@@ -1,6 +1,7 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -12,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
@@ -27,6 +29,28 @@ export default function SearchScreen() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const insets = useSafeAreaInsets();
+  const flatListRef = useRef<FlatList>(null);
+
+  // Register scroll handler for this tab
+  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  const scrollToTop = () => {
+    console.log("Search scroll to top called");
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
+
+  // Register the scroll handler when component mounts
+  React.useEffect(() => {
+    console.log("Registering scroll handler for search tab");
+    registerScrollHandler("search", scrollToTop);
+  }, [registerScrollHandler]);
+
+  // Set current tab when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Search screen focused, setting current tab to search");
+      setCurrentTab("search");
+    }, [setCurrentTab])
+  );
 
   const backgroundColor = useThemeColor(
     {
@@ -257,6 +281,7 @@ export default function SearchScreen() {
       </ThemedView>
 
       <FlatList
+        ref={flatListRef}
         data={results}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}

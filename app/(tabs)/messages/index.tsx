@@ -1,10 +1,12 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useConversations } from "@/hooks/queries/useConversations";
 import { useBorderColor } from "@/hooks/useBorderColor";
@@ -31,6 +33,28 @@ export default function MessagesScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const flatListRef = useRef<FlatList>(null);
+
+  // Register scroll handler for this tab
+  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  const scrollToTop = () => {
+    console.log("Messages scroll to top called");
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
+
+  // Register the scroll handler when component mounts
+  React.useEffect(() => {
+    console.log("Registering scroll handler for messages tab");
+    registerScrollHandler("messages", scrollToTop);
+  }, [registerScrollHandler]);
+
+  // Set current tab when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Messages screen focused, setting current tab to messages");
+      setCurrentTab("messages");
+    }, [setCurrentTab])
+  );
 
   const {
     data: conversationsData,
@@ -101,7 +125,7 @@ export default function MessagesScreen() {
             {item.unreadCount > 0 && (
               <ThemedView style={styles.unreadBadge}>
                 <ThemedText style={styles.unreadCount}>
-                  {item.unreadCount}
+                  {item.unreadCount > 99 ? "99+" : item.unreadCount}
                 </ThemedText>
               </ThemedView>
             )}
@@ -117,13 +141,14 @@ export default function MessagesScreen() {
   );
 
   const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>Loading more...</ThemedText>
-      </ThemedView>
-    );
+    if (isFetchingNextPage) {
+      return (
+        <ThemedView style={styles.loadingFooter}>
+          <ThemedText style={styles.loadingText}>Loading more...</ThemedText>
+        </ThemedView>
+      );
+    }
+    return null;
   };
 
   const handleLoadMore = () => {
@@ -132,88 +157,51 @@ export default function MessagesScreen() {
     }
   };
 
-  if (conversationsLoading) {
-    return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={styles.title}>Messages</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.loadingState}>
-          <ThemedText style={styles.loadingText}>
-            Loading conversations...
-          </ThemedText>
-        </ThemedView>
-      </ThemedView>
-    );
-  }
-
-  if (error) {
-    const conversationError = error as ConversationError;
-
-    return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={styles.title}>Messages</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.errorState}>
-          {conversationError.type === "permission" ? (
-            <>
-              <ThemedText style={styles.errorTitle}>
-                Messages Not Available
-              </ThemedText>
-              <ThemedText style={styles.errorSubtitle}>
-                {conversationError.message}
-              </ThemedText>
-              <ThemedText style={styles.errorHelp}>
-                To access messages, you need to create an app password with chat
-                permissions in your Bluesky settings.
-              </ThemedText>
-            </>
-          ) : (
-            <>
-              <ThemedText style={styles.errorTitle}>
-                Error loading conversations
-              </ThemedText>
-              <ThemedText style={styles.errorSubtitle}>
-                {conversationError.message}
-              </ThemedText>
-            </>
-          )}
-        </ThemedView>
-      </ThemedView>
-    );
-  }
-
-  // Flatten all pages of conversations into a single array
-  const conversations =
-    conversationsData?.pages.flatMap((page) => page.conversations) || [];
-
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
         <ThemedText style={styles.title}>Messages</ThemedText>
       </ThemedView>
 
-      {conversations.length > 0 ? (
-        <FlatList
-          data={conversations}
-          renderItem={renderConversation}
-          keyExtractor={(item) => item.id}
-          style={styles.list}
-          contentContainerStyle={styles.conversationsContent}
-          showsVerticalScrollIndicator={false}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={renderFooter}
-        />
-      ) : (
-        <ThemedView style={styles.emptyState}>
-          <ThemedText style={styles.emptyTitle}>No messages yet</ThemedText>
-          <ThemedText style={styles.emptySubtitle}>
-            Start a conversation by following someone and sending them a message
-          </ThemedText>
-        </ThemedView>
-      )}
+      <FlatList
+        ref={flatListRef}
+        data={
+          conversationsData?.pages.flatMap((page) => page.conversations) ?? []
+        }
+        renderItem={renderConversation}
+        keyExtractor={(item) => item.id}
+        style={styles.list}
+        contentContainerStyle={styles.conversationsContent}
+        showsVerticalScrollIndicator={false}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={
+          conversationsLoading ? (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.emptyTitle}>
+                Loading conversations...
+              </ThemedText>
+            </ThemedView>
+          ) : error ? (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.errorTitle}>
+                {error.message || "Failed to load conversations"}
+              </ThemedText>
+            </ThemedView>
+          ) : (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.emptyTitle}>
+                No conversations yet
+              </ThemedText>
+              <ThemedText style={styles.emptySubtitle}>
+                Start a conversation by following someone and sending them a
+                message
+              </ThemedText>
+            </ThemedView>
+          )
+        }
+      />
     </ThemedView>
   );
 }

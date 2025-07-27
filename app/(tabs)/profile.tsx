@@ -1,5 +1,6 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -8,6 +9,7 @@ import { ProfileHeader } from "@/components/ProfileHeader";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
 import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
@@ -25,6 +27,28 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Register scroll handler for this tab
+  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  const scrollToTop = () => {
+    console.log("Profile scroll to top called");
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
+  // Register the scroll handler when component mounts
+  React.useEffect(() => {
+    console.log("Registering scroll handler for profile tab");
+    registerScrollHandler("profile", scrollToTop);
+  }, [registerScrollHandler]);
+
+  // Set current tab when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Profile screen focused, setting current tab to profile");
+      setCurrentTab("profile");
+    }, [setCurrentTab])
+  );
 
   const { data: profile } = useProfile(
     userData.handle || "",
@@ -101,17 +125,23 @@ export default function ProfileScreen() {
       case "media":
         return "No media yet";
       default:
-        return "No content";
+        return "No content yet";
     }
   };
 
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    // Scroll to top when switching tabs
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
   const currentData = getCurrentData();
-  const currentLoading = getCurrentLoading();
-  const emptyMessage = getEmptyMessage();
+  const isLoadingData = getCurrentLoading();
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
@@ -128,61 +158,40 @@ export default function ProfileScreen() {
           }}
           isOwnProfile={true}
         />
+        <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
-        {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {/* Content */}
-        {currentLoading ? (
-          <ThemedView style={styles.loadingContainer}>
-            <ThemedText style={styles.loadingText}>
-              Loading {activeTab}...
-            </ThemedText>
+        {isLoadingData ? (
+          <ThemedView style={styles.loadingState}>
+            <ThemedText style={styles.loadingText}>Loading...</ThemedText>
           </ThemedView>
-        ) : currentData && currentData.length > 0 ? (
-          currentData
-            .filter((item) => item && item.uri) // Filter out undefined/null items
-            .map((item) => {
-              // Check if this post is a reply and has reply context
-              const replyTo = item.reply?.parent
-                ? {
-                    author: {
-                      handle: item.reply.parent.author?.handle || "unknown",
-                      displayName: item.reply.parent.author?.displayName,
-                    },
-                    text: item.reply.parent.record?.text || "No text content",
-                  }
-                : undefined;
-
-              return (
-                <PostCard
-                  key={`${item.uri}-${item.indexedAt}`}
-                  post={{
-                    id: item.uri,
-                    text: item.record?.text || "No text content",
-                    author: {
-                      handle: item.author.handle,
-                      displayName: item.author.displayName,
-                      avatar: item.author.avatar,
-                    },
-                    createdAt: new Date(item.indexedAt).toLocaleDateString(),
-                    likeCount: item.likeCount || 0,
-                    commentCount: item.replyCount || 0,
-                    repostCount: item.repostCount || 0,
-                    embed: item.embed,
-                    embeds: item.embeds,
-                    replyTo,
-                  }}
-                  onPress={() => {
-                    router.push(`/post/${encodeURIComponent(item.uri)}`);
-                  }}
-                />
-              );
-            })
+        ) : currentData.length > 0 ? (
+          currentData.map((post: any) => (
+            <PostCard
+              key={post.uri}
+              post={{
+                id: post.uri,
+                text: post.record?.text || "No text content",
+                author: {
+                  handle: post.author.handle,
+                  displayName: post.author.displayName,
+                  avatar: post.author.avatar,
+                },
+                createdAt: new Date(post.indexedAt).toLocaleDateString(),
+                likeCount: post.likeCount || 0,
+                commentCount: post.replyCount || 0,
+                repostCount: post.repostCount || 0,
+                embed: post.embed,
+                embeds: post.embeds,
+              }}
+              onPress={() => {
+                router.push(`/post/${encodeURIComponent(post.uri)}`);
+              }}
+            />
+          ))
         ) : (
-          <ThemedView style={styles.emptyPosts}>
-            <ThemedText style={styles.emptyPostsText}>
-              {emptyMessage}
+          <ThemedView style={styles.emptyState}>
+            <ThemedText style={styles.emptyStateText}>
+              {getEmptyMessage()}
             </ThemedText>
           </ThemedView>
         )}
@@ -201,7 +210,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  loadingContainer: {
+  loadingState: {
     paddingVertical: 40,
     alignItems: "center",
   },
@@ -209,11 +218,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  emptyPosts: {
+  emptyState: {
     paddingVertical: 40,
     alignItems: "center",
   },
-  emptyPostsText: {
+  emptyStateText: {
     fontSize: 16,
     opacity: 0.6,
   },

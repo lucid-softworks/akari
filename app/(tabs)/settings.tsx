@@ -1,11 +1,13 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
@@ -23,6 +25,28 @@ export default function SettingsScreen() {
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [accountProfiles, setAccountProfiles] = useState<Record<string, any>>(
     {}
+  );
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Register scroll handler for this tab
+  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  const scrollToTop = () => {
+    console.log("Settings scroll to top called");
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
+  // Register the scroll handler when component mounts
+  React.useEffect(() => {
+    console.log("Registering scroll handler for settings tab");
+    registerScrollHandler("settings", scrollToTop);
+  }, [registerScrollHandler]);
+
+  // Set current tab when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Settings screen focused, setting current tab to settings");
+      setCurrentTab("settings");
+    }, [setCurrentTab])
   );
 
   // Get current account profile data
@@ -220,6 +244,7 @@ export default function SettingsScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}

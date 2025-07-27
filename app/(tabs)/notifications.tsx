@@ -1,6 +1,7 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import React from "react";
+import React, { useRef } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -14,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
+import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useNotifications } from "@/hooks/queries/useNotifications";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -275,6 +277,30 @@ export default function NotificationsScreen() {
   const colors = Colors[colorScheme ?? "light"];
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const flatListRef = useRef<FlatList>(null);
+
+  // Register scroll handler for this tab
+  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  const scrollToTop = () => {
+    console.log("Notifications scroll to top called");
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
+
+  // Register the scroll handler when component mounts
+  React.useEffect(() => {
+    console.log("Registering scroll handler for notifications tab");
+    registerScrollHandler("notifications", scrollToTop);
+  }, [registerScrollHandler]);
+
+  // Set current tab when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(
+        "Notifications screen focused, setting current tab to notifications"
+      );
+      setCurrentTab("notifications");
+    }, [setCurrentTab])
+  );
 
   const {
     data,
@@ -334,62 +360,63 @@ export default function NotificationsScreen() {
   );
 
   const renderErrorState = () => (
-    <View style={styles.errorState}>
-      <ThemedText style={styles.errorTitle}>
-        Failed to load notifications
+    <View style={styles.emptyState}>
+      <ThemedText style={styles.emptyStateTitle}>
+        Error loading notifications
       </ThemedText>
-      <ThemedText style={styles.errorMessage}>
-        {error?.message || "Please try again later"}
+      <ThemedText style={styles.emptyStateSubtitle}>
+        {error?.message || "Something went wrong"}
       </ThemedText>
-      <TouchableOpacity
-        style={[styles.retryButton, { backgroundColor: colors.tint }]}
-        onPress={() => refetch()}
-      >
-        <Text style={[styles.retryButtonText, { color: colors.background }]}>
-          Retry
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 
-  return (
-    <ThemedView
-      style={[
-        styles.container,
-        { backgroundColor: colors.background, paddingTop: insets.top },
-      ]}
-    >
-      <View style={[styles.header, { borderBottomColor: borderColor }]}>
-        <ThemedText style={styles.title}>Notifications</ThemedText>
-      </View>
+  if (isError) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        {renderErrorState()}
+      </ThemedView>
+    );
+  }
 
-      {isError ? (
-        renderErrorState()
-      ) : (
-        <FlatList
-          data={groupedNotifications}
-          renderItem={renderNotification}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={!isLoading ? renderEmptyState : null}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={refetch}
-              tintColor={colors.tint}
-            />
-          }
-          ListFooterComponent={
-            isFetchingNextPage ? (
-              <View style={styles.loadingFooter}>
-                <ThemedText style={styles.loadingText}>Loading...</ThemedText>
-              </View>
-            ) : null
-          }
-        />
-      )}
+  return (
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <ThemedView style={styles.header}>
+        <ThemedText style={styles.title}>Notifications</ThemedText>
+      </ThemedView>
+
+      <FlatList
+        ref={flatListRef}
+        data={groupedNotifications}
+        renderItem={renderNotification}
+        keyExtractor={(item) => item.id}
+        style={styles.notificationsList}
+        contentContainerStyle={styles.notificationsListContent}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ThemedView style={styles.loadingMore}>
+              <ThemedText style={styles.loadingMoreText}>
+                Loading more notifications...
+              </ThemedText>
+            </ThemedView>
+          ) : null
+        }
+        ListEmptyComponent={
+          isLoading ? (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.emptyStateText}>
+                Loading notifications...
+              </ThemedText>
+            </ThemedView>
+          ) : (
+            renderEmptyState()
+          )
+        }
+      />
     </ThemedView>
   );
 }
@@ -540,6 +567,24 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
+    opacity: 0.7,
+  },
+  notificationsList: {
+    flex: 1,
+  },
+  notificationsListContent: {
+    paddingBottom: 16, // Add some padding at the bottom for the footer
+  },
+  loadingMore: {
+    paddingVertical: 16,
+    alignItems: "center",
+  },
+  loadingMoreText: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
+  emptyStateText: {
+    fontSize: 16,
     opacity: 0.7,
   },
 });
