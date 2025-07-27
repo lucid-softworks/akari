@@ -1,16 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
+import { TabBar } from "@/components/TabBar";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFeeds } from "@/hooks/queries/useFeeds";
@@ -188,32 +183,14 @@ export default function DiscoverScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       {/* Feed Tabs */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.tabsContainer}
-        contentContainerStyle={styles.tabsContent}
-      >
-        {allFeeds.map((feed) => (
-          <TouchableOpacity
-            key={feed.uri}
-            style={[
-              styles.feedTab,
-              selectedFeed === feed.uri && styles.feedTabActive,
-            ]}
-            onPress={() => handleFeedSelection(feed.uri)}
-          >
-            <ThemedText
-              style={[
-                styles.feedTabText,
-                selectedFeed === feed.uri && styles.feedTabTextActive,
-              ]}
-            >
-              {feed.displayName}
-            </ThemedText>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <TabBar
+        tabs={allFeeds.map((feed) => ({
+          key: feed.uri,
+          label: feed.displayName,
+        }))}
+        activeTab={selectedFeed || ""}
+        onTabChange={handleFeedSelection}
+      />
 
       {/* Feed Content */}
       {selectedFeed && isInitialized ? (
@@ -284,50 +261,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.8,
     textAlign: "center",
-  },
-  tabsContainer: {
-    maxHeight: 50,
-    marginBottom: 8,
-    paddingVertical: 4,
-  },
-  tabsContent: {
-    paddingHorizontal: 16,
-    gap: 8,
-    alignItems: "center",
-  },
-  feedTab: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: "#f8f9fa",
-    borderWidth: 1,
-    borderColor: "#e9ecef",
-    marginRight: 6,
-    minWidth: 70,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  feedTabActive: {
-    backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
-    shadowColor: "#007AFF",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  feedTabText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#6c757d",
-    textAlign: "center",
-  },
-  feedTabTextActive: {
-    color: "white",
-    fontWeight: "700",
   },
   feedList: {
     flex: 1,
