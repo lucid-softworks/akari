@@ -4,21 +4,28 @@ import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 
 /**
- * Query hook for fetching a user's profile information
+ * Query hook for fetching a user's replies
  * @param identifier - The user's handle or DID
  * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useProfile(identifier: string, enabled: boolean = true) {
+export function useAuthorReplies(identifier: string, enabled: boolean = true) {
   return useQuery({
-    queryKey: ["profile", identifier],
+    queryKey: ["authorReplies", identifier],
     queryFn: async () => {
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      const profile = await blueskyApi.getProfile(token, identifier);
-      console.log("PROFILE DATA:", JSON.stringify(profile, null, 2));
+      const feed = await blueskyApi.getAuthorFeed(token, identifier, 50);
 
-      return profile;
+      // Filter to only show replies
+      const replies = feed.feed
+        .filter((item) => {
+          // Only include posts that are replies
+          return item.reply;
+        })
+        .map((item) => item.post);
+
+      return replies;
     },
     enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes

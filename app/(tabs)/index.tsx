@@ -1,26 +1,51 @@
 import { router } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ProfileHeader } from "@/components/ProfileHeader";
+import { ProfileTabs } from "@/components/ProfileTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
+import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
+import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
+import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
+import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { jwtStorage } from "@/utils/secureStorage";
+
+type TabType = "posts" | "replies" | "likes" | "media";
 
 export default function ProfileScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const userData = jwtStorage.getUserData();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const [activeTab, setActiveTab] = useState<TabType>("posts");
 
   const { data: profile } = useProfile(
     userData.handle || "",
     !!userData.handle
+  );
+
+  const { data: posts, isLoading: postsLoading } = useAuthorPosts(
+    userData.handle || "",
+    activeTab === "posts"
+  );
+  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
+    userData.handle || "",
+    activeTab === "replies"
+  );
+  const { data: likes, isLoading: likesLoading } = useAuthorLikes(
+    userData.handle || "",
+    activeTab === "likes"
+  );
+  const { data: media, isLoading: mediaLoading } = useAuthorMedia(
+    userData.handle || "",
+    activeTab === "media"
   );
 
   // Handle navigation in useEffect to avoid React warnings
@@ -34,6 +59,55 @@ export default function ProfileScreen() {
   if (isLoading || !authData?.isAuthenticated) {
     return null;
   }
+
+  const getCurrentData = () => {
+    switch (activeTab) {
+      case "posts":
+        return posts || [];
+      case "replies":
+        return replies || [];
+      case "likes":
+        return likes || [];
+      case "media":
+        return media || [];
+      default:
+        return [];
+    }
+  };
+
+  const getCurrentLoading = () => {
+    switch (activeTab) {
+      case "posts":
+        return postsLoading;
+      case "replies":
+        return repliesLoading;
+      case "likes":
+        return likesLoading;
+      case "media":
+        return mediaLoading;
+      default:
+        return false;
+    }
+  };
+
+  const getEmptyMessage = () => {
+    switch (activeTab) {
+      case "posts":
+        return "No posts yet";
+      case "replies":
+        return "No replies yet";
+      case "likes":
+        return "No likes yet";
+      case "media":
+        return "No media yet";
+      default:
+        return "No content";
+    }
+  };
+
+  const currentData = getCurrentData();
+  const currentLoading = getCurrentLoading();
+  const emptyMessage = getEmptyMessage();
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -55,41 +129,47 @@ export default function ProfileScreen() {
           isOwnProfile={true}
         />
 
-        {/* Posts Section */}
-        <ThemedView
-          style={[styles.postsSection, { borderBottomColor: borderColor }]}
-        >
-          <ThemedText style={styles.postsTitle}>Your Posts</ThemedText>
-        </ThemedView>
+        {/* Tabs */}
+        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Posts List */}
-        {profile?.posts && profile.posts.length > 0 ? (
-          profile.posts.map((item: any) => (
-            <PostCard
-              key={`${item.uri}-${item.indexedAt}`}
-              post={{
-                id: item.uri,
-                text: item.record?.text || "No text content",
-                author: {
-                  handle: item.author.handle,
-                  displayName: item.author.displayName,
-                  avatar: item.author.avatar,
-                },
-                createdAt: new Date(item.indexedAt).toLocaleDateString(),
-                likeCount: item.likeCount || 0,
-                commentCount: item.replyCount || 0,
-                repostCount: item.repostCount || 0,
-                embed: item.embed,
-                embeds: item.embeds,
-              }}
-              onPress={() => {
-                router.push(`/post/${encodeURIComponent(item.uri)}`);
-              }}
-            />
-          ))
+        {/* Content */}
+        {currentLoading ? (
+          <ThemedView style={styles.loadingContainer}>
+            <ThemedText style={styles.loadingText}>
+              Loading {activeTab}...
+            </ThemedText>
+          </ThemedView>
+        ) : currentData && currentData.length > 0 ? (
+          currentData
+            .filter((item) => item && item.uri) // Filter out undefined/null items
+            .map((item) => (
+              <PostCard
+                key={`${item.uri}-${item.indexedAt}`}
+                post={{
+                  id: item.uri,
+                  text: item.record?.text || "No text content",
+                  author: {
+                    handle: item.author.handle,
+                    displayName: item.author.displayName,
+                    avatar: item.author.avatar,
+                  },
+                  createdAt: new Date(item.indexedAt).toLocaleDateString(),
+                  likeCount: item.likeCount || 0,
+                  commentCount: item.replyCount || 0,
+                  repostCount: item.repostCount || 0,
+                  embed: item.embed,
+                  embeds: item.embeds,
+                }}
+                onPress={() => {
+                  router.push(`/post/${encodeURIComponent(item.uri)}`);
+                }}
+              />
+            ))
         ) : (
           <ThemedView style={styles.emptyPosts}>
-            <ThemedText style={styles.emptyPostsText}>No posts yet</ThemedText>
+            <ThemedText style={styles.emptyPostsText}>
+              {emptyMessage}
+            </ThemedText>
           </ThemedView>
         )}
       </ScrollView>
@@ -107,14 +187,13 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  postsSection: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+  loadingContainer: {
+    paddingVertical: 40,
+    alignItems: "center",
   },
-  postsTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+  loadingText: {
+    fontSize: 16,
+    textAlign: "center",
   },
   emptyPosts: {
     paddingVertical: 40,

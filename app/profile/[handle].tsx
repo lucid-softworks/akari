@@ -1,21 +1,46 @@
 import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ProfileHeader } from "@/components/ProfileHeader";
+import { ProfileTabs } from "@/components/ProfileTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
+import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
+import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
+import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { jwtStorage } from "@/utils/secureStorage";
 
+type TabType = "posts" | "replies" | "likes" | "media";
+
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
+  const [activeTab, setActiveTab] = useState<TabType>("posts");
   const borderColor = useBorderColor();
   const currentUser = jwtStorage.getUserData();
 
   const { data: profile, isLoading, error } = useProfile(handle);
+  const { data: posts, isLoading: postsLoading } = useAuthorPosts(
+    handle,
+    activeTab === "posts"
+  );
+  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
+    handle,
+    activeTab === "replies"
+  );
+  const { data: likes, isLoading: likesLoading } = useAuthorLikes(
+    handle,
+    activeTab === "likes"
+  );
+  const { data: media, isLoading: mediaLoading } = useAuthorMedia(
+    handle,
+    activeTab === "media"
+  );
 
   if (isLoading) {
     return (
@@ -39,8 +64,54 @@ export default function ProfileScreen() {
 
   const isOwnProfile = currentUser?.handle === profile?.handle;
 
-  // For debugging - you can temporarily set this to true to test
-  // const isOwnProfile = true;
+  const getCurrentData = () => {
+    switch (activeTab) {
+      case "posts":
+        return posts || [];
+      case "replies":
+        return replies || [];
+      case "likes":
+        return likes || [];
+      case "media":
+        return media || [];
+      default:
+        return [];
+    }
+  };
+
+  const getCurrentLoading = () => {
+    switch (activeTab) {
+      case "posts":
+        return postsLoading;
+      case "replies":
+        return repliesLoading;
+      case "likes":
+        return likesLoading;
+      case "media":
+        return mediaLoading;
+      default:
+        return false;
+    }
+  };
+
+  const getEmptyMessage = () => {
+    switch (activeTab) {
+      case "posts":
+        return "No posts yet";
+      case "replies":
+        return "No replies yet";
+      case "likes":
+        return "No likes yet";
+      case "media":
+        return "No media yet";
+      default:
+        return "No content";
+    }
+  };
+
+  const currentData = getCurrentData();
+  const currentLoading = getCurrentLoading();
+  const emptyMessage = getEmptyMessage();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,16 +134,18 @@ export default function ProfileScreen() {
             isOwnProfile={isOwnProfile}
           />
 
-          {/* Posts Section */}
-          <ThemedView
-            style={[styles.postsSection, { borderBottomColor: borderColor }]}
-          >
-            <ThemedText style={styles.postsTitle}>Posts</ThemedText>
-          </ThemedView>
+          {/* Tabs */}
+          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-          {/* Posts List */}
-          {profile?.posts && profile.posts.length > 0 ? (
-            profile.posts
+          {/* Content */}
+          {currentLoading ? (
+            <ThemedView style={styles.loadingContainer}>
+              <ThemedText style={styles.loadingText}>
+                Loading {activeTab}...
+              </ThemedText>
+            </ThemedView>
+          ) : currentData && currentData.length > 0 ? (
+            currentData
               .filter((item) => item && item.uri) // Filter out undefined/null items
               .map((item) => (
                 <PostCard
@@ -100,7 +173,7 @@ export default function ProfileScreen() {
           ) : (
             <ThemedView style={styles.emptyPosts}>
               <ThemedText style={styles.emptyPostsText}>
-                No posts yet
+                {emptyMessage}
               </ThemedText>
             </ThemedView>
           )}
@@ -131,14 +204,9 @@ const styles = StyleSheet.create({
     marginTop: 40,
     color: "red",
   },
-  postsSection: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-  },
-  postsTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+  loadingContainer: {
+    paddingVertical: 40,
+    alignItems: "center",
   },
   emptyPosts: {
     paddingVertical: 40,
