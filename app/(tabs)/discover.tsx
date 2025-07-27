@@ -123,6 +123,7 @@ export default function DiscoverScreen() {
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
+          avatar: item.post.author.avatar,
         },
         createdAt: new Date(item.post.indexedAt).toLocaleDateString(),
         likeCount: item.post.likeCount || 0,

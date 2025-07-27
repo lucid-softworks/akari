@@ -6,7 +6,10 @@ import type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
+  BlueskySearchActorsResponse,
+  BlueskySearchPostsResponse,
   BlueskySession,
+  BlueskyThreadResponse,
 } from "./types";
 
 /**
@@ -67,7 +70,10 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getPost(accessJwt, uri);
   }
 
-  async getPostThread(accessJwt: string, uri: string) {
+  async getPostThread(
+    accessJwt: string,
+    uri: string
+  ): Promise<BlueskyThreadResponse> {
     return this.feeds.getPostThread(accessJwt, uri);
   }
 
@@ -81,11 +87,19 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   // Search methods
-  async searchProfiles(accessJwt: string, query: string, limit: number = 20) {
+  async searchProfiles(
+    accessJwt: string,
+    query: string,
+    limit: number = 20
+  ): Promise<BlueskySearchActorsResponse> {
     return this.search.searchProfiles(accessJwt, query, limit);
   }
 
-  async searchPosts(accessJwt: string, query: string, limit: number = 20) {
+  async searchPosts(
+    accessJwt: string,
+    query: string,
+    limit: number = 20
+  ): Promise<BlueskySearchPostsResponse> {
     return this.search.searchPosts(accessJwt, query, limit);
   }
 

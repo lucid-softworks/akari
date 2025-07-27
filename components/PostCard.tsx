@@ -17,6 +17,7 @@ type PostCardProps = {
     author: {
       handle: string;
       displayName?: string;
+      avatar?: string;
     };
     createdAt: string;
     likeCount?: number;
@@ -127,15 +128,28 @@ export function PostCard({ post, onPress }: PostCardProps) {
         activeOpacity={0.7}
       >
         <ThemedView style={styles.header}>
-          <ThemedView style={styles.authorInfo}>
-            <ThemedText style={styles.displayName}>
-              {post.author.displayName || post.author.handle}
-            </ThemedText>
-            <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
-              <ThemedText style={styles.handle}>
-                @{post.author.handle}
+          <ThemedView style={styles.authorSection}>
+            {post.author.avatar && (
+              <Image
+                source={{ uri: post.author.avatar }}
+                style={styles.authorAvatar}
+                contentFit="cover"
+                placeholder={require("@/assets/images/partial-react-logo.png")}
+              />
+            )}
+            <ThemedView style={styles.authorInfo}>
+              <ThemedText style={styles.displayName}>
+                {post.author.displayName || post.author.handle}
               </ThemedText>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleProfilePress}
+                activeOpacity={0.7}
+              >
+                <ThemedText style={styles.handle}>
+                  @{post.author.handle}
+                </ThemedText>
+              </TouchableOpacity>
+            </ThemedView>
           </ThemedView>
           <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
         </ThemedView>
@@ -216,6 +230,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: 10,
+  },
+  authorSection: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    flex: 1,
+  },
+  authorAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   authorInfo: {
     flex: 1,

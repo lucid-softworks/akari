@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -65,11 +66,11 @@ export default function SearchScreen() {
       const postResults = await blueskyApi.searchPosts(token, query, 10);
 
       const combinedResults: SearchResult[] = [
-        ...profileResults.profiles.map((profile: any) => ({
+        ...(profileResults.actors || []).map((profile: any) => ({
           type: "profile" as const,
           data: profile,
         })),
-        ...postResults.posts.map((post: any) => ({
+        ...(postResults.posts || []).map((post: any) => ({
           type: "post" as const,
           data: post,
         })),
@@ -78,6 +79,10 @@ export default function SearchScreen() {
       setResults(combinedResults);
     } catch (error) {
       console.error("Search error:", error);
+      // Show a more user-friendly error message
+      if (error instanceof Error) {
+        console.error("Search error details:", error.message);
+      }
     } finally {
       setIsSearching(false);
     }
@@ -95,21 +100,31 @@ export default function SearchScreen() {
         }
         activeOpacity={0.7}
       >
-        <ThemedView style={styles.profileInfo}>
-          <ThemedText style={[styles.displayName, { color: textColor }]}>
-            {profile.displayName || profile.handle}
-          </ThemedText>
-          <ThemedText style={[styles.handle, { color: textColor }]}>
-            @{profile.handle}
-          </ThemedText>
-          {profile.description && (
-            <ThemedText
-              style={[styles.description, { color: textColor }]}
-              numberOfLines={2}
-            >
-              {profile.description}
-            </ThemedText>
+        <ThemedView style={styles.profileContainer}>
+          {profile.avatar && (
+            <Image
+              source={{ uri: profile.avatar }}
+              style={styles.profileAvatar}
+              contentFit="cover"
+              placeholder={require("@/assets/images/partial-react-logo.png")}
+            />
           )}
+          <ThemedView style={styles.profileInfo}>
+            <ThemedText style={[styles.displayName, { color: textColor }]}>
+              {profile.displayName || profile.handle}
+            </ThemedText>
+            <ThemedText style={[styles.handle, { color: textColor }]}>
+              @{profile.handle}
+            </ThemedText>
+            {profile.description && (
+              <ThemedText
+                style={[styles.description, { color: textColor }]}
+                numberOfLines={2}
+              >
+                {profile.description}
+              </ThemedText>
+            )}
+          </ThemedView>
         </ThemedView>
       </TouchableOpacity>
     );
@@ -127,6 +142,7 @@ export default function SearchScreen() {
           author: {
             handle: post.author.handle,
             displayName: post.author.displayName,
+            avatar: post.author.avatar,
           },
           createdAt: new Date(post.indexedAt).toLocaleDateString(),
           likeCount: post.likeCount || 0,
@@ -264,7 +280,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 0.5,
   },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+  },
+  profileAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
   profileInfo: {
+    flex: 1,
     gap: 4,
   },
   displayName: {

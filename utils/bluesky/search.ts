@@ -1,4 +1,8 @@
 import { BlueskyApiClient } from "./client";
+import type {
+  BlueskySearchActorsResponse,
+  BlueskySearchPostsResponse,
+} from "./types";
 
 /**
  * Bluesky API search methods
@@ -11,8 +15,12 @@ export class BlueskySearch extends BlueskyApiClient {
    * @param limit - Number of results to fetch (default: 20)
    * @returns Promise resolving to search results
    */
-  async searchProfiles(accessJwt: string, query: string, limit: number = 20) {
-    return this.makeAuthenticatedRequest(
+  async searchProfiles(
+    accessJwt: string,
+    query: string,
+    limit: number = 20
+  ): Promise<BlueskySearchActorsResponse> {
+    return this.makeAuthenticatedRequest<BlueskySearchActorsResponse>(
       "/app.bsky.actor.searchActors",
       accessJwt,
       {
@@ -31,8 +39,12 @@ export class BlueskySearch extends BlueskyApiClient {
    * @param limit - Number of results to fetch (default: 20)
    * @returns Promise resolving to search results
    */
-  async searchPosts(accessJwt: string, query: string, limit: number = 20) {
-    return this.makeAuthenticatedRequest(
+  async searchPosts(
+    accessJwt: string,
+    query: string,
+    limit: number = 20
+  ): Promise<BlueskySearchPostsResponse> {
+    return this.makeAuthenticatedRequest<BlueskySearchPostsResponse>(
       "/app.bsky.feed.searchPosts",
       accessJwt,
       {

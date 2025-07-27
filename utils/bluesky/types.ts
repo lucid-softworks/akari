@@ -307,6 +307,69 @@ export type BlueskySession =
     };
 
 /**
+ * Bluesky profile information
+ */
+export type BlueskyProfile = {
+  /** The user's DID */
+  did: string;
+  /** The user's handle */
+  handle: string;
+  /** The user's display name */
+  displayName?: string;
+  /** The user's description/bio */
+  description?: string;
+  /** The user's avatar URL */
+  avatar?: string;
+  /** The user's banner URL */
+  banner?: string;
+  /** When the profile was indexed */
+  indexedAt: string;
+  /** Viewer's interaction with the profile */
+  viewer?: {
+    muted?: boolean;
+    blockedBy?: boolean;
+    blocking?: string;
+    following?: string;
+    followedBy?: string;
+  };
+  /** Labels applied to the profile */
+  labels?: any[];
+};
+
+/**
+ * Response from the searchActors endpoint
+ */
+export type BlueskySearchActorsResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of profiles */
+  actors: BlueskyProfile[];
+};
+
+/**
+ * Response from the searchPosts endpoint
+ */
+export type BlueskySearchPostsResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of posts */
+  posts: BlueskyPostView[];
+};
+
+/**
+ * Response from the getPostThread endpoint
+ */
+export type BlueskyThreadResponse = {
+  /** The thread data */
+  thread?: {
+    /** The main post */
+    post: BlueskyPostView;
+    /** Replies to the post */
+    replies?: BlueskyFeedItem[];
+  };
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {

@@ -70,6 +70,7 @@ export default function ProfileScreen() {
                 author: {
                   handle: item.author.handle,
                   displayName: item.author.displayName,
+                  avatar: item.author.avatar,
                 },
                 createdAt: new Date(item.indexedAt).toLocaleDateString(),
                 likeCount: item.likeCount || 0,

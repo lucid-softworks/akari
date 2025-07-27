@@ -7,7 +7,11 @@ import type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
+  BlueskyProfile,
+  BlueskySearchActorsResponse,
+  BlueskySearchPostsResponse,
   BlueskySession,
+  BlueskyThreadResponse,
 } from "./bluesky/types";
 
 // Export the main API class
@@ -21,7 +25,11 @@ export type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
+  BlueskyProfile,
+  BlueskySearchActorsResponse,
+  BlueskySearchPostsResponse,
   BlueskySession,
+  BlueskyThreadResponse,
 };
 
 // Create and export the default instance

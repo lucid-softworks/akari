@@ -3,6 +3,7 @@ import type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
+  BlueskyThreadResponse,
 } from "./types";
 
 /**
@@ -111,7 +112,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     const data = await this.makeAuthenticatedRequest<{
       thread?: { post: BlueskyPostView };
     }>("/app.bsky.feed.getPostThread", accessJwt, {
-      params: { uri: encodeURIComponent(uri) },
+      params: { uri },
     });
     if (!data.thread?.post) {
       throw new Error("Post not found");
@@ -125,12 +126,15 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param uri - The post's URI
    * @returns Promise resolving to thread data
    */
-  async getPostThread(accessJwt: string, uri: string) {
-    return this.makeAuthenticatedRequest(
+  async getPostThread(
+    accessJwt: string,
+    uri: string
+  ): Promise<BlueskyThreadResponse> {
+    return this.makeAuthenticatedRequest<BlueskyThreadResponse>(
       "/app.bsky.feed.getPostThread",
       accessJwt,
       {
-        params: { uri: encodeURIComponent(uri) },
+        params: { uri },
       }
     );
   }

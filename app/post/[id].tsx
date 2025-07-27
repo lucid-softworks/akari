@@ -50,6 +50,7 @@ export default function PostDetailScreen() {
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
+          avatar: item.post.author.avatar,
         },
         createdAt: new Date(item.post.indexedAt).toLocaleDateString(),
         likeCount: item.post.likeCount || 0,
@@ -71,6 +72,7 @@ export default function PostDetailScreen() {
           author: {
             handle: post.author.handle,
             displayName: post.author.displayName,
+            avatar: post.author.avatar,
           },
           createdAt: new Date(post.indexedAt).toLocaleDateString(),
           likeCount: post.likeCount || 0,
