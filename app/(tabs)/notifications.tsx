@@ -15,6 +15,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useNotifications } from "@/hooks/queries/useNotifications";
+import { useBorderColor } from "@/hooks/useBorderColor";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 /**
@@ -42,9 +43,14 @@ type GroupedNotification = {
 type NotificationItemProps = {
   notification: GroupedNotification;
   onPress: () => void;
+  borderColor: string;
 };
 
-function NotificationItem({ notification, onPress }: NotificationItemProps) {
+function NotificationItem({
+  notification,
+  onPress,
+  borderColor,
+}: NotificationItemProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
@@ -154,6 +160,7 @@ function NotificationItem({ notification, onPress }: NotificationItemProps) {
           backgroundColor: notification.isRead
             ? colors.background
             : colors.tint + "10",
+          borderBottomColor: borderColor,
         },
       ]}
       onPress={onPress}
@@ -267,6 +274,7 @@ export default function NotificationsScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
   const insets = useSafeAreaInsets();
+  const borderColor = useBorderColor();
 
   const {
     data,
@@ -310,6 +318,7 @@ export default function NotificationsScreen() {
     <NotificationItem
       notification={item}
       onPress={() => handleNotificationPress(item)}
+      borderColor={borderColor}
     />
   );
 
@@ -350,7 +359,7 @@ export default function NotificationsScreen() {
         { backgroundColor: colors.background, paddingTop: insets.top },
       ]}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: borderColor }]}>
         <ThemedText style={styles.title}>Notifications</ThemedText>
       </View>
 
@@ -394,7 +403,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingTop: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ccc",
   },
   title: {
     fontSize: 24,
@@ -408,7 +416,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ccc",
   },
   notificationContent: {
     flex: 1,
