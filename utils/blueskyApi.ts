@@ -106,6 +106,12 @@ type BlueskyPostView = {
   facets?: any[];
   /** The post's tags */
   tags?: string[];
+  /** Number of likes on the post */
+  likeCount?: number;
+  /** Number of replies on the post */
+  replyCount?: number;
+  /** Number of reposts on the post */
+  repostCount?: number;
 };
 
 /**
@@ -511,6 +517,61 @@ class BlueskyApi {
     if (!response.ok) {
       const error: BlueskyError = await response.json();
       throw new Error(error.message || "Failed to get feed");
+    }
+
+    return await response.json();
+  }
+
+  /**
+   * Gets a specific post by its URI
+   * @param accessJwt - Valid access JWT token
+   * @param uri - The post's URI
+   * @returns Promise resolving to post data
+   */
+  async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {
+    const response = await fetch(
+      `${this.baseUrl}/app.bsky.feed.getPostThread?uri=${encodeURIComponent(
+        uri
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error: BlueskyError = await response.json();
+      throw new Error(error.message || "Failed to get post");
+    }
+
+    const data = await response.json();
+    return data.thread?.post;
+  }
+
+  /**
+   * Gets a post thread including replies
+   * @param accessJwt - Valid access JWT token
+   * @param uri - The post's URI
+   * @returns Promise resolving to thread data
+   */
+  async getPostThread(accessJwt: string, uri: string) {
+    const response = await fetch(
+      `${this.baseUrl}/app.bsky.feed.getPostThread?uri=${encodeURIComponent(
+        uri
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error: BlueskyError = await response.json();
+      throw new Error(error.message || "Failed to get post thread");
     }
 
     return await response.json();

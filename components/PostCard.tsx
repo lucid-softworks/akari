@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { ThemedCard } from "@/components/ThemedCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type PostCardProps = {
   post: {
@@ -13,12 +13,28 @@ type PostCardProps = {
       displayName?: string;
     };
     createdAt: string;
+    likeCount?: number;
+    commentCount?: number;
+    repostCount?: number;
   };
+  onPress?: () => void;
 };
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, onPress }: PostCardProps) {
+  const borderColor = useThemeColor(
+    {
+      light: "#e8eaed",
+      dark: "#2d3133",
+    },
+    "background"
+  );
+
   return (
-    <ThemedCard style={styles.container}>
+    <TouchableOpacity
+      style={[styles.container, { borderBottomColor: borderColor }]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
       <ThemedView style={styles.header}>
         <ThemedView style={styles.authorInfo}>
           <ThemedText style={styles.displayName}>
@@ -33,18 +49,35 @@ export function PostCard({ post }: PostCardProps) {
         <ThemedText style={styles.text}>{post.text}</ThemedText>
       </ThemedView>
 
-      <ThemedView style={styles.footer}>
-        <ThemedText style={styles.notImplemented}>
-          🚧 Post interactions not implemented yet
-        </ThemedText>
+      <ThemedView style={styles.interactions}>
+        <ThemedView style={styles.interactionItem}>
+          <ThemedText style={styles.interactionIcon}>💬</ThemedText>
+          <ThemedText style={styles.interactionCount}>
+            {post.commentCount || 0}
+          </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.interactionItem}>
+          <ThemedText style={styles.interactionIcon}>🔄</ThemedText>
+          <ThemedText style={styles.interactionCount}>
+            {post.repostCount || 0}
+          </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.interactionItem}>
+          <ThemedText style={styles.interactionIcon}>❤️</ThemedText>
+          <ThemedText style={styles.interactionCount}>
+            {post.likeCount || 0}
+          </ThemedText>
+        </ThemedView>
       </ThemedView>
-    </ThemedCard>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 0.5,
   },
   header: {
     flexDirection: "row",
@@ -68,21 +101,28 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   content: {
-    marginBottom: 10,
+    marginBottom: 12,
   },
   text: {
     fontSize: 16,
     lineHeight: 24,
   },
-  footer: {
-    borderTopWidth: 1,
-    borderTopColor: "#e1e5e9",
-    paddingTop: 10,
+  interactions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 8,
   },
-  notImplemented: {
-    fontSize: 12,
-    opacity: 0.6,
-    fontStyle: "italic",
-    textAlign: "center",
+  interactionItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  interactionIcon: {
+    fontSize: 16,
+  },
+  interactionCount: {
+    fontSize: 14,
+    opacity: 0.7,
   },
 });

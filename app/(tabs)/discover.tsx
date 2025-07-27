@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { useRef, useState } from "react";
 import {
   FlatList,
@@ -124,6 +125,12 @@ export default function DiscoverScreen() {
           displayName: item.post.author.displayName,
         },
         createdAt: new Date(item.post.indexedAt).toLocaleDateString(),
+        likeCount: item.post.likeCount || 0,
+        commentCount: item.post.replyCount || 0,
+        repostCount: item.post.repostCount || 0,
+      }}
+      onPress={() => {
+        router.push(`/post/${encodeURIComponent(item.post.uri)}`);
       }}
     />
   );
@@ -304,7 +311,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   feedListContent: {
-    paddingHorizontal: 12,
     paddingBottom: 100, // Account for tab bar
   },
   loadingMore: {
