@@ -11,7 +11,7 @@ import {
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useFeeds } from "@/hooks/useBlueskyMutations";
+import { useFeeds } from "@/hooks/queries/useFeeds";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 

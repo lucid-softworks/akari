@@ -12,7 +12,7 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useSignIn } from "@/hooks/useBlueskyMutations";
+import { useSignIn } from "@/hooks/mutations/useSignIn";
 
 type AuthMode = "signin" | "signup";
 

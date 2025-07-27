@@ -5,7 +5,7 @@ import { Alert, StyleSheet } from "react-native";
 import { ThemedCard } from "@/components/ThemedCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useAuthStatus } from "@/hooks/useBlueskyMutations";
+import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { jwtStorage } from "@/utils/secureStorage";
 
 export default function ProfileScreen() {
