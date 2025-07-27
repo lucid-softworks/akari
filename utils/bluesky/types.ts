@@ -98,7 +98,7 @@ export type BlueskyPostView = {
   };
   /** The post's thread data */
   thread?: any;
-  /** The post's embed data */
+  /** The post's embeds */
   embeds?: any[];
   /** The post's language tags */
   langs?: string[];
@@ -112,6 +112,92 @@ export type BlueskyPostView = {
   replyCount?: number;
   /** Number of reposts on the post */
   repostCount?: number;
+};
+
+/**
+ * Bluesky conversation member
+ */
+export type BlueskyConvoMember = {
+  did: string;
+  handle: string;
+  displayName: string;
+  avatar: string;
+  associated: {
+    lists: number;
+    feedgens: number;
+    starterPacks: number;
+    labeler: boolean;
+    chat: {
+      allowIncoming: string;
+    };
+  };
+  viewer: {
+    muted: boolean;
+    mutedByList?: any;
+    blockedBy: boolean;
+    blocking?: string;
+    blockingByList?: any;
+    following?: string;
+    followedBy?: string;
+    knownFollowers?: {
+      count: number;
+      followers: any[];
+    };
+  };
+  labels: any[];
+  chatDisabled: boolean;
+  verification?: {
+    verifications: any[];
+    verifiedStatus: string;
+    trustedVerifierStatus: string;
+  };
+};
+
+/**
+ * Bluesky conversation message
+ */
+export type BlueskyConvoMessage = {
+  id: string;
+  rev: string;
+  text: string;
+  facets?: any[];
+  embed?: any;
+  reactions?: any[];
+  sender: {
+    did: string;
+  };
+  sentAt: string;
+};
+
+/**
+ * Bluesky conversation
+ */
+export type BlueskyConvo = {
+  id: string;
+  rev: string;
+  members: BlueskyConvoMember[];
+  lastMessage?: BlueskyConvoMessage;
+  lastReaction?: {
+    message: BlueskyConvoMessage;
+    reaction: {
+      value: string;
+      sender: {
+        did: string;
+      };
+      createdAt: string;
+    };
+  };
+  muted: boolean;
+  status: "request" | "accepted";
+  unreadCount: number;
+};
+
+/**
+ * Bluesky conversations response
+ */
+export type BlueskyConvosResponse = {
+  cursor?: string;
+  convos: BlueskyConvo[];
 };
 
 /**

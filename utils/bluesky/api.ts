@@ -1,10 +1,12 @@
 import { BlueskyActors } from "./actors";
 import { BlueskyAuth } from "./auth";
 import { BlueskyApiClient } from "./client";
+import { BlueskyConversations } from "./conversations";
 import { BlueskyFeeds } from "./feeds";
 import { BlueskyGraph } from "./graph";
 import { BlueskySearch } from "./search";
 import type {
+  BlueskyConvosResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
@@ -21,6 +23,7 @@ import type {
 export class BlueskyApi extends BlueskyApiClient {
   private actors: BlueskyActors;
   private auth: BlueskyAuth;
+  private conversations: BlueskyConversations;
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
   private search: BlueskySearch;
@@ -29,6 +32,7 @@ export class BlueskyApi extends BlueskyApiClient {
     super(pdsUrl);
     this.actors = new BlueskyActors(pdsUrl);
     this.auth = new BlueskyAuth(pdsUrl);
+    this.conversations = new BlueskyConversations(pdsUrl);
     this.feeds = new BlueskyFeeds(pdsUrl);
     this.graph = new BlueskyGraph(pdsUrl);
     this.search = new BlueskySearch(pdsUrl);
@@ -97,6 +101,23 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string
   ): Promise<BlueskyFeedResponse> {
     return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor);
+  }
+
+  // Conversation methods
+  async listConversations(
+    accessJwt: string,
+    limit: number = 50,
+    cursor?: string,
+    readState?: "unread",
+    status?: "request" | "accepted"
+  ): Promise<BlueskyConvosResponse> {
+    return this.conversations.listConversations(
+      accessJwt,
+      limit,
+      cursor,
+      readState,
+      status
+    );
   }
 
   // Graph methods (follow/block)
