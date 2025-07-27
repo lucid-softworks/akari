@@ -88,6 +88,9 @@ export class BlueskyApiClient {
       ...options,
       headers: {
         Authorization: `Bearer ${accessJwt}`,
+        // Include labelers to get labels in responses
+        "atproto-accept-labelers":
+          "did:plc:ar7c4by46qjdydhdevvrndac;redact, did:plc:gvkp7euswjjrctjmqwhhfzif;redact, did:plc:newitj5jo3uel7o4mnf3vj2o, did:plc:pbmxe3tfpkts72wi74weijpo, did:plc:wkoofae5uytcm7bjncmev6n6, did:plc:blwl5jhgk7eygww2bhkt56hg, did:plc:mjyeurqmqjeexbgigk3yytvb, did:plc:i65enriuag7n5fgkopbqtkyk, did:plc:zal76px7lfptnpgn4j3v6i7d, did:plc:wp7hxfjl5l4zlptn7y6774lk, did:plc:xpxsa5aviwecd7cv6bzbmr5n, did:plc:gwqqyezoxusulkn5g2nzd6t2, did:plc:xss2sw5p4bfhjqjorl7gk6z4, did:plc:mtbmlt62wuf454ztne5wacev, did:plc:bfsapbnzx54ypg2mgrflkjlx, did:plc:gclep67kb2bifr3praijwoun, did:plc:aksxl7qy5azlzfm2jstcwqtz, did:plc:yb2gz6yxpebbzlundrrfkv4d, did:plc:vfibt4bgozsdx6rnnnpha3x7",
       },
     });
   }

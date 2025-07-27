@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 
+import { Labels } from "@/components/Labels";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
@@ -30,6 +31,19 @@ type ProfileHeaderProps = {
       blocking?: string;
       blockedBy?: boolean;
     };
+    labels?: {
+      val: string;
+      src: string;
+      cts: string;
+      uri: string;
+      cid?: string;
+      neg?: boolean;
+      value?: string;
+      text?: string;
+      label?: string;
+      ver?: number;
+      exp?: string;
+    }[];
   };
   isOwnProfile?: boolean;
 };
@@ -272,6 +286,9 @@ export function ProfileHeader({
             </ThemedText>
           </ThemedView>
         )}
+
+        {/* Labels */}
+        <Labels labels={profile.labels} />
 
         {isBlockedBy && (
           <ThemedView style={styles.blockedMessage}>

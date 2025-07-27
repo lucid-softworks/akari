@@ -144,6 +144,7 @@ export default function ProfileScreen() {
             banner: profile?.banner,
             did: profile?.did,
             viewer: profile?.viewer,
+            labels: profile?.labels,
           }}
           isOwnProfile={true}
         />

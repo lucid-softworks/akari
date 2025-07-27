@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Labels } from "@/components/Labels";
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -175,6 +176,7 @@ export default function SearchScreen() {
                 {profile.description}
               </ThemedText>
             )}
+            <Labels labels={profile.labels} maxLabels={3} />
           </ThemedView>
         </ThemedView>
       </TouchableOpacity>
