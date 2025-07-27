@@ -1,10 +1,10 @@
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
+import { ProfileHeader } from "@/components/ProfileHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
@@ -75,60 +75,17 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Banner */}
-      {profile?.banner && (
-        <ThemedView style={styles.banner}>
-          <Image
-            source={{ uri: profile.banner }}
-            style={styles.bannerImage}
-            contentFit="cover"
-          />
-        </ThemedView>
-      )}
-
-      {/* Profile Header */}
-      <ThemedView
-        style={[styles.profileHeader, { borderBottomColor: borderColor }]}
-      >
-        {/* Avatar */}
-        <View style={styles.avatarContainer}>
-          {profile?.avatar ? (
-            <View style={styles.avatar}>
-              <Image
-                source={{ uri: profile.avatar }}
-                style={styles.avatarImage}
-                contentFit="cover"
-              />
-            </View>
-          ) : (
-            <View style={styles.avatar}>
-              <View style={styles.avatarFallbackContainer}>
-                <ThemedText style={styles.avatarFallback}>
-                  {(profile?.displayName ||
-                    userData.handle ||
-                    "U")[0].toUpperCase()}
-                </ThemedText>
-              </View>
-            </View>
-          )}
-        </View>
-
-        <ThemedView style={styles.profileInfo}>
-          <ThemedText style={styles.displayName}>
-            {profile?.displayName || userData.handle}
-          </ThemedText>
-          <ThemedText style={styles.handle}>@{userData.handle}</ThemedText>
-          {profile?.description && (
-            <ThemedText style={styles.description}>
-              {profile.description}
-            </ThemedText>
-          )}
-        </ThemedView>
-
-        <ThemedView style={styles.logoutButton} onTouchEnd={handleLogout}>
-          <ThemedText style={styles.logoutButtonText}>Disconnect</ThemedText>
-        </ThemedView>
-      </ThemedView>
+      <ProfileHeader
+        profile={{
+          avatar: profile?.avatar,
+          displayName: profile?.displayName || userData.handle || "",
+          handle: userData.handle || "",
+          description: profile?.description,
+          banner: profile?.banner,
+        }}
+        showLogoutButton={true}
+        onLogout={handleLogout}
+      />
 
       {/* Posts Section */}
       <ThemedView
@@ -157,81 +114,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  banner: {
-    height: 120,
-    backgroundColor: "#f0f0f0",
-  },
-  bannerImage: {
-    flex: 1,
-  },
-  profileHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    borderBottomWidth: 0.5,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-  },
-  avatarContainer: {
-    marginTop: -30,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 3,
-    borderColor: "white",
-    overflow: "hidden",
-    backgroundColor: "transparent",
-  },
-  avatarImage: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-  },
-  avatarFallbackContainer: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarFallback: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-  profileInfo: {
-    flex: 1,
-    gap: 4,
-  },
-  displayName: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  handle: {
-    fontSize: 16,
-    opacity: 0.7,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 20,
-    marginTop: 4,
-  },
-  logoutButton: {
-    backgroundColor: "#dc3545",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  logoutButtonText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "600",
   },
   postsSection: {
     paddingHorizontal: 16,
