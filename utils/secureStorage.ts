@@ -17,6 +17,7 @@ export const STORAGE_KEYS = {
   USER_HANDLE: "user_handle",
   CURRENT_ACCOUNT_ID: "current_account_id",
   ACCOUNTS: "accounts",
+  SELECTED_FEED: "selected_feed",
 } as const;
 
 // Type for storage keys

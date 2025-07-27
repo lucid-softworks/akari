@@ -14,11 +14,11 @@ import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFeeds } from "@/hooks/queries/useFeeds";
+import { useSelectedFeed } from "@/hooks/useSelectedFeed";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 
 export default function DiscoverScreen() {
-  const [selectedFeed, setSelectedFeed] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
@@ -67,6 +67,11 @@ export default function DiscoverScreen() {
     },
     ...(feedsData?.feeds || []),
   ];
+
+  // Use the custom hook for selected feed management
+  const { selectedFeed, setSelectedFeed, isInitialized } = useSelectedFeed(
+    allFeeds[0]?.uri || ""
+  );
 
   // Handle feed selection with scroll to top
   const handleFeedSelection = (feedUri: string) => {
@@ -152,7 +157,7 @@ export default function DiscoverScreen() {
     );
   };
 
-  if (feedsLoading) {
+  if (feedsLoading || !isInitialized) {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
@@ -211,7 +216,7 @@ export default function DiscoverScreen() {
       </ScrollView>
 
       {/* Feed Content */}
-      {selectedFeed ? (
+      {selectedFeed && isInitialized ? (
         <FlatList
           ref={flatListRef}
           data={allPosts}
