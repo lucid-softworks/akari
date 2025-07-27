@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { FlatList, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -45,6 +45,9 @@ export default function ProfileScreen() {
         likeCount: item.likeCount || 0,
         commentCount: item.replyCount || 0,
         repostCount: item.repostCount || 0,
+      }}
+      onPress={() => {
+        router.push(`/post/${encodeURIComponent(item.uri)}`);
       }}
     />
   );

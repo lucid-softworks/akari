@@ -70,6 +70,9 @@ export default function ProfileScreen() {
         commentCount: item.replyCount || 0,
         repostCount: item.repostCount || 0,
       }}
+      onPress={() => {
+        router.push(`/post/${encodeURIComponent(item.uri)}`);
+      }}
     />
   );
 
