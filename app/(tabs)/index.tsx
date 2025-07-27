@@ -5,18 +5,19 @@ import { Alert, StyleSheet } from "react-native";
 import { ThemedCard } from "@/components/ThemedCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useAuthStatus } from "@/hooks/useBlueskyMutations";
 import { jwtStorage } from "@/utils/secureStorage";
 
 export default function HomeScreen() {
+  const { data: authData, isLoading } = useAuthStatus();
   const userData = jwtStorage.getUserData();
-  const isAuthenticated = jwtStorage.isAuthenticated();
 
   // Handle navigation in useEffect to avoid React warnings
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isLoading && !authData?.isAuthenticated) {
       router.replace("/(auth)/signin");
     }
-  }, [isAuthenticated]);
+  }, [authData?.isAuthenticated, isLoading]);
 
   const handleLogout = () => {
     Alert.alert(
@@ -39,8 +40,8 @@ export default function HomeScreen() {
     );
   };
 
-  // Don't render anything if not authenticated (navigation will happen in useEffect)
-  if (!isAuthenticated) {
+  // Don't render anything if not authenticated or still loading
+  if (isLoading || !authData?.isAuthenticated) {
     return null;
   }
 
@@ -59,11 +60,11 @@ export default function HomeScreen() {
         <ThemedText type="subtitle">Bluesky Account</ThemedText>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>Handle:</ThemedText>
-          <ThemedText style={styles.value}>{userData.email}</ThemedText>
+          <ThemedText style={styles.value}>{userData.handle}</ThemedText>
         </ThemedView>
         <ThemedView style={styles.infoRow}>
-          <ThemedText style={styles.label}>User ID:</ThemedText>
-          <ThemedText style={styles.value}>{userData.userId}</ThemedText>
+          <ThemedText style={styles.label}>DID:</ThemedText>
+          <ThemedText style={styles.value}>{userData.did}</ThemedText>
         </ThemedView>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>Status:</ThemedText>

@@ -13,8 +13,8 @@ export const secureStorage = new MMKV({
 export const STORAGE_KEYS = {
   JWT_TOKEN: "jwt_token",
   REFRESH_TOKEN: "refresh_token",
-  USER_ID: "user_id",
-  USER_EMAIL: "user_email",
+  USER_DID: "user_did",
+  USER_HANDLE: "user_handle",
 } as const;
 
 // Type for storage keys
@@ -111,21 +111,21 @@ export const jwtStorage = {
   clearAuth: (): void => {
     secureStorageUtils.delete("JWT_TOKEN");
     secureStorageUtils.delete("REFRESH_TOKEN");
-    secureStorageUtils.delete("USER_ID");
-    secureStorageUtils.delete("USER_EMAIL");
+    secureStorageUtils.delete("USER_DID");
+    secureStorageUtils.delete("USER_HANDLE");
   },
 
   // Save user data
-  setUserData: (userId: string, email: string): void => {
-    secureStorageUtils.set("USER_ID", userId);
-    secureStorageUtils.set("USER_EMAIL", email);
+  setUserData: (did: string, handle: string): void => {
+    secureStorageUtils.set("USER_DID", did);
+    secureStorageUtils.set("USER_HANDLE", handle);
   },
 
   // Get user data
-  getUserData: (): { userId: string | null; email: string | null } => {
+  getUserData: (): { did: string | null; handle: string | null } => {
     return {
-      userId: secureStorageUtils.get("USER_ID"),
-      email: secureStorageUtils.get("USER_EMAIL"),
+      did: secureStorageUtils.get("USER_DID"),
+      handle: secureStorageUtils.get("USER_HANDLE"),
     };
   },
 };

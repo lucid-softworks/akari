@@ -88,8 +88,8 @@ To integrate with your backend API:
 import { jwtStorage } from "@/utils/secureStorage";
 
 // After successful login
-jwtStorage.setToken(response.jwtToken);
-jwtStorage.setUserData(user.id, user.email);
+jwtStorage.setToken(response.accessJwt);
+jwtStorage.setUserData(response.did, response.handle);
 
 // For API calls
 const token = jwtStorage.getToken();

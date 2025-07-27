@@ -12,7 +12,7 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { jwtStorage } from "@/utils/secureStorage";
+import { useSignIn } from "@/hooks/useBlueskyMutations";
 
 type AuthMode = "signin" | "signup";
 
@@ -20,7 +20,10 @@ export default function AuthScreen() {
   const [mode, setMode] = useState<AuthMode>("signin");
   const [handle, setHandle] = useState("");
   const [appPassword, setAppPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [pdsUrl, setPdsUrl] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const signInMutation = useSignIn();
 
   const validateHandle = (handle: string) => {
     // Bluesky handles can be @username.bsky.social or just username
@@ -39,32 +42,12 @@ export default function AuthScreen() {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      // TODO: Replace with your actual Bluesky API call
-      // const response = await signInToBluesky(handle, appPassword);
-
-      // For demo purposes, simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock successful Bluesky response
-      const mockResponse = {
-        accessJwt:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-        refreshJwt: "refresh-token-123",
-        handle: handle.includes("@") ? handle : `@${handle}`,
-        did: "did:plc:user123",
-        user: {
-          id: "user123",
-          handle: handle.includes("@") ? handle : `@${handle}`,
-        },
-      };
-
-      // Store tokens securely
-      jwtStorage.setToken(mockResponse.accessJwt);
-      jwtStorage.setRefreshToken(mockResponse.refreshJwt);
-      jwtStorage.setUserData(mockResponse.user.id, mockResponse.user.handle);
+      await signInMutation.mutateAsync({
+        identifier: handle,
+        password: appPassword,
+        pdsUrl: pdsUrl || undefined,
+      });
 
       Alert.alert("Success", "Signed in to Bluesky successfully!", [
         {
@@ -73,12 +56,13 @@ export default function AuthScreen() {
         },
       ]);
     } catch (error) {
+      console.error("Sign in error:", error);
       Alert.alert(
         "Error",
-        "Sign in failed. Please check your handle and app password."
+        error instanceof Error
+          ? error.message
+          : "Sign in failed. Please check your handle and app password."
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -98,32 +82,13 @@ export default function AuthScreen() {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      // TODO: Replace with your actual Bluesky API call
-      // const response = await signUpToBluesky(handle, appPassword);
-
-      // For demo purposes, simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock successful Bluesky response
-      const mockResponse = {
-        accessJwt:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-        refreshJwt: "refresh-token-123",
-        handle: handle.includes("@") ? handle : `@${handle}`,
-        did: "did:plc:user123",
-        user: {
-          id: "user123",
-          handle: handle.includes("@") ? handle : `@${handle}`,
-        },
-      };
-
-      // Store tokens securely
-      jwtStorage.setToken(mockResponse.accessJwt);
-      jwtStorage.setRefreshToken(mockResponse.refreshJwt);
-      jwtStorage.setUserData(mockResponse.user.id, mockResponse.user.handle);
+      // For signup, we also use createSession since Bluesky accounts are created via web
+      await signInMutation.mutateAsync({
+        identifier: handle,
+        password: appPassword,
+        pdsUrl: pdsUrl || undefined,
+      });
 
       Alert.alert("Success", "Bluesky account connected successfully!", [
         {
@@ -132,9 +97,13 @@ export default function AuthScreen() {
         },
       ]);
     } catch (error) {
-      Alert.alert("Error", "Sign up failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+      console.error("Sign up error:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error
+          ? error.message
+          : "Sign up failed. Please try again."
+      );
     }
   };
 
@@ -146,6 +115,7 @@ export default function AuthScreen() {
   };
 
   const isSignUp = mode === "signup";
+  const isLoading = signInMutation.isPending;
 
   return (
     <KeyboardAvoidingView
@@ -200,6 +170,36 @@ export default function AuthScreen() {
                 Use an app password from your Bluesky account settings
               </ThemedText>
             </ThemedView>
+
+            <TouchableOpacity
+              style={styles.advancedToggle}
+              onPress={() => setShowAdvanced(!showAdvanced)}
+            >
+              <ThemedText style={styles.advancedToggleText}>
+                {showAdvanced ? "Hide" : "Show"} Advanced Options
+              </ThemedText>
+            </TouchableOpacity>
+
+            {showAdvanced && (
+              <ThemedView style={styles.inputContainer}>
+                <ThemedText style={styles.label}>
+                  Custom PDS Server (Optional)
+                </ThemedText>
+                <TextInput
+                  style={styles.input}
+                  value={pdsUrl}
+                  onChangeText={setPdsUrl}
+                  placeholder="https://your-pds.com (leave empty for default)"
+                  placeholderTextColor="#999"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="off"
+                />
+                <ThemedText style={styles.helperText}>
+                  Use a custom Personal Data Server (default: bsky.social)
+                </ThemedText>
+              </ThemedView>
+            )}
 
             <TouchableOpacity
               style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -295,6 +295,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.6,
     fontStyle: "italic",
+  },
+  advancedToggle: {
+    paddingVertical: 8,
+  },
+  advancedToggleText: {
+    fontSize: 14,
+    color: "#007AFF",
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#007AFF",
