@@ -39,6 +39,9 @@ export default function ProfileScreen() {
 
   const isOwnProfile = currentUser?.handle === profile?.handle;
 
+  // For debugging - you can temporarily set this to true to test
+  // const isOwnProfile = true;
+
   return (
     <SafeAreaView style={styles.container}>
       <ThemedView style={styles.container}>

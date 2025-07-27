@@ -49,7 +49,10 @@ export default function ProfileScreen() {
             handle: userData.handle || "",
             description: profile?.description,
             banner: profile?.banner,
+            did: profile?.did,
+            viewer: profile?.viewer,
           }}
+          isOwnProfile={true}
         />
 
         {/* Posts Section */}

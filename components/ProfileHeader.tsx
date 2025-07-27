@@ -55,14 +55,6 @@ export function ProfileHeader({
   const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
 
-  // Debug logging
-  console.log("ProfileHeader:", {
-    isOwnProfile,
-    handle: profile.handle,
-    isBlockedBy,
-    shouldShowButtons: !isOwnProfile && !isBlockedBy,
-  });
-
   const handleFollow = async () => {
     if (!profile.did) return;
 
@@ -202,17 +194,17 @@ export function ProfileHeader({
           </ThemedView>
 
           {/* Action Buttons */}
-          {!isOwnProfile && !isBlockedBy && (
-            <ThemedView style={styles.actionButtons}>
-              {/* Search Button */}
-              <TouchableOpacity
-                style={[styles.iconButton, { borderColor: borderColor }]}
-                onPress={handleSearchPosts}
-              >
-                <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
-              </TouchableOpacity>
+          <ThemedView style={styles.actionButtons}>
+            {/* Search Button - Always show */}
+            <TouchableOpacity
+              style={[styles.iconButton, { borderColor: borderColor }]}
+              onPress={handleSearchPosts}
+            >
+              <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
+            </TouchableOpacity>
 
-              {/* Dropdown Menu */}
+            {/* Dropdown Menu - Only show for other profiles */}
+            {!isOwnProfile && !isBlockedBy && (
               <ThemedView style={styles.dropdownContainer}>
                 <TouchableOpacity
                   style={[styles.iconButton, { borderColor: borderColor }]}
@@ -268,8 +260,8 @@ export function ProfileHeader({
                   </ThemedView>
                 )}
               </ThemedView>
-            </ThemedView>
-          )}
+            )}
+          </ThemedView>
         </View>
 
         {/* Description - Full Width */}
