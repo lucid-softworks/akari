@@ -62,7 +62,14 @@ export default function MessagesScreen() {
       }}
     >
       <ThemedView style={styles.conversationContent}>
-        <ThemedView style={styles.avatarContainer}>
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={() => {
+            // Navigate to profile when avatar is clicked
+            router.push(`/profile/${encodeURIComponent(item.handle)}`);
+          }}
+          activeOpacity={0.7}
+        >
           {item.avatar ? (
             <ThemedView style={styles.avatar}>
               <Image
@@ -78,7 +85,7 @@ export default function MessagesScreen() {
               </ThemedText>
             </ThemedView>
           )}
-        </ThemedView>
+        </TouchableOpacity>
 
         <ThemedView style={styles.conversationInfo}>
           <ThemedView style={styles.conversationHeader}>

@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -224,11 +225,30 @@ export default function ConversationScreen() {
             >
               <IconSymbol name="chevron.left" size={24} color="#007AFF" />
             </TouchableOpacity>
-            <ThemedView style={styles.headerInfo}>
-              <ThemedText style={styles.headerTitle}>
-                {decodeURIComponent(handle)}
-              </ThemedText>
-            </ThemedView>
+            <TouchableOpacity
+              style={styles.headerInfo}
+              onPress={() => {
+                // Navigate to profile when header is clicked
+                router.push(`/profile/${encodeURIComponent(handle)}`);
+              }}
+              activeOpacity={0.7}
+            >
+              {conversation?.avatar && (
+                <Image
+                  source={{ uri: conversation.avatar }}
+                  style={styles.headerAvatar}
+                  contentFit="cover"
+                />
+              )}
+              <ThemedView style={styles.headerTextContainer}>
+                <ThemedText style={styles.headerTitle}>
+                  {conversation?.displayName || decodeURIComponent(handle)}
+                </ThemedText>
+                <ThemedText style={styles.headerHandle}>
+                  @{decodeURIComponent(handle)}
+                </ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
           </ThemedView>
 
           {/* Messages */}
@@ -318,11 +338,25 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   headerInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 12,
+  },
+  headerTextContainer: {
     flex: 1,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
+  },
+  headerHandle: {
+    fontSize: 14,
+    opacity: 0.6,
   },
   messagesList: {
     flex: 1,
