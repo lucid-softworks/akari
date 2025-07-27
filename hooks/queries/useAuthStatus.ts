@@ -7,8 +7,12 @@ import { useQuery } from "@tanstack/react-query";
  * Validates stored tokens and returns current auth state
  */
 export function useAuthStatus() {
+  // Get current user data for query key
+  const currentUser = jwtStorage.getUserData();
+  const currentUserDid = currentUser?.did;
+
   return useQuery({
-    queryKey: ["auth"],
+    queryKey: ["auth", currentUserDid],
     queryFn: async () => {
       const token = jwtStorage.getToken();
       const refreshToken = jwtStorage.getRefreshToken();

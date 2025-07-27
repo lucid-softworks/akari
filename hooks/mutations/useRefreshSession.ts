@@ -28,8 +28,8 @@ export function useRefreshSession() {
       jwtStorage.setRefreshToken(session.refreshJwt);
       jwtStorage.setUserData(session.did, session.handle);
 
-      // Invalidate auth queries
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      // Invalidate auth queries with the new user-specific key
+      queryClient.invalidateQueries({ queryKey: ["auth", session.did] });
     },
   });
 }

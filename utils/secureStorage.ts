@@ -197,11 +197,6 @@ export const jwtStorage = {
     accounts.push(newAccount);
     secureStorageUtils.setJSON("ACCOUNTS", accounts);
 
-    // Set as current account if it's the first one
-    if (accounts.length === 1) {
-      secureStorageUtils.set("CURRENT_ACCOUNT_ID", newAccount.id);
-    }
-
     return newAccount.id;
   },
 

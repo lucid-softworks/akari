@@ -55,6 +55,16 @@ export default function AuthScreen() {
 
       // If adding account, store it in multi-account system
       if (isAddingAccount) {
+        const accountId = jwtStorage.addAccount({
+          did: result.did,
+          handle: result.handle,
+          jwtToken: result.accessJwt,
+          refreshToken: result.refreshJwt,
+        });
+
+        // Set the newly added account as current
+        jwtStorage.switchAccount(accountId);
+
         Alert.alert("Success", "Account added successfully!", [
           {
             text: "OK",
@@ -117,6 +127,9 @@ export default function AuthScreen() {
           jwtToken: result.accessJwt,
           refreshToken: result.refreshJwt,
         });
+
+        // Set the newly added account as current
+        jwtStorage.switchAccount(accountId);
 
         Alert.alert("Success", "Account added successfully!", [
           {

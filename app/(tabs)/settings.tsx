@@ -9,7 +9,11 @@ import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
-import { jwtStorage, type Account } from "@/utils/secureStorage";
+import {
+  jwtStorage,
+  secureStorageUtils,
+  type Account,
+} from "@/utils/secureStorage";
 
 export default function SettingsScreen() {
   const { data: authData, isLoading } = useAuthStatus();
@@ -125,18 +129,19 @@ export default function SettingsScreen() {
 
   const handleLogout = () => {
     Alert.alert(
-      "Disconnect Bluesky",
-      "Are you sure you want to disconnect your Bluesky account?",
+      "Disconnect All Accounts",
+      "Are you sure you want to disconnect all Bluesky accounts? This will clear all stored data.",
       [
         {
           text: "Cancel",
           style: "cancel",
         },
         {
-          text: "Disconnect",
+          text: "Disconnect All",
           style: "destructive",
           onPress: () => {
-            jwtStorage.clearAuth();
+            // Clear all secure storage data
+            secureStorageUtils.clear();
             router.replace("/(auth)/signin");
           },
         },

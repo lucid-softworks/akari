@@ -19,8 +19,12 @@ export function useMessages(
   limit: number = 50,
   enabled: boolean = true
 ) {
+  // Get current user data for query key
+  const currentUser = jwtStorage.getUserData();
+  const currentUserDid = currentUser?.did;
+
   return useInfiniteQuery({
-    queryKey: ["messages", convoId, limit],
+    queryKey: ["messages", convoId, limit, currentUserDid],
     queryFn: async ({ pageParam }) => {
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
@@ -29,7 +33,9 @@ export function useMessages(
         "Fetching messages for conversation:",
         convoId,
         "page:",
-        pageParam
+        pageParam,
+        "user:",
+        currentUserDid
       );
 
       try {
@@ -85,6 +91,10 @@ export function useMessages(
           errorType = "permission";
           errorMessage =
             "Access to messages is not allowed with this app password";
+        } else if (error?.message?.includes("Bad token scope")) {
+          errorType = "permission";
+          errorMessage =
+            "Your app password doesn't have chat permissions. Please create a new app password with chat access in your Bluesky settings.";
         } else if (
           error?.message?.includes("network") ||
           error?.code === "NETWORK_ERROR"
@@ -107,7 +117,8 @@ export function useMessages(
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
-    enabled: enabled && !!jwtStorage.getToken() && !!convoId,
+    enabled:
+      enabled && !!jwtStorage.getToken() && !!convoId && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: any) => {
       // Don't retry permission errors
