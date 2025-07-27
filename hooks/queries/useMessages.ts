@@ -3,88 +3,79 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 
-type ConversationError = {
+type MessageError = {
   type: "permission" | "network" | "unknown";
   message: string;
 };
 
 /**
- * Infinite query hook for fetching conversations with pagination
- * @param limit - Number of conversations to fetch per page (1-100, default: 50)
- * @param readState - Filter by read state ("unread")
- * @param status - Filter by status ("request" or "accepted")
+ * Infinite query hook for fetching messages in a conversation
+ * @param convoId - The conversation ID
+ * @param limit - Number of messages to fetch per page (1-100, default: 50)
  * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useConversations(
+export function useMessages(
+  convoId: string,
   limit: number = 50,
-  readState?: "unread",
-  status?: "request" | "accepted",
   enabled: boolean = true
 ) {
   return useInfiniteQuery({
-    queryKey: ["conversations", limit, readState, status],
+    queryKey: ["messages", convoId, limit],
     queryFn: async ({ pageParam }) => {
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      console.log("Fetching conversations page:", pageParam);
+      console.log(
+        "Fetching messages for conversation:",
+        convoId,
+        "page:",
+        pageParam
+      );
 
       try {
-        const response = await blueskyApi.listConversations(
+        const response = await blueskyApi.getMessages(
           token,
+          convoId,
           limit,
-          pageParam, // cursor
-          readState,
-          status
+          pageParam // cursor
         );
 
         console.log(
-          "Conversations API response:",
+          "Messages API response:",
           JSON.stringify(response, null, 2)
         );
 
         // Transform the data to match our UI needs
-        const conversations = response.convos.map((convo) => {
-          // Find the other member (not the current user)
+        const messages = response.messages.map((message) => {
           const currentUser = jwtStorage.getUserData();
-          const otherMember = convo.members.find(
-            (member) => member.did !== currentUser.did
-          );
-
-          if (!otherMember) {
-            throw new Error("No other member found in conversation");
-          }
+          const isFromMe = message.sender.did === currentUser.did;
 
           return {
-            id: convo.id,
-            convoId: convo.id, // Keep the conversation ID for message fetching
-            handle: otherMember.handle,
-            displayName: otherMember.displayName || otherMember.handle,
-            avatar: otherMember.avatar,
-            lastMessage: convo.lastMessage?.text || "No messages yet",
-            timestamp: convo.lastMessage?.sentAt
-              ? new Date(convo.lastMessage.sentAt).toLocaleDateString()
-              : "No messages",
-            unreadCount: convo.unreadCount,
-            status: convo.status,
-            muted: convo.muted,
+            id: message.id,
+            text: message.text || "",
+            timestamp: new Date(message.sentAt).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            isFromMe,
+            sentAt: message.sentAt,
           };
         });
 
-        console.log("Transformed conversations:", conversations);
+        console.log("Transformed messages:", messages);
 
         return {
-          conversations,
+          messages,
           cursor: response.cursor,
         };
       } catch (error: any) {
-        console.error("Conversations API error:", error);
+        console.error("Messages API error:", error);
         console.error("Error response:", error?.response);
         console.error("Error message:", error?.message);
 
         // Determine the type of error
-        let errorType: ConversationError["type"] = "unknown";
-        let errorMessage = "Failed to load conversations";
+        let errorType: MessageError["type"] = "unknown";
+        let errorMessage = "Failed to load messages";
 
         if (error?.response?.status === 401) {
           errorType = "permission";
@@ -106,17 +97,17 @@ export function useConversations(
           errorMessage = "Server error. Please try again later";
         }
 
-        const conversationError: ConversationError = {
+        const messageError: MessageError = {
           type: errorType,
           message: errorMessage,
         };
 
-        throw conversationError;
+        throw messageError;
       }
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
-    enabled: enabled && !!jwtStorage.getToken(),
+    enabled: enabled && !!jwtStorage.getToken() && !!convoId,
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: any) => {
       // Don't retry permission errors

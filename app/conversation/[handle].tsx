@@ -11,6 +11,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useConversations } from "@/hooks/queries/useConversations";
+import { useMessages } from "@/hooks/queries/useMessages";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -19,6 +21,12 @@ type Message = {
   text: string;
   timestamp: string;
   isFromMe: boolean;
+  sentAt: string;
+};
+
+type MessageError = {
+  type: "permission" | "network" | "unknown";
+  message: string;
 };
 
 export default function ConversationScreen() {
@@ -31,27 +39,21 @@ export default function ConversationScreen() {
   const textColor = useThemeColor({}, "text");
   const iconColor = useThemeColor({}, "icon");
 
-  // Mock messages - replace with actual API calls
-  const messages: Message[] = [
-    {
-      id: "1",
-      text: "Hey, how are you doing?",
-      timestamp: "2:30 PM",
-      isFromMe: false,
-    },
-    {
-      id: "2",
-      text: "I'm doing great! How about you?",
-      timestamp: "2:32 PM",
-      isFromMe: true,
-    },
-    {
-      id: "3",
-      text: "Pretty good! Just working on some projects.",
-      timestamp: "2:35 PM",
-      isFromMe: false,
-    },
-  ];
+  // Get the conversation ID from the conversations list
+  const { data: conversationsData } = useConversations();
+  const conversation = conversationsData?.pages
+    .flatMap((page) => page.conversations)
+    .find((conv) => conv.handle === decodeURIComponent(handle));
+
+  // Fetch messages for this conversation
+  const {
+    data: messagesData,
+    isLoading: messagesLoading,
+    error: messagesError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMessages(conversation?.convoId || "", 50, !!conversation?.convoId);
 
   const handleSendMessage = () => {
     if (messageText.trim()) {
@@ -97,6 +99,92 @@ export default function ConversationScreen() {
     </ThemedView>
   );
 
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+
+    return (
+      <ThemedView style={styles.loadingFooter}>
+        <ThemedText style={styles.loadingText}>
+          Loading more messages...
+        </ThemedText>
+      </ThemedView>
+    );
+  };
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  // Show loading state while finding conversation
+  if (!conversation) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+          <ThemedView
+            style={[styles.header, { borderBottomColor: borderColor }]}
+          >
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+            </TouchableOpacity>
+            <ThemedView style={styles.headerInfo}>
+              <ThemedText style={styles.headerTitle}>
+                {decodeURIComponent(handle)}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+          <ThemedView style={styles.loadingState}>
+            <ThemedText style={styles.loadingText}>
+              Loading conversation...
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+      </SafeAreaView>
+    );
+  }
+
+  // Show error state
+  if (messagesError) {
+    const messageError = messagesError as MessageError;
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+          <ThemedView
+            style={[styles.header, { borderBottomColor: borderColor }]}
+          >
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+            </TouchableOpacity>
+            <ThemedView style={styles.headerInfo}>
+              <ThemedText style={styles.headerTitle}>
+                {decodeURIComponent(handle)}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+          <ThemedView style={styles.errorState}>
+            <ThemedText style={styles.errorTitle}>
+              Error loading messages
+            </ThemedText>
+            <ThemedText style={styles.errorSubtitle}>
+              {messageError.message}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+      </SafeAreaView>
+    );
+  }
+
+  // Flatten all pages of messages into a single array
+  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
+
   return (
     <SafeAreaView style={styles.container}>
       <ThemedView style={styles.container}>
@@ -116,14 +204,26 @@ export default function ConversationScreen() {
         </ThemedView>
 
         {/* Messages */}
-        <FlatList
-          data={messages}
-          renderItem={renderMessage}
-          keyExtractor={(item) => item.id}
-          style={styles.messagesList}
-          contentContainerStyle={styles.messagesContent}
-          showsVerticalScrollIndicator={false}
-        />
+        {messagesLoading ? (
+          <ThemedView style={styles.loadingState}>
+            <ThemedText style={styles.loadingText}>
+              Loading messages...
+            </ThemedText>
+          </ThemedView>
+        ) : (
+          <FlatList
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id}
+            style={styles.messagesList}
+            contentContainerStyle={styles.messagesContent}
+            showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={renderFooter}
+            inverted={true} // Show newest messages at the bottom
+          />
+        )}
 
         {/* Message Input */}
         <ThemedView
@@ -245,5 +345,34 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     opacity: 0.5,
+  },
+  loadingState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingFooter: {
+    paddingVertical: 20,
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: 16,
+    opacity: 0.6,
+  },
+  errorState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 32,
+  },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  errorSubtitle: {
+    fontSize: 16,
+    opacity: 0.6,
+    textAlign: "center",
   },
 });

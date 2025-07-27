@@ -170,6 +170,14 @@ export type BlueskyConvoMessage = {
 };
 
 /**
+ * Bluesky messages response
+ */
+export type BlueskyMessagesResponse = {
+  cursor?: string;
+  messages: BlueskyConvoMessage[];
+};
+
+/**
  * Bluesky conversation
  */
 export type BlueskyConvo = {
