@@ -329,14 +329,17 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     gap: 8,
+    borderWidth: 1,
+    borderColor: "#e1e5e9",
   },
   infoTitle: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#11181C",
   },
   infoText: {
     fontSize: 14,
     lineHeight: 20,
-    opacity: 0.8,
+    color: "#374151",
   },
 });
