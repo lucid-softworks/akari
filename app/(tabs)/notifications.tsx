@@ -204,27 +204,37 @@ function groupNotifications(notifications: any[]): GroupedNotification[] {
   const groups = new Map<string, GroupedNotification>();
 
   notifications.forEach((notification) => {
-    const key = `${notification.reason}_${
+    // Create a key for grouping by type and subject
+    const groupKey = `${notification.reason}_${
       notification.reasonSubject || "none"
     }`;
 
-    if (groups.has(key)) {
-      const group = groups.get(key)!;
-      group.authors.push({
-        did: notification.author.did,
-        handle: notification.author.handle,
-        displayName: notification.author.displayName,
-        avatar: notification.author.avatar,
-      });
-      group.count++;
+    if (groups.has(groupKey)) {
+      const group = groups.get(groupKey)!;
+      // Check if this author is already in the group
+      const existingAuthor = group.authors.find(
+        (author) => author.did === notification.author.did
+      );
+
+      if (!existingAuthor) {
+        // Add new author to the group
+        group.authors.push({
+          did: notification.author.did,
+          handle: notification.author.handle,
+          displayName: notification.author.displayName,
+          avatar: notification.author.avatar,
+        });
+        group.count++;
+      }
+
       group.isRead = group.isRead && notification.isRead;
       // Keep the latest timestamp
       if (new Date(notification.indexedAt) > new Date(group.latestTimestamp)) {
         group.latestTimestamp = notification.indexedAt;
       }
     } else {
-      groups.set(key, {
-        id: key,
+      groups.set(groupKey, {
+        id: groupKey,
         type: notification.reason as GroupedNotification["type"],
         subject: notification.reasonSubject,
         postContent: notification.postContent,
