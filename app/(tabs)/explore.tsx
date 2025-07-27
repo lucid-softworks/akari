@@ -1,110 +1,132 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 
-export default function TabTwoScreen() {
+export default function ExploreScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.header}>
+        <ThemedText type="title" style={styles.title}>
+          Explore Akari
+        </ThemedText>
+        <ThemedText style={styles.subtitle}>
+          Discover what&apos;s new and exciting
+        </ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
+
+      <ThemedView style={styles.content}>
+        <ThemedView style={styles.section}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Features
           </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+          <ThemedView style={styles.featureList}>
+            <ThemedView style={styles.featureItem}>
+              <ThemedText style={styles.featureIcon}>🔐</ThemedText>
+              <ThemedText style={styles.featureText}>
+                Secure Authentication
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.featureItem}>
+              <ThemedText style={styles.featureIcon}>🔄</ThemedText>
+              <ThemedText style={styles.featureText}>
+                TanStack Query Integration
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.featureItem}>
+              <ThemedText style={styles.featureIcon}>🎨</ThemedText>
+              <ThemedText style={styles.featureText}>
+                Themed UI Components
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.featureItem}>
+              <ThemedText style={styles.featureIcon}>📱</ThemedText>
+              <ThemedText style={styles.featureText}>
+                Cross-platform Support
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
+
+        <ThemedView style={styles.section}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Getting Started
+          </ThemedText>
+          <ThemedText style={styles.description}>
+            Welcome to Akari! This app demonstrates secure authentication using
+            encrypted storage and modern React Native development practices.
+          </ThemedText>
+          <ThemedText style={styles.description}>
+            The authentication system uses react-native-mmkv for secure token
+            storage, ensuring your data is protected with encryption.
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView style={styles.section}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Development
+          </ThemedText>
+          <ThemedText style={styles.description}>
+            This project is built with Expo Router for navigation, TanStack
+            Query for data fetching, and includes comprehensive TypeScript
+            support.
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    padding: 24,
   },
-  titleContainer: {
-    flexDirection: 'row',
+  header: {
+    alignItems: "center",
+    marginTop: 60,
+    marginBottom: 40,
     gap: 8,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 16,
+    opacity: 0.7,
+  },
+  content: {
+    gap: 32,
+  },
+  section: {
+    gap: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  featureList: {
+    gap: 16,
+  },
+  featureItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 16,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+  },
+  featureIcon: {
+    fontSize: 24,
+  },
+  featureText: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    opacity: 0.8,
   },
 });

@@ -1,6 +1,13 @@
-# Welcome to your Expo app 👋
+# Akari v2 - React Native App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a [React Native](https://reactnative.dev) project built with [Expo](https://expo.dev) that includes secure authentication and data management.
+
+## Features
+
+- 🔐 **Secure Storage** - Encrypted JWT token storage using react-native-mmkv
+- 🔄 **TanStack Query** - Efficient data fetching and caching
+- 🎨 **Themed UI** - Light/dark mode support
+- 📱 **Cross-platform** - iOS, Android, and Web support
 
 ## Get started
 
@@ -16,35 +23,141 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## 🔐 Secure Storage Configuration
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Development Setup
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+The app uses react-native-mmkv for encrypted storage of sensitive data like JWT tokens. A development encryption key is already configured.
 
-## Get a fresh project
+### Production Setup
 
-When you're ready, run:
+**IMPORTANT**: Before deploying to production, you must replace the encryption key in `utils/secureStorage.ts`:
 
-```bash
-npm run reset-project
+1. **Generate a secure encryption key**:
+
+   ```bash
+   # Generate a 32-byte random key (256 bits)
+   openssl rand -hex 32
+   ```
+
+2. **Replace the encryption key** in `utils/secureStorage.ts`:
+
+   ```typescript
+   export const secureStorage = new MMKV({
+     id: "secure-storage",
+     encryptionKey:
+       process.env.MMKV_ENCRYPTION_KEY || "your-secure-production-key-here",
+   });
+   ```
+
+3. **Set up environment variables** (recommended):
+   - Create a `.env` file (add to .gitignore)
+   - Add your encryption key: `MMKV_ENCRYPTION_KEY=your-generated-key`
+   - Use a secure key management service for production
+
+### Security Best Practices
+
+- ✅ Never commit encryption keys to version control
+- ✅ Use environment variables for production keys
+- ✅ Generate cryptographically secure random keys
+- ✅ Rotate keys periodically in production
+- ✅ Use different keys for different environments (dev/staging/prod)
+
+## Authentication System
+
+The app includes a complete authentication system with:
+
+- **Sign In/Sign Up pages** with form validation
+- **Secure JWT token storage** with encryption
+- **Automatic token persistence** across app restarts
+- **User data management** (ID, email, etc.)
+
+### Authentication Flow
+
+1. User enters credentials on sign-in/sign-up page
+2. App validates credentials and receives JWT token
+3. Token is securely stored using encrypted MMKV storage
+4. App checks for existing token on startup
+5. User remains authenticated until logout or token expiration
+
+### API Integration
+
+To integrate with your backend API:
+
+```typescript
+import { jwtStorage } from "@/utils/secureStorage";
+
+// After successful login
+jwtStorage.setToken(response.jwtToken);
+jwtStorage.setUserData(user.id, user.email);
+
+// For API calls
+const token = jwtStorage.getToken();
+// Add to Authorization header: `Bearer ${token}`
+
+// Check authentication status
+if (jwtStorage.isAuthenticated()) {
+  // User is logged in
+}
+
+// Logout
+jwtStorage.clearAuth();
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Project Structure
+
+```
+akari-v2/
+├── app/                    # Expo Router pages
+│   ├── (auth)/            # Authentication pages
+│   │   ├── signin.tsx     # Sign in page
+│   │   └── signup.tsx     # Sign up page
+│   └── (tabs)/            # Main app tabs
+├── components/             # Reusable components
+├── utils/                  # Utilities
+│   └── secureStorage.ts   # Secure storage configuration
+└── constants/              # App constants
+```
+
+## Development
+
+### Available Scripts
+
+- `npm start` - Start the development server
+- `npm run android` - Start on Android
+- `npm run ios` - Start on iOS
+- `npm run web` - Start on Web
+- `npm run lint` - Run ESLint
+
+### Environment Setup
+
+1. **Development**: Uses default encryption key
+2. **Production**: Must set `MMKV_ENCRYPTION_KEY` environment variable
+3. **Testing**: Can use different keys for different test environments
+
+## Deployment Checklist
+
+Before deploying to production:
+
+- [ ] Replace encryption key with secure random key
+- [ ] Set up environment variables for production
+- [ ] Configure your backend API endpoints
+- [ ] Test authentication flow end-to-end
+- [ ] Verify secure storage works across app restarts
+- [ ] Test on both iOS and Android devices
 
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+- [Expo documentation](https://docs.expo.dev/)
+- [React Native documentation](https://reactnative.dev/)
+- [TanStack Query documentation](https://tanstack.com/query)
+- [MMKV documentation](https://github.com/mrousavy/react-native-mmkv)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Security Notes
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- The encryption key in `utils/secureStorage.ts` is for development only
+- Never use the default key in production
+- Always use cryptographically secure random keys
+- Consider using a secure key management service for production
+- Regularly rotate encryption keys
+- Monitor for security vulnerabilities in dependencies
