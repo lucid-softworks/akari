@@ -26,11 +26,13 @@ export function useAuthorMedia(identifier: string, enabled: boolean = true) {
             (item.post.embed.$type === "app.bsky.embed.images#view" ||
               item.post.embed.$type === "app.bsky.embed.external#view" ||
               item.post.embed.$type === "app.bsky.embed.record#view" ||
+              item.post.embed.$type === "app.bsky.embed.recordWithMedia#view" ||
               item.post.embeds?.some(
                 (embed) =>
                   embed.$type === "app.bsky.embed.images#view" ||
                   embed.$type === "app.bsky.embed.external#view" ||
-                  embed.$type === "app.bsky.embed.record#view"
+                  embed.$type === "app.bsky.embed.record#view" ||
+                  embed.$type === "app.bsky.embed.recordWithMedia#view"
               ))
           );
         })

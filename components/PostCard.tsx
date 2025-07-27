@@ -7,6 +7,7 @@ import { ExternalEmbed } from "@/components/ExternalEmbed";
 import { ImageViewer } from "@/components/ImageViewer";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { VideoEmbed } from "@/components/VideoEmbed";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -41,6 +42,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
+  const [imageDimensions, setImageDimensions] = useState<{
+    [key: string]: { width: number; height: number };
+  }>({});
 
   const borderColor = useThemeColor(
     {
@@ -62,28 +66,106 @@ export function PostCard({ post, onPress }: PostCardProps) {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
   };
 
+  const handleImageLoad = (imageUrl: string, width: number, height: number) => {
+    setImageDimensions((prev) => ({
+      ...prev,
+      [imageUrl]: { width, height },
+    }));
+  };
+
   // Extract image URLs and alt text from embed data
   const getImageData = () => {
     if (!post.embed) return { urls: [], altTexts: [] };
 
     // Handle different embed types
     if (post.embed.$type === "app.bsky.embed.images") {
-      const urls = post.embed.images?.map((img: any) => img.fullsize) || [];
-      const altTexts = post.embed.images?.map((img: any) => img.alt) || [];
+      // Filter out video files, only show actual images
+      const imageFiles =
+        post.embed.images?.filter(
+          (img: any) => !img.mimeType || !img.mimeType.startsWith("video/")
+        ) || [];
+
+      const urls = imageFiles.map((img: any) => img.fullsize) || [];
+      const altTexts = imageFiles.map((img: any) => img.alt) || [];
       return { urls, altTexts };
     }
 
     // Handle other embed types that might contain images
     if (post.embed.images) {
-      const urls = post.embed.images.map((img: any) => img.fullsize);
-      const altTexts = post.embed.images.map((img: any) => img.alt);
+      // Filter out video files, only show actual images
+      const imageFiles = post.embed.images.filter(
+        (img: any) => !img.mimeType || !img.mimeType.startsWith("video/")
+      );
+
+      const urls = imageFiles.map((img: any) => img.fullsize);
+      const altTexts = imageFiles.map((img: any) => img.alt);
       return { urls, altTexts };
     }
 
     return { urls: [], altTexts: [] };
   };
 
+  // Extract video data from embed
+  const getVideoData = () => {
+    if (!post.embed) return null;
+
+    // Handle Bluesky native video embeds
+    if (post.embed.$type === "app.bsky.embed.video" && post.embed.video) {
+      return {
+        videoUrl: post.embed.video.ref?.$link,
+        thumbnailUrl: post.embed.video.ref?.$link, // Use video URL as thumbnail for now
+        altText: post.embed.video.alt || "Video",
+        aspectRatio: post.embed.aspectRatio,
+      };
+    }
+
+    // Handle image embeds that might contain videos
+    if (
+      post.embed.$type === "app.bsky.embed.images#view" &&
+      post.embed.images
+    ) {
+      // Check if any of the images are actually videos
+      const videoImages = post.embed.images.filter(
+        (img: any) => img.mimeType && img.mimeType.startsWith("video/")
+      );
+
+      if (videoImages.length > 0) {
+        return {
+          videoUrl: videoImages[0].fullsize,
+          thumbnailUrl: videoImages[0].thumb,
+          altText: videoImages[0].alt,
+        };
+      }
+    }
+
+    // Handle record with media embeds that might contain video
+    if (
+      post.embed.$type === "app.bsky.embed.recordWithMedia#view" &&
+      post.embed.media
+    ) {
+      if (
+        post.embed.media.$type === "app.bsky.embed.images#view" &&
+        post.embed.media.images
+      ) {
+        const videoImages = post.embed.media.images.filter(
+          (img: any) => img.mimeType && img.mimeType.startsWith("video/")
+        );
+
+        if (videoImages.length > 0) {
+          return {
+            videoUrl: videoImages[0].fullsize,
+            thumbnailUrl: videoImages[0].thumb,
+            altText: videoImages[0].alt,
+          };
+        }
+      }
+    }
+
+    return null;
+  };
+
   const { urls: imageUrls, altTexts } = getImageData();
+  const videoData = getVideoData();
 
   // Check if embed is a YouTube embed
   const isYouTubeEmbed = () => {
@@ -121,6 +203,39 @@ export function PostCard({ post, onPress }: PostCardProps) {
       !uri.includes("youtu.be") &&
       !uri.includes("music.youtube.com")
     );
+  };
+
+  // Check if embed is a native video embed
+  const isNativeVideoEmbed = () => {
+    return videoData !== null;
+  };
+
+  // Check if embed is an external video embed
+  const isExternalVideoEmbed = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+
+    if (!embedData) {
+      return false;
+    }
+
+    // Check for external video embeds (non-YouTube)
+    if (embedData.$type?.includes("app.bsky.embed.external")) {
+      const uri = embedData.external?.uri || "";
+      // Check if it's a video link but not YouTube
+      const isVideoLink =
+        uri.includes("vimeo.com") ||
+        uri.includes("dailymotion.com") ||
+        uri.includes("twitch.tv") ||
+        uri.includes("tiktok.com") ||
+        uri.includes(".mp4") ||
+        uri.includes(".mov") ||
+        uri.includes(".avi") ||
+        uri.includes(".webm");
+
+      return isVideoLink && !isYouTubeEmbed();
+    }
+
+    return false;
   };
 
   // Get the embed data for rendering
@@ -197,23 +312,49 @@ export function PostCard({ post, onPress }: PostCardProps) {
           {/* Render external embed if present (non-YouTube) */}
           {isExternalEmbed() && <ExternalEmbed embed={getEmbedData()} />}
 
+          {/* Render native video embed if present */}
+          {isNativeVideoEmbed() && videoData && (
+            <VideoEmbed
+              embed={videoData}
+              onClose={() => setSelectedImageIndex(null)}
+            />
+          )}
+
+          {/* Render external video embed if present */}
+          {isExternalVideoEmbed() && <VideoEmbed embed={getEmbedData()} />}
+
           {/* Render images if present */}
           {imageUrls.length > 0 && (
             <ThemedView style={styles.imagesContainer}>
-              {imageUrls.map((imageUrl: string, index: number) => (
-                <TouchableOpacity
-                  key={`${post.id}-image-${index}`}
-                  onPress={() => handleImagePress(index)}
-                  activeOpacity={0.8}
-                >
-                  <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.image}
-                    contentFit="cover"
-                    placeholder={require("@/assets/images/partial-react-logo.png")}
-                  />
-                </TouchableOpacity>
-              ))}
+              {imageUrls.map((imageUrl: string, index: number) => {
+                const dimensions = imageDimensions[imageUrl];
+                const screenWidth = 400; // Approximate screen width minus padding
+                const imageHeight = dimensions
+                  ? (dimensions.height / dimensions.width) * screenWidth
+                  : 300;
+
+                return (
+                  <TouchableOpacity
+                    key={`${post.id}-image-${index}`}
+                    onPress={() => handleImagePress(index)}
+                    activeOpacity={0.8}
+                  >
+                    <Image
+                      source={{ uri: imageUrl }}
+                      style={[styles.image, { height: imageHeight }]}
+                      contentFit="contain"
+                      placeholder={require("@/assets/images/partial-react-logo.png")}
+                      onLoad={(event) =>
+                        handleImageLoad(
+                          imageUrl,
+                          event.source.width,
+                          event.source.height
+                        )
+                      }
+                    />
+                  </TouchableOpacity>
+                );
+              })}
             </ThemedView>
           )}
         </ThemedView>
@@ -331,8 +472,20 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    aspectRatio: 16 / 9,
     borderRadius: 8,
+  },
+  videoContainer: {
+    marginTop: 8,
+    padding: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  videoPlaceholder: {
+    fontSize: 14,
+    opacity: 0.7,
+    textAlign: "center",
   },
   interactions: {
     flexDirection: "row",
