@@ -60,11 +60,23 @@ export default function ProfileScreen() {
         <ThemedText type="subtitle">Bluesky Account</ThemedText>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>Handle:</ThemedText>
-          <ThemedText style={styles.value}>{userData.handle}</ThemedText>
+          <ThemedText
+            style={styles.value}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {userData.handle}
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>DID:</ThemedText>
-          <ThemedText style={styles.value}>{userData.did}</ThemedText>
+          <ThemedText
+            style={styles.value}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {userData.did}
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>Status:</ThemedText>
@@ -86,30 +98,34 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 24,
   },
   header: {
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 40,
+    marginTop: 40,
+    marginBottom: 32,
     gap: 8,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
   },
   subtitle: {
     fontSize: 16,
     opacity: 0.7,
+    textAlign: "center",
   },
   userInfo: {
-    gap: 16,
-    marginBottom: 40,
+    gap: 20,
+    marginBottom: 32,
   },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: 4,
   },
   label: {
     fontSize: 16,
@@ -117,6 +133,9 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
+    flex: 1,
+    textAlign: "right",
+    marginLeft: 12,
   },
   authenticated: {
     color: "green",

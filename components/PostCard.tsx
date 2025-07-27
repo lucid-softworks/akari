@@ -44,13 +44,13 @@ export function PostCard({ post }: PostCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 12,
+    marginBottom: 10,
   },
   authorInfo: {
     flex: 1,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   content: {
-    marginBottom: 12,
+    marginBottom: 10,
   },
   text: {
     fontSize: 16,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   footer: {
     borderTopWidth: 1,
     borderTopColor: "#e1e5e9",
-    paddingTop: 12,
+    paddingTop: 10,
   },
   notImplemented: {
     fontSize: 12,

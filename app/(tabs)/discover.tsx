@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
@@ -19,6 +20,7 @@ export default function DiscoverScreen() {
   const [selectedFeed, setSelectedFeed] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const insets = useSafeAreaInsets();
 
   const userData = jwtStorage.getUserData();
 
@@ -130,9 +132,6 @@ export default function DiscoverScreen() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText type="title" style={styles.title}>
-            Home
-          </ThemedText>
           <ThemedText style={styles.subtitle}>Loading your feeds...</ThemedText>
         </ThemedView>
       </ThemedView>
@@ -143,9 +142,6 @@ export default function DiscoverScreen() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText type="title" style={styles.title}>
-            Home
-          </ThemedText>
           <ThemedText style={styles.subtitle}>No custom feeds found</ThemedText>
         </ThemedView>
         <ThemedView style={styles.emptyState}>
@@ -161,14 +157,7 @@ export default function DiscoverScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.header}>
-        <ThemedText type="title" style={styles.title}>
-          Home
-        </ThemedText>
-        <ThemedText style={styles.subtitle}>Your personalized feeds</ThemedText>
-      </ThemedView>
-
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       {/* Feed Tabs */}
       <ScrollView
         horizontal
@@ -253,39 +242,39 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 20,
-    paddingHorizontal: 24,
-    gap: 8,
+    marginTop: 20,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    gap: 4,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     opacity: 0.8,
     textAlign: "center",
   },
   tabsContainer: {
-    maxHeight: 60,
-    marginBottom: 16,
-    paddingVertical: 8,
+    maxHeight: 50,
+    marginBottom: 8,
+    paddingVertical: 4,
   },
   tabsContent: {
-    paddingHorizontal: 24,
-    gap: 12,
+    paddingHorizontal: 16,
+    gap: 8,
     alignItems: "center",
   },
   feedTab: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
     backgroundColor: "#f8f9fa",
     borderWidth: 1,
     borderColor: "#e9ecef",
-    marginRight: 8,
-    minWidth: 80,
+    marginRight: 6,
+    minWidth: 70,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -302,7 +291,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   feedTabText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "600",
     color: "#6c757d",
     textAlign: "center",
@@ -315,12 +304,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   feedListContent: {
-    padding: 24,
+    paddingHorizontal: 12,
     paddingBottom: 100, // Account for tab bar
   },
   loadingMore: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   loadingMoreText: {
     fontSize: 14,
