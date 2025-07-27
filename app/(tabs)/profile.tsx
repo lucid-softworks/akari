@@ -14,7 +14,6 @@ import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
 import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
-import { useBorderColor } from "@/hooks/useBorderColor";
 import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
@@ -24,7 +23,6 @@ export default function ProfileScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const userData = jwtStorage.getUserData();
   const insets = useSafeAreaInsets();
-  const borderColor = useBorderColor();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -171,6 +169,7 @@ export default function ProfileScreen() {
                 repostCount: post.repostCount || 0,
                 embed: post.embed,
                 embeds: post.embeds,
+                labels: post.labels,
               }}
               onPress={() => {
                 router.push(`/post/${encodeURIComponent(post.uri)}`);

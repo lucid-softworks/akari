@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { ExternalEmbed } from "@/components/ExternalEmbed";
 import { ImageViewer } from "@/components/ImageViewer";
+import { Labels } from "@/components/Labels";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { VideoEmbed } from "@/components/VideoEmbed";
@@ -34,6 +35,20 @@ type PostCardProps = {
       };
       text: string;
     };
+    /** Labels applied to the post */
+    labels?: {
+      val: string;
+      src: string;
+      cts: string;
+      uri: string;
+      cid?: string;
+      neg?: boolean;
+      value?: string;
+      text?: string;
+      label?: string;
+      ver?: number;
+      exp?: string;
+    }[];
   };
   onPress?: () => void;
 };
@@ -358,6 +373,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
             </ThemedView>
           )}
         </ThemedView>
+
+        {/* Labels */}
+        <Labels labels={post.labels} maxLabels={3} />
 
         <ThemedView style={styles.interactions}>
           <ThemedView style={styles.interactionItem}>

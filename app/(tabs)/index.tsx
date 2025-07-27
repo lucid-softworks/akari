@@ -154,6 +154,7 @@ export default function DiscoverScreen() {
           repostCount: item.post.repostCount || 0,
           embed: item.post.embed,
           embeds: item.post.embeds,
+          labels: item.post.labels,
           replyTo,
         }}
         onPress={() => {

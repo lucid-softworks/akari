@@ -177,6 +177,7 @@ export default function ProfileScreen() {
                       repostCount: item.repostCount || 0,
                       embed: item.embed,
                       embeds: item.embeds,
+                      labels: item.labels,
                       replyTo,
                     }}
                     onPress={() => {

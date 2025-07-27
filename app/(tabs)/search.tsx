@@ -212,6 +212,7 @@ export default function SearchScreen() {
           repostCount: post.repostCount || 0,
           embed: post.embed,
           embeds: post.embeds,
+          labels: post.labels,
           replyTo,
         }}
         onPress={() => {

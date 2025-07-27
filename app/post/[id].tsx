@@ -128,6 +128,7 @@ export default function PostDetailScreen() {
           repostCount: (item as any).repostCount || 0,
           embed: (item as any).embed,
           embeds: (item as any).embeds,
+          labels: (item as any).labels,
         }}
       />
     );
@@ -159,6 +160,7 @@ export default function PostDetailScreen() {
           repostCount: parentPost.repostCount || 0,
           embed: parentPost.embed,
           embeds: parentPost.embeds,
+          labels: parentPost.labels,
         }}
       />
     );
@@ -251,6 +253,7 @@ export default function PostDetailScreen() {
                 repostCount: mainPost?.repostCount || 0,
                 embed: mainPost?.embed,
                 embeds: mainPost?.embeds,
+                labels: mainPost?.labels,
               }}
             />
           </View>
