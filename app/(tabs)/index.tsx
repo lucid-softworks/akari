@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { Alert, StyleSheet } from "react-native";
 
+import { ThemedCard } from "@/components/ThemedCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { jwtStorage } from "@/utils/secureStorage";
@@ -54,7 +55,7 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
 
-      <ThemedView style={styles.userInfo}>
+      <ThemedCard style={styles.userInfo}>
         <ThemedText type="subtitle">Bluesky Account</ThemedText>
         <ThemedView style={styles.infoRow}>
           <ThemedText style={styles.label}>Handle:</ThemedText>
@@ -70,7 +71,7 @@ export default function HomeScreen() {
             ✅ Connected to Bluesky
           </ThemedText>
         </ThemedView>
-      </ThemedView>
+      </ThemedCard>
 
       <ThemedView style={styles.actions}>
         <ThemedView style={styles.button} onTouchEnd={handleLogout}>
@@ -101,9 +102,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   userInfo: {
-    backgroundColor: "#f8f9fa",
-    padding: 20,
-    borderRadius: 12,
     gap: 16,
     marginBottom: 40,
   },
