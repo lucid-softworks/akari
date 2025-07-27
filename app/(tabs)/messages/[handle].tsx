@@ -1,12 +1,18 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -32,12 +38,28 @@ type MessageError = {
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState("");
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const borderColor = useBorderColor();
+  const insets = useSafeAreaInsets();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, "background");
   const textColor = useThemeColor({}, "text");
   const iconColor = useThemeColor({}, "icon");
+
+  // Keyboard state
+  useEffect(() => {
+    const keyboardWillShow = () => setIsKeyboardOpen(true);
+    const keyboardWillHide = () => setIsKeyboardOpen(false);
+
+    Keyboard.addListener("keyboardWillShow", keyboardWillShow);
+    Keyboard.addListener("keyboardWillHide", keyboardWillHide);
+
+    return () => {
+      Keyboard.removeAllListeners("keyboardWillShow");
+      Keyboard.removeAllListeners("keyboardWillHide");
+    };
+  }, []);
 
   // Get the conversation ID from the conversations list
   const { data: conversationsData } = useConversations();
@@ -187,80 +209,96 @@ export default function ConversationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container}>
-        {/* Header */}
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ThemedView style={styles.container}>
+          {/* Header */}
+          <ThemedView
+            style={[styles.header, { borderBottomColor: borderColor }]}
           >
-            <IconSymbol name="chevron.left" size={24} color="#007AFF" />
-          </TouchableOpacity>
-          <ThemedView style={styles.headerInfo}>
-            <ThemedText style={styles.headerTitle}>
-              {decodeURIComponent(handle)}
-            </ThemedText>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+            </TouchableOpacity>
+            <ThemedView style={styles.headerInfo}>
+              <ThemedText style={styles.headerTitle}>
+                {decodeURIComponent(handle)}
+              </ThemedText>
+            </ThemedView>
           </ThemedView>
-        </ThemedView>
 
-        {/* Messages */}
-        {messagesLoading ? (
-          <ThemedView style={styles.loadingState}>
-            <ThemedText style={styles.loadingText}>
-              Loading messages...
-            </ThemedText>
-          </ThemedView>
-        ) : (
-          <FlatList
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={(item) => item.id}
-            style={styles.messagesList}
-            contentContainerStyle={styles.messagesContent}
-            showsVerticalScrollIndicator={false}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={renderFooter}
-            inverted={true} // Show newest messages at the bottom
-          />
-        )}
+          {/* Messages */}
+          {messagesLoading ? (
+            <ThemedView style={styles.loadingState}>
+              <ThemedText style={styles.loadingText}>
+                Loading messages...
+              </ThemedText>
+            </ThemedView>
+          ) : (
+            <FlatList
+              data={messages}
+              renderItem={renderMessage}
+              keyExtractor={(item) => item.id}
+              style={styles.messagesList}
+              contentContainerStyle={styles.messagesContent}
+              showsVerticalScrollIndicator={false}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={renderFooter}
+              inverted={true} // Show newest messages at the bottom
+            />
+          )}
 
-        {/* Message Input */}
-        <ThemedView
-          style={[styles.inputContainer, { borderTopColor: borderColor }]}
-        >
-          <TextInput
+          {/* Message Input */}
+          <ThemedView
             style={[
-              styles.textInput,
+              styles.inputContainer,
               {
-                backgroundColor: backgroundColor,
-                borderColor: borderColor,
-                color: textColor,
+                borderTopColor: borderColor,
+                paddingBottom:
+                  Platform.OS === "ios" && !isKeyboardOpen
+                    ? insets.bottom + 35
+                    : 12,
               },
             ]}
-            value={messageText}
-            onChangeText={setMessageText}
-            placeholder="Type a message..."
-            placeholderTextColor={iconColor}
-            multiline
-            maxLength={500}
-          />
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              !messageText.trim() && styles.sendButtonDisabled,
-            ]}
-            onPress={handleSendMessage}
-            disabled={!messageText.trim()}
           >
-            <IconSymbol
-              name="arrow.up.circle.fill"
-              size={32}
-              color={messageText.trim() ? "#007AFF" : "#C7C7CC"}
+            <TextInput
+              style={[
+                styles.textInput,
+                {
+                  backgroundColor: backgroundColor,
+                  borderColor: borderColor,
+                  color: textColor,
+                },
+              ]}
+              value={messageText}
+              onChangeText={setMessageText}
+              placeholder="Type a message..."
+              placeholderTextColor={iconColor}
+              multiline
+              maxLength={500}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                !messageText.trim() && styles.sendButtonDisabled,
+              ]}
+              onPress={handleSendMessage}
+              disabled={!messageText.trim()}
+            >
+              <IconSymbol
+                name="arrow.up.circle.fill"
+                size={32}
+                color={messageText.trim() ? "#007AFF" : "#C7C7CC"}
+              />
+            </TouchableOpacity>
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
@@ -9,6 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useConversations } from "@/hooks/queries/useConversations";
 import { useBorderColor } from "@/hooks/useBorderColor";
+import { Image } from "expo-image";
 
 type Conversation = {
   id: string;
@@ -57,8 +57,8 @@ export default function MessagesScreen() {
     <TouchableOpacity
       style={[styles.conversationItem, { borderBottomColor: borderColor }]}
       onPress={() => {
-        // Navigate to conversation detail
-        router.push(`/conversation/${encodeURIComponent(item.handle)}`);
+        // Navigate to conversation detail within the messages tab
+        router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
       }}
     >
       <ThemedView style={styles.conversationContent}>
@@ -193,6 +193,7 @@ export default function MessagesScreen() {
           renderItem={renderConversation}
           keyExtractor={(item) => item.id}
           style={styles.list}
+          contentContainerStyle={styles.conversationsContent}
           showsVerticalScrollIndicator={false}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
@@ -225,6 +226,9 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
+  },
+  conversationsContent: {
+    paddingBottom: 100, // Add extra padding to account for tab bar
   },
   conversationItem: {
     paddingHorizontal: 16,
