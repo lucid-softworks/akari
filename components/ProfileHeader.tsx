@@ -13,15 +13,9 @@ type ProfileHeaderProps = {
     description?: string;
     banner?: string;
   };
-  showLogoutButton?: boolean;
-  onLogout?: () => void;
 };
 
-export function ProfileHeader({
-  profile,
-  showLogoutButton,
-  onLogout,
-}: ProfileHeaderProps) {
+export function ProfileHeader({ profile }: ProfileHeaderProps) {
   const borderColor = useBorderColor();
 
   return (
@@ -72,15 +66,6 @@ export function ProfileHeader({
             </ThemedText>
             <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
           </ThemedView>
-
-          {/* Logout Button (only for user's own profile) */}
-          {showLogoutButton && onLogout && (
-            <ThemedView style={styles.logoutButton} onTouchEnd={onLogout}>
-              <ThemedText style={styles.logoutButtonText}>
-                Disconnect
-              </ThemedText>
-            </ThemedView>
-          )}
         </View>
 
         {/* Description - Full Width */}
@@ -111,7 +96,7 @@ const styles = StyleSheet.create({
   },
   avatarNameSection: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     gap: 12,
     marginBottom: 12,
   },
@@ -165,16 +150,5 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     marginTop: 4,
-  },
-  logoutButton: {
-    backgroundColor: "#dc3545",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  logoutButtonText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "600",
   },
 });

@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { FlatList, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
@@ -32,59 +32,59 @@ export default function ProfileScreen() {
     );
   }
 
-  const renderPost = ({ item }: { item: any }) => (
-    <PostCard
-      post={{
-        id: item.uri,
-        text: item.record?.text || "No text content",
-        author: {
-          handle: item.author.handle,
-          displayName: item.author.displayName,
-        },
-        createdAt: new Date(item.indexedAt).toLocaleDateString(),
-        likeCount: item.likeCount || 0,
-        commentCount: item.replyCount || 0,
-        repostCount: item.repostCount || 0,
-        embed: item.embed,
-      }}
-      onPress={() => {
-        router.push(`/post/${encodeURIComponent(item.uri)}`);
-      }}
-    />
-  );
-
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ProfileHeader
-        profile={{
-          avatar: profile.avatar,
-          displayName: profile.displayName,
-          handle: profile.handle,
-          description: profile.description,
-          banner: profile.banner,
-        }}
-      />
-
-      {/* Posts Section */}
-      <ThemedView
-        style={[styles.postsSection, { borderBottomColor: borderColor }]}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
       >
-        <ThemedText style={styles.postsTitle}>Posts</ThemedText>
-      </ThemedView>
+        <ProfileHeader
+          profile={{
+            avatar: profile.avatar,
+            displayName: profile.displayName,
+            handle: profile.handle,
+            description: profile.description,
+            banner: profile.banner,
+          }}
+        />
 
-      {/* Posts List */}
-      <FlatList
-        data={profile.posts || []}
-        renderItem={renderPost}
-        keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
-        style={styles.postsList}
-        contentContainerStyle={styles.postsListContent}
-        ListEmptyComponent={
+        {/* Posts Section */}
+        <ThemedView
+          style={[styles.postsSection, { borderBottomColor: borderColor }]}
+        >
+          <ThemedText style={styles.postsTitle}>Posts</ThemedText>
+        </ThemedView>
+
+        {/* Posts List */}
+        {profile.posts && profile.posts.length > 0 ? (
+          profile.posts.map((item: any) => (
+            <PostCard
+              key={`${item.uri}-${item.indexedAt}`}
+              post={{
+                id: item.uri,
+                text: item.record?.text || "No text content",
+                author: {
+                  handle: item.author.handle,
+                  displayName: item.author.displayName,
+                },
+                createdAt: new Date(item.indexedAt).toLocaleDateString(),
+                likeCount: item.likeCount || 0,
+                commentCount: item.replyCount || 0,
+                repostCount: item.repostCount || 0,
+                embed: item.embed,
+              }}
+              onPress={() => {
+                router.push(`/post/${encodeURIComponent(item.uri)}`);
+              }}
+            />
+          ))
+        ) : (
           <ThemedView style={styles.emptyPosts}>
             <ThemedText style={styles.emptyPostsText}>No posts yet</ThemedText>
           </ThemedView>
-        }
-      />
+        )}
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -92,6 +92,12 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 100, // Account for tab bar
   },
   loadingText: {
     fontSize: 16,
@@ -112,12 +118,6 @@ const styles = StyleSheet.create({
   postsTitle: {
     fontSize: 18,
     fontWeight: "600",
-  },
-  postsList: {
-    flex: 1,
-  },
-  postsListContent: {
-    paddingBottom: 100, // Account for tab bar
   },
   emptyPosts: {
     paddingVertical: 40,
