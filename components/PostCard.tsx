@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
@@ -17,6 +18,7 @@ type PostCardProps = {
     likeCount?: number;
     commentCount?: number;
     repostCount?: number;
+    embed?: any;
   };
   onPress?: () => void;
 };
@@ -33,6 +35,25 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const handleProfilePress = () => {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
   };
+
+  // Extract image URLs from embed data
+  const getImageUrls = () => {
+    if (!post.embed) return [];
+
+    // Handle different embed types
+    if (post.embed.$type === "app.bsky.embed.images") {
+      return post.embed.images?.map((img: any) => img.fullsize) || [];
+    }
+
+    // Handle other embed types that might contain images
+    if (post.embed.images) {
+      return post.embed.images.map((img: any) => img.fullsize);
+    }
+
+    return [];
+  };
+
+  const imageUrls = getImageUrls();
 
   return (
     <TouchableOpacity
@@ -54,6 +75,21 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
       <ThemedView style={styles.content}>
         <ThemedText style={styles.text}>{post.text}</ThemedText>
+
+        {/* Render images if present */}
+        {imageUrls.length > 0 && (
+          <ThemedView style={styles.imagesContainer}>
+            {imageUrls.map((imageUrl: string, index: number) => (
+              <Image
+                key={`${post.id}-image-${index}`}
+                source={{ uri: imageUrl }}
+                style={styles.image}
+                contentFit="cover"
+                placeholder={require("@/assets/images/partial-react-logo.png")}
+              />
+            ))}
+          </ThemedView>
+        )}
       </ThemedView>
 
       <ThemedView style={styles.interactions}>
@@ -113,6 +149,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     lineHeight: 24,
+    marginBottom: 8,
+  },
+  imagesContainer: {
+    gap: 4,
+  },
+  image: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
   },
   interactions: {
     flexDirection: "row",

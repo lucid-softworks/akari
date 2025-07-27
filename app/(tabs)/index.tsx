@@ -69,6 +69,7 @@ export default function ProfileScreen() {
         likeCount: item.likeCount || 0,
         commentCount: item.replyCount || 0,
         repostCount: item.repostCount || 0,
+        embed: item.embed,
       }}
       onPress={() => {
         router.push(`/post/${encodeURIComponent(item.uri)}`);
