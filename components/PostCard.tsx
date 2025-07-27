@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -29,6 +30,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
     "background"
   );
 
+  const handleProfilePress = () => {
+    router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+  };
+
   return (
     <TouchableOpacity
       style={[styles.container, { borderBottomColor: borderColor }]}
@@ -40,7 +45,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <ThemedText style={styles.displayName}>
             {post.author.displayName || post.author.handle}
           </ThemedText>
-          <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
+          <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+            <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
+          </TouchableOpacity>
         </ThemedView>
         <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
       </ThemedView>

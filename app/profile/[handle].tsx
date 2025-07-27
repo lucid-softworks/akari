@@ -1,59 +1,35 @@
 import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useEffect } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
-import { jwtStorage } from "@/utils/secureStorage";
 
 export default function ProfileScreen() {
-  const { data: authData, isLoading } = useAuthStatus();
-  const userData = jwtStorage.getUserData();
+  const { handle } = useLocalSearchParams<{ handle: string }>();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
 
-  const { data: profile } = useProfile(
-    userData.handle || "",
-    !!userData.handle
-  );
+  const { data: profile, isLoading, error } = useProfile(handle);
 
-  // Handle navigation in useEffect to avoid React warnings
-  useEffect(() => {
-    if (!isLoading && !authData?.isAuthenticated) {
-      router.replace("/(auth)/signin");
-    }
-  }, [authData?.isAuthenticated, isLoading]);
-
-  const handleLogout = () => {
-    Alert.alert(
-      "Disconnect Bluesky",
-      "Are you sure you want to disconnect your Bluesky account?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Disconnect",
-          style: "destructive",
-          onPress: () => {
-            jwtStorage.clearAuth();
-            router.replace("/(auth)/signin");
-          },
-        },
-      ]
+  if (isLoading) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        <ThemedText style={styles.loadingText}>Loading profile...</ThemedText>
+      </ThemedView>
     );
-  };
+  }
 
-  // Don't render anything if not authenticated or still loading
-  if (isLoading || !authData?.isAuthenticated) {
-    return null;
+  if (error || !profile) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        <ThemedText style={styles.errorText}>Profile not found</ThemedText>
+      </ThemedView>
+    );
   }
 
   const renderPost = ({ item }: { item: any }) => (
@@ -76,7 +52,7 @@ export default function ProfileScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       {/* Banner */}
-      {profile?.banner && (
+      {profile.banner && (
         <ThemedView style={styles.banner}>
           <Image
             source={{ uri: profile.banner }}
@@ -92,7 +68,7 @@ export default function ProfileScreen() {
       >
         {/* Avatar */}
         <View style={styles.avatarContainer}>
-          {profile?.avatar ? (
+          {profile.avatar ? (
             <View style={styles.avatar}>
               <Image
                 source={{ uri: profile.avatar }}
@@ -104,8 +80,8 @@ export default function ProfileScreen() {
             <View style={styles.avatar}>
               <View style={styles.avatarFallbackContainer}>
                 <ThemedText style={styles.avatarFallback}>
-                  {(profile?.displayName ||
-                    userData.handle ||
+                  {(profile.displayName ||
+                    profile.handle ||
                     "U")[0].toUpperCase()}
                 </ThemedText>
               </View>
@@ -115,18 +91,14 @@ export default function ProfileScreen() {
 
         <ThemedView style={styles.profileInfo}>
           <ThemedText style={styles.displayName}>
-            {profile?.displayName || userData.handle}
+            {profile.displayName || profile.handle}
           </ThemedText>
-          <ThemedText style={styles.handle}>@{userData.handle}</ThemedText>
-          {profile?.description && (
+          <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
+          {profile.description && (
             <ThemedText style={styles.description}>
               {profile.description}
             </ThemedText>
           )}
-        </ThemedView>
-
-        <ThemedView style={styles.logoutButton} onTouchEnd={handleLogout}>
-          <ThemedText style={styles.logoutButtonText}>Disconnect</ThemedText>
         </ThemedView>
       </ThemedView>
 
@@ -134,12 +106,12 @@ export default function ProfileScreen() {
       <ThemedView
         style={[styles.postsSection, { borderBottomColor: borderColor }]}
       >
-        <ThemedText style={styles.postsTitle}>Your Posts</ThemedText>
+        <ThemedText style={styles.postsTitle}>Posts</ThemedText>
       </ThemedView>
 
       {/* Posts List */}
       <FlatList
-        data={profile?.posts || []}
+        data={profile.posts || []}
         renderItem={renderPost}
         keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
         style={styles.postsList}
@@ -157,6 +129,17 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 40,
+  },
+  errorText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 40,
+    color: "red",
   },
   banner: {
     height: 120,
@@ -221,17 +204,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     marginTop: 4,
-  },
-  logoutButton: {
-    backgroundColor: "#dc3545",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  logoutButtonText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "600",
   },
   postsSection: {
     paddingHorizontal: 16,

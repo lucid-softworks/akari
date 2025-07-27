@@ -1,22 +1,39 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
-import { useQuery } from "@tanstack/react-query";
 
 /**
  * Query hook for fetching a user's profile information
- * @param did - The user's Decentralized Identifier (DID)
+ * @param identifier - The user's handle or DID
  * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useProfile(did: string, enabled: boolean = true) {
+export function useProfile(identifier: string, enabled: boolean = true) {
   return useQuery({
-    queryKey: ["profile", did],
+    queryKey: ["profile", identifier],
     queryFn: async () => {
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      return await blueskyApi.getProfile(token, did);
+      const profile = await blueskyApi.getProfile(token, identifier);
+
+      // Also fetch user's posts
+      const posts = await blueskyApi.getAuthorFeed(token, identifier, 50);
+
+      // Filter to only show original posts (not reposts or replies)
+      const originalPosts = posts.feed
+        .filter((item: any) => {
+          // Only include posts that are not reposts and not replies
+          return !item.reason && !item.reply;
+        })
+        .map((item: any) => item.post);
+
+      return {
+        ...profile,
+        posts: originalPosts,
+      };
     },
-    enabled: enabled && !!did,
+    enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

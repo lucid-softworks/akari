@@ -578,6 +578,47 @@ class BlueskyApi {
   }
 
   /**
+   * Gets posts from a specific author
+   * @param accessJwt - Valid access JWT token
+   * @param actor - The author's handle or DID
+   * @param limit - Number of posts to fetch (default: 20)
+   * @param cursor - Pagination cursor
+   * @returns Promise resolving to author feed data
+   */
+  async getAuthorFeed(
+    accessJwt: string,
+    actor: string,
+    limit: number = 20,
+    cursor?: string
+  ): Promise<BlueskyFeedResponse> {
+    const params = new URLSearchParams({
+      actor,
+      limit: limit.toString(),
+    });
+
+    if (cursor) {
+      params.append("cursor", cursor);
+    }
+
+    const response = await fetch(
+      `${this.baseUrl}/app.bsky.feed.getAuthorFeed?${params}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error: BlueskyError = await response.json();
+      throw new Error(error.message || "Failed to get author feed");
+    }
+
+    return await response.json();
+  }
+
+  /**
    * Creates a new BlueskyApi instance with a custom PDS URL
    * @param pdsUrl - The custom PDS URL
    * @returns New BlueskyApi instance
