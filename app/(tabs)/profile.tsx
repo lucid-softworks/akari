@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
@@ -9,7 +8,6 @@ import { ProfileHeader } from "@/components/ProfileHeader";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
 import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
@@ -18,6 +16,7 @@ import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { jwtStorage } from "@/utils/secureStorage";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 type TabType = "posts" | "replies" | "likes" | "media";
 
@@ -29,26 +28,16 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // Register scroll handler for this tab
-  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  // Create scroll to top function
   const scrollToTop = () => {
     console.log("Profile scroll to top called");
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  // Register the scroll handler when component mounts
+  // Register with the tab scroll registry
   React.useEffect(() => {
-    console.log("Registering scroll handler for profile tab");
-    registerScrollHandler("profile", scrollToTop);
-  }, [registerScrollHandler]);
-
-  // Set current tab when this screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("Profile screen focused, setting current tab to profile");
-      setCurrentTab("profile");
-    }, [setCurrentTab])
-  );
+    tabScrollRegistry.register("profile", scrollToTop);
+  }, []);
 
   const { data: profile } = useProfile(
     userData.handle || "",

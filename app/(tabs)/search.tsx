@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,10 +12,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 type SearchResult = {
   type: "profile" | "post";
@@ -31,26 +30,16 @@ export default function SearchScreen() {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
-  // Register scroll handler for this tab
-  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  // Create scroll to top function
   const scrollToTop = () => {
     console.log("Search scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Register the scroll handler when component mounts
+  // Register with the tab scroll registry
   React.useEffect(() => {
-    console.log("Registering scroll handler for search tab");
-    registerScrollHandler("search", scrollToTop);
-  }, [registerScrollHandler]);
-
-  // Set current tab when this screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("Search screen focused, setting current tab to search");
-      setCurrentTab("search");
-    }, [setCurrentTab])
-  );
+    tabScrollRegistry.register("search", scrollToTop);
+  }, []);
 
   const backgroundColor = useThemeColor(
     {

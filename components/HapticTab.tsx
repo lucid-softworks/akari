@@ -2,16 +2,12 @@ import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import * as Haptics from "expo-haptics";
 
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
-
 type HapticTabProps = BottomTabBarButtonProps & {
   onTabPress?: () => void;
-  routeName?: string;
 };
 
 export function HapticTab(props: HapticTabProps) {
-  const { onTabPress, routeName, ...restProps } = props;
-  const { isCurrentTab } = useTabScrollContext();
+  const { onTabPress, ...restProps } = props;
 
   return (
     <PlatformPressable
@@ -24,13 +20,9 @@ export function HapticTab(props: HapticTabProps) {
         restProps.onPressIn?.(ev);
       }}
       onPress={(ev) => {
-        console.log("Tab pressed:", routeName);
-
-        if (routeName) {
-          // Check if this is the current tab being pressed again
-          isCurrentTab(routeName);
-        }
-
+        console.log("HapticTab pressed, calling onTabPress");
+        // Call the tab press handler if provided
+        onTabPress?.();
         restProps.onPress?.(ev);
       }}
     />

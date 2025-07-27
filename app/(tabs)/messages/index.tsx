@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
@@ -6,10 +5,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useConversations } from "@/hooks/queries/useConversations";
 import { useBorderColor } from "@/hooks/useBorderColor";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 import { Image } from "expo-image";
 
 type Conversation = {
@@ -35,26 +34,16 @@ export default function MessagesScreen() {
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
 
-  // Register scroll handler for this tab
-  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  // Create scroll to top function
   const scrollToTop = () => {
     console.log("Messages scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Register the scroll handler when component mounts
+  // Register with the tab scroll registry
   React.useEffect(() => {
-    console.log("Registering scroll handler for messages tab");
-    registerScrollHandler("messages", scrollToTop);
-  }, [registerScrollHandler]);
-
-  // Set current tab when this screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("Messages screen focused, setting current tab to messages");
-      setCurrentTab("messages");
-    }, [setCurrentTab])
-  );
+    tabScrollRegistry.register("messages", scrollToTop);
+  }, []);
 
   const {
     data: conversationsData,

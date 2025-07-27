@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useRef } from "react";
@@ -15,10 +14,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useNotifications } from "@/hooks/queries/useNotifications";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 /**
  * Grouped notification type
@@ -279,28 +278,16 @@ export default function NotificationsScreen() {
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
 
-  // Register scroll handler for this tab
-  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  // Create scroll to top function
   const scrollToTop = () => {
     console.log("Notifications scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Register the scroll handler when component mounts
+  // Register with the tab scroll registry
   React.useEffect(() => {
-    console.log("Registering scroll handler for notifications tab");
-    registerScrollHandler("notifications", scrollToTop);
-  }, [registerScrollHandler]);
-
-  // Set current tab when this screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log(
-        "Notifications screen focused, setting current tab to notifications"
-      );
-      setCurrentTab("notifications");
-    }, [setCurrentTab])
-  );
+    tabScrollRegistry.register("notifications", scrollToTop);
+  }, []);
 
   const {
     data,

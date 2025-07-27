@@ -7,8 +7,8 @@ import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -21,32 +21,42 @@ function TabBarIcon(props: {
 }
 
 /**
- * Custom tab button component that handles scroll-to-top functionality
+ * Custom tab button that tracks which tab is being pressed
  */
 function CustomTabButton(props: any) {
-  const { getScrollHandler } = useTabScrollContext();
   const navigationState = useNavigationState((state) => state);
   const lastPressedTabRef = useRef<string | null>(null);
-  const lastPressTimeRef = useRef<number>(0);
 
-  const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
-  const routeName = props.route?.name || currentRoute;
-  const handler = routeName ? getScrollHandler(routeName) : undefined;
-
-  console.log("CustomTabButton props:", Object.keys(props));
   console.log(
-    "Navigation state:",
+    "CustomTabButton created, navigation state:",
     navigationState?.routes?.map((r) => r.name)
   );
-  console.log("Current route:", currentRoute);
-  console.log(
-    "Creating tab button for route:",
-    routeName,
-    "has handler:",
-    !!handler
-  );
 
-  return <HapticTab {...props} routeName={routeName} onTabPress={handler} />;
+  const handleTabPress = () => {
+    const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
+
+    console.log(
+      "Tab pressed, current route:",
+      currentRoute,
+      "last pressed:",
+      lastPressedTabRef.current
+    );
+
+    if (currentRoute) {
+      // Check if this is the same tab pressed again
+      if (lastPressedTabRef.current === currentRoute) {
+        console.log(
+          "Same tab pressed twice, triggering scroll for:",
+          currentRoute
+        );
+        tabScrollRegistry.handleTabPress(currentRoute);
+      }
+
+      lastPressedTabRef.current = currentRoute;
+    }
+  };
+
+  return <HapticTab {...props} onTabPress={handleTabPress} />;
 }
 
 export default function TabLayout() {

@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -9,11 +8,11 @@ import { PostCard } from "@/components/PostCard";
 import { TabBar } from "@/components/TabBar";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTabScrollContext } from "@/contexts/TabScrollContext";
 import { useFeeds } from "@/hooks/queries/useFeeds";
 import { useSelectedFeed } from "@/hooks/useSelectedFeed";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
+import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 export default function DiscoverScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -22,26 +21,16 @@ export default function DiscoverScreen() {
 
   const userData = jwtStorage.getUserData();
 
-  // Register scroll handler for this tab
-  const { registerScrollHandler, setCurrentTab } = useTabScrollContext();
+  // Create scroll to top function
   const scrollToTop = () => {
     console.log("Home scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Register the scroll handler when component mounts
+  // Register with the tab scroll registry
   React.useEffect(() => {
-    console.log("Registering scroll handler for index tab");
-    registerScrollHandler("index", scrollToTop);
-  }, [registerScrollHandler]);
-
-  // Set current tab when this screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("Home screen focused, setting current tab to index");
-      setCurrentTab("index");
-    }, [setCurrentTab])
-  );
+    tabScrollRegistry.register("index", scrollToTop);
+  }, []);
 
   // Get user's feeds
   const {
