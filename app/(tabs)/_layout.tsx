@@ -28,6 +28,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+        tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -38,18 +39,16 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="discover"
+        name="index"
         options={{
-          title: "Home",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="sparkles" color={color} />
+            <TabBarIcon name="house.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: "Search",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="magnifyingglass" color={color} />
           ),
@@ -58,7 +57,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="notifications"
         options={{
-          title: "Notifications",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="bell.fill" color={color} />
           ),
@@ -67,16 +65,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: "Messages",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="message.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="profile"
         options={{
-          title: "Profile",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="person.fill" color={color} />
           ),
@@ -85,7 +81,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="gearshape.fill" color={color} />
           ),
