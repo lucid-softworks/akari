@@ -27,33 +27,22 @@ function CustomTabButton(props: any) {
   const navigationState = useNavigationState((state) => state);
   const lastPressedTabRef = useRef<string | null>(null);
 
-  console.log(
-    "CustomTabButton created, navigation state:",
-    navigationState?.routes?.map((r) => r.name)
-  );
-
   const handleTabPress = () => {
-    const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
+    // Use a timeout to check the navigation state after the tab press
+    // since the navigation state doesn't update immediately
+    setTimeout(() => {
+      const currentRoute =
+        navigationState?.routes?.[navigationState.index]?.name;
 
-    console.log(
-      "Tab pressed, current route:",
-      currentRoute,
-      "last pressed:",
-      lastPressedTabRef.current
-    );
+      if (currentRoute) {
+        // Check if this is the same tab pressed again
+        if (lastPressedTabRef.current === currentRoute) {
+          tabScrollRegistry.handleTabPress(currentRoute);
+        }
 
-    if (currentRoute) {
-      // Check if this is the same tab pressed again
-      if (lastPressedTabRef.current === currentRoute) {
-        console.log(
-          "Same tab pressed twice, triggering scroll for:",
-          currentRoute
-        );
-        tabScrollRegistry.handleTabPress(currentRoute);
+        lastPressedTabRef.current = currentRoute;
       }
-
-      lastPressedTabRef.current = currentRoute;
-    }
+    }, 50); // Small delay to ensure navigation state has updated
   };
 
   return <HapticTab {...props} onTabPress={handleTabPress} />;
