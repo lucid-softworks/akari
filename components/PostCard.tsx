@@ -1,7 +1,9 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
+import { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
+import { ImageViewer } from "@/components/ImageViewer";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -24,6 +26,10 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, onPress }: PostCardProps) {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
+
   const borderColor = useThemeColor(
     {
       light: "#e8eaed",
@@ -36,83 +42,114 @@ export function PostCard({ post, onPress }: PostCardProps) {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
   };
 
-  // Extract image URLs from embed data
-  const getImageUrls = () => {
-    if (!post.embed) return [];
+  // Extract image URLs and alt text from embed data
+  const getImageData = () => {
+    if (!post.embed) return { urls: [], altTexts: [] };
 
     // Handle different embed types
     if (post.embed.$type === "app.bsky.embed.images") {
-      return post.embed.images?.map((img: any) => img.fullsize) || [];
+      const urls = post.embed.images?.map((img: any) => img.fullsize) || [];
+      const altTexts = post.embed.images?.map((img: any) => img.alt) || [];
+      return { urls, altTexts };
     }
 
     // Handle other embed types that might contain images
     if (post.embed.images) {
-      return post.embed.images.map((img: any) => img.fullsize);
+      const urls = post.embed.images.map((img: any) => img.fullsize);
+      const altTexts = post.embed.images.map((img: any) => img.alt);
+      return { urls, altTexts };
     }
 
-    return [];
+    return { urls: [], altTexts: [] };
   };
 
-  const imageUrls = getImageUrls();
+  const { urls: imageUrls, altTexts } = getImageData();
+
+  const handleImagePress = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const handleCloseImageViewer = () => {
+    setSelectedImageIndex(null);
+  };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { borderBottomColor: borderColor }]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <ThemedView style={styles.header}>
-        <ThemedView style={styles.authorInfo}>
-          <ThemedText style={styles.displayName}>
-            {post.author.displayName || post.author.handle}
-          </ThemedText>
-          <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
-            <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-        <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
-      </ThemedView>
-
-      <ThemedView style={styles.content}>
-        <ThemedText style={styles.text}>{post.text}</ThemedText>
-
-        {/* Render images if present */}
-        {imageUrls.length > 0 && (
-          <ThemedView style={styles.imagesContainer}>
-            {imageUrls.map((imageUrl: string, index: number) => (
-              <Image
-                key={`${post.id}-image-${index}`}
-                source={{ uri: imageUrl }}
-                style={styles.image}
-                contentFit="cover"
-                placeholder={require("@/assets/images/partial-react-logo.png")}
-              />
-            ))}
+    <>
+      <TouchableOpacity
+        style={[styles.container, { borderBottomColor: borderColor }]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        <ThemedView style={styles.header}>
+          <ThemedView style={styles.authorInfo}>
+            <ThemedText style={styles.displayName}>
+              {post.author.displayName || post.author.handle}
+            </ThemedText>
+            <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+              <ThemedText style={styles.handle}>
+                @{post.author.handle}
+              </ThemedText>
+            </TouchableOpacity>
           </ThemedView>
-        )}
-      </ThemedView>
+          <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
+        </ThemedView>
 
-      <ThemedView style={styles.interactions}>
-        <ThemedView style={styles.interactionItem}>
-          <ThemedText style={styles.interactionIcon}>💬</ThemedText>
-          <ThemedText style={styles.interactionCount}>
-            {post.commentCount || 0}
-          </ThemedText>
+        <ThemedView style={styles.content}>
+          <ThemedText style={styles.text}>{post.text}</ThemedText>
+
+          {/* Render images if present */}
+          {imageUrls.length > 0 && (
+            <ThemedView style={styles.imagesContainer}>
+              {imageUrls.map((imageUrl: string, index: number) => (
+                <TouchableOpacity
+                  key={`${post.id}-image-${index}`}
+                  onPress={() => handleImagePress(index)}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    source={{ uri: imageUrl }}
+                    style={styles.image}
+                    contentFit="cover"
+                    placeholder={require("@/assets/images/partial-react-logo.png")}
+                  />
+                </TouchableOpacity>
+              ))}
+            </ThemedView>
+          )}
         </ThemedView>
-        <ThemedView style={styles.interactionItem}>
-          <ThemedText style={styles.interactionIcon}>🔄</ThemedText>
-          <ThemedText style={styles.interactionCount}>
-            {post.repostCount || 0}
-          </ThemedText>
+
+        <ThemedView style={styles.interactions}>
+          <ThemedView style={styles.interactionItem}>
+            <ThemedText style={styles.interactionIcon}>💬</ThemedText>
+            <ThemedText style={styles.interactionCount}>
+              {post.commentCount || 0}
+            </ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.interactionItem}>
+            <ThemedText style={styles.interactionIcon}>🔄</ThemedText>
+            <ThemedText style={styles.interactionCount}>
+              {post.repostCount || 0}
+            </ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.interactionItem}>
+            <ThemedText style={styles.interactionIcon}>❤️</ThemedText>
+            <ThemedText style={styles.interactionCount}>
+              {post.likeCount || 0}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
-        <ThemedView style={styles.interactionItem}>
-          <ThemedText style={styles.interactionIcon}>❤️</ThemedText>
-          <ThemedText style={styles.interactionCount}>
-            {post.likeCount || 0}
-          </ThemedText>
-        </ThemedView>
-      </ThemedView>
-    </TouchableOpacity>
+      </TouchableOpacity>
+
+      {/* Image Viewer Modal */}
+      {selectedImageIndex !== null && imageUrls[selectedImageIndex] && (
+        <ImageViewer
+          visible={selectedImageIndex !== null}
+          onClose={handleCloseImageViewer}
+          imageUrl={imageUrls[selectedImageIndex]}
+          altText={altTexts[selectedImageIndex]}
+        />
+      )}
+    </>
   );
 }
 
@@ -156,7 +193,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    aspectRatio: 16 / 9,
     borderRadius: 8,
   },
   interactions: {
