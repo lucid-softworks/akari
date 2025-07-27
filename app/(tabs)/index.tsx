@@ -8,7 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/useBlueskyMutations";
 import { jwtStorage } from "@/utils/secureStorage";
 
-export default function HomeScreen() {
+export default function ProfileScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const userData = jwtStorage.getUserData();
 
@@ -49,10 +49,10 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
         <ThemedText type="title" style={styles.title}>
-          Welcome to Akari
+          Profile
         </ThemedText>
         <ThemedText style={styles.subtitle}>
-          Connected to Bluesky successfully
+          Your Bluesky account information
         </ThemedText>
       </ThemedView>
 
