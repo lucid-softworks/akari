@@ -1,5 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { FlatList, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
@@ -7,11 +8,9 @@ import { ThemedView } from "@/components/ThemedView";
 import { usePost } from "@/hooks/queries/usePost";
 import { usePostThread } from "@/hooks/queries/usePostThread";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const insets = useSafeAreaInsets();
 
   const { data: post, isLoading: postLoading, error: postError } = usePost(id);
   const { data: threadData, isLoading: threadLoading } = usePostThread(id);
@@ -28,17 +27,21 @@ export default function PostDetailScreen() {
 
   if (postLoading || threadLoading) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-        <ThemedText style={styles.loadingText}>Loading post...</ThemedText>
-      </ThemedView>
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+          <ThemedText style={styles.loadingText}>Loading post...</ThemedText>
+        </ThemedView>
+      </SafeAreaView>
     );
   }
 
   if (postError || !post) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-        <ThemedText style={styles.errorText}>Post not found</ThemedText>
-      </ThemedView>
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+          <ThemedText style={styles.errorText}>Post not found</ThemedText>
+        </ThemedView>
+      </SafeAreaView>
     );
   }
 
@@ -63,51 +66,53 @@ export default function PostDetailScreen() {
   );
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Main Post */}
-      <PostCard
-        post={{
-          id: post.uri,
-          text: post.record?.text || "No text content",
-          author: {
-            handle: post.author.handle,
-            displayName: post.author.displayName,
-            avatar: post.author.avatar,
-          },
-          createdAt: new Date(post.indexedAt).toLocaleDateString(),
-          likeCount: post.likeCount || 0,
-          commentCount: post.replyCount || 0,
-          repostCount: post.repostCount || 0,
-          embed: post.embed,
-          embeds: post.embeds,
-        }}
-      />
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
+        {/* Main Post */}
+        <PostCard
+          post={{
+            id: post.uri,
+            text: post.record?.text || "No text content",
+            author: {
+              handle: post.author.handle,
+              displayName: post.author.displayName,
+              avatar: post.author.avatar,
+            },
+            createdAt: new Date(post.indexedAt).toLocaleDateString(),
+            likeCount: post.likeCount || 0,
+            commentCount: post.replyCount || 0,
+            repostCount: post.repostCount || 0,
+            embed: post.embed,
+            embeds: post.embeds,
+          }}
+        />
 
-      {/* Comments Section */}
-      <ThemedView
-        style={[styles.commentsSection, { borderBottomColor: borderColor }]}
-      >
-        <ThemedText style={styles.commentsTitle}>
-          Comments ({comments.length})
-        </ThemedText>
+        {/* Comments Section */}
+        <ThemedView
+          style={[styles.commentsSection, { borderBottomColor: borderColor }]}
+        >
+          <ThemedText style={styles.commentsTitle}>
+            Comments ({comments.length})
+          </ThemedText>
+        </ThemedView>
+
+        {/* Comments List */}
+        <FlatList
+          data={comments}
+          renderItem={renderComment}
+          keyExtractor={(item) => item.post.uri}
+          style={styles.commentsList}
+          contentContainerStyle={styles.commentsListContent}
+          ListEmptyComponent={
+            <ThemedView style={styles.emptyComments}>
+              <ThemedText style={styles.emptyCommentsText}>
+                No comments yet
+              </ThemedText>
+            </ThemedView>
+          }
+        />
       </ThemedView>
-
-      {/* Comments List */}
-      <FlatList
-        data={comments}
-        renderItem={renderComment}
-        keyExtractor={(item) => item.post.uri}
-        style={styles.commentsList}
-        contentContainerStyle={styles.commentsListContent}
-        ListEmptyComponent={
-          <ThemedView style={styles.emptyComments}>
-            <ThemedText style={styles.emptyCommentsText}>
-              No comments yet
-            </ThemedText>
-          </ThemedView>
-        }
-      />
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 

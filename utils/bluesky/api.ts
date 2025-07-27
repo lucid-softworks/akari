@@ -1,11 +1,14 @@
+import { BlueskyActors } from "./actors";
 import { BlueskyAuth } from "./auth";
 import { BlueskyApiClient } from "./client";
 import { BlueskyFeeds } from "./feeds";
+import { BlueskyGraph } from "./graph";
 import { BlueskySearch } from "./search";
 import type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyPostView,
+  BlueskyProfileResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySession,
@@ -16,18 +19,22 @@ import type {
  * Main Bluesky API client that combines all functionality
  */
 export class BlueskyApi extends BlueskyApiClient {
+  private actors: BlueskyActors;
   private auth: BlueskyAuth;
   private feeds: BlueskyFeeds;
+  private graph: BlueskyGraph;
   private search: BlueskySearch;
 
   constructor(pdsUrl?: string) {
     super(pdsUrl);
+    this.actors = new BlueskyActors(pdsUrl);
     this.auth = new BlueskyAuth(pdsUrl);
     this.feeds = new BlueskyFeeds(pdsUrl);
+    this.graph = new BlueskyGraph(pdsUrl);
     this.search = new BlueskySearch(pdsUrl);
   }
 
-  // Authentication methods
+  // Auth methods
   async createSession(
     identifier: string,
     password: string
@@ -40,11 +47,17 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   // Feed methods
-  async getProfile(accessJwt: string, did: string) {
-    return this.feeds.getProfile(accessJwt, did);
+  async getProfile(
+    accessJwt: string,
+    did: string
+  ): Promise<BlueskyProfileResponse> {
+    return this.actors.getProfile(accessJwt, did);
   }
 
-  async getTimeline(accessJwt: string, limit: number = 20) {
+  async getTimeline(
+    accessJwt: string,
+    limit: number = 20
+  ): Promise<BlueskyFeedResponse> {
     return this.feeds.getTimeline(accessJwt, limit);
   }
 
@@ -86,6 +99,23 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor);
   }
 
+  // Graph methods (follow/block)
+  async followUser(accessJwt: string, did: string) {
+    return this.graph.followUser(accessJwt, did);
+  }
+
+  async unfollowUser(accessJwt: string, followUri: string) {
+    return this.graph.unfollowUser(accessJwt, followUri);
+  }
+
+  async blockUser(accessJwt: string, did: string) {
+    return this.graph.blockUser(accessJwt, did);
+  }
+
+  async unblockUser(accessJwt: string, blockUri: string) {
+    return this.graph.unblockUser(accessJwt, blockUri);
+  }
+
   // Search methods
   async searchProfiles(
     accessJwt: string,
@@ -103,11 +133,7 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.search.searchPosts(accessJwt, query, limit);
   }
 
-  /**
-   * Creates a new BlueskyApi instance with a custom PDS URL
-   * @param pdsUrl - The custom PDS URL
-   * @returns New BlueskyApi instance
-   */
+  // Static factory method for custom PDS
   static createWithPDS(pdsUrl: string): BlueskyApi {
     return new BlueskyApi(pdsUrl);
   }

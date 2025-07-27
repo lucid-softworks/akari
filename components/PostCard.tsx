@@ -129,14 +129,16 @@ export function PostCard({ post, onPress }: PostCardProps) {
       >
         <ThemedView style={styles.header}>
           <ThemedView style={styles.authorSection}>
-            {post.author.avatar && (
-              <Image
-                source={{ uri: post.author.avatar }}
-                style={styles.authorAvatar}
-                contentFit="cover"
-                placeholder={require("@/assets/images/partial-react-logo.png")}
-              />
-            )}
+            <Image
+              source={{
+                uri:
+                  post.author.avatar ||
+                  "https://bsky.app/static/default-avatar.png",
+              }}
+              style={styles.authorAvatar}
+              contentFit="cover"
+              placeholder={require("@/assets/images/partial-react-logo.png")}
+            />
             <ThemedView style={styles.authorInfo}>
               <ThemedText style={styles.displayName}>
                 {post.author.displayName || post.author.handle}

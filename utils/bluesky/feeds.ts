@@ -11,29 +11,16 @@ import type {
  */
 export class BlueskyFeeds extends BlueskyApiClient {
   /**
-   * Gets a user's profile information
-   * @param accessJwt - Valid access JWT token
-   * @param did - User's DID to fetch profile for
-   * @returns Promise resolving to profile data
-   */
-  async getProfile(accessJwt: string, did: string) {
-    return this.makeAuthenticatedRequest(
-      "/app.bsky.actor.getProfile",
-      accessJwt,
-      {
-        params: { actor: did },
-      }
-    );
-  }
-
-  /**
    * Gets the user's timeline feed
    * @param accessJwt - Valid access JWT token
    * @param limit - Number of posts to fetch (default: 20)
    * @returns Promise resolving to timeline data
    */
-  async getTimeline(accessJwt: string, limit: number = 20) {
-    return this.makeAuthenticatedRequest(
+  async getTimeline(
+    accessJwt: string,
+    limit: number = 20
+  ): Promise<BlueskyFeedResponse> {
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>(
       "/app.bsky.feed.getTimeline",
       accessJwt,
       {

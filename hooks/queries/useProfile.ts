@@ -16,20 +16,21 @@ export function useProfile(identifier: string, enabled: boolean = true) {
       if (!token) throw new Error("No access token");
 
       const profile = await blueskyApi.getProfile(token, identifier);
+      console.log("PROFILE DATA:", JSON.stringify(profile, null, 2));
 
       // Also fetch user's posts
       const posts = await blueskyApi.getAuthorFeed(token, identifier, 50);
 
       // Filter to only show original posts (not reposts or replies)
       const originalPosts = posts.feed
-        .filter((item: any) => {
+        .filter((item) => {
           // Only include posts that are not reposts and not replies
           return !item.reason && !item.reply;
         })
-        .map((item: any) => item.post);
+        .map((item) => item.post);
 
       return {
-        ...profile,
+        ...profile, // Spread the profile data directly
         posts: originalPosts,
       };
     },

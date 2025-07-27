@@ -337,6 +337,11 @@ export type BlueskyProfile = {
 };
 
 /**
+ * Bluesky profile response from the getProfile endpoint
+ */
+export type BlueskyProfileResponse = BlueskyProfile;
+
+/**
  * Response from the searchActors endpoint
  */
 export type BlueskySearchActorsResponse = {

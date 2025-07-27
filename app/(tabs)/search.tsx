@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -22,7 +22,8 @@ type SearchResult = {
 };
 
 export default function SearchScreen() {
-  const [query, setQuery] = useState("");
+  const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
+  const [query, setQuery] = useState(initialQuery || "");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const insets = useSafeAreaInsets();
@@ -51,19 +52,48 @@ export default function SearchScreen() {
     "background"
   );
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const handleSearch = async (searchQuery?: string) => {
+    const queryToSearch = searchQuery || query;
+    if (!queryToSearch.trim()) return;
 
     setIsSearching(true);
     try {
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      // Search for profiles
-      const profileResults = await blueskyApi.searchProfiles(token, query, 10);
+      // Check if this is a "from:handle" search
+      const fromMatch = queryToSearch.match(/^from:(\S+)/);
+      if (fromMatch) {
+        const handle = fromMatch[1];
+        // Search for posts from this specific user
+        const postResults = await blueskyApi.searchPosts(
+          token,
+          `from:${handle}`,
+          50
+        );
 
-      // Search for posts
-      const postResults = await blueskyApi.searchPosts(token, query, 10);
+        const combinedResults: SearchResult[] = [
+          ...(postResults.posts || []).map((post: any) => ({
+            type: "post" as const,
+            data: post,
+          })),
+        ];
+
+        setResults(combinedResults);
+        return;
+      }
+
+      // Regular search for profiles and posts
+      const profileResults = await blueskyApi.searchProfiles(
+        token,
+        queryToSearch,
+        10
+      );
+      const postResults = await blueskyApi.searchPosts(
+        token,
+        queryToSearch,
+        10
+      );
 
       const combinedResults: SearchResult[] = [
         ...(profileResults.actors || []).map((profile: any) => ({
@@ -87,6 +117,14 @@ export default function SearchScreen() {
       setIsSearching(false);
     }
   };
+
+  // Handle initial query from URL
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+      handleSearch(initialQuery);
+    }
+  }, [handleSearch, initialQuery]);
 
   const renderProfileResult = ({ item }: { item: SearchResult }) => {
     if (item.type !== "profile") return null;
@@ -189,14 +227,14 @@ export default function SearchScreen() {
           placeholderTextColor="#999999"
           value={query}
           onChangeText={setQuery}
-          onSubmitEditing={handleSearch}
+          onSubmitEditing={() => handleSearch()}
           returnKeyType="search"
           autoCapitalize="none"
           autoCorrect={false}
         />
         <TouchableOpacity
           style={[styles.searchButton, { backgroundColor: borderColor }]}
-          onPress={handleSearch}
+          onPress={() => handleSearch()}
           disabled={isSearching}
         >
           <ThemedText style={styles.searchButtonText}>
