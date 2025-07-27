@@ -218,14 +218,14 @@ export default function SettingsScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <ThemedView style={[styles.header, { paddingTop: insets.top + 20 }]}>
+        <ThemedView style={styles.header}>
           <ThemedText style={styles.headerTitle}>Settings</ThemedText>
         </ThemedView>
 
@@ -401,12 +401,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingVertical: 16,
+    paddingTop: 20,
     borderBottomWidth: 0.5,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: 24,
+    fontWeight: "700",
   },
   section: {
     marginTop: 20,

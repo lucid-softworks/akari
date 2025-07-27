@@ -4,12 +4,14 @@ import { BlueskyApiClient } from "./client";
 import { BlueskyConversations } from "./conversations";
 import { BlueskyFeeds } from "./feeds";
 import { BlueskyGraph } from "./graph";
+import { BlueskyNotifications } from "./notifications";
 import { BlueskySearch } from "./search";
 import type {
   BlueskyConvosResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyMessagesResponse,
+  BlueskyNotificationsResponse,
   BlueskyPostView,
   BlueskyProfileResponse,
   BlueskySearchActorsResponse,
@@ -27,6 +29,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private conversations: BlueskyConversations;
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
+  private notifications: BlueskyNotifications;
   private search: BlueskySearch;
 
   constructor(pdsUrl?: string) {
@@ -36,6 +39,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.conversations = new BlueskyConversations(pdsUrl);
     this.feeds = new BlueskyFeeds(pdsUrl);
     this.graph = new BlueskyGraph(pdsUrl);
+    this.notifications = new BlueskyNotifications(pdsUrl);
     this.search = new BlueskySearch(pdsUrl);
   }
 
@@ -162,6 +166,25 @@ export class BlueskyApi extends BlueskyApiClient {
     limit: number = 20
   ): Promise<BlueskySearchPostsResponse> {
     return this.search.searchPosts(accessJwt, query, limit);
+  }
+
+  // Notification methods
+  async listNotifications(
+    accessJwt: string,
+    limit: number = 50,
+    cursor?: string,
+    reasons?: string[],
+    priority?: boolean,
+    seenAt?: string
+  ): Promise<BlueskyNotificationsResponse> {
+    return this.notifications.listNotifications(
+      accessJwt,
+      limit,
+      cursor,
+      reasons,
+      priority,
+      seenAt
+    );
   }
 
   // Static factory method for custom PDS

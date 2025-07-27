@@ -469,6 +469,87 @@ export type BlueskyThreadResponse = {
 };
 
 /**
+ * Bluesky notification item
+ */
+export type BlueskyNotification = {
+  /** The notification's URI */
+  uri: string;
+  /** The notification's CID */
+  cid: string;
+  /** The notification author's information */
+  author: {
+    did: string;
+    handle: string;
+    displayName: string;
+    description: string;
+    avatar: string;
+    associated: {
+      lists: number;
+      feedgens: number;
+      starterPacks: number;
+      labeler: boolean;
+      chat: {
+        allowIncoming: string;
+      };
+    };
+    indexedAt: string;
+    createdAt: string;
+    viewer: {
+      muted: boolean;
+      mutedByList?: any;
+      blockedBy: boolean;
+      blocking?: string;
+      blockingByList?: any;
+      following?: string;
+      followedBy?: string;
+      knownFollowers?: {
+        count: number;
+        followers: any[];
+      };
+    };
+    labels: any[];
+    verification?: {
+      verifications: any[];
+      verifiedStatus: string;
+      trustedVerifierStatus: string;
+    };
+    status?: {
+      status: string;
+      record: any;
+      embed?: any;
+      expiresAt: string;
+      isActive: boolean;
+    };
+  };
+  /** The reason for the notification */
+  reason: string;
+  /** The subject of the notification reason */
+  reasonSubject?: string;
+  /** The notification record data */
+  record: any;
+  /** Whether the notification has been read */
+  isRead: boolean;
+  /** When the notification was indexed */
+  indexedAt: string;
+  /** Labels applied to the notification */
+  labels: any[];
+};
+
+/**
+ * Bluesky notifications response
+ */
+export type BlueskyNotificationsResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of notifications */
+  notifications: BlueskyNotification[];
+  /** Whether there are priority notifications */
+  priority: boolean;
+  /** When notifications were last seen */
+  seenAt: string;
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {
