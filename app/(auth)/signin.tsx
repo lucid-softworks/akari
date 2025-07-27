@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -13,10 +13,14 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useSignIn } from "@/hooks/mutations/useSignIn";
+import { jwtStorage } from "@/utils/secureStorage";
 
 type AuthMode = "signin" | "signup";
 
 export default function AuthScreen() {
+  const { addAccount } = useLocalSearchParams<{ addAccount?: string }>();
+  const isAddingAccount = addAccount === "true";
+
   const [mode, setMode] = useState<AuthMode>("signin");
   const [handle, setHandle] = useState("");
   const [appPassword, setAppPassword] = useState("");
@@ -43,18 +47,33 @@ export default function AuthScreen() {
     }
 
     try {
-      await signInMutation.mutateAsync({
+      const result = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
         pdsUrl: pdsUrl || undefined,
       });
 
-      Alert.alert("Success", "Signed in to Bluesky successfully!", [
-        {
-          text: "OK",
-          onPress: () => router.replace("/(tabs)"),
-        },
-      ]);
+      // If adding account, store it in multi-account system
+      if (isAddingAccount) {
+        Alert.alert("Success", "Account added successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)/settings"),
+          },
+        ]);
+      } else {
+        // For first-time sign in, use the old single-account system
+        jwtStorage.setToken(result.accessJwt);
+        jwtStorage.setRefreshToken(result.refreshJwt);
+        jwtStorage.setUserData(result.did, result.handle);
+
+        Alert.alert("Success", "Signed in to Bluesky successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)"),
+          },
+        ]);
+      }
     } catch (error) {
       console.error("Sign in error:", error);
       Alert.alert(
@@ -84,18 +103,40 @@ export default function AuthScreen() {
 
     try {
       // For signup, we also use createSession since Bluesky accounts are created via web
-      await signInMutation.mutateAsync({
+      const result = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
         pdsUrl: pdsUrl || undefined,
       });
 
-      Alert.alert("Success", "Bluesky account connected successfully!", [
-        {
-          text: "OK",
-          onPress: () => router.replace("/(tabs)"),
-        },
-      ]);
+      // If adding account, store it in multi-account system
+      if (isAddingAccount) {
+        const accountId = jwtStorage.addAccount({
+          did: result.did,
+          handle: result.handle,
+          jwtToken: result.accessJwt,
+          refreshToken: result.refreshJwt,
+        });
+
+        Alert.alert("Success", "Account added successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)/settings"),
+          },
+        ]);
+      } else {
+        // For first-time sign in, use the old single-account system
+        jwtStorage.setToken(result.accessJwt);
+        jwtStorage.setRefreshToken(result.refreshJwt);
+        jwtStorage.setUserData(result.did, result.handle);
+
+        Alert.alert("Success", "Bluesky account connected successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)"),
+          },
+        ]);
+      }
     } catch (error) {
       console.error("Sign up error:", error);
       Alert.alert(
@@ -126,10 +167,16 @@ export default function AuthScreen() {
         <ThemedView style={styles.content}>
           <ThemedView style={styles.header}>
             <ThemedText type="title" style={styles.title}>
-              {isSignUp ? "Connect Bluesky" : "Sign in to Bluesky"}
+              {isAddingAccount
+                ? "Add Account"
+                : isSignUp
+                ? "Connect Bluesky"
+                : "Sign in to Bluesky"}
             </ThemedText>
             <ThemedText style={styles.subtitle}>
-              {isSignUp
+              {isAddingAccount
+                ? "Add another Bluesky account to your app"
+                : isSignUp
                 ? "Connect your Bluesky account to get started"
                 : "Sign in with your Bluesky handle and app password"}
             </ThemedText>
@@ -208,9 +255,13 @@ export default function AuthScreen() {
             >
               <ThemedText style={styles.buttonText}>
                 {isLoading
-                  ? isSignUp
+                  ? isAddingAccount
+                    ? "Adding Account..."
+                    : isSignUp
                     ? "Connecting..."
                     : "Signing In..."
+                  : isAddingAccount
+                  ? "Add Account"
                   : isSignUp
                   ? "Connect Account"
                   : "Sign In"}
@@ -218,18 +269,20 @@ export default function AuthScreen() {
             </TouchableOpacity>
           </ThemedView>
 
-          <ThemedView style={styles.footer}>
-            <ThemedText style={styles.footerText}>
-              {isSignUp
-                ? "Already connected? "
-                : "Need to connect a different account? "}
-            </ThemedText>
-            <TouchableOpacity onPress={toggleMode}>
-              <ThemedText style={styles.linkText}>
-                {isSignUp ? "Sign In" : "Connect New"}
+          {!isAddingAccount && (
+            <ThemedView style={styles.footer}>
+              <ThemedText style={styles.footerText}>
+                {isSignUp
+                  ? "Already connected? "
+                  : "Need to connect a different account? "}
               </ThemedText>
-            </TouchableOpacity>
-          </ThemedView>
+              <TouchableOpacity onPress={toggleMode}>
+                <ThemedText style={styles.linkText}>
+                  {isSignUp ? "Sign In" : "Connect New"}
+                </ThemedText>
+              </TouchableOpacity>
+            </ThemedView>
+          )}
 
           <ThemedView style={styles.infoSection}>
             <ThemedText type="subtitle" style={styles.infoTitle}>
