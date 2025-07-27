@@ -280,7 +280,6 @@ export default function NotificationsScreen() {
 
   // Create scroll to top function
   const scrollToTop = () => {
-    console.log("Notifications scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 

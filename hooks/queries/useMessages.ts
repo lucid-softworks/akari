@@ -29,26 +29,12 @@ export function useMessages(
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      console.log(
-        "Fetching messages for conversation:",
-        convoId,
-        "page:",
-        pageParam,
-        "user:",
-        currentUserDid
-      );
-
       try {
         const response = await blueskyApi.getMessages(
           token,
           convoId,
           limit,
           pageParam // cursor
-        );
-
-        console.log(
-          "Messages API response:",
-          JSON.stringify(response, null, 2)
         );
 
         // Transform the data to match our UI needs
@@ -68,17 +54,11 @@ export function useMessages(
           };
         });
 
-        console.log("Transformed messages:", messages);
-
         return {
           messages,
           cursor: response.cursor,
         };
       } catch (error: any) {
-        console.error("Messages API error:", error);
-        console.error("Error response:", error?.response);
-        console.error("Error message:", error?.message);
-
         // Determine the type of error
         let errorType: MessageError["type"] = "unknown";
         let errorMessage = "Failed to load messages";

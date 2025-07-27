@@ -109,7 +109,7 @@ export function ProfileHeader({
       }
       setShowDropdown(false);
     } catch (error) {
-      console.error("Block error:", error);
+      // Handle block error
     }
   };
 

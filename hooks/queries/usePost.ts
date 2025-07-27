@@ -21,43 +21,44 @@ export function usePost(postUri: string | null) {
  * Hook to fetch a parent post when viewing a reply
  */
 export function useParentPost(parentUri: string | null) {
-  console.log("useParentPost called with URI:", parentUri);
-
-  return useQuery({
+  const {
+    data: parentPost,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["parentPost", parentUri],
     queryFn: async () => {
+      if (!parentUri) return null;
       const token = jwtStorage.getToken();
-      if (!token || !parentUri)
-        throw new Error("No access token or parent URI");
-
-      console.log("Fetching parent post:", parentUri);
+      if (!token) throw new Error("No access token");
       const result = await blueskyApi.getPost(token, parentUri);
-      console.log("Parent post result:", result);
       return result;
     },
     enabled: !!parentUri,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  return { parentPost, error, isLoading };
 }
 
 /**
  * Hook to fetch a root post when viewing a reply in a thread
  */
 export function useRootPost(rootUri: string | null) {
-  console.log("useRootPost called with URI:", rootUri);
-
-  return useQuery({
+  const {
+    data: rootPost,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["rootPost", rootUri],
     queryFn: async () => {
+      if (!rootUri) return null;
       const token = jwtStorage.getToken();
-      if (!token || !rootUri) throw new Error("No access token or root URI");
-
-      console.log("Fetching root post:", rootUri);
+      if (!token) throw new Error("No access token");
       const result = await blueskyApi.getPost(token, rootUri);
-      console.log("Root post result:", result);
       return result;
     },
     enabled: !!rootUri,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  return { rootPost, error, isLoading };
 }

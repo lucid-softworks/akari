@@ -23,7 +23,6 @@ export default function DiscoverScreen() {
 
   // Create scroll to top function
   const scrollToTop = () => {
-    console.log("Home scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 

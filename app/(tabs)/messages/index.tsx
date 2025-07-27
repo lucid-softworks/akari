@@ -23,11 +23,6 @@ type Conversation = {
   muted: boolean;
 };
 
-type ConversationError = {
-  type: "permission" | "network" | "unknown";
-  message: string;
-};
-
 export default function MessagesScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const insets = useSafeAreaInsets();
@@ -36,7 +31,6 @@ export default function MessagesScreen() {
 
   // Create scroll to top function
   const scrollToTop = () => {
-    console.log("Messages scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 

@@ -16,7 +16,6 @@ export function useProfile(identifier: string, enabled: boolean = true) {
       if (!token) throw new Error("No access token");
 
       const profile = await blueskyApi.getProfile(token, identifier);
-      console.log("PROFILE DATA:", JSON.stringify(profile, null, 2));
 
       return profile;
     },

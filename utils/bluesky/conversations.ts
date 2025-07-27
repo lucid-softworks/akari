@@ -27,12 +27,6 @@ export class BlueskyConversations extends BlueskyApiClient {
     if (readState) params.readState = readState;
     if (status) params.status = status;
 
-    console.log(
-      "Making conversations API request to:",
-      `https://api.bsky.chat/xrpc/chat.bsky.convo.listConvos`
-    );
-    console.log("With params:", params);
-
     try {
       // Use the dedicated chat service URL
       const chatBaseUrl = "https://api.bsky.chat/xrpc";
@@ -64,10 +58,8 @@ export class BlueskyConversations extends BlueskyApiClient {
       }
 
       const data = await response.json();
-      console.log("Conversations API success:", data);
       return data;
     } catch (error) {
-      console.error("Conversations API error in client:", error);
       throw error;
     }
   }
@@ -89,12 +81,6 @@ export class BlueskyConversations extends BlueskyApiClient {
     const params: any = { convoId, limit };
 
     if (cursor) params.cursor = cursor;
-
-    console.log(
-      "Making messages API request to:",
-      `https://api.bsky.chat/xrpc/chat.bsky.convo.getMessages`
-    );
-    console.log("With params:", params);
 
     try {
       // Use the dedicated chat service URL
@@ -127,10 +113,8 @@ export class BlueskyConversations extends BlueskyApiClient {
       }
 
       const data = await response.json();
-      console.log("Messages API success:", data);
       return data;
     } catch (error) {
-      console.error("Messages API error in client:", error);
       throw error;
     }
   }

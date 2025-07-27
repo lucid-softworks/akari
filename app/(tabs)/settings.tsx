@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -9,11 +9,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
-import {
-  jwtStorage,
-  secureStorageUtils,
-  type Account,
-} from "@/utils/secureStorage";
+import { jwtStorage, type Account } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 export default function SettingsScreen() {
@@ -28,15 +24,16 @@ export default function SettingsScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Create scroll to top function
-  const scrollToTop = () => {
-    console.log("Settings scroll to top called");
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
+  const handleScrollToTop = useCallback(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  }, []);
 
   // Register with the tab scroll registry
-  React.useEffect(() => {
-    tabScrollRegistry.register("settings", scrollToTop);
-  }, []);
+  useEffect(() => {
+    tabScrollRegistry.register("settings", handleScrollToTop);
+  }, [handleScrollToTop]);
 
   // Get current account profile data
   const { data: currentProfile } = useProfile(
@@ -77,9 +74,6 @@ export default function SettingsScreen() {
           current = jwtStorage.getCurrentAccount();
         }
       }
-
-      console.log("Settings: Found accounts:", allAccounts.length);
-      console.log("Settings: Current account:", current?.handle);
 
       setAccounts(allAccounts);
       setCurrentAccount(current);
@@ -126,10 +120,10 @@ export default function SettingsScreen() {
               }
             }
           } catch (error) {
-            console.error(
-              `Error fetching profile for ${account.handle}:`,
-              error
-            );
+            // console.error(
+            //   `Error fetching profile for ${account.handle}:`,
+            //   error
+            // );
           }
         }
 
@@ -140,26 +134,13 @@ export default function SettingsScreen() {
     }
   }, [accounts, currentAccount]);
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Disconnect All Accounts",
-      "Are you sure you want to disconnect all Bluesky accounts? This will clear all stored data.",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Disconnect All",
-          style: "destructive",
-          onPress: () => {
-            // Clear all secure storage data
-            secureStorageUtils.clear();
-            router.replace("/(auth)/signin");
-          },
-        },
-      ]
-    );
+  const handleLogout = async () => {
+    try {
+      jwtStorage.clearAuth();
+      router.replace("/(auth)/signin");
+    } catch (error) {
+      Alert.alert("Error", "Failed to logout");
+    }
   };
 
   const handleSwitchAccount = (account: Account) => {

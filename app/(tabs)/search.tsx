@@ -33,7 +33,6 @@ export default function SearchScreen() {
 
   // Create scroll to top function
   const scrollToTop = () => {
-    console.log("Search scroll to top called");
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
@@ -122,10 +121,8 @@ export default function SearchScreen() {
 
       setResults(combinedResults);
     } catch (error) {
-      console.error("Search error:", error);
       // Show a more user-friendly error message
       if (error instanceof Error) {
-        console.error("Search error details:", error.message);
       }
     } finally {
       setIsSearching(false);

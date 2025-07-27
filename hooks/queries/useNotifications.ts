@@ -31,14 +31,6 @@ export function useNotifications(
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      console.log(
-        "Fetching notifications:",
-        "page:",
-        pageParam,
-        "user:",
-        currentUserDid
-      );
-
       try {
         const response = await blueskyApi.listNotifications(
           token,
@@ -46,11 +38,6 @@ export function useNotifications(
           pageParam, // cursor
           reasons,
           priority
-        );
-
-        console.log(
-          "Notifications API response:",
-          JSON.stringify(response, null, 2)
         );
 
         // Transform the data to match our UI needs
@@ -78,8 +65,6 @@ export function useNotifications(
           };
         });
 
-        console.log("Transformed notifications:", notifications);
-
         return {
           notifications,
           cursor: response.cursor,
@@ -87,10 +72,6 @@ export function useNotifications(
           seenAt: response.seenAt,
         };
       } catch (error: any) {
-        console.error("Notifications API error:", error);
-        console.error("Error response:", error?.response);
-        console.error("Error message:", error?.message);
-
         // Determine the type of error
         let errorType: NotificationError["type"] = "unknown";
         let errorMessage = "Failed to load notifications";

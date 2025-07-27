@@ -32,13 +32,11 @@ export function useBlueskyAuth() {
 
         setIsAuthenticated(true);
       } catch (error) {
-        console.error("Token refresh failed:", error);
         // Clear invalid tokens
         jwtStorage.clearAuth();
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.error("Auth check failed:", error);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);

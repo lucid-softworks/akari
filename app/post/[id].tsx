@@ -28,9 +28,8 @@ export default function PostDetailScreen() {
   const parentUri = mainPost?.record?.reply?.parent?.uri;
   const rootUri = mainPost?.record?.reply?.root?.uri;
 
-  const { data: parentPost, isLoading: parentLoading } =
-    useParentPost(parentUri);
-  const { data: rootPost, isLoading: rootLoading } = useRootPost(rootUri);
+  const { parentPost, isLoading: parentLoading } = useParentPost(parentUri);
+  const { rootPost, isLoading: rootLoading } = useRootPost(rootUri);
 
   // Scroll to the main post after everything is loaded
   useEffect(() => {
@@ -58,34 +57,6 @@ export default function PostDetailScreen() {
     }
   }, [postLoading, threadLoading, parentLoading, rootLoading, isReply]);
 
-  // Debug logging to understand the data structure
-  console.log("Thread data:", {
-    hasThread: !!threadData?.thread,
-    hasReplies: !!threadData?.thread?.replies,
-    replyCount: threadData?.thread?.replies?.length,
-    postReply: post?.reply,
-    mainPost: mainPost,
-  });
-
-  console.log("Reply analysis:", {
-    isReply,
-    hasParent: !!parentPost,
-    hasRoot: !!rootPost,
-    parentUri,
-    rootUri,
-    parentData: parentPost,
-    rootData: rootPost,
-    replyData: mainPost?.record?.reply,
-  });
-
-  console.log("Full post data:", {
-    post,
-    mainPost,
-    reply: mainPost?.record?.reply,
-    parent: mainPost?.record?.reply?.parent,
-    root: mainPost?.record?.reply?.root,
-  });
-
   // Check if this comment is a reply to another comment
   const renderComment = (
     item:
@@ -99,7 +70,6 @@ export default function PostDetailScreen() {
     if ("post" in item) {
       const post = item.post;
       if (!post.author || !post.author.handle) {
-        console.log("Skipping comment without author data:", post);
         return null;
       }
 
@@ -138,7 +108,6 @@ export default function PostDetailScreen() {
 
     // Handle direct post type
     if (!item.author || !item.author.handle) {
-      console.log("Skipping comment without author data:", item);
       return null;
     }
 
@@ -166,17 +135,13 @@ export default function PostDetailScreen() {
 
   // Render parent post if this is a reply
   const renderParentPost = () => {
-    console.log("renderParentPost called:", { isReply, parentPost });
-
     if (!isReply || !parentPost) {
-      console.log("Not rendering parent post:", {
-        isReply,
-        hasParent: !!parentPost,
-      });
       return null;
     }
 
-    console.log("Rendering parent post:", parentPost);
+    if (!parentPost.author) {
+      return null;
+    }
 
     return (
       <PostCard
@@ -202,8 +167,6 @@ export default function PostDetailScreen() {
   // Render grandparent post if this is a reply to a reply
   const renderGrandparentPost = () => {
     if (!rootPost) return null;
-
-    console.log("Rendering grandparent post:", rootPost);
 
     return (
       <PostCard

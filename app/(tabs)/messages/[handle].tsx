@@ -2,6 +2,7 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
@@ -78,11 +79,14 @@ export default function ConversationScreen() {
     isFetchingNextPage,
   } = useMessages(conversation?.convoId || "", 50, !!conversation?.convoId);
 
-  const handleSendMessage = () => {
-    if (messageText.trim()) {
+  const handleSendMessage = async () => {
+    if (!messageText.trim()) return;
+
+    try {
       // TODO: Send message via API
-      console.log("Sending message:", messageText);
       setMessageText("");
+    } catch {
+      Alert.alert("Error", "Failed to send message");
     }
   };
 

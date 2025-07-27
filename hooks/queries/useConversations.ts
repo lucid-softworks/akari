@@ -31,13 +31,6 @@ export function useConversations(
       const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
-      console.log(
-        "Fetching conversations page:",
-        pageParam,
-        "user:",
-        currentUserDid
-      );
-
       try {
         const response = await blueskyApi.listConversations(
           token,
@@ -45,11 +38,6 @@ export function useConversations(
           pageParam, // cursor
           readState,
           status
-        );
-
-        console.log(
-          "Conversations API response:",
-          JSON.stringify(response, null, 2)
         );
 
         // Transform the data to match our UI needs
@@ -80,17 +68,11 @@ export function useConversations(
           };
         });
 
-        console.log("Transformed conversations:", conversations);
-
         return {
           conversations,
           cursor: response.cursor,
         };
       } catch (error: any) {
-        console.error("Conversations API error:", error);
-        console.error("Error response:", error?.response);
-        console.error("Error message:", error?.message);
-
         // Determine the type of error
         let errorType: ConversationError["type"] = "unknown";
         let errorMessage = "Failed to load conversations";

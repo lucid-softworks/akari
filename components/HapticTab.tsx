@@ -20,8 +20,6 @@ export function HapticTab(props: HapticTabProps) {
         restProps.onPressIn?.(ev);
       }}
       onPress={(ev) => {
-        console.log("HapticTab pressed, calling onTabPress");
-        // Call the tab press handler if provided
         onTabPress?.();
         restProps.onPress?.(ev);
       }}

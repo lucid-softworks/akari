@@ -85,7 +85,6 @@ export default function AuthScreen() {
         ]);
       }
     } catch (error) {
-      console.error("Sign in error:", error);
       Alert.alert(
         "Error",
         error instanceof Error
@@ -151,12 +150,11 @@ export default function AuthScreen() {
         ]);
       }
     } catch (error) {
-      console.error("Sign up error:", error);
       Alert.alert(
         "Error",
         error instanceof Error
           ? error.message
-          : "Sign up failed. Please try again."
+          : "Sign up failed. Please check your handle and app password."
       );
     }
   };

@@ -167,10 +167,12 @@ export const jwtStorage = {
 
   // Multi-account functions
   getAllAccounts: (): Account[] => {
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
-    console.log("getAllAccounts: Found", accounts.length, "accounts");
-    console.log("getAllAccounts: Accounts:", accounts);
-    return accounts;
+    try {
+      const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+      return accounts;
+    } catch {
+      return [];
+    }
   },
 
   getCurrentAccountId: (): string | null => {
@@ -178,13 +180,17 @@ export const jwtStorage = {
   },
 
   getCurrentAccount: (): Account | null => {
-    const currentId = secureStorageUtils.get("CURRENT_ACCOUNT_ID");
-    if (!currentId) return null;
+    try {
+      const currentId = secureStorageUtils.get("CURRENT_ACCOUNT_ID");
+      if (!currentId) return null;
 
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
-    return (
-      accounts.find((account: Account) => account.id === currentId) || null
-    );
+      const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+      return (
+        accounts.find((account: Account) => account.id === currentId) || null
+      );
+    } catch {
+      return null;
+    }
   },
 
   addAccount: (account: Omit<Account, "id" | "createdAt">): string => {
