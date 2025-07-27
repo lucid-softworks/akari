@@ -115,28 +115,42 @@ export default function DiscoverScreen() {
 
   const allPosts = feedData?.pages.flatMap((page: any) => page.feed) || [];
 
-  const renderFeedItem = ({ item }: { item: any }) => (
-    <PostCard
-      post={{
-        id: item.post.uri,
-        text: item.post.record?.text || "No text content",
-        author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
-        },
-        createdAt: new Date(item.post.indexedAt).toLocaleDateString(),
-        likeCount: item.post.likeCount || 0,
-        commentCount: item.post.replyCount || 0,
-        repostCount: item.post.repostCount || 0,
-        embed: item.post.embed,
-        embeds: item.post.embeds,
-      }}
-      onPress={() => {
-        router.push(`/post/${encodeURIComponent(item.post.uri)}`);
-      }}
-    />
-  );
+  const renderFeedItem = ({ item }: { item: any }) => {
+    // Check if this post is a reply and has reply context
+    const replyTo = item.post.reply?.parent
+      ? {
+          author: {
+            handle: item.post.reply.parent.author?.handle || "unknown",
+            displayName: item.post.reply.parent.author?.displayName,
+          },
+          text: item.post.reply.parent.record?.text || "No text content",
+        }
+      : undefined;
+
+    return (
+      <PostCard
+        post={{
+          id: item.post.uri,
+          text: item.post.record?.text || "No text content",
+          author: {
+            handle: item.post.author.handle,
+            displayName: item.post.author.displayName,
+            avatar: item.post.author.avatar,
+          },
+          createdAt: new Date(item.post.indexedAt).toLocaleDateString(),
+          likeCount: item.post.likeCount || 0,
+          commentCount: item.post.replyCount || 0,
+          repostCount: item.post.repostCount || 0,
+          embed: item.post.embed,
+          embeds: item.post.embeds,
+          replyTo,
+        }}
+        onPress={() => {
+          router.push(`/post/${encodeURIComponent(item.post.uri)}`);
+        }}
+      />
+    );
+  };
 
   if (feedsLoading) {
     return (

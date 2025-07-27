@@ -172,6 +172,18 @@ export default function SearchScreen() {
     if (item.type !== "post") return null;
 
     const post = item.data;
+
+    // Check if this post is a reply and has reply context
+    const replyTo = post.reply?.parent
+      ? {
+          author: {
+            handle: post.reply.parent.author?.handle || "unknown",
+            displayName: post.reply.parent.author?.displayName,
+          },
+          text: post.reply.parent.record?.text || "No text content",
+        }
+      : undefined;
+
     return (
       <PostCard
         post={{
@@ -188,6 +200,7 @@ export default function SearchScreen() {
           repostCount: post.repostCount || 0,
           embed: post.embed,
           embeds: post.embeds,
+          replyTo,
         }}
         onPress={() => {
           router.push(`/post/${encodeURIComponent(post.uri)}`);

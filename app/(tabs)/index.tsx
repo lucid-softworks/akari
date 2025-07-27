@@ -142,29 +142,43 @@ export default function ProfileScreen() {
         ) : currentData && currentData.length > 0 ? (
           currentData
             .filter((item) => item && item.uri) // Filter out undefined/null items
-            .map((item) => (
-              <PostCard
-                key={`${item.uri}-${item.indexedAt}`}
-                post={{
-                  id: item.uri,
-                  text: item.record?.text || "No text content",
-                  author: {
-                    handle: item.author.handle,
-                    displayName: item.author.displayName,
-                    avatar: item.author.avatar,
-                  },
-                  createdAt: new Date(item.indexedAt).toLocaleDateString(),
-                  likeCount: item.likeCount || 0,
-                  commentCount: item.replyCount || 0,
-                  repostCount: item.repostCount || 0,
-                  embed: item.embed,
-                  embeds: item.embeds,
-                }}
-                onPress={() => {
-                  router.push(`/post/${encodeURIComponent(item.uri)}`);
-                }}
-              />
-            ))
+            .map((item) => {
+              // Check if this post is a reply and has reply context
+              const replyTo = item.reply?.parent
+                ? {
+                    author: {
+                      handle: item.reply.parent.author?.handle || "unknown",
+                      displayName: item.reply.parent.author?.displayName,
+                    },
+                    text: item.reply.parent.record?.text || "No text content",
+                  }
+                : undefined;
+
+              return (
+                <PostCard
+                  key={`${item.uri}-${item.indexedAt}`}
+                  post={{
+                    id: item.uri,
+                    text: item.record?.text || "No text content",
+                    author: {
+                      handle: item.author.handle,
+                      displayName: item.author.displayName,
+                      avatar: item.author.avatar,
+                    },
+                    createdAt: new Date(item.indexedAt).toLocaleDateString(),
+                    likeCount: item.likeCount || 0,
+                    commentCount: item.replyCount || 0,
+                    repostCount: item.repostCount || 0,
+                    embed: item.embed,
+                    embeds: item.embeds,
+                    replyTo,
+                  }}
+                  onPress={() => {
+                    router.push(`/post/${encodeURIComponent(item.uri)}`);
+                  }}
+                />
+              );
+            })
         ) : (
           <ThemedView style={styles.emptyPosts}>
             <ThemedText style={styles.emptyPostsText}>

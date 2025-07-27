@@ -461,10 +461,28 @@ export type BlueskySearchPostsResponse = {
 export type BlueskyThreadResponse = {
   /** The thread data */
   thread?: {
-    /** The main post */
-    post: BlueskyPostView;
     /** Replies to the post */
-    replies?: BlueskyFeedItem[];
+    replies?: (
+      | BlueskyFeedItem
+      | null
+      | {
+          uri: string;
+          notFound?: boolean;
+          blocked?: boolean;
+          author?: any;
+        }
+    )[];
+    /** Thread context */
+    threadContext?: {
+      rootAuthorLike?: string;
+    };
+  };
+  /** Thread access controls */
+  threadgate?: {
+    uri: string;
+    cid: string;
+    record: any;
+    lists?: any[];
   };
 };
 

@@ -25,6 +25,14 @@ type PostCardProps = {
     repostCount?: number;
     embed?: any;
     embeds?: any[]; // Added embeds field
+    /** Reply context - what this post is replying to */
+    replyTo?: {
+      author: {
+        handle: string;
+        displayName?: string;
+      };
+      text: string;
+    };
   };
   onPress?: () => void;
 };
@@ -40,6 +48,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
       dark: "#2d3133",
     },
     "background"
+  );
+
+  const iconColor = useThemeColor(
+    {
+      light: "#666",
+      dark: "#999",
+    },
+    "text"
   );
 
   const handleProfilePress = () => {
@@ -127,6 +143,22 @@ export function PostCard({ post, onPress }: PostCardProps) {
         onPress={onPress}
         activeOpacity={0.7}
       >
+        {/* Reply Context */}
+        {post.replyTo && (
+          <ThemedView style={styles.replyContext}>
+            <ThemedText style={styles.replyIcon}>↩️</ThemedText>
+            <ThemedText style={styles.replyText}>
+              Replying to{" "}
+              <ThemedText style={styles.replyAuthor}>
+                @{post.replyTo.author.handle}
+              </ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.replyPreview} numberOfLines={1}>
+              {post.replyTo.text}
+            </ThemedText>
+          </ThemedView>
+        )}
+
         <ThemedView style={styles.header}>
           <ThemedView style={styles.authorSection}>
             <Image
@@ -226,6 +258,33 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
+  },
+  replyContext: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    paddingHorizontal: 4,
+  },
+  replyIcon: {
+    fontSize: 12,
+    marginRight: 4,
+  },
+  replyText: {
+    fontSize: 12,
+    opacity: 0.7,
+    flex: 1,
+  },
+  replyAuthor: {
+    fontSize: 12,
+    fontWeight: "600",
+    opacity: 0.8,
+  },
+  replyPreview: {
+    fontSize: 11,
+    opacity: 0.5,
+    fontStyle: "italic",
+    flex: 1,
+    marginLeft: 8,
   },
   header: {
     flexDirection: "row",
