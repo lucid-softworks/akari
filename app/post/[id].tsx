@@ -56,6 +56,7 @@ export default function PostDetailScreen() {
         commentCount: item.post.replyCount || 0,
         repostCount: item.post.repostCount || 0,
         embed: item.post.embed,
+        embeds: item.post.embeds,
       }}
     />
   );
@@ -76,6 +77,7 @@ export default function PostDetailScreen() {
           commentCount: post.replyCount || 0,
           repostCount: post.repostCount || 0,
           embed: post.embed,
+          embeds: post.embeds,
         }}
       />
 

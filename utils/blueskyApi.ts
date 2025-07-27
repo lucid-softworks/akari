@@ -619,6 +619,68 @@ class BlueskyApi {
   }
 
   /**
+   * Searches for profiles
+   * @param accessJwt - Valid access JWT token
+   * @param query - Search query
+   * @param limit - Number of results to fetch (default: 20)
+   * @returns Promise resolving to search results
+   */
+  async searchProfiles(accessJwt: string, query: string, limit: number = 20) {
+    const params = new URLSearchParams({
+      q: query,
+      limit: limit.toString(),
+    });
+
+    const response = await fetch(
+      `${this.baseUrl}/app.bsky.actor.searchActors?${params}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error: BlueskyError = await response.json();
+      throw new Error(error.message || "Failed to search profiles");
+    }
+
+    return await response.json();
+  }
+
+  /**
+   * Searches for posts
+   * @param accessJwt - Valid access JWT token
+   * @param query - Search query
+   * @param limit - Number of results to fetch (default: 20)
+   * @returns Promise resolving to search results
+   */
+  async searchPosts(accessJwt: string, query: string, limit: number = 20) {
+    const params = new URLSearchParams({
+      q: query,
+      limit: limit.toString(),
+    });
+
+    const response = await fetch(
+      `${this.baseUrl}/app.bsky.feed.searchPosts?${params}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error: BlueskyError = await response.json();
+      throw new Error(error.message || "Failed to search posts");
+    }
+
+    return await response.json();
+  }
+
+  /**
    * Creates a new BlueskyApi instance with a custom PDS URL
    * @param pdsUrl - The custom PDS URL
    * @returns New BlueskyApi instance

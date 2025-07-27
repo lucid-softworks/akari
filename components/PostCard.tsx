@@ -3,9 +3,11 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
+import { ExternalEmbed } from "@/components/ExternalEmbed";
 import { ImageViewer } from "@/components/ImageViewer";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 type PostCardProps = {
@@ -21,6 +23,7 @@ type PostCardProps = {
     commentCount?: number;
     repostCount?: number;
     embed?: any;
+    embeds?: any[]; // Added embeds field
   };
   onPress?: () => void;
 };
@@ -65,6 +68,49 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   const { urls: imageUrls, altTexts } = getImageData();
 
+  // Check if embed is a YouTube embed
+  const isYouTubeEmbed = () => {
+    // Check both embed and embeds fields
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+
+    if (!embedData) {
+      return false;
+    }
+
+    // Handle both "app.bsky.embed.external" and "app.bsky.embed.external#view"
+    if (!embedData.$type?.includes("app.bsky.embed.external")) {
+      return false;
+    }
+
+    const uri = embedData.external?.uri || "";
+    return (
+      uri.includes("youtube.com") ||
+      uri.includes("youtu.be") ||
+      uri.includes("music.youtube.com")
+    );
+  };
+
+  // Check if embed is an external embed (non-YouTube)
+  const isExternalEmbed = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+
+    if (!embedData || !embedData.$type?.includes("app.bsky.embed.external")) {
+      return false;
+    }
+
+    const uri = embedData.external?.uri || "";
+    return (
+      !uri.includes("youtube.com") &&
+      !uri.includes("youtu.be") &&
+      !uri.includes("music.youtube.com")
+    );
+  };
+
+  // Get the embed data for rendering
+  const getEmbedData = () => {
+    return post.embed || (post.embeds && post.embeds[0]);
+  };
+
   const handleImagePress = (index: number) => {
     setSelectedImageIndex(index);
   };
@@ -96,6 +142,12 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
         <ThemedView style={styles.content}>
           <ThemedText style={styles.text}>{post.text}</ThemedText>
+
+          {/* Render YouTube embed if present */}
+          {isYouTubeEmbed() && <YouTubeEmbed embed={getEmbedData()} />}
+
+          {/* Render external embed if present (non-YouTube) */}
+          {isExternalEmbed() && <ExternalEmbed embed={getEmbedData()} />}
 
           {/* Render images if present */}
           {imageUrls.length > 0 && (

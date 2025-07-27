@@ -129,6 +129,7 @@ export default function DiscoverScreen() {
         commentCount: item.post.replyCount || 0,
         repostCount: item.post.repostCount || 0,
         embed: item.post.embed,
+        embeds: item.post.embeds,
       }}
       onPress={() => {
         router.push(`/post/${encodeURIComponent(item.post.uri)}`);
