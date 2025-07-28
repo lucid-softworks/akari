@@ -291,6 +291,15 @@ export const es = {
     noReposts: "Aún no hay republicaciones",
     noContent: "Aún no hay contenido",
   },
+  // Messages
+  messages: {
+    typeMessage: "Escribe un mensaje...",
+    sendMessage: "Enviar mensaje",
+    messageSent: "Mensaje enviado",
+    messageError: "Error al enviar mensaje",
+    noMessages: "Aún no hay mensajes",
+    startConversation: "Inicia una conversación",
+  },
   // Settings
   settings: {
     account: "Cuenta",
@@ -317,5 +326,7 @@ export const es = {
       "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
     deleteAccountSuccess: "Cuenta eliminada exitosamente",
     deleteAccountError: "Error al eliminar cuenta",
+    checkMissingTranslations: "🔍 Verificar Traducciones Faltantes",
+    developmentTool: "Herramienta de desarrollo",
   },
 };

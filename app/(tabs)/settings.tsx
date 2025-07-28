@@ -420,10 +420,10 @@ export default function SettingsScreen() {
             >
               <ThemedView style={styles.settingInfo}>
                 <ThemedText style={styles.settingLabel}>
-                  🔍 Check Missing Translations
+                  {t("settings.checkMissingTranslations")}
                 </ThemedText>
                 <ThemedText style={styles.settingValue}>
-                  Development tool
+                  {t("settings.developmentTool")}
                 </ThemedText>
               </ThemedView>
             </TouchableOpacity>

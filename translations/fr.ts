@@ -290,6 +290,15 @@ export const fr = {
     noReposts: "Aucune republication pour le moment",
     noContent: "Aucun contenu pour le moment",
   },
+  // Messages
+  messages: {
+    typeMessage: "Tapez un message...",
+    sendMessage: "Envoyer le message",
+    messageSent: "Message envoyé",
+    messageError: "Erreur lors de l'envoi du message",
+    noMessages: "Aucun message pour le moment",
+    startConversation: "Commencer une conversation",
+  },
   // Settings
   settings: {
     account: "Compte",
@@ -316,5 +325,7 @@ export const fr = {
       "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.",
     deleteAccountSuccess: "Compte supprimé avec succès",
     deleteAccountError: "Erreur lors de la suppression du compte",
+    checkMissingTranslations: "🔍 Vérifier les traductions manquantes",
+    developmentTool: "Outil de développement",
   },
 };

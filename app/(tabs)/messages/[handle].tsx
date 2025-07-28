@@ -305,7 +305,7 @@ export default function ConversationScreen() {
               ]}
               value={messageText}
               onChangeText={setMessageText}
-              placeholder="Type a message..."
+              placeholder={t("messages.typeMessage")}
               placeholderTextColor={iconColor}
               multiline
               maxLength={500}

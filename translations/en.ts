@@ -287,6 +287,15 @@ export const en = {
     noReposts: "No reposts yet",
     noContent: "No content yet",
   },
+  // Messages
+  messages: {
+    typeMessage: "Type a message...",
+    sendMessage: "Send message",
+    messageSent: "Message sent",
+    messageError: "Error sending message",
+    noMessages: "No messages yet",
+    startConversation: "Start a conversation",
+  },
   // Settings
   settings: {
     account: "Account",
@@ -313,5 +322,7 @@ export const en = {
       "Are you sure you want to delete your account? This action cannot be undone.",
     deleteAccountSuccess: "Account deleted successfully",
     deleteAccountError: "Error deleting account",
+    checkMissingTranslations: "🔍 Check Missing Translations",
+    developmentTool: "Development tool",
   },
 };

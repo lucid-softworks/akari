@@ -282,6 +282,15 @@ export const zhCN = {
     noReposts: "还没有转发",
     noContent: "还没有内容",
   },
+  // Messages
+  messages: {
+    typeMessage: "输入消息...",
+    sendMessage: "发送消息",
+    messageSent: "消息已发送",
+    messageError: "发送消息时出错",
+    noMessages: "暂无消息",
+    startConversation: "开始对话",
+  },
   // Settings
   settings: {
     account: "账户",
@@ -307,5 +316,7 @@ export const zhCN = {
     deleteAccountConfirm: "您确定要删除您的账户吗？此操作无法撤销。",
     deleteAccountSuccess: "账户删除成功",
     deleteAccountError: "删除账户时出错",
+    checkMissingTranslations: "🔍 检查缺失翻译",
+    developmentTool: "开发工具",
   },
 };

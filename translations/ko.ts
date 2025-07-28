@@ -282,6 +282,15 @@ export const ko = {
     noReposts: "아직 리포스트가 없습니다",
     noContent: "아직 콘텐츠가 없습니다",
   },
+  // Messages
+  messages: {
+    typeMessage: "메시지를 입력하세요...",
+    sendMessage: "메시지 보내기",
+    messageSent: "메시지가 전송되었습니다",
+    messageError: "메시지 전송 오류",
+    noMessages: "아직 메시지가 없습니다",
+    startConversation: "대화 시작",
+  },
   // Settings
   settings: {
     account: "계정",
@@ -308,5 +317,7 @@ export const ko = {
       "계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
     deleteAccountSuccess: "계정이 성공적으로 삭제되었습니다",
     deleteAccountError: "계정 삭제 오류",
+    checkMissingTranslations: "🔍 누락된 번역 확인",
+    developmentTool: "개발 도구",
   },
 };

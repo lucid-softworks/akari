@@ -290,6 +290,15 @@ export const de = {
     noReposts: "Noch nichts erneut gepostet",
     noContent: "Noch kein Inhalt",
   },
+  // Messages
+  messages: {
+    typeMessage: "Nachricht eingeben...",
+    sendMessage: "Nachricht senden",
+    messageSent: "Nachricht gesendet",
+    messageError: "Fehler beim Senden der Nachricht",
+    noMessages: "Noch keine Nachrichten",
+    startConversation: "Konversation starten",
+  },
   // Settings
   settings: {
     account: "Konto",
@@ -316,5 +325,7 @@ export const de = {
       "Bist du sicher, dass du dein Konto löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
     deleteAccountSuccess: "Konto erfolgreich gelöscht",
     deleteAccountError: "Fehler beim Löschen des Kontos",
+    checkMissingTranslations: "🔍 Fehlende Übersetzungen prüfen",
+    developmentTool: "Entwicklungstool",
   },
 };
