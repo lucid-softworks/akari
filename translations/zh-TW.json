@@ -107,15 +107,13 @@
       "networkError": "網路錯誤。請檢查您的連線。",
       "serverError": "伺服器錯誤。請稍後再試。",
       "unknownError": "發生未知錯誤。",
-      "noTextContent": "沒有文字內容",
       "success": "成功",
       "ok": "確定",
       "hide": "隱藏",
       "show": "顯示",
       "pending": "待處理",
       "video": "影片",
-      "unknown": "未知",
-      "test": "Test"
+      "unknown": "未知"
     },
     "auth": {
       "signInTitle": "登入",

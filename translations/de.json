@@ -107,7 +107,6 @@
       "networkError": "Netzwerkfehler. Bitte überprüfe deine Verbindung.",
       "serverError": "Serverfehler. Bitte versuche es später erneut.",
       "unknownError": "Ein unbekannter Fehler ist aufgetreten.",
-      "noTextContent": "Kein Textinhalt",
       "success": "Erfolg",
       "ok": "OK",
       "hide": "Ausblenden",

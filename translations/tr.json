@@ -107,7 +107,6 @@
       "networkError": "Ağ hatası. Lütfen bağlantınızı kontrol edin.",
       "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
       "unknownError": "Bilinmeyen bir hata oluştu.",
-      "noTextContent": "Metin içeriği yok",
       "success": "Başarılı",
       "ok": "Tamam",
       "hide": "Gizle",

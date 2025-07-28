@@ -107,7 +107,6 @@
       "networkError": "网络错误。请检查您的连接。",
       "serverError": "服务器错误。请稍后重试。",
       "unknownError": "发生未知错误。",
-      "noTextContent": "没有文本内容",
       "success": "成功",
       "ok": "确定",
       "hide": "隐藏",

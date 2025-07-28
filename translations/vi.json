@@ -107,15 +107,13 @@
       "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
       "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
       "unknownError": "Đã xảy ra lỗi không xác định.",
-      "noTextContent": "Không có nội dung văn bản",
       "success": "Thành công",
       "ok": "OK",
       "hide": "Ẩn",
       "show": "Hiển thị",
       "pending": "Đang chờ",
       "video": "Video",
-      "unknown": "Không xác định",
-      "test": "Test"
+      "unknown": "Không xác định"
     },
     "auth": {
       "signInTitle": "Đăng nhập",

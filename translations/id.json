@@ -107,15 +107,13 @@
       "networkError": "Kesalahan jaringan. Silakan periksa koneksi Anda.",
       "serverError": "Kesalahan server. Silakan coba lagi nanti.",
       "unknownError": "Terjadi kesalahan yang tidak diketahui.",
-      "noTextContent": "Tidak ada konten teks",
       "success": "Berhasil",
       "ok": "OK",
       "hide": "Sembunyikan",
       "show": "Tampilkan",
       "pending": "Menunggu",
       "video": "Video",
-      "unknown": "Tidak Diketahui",
-      "test": "Test"
+      "unknown": "Tidak Diketahui"
     },
     "auth": {
       "signInTitle": "Masuk",

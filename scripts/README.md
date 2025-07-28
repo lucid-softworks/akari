@@ -1,61 +1,78 @@
-# Translation Key Management Script
+# Scripts
 
-This script provides a streamlined CLI for managing translation keys across all language files.
+This directory contains utility scripts for the Akari v2 project.
 
-## Usage
+## Available Scripts
+
+### `reset-project.js`
+
+Resets the project to a clean state by removing generated files and dependencies.
+
+**Usage:**
+
+```bash
+npm run reset-project
+```
+
+### `add-translation-keys.js`
+
+Adds missing translation keys to all language files based on the English translation file.
+
+**Usage:**
 
 ```bash
 npm run add-translations
 ```
 
-## Workflow
+### `validate-translations.js`
 
-The script follows a simple, intuitive workflow:
+Validates all translation files to ensure they match the exact structure of the English translation file (`en.json`). This script:
 
-1. **Section?** - Enter the section name (e.g., `common`, `messages`, `settings`)
-   - If section doesn't exist, it suggests similar ones or creates a new one
-2. **Key?** - Enter the translation key (e.g., `newFeature`, `welcomeMessage`)
-   - If key already exists, it shows an error and exits
-3. **Value?** - Enter the English translation value
-   - This is required and cannot be empty
-4. **Add other languages?** - Choose whether to add translations for other languages
-   - If yes, select from a numbered list of available languages
-   - Enter the translation for the selected language
+- Checks for missing keys in other language files
+- Identifies extra keys that don't exist in the reference file
+- Reports JSON parsing errors
+- Provides a detailed summary of validation results
 
-## Features
+**Usage:**
 
-- **Smart section detection** - Suggests similar sections if you mistype
-- **Duplicate prevention** - Checks if keys already exist
-- **Auto-creation** - Creates new sections automatically
-- **Language selection** - Shows language names and flags for easy selection
-- **Minimal output** - Only shows success/error messages, no verbose logging
-
-## Example Session
-
-```
-🌍 Translation Manager
-
-Section? common
-Key? newFeature
-Value? New feature description
-
-Add translations for other languages? (y/n): y
-
-Available languages:
-1. 🇪🇸 Español (Spanish)
-2. 🇫🇷 Français (French)
-3. 🇩🇪 Deutsch (German)
-...
-
-Select language (number): 1
-🇪🇸 Español value: Descripción de nueva función
-
-✅ Done!
+```bash
+npm run validate-translations
 ```
 
-## Tips
+**Output Example:**
 
-- Use tab completion for section names (if your terminal supports it)
-- Section names are case-insensitive
-- You can skip adding other languages by answering 'n'
-- The script automatically handles all file formatting
+```
+📋 Reference file has 304 keys
+🔍 Validating 20 translation files...
+
+✅ en-US.json: Valid
+❌ ar.json: Invalid
+   Extra keys (1):
+     + translations.common.noTextContent
+
+📊 Summary:
+   Total files: 20
+   Valid: 1
+   Invalid: 19
+
+⚠️  Some translation files have issues. Please fix them.
+```
+
+**Exit Codes:**
+
+- `0`: All translation files are valid
+- `1`: One or more translation files have issues
+
+## Running Scripts
+
+All scripts can be run using npm:
+
+```bash
+npm run <script-name>
+```
+
+Or directly with node:
+
+```bash
+node scripts/<script-name>.js
+```

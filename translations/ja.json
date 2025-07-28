@@ -107,7 +107,6 @@
       "networkError": "ネットワークエラー。接続を確認してください。",
       "serverError": "サーバーエラー。後でもう一度お試しください。",
       "unknownError": "不明なエラーが発生しました。",
-      "noTextContent": "テキストコンテンツがありません",
       "success": "成功",
       "ok": "OK",
       "hide": "非表示",

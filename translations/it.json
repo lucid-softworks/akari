@@ -107,7 +107,6 @@
       "networkError": "Errore di rete. Controlla la tua connessione.",
       "serverError": "Errore del server. Riprova più tardi.",
       "unknownError": "Si è verificato un errore sconosciuto.",
-      "noTextContent": "Nessun contenuto testuale",
       "success": "Successo",
       "ok": "OK",
       "hide": "Nascondi",
