@@ -39,7 +39,7 @@ type PostCardProps = {
         handle: string;
         displayName?: string;
       };
-      text: string;
+      text?: string;
     };
     /** Labels applied to the post */
     labels?: BlueskyLabel[];

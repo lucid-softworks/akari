@@ -78,9 +78,7 @@ export class BlueskyConversations extends BlueskyApiClient {
     limit: number = 50,
     cursor?: string
   ): Promise<BlueskyMessagesResponse> {
-    const params: any = { convoId, limit };
-
-    if (cursor) params.cursor = cursor;
+    const params = { convoId, limit, cursor };
 
     try {
       // Use the dedicated chat service URL

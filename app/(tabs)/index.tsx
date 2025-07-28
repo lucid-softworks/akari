@@ -10,6 +10,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFeeds } from "@/hooks/queries/useFeeds";
 import { useSelectedFeed } from "@/hooks/useSelectedFeed";
+import type { BlueskyFeedItem } from "@/utils/blueskyApi";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
@@ -124,9 +125,9 @@ export default function DiscoverScreen() {
     }
   };
 
-  const allPosts = feedData?.pages.flatMap((page: any) => page.feed) || [];
+  const allPosts = feedData?.pages.flatMap((page) => page.feed) || [];
 
-  const renderFeedItem = ({ item }: { item: any }) => {
+  const renderFeedItem = ({ item }: { item: BlueskyFeedItem }) => {
     // Check if this post is a reply and has reply context
     const replyTo = item.post.reply?.parent
       ? {
@@ -134,7 +135,7 @@ export default function DiscoverScreen() {
             handle: item.post.reply.parent.author?.handle || "unknown",
             displayName: item.post.reply.parent.author?.displayName,
           },
-          text: item.post.reply.parent.record?.text || "No text content",
+          text: item.post.reply.parent.record?.text as string,
         }
       : undefined;
 
@@ -142,7 +143,7 @@ export default function DiscoverScreen() {
       <PostCard
         post={{
           id: item.post.uri,
-          text: item.post.record?.text || "No text content",
+          text: item.post.record?.text as string,
           author: {
             handle: item.post.author.handle,
             displayName: item.post.author.displayName,

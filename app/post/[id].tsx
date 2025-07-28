@@ -116,7 +116,7 @@ export default function PostDetailScreen() {
               post.reply.parent.record &&
               "text" in post.reply.parent.record
                 ? (post.reply.parent.record as { text: string }).text
-                : "No text content",
+                : undefined,
           }
         : undefined;
 
@@ -130,7 +130,7 @@ export default function PostDetailScreen() {
               post.record &&
               "text" in post.record
                 ? (post.record as { text: string }).text
-                : "No text content",
+                : undefined,
             author: {
               handle: post.author.handle,
               displayName: post.author.displayName,
@@ -164,7 +164,7 @@ export default function PostDetailScreen() {
             postItem.record &&
             "text" in postItem.record
               ? (postItem.record as { text: string }).text
-              : "No text content",
+              : undefined,
           author: {
             handle: postItem.author.handle,
             displayName: postItem.author.displayName,
@@ -201,7 +201,7 @@ export default function PostDetailScreen() {
             parentPost.record &&
             "text" in parentPost.record
               ? (parentPost.record as { text: string }).text
-              : "No text content",
+              : undefined,
           author: {
             handle: parentPost.author.handle,
             displayName: parentPost.author.displayName,
@@ -232,7 +232,7 @@ export default function PostDetailScreen() {
             rootPost.record &&
             "text" in rootPost.record
               ? (rootPost.record as { text: string }).text
-              : "No text content",
+              : undefined,
           author: {
             handle: rootPost.author.handle,
             displayName: rootPost.author.displayName,
@@ -309,7 +309,7 @@ export default function PostDetailScreen() {
                   mainPost?.record &&
                   "text" in mainPost.record
                     ? (mainPost.record as { text: string }).text
-                    : "No text content",
+                    : undefined,
                 author: {
                   handle: mainPost?.author?.handle || "",
                   displayName: mainPost?.author?.displayName,
