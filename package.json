@@ -7,6 +7,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "add-translations": "node ./scripts/add-translation-keys.js",
     "validate-translations": "node ./scripts/validate-translations.js",
+    "find-unused-translations": "node ./scripts/find-unused-translations.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",

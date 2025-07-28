@@ -183,7 +183,7 @@ export default function SearchScreen() {
             handle: post.reply.parent.author?.handle || t("common.unknown"),
             displayName: post.reply.parent.author?.displayName,
           },
-          text: post.reply.parent.record?.text || t("common.noTextContent"),
+          text: post.reply.parent.record?.text,
         }
       : undefined;
 
@@ -191,7 +191,7 @@ export default function SearchScreen() {
       <PostCard
         post={{
           id: post.uri,
-          text: post.record?.text || t("common.noTextContent"),
+          text: post.record?.text,
           author: {
             handle: post.author.handle,
             displayName: post.author.displayName,

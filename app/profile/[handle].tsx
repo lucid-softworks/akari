@@ -13,7 +13,6 @@ import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
 import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
-import { useBorderColor } from "@/hooks/useBorderColor";
 import { useTranslation } from "@/hooks/useTranslation";
 import { jwtStorage } from "@/utils/secureStorage";
 
@@ -22,7 +21,6 @@ type TabType = "posts" | "replies" | "likes" | "media";
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
-  const borderColor = useBorderColor();
   const currentUser = jwtStorage.getUserData();
   const { t } = useTranslation();
 
@@ -162,9 +160,7 @@ export default function ProfileScreen() {
                         handle: item.reply.parent.author?.handle || "unknown",
                         displayName: item.reply.parent.author?.displayName,
                       },
-                      text:
-                        item.reply.parent.record?.text ||
-                        t("common.noTextContent"),
+                      text: item.reply.parent.record?.text,
                     }
                   : undefined;
 
@@ -173,7 +169,7 @@ export default function ProfileScreen() {
                     key={`${item.uri}-${item.indexedAt}`}
                     post={{
                       id: item.uri,
-                      text: item.record?.text || t("common.noTextContent"),
+                      text: item.record?.text,
                       author: {
                         handle: item.author.handle,
                         displayName: item.author.displayName,

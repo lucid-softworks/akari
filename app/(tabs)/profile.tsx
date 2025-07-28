@@ -161,7 +161,7 @@ export default function ProfileScreen() {
               key={post.uri}
               post={{
                 id: post.uri,
-                text: post.record?.text || t("common.noTextContent"),
+                text: post.record?.text,
                 author: {
                   handle: post.author.handle,
                   displayName: post.author.displayName,

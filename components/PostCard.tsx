@@ -16,7 +16,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 type PostCardProps = {
   post: {
     id: string;
-    text: string;
+    text?: string;
     author: {
       handle: string;
       displayName?: string;
@@ -69,14 +69,6 @@ export function PostCard({ post, onPress }: PostCardProps) {
       dark: "#2d3133",
     },
     "background"
-  );
-
-  const iconColor = useThemeColor(
-    {
-      light: "#666",
-      dark: "#999",
-    },
-    "text"
   );
 
   const handleProfilePress = () => {
