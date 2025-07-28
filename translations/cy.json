@@ -35,7 +35,23 @@
       "show": "Dangos",
       "pending": "Yn aros",
       "video": "Fideo",
-      "unknown": "Anhysbys"
+      "unknown": "Anhysbys",
+      "cancel": "Canslo",
+      "follow": "Dilyn",
+      "unfollow": "Peidio â Dilyn",
+      "block": "Blocio",
+      "unblock": "Dadflocio",
+      "externalLink": "Dolen Allanol",
+      "failedToDownloadImage": "Methodd llwytho i lawr delwedd",
+      "failedToLoadImage": "Methodd llwytho delwedd",
+      "failedToLogout": "Methodd allgofnodi",
+      "switchAccount": "Newid Cyfrif",
+      "cannotRemoveAccount": "Methu Tynnu Cyfrif",
+      "mustHaveOneAccount": "Rhaid i chi gael o leiaf un cyfrif. Ychwanegwch gyfrif arall yn gyntaf.",
+      "removeAccount": "Tynnu Cyfrif",
+      "translationReport": "Adroddiad Cyfieithiad",
+      "checkConsoleForReport": "Gwiriwch y consol am adroddiad cyfieithiadau coll",
+      "checkOutImage": "Edrychwch ar y ddelwedd hon!"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -111,7 +127,13 @@
       "noLikes": "Dim hoffiadau eto",
       "noMedia": "Dim cyfryngau eto",
       "noReplies": "Dim atebion eto",
-      "noContent": "Dim cynnwys eto"
+      "noContent": "Dim cynnwys eto",
+      "youAreBlockedByUser": "Rydych wedi'ch blocio gan y defnyddiwr hwn",
+      "unfollowConfirmation": "Ydych chi'n siŵr eich bod am beidio â dilyn @{{handle}}?",
+      "unblockConfirmation": "Ydych chi'n siŵr eich bod am ddadflocio @{{handle}}?",
+      "blockConfirmation": "Ydych chi'n siŵr eich bod am flocio @{{handle}}?",
+      "switchToAccount": "Newid i @{{handle}}?",
+      "removeAccountConfirmation": "Ydych chi'n siŵr eich bod am dynnu @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -138,7 +160,8 @@
       "about": "Am",
       "version": "Fersiwn",
       "checkMissingTranslations": "🔍 Gwiriwch Cyfieithiadau Coll",
-      "developmentTool": "Offeryn datblygu"
+      "developmentTool": "Offeryn datblygu",
+      "appVersion": "1.0.0"
     }
   }
 }

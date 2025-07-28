@@ -35,7 +35,23 @@
       "show": "Göster",
       "pending": "Beklemede",
       "video": "Video",
-      "unknown": "Bilinmiyor"
+      "unknown": "Bilinmiyor",
+      "cancel": "İptal",
+      "follow": "Takip Et",
+      "unfollow": "Takibi Bırak",
+      "block": "Engelle",
+      "unblock": "Engeli Kaldır",
+      "externalLink": "Dış Bağlantı",
+      "failedToDownloadImage": "Resim indirilemedi",
+      "failedToLoadImage": "Resim yüklenemedi",
+      "failedToLogout": "Çıkış yapılamadı",
+      "switchAccount": "Hesap Değiştir",
+      "cannotRemoveAccount": "Hesap kaldırılamaz",
+      "mustHaveOneAccount": "En az bir hesabınız olmalı. Lütfen önce başka bir hesap ekleyin.",
+      "removeAccount": "Hesabı Kaldır",
+      "translationReport": "Çeviri Raporu",
+      "checkConsoleForReport": "Eksik çeviriler raporu için konsolu kontrol edin",
+      "checkOutImage": "Bu resme bakın!"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
@@ -111,7 +127,13 @@
       "noLikes": "Henüz beğeni yok",
       "noMedia": "Henüz medya yok",
       "noReplies": "Henüz yanıt yok",
-      "noContent": "Henüz içerik yok"
+      "noContent": "Henüz içerik yok",
+      "youAreBlockedByUser": "Bu kullanıcı tarafından engellendiniz",
+      "unfollowConfirmation": "@{{handle}} takibini bırakmak istediğinizden emin misiniz?",
+      "unblockConfirmation": "@{{handle}} engelini kaldırmak istediğinizden emin misiniz?",
+      "blockConfirmation": "@{{handle}} engellemek istediğinizden emin misiniz?",
+      "switchToAccount": "@{{handle}} hesabına geçmek istiyor musunuz?",
+      "removeAccountConfirmation": "@{{handle}} hesabını kaldırmak istediğinizden emin misiniz?"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
@@ -138,7 +160,8 @@
       "about": "Hakkında",
       "version": "Sürüm",
       "checkMissingTranslations": "🔍 Eksik çevirileri kontrol et",
-      "developmentTool": "Geliştirme aracı"
+      "developmentTool": "Geliştirme aracı",
+      "appVersion": "1.0.0"
     }
   }
 }

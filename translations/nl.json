@@ -35,7 +35,23 @@
       "show": "Tonen",
       "pending": "In behandeling",
       "video": "Video",
-      "unknown": "Onbekend"
+      "unknown": "Onbekend",
+      "cancel": "Annuleren",
+      "follow": "Volgen",
+      "unfollow": "Niet meer volgen",
+      "block": "Blokkeren",
+      "unblock": "Deblokkeren",
+      "externalLink": "Externe link",
+      "failedToDownloadImage": "Afbeelding downloaden mislukt",
+      "failedToLoadImage": "Afbeelding laden mislukt",
+      "failedToLogout": "Uitloggen mislukt",
+      "switchAccount": "Account wisselen",
+      "cannotRemoveAccount": "Account kan niet worden verwijderd",
+      "mustHaveOneAccount": "U moet ten minste één account hebben. Voeg eerst een ander account toe.",
+      "removeAccount": "Account verwijderen",
+      "translationReport": "Vertalingsrapport",
+      "checkConsoleForReport": "Controleer de console voor het rapport over ontbrekende vertalingen",
+      "checkOutImage": "Bekijk deze afbeelding!"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
@@ -111,7 +127,13 @@
       "noLikes": "Nog geen likes",
       "noMedia": "Nog geen media",
       "noReplies": "Nog geen antwoorden",
-      "noContent": "Nog geen inhoud"
+      "noContent": "Nog geen inhoud",
+      "youAreBlockedByUser": "U wordt geblokkeerd door deze gebruiker",
+      "unfollowConfirmation": "Weet u zeker dat u @{{handle}} niet meer wilt volgen?",
+      "unblockConfirmation": "Weet u zeker dat u @{{handle}} wilt deblokkeren?",
+      "blockConfirmation": "Weet u zeker dat u @{{handle}} wilt blokkeren?",
+      "switchToAccount": "Wisselen naar @{{handle}}?",
+      "removeAccountConfirmation": "Weet u zeker dat u @{{handle}} wilt verwijderen?"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",
@@ -138,7 +160,8 @@
       "about": "Over",
       "version": "Versie",
       "checkMissingTranslations": "🔍 Controleer ontbrekende vertalingen",
-      "developmentTool": "Ontwikkelingshulpmiddel"
+      "developmentTool": "Ontwikkelingshulpmiddel",
+      "appVersion": "1.0.0"
     }
   }
 }

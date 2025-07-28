@@ -143,50 +143,54 @@ export default function SettingsScreen() {
       jwtStorage.clearAuth();
       router.replace("/(auth)/signin");
     } catch {
-      Alert.alert("Error", "Failed to logout");
+      Alert.alert(t("common.error"), t("common.failedToLogout"));
     }
   };
 
   const handleSwitchAccount = (account: Account) => {
     if (account.id === currentAccount?.id) return;
 
-    Alert.alert("Switch Account", `Switch to @${account.handle}?`, [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Switch",
-        onPress: () => {
-          jwtStorage.switchAccount(account.id);
-          setCurrentAccount(account);
-          // Stay on settings page and refresh the data
-          setAccounts(jwtStorage.getAllAccounts());
+    Alert.alert(
+      t("common.switchAccount"),
+      t("profile.switchToAccount", { handle: account.handle }),
+      [
+        {
+          text: t("common.cancel"),
+          style: "cancel",
         },
-      },
-    ]);
+        {
+          text: t("common.switch"),
+          onPress: () => {
+            jwtStorage.switchAccount(account.id);
+            setCurrentAccount(account);
+            // Stay on settings page and refresh the data
+            setAccounts(jwtStorage.getAllAccounts());
+          },
+        },
+      ]
+    );
   };
 
   const handleRemoveAccount = (account: Account) => {
     if (accounts.length === 1) {
       Alert.alert(
-        "Cannot Remove Account",
-        "You must have at least one account. Please add another account first.",
-        [{ text: "OK" }]
+        t("common.cannotRemoveAccount"),
+        t("common.mustHaveOneAccount"),
+        [{ text: t("common.ok") }]
       );
       return;
     }
 
     Alert.alert(
-      "Remove Account",
-      `Are you sure you want to remove @${account.handle}?`,
+      t("common.removeAccount"),
+      t("profile.removeAccountConfirmation", { handle: account.handle }),
       [
         {
-          text: "Cancel",
+          text: t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Remove",
+          text: t("common.remove"),
           style: "destructive",
           onPress: () => {
             jwtStorage.removeAccount(account.id);
@@ -398,7 +402,9 @@ export default function SettingsScreen() {
               <ThemedText style={styles.settingLabel}>
                 {t("settings.version")}
               </ThemedText>
-              <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
+              <ThemedText style={styles.settingValue}>
+                {t("settings.appVersion")}
+              </ThemedText>
             </ThemedView>
           </ThemedView>
 
@@ -409,8 +415,8 @@ export default function SettingsScreen() {
               onPress={() => {
                 checkMissingTranslations();
                 Alert.alert(
-                  "Translation Report",
-                  "Check the console for missing translations report"
+                  t("common.translationReport"),
+                  t("common.checkConsoleForReport")
                 );
               }}
             >

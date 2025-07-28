@@ -35,7 +35,23 @@
       "show": "Mostrar",
       "pending": "Pendiente",
       "video": "Video",
-      "unknown": "Desconocido"
+      "unknown": "Desconocido",
+      "cancel": "Cancelar",
+      "follow": "Seguir",
+      "unfollow": "Dejar de seguir",
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "externalLink": "Enlace externo",
+      "failedToDownloadImage": "Error al descargar imagen",
+      "failedToLoadImage": "Error al cargar imagen",
+      "failedToLogout": "Error al cerrar sesión",
+      "switchAccount": "Cambiar cuenta",
+      "cannotRemoveAccount": "No se puede eliminar cuenta",
+      "mustHaveOneAccount": "Debes tener al menos una cuenta. Por favor agrega otra cuenta primero.",
+      "removeAccount": "Eliminar cuenta",
+      "translationReport": "Reporte de traducción",
+      "checkConsoleForReport": "Revisa la consola para el reporte de traducciones faltantes",
+      "checkOutImage": "¡Mira esta imagen!"
     },
     "auth": {
       "fillAllFields": "Por favor completa todos los campos",
@@ -111,7 +127,13 @@
       "noLikes": "Aún no hay me gusta",
       "noMedia": "Aún no hay medios",
       "noReplies": "Aún no hay respuestas",
-      "noContent": "Aún no hay contenido"
+      "noContent": "Aún no hay contenido",
+      "youAreBlockedByUser": "Estás bloqueado por este usuario",
+      "unfollowConfirmation": "¿Estás seguro de que quieres dejar de seguir a @{{handle}}?",
+      "unblockConfirmation": "¿Estás seguro de que quieres desbloquear a @{{handle}}?",
+      "blockConfirmation": "¿Estás seguro de que quieres bloquear a @{{handle}}?",
+      "switchToAccount": "¿Cambiar a @{{handle}}?",
+      "removeAccountConfirmation": "¿Estás seguro de que quieres eliminar @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Cargando más publicaciones...",
@@ -138,7 +160,8 @@
       "about": "Acerca de",
       "version": "Versión",
       "checkMissingTranslations": "🔍 Verificar traducciones faltantes",
-      "developmentTool": "Herramienta de desarrollo"
+      "developmentTool": "Herramienta de desarrollo",
+      "appVersion": "1.0.0"
     }
   }
 }

@@ -35,7 +35,23 @@
       "show": "Tampilkan",
       "pending": "Menunggu",
       "video": "Video",
-      "unknown": "Tidak Diketahui"
+      "unknown": "Tidak Diketahui",
+      "cancel": "Batal",
+      "follow": "Ikuti",
+      "unfollow": "Berhenti Mengikuti",
+      "block": "Blokir",
+      "unblock": "Buka Blokir",
+      "externalLink": "Tautan Eksternal",
+      "failedToDownloadImage": "Gagal mengunduh gambar",
+      "failedToLoadImage": "Gagal memuat gambar",
+      "failedToLogout": "Gagal keluar",
+      "switchAccount": "Ganti Akun",
+      "cannotRemoveAccount": "Tidak dapat menghapus akun",
+      "mustHaveOneAccount": "Anda harus memiliki setidaknya satu akun. Silakan tambahkan akun lain terlebih dahulu.",
+      "removeAccount": "Hapus Akun",
+      "translationReport": "Laporan Terjemahan",
+      "checkConsoleForReport": "Periksa konsol untuk laporan terjemahan yang hilang",
+      "checkOutImage": "Lihat gambar ini!"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -111,7 +127,13 @@
       "noLikes": "Belum ada suka",
       "noMedia": "Belum ada media",
       "noReplies": "Belum ada balasan",
-      "noContent": "Belum ada konten"
+      "noContent": "Belum ada konten",
+      "youAreBlockedByUser": "Anda diblokir oleh pengguna ini",
+      "unfollowConfirmation": "Apakah Anda yakin ingin berhenti mengikuti @{{handle}}?",
+      "unblockConfirmation": "Apakah Anda yakin ingin membuka blokir @{{handle}}?",
+      "blockConfirmation": "Apakah Anda yakin ingin memblokir @{{handle}}?",
+      "switchToAccount": "Ganti ke @{{handle}}?",
+      "removeAccountConfirmation": "Apakah Anda yakin ingin menghapus @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -137,8 +159,9 @@
       "language": "Bahasa",
       "about": "Tentang",
       "version": "Versi",
-      "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool"
+      "checkMissingTranslations": "🔍 Periksa Terjemahan yang Hilang",
+      "developmentTool": "Alat Pengembangan",
+      "appVersion": "1.0.0"
     }
   }
 }

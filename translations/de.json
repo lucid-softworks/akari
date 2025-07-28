@@ -35,7 +35,23 @@
       "show": "Anzeigen",
       "pending": "Ausstehend",
       "video": "Video",
-      "unknown": "Unbekannt"
+      "unknown": "Unbekannt",
+      "cancel": "Abbrechen",
+      "follow": "Folgen",
+      "unfollow": "Nicht mehr folgen",
+      "block": "Blockieren",
+      "unblock": "Entsperren",
+      "externalLink": "Externer Link",
+      "failedToDownloadImage": "Fehler beim Herunterladen des Bildes",
+      "failedToLoadImage": "Fehler beim Laden des Bildes",
+      "failedToLogout": "Fehler beim Abmelden",
+      "switchAccount": "Konto wechseln",
+      "cannotRemoveAccount": "Konto kann nicht entfernt werden",
+      "mustHaveOneAccount": "Du musst mindestens ein Konto haben. Bitte füge zuerst ein anderes Konto hinzu.",
+      "removeAccount": "Konto entfernen",
+      "translationReport": "Übersetzungsbericht",
+      "checkConsoleForReport": "Überprüfe die Konsole für den Bericht über fehlende Übersetzungen",
+      "checkOutImage": "Schau dir dieses Bild an!"
     },
     "auth": {
       "fillAllFields": "Bitte fülle alle Felder aus",
@@ -111,7 +127,13 @@
       "noLikes": "Noch keine Gefällt mir",
       "noMedia": "Noch keine Medien",
       "noReplies": "Noch keine Antworten",
-      "noContent": "Noch kein Inhalt"
+      "noContent": "Noch kein Inhalt",
+      "youAreBlockedByUser": "Du wirst von diesem Benutzer blockiert",
+      "unfollowConfirmation": "Bist du sicher, dass du @{{handle}} nicht mehr folgen möchtest?",
+      "unblockConfirmation": "Bist du sicher, dass du @{{handle}} entsperren möchtest?",
+      "blockConfirmation": "Bist du sicher, dass du @{{handle}} blockieren möchtest?",
+      "switchToAccount": "Zu @{{handle}} wechseln?",
+      "removeAccountConfirmation": "Bist du sicher, dass du @{{handle}} entfernen möchtest?"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",
@@ -138,7 +160,8 @@
       "about": "Über",
       "version": "Version",
       "checkMissingTranslations": "🔍 Fehlende Übersetzungen prüfen",
-      "developmentTool": "Entwicklungstool"
+      "developmentTool": "Entwicklungstool",
+      "appVersion": "1.0.0"
     }
   }
 }

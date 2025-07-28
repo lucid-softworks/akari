@@ -6,6 +6,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type VideoEmbedProps = {
   /** Video embed data from Bluesky or native video data */
@@ -93,6 +94,7 @@ type VideoEmbedProps = {
  * Supports both native Bluesky videos and external video links
  */
 export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
+  const { t } = useTranslation();
   const textColor = useThemeColor(
     {
       light: "#000000",
@@ -155,7 +157,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.media.video.title;
     }
 
-    return "Video";
+    return t("common.video");
   };
 
   // Get video description

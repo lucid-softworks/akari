@@ -18,6 +18,7 @@ import Animated, {
 
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type ImageViewerProps = {
   visible: boolean;
@@ -32,6 +33,7 @@ export function ImageViewer({
   imageUrl,
   altText,
 }: ImageViewerProps) {
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -129,11 +131,11 @@ export function ImageViewer({
         // For mobile, use Share API
         await Share.share({
           url: imageUrl,
-          message: "Check out this image!",
+          message: t("common.checkOutImage"),
         });
       }
     } catch {
-      Alert.alert("Error", "Failed to download image");
+      Alert.alert(t("common.error"), t("common.failedToDownloadImage"));
     }
   };
 
@@ -209,7 +211,7 @@ export function ImageViewer({
         {!imageLoaded && !imageError && (
           <View style={styles.centerContainer}>
             <ThemedText style={[styles.loadingText, { color: textColor }]}>
-              Loading...
+              {t("common.loading")}
             </ThemedText>
           </View>
         )}
@@ -217,7 +219,7 @@ export function ImageViewer({
         {imageError && (
           <View style={styles.centerContainer}>
             <ThemedText style={[styles.errorText, { color: textColor }]}>
-              Failed to load image
+              {t("common.failedToLoadImage")}
             </ThemedText>
           </View>
         )}

@@ -35,7 +35,23 @@
       "show": "Pokaż",
       "pending": "Oczekujące",
       "video": "Wideo",
-      "unknown": "Nieznane"
+      "unknown": "Nieznane",
+      "cancel": "Anuluj",
+      "follow": "Obserwuj",
+      "unfollow": "Przestań obserwować",
+      "block": "Zablokuj",
+      "unblock": "Odblokuj",
+      "externalLink": "Link zewnętrzny",
+      "failedToDownloadImage": "Nie udało się pobrać obrazu",
+      "failedToLoadImage": "Nie udało się załadować obrazu",
+      "failedToLogout": "Nie udało się wylogować",
+      "switchAccount": "Przełącz konto",
+      "cannotRemoveAccount": "Nie można usunąć konta",
+      "mustHaveOneAccount": "Musisz mieć co najmniej jedno konto. Najpierw dodaj inne konto.",
+      "removeAccount": "Usuń konto",
+      "translationReport": "Raport tłumaczenia",
+      "checkConsoleForReport": "Sprawdź konsolę, aby uzyskać raport o brakujących tłumaczeniach",
+      "checkOutImage": "Sprawdź ten obraz!"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",
@@ -111,7 +127,13 @@
       "noLikes": "Brak polubień",
       "noMedia": "Brak mediów",
       "noReplies": "Brak odpowiedzi",
-      "noContent": "Brak zawartości"
+      "noContent": "Brak zawartości",
+      "youAreBlockedByUser": "Jesteś zablokowany przez tego użytkownika",
+      "unfollowConfirmation": "Czy na pewno chcesz przestać obserwować @{{handle}}?",
+      "unblockConfirmation": "Czy na pewno chcesz odblokować @{{handle}}?",
+      "blockConfirmation": "Czy na pewno chcesz zablokować @{{handle}}?",
+      "switchToAccount": "Przełącz na @{{handle}}?",
+      "removeAccountConfirmation": "Czy na pewno chcesz usunąć @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",
@@ -138,7 +160,8 @@
       "about": "O aplikacji",
       "version": "Wersja",
       "checkMissingTranslations": "🔍 Sprawdź brakujące tłumaczenia",
-      "developmentTool": "Narzędzie deweloperskie"
+      "developmentTool": "Narzędzie deweloperskie",
+      "appVersion": "1.0.0"
     }
   }
 }

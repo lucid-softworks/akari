@@ -35,7 +35,23 @@
       "show": "显示",
       "pending": "待处理",
       "video": "视频",
-      "unknown": "未知"
+      "unknown": "未知",
+      "cancel": "取消",
+      "follow": "关注",
+      "unfollow": "取消关注",
+      "block": "屏蔽",
+      "unblock": "取消屏蔽",
+      "externalLink": "外部链接",
+      "failedToDownloadImage": "下载图片失败",
+      "failedToLoadImage": "加载图片失败",
+      "failedToLogout": "退出登录失败",
+      "switchAccount": "切换账户",
+      "cannotRemoveAccount": "无法移除账户",
+      "mustHaveOneAccount": "您必须至少有一个账户。请先添加另一个账户。",
+      "removeAccount": "移除账户",
+      "translationReport": "翻译报告",
+      "checkConsoleForReport": "查看控制台获取缺失翻译报告",
+      "checkOutImage": "查看这张图片！"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",
@@ -111,7 +127,13 @@
       "noLikes": "还没有点赞",
       "noMedia": "还没有媒体",
       "noReplies": "还没有回复",
-      "noContent": "还没有内容"
+      "noContent": "还没有内容",
+      "youAreBlockedByUser": "您被此用户屏蔽",
+      "unfollowConfirmation": "确定要取消关注 @{{handle}} 吗？",
+      "unblockConfirmation": "确定要取消屏蔽 @{{handle}} 吗？",
+      "blockConfirmation": "确定要屏蔽 @{{handle}} 吗？",
+      "switchToAccount": "切换到 @{{handle}}？",
+      "removeAccountConfirmation": "确定要移除 @{{handle}} 吗？"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -138,7 +160,8 @@
       "about": "关于",
       "version": "版本",
       "checkMissingTranslations": "🔍 检查缺失的翻译",
-      "developmentTool": "开发工具"
+      "developmentTool": "开发工具",
+      "appVersion": "1.0.0"
     }
   }
 }

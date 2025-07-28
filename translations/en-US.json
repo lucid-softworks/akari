@@ -35,7 +35,23 @@
       "show": "Show",
       "pending": "Pending",
       "video": "Video",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "cancel": "Cancel",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "block": "Block",
+      "unblock": "Unblock",
+      "externalLink": "External Link",
+      "failedToDownloadImage": "Failed to download image",
+      "failedToLoadImage": "Failed to load image",
+      "failedToLogout": "Failed to logout",
+      "switchAccount": "Switch Account",
+      "cannotRemoveAccount": "Cannot Remove Account",
+      "mustHaveOneAccount": "You must have at least one account. Please add another account first.",
+      "removeAccount": "Remove Account",
+      "translationReport": "Translation Report",
+      "checkConsoleForReport": "Check the console for missing translations report",
+      "checkOutImage": "Check out this image!"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -111,7 +127,13 @@
       "noLikes": "No likes yet",
       "noMedia": "No media yet",
       "noReplies": "No replies yet",
-      "noContent": "No content yet"
+      "noContent": "No content yet",
+      "youAreBlockedByUser": "You are blocked by this user",
+      "unfollowConfirmation": "Are you sure you want to unfollow @{{handle}}?",
+      "unblockConfirmation": "Are you sure you want to unblock @{{handle}}?",
+      "blockConfirmation": "Are you sure you want to block @{{handle}}?",
+      "switchToAccount": "Switch to @{{handle}}?",
+      "removeAccountConfirmation": "Are you sure you want to remove @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
@@ -138,7 +160,8 @@
       "about": "About",
       "version": "Version",
       "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool"
+      "developmentTool": "Development tool",
+      "appVersion": "1.0.0"
     }
   }
 }

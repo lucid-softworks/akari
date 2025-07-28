@@ -17,6 +17,7 @@ import { useBlockUser } from "@/hooks/mutations/useBlockUser";
 import { useFollowUser } from "@/hooks/mutations/useFollowUser";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type ProfileHeaderProps = {
   profile: {
@@ -52,6 +53,7 @@ export function ProfileHeader({
   profile,
   isOwnProfile = false,
 }: ProfileHeaderProps) {
+  const { t } = useTranslation();
   const [showDropdown, setShowDropdown] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
@@ -108,7 +110,7 @@ export function ProfileHeader({
         });
       }
       setShowDropdown(false);
-    } catch (error) {
+    } catch {
       // Handle block error
     }
   };
@@ -124,11 +126,15 @@ export function ProfileHeader({
   const handleFollowPress = () => {
     if (isFollowing) {
       Alert.alert(
-        "Unfollow",
-        `Are you sure you want to unfollow @${profile.handle}?`,
+        t("common.unfollow"),
+        t("profile.unfollowConfirmation", { handle: profile.handle }),
         [
-          { text: "Cancel", style: "cancel" },
-          { text: "Unfollow", style: "destructive", onPress: handleFollow },
+          { text: t("common.cancel"), style: "cancel" },
+          {
+            text: t("common.unfollow"),
+            style: "destructive",
+            onPress: handleFollow,
+          },
         ]
       );
     } else {
@@ -139,20 +145,28 @@ export function ProfileHeader({
   const handleBlockPress = () => {
     if (isBlocking) {
       Alert.alert(
-        "Unblock",
-        `Are you sure you want to unblock @${profile.handle}?`,
+        t("common.unblock"),
+        t("profile.unblockConfirmation", { handle: profile.handle }),
         [
-          { text: "Cancel", style: "cancel" },
-          { text: "Unblock", style: "destructive", onPress: handleBlock },
+          { text: t("common.cancel"), style: "cancel" },
+          {
+            text: t("common.unblock"),
+            style: "destructive",
+            onPress: handleBlock,
+          },
         ]
       );
     } else {
       Alert.alert(
-        "Block",
-        `Are you sure you want to block @${profile.handle}?`,
+        t("common.block"),
+        t("profile.blockConfirmation", { handle: profile.handle }),
         [
-          { text: "Cancel", style: "cancel" },
-          { text: "Block", style: "destructive", onPress: handleBlock },
+          { text: t("common.cancel"), style: "cancel" },
+          {
+            text: t("common.block"),
+            style: "destructive",
+            onPress: handleBlock,
+          },
         ]
       );
     }
@@ -250,10 +264,10 @@ export function ProfileHeader({
                       >
                         <ThemedText style={styles.dropdownItemText}>
                           {followMutation.isPending
-                            ? "Loading..."
+                            ? t("common.loading")
                             : isFollowing
-                            ? "Unfollow"
-                            : "Follow"}
+                            ? t("common.unfollow")
+                            : t("common.follow")}
                         </ThemedText>
                       </TouchableOpacity>
 
@@ -264,10 +278,10 @@ export function ProfileHeader({
                       >
                         <ThemedText style={styles.dropdownItemText}>
                           {blockMutation.isPending
-                            ? "Loading..."
+                            ? t("common.loading")
                             : isBlocking
-                            ? "Unblock"
-                            : "Block"}
+                            ? t("common.unblock")
+                            : t("common.block")}
                         </ThemedText>
                       </TouchableOpacity>
                     </ThemedView>
@@ -293,7 +307,7 @@ export function ProfileHeader({
         {isBlockedBy && (
           <ThemedView style={styles.blockedMessage}>
             <ThemedText style={styles.blockedText}>
-              You are blocked by this user
+              {t("profile.youAreBlockedByUser")}
             </ThemedText>
           </ThemedView>
         )}

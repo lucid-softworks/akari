@@ -35,7 +35,23 @@
       "show": "Afficher",
       "pending": "En attente",
       "video": "Vidéo",
-      "unknown": "Inconnu"
+      "unknown": "Inconnu",
+      "cancel": "Annuler",
+      "follow": "Suivre",
+      "unfollow": "Ne plus suivre",
+      "block": "Bloquer",
+      "unblock": "Débloquer",
+      "externalLink": "Lien externe",
+      "failedToDownloadImage": "Échec du téléchargement de l'image",
+      "failedToLoadImage": "Échec du chargement de l'image",
+      "failedToLogout": "Échec de la déconnexion",
+      "switchAccount": "Changer de compte",
+      "cannotRemoveAccount": "Impossible de supprimer le compte",
+      "mustHaveOneAccount": "Vous devez avoir au moins un compte. Veuillez d'abord ajouter un autre compte.",
+      "removeAccount": "Supprimer le compte",
+      "translationReport": "Rapport de traduction",
+      "checkConsoleForReport": "Vérifiez la console pour le rapport des traductions manquantes",
+      "checkOutImage": "Regardez cette image !"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",
@@ -111,7 +127,13 @@
       "noLikes": "Aucun j'aime pour le moment",
       "noMedia": "Aucun média pour le moment",
       "noReplies": "Aucune réponse pour le moment",
-      "noContent": "Aucun contenu pour le moment"
+      "noContent": "Aucun contenu pour le moment",
+      "youAreBlockedByUser": "Vous êtes bloqué par cet utilisateur",
+      "unfollowConfirmation": "Êtes-vous sûr de vouloir ne plus suivre @{{handle}} ?",
+      "unblockConfirmation": "Êtes-vous sûr de vouloir débloquer @{{handle}} ?",
+      "blockConfirmation": "Êtes-vous sûr de vouloir bloquer @{{handle}} ?",
+      "switchToAccount": "Changer vers @{{handle}} ?",
+      "removeAccountConfirmation": "Êtes-vous sûr de vouloir supprimer @{{handle}} ?"
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",
@@ -138,7 +160,8 @@
       "about": "À propos",
       "version": "Version",
       "checkMissingTranslations": "🔍 Vérifier les traductions manquantes",
-      "developmentTool": "Outil de développement"
+      "developmentTool": "Outil de développement",
+      "appVersion": "1.0.0"
     }
   }
 }

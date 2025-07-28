@@ -35,7 +35,23 @@
       "show": "顯示",
       "pending": "待處理",
       "video": "影片",
-      "unknown": "未知"
+      "unknown": "未知",
+      "cancel": "取消",
+      "follow": "追蹤",
+      "unfollow": "取消追蹤",
+      "block": "封鎖",
+      "unblock": "取消封鎖",
+      "externalLink": "外部連結",
+      "failedToDownloadImage": "下載圖片失敗",
+      "failedToLoadImage": "載入圖片失敗",
+      "failedToLogout": "登出失敗",
+      "switchAccount": "切換帳戶",
+      "cannotRemoveAccount": "無法移除帳戶",
+      "mustHaveOneAccount": "您必須至少有一個帳戶。請先新增另一個帳戶。",
+      "removeAccount": "移除帳戶",
+      "translationReport": "翻譯報告",
+      "checkConsoleForReport": "查看控制台取得缺失翻譯報告",
+      "checkOutImage": "查看這張圖片！"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -111,7 +127,13 @@
       "noLikes": "還沒有讚",
       "noMedia": "還沒有媒體",
       "noReplies": "還沒有回覆",
-      "noContent": "還沒有內容"
+      "noContent": "還沒有內容",
+      "youAreBlockedByUser": "您被此使用者封鎖",
+      "unfollowConfirmation": "確定要取消追蹤 @{{handle}} 嗎？",
+      "unblockConfirmation": "確定要取消封鎖 @{{handle}} 嗎？",
+      "blockConfirmation": "確定要封鎖 @{{handle}} 嗎？",
+      "switchToAccount": "切換到 @{{handle}}？",
+      "removeAccountConfirmation": "確定要移除 @{{handle}} 嗎？"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -137,8 +159,9 @@
       "language": "語言",
       "about": "關於",
       "version": "版本",
-      "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool"
+      "checkMissingTranslations": "🔍 檢查缺失的翻譯",
+      "developmentTool": "開發工具",
+      "appVersion": "1.0.0"
     }
   }
 }

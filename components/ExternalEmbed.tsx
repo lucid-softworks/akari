@@ -5,6 +5,7 @@ import { ThemedCard } from "@/components/ThemedCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type ExternalEmbedProps = {
   /** External embed data from Bluesky */
@@ -31,6 +32,7 @@ type ExternalEmbedProps = {
  * Shows thumbnail, title, description, and opens the link when tapped
  */
 export function ExternalEmbed({ embed }: ExternalEmbedProps) {
+  const { t } = useTranslation();
   const textColor = useThemeColor(
     {
       light: "#000000",
@@ -57,7 +59,7 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
       const url = new URL(uri);
       return url.hostname.replace("www.", "");
     } catch {
-      return "External Link";
+      return t("common.externalLink");
     }
   };
 

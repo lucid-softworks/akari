@@ -35,7 +35,23 @@
       "show": "Hiển thị",
       "pending": "Đang chờ",
       "video": "Video",
-      "unknown": "Không xác định"
+      "unknown": "Không xác định",
+      "cancel": "Hủy",
+      "follow": "Theo dõi",
+      "unfollow": "Bỏ theo dõi",
+      "block": "Chặn",
+      "unblock": "Bỏ chặn",
+      "externalLink": "Liên kết ngoài",
+      "failedToDownloadImage": "Không thể tải xuống hình ảnh",
+      "failedToLoadImage": "Không thể tải hình ảnh",
+      "failedToLogout": "Không thể đăng xuất",
+      "switchAccount": "Chuyển đổi tài khoản",
+      "cannotRemoveAccount": "Không thể xóa tài khoản",
+      "mustHaveOneAccount": "Bạn phải có ít nhất một tài khoản. Vui lòng thêm tài khoản khác trước.",
+      "removeAccount": "Xóa tài khoản",
+      "translationReport": "Báo cáo dịch thuật",
+      "checkConsoleForReport": "Kiểm tra bảng điều khiển để xem báo cáo dịch thuật bị thiếu",
+      "checkOutImage": "Xem hình ảnh này!"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -111,7 +127,13 @@
       "noLikes": "Chưa có lượt thích",
       "noMedia": "Chưa có phương tiện",
       "noReplies": "Chưa có trả lời",
-      "noContent": "Chưa có nội dung"
+      "noContent": "Chưa có nội dung",
+      "youAreBlockedByUser": "Bạn bị chặn bởi người dùng này",
+      "unfollowConfirmation": "Bạn có chắc chắn muốn bỏ theo dõi @{{handle}}?",
+      "unblockConfirmation": "Bạn có chắc chắn muốn bỏ chặn @{{handle}}?",
+      "blockConfirmation": "Bạn có chắc chắn muốn chặn @{{handle}}?",
+      "switchToAccount": "Chuyển sang @{{handle}}?",
+      "removeAccountConfirmation": "Bạn có chắc chắn muốn xóa @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",
@@ -137,8 +159,9 @@
       "language": "Ngôn ngữ",
       "about": "Giới thiệu",
       "version": "Phiên bản",
-      "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool"
+      "checkMissingTranslations": "🔍 Kiểm tra bản dịch bị thiếu",
+      "developmentTool": "Công cụ phát triển",
+      "appVersion": "1.0.0"
     }
   }
 }

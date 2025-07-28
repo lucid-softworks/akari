@@ -35,7 +35,23 @@
       "show": "Mostrar",
       "pending": "Pendente",
       "video": "Vídeo",
-      "unknown": "Desconhecido"
+      "unknown": "Desconhecido",
+      "cancel": "Cancelar",
+      "follow": "Seguir",
+      "unfollow": "Deixar de seguir",
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "externalLink": "Link externo",
+      "failedToDownloadImage": "Falha ao baixar imagem",
+      "failedToLoadImage": "Falha ao carregar imagem",
+      "failedToLogout": "Falha ao sair",
+      "switchAccount": "Alternar conta",
+      "cannotRemoveAccount": "Não é possível remover conta",
+      "mustHaveOneAccount": "Você deve ter pelo menos uma conta. Adicione outra conta primeiro.",
+      "removeAccount": "Remover conta",
+      "translationReport": "Relatório de tradução",
+      "checkConsoleForReport": "Verifique o console para o relatório de traduções ausentes",
+      "checkOutImage": "Confira esta imagem!"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",
@@ -111,7 +127,13 @@
       "noLikes": "Ainda não há curtidas",
       "noMedia": "Ainda não há mídia",
       "noReplies": "Ainda não há respostas",
-      "noContent": "Ainda não há conteúdo"
+      "noContent": "Ainda não há conteúdo",
+      "youAreBlockedByUser": "Você está bloqueado por este usuário",
+      "unfollowConfirmation": "Tem certeza de que quer deixar de seguir @{{handle}}?",
+      "unblockConfirmation": "Tem certeza de que quer desbloquear @{{handle}}?",
+      "blockConfirmation": "Tem certeza de que quer bloquear @{{handle}}?",
+      "switchToAccount": "Alternar para @{{handle}}?",
+      "removeAccountConfirmation": "Tem certeza de que quer remover @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",
@@ -138,7 +160,8 @@
       "about": "Sobre",
       "version": "Versão",
       "checkMissingTranslations": "🔍 Verificar traduções ausentes",
-      "developmentTool": "Ferramenta de desenvolvimento"
+      "developmentTool": "Ferramenta de desenvolvimento",
+      "appVersion": "1.0.0"
     }
   }
 }

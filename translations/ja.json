@@ -35,7 +35,23 @@
       "show": "表示",
       "pending": "保留中",
       "video": "動画",
-      "unknown": "不明"
+      "unknown": "不明",
+      "cancel": "キャンセル",
+      "follow": "フォロー",
+      "unfollow": "フォロー解除",
+      "block": "ブロック",
+      "unblock": "ブロック解除",
+      "externalLink": "外部リンク",
+      "failedToDownloadImage": "画像のダウンロードに失敗しました",
+      "failedToLoadImage": "画像の読み込みに失敗しました",
+      "failedToLogout": "ログアウトに失敗しました",
+      "switchAccount": "アカウントを切り替え",
+      "cannotRemoveAccount": "アカウントを削除できません",
+      "mustHaveOneAccount": "少なくとも1つのアカウントが必要です。先に別のアカウントを追加してください。",
+      "removeAccount": "アカウントを削除",
+      "translationReport": "翻訳レポート",
+      "checkConsoleForReport": "不足している翻訳のレポートについてはコンソールを確認してください",
+      "checkOutImage": "この画像をチェックしてください！"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -111,7 +127,13 @@
       "noLikes": "まだいいねがありません",
       "noMedia": "まだメディアがありません",
       "noReplies": "まだ返信がありません",
-      "noContent": "まだコンテンツがありません"
+      "noContent": "まだコンテンツがありません",
+      "youAreBlockedByUser": "このユーザーによってブロックされています",
+      "unfollowConfirmation": "@{{handle}}のフォローを解除してもよろしいですか？",
+      "unblockConfirmation": "@{{handle}}のブロックを解除してもよろしいですか？",
+      "blockConfirmation": "@{{handle}}をブロックしてもよろしいですか？",
+      "switchToAccount": "@{{handle}}に切り替えますか？",
+      "removeAccountConfirmation": "@{{handle}}を削除してもよろしいですか？"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",
@@ -138,7 +160,8 @@
       "about": "について",
       "version": "バージョン",
       "checkMissingTranslations": "🔍 不足している翻訳をチェック",
-      "developmentTool": "開発ツール"
+      "developmentTool": "開発ツール",
+      "appVersion": "1.0.0"
     }
   }
 }
