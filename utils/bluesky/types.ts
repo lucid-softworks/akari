@@ -1,95 +1,189 @@
 /**
  * Bluesky post view from feed responses
  */
+
+// Common types used across multiple interfaces
+export interface BlueskyAssociated {
+  lists: number;
+  feedgens: number;
+  starterPacks: number;
+  labeler: boolean;
+  chat: {
+    allowIncoming: string;
+  };
+}
+
+export interface BlueskyViewer {
+  muted: boolean;
+  mutedByList?: string;
+  blockedBy: boolean;
+  blocking?: string;
+  blockingByList?: string;
+  following?: string;
+  followedBy?: string;
+  knownFollowers?: {
+    count: number;
+    followers: string[];
+  };
+}
+
+export interface BlueskyVerification {
+  verifications: string[];
+  verifiedStatus: string;
+  trustedVerifierStatus: string;
+}
+
+export interface BlueskyStatus {
+  status: string;
+  record: Record<string, unknown>;
+  embed?: BlueskyEmbed;
+  expiresAt: string;
+  isActive: boolean;
+}
+
+export interface BlueskyLabel {
+  val: string;
+  src: string;
+  cts: string;
+  uri: string;
+  cid?: string;
+  neg?: boolean;
+  value?: string;
+  text?: string;
+  label?: string;
+  ver?: number;
+  exp?: string;
+}
+
+export interface BlueskyImage {
+  alt: string;
+  image: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+  thumb: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+  fullsize: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+}
+
+export interface BlueskyVideo {
+  alt: string;
+  ref: {
+    $link: string;
+  };
+  mimeType: string;
+  size: number;
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+}
+
+export interface BlueskyExternal {
+  uri: string;
+  title: string;
+  description: string;
+  thumb?: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+}
+
+export interface BlueskyRecord {
+  uri: string;
+  cid: string;
+  author: {
+    did: string;
+    handle: string;
+    displayName: string;
+    avatar: string;
+  };
+  record: Record<string, unknown>;
+  embed?: BlueskyEmbed;
+  replyCount: number;
+  repostCount: number;
+  likeCount: number;
+  indexedAt: string;
+  viewer?: {
+    like?: string;
+    repost?: string;
+    reply?: string;
+  };
+}
+
+export interface BlueskyEmbed {
+  $type: string;
+  images?: BlueskyImage[];
+  video?: BlueskyVideo;
+  external?: BlueskyExternal;
+  record?: BlueskyRecord;
+  media?: BlueskyEmbed;
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+}
+
+export interface BlueskyAuthor {
+  did: string;
+  handle: string;
+  displayName: string;
+  avatar: string;
+  associated: BlueskyAssociated;
+  viewer: BlueskyViewer;
+  labels: BlueskyLabel[];
+  createdAt: string;
+  verification?: BlueskyVerification;
+  status?: BlueskyStatus;
+}
+
 export type BlueskyPostView = {
   /** The post's URI */
   uri: string;
   /** The post's CID */
   cid: string;
   /** The post author's information */
-  author: {
-    did: string;
-    handle: string;
-    displayName: string;
-    avatar: string;
-    associated: {
-      lists: number;
-      feedgens: number;
-      starterPacks: number;
-      labeler: boolean;
-      chat: {
-        allowIncoming: string;
-      };
-    };
-    viewer: {
-      muted: boolean;
-      mutedByList?: any;
-      blockedBy: boolean;
-      blocking?: string;
-      blockingByList?: any;
-      following?: string;
-      followedBy?: string;
-      knownFollowers?: {
-        count: number;
-        followers: any[];
-      };
-    };
-    labels: any[];
-    createdAt: string;
-    verification?: {
-      verifications: any[];
-      verifiedStatus: string;
-      trustedVerifierStatus: string;
-    };
-    status?: {
-      status: string;
-      record: any;
-      embed?: any;
-      expiresAt: string;
-      isActive: boolean;
-    };
-  };
+  author: BlueskyAuthor;
   /** The post's record data */
-  record: any;
+  record: Record<string, unknown>;
   /** The post's embed data */
-  embed?: any;
+  embed?: BlueskyEmbed;
   /** The post's reply data */
   reply?: {
-    root: any;
-    parent: any;
-    grandparentAuthor?: {
-      did: string;
-      handle: string;
-      displayName: string;
-      avatar: string;
-      associated: any;
-      viewer: any;
-      labels: any[];
-      createdAt: string;
-      verification?: any;
-      status?: any;
-    };
+    root: BlueskyPostView;
+    parent: BlueskyPostView;
+    grandparentAuthor?: BlueskyAuthor;
   };
   /** The post's repost/reason data */
   reason?: {
-    by: {
-      did: string;
-      handle: string;
-      displayName: string;
-      avatar: string;
-      associated: any;
-      viewer: any;
-      labels: any[];
-      createdAt: string;
-      verification?: any;
-      status?: any;
-    };
+    by: BlueskyAuthor;
     indexedAt: string;
   };
   /** When the post was indexed */
   indexedAt: string;
   /** The post's labels */
-  labels: any[];
+  labels: BlueskyLabel[];
   /** Viewer's interaction with the post */
   viewer?: {
     like?: string;
@@ -97,13 +191,25 @@ export type BlueskyPostView = {
     reply?: string;
   };
   /** The post's thread data */
-  thread?: any;
+  thread?: {
+    replies?: BlueskyPostView[];
+  };
   /** The post's embeds */
-  embeds?: any[];
+  embeds?: BlueskyEmbed[];
   /** The post's language tags */
   langs?: string[];
   /** The post's facets */
-  facets?: any[];
+  facets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
   /** The post's tags */
   tags?: string[];
   /** Number of likes on the post */
@@ -122,35 +228,11 @@ export type BlueskyConvoMember = {
   handle: string;
   displayName: string;
   avatar: string;
-  associated: {
-    lists: number;
-    feedgens: number;
-    starterPacks: number;
-    labeler: boolean;
-    chat: {
-      allowIncoming: string;
-    };
-  };
-  viewer: {
-    muted: boolean;
-    mutedByList?: any;
-    blockedBy: boolean;
-    blocking?: string;
-    blockingByList?: any;
-    following?: string;
-    followedBy?: string;
-    knownFollowers?: {
-      count: number;
-      followers: any[];
-    };
-  };
-  labels: any[];
+  associated: BlueskyAssociated;
+  viewer: BlueskyViewer;
+  labels: BlueskyLabel[];
   chatDisabled: boolean;
-  verification?: {
-    verifications: any[];
-    verifiedStatus: string;
-    trustedVerifierStatus: string;
-  };
+  verification?: BlueskyVerification;
 };
 
 /**
@@ -160,9 +242,25 @@ export type BlueskyConvoMessage = {
   id: string;
   rev: string;
   text: string;
-  facets?: any[];
-  embed?: any;
-  reactions?: any[];
+  facets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
+  embed?: BlueskyEmbed;
+  reactions?: {
+    value: string;
+    sender: {
+      did: string;
+    };
+    createdAt: string;
+  }[];
   sender: {
     did: string;
   };
@@ -216,33 +314,11 @@ export type BlueskyFeedItem = {
   post: BlueskyPostView;
   /** Reply context if this is a reply */
   reply?: {
-    grandparentAuthor?: {
-      did: string;
-      handle: string;
-      displayName: string;
-      avatar: string;
-      associated: any;
-      viewer: any;
-      labels: any[];
-      createdAt: string;
-      verification?: any;
-      status?: any;
-    };
+    grandparentAuthor?: BlueskyAuthor;
   };
   /** Repost/reason context if this is a repost */
   reason?: {
-    by: {
-      did: string;
-      handle: string;
-      displayName: string;
-      avatar: string;
-      associated: any;
-      viewer: any;
-      labels: any[];
-      createdAt: string;
-      verification?: any;
-      status?: any;
-    };
+    by: BlueskyAuthor;
     indexedAt: string;
   };
   /** Context provided by feed generator */
@@ -270,56 +346,23 @@ export type BlueskyFeed = {
   /** The feed's DID */
   did: string;
   /** The feed creator's information */
-  creator: {
-    did: string;
-    handle: string;
-    displayName: string;
-    description: string;
-    avatar: string;
-    associated: {
-      lists: number;
-      feedgens: number;
-      starterPacks: number;
-      labeler: boolean;
-      chat: {
-        allowIncoming: string;
-      };
-    };
-    indexedAt: string;
-    createdAt: string;
-    viewer: {
-      muted: boolean;
-      mutedByList?: any;
-      blockedBy: boolean;
-      blocking?: string;
-      blockingByList?: any;
-      following?: string;
-      followedBy?: string;
-      knownFollowers?: {
-        count: number;
-        followers: any[];
-      };
-    };
-    labels: any[];
-    verification?: {
-      verifications: any[];
-      verifiedStatus: string;
-      trustedVerifierStatus: string;
-    };
-    status?: {
-      status: string;
-      record: any;
-      embed?: any;
-      expiresAt: string;
-      isActive: boolean;
-    };
-  };
+  creator: BlueskyAuthor;
   /** The feed's display name */
   displayName: string;
   /** The feed's description */
   description: string;
   /** Description facets for rich text */
-  descriptionFacets?: any[];
+  descriptionFacets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
   /** The feed's avatar URI */
   avatar?: string;
   /** Number of likes on the feed */
@@ -327,7 +370,7 @@ export type BlueskyFeed = {
   /** Whether the feed accepts interactions */
   acceptsInteractions: boolean;
   /** Labels applied to the feed */
-  labels: any[];
+  labels: BlueskyLabel[];
   /** Viewer's interaction with the feed */
   viewer?: {
     like?: string;
@@ -366,7 +409,7 @@ export type BlueskySession =
       /** Whether email is used as an authentication factor */
       emailAuthFactor?: boolean;
       /** The DID document (optional) */
-      didDoc?: any;
+      didDoc?: Record<string, unknown>;
       /** Whether the account is active */
       active: true;
       /** JWT access token for API authentication */
@@ -386,7 +429,7 @@ export type BlueskySession =
       /** Whether email is used as an authentication factor */
       emailAuthFactor?: boolean;
       /** The DID document (optional) */
-      didDoc?: any;
+      didDoc?: Record<string, unknown>;
       /** Whether the account is active */
       active: false;
       /**
@@ -427,7 +470,7 @@ export type BlueskyProfile = {
     followedBy?: string;
   };
   /** Labels applied to the profile */
-  labels?: any[];
+  labels?: BlueskyLabel[];
 };
 
 /**
@@ -456,22 +499,25 @@ export type BlueskySearchPostsResponse = {
 };
 
 /**
+ * Bluesky thread item
+ */
+export type BlueskyThreadItem =
+  | BlueskyFeedItem
+  | {
+      uri: string;
+      notFound?: boolean;
+      blocked?: boolean;
+      author?: BlueskyAuthor;
+    };
+
+/**
  * Response from the getPostThread endpoint
  */
 export type BlueskyThreadResponse = {
   /** The thread data */
   thread?: {
     /** Replies to the post */
-    replies?: (
-      | BlueskyFeedItem
-      | null
-      | {
-          uri: string;
-          notFound?: boolean;
-          blocked?: boolean;
-          author?: any;
-        }
-    )[];
+    replies?: BlueskyThreadItem[];
     /** Thread context */
     threadContext?: {
       rootAuthorLike?: string;
@@ -481,8 +527,13 @@ export type BlueskyThreadResponse = {
   threadgate?: {
     uri: string;
     cid: string;
-    record: any;
-    lists?: any[];
+    record: Record<string, unknown>;
+    lists?: {
+      uri: string;
+      cid: string;
+      name: string;
+      purpose: string;
+    }[];
   };
 };
 
@@ -495,62 +546,19 @@ export type BlueskyNotification = {
   /** The notification's CID */
   cid: string;
   /** The notification author's information */
-  author: {
-    did: string;
-    handle: string;
-    displayName: string;
-    description: string;
-    avatar: string;
-    associated: {
-      lists: number;
-      feedgens: number;
-      starterPacks: number;
-      labeler: boolean;
-      chat: {
-        allowIncoming: string;
-      };
-    };
-    indexedAt: string;
-    createdAt: string;
-    viewer: {
-      muted: boolean;
-      mutedByList?: any;
-      blockedBy: boolean;
-      blocking?: string;
-      blockingByList?: any;
-      following?: string;
-      followedBy?: string;
-      knownFollowers?: {
-        count: number;
-        followers: any[];
-      };
-    };
-    labels: any[];
-    verification?: {
-      verifications: any[];
-      verifiedStatus: string;
-      trustedVerifierStatus: string;
-    };
-    status?: {
-      status: string;
-      record: any;
-      embed?: any;
-      expiresAt: string;
-      isActive: boolean;
-    };
-  };
+  author: BlueskyAuthor;
   /** The reason for the notification */
   reason: string;
   /** The subject of the notification reason */
   reasonSubject?: string;
   /** The notification record data */
-  record: any;
+  record: Record<string, unknown>;
   /** Whether the notification has been read */
   isRead: boolean;
   /** When the notification was indexed */
   indexedAt: string;
   /** Labels applied to the notification */
-  labels: any[];
+  labels: BlueskyLabel[];
 };
 
 /**

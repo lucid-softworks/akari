@@ -12,6 +12,11 @@ import { VideoEmbed } from "@/components/VideoEmbed";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslation } from "@/hooks/useTranslation";
+import {
+  BlueskyEmbed,
+  BlueskyImage,
+  BlueskyLabel,
+} from "@/utils/bluesky/types";
 
 type PostCardProps = {
   post: {
@@ -26,8 +31,8 @@ type PostCardProps = {
     likeCount?: number;
     commentCount?: number;
     repostCount?: number;
-    embed?: any;
-    embeds?: any[]; // Added embeds field
+    embed?: BlueskyEmbed;
+    embeds?: BlueskyEmbed[]; // Added embeds field
     /** Reply context - what this post is replying to */
     replyTo?: {
       author: {
@@ -37,19 +42,7 @@ type PostCardProps = {
       text: string;
     };
     /** Labels applied to the post */
-    labels?: {
-      val: string;
-      src: string;
-      cts: string;
-      uri: string;
-      cid?: string;
-      neg?: boolean;
-      value?: string;
-      text?: string;
-      label?: string;
-      ver?: number;
-      exp?: string;
-    }[];
+    labels?: BlueskyLabel[];
   };
   onPress?: () => void;
 };
@@ -91,11 +84,15 @@ export function PostCard({ post, onPress }: PostCardProps) {
       // Filter out video files, only show actual images
       const imageFiles =
         post.embed.images?.filter(
-          (img: any) => !img.mimeType || !img.mimeType.startsWith("video/")
+          (img: BlueskyImage) =>
+            !img.image?.mimeType || !img.image.mimeType.startsWith("video/")
         ) || [];
 
-      const urls = imageFiles.map((img: any) => img.fullsize) || [];
-      const altTexts = imageFiles.map((img: any) => img.alt) || [];
+      const urls =
+        imageFiles
+          .map((img: BlueskyImage) => img.fullsize?.ref?.$link)
+          .filter(Boolean) || [];
+      const altTexts = imageFiles.map((img: BlueskyImage) => img.alt) || [];
       return { urls, altTexts };
     }
 
@@ -103,11 +100,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
     if (post.embed.images) {
       // Filter out video files, only show actual images
       const imageFiles = post.embed.images.filter(
-        (img: any) => !img.mimeType || !img.mimeType.startsWith("video/")
+        (img: BlueskyImage) =>
+          !img.image?.mimeType || !img.image.mimeType.startsWith("video/")
       );
 
-      const urls = imageFiles.map((img: any) => img.fullsize);
-      const altTexts = imageFiles.map((img: any) => img.alt);
+      const urls = imageFiles
+        .map((img: BlueskyImage) => img.fullsize?.ref?.$link)
+        .filter(Boolean);
+      const altTexts = imageFiles.map((img: BlueskyImage) => img.alt);
       return { urls, altTexts };
     }
 
@@ -121,9 +121,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
     // Handle Bluesky native video embeds
     if (post.embed.$type === "app.bsky.embed.video" && post.embed.video) {
       return {
-        videoUrl: post.embed.video.ref?.$link,
-        thumbnailUrl: post.embed.video.ref?.$link, // Use video URL as thumbnail for now
-        altText: post.embed.video.alt || t("common.video"),
+        videoUrl: post.embed.video?.ref?.$link,
+        thumbnailUrl: post.embed.video?.ref?.$link, // Use video URL as thumbnail for now
+        altText: post.embed.video?.alt || t("common.video"),
         aspectRatio: post.embed.aspectRatio,
       };
     }
@@ -135,13 +135,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
     ) {
       // Check if any of the images are actually videos
       const videoImages = post.embed.images.filter(
-        (img: any) => img.mimeType && img.mimeType.startsWith("video/")
+        (img: BlueskyImage) =>
+          img.image?.mimeType && img.image.mimeType.startsWith("video/")
       );
 
       if (videoImages.length > 0) {
         return {
-          videoUrl: videoImages[0].fullsize,
-          thumbnailUrl: videoImages[0].thumb,
+          videoUrl: videoImages[0].fullsize?.ref?.$link,
+          thumbnailUrl: videoImages[0].thumb?.ref?.$link,
           altText: videoImages[0].alt,
         };
       }
@@ -157,13 +158,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
         post.embed.media.images
       ) {
         const videoImages = post.embed.media.images.filter(
-          (img: any) => img.mimeType && img.mimeType.startsWith("video/")
+          (img: BlueskyImage) =>
+            img.image?.mimeType && img.image.mimeType.startsWith("video/")
         );
 
         if (videoImages.length > 0) {
           return {
-            videoUrl: videoImages[0].fullsize,
-            thumbnailUrl: videoImages[0].thumb,
+            videoUrl: videoImages[0].fullsize?.ref?.$link,
+            thumbnailUrl: videoImages[0].thumb?.ref?.$link,
             altText: videoImages[0].alt,
           };
         }
@@ -247,9 +249,75 @@ export function PostCard({ post, onPress }: PostCardProps) {
     return false;
   };
 
-  // Get the embed data for rendering
+  // Get the embed data for rendering external embeds
   const getEmbedData = () => {
-    return post.embed || (post.embeds && post.embeds[0]);
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    if (!embedData || !embedData.$type?.includes("app.bsky.embed.external")) {
+      return null;
+    }
+    return embedData as {
+      $type: "app.bsky.embed.external" | "app.bsky.embed.external#view";
+      external: {
+        description: string;
+        thumb?: {
+          $type: "blob";
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+        };
+        title: string;
+        uri: string;
+      };
+    };
+  };
+
+  // Get the embed data for rendering video embeds
+  const getVideoEmbedData = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    if (!embedData) {
+      return null;
+    }
+    return embedData as {
+      $type?: string;
+      external?: {
+        description: string;
+        thumb?: {
+          $type: "blob";
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+        };
+        title: string;
+        uri: string;
+      };
+      media?: {
+        $type: string;
+        images?: BlueskyImage[];
+        video?: {
+          alt: string;
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+          aspectRatio?: {
+            width: number;
+            height: number;
+          };
+        };
+      };
+      videoUrl?: string;
+      thumbnailUrl?: string;
+      altText?: string;
+      aspectRatio?: {
+        width: number;
+        height: number;
+      };
+    };
   };
 
   const handleImagePress = (index: number) => {
@@ -316,10 +384,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <ThemedText style={styles.text}>{post.text}</ThemedText>
 
           {/* Render YouTube embed if present */}
-          {isYouTubeEmbed() && <YouTubeEmbed embed={getEmbedData()} />}
+          {isYouTubeEmbed() && getEmbedData() && (
+            <YouTubeEmbed embed={getEmbedData()!} />
+          )}
 
           {/* Render external embed if present (non-YouTube) */}
-          {isExternalEmbed() && <ExternalEmbed embed={getEmbedData()} />}
+          {isExternalEmbed() && getEmbedData() && (
+            <ExternalEmbed embed={getEmbedData()!} />
+          )}
 
           {/* Render native video embed if present */}
           {isNativeVideoEmbed() && videoData && (
@@ -330,7 +402,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
           )}
 
           {/* Render external video embed if present */}
-          {isExternalVideoEmbed() && <VideoEmbed embed={getEmbedData()} />}
+          {isExternalVideoEmbed() && getVideoEmbedData() && (
+            <VideoEmbed embed={getVideoEmbedData()!} />
+          )}
 
           {/* Render images if present */}
           {imageUrls.length > 0 && (

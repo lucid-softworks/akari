@@ -22,14 +22,11 @@ export class BlueskySearch extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string
   ): Promise<BlueskySearchActorsResponse> {
-    const params: any = {
+    const params: Record<string, string> = {
       q: query,
       limit: limit.toString(),
+      ...(cursor && { cursor }),
     };
-
-    if (cursor) {
-      params.cursor = cursor;
-    }
 
     return this.makeAuthenticatedRequest<BlueskySearchActorsResponse>(
       "/app.bsky.actor.searchActors",
@@ -54,14 +51,11 @@ export class BlueskySearch extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string
   ): Promise<BlueskySearchPostsResponse> {
-    const params: any = {
+    const params: Record<string, string> = {
       q: query,
       limit: limit.toString(),
+      ...(cursor && { cursor }),
     };
-
-    if (cursor) {
-      params.cursor = cursor;
-    }
 
     return this.makeAuthenticatedRequest<BlueskySearchPostsResponse>(
       "/app.bsky.feed.searchPosts",

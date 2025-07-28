@@ -44,8 +44,12 @@ export function useNotifications(
         const notifications = response.notifications.map((notification) => {
           // Extract post content from the record
           let postContent: string | undefined;
-          if (notification.record && notification.record.text) {
-            postContent = notification.record.text;
+          if (
+            notification.record &&
+            typeof notification.record === "object" &&
+            "text" in notification.record
+          ) {
+            postContent = (notification.record as { text: string }).text;
           }
 
           return {
@@ -71,25 +75,34 @@ export function useNotifications(
           priority: response.priority,
           seenAt: response.seenAt,
         };
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Determine the type of error
         let errorType: NotificationError["type"] = "unknown";
         let errorMessage = "Failed to load notifications";
 
-        if (error?.response?.status === 401) {
+        const errorObj = error as {
+          response?: { status?: number };
+          message?: string;
+          code?: string;
+        };
+
+        if (errorObj?.response?.status === 401) {
           errorType = "permission";
           errorMessage = "Authentication failed. Please sign in again.";
-        } else if (error?.response?.status === 403) {
+        } else if (errorObj?.response?.status === 403) {
           errorType = "permission";
           errorMessage = "Access to notifications is not allowed";
         } else if (
-          error?.message?.includes("network") ||
-          error?.code === "NETWORK_ERROR"
+          errorObj?.message?.includes("network") ||
+          errorObj?.code === "NETWORK_ERROR"
         ) {
           errorType = "network";
           errorMessage =
             "Network error. Please check your connection and try again";
-        } else if (error?.response?.status >= 500) {
+        } else if (
+          errorObj?.response?.status &&
+          errorObj.response.status >= 500
+        ) {
           errorType = "network";
           errorMessage = "Server error. Please try again later";
         }
@@ -106,7 +119,7 @@ export function useNotifications(
     getNextPageParam: (lastPage) => lastPage.cursor,
     enabled: enabled && !!jwtStorage.getToken() && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: NotificationError) => {
       // Don't retry permission errors
       if (error?.type === "permission") {
         return false;

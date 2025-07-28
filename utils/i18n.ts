@@ -87,7 +87,10 @@ i18n.defaultLocale = "en";
 
 // Add missing translation logging
 const originalTranslate = i18n.t.bind(i18n);
-i18n.t = (scope: any, options?: any) => {
+i18n.t = (
+  scope: Parameters<typeof originalTranslate>[0],
+  options?: Parameters<typeof originalTranslate>[1]
+) => {
   const result = originalTranslate(scope, options);
 
   // Check if the translation is missing (returns the key itself)

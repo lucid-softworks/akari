@@ -21,7 +21,7 @@ export class BlueskyConversations extends BlueskyApiClient {
     readState?: "unread",
     status?: "request" | "accepted"
   ): Promise<BlueskyConvosResponse> {
-    const params: any = { limit };
+    const params: Record<string, string | number | boolean> = { limit };
 
     if (cursor) params.cursor = cursor;
     if (readState) params.readState = readState;

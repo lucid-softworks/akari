@@ -40,12 +40,12 @@ export const enhancedPseudoLocalizeString = (text: string): string => {
 };
 
 // Transform an object recursively with pseudo-localization
-export const pseudoLocalizeObject = (obj: any): any => {
+export const pseudoLocalizeObject = (obj: unknown): unknown => {
   if (typeof obj === "string") {
     return enhancedPseudoLocalizeString(obj);
   }
   if (typeof obj === "object" && obj !== null) {
-    const result: any = {};
+    const result: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj)) {
       result[key] = pseudoLocalizeObject(value);
     }

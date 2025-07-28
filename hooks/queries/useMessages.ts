@@ -58,31 +58,40 @@ export function useMessages(
           messages,
           cursor: response.cursor,
         };
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Determine the type of error
         let errorType: MessageError["type"] = "unknown";
         let errorMessage = "Failed to load messages";
 
-        if (error?.response?.status === 401) {
+        const errorObj = error as {
+          response?: { status?: number };
+          message?: string;
+          code?: string;
+        };
+
+        if (errorObj?.response?.status === 401) {
           errorType = "permission";
           errorMessage =
             "Your app password doesn't have permission to access messages";
-        } else if (error?.response?.status === 403) {
+        } else if (errorObj?.response?.status === 403) {
           errorType = "permission";
           errorMessage =
             "Access to messages is not allowed with this app password";
-        } else if (error?.message?.includes("Bad token scope")) {
+        } else if (errorObj?.message?.includes("Bad token scope")) {
           errorType = "permission";
           errorMessage =
             "Your app password doesn't have chat permissions. Please create a new app password with chat access in your Bluesky settings.";
         } else if (
-          error?.message?.includes("network") ||
-          error?.code === "NETWORK_ERROR"
+          errorObj?.message?.includes("network") ||
+          errorObj?.code === "NETWORK_ERROR"
         ) {
           errorType = "network";
           errorMessage =
             "Network error. Please check your connection and try again";
-        } else if (error?.response?.status >= 500) {
+        } else if (
+          errorObj?.response?.status &&
+          errorObj.response.status >= 500
+        ) {
           errorType = "network";
           errorMessage = "Server error. Please try again later";
         }
@@ -100,7 +109,7 @@ export function useMessages(
     enabled:
       enabled && !!jwtStorage.getToken() && !!convoId && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: MessageError) => {
       // Don't retry permission errors
       if (error?.type === "permission") {
         return false;

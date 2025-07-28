@@ -5,7 +5,7 @@ import { useCallback } from "react";
 export const useTranslation = () => {
   const { currentLocale, changeLanguage, availableLocales } = useLanguage();
 
-  const t = useCallback((key: string, options?: any) => {
+  const t = useCallback((key: string, options?: Record<string, unknown>) => {
     return i18n.t(key, options);
   }, []);
 

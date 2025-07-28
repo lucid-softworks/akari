@@ -95,7 +95,7 @@ export const secureStorageUtils = {
   },
 
   // Set JSON value
-  setJSON: (key: StorageKey, value: any): void => {
+  setJSON: <T>(key: StorageKey, value: T): void => {
     try {
       secureStorage.set(key, JSON.stringify(value));
     } catch (error) {
@@ -104,7 +104,7 @@ export const secureStorageUtils = {
   },
 
   // Get JSON value
-  getJSON: (key: StorageKey): any => {
+  getJSON: <T>(key: StorageKey): T | null => {
     try {
       const value = secureStorage.getString(key);
       return value ? JSON.parse(value) : null;
@@ -168,7 +168,7 @@ export const jwtStorage = {
   // Multi-account functions
   getAllAccounts: (): Account[] => {
     try {
-      const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+      const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
       return accounts;
     } catch {
       return [];
@@ -184,7 +184,7 @@ export const jwtStorage = {
       const currentId = secureStorageUtils.get("CURRENT_ACCOUNT_ID");
       if (!currentId) return null;
 
-      const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+      const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
       return (
         accounts.find((account: Account) => account.id === currentId) || null
       );
@@ -194,7 +194,7 @@ export const jwtStorage = {
   },
 
   addAccount: (account: Omit<Account, "id" | "createdAt">): string => {
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+    const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
     const newAccount: Account = {
       ...account,
       id: `${account.handle}-${Date.now()}`,
@@ -208,7 +208,7 @@ export const jwtStorage = {
   },
 
   switchAccount: (accountId: string): boolean => {
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+    const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
     const account = accounts.find((acc: Account) => acc.id === accountId);
 
     if (!account) return false;
@@ -223,7 +223,7 @@ export const jwtStorage = {
   },
 
   removeAccount: (accountId: string): boolean => {
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+    const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
     const filteredAccounts = accounts.filter(
       (acc: Account) => acc.id !== accountId
     );
@@ -246,7 +246,7 @@ export const jwtStorage = {
   },
 
   updateAccount: (accountId: string, updates: Partial<Account>): boolean => {
-    const accounts = secureStorageUtils.getJSON("ACCOUNTS") || [];
+    const accounts = secureStorageUtils.getJSON<Account[]>("ACCOUNTS") || [];
     const accountIndex = accounts.findIndex(
       (acc: Account) => acc.id === accountId
     );

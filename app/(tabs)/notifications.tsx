@@ -14,10 +14,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LocalizedText } from "@/components/LocalizedText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
 import { useNotifications } from "@/hooks/queries/useNotifications";
 import { useBorderColor } from "@/hooks/useBorderColor";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useTranslation } from "@/hooks/useTranslation";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
@@ -54,8 +52,6 @@ function NotificationItem({
   onPress,
   borderColor,
 }: NotificationItemProps) {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
   const { t } = useTranslation();
 
   const getReasonText = (type: string, count: number) => {
@@ -190,7 +186,24 @@ function NotificationItem({
 /**
  * Group notifications by type and subject
  */
-function groupNotifications(notifications: any[]): GroupedNotification[] {
+type NotificationData = {
+  id: string;
+  author: {
+    did: string;
+    handle: string;
+    displayName: string;
+    avatar: string;
+  };
+  reason: string;
+  reasonSubject?: string;
+  isRead: boolean;
+  indexedAt: string;
+  postContent?: string;
+};
+
+function groupNotifications(
+  notifications: NotificationData[]
+): GroupedNotification[] {
   const groups = new Map<string, GroupedNotification>();
 
   notifications.forEach((notification) => {
@@ -254,8 +267,6 @@ function groupNotifications(notifications: any[]): GroupedNotification[] {
  * Notifications screen component
  */
 export default function NotificationsScreen() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);

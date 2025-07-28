@@ -9,7 +9,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useParentPost, usePost, useRootPost } from "@/hooks/queries/usePost";
 import { usePostThread } from "@/hooks/queries/usePostThread";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { BlueskyFeedItem } from "@/utils/bluesky/types";
+import { BlueskyFeedItem, BlueskyPostView } from "@/utils/bluesky/types";
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -24,12 +24,39 @@ export default function PostDetailScreen() {
   // Check if this post is a reply and fetch parent/root posts
   // Use the main post data (from getPost) since threadData doesn't include the main post
   const mainPost = post;
-  const isReply = mainPost?.record?.reply;
-  const parentUri = mainPost?.record?.reply?.parent?.uri;
-  const rootUri = mainPost?.record?.reply?.root?.uri;
+  const isReply =
+    typeof mainPost?.record === "object" &&
+    mainPost?.record &&
+    "reply" in mainPost.record;
+  const parentUri =
+    typeof mainPost?.record === "object" &&
+    mainPost?.record &&
+    "reply" in mainPost.record &&
+    mainPost.record.reply &&
+    typeof mainPost.record.reply === "object" &&
+    "parent" in mainPost.record.reply &&
+    mainPost.record.reply.parent &&
+    typeof mainPost.record.reply.parent === "object" &&
+    "uri" in mainPost.record.reply.parent
+      ? (mainPost.record.reply.parent as { uri: string }).uri
+      : undefined;
+  const rootUri =
+    typeof mainPost?.record === "object" &&
+    mainPost?.record &&
+    "reply" in mainPost.record &&
+    mainPost.record.reply &&
+    typeof mainPost.record.reply === "object" &&
+    "root" in mainPost.record.reply &&
+    mainPost.record.reply.root &&
+    typeof mainPost.record.reply.root === "object" &&
+    "uri" in mainPost.record.reply.root
+      ? (mainPost.record.reply.root as { uri: string }).uri
+      : undefined;
 
-  const { parentPost, isLoading: parentLoading } = useParentPost(parentUri);
-  const { rootPost, isLoading: rootLoading } = useRootPost(rootUri);
+  const { parentPost, isLoading: parentLoading } = useParentPost(
+    parentUri || null
+  );
+  const { rootPost, isLoading: rootLoading } = useRootPost(rootUri || null);
 
   // Scroll to the main post after everything is loaded
   useEffect(() => {
@@ -61,7 +88,12 @@ export default function PostDetailScreen() {
   const renderComment = (
     item:
       | BlueskyFeedItem
-      | { uri: string; notFound?: boolean; blocked?: boolean; author?: any }
+      | {
+          uri: string;
+          notFound?: boolean;
+          blocked?: boolean;
+          author?: BlueskyPostView["author"];
+        }
   ) => {
     // Skip null or blocked replies
     if (!item || "notFound" in item || "blocked" in item) return null;
@@ -79,7 +111,12 @@ export default function PostDetailScreen() {
               handle: post.reply.parent.author?.handle || "unknown",
               displayName: post.reply.parent.author?.displayName,
             },
-            text: post.reply.parent.record?.text || "No text content",
+            text:
+              typeof post.reply.parent.record === "object" &&
+              post.reply.parent.record &&
+              "text" in post.reply.parent.record
+                ? (post.reply.parent.record as { text: string }).text
+                : "No text content",
           }
         : undefined;
 
@@ -88,7 +125,12 @@ export default function PostDetailScreen() {
           key={`${post.uri}-${post.indexedAt}`}
           post={{
             id: post.uri,
-            text: post.record?.text || "No text content",
+            text:
+              typeof post.record === "object" &&
+              post.record &&
+              "text" in post.record
+                ? (post.record as { text: string }).text
+                : "No text content",
             author: {
               handle: post.author.handle,
               displayName: post.author.displayName,
@@ -111,24 +153,30 @@ export default function PostDetailScreen() {
       return null;
     }
 
+    const postItem = item as BlueskyPostView;
     return (
       <PostCard
-        key={`${item.uri}-${(item as any).indexedAt}`}
+        key={`${postItem.uri}-${postItem.indexedAt}`}
         post={{
-          id: item.uri,
-          text: (item as any).record?.text || "No text content",
+          id: postItem.uri,
+          text:
+            typeof postItem.record === "object" &&
+            postItem.record &&
+            "text" in postItem.record
+              ? (postItem.record as { text: string }).text
+              : "No text content",
           author: {
-            handle: item.author.handle,
-            displayName: item.author.displayName,
-            avatar: item.author.avatar,
+            handle: postItem.author.handle,
+            displayName: postItem.author.displayName,
+            avatar: postItem.author.avatar,
           },
-          createdAt: new Date((item as any).indexedAt).toLocaleDateString(),
-          likeCount: (item as any).likeCount || 0,
-          commentCount: (item as any).replyCount || 0,
-          repostCount: (item as any).repostCount || 0,
-          embed: (item as any).embed,
-          embeds: (item as any).embeds,
-          labels: (item as any).labels,
+          createdAt: new Date(postItem.indexedAt).toLocaleDateString(),
+          likeCount: postItem.likeCount || 0,
+          commentCount: postItem.replyCount || 0,
+          repostCount: postItem.repostCount || 0,
+          embed: postItem.embed,
+          embeds: postItem.embeds,
+          labels: postItem.labels,
         }}
       />
     );
@@ -148,7 +196,12 @@ export default function PostDetailScreen() {
       <PostCard
         post={{
           id: parentPost.uri,
-          text: parentPost.record?.text || "No text content",
+          text:
+            typeof parentPost.record === "object" &&
+            parentPost.record &&
+            "text" in parentPost.record
+              ? (parentPost.record as { text: string }).text
+              : "No text content",
           author: {
             handle: parentPost.author.handle,
             displayName: parentPost.author.displayName,
@@ -174,7 +227,12 @@ export default function PostDetailScreen() {
       <PostCard
         post={{
           id: rootPost.uri,
-          text: rootPost.record?.text || "No text content",
+          text:
+            typeof rootPost.record === "object" &&
+            rootPost.record &&
+            "text" in rootPost.record
+              ? (rootPost.record as { text: string }).text
+              : "No text content",
           author: {
             handle: rootPost.author.handle,
             displayName: rootPost.author.displayName,
@@ -246,7 +304,12 @@ export default function PostDetailScreen() {
             <PostCard
               post={{
                 id: mainPost?.uri || "",
-                text: mainPost?.record?.text || "No text content",
+                text:
+                  typeof mainPost?.record === "object" &&
+                  mainPost?.record &&
+                  "text" in mainPost.record
+                    ? (mainPost.record as { text: string }).text
+                    : "No text content",
                 author: {
                   handle: mainPost?.author?.handle || "",
                   displayName: mainPost?.author?.displayName,
@@ -286,7 +349,7 @@ export default function PostDetailScreen() {
                       uri: string;
                       notFound?: boolean;
                       blocked?: boolean;
-                      author?: any;
+                      author?: BlueskyPostView["author"];
                     } =>
                   item !== null && !("notFound" in item) && !("blocked" in item)
               )

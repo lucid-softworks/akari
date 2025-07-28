@@ -1,3 +1,4 @@
+import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -6,7 +7,7 @@ type SearchTabType = "all" | "users" | "posts";
 
 type SearchResult = {
   type: "profile" | "post";
-  data: any;
+  data: BlueskyProfile | BlueskyPostView;
 };
 
 type SearchError = {
@@ -46,7 +47,7 @@ export function useSearch(
           );
 
           const results: SearchResult[] = (postResults.posts || []).map(
-            (post: any) => ({
+            (post) => ({
               type: "post" as const,
               data: post,
             })
@@ -68,7 +69,7 @@ export function useSearch(
           );
 
           const results: SearchResult[] = (profileResults.actors || []).map(
-            (profile: any) => ({
+            (profile) => ({
               type: "profile" as const,
               data: profile,
             })
@@ -87,7 +88,7 @@ export function useSearch(
           );
 
           const results: SearchResult[] = (postResults.posts || []).map(
-            (post: any) => ({
+            (post: BlueskyPostView) => ({
               type: "post" as const,
               data: post,
             })
@@ -105,11 +106,11 @@ export function useSearch(
           ]);
 
           const results: SearchResult[] = [
-            ...(profileResults.actors || []).map((profile: any) => ({
+            ...(profileResults.actors || []).map((profile: BlueskyProfile) => ({
               type: "profile" as const,
               data: profile,
             })),
-            ...(postResults.posts || []).map((post: any) => ({
+            ...(postResults.posts || []).map((post: BlueskyPostView) => ({
               type: "post" as const,
               data: post,
             })),
@@ -128,25 +129,34 @@ export function useSearch(
           results: [],
           cursor: undefined,
         };
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Determine the type of error
         let errorType: SearchError["type"] = "unknown";
         let errorMessage = "Failed to search";
 
-        if (error?.response?.status === 401) {
+        const errorObj = error as {
+          response?: { status?: number };
+          message?: string;
+          code?: string;
+        };
+
+        if (errorObj?.response?.status === 401) {
           errorType = "permission";
           errorMessage = "Authentication failed. Please sign in again.";
-        } else if (error?.response?.status === 403) {
+        } else if (errorObj?.response?.status === 403) {
           errorType = "permission";
           errorMessage = "Access to search is not allowed";
         } else if (
-          error?.message?.includes("network") ||
-          error?.code === "NETWORK_ERROR"
+          errorObj?.message?.includes("network") ||
+          errorObj?.code === "NETWORK_ERROR"
         ) {
           errorType = "network";
           errorMessage =
             "Network error. Please check your connection and try again";
-        } else if (error?.response?.status >= 500) {
+        } else if (
+          errorObj?.response?.status &&
+          errorObj.response.status >= 500
+        ) {
           errorType = "network";
           errorMessage = "Server error. Please try again later";
         }
@@ -163,7 +173,7 @@ export function useSearch(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 2 * 60 * 1000, // 2 minutes
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: SearchError) => {
       // Don't retry permission errors
       if (error?.type === "permission") {
         return false;

@@ -26,8 +26,54 @@ type VideoEmbedProps = {
     };
     media?: {
       $type: string;
-      images?: any[];
-      video?: any;
+      images?: {
+        alt: string;
+        image: {
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+        };
+        thumb: {
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+        };
+        fullsize: {
+          ref: {
+            $link: string;
+          };
+          mimeType: string;
+          size: number;
+        };
+        aspectRatio?: {
+          width: number;
+          height: number;
+        };
+      }[];
+      video?: {
+        alt: string;
+        ref: {
+          $link: string;
+        };
+        mimeType: string;
+        size: number;
+        aspectRatio?: {
+          width: number;
+          height: number;
+        };
+        thumb?: {
+          ref: {
+            $link: string;
+          };
+        };
+        title?: string;
+        description?: string;
+        url?: string;
+      };
     };
     // Native video data structure
     videoUrl?: string;

@@ -10,7 +10,7 @@ import {
 interface LocalizedTextProps extends RNTextProps {
   children?: React.ReactNode;
   translationKey?: string;
-  translationOptions?: any;
+  translationOptions?: Record<string, unknown>;
 }
 
 export const LocalizedText = ({

@@ -26,7 +26,7 @@ export class BlueskyApiClient {
     options: {
       method?: "GET" | "POST";
       headers?: Record<string, string>;
-      body?: any;
+      body?: Record<string, unknown>;
       params?: Record<string, string>;
     } = {}
   ): Promise<T> {
@@ -80,7 +80,7 @@ export class BlueskyApiClient {
     accessJwt: string,
     options: {
       method?: "GET" | "POST";
-      body?: any;
+      body?: Record<string, unknown>;
       params?: Record<string, string>;
     } = {}
   ): Promise<T> {
