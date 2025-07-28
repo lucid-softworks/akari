@@ -23,6 +23,7 @@ import { useConversations } from "@/hooks/queries/useConversations";
 import { useMessages } from "@/hooks/queries/useMessages";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type Message = {
   id: string;
@@ -43,6 +44,7 @@ export default function ConversationScreen() {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, "background");
@@ -86,7 +88,7 @@ export default function ConversationScreen() {
       // TODO: Send message via API
       setMessageText("");
     } catch {
-      Alert.alert("Error", "Failed to send message");
+      Alert.alert(t("common.error"), t("common.errorLoadingMessages"));
     }
   };
 
@@ -132,7 +134,7 @@ export default function ConversationScreen() {
     return (
       <ThemedView style={styles.loadingFooter}>
         <ThemedText style={styles.loadingText}>
-          Loading more messages...
+          {t("common.loading")} {t("common.messages")}...
         </ThemedText>
       </ThemedView>
     );
@@ -166,7 +168,7 @@ export default function ConversationScreen() {
           </ThemedView>
           <ThemedView style={styles.loadingState}>
             <ThemedText style={styles.loadingText}>
-              Loading conversation...
+              {t("common.loading")} {t("common.conversations")}...
             </ThemedText>
           </ThemedView>
         </ThemedView>
@@ -197,12 +199,14 @@ export default function ConversationScreen() {
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.errorState}>
-            <ThemedText style={styles.errorTitle}>
-              Error loading messages
-            </ThemedText>
-            <ThemedText style={styles.errorSubtitle}>
+            <ThemedText style={styles.errorText}>
               {messageError.message}
             </ThemedText>
+            {messageError.type === "permission" && (
+              <ThemedText style={styles.errorSubtext}>
+                {t("common.errorLoadingMessages")}
+              </ThemedText>
+            )}
           </ThemedView>
         </ThemedView>
       </SafeAreaView>
@@ -448,6 +452,15 @@ const styles = StyleSheet.create({
   },
   errorSubtitle: {
     fontSize: 16,
+    opacity: 0.6,
+    textAlign: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  errorSubtext: {
+    fontSize: 14,
     opacity: 0.6,
     textAlign: "center",
   },

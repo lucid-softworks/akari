@@ -11,12 +11,14 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { LocalizedText } from "@/components/LocalizedText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useNotifications } from "@/hooks/queries/useNotifications";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useTranslation } from "@/hooks/useTranslation";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 /**
@@ -54,22 +56,23 @@ function NotificationItem({
 }: NotificationItemProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const { t } = useTranslation();
 
   const getReasonText = (type: string, count: number) => {
     const action = (() => {
       switch (type) {
         case "like":
-          return "liked your post";
+          return t("notifications.likedYourPost");
         case "repost":
-          return "reposted your post";
+          return t("notifications.repostedYourPost");
         case "follow":
-          return "started following you";
+          return t("notifications.startedFollowingYou");
         case "reply":
-          return "replied to your post";
+          return t("notifications.repliedToYourPost");
         case "mention":
-          return "mentioned you";
+          return t("notifications.mentionedYou");
         case "quote":
-          return "quoted your post";
+          return t("notifications.quotedYourPost");
         default:
           return type;
       }
@@ -78,9 +81,9 @@ function NotificationItem({
     if (count === 1) {
       return action;
     } else if (count === 2) {
-      return `and 1 other ${action}`;
+      return t("notifications.andOneOther", { action });
     } else {
-      return `and ${count - 1} others ${action}`;
+      return t("notifications.andOthers", { count: count - 1, action });
     }
   };
 
@@ -155,52 +158,31 @@ function NotificationItem({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.notificationItem,
-        {
-          backgroundColor: notification.isRead
-            ? colors.background
-            : colors.tint + "10",
-          borderBottomColor: borderColor,
-        },
-      ]}
+      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
       onPress={onPress}
     >
-      <View style={styles.notificationContent}>
-        {renderAvatars()}
-        <View style={styles.notificationText}>
-          <View style={styles.authorInfo}>
-            <Text style={[styles.authorName, { color: colors.text }]}>
-              {notification.authors[0].displayName ||
-                notification.authors[0].handle}
-            </Text>
-            <Text
-              style={[styles.authorHandle, { color: colors.tabIconDefault }]}
-            >
-              @{notification.authors[0].handle}
-            </Text>
-          </View>
-          <Text style={[styles.reasonText, { color: colors.text }]}>
-            {getReasonText(notification.type, notification.count)}
-          </Text>
-          {notification.postContent && (
-            <Text
-              style={[styles.postContent, { color: colors.tabIconDefault }]}
-              numberOfLines={2}
-            >
-              &ldquo;{notification.postContent}&rdquo;
-            </Text>
-          )}
-          <Text style={[styles.timeText, { color: colors.tabIconDefault }]}>
+      <View style={styles.avatarContainer}>{renderAvatars()}</View>
+      <View style={styles.contentContainer}>
+        <View style={styles.headerRow}>
+          <ThemedText style={styles.authorNames}>
+            {notification.authors
+              .map((author) => author.displayName || author.handle)
+              .join(", ")}
+          </ThemedText>
+          <ThemedText style={styles.timestamp}>
             {formatTime(notification.latestTimestamp)}
-          </Text>
+          </ThemedText>
         </View>
+        <ThemedText style={styles.reasonText}>
+          {getReasonText(notification.type, notification.count)}
+        </ThemedText>
+        {notification.postContent && (
+          <ThemedText style={styles.postContent} numberOfLines={2}>
+            {notification.postContent}
+          </ThemedText>
+        )}
       </View>
-      {!notification.isRead && (
-        <View
-          style={[styles.unreadIndicator, { backgroundColor: colors.tint }]}
-        />
-      )}
+      {!notification.isRead && <View style={styles.unreadIndicator} />}
     </TouchableOpacity>
   );
 }
@@ -277,6 +259,7 @@ export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
+  const { t } = useTranslation();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -289,7 +272,7 @@ export default function NotificationsScreen() {
   }, []);
 
   const {
-    data,
+    data: notificationsData,
     isLoading,
     isError,
     error,
@@ -298,9 +281,10 @@ export default function NotificationsScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useNotifications(50);
+  } = useNotifications();
 
-  const notifications = data?.pages.flatMap((page) => page.notifications) ?? [];
+  const notifications =
+    notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
   const groupedNotifications = groupNotifications(notifications);
 
   const handleLoadMore = () => {
@@ -337,10 +321,10 @@ export default function NotificationsScreen() {
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <ThemedText style={styles.emptyStateTitle}>
-        No notifications yet
+        {t("notifications.noNotificationsYet")}
       </ThemedText>
       <ThemedText style={styles.emptyStateSubtitle}>
-        When you get notifications, they&apos;ll appear here
+        {t("notifications.notificationsWillAppearHere")}
       </ThemedText>
     </View>
   );
@@ -348,10 +332,10 @@ export default function NotificationsScreen() {
   const renderErrorState = () => (
     <View style={styles.emptyState}>
       <ThemedText style={styles.emptyStateTitle}>
-        Error loading notifications
+        {t("notifications.errorLoadingNotifications")}
       </ThemedText>
       <ThemedText style={styles.emptyStateSubtitle}>
-        {error?.message || "Something went wrong"}
+        {error?.message || t("notifications.somethingWentWrong")}
       </ThemedText>
     </View>
   );
@@ -367,7 +351,12 @@ export default function NotificationsScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>Notifications</ThemedText>
+        <LocalizedText
+          style={styles.title}
+          translationKey="navigation.notifications"
+        >
+          Notifications
+        </LocalizedText>
       </ThemedView>
 
       <FlatList
@@ -386,7 +375,7 @@ export default function NotificationsScreen() {
           isFetchingNextPage ? (
             <ThemedView style={styles.loadingMore}>
               <ThemedText style={styles.loadingMoreText}>
-                Loading more notifications...
+                {t("notifications.loadingMoreNotifications")}
               </ThemedText>
             </ThemedView>
           ) : null
@@ -395,7 +384,7 @@ export default function NotificationsScreen() {
           isLoading ? (
             <ThemedView style={styles.emptyState}>
               <ThemedText style={styles.emptyStateText}>
-                Loading notifications...
+                {t("notifications.loadingNotifications")}
               </ThemedText>
             </ThemedView>
           ) : (
@@ -572,5 +561,26 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 16,
     opacity: 0.7,
+  },
+  avatarContainer: {
+    marginRight: 12,
+    marginTop: 2,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  authorNames: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  timestamp: {
+    fontSize: 14,
+    color: "#666",
   },
 });

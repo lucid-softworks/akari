@@ -1,4 +1,5 @@
 import { TabBar } from "@/components/TabBar";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type TabType = "posts" | "replies" | "likes" | "media";
 
@@ -8,11 +9,13 @@ type ProfileTabsProps = {
 };
 
 export function ProfileTabs({ activeTab, onTabChange }: ProfileTabsProps) {
+  const { t } = useTranslation();
+
   const tabs = [
-    { key: "posts" as const, label: "Posts" },
-    { key: "replies" as const, label: "Replies" },
-    { key: "likes" as const, label: "Likes" },
-    { key: "media" as const, label: "Media" },
+    { key: "posts" as const, label: t("common.posts") },
+    { key: "replies" as const, label: t("common.replies") },
+    { key: "likes" as const, label: t("common.likes") },
+    { key: "media" as const, label: t("profile.media") },
   ];
 
   return <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />;

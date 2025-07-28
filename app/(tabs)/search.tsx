@@ -12,12 +12,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Labels } from "@/components/Labels";
+import { LocalizedText } from "@/components/LocalizedText";
 import { PostCard } from "@/components/PostCard";
 import { SearchTabs } from "@/components/SearchTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useSearch } from "@/hooks/queries/useSearch";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 type SearchResult = {
@@ -34,6 +36,7 @@ export default function SearchScreen() {
   const [activeTab, setActiveTab] = useState<SearchTabType>("all");
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
+  const { t } = useTranslation();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -177,10 +180,10 @@ export default function SearchScreen() {
     const replyTo = post.reply?.parent
       ? {
           author: {
-            handle: post.reply.parent.author?.handle || "unknown",
+            handle: post.reply.parent.author?.handle || t("common.unknown"),
             displayName: post.reply.parent.author?.displayName,
           },
-          text: post.reply.parent.record?.text || "No text content",
+          text: post.reply.parent.record?.text || t("common.noTextContent"),
         }
       : undefined;
 
@@ -188,7 +191,7 @@ export default function SearchScreen() {
       <PostCard
         post={{
           id: post.uri,
-          text: post.record?.text || "No text content",
+          text: post.record?.text || t("common.noTextContent"),
           author: {
             handle: post.author.handle,
             displayName: post.author.displayName,
@@ -224,7 +227,7 @@ export default function SearchScreen() {
       return (
         <ThemedView style={styles.loadingFooter}>
           <ThemedText style={[styles.loadingText, { color: textColor }]}>
-            Loading more results...
+            {t("search.loadingMoreResults")}
           </ThemedText>
         </ThemedView>
       );
@@ -234,33 +237,36 @@ export default function SearchScreen() {
 
   const getEmptyStateText = () => {
     if (!searchQuery) {
-      return "Search for profiles and posts on Bluesky";
+      return t("search.searchPlaceholder");
     }
 
     if (isLoading) {
-      return "Searching...";
+      return t("search.searching");
     }
 
     if (isError) {
-      return error?.message || "Search failed";
+      return error?.message || t("search.searchFailed");
     }
 
     switch (activeTab) {
       case "users":
-        return "No users found";
+        return t("search.noUsersFound");
       case "posts":
-        return "No posts found";
+        return t("search.noPostsFound");
       default:
-        return "No results found";
+        return t("search.noResultsFound");
     }
   };
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={[styles.title, { color: textColor }]}>
+        <LocalizedText
+          style={[styles.title, { color: textColor }]}
+          translationKey="navigation.search"
+        >
           Search
-        </ThemedText>
+        </LocalizedText>
       </ThemedView>
 
       <ThemedView style={styles.searchContainer}>
@@ -273,7 +279,7 @@ export default function SearchScreen() {
               color: textColor,
             },
           ]}
-          placeholder="Search profiles and posts..."
+          placeholder={t("search.searchInputPlaceholder")}
           placeholderTextColor="#999999"
           value={query}
           onChangeText={setQuery}
@@ -288,7 +294,7 @@ export default function SearchScreen() {
           disabled={isLoading}
         >
           <ThemedText style={styles.searchButtonText}>
-            {isLoading ? "Searching..." : "Search"}
+            {isLoading ? t("search.searching") : t("common.search")}
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>

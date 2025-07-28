@@ -4,11 +4,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { LocalizedText } from "@/components/LocalizedText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
+import { useTranslation } from "@/hooks/useTranslation";
+import { checkMissingTranslations } from "@/utils/devUtils";
 import { jwtStorage, type Account } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
@@ -16,6 +20,7 @@ export default function SettingsScreen() {
   const { data: authData, isLoading } = useAuthStatus();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const { t } = useTranslation();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [accountProfiles, setAccountProfiles] = useState<Record<string, any>>(
@@ -62,7 +67,7 @@ export default function SettingsScreen() {
 
         if (oldUserData.handle && oldToken) {
           // Migrate to multi-account system
-          const accountId = jwtStorage.addAccount({
+          jwtStorage.addAccount({
             did: oldUserData.did || "",
             handle: oldUserData.handle,
             jwtToken: oldToken,
@@ -120,10 +125,10 @@ export default function SettingsScreen() {
               }
             }
           } catch (error) {
-            // console.error(
-            //   `Error fetching profile for ${account.handle}:`,
-            //   error
-            // );
+            console.error(
+              `Error fetching profile for ${account.handle}:`,
+              error
+            );
           }
         }
 
@@ -138,7 +143,7 @@ export default function SettingsScreen() {
     try {
       jwtStorage.clearAuth();
       router.replace("/(auth)/signin");
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to logout");
     }
   };
@@ -221,19 +226,29 @@ export default function SettingsScreen() {
       >
         {/* Header */}
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.headerTitle}>Settings</ThemedText>
+          <LocalizedText
+            style={styles.headerTitle}
+            translationKey="settings.account"
+          >
+            Settings
+          </LocalizedText>
+        </ThemedView>
+
+        {/* Language Section */}
+        <ThemedView style={styles.section}>
+          <LanguageSelector />
         </ThemedView>
 
         {/* Accounts Section */}
         <ThemedView style={styles.section}>
           <ThemedText style={styles.sectionTitle}>
-            Accounts ({accounts.length})
+            {t("common.accounts")} ({accounts.length})
           </ThemedText>
 
           {accounts.length === 0 && (
             <ThemedView style={styles.settingItem}>
               <ThemedText style={styles.settingValue}>
-                No accounts found
+                {t("common.noAccounts")}
               </ThemedText>
             </ThemedView>
           )}
@@ -280,7 +295,7 @@ export default function SettingsScreen() {
                     )}
                     {account.id === currentAccount?.id && (
                       <ThemedText style={styles.currentAccountBadge}>
-                        Current
+                        {t("common.current")}
                       </ThemedText>
                     )}
                   </ThemedView>
@@ -292,7 +307,7 @@ export default function SettingsScreen() {
                         onPress={() => handleSwitchAccount(account)}
                       >
                         <ThemedText style={styles.actionButtonText}>
-                          Switch
+                          {t("common.switch")}
                         </ThemedText>
                       </TouchableOpacity>
                     )}
@@ -302,7 +317,7 @@ export default function SettingsScreen() {
                       onPress={() => handleRemoveAccount(account)}
                     >
                       <ThemedText style={styles.removeButtonText}>
-                        Remove
+                        {t("common.remove")}
                       </ThemedText>
                     </TouchableOpacity>
                   </ThemedView>
@@ -316,9 +331,11 @@ export default function SettingsScreen() {
             onPress={handleAddAccount}
           >
             <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>Add Account</ThemedText>
+              <ThemedText style={styles.settingLabel}>
+                {t("common.addAccount")}
+              </ThemedText>
               <ThemedText style={styles.settingValue}>
-                Connect another Bluesky account
+                {t("common.connectAnotherAccount")}
               </ThemedText>
             </ThemedView>
           </TouchableOpacity>
@@ -327,11 +344,15 @@ export default function SettingsScreen() {
         {/* Current Account Section */}
         {currentAccount && (
           <ThemedView style={styles.section}>
-            <ThemedText style={styles.sectionTitle}>Current Account</ThemedText>
+            <ThemedText style={styles.sectionTitle}>
+              {t("common.currentAccount")}
+            </ThemedText>
 
             <ThemedView style={styles.settingItem}>
               <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>Handle</ThemedText>
+                <ThemedText style={styles.settingLabel}>
+                  {t("common.handle")}
+                </ThemedText>
                 <ThemedText style={styles.settingValue}>
                   @{currentAccount.handle}
                 </ThemedText>
@@ -351,7 +372,9 @@ export default function SettingsScreen() {
 
         {/* Actions Section */}
         <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Actions</ThemedText>
+          <ThemedText style={styles.sectionTitle}>
+            {t("common.actions")}
+          </ThemedText>
 
           <TouchableOpacity
             style={[styles.settingItem, { borderBottomColor: borderColor }]}
@@ -359,10 +382,10 @@ export default function SettingsScreen() {
           >
             <ThemedView style={styles.settingInfo}>
               <ThemedText style={styles.settingLabel}>
-                Disconnect All Accounts
+                {t("common.disconnectAllAccounts")}
               </ThemedText>
               <ThemedText style={styles.settingValue}>
-                Remove all Bluesky connections
+                {t("common.removeAllConnections")}
               </ThemedText>
             </ThemedView>
           </TouchableOpacity>
@@ -370,14 +393,41 @@ export default function SettingsScreen() {
 
         {/* About Section */}
         <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>About</ThemedText>
+          <ThemedText style={styles.sectionTitle}>
+            {t("settings.about")}
+          </ThemedText>
 
           <ThemedView style={styles.settingItem}>
             <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>Version</ThemedText>
+              <ThemedText style={styles.settingLabel}>
+                {t("settings.version")}
+              </ThemedText>
               <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
             </ThemedView>
           </ThemedView>
+
+          {/* Development Tools */}
+          {__DEV__ && (
+            <TouchableOpacity
+              style={[styles.settingItem, { borderBottomColor: borderColor }]}
+              onPress={() => {
+                checkMissingTranslations();
+                Alert.alert(
+                  "Translation Report",
+                  "Check the console for missing translations report"
+                );
+              }}
+            >
+              <ThemedView style={styles.settingInfo}>
+                <ThemedText style={styles.settingLabel}>
+                  🔍 Check Missing Translations
+                </ThemedText>
+                <ThemedText style={styles.settingValue}>
+                  Development tool
+                </ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
+          )}
         </ThemedView>
       </ScrollView>
     </ThemedView>

@@ -13,6 +13,7 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useSignIn } from "@/hooks/mutations/useSignIn";
+import { useTranslation } from "@/hooks/useTranslation";
 import { jwtStorage } from "@/utils/secureStorage";
 
 type AuthMode = "signin" | "signup";
@@ -20,6 +21,7 @@ type AuthMode = "signin" | "signup";
 export default function AuthScreen() {
   const { addAccount } = useLocalSearchParams<{ addAccount?: string }>();
   const isAddingAccount = addAccount === "true";
+  const { t } = useTranslation();
 
   const [mode, setMode] = useState<AuthMode>("signin");
   const [handle, setHandle] = useState("");
@@ -37,12 +39,12 @@ export default function AuthScreen() {
 
   const handleSignIn = async () => {
     if (!handle || !appPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t("common.error"), t("auth.fillAllFields"));
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert("Error", "Please enter a valid Bluesky handle");
+      Alert.alert(t("common.error"), t("auth.invalidBlueskyHandle"));
       return;
     }
 
@@ -65,9 +67,9 @@ export default function AuthScreen() {
         // Set the newly added account as current
         jwtStorage.switchAccount(accountId);
 
-        Alert.alert("Success", "Account added successfully!", [
+        Alert.alert(t("common.success"), t("auth.accountAddedSuccessfully"), [
           {
-            text: "OK",
+            text: t("common.ok"),
             onPress: () => router.replace("/(tabs)/settings"),
           },
         ]);
@@ -77,84 +79,54 @@ export default function AuthScreen() {
         jwtStorage.setRefreshToken(result.refreshJwt);
         jwtStorage.setUserData(result.did, result.handle);
 
-        Alert.alert("Success", "Signed in to Bluesky successfully!", [
+        Alert.alert(t("common.success"), t("auth.signedInSuccessfully"), [
           {
-            text: "OK",
+            text: t("common.ok"),
             onPress: () => router.replace("/(tabs)"),
           },
         ]);
       }
     } catch (error) {
       Alert.alert(
-        "Error",
-        error instanceof Error
-          ? error.message
-          : "Sign in failed. Please check your handle and app password."
+        t("common.error"),
+        error instanceof Error ? error.message : t("auth.signInFailed")
       );
     }
   };
 
   const handleSignUp = async () => {
     if (!handle || !appPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t("common.error"), t("auth.fillAllFields"));
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert("Error", "Please enter a valid Bluesky handle");
-      return;
-    }
-
-    if (appPassword.length < 6) {
-      Alert.alert("Error", "App password must be at least 6 characters long");
+      Alert.alert(t("common.error"), t("auth.invalidBlueskyHandle"));
       return;
     }
 
     try {
-      // For signup, we also use createSession since Bluesky accounts are created via web
       const result = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
         pdsUrl: pdsUrl || undefined,
       });
 
-      // If adding account, store it in multi-account system
-      if (isAddingAccount) {
-        const accountId = jwtStorage.addAccount({
-          did: result.did,
-          handle: result.handle,
-          jwtToken: result.accessJwt,
-          refreshToken: result.refreshJwt,
-        });
+      // For sign up, use the single-account system
+      jwtStorage.setToken(result.accessJwt);
+      jwtStorage.setRefreshToken(result.refreshJwt);
+      jwtStorage.setUserData(result.did, result.handle);
 
-        // Set the newly added account as current
-        jwtStorage.switchAccount(accountId);
-
-        Alert.alert("Success", "Account added successfully!", [
-          {
-            text: "OK",
-            onPress: () => router.replace("/(tabs)/settings"),
-          },
-        ]);
-      } else {
-        // For first-time sign in, use the old single-account system
-        jwtStorage.setToken(result.accessJwt);
-        jwtStorage.setRefreshToken(result.refreshJwt);
-        jwtStorage.setUserData(result.did, result.handle);
-
-        Alert.alert("Success", "Bluesky account connected successfully!", [
-          {
-            text: "OK",
-            onPress: () => router.replace("/(tabs)"),
-          },
-        ]);
-      }
+      Alert.alert(t("common.success"), t("auth.connectedSuccessfully"), [
+        {
+          text: t("common.ok"),
+          onPress: () => router.replace("/(tabs)"),
+        },
+      ]);
     } catch (error) {
       Alert.alert(
-        "Error",
-        error instanceof Error
-          ? error.message
-          : "Sign up failed. Please check your handle and app password."
+        t("common.error"),
+        error instanceof Error ? error.message : t("auth.connectionFailed")
       );
     }
   };
@@ -179,45 +151,49 @@ export default function AuthScreen() {
           <ThemedView style={styles.header}>
             <ThemedText type="title" style={styles.title}>
               {isAddingAccount
-                ? "Add Account"
+                ? t("common.addAccount")
                 : isSignUp
-                ? "Connect Bluesky"
-                : "Sign in to Bluesky"}
+                ? t("auth.connectBluesky")
+                : t("auth.signInToBluesky")}
             </ThemedText>
             <ThemedText style={styles.subtitle}>
               {isAddingAccount
-                ? "Add another Bluesky account to your app"
+                ? t("auth.addAnotherAccount")
                 : isSignUp
-                ? "Connect your Bluesky account to get started"
-                : "Sign in with your Bluesky handle and app password"}
+                ? t("auth.connectAccountToGetStarted")
+                : t("auth.signInWithHandleAndPassword")}
             </ThemedText>
           </ThemedView>
 
           <ThemedView style={styles.form}>
             <ThemedView style={styles.inputContainer}>
-              <ThemedText style={styles.label}>Bluesky Handle</ThemedText>
+              <ThemedText style={styles.label}>
+                {t("auth.blueskyHandle")}
+              </ThemedText>
               <TextInput
                 style={styles.input}
                 value={handle}
                 onChangeText={setHandle}
-                placeholder="username.bsky.social or @username"
+                placeholder={t("auth.blueskyHandlePlaceholder")}
                 placeholderTextColor="#999"
                 autoCapitalize="none"
                 autoCorrect={false}
                 autoComplete="off"
               />
               <ThemedText style={styles.helperText}>
-                Enter your Bluesky handle (e.g., username.bsky.social)
+                {t("auth.handleHelperText")}
               </ThemedText>
             </ThemedView>
 
             <ThemedView style={styles.inputContainer}>
-              <ThemedText style={styles.label}>App Password</ThemedText>
+              <ThemedText style={styles.label}>
+                {t("auth.appPassword")}
+              </ThemedText>
               <TextInput
                 style={styles.input}
                 value={appPassword}
                 onChangeText={setAppPassword}
-                placeholder="Enter your app password"
+                placeholder={t("auth.appPasswordPlaceholder")}
                 placeholderTextColor="#999"
                 secureTextEntry
                 autoCapitalize="none"
@@ -225,7 +201,7 @@ export default function AuthScreen() {
                 autoComplete="off"
               />
               <ThemedText style={styles.helperText}>
-                Use an app password from your Bluesky account settings
+                {t("auth.appPasswordHelperText")}
               </ThemedText>
             </ThemedView>
 
@@ -234,27 +210,28 @@ export default function AuthScreen() {
               onPress={() => setShowAdvanced(!showAdvanced)}
             >
               <ThemedText style={styles.advancedToggleText}>
-                {showAdvanced ? "Hide" : "Show"} Advanced Options
+                {showAdvanced ? t("common.hide") : t("common.show")}{" "}
+                {t("auth.advancedOptions")}
               </ThemedText>
             </TouchableOpacity>
 
             {showAdvanced && (
               <ThemedView style={styles.inputContainer}>
                 <ThemedText style={styles.label}>
-                  Custom PDS Server (Optional)
+                  {t("auth.customPdsServer")}
                 </ThemedText>
                 <TextInput
                   style={styles.input}
                   value={pdsUrl}
                   onChangeText={setPdsUrl}
-                  placeholder="https://your-pds.com (leave empty for default)"
+                  placeholder={t("auth.pdsUrlPlaceholder")}
                   placeholderTextColor="#999"
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="off"
                 />
                 <ThemedText style={styles.helperText}>
-                  Use a custom Personal Data Server (default: bsky.social)
+                  {t("auth.pdsUrlHelperText")}
                 </ThemedText>
               </ThemedView>
             )}
@@ -267,15 +244,15 @@ export default function AuthScreen() {
               <ThemedText style={styles.buttonText}>
                 {isLoading
                   ? isAddingAccount
-                    ? "Adding Account..."
+                    ? t("auth.addingAccount")
                     : isSignUp
-                    ? "Connecting..."
-                    : "Signing In..."
+                    ? t("auth.connecting")
+                    : t("auth.signingIn")
                   : isAddingAccount
-                  ? "Add Account"
+                  ? t("common.addAccount")
                   : isSignUp
-                  ? "Connect Account"
-                  : "Sign In"}
+                  ? t("auth.connectAccount")
+                  : t("common.signIn")}
               </ThemedText>
             </TouchableOpacity>
           </ThemedView>
@@ -284,12 +261,12 @@ export default function AuthScreen() {
             <ThemedView style={styles.footer}>
               <ThemedText style={styles.footerText}>
                 {isSignUp
-                  ? "Already connected? "
-                  : "Need to connect a different account? "}
+                  ? t("auth.alreadyConnected")
+                  : t("auth.needDifferentAccount")}
               </ThemedText>
               <TouchableOpacity onPress={toggleMode}>
                 <ThemedText style={styles.linkText}>
-                  {isSignUp ? "Sign In" : "Connect New"}
+                  {isSignUp ? t("common.signIn") : t("auth.connectNew")}
                 </ThemedText>
               </TouchableOpacity>
             </ThemedView>
@@ -297,13 +274,10 @@ export default function AuthScreen() {
 
           <ThemedView style={styles.infoSection}>
             <ThemedText type="subtitle" style={styles.infoTitle}>
-              How to get your app password:
+              {t("auth.howToGetAppPassword")}:
             </ThemedText>
             <ThemedText style={styles.infoText}>
-              1. Go to Bluesky web app{"\n"}
-              2. Navigate to Settings → App Passwords{"\n"}
-              3. Create a new app password{"\n"}
-              4. Use that password here
+              {t("auth.appPasswordInstructions")}
             </ThemedText>
           </ThemedView>
         </ThemedView>

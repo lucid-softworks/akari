@@ -14,6 +14,7 @@ import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useBorderColor } from "@/hooks/useBorderColor";
+import { useTranslation } from "@/hooks/useTranslation";
 import { jwtStorage } from "@/utils/secureStorage";
 
 type TabType = "posts" | "replies" | "likes" | "media";
@@ -23,6 +24,7 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const borderColor = useBorderColor();
   const currentUser = jwtStorage.getUserData();
+  const { t } = useTranslation();
 
   const { data: profile, isLoading, error } = useProfile(handle);
   const { data: posts, isLoading: postsLoading } = useAuthorPosts(
@@ -46,7 +48,9 @@ export default function ProfileScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
-          <ThemedText style={styles.loadingText}>Loading profile...</ThemedText>
+          <ThemedText style={styles.loadingText}>
+            {t("common.loading")}
+          </ThemedText>
         </ThemedView>
       </SafeAreaView>
     );
@@ -56,7 +60,9 @@ export default function ProfileScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>Profile not found</ThemedText>
+          <ThemedText style={styles.errorText}>
+            {t("common.noProfile")}
+          </ThemedText>
         </ThemedView>
       </SafeAreaView>
     );
@@ -97,15 +103,15 @@ export default function ProfileScreen() {
   const getEmptyMessage = () => {
     switch (activeTab) {
       case "posts":
-        return "No posts yet";
+        return t("profile.noPosts");
       case "replies":
-        return "No replies yet";
+        return t("profile.noReplies");
       case "likes":
-        return "No likes yet";
+        return t("profile.noLikes");
       case "media":
-        return "No media yet";
+        return t("profile.noMedia");
       default:
-        return "No content";
+        return t("profile.noContent");
     }
   };
 
@@ -142,7 +148,7 @@ export default function ProfileScreen() {
           {currentLoading ? (
             <ThemedView style={styles.loadingContainer}>
               <ThemedText style={styles.loadingText}>
-                Loading {activeTab}...
+                {t("common.loading")} {t(`common.${activeTab}`)}...
               </ThemedText>
             </ThemedView>
           ) : currentData && currentData.length > 0 ? (
@@ -156,7 +162,9 @@ export default function ProfileScreen() {
                         handle: item.reply.parent.author?.handle || "unknown",
                         displayName: item.reply.parent.author?.displayName,
                       },
-                      text: item.reply.parent.record?.text || "No text content",
+                      text:
+                        item.reply.parent.record?.text ||
+                        t("common.noTextContent"),
                     }
                   : undefined;
 
@@ -165,7 +173,7 @@ export default function ProfileScreen() {
                     key={`${item.uri}-${item.indexedAt}`}
                     post={{
                       id: item.uri,
-                      text: item.record?.text || "No text content",
+                      text: item.record?.text || t("common.noTextContent"),
                       author: {
                         handle: item.author.handle,
                         displayName: item.author.displayName,

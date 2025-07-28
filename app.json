@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.imlunahey.akariv2",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -44,6 +45,15 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": ["en", "ja", "ar", "fr"],
+            "android": ["en", "ja", "ar", "fr"]
+          }
+        }
       ]
     ],
     "experiments": {
@@ -54,7 +64,8 @@
       "router": {},
       "eas": {
         "projectId": "544afaeb-5cfb-40ab-b8ff-6e7154c49d1d"
-      }
+      },
+      "supportsRTL": true
     }
   }
 }

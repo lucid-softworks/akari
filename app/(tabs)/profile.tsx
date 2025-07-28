@@ -14,6 +14,7 @@ import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
 import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
 import { useProfile } from "@/hooks/queries/useProfile";
+import { useTranslation } from "@/hooks/useTranslation";
 import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
@@ -25,6 +26,7 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const scrollViewRef = useRef<ScrollView>(null);
+  const { t } = useTranslation();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -103,15 +105,15 @@ export default function ProfileScreen() {
   const getEmptyMessage = () => {
     switch (activeTab) {
       case "posts":
-        return "No posts yet";
+        return t("profile.noPosts");
       case "replies":
-        return "No replies yet";
+        return t("profile.noReplies");
       case "likes":
-        return "No likes yet";
+        return t("profile.noLikes");
       case "media":
-        return "No media yet";
+        return t("profile.noMedia");
       default:
-        return "No content yet";
+        return t("profile.noContent");
     }
   };
 
@@ -149,7 +151,9 @@ export default function ProfileScreen() {
 
         {isLoadingData ? (
           <ThemedView style={styles.loadingState}>
-            <ThemedText style={styles.loadingText}>Loading...</ThemedText>
+            <ThemedText style={styles.loadingText}>
+              {t("common.loading")}
+            </ThemedText>
           </ThemedView>
         ) : currentData.length > 0 ? (
           currentData.map((post: any) => (
@@ -157,7 +161,7 @@ export default function ProfileScreen() {
               key={post.uri}
               post={{
                 id: post.uri,
-                text: post.record?.text || "No text content",
+                text: post.record?.text || t("common.noTextContent"),
                 author: {
                   handle: post.author.handle,
                   displayName: post.author.displayName,

@@ -8,6 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useConversations } from "@/hooks/queries/useConversations";
 import { useBorderColor } from "@/hooks/useBorderColor";
+import { useTranslation } from "@/hooks/useTranslation";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 import { Image } from "expo-image";
 
@@ -28,6 +29,7 @@ export default function MessagesScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
+  const { t } = useTranslation();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -115,7 +117,9 @@ export default function MessagesScreen() {
           </ThemedView>
           {item.status === "request" && (
             <ThemedView style={styles.statusBadge}>
-              <ThemedText style={styles.statusText}>Pending</ThemedText>
+              <ThemedText style={styles.statusText}>
+                {t("common.pending")}
+              </ThemedText>
             </ThemedView>
           )}
         </ThemedView>
@@ -127,7 +131,9 @@ export default function MessagesScreen() {
     if (isFetchingNextPage) {
       return (
         <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={styles.loadingText}>Loading more...</ThemedText>
+          <ThemedText style={styles.loadingText}>
+            {t("common.loading")}...
+          </ThemedText>
         </ThemedView>
       );
     }
@@ -143,7 +149,7 @@ export default function MessagesScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>Messages</ThemedText>
+        <ThemedText style={styles.title}>{t("common.messages")}</ThemedText>
       </ThemedView>
 
       <FlatList
@@ -157,29 +163,25 @@ export default function MessagesScreen() {
         contentContainerStyle={styles.conversationsContent}
         showsVerticalScrollIndicator={false}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           conversationsLoading ? (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyTitle}>
-                Loading conversations...
+              <ThemedText style={styles.emptyStateText}>
+                {t("common.loading")}...
               </ThemedText>
             </ThemedView>
           ) : error ? (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.errorTitle}>
-                {error.message || "Failed to load conversations"}
+              <ThemedText style={styles.emptyStateText}>
+                {t("common.errorLoadingConversations")}
               </ThemedText>
             </ThemedView>
           ) : (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyTitle}>
-                No conversations yet
-              </ThemedText>
-              <ThemedText style={styles.emptySubtitle}>
-                Start a conversation by following someone and sending them a
-                message
+              <ThemedText style={styles.emptyStateText}>
+                {t("common.noConversations")}
               </ThemedText>
             </ThemedView>
           )
@@ -345,5 +347,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.6,
     textAlign: "center",
+  },
+  emptyStateText: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  errorLoadingConversations: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  noConversations: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 8,
   },
 });

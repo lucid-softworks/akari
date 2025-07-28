@@ -11,6 +11,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type PostCardProps = {
   post: {
@@ -60,6 +61,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const [imageDimensions, setImageDimensions] = useState<{
     [key: string]: { width: number; height: number };
   }>({});
+  const { t } = useTranslation();
 
   const borderColor = useThemeColor(
     {
@@ -129,7 +131,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
       return {
         videoUrl: post.embed.video.ref?.$link,
         thumbnailUrl: post.embed.video.ref?.$link, // Use video URL as thumbnail for now
-        altText: post.embed.video.alt || "Video",
+        altText: post.embed.video.alt || t("common.video"),
         aspectRatio: post.embed.aspectRatio,
       };
     }
