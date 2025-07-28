@@ -25,7 +25,13 @@ export function useAuthorReplies(identifier: string, enabled: boolean = true) {
         })
         .map((item) => item.post);
 
-      return replies;
+      // Deduplicate posts by URI to prevent duplicate keys
+      const uniqueReplies = replies.filter(
+        (post, index, self) =>
+          index === self.findIndex((p) => p.uri === post.uri)
+      );
+
+      return uniqueReplies;
     },
     enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes

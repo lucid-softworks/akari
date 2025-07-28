@@ -38,7 +38,13 @@ export function useAuthorMedia(identifier: string, enabled: boolean = true) {
         })
         .map((item) => item.post);
 
-      return mediaPosts;
+      // Deduplicate posts by URI to prevent duplicate keys
+      const uniqueMediaPosts = mediaPosts.filter(
+        (post, index, self) =>
+          index === self.findIndex((p) => p.uri === post.uri)
+      );
+
+      return uniqueMediaPosts;
     },
     enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -25,7 +25,13 @@ export function useAuthorLikes(identifier: string, enabled: boolean = true) {
         })
         .map((item) => item.post);
 
-      return likes;
+      // Deduplicate posts by URI to prevent duplicate keys
+      const uniqueLikes = likes.filter(
+        (post, index, self) =>
+          index === self.findIndex((p) => p.uri === post.uri)
+      );
+
+      return uniqueLikes;
     },
     enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes

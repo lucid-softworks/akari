@@ -85,7 +85,7 @@ export default function PostDetailScreen() {
 
       return (
         <PostCard
-          key={post.uri}
+          key={`${post.uri}-${post.indexedAt}`}
           post={{
             id: post.uri,
             text: post.record?.text || "No text content",
@@ -113,7 +113,7 @@ export default function PostDetailScreen() {
 
     return (
       <PostCard
-        key={item.uri}
+        key={`${item.uri}-${(item as any).indexedAt}`}
         post={{
           id: item.uri,
           text: (item as any).record?.text || "No text content",

@@ -25,7 +25,13 @@ export function useAuthorPosts(identifier: string, enabled: boolean = true) {
         })
         .map((item) => item.post);
 
-      return originalPosts;
+      // Deduplicate posts by URI to prevent duplicate keys
+      const uniqueOriginalPosts = originalPosts.filter(
+        (post, index, self) =>
+          index === self.findIndex((p) => p.uri === post.uri)
+      );
+
+      return uniqueOriginalPosts;
     },
     enabled: enabled && !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes

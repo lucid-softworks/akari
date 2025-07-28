@@ -156,30 +156,36 @@ export default function ProfileScreen() {
             </ThemedText>
           </ThemedView>
         ) : currentData.length > 0 ? (
-          currentData.map((post: any) => (
-            <PostCard
-              key={post.uri}
-              post={{
-                id: post.uri,
-                text: post.record?.text,
-                author: {
-                  handle: post.author.handle,
-                  displayName: post.author.displayName,
-                  avatar: post.author.avatar,
-                },
-                createdAt: new Date(post.indexedAt).toLocaleDateString(),
-                likeCount: post.likeCount || 0,
-                commentCount: post.replyCount || 0,
-                repostCount: post.repostCount || 0,
-                embed: post.embed,
-                embeds: post.embeds,
-                labels: post.labels,
-              }}
-              onPress={() => {
-                router.push(`/post/${encodeURIComponent(post.uri)}`);
-              }}
-            />
-          ))
+          // Deduplicate posts by URI and create unique keys
+          currentData
+            .filter(
+              (post, index, self) =>
+                index === self.findIndex((p) => p.uri === post.uri)
+            )
+            .map((post) => (
+              <PostCard
+                key={`${post.uri}-${post.indexedAt}`}
+                post={{
+                  id: post.uri,
+                  text: post.record?.text,
+                  author: {
+                    handle: post.author.handle,
+                    displayName: post.author.displayName,
+                    avatar: post.author.avatar,
+                  },
+                  createdAt: new Date(post.indexedAt).toLocaleDateString(),
+                  likeCount: post.likeCount || 0,
+                  commentCount: post.replyCount || 0,
+                  repostCount: post.repostCount || 0,
+                  embed: post.embed,
+                  embeds: post.embeds,
+                  labels: post.labels,
+                }}
+                onPress={() => {
+                  router.push(`/post/${encodeURIComponent(post.uri)}`);
+                }}
+              />
+            ))
         ) : (
           <ThemedView style={styles.emptyState}>
             <ThemedText style={styles.emptyStateText}>

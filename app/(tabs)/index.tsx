@@ -210,7 +210,7 @@ export default function DiscoverScreen() {
           ref={flatListRef}
           data={allPosts}
           renderItem={renderFeedItem}
-          keyExtractor={(item) => item.post.uri}
+          keyExtractor={(item) => `${item.post.uri}-${item.post.indexedAt}`}
           style={styles.feedList}
           contentContainerStyle={styles.feedListContent}
           refreshControl={
