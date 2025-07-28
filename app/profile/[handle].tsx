@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ProfileHeader } from "@/components/ProfileHeader";
@@ -21,8 +20,8 @@ type TabType = "posts" | "replies" | "likes" | "media";
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
-  const currentUser = jwtStorage.getUserData();
   const { t } = useTranslation();
+  const currentUser = jwtStorage.getUserData();
 
   const { data: profile, isLoading, error } = useProfile(handle);
   const { data: posts, isLoading: postsLoading } = useAuthorPosts(
@@ -44,25 +43,21 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.loadingText}>
-            {t("common.loading")}
-          </ThemedText>
-        </ThemedView>
-      </SafeAreaView>
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.loadingText}>
+          {t("common.loading")}
+        </ThemedText>
+      </ThemedView>
     );
   }
 
   if (error || !profile) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>
-            {t("common.noProfile")}
-          </ThemedText>
-        </ThemedView>
-      </SafeAreaView>
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.errorText}>
+          {t("common.noProfile")}
+        </ThemedText>
+      </ThemedView>
     );
   }
 
@@ -118,88 +113,86 @@ export default function ProfileScreen() {
   const emptyMessage = getEmptyMessage();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <ProfileHeader
-            profile={{
-              avatar: profile?.avatar,
-              displayName: profile?.displayName,
-              handle: profile?.handle,
-              description: profile?.description,
-              banner: profile?.banner,
-              did: profile?.did,
-              viewer: profile?.viewer,
-              labels: profile?.labels,
-            }}
-            isOwnProfile={isOwnProfile}
-          />
+    <ThemedView style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProfileHeader
+          profile={{
+            avatar: profile?.avatar,
+            displayName: profile?.displayName,
+            handle: profile?.handle,
+            description: profile?.description,
+            banner: profile?.banner,
+            did: profile?.did,
+            viewer: profile?.viewer,
+            labels: profile?.labels,
+          }}
+          isOwnProfile={isOwnProfile}
+        />
 
-          {/* Tabs */}
-          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Tabs */}
+        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-          {/* Content */}
-          {currentLoading ? (
-            <ThemedView style={styles.loadingContainer}>
-              <ThemedText style={styles.loadingText}>
-                {t("common.loading")} {t(`common.${activeTab}`)}...
-              </ThemedText>
-            </ThemedView>
-          ) : currentData && currentData.length > 0 ? (
-            currentData
-              .filter((item) => item && item.uri) // Filter out undefined/null items
-              .map((item) => {
-                // Check if this post is a reply and has reply context
-                const replyTo = item.reply?.parent
-                  ? {
-                      author: {
-                        handle: item.reply.parent.author?.handle || "unknown",
-                        displayName: item.reply.parent.author?.displayName,
-                      },
-                      text: item.reply.parent.record?.text,
-                    }
-                  : undefined;
+        {/* Content */}
+        {currentLoading ? (
+          <ThemedView style={styles.loadingContainer}>
+            <ThemedText style={styles.loadingText}>
+              {t("common.loading")} {t(`common.${activeTab}`)}...
+            </ThemedText>
+          </ThemedView>
+        ) : currentData && currentData.length > 0 ? (
+          currentData
+            .filter((item) => item && item.uri) // Filter out undefined/null items
+            .map((item) => {
+              // Check if this post is a reply and has reply context
+              const replyTo = item.reply?.parent
+                ? {
+                    author: {
+                      handle: item.reply.parent.author?.handle || "unknown",
+                      displayName: item.reply.parent.author?.displayName,
+                    },
+                    text: item.reply.parent.record?.text as string | undefined,
+                  }
+                : undefined;
 
-                return (
-                  <PostCard
-                    key={`${item.uri}-${item.indexedAt}`}
-                    post={{
-                      id: item.uri,
-                      text: item.record?.text,
-                      author: {
-                        handle: item.author.handle,
-                        displayName: item.author.displayName,
-                        avatar: item.author.avatar,
-                      },
-                      createdAt: new Date(item.indexedAt).toLocaleDateString(),
-                      likeCount: item.likeCount || 0,
-                      commentCount: item.replyCount || 0,
-                      repostCount: item.repostCount || 0,
-                      embed: item.embed,
-                      embeds: item.embeds,
-                      labels: item.labels,
-                      replyTo,
-                    }}
-                    onPress={() => {
-                      router.push(`/post/${encodeURIComponent(item.uri)}`);
-                    }}
-                  />
-                );
-              })
-          ) : (
-            <ThemedView style={styles.emptyPosts}>
-              <ThemedText style={styles.emptyPostsText}>
-                {emptyMessage}
-              </ThemedText>
-            </ThemedView>
-          )}
-        </ScrollView>
-      </ThemedView>
-    </SafeAreaView>
+              return (
+                <PostCard
+                  key={`${item.uri}-${item.indexedAt}`}
+                  post={{
+                    id: item.uri,
+                    text: item.record?.text as string | undefined,
+                    author: {
+                      handle: item.author.handle,
+                      displayName: item.author.displayName,
+                      avatar: item.author.avatar,
+                    },
+                    createdAt: new Date(item.indexedAt).toLocaleDateString(),
+                    likeCount: item.likeCount || 0,
+                    commentCount: item.replyCount || 0,
+                    repostCount: item.repostCount || 0,
+                    embed: item.embed,
+                    embeds: item.embeds,
+                    labels: item.labels,
+                    replyTo,
+                  }}
+                  onPress={() => {
+                    router.push(`/post/${encodeURIComponent(item.uri)}`);
+                  }}
+                />
+              );
+            })
+        ) : (
+          <ThemedView style={styles.emptyPosts}>
+            <ThemedText style={styles.emptyPostsText}>
+              {emptyMessage}
+            </ThemedText>
+          </ThemedView>
+        )}
+      </ScrollView>
+    </ThemedView>
   );
 }
 
