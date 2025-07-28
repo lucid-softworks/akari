@@ -160,8 +160,7 @@
       "about": "정보",
       "version": "버전",
       "checkMissingTranslations": "🔍 누락된 번역 확인",
-      "developmentTool": "개발 도구",
-      "appVersion": "1.0.0"
+      "developmentTool": "개발 도구"
     }
   }
 }

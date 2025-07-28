@@ -160,8 +160,7 @@
       "about": "Hakkında",
       "version": "Sürüm",
       "checkMissingTranslations": "🔍 Eksik çevirileri kontrol et",
-      "developmentTool": "Geliştirme aracı",
-      "appVersion": "1.0.0"
+      "developmentTool": "Geliştirme aracı"
     }
   }
 }

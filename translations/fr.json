@@ -160,8 +160,7 @@
       "about": "À propos",
       "version": "Version",
       "checkMissingTranslations": "🔍 Vérifier les traductions manquantes",
-      "developmentTool": "Outil de développement",
-      "appVersion": "1.0.0"
+      "developmentTool": "Outil de développement"
     }
   }
 }

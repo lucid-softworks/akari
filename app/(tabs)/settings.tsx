@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -403,7 +404,7 @@ export default function SettingsScreen() {
                 {t("settings.version")}
               </ThemedText>
               <ThemedText style={styles.settingValue}>
-                {t("settings.appVersion")}
+                {Constants.expoConfig?.version || t("common.unknown")}
               </ThemedText>
             </ThemedView>
           </ThemedView>

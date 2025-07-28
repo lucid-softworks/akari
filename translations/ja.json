@@ -160,8 +160,7 @@
       "about": "について",
       "version": "バージョン",
       "checkMissingTranslations": "🔍 不足している翻訳をチェック",
-      "developmentTool": "開発ツール",
-      "appVersion": "1.0.0"
+      "developmentTool": "開発ツール"
     }
   }
 }
