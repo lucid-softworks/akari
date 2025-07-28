@@ -36,6 +36,7 @@
     "expo-video": "~2.2.2",
     "expo-web-browser": "~14.2.0",
     "i18n-js": "^4.5.1",
+    "pseudo-localization": "^3.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.5",

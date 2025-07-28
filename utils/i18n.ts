@@ -21,6 +21,7 @@ import zhCN from "@/translations/zh-CN.json";
 import zhTW from "@/translations/zh-TW.json";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
+import { pseudoLocalizeObject } from "./pseudoLocalization";
 import { translationLogger } from "./translationLogger";
 
 // Raw translation data (includes metadata and nested translations)
@@ -48,11 +49,26 @@ const rawTranslations = {
   "zh-TW": zhTW,
 };
 
+// Create pseudo translation data based on English
+const createPseudoTranslations = () => ({
+  language: "Pseudo",
+  nativeName: "Pseudo",
+  flag: "🔤",
+  translations: pseudoLocalizeObject(rawTranslations.en.translations),
+});
+
+// Add pseudo translations to raw translations
+const pseudoTranslations = createPseudoTranslations();
+const rawTranslationsWithPseudo = {
+  ...rawTranslations,
+  pseudo: pseudoTranslations,
+};
+
 // Extract only the nested translations for the I18n constructor
 const translations = Object.fromEntries(
-  Object.entries(rawTranslations).map(([locale, data]) => [
+  Object.entries(rawTranslationsWithPseudo).map(([locale, data]) => [
     locale,
-    data.translations || data,
+    data.translations,
   ])
 );
 
@@ -95,11 +111,13 @@ export const setLocale = (locale: string) => {
 };
 
 // Helper function to get available locales
-export const getAvailableLocales = () => Object.keys(rawTranslations);
+export const getAvailableLocales = () => Object.keys(rawTranslationsWithPseudo);
 
 // Helper function to get translation data for a specific locale (includes metadata)
 export const getTranslationData = (locale: string) => {
-  return rawTranslations[locale as keyof typeof rawTranslations];
+  return rawTranslationsWithPseudo[
+    locale as keyof typeof rawTranslationsWithPseudo
+  ];
 };
 
 // Type for translation keys
