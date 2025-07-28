@@ -1,4 +1,5 @@
 import ar from "@/translations/ar.json";
+import cy from "@/translations/cy.json";
 import de from "@/translations/de.json";
 import enUS from "@/translations/en-US.json";
 import en from "@/translations/en.json";
@@ -27,6 +28,7 @@ const rawTranslations = {
   en,
   ja,
   ar,
+  cy,
   fr,
   es,
   de,
