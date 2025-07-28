@@ -46,6 +46,19 @@ const languages: LanguageOption[] = [
     flag: "🇹🇼",
   },
   { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
+  { code: "ru", name: "Russian", nativeName: "Русский", flag: "🇷🇺" },
+  { code: "hi", name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳" },
+  {
+    code: "id",
+    name: "Indonesian",
+    nativeName: "Bahasa Indonesia",
+    flag: "🇮🇩",
+  },
+  { code: "tr", name: "Turkish", nativeName: "Türkçe", flag: "🇹🇷" },
+  { code: "nl", name: "Dutch", nativeName: "Nederlands", flag: "🇳🇱" },
+  { code: "pl", name: "Polish", nativeName: "Polski", flag: "🇵🇱" },
+  { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "th", name: "Thai", nativeName: "ไทย", flag: "🇹🇭" },
 ];
 
 export const LanguageSelector: React.FC = () => {

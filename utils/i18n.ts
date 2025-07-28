@@ -4,10 +4,18 @@ import { en } from "@/translations/en";
 import { enUS } from "@/translations/en-US";
 import { es } from "@/translations/es";
 import { fr } from "@/translations/fr";
+import { hi } from "@/translations/hi";
+import { id } from "@/translations/id";
 import { it } from "@/translations/it";
 import { ja } from "@/translations/ja";
 import { ko } from "@/translations/ko";
+import { nl } from "@/translations/nl";
+import { pl } from "@/translations/pl";
 import { pt } from "@/translations/pt";
+import { ru } from "@/translations/ru";
+import { th } from "@/translations/th";
+import { tr } from "@/translations/tr";
+import { vi } from "@/translations/vi";
 import { zhCN } from "@/translations/zh-CN";
 import { zhTW } from "@/translations/zh-TW";
 import { getLocales } from "expo-localization";
@@ -25,6 +33,14 @@ const translations = {
   pt,
   it,
   ko,
+  ru,
+  hi,
+  id,
+  tr,
+  nl,
+  pl,
+  vi,
+  th,
   "en-US": enUS,
   "zh-CN": zhCN,
   "zh-TW": zhTW,
