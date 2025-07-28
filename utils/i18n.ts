@@ -1,29 +1,29 @@
-import { ar } from "@/translations/ar";
-import { de } from "@/translations/de";
-import { en } from "@/translations/en";
-import { enUS } from "@/translations/en-US";
-import { es } from "@/translations/es";
-import { fr } from "@/translations/fr";
-import { hi } from "@/translations/hi";
-import { id } from "@/translations/id";
-import { it } from "@/translations/it";
-import { ja } from "@/translations/ja";
-import { ko } from "@/translations/ko";
-import { nl } from "@/translations/nl";
-import { pl } from "@/translations/pl";
-import { pt } from "@/translations/pt";
-import { ru } from "@/translations/ru";
-import { th } from "@/translations/th";
-import { tr } from "@/translations/tr";
-import { vi } from "@/translations/vi";
-import { zhCN } from "@/translations/zh-CN";
-import { zhTW } from "@/translations/zh-TW";
+import ar from "@/translations/ar.json";
+import de from "@/translations/de.json";
+import enUS from "@/translations/en-US.json";
+import en from "@/translations/en.json";
+import es from "@/translations/es.json";
+import fr from "@/translations/fr.json";
+import hi from "@/translations/hi.json";
+import id from "@/translations/id.json";
+import it from "@/translations/it.json";
+import ja from "@/translations/ja.json";
+import ko from "@/translations/ko.json";
+import nl from "@/translations/nl.json";
+import pl from "@/translations/pl.json";
+import pt from "@/translations/pt.json";
+import ru from "@/translations/ru.json";
+import th from "@/translations/th.json";
+import tr from "@/translations/tr.json";
+import vi from "@/translations/vi.json";
+import zhCN from "@/translations/zh-CN.json";
+import zhTW from "@/translations/zh-TW.json";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import { translationLogger } from "./translationLogger";
 
-// Translation keys for the app
-const translations = {
+// Raw translation data (includes metadata and nested translations)
+const rawTranslations = {
   en,
   ja,
   ar,
@@ -45,6 +45,14 @@ const translations = {
   "zh-CN": zhCN,
   "zh-TW": zhTW,
 };
+
+// Extract only the nested translations for the I18n constructor
+const translations = Object.fromEntries(
+  Object.entries(rawTranslations).map(([locale, data]) => [
+    locale,
+    data.translations || data,
+  ])
+);
 
 // Create i18n instance
 const i18n = new I18n(translations);
@@ -85,7 +93,12 @@ export const setLocale = (locale: string) => {
 };
 
 // Helper function to get available locales
-export const getAvailableLocales = () => Object.keys(translations);
+export const getAvailableLocales = () => Object.keys(rawTranslations);
+
+// Helper function to get translation data for a specific locale (includes metadata)
+export const getTranslationData = (locale: string) => {
+  return rawTranslations[locale as keyof typeof rawTranslations];
+};
 
 // Type for translation keys
 export type TranslationKey = keyof typeof translations.en;

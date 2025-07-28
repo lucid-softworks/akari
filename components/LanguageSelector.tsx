@@ -10,6 +10,7 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTranslation } from "@/hooks/useTranslation";
+import { getAvailableLocales, getTranslationData } from "@/utils/i18n";
 
 type LanguageOption = {
   code: string;
@@ -18,53 +19,51 @@ type LanguageOption = {
   flag: string;
 };
 
-const languages: LanguageOption[] = [
-  { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" },
-  {
-    code: "en-US",
-    name: "English (US)",
-    nativeName: "English (Simplified)",
-    flag: "🇺🇸",
-  },
-  { code: "es", name: "Spanish", nativeName: "Español", flag: "🇪🇸" },
-  { code: "fr", name: "French", nativeName: "Français", flag: "🇫🇷" },
-  { code: "de", name: "German", nativeName: "Deutsch", flag: "🇩🇪" },
-  { code: "it", name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
-  { code: "pt", name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
-  { code: "ja", name: "Japanese", nativeName: "日本語", flag: "🇯🇵" },
-  { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
-  {
-    code: "zh-CN",
-    name: "Chinese (Simplified)",
-    nativeName: "简体中文",
-    flag: "🇨🇳",
-  },
-  {
-    code: "zh-TW",
-    name: "Chinese (Traditional)",
-    nativeName: "繁體中文",
-    flag: "🇹🇼",
-  },
-  { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
-  { code: "ru", name: "Russian", nativeName: "Русский", flag: "🇷🇺" },
-  { code: "hi", name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳" },
-  {
-    code: "id",
-    name: "Indonesian",
-    nativeName: "Bahasa Indonesia",
-    flag: "🇮🇩",
-  },
-  { code: "tr", name: "Turkish", nativeName: "Türkçe", flag: "🇹🇷" },
-  { code: "nl", name: "Dutch", nativeName: "Nederlands", flag: "🇳🇱" },
-  { code: "pl", name: "Polish", nativeName: "Polski", flag: "🇵🇱" },
-  { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
-  { code: "th", name: "Thai", nativeName: "ไทย", flag: "🇹🇭" },
-];
+// Helper function to get language metadata from translation files
+const getLanguageMetadata = (locale: string): LanguageOption | null => {
+  try {
+    // Access the translation data using the helper function
+    const translationData = getTranslationData(locale);
+    if (
+      translationData &&
+      translationData.language &&
+      translationData.nativeName &&
+      translationData.flag
+    ) {
+      return {
+        code: locale,
+        name: translationData.language,
+        nativeName: translationData.nativeName,
+        flag: translationData.flag,
+      };
+    }
+  } catch (error) {
+    console.warn(`Failed to get metadata for locale: ${locale}`, error);
+  }
+  return null;
+};
+
+// Get all available languages with their metadata
+const getLanguages = (): LanguageOption[] => {
+  const availableLocales = getAvailableLocales();
+  const languages: LanguageOption[] = [];
+
+  availableLocales.forEach((locale) => {
+    const metadata = getLanguageMetadata(locale);
+    if (metadata) {
+      languages.push(metadata);
+    }
+  });
+
+  // Sort languages alphabetically by native name
+  return languages.sort((a, b) => a.nativeName.localeCompare(b.nativeName));
+};
 
 export const LanguageSelector: React.FC = () => {
   const { t, currentLocale, changeLanguage } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const languages = getLanguages();
   const currentLanguage =
     languages.find((lang) => lang.code === currentLocale) || languages[0];
 
