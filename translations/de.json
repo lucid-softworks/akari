@@ -113,6 +113,12 @@
       "noReplies": "Noch keine Antworten",
       "noContent": "Noch kein Inhalt"
     },
+    "feed": {
+      "loadingMorePosts": "Lade weitere Beiträge...",
+      "loadingPosts": "Lade Beiträge...",
+      "noPostsInFeed": "Noch keine Beiträge in diesem Feed.",
+      "selectFeedToView": "Wähle einen Feed aus, um Beiträge anzuzeigen"
+    },
     "messages": {
       "typeMessage": "Nachricht eingeben..."
     },

@@ -113,6 +113,12 @@
       "noReplies": "No replies yet",
       "noContent": "No content yet"
     },
+    "feed": {
+      "loadingMorePosts": "Loading more posts...",
+      "loadingPosts": "Loading posts...",
+      "noPostsInFeed": "No posts in this feed yet.",
+      "selectFeedToView": "Select a feed to view posts"
+    },
     "messages": {
       "typeMessage": "Type a message..."
     },

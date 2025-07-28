@@ -113,6 +113,12 @@
       "noReplies": "Dim atebion eto",
       "noContent": "Dim cynnwys eto"
     },
+    "feed": {
+      "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
+      "loadingPosts": "Wrth lwytho postiadau...",
+      "noPostsInFeed": "Dim postiadau yn y porthiant hwn eto.",
+      "selectFeedToView": "Dewiswch borthiant i weld postiadau"
+    },
     "messages": {
       "typeMessage": "Teipiwch neges..."
     },

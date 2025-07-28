@@ -113,6 +113,12 @@
       "noReplies": "Belum ada balasan",
       "noContent": "Belum ada konten"
     },
+    "feed": {
+      "loadingMorePosts": "Memuat lebih banyak postingan...",
+      "loadingPosts": "Memuat postingan...",
+      "noPostsInFeed": "Belum ada postingan di feed ini.",
+      "selectFeedToView": "Pilih feed untuk melihat postingan"
+    },
     "messages": {
       "typeMessage": "Ketik pesan..."
     },

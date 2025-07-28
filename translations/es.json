@@ -113,6 +113,12 @@
       "noReplies": "Aún no hay respuestas",
       "noContent": "Aún no hay contenido"
     },
+    "feed": {
+      "loadingMorePosts": "Cargando más publicaciones...",
+      "loadingPosts": "Cargando publicaciones...",
+      "noPostsInFeed": "Aún no hay publicaciones en este feed.",
+      "selectFeedToView": "Selecciona un feed para ver publicaciones"
+    },
     "messages": {
       "typeMessage": "Escribe un mensaje..."
     },

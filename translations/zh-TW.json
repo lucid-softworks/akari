@@ -113,6 +113,12 @@
       "noReplies": "還沒有回覆",
       "noContent": "還沒有內容"
     },
+    "feed": {
+      "loadingMorePosts": "載入更多貼文...",
+      "loadingPosts": "載入貼文中...",
+      "noPostsInFeed": "此動態中尚無貼文。",
+      "selectFeedToView": "選擇動態以查看貼文"
+    },
     "messages": {
       "typeMessage": "輸入訊息..."
     },

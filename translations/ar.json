@@ -113,6 +113,12 @@
       "noReplies": "لا توجد ردود بعد",
       "noContent": "لا يوجد محتوى بعد"
     },
+    "feed": {
+      "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",
+      "loadingPosts": "جاري تحميل المنشورات...",
+      "noPostsInFeed": "لا توجد منشورات في هذا التغذية بعد.",
+      "selectFeedToView": "اختر تغذية لعرض المنشورات"
+    },
     "messages": {
       "typeMessage": "اكتب رسالة..."
     },

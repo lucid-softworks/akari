@@ -113,6 +113,12 @@
       "noReplies": "还没有回复",
       "noContent": "还没有内容"
     },
+    "feed": {
+      "loadingMorePosts": "加载更多帖子...",
+      "loadingPosts": "加载帖子中...",
+      "noPostsInFeed": "此动态中尚无帖子。",
+      "selectFeedToView": "选择动态以查看帖子"
+    },
     "messages": {
       "typeMessage": "输入消息..."
     },

@@ -113,6 +113,12 @@
       "noReplies": "まだ返信がありません",
       "noContent": "まだコンテンツがありません"
     },
+    "feed": {
+      "loadingMorePosts": "さらに投稿を読み込み中...",
+      "loadingPosts": "投稿を読み込み中...",
+      "noPostsInFeed": "このフィードにはまだ投稿がありません。",
+      "selectFeedToView": "投稿を表示するにはフィードを選択してください"
+    },
     "messages": {
       "typeMessage": "メッセージを入力..."
     },

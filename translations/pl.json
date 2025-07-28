@@ -113,6 +113,12 @@
       "noReplies": "Brak odpowiedzi",
       "noContent": "Brak zawartości"
     },
+    "feed": {
+      "loadingMorePosts": "Ładowanie większej liczby postów...",
+      "loadingPosts": "Ładowanie postów...",
+      "noPostsInFeed": "Brak postów w tym kanale jeszcze.",
+      "selectFeedToView": "Wybierz kanał, aby zobaczyć posty"
+    },
     "messages": {
       "typeMessage": "Wpisz wiadomość..."
     },

@@ -113,6 +113,12 @@
       "noReplies": "ยังไม่มีตอบกลับ",
       "noContent": "ยังไม่มีเนื้อหา"
     },
+    "feed": {
+      "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
+      "loadingPosts": "กำลังโหลดโพสต์...",
+      "noPostsInFeed": "ยังไม่มีโพสต์ในฟีดนี้",
+      "selectFeedToView": "เลือกฟีดเพื่อดูโพสต์"
+    },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ..."
     },

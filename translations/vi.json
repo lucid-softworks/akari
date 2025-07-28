@@ -113,6 +113,12 @@
       "noReplies": "Chưa có trả lời",
       "noContent": "Chưa có nội dung"
     },
+    "feed": {
+      "loadingMorePosts": "Đang tải thêm bài đăng...",
+      "loadingPosts": "Đang tải bài đăng...",
+      "noPostsInFeed": "Chưa có bài đăng nào trong nguồn cấp này.",
+      "selectFeedToView": "Chọn nguồn cấp để xem bài đăng"
+    },
     "messages": {
       "typeMessage": "Nhập tin nhắn..."
     },

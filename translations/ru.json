@@ -113,6 +113,12 @@
       "noReplies": "Пока нет ответов",
       "noContent": "Пока нет контента"
     },
+    "feed": {
+      "loadingMorePosts": "Загрузка дополнительных постов...",
+      "loadingPosts": "Загрузка постов...",
+      "noPostsInFeed": "В этой ленте пока нет постов.",
+      "selectFeedToView": "Выберите ленту для просмотра постов"
+    },
     "messages": {
       "typeMessage": "Введите сообщение..."
     },

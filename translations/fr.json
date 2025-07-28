@@ -113,6 +113,12 @@
       "noReplies": "Aucune réponse pour le moment",
       "noContent": "Aucun contenu pour le moment"
     },
+    "feed": {
+      "loadingMorePosts": "Chargement de plus de publications...",
+      "loadingPosts": "Chargement des publications...",
+      "noPostsInFeed": "Aucune publication dans ce flux pour le moment.",
+      "selectFeedToView": "Sélectionnez un flux pour voir les publications"
+    },
     "messages": {
       "typeMessage": "Tapez un message..."
     },

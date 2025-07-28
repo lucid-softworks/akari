@@ -113,6 +113,12 @@
       "noReplies": "Henüz yanıt yok",
       "noContent": "Henüz içerik yok"
     },
+    "feed": {
+      "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
+      "loadingPosts": "Gönderiler yükleniyor...",
+      "noPostsInFeed": "Bu akışta henüz gönderi yok.",
+      "selectFeedToView": "Gönderileri görmek için bir akış seçin"
+    },
     "messages": {
       "typeMessage": "Mesaj yazın..."
     },

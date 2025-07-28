@@ -10,12 +10,14 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFeeds } from "@/hooks/queries/useFeeds";
 import { useSelectedFeed } from "@/hooks/useSelectedFeed";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { BlueskyFeedItem } from "@/utils/blueskyApi";
 import { blueskyApi } from "@/utils/blueskyApi";
 import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 export default function DiscoverScreen() {
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
@@ -223,7 +225,7 @@ export default function DiscoverScreen() {
             isFetchingNextPage ? (
               <ThemedView style={styles.loadingMore}>
                 <ThemedText style={styles.loadingMoreText}>
-                  Loading more posts...
+                  {t("feed.loadingMorePosts")}
                 </ThemedText>
               </ThemedView>
             ) : null
@@ -232,13 +234,13 @@ export default function DiscoverScreen() {
             feedLoading ? (
               <ThemedView style={styles.emptyState}>
                 <ThemedText style={styles.emptyStateText}>
-                  Loading posts...
+                  {t("feed.loadingPosts")}
                 </ThemedText>
               </ThemedView>
             ) : (
               <ThemedView style={styles.emptyState}>
                 <ThemedText style={styles.emptyStateText}>
-                  No posts in this feed yet.
+                  {t("feed.noPostsInFeed")}
                 </ThemedText>
               </ThemedView>
             )
@@ -247,7 +249,7 @@ export default function DiscoverScreen() {
       ) : (
         <ThemedView style={styles.selectFeedPrompt}>
           <ThemedText style={styles.selectFeedText}>
-            Select a feed to view posts
+            {t("feed.selectFeedToView")}
           </ThemedText>
         </ThemedView>
       )}

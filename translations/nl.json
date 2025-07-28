@@ -113,6 +113,12 @@
       "noReplies": "Nog geen antwoorden",
       "noContent": "Nog geen inhoud"
     },
+    "feed": {
+      "loadingMorePosts": "Meer berichten laden...",
+      "loadingPosts": "Berichten laden...",
+      "noPostsInFeed": "Nog geen berichten in deze feed.",
+      "selectFeedToView": "Selecteer een feed om berichten te bekijken"
+    },
     "messages": {
       "typeMessage": "Typ een bericht..."
     },
