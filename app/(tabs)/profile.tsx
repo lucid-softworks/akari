@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ProfileHeader } from "@/components/ProfileHeader";
@@ -17,6 +16,7 @@ import { useProfile } from "@/hooks/queries/useProfile";
 import { useTranslation } from "@/hooks/useTranslation";
 import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TabType = "posts" | "replies" | "likes" | "media";
 
@@ -167,7 +167,7 @@ export default function ProfileScreen() {
                 key={`${post.uri}-${post.indexedAt}`}
                 post={{
                   id: post.uri,
-                  text: post.record?.text,
+                  text: post.record?.text as string | undefined,
                   author: {
                     handle: post.author.handle,
                     displayName: post.author.displayName,
