@@ -1,8 +1,15 @@
 import { ar } from "@/translations/ar";
+import { de } from "@/translations/de";
 import { en } from "@/translations/en";
 import { enUS } from "@/translations/en-US";
+import { es } from "@/translations/es";
 import { fr } from "@/translations/fr";
+import { it } from "@/translations/it";
 import { ja } from "@/translations/ja";
+import { ko } from "@/translations/ko";
+import { pt } from "@/translations/pt";
+import { zhCN } from "@/translations/zh-CN";
+import { zhTW } from "@/translations/zh-TW";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import { translationLogger } from "./translationLogger";
@@ -13,7 +20,14 @@ const translations = {
   ja,
   ar,
   fr,
+  es,
+  de,
+  pt,
+  it,
+  ko,
   "en-US": enUS,
+  "zh-CN": zhCN,
+  "zh-TW": zhTW,
 };
 
 // Create i18n instance

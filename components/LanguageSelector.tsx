@@ -15,14 +15,37 @@ type LanguageOption = {
   code: string;
   name: string;
   nativeName: string;
+  flag: string;
 };
 
 const languages: LanguageOption[] = [
-  { code: "en", name: "English", nativeName: "English" },
-  { code: "en-US", name: "English (US)", nativeName: "English (US)" },
-  { code: "ja", name: "Japanese", nativeName: "日本語" },
-  { code: "ar", name: "Arabic", nativeName: "العربية" },
-  { code: "fr", name: "French", nativeName: "Français" },
+  { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" },
+  {
+    code: "en-US",
+    name: "English (US)",
+    nativeName: "English (Simplified)",
+    flag: "🇺🇸",
+  },
+  { code: "es", name: "Spanish", nativeName: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "French", nativeName: "Français", flag: "🇫🇷" },
+  { code: "de", name: "German", nativeName: "Deutsch", flag: "🇩🇪" },
+  { code: "it", name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
+  { code: "pt", name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
+  { code: "ja", name: "Japanese", nativeName: "日本語", flag: "🇯🇵" },
+  { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
+  {
+    code: "zh-CN",
+    name: "Chinese (Simplified)",
+    nativeName: "简体中文",
+    flag: "🇨🇳",
+  },
+  {
+    code: "zh-TW",
+    name: "Chinese (Traditional)",
+    nativeName: "繁體中文",
+    flag: "🇹🇼",
+  },
+  { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
 ];
 
 export const LanguageSelector: React.FC = () => {
@@ -45,9 +68,17 @@ export const LanguageSelector: React.FC = () => {
         style={styles.selector}
         onPress={() => setIsModalVisible(true)}
       >
-        <ThemedText style={styles.selectorText}>
-          {currentLanguage.nativeName}
-        </ThemedText>
+        <View style={styles.selectorContent}>
+          <ThemedText style={styles.flag}>{currentLanguage.flag}</ThemedText>
+          <View style={styles.selectorTextContainer}>
+            <ThemedText style={styles.selectorText}>
+              {currentLanguage.name}
+            </ThemedText>
+            <ThemedText style={styles.selectorNativeText}>
+              {currentLanguage.nativeName}
+            </ThemedText>
+          </View>
+        </View>
         <ThemedText style={styles.chevron}>▼</ThemedText>
       </TouchableOpacity>
 
@@ -76,9 +107,17 @@ export const LanguageSelector: React.FC = () => {
                   ]}
                   onPress={() => handleLanguageChange(language.code)}
                 >
-                  <ThemedText style={styles.languageName}>
-                    {language.nativeName}
-                  </ThemedText>
+                  <View style={styles.languageInfo}>
+                    <ThemedText style={styles.flag}>{language.flag}</ThemedText>
+                    <View style={styles.languageTextContainer}>
+                      <ThemedText style={styles.languageName}>
+                        {language.nativeName}
+                      </ThemedText>
+                      <ThemedText style={styles.languageEnglishName}>
+                        {language.name}
+                      </ThemedText>
+                    </View>
+                  </View>
                   {currentLocale === language.code && (
                     <View style={styles.checkmark}>
                       <ThemedText style={styles.checkmarkText}>✓</ThemedText>
@@ -113,9 +152,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.1)",
   },
+  selectorContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  selectorTextContainer: {
+    flex: 1,
+  },
+  flag: {
+    fontSize: 20,
+    marginRight: 8,
+  },
   selectorText: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  selectorNativeText: {
+    fontSize: 12,
+    opacity: 0.6,
+    marginTop: 2,
   },
   chevron: {
     fontSize: 12,
@@ -157,6 +212,19 @@ const styles = StyleSheet.create({
   languageName: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  languageInfo: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  languageTextContainer: {
+    flex: 1,
+  },
+  languageEnglishName: {
+    fontSize: 12,
+    opacity: 0.6,
+    marginTop: 2,
   },
   checkmark: {
     width: 20,
