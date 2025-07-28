@@ -220,80 +220,78 @@ export default function PostDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
+    <ThemedView style={styles.container}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Thread Context - Root Post (if this is a reply to a reply) */}
+        {renderGrandparentPost()}
+
+        {/* Thread Context - Parent Post */}
+        {renderParentPost()}
+
+        {/* Main Post (the reply you're viewing) */}
+        <View ref={mainPostRef}>
+          <PostCard
+            post={{
+              id: mainPost?.uri || "",
+              text: mainPost?.record?.text || "No text content",
+              author: {
+                handle: mainPost?.author?.handle || "",
+                displayName: mainPost?.author?.displayName,
+                avatar: mainPost?.author?.avatar,
+              },
+              createdAt: new Date(
+                mainPost?.indexedAt || Date.now()
+              ).toLocaleDateString(),
+              likeCount: mainPost?.likeCount || 0,
+              commentCount: mainPost?.replyCount || 0,
+              repostCount: mainPost?.repostCount || 0,
+              embed: mainPost?.embed,
+              embeds: mainPost?.embeds,
+              labels: mainPost?.labels,
+            }}
+          />
+        </View>
+
+        {/* Comments Section */}
+        <ThemedView
+          style={[styles.commentsSection, { borderBottomColor: borderColor }]}
         >
-          {/* Thread Context - Root Post (if this is a reply to a reply) */}
-          {renderGrandparentPost()}
+          <ThemedText style={styles.commentsTitle}>
+            Comments ({comments.length})
+          </ThemedText>
+        </ThemedView>
 
-          {/* Thread Context - Parent Post */}
-          {renderParentPost()}
-
-          {/* Main Post (the reply you're viewing) */}
-          <View ref={mainPostRef}>
-            <PostCard
-              post={{
-                id: mainPost?.uri || "",
-                text: mainPost?.record?.text || "No text content",
-                author: {
-                  handle: mainPost?.author?.handle || "",
-                  displayName: mainPost?.author?.displayName,
-                  avatar: mainPost?.author?.avatar,
-                },
-                createdAt: new Date(
-                  mainPost?.indexedAt || Date.now()
-                ).toLocaleDateString(),
-                likeCount: mainPost?.likeCount || 0,
-                commentCount: mainPost?.replyCount || 0,
-                repostCount: mainPost?.repostCount || 0,
-                embed: mainPost?.embed,
-                embeds: mainPost?.embeds,
-                labels: mainPost?.labels,
-              }}
-            />
-          </View>
-
-          {/* Comments Section */}
-          <ThemedView
-            style={[styles.commentsSection, { borderBottomColor: borderColor }]}
-          >
-            <ThemedText style={styles.commentsTitle}>
-              Comments ({comments.length})
+        {/* Comments List */}
+        {comments.length > 0 ? (
+          comments
+            .filter(
+              (
+                item
+              ): item is
+                | BlueskyFeedItem
+                | {
+                    uri: string;
+                    notFound?: boolean;
+                    blocked?: boolean;
+                    author?: any;
+                  } =>
+                item !== null && !("notFound" in item) && !("blocked" in item)
+            )
+            .map(renderComment)
+        ) : (
+          <ThemedView style={styles.emptyComments}>
+            <ThemedText style={styles.emptyCommentsText}>
+              No comments yet
             </ThemedText>
           </ThemedView>
-
-          {/* Comments List */}
-          {comments.length > 0 ? (
-            comments
-              .filter(
-                (
-                  item
-                ): item is
-                  | BlueskyFeedItem
-                  | {
-                      uri: string;
-                      notFound?: boolean;
-                      blocked?: boolean;
-                      author?: any;
-                    } =>
-                  item !== null && !("notFound" in item) && !("blocked" in item)
-              )
-              .map(renderComment)
-          ) : (
-            <ThemedView style={styles.emptyComments}>
-              <ThemedText style={styles.emptyCommentsText}>
-                No comments yet
-              </ThemedText>
-            </ThemedView>
-          )}
-        </ScrollView>
-      </ThemedView>
-    </SafeAreaView>
+        )}
+      </ScrollView>
+    </ThemedView>
   );
 }
 
