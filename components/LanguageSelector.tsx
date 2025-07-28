@@ -13,6 +13,7 @@ type LanguageOption = {
 
 const languages: LanguageOption[] = [
   { code: "en", name: "English", nativeName: "English" },
+  { code: "en-US", name: "English (US)", nativeName: "English (US)" },
   { code: "ja", name: "Japanese", nativeName: "日本語" },
   { code: "ar", name: "Arabic", nativeName: "العربية" },
   { code: "fr", name: "French", nativeName: "Français" },

@@ -1,5 +1,6 @@
 import { ar } from "@/translations/ar";
 import { en } from "@/translations/en";
+import { enUS } from "@/translations/en-US";
 import { fr } from "@/translations/fr";
 import { ja } from "@/translations/ja";
 import { getLocales } from "expo-localization";
@@ -12,6 +13,7 @@ const translations = {
   ja,
   ar,
   fr,
+  "en-US": enUS,
 };
 
 // Create i18n instance
