@@ -117,7 +117,11 @@
       "loadingMorePosts": "Memuat lebih banyak postingan...",
       "loadingPosts": "Memuat postingan...",
       "noPostsInFeed": "Belum ada postingan di feed ini.",
-      "selectFeedToView": "Pilih feed untuk melihat postingan"
+      "selectFeedToView": "Pilih feed untuk melihat postingan",
+      "loadingFeeds": "Memuat feed Anda...",
+      "noCustomFeedsFound": "Tidak ada feed kustom yang ditemukan",
+      "noCustomFeedsCreated": "Anda belum membuat feed kustom apa pun.",
+      "canBrowseDefaultFeed": "Anda masih dapat menelusuri feed Temukan default."
     },
     "messages": {
       "typeMessage": "Ketik pesan..."

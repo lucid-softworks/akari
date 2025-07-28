@@ -117,7 +117,11 @@
       "loadingMorePosts": "Đang tải thêm bài đăng...",
       "loadingPosts": "Đang tải bài đăng...",
       "noPostsInFeed": "Chưa có bài đăng nào trong nguồn cấp này.",
-      "selectFeedToView": "Chọn nguồn cấp để xem bài đăng"
+      "selectFeedToView": "Chọn nguồn cấp để xem bài đăng",
+      "loadingFeeds": "Đang tải nguồn cấp dữ liệu của bạn...",
+      "noCustomFeedsFound": "Không tìm thấy nguồn cấp dữ liệu tùy chỉnh",
+      "noCustomFeedsCreated": "Bạn chưa tạo bất kỳ nguồn cấp dữ liệu tùy chỉnh nào.",
+      "canBrowseDefaultFeed": "Bạn vẫn có thể duyệt nguồn cấp dữ liệu Khám phá mặc định."
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn..."

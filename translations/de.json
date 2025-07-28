@@ -117,7 +117,11 @@
       "loadingMorePosts": "Lade weitere Beiträge...",
       "loadingPosts": "Lade Beiträge...",
       "noPostsInFeed": "Noch keine Beiträge in diesem Feed.",
-      "selectFeedToView": "Wähle einen Feed aus, um Beiträge anzuzeigen"
+      "selectFeedToView": "Wähle einen Feed aus, um Beiträge anzuzeigen",
+      "loadingFeeds": "Lade deine Feeds...",
+      "noCustomFeedsFound": "Keine benutzerdefinierten Feeds gefunden",
+      "noCustomFeedsCreated": "Du hast noch keine benutzerdefinierten Feeds erstellt.",
+      "canBrowseDefaultFeed": "Du kannst trotzdem den Standard-Entdecken-Feed durchsuchen."
     },
     "messages": {
       "typeMessage": "Nachricht eingeben..."

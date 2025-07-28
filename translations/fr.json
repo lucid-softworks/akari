@@ -117,7 +117,11 @@
       "loadingMorePosts": "Chargement de plus de publications...",
       "loadingPosts": "Chargement des publications...",
       "noPostsInFeed": "Aucune publication dans ce flux pour le moment.",
-      "selectFeedToView": "Sélectionnez un flux pour voir les publications"
+      "selectFeedToView": "Sélectionnez un flux pour voir les publications",
+      "loadingFeeds": "Chargement de vos flux...",
+      "noCustomFeedsFound": "Aucun flux personnalisé trouvé",
+      "noCustomFeedsCreated": "Vous n'avez pas encore créé de flux personnalisé.",
+      "canBrowseDefaultFeed": "Vous pouvez toujours parcourir le flux Découverte par défaut."
     },
     "messages": {
       "typeMessage": "Tapez un message..."

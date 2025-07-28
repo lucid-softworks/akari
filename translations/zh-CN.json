@@ -117,7 +117,11 @@
       "loadingMorePosts": "加载更多帖子...",
       "loadingPosts": "加载帖子中...",
       "noPostsInFeed": "此动态中尚无帖子。",
-      "selectFeedToView": "选择动态以查看帖子"
+      "selectFeedToView": "选择动态以查看帖子",
+      "loadingFeeds": "正在加载您的订阅源...",
+      "noCustomFeedsFound": "未找到自定义订阅源",
+      "noCustomFeedsCreated": "您还没有创建任何自定义订阅源。",
+      "canBrowseDefaultFeed": "您仍然可以浏览默认的发现订阅源。"
     },
     "messages": {
       "typeMessage": "输入消息..."

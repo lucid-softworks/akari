@@ -117,7 +117,11 @@
       "loadingMorePosts": "Ładowanie większej liczby postów...",
       "loadingPosts": "Ładowanie postów...",
       "noPostsInFeed": "Brak postów w tym kanale jeszcze.",
-      "selectFeedToView": "Wybierz kanał, aby zobaczyć posty"
+      "selectFeedToView": "Wybierz kanał, aby zobaczyć posty",
+      "loadingFeeds": "Ładowanie twoich kanałów...",
+      "noCustomFeedsFound": "Nie znaleziono niestandardowych kanałów",
+      "noCustomFeedsCreated": "Nie utworzyłeś jeszcze żadnych niestandardowych kanałów.",
+      "canBrowseDefaultFeed": "Nadal możesz przeglądać domyślny kanał Odkryj."
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość..."

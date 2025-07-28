@@ -117,7 +117,11 @@
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
       "loadingPosts": "Wrth lwytho postiadau...",
       "noPostsInFeed": "Dim postiadau yn y porthiant hwn eto.",
-      "selectFeedToView": "Dewiswch borthiant i weld postiadau"
+      "selectFeedToView": "Dewiswch borthiant i weld postiadau",
+      "loadingFeeds": "Llwytho eich ffrydiau...",
+      "noCustomFeedsFound": "Dim hyddod ffrydiau wedi'u canfod",
+      "noCustomFeedsCreated": "Nid ydych wedi creu unrhyw ffrydiau wedi'u haddasu eto.",
+      "canBrowseDefaultFeed": "Gallwch dal i bori'r ffryd Darganfod rhagosodedig."
     },
     "messages": {
       "typeMessage": "Teipiwch neges..."

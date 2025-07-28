@@ -117,7 +117,11 @@
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
       "loadingPosts": "กำลังโหลดโพสต์...",
       "noPostsInFeed": "ยังไม่มีโพสต์ในฟีดนี้",
-      "selectFeedToView": "เลือกฟีดเพื่อดูโพสต์"
+      "selectFeedToView": "เลือกฟีดเพื่อดูโพสต์",
+      "loadingFeeds": "กำลังโหลดฟีดของคุณ...",
+      "noCustomFeedsFound": "ไม่พบฟีดที่กำหนดเอง",
+      "noCustomFeedsCreated": "คุณยังไม่ได้สร้างฟีดที่กำหนดเอง",
+      "canBrowseDefaultFeed": "คุณยังสามารถเรียกดูฟีดค้นพบเริ่มต้นได้"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ..."

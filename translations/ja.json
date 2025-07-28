@@ -117,7 +117,11 @@
       "loadingMorePosts": "さらに投稿を読み込み中...",
       "loadingPosts": "投稿を読み込み中...",
       "noPostsInFeed": "このフィードにはまだ投稿がありません。",
-      "selectFeedToView": "投稿を表示するにはフィードを選択してください"
+      "selectFeedToView": "投稿を表示するにはフィードを選択してください",
+      "loadingFeeds": "フィードを読み込み中...",
+      "noCustomFeedsFound": "カスタムフィードが見つかりません",
+      "noCustomFeedsCreated": "まだカスタムフィードを作成していません。",
+      "canBrowseDefaultFeed": "デフォルトのディスカバーフィードは引き続き閲覧できます。"
     },
     "messages": {
       "typeMessage": "メッセージを入力..."

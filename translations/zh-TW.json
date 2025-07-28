@@ -117,7 +117,11 @@
       "loadingMorePosts": "載入更多貼文...",
       "loadingPosts": "載入貼文中...",
       "noPostsInFeed": "此動態中尚無貼文。",
-      "selectFeedToView": "選擇動態以查看貼文"
+      "selectFeedToView": "選擇動態以查看貼文",
+      "loadingFeeds": "正在載入您的訂閱源...",
+      "noCustomFeedsFound": "未找到自訂訂閱源",
+      "noCustomFeedsCreated": "您還沒有建立任何自訂訂閱源。",
+      "canBrowseDefaultFeed": "您仍然可以瀏覽預設的發現訂閱源。"
     },
     "messages": {
       "typeMessage": "輸入訊息..."

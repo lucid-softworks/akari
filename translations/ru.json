@@ -117,7 +117,11 @@
       "loadingMorePosts": "Загрузка дополнительных постов...",
       "loadingPosts": "Загрузка постов...",
       "noPostsInFeed": "В этой ленте пока нет постов.",
-      "selectFeedToView": "Выберите ленту для просмотра постов"
+      "selectFeedToView": "Выберите ленту для просмотра постов",
+      "loadingFeeds": "Загрузка ваших лент...",
+      "noCustomFeedsFound": "Пользовательские ленты не найдены",
+      "noCustomFeedsCreated": "Вы еще не создали пользовательские ленты.",
+      "canBrowseDefaultFeed": "Вы по-прежнему можете просматривать стандартную ленту Discover."
     },
     "messages": {
       "typeMessage": "Введите сообщение..."

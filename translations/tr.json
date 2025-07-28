@@ -117,7 +117,11 @@
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
       "loadingPosts": "Gönderiler yükleniyor...",
       "noPostsInFeed": "Bu akışta henüz gönderi yok.",
-      "selectFeedToView": "Gönderileri görmek için bir akış seçin"
+      "selectFeedToView": "Gönderileri görmek için bir akış seçin",
+      "loadingFeeds": "Akışlarınız yükleniyor...",
+      "noCustomFeedsFound": "Özel akış bulunamadı",
+      "noCustomFeedsCreated": "Henüz özel akış oluşturmadınız.",
+      "canBrowseDefaultFeed": "Varsayılan Keşfet akışını hala göz atabilirsiniz."
     },
     "messages": {
       "typeMessage": "Mesaj yazın..."

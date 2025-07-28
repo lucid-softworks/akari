@@ -171,7 +171,9 @@ export default function DiscoverScreen() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>Loading your feeds...</ThemedText>
+          <ThemedText style={styles.subtitle}>
+            {t("feed.loadingFeeds")}
+          </ThemedText>
         </ThemedView>
       </ThemedView>
     );
@@ -181,14 +183,16 @@ export default function DiscoverScreen() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>No custom feeds found</ThemedText>
+          <ThemedText style={styles.subtitle}>
+            {t("feed.noCustomFeedsFound")}
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.emptyState}>
           <ThemedText style={styles.emptyStateText}>
-            You haven&apos;t created any custom feeds yet.
+            {t("feed.noCustomFeedsCreated")}
           </ThemedText>
           <ThemedText style={styles.emptyStateText}>
-            You can still browse the default Discover feed.
+            {t("feed.canBrowseDefaultFeed")}
           </ThemedText>
         </ThemedView>
       </ThemedView>

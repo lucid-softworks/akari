@@ -117,7 +117,11 @@
       "loadingMorePosts": "Caricamento di altri post...",
       "loadingPosts": "Caricamento post...",
       "noPostsInFeed": "Nessun post in questo feed ancora.",
-      "selectFeedToView": "Seleziona un feed per visualizzare i post"
+      "selectFeedToView": "Seleziona un feed per visualizzare i post",
+      "loadingFeeds": "Caricamento dei tuoi feed...",
+      "noCustomFeedsFound": "Nessun feed personalizzato trovato",
+      "noCustomFeedsCreated": "Non hai ancora creato nessun feed personalizzato.",
+      "canBrowseDefaultFeed": "Puoi ancora sfogliare il feed Scopri predefinito."
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio..."

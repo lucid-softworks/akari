@@ -117,7 +117,11 @@
       "loadingMorePosts": "Loading more posts...",
       "loadingPosts": "Loading posts...",
       "noPostsInFeed": "No posts in this feed yet.",
-      "selectFeedToView": "Select a feed to view posts"
+      "selectFeedToView": "Select a feed to view posts",
+      "loadingFeeds": "Loading your feeds...",
+      "noCustomFeedsFound": "No custom feeds found",
+      "noCustomFeedsCreated": "You haven't created any custom feeds yet.",
+      "canBrowseDefaultFeed": "You can still browse the default Discover feed."
     },
     "messages": {
       "typeMessage": "Type a message..."

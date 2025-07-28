@@ -117,7 +117,11 @@
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",
       "loadingPosts": "पोस्ट लोड हो रही हैं...",
       "noPostsInFeed": "इस फीड में अभी तक कोई पोस्ट नहीं है।",
-      "selectFeedToView": "पोस्ट देखने के लिए फीड चुनें"
+      "selectFeedToView": "पोस्ट देखने के लिए फीड चुनें",
+      "loadingFeeds": "आपके फीड लोड हो रहे हैं...",
+      "noCustomFeedsFound": "कोई कस्टम फीड नहीं मिला",
+      "noCustomFeedsCreated": "आपने अभी तक कोई कस्टम फीड नहीं बनाया है।",
+      "canBrowseDefaultFeed": "आप अभी भी डिफ़ॉल्ट डिस्कवर फीड ब्राउज़ कर सकते हैं।"
     },
     "messages": {
       "typeMessage": "संदेश लिखें..."
