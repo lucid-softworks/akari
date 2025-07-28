@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "搜尋",
-      "notifications": "通知"
+      "notifications": "通知",
+      "post": "貼文"
     },
     "search": {
       "searchPlaceholder": "在 Bluesky 上搜尋個人資料和貼文",

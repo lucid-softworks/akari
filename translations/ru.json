@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Поиск",
-      "notifications": "Уведомления"
+      "notifications": "Уведомления",
+      "post": "Пост"
     },
     "search": {
       "searchPlaceholder": "Поиск профилей и постов в Bluesky",

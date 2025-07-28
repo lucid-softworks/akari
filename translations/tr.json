@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Arama",
-      "notifications": "Bildirimler"
+      "notifications": "Bildirimler",
+      "post": "Gönderi"
     },
     "search": {
       "searchPlaceholder": "Bluesky'de profiller ve gönderiler ara",

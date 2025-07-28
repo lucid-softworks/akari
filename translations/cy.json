@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Chwilio",
-      "notifications": "Hysbysiadau"
+      "notifications": "Hysbysiadau",
+      "post": "Post"
     },
     "search": {
       "searchPlaceholder": "Chwilio am broffiliau a swyddi ar Bluesky",

@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "검색",
-      "notifications": "알림"
+      "notifications": "알림",
+      "post": "게시물"
     },
     "search": {
       "searchPlaceholder": "Bluesky에서 프로필과 게시물 검색",

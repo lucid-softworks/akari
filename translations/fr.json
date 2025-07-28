@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Recherche",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "post": "Publication"
     },
     "search": {
       "searchPlaceholder": "Rechercher des profils et publications sur Bluesky",

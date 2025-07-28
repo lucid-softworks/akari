@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "検索",
-      "notifications": "通知"
+      "notifications": "通知",
+      "post": "投稿"
     },
     "search": {
       "searchPlaceholder": "Blueskyでプロフィールと投稿を検索",

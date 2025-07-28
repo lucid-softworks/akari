@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Tìm kiếm",
-      "notifications": "Thông báo"
+      "notifications": "Thông báo",
+      "post": "Bài đăng"
     },
     "search": {
       "searchPlaceholder": "Tìm kiếm hồ sơ và bài đăng trên Bluesky",

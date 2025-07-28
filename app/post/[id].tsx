@@ -9,12 +9,14 @@ import { ThemedView } from "@/components/ThemedView";
 import { useParentPost, usePost, useRootPost } from "@/hooks/queries/usePost";
 import { usePostThread } from "@/hooks/queries/usePostThread";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslation } from "@/hooks/useTranslation";
 import { BlueskyFeedItem, BlueskyPostView } from "@/utils/bluesky/types";
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const scrollViewRef = useRef<ScrollView>(null);
   const mainPostRef = useRef<View>(null);
+  const { t } = useTranslation();
 
   const { data: post, isLoading: postLoading, error: postError } = usePost(id);
   const { data: threadData, isLoading: threadLoading } = usePostThread(id);
@@ -260,7 +262,12 @@ export default function PostDetailScreen() {
   if (postLoading || threadLoading || parentLoading || rootLoading) {
     return (
       <>
-        <Stack.Screen options={{ title: "Post", headerBackTitle: "Back" }} />
+        <Stack.Screen
+          options={{
+            title: t("navigation.post"),
+            headerBackButtonDisplayMode: "minimal",
+          }}
+        />
         <SafeAreaView style={styles.container}>
           <ThemedView style={styles.container}>
             <ThemedText style={styles.loadingText}>Loading post...</ThemedText>
@@ -273,7 +280,12 @@ export default function PostDetailScreen() {
   if (postError || !post) {
     return (
       <>
-        <Stack.Screen options={{ title: "Post", headerBackTitle: "Back" }} />
+        <Stack.Screen
+          options={{
+            title: t("navigation.post"),
+            headerBackButtonDisplayMode: "minimal",
+          }}
+        />
         <SafeAreaView style={styles.container}>
           <ThemedView style={styles.container}>
             <ThemedText style={styles.errorText}>Post not found</ThemedText>
@@ -285,7 +297,12 @@ export default function PostDetailScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Post", headerBackTitle: "Back" }} />
+      <Stack.Screen
+        options={{
+          title: t("navigation.post"),
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      />
       <ThemedView style={styles.container}>
         <ScrollView
           ref={scrollViewRef}

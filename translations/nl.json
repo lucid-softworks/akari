@@ -72,7 +72,8 @@
     },
     "navigation": {
       "search": "Zoeken",
-      "notifications": "Meldingen"
+      "notifications": "Meldingen",
+      "post": "Bericht"
     },
     "search": {
       "searchPlaceholder": "Zoek naar profielen en berichten op Bluesky",
