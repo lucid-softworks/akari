@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Aún no has creado ningún feed personalizado.",
       "canBrowseDefaultFeed": "Aún puedes navegar por el feed Descubrir predeterminado."
     },
+    "post": {
+      "loadingPost": "Cargando publicación...",
+      "postNotFound": "Publicación no encontrada",
+      "comments": "Comentarios ({{count}})",
+      "noCommentsYet": "Aún no hay comentarios"
+    },
     "messages": {
       "typeMessage": "Escribe un mensaje..."
     },

@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Anda belum membuat feed kustom apa pun.",
       "canBrowseDefaultFeed": "Anda masih dapat menelusuri feed Temukan default."
     },
+    "post": {
+      "loadingPost": "Memuat postingan...",
+      "postNotFound": "Postingan tidak ditemukan",
+      "comments": "Komentar ({{count}})",
+      "noCommentsYet": "Belum ada komentar"
+    },
     "messages": {
       "typeMessage": "Ketik pesan..."
     },

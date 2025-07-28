@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Bạn chưa tạo bất kỳ nguồn cấp dữ liệu tùy chỉnh nào.",
       "canBrowseDefaultFeed": "Bạn vẫn có thể duyệt nguồn cấp dữ liệu Khám phá mặc định."
     },
+    "post": {
+      "loadingPost": "Đang tải bài viết...",
+      "postNotFound": "Không tìm thấy bài viết",
+      "comments": "Bình luận ({{count}})",
+      "noCommentsYet": "Chưa có bình luận nào"
+    },
     "messages": {
       "typeMessage": "Nhập tin nhắn..."
     },

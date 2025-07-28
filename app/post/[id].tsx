@@ -270,7 +270,9 @@ export default function PostDetailScreen() {
         />
         <SafeAreaView style={styles.container}>
           <ThemedView style={styles.container}>
-            <ThemedText style={styles.loadingText}>Loading post...</ThemedText>
+            <ThemedText style={styles.loadingText}>
+              {t("post.loadingPost")}
+            </ThemedText>
           </ThemedView>
         </SafeAreaView>
       </>
@@ -288,7 +290,9 @@ export default function PostDetailScreen() {
         />
         <SafeAreaView style={styles.container}>
           <ThemedView style={styles.container}>
-            <ThemedText style={styles.errorText}>Post not found</ThemedText>
+            <ThemedText style={styles.errorText}>
+              {t("post.postNotFound")}
+            </ThemedText>
           </ThemedView>
         </SafeAreaView>
       </>
@@ -350,7 +354,7 @@ export default function PostDetailScreen() {
             style={[styles.commentsSection, { borderBottomColor: borderColor }]}
           >
             <ThemedText style={styles.commentsTitle}>
-              Comments ({comments.length})
+              {t("post.comments", { count: comments.length })}
             </ThemedText>
           </ThemedView>
 
@@ -374,7 +378,7 @@ export default function PostDetailScreen() {
           ) : (
             <ThemedView style={styles.emptyComments}>
               <ThemedText style={styles.emptyCommentsText}>
-                No comments yet
+                {t("post.noCommentsYet")}
               </ThemedText>
             </ThemedView>
           )}

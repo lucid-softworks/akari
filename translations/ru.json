@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Вы еще не создали пользовательские ленты.",
       "canBrowseDefaultFeed": "Вы по-прежнему можете просматривать стандартную ленту Discover."
     },
+    "post": {
+      "loadingPost": "Загрузка поста...",
+      "postNotFound": "Пост не найден",
+      "comments": "Комментарии ({{count}})",
+      "noCommentsYet": "Пока нет комментариев"
+    },
     "messages": {
       "typeMessage": "Введите сообщение..."
     },

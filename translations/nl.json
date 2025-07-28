@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Je hebt nog geen aangepaste feeds gemaakt.",
       "canBrowseDefaultFeed": "Je kunt nog steeds door de standaard Ontdekken-feed bladeren."
     },
+    "post": {
+      "loadingPost": "Bericht laden...",
+      "postNotFound": "Bericht niet gevonden",
+      "comments": "Reacties ({{count}})",
+      "noCommentsYet": "Nog geen reacties"
+    },
     "messages": {
       "typeMessage": "Typ een bericht..."
     },

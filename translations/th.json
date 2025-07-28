@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "คุณยังไม่ได้สร้างฟีดที่กำหนดเอง",
       "canBrowseDefaultFeed": "คุณยังสามารถเรียกดูฟีดค้นพบเริ่มต้นได้"
     },
+    "post": {
+      "loadingPost": "กำลังโหลดโพสต์...",
+      "postNotFound": "ไม่พบโพสต์",
+      "comments": "ความคิดเห็น ({{count}})",
+      "noCommentsYet": "ยังไม่มีความคิดเห็น"
+    },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ..."
     },

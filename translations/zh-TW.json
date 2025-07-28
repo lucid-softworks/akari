@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "您還沒有建立任何自訂訂閱源。",
       "canBrowseDefaultFeed": "您仍然可以瀏覽預設的發現訂閱源。"
     },
+    "post": {
+      "loadingPost": "載入貼文...",
+      "postNotFound": "找不到貼文",
+      "comments": "留言 ({{count}})",
+      "noCommentsYet": "尚無留言"
+    },
     "messages": {
       "typeMessage": "輸入訊息..."
     },

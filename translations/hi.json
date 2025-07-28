@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "आपने अभी तक कोई कस्टम फीड नहीं बनाया है।",
       "canBrowseDefaultFeed": "आप अभी भी डिफ़ॉल्ट डिस्कवर फीड ब्राउज़ कर सकते हैं।"
     },
+    "post": {
+      "loadingPost": "पोस्ट लोड हो रही है...",
+      "postNotFound": "पोस्ट नहीं मिली",
+      "comments": "टिप्पणियां ({{count}})",
+      "noCommentsYet": "अभी तक कोई टिप्पणी नहीं"
+    },
     "messages": {
       "typeMessage": "संदेश लिखें..."
     },

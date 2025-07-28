@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Nie utworzyłeś jeszcze żadnych niestandardowych kanałów.",
       "canBrowseDefaultFeed": "Nadal możesz przeglądać domyślny kanał Odkryj."
     },
+    "post": {
+      "loadingPost": "Ładowanie posta...",
+      "postNotFound": "Nie znaleziono posta",
+      "comments": "Komentarze ({{count}})",
+      "noCommentsYet": "Brak komentarzy"
+    },
     "messages": {
       "typeMessage": "Wpisz wiadomość..."
     },

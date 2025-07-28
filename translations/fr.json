@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Vous n'avez pas encore créé de flux personnalisé.",
       "canBrowseDefaultFeed": "Vous pouvez toujours parcourir le flux Découverte par défaut."
     },
+    "post": {
+      "loadingPost": "Chargement de la publication...",
+      "postNotFound": "Publication introuvable",
+      "comments": "Commentaires ({{count}})",
+      "noCommentsYet": "Aucun commentaire pour le moment"
+    },
     "messages": {
       "typeMessage": "Tapez un message..."
     },

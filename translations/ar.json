@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "لم تقم بإنشاء أي مصادر مخصصة بعد.",
       "canBrowseDefaultFeed": "يمكنك الاستمرار في تصفح مصدر الاكتشاف الافتراضي."
     },
+    "post": {
+      "loadingPost": "جاري تحميل المنشور...",
+      "postNotFound": "لم يتم العثور على المنشور",
+      "comments": "التعليقات ({{count}})",
+      "noCommentsYet": "لا توجد تعليقات بعد"
+    },
     "messages": {
       "typeMessage": "اكتب رسالة..."
     },

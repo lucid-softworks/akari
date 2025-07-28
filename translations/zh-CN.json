@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "您还没有创建任何自定义订阅源。",
       "canBrowseDefaultFeed": "您仍然可以浏览默认的发现订阅源。"
     },
+    "post": {
+      "loadingPost": "加载帖子...",
+      "postNotFound": "未找到帖子",
+      "comments": "评论 ({{count}})",
+      "noCommentsYet": "暂无评论"
+    },
     "messages": {
       "typeMessage": "输入消息..."
     },

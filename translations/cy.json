@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Nid ydych wedi creu unrhyw ffrydiau wedi'u haddasu eto.",
       "canBrowseDefaultFeed": "Gallwch dal i bori'r ffryd Darganfod rhagosodedig."
     },
+    "post": {
+      "loadingPost": "Wrth lwytho'r post...",
+      "postNotFound": "Heb ddod o hyd i'r post",
+      "comments": "Sylwadau ({{count}})",
+      "noCommentsYet": "Dim sylwadau eto"
+    },
     "messages": {
       "typeMessage": "Teipiwch neges..."
     },

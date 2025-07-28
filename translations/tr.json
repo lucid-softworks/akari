@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Henüz özel akış oluşturmadınız.",
       "canBrowseDefaultFeed": "Varsayılan Keşfet akışını hala göz atabilirsiniz."
     },
+    "post": {
+      "loadingPost": "Gönderi yükleniyor...",
+      "postNotFound": "Gönderi bulunamadı",
+      "comments": "Yorumlar ({{count}})",
+      "noCommentsYet": "Henüz yorum yok"
+    },
     "messages": {
       "typeMessage": "Mesaj yazın..."
     },

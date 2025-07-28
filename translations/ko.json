@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "아직 사용자 정의 피드를 만들지 않았습니다.",
       "canBrowseDefaultFeed": "기본 발견 피드는 계속 탐색할 수 있습니다."
     },
+    "post": {
+      "loadingPost": "게시물 로딩 중...",
+      "postNotFound": "게시물을 찾을 수 없습니다",
+      "comments": "댓글 ({{count}})",
+      "noCommentsYet": "아직 댓글이 없습니다"
+    },
     "messages": {
       "typeMessage": "메시지를 입력하세요..."
     },

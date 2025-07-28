@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "Du hast noch keine benutzerdefinierten Feeds erstellt.",
       "canBrowseDefaultFeed": "Du kannst trotzdem den Standard-Entdecken-Feed durchsuchen."
     },
+    "post": {
+      "loadingPost": "Lade Beitrag...",
+      "postNotFound": "Beitrag nicht gefunden",
+      "comments": "Kommentare ({{count}})",
+      "noCommentsYet": "Noch keine Kommentare"
+    },
     "messages": {
       "typeMessage": "Nachricht eingeben..."
     },

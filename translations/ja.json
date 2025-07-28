@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "まだカスタムフィードを作成していません。",
       "canBrowseDefaultFeed": "デフォルトのディスカバーフィードは引き続き閲覧できます。"
     },
+    "post": {
+      "loadingPost": "投稿を読み込み中...",
+      "postNotFound": "投稿が見つかりません",
+      "comments": "コメント ({{count}})",
+      "noCommentsYet": "まだコメントがありません"
+    },
     "messages": {
       "typeMessage": "メッセージを入力..."
     },

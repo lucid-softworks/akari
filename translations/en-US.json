@@ -123,6 +123,12 @@
       "noCustomFeedsCreated": "You haven't created any custom feeds yet.",
       "canBrowseDefaultFeed": "You can still browse the default Discover feed."
     },
+    "post": {
+      "loadingPost": "Loading post...",
+      "postNotFound": "Post not found",
+      "comments": "Comments ({{count}})",
+      "noCommentsYet": "No comments yet"
+    },
     "messages": {
       "typeMessage": "Type a message..."
     },
