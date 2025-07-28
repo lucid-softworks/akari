@@ -73,7 +73,8 @@
     "navigation": {
       "search": "खोज",
       "notifications": "सूचनाएं",
-      "post": "पोस्ट"
+      "post": "पोस्ट",
+      "settings": "सेटिंग्स"
     },
     "search": {
       "searchPlaceholder": "Bluesky पर प्रोफ़ाइल और पोस्ट खोजें",

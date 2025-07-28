@@ -73,7 +73,8 @@
     "navigation": {
       "search": "検索",
       "notifications": "通知",
-      "post": "投稿"
+      "post": "投稿",
+      "settings": "設定"
     },
     "search": {
       "searchPlaceholder": "Blueskyでプロフィールと投稿を検索",

@@ -73,7 +73,8 @@
     "navigation": {
       "search": "ค้นหา",
       "notifications": "การแจ้งเตือน",
-      "post": "โพสต์"
+      "post": "โพสต์",
+      "settings": "การตั้งค่า"
     },
     "search": {
       "searchPlaceholder": "ค้นหาโปรไฟล์และโพสต์บน Bluesky",

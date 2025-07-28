@@ -73,7 +73,8 @@
     "navigation": {
       "search": "Search",
       "notifications": "Notifications",
-      "post": "Post"
+      "post": "Post",
+      "settings": "Settings"
     },
     "search": {
       "searchPlaceholder": "Search for profiles and posts on Bluesky",

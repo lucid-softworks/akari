@@ -5,7 +5,6 @@ import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { LocalizedText } from "@/components/LocalizedText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
@@ -226,12 +225,9 @@ export default function SettingsScreen() {
       >
         {/* Header */}
         <ThemedView style={styles.header}>
-          <LocalizedText
-            style={styles.headerTitle}
-            translationKey="settings.account"
-          >
-            Settings
-          </LocalizedText>
+          <ThemedText style={styles.headerTitle}>
+            {t("navigation.settings")}
+          </ThemedText>
         </ThemedView>
 
         {/* Language Section */}

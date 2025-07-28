@@ -73,7 +73,8 @@
     "navigation": {
       "search": "البحث",
       "notifications": "الإشعارات",
-      "post": "المنشور"
+      "post": "المنشور",
+      "settings": "الإعدادات"
     },
     "search": {
       "searchPlaceholder": "البحث عن الملفات الشخصية والمنشورات على Bluesky",
