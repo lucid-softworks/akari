@@ -3,6 +3,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
+  Keyboard,
+  RefreshControl,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -11,11 +13,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Labels } from "@/components/Labels";
 import { PostCard } from "@/components/PostCard";
+import { SearchTabs } from "@/components/SearchTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useSearch } from "@/hooks/queries/useSearch";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 
 type SearchResult = {
@@ -23,11 +25,13 @@ type SearchResult = {
   data: any;
 };
 
+type SearchTabType = "all" | "users" | "posts";
+
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
   const [query, setQuery] = useState(initialQuery || "");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(initialQuery || "");
+  const [activeTab, setActiveTab] = useState<SearchTabType>("all");
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
@@ -65,77 +69,61 @@ export default function SearchScreen() {
     "background"
   );
 
-  const handleSearch = async (searchQuery?: string) => {
-    const queryToSearch = searchQuery || query;
-    if (!queryToSearch.trim()) return;
+  // Use the infinite search hook with searchQuery (not query) - always fetch "all" data
+  const {
+    data: searchData,
+    isLoading,
+    isError,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+    isRefetching,
+  } = useSearch(searchQuery, "all", 20, !!searchQuery.trim());
 
-    setIsSearching(true);
-    try {
-      const token = jwtStorage.getToken();
-      if (!token) throw new Error("No access token");
+  // Flatten all search results from all pages
+  const allResults = searchData?.pages.flatMap((page) => page.results) || [];
 
-      // Check if this is a "from:handle" search
-      const fromMatch = queryToSearch.match(/^from:(\S+)/);
-      if (fromMatch) {
-        const handle = fromMatch[1];
-        // Search for posts from this specific user
-        const postResults = await blueskyApi.searchPosts(
-          token,
-          `from:${handle}`,
-          50
-        );
-
-        const combinedResults: SearchResult[] = [
-          ...(postResults.posts || []).map((post: any) => ({
-            type: "post" as const,
-            data: post,
-          })),
-        ];
-
-        setResults(combinedResults);
-        return;
-      }
-
-      // Regular search for profiles and posts
-      const profileResults = await blueskyApi.searchProfiles(
-        token,
-        queryToSearch,
-        10
-      );
-      const postResults = await blueskyApi.searchPosts(
-        token,
-        queryToSearch,
-        10
-      );
-
-      const combinedResults: SearchResult[] = [
-        ...(profileResults.actors || []).map((profile: any) => ({
-          type: "profile" as const,
-          data: profile,
-        })),
-        ...(postResults.posts || []).map((post: any) => ({
-          type: "post" as const,
-          data: post,
-        })),
-      ];
-
-      setResults(combinedResults);
-    } catch (error) {
-      // Show a more user-friendly error message
-      if (error instanceof Error) {
-      }
-    } finally {
-      setIsSearching(false);
+  // Filter results based on active tab
+  const filteredResults = allResults.filter((result) => {
+    switch (activeTab) {
+      case "users":
+        return result.type === "profile";
+      case "posts":
+        return result.type === "post";
+      case "all":
+      default:
+        return true;
     }
-  };
+  });
 
   // Handle initial query from URL
   useEffect(() => {
     if (initialQuery) {
       setQuery(initialQuery);
-      handleSearch(initialQuery);
+      setSearchQuery(initialQuery);
     }
-  }, [handleSearch, initialQuery]);
+  }, [initialQuery]);
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      setSearchQuery(query.trim());
+      Keyboard.dismiss();
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (searchQuery.trim()) {
+      await refetch();
+    }
+  };
 
   const renderProfileResult = ({ item }: { item: SearchResult }) => {
     if (item.type !== "profile") return null;
@@ -231,6 +219,42 @@ export default function SearchScreen() {
     return null;
   };
 
+  const renderFooter = () => {
+    if (isFetchingNextPage) {
+      return (
+        <ThemedView style={styles.loadingFooter}>
+          <ThemedText style={[styles.loadingText, { color: textColor }]}>
+            Loading more results...
+          </ThemedText>
+        </ThemedView>
+      );
+    }
+    return null;
+  };
+
+  const getEmptyStateText = () => {
+    if (!searchQuery) {
+      return "Search for profiles and posts on Bluesky";
+    }
+
+    if (isLoading) {
+      return "Searching...";
+    }
+
+    if (isError) {
+      return error?.message || "Search failed";
+    }
+
+    switch (activeTab) {
+      case "users":
+        return "No users found";
+      case "posts":
+        return "No posts found";
+      default:
+        return "No results found";
+    }
+  };
+
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
@@ -253,43 +277,45 @@ export default function SearchScreen() {
           placeholderTextColor="#999999"
           value={query}
           onChangeText={setQuery}
-          onSubmitEditing={() => handleSearch()}
+          onSubmitEditing={handleSearch}
           returnKeyType="search"
           autoCapitalize="none"
           autoCorrect={false}
         />
         <TouchableOpacity
           style={[styles.searchButton, { backgroundColor: borderColor }]}
-          onPress={() => handleSearch()}
-          disabled={isSearching}
+          onPress={handleSearch}
+          disabled={isLoading}
         >
           <ThemedText style={styles.searchButtonText}>
-            {isSearching ? "Searching..." : "Search"}
+            {isLoading ? "Searching..." : "Search"}
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>
 
+      {searchQuery && allResults.length > 0 && (
+        <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      )}
+
       <FlatList
         ref={flatListRef}
-        data={results}
+        data={filteredResults}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}
         style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
         ListEmptyComponent={
-          query ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>
-                {isSearching ? "Searching..." : "No results found"}
-              </ThemedText>
-            </ThemedView>
-          ) : (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>
-                Search for profiles and posts on Bluesky
-              </ThemedText>
-            </ThemedView>
-          )
+          <ThemedView style={styles.emptyState}>
+            <ThemedText style={[styles.emptyStateText, { color: textColor }]}>
+              {getEmptyStateText()}
+            </ThemedText>
+          </ThemedView>
         }
       />
     </ThemedView>
@@ -378,6 +404,14 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     fontSize: 16,
+    opacity: 0.6,
+  },
+  loadingFooter: {
+    paddingVertical: 20,
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: 14,
     opacity: 0.6,
   },
 });

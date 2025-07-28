@@ -155,17 +155,19 @@ export class BlueskyApi extends BlueskyApiClient {
   async searchProfiles(
     accessJwt: string,
     query: string,
-    limit: number = 20
+    limit: number = 20,
+    cursor?: string
   ): Promise<BlueskySearchActorsResponse> {
-    return this.search.searchProfiles(accessJwt, query, limit);
+    return this.search.searchProfiles(accessJwt, query, limit, cursor);
   }
 
   async searchPosts(
     accessJwt: string,
     query: string,
-    limit: number = 20
+    limit: number = 20,
+    cursor?: string
   ): Promise<BlueskySearchPostsResponse> {
-    return this.search.searchPosts(accessJwt, query, limit);
+    return this.search.searchPosts(accessJwt, query, limit, cursor);
   }
 
   // Notification methods

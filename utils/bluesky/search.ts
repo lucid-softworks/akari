@@ -13,21 +13,29 @@ export class BlueskySearch extends BlueskyApiClient {
    * @param accessJwt - Valid access JWT token
    * @param query - Search query
    * @param limit - Number of results to fetch (default: 20)
+   * @param cursor - Pagination cursor
    * @returns Promise resolving to search results
    */
   async searchProfiles(
     accessJwt: string,
     query: string,
-    limit: number = 20
+    limit: number = 20,
+    cursor?: string
   ): Promise<BlueskySearchActorsResponse> {
+    const params: any = {
+      q: query,
+      limit: limit.toString(),
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
     return this.makeAuthenticatedRequest<BlueskySearchActorsResponse>(
       "/app.bsky.actor.searchActors",
       accessJwt,
       {
-        params: {
-          q: query,
-          limit: limit.toString(),
-        },
+        params,
       }
     );
   }
@@ -37,21 +45,29 @@ export class BlueskySearch extends BlueskyApiClient {
    * @param accessJwt - Valid access JWT token
    * @param query - Search query
    * @param limit - Number of results to fetch (default: 20)
+   * @param cursor - Pagination cursor
    * @returns Promise resolving to search results
    */
   async searchPosts(
     accessJwt: string,
     query: string,
-    limit: number = 20
+    limit: number = 20,
+    cursor?: string
   ): Promise<BlueskySearchPostsResponse> {
+    const params: any = {
+      q: query,
+      limit: limit.toString(),
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
     return this.makeAuthenticatedRequest<BlueskySearchPostsResponse>(
       "/app.bsky.feed.searchPosts",
       accessJwt,
       {
-        params: {
-          q: query,
-          limit: limit.toString(),
-        },
+        params,
       }
     );
   }
