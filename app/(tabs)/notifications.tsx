@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { LocalizedText } from "@/components/LocalizedText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNotifications } from "@/hooks/queries/useNotifications";
@@ -362,12 +361,9 @@ export default function NotificationsScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <LocalizedText
-          style={styles.title}
-          translationKey="navigation.notifications"
-        >
-          Notifications
-        </LocalizedText>
+        <ThemedText style={styles.title}>
+          {t("navigation.notifications")}
+        </ThemedText>
       </ThemedView>
 
       <FlatList
@@ -592,6 +588,6 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 14,
-    color: "#666",
+    opacity: 0.7,
   },
 });

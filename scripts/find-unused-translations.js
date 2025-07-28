@@ -183,18 +183,6 @@ function findTranslationUsage(keys) {
         keyUsageCount[key] = (keyUsageCount[key] || 0) + 1;
       }
     });
-
-    // Search for translationKey="key" patterns (LocalizedText component)
-    const translationKeyMatches =
-      content.match(/translationKey=["']([^"']+)["']/g) || [];
-    translationKeyMatches.forEach((match) => {
-      const key = match.match(/translationKey=["']([^"']+)["']/)[1];
-      // Filter out storage keys and other non-translation strings
-      if (!isStorageKey(key)) {
-        usedKeys.add(key);
-        keyUsageCount[key] = (keyUsageCount[key] || 0) + 1;
-      }
-    });
   });
 
   return { usedKeys, keyUsageCount };

@@ -12,7 +12,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Labels } from "@/components/Labels";
-import { LocalizedText } from "@/components/LocalizedText";
+
 import { PostCard } from "@/components/PostCard";
 import { SearchTabs } from "@/components/SearchTabs";
 import { ThemedText } from "@/components/ThemedText";
@@ -261,12 +261,9 @@ export default function SearchScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <LocalizedText
-          style={[styles.title, { color: textColor }]}
-          translationKey="navigation.search"
-        >
-          Search
-        </LocalizedText>
+        <ThemedText style={[styles.title, { color: textColor }]}>
+          {t("navigation.search")}
+        </ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.searchContainer}>
