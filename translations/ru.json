@@ -133,7 +133,10 @@
       "unblockConfirmation": "Вы уверены, что хотите разблокировать @{{handle}}?",
       "blockConfirmation": "Вы уверены, что хотите заблокировать @{{handle}}?",
       "switchToAccount": "Переключиться на @{{handle}}?",
-      "removeAccountConfirmation": "Вы уверены, что хотите удалить @{{handle}}?"
+      "removeAccountConfirmation": "Вы уверены, что хотите удалить @{{handle}}?",
+      "posts": "Посты",
+      "followers": "Подписчики",
+      "following": "Подписки"
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",

@@ -133,7 +133,10 @@
       "unblockConfirmation": "确定要取消屏蔽 @{{handle}} 吗？",
       "blockConfirmation": "确定要屏蔽 @{{handle}} 吗？",
       "switchToAccount": "切换到 @{{handle}}？",
-      "removeAccountConfirmation": "确定要移除 @{{handle}} 吗？"
+      "removeAccountConfirmation": "确定要移除 @{{handle}} 吗？",
+      "posts": "帖子",
+      "followers": "关注者",
+      "following": "关注"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",

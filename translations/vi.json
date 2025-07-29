@@ -133,7 +133,10 @@
       "unblockConfirmation": "Bạn có chắc chắn muốn bỏ chặn @{{handle}}?",
       "blockConfirmation": "Bạn có chắc chắn muốn chặn @{{handle}}?",
       "switchToAccount": "Chuyển sang @{{handle}}?",
-      "removeAccountConfirmation": "Bạn có chắc chắn muốn xóa @{{handle}}?"
+      "removeAccountConfirmation": "Bạn có chắc chắn muốn xóa @{{handle}}?",
+      "posts": "Bài viết",
+      "followers": "Người theo dõi",
+      "following": "Đang theo dõi"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",

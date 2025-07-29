@@ -133,7 +133,10 @@
       "unblockConfirmation": "هل أنت متأكد من أنك تريد إلغاء حظر @{{handle}}؟",
       "blockConfirmation": "هل أنت متأكد من أنك تريد حظر @{{handle}}؟",
       "switchToAccount": "التبديل إلى @{{handle}}؟",
-      "removeAccountConfirmation": "هل أنت متأكد من أنك تريد إزالة @{{handle}}؟"
+      "removeAccountConfirmation": "هل أنت متأكد من أنك تريد إزالة @{{handle}}؟",
+      "posts": "المنشورات",
+      "followers": "المتابعون",
+      "following": "المتابَعون"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",

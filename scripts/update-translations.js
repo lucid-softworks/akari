@@ -29,13 +29,15 @@ function writeTranslationFile(lang, content) {
 // Get available sections from English file
 function getAvailableSections() {
   const enContent = readTranslationFile("en");
-  return Object.keys(enContent);
+  return Object.keys(enContent.translations || {});
 }
 
 // Get existing keys from a section
 function getSectionKeys(sectionName) {
   const enContent = readTranslationFile("en");
-  return enContent[sectionName] ? Object.keys(enContent[sectionName]) : [];
+  return enContent.translations && enContent.translations[sectionName]
+    ? Object.keys(enContent.translations[sectionName])
+    : [];
 }
 
 // Find similar sections
@@ -54,8 +56,13 @@ function addNewSection(sectionName) {
   languages.forEach((lang) => {
     let content = readTranslationFile(lang);
 
+    // Ensure translations object exists
+    if (!content.translations) {
+      content.translations = {};
+    }
+
     // Add the new section
-    content[sectionName] = {};
+    content.translations[sectionName] = {};
 
     writeTranslationFile(lang, content);
   });
@@ -70,13 +77,19 @@ function addKeyToSection(sectionName, key, translations) {
   languages.forEach((lang) => {
     let content = readTranslationFile(lang);
 
+    // Ensure translations object exists
+    if (!content.translations) {
+      content.translations = {};
+    }
+
     // Ensure section exists
-    if (!content[sectionName]) {
-      content[sectionName] = {};
+    if (!content.translations[sectionName]) {
+      content.translations[sectionName] = {};
     }
 
     // Add the key
-    content[sectionName][key] = translations[lang] || translations["en"] || "";
+    content.translations[sectionName][key] =
+      translations[lang] || translations["en"] || "";
 
     writeTranslationFile(lang, content);
   });
@@ -84,47 +97,108 @@ function addKeyToSection(sectionName, key, translations) {
   console.log(`✅ Added key "${key}" to ${sectionName} section`);
 }
 
-// Get language metadata (name, native name, flag)
+// Add key to section in a specific language file only
+function addKeyToLanguageSection(language, sectionName, key, value) {
+  let content = readTranslationFile(language);
+
+  // Ensure translations object exists
+  if (!content.translations) {
+    content.translations = {};
+  }
+
+  // Ensure section exists under translations
+  if (!content.translations[sectionName]) {
+    content.translations[sectionName] = {};
+  }
+
+  // Add the key
+  content.translations[sectionName][key] = value;
+
+  writeTranslationFile(language, content);
+  console.log(
+    `✅ Added key "${key}" to ${sectionName} section for ${language}`
+  );
+}
+
+// Get language metadata (name, native name, flag) from translation files
 function getLanguageMetadata() {
-  // This will be moved to translation files later, but for now hardcode
-  return {
-    en: { name: "English", nativeName: "English", flag: "🇬🇧" },
-    "en-US": {
-      name: "English (US)",
-      nativeName: "English (Simplified)",
-      flag: "🇺🇸",
-    },
-    es: { name: "Spanish", nativeName: "Español", flag: "🇪🇸" },
-    fr: { name: "French", nativeName: "Français", flag: "🇫🇷" },
-    de: { name: "German", nativeName: "Deutsch", flag: "🇩🇪" },
-    it: { name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
-    pt: { name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
-    ja: { name: "Japanese", nativeName: "日本語", flag: "🇯🇵" },
-    ko: { name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
-    "zh-CN": {
-      name: "Chinese (Simplified)",
-      nativeName: "简体中文",
-      flag: "🇨🇳",
-    },
-    "zh-TW": {
-      name: "Chinese (Traditional)",
-      nativeName: "繁體中文",
-      flag: "🇹🇼",
-    },
-    ar: { name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
-    ru: { name: "Russian", nativeName: "Русский", flag: "🇷🇺" },
-    hi: { name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳" },
-    id: { name: "Indonesian", nativeName: "Bahasa Indonesia", flag: "🇮🇩" },
-    tr: { name: "Turkish", nativeName: "Türkçe", flag: "🇹🇷" },
-    nl: { name: "Dutch", nativeName: "Nederlands", flag: "🇳🇱" },
-    pl: { name: "Polish", nativeName: "Polski", flag: "🇵🇱" },
-    vi: { name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
-    th: { name: "Thai", nativeName: "ไทย", flag: "🇹🇭" },
-  };
+  const metadata = {};
+  const languages = ["en", ...getTranslationFiles()];
+
+  languages.forEach((lang) => {
+    const content = readTranslationFile(lang);
+    metadata[lang] = {
+      name: content.language,
+      nativeName: content.nativeName,
+      flag: content.flag,
+    };
+  });
+
+  return metadata;
+}
+
+// Non-interactive function to update translation keys
+function updateTranslationKeysNonInteractive(language, keyPath, value) {
+  try {
+    // Parse the key path (e.g., "common.abc" -> section: "common", key: "abc")
+    const keyParts = keyPath.split(".");
+    if (keyParts.length !== 2) {
+      console.error("❌ Key must be in format: section.key (e.g., common.abc)");
+      return;
+    }
+
+    let [sectionName, key] = keyParts;
+    const sections = getAvailableSections();
+    sectionName = sectionName.toLowerCase();
+
+    // Check if section exists
+    if (!sections.includes(sectionName)) {
+      console.log(`Creating new section: ${sectionName}`);
+      addNewSection(sectionName);
+    }
+
+    // Update the key for the specified language (will override if exists)
+    addKeyToLanguageSection(language, sectionName, key, value);
+  } catch (error) {
+    console.error("❌ Error:", error.message);
+  }
 }
 
 // Main CLI function
 async function main() {
+  // Check for command line arguments
+  const args = process.argv.slice(2);
+
+  // Parse command line arguments
+  let language = null;
+  let keyPath = null;
+  let value = null;
+
+  for (let i = 0; i < args.length; i++) {
+    let arg = args[i];
+    if (arg.startsWith("--language=")) {
+      language = arg.split("=")[1];
+    } else if (arg.startsWith("--key=")) {
+      keyPath = arg.split("=")[1];
+    } else if (arg.startsWith("--value=")) {
+      // Handle quoted values by removing surrounding quotes
+      value = arg.split("=")[1];
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+    }
+  }
+
+  if (language && keyPath && value) {
+    // Non-interactive mode
+    updateTranslationKeysNonInteractive(language, keyPath, value);
+    return;
+  }
+
+  // Interactive mode (original functionality)
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -134,6 +208,10 @@ async function main() {
     new Promise((resolve) => rl.question(prompt, resolve));
 
   console.log("🌍 Translation Manager\n");
+  console.log(
+    "Usage: npm run update-translations --language=en --key=common.abc --value=abc"
+  );
+  console.log("Or run without arguments for interactive mode.\n");
 
   try {
     // Get section

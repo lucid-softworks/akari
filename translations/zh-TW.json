@@ -133,7 +133,10 @@
       "unblockConfirmation": "確定要取消封鎖 @{{handle}} 嗎？",
       "blockConfirmation": "確定要封鎖 @{{handle}} 嗎？",
       "switchToAccount": "切換到 @{{handle}}？",
-      "removeAccountConfirmation": "確定要移除 @{{handle}} 嗎？"
+      "removeAccountConfirmation": "確定要移除 @{{handle}} 嗎？",
+      "posts": "貼文",
+      "followers": "追蹤者",
+      "following": "追蹤"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

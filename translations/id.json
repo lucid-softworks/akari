@@ -133,7 +133,10 @@
       "unblockConfirmation": "Apakah Anda yakin ingin membuka blokir @{{handle}}?",
       "blockConfirmation": "Apakah Anda yakin ingin memblokir @{{handle}}?",
       "switchToAccount": "Ganti ke @{{handle}}?",
-      "removeAccountConfirmation": "Apakah Anda yakin ingin menghapus @{{handle}}?"
+      "removeAccountConfirmation": "Apakah Anda yakin ingin menghapus @{{handle}}?",
+      "posts": "Postingan",
+      "followers": "Pengikut",
+      "following": "Mengikuti"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

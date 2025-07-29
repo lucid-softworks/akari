@@ -133,7 +133,10 @@
       "unblockConfirmation": "Czy na pewno chcesz odblokować @{{handle}}?",
       "blockConfirmation": "Czy na pewno chcesz zablokować @{{handle}}?",
       "switchToAccount": "Przełącz na @{{handle}}?",
-      "removeAccountConfirmation": "Czy na pewno chcesz usunąć @{{handle}}?"
+      "removeAccountConfirmation": "Czy na pewno chcesz usunąć @{{handle}}?",
+      "posts": "Posty",
+      "followers": "Obserwujący",
+      "following": "Obserwowani"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",

@@ -133,7 +133,10 @@
       "unblockConfirmation": "क्या आप वाकई @{{handle}} को अनब्लॉक करना चाहते हैं?",
       "blockConfirmation": "क्या आप वाकई @{{handle}} को ब्लॉक करना चाहते हैं?",
       "switchToAccount": "@{{handle}} पर स्विच करें?",
-      "removeAccountConfirmation": "क्या आप वाकई @{{handle}} को हटाना चाहते हैं?"
+      "removeAccountConfirmation": "क्या आप वाकई @{{handle}} को हटाना चाहते हैं?",
+      "posts": "पोस्ट",
+      "followers": "फॉलोअर्स",
+      "following": "फॉलोइंग"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

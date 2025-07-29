@@ -133,7 +133,10 @@
       "unblockConfirmation": "Sei sicuro di voler sbloccare @{{handle}}?",
       "blockConfirmation": "Sei sicuro di voler bloccare @{{handle}}?",
       "switchToAccount": "Passa a @{{handle}}?",
-      "removeAccountConfirmation": "Sei sicuro di voler rimuovere @{{handle}}?"
+      "removeAccountConfirmation": "Sei sicuro di voler rimuovere @{{handle}}?",
+      "posts": "Post",
+      "followers": "Follower",
+      "following": "Seguiti"
     },
     "feed": {
       "loadingMorePosts": "Caricamento di altri post...",

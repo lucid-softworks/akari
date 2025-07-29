@@ -133,7 +133,10 @@
       "unblockConfirmation": "@{{handle}}のブロックを解除してもよろしいですか？",
       "blockConfirmation": "@{{handle}}をブロックしてもよろしいですか？",
       "switchToAccount": "@{{handle}}に切り替えますか？",
-      "removeAccountConfirmation": "@{{handle}}を削除してもよろしいですか？"
+      "removeAccountConfirmation": "@{{handle}}を削除してもよろしいですか？",
+      "posts": "投稿",
+      "followers": "フォロワー",
+      "following": "フォロー中"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",

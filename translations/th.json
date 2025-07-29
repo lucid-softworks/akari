@@ -133,7 +133,10 @@
       "unblockConfirmation": "คุณแน่ใจหรือไม่ที่จะเลิกบล็อก @{{handle}}?",
       "blockConfirmation": "คุณแน่ใจหรือไม่ที่จะบล็อก @{{handle}}?",
       "switchToAccount": "สลับไปยัง @{{handle}}?",
-      "removeAccountConfirmation": "คุณแน่ใจหรือไม่ที่จะลบ @{{handle}}?"
+      "removeAccountConfirmation": "คุณแน่ใจหรือไม่ที่จะลบ @{{handle}}?",
+      "posts": "โพสต์",
+      "followers": "ผู้ติดตาม",
+      "following": "กำลังติดตาม"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",

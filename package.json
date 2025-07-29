@@ -5,7 +5,7 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "add-translations": "node ./scripts/add-translation-keys.js",
+    "update-translations": "node ./scripts/update-translations.js",
     "validate-translations": "node ./scripts/validate-translations.js",
     "find-unused-translations": "node ./scripts/find-unused-translations.js",
     "android": "expo run:android",

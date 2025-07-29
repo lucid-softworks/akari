@@ -123,6 +123,9 @@
     },
     "profile": {
       "media": "Media",
+      "posts": "Posts",
+      "followers": "Followers",
+      "following": "Following",
       "noPosts": "No posts yet",
       "noLikes": "No likes yet",
       "noMedia": "No media yet",

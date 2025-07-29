@@ -133,7 +133,10 @@
       "unblockConfirmation": "Weet u zeker dat u @{{handle}} wilt deblokkeren?",
       "blockConfirmation": "Weet u zeker dat u @{{handle}} wilt blokkeren?",
       "switchToAccount": "Wisselen naar @{{handle}}?",
-      "removeAccountConfirmation": "Weet u zeker dat u @{{handle}} wilt verwijderen?"
+      "removeAccountConfirmation": "Weet u zeker dat u @{{handle}} wilt verwijderen?",
+      "posts": "Berichten",
+      "followers": "Volgers",
+      "following": "Volgend"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",

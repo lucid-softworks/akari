@@ -133,7 +133,10 @@
       "unblockConfirmation": "Are you sure you want to unblock @{{handle}}?",
       "blockConfirmation": "Are you sure you want to block @{{handle}}?",
       "switchToAccount": "Switch to @{{handle}}?",
-      "removeAccountConfirmation": "Are you sure you want to remove @{{handle}}?"
+      "removeAccountConfirmation": "Are you sure you want to remove @{{handle}}?",
+      "posts": "Posts",
+      "followers": "Followers",
+      "following": "Following"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

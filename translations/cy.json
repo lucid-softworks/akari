@@ -133,7 +133,10 @@
       "unblockConfirmation": "Ydych chi'n siŵr eich bod am ddadflocio @{{handle}}?",
       "blockConfirmation": "Ydych chi'n siŵr eich bod am flocio @{{handle}}?",
       "switchToAccount": "Newid i @{{handle}}?",
-      "removeAccountConfirmation": "Ydych chi'n siŵr eich bod am dynnu @{{handle}}?"
+      "removeAccountConfirmation": "Ydych chi'n siŵr eich bod am dynnu @{{handle}}?",
+      "posts": "Swyddi",
+      "followers": "Dilynwyr",
+      "following": "Dilyn"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

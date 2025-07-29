@@ -133,7 +133,10 @@
       "unblockConfirmation": "@{{handle}} engelini kaldırmak istediğinizden emin misiniz?",
       "blockConfirmation": "@{{handle}} engellemek istediğinizden emin misiniz?",
       "switchToAccount": "@{{handle}} hesabına geçmek istiyor musunuz?",
-      "removeAccountConfirmation": "@{{handle}} hesabını kaldırmak istediğinizden emin misiniz?"
+      "removeAccountConfirmation": "@{{handle}} hesabını kaldırmak istediğinizden emin misiniz?",
+      "posts": "Gönderiler",
+      "followers": "Takipçiler",
+      "following": "Takip"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
