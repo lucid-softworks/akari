@@ -59,7 +59,7 @@ const getLanguages = (): LanguageOption[] => {
   return languages.sort((a, b) => a.name.localeCompare(b.name));
 };
 
-export const LanguageSelector: React.FC = () => {
+export const LanguageSelector = () => {
   const { t, currentLocale, changeLanguage } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
