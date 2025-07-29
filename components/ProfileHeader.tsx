@@ -308,12 +308,17 @@ export function ProfileHeader({
         {/* Stats */}
         <ThemedView style={styles.statsContainer}>
           <ThemedText style={styles.statText}>
-            {t("profile.posts")}{" "}
-            {formatNumber(profile.postsCount || 0, currentLocale)} •{" "}
-            {t("profile.followers")}{" "}
-            {formatNumber(profile.followersCount || 0, currentLocale)} •{" "}
-            {t("profile.following")}{" "}
-            {formatNumber(profile.followsCount || 0, currentLocale)}
+            {t("profile.posts", {
+              count: formatNumber(profile.postsCount || 0, currentLocale),
+            })}{" "}
+            •{" "}
+            {t("profile.followers", {
+              count: formatNumber(profile.followersCount || 0, currentLocale),
+            })}{" "}
+            •{" "}
+            {t("profile.following", {
+              count: formatNumber(profile.followsCount || 0, currentLocale),
+            })}
           </ThemedText>
         </ThemedView>
 

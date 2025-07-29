@@ -134,9 +134,9 @@
       "blockConfirmation": "คุณแน่ใจหรือไม่ที่จะบล็อก @{{handle}}?",
       "switchToAccount": "สลับไปยัง @{{handle}}?",
       "removeAccountConfirmation": "คุณแน่ใจหรือไม่ที่จะลบ @{{handle}}?",
-      "posts": "โพสต์",
-      "followers": "ผู้ติดตาม",
-      "following": "กำลังติดตาม"
+      "posts": "โพสต์ {{count}}",
+      "followers": "ผู้ติดตาม {{count}}",
+      "following": "กำลังติดตาม {{count}}"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",

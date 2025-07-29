@@ -134,9 +134,9 @@
       "blockConfirmation": "確定要封鎖 @{{handle}} 嗎？",
       "switchToAccount": "切換到 @{{handle}}？",
       "removeAccountConfirmation": "確定要移除 @{{handle}} 嗎？",
-      "posts": "貼文",
-      "followers": "追蹤者",
-      "following": "追蹤"
+      "posts": "貼文 {{count}}",
+      "followers": "追蹤者 {{count}}",
+      "following": "追蹤 {{count}}"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

@@ -134,9 +134,9 @@
       "blockConfirmation": "Apakah Anda yakin ingin memblokir @{{handle}}?",
       "switchToAccount": "Ganti ke @{{handle}}?",
       "removeAccountConfirmation": "Apakah Anda yakin ingin menghapus @{{handle}}?",
-      "posts": "Postingan",
-      "followers": "Pengikut",
-      "following": "Mengikuti"
+      "posts": "Postingan {{count}}",
+      "followers": "Pengikut {{count}}",
+      "following": "Mengikuti {{count}}"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

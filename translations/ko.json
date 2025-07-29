@@ -134,9 +134,9 @@
       "blockConfirmation": "@{{handle}}을(를) 차단하시겠습니까?",
       "switchToAccount": "@{{handle}}(으)로 전환하시겠습니까?",
       "removeAccountConfirmation": "@{{handle}}을(를) 제거하시겠습니까?",
-      "posts": "게시물",
-      "followers": "팔로워",
-      "following": "팔로잉"
+      "posts": "게시물 {{count}}",
+      "followers": "팔로워 {{count}}",
+      "following": "팔로잉 {{count}}"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",

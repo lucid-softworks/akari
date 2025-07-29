@@ -134,9 +134,9 @@
       "blockConfirmation": "Вы уверены, что хотите заблокировать @{{handle}}?",
       "switchToAccount": "Переключиться на @{{handle}}?",
       "removeAccountConfirmation": "Вы уверены, что хотите удалить @{{handle}}?",
-      "posts": "Посты",
-      "followers": "Подписчики",
-      "following": "Подписки"
+      "posts": "Посты {{count}}",
+      "followers": "Подписчики {{count}}",
+      "following": "Подписки {{count}}"
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",

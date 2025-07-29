@@ -134,9 +134,9 @@
       "blockConfirmation": "Ydych chi'n siŵr eich bod am flocio @{{handle}}?",
       "switchToAccount": "Newid i @{{handle}}?",
       "removeAccountConfirmation": "Ydych chi'n siŵr eich bod am dynnu @{{handle}}?",
-      "posts": "Swyddi",
-      "followers": "Dilynwyr",
-      "following": "Dilyn"
+      "posts": "Swyddi {{count}}",
+      "followers": "Dilynwyr {{count}}",
+      "following": "Dilyn {{count}}"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

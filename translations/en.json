@@ -123,9 +123,9 @@
     },
     "profile": {
       "media": "Media",
-      "posts": "Posts",
-      "followers": "Followers",
-      "following": "Following",
+      "posts": "Posts {{count}}",
+      "followers": "Followers {{count}}",
+      "following": "Following {{count}}",
       "noPosts": "No posts yet",
       "noLikes": "No likes yet",
       "noMedia": "No media yet",

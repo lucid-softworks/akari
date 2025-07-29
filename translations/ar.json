@@ -134,9 +134,9 @@
       "blockConfirmation": "هل أنت متأكد من أنك تريد حظر @{{handle}}؟",
       "switchToAccount": "التبديل إلى @{{handle}}؟",
       "removeAccountConfirmation": "هل أنت متأكد من أنك تريد إزالة @{{handle}}؟",
-      "posts": "المنشورات",
-      "followers": "المتابعون",
-      "following": "المتابَعون"
+      "posts": "المنشورات {{count}}",
+      "followers": "المتابعون {{count}}",
+      "following": "المتابَعون {{count}}"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",

@@ -134,9 +134,9 @@
       "blockConfirmation": "Weet u zeker dat u @{{handle}} wilt blokkeren?",
       "switchToAccount": "Wisselen naar @{{handle}}?",
       "removeAccountConfirmation": "Weet u zeker dat u @{{handle}} wilt verwijderen?",
-      "posts": "Berichten",
-      "followers": "Volgers",
-      "following": "Volgend"
+      "posts": "Berichten {{count}}",
+      "followers": "Volgers {{count}}",
+      "following": "Volgend {{count}}"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",

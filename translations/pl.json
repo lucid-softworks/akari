@@ -134,9 +134,9 @@
       "blockConfirmation": "Czy na pewno chcesz zablokować @{{handle}}?",
       "switchToAccount": "Przełącz na @{{handle}}?",
       "removeAccountConfirmation": "Czy na pewno chcesz usunąć @{{handle}}?",
-      "posts": "Posty",
-      "followers": "Obserwujący",
-      "following": "Obserwowani"
+      "posts": "Posty {{count}}",
+      "followers": "Obserwujący {{count}}",
+      "following": "Obserwowani {{count}}"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",
