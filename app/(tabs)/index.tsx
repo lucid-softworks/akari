@@ -9,7 +9,7 @@ import { TabBar } from "@/components/TabBar";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFeeds } from "@/hooks/queries/useFeeds";
-import { useSelectedFeed } from "@/hooks/useSelectedFeed";
+import { useSelectedFeed } from "@/hooks/queries/useSelectedFeed";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { BlueskyFeedItem } from "@/utils/blueskyApi";
 import { blueskyApi } from "@/utils/blueskyApi";
