@@ -1,7 +1,6 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PostCard } from "@/components/PostCard";
 import { ThemedText } from "@/components/ThemedText";
@@ -268,13 +267,11 @@ export default function PostDetailScreen() {
             headerBackButtonDisplayMode: "minimal",
           }}
         />
-        <SafeAreaView style={styles.container}>
-          <ThemedView style={styles.container}>
-            <ThemedText style={styles.loadingText}>
-              {t("post.loadingPost")}
-            </ThemedText>
-          </ThemedView>
-        </SafeAreaView>
+        <ThemedView style={styles.container}>
+          <ThemedText style={styles.loadingText}>
+            {t("post.loadingPost")}
+          </ThemedText>
+        </ThemedView>
       </>
     );
   }
@@ -288,13 +285,11 @@ export default function PostDetailScreen() {
             headerBackButtonDisplayMode: "minimal",
           }}
         />
-        <SafeAreaView style={styles.container}>
-          <ThemedView style={styles.container}>
-            <ThemedText style={styles.errorText}>
-              {t("post.postNotFound")}
-            </ThemedText>
-          </ThemedView>
-        </SafeAreaView>
+        <ThemedView style={styles.container}>
+          <ThemedText style={styles.errorText}>
+            {t("post.postNotFound")}
+          </ThemedText>
+        </ThemedView>
       </>
     );
   }
