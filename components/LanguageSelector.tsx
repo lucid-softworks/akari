@@ -55,8 +55,8 @@ const getLanguages = (): LanguageOption[] => {
     }
   });
 
-  // Sort languages alphabetically by native name
-  return languages.sort((a, b) => a.nativeName.localeCompare(b.nativeName));
+  // Sort languages alphabetically by English name
+  return languages.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 export const LanguageSelector: React.FC = () => {
