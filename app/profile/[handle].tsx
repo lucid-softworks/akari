@@ -127,6 +127,9 @@ export default function ProfileScreen() {
             description: profile?.description,
             banner: profile?.banner,
             did: profile?.did,
+            followersCount: profile?.followersCount,
+            followsCount: profile?.followsCount,
+            postsCount: profile?.postsCount,
             viewer: profile?.viewer,
             labels: profile?.labels,
           }}

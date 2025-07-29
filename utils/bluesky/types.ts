@@ -461,6 +461,12 @@ export type BlueskyProfile = {
   banner?: string;
   /** When the profile was indexed */
   indexedAt: string;
+  /** Number of followers */
+  followersCount?: number;
+  /** Number of users being followed */
+  followsCount?: number;
+  /** Number of posts */
+  postsCount?: number;
   /** Viewer's interaction with the profile */
   viewer?: {
     muted?: boolean;

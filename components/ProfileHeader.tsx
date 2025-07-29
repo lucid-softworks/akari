@@ -27,6 +27,9 @@ type ProfileHeaderProps = {
     description?: string;
     banner?: string;
     did?: string;
+    followersCount?: number;
+    followsCount?: number;
+    postsCount?: number;
     viewer?: {
       following?: string;
       blocking?: string;
@@ -301,6 +304,34 @@ export function ProfileHeader({
           </ThemedView>
         )}
 
+        {/* Stats */}
+        <ThemedView style={styles.statsContainer}>
+          <ThemedView style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>
+              {profile.postsCount?.toLocaleString() || "0"}
+            </ThemedText>
+            <ThemedText style={styles.statLabel}>
+              {t("profile.posts")}
+            </ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>
+              {profile.followersCount?.toLocaleString() || "0"}
+            </ThemedText>
+            <ThemedText style={styles.statLabel}>
+              {t("profile.followers")}
+            </ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>
+              {profile.followsCount?.toLocaleString() || "0"}
+            </ThemedText>
+            <ThemedText style={styles.statLabel}>
+              {t("profile.following")}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+
         {/* Labels */}
         <Labels labels={profile.labels} />
 
@@ -451,5 +482,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#c62828",
     textAlign: "center",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 16,
+    marginBottom: 12,
+  },
+  statItem: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  statLabel: {
+    fontSize: 14,
+    opacity: 0.7,
+    marginTop: 2,
   },
 });
