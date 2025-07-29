@@ -5,7 +5,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -14,9 +14,26 @@ import "react-native-reanimated";
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import "@/utils/i18n"; // Initialize i18n
+import "@/utils/i18n";
+import { secureStorage } from "@/utils/secureStorage";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 const queryClient = new QueryClient();
+
+const persister = createAsyncStoragePersister({
+  storage: {
+    getItem(key) {
+      return secureStorage.getString(key);
+    },
+    setItem(key, value) {
+      return secureStorage.set(key, value);
+    },
+    removeItem(key) {
+      return secureStorage.delete(key);
+    },
+  },
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -32,7 +49,17 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LanguageProvider>
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{
+            persister,
+            dehydrateOptions: {
+              shouldDehydrateQuery: (query) => {
+                return !!query.meta?.persist;
+              },
+            },
+          }}
+        >
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
@@ -43,7 +70,7 @@ export default function RootLayout() {
             </Stack>
             <StatusBar style="auto" />
           </ThemeProvider>
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
       </LanguageProvider>
     </GestureHandlerRootView>
   );
