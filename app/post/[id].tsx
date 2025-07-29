@@ -349,7 +349,7 @@ export default function PostDetailScreen() {
             style={[styles.commentsSection, { borderBottomColor: borderColor }]}
           >
             <ThemedText style={styles.commentsTitle}>
-              {t("post.comments", { count: comments.length })}
+              {t("post.comments", { count: comments?.length || 0 })}
             </ThemedText>
           </ThemedView>
 

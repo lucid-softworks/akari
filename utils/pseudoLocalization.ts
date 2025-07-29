@@ -28,12 +28,27 @@ export const enhancedPseudoLocalizeString = (text: string): string => {
     C: "Ç",
   };
 
-  let result = text;
+  // Split the text by {{}} placeholders to preserve them exactly
+  const parts = text.split(/(\{\{[^}]+\}\})/);
 
-  // Apply character transformations
-  for (const [original, replacement] of Object.entries(charMap)) {
-    result = result.replace(new RegExp(original, "g"), replacement);
-  }
+  const result = parts
+    .map((part, index) => {
+      // If this part is a placeholder (odd indices), keep it unchanged
+      if (index % 2 === 1) {
+        return part;
+      }
+
+      // Otherwise, apply pseudo-localization to this part
+      let transformed = part;
+      for (const [original, replacement] of Object.entries(charMap)) {
+        transformed = transformed.replace(
+          new RegExp(original, "g"),
+          replacement
+        );
+      }
+      return transformed;
+    })
+    .join("");
 
   // Add brackets and some extra characters to simulate longer text
   return `[${result}]`;
