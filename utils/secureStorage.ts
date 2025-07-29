@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { MMKV } from "react-native-mmkv";
 
 // Create an encrypted MMKV instance for sensitive data like JWT tokens
@@ -6,7 +7,10 @@ export const secureStorage = new MMKV({
   // IMPORTANT: Replace this with a secure key in production!
   // This is a development-only key. For production, use a cryptographically secure random key
   // that is stored securely (e.g., in environment variables or secure key management)
-  encryptionKey: "dev-key-akari-v2-2024-secure-storage-encryption",
+  encryptionKey:
+    Platform.OS === "web"
+      ? undefined
+      : "dev-key-akari-v2-2024-secure-storage-encryption",
 });
 
 // Storage keys
