@@ -13,6 +13,7 @@ import { Labels } from "@/components/Labels";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useBlockUser } from "@/hooks/mutations/useBlockUser";
 import { useFollowUser } from "@/hooks/mutations/useFollowUser";
 import { useBorderColor } from "@/hooks/useBorderColor";
@@ -52,11 +53,20 @@ type ProfileHeaderProps = {
   isOwnProfile?: boolean;
 };
 
+const formatNumber = (num: number, locale: string): string => {
+  const formatter = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    compactDisplay: "short",
+  });
+  return formatter.format(num);
+};
+
 export function ProfileHeader({
   profile,
   isOwnProfile = false,
 }: ProfileHeaderProps) {
   const { t } = useTranslation();
+  const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
@@ -295,6 +305,18 @@ export function ProfileHeader({
           </ThemedView>
         </View>
 
+        {/* Stats */}
+        <ThemedView style={styles.statsContainer}>
+          <ThemedText style={styles.statText}>
+            {t("profile.posts")}{" "}
+            {formatNumber(profile.postsCount || 0, currentLocale)} •{" "}
+            {t("profile.followers")}{" "}
+            {formatNumber(profile.followersCount || 0, currentLocale)} •{" "}
+            {t("profile.following")}{" "}
+            {formatNumber(profile.followsCount || 0, currentLocale)}
+          </ThemedText>
+        </ThemedView>
+
         {/* Description - Full Width */}
         {profile.description && (
           <ThemedView style={styles.descriptionContainer}>
@@ -303,34 +325,6 @@ export function ProfileHeader({
             </ThemedText>
           </ThemedView>
         )}
-
-        {/* Stats */}
-        <ThemedView style={styles.statsContainer}>
-          <ThemedView style={styles.statItem}>
-            <ThemedText style={styles.statNumber}>
-              {profile.postsCount?.toLocaleString() || "0"}
-            </ThemedText>
-            <ThemedText style={styles.statLabel}>
-              {t("profile.posts")}
-            </ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.statItem}>
-            <ThemedText style={styles.statNumber}>
-              {profile.followersCount?.toLocaleString() || "0"}
-            </ThemedText>
-            <ThemedText style={styles.statLabel}>
-              {t("profile.followers")}
-            </ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.statItem}>
-            <ThemedText style={styles.statNumber}>
-              {profile.followsCount?.toLocaleString() || "0"}
-            </ThemedText>
-            <ThemedText style={styles.statLabel}>
-              {t("profile.following")}
-            </ThemedText>
-          </ThemedView>
-        </ThemedView>
 
         {/* Labels */}
         <Labels labels={profile.labels} />
@@ -484,22 +478,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   statsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 16,
-    marginBottom: 12,
+    marginTop: 8,
+    marginBottom: 6,
   },
-  statItem: {
-    alignItems: "center",
-    flex: 1,
-  },
-  statNumber: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  statLabel: {
-    fontSize: 14,
-    opacity: 0.7,
-    marginTop: 2,
+  statText: {
+    fontSize: 15,
+    opacity: 0.8,
   },
 });

@@ -1,3 +1,5 @@
+import "@/utils/intl-polyfills"; // Initialize Intl polyfills
+
 import {
   DarkTheme,
   DefaultTheme,
