@@ -21,7 +21,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.imlunahey.akariv2"
     },
     "web": {
       "bundler": "metro",
@@ -50,8 +51,20 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "ios": ["en", "en-US", "ja", "ar", "fr"],
-            "android": ["en", "en-US", "ja", "ar", "fr"]
+            "ios": [
+              "en",
+              "en-US",
+              "ja",
+              "ar",
+              "fr"
+            ],
+            "android": [
+              "en",
+              "en-US",
+              "ja",
+              "ar",
+              "fr"
+            ]
           }
         }
       ]
