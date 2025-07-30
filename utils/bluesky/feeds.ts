@@ -1,5 +1,5 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyFeedResponse, BlueskyFeedsResponse, BlueskyPostView, BlueskyThreadResponse } from './types';
+import type { BlueskyFeedResponse, BlueskyFeedsResponse, BlueskyPostView, BlueskyThreadResponse, BlueskyStarterPacksResponse } from './types';
 
 /**
  * Bluesky API feed methods
@@ -176,17 +176,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
     actor: string,
     limit: number = 50,
     cursor?: string,
-  ): Promise<BlueskyFeedsResponse> {
+  ): Promise<BlueskyStarterPacksResponse> {
     const params: Record<string, string> = {
       actor,
       limit: limit.toString(),
-      filter: 'starterpacks',
     };
 
     if (cursor) {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyStarterPacksResponse>('/app.bsky.graph.getActorStarterPacks', accessJwt, { params });
   }
 }

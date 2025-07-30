@@ -1,21 +1,21 @@
-import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import { PostCard } from '@/components/PostCard';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
-import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
-import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
-import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { FeedsTab } from '@/components/profile/FeedsTab';
+import { LikesTab } from '@/components/profile/LikesTab';
+import { MediaTab } from '@/components/profile/MediaTab';
+import { PostsTab } from '@/components/profile/PostsTab';
+import { RepliesTab } from '@/components/profile/RepliesTab';
+import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
+import { VideosTab } from '@/components/profile/VideosTab';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-import { formatRelativeTime } from '@/utils/timeUtils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProfileTabType } from '@/types/profile';
@@ -39,144 +39,44 @@ export default function ProfileScreen() {
 
   const { data: profile } = useProfile(currentAccount?.handle);
 
-  const {
-    data: posts,
-    isLoading: postsLoading,
-    fetchNextPage: fetchNextPosts,
-    hasNextPage: hasNextPosts,
-    isFetchingNextPage: isFetchingNextPosts,
-  } = useAuthorPosts(activeTab === 'posts' ? currentAccount?.handle : undefined);
-  const {
-    data: replies,
-    isLoading: repliesLoading,
-    fetchNextPage: fetchNextReplies,
-    hasNextPage: hasNextReplies,
-    isFetchingNextPage: isFetchingNextReplies,
-  } = useAuthorReplies(activeTab === 'replies' ? currentAccount?.handle : undefined);
-  const {
-    data: likes,
-    isLoading: likesLoading,
-    fetchNextPage: fetchNextLikes,
-    hasNextPage: hasNextLikes,
-    isFetchingNextPage: isFetchingNextLikes,
-  } = useAuthorLikes(activeTab === 'likes' ? currentAccount?.handle : undefined);
-  const {
-    data: media,
-    isLoading: mediaLoading,
-    fetchNextPage: fetchNextMedia,
-    hasNextPage: hasNextMedia,
-    isFetchingNextPage: isFetchingNextMedia,
-  } = useAuthorMedia(activeTab === 'media' ? currentAccount?.handle : undefined);
-
-  const getCurrentData = () => {
-    switch (activeTab) {
-      case 'posts':
-        return posts || [];
-      case 'replies':
-        return replies || [];
-      case 'likes':
-        return likes || [];
-      case 'media':
-        return media || [];
-      default:
-        return [];
-    }
-  };
-
-  const getCurrentLoading = () => {
-    switch (activeTab) {
-      case 'posts':
-        return postsLoading;
-      case 'replies':
-        return repliesLoading;
-      case 'likes':
-        return likesLoading;
-      case 'media':
-        return mediaLoading;
-      default:
-        return false;
-    }
-  };
-
-  const getCurrentFetchingNext = () => {
-    switch (activeTab) {
-      case 'posts':
-        return isFetchingNextPosts;
-      case 'replies':
-        return isFetchingNextReplies;
-      case 'likes':
-        return isFetchingNextLikes;
-      case 'media':
-        return isFetchingNextMedia;
-      default:
-        return false;
-    }
-  };
-
-  const getCurrentHasNext = () => {
-    switch (activeTab) {
-      case 'posts':
-        return hasNextPosts;
-      case 'replies':
-        return hasNextReplies;
-      case 'likes':
-        return hasNextLikes;
-      case 'media':
-        return hasNextMedia;
-      default:
-        return false;
-    }
-  };
-
-  const getCurrentFetchNext = () => {
-    switch (activeTab) {
-      case 'posts':
-        return fetchNextPosts;
-      case 'replies':
-        return fetchNextReplies;
-      case 'likes':
-        return fetchNextLikes;
-      case 'media':
-        return fetchNextMedia;
-      default:
-        return () => {};
-    }
-  };
-
-  const getEmptyMessage = () => {
-    switch (activeTab) {
-      case 'posts':
-        return t('profile.noPosts');
-      case 'replies':
-        return t('profile.noReplies');
-      case 'likes':
-        return t('profile.noLikes');
-      case 'media':
-        return t('profile.noMedia');
-      default:
-        return t('profile.noContent');
-    }
-  };
-
   const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
     // Scroll to top when switching tabs
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const handleLoadMore = () => {
-    const hasNext = getCurrentHasNext();
-    const isFetching = getCurrentFetchingNext();
-    const fetchNext = getCurrentFetchNext();
+  const renderTabContent = () => {
+    if (!currentAccount?.handle) {
+      return (
+        <ThemedView style={styles.emptyState}>
+          <ThemedText style={styles.emptyStateText}>{t('common.loading')}</ThemedText>
+        </ThemedView>
+      );
+    }
 
-    if (hasNext && !isFetching) {
-      fetchNext();
+    switch (activeTab) {
+      case 'posts':
+        return <PostsTab handle={currentAccount.handle} />;
+      case 'replies':
+        return <RepliesTab handle={currentAccount.handle} />;
+      case 'likes':
+        return <LikesTab handle={currentAccount.handle} />;
+      case 'media':
+        return <MediaTab handle={currentAccount.handle} />;
+      case 'videos':
+        return <VideosTab handle={currentAccount.handle} />;
+      case 'feeds':
+        return <FeedsTab handle={currentAccount.handle} />;
+      case 'starterpacks':
+        return <StarterpacksTab handle={currentAccount.handle} />;
+      default:
+        return (
+          <ThemedView style={styles.emptyState}>
+            <ThemedText style={styles.emptyStateText}>{t('profile.noContent')}</ThemedText>
+          </ThemedView>
+        );
     }
   };
-
-  const currentData = getCurrentData();
-  const isLoadingData = getCurrentLoading();
-  const isFetchingNext = getCurrentFetchingNext();
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -185,14 +85,6 @@ export default function ProfileScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
-        onScroll={(event) => {
-          const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-          const paddingToBottom = 20;
-          if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-            handleLoadMore();
-          }
-        }}
-        scrollEventThrottle={400}
       >
         <ProfileHeader
           profile={{
@@ -212,51 +104,7 @@ export default function ProfileScreen() {
         />
         <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
 
-        {isLoadingData ? (
-          <ThemedView style={styles.loadingState}>
-            <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-          </ThemedView>
-        ) : currentData.length > 0 ? (
-          // Deduplicate posts by URI and create unique keys
-          currentData
-            .filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri))
-            .map((post) => (
-              <PostCard
-                key={`${post.uri}-${post.indexedAt}`}
-                post={{
-                  id: post.uri,
-                  text: post.record?.text as string | undefined,
-                  author: {
-                    handle: post.author.handle,
-                    displayName: post.author.displayName,
-                    avatar: post.author.avatar,
-                  },
-                  createdAt: formatRelativeTime(post.indexedAt),
-                  likeCount: post.likeCount || 0,
-                  commentCount: post.replyCount || 0,
-                  repostCount: post.repostCount || 0,
-                  embed: post.embed,
-                  embeds: post.embeds,
-                  labels: post.labels,
-                  viewer: post.viewer,
-                }}
-                onPress={() => {
-                  router.push(`/post/${encodeURIComponent(post.uri)}`);
-                }}
-              />
-            ))
-        ) : (
-          <ThemedView style={styles.emptyState}>
-            <ThemedText style={styles.emptyStateText}>{getEmptyMessage()}</ThemedText>
-          </ThemedView>
-        )}
-
-        {/* Loading indicator for infinite scroll */}
-        {isFetchingNext && (
-          <ThemedView style={styles.loadingFooter}>
-            <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-          </ThemedView>
-        )}
+        {renderTabContent()}
       </ScrollView>
     </ThemedView>
   );
@@ -272,14 +120,6 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  loadingState: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
   emptyState: {
     paddingVertical: 40,
     alignItems: 'center',
@@ -287,9 +127,5 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 16,
     opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
   },
 });

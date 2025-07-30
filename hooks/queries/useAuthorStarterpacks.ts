@@ -20,7 +20,7 @@ export function useAuthorStarterpacks(identifier: string | undefined, limit: num
       const starterpacks = await blueskyApi.getAuthorStarterpacks(token, identifier, limit, pageParam);
 
       return {
-        starterpacks: starterpacks.feeds,
+        starterpacks: starterpacks.starterPacks,
         cursor: starterpacks.cursor,
       };
     },

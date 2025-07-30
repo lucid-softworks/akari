@@ -570,6 +570,46 @@ export type BlueskyNotificationsResponse = {
 };
 
 /**
+ * Bluesky starterpack from the getActorStarterPacks endpoint
+ */
+export type BlueskyStarterPack = {
+  /** The starterpack's URI */
+  uri: string;
+  /** The starterpack's CID */
+  cid: string;
+  /** The starterpack's record data */
+  record: {
+    $type: string;
+    createdAt: string;
+    description: string;
+    feeds: string[];
+    list: string;
+    name: string;
+    updatedAt: string;
+  };
+  /** The starterpack creator's information */
+  creator: BlueskyAuthor;
+  /** Number of users who joined this week */
+  joinedWeekCount: number;
+  /** Number of users who joined all time */
+  joinedAllTimeCount: number;
+  /** Labels applied to the starterpack */
+  labels: BlueskyLabel[];
+  /** When the starterpack was indexed */
+  indexedAt: string;
+};
+
+/**
+ * Response from the getActorStarterPacks endpoint
+ */
+export type BlueskyStarterPacksResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of starterpacks */
+  starterPacks: BlueskyStarterPack[];
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {

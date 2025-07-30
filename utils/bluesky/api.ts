@@ -17,6 +17,7 @@ import type {
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySession,
+  BlueskyStarterPacksResponse,
   BlueskyThreadResponse,
 } from './types';
 
@@ -104,7 +105,7 @@ export class BlueskyApi extends BlueskyApiClient {
     actor: string,
     limit: number = 50,
     cursor?: string,
-  ): Promise<BlueskyFeedsResponse> {
+  ): Promise<BlueskyStarterPacksResponse> {
     return this.feeds.getAuthorStarterpacks(accessJwt, actor, limit, cursor);
   }
 

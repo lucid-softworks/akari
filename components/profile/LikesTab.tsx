@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -15,7 +15,13 @@ type LikesTabProps = {
 
 export function LikesTab({ handle }: LikesTabProps) {
   const { t } = useTranslation();
-  const { data: likes, isLoading } = useAuthorLikes(handle);
+  const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorLikes(handle);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
@@ -30,7 +36,19 @@ export function LikesTab({ handle }: LikesTabProps) {
   }
 
   return (
-    <>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}
+      onScroll={(event) => {
+        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+        const paddingToBottom = 20;
+        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+          handleLoadMore();
+        }
+      }}
+      scrollEventThrottle={400}
+    >
       {likes
         .filter((item) => item && item.uri)
         .map((item) => {
@@ -71,11 +89,24 @@ export function LikesTab({ handle }: LikesTabProps) {
             />
           );
         })}
-    </>
+
+      {/* Loading indicator for infinite scroll */}
+      {isFetchingNextPage && (
+        <ThemedView style={styles.loadingFooter}>
+          <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
+        </ThemedView>
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 20,
+  },
   emptyContainer: {
     paddingVertical: 40,
     alignItems: 'center',
@@ -83,5 +114,13 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     opacity: 0.6,
+  },
+  loadingFooter: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

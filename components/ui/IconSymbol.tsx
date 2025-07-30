@@ -29,6 +29,8 @@ const MAPPING = {
   'arrow.2.squarepath': 'repeat',
   heart: 'favorite-border',
   'heart.fill': 'favorite',
+  'pin.fill': 'push-pin',
+  pin: 'push-pin',
 } as IconMapping;
 
 /**
