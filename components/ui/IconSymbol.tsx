@@ -31,6 +31,7 @@ const MAPPING = {
   'heart.fill': 'favorite',
   'pin.fill': 'push-pin',
   pin: 'push-pin',
+  ellipsis: 'more-horiz',
 } as IconMapping;
 
 /**
