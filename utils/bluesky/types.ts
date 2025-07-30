@@ -57,27 +57,15 @@ export interface BlueskyLabel {
 
 export interface BlueskyImage {
   alt: string;
-  image: {
+  image?: {
     ref: {
       $link: string;
     };
     mimeType: string;
     size: number;
   };
-  thumb: {
-    ref: {
-      $link: string;
-    };
-    mimeType: string;
-    size: number;
-  };
-  fullsize: {
-    ref: {
-      $link: string;
-    };
-    mimeType: string;
-    size: number;
-  };
+  thumb: string;
+  fullsize: string;
   aspectRatio?: {
     width: number;
     height: number;
@@ -120,7 +108,9 @@ export interface BlueskyRecord {
     avatar: string;
   };
   record: Record<string, unknown>;
+  value?: Record<string, unknown>; // For record embeds, contains the actual post data
   embed?: BlueskyEmbed;
+  embeds?: BlueskyEmbed[]; // Array of embeds in the record
   replyCount: number;
   repostCount: number;
   likeCount: number;
@@ -294,7 +284,7 @@ export type BlueskyConvo = {
     };
   };
   muted: boolean;
-  status: "request" | "accepted";
+  status: 'request' | 'accepted';
   unreadCount: number;
 };
 
@@ -376,9 +366,7 @@ export type BlueskyFeed = {
     like?: string;
   };
   /** Content mode for the feed */
-  contentMode:
-    | "app.bsky.feed.defs#contentModeUnspecified"
-    | "app.bsky.feed.defs#contentModeVideo";
+  contentMode: 'app.bsky.feed.defs#contentModeUnspecified' | 'app.bsky.feed.defs#contentModeVideo';
   /** When the feed was indexed */
   indexedAt: string;
 };
@@ -436,7 +424,7 @@ export type BlueskySession =
        * Status indicating why the account is not active
        * Possible values: 'takendown', 'suspended', 'deactivated'
        */
-      status: "takendown" | "suspended" | "deactivated";
+      status: 'takendown' | 'suspended' | 'deactivated';
       /** JWT access token for API authentication */
       accessJwt: string;
       /** JWT refresh token for renewing the session */

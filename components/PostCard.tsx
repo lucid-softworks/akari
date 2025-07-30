@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { Labels } from '@/components/Labels';
+import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -86,28 +87,30 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   // Extract image URLs and alt text from embed data
   const getImageData = () => {
-    if (!post.embed) return { urls: [], altTexts: [] };
+    // Check both embed and embeds fields
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    if (!embedData) return { urls: [], altTexts: [] };
 
     // Handle different embed types
-    if (post.embed.$type === 'app.bsky.embed.images') {
+    if (embedData.$type === 'app.bsky.embed.images' || embedData.$type === 'app.bsky.embed.images#view') {
       // Filter out video files, only show actual images
       const imageFiles =
-        post.embed.images?.filter((img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/')) ||
+        embedData.images?.filter((img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/')) ||
         [];
 
-      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize?.ref?.$link).filter(Boolean) || [];
+      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean) || [];
       const altTexts = imageFiles.map((img: BlueskyImage) => img.alt) || [];
       return { urls, altTexts };
     }
 
     // Handle other embed types that might contain images
-    if (post.embed.images) {
+    if (embedData.images) {
       // Filter out video files, only show actual images
-      const imageFiles = post.embed.images.filter(
+      const imageFiles = embedData.images.filter(
         (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
       );
 
-      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize?.ref?.$link).filter(Boolean);
+      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean);
       const altTexts = imageFiles.map((img: BlueskyImage) => img.alt);
       return { urls, altTexts };
     }
@@ -231,6 +234,18 @@ export function PostCard({ post, onPress }: PostCardProps) {
     return false;
   };
 
+  // Check if embed is a record embed (quoted post)
+  const isRecordEmbed = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    return embedData?.$type === 'app.bsky.embed.record#view' && embedData.record;
+  };
+
+  // Check if embed is a record with media embed (quoted post with media)
+  const isRecordWithMediaEmbed = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    return embedData?.$type === 'app.bsky.embed.recordWithMedia#view' && embedData.record;
+  };
+
   // Get the embed data for rendering external embeds
   const getEmbedData = () => {
     const embedData = post.embed || (post.embeds && post.embeds[0]);
@@ -302,6 +317,39 @@ export function PostCard({ post, onPress }: PostCardProps) {
     };
   };
 
+  // Get the embed data for rendering record embeds
+  const getRecordEmbedData = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+    if (!embedData || !embedData.record) {
+      return null;
+    }
+    return embedData as {
+      $type: 'app.bsky.embed.record#view' | 'app.bsky.embed.recordWithMedia#view';
+      record: {
+        uri: string;
+        cid: string;
+        author: {
+          did: string;
+          handle: string;
+          displayName: string;
+          avatar: string;
+        };
+        record: Record<string, unknown>;
+        embed?: BlueskyEmbed;
+        replyCount: number;
+        repostCount: number;
+        likeCount: number;
+        indexedAt: string;
+        viewer?: {
+          like?: string;
+          repost?: string;
+          reply?: string;
+        };
+      };
+      media?: BlueskyEmbed;
+    };
+  };
+
   const handleImagePress = (index: number) => {
     setSelectedImageIndex(index);
   };
@@ -361,6 +409,11 @@ export function PostCard({ post, onPress }: PostCardProps) {
           {/* Render external video embed if present */}
           {isExternalVideoEmbed() && getVideoEmbedData() && <VideoEmbed embed={getVideoEmbedData()!} />}
 
+          {/* Render record embed (quoted post) if present */}
+          {(isRecordEmbed() || isRecordWithMediaEmbed()) && getRecordEmbedData() && (
+            <RecordEmbed embed={getRecordEmbedData()!} />
+          )}
+
           {/* Render images if present */}
           {imageUrls.length > 0 && (
             <ThemedView style={styles.imagesContainer}>
@@ -402,11 +455,11 @@ export function PostCard({ post, onPress }: PostCardProps) {
             <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.interactionItem}>
-            <IconSymbol 
-              name={post.viewer?.like ? "heart.fill" : "heart"} 
-              size={16} 
-              color={post.viewer?.like ? "#ff3b30" : iconColor} 
-              style={styles.interactionIcon} 
+            <IconSymbol
+              name={post.viewer?.like ? 'heart.fill' : 'heart'}
+              size={16}
+              color={post.viewer?.like ? '#ff3b30' : iconColor}
+              style={styles.interactionIcon}
             />
             <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
           </ThemedView>
@@ -505,6 +558,8 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'transparent', // Will be overridden by theme color
   },
   videoContainer: {
     marginTop: 8,

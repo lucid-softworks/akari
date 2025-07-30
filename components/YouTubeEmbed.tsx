@@ -1,19 +1,18 @@
-import { Image } from "expo-image";
-import { Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from 'expo-image';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { ThemedCard } from "@/components/ThemedCard";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 type YouTubeEmbedProps = {
   /** YouTube embed data from Bluesky */
   embed: {
-    $type: "app.bsky.embed.external" | "app.bsky.embed.external#view";
+    $type: 'app.bsky.embed.external' | 'app.bsky.embed.external#view';
     external: {
       description: string;
       thumb?: {
-        $type: "blob";
+        $type: 'blob';
         ref: {
           $link: string;
         };
@@ -33,18 +32,18 @@ type YouTubeEmbedProps = {
 export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
   const textColor = useThemeColor(
     {
-      light: "#000000",
-      dark: "#ffffff",
+      light: '#000000',
+      dark: '#ffffff',
     },
-    "text"
+    'text',
   );
 
   const secondaryTextColor = useThemeColor(
     {
-      light: "#666666",
-      dark: "#999999",
+      light: '#666666',
+      dark: '#999999',
     },
-    "text"
+    'text',
   );
 
   const handlePress = () => {
@@ -71,16 +70,24 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
     ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
     : embed.external.thumb?.ref?.$link;
 
+  const borderColor = useThemeColor(
+    {
+      light: '#e8eaed',
+      dark: '#2d3133',
+    },
+    'background',
+  );
+
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-      <ThemedCard style={styles.container}>
+      <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.thumbnailContainer}>
           {thumbnailUrl && (
             <Image
               source={{ uri: thumbnailUrl }}
               style={styles.thumbnail}
               contentFit="cover"
-              placeholder={require("@/assets/images/partial-react-logo.png")}
+              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           )}
           <ThemedView style={styles.playButton}>
@@ -89,23 +96,15 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
         </ThemedView>
 
         <ThemedView style={styles.content}>
-          <ThemedText
-            style={[styles.title, { color: textColor }]}
-            numberOfLines={2}
-          >
+          <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
             {embed.external.title}
           </ThemedText>
-          <ThemedText
-            style={[styles.description, { color: secondaryTextColor }]}
-            numberOfLines={2}
-          >
+          <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
             {embed.external.description}
           </ThemedText>
-          <ThemedText style={[styles.source, { color: secondaryTextColor }]}>
-            YouTube
-          </ThemedText>
+          <ThemedText style={[styles.source, { color: secondaryTextColor }]}>YouTube</ThemedText>
         </ThemedView>
-      </ThemedCard>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -114,28 +113,29 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 8,
     borderRadius: 12,
-    overflow: "hidden",
+    overflow: 'hidden',
+    borderWidth: 1,
   },
   thumbnailContainer: {
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
     aspectRatio: 16 / 9,
   },
   thumbnail: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   playButton: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
     transform: [{ translateX: -20 }, { translateY: -20 }],
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   playIcon: {
     fontSize: 16,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 20,
   },
   description: {

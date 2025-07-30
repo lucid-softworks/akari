@@ -1,12 +1,11 @@
-import { Image } from "expo-image";
-import { Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from 'expo-image';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { ThemedCard } from "@/components/ThemedCard";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { VideoPlayer } from "@/components/VideoPlayer";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { VideoPlayer } from '@/components/VideoPlayer';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type VideoEmbedProps = {
   /** Video embed data from Bluesky or native video data */
@@ -15,7 +14,7 @@ type VideoEmbedProps = {
     external?: {
       description: string;
       thumb?: {
-        $type: "blob";
+        $type: 'blob';
         ref: {
           $link: string;
         };
@@ -97,18 +96,18 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
   const { t } = useTranslation();
   const textColor = useThemeColor(
     {
-      light: "#000000",
-      dark: "#ffffff",
+      light: '#000000',
+      dark: '#ffffff',
     },
-    "text"
+    'text',
   );
 
   const secondaryTextColor = useThemeColor(
     {
-      light: "#666666",
-      dark: "#999999",
+      light: '#666666',
+      dark: '#999999',
     },
-    "text"
+    'text',
   );
 
   const handlePress = () => {
@@ -120,7 +119,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
 
   // Check if this is a native video embed
   const isNativeVideo = () => {
-    return embed.videoUrl && embed.videoUrl.trim() !== "";
+    return embed.videoUrl && embed.videoUrl.trim() !== '';
   };
 
   // Check if this is an external video embed
@@ -157,7 +156,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.media.video.title;
     }
 
-    return t("common.video");
+    return t('common.video');
   };
 
   // Get video description
@@ -171,7 +170,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.media.video.description;
     }
 
-    return "";
+    return '';
   };
 
   // Get video URL
@@ -189,13 +188,21 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.media.video.url;
     }
 
-    return "";
+    return '';
   };
 
   const thumbnailUrl = getThumbnailUrl();
   const videoTitle = getVideoTitle();
   const videoDescription = getVideoDescription();
   const videoUrl = getVideoUrl();
+
+  const borderColor = useThemeColor(
+    {
+      light: '#e8eaed',
+      dark: '#2d3133',
+    },
+    'background',
+  );
 
   // If we have a native video URL, use the VideoPlayer component
   if (isNativeVideo() && videoUrl) {
@@ -212,25 +219,18 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
 
   // For external videos, show thumbnail with play button
   if (isExternalVideo()) {
-    const thumbnailAspectRatio = embed.aspectRatio
-      ? embed.aspectRatio.width / embed.aspectRatio.height
-      : 16 / 9;
+    const thumbnailAspectRatio = embed.aspectRatio ? embed.aspectRatio.width / embed.aspectRatio.height : 16 / 9;
 
     return (
       <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-        <ThemedCard style={styles.container}>
-          <ThemedView
-            style={[
-              styles.thumbnailContainer,
-              { aspectRatio: thumbnailAspectRatio },
-            ]}
-          >
+        <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
+          <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
             {thumbnailUrl ? (
               <Image
                 source={{ uri: thumbnailUrl }}
                 style={styles.thumbnail}
                 contentFit="cover"
-                placeholder={require("@/assets/images/partial-react-logo.png")}
+                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
             ) : (
               <ThemedView style={styles.placeholderContainer}>
@@ -243,48 +243,31 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
           </ThemedView>
 
           <ThemedView style={styles.content}>
-            <ThemedText
-              style={[styles.title, { color: textColor }]}
-              numberOfLines={2}
-            >
+            <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
               {videoTitle}
             </ThemedText>
             {videoDescription && (
-              <ThemedText
-                style={[styles.description, { color: secondaryTextColor }]}
-                numberOfLines={2}
-              >
+              <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
                 {videoDescription}
               </ThemedText>
             )}
-            <ThemedText style={[styles.source, { color: secondaryTextColor }]}>
-              External Video
-            </ThemedText>
+            <ThemedText style={[styles.source, { color: secondaryTextColor }]}>External Video</ThemedText>
           </ThemedView>
-        </ThemedCard>
+        </View>
       </TouchableOpacity>
     );
   }
 
   // Fallback: show placeholder
-  const placeholderAspectRatio = embed.aspectRatio
-    ? embed.aspectRatio.width / embed.aspectRatio.height
-    : 16 / 9;
+  const placeholderAspectRatio = embed.aspectRatio ? embed.aspectRatio.width / embed.aspectRatio.height : 16 / 9;
 
   return (
-    <ThemedCard style={styles.container}>
-      <ThemedView
-        style={[
-          styles.placeholderContainer,
-          { aspectRatio: placeholderAspectRatio },
-        ]}
-      >
+    <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
+      <ThemedView style={[styles.placeholderContainer, { aspectRatio: placeholderAspectRatio }]}>
         <ThemedText style={styles.placeholderIcon}>🎥</ThemedText>
-        <ThemedText style={[styles.placeholderText, { color: textColor }]}>
-          Video content
-        </ThemedText>
+        <ThemedText style={[styles.placeholderText, { color: textColor }]}>Video content</ThemedText>
       </ThemedView>
-    </ThemedCard>
+    </View>
   );
 }
 
@@ -292,21 +275,22 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 8,
     borderRadius: 12,
-    overflow: "hidden",
+    overflow: 'hidden',
+    borderWidth: 1,
   },
   thumbnailContainer: {
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
   },
   thumbnail: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   placeholderContainer: {
-    width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   placeholderIcon: {
     fontSize: 48,
@@ -318,16 +302,16 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   playButton: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
     transform: [{ translateX: -20 }, { translateY: -20 }],
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   playIcon: {
     fontSize: 16,
@@ -338,7 +322,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 20,
   },
   description: {

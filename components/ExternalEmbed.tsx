@@ -1,20 +1,19 @@
-import { Image } from "expo-image";
-import { Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from 'expo-image';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { ThemedCard } from "@/components/ThemedCard";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type ExternalEmbedProps = {
   /** External embed data from Bluesky */
   embed: {
-    $type: "app.bsky.embed.external" | "app.bsky.embed.external#view";
+    $type: 'app.bsky.embed.external' | 'app.bsky.embed.external#view';
     external: {
       description: string;
       thumb?: {
-        $type: "blob";
+        $type: 'blob';
         ref: {
           $link: string;
         };
@@ -35,18 +34,18 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
   const { t } = useTranslation();
   const textColor = useThemeColor(
     {
-      light: "#000000",
-      dark: "#ffffff",
+      light: '#000000',
+      dark: '#ffffff',
     },
-    "text"
+    'text',
   );
 
   const secondaryTextColor = useThemeColor(
     {
-      light: "#666666",
-      dark: "#999999",
+      light: '#666666',
+      dark: '#999999',
     },
-    "text"
+    'text',
   );
 
   const handlePress = () => {
@@ -57,46 +56,46 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
   const getDomain = (uri: string): string => {
     try {
       const url = new URL(uri);
-      return url.hostname.replace("www.", "");
+      return url.hostname.replace('www.', '');
     } catch {
-      return t("common.externalLink");
+      return t('common.externalLink');
     }
   };
 
   const domain = getDomain(embed.external.uri);
 
+  const borderColor = useThemeColor(
+    {
+      light: '#e8eaed',
+      dark: '#2d3133',
+    },
+    'background',
+  );
+
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-      <ThemedCard style={styles.container}>
+      <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
           {embed.external.thumb && embed.external.thumb.ref?.$link && (
             <Image
               source={{ uri: embed.external.thumb.ref.$link }}
               style={styles.thumbnail}
               contentFit="cover"
-              placeholder={require("@/assets/images/partial-react-logo.png")}
+              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           )}
 
           <ThemedView style={styles.textContent}>
-            <ThemedText
-              style={[styles.title, { color: textColor }]}
-              numberOfLines={2}
-            >
+            <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
               {embed.external.title}
             </ThemedText>
-            <ThemedText
-              style={[styles.description, { color: secondaryTextColor }]}
-              numberOfLines={2}
-            >
+            <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
               {embed.external.description}
             </ThemedText>
-            <ThemedText style={[styles.domain, { color: secondaryTextColor }]}>
-              {domain}
-            </ThemedText>
+            <ThemedText style={[styles.domain, { color: secondaryTextColor }]}>{domain}</ThemedText>
           </ThemedView>
         </ThemedView>
-      </ThemedCard>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -105,10 +104,11 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 8,
     borderRadius: 12,
-    overflow: "hidden",
+    overflow: 'hidden',
+    borderWidth: 1,
   },
   content: {
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 12,
     gap: 12,
   },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 20,
   },
   description: {
