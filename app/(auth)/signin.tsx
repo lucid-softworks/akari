@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -9,6 +9,7 @@ import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -34,12 +35,18 @@ export default function AuthScreen() {
 
   const handleSignIn = async () => {
     if (!handle || !appPassword) {
-      Alert.alert(t('common.error'), t('auth.fillAllFields'));
+      showAlert({
+        title: t('common.error'),
+        message: t('auth.fillAllFields'),
+      });
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert(t('common.error'), t('auth.invalidBlueskyHandle'));
+      showAlert({
+        title: t('common.error'),
+        message: t('auth.invalidBlueskyHandle'),
+      });
       return;
     }
 
@@ -60,29 +67,38 @@ export default function AuthScreen() {
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
 
-      Alert.alert(
-        t('common.success'),
-        currentAccount ? t('auth.accountAddedSuccessfully') : t('auth.signedInSuccessfully'),
-        [
+      showAlert({
+        title: t('common.success'),
+        message: currentAccount ? t('auth.accountAddedSuccessfully') : t('auth.signedInSuccessfully'),
+        buttons: [
           {
             text: t('common.ok'),
             onPress: () => router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)'),
           },
         ],
-      );
+      });
     } catch (error) {
-      Alert.alert(t('common.error'), error instanceof Error ? error.message : t('auth.signInFailed'));
+      showAlert({
+        title: t('common.error'),
+        message: error instanceof Error ? error.message : t('auth.signInFailed'),
+      });
     }
   };
 
   const handleSignUp = async () => {
     if (!handle || !appPassword) {
-      Alert.alert(t('common.error'), t('auth.fillAllFields'));
+      showAlert({
+        title: t('common.error'),
+        message: t('auth.fillAllFields'),
+      });
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert(t('common.error'), t('auth.invalidBlueskyHandle'));
+      showAlert({
+        title: t('common.error'),
+        message: t('auth.invalidBlueskyHandle'),
+      });
       return;
     }
 
@@ -104,14 +120,21 @@ export default function AuthScreen() {
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
 
-      Alert.alert(t('common.success'), t('auth.connectedSuccessfully'), [
-        {
-          text: t('common.ok'),
-          onPress: () => router.replace('/(tabs)'),
-        },
-      ]);
+      showAlert({
+        title: t('common.success'),
+        message: t('auth.connectedSuccessfully'),
+        buttons: [
+          {
+            text: t('common.ok'),
+            onPress: () => router.replace('/(tabs)'),
+          },
+        ],
+      });
     } catch (error) {
-      Alert.alert(t('common.error'), error instanceof Error ? error.message : t('auth.connectionFailed'));
+      showAlert({
+        title: t('common.error'),
+        message: error instanceof Error ? error.message : t('auth.connectionFailed'),
+      });
     }
   };
 

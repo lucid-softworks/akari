@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
@@ -16,6 +16,7 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
+import { showAlert } from '@/utils/alert';
 import { checkMissingTranslations } from '@/utils/devUtils';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -98,51 +99,66 @@ export default function SettingsScreen() {
     try {
       router.replace('/(auth)/signin');
     } catch {
-      Alert.alert(t('common.error'), t('common.failedToLogout'));
+      showAlert({
+        title: t('common.error'),
+        message: t('common.failedToLogout'),
+      });
     }
   };
 
   const handleSwitchAccount = (account: Account) => {
     if (account.did === currentAccount?.did) return;
 
-    Alert.alert(t('common.switchAccount'), t('profile.switchToAccount', { handle: account.handle }), [
-      {
-        text: t('common.cancel'),
-        style: 'cancel',
-      },
-      {
-        text: t('common.switch'),
-        onPress: () => {
-          switchAccountMutation.mutate(account);
+    showAlert({
+      title: t('common.switchAccount'),
+      message: t('profile.switchToAccount', { handle: account.handle }),
+      buttons: [
+        {
+          text: t('common.cancel'),
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: t('common.switch'),
+          onPress: () => {
+            switchAccountMutation.mutate(account);
+          },
+        },
+      ],
+    });
   };
 
   const handleRemoveAccount = (account: Account) => {
     if (accounts && accounts.length === 1) {
-      Alert.alert(t('common.cannotRemoveAccount'), t('common.mustHaveOneAccount'), [{ text: t('common.ok') }]);
+      showAlert({
+        title: t('common.cannotRemoveAccount'),
+        message: t('common.mustHaveOneAccount'),
+        buttons: [{ text: t('common.ok') }],
+      });
       return;
     }
 
-    Alert.alert(t('common.removeAccount'), t('profile.removeAccountConfirmation', { handle: account.handle }), [
-      {
-        text: t('common.cancel'),
-        style: 'cancel',
-      },
-      {
-        text: t('common.remove'),
-        style: 'destructive',
-        onPress: () => {
-          removeAccountMutation.mutate(account.did);
-
-          if (account.did === currentAccount?.did) {
-            // If we removed the current account, reload the app
-            router.replace('/(tabs)');
-          }
+    showAlert({
+      title: t('common.removeAccount'),
+      message: t('profile.removeAccountConfirmation', { handle: account.handle }),
+      buttons: [
+        {
+          text: t('common.cancel'),
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: t('common.remove'),
+          style: 'destructive',
+          onPress: () => {
+            removeAccountMutation.mutate(account.did);
+
+            if (account.did === currentAccount?.did) {
+              // If we removed the current account, reload the app
+              router.replace('/(tabs)');
+            }
+          },
+        },
+      ],
+    });
   };
 
   const handleAddAccount = () => {
@@ -287,7 +303,10 @@ export default function SettingsScreen() {
               style={[styles.settingItem, { borderBottomColor: borderColor }]}
               onPress={() => {
                 checkMissingTranslations();
-                Alert.alert(t('common.translationReport'), t('common.checkConsoleForReport'));
+                showAlert({
+                  title: t('common.translationReport'),
+                  message: t('common.checkConsoleForReport'),
+                });
               }}
             >
               <ThemedView style={styles.settingInfo}>

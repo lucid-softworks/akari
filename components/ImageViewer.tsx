@@ -1,24 +1,13 @@
-import { Image } from "expo-image";
-import { useState } from "react";
-import {
-  Alert,
-  Modal,
-  Platform,
-  Share,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import { Image } from 'expo-image';
+import { useState } from 'react';
+import { Modal, Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { ThemedText } from "@/components/ThemedText";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ThemedText } from '@/components/ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
 
 type ImageViewerProps = {
   visible: boolean;
@@ -27,12 +16,7 @@ type ImageViewerProps = {
   altText?: string;
 };
 
-export function ImageViewer({
-  visible,
-  onClose,
-  imageUrl,
-  altText,
-}: ImageViewerProps) {
+export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewerProps) {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -46,18 +30,18 @@ export function ImageViewer({
 
   const backgroundColor = useThemeColor(
     {
-      light: "#000000",
-      dark: "#000000",
+      light: '#000000',
+      dark: '#000000',
     },
-    "background"
+    'background',
   );
 
   const textColor = useThemeColor(
     {
-      light: "#ffffff",
-      dark: "#ffffff",
+      light: '#ffffff',
+      dark: '#ffffff',
     },
-    "text"
+    'text',
   );
 
   // Pinch gesture
@@ -99,11 +83,7 @@ export function ImageViewer({
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        { translateX: translateX.value },
-        { translateY: translateY.value },
-        { scale: scale.value },
-      ],
+      transform: [{ translateX: translateX.value }, { translateY: translateY.value }, { scale: scale.value }],
     };
   });
 
@@ -119,11 +99,11 @@ export function ImageViewer({
 
   const handleDownload = async () => {
     try {
-      if (Platform.OS === "web") {
+      if (Platform.OS === 'web') {
         // For web, create a download link
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = imageUrl;
-        link.download = "image.jpg";
+        link.download = 'image.jpg';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -131,11 +111,14 @@ export function ImageViewer({
         // For mobile, use Share API
         await Share.share({
           url: imageUrl,
-          message: t("common.checkOutImage"),
+          message: t('common.checkOutImage'),
         });
       }
     } catch {
-      Alert.alert(t("common.error"), t("common.failedToDownloadImage"));
+      showAlert({
+        title: t('common.error'),
+        message: t('common.failedToDownloadImage'),
+      });
     }
   };
 
@@ -150,28 +133,16 @@ export function ImageViewer({
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={handleClose}
-    >
+    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={handleClose}>
       <View style={[styles.container, { backgroundColor }]}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <ThemedText style={[styles.closeText, { color: textColor }]}>
-              ✕
-            </ThemedText>
+            <ThemedText style={[styles.closeText, { color: textColor }]}>✕</ThemedText>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={handleDownload}
-            style={styles.downloadButton}
-          >
-            <ThemedText style={[styles.downloadText, { color: textColor }]}>
-              ⬇️
-            </ThemedText>
+          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton}>
+            <ThemedText style={[styles.downloadText, { color: textColor }]}>⬇️</ThemedText>
           </TouchableOpacity>
         </View>
 
@@ -191,7 +162,7 @@ export function ImageViewer({
                   contentFit="contain"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
-                  placeholder={require("@/assets/images/partial-react-logo.png")}
+                  placeholder={require('@/assets/images/partial-react-logo.png')}
                 />
               </TouchableOpacity>
             </Animated.View>
@@ -201,26 +172,20 @@ export function ImageViewer({
         {/* Alt Text */}
         {altText && (
           <View style={styles.altTextContainer}>
-            <ThemedText style={[styles.altText, { color: textColor }]}>
-              {altText}
-            </ThemedText>
+            <ThemedText style={[styles.altText, { color: textColor }]}>{altText}</ThemedText>
           </View>
         )}
 
         {/* Loading/Error States */}
         {!imageLoaded && !imageError && (
           <View style={styles.centerContainer}>
-            <ThemedText style={[styles.loadingText, { color: textColor }]}>
-              {t("common.loading")}
-            </ThemedText>
+            <ThemedText style={[styles.loadingText, { color: textColor }]}>{t('common.loading')}</ThemedText>
           </View>
         )}
 
         {imageError && (
           <View style={styles.centerContainer}>
-            <ThemedText style={[styles.errorText, { color: textColor }]}>
-              {t("common.failedToLoadImage")}
-            </ThemedText>
+            <ThemedText style={[styles.errorText, { color: textColor }]}>{t('common.failedToLoadImage')}</ThemedText>
           </View>
         )}
       </View>
@@ -233,9 +198,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
@@ -243,42 +208,42 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 44,
     height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   closeText: {
     fontSize: 24,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   downloadButton: {
     width: 44,
     height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   downloadText: {
     fontSize: 20,
   },
   imageContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageWrapper: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageTouchable: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   altTextContainer: {
     paddingHorizontal: 20,
@@ -287,12 +252,12 @@ const styles = StyleSheet.create({
   altText: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: "center",
+    textAlign: 'center',
   },
   centerContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 18,

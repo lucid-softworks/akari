@@ -1,29 +1,18 @@
-import { Image } from "expo-image";
-import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-  Alert,
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { Image } from 'expo-image';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useConversations } from "@/hooks/queries/useConversations";
-import { useMessages } from "@/hooks/queries/useMessages";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useConversations } from '@/hooks/queries/useConversations';
+import { useMessages } from '@/hooks/queries/useMessages';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
 
 type Message = {
   id: string;
@@ -34,34 +23,34 @@ type Message = {
 };
 
 type MessageError = {
-  type: "permission" | "network" | "unknown";
+  type: 'permission' | 'network' | 'unknown';
   message: string;
 };
 
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
-  const [messageText, setMessageText] = useState("");
+  const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
   // Theme colors
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
-  const iconColor = useThemeColor({}, "icon");
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const iconColor = useThemeColor({}, 'icon');
 
   // Keyboard state
   useEffect(() => {
     const keyboardWillShow = () => setIsKeyboardOpen(true);
     const keyboardWillHide = () => setIsKeyboardOpen(false);
 
-    Keyboard.addListener("keyboardWillShow", keyboardWillShow);
-    Keyboard.addListener("keyboardWillHide", keyboardWillHide);
+    Keyboard.addListener('keyboardWillShow', keyboardWillShow);
+    Keyboard.addListener('keyboardWillHide', keyboardWillHide);
 
     return () => {
-      Keyboard.removeAllListeners("keyboardWillShow");
-      Keyboard.removeAllListeners("keyboardWillHide");
+      Keyboard.removeAllListeners('keyboardWillShow');
+      Keyboard.removeAllListeners('keyboardWillHide');
     };
   }, []);
 
@@ -86,42 +75,28 @@ export default function ConversationScreen() {
 
     try {
       // TODO: Send message via API
-      setMessageText("");
+      setMessageText('');
     } catch {
-      Alert.alert(t("common.error"), t("common.errorLoadingMessages"));
+      showAlert({
+        title: t('common.error'),
+        message: t('common.errorLoadingMessages'),
+      });
     }
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
-    <ThemedView
-      style={[
-        styles.messageContainer,
-        item.isFromMe ? styles.myMessage : styles.theirMessage,
-      ]}
-    >
+    <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
       <ThemedView
         style={[
           styles.messageBubble,
           item.isFromMe ? styles.myBubble : styles.theirBubble,
           {
-            backgroundColor: item.isFromMe ? "#007AFF" : backgroundColor,
+            backgroundColor: item.isFromMe ? '#007AFF' : backgroundColor,
           },
         ]}
       >
-        <ThemedText
-          style={[
-            styles.messageText,
-            { color: item.isFromMe ? "white" : textColor },
-          ]}
-        >
-          {item.text}
-        </ThemedText>
-        <ThemedText
-          style={[
-            styles.messageTimestamp,
-            { color: item.isFromMe ? "rgba(255,255,255,0.6)" : iconColor },
-          ]}
-        >
+        <ThemedText style={[styles.messageText, { color: item.isFromMe ? 'white' : textColor }]}>{item.text}</ThemedText>
+        <ThemedText style={[styles.messageTimestamp, { color: item.isFromMe ? 'rgba(255,255,255,0.6)' : iconColor }]}>
           {item.timestamp}
         </ThemedText>
       </ThemedView>
@@ -134,7 +109,7 @@ export default function ConversationScreen() {
     return (
       <ThemedView style={styles.loadingFooter}>
         <ThemedText style={styles.loadingText}>
-          {t("common.loading")} {t("common.messages")}...
+          {t('common.loading')} {t('common.messages')}...
         </ThemedText>
       </ThemedView>
     );
@@ -151,24 +126,17 @@ export default function ConversationScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
-          <ThemedView
-            style={[styles.header, { borderBottomColor: borderColor }]}
-          >
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
               <IconSymbol name="chevron.left" size={24} color="#007AFF" />
             </TouchableOpacity>
             <ThemedView style={styles.headerInfo}>
-              <ThemedText style={styles.headerTitle}>
-                {decodeURIComponent(handle)}
-              </ThemedText>
+              <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.loadingState}>
             <ThemedText style={styles.loadingText}>
-              {t("common.loading")} {t("common.conversations")}...
+              {t('common.loading')} {t('common.conversations')}...
             </ThemedText>
           </ThemedView>
         </ThemedView>
@@ -183,29 +151,18 @@ export default function ConversationScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
-          <ThemedView
-            style={[styles.header, { borderBottomColor: borderColor }]}
-          >
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
               <IconSymbol name="chevron.left" size={24} color="#007AFF" />
             </TouchableOpacity>
             <ThemedView style={styles.headerInfo}>
-              <ThemedText style={styles.headerTitle}>
-                {decodeURIComponent(handle)}
-              </ThemedText>
+              <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.errorState}>
-            <ThemedText style={styles.errorText}>
-              {messageError.message}
-            </ThemedText>
-            {messageError.type === "permission" && (
-              <ThemedText style={styles.errorSubtext}>
-                {t("common.errorLoadingMessages")}
-              </ThemedText>
+            <ThemedText style={styles.errorText}>{messageError.message}</ThemedText>
+            {messageError.type === 'permission' && (
+              <ThemedText style={styles.errorSubtext}>{t('common.errorLoadingMessages')}</ThemedText>
             )}
           </ThemedView>
         </ThemedView>
@@ -218,19 +175,11 @@ export default function ConversationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ThemedView style={styles.container}>
           {/* Header */}
-          <ThemedView
-            style={[styles.header, { borderBottomColor: borderColor }]}
-          >
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
               <IconSymbol name="chevron.left" size={24} color="#007AFF" />
             </TouchableOpacity>
             <TouchableOpacity
@@ -242,19 +191,11 @@ export default function ConversationScreen() {
               activeOpacity={0.7}
             >
               {conversation?.avatar && (
-                <Image
-                  source={{ uri: conversation.avatar }}
-                  style={styles.headerAvatar}
-                  contentFit="cover"
-                />
+                <Image source={{ uri: conversation.avatar }} style={styles.headerAvatar} contentFit="cover" />
               )}
               <ThemedView style={styles.headerTextContainer}>
-                <ThemedText style={styles.headerTitle}>
-                  {conversation?.displayName || decodeURIComponent(handle)}
-                </ThemedText>
-                <ThemedText style={styles.headerHandle}>
-                  @{decodeURIComponent(handle)}
-                </ThemedText>
+                <ThemedText style={styles.headerTitle}>{conversation?.displayName || decodeURIComponent(handle)}</ThemedText>
+                <ThemedText style={styles.headerHandle}>@{decodeURIComponent(handle)}</ThemedText>
               </ThemedView>
             </TouchableOpacity>
           </ThemedView>
@@ -262,9 +203,7 @@ export default function ConversationScreen() {
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
-              <ThemedText style={styles.loadingText}>
-                Loading messages...
-              </ThemedText>
+              <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
             </ThemedView>
           ) : (
             <FlatList
@@ -287,10 +226,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom:
-                  Platform.OS === "ios" && !isKeyboardOpen
-                    ? insets.bottom + 35
-                    : 12,
+                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom + 35 : 12,
               },
             ]}
           >
@@ -305,24 +241,17 @@ export default function ConversationScreen() {
               ]}
               value={messageText}
               onChangeText={setMessageText}
-              placeholder={t("messages.typeMessage")}
+              placeholder={t('messages.typeMessage')}
               placeholderTextColor={iconColor}
               multiline
               maxLength={500}
             />
             <TouchableOpacity
-              style={[
-                styles.sendButton,
-                !messageText.trim() && styles.sendButtonDisabled,
-              ]}
+              style={[styles.sendButton, !messageText.trim() && styles.sendButtonDisabled]}
               onPress={handleSendMessage}
               disabled={!messageText.trim()}
             >
-              <IconSymbol
-                name="arrow.up.circle.fill"
-                size={32}
-                color={messageText.trim() ? "#007AFF" : "#C7C7CC"}
-              />
+              <IconSymbol name="arrow.up.circle.fill" size={32} color={messageText.trim() ? '#007AFF' : '#C7C7CC'} />
             </TouchableOpacity>
           </ThemedView>
         </ThemedView>
@@ -336,8 +265,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
@@ -346,8 +275,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   headerInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerAvatar: {
     width: 40,
@@ -360,7 +289,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   headerHandle: {
     fontSize: 14,
@@ -377,13 +306,13 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   myMessage: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   theirMessage: {
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
   },
   messageBubble: {
-    maxWidth: "80%",
+    maxWidth: '80%',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 20,
@@ -401,11 +330,11 @@ const styles = StyleSheet.create({
   messageTimestamp: {
     fontSize: 12,
     opacity: 0.6,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderTopWidth: 0.5,
@@ -428,12 +357,12 @@ const styles = StyleSheet.create({
   },
   loadingState: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   loadingFooter: {
     paddingVertical: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 16,
@@ -441,19 +370,19 @@ const styles = StyleSheet.create({
   },
   errorState: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 32,
   },
   errorTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
   errorSubtitle: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
   errorText: {
     fontSize: 16,
@@ -462,6 +391,6 @@ const styles = StyleSheet.create({
   errorSubtext: {
     fontSize: 14,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

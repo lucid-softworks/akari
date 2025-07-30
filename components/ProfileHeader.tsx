@@ -1,24 +1,19 @@
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useState } from "react";
-import {
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
-import { Labels } from "@/components/Labels";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useBlockUser } from "@/hooks/mutations/useBlockUser";
-import { useFollowUser } from "@/hooks/mutations/useFollowUser";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
+import { Labels } from '@/components/Labels';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useBlockUser } from '@/hooks/mutations/useBlockUser';
+import { useFollowUser } from '@/hooks/mutations/useFollowUser';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
 
 type ProfileHeaderProps = {
   profile: {
@@ -55,16 +50,13 @@ type ProfileHeaderProps = {
 
 const formatNumber = (num: number, locale: string): string => {
   const formatter = new Intl.NumberFormat(locale, {
-    notation: "compact",
-    compactDisplay: "short",
+    notation: 'compact',
+    compactDisplay: 'short',
   });
   return formatter.format(num);
 };
 
-export function ProfileHeader({
-  profile,
-  isOwnProfile = false,
-}: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -74,10 +66,10 @@ export function ProfileHeader({
 
   const dropdownBackgroundColor = useThemeColor(
     {
-      light: "#ffffff",
-      dark: "#1c1c1e",
+      light: '#ffffff',
+      dark: '#1c1c1e',
     },
-    "background"
+    'background',
   );
 
   const isFollowing = !!profile.viewer?.following;
@@ -92,17 +84,17 @@ export function ProfileHeader({
         await followMutation.mutateAsync({
           did: profile.did,
           followUri: profile.viewer?.following,
-          action: "unfollow",
+          action: 'unfollow',
         });
       } else {
         await followMutation.mutateAsync({
           did: profile.did,
-          action: "follow",
+          action: 'follow',
         });
       }
       setShowDropdown(false);
     } catch (error) {
-      console.error("Follow error:", error);
+      console.error('Follow error:', error);
     }
   };
 
@@ -114,12 +106,12 @@ export function ProfileHeader({
         await blockMutation.mutateAsync({
           did: profile.did,
           blockUri: profile.viewer?.blocking,
-          action: "unblock",
+          action: 'unblock',
         });
       } else {
         await blockMutation.mutateAsync({
           did: profile.did,
-          action: "block",
+          action: 'block',
         });
       }
       setShowDropdown(false);
@@ -138,18 +130,18 @@ export function ProfileHeader({
 
   const handleFollowPress = () => {
     if (isFollowing) {
-      Alert.alert(
-        t("common.unfollow"),
-        t("profile.unfollowConfirmation", { handle: profile.handle }),
-        [
-          { text: t("common.cancel"), style: "cancel" },
+      showAlert({
+        title: t('common.unfollow'),
+        message: t('profile.unfollowConfirmation', { handle: profile.handle }),
+        buttons: [
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: t("common.unfollow"),
-            style: "destructive",
+            text: t('common.unfollow'),
+            style: 'destructive',
             onPress: handleFollow,
           },
-        ]
-      );
+        ],
+      });
     } else {
       handleFollow();
     }
@@ -157,31 +149,31 @@ export function ProfileHeader({
 
   const handleBlockPress = () => {
     if (isBlocking) {
-      Alert.alert(
-        t("common.unblock"),
-        t("profile.unblockConfirmation", { handle: profile.handle }),
-        [
-          { text: t("common.cancel"), style: "cancel" },
+      showAlert({
+        title: t('common.unblock'),
+        message: t('profile.unblockConfirmation', { handle: profile.handle }),
+        buttons: [
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: t("common.unblock"),
-            style: "destructive",
+            text: t('common.unblock'),
+            style: 'destructive',
             onPress: handleBlock,
           },
-        ]
-      );
+        ],
+      });
     } else {
-      Alert.alert(
-        t("common.block"),
-        t("profile.blockConfirmation", { handle: profile.handle }),
-        [
-          { text: t("common.cancel"), style: "cancel" },
+      showAlert({
+        title: t('common.block'),
+        message: t('profile.blockConfirmation', { handle: profile.handle }),
+        buttons: [
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: t("common.block"),
-            style: "destructive",
+            text: t('common.block'),
+            style: 'destructive',
             onPress: handleBlock,
           },
-        ]
-      );
+        ],
+      });
     }
   };
 
@@ -190,37 +182,25 @@ export function ProfileHeader({
       {/* Banner */}
       {profile.banner && (
         <ThemedView style={styles.banner}>
-          <Image
-            source={{ uri: profile.banner }}
-            style={styles.bannerImage}
-            contentFit="cover"
-          />
+          <Image source={{ uri: profile.banner }} style={styles.bannerImage} contentFit="cover" />
         </ThemedView>
       )}
 
       {/* Profile Header */}
-      <ThemedView
-        style={[styles.profileHeader, { borderBottomColor: borderColor }]}
-      >
+      <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
         {/* Avatar and Name Section */}
         <View style={styles.avatarNameSection}>
           {/* Avatar */}
           <View style={styles.avatarContainer}>
             {profile.avatar ? (
               <View style={styles.avatar}>
-                <Image
-                  source={{ uri: profile.avatar }}
-                  style={styles.avatarImage}
-                  contentFit="cover"
-                />
+                <Image source={{ uri: profile.avatar }} style={styles.avatarImage} contentFit="cover" />
               </View>
             ) : (
               <View style={styles.avatar}>
                 <View style={styles.avatarFallbackContainer}>
                   <ThemedText style={styles.avatarFallback}>
-                    {(profile.displayName ||
-                      profile.handle ||
-                      "U")[0].toUpperCase()}
+                    {(profile.displayName || profile.handle || 'U')[0].toUpperCase()}
                   </ThemedText>
                 </View>
               </View>
@@ -228,37 +208,27 @@ export function ProfileHeader({
           </View>
 
           <ThemedView style={styles.profileInfo}>
-            <ThemedText style={styles.displayName}>
-              {profile.displayName || profile.handle}
-            </ThemedText>
+            <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
             <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
           </ThemedView>
 
           {/* Action Buttons */}
           <ThemedView style={styles.actionButtons}>
             {/* Search Button - Always show */}
-            <TouchableOpacity
-              style={[styles.iconButton, { borderColor: borderColor }]}
-              onPress={handleSearchPosts}
-            >
+            <TouchableOpacity style={[styles.iconButton, { borderColor: borderColor }]} onPress={handleSearchPosts}>
               <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
             </TouchableOpacity>
 
             {/* Dropdown Menu - Only show for other profiles */}
             {!isOwnProfile && !isBlockedBy && (
               <ThemedView style={styles.dropdownContainer}>
-                <TouchableOpacity
-                  style={[styles.iconButton, { borderColor: borderColor }]}
-                  onPress={handleDropdownToggle}
-                >
+                <TouchableOpacity style={[styles.iconButton, { borderColor: borderColor }]} onPress={handleDropdownToggle}>
                   <IconSymbol name="ellipsis" size={20} color="#007AFF" />
                 </TouchableOpacity>
 
                 {showDropdown && (
                   <ThemedView style={styles.dropdownOverlay}>
-                    <TouchableWithoutFeedback
-                      onPress={() => setShowDropdown(false)}
-                    >
+                    <TouchableWithoutFeedback onPress={() => setShowDropdown(false)}>
                       <ThemedView style={styles.dropdownOverlayTouchable} />
                     </TouchableWithoutFeedback>
                     <ThemedView
@@ -277,10 +247,10 @@ export function ProfileHeader({
                       >
                         <ThemedText style={styles.dropdownItemText}>
                           {followMutation.isPending
-                            ? t("common.loading")
+                            ? t('common.loading')
                             : isFollowing
-                            ? t("common.unfollow")
-                            : t("common.follow")}
+                            ? t('common.unfollow')
+                            : t('common.follow')}
                         </ThemedText>
                       </TouchableOpacity>
 
@@ -291,10 +261,10 @@ export function ProfileHeader({
                       >
                         <ThemedText style={styles.dropdownItemText}>
                           {blockMutation.isPending
-                            ? t("common.loading")
+                            ? t('common.loading')
                             : isBlocking
-                            ? t("common.unblock")
-                            : t("common.block")}
+                            ? t('common.unblock')
+                            : t('common.block')}
                         </ThemedText>
                       </TouchableOpacity>
                     </ThemedView>
@@ -308,15 +278,15 @@ export function ProfileHeader({
         {/* Stats */}
         <ThemedView style={styles.statsContainer}>
           <ThemedText style={styles.statText}>
-            {t("profile.posts", {
+            {t('profile.posts', {
               count: formatNumber(profile.postsCount || 0, currentLocale),
-            })}{" "}
-            •{" "}
-            {t("profile.followers", {
+            })}{' '}
+            •{' '}
+            {t('profile.followers', {
               count: formatNumber(profile.followersCount || 0, currentLocale),
-            })}{" "}
-            •{" "}
-            {t("profile.following", {
+            })}{' '}
+            •{' '}
+            {t('profile.following', {
               count: formatNumber(profile.followsCount || 0, currentLocale),
             })}
           </ThemedText>
@@ -325,9 +295,7 @@ export function ProfileHeader({
         {/* Description - Full Width */}
         {profile.description && (
           <ThemedView style={styles.descriptionContainer}>
-            <ThemedText style={styles.description}>
-              {profile.description}
-            </ThemedText>
+            <ThemedText style={styles.description}>{profile.description}</ThemedText>
           </ThemedView>
         )}
 
@@ -336,9 +304,7 @@ export function ProfileHeader({
 
         {isBlockedBy && (
           <ThemedView style={styles.blockedMessage}>
-            <ThemedText style={styles.blockedText}>
-              {t("profile.youAreBlockedByUser")}
-            </ThemedText>
+            <ThemedText style={styles.blockedText}>{t('profile.youAreBlockedByUser')}</ThemedText>
           </ThemedView>
         )}
       </ThemedView>
@@ -349,7 +315,7 @@ export function ProfileHeader({
 const styles = StyleSheet.create({
   banner: {
     height: 120,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
   },
   bannerImage: {
     flex: 1,
@@ -360,8 +326,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   avatarNameSection: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 12,
     marginBottom: 12,
   },
@@ -372,12 +338,12 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 3,
-    borderColor: "white",
-    overflow: "hidden",
-    backgroundColor: "transparent",
+    borderColor: 'white',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   avatarImage: {
     width: 54,
@@ -388,14 +354,14 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     borderRadius: 27,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarFallback: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   profileInfo: {
     flex: 1,
@@ -403,7 +369,7 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   handle: {
     fontSize: 16,
@@ -417,7 +383,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   actionButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 8,
   },
   iconButton: {
@@ -425,14 +391,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dropdownContainer: {
-    position: "relative",
+    position: 'relative',
   },
   dropdownOverlay: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
@@ -440,19 +406,19 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   dropdownOverlayTouchable: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   dropdown: {
-    position: "absolute",
+    position: 'absolute',
     top: 45,
     right: 0,
     borderRadius: 8,
     borderWidth: 1,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -474,13 +440,13 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "#ffebee",
+    backgroundColor: '#ffebee',
     borderRadius: 8,
   },
   blockedText: {
     fontSize: 14,
-    color: "#c62828",
-    textAlign: "center",
+    color: '#c62828',
+    textAlign: 'center',
   },
   statsContainer: {
     marginTop: 8,
