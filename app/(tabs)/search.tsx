@@ -10,6 +10,7 @@ import { PostCard } from '@/components/PostCard';
 import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -292,9 +293,17 @@ export default function SearchScreen() {
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
-          <ThemedView style={styles.emptyState}>
-            <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
-          </ThemedView>
+          isLoading ? (
+            <ThemedView style={styles.emptyState}>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <SearchResultSkeleton key={index} />
+              ))}
+            </ThemedView>
+          ) : (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
+            </ThemedView>
+          )
         }
       />
     </ThemedView>

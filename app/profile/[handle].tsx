@@ -7,6 +7,7 @@ import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { FeedSkeleton, ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
@@ -31,11 +32,7 @@ export default function ProfileScreen() {
   const { data: media, isLoading: mediaLoading } = useAuthorMedia(activeTab === 'media' ? handle : undefined);
 
   if (isLoading) {
-    return (
-      <ThemedView style={styles.container}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
+    return <ProfileHeaderSkeleton />;
   }
 
   if (error || !profile) {
@@ -126,11 +123,7 @@ export default function ProfileScreen() {
 
         {/* Content */}
         {currentLoading ? (
-          <ThemedView style={styles.loadingContainer}>
-            <ThemedText style={styles.loadingText}>
-              {t('common.loading')} {t(`common.${activeTab}`)}...
-            </ThemedText>
-          </ThemedView>
+          <FeedSkeleton count={3} />
         ) : currentData && currentData.length > 0 ? (
           currentData
             .filter((item) => item && item.uri) // Filter out undefined/null items

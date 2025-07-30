@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { NotificationSkeleton } from '@/components/skeletons';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -317,8 +318,10 @@ export default function NotificationsScreen() {
         }
         ListEmptyComponent={
           isLoading ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('notifications.loadingNotifications')}</ThemedText>
+            <ThemedView style={styles.skeletonContainer}>
+              {Array.from({ length: 12 }).map((_, index) => (
+                <NotificationSkeleton key={index} />
+              ))}
             </ThemedView>
           ) : (
             renderEmptyState()
@@ -430,6 +433,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
+  },
+  skeletonContainer: {
+    flex: 1,
+    paddingBottom: 100, // Account for tab bar
   },
   emptyStateTitle: {
     fontSize: 20,

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useParentPost, usePost, useRootPost } from '@/hooks/queries/usePost';
@@ -250,9 +251,7 @@ export default function PostDetailScreen() {
             headerBackButtonDisplayMode: 'minimal',
           }}
         />
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.loadingText}>{t('post.loadingPost')}</ThemedText>
-        </ThemedView>
+        <PostDetailSkeleton />
       </>
     );
   }

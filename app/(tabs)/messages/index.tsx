@@ -1,15 +1,16 @@
-import { router } from "expo-router";
-import React, { useRef } from "react";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from 'expo-router';
+import React, { useRef } from 'react';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useConversations } from "@/hooks/queries/useConversations";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
-import { Image } from "expo-image";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { ConversationSkeleton } from '@/components/skeletons';
+import { useConversations } from '@/hooks/queries/useConversations';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { Image } from 'expo-image';
 
 type Conversation = {
   id: string;
@@ -19,7 +20,7 @@ type Conversation = {
   lastMessage: string;
   timestamp: string;
   unreadCount: number;
-  status: "request" | "accepted";
+  status: 'request' | 'accepted';
   muted: boolean;
 };
 
@@ -36,7 +37,7 @@ export default function MessagesScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register("messages", scrollToTop);
+    tabScrollRegistry.register('messages', scrollToTop);
   }, []);
 
   const {
@@ -67,26 +68,18 @@ export default function MessagesScreen() {
         >
           {item.avatar ? (
             <ThemedView style={styles.avatar}>
-              <Image
-                source={{ uri: item.avatar }}
-                style={styles.avatarImage}
-                contentFit="cover"
-              />
+              <Image source={{ uri: item.avatar }} style={styles.avatarImage} contentFit="cover" />
             </ThemedView>
           ) : (
             <ThemedView style={styles.avatar}>
-              <ThemedText style={styles.avatarFallback}>
-                {item.displayName[0].toUpperCase()}
-              </ThemedText>
+              <ThemedText style={styles.avatarFallback}>{item.displayName[0].toUpperCase()}</ThemedText>
             </ThemedView>
           )}
         </TouchableOpacity>
 
         <ThemedView style={styles.conversationInfo}>
           <ThemedView style={styles.conversationHeader}>
-            <ThemedText style={styles.displayName}>
-              {item.displayName}
-            </ThemedText>
+            <ThemedText style={styles.displayName}>{item.displayName}</ThemedText>
             <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.conversationFooter}>
@@ -95,17 +88,13 @@ export default function MessagesScreen() {
             </ThemedText>
             {item.unreadCount > 0 && (
               <ThemedView style={styles.unreadBadge}>
-                <ThemedText style={styles.unreadCount}>
-                  {item.unreadCount > 99 ? "99+" : item.unreadCount}
-                </ThemedText>
+                <ThemedText style={styles.unreadCount}>{item.unreadCount > 99 ? '99+' : item.unreadCount}</ThemedText>
               </ThemedView>
             )}
           </ThemedView>
-          {item.status === "request" && (
+          {item.status === 'request' && (
             <ThemedView style={styles.statusBadge}>
-              <ThemedText style={styles.statusText}>
-                {t("common.pending")}
-              </ThemedText>
+              <ThemedText style={styles.statusText}>{t('common.pending')}</ThemedText>
             </ThemedView>
           )}
         </ThemedView>
@@ -117,9 +106,7 @@ export default function MessagesScreen() {
     if (isFetchingNextPage) {
       return (
         <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={styles.loadingText}>
-            {t("common.loading")}...
-          </ThemedText>
+          <ThemedText style={styles.loadingText}>{t('common.loading')}...</ThemedText>
         </ThemedView>
       );
     }
@@ -135,14 +122,12 @@ export default function MessagesScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>{t("common.messages")}</ThemedText>
+        <ThemedText style={styles.title}>{t('common.messages')}</ThemedText>
       </ThemedView>
 
       <FlatList
         ref={flatListRef}
-        data={
-          conversationsData?.pages.flatMap((page) => page.conversations) ?? []
-        }
+        data={conversationsData?.pages.flatMap((page) => page.conversations) ?? []}
         renderItem={renderConversation}
         keyExtractor={(item) => item.id}
         style={styles.list}
@@ -153,22 +138,18 @@ export default function MessagesScreen() {
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           conversationsLoading ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>
-                {t("common.loading")}...
-              </ThemedText>
+            <ThemedView style={styles.skeletonContainer}>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <ConversationSkeleton key={index} />
+              ))}
             </ThemedView>
           ) : error ? (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>
-                {t("common.errorLoadingConversations")}
-              </ThemedText>
+              <ThemedText style={styles.emptyStateText}>{t('common.errorLoadingConversations')}</ThemedText>
             </ThemedView>
           ) : (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>
-                {t("common.noConversations")}
-              </ThemedText>
+              <ThemedText style={styles.emptyStateText}>{t('common.noConversations')}</ThemedText>
             </ThemedView>
           )
         }
@@ -188,7 +169,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   list: {
     flex: 1,
@@ -202,8 +183,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   conversationContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   avatarContainer: {
     marginRight: 12,
@@ -212,10 +193,10 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   avatarImage: {
     width: 50,
@@ -224,30 +205,30 @@ const styles = StyleSheet.create({
   },
   avatarFallback: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   conversationInfo: {
     flex: 1,
   },
   conversationHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 4,
   },
   displayName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   timestamp: {
     fontSize: 12,
     opacity: 0.6,
   },
   conversationFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   lastMessage: {
     fontSize: 14,
@@ -256,40 +237,40 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   unreadBadge: {
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
     borderRadius: 10,
     minWidth: 20,
     height: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 6,
   },
   unreadCount: {
     fontSize: 12,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   statusBadge: {
-    backgroundColor: "#FF9500",
+    backgroundColor: '#FF9500',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginTop: 4,
   },
   statusText: {
     fontSize: 10,
-    fontWeight: "600",
-    color: "white",
+    fontWeight: '600',
+    color: 'white',
   },
   loadingState: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   loadingFooter: {
     paddingVertical: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 16,
@@ -297,56 +278,60 @@ const styles = StyleSheet.create({
   },
   errorState: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 32,
   },
   errorTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
   errorSubtitle: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 16,
   },
   errorHelp: {
     fontSize: 14,
     opacity: 0.7,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 20,
   },
   emptyState: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 32,
+  },
+  skeletonContainer: {
+    flex: 1,
+    paddingBottom: 100, // Account for tab bar
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
   emptyStateText: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
   errorLoadingConversations: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
   noConversations: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
   },
 });

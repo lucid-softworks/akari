@@ -18,7 +18,7 @@ import type { BlueskyFeedItem } from '@/utils/blueskyApi';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
-export default function HomeScreen() {
+export default function HomeScreenWithSkeletons() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -153,9 +153,10 @@ export default function HomeScreen() {
     );
   };
 
+  // Show skeleton loading for feeds
   if (feedsLoading) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
         <ThemedView style={styles.header}>
           <ThemedText style={styles.subtitle}>{t('feed.loadingFeeds')}</ThemedText>
         </ThemedView>
@@ -165,7 +166,7 @@ export default function HomeScreen() {
 
   if (!feedsData?.feeds || feedsData.feeds.length === 0) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
         <ThemedView style={styles.header}>
           <ThemedText style={styles.subtitle}>{t('feed.noCustomFeedsFound')}</ThemedText>
         </ThemedView>
@@ -193,7 +194,7 @@ export default function HomeScreen() {
       {selectedFeed ? (
         <FlatList
           ref={flatListRef}
-          data={allPosts}
+          data={feedLoading ? [] : allPosts}
           renderItem={renderFeedItem}
           keyExtractor={(item) => `${item.post.uri}-${item.post.indexedAt}`}
           style={styles.feedList}
@@ -204,7 +205,7 @@ export default function HomeScreen() {
           ListFooterComponent={
             isFetchingNextPage ? (
               <ThemedView style={styles.loadingMore}>
-                <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
+                <ThemedText>{t('feed.loadingMore')}</ThemedText>
               </ThemedView>
             ) : null
           }
@@ -213,14 +214,14 @@ export default function HomeScreen() {
               <FeedSkeleton count={5} />
             ) : (
               <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
+                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsFound')}</ThemedText>
               </ThemedView>
             )
           }
         />
       ) : (
-        <ThemedView style={styles.selectFeedPrompt}>
-          <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
+        <ThemedView style={styles.emptyState}>
+          <ThemedText style={styles.emptyStateText}>{t('feed.selectFeedToView')}</ThemedText>
         </ThemedView>
       )}
     </ThemedView>
@@ -232,55 +233,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e8eaed',
   },
   subtitle: {
-    fontSize: 14,
-    opacity: 0.8,
-    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
   feedList: {
     flex: 1,
   },
   feedListContent: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  loadingMore: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.6,
+    flexGrow: 1,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 40,
+    padding: 32,
   },
   emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
     textAlign: 'center',
+    marginBottom: 8,
+    opacity: 0.7,
   },
-  selectFeedPrompt: {
-    flex: 1,
-    justifyContent: 'center',
+  loadingMore: {
+    padding: 16,
     alignItems: 'center',
-    paddingVertical: 40,
   },
-  selectFeedText: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-});
+}); 
