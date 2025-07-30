@@ -1,7 +1,7 @@
 import { useNavigationState } from '@react-navigation/native';
 import { Redirect, Tabs } from 'expo-router';
 import React, { useRef } from 'react';
-import { ActivityIndicator, Platform } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { TabBadge } from '@/components/TabBadge';
@@ -107,10 +107,10 @@ export default function TabLayout() {
         name="messages"
         options={{
           tabBarIcon: ({ color }) => (
-            <ThemedView style={{ position: 'relative' }}>
+            <View style={{ position: 'relative' }}>
               <TabBarIcon name="message.fill" color={color} />
               <TabBadge count={unreadMessagesCount} size="small" />
-            </ThemedView>
+            </View>
           ),
         }}
       />
@@ -118,10 +118,10 @@ export default function TabLayout() {
         name="notifications"
         options={{
           tabBarIcon: ({ color }) => (
-            <ThemedView style={{ position: 'relative' }}>
+            <View style={{ position: 'relative' }}>
               <TabBarIcon name="bell.fill" color={color} />
               <TabBadge count={unreadNotificationsCount} size="small" />
-            </ThemedView>
+            </View>
           ),
         }}
       />

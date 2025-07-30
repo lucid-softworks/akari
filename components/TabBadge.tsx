@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -49,6 +49,23 @@ const baseStyles = StyleSheet.create({
     minWidth: 20,
     height: 20,
     paddingHorizontal: 6,
+    // iOS-specific positioning to avoid background issues
+    top: Platform.OS === 'ios' ? -8 : -5,
+    right: Platform.OS === 'ios' ? -8 : -5,
+    // Add shadow for better visibility on iOS blur background
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 3,
+      },
+      default: {},
+    }),
   },
   text: {
     fontSize: 12,
@@ -64,6 +81,9 @@ const smallStyles = StyleSheet.create({
     minWidth: 16,
     height: 16,
     paddingHorizontal: 4,
+    // Adjust positioning for small badges
+    top: Platform.OS === 'ios' ? -6 : -4,
+    right: Platform.OS === 'ios' ? -6 : -4,
   },
   text: {
     ...baseStyles.text,
