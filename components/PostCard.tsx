@@ -40,6 +40,12 @@ type PostCardProps = {
     };
     /** Labels applied to the post */
     labels?: BlueskyLabel[];
+    /** Viewer's interaction with the post */
+    viewer?: {
+      like?: string;
+      repost?: string;
+      reply?: string;
+    };
   };
   onPress?: () => void;
 };
@@ -396,7 +402,12 @@ export function PostCard({ post, onPress }: PostCardProps) {
             <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.interactionItem}>
-            <IconSymbol name="heart" size={16} color={iconColor} style={styles.interactionIcon} />
+            <IconSymbol 
+              name={post.viewer?.like ? "heart.fill" : "heart"} 
+              size={16} 
+              color={post.viewer?.like ? "#ff3b30" : iconColor} 
+              style={styles.interactionIcon} 
+            />
             <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
           </ThemedView>
         </ThemedView>

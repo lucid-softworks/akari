@@ -157,6 +157,7 @@ export default function ProfileScreen() {
                   embed: post.embed,
                   embeds: post.embeds,
                   labels: post.labels,
+                  viewer: post.viewer,
                 }}
                 onPress={() => {
                   router.push(`/post/${encodeURIComponent(post.uri)}`);

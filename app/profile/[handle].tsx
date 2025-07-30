@@ -1,48 +1,38 @@
-import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 
-import { PostCard } from "@/components/PostCard";
-import { ProfileHeader } from "@/components/ProfileHeader";
-import { ProfileTabs } from "@/components/ProfileTabs";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
-import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
-import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
-import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
-import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
-import { useProfile } from "@/hooks/queries/useProfile";
-import { useTranslation } from "@/hooks/useTranslation";
+import { PostCard } from '@/components/PostCard';
+import { ProfileHeader } from '@/components/ProfileHeader';
+import { ProfileTabs } from '@/components/ProfileTabs';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
+import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
+import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
+import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useProfile } from '@/hooks/queries/useProfile';
+import { useTranslation } from '@/hooks/useTranslation';
 
-type TabType = "posts" | "replies" | "likes" | "media";
+type TabType = 'posts' | 'replies' | 'likes' | 'media';
 
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
-  const [activeTab, setActiveTab] = useState<TabType>("posts");
+  const [activeTab, setActiveTab] = useState<TabType>('posts');
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
 
   const { data: profile, isLoading, error } = useProfile(handle);
-  const { data: posts, isLoading: postsLoading } = useAuthorPosts(
-    activeTab === "posts" ? handle : undefined
-  );
-  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
-    activeTab === "replies" ? handle : undefined
-  );
-  const { data: likes, isLoading: likesLoading } = useAuthorLikes(
-    activeTab === "likes" ? handle : undefined
-  );
-  const { data: media, isLoading: mediaLoading } = useAuthorMedia(
-    activeTab === "media" ? handle : undefined
-  );
+  const { data: posts, isLoading: postsLoading } = useAuthorPosts(activeTab === 'posts' ? handle : undefined);
+  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(activeTab === 'replies' ? handle : undefined);
+  const { data: likes, isLoading: likesLoading } = useAuthorLikes(activeTab === 'likes' ? handle : undefined);
+  const { data: media, isLoading: mediaLoading } = useAuthorMedia(activeTab === 'media' ? handle : undefined);
 
   if (isLoading) {
     return (
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.loadingText}>
-          {t("common.loading")}
-        </ThemedText>
+        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
       </ThemedView>
     );
   }
@@ -50,9 +40,7 @@ export default function ProfileScreen() {
   if (error || !profile) {
     return (
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.errorText}>
-          {t("common.noProfile")}
-        </ThemedText>
+        <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
       </ThemedView>
     );
   }
@@ -61,13 +49,13 @@ export default function ProfileScreen() {
 
   const getCurrentData = () => {
     switch (activeTab) {
-      case "posts":
+      case 'posts':
         return posts || [];
-      case "replies":
+      case 'replies':
         return replies || [];
-      case "likes":
+      case 'likes':
         return likes || [];
-      case "media":
+      case 'media':
         return media || [];
       default:
         return [];
@@ -76,13 +64,13 @@ export default function ProfileScreen() {
 
   const getCurrentLoading = () => {
     switch (activeTab) {
-      case "posts":
+      case 'posts':
         return postsLoading;
-      case "replies":
+      case 'replies':
         return repliesLoading;
-      case "likes":
+      case 'likes':
         return likesLoading;
-      case "media":
+      case 'media':
         return mediaLoading;
       default:
         return false;
@@ -91,16 +79,16 @@ export default function ProfileScreen() {
 
   const getEmptyMessage = () => {
     switch (activeTab) {
-      case "posts":
-        return t("profile.noPosts");
-      case "replies":
-        return t("profile.noReplies");
-      case "likes":
-        return t("profile.noLikes");
-      case "media":
-        return t("profile.noMedia");
+      case 'posts':
+        return t('profile.noPosts');
+      case 'replies':
+        return t('profile.noReplies');
+      case 'likes':
+        return t('profile.noLikes');
+      case 'media':
+        return t('profile.noMedia');
       default:
-        return t("profile.noContent");
+        return t('profile.noContent');
     }
   };
 
@@ -139,7 +127,7 @@ export default function ProfileScreen() {
         {currentLoading ? (
           <ThemedView style={styles.loadingContainer}>
             <ThemedText style={styles.loadingText}>
-              {t("common.loading")} {t(`common.${activeTab}`)}...
+              {t('common.loading')} {t(`common.${activeTab}`)}...
             </ThemedText>
           </ThemedView>
         ) : currentData && currentData.length > 0 ? (
@@ -150,7 +138,7 @@ export default function ProfileScreen() {
               const replyTo = item.reply?.parent
                 ? {
                     author: {
-                      handle: item.reply.parent.author?.handle || "unknown",
+                      handle: item.reply.parent.author?.handle || 'unknown',
                       displayName: item.reply.parent.author?.displayName,
                     },
                     text: item.reply.parent.record?.text as string | undefined,
@@ -175,6 +163,7 @@ export default function ProfileScreen() {
                     embed: item.embed,
                     embeds: item.embeds,
                     labels: item.labels,
+                    viewer: item.viewer,
                     replyTo,
                   }}
                   onPress={() => {
@@ -185,9 +174,7 @@ export default function ProfileScreen() {
             })
         ) : (
           <ThemedView style={styles.emptyPosts}>
-            <ThemedText style={styles.emptyPostsText}>
-              {emptyMessage}
-            </ThemedText>
+            <ThemedText style={styles.emptyPostsText}>{emptyMessage}</ThemedText>
           </ThemedView>
         )}
       </ScrollView>
@@ -207,22 +194,22 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 40,
   },
   errorText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 40,
-    color: "red",
+    color: 'red',
   },
   loadingContainer: {
     paddingVertical: 40,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyPosts: {
     paddingVertical: 40,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyPostsText: {
     fontSize: 16,

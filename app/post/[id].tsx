@@ -1,15 +1,15 @@
-import { Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useRef } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { PostCard } from "@/components/PostCard";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useParentPost, usePost, useRootPost } from "@/hooks/queries/usePost";
-import { usePostThread } from "@/hooks/queries/usePostThread";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { BlueskyFeedItem, BlueskyPostView } from "@/utils/bluesky/types";
+import { PostCard } from '@/components/PostCard';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useParentPost, usePost, useRootPost } from '@/hooks/queries/usePost';
+import { usePostThread } from '@/hooks/queries/usePostThread';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { BlueskyFeedItem, BlueskyPostView } from '@/utils/bluesky/types';
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,49 +25,38 @@ export default function PostDetailScreen() {
   // Check if this post is a reply and fetch parent/root posts
   // Use the main post data (from getPost) since threadData doesn't include the main post
   const mainPost = post;
-  const isReply =
-    typeof mainPost?.record === "object" &&
-    mainPost?.record &&
-    "reply" in mainPost.record;
+  const isReply = typeof mainPost?.record === 'object' && mainPost?.record && 'reply' in mainPost.record;
   const parentUri =
-    typeof mainPost?.record === "object" &&
+    typeof mainPost?.record === 'object' &&
     mainPost?.record &&
-    "reply" in mainPost.record &&
+    'reply' in mainPost.record &&
     mainPost.record.reply &&
-    typeof mainPost.record.reply === "object" &&
-    "parent" in mainPost.record.reply &&
+    typeof mainPost.record.reply === 'object' &&
+    'parent' in mainPost.record.reply &&
     mainPost.record.reply.parent &&
-    typeof mainPost.record.reply.parent === "object" &&
-    "uri" in mainPost.record.reply.parent
+    typeof mainPost.record.reply.parent === 'object' &&
+    'uri' in mainPost.record.reply.parent
       ? (mainPost.record.reply.parent as { uri: string }).uri
       : undefined;
   const rootUri =
-    typeof mainPost?.record === "object" &&
+    typeof mainPost?.record === 'object' &&
     mainPost?.record &&
-    "reply" in mainPost.record &&
+    'reply' in mainPost.record &&
     mainPost.record.reply &&
-    typeof mainPost.record.reply === "object" &&
-    "root" in mainPost.record.reply &&
+    typeof mainPost.record.reply === 'object' &&
+    'root' in mainPost.record.reply &&
     mainPost.record.reply.root &&
-    typeof mainPost.record.reply.root === "object" &&
-    "uri" in mainPost.record.reply.root
+    typeof mainPost.record.reply.root === 'object' &&
+    'uri' in mainPost.record.reply.root
       ? (mainPost.record.reply.root as { uri: string }).uri
       : undefined;
 
-  const { parentPost, isLoading: parentLoading } = useParentPost(
-    parentUri || null
-  );
+  const { parentPost, isLoading: parentLoading } = useParentPost(parentUri || null);
   const { rootPost, isLoading: rootLoading } = useRootPost(rootUri || null);
 
   // Scroll to the main post after everything is loaded
   useEffect(() => {
-    if (
-      !postLoading &&
-      !threadLoading &&
-      !parentLoading &&
-      !rootLoading &&
-      isReply
-    ) {
+    if (!postLoading && !threadLoading && !parentLoading && !rootLoading && isReply) {
       // Wait a bit for the layout to complete, then scroll to the main post
       setTimeout(() => {
         mainPostRef.current?.measureLayout(
@@ -79,7 +68,7 @@ export default function PostDetailScreen() {
           () => {
             // Fallback if measureLayout fails - scroll to a reasonable position
             scrollViewRef.current?.scrollTo({ y: 0, animated: false });
-          }
+          },
         );
       }, 100);
     }
@@ -93,14 +82,14 @@ export default function PostDetailScreen() {
           uri: string;
           notFound?: boolean;
           blocked?: boolean;
-          author?: BlueskyPostView["author"];
-        }
+          author?: BlueskyPostView['author'];
+        },
   ) => {
     // Skip null or blocked replies
-    if (!item || "notFound" in item || "blocked" in item) return null;
+    if (!item || 'notFound' in item || 'blocked' in item) return null;
 
     // Handle BlueskyFeedItem type
-    if ("post" in item) {
+    if ('post' in item) {
       const post = item.post;
       if (!post.author || !post.author.handle) {
         return null;
@@ -109,13 +98,11 @@ export default function PostDetailScreen() {
       const commentReplyTo = post.reply?.parent
         ? {
             author: {
-              handle: post.reply.parent.author?.handle || "unknown",
+              handle: post.reply.parent.author?.handle || 'unknown',
               displayName: post.reply.parent.author?.displayName,
             },
             text:
-              typeof post.reply.parent.record === "object" &&
-              post.reply.parent.record &&
-              "text" in post.reply.parent.record
+              typeof post.reply.parent.record === 'object' && post.reply.parent.record && 'text' in post.reply.parent.record
                 ? (post.reply.parent.record as { text: string }).text
                 : undefined,
           }
@@ -127,9 +114,7 @@ export default function PostDetailScreen() {
           post={{
             id: post.uri,
             text:
-              typeof post.record === "object" &&
-              post.record &&
-              "text" in post.record
+              typeof post.record === 'object' && post.record && 'text' in post.record
                 ? (post.record as { text: string }).text
                 : undefined,
             author: {
@@ -161,9 +146,7 @@ export default function PostDetailScreen() {
         post={{
           id: postItem.uri,
           text:
-            typeof postItem.record === "object" &&
-            postItem.record &&
-            "text" in postItem.record
+            typeof postItem.record === 'object' && postItem.record && 'text' in postItem.record
               ? (postItem.record as { text: string }).text
               : undefined,
           author: {
@@ -178,6 +161,7 @@ export default function PostDetailScreen() {
           embed: postItem.embed,
           embeds: postItem.embeds,
           labels: postItem.labels,
+          viewer: postItem.viewer,
         }}
       />
     );
@@ -198,9 +182,7 @@ export default function PostDetailScreen() {
         post={{
           id: parentPost.uri,
           text:
-            typeof parentPost.record === "object" &&
-            parentPost.record &&
-            "text" in parentPost.record
+            typeof parentPost.record === 'object' && parentPost.record && 'text' in parentPost.record
               ? (parentPost.record as { text: string }).text
               : undefined,
           author: {
@@ -215,6 +197,7 @@ export default function PostDetailScreen() {
           embed: parentPost.embed,
           embeds: parentPost.embeds,
           labels: parentPost.labels,
+          viewer: parentPost.viewer,
         }}
       />
     );
@@ -229,9 +212,7 @@ export default function PostDetailScreen() {
         post={{
           id: rootPost.uri,
           text:
-            typeof rootPost.record === "object" &&
-            rootPost.record &&
-            "text" in rootPost.record
+            typeof rootPost.record === 'object' && rootPost.record && 'text' in rootPost.record
               ? (rootPost.record as { text: string }).text
               : undefined,
           author: {
@@ -245,6 +226,7 @@ export default function PostDetailScreen() {
           repostCount: rootPost.repostCount || 0,
           embed: rootPost.embed,
           embeds: rootPost.embeds,
+          viewer: rootPost.viewer,
         }}
       />
     );
@@ -252,10 +234,10 @@ export default function PostDetailScreen() {
 
   const borderColor = useThemeColor(
     {
-      light: "#e8eaed",
-      dark: "#2d3133",
+      light: '#e8eaed',
+      dark: '#2d3133',
     },
-    "background"
+    'background',
   );
 
   if (postLoading || threadLoading || parentLoading || rootLoading) {
@@ -263,14 +245,12 @@ export default function PostDetailScreen() {
       <>
         <Stack.Screen
           options={{
-            title: t("navigation.post"),
-            headerBackButtonDisplayMode: "minimal",
+            title: t('navigation.post'),
+            headerBackButtonDisplayMode: 'minimal',
           }}
         />
         <ThemedView style={styles.container}>
-          <ThemedText style={styles.loadingText}>
-            {t("post.loadingPost")}
-          </ThemedText>
+          <ThemedText style={styles.loadingText}>{t('post.loadingPost')}</ThemedText>
         </ThemedView>
       </>
     );
@@ -281,14 +261,12 @@ export default function PostDetailScreen() {
       <>
         <Stack.Screen
           options={{
-            title: t("navigation.post"),
-            headerBackButtonDisplayMode: "minimal",
+            title: t('navigation.post'),
+            headerBackButtonDisplayMode: 'minimal',
           }}
         />
         <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>
-            {t("post.postNotFound")}
-          </ThemedText>
+          <ThemedText style={styles.errorText}>{t('post.postNotFound')}</ThemedText>
         </ThemedView>
       </>
     );
@@ -298,8 +276,8 @@ export default function PostDetailScreen() {
     <>
       <Stack.Screen
         options={{
-          title: t("navigation.post"),
-          headerBackButtonDisplayMode: "minimal",
+          title: t('navigation.post'),
+          headerBackButtonDisplayMode: 'minimal',
         }}
       />
       <ThemedView style={styles.container}>
@@ -319,38 +297,31 @@ export default function PostDetailScreen() {
           <View ref={mainPostRef}>
             <PostCard
               post={{
-                id: mainPost?.uri || "",
+                id: mainPost?.uri || '',
                 text:
-                  typeof mainPost?.record === "object" &&
-                  mainPost?.record &&
-                  "text" in mainPost.record
+                  typeof mainPost?.record === 'object' && mainPost?.record && 'text' in mainPost.record
                     ? (mainPost.record as { text: string }).text
                     : undefined,
                 author: {
-                  handle: mainPost?.author?.handle || "",
+                  handle: mainPost?.author?.handle || '',
                   displayName: mainPost?.author?.displayName,
                   avatar: mainPost?.author?.avatar,
                 },
-                createdAt: new Date(
-                  mainPost?.indexedAt || Date.now()
-                ).toLocaleDateString(),
+                createdAt: new Date(mainPost?.indexedAt || Date.now()).toLocaleDateString(),
                 likeCount: mainPost?.likeCount || 0,
                 commentCount: mainPost?.replyCount || 0,
                 repostCount: mainPost?.repostCount || 0,
                 embed: mainPost?.embed,
                 embeds: mainPost?.embeds,
                 labels: mainPost?.labels,
+                viewer: mainPost?.viewer,
               }}
             />
           </View>
 
           {/* Comments Section */}
-          <ThemedView
-            style={[styles.commentsSection, { borderBottomColor: borderColor }]}
-          >
-            <ThemedText style={styles.commentsTitle}>
-              {t("post.comments", { count: comments?.length || 0 })}
-            </ThemedText>
+          <ThemedView style={[styles.commentsSection, { borderBottomColor: borderColor }]}>
+            <ThemedText style={styles.commentsTitle}>{t('post.comments', { count: comments?.length || 0 })}</ThemedText>
           </ThemedView>
 
           {/* Comments List */}
@@ -358,23 +329,20 @@ export default function PostDetailScreen() {
             comments
               .filter(
                 (
-                  item
+                  item,
                 ): item is
                   | BlueskyFeedItem
                   | {
                       uri: string;
                       notFound?: boolean;
                       blocked?: boolean;
-                      author?: BlueskyPostView["author"];
-                    } =>
-                  item !== null && !("notFound" in item) && !("blocked" in item)
+                      author?: BlueskyPostView['author'];
+                    } => item !== null && !('notFound' in item) && !('blocked' in item),
               )
               .map(renderComment)
           ) : (
             <ThemedView style={styles.emptyComments}>
-              <ThemedText style={styles.emptyCommentsText}>
-                {t("post.noCommentsYet")}
-              </ThemedText>
+              <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
             </ThemedView>
           )}
         </ScrollView>
@@ -395,18 +363,18 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 40,
   },
   errorText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 40,
-    color: "red",
+    color: 'red',
   },
   parentPostContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   commentsSection: {
     paddingHorizontal: 16,
@@ -415,11 +383,11 @@ const styles = StyleSheet.create({
   },
   commentsTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   emptyComments: {
     padding: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyCommentsText: {
     fontSize: 16,

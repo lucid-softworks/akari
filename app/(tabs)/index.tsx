@@ -141,6 +141,7 @@ export default function HomeScreen() {
           embed: item.post.embed,
           embeds: item.post.embeds,
           labels: item.post.labels,
+          viewer: item.post.viewer,
           replyTo,
         }}
         onPress={() => {

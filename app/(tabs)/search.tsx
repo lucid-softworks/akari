@@ -1,39 +1,32 @@
-import { Image } from "expo-image";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  Keyboard,
-  RefreshControl,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Image } from 'expo-image';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Labels } from "@/components/Labels";
+import { Labels } from '@/components/Labels';
 
-import { PostCard } from "@/components/PostCard";
-import { SearchTabs } from "@/components/SearchTabs";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useSearch } from "@/hooks/queries/useSearch";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { PostCard } from '@/components/PostCard';
+import { SearchTabs } from '@/components/SearchTabs';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useSearch } from '@/hooks/queries/useSearch';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 type SearchResult = {
-  type: "profile" | "post";
+  type: 'profile' | 'post';
   data: any;
 };
 
-type SearchTabType = "all" | "users" | "posts";
+type SearchTabType = 'all' | 'users' | 'posts';
 
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
-  const [query, setQuery] = useState(initialQuery || "");
-  const [searchQuery, setSearchQuery] = useState(initialQuery || "");
-  const [activeTab, setActiveTab] = useState<SearchTabType>("all");
+  const [query, setQuery] = useState(initialQuery || '');
+  const [searchQuery, setSearchQuery] = useState(initialQuery || '');
+  const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
@@ -45,31 +38,31 @@ export default function SearchScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register("search", scrollToTop);
+    tabScrollRegistry.register('search', scrollToTop);
   }, []);
 
   const backgroundColor = useThemeColor(
     {
-      light: "#ffffff",
-      dark: "#000000",
+      light: '#ffffff',
+      dark: '#000000',
     },
-    "background"
+    'background',
   );
 
   const textColor = useThemeColor(
     {
-      light: "#000000",
-      dark: "#ffffff",
+      light: '#000000',
+      dark: '#ffffff',
     },
-    "text"
+    'text',
   );
 
   const borderColor = useThemeColor(
     {
-      light: "#e8eaed",
-      dark: "#2d3133",
+      light: '#e8eaed',
+      dark: '#2d3133',
     },
-    "background"
+    'background',
   );
 
   // Use the infinite search hook with searchQuery (not query) - always fetch "all" data
@@ -83,7 +76,7 @@ export default function SearchScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useSearch(searchQuery.trim() || undefined, "all", 20);
+  } = useSearch(searchQuery.trim() || undefined, 'all', 20);
 
   // Flatten all search results from all pages
   const allResults = searchData?.pages.flatMap((page) => page.results) || [];
@@ -91,11 +84,11 @@ export default function SearchScreen() {
   // Filter results based on active tab
   const filteredResults = allResults.filter((result) => {
     switch (activeTab) {
-      case "users":
-        return result.type === "profile";
-      case "posts":
-        return result.type === "post";
-      case "all":
+      case 'users':
+        return result.type === 'profile';
+      case 'posts':
+        return result.type === 'post';
+      case 'all':
       default:
         return true;
     }
@@ -129,15 +122,13 @@ export default function SearchScreen() {
   };
 
   const renderProfileResult = ({ item }: { item: SearchResult }) => {
-    if (item.type !== "profile") return null;
+    if (item.type !== 'profile') return null;
 
     const profile = item.data;
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() =>
-          router.push(`/profile/${encodeURIComponent(profile.handle)}`)
-        }
+        onPress={() => router.push(`/profile/${encodeURIComponent(profile.handle)}`)}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
@@ -146,21 +137,16 @@ export default function SearchScreen() {
               source={{ uri: profile.avatar }}
               style={styles.profileAvatar}
               contentFit="cover"
-              placeholder={require("@/assets/images/partial-react-logo.png")}
+              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           )}
           <ThemedView style={styles.profileInfo}>
             <ThemedText style={[styles.displayName, { color: textColor }]}>
               {profile.displayName || profile.handle}
             </ThemedText>
-            <ThemedText style={[styles.handle, { color: textColor }]}>
-              @{profile.handle}
-            </ThemedText>
+            <ThemedText style={[styles.handle, { color: textColor }]}>@{profile.handle}</ThemedText>
             {profile.description && (
-              <ThemedText
-                style={[styles.description, { color: textColor }]}
-                numberOfLines={2}
-              >
+              <ThemedText style={[styles.description, { color: textColor }]} numberOfLines={2}>
                 {profile.description}
               </ThemedText>
             )}
@@ -172,7 +158,7 @@ export default function SearchScreen() {
   };
 
   const renderPostResult = ({ item }: { item: SearchResult }) => {
-    if (item.type !== "post") return null;
+    if (item.type !== 'post') return null;
 
     const post = item.data;
 
@@ -180,7 +166,7 @@ export default function SearchScreen() {
     const replyTo = post.reply?.parent
       ? {
           author: {
-            handle: post.reply.parent.author?.handle || t("common.unknown"),
+            handle: post.reply.parent.author?.handle || t('common.unknown'),
             displayName: post.reply.parent.author?.displayName,
           },
           text: post.reply.parent.record?.text,
@@ -204,6 +190,7 @@ export default function SearchScreen() {
           embed: post.embed,
           embeds: post.embeds,
           labels: post.labels,
+          viewer: post.viewer,
           replyTo,
         }}
         onPress={() => {
@@ -214,9 +201,9 @@ export default function SearchScreen() {
   };
 
   const renderResult = ({ item }: { item: SearchResult }) => {
-    if (item.type === "profile") {
+    if (item.type === 'profile') {
       return renderProfileResult({ item });
-    } else if (item.type === "post") {
+    } else if (item.type === 'post') {
       return renderPostResult({ item });
     }
     return null;
@@ -226,9 +213,7 @@ export default function SearchScreen() {
     if (isFetchingNextPage) {
       return (
         <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={[styles.loadingText, { color: textColor }]}>
-            {t("search.loadingMoreResults")}
-          </ThemedText>
+          <ThemedText style={[styles.loadingText, { color: textColor }]}>{t('search.loadingMoreResults')}</ThemedText>
         </ThemedView>
       );
     }
@@ -237,33 +222,31 @@ export default function SearchScreen() {
 
   const getEmptyStateText = () => {
     if (!searchQuery) {
-      return t("search.searchPlaceholder");
+      return t('search.searchPlaceholder');
     }
 
     if (isLoading) {
-      return t("search.searching");
+      return t('search.searching');
     }
 
     if (isError) {
-      return error?.message || t("search.searchFailed");
+      return error?.message || t('search.searchFailed');
     }
 
     switch (activeTab) {
-      case "users":
-        return t("search.noUsersFound");
-      case "posts":
-        return t("search.noPostsFound");
+      case 'users':
+        return t('search.noUsersFound');
+      case 'posts':
+        return t('search.noPostsFound');
       default:
-        return t("search.noResultsFound");
+        return t('search.noResultsFound');
     }
   };
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={[styles.title, { color: textColor }]}>
-          {t("navigation.search")}
-        </ThemedText>
+        <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.searchContainer}>
@@ -276,7 +259,7 @@ export default function SearchScreen() {
               color: textColor,
             },
           ]}
-          placeholder={t("search.searchInputPlaceholder")}
+          placeholder={t('search.searchInputPlaceholder')}
           placeholderTextColor="#999999"
           value={query}
           onChangeText={setQuery}
@@ -290,15 +273,11 @@ export default function SearchScreen() {
           onPress={handleSearch}
           disabled={isLoading}
         >
-          <ThemedText style={styles.searchButtonText}>
-            {isLoading ? t("search.searching") : t("common.search")}
-          </ThemedText>
+          <ThemedText style={styles.searchButtonText}>{isLoading ? t('search.searching') : t('common.search')}</ThemedText>
         </TouchableOpacity>
       </ThemedView>
 
-      {searchQuery && allResults.length > 0 && (
-        <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      )}
+      {searchQuery && allResults.length > 0 && <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />}
 
       <FlatList
         ref={flatListRef}
@@ -307,17 +286,13 @@ export default function SearchScreen() {
         keyExtractor={(item, index) => `${item.type}-${index}`}
         style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           <ThemedView style={styles.emptyState}>
-            <ThemedText style={[styles.emptyStateText, { color: textColor }]}>
-              {getEmptyStateText()}
-            </ThemedText>
+            <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
           </ThemedView>
         }
       />
@@ -335,10 +310,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   searchContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 12,
     gap: 8,
@@ -355,13 +330,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchButtonText: {
-    color: "#ffffff",
+    color: '#ffffff',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   resultsList: {
     flex: 1,
@@ -375,8 +350,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   profileContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     gap: 12,
   },
   profileAvatar: {
@@ -390,7 +365,7 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   handle: {
     fontSize: 14,
@@ -403,7 +378,7 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     paddingVertical: 40,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyStateText: {
     fontSize: 16,
@@ -411,7 +386,7 @@ const styles = StyleSheet.create({
   },
   loadingFooter: {
     paddingVertical: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 14,
