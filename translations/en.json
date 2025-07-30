@@ -37,6 +37,8 @@
       "video": "Video",
       "unknown": "Unknown",
       "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
       "follow": "Follow",
       "unfollow": "Unfollow",
       "block": "Block",
@@ -153,7 +155,15 @@
       "linkCopyError": "Failed to copy link to clipboard",
       "muteConfirmation": "Are you sure you want to mute @{{handle}}?",
       "unmuteConfirmation": "Are you sure you want to unmute @{{handle}}?",
-      "reportConfirmation": "Are you sure you want to report @{{handle}}?"
+      "reportConfirmation": "Are you sure you want to report @{{handle}}?",
+      "editProfile": "Edit profile",
+      "displayName": "Display name",
+      "description": "Description",
+      "displayNamePlaceholder": "Enter your display name",
+      "descriptionPlaceholder": "Tell us about yourself",
+      "noBanner": "No banner",
+      "profileUpdated": "Profile updated successfully",
+      "profileUpdateError": "Failed to update profile. Please try again."
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

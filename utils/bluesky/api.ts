@@ -58,6 +58,18 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.actors.getProfile(accessJwt, did);
   }
 
+  async updateProfile(
+    accessJwt: string,
+    profileData: {
+      displayName?: string;
+      description?: string;
+      avatar?: string;
+      banner?: string;
+    },
+  ): Promise<BlueskyProfileResponse> {
+    return this.actors.updateProfile(accessJwt, profileData);
+  }
+
   async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.feeds.getTimeline(accessJwt, limit);
   }

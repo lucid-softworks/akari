@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Labels } from '@/components/Labels';
+import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -12,6 +13,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
+import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
@@ -64,9 +66,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
+  const updateProfileMutation = useUpdateProfile();
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -249,6 +253,33 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
     }
   };
 
+  const handleEditProfile = () => {
+    setShowEditModal(true);
+  };
+
+  const handleSaveProfile = async (profileData: {
+    displayName: string;
+    description: string;
+    avatar?: string;
+    banner?: string;
+  }) => {
+    try {
+      await updateProfileMutation.mutateAsync(profileData);
+      setShowEditModal(false);
+      showAlert({
+        title: t('common.success'),
+        message: t('profile.profileUpdated'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    } catch (error) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.profileUpdateError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    }
+  };
+
   return (
     <>
       {/* Banner */}
@@ -293,8 +324,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           <View style={styles.actionButtons}>
             {isOwnProfile ? (
               <>
-                <TouchableOpacity style={styles.editButton} onPress={() => {}}>
-                  <ThemedText style={styles.editButtonText}>Edit Profile</ThemedText>
+                <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+                  <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
                 </TouchableOpacity>
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
                   <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
@@ -352,6 +383,20 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           </ThemedView>
         )}
       </ThemedView>
+
+      {/* Profile Edit Modal */}
+      <ProfileEditModal
+        visible={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSave={handleSaveProfile}
+        profile={{
+          displayName: profile.displayName,
+          description: profile.description,
+          avatar: profile.avatar,
+          banner: profile.banner,
+        }}
+        isLoading={updateProfileMutation.isPending}
+      />
     </>
   );
 }

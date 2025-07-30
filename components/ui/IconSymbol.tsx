@@ -32,6 +32,7 @@ const MAPPING = {
   'pin.fill': 'push-pin',
   pin: 'push-pin',
   ellipsis: 'more-horiz',
+  camera: 'camera-alt',
 } as IconMapping;
 
 /**
