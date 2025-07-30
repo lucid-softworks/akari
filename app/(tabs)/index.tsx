@@ -22,7 +22,7 @@ export default function HomeScreen() {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
 
-  const { data: userData } = useCurrentAccount();
+  const { data: currentAccount } = useCurrentAccount();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -35,7 +35,7 @@ export default function HomeScreen() {
   }, []);
 
   // Get user's feeds
-  const { data: feedsData, isLoading: feedsLoading, refetch: refetchFeeds } = useFeeds(userData?.did, 50);
+  const { data: feedsData, isLoading: feedsLoading, refetch: refetchFeeds } = useFeeds(currentAccount?.did, 50);
 
   // Create a combined feeds array with default home feed
   const allFeeds = [

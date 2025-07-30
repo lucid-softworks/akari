@@ -1,22 +1,19 @@
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { ExternalEmbed } from "@/components/ExternalEmbed";
-import { ImageViewer } from "@/components/ImageViewer";
-import { Labels } from "@/components/Labels";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { VideoEmbed } from "@/components/VideoEmbed";
-import { YouTubeEmbed } from "@/components/YouTubeEmbed";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import {
-  BlueskyEmbed,
-  BlueskyImage,
-  BlueskyLabel,
-} from "@/utils/bluesky/types";
+import { ExternalEmbed } from '@/components/ExternalEmbed';
+import { ImageViewer } from '@/components/ImageViewer';
+import { Labels } from '@/components/Labels';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VideoEmbed } from '@/components/VideoEmbed';
+import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/utils/bluesky/types';
 
 type PostCardProps = {
   post: {
@@ -48,9 +45,7 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, onPress }: PostCardProps) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
-  );
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [imageDimensions, setImageDimensions] = useState<{
     [key: string]: { width: number; height: number };
   }>({});
@@ -58,10 +53,18 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   const borderColor = useThemeColor(
     {
-      light: "#e8eaed",
-      dark: "#2d3133",
+      light: '#e8eaed',
+      dark: '#2d3133',
     },
-    "background"
+    'background',
+  );
+
+  const iconColor = useThemeColor(
+    {
+      light: '#687076',
+      dark: '#9BA1A6',
+    },
+    'text',
   );
 
   const handleProfilePress = () => {
@@ -80,18 +83,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
     if (!post.embed) return { urls: [], altTexts: [] };
 
     // Handle different embed types
-    if (post.embed.$type === "app.bsky.embed.images") {
+    if (post.embed.$type === 'app.bsky.embed.images') {
       // Filter out video files, only show actual images
       const imageFiles =
-        post.embed.images?.filter(
-          (img: BlueskyImage) =>
-            !img.image?.mimeType || !img.image.mimeType.startsWith("video/")
-        ) || [];
+        post.embed.images?.filter((img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/')) ||
+        [];
 
-      const urls =
-        imageFiles
-          .map((img: BlueskyImage) => img.fullsize?.ref?.$link)
-          .filter(Boolean) || [];
+      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize?.ref?.$link).filter(Boolean) || [];
       const altTexts = imageFiles.map((img: BlueskyImage) => img.alt) || [];
       return { urls, altTexts };
     }
@@ -100,13 +98,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
     if (post.embed.images) {
       // Filter out video files, only show actual images
       const imageFiles = post.embed.images.filter(
-        (img: BlueskyImage) =>
-          !img.image?.mimeType || !img.image.mimeType.startsWith("video/")
+        (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
       );
 
-      const urls = imageFiles
-        .map((img: BlueskyImage) => img.fullsize?.ref?.$link)
-        .filter(Boolean);
+      const urls = imageFiles.map((img: BlueskyImage) => img.fullsize?.ref?.$link).filter(Boolean);
       const altTexts = imageFiles.map((img: BlueskyImage) => img.alt);
       return { urls, altTexts };
     }
@@ -119,24 +114,20 @@ export function PostCard({ post, onPress }: PostCardProps) {
     if (!post.embed) return null;
 
     // Handle Bluesky native video embeds
-    if (post.embed.$type === "app.bsky.embed.video" && post.embed.video) {
+    if (post.embed.$type === 'app.bsky.embed.video' && post.embed.video) {
       return {
         videoUrl: post.embed.video?.ref?.$link,
         thumbnailUrl: post.embed.video?.ref?.$link, // Use video URL as thumbnail for now
-        altText: post.embed.video?.alt || t("common.video"),
+        altText: post.embed.video?.alt || t('common.video'),
         aspectRatio: post.embed.aspectRatio,
       };
     }
 
     // Handle image embeds that might contain videos
-    if (
-      post.embed.$type === "app.bsky.embed.images#view" &&
-      post.embed.images
-    ) {
+    if (post.embed.$type === 'app.bsky.embed.images#view' && post.embed.images) {
       // Check if any of the images are actually videos
       const videoImages = post.embed.images.filter(
-        (img: BlueskyImage) =>
-          img.image?.mimeType && img.image.mimeType.startsWith("video/")
+        (img: BlueskyImage) => img.image?.mimeType && img.image.mimeType.startsWith('video/'),
       );
 
       if (videoImages.length > 0) {
@@ -149,17 +140,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
 
     // Handle record with media embeds that might contain video
-    if (
-      post.embed.$type === "app.bsky.embed.recordWithMedia#view" &&
-      post.embed.media
-    ) {
-      if (
-        post.embed.media.$type === "app.bsky.embed.images#view" &&
-        post.embed.media.images
-      ) {
+    if (post.embed.$type === 'app.bsky.embed.recordWithMedia#view' && post.embed.media) {
+      if (post.embed.media.$type === 'app.bsky.embed.images#view' && post.embed.media.images) {
         const videoImages = post.embed.media.images.filter(
-          (img: BlueskyImage) =>
-            img.image?.mimeType && img.image.mimeType.startsWith("video/")
+          (img: BlueskyImage) => img.image?.mimeType && img.image.mimeType.startsWith('video/'),
         );
 
         if (videoImages.length > 0) {
@@ -188,32 +172,24 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
 
     // Handle both "app.bsky.embed.external" and "app.bsky.embed.external#view"
-    if (!embedData.$type?.includes("app.bsky.embed.external")) {
+    if (!embedData.$type?.includes('app.bsky.embed.external')) {
       return false;
     }
 
-    const uri = embedData.external?.uri || "";
-    return (
-      uri.includes("youtube.com") ||
-      uri.includes("youtu.be") ||
-      uri.includes("music.youtube.com")
-    );
+    const uri = embedData.external?.uri || '';
+    return uri.includes('youtube.com') || uri.includes('youtu.be') || uri.includes('music.youtube.com');
   };
 
   // Check if embed is an external embed (non-YouTube)
   const isExternalEmbed = () => {
     const embedData = post.embed || (post.embeds && post.embeds[0]);
 
-    if (!embedData || !embedData.$type?.includes("app.bsky.embed.external")) {
+    if (!embedData || !embedData.$type?.includes('app.bsky.embed.external')) {
       return false;
     }
 
-    const uri = embedData.external?.uri || "";
-    return (
-      !uri.includes("youtube.com") &&
-      !uri.includes("youtu.be") &&
-      !uri.includes("music.youtube.com")
-    );
+    const uri = embedData.external?.uri || '';
+    return !uri.includes('youtube.com') && !uri.includes('youtu.be') && !uri.includes('music.youtube.com');
   };
 
   // Check if embed is a native video embed
@@ -230,18 +206,18 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
 
     // Check for external video embeds (non-YouTube)
-    if (embedData.$type?.includes("app.bsky.embed.external")) {
-      const uri = embedData.external?.uri || "";
+    if (embedData.$type?.includes('app.bsky.embed.external')) {
+      const uri = embedData.external?.uri || '';
       // Check if it's a video link but not YouTube
       const isVideoLink =
-        uri.includes("vimeo.com") ||
-        uri.includes("dailymotion.com") ||
-        uri.includes("twitch.tv") ||
-        uri.includes("tiktok.com") ||
-        uri.includes(".mp4") ||
-        uri.includes(".mov") ||
-        uri.includes(".avi") ||
-        uri.includes(".webm");
+        uri.includes('vimeo.com') ||
+        uri.includes('dailymotion.com') ||
+        uri.includes('twitch.tv') ||
+        uri.includes('tiktok.com') ||
+        uri.includes('.mp4') ||
+        uri.includes('.mov') ||
+        uri.includes('.avi') ||
+        uri.includes('.webm');
 
       return isVideoLink && !isYouTubeEmbed();
     }
@@ -252,15 +228,15 @@ export function PostCard({ post, onPress }: PostCardProps) {
   // Get the embed data for rendering external embeds
   const getEmbedData = () => {
     const embedData = post.embed || (post.embeds && post.embeds[0]);
-    if (!embedData || !embedData.$type?.includes("app.bsky.embed.external")) {
+    if (!embedData || !embedData.$type?.includes('app.bsky.embed.external')) {
       return null;
     }
     return embedData as {
-      $type: "app.bsky.embed.external" | "app.bsky.embed.external#view";
+      $type: 'app.bsky.embed.external' | 'app.bsky.embed.external#view';
       external: {
         description: string;
         thumb?: {
-          $type: "blob";
+          $type: 'blob';
           ref: {
             $link: string;
           };
@@ -284,7 +260,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
       external?: {
         description: string;
         thumb?: {
-          $type: "blob";
+          $type: 'blob';
           ref: {
             $link: string;
           };
@@ -330,20 +306,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   return (
     <>
-      <TouchableOpacity
-        style={[styles.container, { borderBottomColor: borderColor }]}
-        onPress={onPress}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity style={[styles.container, { borderBottomColor: borderColor }]} onPress={onPress} activeOpacity={0.7}>
         {/* Reply Context */}
         {post.replyTo && (
           <ThemedView style={styles.replyContext}>
-            <ThemedText style={styles.replyIcon}>↩️</ThemedText>
+            <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
             <ThemedText style={styles.replyText}>
-              Replying to{" "}
-              <ThemedText style={styles.replyAuthor}>
-                @{post.replyTo.author.handle}
-              </ThemedText>
+              Replying to <ThemedText style={styles.replyAuthor}>@{post.replyTo.author.handle}</ThemedText>
             </ThemedText>
             <ThemedText style={styles.replyPreview} numberOfLines={1}>
               {post.replyTo.text}
@@ -355,25 +324,16 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <ThemedView style={styles.authorSection}>
             <Image
               source={{
-                uri:
-                  post.author.avatar ||
-                  "https://bsky.app/static/default-avatar.png",
+                uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
               }}
               style={styles.authorAvatar}
               contentFit="cover"
-              placeholder={require("@/assets/images/partial-react-logo.png")}
+              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
             <ThemedView style={styles.authorInfo}>
-              <ThemedText style={styles.displayName}>
-                {post.author.displayName || post.author.handle}
-              </ThemedText>
-              <TouchableOpacity
-                onPress={handleProfilePress}
-                activeOpacity={0.7}
-              >
-                <ThemedText style={styles.handle}>
-                  @{post.author.handle}
-                </ThemedText>
+              <ThemedText style={styles.displayName}>{post.author.displayName || post.author.handle}</ThemedText>
+              <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+                <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
               </TouchableOpacity>
             </ThemedView>
           </ThemedView>
@@ -384,27 +344,16 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <ThemedText style={styles.text}>{post.text}</ThemedText>
 
           {/* Render YouTube embed if present */}
-          {isYouTubeEmbed() && getEmbedData() && (
-            <YouTubeEmbed embed={getEmbedData()!} />
-          )}
+          {isYouTubeEmbed() && getEmbedData() && <YouTubeEmbed embed={getEmbedData()!} />}
 
           {/* Render external embed if present (non-YouTube) */}
-          {isExternalEmbed() && getEmbedData() && (
-            <ExternalEmbed embed={getEmbedData()!} />
-          )}
+          {isExternalEmbed() && getEmbedData() && <ExternalEmbed embed={getEmbedData()!} />}
 
           {/* Render native video embed if present */}
-          {isNativeVideoEmbed() && videoData && (
-            <VideoEmbed
-              embed={videoData}
-              onClose={() => setSelectedImageIndex(null)}
-            />
-          )}
+          {isNativeVideoEmbed() && videoData && <VideoEmbed embed={videoData} onClose={() => setSelectedImageIndex(null)} />}
 
           {/* Render external video embed if present */}
-          {isExternalVideoEmbed() && getVideoEmbedData() && (
-            <VideoEmbed embed={getVideoEmbedData()!} />
-          )}
+          {isExternalVideoEmbed() && getVideoEmbedData() && <VideoEmbed embed={getVideoEmbedData()!} />}
 
           {/* Render images if present */}
           {imageUrls.length > 0 && (
@@ -412,9 +361,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
               {imageUrls.map((imageUrl: string, index: number) => {
                 const dimensions = imageDimensions[imageUrl];
                 const screenWidth = 400; // Approximate screen width minus padding
-                const imageHeight = dimensions
-                  ? (dimensions.height / dimensions.width) * screenWidth
-                  : 300;
+                const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
 
                 return (
                   <TouchableOpacity
@@ -426,14 +373,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
                       source={{ uri: imageUrl }}
                       style={[styles.image, { height: imageHeight }]}
                       contentFit="contain"
-                      placeholder={require("@/assets/images/partial-react-logo.png")}
-                      onLoad={(event) =>
-                        handleImageLoad(
-                          imageUrl,
-                          event.source.width,
-                          event.source.height
-                        )
-                      }
+                      placeholder={require('@/assets/images/partial-react-logo.png')}
+                      onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                     />
                   </TouchableOpacity>
                 );
@@ -447,22 +388,16 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
         <ThemedView style={styles.interactions}>
           <ThemedView style={styles.interactionItem}>
-            <ThemedText style={styles.interactionIcon}>💬</ThemedText>
-            <ThemedText style={styles.interactionCount}>
-              {post.commentCount || 0}
-            </ThemedText>
+            <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
+            <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.interactionItem}>
-            <ThemedText style={styles.interactionIcon}>🔄</ThemedText>
-            <ThemedText style={styles.interactionCount}>
-              {post.repostCount || 0}
-            </ThemedText>
+            <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
+            <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.interactionItem}>
-            <ThemedText style={styles.interactionIcon}>❤️</ThemedText>
-            <ThemedText style={styles.interactionCount}>
-              {post.likeCount || 0}
-            </ThemedText>
+            <IconSymbol name="heart" size={16} color={iconColor} style={styles.interactionIcon} />
+            <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
           </ThemedView>
         </ThemedView>
       </TouchableOpacity>
@@ -487,8 +422,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   replyContext: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
     paddingHorizontal: 4,
   },
@@ -503,25 +438,25 @@ const styles = StyleSheet.create({
   },
   replyAuthor: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
     opacity: 0.8,
   },
   replyPreview: {
     fontSize: 11,
     opacity: 0.5,
-    fontStyle: "italic",
+    fontStyle: 'italic',
     flex: 1,
     marginLeft: 8,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 10,
   },
   authorSection: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     gap: 8,
     flex: 1,
   },
@@ -535,7 +470,7 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   handle: {
     fontSize: 14,
@@ -557,35 +492,35 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   image: {
-    width: "100%",
+    width: '100%',
     borderRadius: 8,
   },
   videoContainer: {
     marginTop: 8,
     padding: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   videoPlaceholder: {
     fontSize: 14,
     opacity: 0.7,
-    textAlign: "center",
+    textAlign: 'center',
   },
   interactions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: 8,
   },
   interactionItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 4,
   },
   interactionIcon: {
-    fontSize: 16,
+    // IconSymbol handles its own sizing
   },
   interactionCount: {
     fontSize: 14,

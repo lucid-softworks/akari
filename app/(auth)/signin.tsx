@@ -51,21 +51,24 @@ export default function AuthScreen() {
     }
 
     try {
-      const result = await signInMutation.mutateAsync({
+      const session = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
         pdsUrl: pdsUrl || undefined,
       });
+      console.info('session', session);
 
       const newAccount = await addAccountMutation.mutateAsync({
-        did: result.did,
-        handle: result.handle,
-        jwtToken: result.accessJwt,
-        refreshToken: result.refreshJwt,
+        did: session.did,
+        handle: session.handle,
+        jwtToken: session.accessJwt,
+        refreshToken: session.refreshJwt,
       });
+      console.info('newAccount', newAccount);
 
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
+      console.info('switched account');
 
       showAlert({
         title: t('common.success'),
@@ -103,22 +106,25 @@ export default function AuthScreen() {
     }
 
     try {
-      const result = await signInMutation.mutateAsync({
+      const session = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
         pdsUrl: pdsUrl || undefined,
       });
+      console.info('session', session);
 
       // For sign up, use the multi-account system
       const newAccount = await addAccountMutation.mutateAsync({
-        did: result.did,
-        handle: result.handle,
-        jwtToken: result.accessJwt,
-        refreshToken: result.refreshJwt,
+        did: session.did,
+        handle: session.handle,
+        jwtToken: session.accessJwt,
+        refreshToken: session.refreshJwt,
       });
+      console.info('newAccount', newAccount);
 
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
+      console.info('switched account');
 
       showAlert({
         title: t('common.success'),

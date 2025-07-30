@@ -1,13 +1,14 @@
 import { useNavigationState } from '@react-navigation/native';
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import React, { useRef } from 'react';
-import { Platform } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
+import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -47,11 +48,25 @@ function CustomTabButton(props: any) {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { data: authData, isLoading } = useAuthStatus();
+  const { data: currentAccount, isLoading: isLoadingCurrentAccount } = useCurrentAccount();
+
+  if (isLoadingCurrentAccount) {
+    return (
+      <ThemedView
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size="large" color={Colors[colorScheme ?? 'light'].tint} />
+      </ThemedView>
+    );
+  }
 
   // Don't render tabs if not authenticated or still loading
-  if (isLoading || !authData?.isAuthenticated) {
-    return null;
+  if (!currentAccount) {
+    return <Redirect href="/(auth)/signin" />;
   }
 
   return (

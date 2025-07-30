@@ -1,28 +1,28 @@
-import { router } from "expo-router";
-import React, { useRef, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { router } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 
-import { PostCard } from "@/components/PostCard";
-import { ProfileHeader } from "@/components/ProfileHeader";
-import { ProfileTabs } from "@/components/ProfileTabs";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
-import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
-import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
-import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
-import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
-import { useProfile } from "@/hooks/queries/useProfile";
-import { useTranslation } from "@/hooks/useTranslation";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PostCard } from '@/components/PostCard';
+import { ProfileHeader } from '@/components/ProfileHeader';
+import { ProfileTabs } from '@/components/ProfileTabs';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
+import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
+import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
+import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useProfile } from '@/hooks/queries/useProfile';
+import { useTranslation } from '@/hooks/useTranslation';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type TabType = "posts" | "replies" | "likes" | "media";
+type TabType = 'posts' | 'replies' | 'likes' | 'media';
 
 export default function ProfileScreen() {
-  const { data: userData } = useCurrentAccount();
+  const { data: currentAccount } = useCurrentAccount();
   const insets = useSafeAreaInsets();
-  const [activeTab, setActiveTab] = useState<TabType>("posts");
+  const [activeTab, setActiveTab] = useState<TabType>('posts');
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
 
@@ -33,33 +33,33 @@ export default function ProfileScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register("profile", scrollToTop);
+    tabScrollRegistry.register('profile', scrollToTop);
   }, []);
 
-  const { data: profile } = useProfile(userData?.handle);
+  const { data: profile } = useProfile(currentAccount?.handle);
 
   const { data: posts, isLoading: postsLoading } = useAuthorPosts(
-    activeTab === "posts" ? userData?.handle : undefined
+    activeTab === 'posts' ? currentAccount?.handle : undefined,
   );
   const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
-    activeTab === "replies" ? userData?.handle : undefined
+    activeTab === 'replies' ? currentAccount?.handle : undefined,
   );
   const { data: likes, isLoading: likesLoading } = useAuthorLikes(
-    activeTab === "likes" ? userData?.handle : undefined
+    activeTab === 'likes' ? currentAccount?.handle : undefined,
   );
   const { data: media, isLoading: mediaLoading } = useAuthorMedia(
-    activeTab === "media" ? userData?.handle : undefined
+    activeTab === 'media' ? currentAccount?.handle : undefined,
   );
 
   const getCurrentData = () => {
     switch (activeTab) {
-      case "posts":
+      case 'posts':
         return posts || [];
-      case "replies":
+      case 'replies':
         return replies || [];
-      case "likes":
+      case 'likes':
         return likes || [];
-      case "media":
+      case 'media':
         return media || [];
       default:
         return [];
@@ -68,13 +68,13 @@ export default function ProfileScreen() {
 
   const getCurrentLoading = () => {
     switch (activeTab) {
-      case "posts":
+      case 'posts':
         return postsLoading;
-      case "replies":
+      case 'replies':
         return repliesLoading;
-      case "likes":
+      case 'likes':
         return likesLoading;
-      case "media":
+      case 'media':
         return mediaLoading;
       default:
         return false;
@@ -83,16 +83,16 @@ export default function ProfileScreen() {
 
   const getEmptyMessage = () => {
     switch (activeTab) {
-      case "posts":
-        return t("profile.noPosts");
-      case "replies":
-        return t("profile.noReplies");
-      case "likes":
-        return t("profile.noLikes");
-      case "media":
-        return t("profile.noMedia");
+      case 'posts':
+        return t('profile.noPosts');
+      case 'replies':
+        return t('profile.noReplies');
+      case 'likes':
+        return t('profile.noLikes');
+      case 'media':
+        return t('profile.noMedia');
       default:
-        return t("profile.noContent");
+        return t('profile.noContent');
     }
   };
 
@@ -116,8 +116,8 @@ export default function ProfileScreen() {
         <ProfileHeader
           profile={{
             avatar: profile?.avatar,
-            displayName: profile?.displayName || userData?.handle || "",
-            handle: userData?.handle || "",
+            displayName: profile?.displayName || currentAccount?.handle || '',
+            handle: currentAccount?.handle || '',
             description: profile?.description,
             banner: profile?.banner,
             did: profile?.did,
@@ -133,17 +133,12 @@ export default function ProfileScreen() {
 
         {isLoadingData ? (
           <ThemedView style={styles.loadingState}>
-            <ThemedText style={styles.loadingText}>
-              {t("common.loading")}
-            </ThemedText>
+            <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
           </ThemedView>
         ) : currentData.length > 0 ? (
           // Deduplicate posts by URI and create unique keys
           currentData
-            .filter(
-              (post, index, self) =>
-                index === self.findIndex((p) => p.uri === post.uri)
-            )
+            .filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri))
             .map((post) => (
               <PostCard
                 key={`${post.uri}-${post.indexedAt}`}
@@ -170,9 +165,7 @@ export default function ProfileScreen() {
             ))
         ) : (
           <ThemedView style={styles.emptyState}>
-            <ThemedText style={styles.emptyStateText}>
-              {getEmptyMessage()}
-            </ThemedText>
+            <ThemedText style={styles.emptyStateText}>{getEmptyMessage()}</ThemedText>
           </ThemedView>
         )}
       </ScrollView>
@@ -192,15 +185,15 @@ const styles = StyleSheet.create({
   },
   loadingState: {
     paddingVertical: 40,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   emptyState: {
     paddingVertical: 40,
-    alignItems: "center",
+    alignItems: 'center',
   },
   emptyStateText: {
     fontSize: 16,

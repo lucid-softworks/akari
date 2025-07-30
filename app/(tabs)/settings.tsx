@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -31,6 +32,7 @@ export default function SettingsScreen() {
 
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
+  const wipeAllDataMutation = useWipeAllData();
 
   // Create scroll to top function
   const handleScrollToTop = useCallback(() => {
@@ -97,7 +99,7 @@ export default function SettingsScreen() {
 
   const handleLogout = async () => {
     try {
-      router.replace('/(auth)/signin');
+      await wipeAllDataMutation.mutateAsync();
     } catch {
       showAlert({
         title: t('common.error'),
