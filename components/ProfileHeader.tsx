@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Labels } from '@/components/Labels';
 import { ThemedText } from '@/components/ThemedText';
@@ -225,51 +225,6 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
                 <TouchableOpacity style={[styles.iconButton, { borderColor: borderColor }]} onPress={handleDropdownToggle}>
                   <IconSymbol name="ellipsis" size={20} color="#007AFF" />
                 </TouchableOpacity>
-
-                {showDropdown && (
-                  <ThemedView style={styles.dropdownOverlay}>
-                    <TouchableWithoutFeedback onPress={() => setShowDropdown(false)}>
-                      <ThemedView style={styles.dropdownOverlayTouchable} />
-                    </TouchableWithoutFeedback>
-                    <ThemedView
-                      style={[
-                        styles.dropdown,
-                        {
-                          borderColor: borderColor,
-                          backgroundColor: dropdownBackgroundColor,
-                        },
-                      ]}
-                    >
-                      <TouchableOpacity
-                        style={styles.dropdownItem}
-                        onPress={handleFollowPress}
-                        disabled={followMutation.isPending}
-                      >
-                        <ThemedText style={styles.dropdownItemText}>
-                          {followMutation.isPending
-                            ? t('common.loading')
-                            : isFollowing
-                            ? t('common.unfollow')
-                            : t('common.follow')}
-                        </ThemedText>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.dropdownItem}
-                        onPress={handleBlockPress}
-                        disabled={blockMutation.isPending}
-                      >
-                        <ThemedText style={styles.dropdownItemText}>
-                          {blockMutation.isPending
-                            ? t('common.loading')
-                            : isBlocking
-                            ? t('common.unblock')
-                            : t('common.block')}
-                        </ThemedText>
-                      </TouchableOpacity>
-                    </ThemedView>
-                  </ThemedView>
-                )}
               </ThemedView>
             )}
           </ThemedView>
@@ -308,6 +263,34 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
           </ThemedView>
         )}
       </ThemedView>
+
+      {/* Dropdown - Rendered at root level */}
+      {!isOwnProfile && !isBlockedBy && showDropdown && (
+        <>
+          <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setShowDropdown(false)} activeOpacity={1} />
+          <ThemedView
+            style={[
+              styles.dropdown,
+              {
+                borderColor: borderColor,
+                backgroundColor: dropdownBackgroundColor,
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.dropdownItem} onPress={handleFollowPress} disabled={followMutation.isPending}>
+              <ThemedText style={styles.dropdownItemText}>
+                {followMutation.isPending ? t('common.loading') : isFollowing ? t('common.unfollow') : t('common.follow')}
+              </ThemedText>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.dropdownItem} onPress={handleBlockPress} disabled={blockMutation.isPending}>
+              <ThemedText style={styles.dropdownItemText}>
+                {blockMutation.isPending ? t('common.loading') : isBlocking ? t('common.unblock') : t('common.block')}
+              </ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        </>
+      )}
     </>
   );
 }
@@ -393,29 +376,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
   },
   dropdownContainer: {
     position: 'relative',
   },
-  dropdownOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1000,
-  },
-  dropdownOverlayTouchable: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
   dropdown: {
     position: 'absolute',
-    top: 45,
-    right: 0,
+    top: 200, // Position relative to the top of the screen
+    right: 16, // Align with the right edge of the profile header
     borderRadius: 8,
     borderWidth: 1,
     shadowColor: '#000',
@@ -427,7 +396,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     minWidth: 120,
-    zIndex: 1001,
+    zIndex: 10000,
   },
   dropdownItem: {
     paddingHorizontal: 16,
@@ -455,5 +424,13 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 15,
     opacity: 0.8,
+  },
+  dropdownBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999, // Ensure it's below other content
   },
 });
