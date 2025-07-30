@@ -11,9 +11,9 @@ import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
 import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
 import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useTranslation } from "@/hooks/useTranslation";
-import { jwtStorage } from "@/utils/secureStorage";
 
 type TabType = "posts" | "replies" | "likes" | "media";
 
@@ -21,24 +21,20 @@ export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const { t } = useTranslation();
-  const currentUser = jwtStorage.getUserData();
+  const { data: currentUser } = useCurrentAccount();
 
   const { data: profile, isLoading, error } = useProfile(handle);
   const { data: posts, isLoading: postsLoading } = useAuthorPosts(
-    handle,
-    activeTab === "posts"
+    activeTab === "posts" ? handle : undefined
   );
   const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
-    handle,
-    activeTab === "replies"
+    activeTab === "replies" ? handle : undefined
   );
   const { data: likes, isLoading: likesLoading } = useAuthorLikes(
-    handle,
-    activeTab === "likes"
+    activeTab === "likes" ? handle : undefined
   );
   const { data: media, isLoading: mediaLoading } = useAuthorMedia(
-    handle,
-    activeTab === "media"
+    activeTab === "media" ? handle : undefined
   );
 
   if (isLoading) {

@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 type MessageError = {
   type: "permission" | "network" | "unknown";
@@ -12,22 +13,17 @@ type MessageError = {
  * Infinite query hook for fetching messages in a conversation
  * @param convoId - The conversation ID
  * @param limit - Number of messages to fetch per page (1-100, default: 50)
- * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useMessages(
-  convoId: string,
-  limit: number = 50,
-  enabled: boolean = true
-) {
-  // Get current user data for query key
-  const currentUser = jwtStorage.getUserData();
-  const currentUserDid = currentUser?.did;
+export function useMessages(convoId: string | undefined, limit: number = 50) {
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+  const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
     queryKey: ["messages", convoId, limit, currentUserDid],
     queryFn: async ({ pageParam }) => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
+      if (!convoId) throw new Error("No conversation ID provided");
 
       try {
         const response = await blueskyApi.getMessages(
@@ -39,8 +35,7 @@ export function useMessages(
 
         // Transform the data to match our UI needs
         const messages = response.messages.map((message) => {
-          const currentUser = jwtStorage.getUserData();
-          const isFromMe = message.sender.did === currentUser.did;
+          const isFromMe = message.sender.did === currentAccount?.did;
 
           return {
             id: message.id,
@@ -106,8 +101,7 @@ export function useMessages(
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
-    enabled:
-      enabled && !!jwtStorage.getToken() && !!convoId && !!currentUserDid,
+    enabled: !!token && !!convoId && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: MessageError) => {
       // Don't retry permission errors

@@ -1,5 +1,5 @@
+import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
 import { BlueskyApi, blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
  */
 export function useSignIn() {
   const queryClient = useQueryClient();
+  const setAuthMutation = useSetAuthentication();
 
   return useMutation({
     mutationFn: async ({
@@ -25,13 +26,16 @@ export function useSignIn() {
       const api = pdsUrl ? BlueskyApi.createWithPDS(pdsUrl) : blueskyApi;
       return await api.createSession(identifier, password);
     },
-    onSuccess: (session) => {
-      // Store tokens securely
-      jwtStorage.setToken(session.accessJwt);
-      jwtStorage.setRefreshToken(session.refreshJwt);
-      jwtStorage.setUserData(session.did, session.handle);
+    onSuccess: async (session) => {
+      // Store tokens securely - await to prevent race conditions
+      await setAuthMutation.mutateAsync({
+        token: session.accessJwt,
+        refreshToken: session.refreshJwt,
+        did: session.did,
+        handle: session.handle,
+      });
 
-      // Invalidate and refetch auth-related queries
+      // Invalidate all auth-related queries to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ["auth"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },

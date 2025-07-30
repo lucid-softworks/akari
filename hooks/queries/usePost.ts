@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 export function usePost(postUri: string | null) {
+  const { data: token } = useJwtToken();
+
   return useQuery({
     queryKey: ["post", postUri],
     queryFn: async () => {
-      const token = jwtStorage.getToken();
       if (!token || !postUri) throw new Error("No access token or post URI");
 
       return await blueskyApi.getPost(token, postUri);
@@ -21,6 +22,8 @@ export function usePost(postUri: string | null) {
  * Hook to fetch a parent post when viewing a reply
  */
 export function useParentPost(parentUri: string | null) {
+  const { data: token } = useJwtToken();
+
   const {
     data: parentPost,
     error,
@@ -29,7 +32,6 @@ export function useParentPost(parentUri: string | null) {
     queryKey: ["parentPost", parentUri],
     queryFn: async () => {
       if (!parentUri) return null;
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
       const result = await blueskyApi.getPost(token, parentUri);
       return result;
@@ -44,6 +46,8 @@ export function useParentPost(parentUri: string | null) {
  * Hook to fetch a root post when viewing a reply in a thread
  */
 export function useRootPost(rootUri: string | null) {
+  const { data: token } = useJwtToken();
+
   const {
     data: rootPost,
     error,
@@ -52,7 +56,6 @@ export function useRootPost(rootUri: string | null) {
     queryKey: ["rootPost", rootUri],
     queryFn: async () => {
       if (!rootUri) return null;
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
       const result = await blueskyApi.getPost(token, rootUri);
       return result;

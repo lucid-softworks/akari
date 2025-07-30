@@ -1,32 +1,35 @@
-import Constants from "expo-constants";
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Constants from 'expo-constants';
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { LanguageSelector } from "@/components/LanguageSelector";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
-import { useProfile } from "@/hooks/queries/useProfile";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { checkMissingTranslations } from "@/utils/devUtils";
-import { jwtStorage, type Account } from "@/utils/secureStorage";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useAccounts } from '@/hooks/queries/useAccounts';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useProfile } from '@/hooks/queries/useProfile';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Account } from '@/types/account';
+import { checkMissingTranslations } from '@/utils/devUtils';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 export default function SettingsScreen() {
-  const { data: authData, isLoading } = useAuthStatus();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const { t } = useTranslation();
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
-  const [accountProfiles, setAccountProfiles] = useState<Record<string, any>>(
-    {}
-  );
+  const { data: accounts = [] } = useAccounts();
+  const { data: currentAccount } = useCurrentAccount();
+  const [accountProfiles, setAccountProfiles] = useState<Record<string, any>>({});
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const switchAccountMutation = useSwitchAccount();
+  const removeAccountMutation = useRemoveAccount();
 
   // Create scroll to top function
   const handleScrollToTop = useCallback(() => {
@@ -37,98 +40,50 @@ export default function SettingsScreen() {
 
   // Register with the tab scroll registry
   useEffect(() => {
-    tabScrollRegistry.register("settings", handleScrollToTop);
+    tabScrollRegistry.register('settings', handleScrollToTop);
   }, [handleScrollToTop]);
 
   // Get current account profile data
-  const { data: currentProfile } = useProfile(
-    currentAccount?.handle || "",
-    !!currentAccount?.handle
-  );
-
-  // Handle navigation in useEffect to avoid React warnings
-  useEffect(() => {
-    if (!isLoading && !authData?.isAuthenticated) {
-      router.replace("/(auth)/signin");
-    }
-  }, [authData?.isAuthenticated, isLoading]);
-
-  // Load accounts on mount
-  useEffect(() => {
-    if (authData?.isAuthenticated) {
-      let allAccounts = jwtStorage.getAllAccounts();
-      let current = jwtStorage.getCurrentAccount();
-
-      // If no accounts exist but user is authenticated, migrate from old system
-      if (allAccounts.length === 0 && jwtStorage.isAuthenticated()) {
-        const oldUserData = jwtStorage.getUserData();
-        const oldToken = jwtStorage.getToken();
-        const oldRefreshToken = jwtStorage.getRefreshToken();
-
-        if (oldUserData.handle && oldToken) {
-          // Migrate to multi-account system
-          jwtStorage.addAccount({
-            did: oldUserData.did || "",
-            handle: oldUserData.handle,
-            jwtToken: oldToken,
-            refreshToken: oldRefreshToken || "",
-          });
-
-          // Reload accounts after migration
-          allAccounts = jwtStorage.getAllAccounts();
-          current = jwtStorage.getCurrentAccount();
-        }
-      }
-
-      setAccounts(allAccounts);
-      setCurrentAccount(current);
-    }
-  }, [authData?.isAuthenticated]);
+  const { data: currentProfile } = useProfile(currentAccount?.handle);
 
   // Update current account profile data
   useEffect(() => {
     if (currentAccount && currentProfile) {
       setAccountProfiles((prev) => ({
         ...prev,
-        [currentAccount.id]: currentProfile,
+        [currentAccount.did]: currentProfile,
       }));
     }
   }, [currentAccount, currentProfile]);
 
   // Fetch profile data for each account to get avatars
   useEffect(() => {
-    if (accounts.length > 0) {
+    if (accounts && accounts.length > 0) {
       const fetchProfiles = async () => {
         const profiles: Record<string, any> = {};
 
         for (const account of accounts) {
           try {
             // Skip current account as it's handled by the profile hook
-            if (account.id === currentAccount?.id) {
+            if (account.did === currentAccount?.did) {
               continue;
             }
 
             // For other accounts, fetch profile data directly
-            const response = await fetch(
-              `https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${account.handle}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${account.jwtToken}`,
-                },
-              }
-            );
+            const response = await fetch(`https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${account.handle}`, {
+              headers: {
+                Authorization: `Bearer ${account.jwtToken}`,
+              },
+            });
 
             if (response.ok) {
               const profile = await response.json();
               if (profile.data) {
-                profiles[account.id] = profile.data;
+                profiles[account.did] = profile.data;
               }
             }
           } catch (error) {
-            console.error(
-              `Error fetching profile for ${account.handle}:`,
-              error
-            );
+            console.error(`Error fetching profile for ${account.handle}:`, error);
           }
         }
 
@@ -141,84 +96,59 @@ export default function SettingsScreen() {
 
   const handleLogout = async () => {
     try {
-      jwtStorage.clearAuth();
-      router.replace("/(auth)/signin");
+      router.replace('/(auth)/signin');
     } catch {
-      Alert.alert(t("common.error"), t("common.failedToLogout"));
+      Alert.alert(t('common.error'), t('common.failedToLogout'));
     }
   };
 
   const handleSwitchAccount = (account: Account) => {
-    if (account.id === currentAccount?.id) return;
+    if (account.did === currentAccount?.did) return;
 
-    Alert.alert(
-      t("common.switchAccount"),
-      t("profile.switchToAccount", { handle: account.handle }),
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
+    Alert.alert(t('common.switchAccount'), t('profile.switchToAccount', { handle: account.handle }), [
+      {
+        text: t('common.cancel'),
+        style: 'cancel',
+      },
+      {
+        text: t('common.switch'),
+        onPress: () => {
+          switchAccountMutation.mutate(account);
         },
-        {
-          text: t("common.switch"),
-          onPress: () => {
-            jwtStorage.switchAccount(account.id);
-            setCurrentAccount(account);
-            // Stay on settings page and refresh the data
-            setAccounts(jwtStorage.getAllAccounts());
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleRemoveAccount = (account: Account) => {
-    if (accounts.length === 1) {
-      Alert.alert(
-        t("common.cannotRemoveAccount"),
-        t("common.mustHaveOneAccount"),
-        [{ text: t("common.ok") }]
-      );
+    if (accounts && accounts.length === 1) {
+      Alert.alert(t('common.cannotRemoveAccount'), t('common.mustHaveOneAccount'), [{ text: t('common.ok') }]);
       return;
     }
 
-    Alert.alert(
-      t("common.removeAccount"),
-      t("profile.removeAccountConfirmation", { handle: account.handle }),
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("common.remove"),
-          style: "destructive",
-          onPress: () => {
-            jwtStorage.removeAccount(account.id);
-            const updatedAccounts = jwtStorage.getAllAccounts();
-            const updatedCurrent = jwtStorage.getCurrentAccount();
-            setAccounts(updatedAccounts);
-            setCurrentAccount(updatedCurrent);
+    Alert.alert(t('common.removeAccount'), t('profile.removeAccountConfirmation', { handle: account.handle }), [
+      {
+        text: t('common.cancel'),
+        style: 'cancel',
+      },
+      {
+        text: t('common.remove'),
+        style: 'destructive',
+        onPress: () => {
+          removeAccountMutation.mutate(account.did);
 
-            if (account.id === currentAccount?.id) {
-              // If we removed the current account, reload the app
-              router.replace("/(tabs)");
-            }
-          },
+          if (account.did === currentAccount?.did) {
+            // If we removed the current account, reload the app
+            router.replace('/(tabs)');
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleAddAccount = () => {
     // Navigate to sign in with option to add account
-    router.push("/(auth)/signin?addAccount=true");
+    router.push('/(auth)/signin?addAccount=true');
   };
-
-  // Don't render anything if not authenticated or still loading
-  if (isLoading || !authData?.isAuthenticated) {
-    return null;
-  }
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -230,9 +160,7 @@ export default function SettingsScreen() {
       >
         {/* Header */}
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.headerTitle}>
-            {t("navigation.settings")}
-          </ThemedText>
+          <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
         </ThemedView>
 
         {/* Language Section */}
@@ -243,73 +171,49 @@ export default function SettingsScreen() {
         {/* Accounts Section */}
         <ThemedView style={styles.section}>
           <ThemedText style={styles.sectionTitle}>
-            {t("common.accounts")} ({accounts.length})
+            {t('common.accounts')} ({accounts?.length || 0})
           </ThemedText>
 
-          {accounts.length === 0 && (
+          {accounts?.length === 0 && (
             <ThemedView style={styles.settingItem}>
-              <ThemedText style={styles.settingValue}>
-                {t("common.noAccounts")}
-              </ThemedText>
+              <ThemedText style={styles.settingValue}>{t('common.noAccounts')}</ThemedText>
             </ThemedView>
           )}
 
-          {accounts.map((account) => {
-            const profile = accountProfiles[account.id];
+          {accounts?.map((account) => {
+            const profile = accountProfiles[account.did];
             const avatar = profile?.avatar || account.avatar;
             const displayName = profile?.displayName || account.displayName;
 
             return (
-              <ThemedView
-                key={account.id}
-                style={[styles.settingItem, { borderBottomColor: borderColor }]}
-              >
+              <ThemedView key={account.did} style={[styles.settingItem, { borderBottomColor: borderColor }]}>
                 <ThemedView style={styles.accountInfo}>
                   <ThemedView style={styles.accountAvatarContainer}>
                     {avatar ? (
                       <ThemedView style={styles.accountAvatar}>
-                        <Image
-                          source={{ uri: avatar }}
-                          style={styles.accountAvatarImage}
-                          contentFit="cover"
-                        />
+                        <Image source={{ uri: avatar }} style={styles.accountAvatarImage} contentFit="cover" />
                       </ThemedView>
                     ) : (
                       <ThemedView style={styles.accountAvatarFallback}>
                         <ThemedText style={styles.accountAvatarFallbackText}>
-                          {(displayName ||
-                            account.handle ||
-                            "U")[0].toUpperCase()}
+                          {(displayName || account.handle || 'U')[0].toUpperCase()}
                         </ThemedText>
                       </ThemedView>
                     )}
                   </ThemedView>
 
                   <ThemedView style={styles.accountDetails}>
-                    <ThemedText style={styles.accountHandle}>
-                      @{account.handle}
-                    </ThemedText>
-                    {displayName && (
-                      <ThemedText style={styles.accountDisplayName}>
-                        {displayName}
-                      </ThemedText>
-                    )}
-                    {account.id === currentAccount?.id && (
-                      <ThemedText style={styles.currentAccountBadge}>
-                        {t("common.current")}
-                      </ThemedText>
+                    <ThemedText style={styles.accountHandle}>@{account.handle}</ThemedText>
+                    {displayName && <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText>}
+                    {account.did === currentAccount?.did && (
+                      <ThemedText style={styles.currentAccountBadge}>{t('common.current')}</ThemedText>
                     )}
                   </ThemedView>
 
                   <ThemedView style={styles.accountActions}>
-                    {account.id !== currentAccount?.id && (
-                      <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={() => handleSwitchAccount(account)}
-                      >
-                        <ThemedText style={styles.actionButtonText}>
-                          {t("common.switch")}
-                        </ThemedText>
+                    {account.did !== currentAccount?.did && (
+                      <TouchableOpacity style={styles.actionButton} onPress={() => handleSwitchAccount(account)}>
+                        <ThemedText style={styles.actionButtonText}>{t('common.switch')}</ThemedText>
                       </TouchableOpacity>
                     )}
 
@@ -317,9 +221,7 @@ export default function SettingsScreen() {
                       style={[styles.actionButton, styles.removeButton]}
                       onPress={() => handleRemoveAccount(account)}
                     >
-                      <ThemedText style={styles.removeButtonText}>
-                        {t("common.remove")}
-                      </ThemedText>
+                      <ThemedText style={styles.removeButtonText}>{t('common.remove')}</ThemedText>
                     </TouchableOpacity>
                   </ThemedView>
                 </ThemedView>
@@ -327,17 +229,10 @@ export default function SettingsScreen() {
             );
           })}
 
-          <TouchableOpacity
-            style={[styles.settingItem, { borderBottomColor: borderColor }]}
-            onPress={handleAddAccount}
-          >
+          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleAddAccount}>
             <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>
-                {t("common.addAccount")}
-              </ThemedText>
-              <ThemedText style={styles.settingValue}>
-                {t("common.connectAnotherAccount")}
-              </ThemedText>
+              <ThemedText style={styles.settingLabel}>{t('common.addAccount')}</ThemedText>
+              <ThemedText style={styles.settingValue}>{t('common.connectAnotherAccount')}</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </ThemedView>
@@ -345,27 +240,19 @@ export default function SettingsScreen() {
         {/* Current Account Section */}
         {currentAccount && (
           <ThemedView style={styles.section}>
-            <ThemedText style={styles.sectionTitle}>
-              {t("common.currentAccount")}
-            </ThemedText>
+            <ThemedText style={styles.sectionTitle}>{t('common.currentAccount')}</ThemedText>
 
             <ThemedView style={styles.settingItem}>
               <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>
-                  {t("common.handle")}
-                </ThemedText>
-                <ThemedText style={styles.settingValue}>
-                  @{currentAccount.handle}
-                </ThemedText>
+                <ThemedText style={styles.settingLabel}>{t('common.handle')}</ThemedText>
+                <ThemedText style={styles.settingValue}>@{currentAccount.handle}</ThemedText>
               </ThemedView>
             </ThemedView>
 
             <ThemedView style={styles.settingItem}>
               <ThemedView style={styles.settingInfo}>
                 <ThemedText style={styles.settingLabel}>DID</ThemedText>
-                <ThemedText style={styles.settingValue}>
-                  {currentAccount.did}
-                </ThemedText>
+                <ThemedText style={styles.settingValue}>{currentAccount.did}</ThemedText>
               </ThemedView>
             </ThemedView>
           </ThemedView>
@@ -373,39 +260,24 @@ export default function SettingsScreen() {
 
         {/* Actions Section */}
         <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>
-            {t("common.actions")}
-          </ThemedText>
+          <ThemedText style={styles.sectionTitle}>{t('common.actions')}</ThemedText>
 
-          <TouchableOpacity
-            style={[styles.settingItem, { borderBottomColor: borderColor }]}
-            onPress={handleLogout}
-          >
+          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleLogout}>
             <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>
-                {t("common.disconnectAllAccounts")}
-              </ThemedText>
-              <ThemedText style={styles.settingValue}>
-                {t("common.removeAllConnections")}
-              </ThemedText>
+              <ThemedText style={styles.settingLabel}>{t('common.disconnectAllAccounts')}</ThemedText>
+              <ThemedText style={styles.settingValue}>{t('common.removeAllConnections')}</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </ThemedView>
 
         {/* About Section */}
         <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>
-            {t("settings.about")}
-          </ThemedText>
+          <ThemedText style={styles.sectionTitle}>{t('settings.about')}</ThemedText>
 
           <ThemedView style={styles.settingItem}>
             <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>
-                {t("settings.version")}
-              </ThemedText>
-              <ThemedText style={styles.settingValue}>
-                {Constants.expoConfig?.version || t("common.unknown")}
-              </ThemedText>
+              <ThemedText style={styles.settingLabel}>{t('settings.version')}</ThemedText>
+              <ThemedText style={styles.settingValue}>{Constants.expoConfig?.version || t('common.unknown')}</ThemedText>
             </ThemedView>
           </ThemedView>
 
@@ -415,19 +287,12 @@ export default function SettingsScreen() {
               style={[styles.settingItem, { borderBottomColor: borderColor }]}
               onPress={() => {
                 checkMissingTranslations();
-                Alert.alert(
-                  t("common.translationReport"),
-                  t("common.checkConsoleForReport")
-                );
+                Alert.alert(t('common.translationReport'), t('common.checkConsoleForReport'));
               }}
             >
               <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>
-                  {t("settings.checkMissingTranslations")}
-                </ThemedText>
-                <ThemedText style={styles.settingValue}>
-                  {t("settings.developmentTool")}
-                </ThemedText>
+                <ThemedText style={styles.settingLabel}>{t('settings.checkMissingTranslations')}</ThemedText>
+                <ThemedText style={styles.settingValue}>{t('settings.developmentTool')}</ThemedText>
               </ThemedView>
             </TouchableOpacity>
           )}
@@ -455,14 +320,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   section: {
     marginTop: 20,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
     paddingHorizontal: 16,
     paddingVertical: 8,
     opacity: 0.8,
@@ -473,21 +338,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   settingInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   settingLabel: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   settingValue: {
     fontSize: 16,
     opacity: 0.7,
   },
   accountInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 12,
   },
   accountAvatarContainer: {
@@ -498,7 +363,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   accountAvatarImage: {
     width: 40,
@@ -508,14 +373,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   accountAvatarFallbackText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   accountDetails: {
     flex: 1,
@@ -523,7 +388,7 @@ const styles = StyleSheet.create({
   },
   accountHandle: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   accountDisplayName: {
     fontSize: 14,
@@ -531,31 +396,31 @@ const styles = StyleSheet.create({
   },
   currentAccountBadge: {
     fontSize: 12,
-    fontWeight: "600",
-    color: "#007AFF",
+    fontWeight: '600',
+    color: '#007AFF',
     marginTop: 4,
   },
   accountActions: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 8,
   },
   actionButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
   },
   actionButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   removeButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: '#dc3545',
   },
   removeButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

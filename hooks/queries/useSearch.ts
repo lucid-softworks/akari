@@ -1,6 +1,6 @@
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 type SearchTabType = "all" | "users" | "posts";
@@ -23,16 +23,17 @@ type SearchError = {
  * @param enabled - Whether the query should be enabled (default: true)
  */
 export function useSearch(
-  query: string,
+  query: string | undefined,
   activeTab: SearchTabType = "all",
-  limit: number = 20,
-  enabled: boolean = true
+  limit: number = 20
 ) {
+  const { data: token } = useJwtToken();
+
   return useInfiniteQuery({
     queryKey: ["search", query, activeTab, limit],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
+      if (!query) throw new Error("No query provided");
 
       try {
         // Check if this is a "from:handle" search
@@ -169,7 +170,7 @@ export function useSearch(
         throw searchError;
       }
     },
-    enabled: enabled && !!query.trim() && !!jwtStorage.getToken(),
+    enabled: !!query && !!query.trim() && !!token,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 2 * 60 * 1000, // 2 minutes

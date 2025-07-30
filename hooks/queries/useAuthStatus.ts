@@ -1,22 +1,27 @@
+import { useClearAuthentication } from "@/hooks/mutations/useClearAuthentication";
+import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 import { useQuery } from "@tanstack/react-query";
+import { useCurrentAccount } from "./useCurrentAccount";
+import { useJwtToken } from "./useJwtToken";
+import { useRefreshToken } from "./useRefreshToken";
 
 /**
  * Query hook for checking authentication status
  * Validates stored tokens and returns current auth state
  */
 export function useAuthStatus() {
-  // Get current user data for query key
-  const currentUser = jwtStorage.getUserData();
-  const currentUserDid = currentUser?.did;
+  const { data: token } = useJwtToken();
+  const { data: refreshToken } = useRefreshToken();
+  const { data: currentAccount } = useCurrentAccount();
+  const setAuthMutation = useSetAuthentication();
+  const clearAuthMutation = useClearAuthentication();
+
+  const currentUserDid = currentAccount?.did || null;
 
   return useQuery({
     queryKey: ["auth", currentUserDid],
     queryFn: async () => {
-      const token = jwtStorage.getToken();
-      const refreshToken = jwtStorage.getRefreshToken();
-
       if (!token || !refreshToken) {
         return { isAuthenticated: false };
       }
@@ -26,9 +31,12 @@ export function useAuthStatus() {
         const session = await blueskyApi.refreshSession(refreshToken);
 
         // Update stored tokens with fresh ones
-        jwtStorage.setToken(session.accessJwt);
-        jwtStorage.setRefreshToken(session.refreshJwt);
-        jwtStorage.setUserData(session.did, session.handle);
+        setAuthMutation.mutate({
+          token: session.accessJwt,
+          refreshToken: session.refreshJwt,
+          did: session.did,
+          handle: session.handle,
+        });
 
         return {
           isAuthenticated: true,
@@ -42,7 +50,7 @@ export function useAuthStatus() {
         };
       } catch {
         // Clear invalid tokens
-        jwtStorage.clearAuth();
+        clearAuthMutation.mutate();
         return { isAuthenticated: false };
       }
     },

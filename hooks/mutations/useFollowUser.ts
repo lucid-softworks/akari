@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 /**
  * Mutation hook for following and unfollowing users
  */
 export function useFollowUser() {
   const queryClient = useQueryClient();
+  const { data: token } = useJwtToken();
 
   return useMutation({
     mutationFn: async ({
@@ -22,7 +23,6 @@ export function useFollowUser() {
       /** Whether to follow or unfollow */
       action: "follow" | "unfollow";
     }) => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
       if (action === "follow") {

@@ -1,11 +1,10 @@
 import { router } from "expo-router";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useConversations } from "@/hooks/queries/useConversations";
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -25,7 +24,6 @@ type Conversation = {
 };
 
 export default function MessagesScreen() {
-  const { data: authData, isLoading } = useAuthStatus();
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
@@ -49,18 +47,6 @@ export default function MessagesScreen() {
     hasNextPage,
     isFetchingNextPage,
   } = useConversations();
-
-  // Handle navigation in useEffect to avoid React warnings
-  useEffect(() => {
-    if (!isLoading && !authData?.isAuthenticated) {
-      router.replace("/(auth)/signin");
-    }
-  }, [authData?.isAuthenticated, isLoading]);
-
-  // Don't render anything if not authenticated or still loading
-  if (isLoading || !authData?.isAuthenticated) {
-    return null;
-  }
 
   const renderConversation = ({ item }: { item: Conversation }) => (
     <TouchableOpacity

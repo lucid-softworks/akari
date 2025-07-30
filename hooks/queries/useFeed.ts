@@ -1,29 +1,30 @@
-import { blueskyApi, type BlueskyFeedResponse } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
+import { blueskyApi } from "@/utils/blueskyApi";
 
 /**
- * Query hook for fetching posts from a specific feed generator
- * @param feed - The feed's URI
- * @param limit - Number of posts to fetch (default: 50, max: 100)
- * @param cursor - Pagination cursor
- * @param enabled - Whether the query should be enabled (default: true)
+ * Infinite query hook for fetching feed posts
+ * @param feedUri - The feed URI to fetch posts from
+ * @param limit - Number of posts to fetch per page (default: 20)
  */
 export function useFeed(
-  feed: string,
-  limit: number = 50,
-  cursor?: string,
-  enabled: boolean = true
+  feedUri: string | null,
+  limit: number = 20
 ) {
-  return useQuery({
-    queryKey: ["feed", feed, limit, cursor],
-    queryFn: async (): Promise<BlueskyFeedResponse> => {
-      const token = jwtStorage.getToken();
-      if (!token) throw new Error("No access token");
+  const { data: token } = useJwtToken();
 
-      return await blueskyApi.getFeed(token, feed, limit, cursor);
+  return useInfiniteQuery({
+    queryKey: ["feed", feedUri],
+    queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
+      if (!token) throw new Error("No access token");
+      if (!feedUri) throw new Error("No feed URI provided");
+
+      return await blueskyApi.getFeed(token, feedUri, limit, pageParam);
     },
-    enabled: enabled && !!feed,
+    enabled: !!feedUri && !!token,
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }

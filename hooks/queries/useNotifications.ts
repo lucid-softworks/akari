@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 type NotificationError = {
   type: "permission" | "network" | "unknown";
@@ -21,14 +22,13 @@ export function useNotifications(
   priority?: boolean,
   enabled: boolean = true
 ) {
-  // Get current user data for query key
-  const currentUser = jwtStorage.getUserData();
-  const currentUserDid = currentUser?.did;
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+  const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
     queryKey: ["notifications", limit, reasons, priority, currentUserDid],
     queryFn: async ({ pageParam }) => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
       try {
@@ -117,7 +117,7 @@ export function useNotifications(
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
-    enabled: enabled && !!jwtStorage.getToken() && !!currentUserDid,
+    enabled: enabled && !!token && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: NotificationError) => {
       // Don't retry permission errors

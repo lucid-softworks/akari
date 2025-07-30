@@ -1,5 +1,5 @@
+import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
 import { BlueskyApi, blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /**
@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
  */
 export function useRefreshSession() {
   const queryClient = useQueryClient();
+  const setAuthMutation = useSetAuthentication();
 
   return useMutation({
     mutationFn: async ({
@@ -24,9 +25,12 @@ export function useRefreshSession() {
     },
     onSuccess: (session) => {
       // Update stored tokens
-      jwtStorage.setToken(session.accessJwt);
-      jwtStorage.setRefreshToken(session.refreshJwt);
-      jwtStorage.setUserData(session.did, session.handle);
+      setAuthMutation.mutate({
+        token: session.accessJwt,
+        refreshToken: session.refreshJwt,
+        did: session.did,
+        handle: session.handle,
+      });
 
       // Invalidate auth queries with the new user-specific key
       queryClient.invalidateQueries({ queryKey: ["auth", session.did] });

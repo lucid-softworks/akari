@@ -1,28 +1,28 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-import React, { useRef, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PostCard } from "@/components/PostCard";
-import { TabBar } from "@/components/TabBar";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useFeeds } from "@/hooks/queries/useFeeds";
-import { useSelectedFeed } from "@/hooks/queries/useSelectedFeed";
-import { useTranslation } from "@/hooks/useTranslation";
-import type { BlueskyFeedItem } from "@/utils/blueskyApi";
-import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { PostCard } from '@/components/PostCard';
+import { TabBar } from '@/components/TabBar';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useFeed } from '@/hooks/queries/useFeed';
+import { useFeeds } from '@/hooks/queries/useFeeds';
+import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
+import { useTranslation } from '@/hooks/useTranslation';
+import type { BlueskyFeedItem } from '@/utils/blueskyApi';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
-export default function DiscoverScreen() {
+export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
 
-  const userData = jwtStorage.getUserData();
+  const { data: userData } = useCurrentAccount();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -31,38 +31,34 @@ export default function DiscoverScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register("index", scrollToTop);
+    tabScrollRegistry.register('index', scrollToTop);
   }, []);
 
   // Get user's feeds
-  const {
-    data: feedsData,
-    isLoading: feedsLoading,
-    refetch: refetchFeeds,
-  } = useFeeds(userData.did || "", 50, undefined, !!userData.did);
+  const { data: feedsData, isLoading: feedsLoading, refetch: refetchFeeds } = useFeeds(userData?.did, 50);
 
   // Create a combined feeds array with default home feed
   const allFeeds = [
     {
-      uri: "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot",
-      displayName: "Discover",
-      description: "Popular posts from across Bluesky",
+      uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+      displayName: 'Discover',
+      description: 'Popular posts from across Bluesky',
       likeCount: 0,
       acceptsInteractions: true,
-      contentMode: "app.bsky.feed.defs#contentModeUnspecified" as const,
+      contentMode: 'app.bsky.feed.defs#contentModeUnspecified' as const,
       indexedAt: new Date().toISOString(),
       creator: {
-        did: "did:plc:z72i7hdynmk6r22z27h6tvur",
-        handle: "bsky.app",
-        displayName: "Bluesky",
-        description: "Official Bluesky account",
-        avatar: "",
+        did: 'did:plc:z72i7hdynmk6r22z27h6tvur',
+        handle: 'bsky.app',
+        displayName: 'Bluesky',
+        description: 'Official Bluesky account',
+        avatar: '',
         associated: {
           lists: 0,
           feedgens: 0,
           starterPacks: 0,
           labeler: false,
-          chat: { allowIncoming: "all" as const },
+          chat: { allowIncoming: 'all' as const },
         },
         indexedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
@@ -78,18 +74,17 @@ export default function DiscoverScreen() {
   ];
 
   // Use the custom hook for selected feed management
-  const { selectedFeed, setSelectedFeed, isInitialized } = useSelectedFeed(
-    allFeeds[0]?.uri || ""
-  );
+  const { data: selectedFeed } = useSelectedFeed();
+  const setSelectedFeedMutation = useSetSelectedFeed();
 
   // Handle feed selection with scroll to top
   const handleFeedSelection = (feedUri: string) => {
-    setSelectedFeed(feedUri);
+    setSelectedFeedMutation.mutate(feedUri);
     // Scroll to top when switching feeds
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Get posts from selected feed with infinite query
+  // Get posts from selected feed
   const {
     data: feedData,
     isLoading: feedLoading,
@@ -97,19 +92,7 @@ export default function DiscoverScreen() {
     hasNextPage,
     isFetchingNextPage,
     refetch: refetchFeed,
-  } = useInfiniteQuery({
-    queryKey: ["feed", selectedFeed],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
-      const token = jwtStorage.getToken();
-      if (!token) throw new Error("No access token");
-
-      return await blueskyApi.getFeed(token, selectedFeed!, 20, pageParam);
-    },
-    enabled: !!selectedFeed,
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.cursor,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-  });
+  } = useFeed(selectedFeed, 20);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -134,7 +117,7 @@ export default function DiscoverScreen() {
     const replyTo = item.post.reply?.parent
       ? {
           author: {
-            handle: item.post.reply.parent.author?.handle || "unknown",
+            handle: item.post.reply.parent.author?.handle || 'unknown',
             displayName: item.post.reply.parent.author?.displayName,
           },
           text: item.post.reply.parent.record?.text as string,
@@ -167,13 +150,11 @@ export default function DiscoverScreen() {
     );
   };
 
-  if (feedsLoading || !isInitialized) {
+  if (feedsLoading) {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>
-            {t("feed.loadingFeeds")}
-          </ThemedText>
+          <ThemedText style={styles.subtitle}>{t('feed.loadingFeeds')}</ThemedText>
         </ThemedView>
       </ThemedView>
     );
@@ -183,17 +164,11 @@ export default function DiscoverScreen() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>
-            {t("feed.noCustomFeedsFound")}
-          </ThemedText>
+          <ThemedText style={styles.subtitle}>{t('feed.noCustomFeedsFound')}</ThemedText>
         </ThemedView>
         <ThemedView style={styles.emptyState}>
-          <ThemedText style={styles.emptyStateText}>
-            {t("feed.noCustomFeedsCreated")}
-          </ThemedText>
-          <ThemedText style={styles.emptyStateText}>
-            {t("feed.canBrowseDefaultFeed")}
-          </ThemedText>
+          <ThemedText style={styles.emptyStateText}>{t('feed.noCustomFeedsCreated')}</ThemedText>
+          <ThemedText style={styles.emptyStateText}>{t('feed.canBrowseDefaultFeed')}</ThemedText>
         </ThemedView>
       </ThemedView>
     );
@@ -207,12 +182,12 @@ export default function DiscoverScreen() {
           key: feed.uri,
           label: feed.displayName,
         }))}
-        activeTab={selectedFeed || ""}
+        activeTab={selectedFeed || ''}
         onTabChange={handleFeedSelection}
       />
 
       {/* Feed Content */}
-      {selectedFeed && isInitialized ? (
+      {selectedFeed ? (
         <FlatList
           ref={flatListRef}
           data={allPosts}
@@ -220,41 +195,31 @@ export default function DiscoverScreen() {
           keyExtractor={(item) => `${item.post.uri}-${item.post.indexedAt}`}
           style={styles.feedList}
           contentContainerStyle={styles.feedListContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           onEndReached={loadMorePosts}
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             isFetchingNextPage ? (
               <ThemedView style={styles.loadingMore}>
-                <ThemedText style={styles.loadingMoreText}>
-                  {t("feed.loadingMorePosts")}
-                </ThemedText>
+                <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
               </ThemedView>
             ) : null
           }
           ListEmptyComponent={
             feedLoading ? (
               <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>
-                  {t("feed.loadingPosts")}
-                </ThemedText>
+                <ThemedText style={styles.emptyStateText}>{t('feed.loadingPosts')}</ThemedText>
               </ThemedView>
             ) : (
               <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>
-                  {t("feed.noPostsInFeed")}
-                </ThemedText>
+                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
               </ThemedView>
             )
           }
         />
       ) : (
         <ThemedView style={styles.selectFeedPrompt}>
-          <ThemedText style={styles.selectFeedText}>
-            {t("feed.selectFeedToView")}
-          </ThemedText>
+          <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
         </ThemedView>
       )}
     </ThemedView>
@@ -266,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 20,
     marginBottom: 12,
     paddingHorizontal: 16,
@@ -274,12 +239,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 14,
     opacity: 0.8,
-    textAlign: "center",
+    textAlign: 'center',
   },
   feedList: {
     flex: 1,
@@ -288,7 +253,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100, // Account for tab bar
   },
   loadingMore: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 16,
   },
   loadingMoreText: {
@@ -297,24 +262,24 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 40,
   },
   emptyStateText: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
   selectFeedPrompt: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 40,
   },
   selectFeedText: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

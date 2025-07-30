@@ -12,9 +12,11 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useAddAccount } from "@/hooks/mutations/useAddAccount";
+import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
 import { useSignIn } from "@/hooks/mutations/useSignIn";
+import { useSwitchAccount } from "@/hooks/mutations/useSwitchAccount";
 import { useTranslation } from "@/hooks/useTranslation";
-import { jwtStorage } from "@/utils/secureStorage";
 
 type AuthMode = "signin" | "signup";
 
@@ -30,6 +32,9 @@ export default function AuthScreen() {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const signInMutation = useSignIn();
+  const addAccountMutation = useAddAccount();
+  const switchAccountMutation = useSwitchAccount();
+  const setAuthMutation = useSetAuthentication();
 
   const validateHandle = (handle: string) => {
     // Bluesky handles can be @username.bsky.social or just username
@@ -55,37 +60,30 @@ export default function AuthScreen() {
         pdsUrl: pdsUrl || undefined,
       });
 
-      // If adding account, store it in multi-account system
-      if (isAddingAccount) {
-        const accountId = jwtStorage.addAccount({
-          did: result.did,
-          handle: result.handle,
-          jwtToken: result.accessJwt,
-          refreshToken: result.refreshJwt,
-        });
+      // Always use the multi-account system for consistency
+      const newAccount = await addAccountMutation.mutateAsync({
+        did: result.did,
+        handle: result.handle,
+        jwtToken: result.accessJwt,
+        refreshToken: result.refreshJwt,
+      });
 
-        // Set the newly added account as current
-        jwtStorage.switchAccount(accountId);
+      // Set the newly added account as current
+      await switchAccountMutation.mutateAsync(newAccount);
 
-        Alert.alert(t("common.success"), t("auth.accountAddedSuccessfully"), [
+      Alert.alert(
+        t("common.success"),
+        isAddingAccount
+          ? t("auth.accountAddedSuccessfully")
+          : t("auth.signedInSuccessfully"),
+        [
           {
             text: t("common.ok"),
-            onPress: () => router.replace("/(tabs)/settings"),
+            onPress: () =>
+              router.replace(isAddingAccount ? "/(tabs)/settings" : "/(tabs)"),
           },
-        ]);
-      } else {
-        // For first-time sign in, use the old single-account system
-        jwtStorage.setToken(result.accessJwt);
-        jwtStorage.setRefreshToken(result.refreshJwt);
-        jwtStorage.setUserData(result.did, result.handle);
-
-        Alert.alert(t("common.success"), t("auth.signedInSuccessfully"), [
-          {
-            text: t("common.ok"),
-            onPress: () => router.replace("/(tabs)"),
-          },
-        ]);
-      }
+        ]
+      );
     } catch (error) {
       Alert.alert(
         t("common.error"),
@@ -112,10 +110,16 @@ export default function AuthScreen() {
         pdsUrl: pdsUrl || undefined,
       });
 
-      // For sign up, use the single-account system
-      jwtStorage.setToken(result.accessJwt);
-      jwtStorage.setRefreshToken(result.refreshJwt);
-      jwtStorage.setUserData(result.did, result.handle);
+      // For sign up, use the multi-account system
+      const newAccount = await addAccountMutation.mutateAsync({
+        did: result.did,
+        handle: result.handle,
+        jwtToken: result.accessJwt,
+        refreshToken: result.refreshJwt,
+      });
+
+      // Set the newly added account as current
+      await switchAccountMutation.mutateAsync(newAccount);
 
       Alert.alert(t("common.success"), t("auth.connectedSuccessfully"), [
         {

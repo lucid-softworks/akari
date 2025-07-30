@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 /**
  * Mutation hook for blocking and unblocking users
  */
 export function useBlockUser() {
   const queryClient = useQueryClient();
+  const { data: token } = useJwtToken();
 
   return useMutation({
     mutationFn: async ({
@@ -22,7 +23,6 @@ export function useBlockUser() {
       /** Whether to block or unblock */
       action: "block" | "unblock";
     }) => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
 
       if (action === "block") {

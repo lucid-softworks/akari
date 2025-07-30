@@ -1,19 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { blueskyApi } from "@/utils/blueskyApi";
-import { jwtStorage } from "@/utils/secureStorage";
 
 /**
  * Query hook for fetching a user's original posts (not replies or reposts)
  * @param identifier - The user's handle or DID
- * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useAuthorPosts(identifier: string, enabled: boolean = true) {
+export function useAuthorPosts(identifier: string | undefined) {
+  const { data: token } = useJwtToken();
+
   return useQuery({
     queryKey: ["authorPosts", identifier],
     queryFn: async () => {
-      const token = jwtStorage.getToken();
       if (!token) throw new Error("No access token");
+      if (!identifier) throw new Error("No identifier provided");
 
       const feed = await blueskyApi.getAuthorFeed(token, identifier, 50);
 
@@ -33,7 +34,7 @@ export function useAuthorPosts(identifier: string, enabled: boolean = true) {
 
       return uniqueOriginalPosts;
     },
-    enabled: enabled && !!identifier,
+    enabled: !!identifier && !!token,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

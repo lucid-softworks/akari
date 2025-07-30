@@ -83,7 +83,7 @@ export default function SearchScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useSearch(searchQuery, "all", 20, !!searchQuery.trim());
+  } = useSearch(searchQuery.trim() || undefined, "all", 20);
 
   // Flatten all search results from all pages
   const allResults = searchData?.pages.flatMap((page) => page.results) || [];

@@ -1,33 +1,22 @@
-import { secureStorageUtils } from "@/utils/secureStorage";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 /**
- * Query hook to manage the selected feed with persistence
- * @param defaultFeedUri - The default feed URI to use if no feed is selected
- * @returns Object containing selectedFeed and setSelectedFeed
+ * Query hook to get the selected feed
  */
-export function useSelectedFeed(defaultFeedUri: string) {
-  const queryClient = useQueryClient();
+export function useSelectedFeed() {
+  const defaultFeedUri =
+    "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot";
 
-  const feedQuery = useQuery({
+  return useQuery({
     queryKey: ["selectedFeed"],
     queryFn: () => {
-      const savedFeed = secureStorageUtils.get("SELECTED_FEED");
-      return savedFeed || defaultFeedUri;
+      return defaultFeedUri;
     },
-    staleTime: Infinity, // This data doesn't change unless explicitly updated
-    gcTime: Infinity, // Keep in cache indefinitely
+    staleTime: Infinity,
+    gcTime: Infinity,
+    initialData: defaultFeedUri,
+    meta: {
+      persist: true,
+    },
   });
-
-  const setSelectedFeed = (feedUri: string) => {
-    secureStorageUtils.set("SELECTED_FEED", feedUri);
-    // Update the query cache immediately
-    queryClient.setQueryData(["selectedFeed"], feedUri);
-  };
-
-  return {
-    selectedFeed: feedQuery.data,
-    setSelectedFeed,
-    isInitialized: !feedQuery.isLoading,
-  };
 }

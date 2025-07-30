@@ -79,7 +79,7 @@ export default function ConversationScreen() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useMessages(conversation?.convoId || "", 50, !!conversation?.convoId);
+  } = useMessages(conversation?.convoId, 50);
 
   const handleSendMessage = async () => {
     if (!messageText.trim()) return;

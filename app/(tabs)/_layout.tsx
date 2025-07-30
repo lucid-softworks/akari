@@ -1,22 +1,20 @@
-import { useNavigationState } from "@react-navigation/native";
-import { Tabs } from "expo-router";
-import React, { useRef } from "react";
-import { Platform } from "react-native";
+import { useNavigationState } from '@react-navigation/native';
+import { Tabs } from 'expo-router';
+import React, { useRef } from 'react';
+import { Platform } from 'react-native';
 
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { HapticTab } from '@/components/HapticTab';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import TabBarBackground from '@/components/ui/TabBarBackground';
+import { Colors } from '@/constants/Colors';
+import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof IconSymbol>["name"];
-  color: string;
-}) {
+function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
   return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
@@ -31,8 +29,7 @@ function CustomTabButton(props: any) {
     // Use a timeout to check the navigation state after the tab press
     // since the navigation state doesn't update immediately
     setTimeout(() => {
-      const currentRoute =
-        navigationState?.routes?.[navigationState.index]?.name;
+      const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
 
       if (currentRoute) {
         // Check if this is the same tab pressed again
@@ -50,11 +47,17 @@ function CustomTabButton(props: any) {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { data: authData, isLoading } = useAuthStatus();
+
+  // Don't render tabs if not authenticated or still loading
+  if (isLoading || !authData?.isAuthenticated) {
+    return null;
+  }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: CustomTabButton,
         tabBarBackground: TabBarBackground,
@@ -62,7 +65,7 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
+            position: 'absolute',
           },
           default: {},
         }),
@@ -71,49 +74,37 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="house.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="magnifyingglass" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
         }}
       />
       <Tabs.Screen
         name="notifications"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="bell.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="bell.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="messages"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="message.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="message.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="person.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="gearshape.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
         }}
       />
     </Tabs>

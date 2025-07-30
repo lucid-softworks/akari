@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 import { PostCard } from "@/components/PostCard";
@@ -7,22 +7,20 @@ import { ProfileHeader } from "@/components/ProfileHeader";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useAuthStatus } from "@/hooks/queries/useAuthStatus";
 import { useAuthorLikes } from "@/hooks/queries/useAuthorLikes";
 import { useAuthorMedia } from "@/hooks/queries/useAuthorMedia";
 import { useAuthorPosts } from "@/hooks/queries/useAuthorPosts";
 import { useAuthorReplies } from "@/hooks/queries/useAuthorReplies";
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { useTranslation } from "@/hooks/useTranslation";
-import { jwtStorage } from "@/utils/secureStorage";
 import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TabType = "posts" | "replies" | "likes" | "media";
 
 export default function ProfileScreen() {
-  const { data: authData, isLoading } = useAuthStatus();
-  const userData = jwtStorage.getUserData();
+  const { data: userData } = useCurrentAccount();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<TabType>("posts");
   const scrollViewRef = useRef<ScrollView>(null);
@@ -38,39 +36,20 @@ export default function ProfileScreen() {
     tabScrollRegistry.register("profile", scrollToTop);
   }, []);
 
-  const { data: profile } = useProfile(
-    userData.handle || "",
-    !!userData.handle
-  );
+  const { data: profile } = useProfile(userData?.handle);
 
   const { data: posts, isLoading: postsLoading } = useAuthorPosts(
-    userData.handle || "",
-    activeTab === "posts"
+    activeTab === "posts" ? userData?.handle : undefined
   );
   const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
-    userData.handle || "",
-    activeTab === "replies"
+    activeTab === "replies" ? userData?.handle : undefined
   );
   const { data: likes, isLoading: likesLoading } = useAuthorLikes(
-    userData.handle || "",
-    activeTab === "likes"
+    activeTab === "likes" ? userData?.handle : undefined
   );
   const { data: media, isLoading: mediaLoading } = useAuthorMedia(
-    userData.handle || "",
-    activeTab === "media"
+    activeTab === "media" ? userData?.handle : undefined
   );
-
-  // Handle navigation in useEffect to avoid React warnings
-  useEffect(() => {
-    if (!isLoading && !authData?.isAuthenticated) {
-      router.replace("/(auth)/signin");
-    }
-  }, [authData?.isAuthenticated, isLoading]);
-
-  // Don't render anything if not authenticated or still loading
-  if (isLoading || !authData?.isAuthenticated) {
-    return null;
-  }
 
   const getCurrentData = () => {
     switch (activeTab) {
@@ -137,8 +116,8 @@ export default function ProfileScreen() {
         <ProfileHeader
           profile={{
             avatar: profile?.avatar,
-            displayName: profile?.displayName || userData.handle || "",
-            handle: userData.handle || "",
+            displayName: profile?.displayName || userData?.handle || "",
+            handle: userData?.handle || "",
             description: profile?.description,
             banner: profile?.banner,
             did: profile?.did,
