@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Labels } from '@/components/Labels';
+import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -188,50 +189,91 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
 
       {/* Profile Header */}
       <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
-        {/* Avatar and Name Section */}
-        <View style={styles.avatarNameSection}>
-          {/* Avatar */}
-          <View style={styles.avatarContainer}>
-            {profile.avatar ? (
-              <View style={styles.avatar}>
-                <Image source={{ uri: profile.avatar }} style={styles.avatarImage} contentFit="cover" />
+        {/* Avatar */}
+        <View style={styles.avatarContainer}>
+          {profile.avatar ? (
+            <View style={styles.avatar}>
+              <Image source={{ uri: profile.avatar }} style={styles.avatarImage} contentFit="cover" />
+            </View>
+          ) : (
+            <View style={styles.avatar}>
+              <View style={styles.avatarFallbackContainer}>
+                <ThemedText style={styles.avatarFallback}>
+                  {(profile.displayName || profile.handle || 'U')[0].toUpperCase()}
+                </ThemedText>
               </View>
-            ) : (
-              <View style={styles.avatar}>
-                <View style={styles.avatarFallbackContainer}>
-                  <ThemedText style={styles.avatarFallback}>
-                    {(profile.displayName || profile.handle || 'U')[0].toUpperCase()}
-                  </ThemedText>
-                </View>
-              </View>
-            )}
-          </View>
+            </View>
+          )}
+        </View>
 
-          <ThemedView style={styles.profileInfo}>
+        {/* Profile Info Section */}
+        <View style={styles.profileInfoSection}>
+          {/* Name and Handle */}
+          <View style={styles.nameHandleSection}>
             <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
             <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
-          </ThemedView>
+          </View>
 
           {/* Action Buttons */}
-          <ThemedView style={styles.actionButtons}>
-            {/* Search Button - Always show */}
-            <TouchableOpacity style={[styles.iconButton, { borderColor: borderColor }]} onPress={handleSearchPosts}>
-              <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
-            </TouchableOpacity>
-
-            {/* Dropdown Menu - Only show for other profiles */}
-            {!isOwnProfile && !isBlockedBy && (
-              <ThemedView style={styles.dropdownContainer}>
-                <TouchableOpacity style={[styles.iconButton, { borderColor: borderColor }]} onPress={handleDropdownToggle}>
-                  <IconSymbol name="ellipsis" size={20} color="#007AFF" />
+          <View style={styles.actionButtons}>
+            {isOwnProfile ? (
+              <>
+                <TouchableOpacity style={styles.editButton} onPress={() => {}}>
+                  <ThemedText style={styles.editButtonText}>Edit Profile</ThemedText>
                 </TouchableOpacity>
-              </ThemedView>
+                <View style={styles.moreButtonContainer}>
+                  <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
+                    <IconSymbol name="ellipsis" size={20} color="#ffffff" />
+                  </TouchableOpacity>
+                  {showDropdown && (
+                    <ThemedView
+                      style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }]}
+                    >
+                      <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
+                        <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
+                      </TouchableOpacity>
+                    </ThemedView>
+                  )}
+                </View>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts}>
+                  <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
+                </TouchableOpacity>
+                {!isBlockedBy && (
+                  <View style={styles.moreButtonContainer}>
+                    <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle}>
+                      <IconSymbol name="ellipsis" size={20} color="#007AFF" />
+                    </TouchableOpacity>
+                    {showDropdown && (
+                      <ThemedView
+                        style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }]}
+                      >
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
+                          <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleFollowPress}>
+                          <ThemedText style={styles.dropdownText}>
+                            {isFollowing ? t('common.unfollow') : t('common.follow')}
+                          </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleBlockPress}>
+                          <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
+                            {isBlocking ? t('common.unblock') : t('common.block')}
+                          </ThemedText>
+                        </TouchableOpacity>
+                      </ThemedView>
+                    )}
+                  </View>
+                )}
+              </>
             )}
-          </ThemedView>
+          </View>
         </View>
 
         {/* Stats */}
-        <ThemedView style={styles.statsContainer}>
+        <View style={styles.statsContainer}>
           <ThemedText style={styles.statText}>
             {t('profile.posts', {
               count: formatNumber(profile.postsCount || 0, currentLocale),
@@ -245,13 +287,13 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
               count: formatNumber(profile.followsCount || 0, currentLocale),
             })}
           </ThemedText>
-        </ThemedView>
+        </View>
 
-        {/* Description - Full Width */}
+        {/* Description */}
         {profile.description && (
-          <ThemedView style={styles.descriptionContainer}>
-            <ThemedText style={styles.description}>{profile.description}</ThemedText>
-          </ThemedView>
+          <View style={styles.descriptionContainer}>
+            <RichText text={profile.description} style={styles.description} />
+          </View>
         )}
 
         {/* Labels */}
@@ -263,41 +305,13 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
           </ThemedView>
         )}
       </ThemedView>
-
-      {/* Dropdown - Rendered at root level */}
-      {!isOwnProfile && !isBlockedBy && showDropdown && (
-        <>
-          <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setShowDropdown(false)} activeOpacity={1} />
-          <ThemedView
-            style={[
-              styles.dropdown,
-              {
-                borderColor: borderColor,
-                backgroundColor: dropdownBackgroundColor,
-              },
-            ]}
-          >
-            <TouchableOpacity style={styles.dropdownItem} onPress={handleFollowPress} disabled={followMutation.isPending}>
-              <ThemedText style={styles.dropdownItemText}>
-                {followMutation.isPending ? t('common.loading') : isFollowing ? t('common.unfollow') : t('common.follow')}
-              </ThemedText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.dropdownItem} onPress={handleBlockPress} disabled={blockMutation.isPending}>
-              <ThemedText style={styles.dropdownItemText}>
-                {blockMutation.isPending ? t('common.loading') : isBlocking ? t('common.unblock') : t('common.block')}
-              </ThemedText>
-            </TouchableOpacity>
-          </ThemedView>
-        </>
-      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
   banner: {
-    height: 120,
+    height: 150,
     backgroundColor: '#f0f0f0',
   },
   bannerImage: {
@@ -307,20 +321,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
     borderBottomWidth: 0.5,
-  },
-  avatarNameSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 12,
+    position: 'relative',
   },
   avatarContainer: {
-    marginTop: -30,
+    marginTop: -50,
+    marginBottom: 12,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 3,
@@ -329,14 +339,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   avatarImage: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: 74,
+    height: 74,
+    borderRadius: 37,
   },
   avatarFallbackContainer: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: 74,
+    height: 74,
+    borderRadius: 37,
     backgroundColor: '#007AFF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -346,24 +356,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  profileInfo: {
+  profileInfoSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  nameHandleSection: {
     flex: 1,
-    gap: 4,
+    marginRight: 10,
   },
   displayName: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 2,
   },
   handle: {
-    fontSize: 16,
+    fontSize: 15,
     opacity: 0.7,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  descriptionContainer: {
-    marginTop: 4,
   },
   actionButtons: {
     flexDirection: 'row',
@@ -378,13 +388,56 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 122, 255, 0.1)',
   },
-  dropdownContainer: {
+  editButton: {
+    height: 32,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  moreButtonContainer: {
     position: 'relative',
+  },
+  moreButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statsContainer: {
+    marginBottom: 12,
+  },
+  statText: {
+    fontSize: 15,
+    lineHeight: 20,
+  },
+  statNumber: {
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+    lineHeight: 18,
+  },
+  descriptionContainer: {
+    marginBottom: 12,
   },
   dropdown: {
     position: 'absolute',
-    top: 200, // Position relative to the top of the screen
-    right: 16, // Align with the right edge of the profile header
+    top: '100%',
+    right: 0,
+    marginTop: 4,
     borderRadius: 8,
     borderWidth: 1,
     shadowColor: '#000',
@@ -399,11 +452,14 @@ const styles = StyleSheet.create({
     zIndex: 10000,
   },
   dropdownItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
-  dropdownItemText: {
-    fontSize: 16,
+  dropdownText: {
+    fontSize: 14,
+  },
+  dropdownTextDestructive: {
+    color: '#c62828',
   },
   blockedMessage: {
     marginTop: 16,
@@ -416,21 +472,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#c62828',
     textAlign: 'center',
-  },
-  statsContainer: {
-    marginTop: 8,
-    marginBottom: 6,
-  },
-  statText: {
-    fontSize: 15,
-    opacity: 0.8,
-  },
-  dropdownBackdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9999, // Ensure it's below other content
   },
 });
