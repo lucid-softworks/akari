@@ -14,6 +14,7 @@ import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
+import { formatRelativeTime } from '@/utils/timeUtils';
 
 type TabType = 'posts' | 'replies' | 'likes' | 'media';
 
@@ -156,7 +157,7 @@ export default function ProfileScreen() {
                       displayName: item.author.displayName,
                       avatar: item.author.avatar,
                     },
-                    createdAt: new Date(item.indexedAt).toLocaleDateString(),
+                    createdAt: formatRelativeTime(item.indexedAt),
                     likeCount: item.likeCount || 0,
                     commentCount: item.replyCount || 0,
                     repostCount: item.repostCount || 0,

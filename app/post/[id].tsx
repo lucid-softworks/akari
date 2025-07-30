@@ -10,6 +10,7 @@ import { usePostThread } from '@/hooks/queries/usePostThread';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyFeedItem, BlueskyPostView } from '@/utils/bluesky/types';
+import { formatRelativeTime } from '@/utils/timeUtils';
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -122,7 +123,7 @@ export default function PostDetailScreen() {
               displayName: post.author.displayName,
               avatar: post.author.avatar,
             },
-            createdAt: new Date(post.indexedAt).toLocaleDateString(),
+            createdAt: formatRelativeTime(post.indexedAt),
             likeCount: post.likeCount || 0,
             commentCount: post.replyCount || 0,
             repostCount: post.repostCount || 0,
@@ -154,7 +155,7 @@ export default function PostDetailScreen() {
             displayName: postItem.author.displayName,
             avatar: postItem.author.avatar,
           },
-          createdAt: new Date(postItem.indexedAt).toLocaleDateString(),
+          createdAt: formatRelativeTime(postItem.indexedAt),
           likeCount: postItem.likeCount || 0,
           commentCount: postItem.replyCount || 0,
           repostCount: postItem.repostCount || 0,
@@ -190,7 +191,7 @@ export default function PostDetailScreen() {
             displayName: parentPost.author.displayName,
             avatar: parentPost.author.avatar,
           },
-          createdAt: new Date(parentPost.indexedAt).toLocaleDateString(),
+          createdAt: formatRelativeTime(parentPost.indexedAt),
           likeCount: parentPost.likeCount || 0,
           commentCount: parentPost.replyCount || 0,
           repostCount: parentPost.repostCount || 0,
@@ -220,7 +221,7 @@ export default function PostDetailScreen() {
             displayName: rootPost.author.displayName,
             avatar: rootPost.author.avatar,
           },
-          createdAt: new Date(rootPost.indexedAt).toLocaleDateString(),
+          createdAt: formatRelativeTime(rootPost.indexedAt),
           likeCount: rootPost.likeCount || 0,
           commentCount: rootPost.replyCount || 0,
           repostCount: rootPost.repostCount || 0,
@@ -307,7 +308,7 @@ export default function PostDetailScreen() {
                   displayName: mainPost?.author?.displayName,
                   avatar: mainPost?.author?.avatar,
                 },
-                createdAt: new Date(mainPost?.indexedAt || Date.now()).toLocaleDateString(),
+                createdAt: formatRelativeTime(mainPost?.indexedAt || new Date()),
                 likeCount: mainPost?.likeCount || 0,
                 commentCount: mainPost?.replyCount || 0,
                 repostCount: mainPost?.repostCount || 0,

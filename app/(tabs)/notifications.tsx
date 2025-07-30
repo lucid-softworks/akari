@@ -1,29 +1,23 @@
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import React, { useRef } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import React, { useRef } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useNotifications } from "@/hooks/queries/useNotifications";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { tabScrollRegistry } from "@/utils/tabScrollRegistry";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useNotifications } from '@/hooks/queries/useNotifications';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { formatRelativeTime } from '@/utils/timeUtils';
 
 /**
  * Grouped notification type
  */
 type GroupedNotification = {
   id: string;
-  type: "like" | "repost" | "follow" | "reply" | "mention" | "quote";
+  type: 'like' | 'repost' | 'follow' | 'reply' | 'mention' | 'quote';
   subject?: string; // Post URI for post-related notifications
   postContent?: string; // Content of the post being interacted with
   authors: {
@@ -46,28 +40,24 @@ type NotificationItemProps = {
   borderColor: string;
 };
 
-function NotificationItem({
-  notification,
-  onPress,
-  borderColor,
-}: NotificationItemProps) {
+function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
 
   const getReasonText = (type: string, count: number) => {
     const action = (() => {
       switch (type) {
-        case "like":
-          return t("notifications.likedYourPost");
-        case "repost":
-          return t("notifications.repostedYourPost");
-        case "follow":
-          return t("notifications.startedFollowingYou");
-        case "reply":
-          return t("notifications.repliedToYourPost");
-        case "mention":
-          return t("notifications.mentionedYou");
-        case "quote":
-          return t("notifications.quotedYourPost");
+        case 'like':
+          return t('notifications.likedYourPost');
+        case 'repost':
+          return t('notifications.repostedYourPost');
+        case 'follow':
+          return t('notifications.startedFollowingYou');
+        case 'reply':
+          return t('notifications.repliedToYourPost');
+        case 'mention':
+          return t('notifications.mentionedYou');
+        case 'quote':
+          return t('notifications.quotedYourPost');
         default:
           return type;
       }
@@ -76,25 +66,9 @@ function NotificationItem({
     if (count === 1) {
       return action;
     } else if (count === 2) {
-      return t("notifications.andOneOther", { action });
+      return t('notifications.andOneOther', { action });
     } else {
-      return t("notifications.andOthers", { count: count - 1, action });
-    }
-  };
-
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-
-    if (diffInHours < 1) {
-      const diffInMinutes = Math.floor(diffInHours * 60);
-      return `${diffInMinutes}m`;
-    } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)}h`;
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays}d`;
+      return t('notifications.andOthers', { count: count - 1, action });
     }
   };
 
@@ -121,13 +95,11 @@ function NotificationItem({
                 source={{ uri: author.avatar }}
                 style={styles.avatar}
                 contentFit="cover"
-                placeholder={require("@/assets/images/partial-react-logo.png")}
+                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
             ) : (
               <View style={[styles.avatar, styles.avatarFallback]}>
-                <Text style={styles.avatarFallbackText}>
-                  {(author.displayName || author.handle)[0].toUpperCase()}
-                </Text>
+                <Text style={styles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
               </View>
             )}
           </View>
@@ -152,25 +124,16 @@ function NotificationItem({
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={[styles.notificationItem, { borderBottomColor: borderColor }]} onPress={onPress}>
       <View style={styles.avatarContainer}>{renderAvatars()}</View>
       <View style={styles.contentContainer}>
         <View style={styles.headerRow}>
           <ThemedText style={styles.authorNames}>
-            {notification.authors
-              .map((author) => author.displayName || author.handle)
-              .join(", ")}
+            {notification.authors.map((author) => author.displayName || author.handle).join(', ')}
           </ThemedText>
-          <ThemedText style={styles.timestamp}>
-            {formatTime(notification.latestTimestamp)}
-          </ThemedText>
+          <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
         </View>
-        <ThemedText style={styles.reasonText}>
-          {getReasonText(notification.type, notification.count)}
-        </ThemedText>
+        <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
         {notification.postContent && (
           <ThemedText style={styles.postContent} numberOfLines={2}>
             {notification.postContent}
@@ -200,23 +163,17 @@ type NotificationData = {
   postContent?: string;
 };
 
-function groupNotifications(
-  notifications: NotificationData[]
-): GroupedNotification[] {
+function groupNotifications(notifications: NotificationData[]): GroupedNotification[] {
   const groups = new Map<string, GroupedNotification>();
 
   notifications.forEach((notification) => {
     // Create a key for grouping by type and subject
-    const groupKey = `${notification.reason}_${
-      notification.reasonSubject || "none"
-    }`;
+    const groupKey = `${notification.reason}_${notification.reasonSubject || 'none'}`;
 
     if (groups.has(groupKey)) {
       const group = groups.get(groupKey)!;
       // Check if this author is already in the group
-      const existingAuthor = group.authors.find(
-        (author) => author.did === notification.author.did
-      );
+      const existingAuthor = group.authors.find((author) => author.did === notification.author.did);
 
       if (!existingAuthor) {
         // Add new author to the group
@@ -237,7 +194,7 @@ function groupNotifications(
     } else {
       groups.set(groupKey, {
         id: groupKey,
-        type: notification.reason as GroupedNotification["type"],
+        type: notification.reason as GroupedNotification['type'],
         subject: notification.reasonSubject,
         postContent: notification.postContent,
         authors: [
@@ -256,9 +213,7 @@ function groupNotifications(
   });
 
   return Array.from(groups.values()).sort(
-    (a, b) =>
-      new Date(b.latestTimestamp).getTime() -
-      new Date(a.latestTimestamp).getTime()
+    (a, b) => new Date(b.latestTimestamp).getTime() - new Date(a.latestTimestamp).getTime(),
   );
 }
 
@@ -278,7 +233,7 @@ export default function NotificationsScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register("notifications", scrollToTop);
+    tabScrollRegistry.register('notifications', scrollToTop);
   }, []);
 
   const {
@@ -293,8 +248,7 @@ export default function NotificationsScreen() {
     isRefetching,
   } = useNotifications();
 
-  const notifications =
-    notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
+  const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
   const groupedNotifications = groupNotifications(notifications);
 
   const handleLoadMore = () => {
@@ -304,66 +258,44 @@ export default function NotificationsScreen() {
   };
 
   const handleNotificationPress = (notification: GroupedNotification) => {
-    if (notification.type === "follow") {
+    if (notification.type === 'follow') {
       // Navigate to the first author's profile
-      router.push(
-        `/profile/${encodeURIComponent(notification.authors[0].handle)}`
-      );
+      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     } else if (notification.subject) {
       // Navigate to the post
       router.push(`/post/${encodeURIComponent(notification.subject)}`);
     } else {
       // For notifications without a subject, navigate to the first author's profile
-      router.push(
-        `/profile/${encodeURIComponent(notification.authors[0].handle)}`
-      );
+      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     }
   };
 
   const renderNotification = ({ item }: { item: GroupedNotification }) => (
-    <NotificationItem
-      notification={item}
-      onPress={() => handleNotificationPress(item)}
-      borderColor={borderColor}
-    />
+    <NotificationItem notification={item} onPress={() => handleNotificationPress(item)} borderColor={borderColor} />
   );
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <ThemedText style={styles.emptyStateTitle}>
-        {t("notifications.noNotificationsYet")}
-      </ThemedText>
-      <ThemedText style={styles.emptyStateSubtitle}>
-        {t("notifications.notificationsWillAppearHere")}
-      </ThemedText>
+      <ThemedText style={styles.emptyStateTitle}>{t('notifications.noNotificationsYet')}</ThemedText>
+      <ThemedText style={styles.emptyStateSubtitle}>{t('notifications.notificationsWillAppearHere')}</ThemedText>
     </View>
   );
 
   const renderErrorState = () => (
     <View style={styles.emptyState}>
-      <ThemedText style={styles.emptyStateTitle}>
-        {t("notifications.errorLoadingNotifications")}
-      </ThemedText>
-      <ThemedText style={styles.emptyStateSubtitle}>
-        {error?.message || t("notifications.somethingWentWrong")}
-      </ThemedText>
+      <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
+      <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
     </View>
   );
 
   if (isError) {
-    return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-        {renderErrorState()}
-      </ThemedView>
-    );
+    return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
   }
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>
-          {t("navigation.notifications")}
-        </ThemedText>
+        <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
       </ThemedView>
 
       <FlatList
@@ -373,26 +305,20 @@ export default function NotificationsScreen() {
         keyExtractor={(item) => item.id}
         style={styles.notificationsList}
         contentContainerStyle={styles.notificationsListContent}
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-        }
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={
           isFetchingNextPage ? (
             <ThemedView style={styles.loadingMore}>
-              <ThemedText style={styles.loadingMoreText}>
-                {t("notifications.loadingMoreNotifications")}
-              </ThemedText>
+              <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
             </ThemedView>
           ) : null
         }
         ListEmptyComponent={
           isLoading ? (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>
-                {t("notifications.loadingNotifications")}
-              </ThemedText>
+              <ThemedText style={styles.emptyStateText}>{t('notifications.loadingNotifications')}</ThemedText>
             </ThemedView>
           ) : (
             renderEmptyState()
@@ -415,29 +341,29 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   listContainer: {
     flexGrow: 1,
   },
   notificationItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   notificationContent: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   avatarsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginRight: 12,
     marginTop: 2,
   },
   avatarWrapper: {
-    position: "relative",
+    position: 'relative',
   },
   avatar: {
     width: 40,
@@ -445,36 +371,36 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   avatarFallback: {
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarFallbackText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   avatarOverflow: {
-    backgroundColor: "#666",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#666',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarOverflowText: {
     fontSize: 12,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   notificationText: {
     flex: 1,
   },
   authorInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 4,
   },
   authorName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginRight: 8,
   },
   authorHandle: {
@@ -487,7 +413,7 @@ const styles = StyleSheet.create({
   postContent: {
     fontSize: 14,
     marginBottom: 4,
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   timeText: {
     fontSize: 12,
@@ -497,40 +423,40 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginLeft: 8,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   emptyState: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 32,
   },
   emptyStateTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
-    textAlign: "center",
+    textAlign: 'center',
   },
   emptyStateSubtitle: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     opacity: 0.7,
   },
   errorState: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 32,
   },
   errorTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 8,
-    textAlign: "center",
+    textAlign: 'center',
   },
   errorMessage: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 16,
     opacity: 0.7,
   },
@@ -541,11 +467,11 @@ const styles = StyleSheet.create({
   },
   retryButtonText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   loadingFooter: {
     paddingVertical: 16,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingText: {
     fontSize: 14,
@@ -559,7 +485,7 @@ const styles = StyleSheet.create({
   },
   loadingMore: {
     paddingVertical: 16,
-    alignItems: "center",
+    alignItems: 'center',
   },
   loadingMoreText: {
     fontSize: 14,
@@ -577,14 +503,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 4,
   },
   authorNames: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   timestamp: {
     fontSize: 14,

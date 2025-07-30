@@ -14,6 +14,7 @@ import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { formatRelativeTime } from '@/utils/timeUtils';
 
 type SearchResult = {
   type: 'profile' | 'post';
@@ -183,7 +184,7 @@ export default function SearchScreen() {
             displayName: post.author.displayName,
             avatar: post.author.avatar,
           },
-          createdAt: new Date(post.indexedAt).toLocaleDateString(),
+          createdAt: formatRelativeTime(post.indexedAt),
           likeCount: post.likeCount || 0,
           commentCount: post.replyCount || 0,
           repostCount: post.repostCount || 0,

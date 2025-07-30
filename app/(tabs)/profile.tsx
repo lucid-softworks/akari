@@ -15,6 +15,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { formatRelativeTime } from '@/utils/timeUtils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type TabType = 'posts' | 'replies' | 'likes' | 'media';
@@ -230,7 +231,7 @@ export default function ProfileScreen() {
                     displayName: post.author.displayName,
                     avatar: post.author.avatar,
                   },
-                  createdAt: new Date(post.indexedAt).toLocaleDateString(),
+                  createdAt: formatRelativeTime(post.indexedAt),
                   likeCount: post.likeCount || 0,
                   commentCount: post.replyCount || 0,
                   repostCount: post.repostCount || 0,
