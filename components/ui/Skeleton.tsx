@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View, type ViewProps } from 'react-native';
+import { Animated, View, type DimensionValue, type ViewProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SkeletonProps = ViewProps & {
-  width?: number | string;
-  height?: number | string;
+  width?: DimensionValue;
+  height?: DimensionValue;
   borderRadius?: number;
   lightColor?: string;
   darkColor?: string;
@@ -42,7 +42,7 @@ export function Skeleton({
           duration: 1000,
           useNativeDriver: false,
         }),
-      ])
+      ]),
     );
 
     animation.start();
@@ -58,18 +58,29 @@ export function Skeleton({
   });
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           width,
           height,
           borderRadius,
           backgroundColor,
-          opacity,
         },
         style,
       ]}
       {...otherProps}
-    />
+    >
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor,
+          opacity,
+        }}
+      />
+    </View>
   );
-} 
+}
