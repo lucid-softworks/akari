@@ -1,11 +1,11 @@
-import { BlueskyActors } from "./actors";
-import { BlueskyAuth } from "./auth";
-import { BlueskyApiClient } from "./client";
-import { BlueskyConversations } from "./conversations";
-import { BlueskyFeeds } from "./feeds";
-import { BlueskyGraph } from "./graph";
-import { BlueskyNotifications } from "./notifications";
-import { BlueskySearch } from "./search";
+import { BlueskyActors } from './actors';
+import { BlueskyAuth } from './auth';
+import { BlueskyApiClient } from './client';
+import { BlueskyConversations } from './conversations';
+import { BlueskyFeeds } from './feeds';
+import { BlueskyGraph } from './graph';
+import { BlueskyNotifications } from './notifications';
+import { BlueskySearch } from './search';
 import type {
   BlueskyConvosResponse,
   BlueskyFeedResponse,
@@ -18,7 +18,7 @@ import type {
   BlueskySearchPostsResponse,
   BlueskySession,
   BlueskyThreadResponse,
-} from "./types";
+} from './types';
 
 /**
  * Main Bluesky API client that combines all functionality
@@ -44,10 +44,7 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   // Auth methods
-  async createSession(
-    identifier: string,
-    password: string
-  ): Promise<BlueskySession> {
+  async createSession(identifier: string, password: string): Promise<BlueskySession> {
     return this.auth.createSession(identifier, password);
   }
 
@@ -56,35 +53,19 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   // Feed methods
-  async getProfile(
-    accessJwt: string,
-    did: string
-  ): Promise<BlueskyProfileResponse> {
+  async getProfile(accessJwt: string, did: string): Promise<BlueskyProfileResponse> {
     return this.actors.getProfile(accessJwt, did);
   }
 
-  async getTimeline(
-    accessJwt: string,
-    limit: number = 20
-  ): Promise<BlueskyFeedResponse> {
+  async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.feeds.getTimeline(accessJwt, limit);
   }
 
-  async getFeeds(
-    accessJwt: string,
-    actor: string,
-    limit: number = 50,
-    cursor?: string
-  ): Promise<BlueskyFeedsResponse> {
+  async getFeeds(accessJwt: string, actor: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedsResponse> {
     return this.feeds.getFeeds(accessJwt, actor, limit, cursor);
   }
 
-  async getFeed(
-    accessJwt: string,
-    feed: string,
-    limit: number = 50,
-    cursor?: string
-  ): Promise<BlueskyFeedResponse> {
+  async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
     return this.feeds.getFeed(accessJwt, feed, limit, cursor);
   }
 
@@ -92,19 +73,11 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getPost(accessJwt, uri);
   }
 
-  async getPostThread(
-    accessJwt: string,
-    uri: string
-  ): Promise<BlueskyThreadResponse> {
+  async getPostThread(accessJwt: string, uri: string): Promise<BlueskyThreadResponse> {
     return this.feeds.getPostThread(accessJwt, uri);
   }
 
-  async getAuthorFeed(
-    accessJwt: string,
-    actor: string,
-    limit: number = 20,
-    cursor?: string
-  ): Promise<BlueskyFeedResponse> {
+  async getAuthorFeed(accessJwt: string, actor: string, limit: number = 20, cursor?: string): Promise<BlueskyFeedResponse> {
     return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor);
   }
 
@@ -113,23 +86,17 @@ export class BlueskyApi extends BlueskyApiClient {
     accessJwt: string,
     limit: number = 50,
     cursor?: string,
-    readState?: "unread",
-    status?: "request" | "accepted"
+    readState?: 'unread',
+    status?: 'request' | 'accepted',
   ): Promise<BlueskyConvosResponse> {
-    return this.conversations.listConversations(
-      accessJwt,
-      limit,
-      cursor,
-      readState,
-      status
-    );
+    return this.conversations.listConversations(accessJwt, limit, cursor, readState, status);
   }
 
   async getMessages(
     accessJwt: string,
     convoId: string,
     limit: number = 50,
-    cursor?: string
+    cursor?: string,
   ): Promise<BlueskyMessagesResponse> {
     return this.conversations.getMessages(accessJwt, convoId, limit, cursor);
   }
@@ -156,7 +123,7 @@ export class BlueskyApi extends BlueskyApiClient {
     accessJwt: string,
     query: string,
     limit: number = 20,
-    cursor?: string
+    cursor?: string,
   ): Promise<BlueskySearchActorsResponse> {
     return this.search.searchProfiles(accessJwt, query, limit, cursor);
   }
@@ -165,7 +132,7 @@ export class BlueskyApi extends BlueskyApiClient {
     accessJwt: string,
     query: string,
     limit: number = 20,
-    cursor?: string
+    cursor?: string,
   ): Promise<BlueskySearchPostsResponse> {
     return this.search.searchPosts(accessJwt, query, limit, cursor);
   }
@@ -177,16 +144,13 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
     reasons?: string[],
     priority?: boolean,
-    seenAt?: string
+    seenAt?: string,
   ): Promise<BlueskyNotificationsResponse> {
-    return this.notifications.listNotifications(
-      accessJwt,
-      limit,
-      cursor,
-      reasons,
-      priority,
-      seenAt
-    );
+    return this.notifications.listNotifications(accessJwt, limit, cursor, reasons, priority, seenAt);
+  }
+
+  async getUnreadNotificationsCount(accessJwt: string): Promise<{ count: number }> {
+    return this.notifications.getUnreadCount(accessJwt);
   }
 
   // Static factory method for custom PDS

@@ -4,11 +4,14 @@ import React, { useRef } from 'react';
 import { ActivityIndicator, Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
+import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
+import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -49,6 +52,8 @@ function CustomTabButton(props: any) {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { data: currentAccount, isLoading: isLoadingCurrentAccount } = useCurrentAccount();
+  const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
+  const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
   if (isLoadingCurrentAccount) {
     return (
@@ -101,13 +106,23 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="message.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <ThemedView style={{ position: 'relative' }}>
+              <TabBarIcon name="message.fill" color={color} />
+              <TabBadge count={unreadMessagesCount} size="small" />
+            </ThemedView>
+          ),
         }}
       />
       <Tabs.Screen
         name="notifications"
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="bell.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <ThemedView style={{ position: 'relative' }}>
+              <TabBarIcon name="bell.fill" color={color} />
+              <TabBadge count={unreadNotificationsCount} size="small" />
+            </ThemedView>
+          ),
         }}
       />
       <Tabs.Screen

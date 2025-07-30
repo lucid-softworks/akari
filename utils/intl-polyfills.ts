@@ -9,14 +9,12 @@
 // Don't remove -force from these because detection is VERY slow on low-end Android.
 // https://github.com/formatjs/formatjs/issues/4463#issuecomment-2176070577
 
-// https://github.com/formatjs/formatjs/blob/main/packages/intl-getcanonicallocales/polyfill-force.ts
-import "@formatjs/intl-getcanonicallocales/polyfill-force";
-// https://github.com/formatjs/formatjs/blob/main/packages/intl-locale/polyfill-force.ts
-import "@formatjs/intl-locale/polyfill-force";
-// https://github.com/formatjs/formatjs/blob/main/packages/intl-pluralrules/polyfill-force.ts
-import "@formatjs/intl-pluralrules/polyfill-force";
-// https://github.com/formatjs/formatjs/blob/main/packages/intl-numberformat/polyfill-force.ts
-import "@formatjs/intl-numberformat/polyfill-force";
+import '@formatjs/intl-getcanonicallocales/polyfill-force';
+import '@formatjs/intl-locale/polyfill-force';
+import '@formatjs/intl-numberformat/polyfill-force';
+import '@formatjs/intl-pluralrules/polyfill-force';
+import '@formatjs/intl-relativetimeformat/polyfill-force';
 
-import "@formatjs/intl-numberformat/locale-data/en";
-import "@formatjs/intl-pluralrules/locale-data/en";
+import '@formatjs/intl-numberformat/locale-data/en';
+import '@formatjs/intl-pluralrules/locale-data/en';
+import '@formatjs/intl-relativetimeformat/locale-data/en';

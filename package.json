@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@formatjs/intl-displaynames": "^6.8.11",
     "@formatjs/intl-getcanonicallocales": "^2.5.5",
     "@formatjs/intl-locale": "^4.2.11",
     "@formatjs/intl-numberformat": "^8.15.4",
     "@formatjs/intl-pluralrules": "^5.4.4",
+    "@formatjs/intl-relativetimeformat": "^11.4.11",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
