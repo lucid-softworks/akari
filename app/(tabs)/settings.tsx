@@ -18,7 +18,6 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
-import { checkMissingTranslations } from '@/utils/devUtils';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 export default function SettingsScreen() {
@@ -130,15 +129,6 @@ export default function SettingsScreen() {
   };
 
   const handleRemoveAccount = (account: Account) => {
-    if (accounts && accounts.length === 1) {
-      showAlert({
-        title: t('common.cannotRemoveAccount'),
-        message: t('common.mustHaveOneAccount'),
-        buttons: [{ text: t('common.ok') }],
-      });
-      return;
-    }
-
     showAlert({
       title: t('common.removeAccount'),
       message: t('profile.removeAccountConfirmation', { handle: account.handle }),
@@ -298,25 +288,6 @@ export default function SettingsScreen() {
               <ThemedText style={styles.settingValue}>{Constants.expoConfig?.version || t('common.unknown')}</ThemedText>
             </ThemedView>
           </ThemedView>
-
-          {/* Development Tools */}
-          {__DEV__ && (
-            <TouchableOpacity
-              style={[styles.settingItem, { borderBottomColor: borderColor }]}
-              onPress={() => {
-                checkMissingTranslations();
-                showAlert({
-                  title: t('common.translationReport'),
-                  message: t('common.checkConsoleForReport'),
-                });
-              }}
-            >
-              <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>{t('settings.checkMissingTranslations')}</ThemedText>
-                <ThemedText style={styles.settingValue}>{t('settings.developmentTool')}</ThemedText>
-              </ThemedView>
-            </TouchableOpacity>
-          )}
         </ThemedView>
       </ScrollView>
     </ThemedView>
