@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
@@ -24,6 +25,8 @@ export default function ProfileScreen() {
   const { data: currentAccount } = useCurrentAccount();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
 
@@ -38,6 +41,33 @@ export default function ProfileScreen() {
   }, []);
 
   const { data: profile } = useProfile(currentAccount?.handle);
+
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+
+  const handleDropdownToggle = (isOpen: boolean) => {
+    if (isOpen && dropdownRef.current) {
+      // Measure the position of the more button
+      dropdownRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setDropdownPosition({
+          top: pageY + height + 4, // Position below the button with 4px gap
+          right: 20, // 20px from right edge
+        });
+      });
+    }
+    setShowDropdown(isOpen);
+  };
+
+  const handleCopyLink = async () => {
+    // TODO: Implement copy link functionality
+    console.log('Copy link');
+    setShowDropdown(false);
+  };
+
+  const handleSearchPosts = () => {
+    // TODO: Implement search posts functionality
+    console.log('Search posts');
+    setShowDropdown(false);
+  };
 
   const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
@@ -101,11 +131,44 @@ export default function ProfileScreen() {
             labels: profile?.labels,
           }}
           isOwnProfile={true}
+          onDropdownToggle={handleDropdownToggle}
+          dropdownRef={dropdownRef}
         />
         <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
 
         {renderTabContent()}
       </ScrollView>
+
+      {/* Dropdown rendered at root level */}
+      <ProfileDropdown
+        isVisible={showDropdown}
+        onCopyLink={handleCopyLink}
+        onSearchPosts={handleSearchPosts}
+        onAddToLists={() => {
+          console.log('Add to lists');
+          setShowDropdown(false);
+        }}
+        onMuteAccount={() => {
+          console.log('Mute account');
+          setShowDropdown(false);
+        }}
+        onBlockPress={() => {
+          console.log('Block account');
+          setShowDropdown(false);
+        }}
+        onReportAccount={() => {
+          console.log('Report account');
+          setShowDropdown(false);
+        }}
+        isFollowing={false}
+        isBlocking={false}
+        isMuted={false}
+        isOwnProfile={true}
+        style={{
+          top: dropdownPosition.top,
+          right: dropdownPosition.right,
+        }}
+      />
     </ThemedView>
   );
 }

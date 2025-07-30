@@ -13,7 +13,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
@@ -49,6 +48,8 @@ type ProfileHeaderProps = {
     }[];
   };
   isOwnProfile?: boolean;
+  onDropdownToggle?: (isOpen: boolean) => void;
+  dropdownRef?: React.RefObject<View | null>;
 };
 
 const formatNumber = (num: number, locale: string): string => {
@@ -59,21 +60,13 @@ const formatNumber = (num: number, locale: string): string => {
   return formatter.format(num);
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
-
-  const dropdownBackgroundColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#1c1c1e',
-    },
-    'background',
-  );
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -202,7 +195,9 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
   };
 
   const handleDropdownToggle = () => {
-    setShowDropdown(!showDropdown);
+    const newState = !showDropdown;
+    setShowDropdown(newState);
+    onDropdownToggle?.(newState);
   };
 
   const handleFollowPress = () => {
@@ -301,22 +296,10 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
                 <TouchableOpacity style={styles.editButton} onPress={() => {}}>
                   <ThemedText style={styles.editButtonText}>Edit Profile</ThemedText>
                 </TouchableOpacity>
-                <View style={styles.moreButtonContainer}>
+                <View style={styles.moreButtonContainer} ref={dropdownRef}>
                   <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
                     <IconSymbol name="ellipsis" size={20} color="#ffffff" />
                   </TouchableOpacity>
-                  {showDropdown && (
-                    <ThemedView
-                      style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }]}
-                    >
-                      <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
-                        <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.dropdownItem} onPress={handleCopyLink}>
-                        <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
-                      </TouchableOpacity>
-                    </ThemedView>
-                  )}
                 </View>
               </>
             ) : (
@@ -325,41 +308,10 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
                   <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
                 </TouchableOpacity>
                 {!isBlockedBy && (
-                  <View style={styles.moreButtonContainer}>
+                  <View style={styles.moreButtonContainer} ref={dropdownRef}>
                     <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle}>
                       <IconSymbol name="ellipsis" size={20} color="#007AFF" />
                     </TouchableOpacity>
-                    {showDropdown && (
-                      <ThemedView
-                        style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }]}
-                      >
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleCopyLink}>
-                          <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
-                          <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
-                        </TouchableOpacity>
-                        <View style={[styles.dropdownSeparator, { borderColor: borderColor }]} />
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleAddToLists}>
-                          <ThemedText style={styles.dropdownText}>{t('profile.addToLists')}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleMuteAccount}>
-                          <ThemedText style={styles.dropdownText}>
-                            {profile.viewer?.muted ? t('common.unmute') : t('profile.muteAccount')}
-                          </ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleBlockPress}>
-                          <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
-                            {isBlocking ? t('common.unblock') : t('common.block')}
-                          </ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleReportAccount}>
-                          <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
-                            {t('profile.reportAccount')}
-                          </ThemedText>
-                        </TouchableOpacity>
-                      </ThemedView>
-                    )}
                   </View>
                 )}
               </>
@@ -539,39 +491,7 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     marginBottom: 12,
   },
-  dropdown: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    marginTop: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    minWidth: 140,
-    zIndex: 999999,
-  },
-  dropdownItem: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  dropdownSeparator: {
-    height: 1,
-    borderTopWidth: 1,
-    marginVertical: 4,
-  },
-  dropdownText: {
-    fontSize: 14,
-  },
-  dropdownTextDestructive: {
-    color: '#c62828',
-  },
+
   blockedMessage: {
     marginTop: 16,
     paddingVertical: 12,
