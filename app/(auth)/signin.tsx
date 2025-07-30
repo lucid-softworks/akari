@@ -1,55 +1,45 @@
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useAddAccount } from "@/hooks/mutations/useAddAccount";
-import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
-import { useSignIn } from "@/hooks/mutations/useSignIn";
-import { useSwitchAccount } from "@/hooks/mutations/useSwitchAccount";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { useSignIn } from '@/hooks/mutations/useSignIn';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useTranslation } from '@/hooks/useTranslation';
 
-type AuthMode = "signin" | "signup";
+type AuthMode = 'signin' | 'signup';
 
 export default function AuthScreen() {
-  const { addAccount } = useLocalSearchParams<{ addAccount?: string }>();
-  const isAddingAccount = addAccount === "true";
+  const { data: currentAccount } = useCurrentAccount();
   const { t } = useTranslation();
 
-  const [mode, setMode] = useState<AuthMode>("signin");
-  const [handle, setHandle] = useState("");
-  const [appPassword, setAppPassword] = useState("");
-  const [pdsUrl, setPdsUrl] = useState("");
+  const [mode, setMode] = useState<AuthMode>('signin');
+  const [handle, setHandle] = useState('');
+  const [appPassword, setAppPassword] = useState('');
+  const [pdsUrl, setPdsUrl] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const signInMutation = useSignIn();
   const addAccountMutation = useAddAccount();
   const switchAccountMutation = useSwitchAccount();
-  const setAuthMutation = useSetAuthentication();
 
   const validateHandle = (handle: string) => {
     // Bluesky handles can be @username.bsky.social or just username
     const handleRegex = /^@?[a-zA-Z0-9._-]+$/;
-    return handleRegex.test(handle.replace(".bsky.social", ""));
+    return handleRegex.test(handle.replace('.bsky.social', ''));
   };
 
   const handleSignIn = async () => {
     if (!handle || !appPassword) {
-      Alert.alert(t("common.error"), t("auth.fillAllFields"));
+      Alert.alert(t('common.error'), t('auth.fillAllFields'));
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert(t("common.error"), t("auth.invalidBlueskyHandle"));
+      Alert.alert(t('common.error'), t('auth.invalidBlueskyHandle'));
       return;
     }
 
@@ -60,7 +50,6 @@ export default function AuthScreen() {
         pdsUrl: pdsUrl || undefined,
       });
 
-      // Always use the multi-account system for consistency
       const newAccount = await addAccountMutation.mutateAsync({
         did: result.did,
         handle: result.handle,
@@ -72,34 +61,28 @@ export default function AuthScreen() {
       await switchAccountMutation.mutateAsync(newAccount);
 
       Alert.alert(
-        t("common.success"),
-        isAddingAccount
-          ? t("auth.accountAddedSuccessfully")
-          : t("auth.signedInSuccessfully"),
+        t('common.success'),
+        currentAccount ? t('auth.accountAddedSuccessfully') : t('auth.signedInSuccessfully'),
         [
           {
-            text: t("common.ok"),
-            onPress: () =>
-              router.replace(isAddingAccount ? "/(tabs)/settings" : "/(tabs)"),
+            text: t('common.ok'),
+            onPress: () => router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)'),
           },
-        ]
+        ],
       );
     } catch (error) {
-      Alert.alert(
-        t("common.error"),
-        error instanceof Error ? error.message : t("auth.signInFailed")
-      );
+      Alert.alert(t('common.error'), error instanceof Error ? error.message : t('auth.signInFailed'));
     }
   };
 
   const handleSignUp = async () => {
     if (!handle || !appPassword) {
-      Alert.alert(t("common.error"), t("auth.fillAllFields"));
+      Alert.alert(t('common.error'), t('auth.fillAllFields'));
       return;
     }
 
     if (!validateHandle(handle)) {
-      Alert.alert(t("common.error"), t("auth.invalidBlueskyHandle"));
+      Alert.alert(t('common.error'), t('auth.invalidBlueskyHandle'));
       return;
     }
 
@@ -121,122 +104,96 @@ export default function AuthScreen() {
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
 
-      Alert.alert(t("common.success"), t("auth.connectedSuccessfully"), [
+      Alert.alert(t('common.success'), t('auth.connectedSuccessfully'), [
         {
-          text: t("common.ok"),
-          onPress: () => router.replace("/(tabs)"),
+          text: t('common.ok'),
+          onPress: () => router.replace('/(tabs)'),
         },
       ]);
     } catch (error) {
-      Alert.alert(
-        t("common.error"),
-        error instanceof Error ? error.message : t("auth.connectionFailed")
-      );
+      Alert.alert(t('common.error'), error instanceof Error ? error.message : t('auth.connectionFailed'));
     }
   };
 
   const toggleMode = () => {
-    setMode(mode === "signin" ? "signup" : "signin");
+    setMode(mode === 'signin' ? 'signup' : 'signin');
     // Clear form when switching modes
-    setHandle("");
-    setAppPassword("");
+    setHandle('');
+    setAppPassword('');
   };
 
-  const isSignUp = mode === "signup";
+  const isSignUp = mode === 'signup';
   const isLoading = signInMutation.isPending;
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <ThemedView style={styles.content}>
           <ThemedView style={styles.header}>
             <ThemedText type="title" style={styles.title}>
-              {isAddingAccount
-                ? t("common.addAccount")
-                : isSignUp
-                ? t("auth.connectBluesky")
-                : t("auth.signInToBluesky")}
+              {currentAccount ? t('common.addAccount') : isSignUp ? t('auth.connectBluesky') : t('auth.signInToBluesky')}
             </ThemedText>
             <ThemedText style={styles.subtitle}>
-              {isAddingAccount
-                ? t("auth.addAnotherAccount")
+              {currentAccount
+                ? t('auth.addAnotherAccount')
                 : isSignUp
-                ? t("auth.connectAccountToGetStarted")
-                : t("auth.signInWithHandleAndPassword")}
+                ? t('auth.connectAccountToGetStarted')
+                : t('auth.signInWithHandleAndPassword')}
             </ThemedText>
           </ThemedView>
 
           <ThemedView style={styles.form}>
             <ThemedView style={styles.inputContainer}>
-              <ThemedText style={styles.label}>
-                {t("auth.blueskyHandle")}
-              </ThemedText>
+              <ThemedText style={styles.label}>{t('auth.blueskyHandle')}</ThemedText>
               <TextInput
                 style={styles.input}
                 value={handle}
                 onChangeText={setHandle}
-                placeholder={t("auth.blueskyHandlePlaceholder")}
+                placeholder={t('auth.blueskyHandlePlaceholder')}
                 placeholderTextColor="#999"
                 autoCapitalize="none"
                 autoCorrect={false}
                 autoComplete="off"
               />
-              <ThemedText style={styles.helperText}>
-                {t("auth.handleHelperText")}
-              </ThemedText>
+              <ThemedText style={styles.helperText}>{t('auth.handleHelperText')}</ThemedText>
             </ThemedView>
 
             <ThemedView style={styles.inputContainer}>
-              <ThemedText style={styles.label}>
-                {t("auth.appPassword")}
-              </ThemedText>
+              <ThemedText style={styles.label}>{t('auth.appPassword')}</ThemedText>
               <TextInput
                 style={styles.input}
                 value={appPassword}
                 onChangeText={setAppPassword}
-                placeholder={t("auth.appPasswordPlaceholder")}
+                placeholder={t('auth.appPasswordPlaceholder')}
                 placeholderTextColor="#999"
                 secureTextEntry
                 autoCapitalize="none"
                 autoCorrect={false}
                 autoComplete="off"
               />
-              <ThemedText style={styles.helperText}>
-                {t("auth.appPasswordHelperText")}
-              </ThemedText>
+              <ThemedText style={styles.helperText}>{t('auth.appPasswordHelperText')}</ThemedText>
             </ThemedView>
 
-            <TouchableOpacity
-              style={styles.advancedToggle}
-              onPress={() => setShowAdvanced(!showAdvanced)}
-            >
+            <TouchableOpacity style={styles.advancedToggle} onPress={() => setShowAdvanced(!showAdvanced)}>
               <ThemedText style={styles.advancedToggleText}>
-                {showAdvanced ? t("common.hide") : t("common.show")}{" "}
-                {t("auth.advancedOptions")}
+                {showAdvanced ? t('common.hide') : t('common.show')} {t('auth.advancedOptions')}
               </ThemedText>
             </TouchableOpacity>
 
             {showAdvanced && (
               <ThemedView style={styles.inputContainer}>
-                <ThemedText style={styles.label}>
-                  {t("auth.customPdsServer")}
-                </ThemedText>
+                <ThemedText style={styles.label}>{t('auth.customPdsServer')}</ThemedText>
                 <TextInput
                   style={styles.input}
                   value={pdsUrl}
                   onChangeText={setPdsUrl}
-                  placeholder={t("auth.pdsUrlPlaceholder")}
+                  placeholder={t('auth.pdsUrlPlaceholder')}
                   placeholderTextColor="#999"
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="off"
                 />
-                <ThemedText style={styles.helperText}>
-                  {t("auth.pdsUrlHelperText")}
-                </ThemedText>
+                <ThemedText style={styles.helperText}>{t('auth.pdsUrlHelperText')}</ThemedText>
               </ThemedView>
             )}
 
@@ -247,42 +204,36 @@ export default function AuthScreen() {
             >
               <ThemedText style={styles.buttonText}>
                 {isLoading
-                  ? isAddingAccount
-                    ? t("auth.addingAccount")
+                  ? currentAccount
+                    ? t('auth.addingAccount')
                     : isSignUp
-                    ? t("auth.connecting")
-                    : t("auth.signingIn")
-                  : isAddingAccount
-                  ? t("common.addAccount")
+                    ? t('auth.connecting')
+                    : t('auth.signingIn')
+                  : currentAccount
+                  ? t('common.addAccount')
                   : isSignUp
-                  ? t("auth.connectAccount")
-                  : t("common.signIn")}
+                  ? t('auth.connectAccount')
+                  : t('common.signIn')}
               </ThemedText>
             </TouchableOpacity>
           </ThemedView>
 
-          {!isAddingAccount && (
+          {!currentAccount && (
             <ThemedView style={styles.footer}>
               <ThemedText style={styles.footerText}>
-                {isSignUp
-                  ? t("auth.alreadyConnected")
-                  : t("auth.needDifferentAccount")}
+                {isSignUp ? t('auth.alreadyConnected') : t('auth.needDifferentAccount')}
               </ThemedText>
               <TouchableOpacity onPress={toggleMode}>
-                <ThemedText style={styles.linkText}>
-                  {isSignUp ? t("common.signIn") : t("auth.connectNew")}
-                </ThemedText>
+                <ThemedText style={styles.linkText}>{isSignUp ? t('common.signIn') : t('auth.connectNew')}</ThemedText>
               </TouchableOpacity>
             </ThemedView>
           )}
 
           <ThemedView style={styles.infoSection}>
             <ThemedText type="subtitle" style={styles.infoTitle}>
-              {t("auth.howToGetAppPassword")}:
+              {t('auth.howToGetAppPassword')}:
             </ThemedText>
-            <ThemedText style={styles.infoText}>
-              {t("auth.appPasswordInstructions")}
-            </ThemedText>
+            <ThemedText style={styles.infoText}>{t('auth.appPasswordInstructions')}</ThemedText>
           </ThemedView>
         </ThemedView>
       </ScrollView>
@@ -296,24 +247,24 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   content: {
     padding: 24,
     gap: 32,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     gap: 8,
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 16,
     opacity: 0.7,
-    textAlign: "center",
+    textAlign: 'center',
   },
   form: {
     gap: 20,
@@ -323,73 +274,73 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderRadius: 8,
     padding: 16,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   helperText: {
     fontSize: 12,
     opacity: 0.6,
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   advancedToggle: {
     paddingVertical: 8,
   },
   advancedToggleText: {
     fontSize: 14,
-    color: "#007AFF",
-    textAlign: "center",
+    color: '#007AFF',
+    textAlign: 'center',
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
     padding: 16,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 8,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footerText: {
     fontSize: 16,
   },
   linkText: {
     fontSize: 16,
-    color: "#007AFF",
-    fontWeight: "600",
+    color: '#007AFF',
+    fontWeight: '600',
   },
   infoSection: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f8f9fa',
     padding: 16,
     borderRadius: 8,
     gap: 8,
     borderWidth: 1,
-    borderColor: "#e1e5e9",
+    borderColor: '#e1e5e9',
   },
   infoTitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#11181C",
+    fontWeight: '600',
+    color: '#11181C',
   },
   infoText: {
     fontSize: 14,
     lineHeight: 20,
-    color: "#374151",
+    color: '#374151',
   },
 });
