@@ -58,14 +58,19 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const handleAuthorPress = () => {
     // Navigate to the quoted post's author profile
-    router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+    if (embed.record.author?.handle) {
+      router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+    }
   };
 
   const handleImageLoad = (imageUrl: string, width: number, height: number) => {
-    setImageDimensions((prev) => ({
-      ...prev,
-      [imageUrl]: { width, height },
-    }));
+    // Only store valid dimensions
+    if (width > 0 && height > 0 && isFinite(width) && isFinite(height)) {
+      setImageDimensions((prev) => ({
+        ...prev,
+        [imageUrl]: { width, height },
+      }));
+    }
   };
 
   // Extract text from the quoted post's record
@@ -87,24 +92,41 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
-          <TouchableOpacity onPress={handleAuthorPress} activeOpacity={0.7} style={styles.authorSection}>
-            <Image
-              source={{
-                uri: embed.record.author.avatar || 'https://bsky.app/static/default-avatar.png',
-              }}
-              style={styles.authorAvatar}
-              contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
-            />
-            <ThemedView style={styles.authorInfo}>
-              <ThemedText style={[styles.displayName, { color: textColor }]}>
-                {embed.record.author.displayName || embed.record.author.handle}
-              </ThemedText>
-              <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@{embed.record.author.handle}</ThemedText>
+          {embed.record.author ? (
+            <TouchableOpacity onPress={handleAuthorPress} activeOpacity={0.7} style={styles.authorSection}>
+              <Image
+                source={{
+                  uri: embed.record.author.avatar || 'https://bsky.app/static/default-avatar.png',
+                }}
+                style={styles.authorAvatar}
+                contentFit="cover"
+                placeholder={require('@/assets/images/partial-react-logo.png')}
+              />
+              <ThemedView style={styles.authorInfo}>
+                <ThemedText style={[styles.displayName, { color: textColor }]}>
+                  {embed.record.author.displayName || embed.record.author.handle}
+                </ThemedText>
+                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@{embed.record.author.handle}</ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
+          ) : (
+            <ThemedView style={styles.authorSection}>
+              <Image
+                source={{
+                  uri: 'https://bsky.app/static/default-avatar.png',
+                }}
+                style={styles.authorAvatar}
+                contentFit="cover"
+                placeholder={require('@/assets/images/partial-react-logo.png')}
+              />
+              <ThemedView style={styles.authorInfo}>
+                <ThemedText style={[styles.displayName, { color: textColor }]}>{t('common.unknown')}</ThemedText>
+                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@unknown</ThemedText>
+              </ThemedView>
             </ThemedView>
-          </TouchableOpacity>
+          )}
           <ThemedText style={[styles.timestamp, { color: secondaryTextColor }]}>
-            {formatRelativeTime(embed.record.indexedAt)}
+            {embed.record.indexedAt ? formatRelativeTime(embed.record.indexedAt) : ''}
           </ThemedText>
         </ThemedView>
 
@@ -122,7 +144,14 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                   {embed.media.images.map((image, index) => {
                     const dimensions = imageDimensions[image.fullsize];
                     const screenWidth = 400; // Approximate screen width minus padding
-                    const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
+                    const imageHeight =
+                      dimensions &&
+                      dimensions.width > 0 &&
+                      dimensions.height > 0 &&
+                      isFinite(dimensions.width) &&
+                      isFinite(dimensions.height)
+                        ? (dimensions.height / dimensions.width) * screenWidth
+                        : 300;
 
                     return (
                       <Image
@@ -144,7 +173,8 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                   {embed.record.embed.images.map((image, index) => {
                     const dimensions = imageDimensions[image.fullsize];
                     const screenWidth = 400; // Approximate screen width minus padding
-                    const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
+                    const imageHeight =
+                      dimensions && dimensions.width > 0 ? (dimensions.height / dimensions.width) * screenWidth : 300;
 
                     return (
                       <Image
@@ -171,7 +201,8 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                         {recordEmbed.images.map((image, imageIndex) => {
                           const dimensions = imageDimensions[image.fullsize];
                           const screenWidth = 400; // Approximate screen width minus padding
-                          const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
+                          const imageHeight =
+                            dimensions && dimensions.width > 0 ? (dimensions.height / dimensions.width) * screenWidth : 300;
 
                           return (
                             <Image
