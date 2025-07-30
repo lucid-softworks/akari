@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "@{{handle}}을(를) 제거하시겠습니까?",
       "posts": "게시물 {{count}}",
       "followers": "팔로워 {{count}}",
-      "following": "팔로잉 {{count}}"
+      "following": "팔로잉 {{count}}",
+      "videos": "동영상",
+      "feeds": "피드",
+      "starterpacks": "스타터팩",
+      "noVideos": "아직 동영상이 없습니다",
+      "noFeeds": "아직 피드가 없습니다",
+      "noStarterpacks": "아직 스타터팩이 없습니다"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",

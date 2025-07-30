@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "@{{handle}} hesabını kaldırmak istediğinizden emin misiniz?",
       "posts": "Gönderiler {{count}}",
       "followers": "Takipçiler {{count}}",
-      "following": "Takip {{count}}"
+      "following": "Takip {{count}}",
+      "videos": "Videolar",
+      "feeds": "Akışlar",
+      "starterpacks": "Başlangıç Paketleri",
+      "noVideos": "Henüz video yok",
+      "noFeeds": "Henüz akış yok",
+      "noStarterpacks": "Henüz başlangıç paketi yok"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",

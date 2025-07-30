@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Bạn có chắc chắn muốn xóa @{{handle}}?",
       "posts": "Bài viết {{count}}",
       "followers": "Người theo dõi {{count}}",
-      "following": "Đang theo dõi {{count}}"
+      "following": "Đang theo dõi {{count}}",
+      "videos": "Video",
+      "feeds": "Nguồn cấp",
+      "starterpacks": "Gói khởi đầu",
+      "noVideos": "Chưa có video",
+      "noFeeds": "Chưa có nguồn cấp",
+      "noStarterpacks": "Chưa có gói khởi đầu"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",

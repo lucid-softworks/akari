@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "क्या आप वाकई @{{handle}} को हटाना चाहते हैं?",
       "posts": "पोस्ट {{count}}",
       "followers": "फॉलोअर्स {{count}}",
-      "following": "फॉलोइंग {{count}}"
+      "following": "फॉलोइंग {{count}}",
+      "videos": "वीडियो",
+      "feeds": "फीड्स",
+      "starterpacks": "स्टार्टरपैक्स",
+      "noVideos": "अभी तक कोई वीडियो नहीं",
+      "noFeeds": "अभी तक कोई फीड नहीं",
+      "noStarterpacks": "अभी तक कोई स्टार्टरपैक नहीं"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

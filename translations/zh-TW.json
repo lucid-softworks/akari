@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "確定要移除 @{{handle}} 嗎？",
       "posts": "貼文 {{count}}",
       "followers": "追蹤者 {{count}}",
-      "following": "追蹤 {{count}}"
+      "following": "追蹤 {{count}}",
+      "videos": "影片",
+      "feeds": "動態",
+      "starterpacks": "入門包",
+      "noVideos": "暫無影片",
+      "noFeeds": "暫無動態",
+      "noStarterpacks": "暫無入門包"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

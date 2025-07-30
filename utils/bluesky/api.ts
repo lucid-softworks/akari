@@ -81,6 +81,33 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor);
   }
 
+  async getAuthorVideos(
+    accessJwt: string,
+    actor: string,
+    limit: number = 20,
+    cursor?: string,
+  ): Promise<BlueskyFeedResponse> {
+    return this.feeds.getAuthorVideos(accessJwt, actor, limit, cursor);
+  }
+
+  async getAuthorFeeds(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyFeedsResponse> {
+    return this.feeds.getAuthorFeeds(accessJwt, actor, limit, cursor);
+  }
+
+  async getAuthorStarterpacks(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyFeedsResponse> {
+    return this.feeds.getAuthorStarterpacks(accessJwt, actor, limit, cursor);
+  }
+
   // Conversation methods
   async listConversations(
     accessJwt: string,

@@ -1,10 +1,5 @@
-import { BlueskyApiClient } from "./client";
-import type {
-  BlueskyFeedResponse,
-  BlueskyFeedsResponse,
-  BlueskyPostView,
-  BlueskyThreadResponse,
-} from "./types";
+import { BlueskyApiClient } from './client';
+import type { BlueskyFeedResponse, BlueskyFeedsResponse, BlueskyPostView, BlueskyThreadResponse } from './types';
 
 /**
  * Bluesky API feed methods
@@ -16,17 +11,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param limit - Number of posts to fetch (default: 20)
    * @returns Promise resolving to timeline data
    */
-  async getTimeline(
-    accessJwt: string,
-    limit: number = 20
-  ): Promise<BlueskyFeedResponse> {
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>(
-      "/app.bsky.feed.getTimeline",
-      accessJwt,
-      {
-        params: { limit: limit.toString() },
-      }
-    );
+  async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getTimeline', accessJwt, {
+      params: { limit: limit.toString() },
+    });
   }
 
   /**
@@ -37,12 +25,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param cursor - Pagination cursor
    * @returns Promise resolving to feeds data
    */
-  async getFeeds(
-    accessJwt: string,
-    actor: string,
-    limit: number = 50,
-    cursor?: string
-  ): Promise<BlueskyFeedsResponse> {
+  async getFeeds(accessJwt: string, actor: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedsResponse> {
     const params: Record<string, string> = {
       actor,
       limit: limit.toString(),
@@ -52,11 +35,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>(
-      "/app.bsky.feed.getActorFeeds",
-      accessJwt,
-      { params }
-    );
+    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
   }
 
   /**
@@ -67,12 +46,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param cursor - Pagination cursor
    * @returns Promise resolving to feed posts data
    */
-  async getFeed(
-    accessJwt: string,
-    feed: string,
-    limit: number = 50,
-    cursor?: string
-  ): Promise<BlueskyFeedResponse> {
+  async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       feed,
       limit: limit.toString(),
@@ -82,11 +56,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>(
-      "/app.bsky.feed.getFeed",
-      accessJwt,
-      { params }
-    );
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, { params });
   }
 
   /**
@@ -98,11 +68,11 @@ export class BlueskyFeeds extends BlueskyApiClient {
   async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {
     const data = await this.makeAuthenticatedRequest<{
       thread?: { post: BlueskyPostView };
-    }>("/app.bsky.feed.getPostThread", accessJwt, {
+    }>('/app.bsky.feed.getPostThread', accessJwt, {
       params: { uri },
     });
     if (!data.thread?.post) {
-      throw new Error("Post not found");
+      throw new Error('Post not found');
     }
     return data.thread.post;
   }
@@ -113,17 +83,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param uri - The post's URI
    * @returns Promise resolving to thread data
    */
-  async getPostThread(
-    accessJwt: string,
-    uri: string
-  ): Promise<BlueskyThreadResponse> {
-    return this.makeAuthenticatedRequest<BlueskyThreadResponse>(
-      "/app.bsky.feed.getPostThread",
-      accessJwt,
-      {
-        params: { uri },
-      }
-    );
+  async getPostThread(accessJwt: string, uri: string): Promise<BlueskyThreadResponse> {
+    return this.makeAuthenticatedRequest<BlueskyThreadResponse>('/app.bsky.feed.getPostThread', accessJwt, {
+      params: { uri },
+    });
   }
 
   /**
@@ -134,12 +97,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param cursor - Pagination cursor
    * @returns Promise resolving to author feed data
    */
-  async getAuthorFeed(
-    accessJwt: string,
-    actor: string,
-    limit: number = 20,
-    cursor?: string
-  ): Promise<BlueskyFeedResponse> {
+  async getAuthorFeed(accessJwt: string, actor: string, limit: number = 20, cursor?: string): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       actor,
       limit: limit.toString(),
@@ -149,10 +107,86 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>(
-      "/app.bsky.feed.getAuthorFeed",
-      accessJwt,
-      { params }
-    );
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+  }
+
+  /**
+   * Gets posts from a specific author filtered by videos
+   * @param accessJwt - Valid access JWT token
+   * @param actor - The author's handle or DID
+   * @param limit - Number of posts to fetch (default: 20)
+   * @param cursor - Pagination cursor
+   * @returns Promise resolving to author feed data filtered for videos
+   */
+  async getAuthorVideos(
+    accessJwt: string,
+    actor: string,
+    limit: number = 20,
+    cursor?: string,
+  ): Promise<BlueskyFeedResponse> {
+    const params: Record<string, string> = {
+      actor,
+      limit: limit.toString(),
+      filter: 'videos',
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+  }
+
+  /**
+   * Gets feeds created by a specific author
+   * @param accessJwt - Valid access JWT token
+   * @param actor - The author's handle or DID
+   * @param limit - Number of feeds to fetch (default: 50)
+   * @param cursor - Pagination cursor
+   * @returns Promise resolving to feeds data
+   */
+  async getAuthorFeeds(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyFeedsResponse> {
+    const params: Record<string, string> = {
+      actor,
+      limit: limit.toString(),
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
+  }
+
+  /**
+   * Gets starterpacks created by a specific author
+   * @param accessJwt - Valid access JWT token
+   * @param actor - The author's handle or DID
+   * @param limit - Number of starterpacks to fetch (default: 50)
+   * @param cursor - Pagination cursor
+   * @returns Promise resolving to starterpacks data
+   */
+  async getAuthorStarterpacks(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyFeedsResponse> {
+    const params: Record<string, string> = {
+      actor,
+      limit: limit.toString(),
+      filter: 'starterpacks',
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
   }
 }

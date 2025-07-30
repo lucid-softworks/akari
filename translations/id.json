@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Apakah Anda yakin ingin menghapus @{{handle}}?",
       "posts": "Postingan {{count}}",
       "followers": "Pengikut {{count}}",
-      "following": "Mengikuti {{count}}"
+      "following": "Mengikuti {{count}}",
+      "videos": "Video",
+      "feeds": "Feed",
+      "starterpacks": "Starterpacks",
+      "noVideos": "Belum ada video",
+      "noFeeds": "Belum ada feed",
+      "noStarterpacks": "Belum ada starterpack"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

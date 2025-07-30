@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Weet u zeker dat u @{{handle}} wilt verwijderen?",
       "posts": "Berichten {{count}}",
       "followers": "Volgers {{count}}",
-      "following": "Volgend {{count}}"
+      "following": "Volgend {{count}}",
+      "videos": "Video's",
+      "feeds": "Feeds",
+      "starterpacks": "Starterpacks",
+      "noVideos": "Nog geen video's",
+      "noFeeds": "Nog geen feeds",
+      "noStarterpacks": "Nog geen starterpacks"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",

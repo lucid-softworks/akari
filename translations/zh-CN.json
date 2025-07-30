@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "确定要移除 @{{handle}} 吗？",
       "posts": "帖子 {{count}}",
       "followers": "关注者 {{count}}",
-      "following": "关注 {{count}}"
+      "following": "关注 {{count}}",
+      "videos": "视频",
+      "feeds": "信息流",
+      "starterpacks": "入门包",
+      "noVideos": "暂无视频",
+      "noFeeds": "暂无信息流",
+      "noStarterpacks": "暂无入门包"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",

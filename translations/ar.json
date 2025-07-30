@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "هل أنت متأكد من أنك تريد إزالة @{{handle}}؟",
       "posts": "المنشورات {{count}}",
       "followers": "المتابعون {{count}}",
-      "following": "المتابَعون {{count}}"
+      "following": "المتابَعون {{count}}",
+      "videos": "فيديوهات",
+      "feeds": "التدفقات",
+      "starterpacks": "حزم البداية",
+      "noVideos": "لا توجد فيديوهات بعد",
+      "noFeeds": "لا توجد تدفقات بعد",
+      "noStarterpacks": "لا توجد حزم بداية بعد"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",

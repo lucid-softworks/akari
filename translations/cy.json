@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Ydych chi'n siŵr eich bod am dynnu @{{handle}}?",
       "posts": "Swyddi {{count}}",
       "followers": "Dilynwyr {{count}}",
-      "following": "Dilyn {{count}}"
+      "following": "Dilyn {{count}}",
+      "videos": "Fideos",
+      "feeds": "Porthiant",
+      "starterpacks": "Pecynnau Cychwyn",
+      "noVideos": "Dim fideos eto",
+      "noFeeds": "Dim porthiant eto",
+      "noStarterpacks": "Dim pecynnau cychwyn eto"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

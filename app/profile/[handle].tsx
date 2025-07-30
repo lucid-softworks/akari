@@ -1,35 +1,31 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import { PostCard } from '@/components/PostCard';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { FeedSkeleton, ProfileHeaderSkeleton } from '@/components/skeletons';
-import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
-import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
-import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
-import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { FeedsTab } from '@/components/profile/FeedsTab';
+import { LikesTab } from '@/components/profile/LikesTab';
+import { MediaTab } from '@/components/profile/MediaTab';
+import { PostsTab } from '@/components/profile/PostsTab';
+import { RepliesTab } from '@/components/profile/RepliesTab';
+import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
+import { VideosTab } from '@/components/profile/VideosTab';
+import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
-import { formatRelativeTime } from '@/utils/timeUtils';
-
-type TabType = 'posts' | 'replies' | 'likes' | 'media';
+import type { ProfileTabType } from '@/types/profile';
 
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
-  const [activeTab, setActiveTab] = useState<TabType>('posts');
+  const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
 
   const { data: profile, isLoading, error } = useProfile(handle);
-  const { data: posts, isLoading: postsLoading } = useAuthorPosts(activeTab === 'posts' ? handle : undefined);
-  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(activeTab === 'replies' ? handle : undefined);
-  const { data: likes, isLoading: likesLoading } = useAuthorLikes(activeTab === 'likes' ? handle : undefined);
-  const { data: media, isLoading: mediaLoading } = useAuthorMedia(activeTab === 'media' ? handle : undefined);
 
   if (isLoading) {
     return <ProfileHeaderSkeleton />;
@@ -45,54 +41,28 @@ export default function ProfileScreen() {
 
   const isOwnProfile = currentUser?.handle === profile?.handle;
 
-  const getCurrentData = () => {
+  const renderTabContent = () => {
+    if (!handle) return null;
+
     switch (activeTab) {
       case 'posts':
-        return posts || [];
+        return <PostsTab handle={handle} />;
       case 'replies':
-        return replies || [];
+        return <RepliesTab handle={handle} />;
       case 'likes':
-        return likes || [];
+        return <LikesTab handle={handle} />;
       case 'media':
-        return media || [];
+        return <MediaTab handle={handle} />;
+      case 'videos':
+        return <VideosTab handle={handle} />;
+      case 'feeds':
+        return <FeedsTab handle={handle} />;
+      case 'starterpacks':
+        return <StarterpacksTab handle={handle} />;
       default:
-        return [];
+        return null;
     }
   };
-
-  const getCurrentLoading = () => {
-    switch (activeTab) {
-      case 'posts':
-        return postsLoading;
-      case 'replies':
-        return repliesLoading;
-      case 'likes':
-        return likesLoading;
-      case 'media':
-        return mediaLoading;
-      default:
-        return false;
-    }
-  };
-
-  const getEmptyMessage = () => {
-    switch (activeTab) {
-      case 'posts':
-        return t('profile.noPosts');
-      case 'replies':
-        return t('profile.noReplies');
-      case 'likes':
-        return t('profile.noLikes');
-      case 'media':
-        return t('profile.noMedia');
-      default:
-        return t('profile.noContent');
-    }
-  };
-
-  const currentData = getCurrentData();
-  const currentLoading = getCurrentLoading();
-  const emptyMessage = getEmptyMessage();
 
   return (
     <ThemedView style={styles.container}>
@@ -119,58 +89,10 @@ export default function ProfileScreen() {
         />
 
         {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
 
         {/* Content */}
-        {currentLoading ? (
-          <FeedSkeleton count={3} />
-        ) : currentData && currentData.length > 0 ? (
-          currentData
-            .filter((item) => item && item.uri) // Filter out undefined/null items
-            .map((item) => {
-              // Check if this post is a reply and has reply context
-              const replyTo = item.reply?.parent
-                ? {
-                    author: {
-                      handle: item.reply.parent.author?.handle || 'unknown',
-                      displayName: item.reply.parent.author?.displayName,
-                    },
-                    text: item.reply.parent.record?.text as string | undefined,
-                  }
-                : undefined;
-
-              return (
-                <PostCard
-                  key={`${item.uri}-${item.indexedAt}`}
-                  post={{
-                    id: item.uri,
-                    text: item.record?.text as string | undefined,
-                    author: {
-                      handle: item.author.handle,
-                      displayName: item.author.displayName,
-                      avatar: item.author.avatar,
-                    },
-                    createdAt: formatRelativeTime(item.indexedAt),
-                    likeCount: item.likeCount || 0,
-                    commentCount: item.replyCount || 0,
-                    repostCount: item.repostCount || 0,
-                    embed: item.embed,
-                    embeds: item.embeds,
-                    labels: item.labels,
-                    viewer: item.viewer,
-                    replyTo,
-                  }}
-                  onPress={() => {
-                    router.push(`/post/${encodeURIComponent(item.uri)}`);
-                  }}
-                />
-              );
-            })
-        ) : (
-          <ThemedView style={styles.emptyPosts}>
-            <ThemedText style={styles.emptyPostsText}>{emptyMessage}</ThemedText>
-          </ThemedView>
-        )}
+        {renderTabContent()}
       </ScrollView>
     </ThemedView>
   );
@@ -186,27 +108,10 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  loadingText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 40,
-  },
   errorText: {
     fontSize: 16,
     textAlign: 'center',
     marginTop: 40,
     color: 'red',
-  },
-  loadingContainer: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyPosts: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyPostsText: {
-    fontSize: 16,
-    opacity: 0.6,
   },
 });

@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Tem certeza de que quer remover @{{handle}}?",
       "posts": "Publicações {{count}}",
       "followers": "Seguidores {{count}}",
-      "following": "Seguindo {{count}}"
+      "following": "Seguindo {{count}}",
+      "videos": "Vídeos",
+      "feeds": "Feeds",
+      "starterpacks": "Starterpacks",
+      "noVideos": "Ainda sem vídeos",
+      "noFeeds": "Ainda sem feeds",
+      "noStarterpacks": "Ainda sem starterpacks"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",

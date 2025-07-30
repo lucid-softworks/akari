@@ -18,12 +18,12 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type TabType = 'posts' | 'replies' | 'likes' | 'media';
+import type { ProfileTabType } from '@/types/profile';
 
 export default function ProfileScreen() {
   const { data: currentAccount } = useCurrentAccount();
   const insets = useSafeAreaInsets();
-  const [activeTab, setActiveTab] = useState<TabType>('posts');
+  const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
 
@@ -158,7 +158,7 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleTabChange = (tab: TabType) => {
+  const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
     // Scroll to top when switching tabs
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -210,7 +210,7 @@ export default function ProfileScreen() {
           }}
           isOwnProfile={true}
         />
-        <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} />
+        <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
 
         {isLoadingData ? (
           <ThemedView style={styles.loadingState}>

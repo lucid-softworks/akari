@@ -136,7 +136,13 @@
       "removeAccountConfirmation": "Вы уверены, что хотите удалить @{{handle}}?",
       "posts": "Посты {{count}}",
       "followers": "Подписчики {{count}}",
-      "following": "Подписки {{count}}"
+      "following": "Подписки {{count}}",
+      "videos": "Видео",
+      "feeds": "Ленты",
+      "starterpacks": "Стартерпаки",
+      "noVideos": "Пока нет видео",
+      "noFeeds": "Пока нет лент",
+      "noStarterpacks": "Пока нет стартерпаков"
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",
