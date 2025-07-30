@@ -1,22 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { blueskyApi } from '@/utils/blueskyApi';
 
 /**
- * Query hook for fetching a user's replies
+ * Infinite query hook for fetching a user's replies
  * @param identifier - The user's handle or DID
+ * @param limit - Number of posts to fetch per page (default: 20)
  */
-export function useAuthorReplies(identifier: string | undefined) {
+export function useAuthorReplies(identifier: string | undefined, limit: number = 20) {
   const { data: token } = useJwtToken();
 
-  return useQuery({
-    queryKey: ["authorReplies", identifier],
-    queryFn: async () => {
-      if (!token) throw new Error("No access token");
-      if (!identifier) throw new Error("No identifier provided");
+  return useInfiniteQuery({
+    queryKey: ['authorReplies', identifier, limit],
+    queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
+      if (!token) throw new Error('No access token');
+      if (!identifier) throw new Error('No identifier provided');
 
-      const feed = await blueskyApi.getAuthorFeed(token, identifier, 50);
+      const feed = await blueskyApi.getAuthorFeed(token, identifier, limit, pageParam);
 
       // Filter to only show replies
       const replies = feed.feed
@@ -27,14 +28,17 @@ export function useAuthorReplies(identifier: string | undefined) {
         .map((item) => item.post);
 
       // Deduplicate posts by URI to prevent duplicate keys
-      const uniqueReplies = replies.filter(
-        (post, index, self) =>
-          index === self.findIndex((p) => p.uri === post.uri)
-      );
+      const uniqueReplies = replies.filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri));
 
-      return uniqueReplies;
+      return {
+        replies: uniqueReplies,
+        cursor: feed.cursor,
+      };
     },
+    select: (data) => data.pages.flatMap((page) => page.replies),
     enabled: !!identifier && !!token,
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

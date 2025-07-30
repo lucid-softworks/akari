@@ -38,18 +38,34 @@ export default function ProfileScreen() {
 
   const { data: profile } = useProfile(currentAccount?.handle);
 
-  const { data: posts, isLoading: postsLoading } = useAuthorPosts(
-    activeTab === 'posts' ? currentAccount?.handle : undefined,
-  );
-  const { data: replies, isLoading: repliesLoading } = useAuthorReplies(
-    activeTab === 'replies' ? currentAccount?.handle : undefined,
-  );
-  const { data: likes, isLoading: likesLoading } = useAuthorLikes(
-    activeTab === 'likes' ? currentAccount?.handle : undefined,
-  );
-  const { data: media, isLoading: mediaLoading } = useAuthorMedia(
-    activeTab === 'media' ? currentAccount?.handle : undefined,
-  );
+  const {
+    data: posts,
+    isLoading: postsLoading,
+    fetchNextPage: fetchNextPosts,
+    hasNextPage: hasNextPosts,
+    isFetchingNextPage: isFetchingNextPosts,
+  } = useAuthorPosts(activeTab === 'posts' ? currentAccount?.handle : undefined);
+  const {
+    data: replies,
+    isLoading: repliesLoading,
+    fetchNextPage: fetchNextReplies,
+    hasNextPage: hasNextReplies,
+    isFetchingNextPage: isFetchingNextReplies,
+  } = useAuthorReplies(activeTab === 'replies' ? currentAccount?.handle : undefined);
+  const {
+    data: likes,
+    isLoading: likesLoading,
+    fetchNextPage: fetchNextLikes,
+    hasNextPage: hasNextLikes,
+    isFetchingNextPage: isFetchingNextLikes,
+  } = useAuthorLikes(activeTab === 'likes' ? currentAccount?.handle : undefined);
+  const {
+    data: media,
+    isLoading: mediaLoading,
+    fetchNextPage: fetchNextMedia,
+    hasNextPage: hasNextMedia,
+    isFetchingNextPage: isFetchingNextMedia,
+  } = useAuthorMedia(activeTab === 'media' ? currentAccount?.handle : undefined);
 
   const getCurrentData = () => {
     switch (activeTab) {
@@ -81,6 +97,51 @@ export default function ProfileScreen() {
     }
   };
 
+  const getCurrentFetchingNext = () => {
+    switch (activeTab) {
+      case 'posts':
+        return isFetchingNextPosts;
+      case 'replies':
+        return isFetchingNextReplies;
+      case 'likes':
+        return isFetchingNextLikes;
+      case 'media':
+        return isFetchingNextMedia;
+      default:
+        return false;
+    }
+  };
+
+  const getCurrentHasNext = () => {
+    switch (activeTab) {
+      case 'posts':
+        return hasNextPosts;
+      case 'replies':
+        return hasNextReplies;
+      case 'likes':
+        return hasNextLikes;
+      case 'media':
+        return hasNextMedia;
+      default:
+        return false;
+    }
+  };
+
+  const getCurrentFetchNext = () => {
+    switch (activeTab) {
+      case 'posts':
+        return fetchNextPosts;
+      case 'replies':
+        return fetchNextReplies;
+      case 'likes':
+        return fetchNextLikes;
+      case 'media':
+        return fetchNextMedia;
+      default:
+        return () => {};
+    }
+  };
+
   const getEmptyMessage = () => {
     switch (activeTab) {
       case 'posts':
@@ -102,8 +163,19 @@ export default function ProfileScreen() {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
+  const handleLoadMore = () => {
+    const hasNext = getCurrentHasNext();
+    const isFetching = getCurrentFetchingNext();
+    const fetchNext = getCurrentFetchNext();
+
+    if (hasNext && !isFetching) {
+      fetchNext();
+    }
+  };
+
   const currentData = getCurrentData();
   const isLoadingData = getCurrentLoading();
+  const isFetchingNext = getCurrentFetchingNext();
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -112,6 +184,14 @@ export default function ProfileScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+          const paddingToBottom = 20;
+          if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+            handleLoadMore();
+          }
+        }}
+        scrollEventThrottle={400}
       >
         <ProfileHeader
           profile={{
@@ -169,6 +249,13 @@ export default function ProfileScreen() {
             <ThemedText style={styles.emptyStateText}>{getEmptyMessage()}</ThemedText>
           </ThemedView>
         )}
+
+        {/* Loading indicator for infinite scroll */}
+        {isFetchingNext && (
+          <ThemedView style={styles.loadingFooter}>
+            <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
+          </ThemedView>
+        )}
       </ScrollView>
     </ThemedView>
   );
@@ -199,5 +286,9 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 16,
     opacity: 0.6,
+  },
+  loadingFooter: {
+    paddingVertical: 20,
+    alignItems: 'center',
   },
 });

@@ -22,11 +22,9 @@ type Data = {
 export const storage = {
   getItem: <K extends keyof Data>(key: K): Data[K] | null => {
     const value = secureStorage.getString(key);
-    console.info('getItem', key, value);
     return value !== undefined && value !== null ? (JSON.parse(value) as Data[K]) : null;
   },
   setItem: <T>(key: keyof Data, value: T) => {
-    console.info('setItem', key, value);
     secureStorage.set(key, JSON.stringify(value));
   },
   removeItem: (key: keyof Data) => secureStorage.delete(key),
