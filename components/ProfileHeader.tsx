@@ -1,3 +1,4 @@
+import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -31,6 +32,7 @@ type ProfileHeaderProps = {
       following?: string;
       blocking?: string;
       blockedBy?: boolean;
+      muted?: boolean;
     };
     labels?: {
       val: string;
@@ -125,6 +127,80 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
     router.push(`/(tabs)/search?query=from:${profile.handle}`);
   };
 
+  const handleCopyLink = async () => {
+    try {
+      const profileUrl = `https://bsky.app/profile/${profile.handle}`;
+      await Clipboard.setStringAsync(profileUrl);
+      showAlert({
+        title: t('common.success'),
+        message: t('profile.linkCopied'),
+        buttons: [{ text: t('common.ok') }],
+      });
+      setShowDropdown(false);
+    } catch (error) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    }
+  };
+
+  const handleAddToLists = () => {
+    // TODO: Implement add to lists functionality
+    // This would typically open a modal or navigate to a lists management screen
+    showAlert({
+      title: t('profile.addToLists'),
+      message: 'Lists functionality coming soon!',
+      buttons: [{ text: t('common.ok') }],
+    });
+    setShowDropdown(false);
+  };
+
+  const handleMuteAccount = () => {
+    // TODO: Implement mute functionality
+    const isMuted = profile.viewer?.muted;
+    const message = isMuted
+      ? t('profile.unmuteConfirmation', { handle: profile.handle })
+      : t('profile.muteConfirmation', { handle: profile.handle });
+
+    showAlert({
+      title: isMuted ? t('common.unmute') : t('common.mute'),
+      message,
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: isMuted ? t('common.unmute') : t('common.mute'),
+          style: 'destructive',
+          onPress: () => {
+            // TODO: Implement actual mute/unmute API call
+            console.log(isMuted ? 'Unmuting' : 'Muting', profile.handle);
+          },
+        },
+      ],
+    });
+    setShowDropdown(false);
+  };
+
+  const handleReportAccount = () => {
+    showAlert({
+      title: t('profile.reportAccount'),
+      message: t('profile.reportConfirmation', { handle: profile.handle }),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('profile.reportAccount'),
+          style: 'destructive',
+          onPress: () => {
+            // TODO: Implement actual report API call
+            console.log('Reporting', profile.handle);
+          },
+        },
+      ],
+    });
+    setShowDropdown(false);
+  };
+
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
   };
@@ -181,11 +257,15 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
   return (
     <>
       {/* Banner */}
-      {profile.banner && (
-        <ThemedView style={styles.banner}>
+      <ThemedView style={styles.banner}>
+        {profile.banner ? (
           <Image source={{ uri: profile.banner }} style={styles.bannerImage} contentFit="cover" />
-        </ThemedView>
-      )}
+        ) : (
+          <View style={styles.bannerPlaceholder}>
+            <ThemedText style={styles.bannerPlaceholderText}>No banner</ThemedText>
+          </View>
+        )}
+      </ThemedView>
 
       {/* Profile Header */}
       <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
@@ -232,6 +312,9 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
                       <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
                         <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
                       </TouchableOpacity>
+                      <TouchableOpacity style={styles.dropdownItem} onPress={handleCopyLink}>
+                        <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
+                      </TouchableOpacity>
                     </ThemedView>
                   )}
                 </View>
@@ -250,17 +333,29 @@ export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderPr
                       <ThemedView
                         style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }]}
                       >
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleCopyLink}>
+                          <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.dropdownItem} onPress={handleSearchPosts}>
                           <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.dropdownItem} onPress={handleFollowPress}>
+                        <View style={[styles.dropdownSeparator, { borderColor: borderColor }]} />
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleAddToLists}>
+                          <ThemedText style={styles.dropdownText}>{t('profile.addToLists')}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleMuteAccount}>
                           <ThemedText style={styles.dropdownText}>
-                            {isFollowing ? t('common.unfollow') : t('common.follow')}
+                            {profile.viewer?.muted ? t('common.unmute') : t('profile.muteAccount')}
                           </ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.dropdownItem} onPress={handleBlockPress}>
                           <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
                             {isBlocking ? t('common.unblock') : t('common.block')}
+                          </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleReportAccount}>
+                          <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
+                            {t('profile.reportAccount')}
                           </ThemedText>
                         </TouchableOpacity>
                       </ThemedView>
@@ -316,6 +411,16 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     flex: 1,
+  },
+  bannerPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e0e0e0',
+  },
+  bannerPlaceholderText: {
+    fontSize: 16,
+    opacity: 0.6,
   },
   profileHeader: {
     paddingHorizontal: 16,
@@ -405,6 +510,7 @@ const styles = StyleSheet.create({
   },
   moreButtonContainer: {
     position: 'relative',
+    zIndex: 999999,
   },
   moreButton: {
     width: 32,
@@ -448,12 +554,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    minWidth: 120,
-    zIndex: 10000,
+    minWidth: 140,
+    zIndex: 999999,
   },
   dropdownItem: {
     paddingHorizontal: 12,
     paddingVertical: 8,
+  },
+  dropdownSeparator: {
+    height: 1,
+    borderTopWidth: 1,
+    marginVertical: 4,
   },
   dropdownText: {
     fontSize: 14,

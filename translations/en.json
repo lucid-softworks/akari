@@ -41,6 +41,8 @@
       "unfollow": "Unfollow",
       "block": "Block",
       "unblock": "Unblock",
+      "mute": "Mute",
+      "unmute": "Unmute",
       "externalLink": "External Link",
       "failedToDownloadImage": "Failed to download image",
       "failedToLoadImage": "Failed to load image",
@@ -142,7 +144,16 @@
       "unblockConfirmation": "Are you sure you want to unblock @{{handle}}?",
       "blockConfirmation": "Are you sure you want to block @{{handle}}?",
       "switchToAccount": "Switch to @{{handle}}?",
-      "removeAccountConfirmation": "Are you sure you want to remove @{{handle}}?"
+      "removeAccountConfirmation": "Are you sure you want to remove @{{handle}}?",
+      "copyLink": "Copy link to profile",
+      "addToLists": "Add to lists",
+      "muteAccount": "Mute account",
+      "reportAccount": "Report account",
+      "linkCopied": "Profile link copied to clipboard",
+      "linkCopyError": "Failed to copy link to clipboard",
+      "muteConfirmation": "Are you sure you want to mute @{{handle}}?",
+      "unmuteConfirmation": "Are you sure you want to unmute @{{handle}}?",
+      "reportConfirmation": "Are you sure you want to report @{{handle}}?"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
