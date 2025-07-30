@@ -99,15 +99,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="bell.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="messages"
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="message.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="bell.fill" color={color} />,
         }}
       />
       <Tabs.Screen
