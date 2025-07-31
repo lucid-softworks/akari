@@ -33,6 +33,9 @@ const MAPPING = {
   pin: 'push-pin',
   ellipsis: 'more-horiz',
   camera: 'camera-alt',
+  at: 'alternate-email',
+  'quote.bubble': 'format-quote',
+  bell: 'notifications',
 } as IconMapping;
 
 /**

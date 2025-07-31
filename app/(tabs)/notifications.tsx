@@ -1,15 +1,18 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { BlueskyEmbed } from '@/utils/bluesky/types';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -21,6 +24,7 @@ type GroupedNotification = {
   type: 'like' | 'repost' | 'follow' | 'reply' | 'mention' | 'quote';
   subject?: string; // Post URI for post-related notifications
   postContent?: string; // Content of the post being interacted with
+  embed?: BlueskyEmbed; // Embed data for the post
   authors: {
     did: string;
     handle: string;
@@ -43,6 +47,28 @@ type NotificationItemProps = {
 
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
+  const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
+  const likeColor = '#ff3b30';
+  const repostColor = '#34c759';
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'like':
+        return { name: 'heart.fill' as const, color: likeColor };
+      case 'repost':
+        return { name: 'arrow.2.squarepath' as const, color: repostColor };
+      case 'follow':
+        return { name: 'person.fill' as const, color: iconColor };
+      case 'reply':
+        return { name: 'bubble.left' as const, color: iconColor };
+      case 'mention':
+        return { name: 'at' as const, color: iconColor };
+      case 'quote':
+        return { name: 'quote.bubble' as const, color: iconColor };
+      default:
+        return { name: 'bell' as const, color: iconColor };
+    }
+  };
 
   const getReasonText = (type: string, count: number) => {
     const action = (() => {
@@ -73,8 +99,21 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     }
   };
 
+  const formatAuthorNames = (authors: typeof notification.authors) => {
+    if (authors.length === 1) {
+      return authors[0].displayName || authors[0].handle;
+    } else if (authors.length === 2) {
+      const name1 = authors[0].displayName || authors[0].handle;
+      const name2 = authors[1].displayName || authors[1].handle;
+      return `${name1} and ${name2}`;
+    } else {
+      const firstName = authors[0].displayName || authors[0].handle;
+      return `${firstName} and ${authors.length - 1} others`;
+    }
+  };
+
   const renderAvatars = () => {
-    const maxAvatars = 3;
+    const maxAvatars = 4;
     const avatarsToShow = notification.authors.slice(0, maxAvatars);
     const remainingCount = notification.authors.length - maxAvatars;
 
@@ -86,7 +125,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             style={[
               styles.avatarWrapper,
               {
-                marginLeft: index > 0 ? -8 : 0,
+                marginLeft: index > 0 ? -6 : 0,
                 zIndex: maxAvatars - index,
               },
             ]}
@@ -110,7 +149,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             style={[
               styles.avatarWrapper,
               {
-                marginLeft: -8,
+                marginLeft: -6,
                 zIndex: 0,
               },
             ]}
@@ -124,24 +163,64 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     );
   };
 
+  const renderEmbedImages = () => {
+    if (!notification.embed || !notification.embed.images || notification.embed.images.length === 0) {
+      return null;
+    }
+
+    const images = notification.embed.images.slice(0, 2); // Show max 2 images in notifications
+    const fullWidth = Dimensions.get('window').width;
+    const aspectRatio = 16 / 9; // Default aspect ratio
+    const imageHeight = fullWidth / aspectRatio;
+
+    return (
+      <View style={styles.embedImagesContainer}>
+        {images.map((image, index) => (
+          <Image
+            key={index}
+            source={{ uri: image.fullsize }}
+            style={[styles.embedImage, { width: fullWidth, height: imageHeight }]}
+            contentFit="cover"
+            placeholder={require('@/assets/images/partial-react-logo.png')}
+          />
+        ))}
+      </View>
+    );
+  };
+
+  const notificationIcon = getNotificationIcon(notification.type);
+
   return (
-    <TouchableOpacity style={[styles.notificationItem, { borderBottomColor: borderColor }]} onPress={onPress}>
-      <View style={styles.avatarContainer}>{renderAvatars()}</View>
-      <View style={styles.contentContainer}>
-        <View style={styles.headerRow}>
-          <ThemedText style={styles.authorNames}>
-            {notification.authors.map((author) => author.displayName || author.handle).join(', ')}
-          </ThemedText>
-          <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
+    <TouchableOpacity
+      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <View style={styles.mainContent}>
+        <View style={styles.iconContainer}>
+          <IconSymbol name={notificationIcon.name} size={18} color={notificationIcon.color} />
         </View>
-        <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
-        {notification.postContent && (
+        <View style={styles.avatarContainer}>{renderAvatars()}</View>
+        <View style={styles.contentContainer}>
+          <View style={styles.headerRow}>
+            <ThemedText style={styles.authorNames} numberOfLines={1}>
+              {formatAuthorNames(notification.authors)}
+            </ThemedText>
+            <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
+          </View>
+          <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
+          {notification.type === 'reply' && <ThemedText style={styles.replyIndicator}>Reply to you</ThemedText>}
+        </View>
+        {!notification.isRead && <View style={styles.unreadIndicator} />}
+      </View>
+      {notification.postContent && (
+        <View style={styles.postContentContainer}>
           <ThemedText style={styles.postContent} numberOfLines={2}>
             {notification.postContent}
           </ThemedText>
-        )}
-      </View>
-      {!notification.isRead && <View style={styles.unreadIndicator} />}
+          {renderEmbedImages()}
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -162,42 +241,70 @@ type NotificationData = {
   isRead: boolean;
   indexedAt: string;
   postContent?: string;
+  embed?: BlueskyEmbed;
 };
 
 function groupNotifications(notifications: NotificationData[]): GroupedNotification[] {
   const groups = new Map<string, GroupedNotification>();
+  const individualNotifications: GroupedNotification[] = [];
 
   notifications.forEach((notification) => {
-    // Create a key for grouping by type and subject
-    const groupKey = `${notification.reason}_${notification.reasonSubject || 'none'}`;
+    // Only group likes and reposts
+    const shouldGroup = notification.reason === 'like' || notification.reason === 'repost';
 
-    if (groups.has(groupKey)) {
-      const group = groups.get(groupKey)!;
-      // Check if this author is already in the group
-      const existingAuthor = group.authors.find((author) => author.did === notification.author.did);
+    if (shouldGroup) {
+      // Create a key for grouping by type and subject
+      const groupKey = `${notification.reason}_${notification.reasonSubject || 'none'}`;
 
-      if (!existingAuthor) {
-        // Add new author to the group
-        group.authors.push({
-          did: notification.author.did,
-          handle: notification.author.handle,
-          displayName: notification.author.displayName,
-          avatar: notification.author.avatar,
+      if (groups.has(groupKey)) {
+        const group = groups.get(groupKey)!;
+        // Check if this author is already in the group
+        const existingAuthor = group.authors.find((author) => author.did === notification.author.did);
+
+        if (!existingAuthor) {
+          // Add new author to the group
+          group.authors.push({
+            did: notification.author.did,
+            handle: notification.author.handle,
+            displayName: notification.author.displayName,
+            avatar: notification.author.avatar,
+          });
+          group.count++;
+        }
+
+        group.isRead = group.isRead && notification.isRead;
+        // Keep the latest timestamp
+        if (new Date(notification.indexedAt) > new Date(group.latestTimestamp)) {
+          group.latestTimestamp = notification.indexedAt;
+        }
+      } else {
+        groups.set(groupKey, {
+          id: groupKey,
+          type: notification.reason as GroupedNotification['type'],
+          subject: notification.reasonSubject,
+          postContent: notification.postContent,
+          embed: notification.embed,
+          authors: [
+            {
+              did: notification.author.did,
+              handle: notification.author.handle,
+              displayName: notification.author.displayName,
+              avatar: notification.author.avatar,
+            },
+          ],
+          isRead: notification.isRead,
+          latestTimestamp: notification.indexedAt,
+          count: 1,
         });
-        group.count++;
-      }
-
-      group.isRead = group.isRead && notification.isRead;
-      // Keep the latest timestamp
-      if (new Date(notification.indexedAt) > new Date(group.latestTimestamp)) {
-        group.latestTimestamp = notification.indexedAt;
       }
     } else {
-      groups.set(groupKey, {
-        id: groupKey,
+      // For replies, quotes, follows, mentions - keep as individual notifications
+      individualNotifications.push({
+        id: notification.id || `${notification.author.did}_${notification.indexedAt}`,
         type: notification.reason as GroupedNotification['type'],
         subject: notification.reasonSubject,
         postContent: notification.postContent,
+        embed: notification.embed,
         authors: [
           {
             did: notification.author.did,
@@ -213,9 +320,10 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
     }
   });
 
-  return Array.from(groups.values()).sort(
-    (a, b) => new Date(b.latestTimestamp).getTime() - new Date(a.latestTimestamp).getTime(),
-  );
+  // Combine grouped and individual notifications
+  const allNotifications = [...Array.from(groups.values()), ...individualNotifications];
+
+  return allNotifications.sort((a, b) => new Date(b.latestTimestamp).getTime() - new Date(a.latestTimestamp).getTime());
 }
 
 /**
@@ -338,22 +446,26 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingTop: 20,
+    paddingVertical: 12,
+    paddingTop: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
   },
   listContainer: {
     flexGrow: 1,
   },
   notificationItem: {
-    flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
+    minHeight: 72,
+  },
+  mainContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   notificationContent: {
     flex: 1,
@@ -362,24 +474,25 @@ const styles = StyleSheet.create({
   },
   avatarsContainer: {
     flexDirection: 'row',
-    marginRight: 12,
-    marginTop: 2,
+    alignItems: 'center',
   },
   avatarWrapper: {
     position: 'relative',
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
   },
   avatarFallback: {
     backgroundColor: '#007AFF',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   avatarFallbackText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -387,9 +500,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#666',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   avatarOverflowText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -410,23 +525,42 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   reasonText: {
-    fontSize: 15,
+    fontSize: 13,
+    marginBottom: 6,
+    opacity: 0.7,
+  },
+  replyIndicator: {
+    fontSize: 12,
     marginBottom: 4,
+    opacity: 0.6,
   },
   postContent: {
-    fontSize: 14,
+    fontSize: 13,
     marginBottom: 4,
-    fontStyle: 'italic',
+    opacity: 0.8,
+    lineHeight: 16,
+  },
+  postContentContainer: {
+    marginTop: 4,
+  },
+  embedImagesContainer: {
+    flexDirection: 'row',
+    marginTop: 4,
+    gap: 4,
+  },
+  embedImage: {
+    borderRadius: 8,
   },
   timeText: {
     fontSize: 12,
   },
   unreadIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     marginLeft: 8,
     alignSelf: 'center',
+    backgroundColor: '#007AFF',
   },
   emptyState: {
     flex: 1,
@@ -508,6 +642,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    paddingRight: 4,
   },
   headerRow: {
     flexDirection: 'row',
@@ -516,11 +651,19 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   authorNames: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
+    flex: 1,
+    marginRight: 8,
   },
   timestamp: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: 12,
+    opacity: 0.6,
+  },
+  iconContainer: {
+    marginRight: 10,
+    marginTop: 4,
+    width: 18,
+    alignItems: 'center',
   },
 });

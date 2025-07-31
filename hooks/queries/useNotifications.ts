@@ -1,11 +1,12 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { BlueskyEmbed } from '@/utils/bluesky/types';
+import { blueskyApi } from '@/utils/blueskyApi';
 
 type NotificationError = {
-  type: "permission" | "network" | "unknown";
+  type: 'permission' | 'network' | 'unknown';
   message: string;
 };
 
@@ -16,20 +17,15 @@ type NotificationError = {
  * @param priority - Whether to include priority notifications
  * @param enabled - Whether the query should be enabled (default: true)
  */
-export function useNotifications(
-  limit: number = 50,
-  reasons?: string[],
-  priority?: boolean,
-  enabled: boolean = true
-) {
+export function useNotifications(limit: number = 50, reasons?: string[], priority?: boolean, enabled: boolean = true) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
-    queryKey: ["notifications", limit, reasons, priority, currentUserDid],
+    queryKey: ['notifications', limit, reasons, priority, currentUserDid],
     queryFn: async ({ pageParam }) => {
-      if (!token) throw new Error("No access token");
+      if (!token) throw new Error('No access token');
 
       try {
         const response = await blueskyApi.listNotifications(
@@ -37,19 +33,22 @@ export function useNotifications(
           limit,
           pageParam, // cursor
           reasons,
-          priority
+          priority,
         );
 
         // Transform the data to match our UI needs
         const notifications = response.notifications.map((notification) => {
           // Extract post content from the record
           let postContent: string | undefined;
-          if (
-            notification.record &&
-            typeof notification.record === "object" &&
-            "text" in notification.record
-          ) {
-            postContent = (notification.record as { text: string }).text;
+          let embed: BlueskyEmbed | undefined;
+
+          if (notification.record && typeof notification.record === 'object') {
+            if ('text' in notification.record) {
+              postContent = (notification.record as { text: string }).text;
+            }
+            if ('embed' in notification.record) {
+              embed = (notification.record as { embed: BlueskyEmbed }).embed;
+            }
           }
 
           return {
@@ -66,6 +65,7 @@ export function useNotifications(
             indexedAt: notification.indexedAt,
             record: notification.record,
             postContent,
+            embed,
           };
         });
 
@@ -77,8 +77,8 @@ export function useNotifications(
         };
       } catch (error: unknown) {
         // Determine the type of error
-        let errorType: NotificationError["type"] = "unknown";
-        let errorMessage = "Failed to load notifications";
+        let errorType: NotificationError['type'] = 'unknown';
+        let errorMessage = 'Failed to load notifications';
 
         const errorObj = error as {
           response?: { status?: number };
@@ -87,24 +87,17 @@ export function useNotifications(
         };
 
         if (errorObj?.response?.status === 401) {
-          errorType = "permission";
-          errorMessage = "Authentication failed. Please sign in again.";
+          errorType = 'permission';
+          errorMessage = 'Authentication failed. Please sign in again.';
         } else if (errorObj?.response?.status === 403) {
-          errorType = "permission";
-          errorMessage = "Access to notifications is not allowed";
-        } else if (
-          errorObj?.message?.includes("network") ||
-          errorObj?.code === "NETWORK_ERROR"
-        ) {
-          errorType = "network";
-          errorMessage =
-            "Network error. Please check your connection and try again";
-        } else if (
-          errorObj?.response?.status &&
-          errorObj.response.status >= 500
-        ) {
-          errorType = "network";
-          errorMessage = "Server error. Please try again later";
+          errorType = 'permission';
+          errorMessage = 'Access to notifications is not allowed';
+        } else if (errorObj?.message?.includes('network') || errorObj?.code === 'NETWORK_ERROR') {
+          errorType = 'network';
+          errorMessage = 'Network error. Please check your connection and try again';
+        } else if (errorObj?.response?.status && errorObj.response.status >= 500) {
+          errorType = 'network';
+          errorMessage = 'Server error. Please try again later';
         }
 
         const notificationError: NotificationError = {
@@ -121,7 +114,7 @@ export function useNotifications(
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: NotificationError) => {
       // Don't retry permission errors
-      if (error?.type === "permission") {
+      if (error?.type === 'permission') {
         return false;
       }
       // Retry network errors up to 3 times
