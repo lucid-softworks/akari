@@ -13,6 +13,7 @@ type Facet = {
     $type: string;
     uri?: string;
     tag?: string;
+    did?: string;
   }[];
 };
 
@@ -32,6 +33,7 @@ type TextSegment = {
   uri?: string;
   tag?: string;
   handle?: string;
+  did?: string;
 };
 
 export function RichTextWithFacets({ text, facets, style, containerStyle, onPress }: RichTextWithFacetsProps) {
@@ -113,7 +115,7 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               start: charStart,
               end: charEnd,
               type: 'mention',
-              uri: feature.uri,
+              did: feature.did,
             });
             break;
           case 'app.bsky.richtext.facet#link':
@@ -193,15 +195,6 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
     console.log('=== END FACET DEBUG ===');
   }
 
-  // Extract handle from mention URI
-  const extractHandleFromUri = (uri: string): string => {
-    // URI format: at://did:plc:xxx/app.bsky.actor.profile/self
-    // or at://did:plc:xxx/app.bsky.actor.profile/handle
-    const parts = uri.split('/');
-    const lastPart = parts[parts.length - 1];
-    return lastPart === 'self' ? parts[parts.length - 2] : lastPart;
-  };
-
   // Convert URI to short URL for display
   const toShortUrl = (href: string): string => {
     try {
@@ -227,11 +220,13 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
             return segment.text;
 
           case 'mention':
-            if (segment.uri) {
-              const handle = extractHandleFromUri(segment.uri);
+            if (segment.did) {
+              // For mentions, we need to extract the handle from the text since the did is just the DID
+              // The text should contain the actual handle (e.g., "@miragreen.bsky.social")
+              const handle = segment.text.replace(/^@/, ''); // Remove the @ symbol
               return (
                 <Link key={index} href={`/profile/${handle}`}>
-                  <ThemedText style={[{ color: mentionColor }]}>@{handle}</ThemedText>
+                  <ThemedText style={[{ color: mentionColor }]}>{segment.text}</ThemedText>
                 </Link>
               );
             }
