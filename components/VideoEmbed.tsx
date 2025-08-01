@@ -148,7 +148,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.media.video.title;
     }
 
-    return t('common.video');
+    return '';
   };
 
   // Get video description
@@ -222,15 +222,13 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
   // Only render VideoPlayer when we have a resolved URL (not the original playlist URL)
   if (isNativeVideo() && resolvedVideoUrl) {
     return (
-      <View>
-        <VideoPlayer
-          videoUrl={resolvedVideoUrl}
-          thumbnailUrl={thumbnailUrl || undefined}
-          title={videoTitle}
-          description={videoDescription}
-          aspectRatio={embed.aspectRatio}
-        />
-      </View>
+      <VideoPlayer
+        videoUrl={resolvedVideoUrl}
+        thumbnailUrl={thumbnailUrl || undefined}
+        title={videoTitle}
+        description={videoDescription}
+        aspectRatio={embed.aspectRatio}
+      />
     );
   }
 
@@ -290,7 +288,6 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
@@ -334,7 +331,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   content: {
-    padding: 12,
     gap: 4,
   },
   title: {

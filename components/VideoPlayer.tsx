@@ -46,7 +46,7 @@ export function VideoPlayer({
   description,
   showControls = true,
   autoplay = false,
-  muted = true,
+  muted = false,
   loop = false,
   aspectRatio,
 }: VideoPlayerProps) {
@@ -345,9 +345,9 @@ export function VideoPlayer({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
     borderRadius: 12,
     overflow: 'hidden',
+    padding: 0,
   },
   videoContainer: {
     width: '100%',
@@ -393,7 +393,6 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   content: {
-    padding: 12,
     gap: 4,
   },
   title: {
