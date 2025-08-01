@@ -3,9 +3,12 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VideoEmbed } from '@/components/VideoEmbed';
+import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -89,6 +92,203 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   };
 
   const quotedText = getQuotedText();
+
+  // Get media data from the quoted post
+  const getImageData = () => {
+    // Check both embed and embeds fields
+    const embedData = embed.record.embed;
+    const embedsData = embed.record.embeds;
+
+    if (embedData?.images && embedData.images.length > 0) {
+      const urls = embedData.images.map((img) => img.fullsize);
+      const altTexts = embedData.images.map((img) => img.alt);
+      return { urls, altTexts };
+    }
+
+    if (embedsData) {
+      for (const embedItem of embedsData) {
+        if (embedItem.images && embedItem.images.length > 0) {
+          const urls = embedItem.images.map((img) => img.fullsize);
+          const altTexts = embedItem.images.map((img) => img.alt);
+          return { urls, altTexts };
+        }
+      }
+    }
+
+    return { urls: [], altTexts: [] };
+  };
+
+  // Extract video data from embed
+  const getVideoData = () => {
+    // Check main embed first
+    if (embed.record.embed) {
+      // Handle Bluesky native video embeds (app.bsky.embed.video#view)
+      if (embed.record.embed.$type === 'app.bsky.embed.video#view' && embed.record.embed.playlist) {
+        return {
+          videoUrl: embed.record.embed.playlist,
+          thumbnailUrl: embed.record.embed.thumbnail,
+          altText: embed.record.embed.alt || t('common.video'),
+          aspectRatio: embed.record.embed.aspectRatio,
+        };
+      }
+
+      // Handle legacy video embeds (app.bsky.embed.video)
+      if (embed.record.embed.video) {
+        return {
+          videoUrl: embed.record.embed.video.ref.$link,
+          thumbnailUrl: embed.record.embed.video.ref.$link, // Use video URL as thumbnail for now
+          altText: embed.record.embed.video.alt || t('common.video'),
+          aspectRatio: embed.record.embed.aspectRatio,
+        };
+      }
+
+      // Handle record with media embeds that might contain video
+      if (embed.record.embed.$type === 'app.bsky.embed.recordWithMedia#view' && embed.record.embed.media) {
+        if (embed.record.embed.media.$type === 'app.bsky.embed.video#view' && embed.record.embed.media.playlist) {
+          return {
+            videoUrl: embed.record.embed.media.playlist,
+            thumbnailUrl: embed.record.embed.media.thumbnail,
+            altText: embed.record.embed.media.alt || t('common.video'),
+            aspectRatio: embed.record.embed.media.aspectRatio,
+          };
+        }
+        if (embed.record.embed.media.video) {
+          return {
+            videoUrl: embed.record.embed.media.video.ref.$link,
+            thumbnailUrl: embed.record.embed.media.video.ref.$link,
+            altText: embed.record.embed.media.video.alt || t('common.video'),
+            aspectRatio: embed.record.embed.media.aspectRatio,
+          };
+        }
+      }
+    }
+
+    // Check embeds array if main embed doesn't have video
+    if (embed.record.embeds) {
+      for (const embedItem of embed.record.embeds) {
+        if (embedItem.$type === 'app.bsky.embed.video#view' && embedItem.playlist) {
+          return {
+            videoUrl: embedItem.playlist,
+            thumbnailUrl: embedItem.thumbnail,
+            altText: embedItem.alt || t('common.video'),
+            aspectRatio: embedItem.aspectRatio,
+          };
+        }
+        if (embedItem.video) {
+          return {
+            videoUrl: embedItem.video.ref.$link,
+            thumbnailUrl: embedItem.video.ref.$link,
+            altText: embedItem.video.alt || t('common.video'),
+            aspectRatio: embedItem.aspectRatio,
+          };
+        }
+      }
+    }
+
+    return null;
+  };
+
+  // Check for external embeds
+  const getEmbedData = () => {
+    if (embed.record.embed?.external) {
+      return {
+        $type: 'app.bsky.embed.external#view' as const,
+        external: {
+          ...embed.record.embed.external,
+          thumb: embed.record.embed.external.thumb
+            ? {
+                $type: 'blob' as const,
+                ...embed.record.embed.external.thumb,
+              }
+            : undefined,
+        },
+      };
+    }
+    if (embed.record.embeds) {
+      for (const embedItem of embed.record.embeds) {
+        if (embedItem.external) {
+          return {
+            $type: 'app.bsky.embed.external#view' as const,
+            external: {
+              ...embedItem.external,
+              thumb: embedItem.external.thumb
+                ? {
+                    $type: 'blob' as const,
+                    ...embedItem.external.thumb,
+                  }
+                : undefined,
+            },
+          };
+        }
+      }
+    }
+    return null;
+  };
+
+  // Check for video embeds
+  const getVideoEmbedData = () => {
+    if (embed.record.embed?.external) {
+      return {
+        $type: 'app.bsky.embed.external#view' as const,
+        external: {
+          ...embed.record.embed.external,
+          thumb: embed.record.embed.external.thumb
+            ? {
+                $type: 'blob' as const,
+                ...embed.record.embed.external.thumb,
+              }
+            : undefined,
+        },
+      };
+    }
+    if (embed.record.embeds) {
+      for (const embedItem of embed.record.embeds) {
+        if (embedItem.external) {
+          return {
+            $type: 'app.bsky.embed.external#view' as const,
+            external: {
+              ...embedItem.external,
+              thumb: embedItem.external.thumb
+                ? {
+                    $type: 'blob' as const,
+                    ...embedItem.external.thumb,
+                  }
+                : undefined,
+            },
+          };
+        }
+      }
+    }
+    return null;
+  };
+
+  // Helper functions to check embed types
+  const isYouTubeEmbed = () => {
+    const embedData = getEmbedData();
+    return embedData?.external?.uri?.includes('youtube.com') || embedData?.external?.uri?.includes('youtu.be');
+  };
+
+  const isExternalEmbed = () => {
+    const embedData = getEmbedData();
+    return embedData && !isYouTubeEmbed();
+  };
+
+  const isNativeVideoEmbed = () => {
+    return (
+      embed.record.embed?.$type === 'app.bsky.embed.video#view' ||
+      embed.record.embed?.video ||
+      embed.record.embeds?.some((e) => e.$type === 'app.bsky.embed.video#view' || e.video)
+    );
+  };
+
+  const isExternalVideoEmbed = () => {
+    const embedData = getVideoEmbedData();
+    return embedData && !isYouTubeEmbed();
+  };
+
+  const imageData = getImageData();
+  const videoData = getVideoData();
+  const { urls: imageUrls, altTexts } = imageData;
 
   // Check if this is a blocked record by checking the $type field
   const isBlockedRecord = embed.record.record?.$type === 'app.bsky.embed.record#viewBlocked';
@@ -205,6 +405,55 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
               facets={(embed.record as any)?.facets}
               style={[styles.text, { color: textColor }]}
             />
+
+            {/* Render native video embed if present */}
+            {(() => {
+              const isNative = isNativeVideoEmbed();
+              return isNative && videoData && <VideoEmbed embed={videoData} />;
+            })()}
+
+            {/* Render external video embed if present */}
+            {(() => {
+              const isExternalVideo = isExternalVideoEmbed();
+              const videoEmbedData = getVideoEmbedData();
+              return isExternalVideo && videoEmbedData && <VideoEmbed embed={videoEmbedData} />;
+            })()}
+
+            {/* Render YouTube embed if present */}
+            {(() => {
+              const isYouTube = isYouTubeEmbed();
+              const embedData = getEmbedData();
+              return isYouTube && embedData && <YouTubeEmbed embed={embedData} />;
+            })()}
+
+            {/* Render external embed if present (non-YouTube) */}
+            {(() => {
+              const isExternal = isExternalEmbed();
+              const embedData = getEmbedData();
+              return isExternal && embedData && <ExternalEmbed embed={embedData} />;
+            })()}
+
+            {/* Render images if present */}
+            {imageUrls.length > 0 && (
+              <ThemedView style={styles.imagesContainer}>
+                {imageUrls.map((imageUrl: string, index: number) => {
+                  const dimensions = imageDimensions[imageUrl];
+                  const screenWidth = 300; // Smaller width for quoted posts
+                  const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 200;
+
+                  return (
+                    <Image
+                      key={`${embed.record.uri}-image-${index}`}
+                      source={{ uri: imageUrl }}
+                      style={[styles.image, { height: imageHeight }]}
+                      contentFit="contain"
+                      placeholder={require('@/assets/images/partial-react-logo.png')}
+                      onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
+                    />
+                  );
+                })}
+              </ThemedView>
+            )}
           </ThemedView>
         )}
       </View>
