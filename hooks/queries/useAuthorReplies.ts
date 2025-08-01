@@ -17,15 +17,10 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
 
-      const feed = await blueskyApi.getAuthorFeed(token, identifier, limit, pageParam);
+      const feed = await blueskyApi.getAuthorFeed(token, identifier, limit, pageParam, 'posts_with_replies');
 
-      // Filter to only show replies
-      const replies = feed.feed
-        .filter((item) => {
-          // Only include posts that are replies
-          return item.reply;
-        })
-        .map((item) => item.post);
+      // Map the feed items to posts (they should already be filtered for replies by the API)
+      const replies = feed.feed.map((item) => item.post);
 
       // Deduplicate posts by URI to prevent duplicate keys
       const uniqueReplies = replies.filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri));

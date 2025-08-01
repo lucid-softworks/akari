@@ -19,21 +19,8 @@ export function useAuthorVideos(identifier: string | undefined, limit: number = 
 
       const feed = await blueskyApi.getAuthorVideos(token, identifier, limit, pageParam);
 
-      // Filter to only show posts with videos
-      const videoPosts = feed.feed
-        .filter((item) => {
-          // Only include posts that have video embeds
-          return (
-            item.post.embed &&
-            (item.post.embed.$type === 'app.bsky.embed.external#view' ||
-              item.post.embed.$type === 'app.bsky.embed.recordWithMedia#view' ||
-              item.post.embeds?.some(
-                (embed) =>
-                  embed.$type === 'app.bsky.embed.external#view' || embed.$type === 'app.bsky.embed.recordWithMedia#view',
-              ))
-          );
-        })
-        .map((item) => item.post);
+      // Map the feed items to posts (they should already be filtered for videos by the API)
+      const videoPosts = feed.feed.map((item) => item.post);
 
       // Deduplicate posts by URI to prevent duplicate keys
       const uniqueVideoPosts = videoPosts.filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri));

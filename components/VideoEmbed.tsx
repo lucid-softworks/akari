@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { useEffect, useState } from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -6,6 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { resolveBlueskyVideoUrl } from '@/utils/bluesky/video';
 
 type VideoEmbedProps = {
   /** Video embed data from Bluesky or native video data */
@@ -82,6 +84,9 @@ type VideoEmbedProps = {
  */
 export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
   const { t } = useTranslation();
+  const [resolvedVideoUrl, setResolvedVideoUrl] = useState<string | null>(null);
+  const [isResolving, setIsResolving] = useState(false);
+
   const textColor = useThemeColor(
     {
       light: '#000000',
@@ -179,10 +184,52 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
     return '';
   };
 
+  // Resolve video URL when component mounts or video URL changes
+  useEffect(() => {
+    const videoUrl = getVideoUrl();
+    console.log('VideoEmbed: Video URL:', videoUrl);
+    console.log(
+      'VideoEmbed: Is Bluesky playlist:',
+      videoUrl && videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8'),
+    );
+
+    if (videoUrl && videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8')) {
+      console.log('VideoEmbed: Starting URL resolution');
+      setIsResolving(true);
+      resolveBlueskyVideoUrl(videoUrl)
+        .then((resolvedUrl) => {
+          console.log('VideoEmbed: Resolution result:', resolvedUrl);
+          if (resolvedUrl) {
+            setResolvedVideoUrl(resolvedUrl);
+          } else {
+            // If resolution fails, use original URL
+            setResolvedVideoUrl(videoUrl);
+          }
+        })
+        .catch((error) => {
+          console.error('VideoEmbed: Failed to resolve video URL:', error);
+          // On error, use original URL
+          setResolvedVideoUrl(videoUrl);
+        })
+        .finally(() => {
+          setIsResolving(false);
+        });
+    } else {
+      console.log('VideoEmbed: Not a Bluesky playlist, using URL as-is');
+      // Not a Bluesky playlist, use URL as-is
+      setResolvedVideoUrl(videoUrl);
+    }
+  }, [embed]);
+
+  // Get the final video URL to use (resolved if available, otherwise original)
+  const getFinalVideoUrl = (): string => {
+    return resolvedVideoUrl || getVideoUrl();
+  };
+
   const thumbnailUrl = getThumbnailUrl();
   const videoTitle = getVideoTitle();
   const videoDescription = getVideoDescription();
-  const videoUrl = getVideoUrl();
+  const finalVideoUrl = getFinalVideoUrl();
 
   const borderColor = useThemeColor(
     {
@@ -193,15 +240,19 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
   );
 
   // If we have a native video URL, use the VideoPlayer component
-  if (isNativeVideo() && videoUrl) {
+  // Only render VideoPlayer when we have a resolved URL (not the original playlist URL)
+  if (isNativeVideo() && resolvedVideoUrl) {
     return (
-      <VideoPlayer
-        videoUrl={videoUrl}
-        thumbnailUrl={thumbnailUrl || undefined}
-        title={videoTitle}
-        description={videoDescription}
-        aspectRatio={embed.aspectRatio}
-      />
+      <View>
+        <ThemedText style={{ fontSize: 10, color: 'red', padding: 4 }}>RESOLVED: {resolvedVideoUrl}</ThemedText>
+        <VideoPlayer
+          videoUrl={resolvedVideoUrl}
+          thumbnailUrl={thumbnailUrl || undefined}
+          title={videoTitle}
+          description={videoDescription}
+          aspectRatio={embed.aspectRatio}
+        />
+      </View>
     );
   }
 

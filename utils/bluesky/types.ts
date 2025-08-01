@@ -141,6 +141,10 @@ export interface BlueskyEmbed {
   external?: BlueskyExternal;
   record?: BlueskyRecord;
   media?: BlueskyEmbed;
+  // New video embed properties for app.bsky.embed.video#view
+  playlist?: string;
+  thumbnail?: string;
+  alt?: string;
   aspectRatio?: {
     width: number;
     height: number;

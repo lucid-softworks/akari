@@ -90,8 +90,14 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getPostThread(accessJwt, uri);
   }
 
-  async getAuthorFeed(accessJwt: string, actor: string, limit: number = 20, cursor?: string): Promise<BlueskyFeedResponse> {
-    return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor);
+  async getAuthorFeed(
+    accessJwt: string, 
+    actor: string, 
+    limit: number = 20, 
+    cursor?: string,
+    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads'
+  ): Promise<BlueskyFeedResponse> {
+    return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor, filter);
   }
 
   async getAuthorVideos(

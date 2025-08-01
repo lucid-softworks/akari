@@ -71,9 +71,6 @@ export function PostCard({ post, onPress }: PostCardProps) {
   }>({});
   const { t } = useTranslation();
 
-  // Debug: Log post data to see if facets are present
-  console.log('PostCard - Post facets:', post.facets);
-
   const borderColor = useThemeColor(
     {
       light: '#e8eaed',
@@ -136,47 +133,89 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   // Extract video data from embed
   const getVideoData = () => {
-    if (!post.embed) return null;
-
-    // Handle Bluesky native video embeds
-    if (post.embed.$type === 'app.bsky.embed.video' && post.embed.video) {
-      return {
-        videoUrl: post.embed.video?.ref?.$link,
-        thumbnailUrl: post.embed.video?.ref?.$link, // Use video URL as thumbnail for now
-        altText: post.embed.video?.alt || t('common.video'),
-        aspectRatio: post.embed.aspectRatio,
-      };
-    }
-
-    // Handle image embeds that might contain videos
-    if (post.embed.$type === 'app.bsky.embed.images#view' && post.embed.images) {
-      // Check if any of the images are actually videos
-      const videoImages = post.embed.images.filter(
-        (img: BlueskyImage) => img.image?.mimeType && img.image.mimeType.startsWith('video/'),
-      );
-
-      if (videoImages.length > 0) {
+    // Check main embed first
+    if (post.embed) {
+      // Handle Bluesky native video embeds (app.bsky.embed.video#view)
+      if (post.embed.$type === 'app.bsky.embed.video#view' && post.embed.playlist) {
         return {
-          videoUrl: videoImages[0].fullsize,
-          thumbnailUrl: videoImages[0].thumb,
-          altText: videoImages[0].alt,
+          videoUrl: post.embed.playlist,
+          thumbnailUrl: post.embed.thumbnail,
+          altText: post.embed.alt || t('common.video'),
+          aspectRatio: post.embed.aspectRatio,
         };
+      }
+
+      // Handle legacy video embeds (app.bsky.embed.video)
+      if (post.embed.video) {
+        return {
+          videoUrl: post.embed.video.ref.$link,
+          thumbnailUrl: post.embed.video.ref.$link, // Use video URL as thumbnail for now
+          altText: post.embed.video.alt || t('common.video'),
+          aspectRatio: post.embed.aspectRatio,
+        };
+      }
+
+      // Handle record with media embeds that might contain video
+      if (post.embed.$type === 'app.bsky.embed.recordWithMedia#view' && post.embed.media) {
+        if (post.embed.media.$type === 'app.bsky.embed.video#view' && post.embed.media.playlist) {
+          return {
+            videoUrl: post.embed.media.playlist,
+            thumbnailUrl: post.embed.media.thumbnail,
+            altText: post.embed.media.alt || t('common.video'),
+            aspectRatio: post.embed.media.aspectRatio,
+          };
+        }
+        if (post.embed.media.video) {
+          return {
+            videoUrl: post.embed.media.video.ref.$link,
+            thumbnailUrl: post.embed.media.video.ref.$link,
+            altText: post.embed.media.video.alt || t('common.video'),
+            aspectRatio: post.embed.media.aspectRatio,
+          };
+        }
       }
     }
 
-    // Handle record with media embeds that might contain video
-    if (post.embed.$type === 'app.bsky.embed.recordWithMedia#view' && post.embed.media) {
-      if (post.embed.media.$type === 'app.bsky.embed.images#view' && post.embed.media.images) {
-        const videoImages = post.embed.media.images.filter(
-          (img: BlueskyImage) => img.image?.mimeType && img.image.mimeType.startsWith('video/'),
-        );
-
-        if (videoImages.length > 0) {
+    // Check embeds array if main embed doesn't have video
+    if (post.embeds && post.embeds.length > 0) {
+      for (const embed of post.embeds) {
+        // Handle Bluesky native video embeds (app.bsky.embed.video#view)
+        if (embed.$type === 'app.bsky.embed.video#view' && embed.playlist) {
           return {
-            videoUrl: videoImages[0].fullsize,
-            thumbnailUrl: videoImages[0].thumb,
-            altText: videoImages[0].alt,
+            videoUrl: embed.playlist,
+            thumbnailUrl: embed.thumbnail,
+            altText: embed.alt || t('common.video'),
+            aspectRatio: embed.aspectRatio,
           };
+        }
+
+        if (embed.video) {
+          return {
+            videoUrl: embed.video.ref.$link,
+            thumbnailUrl: embed.video.ref.$link,
+            altText: embed.video.alt || t('common.video'),
+            aspectRatio: embed.aspectRatio,
+          };
+        }
+
+        // Handle record with media embeds in embeds array
+        if (embed.$type === 'app.bsky.embed.recordWithMedia#view' && embed.media) {
+          if (embed.media.$type === 'app.bsky.embed.video#view' && embed.media.playlist) {
+            return {
+              videoUrl: embed.media.playlist,
+              thumbnailUrl: embed.media.thumbnail,
+              altText: embed.media.alt || t('common.video'),
+              aspectRatio: embed.media.aspectRatio,
+            };
+          }
+          if (embed.media.video) {
+            return {
+              videoUrl: embed.media.video.ref.$link,
+              thumbnailUrl: embed.media.video.ref.$link,
+              altText: embed.media.video.alt || t('common.video'),
+              aspectRatio: embed.media.aspectRatio,
+            };
+          }
         }
       }
     }
@@ -219,7 +258,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   // Check if embed is a native video embed
   const isNativeVideoEmbed = () => {
-    return videoData !== null;
+    const result = videoData !== null;
+    return result;
   };
 
   // Check if embed is an external video embed
@@ -412,22 +452,40 @@ export function PostCard({ post, onPress }: PostCardProps) {
       <ThemedView style={styles.content}>
         <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
 
-        {/* Render YouTube embed if present */}
-        {isYouTubeEmbed() && getEmbedData() && <YouTubeEmbed embed={getEmbedData()!} />}
-
-        {/* Render external embed if present (non-YouTube) */}
-        {isExternalEmbed() && getEmbedData() && <ExternalEmbed embed={getEmbedData()!} />}
-
         {/* Render native video embed if present */}
-        {isNativeVideoEmbed() && videoData && <VideoEmbed embed={videoData} onClose={() => setSelectedImageIndex(null)} />}
+        {(() => {
+          const isNative = isNativeVideoEmbed();
+          return isNative && videoData && <VideoEmbed embed={videoData} onClose={() => setSelectedImageIndex(null)} />;
+        })()}
 
         {/* Render external video embed if present */}
-        {isExternalVideoEmbed() && getVideoEmbedData() && <VideoEmbed embed={getVideoEmbedData()!} />}
+        {(() => {
+          const isExternalVideo = isExternalVideoEmbed();
+          const videoEmbedData = getVideoEmbedData();
+          return isExternalVideo && videoEmbedData && <VideoEmbed embed={videoEmbedData} />;
+        })()}
+
+        {/* Render YouTube embed if present */}
+        {(() => {
+          const isYouTube = isYouTubeEmbed();
+          const embedData = getEmbedData();
+          return isYouTube && embedData && <YouTubeEmbed embed={embedData} />;
+        })()}
+
+        {/* Render external embed if present (non-YouTube) */}
+        {(() => {
+          const isExternal = isExternalEmbed();
+          const embedData = getEmbedData();
+          return isExternal && embedData && <ExternalEmbed embed={embedData} />;
+        })()}
 
         {/* Render record embed (quoted post) if present */}
-        {(isRecordEmbed() || isRecordWithMediaEmbed()) && getRecordEmbedData() && (
-          <RecordEmbed embed={getRecordEmbedData()!} />
-        )}
+        {(() => {
+          const isRecord = isRecordEmbed();
+          const isRecordWithMedia = isRecordWithMediaEmbed();
+          const recordData = getRecordEmbedData();
+          return (isRecord || isRecordWithMedia) && recordData && <RecordEmbed embed={recordData} />;
+        })()}
 
         {/* Render images if present */}
         {imageUrls.length > 0 && (

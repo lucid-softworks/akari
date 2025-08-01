@@ -27,7 +27,8 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "template": "./web/index.html"
     },
     "plugins": [
       "expo-router",
@@ -51,20 +52,8 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "ios": [
-              "en",
-              "en-US",
-              "ja",
-              "ar",
-              "fr"
-            ],
-            "android": [
-              "en",
-              "en-US",
-              "ja",
-              "ar",
-              "fr"
-            ]
+            "ios": ["en", "en-US", "ja", "ar", "fr"],
+            "android": ["en", "en-US", "ja", "ar", "fr"]
           }
         }
       ]

@@ -101,9 +101,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param actor - The author's handle or DID
    * @param limit - Number of posts to fetch (default: 20)
    * @param cursor - Pagination cursor
+   * @param filter - Filter type for posts (posts_with_replies, posts_no_replies, posts_with_media, posts_and_author_threads)
    * @returns Promise resolving to author feed data
    */
-  async getAuthorFeed(accessJwt: string, actor: string, limit: number = 20, cursor?: string): Promise<BlueskyFeedResponse> {
+  async getAuthorFeed(
+    accessJwt: string, 
+    actor: string, 
+    limit: number = 20, 
+    cursor?: string,
+    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads'
+  ): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       actor,
       limit: limit.toString(),
@@ -111,6 +118,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
 
     if (cursor) {
       params.cursor = cursor;
+    }
+
+    if (filter) {
+      params.filter = filter;
     }
 
     return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
@@ -133,7 +144,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     const params: Record<string, string> = {
       actor,
       limit: limit.toString(),
-      filter: 'videos',
+      filter: 'posts_with_video',
     };
 
     if (cursor) {
