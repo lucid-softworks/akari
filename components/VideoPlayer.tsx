@@ -1,12 +1,14 @@
 import { Image } from 'expo-image';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
 
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+import { VideoPlayer as WebVideoPlayer } from './VideoPlayer.web';
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -35,6 +37,7 @@ type VideoPlayerProps = {
 /**
  * Video player component with native video support using react-native-video
  * Supports HLS streams and direct video URLs
+ * Uses web-specific implementation on web platform
  */
 export function VideoPlayer({
   videoUrl,
@@ -181,6 +184,23 @@ export function VideoPlayer({
   const handleEnd = () => {
     setIsPlaying(false);
   };
+
+  // On web platform, use web-specific implementation
+  if (Platform.OS === 'web' && WebVideoPlayer) {
+    return (
+      <WebVideoPlayer
+        videoUrl={videoUrl}
+        thumbnailUrl={thumbnailUrl}
+        title={title}
+        description={description}
+        showControls={showControls}
+        autoplay={autoplay}
+        muted={muted}
+        loop={loop}
+        aspectRatio={aspectRatio}
+      />
+    );
+  }
 
   // Show error state
   if (playerStatus === 'error') {

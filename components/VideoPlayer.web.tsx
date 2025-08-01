@@ -1,13 +1,13 @@
-import Hls from 'hls.js';
+import Hls, { Events } from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-type WebVideoPlayerProps = {
+type VideoPlayerProps = {
   /** Video URL to play */
   videoUrl: string;
   /** Thumbnail URL for the video */
@@ -29,25 +29,13 @@ type WebVideoPlayerProps = {
     width: number;
     height: number;
   };
-  /** Callback when video starts loading */
-  onLoadStart?: () => void;
-  /** Callback when video is loaded */
-  onLoad?: (data: any) => void;
-  /** Callback when video encounters an error */
-  onError?: (error: any) => void;
-  /** Callback when video ends */
-  onEnd?: () => void;
-  /** Callback when video progress updates */
-  onProgress?: (data: any) => void;
-  /** Callback when video buffers */
-  onBuffer?: (data: any) => void;
 };
 
 /**
  * Web-specific video player component using hls.js for HLS streams
  * Falls back to native HTML5 video for other formats
  */
-export function WebVideoPlayer({
+export function VideoPlayer({
   videoUrl,
   thumbnailUrl,
   title,
@@ -57,17 +45,11 @@ export function WebVideoPlayer({
   muted = true,
   loop = false,
   aspectRatio,
-  onLoadStart,
-  onLoad,
-  onError,
-  onEnd,
-  onProgress,
-  onBuffer,
-}: WebVideoPlayerProps) {
+}: VideoPlayerProps) {
   const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
   const [playerError, setPlayerError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hlsRef = useRef<any>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
   const textColor = useThemeColor(
     {
@@ -85,6 +67,19 @@ export function WebVideoPlayer({
     'text',
   );
 
+  // Add global error handler for abort errors
+  useEffect(() => {
+    const handleAbortError = (event: ErrorEvent) => {
+      if (event.message && event.message.includes('fetching process for the media resource was aborted')) {
+        event.preventDefault();
+        return false;
+      }
+    };
+
+    window.addEventListener('error', handleAbortError);
+    return () => window.removeEventListener('error', handleAbortError);
+  }, []);
+
   // Initialize HLS player
   useEffect(() => {
     if (!videoUrl || !videoRef.current) return;
@@ -100,7 +95,6 @@ export function WebVideoPlayer({
 
     const initializeVideo = async () => {
       try {
-        onLoadStart?.();
         setPlayerStatus('loading');
         setPlayerError(null);
 
@@ -115,23 +109,20 @@ export function WebVideoPlayer({
             hlsRef.current.loadSource(videoUrl);
             hlsRef.current.attachMedia(video);
 
-            hlsRef.current.on(Hls.Events.MANIFEST_PARSED, () => {
+            hlsRef.current.on(Events.MANIFEST_PARSED, () => {
               setPlayerStatus('readyToPlay');
-              onLoad?.({ duration: video.duration });
             });
 
-            hlsRef.current.on(Hls.Events.ERROR, (event: any, data: any) => {
+            hlsRef.current.on(Events.ERROR, (event, data) => {
               console.error('HLS Error:', data);
               setPlayerStatus('error');
               setPlayerError(`HLS Error: ${data.details}`);
-              onError?.(data);
             });
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Native HLS support (Safari)
             video.src = videoUrl;
             video.addEventListener('loadedmetadata', () => {
               setPlayerStatus('readyToPlay');
-              onLoad?.({ duration: video.duration });
             });
           } else {
             throw new Error('HLS is not supported in this browser');
@@ -141,40 +132,29 @@ export function WebVideoPlayer({
           video.src = videoUrl;
           video.addEventListener('loadedmetadata', () => {
             setPlayerStatus('readyToPlay');
-            onLoad?.({ duration: video.duration });
           });
         }
 
         // Add event listeners
         video.addEventListener('error', (event) => {
-          console.error('Video Error:', event);
+          // Ignore abort errors (they're normal when pausing)
+          if (event.target && (event.target as any).error && (event.target as any).error.code === 20) {
+            console.log('Abort error (ignored):', event);
+            return;
+          }
+          console.error('Video error:', event);
           setPlayerStatus('error');
           setPlayerError('Failed to load video');
-          onError?.(event);
         });
 
-        video.addEventListener('ended', () => {
-          onEnd?.();
-        });
-
-        video.addEventListener('timeupdate', () => {
-          onProgress?.({
-            currentTime: video.currentTime,
-            duration: video.duration,
-            playableDuration: video.buffered.length > 0 ? video.buffered.end(video.buffered.length - 1) : 0,
-          });
-        });
-
-        video.addEventListener('progress', () => {
-          onBuffer?.({
-            buffered: video.buffered,
-          });
+        video.addEventListener('loadedmetadata', () => {
+          if (playerStatus !== 'readyToPlay') {
+            setPlayerStatus('readyToPlay');
+          }
         });
       } catch (error) {
-        console.error('Video initialization error:', error);
         setPlayerStatus('error');
         setPlayerError(`Failed to initialize video: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        onError?.(error);
       }
     };
 
@@ -187,19 +167,7 @@ export function WebVideoPlayer({
         hlsRef.current = null;
       }
     };
-  }, [videoUrl, onLoadStart, onLoad, onError, onEnd, onProgress, onBuffer]);
-
-  // Set video properties when status changes
-  useEffect(() => {
-    if (videoRef.current && playerStatus === 'readyToPlay') {
-      const video = videoRef.current;
-      video.controls = showControls;
-      video.muted = muted;
-      video.loop = loop;
-      video.autoplay = autoplay;
-      video.poster = thumbnailUrl || '';
-    }
-  }, [playerStatus, showControls, muted, loop, autoplay, thumbnailUrl]);
+  }, [videoUrl]);
 
   // Show error state
   if (playerStatus === 'error') {
@@ -208,18 +176,25 @@ export function WebVideoPlayer({
         <ThemedView
           style={[styles.videoContainer, { aspectRatio: aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9 }]}
         >
-          <View style={styles.errorContainer}>
-            <ThemedText style={[styles.errorText, { color: textColor }]}>
-              {playerError && playerError.trim() ? playerError : 'Failed to load video'}
-            </ThemedText>
-            <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>Please try refreshing the page</ThemedText>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              setPlayerStatus('idle');
+              setPlayerError(null);
+            }}
+          >
+            <ThemedView style={styles.errorContainer}>
+              <ThemedText style={[styles.errorText, { color: textColor }]}>
+                {playerError && playerError.trim() ? playerError : 'Failed to load video'}
+              </ThemedText>
+              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>Tap to retry</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
         </ThemedView>
       </ThemedCard>
     );
   }
 
-  // Calculate aspect ratio
+  // Show video player directly
   const videoAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
 
   return (
@@ -227,19 +202,14 @@ export function WebVideoPlayer({
       <ThemedView style={[styles.videoContainer, { aspectRatio: videoAspectRatio }]}>
         <video
           ref={videoRef}
-          style={videoStyles.video}
+          style={styles.video}
           controls={showControls}
           muted={muted}
           loop={loop}
           autoPlay={autoplay}
-          poster={thumbnailUrl}
-          playsInline
+          poster={thumbnailUrl || ''}
+          src={!videoUrl.includes('.m3u8') ? videoUrl : undefined}
         />
-        {playerStatus === 'loading' && (
-          <View style={styles.loadingContainer}>
-            <ThemedText style={[styles.loadingText, { color: textColor }]}>Loading video...</ThemedText>
-          </View>
-        )}
       </ThemedView>
 
       {showControls &&
@@ -253,9 +223,15 @@ export function WebVideoPlayer({
 
           return (
             <ThemedView style={styles.content}>
-              {hasTitle && <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>}
+              {hasTitle && (
+                <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
+                  {title}
+                </ThemedText>
+              )}
               {hasDescription && (
-                <ThemedText style={[styles.description, { color: secondaryTextColor }]}>{description}</ThemedText>
+                <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
+                  {description}
+                </ThemedText>
               )}
             </ThemedView>
           );
@@ -272,7 +248,47 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     width: '100%',
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+  },
+  thumbnailContainer: {
     position: 'relative',
+    width: '100%',
+    aspectRatio: 16 / 9,
+  },
+  thumbnail: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderContainer: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderIcon: {
+    fontSize: 48,
+    opacity: 0.5,
+  },
+  playButton: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -20 }, { translateY: -20 }],
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playIcon: {
+    fontSize: 16,
+    color: 'white',
   },
   content: {
     padding: 12,
@@ -286,20 +302,6 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     lineHeight: 18,
-  },
-  loadingContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  loadingText: {
-    fontSize: 16,
-    fontWeight: '500',
   },
   errorContainer: {
     width: '100%',
@@ -320,12 +322,3 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
-// Web-specific styles for the video element
-const videoStyles = {
-  video: {
-    width: '100%',
-    height: '100%',
-    display: 'block',
-  } as React.CSSProperties,
-};
