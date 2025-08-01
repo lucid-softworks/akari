@@ -7,6 +7,7 @@ import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { Labels } from '@/components/Labels';
 import { RecordEmbed } from '@/components/RecordEmbed';
+import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -47,6 +48,18 @@ type PostCardProps = {
       repost?: string;
       reply?: string;
     };
+    /** Facets for rich text rendering */
+    facets?: {
+      index: {
+        byteStart: number;
+        byteEnd: number;
+      };
+      features: {
+        $type: string;
+        uri?: string;
+        tag?: string;
+      }[];
+    }[];
   };
   onPress?: () => void;
 };
@@ -57,6 +70,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
     [key: string]: { width: number; height: number };
   }>({});
   const { t } = useTranslation();
+
+  // Debug: Log post data to see if facets are present
+  console.log('PostCard - Post facets:', post.facets);
 
   const borderColor = useThemeColor(
     {
@@ -141,8 +157,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
       if (videoImages.length > 0) {
         return {
-          videoUrl: videoImages[0].fullsize?.ref?.$link,
-          thumbnailUrl: videoImages[0].thumb?.ref?.$link,
+          videoUrl: videoImages[0].fullsize,
+          thumbnailUrl: videoImages[0].thumb,
           altText: videoImages[0].alt,
         };
       }
@@ -157,8 +173,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
         if (videoImages.length > 0) {
           return {
-            videoUrl: videoImages[0].fullsize?.ref?.$link,
-            thumbnailUrl: videoImages[0].thumb?.ref?.$link,
+            videoUrl: videoImages[0].fullsize,
+            thumbnailUrl: videoImages[0].thumb,
             altText: videoImages[0].alt,
           };
         }
@@ -358,113 +374,127 @@ export function PostCard({ post, onPress }: PostCardProps) {
     setSelectedImageIndex(null);
   };
 
-  return (
+  const postContent = (
     <>
-      <TouchableOpacity style={[styles.container, { borderBottomColor: borderColor }]} onPress={onPress} activeOpacity={0.7}>
-        {/* Reply Context */}
-        {post.replyTo && (
-          <ThemedView style={styles.replyContext}>
-            <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
-            <ThemedText style={styles.replyText}>
-              Replying to <ThemedText style={styles.replyAuthor}>@{post.replyTo.author.handle}</ThemedText>
-            </ThemedText>
-            <ThemedText style={styles.replyPreview} numberOfLines={1}>
-              {post.replyTo.text}
-            </ThemedText>
+      {/* Reply Context */}
+      {post.replyTo && (
+        <ThemedView style={styles.replyContext}>
+          <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
+          <ThemedText style={styles.replyText}>
+            Replying to <ThemedText style={styles.replyAuthor}>@{post.replyTo.author.handle}</ThemedText>
+          </ThemedText>
+          <ThemedText style={styles.replyPreview} numberOfLines={1}>
+            {post.replyTo.text}
+          </ThemedText>
+        </ThemedView>
+      )}
+
+      <ThemedView style={styles.header}>
+        <ThemedView style={styles.authorSection}>
+          <Image
+            source={{
+              uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
+            }}
+            style={styles.authorAvatar}
+            contentFit="cover"
+            placeholder={require('@/assets/images/partial-react-logo.png')}
+          />
+          <ThemedView style={styles.authorInfo}>
+            <ThemedText style={styles.displayName}>{post.author.displayName || post.author.handle}</ThemedText>
+            <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+              <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
+            </TouchableOpacity>
           </ThemedView>
+        </ThemedView>
+        <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.content}>
+        <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
+
+        {/* Render YouTube embed if present */}
+        {isYouTubeEmbed() && getEmbedData() && <YouTubeEmbed embed={getEmbedData()!} />}
+
+        {/* Render external embed if present (non-YouTube) */}
+        {isExternalEmbed() && getEmbedData() && <ExternalEmbed embed={getEmbedData()!} />}
+
+        {/* Render native video embed if present */}
+        {isNativeVideoEmbed() && videoData && <VideoEmbed embed={videoData} onClose={() => setSelectedImageIndex(null)} />}
+
+        {/* Render external video embed if present */}
+        {isExternalVideoEmbed() && getVideoEmbedData() && <VideoEmbed embed={getVideoEmbedData()!} />}
+
+        {/* Render record embed (quoted post) if present */}
+        {(isRecordEmbed() || isRecordWithMediaEmbed()) && getRecordEmbedData() && (
+          <RecordEmbed embed={getRecordEmbedData()!} />
         )}
 
-        <ThemedView style={styles.header}>
-          <ThemedView style={styles.authorSection}>
-            <Image
-              source={{
-                uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
-              }}
-              style={styles.authorAvatar}
-              contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
-            />
-            <ThemedView style={styles.authorInfo}>
-              <ThemedText style={styles.displayName}>{post.author.displayName || post.author.handle}</ThemedText>
-              <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
-                <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
+        {/* Render images if present */}
+        {imageUrls.length > 0 && (
+          <ThemedView style={styles.imagesContainer}>
+            {imageUrls.map((imageUrl: string, index: number) => {
+              const dimensions = imageDimensions[imageUrl];
+              const screenWidth = 400; // Approximate screen width minus padding
+              const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
+
+              return (
+                <TouchableOpacity
+                  key={`${post.id}-image-${index}`}
+                  onPress={() => handleImagePress(index)}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    source={{ uri: imageUrl }}
+                    style={[styles.image, { height: imageHeight }]}
+                    contentFit="contain"
+                    placeholder={require('@/assets/images/partial-react-logo.png')}
+                    onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
+                  />
+                </TouchableOpacity>
+              );
+            })}
           </ThemedView>
-          <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
+        )}
+      </ThemedView>
+
+      {/* Labels */}
+      <Labels labels={post.labels} maxLabels={3} />
+
+      <ThemedView style={styles.interactions}>
+        <ThemedView style={styles.interactionItem}>
+          <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
+          <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
         </ThemedView>
-
-        <ThemedView style={styles.content}>
-          <ThemedText style={styles.text}>{post.text}</ThemedText>
-
-          {/* Render YouTube embed if present */}
-          {isYouTubeEmbed() && getEmbedData() && <YouTubeEmbed embed={getEmbedData()!} />}
-
-          {/* Render external embed if present (non-YouTube) */}
-          {isExternalEmbed() && getEmbedData() && <ExternalEmbed embed={getEmbedData()!} />}
-
-          {/* Render native video embed if present */}
-          {isNativeVideoEmbed() && videoData && <VideoEmbed embed={videoData} onClose={() => setSelectedImageIndex(null)} />}
-
-          {/* Render external video embed if present */}
-          {isExternalVideoEmbed() && getVideoEmbedData() && <VideoEmbed embed={getVideoEmbedData()!} />}
-
-          {/* Render record embed (quoted post) if present */}
-          {(isRecordEmbed() || isRecordWithMediaEmbed()) && getRecordEmbedData() && (
-            <RecordEmbed embed={getRecordEmbedData()!} />
-          )}
-
-          {/* Render images if present */}
-          {imageUrls.length > 0 && (
-            <ThemedView style={styles.imagesContainer}>
-              {imageUrls.map((imageUrl: string, index: number) => {
-                const dimensions = imageDimensions[imageUrl];
-                const screenWidth = 400; // Approximate screen width minus padding
-                const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
-
-                return (
-                  <TouchableOpacity
-                    key={`${post.id}-image-${index}`}
-                    onPress={() => handleImagePress(index)}
-                    activeOpacity={0.8}
-                  >
-                    <Image
-                      source={{ uri: imageUrl }}
-                      style={[styles.image, { height: imageHeight }]}
-                      contentFit="contain"
-                      placeholder={require('@/assets/images/partial-react-logo.png')}
-                      onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </ThemedView>
-          )}
+        <ThemedView style={styles.interactionItem}>
+          <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
+          <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
         </ThemedView>
-
-        {/* Labels */}
-        <Labels labels={post.labels} maxLabels={3} />
-
-        <ThemedView style={styles.interactions}>
-          <ThemedView style={styles.interactionItem}>
-            <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
-            <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.interactionItem}>
-            <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
-            <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.interactionItem}>
-            <IconSymbol
-              name={post.viewer?.like ? 'heart.fill' : 'heart'}
-              size={16}
-              color={post.viewer?.like ? '#ff3b30' : iconColor}
-              style={styles.interactionIcon}
-            />
-            <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
-          </ThemedView>
+        <ThemedView style={styles.interactionItem}>
+          <IconSymbol
+            name={post.viewer?.like ? 'heart.fill' : 'heart'}
+            size={16}
+            color={post.viewer?.like ? '#ff3b30' : iconColor}
+            style={styles.interactionIcon}
+          />
+          <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
         </ThemedView>
-      </TouchableOpacity>
+      </ThemedView>
+    </>
+  );
+
+  return (
+    <>
+      {onPress ? (
+        <TouchableOpacity
+          style={[styles.container, { borderBottomColor: borderColor }]}
+          onPress={onPress}
+          activeOpacity={0.7}
+        >
+          {postContent}
+        </TouchableOpacity>
+      ) : (
+        <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>{postContent}</ThemedView>
+      )}
 
       {/* Image Viewer Modal */}
       {selectedImageIndex !== null && imageUrls[selectedImageIndex] && (

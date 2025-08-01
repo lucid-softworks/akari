@@ -81,6 +81,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
                 embeds: item.embeds,
                 labels: item.labels,
                 viewer: item.viewer,
+                facets: (item.record as any)?.facets,
                 replyTo,
               }}
               onPress={() => {

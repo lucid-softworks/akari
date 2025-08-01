@@ -120,6 +120,18 @@ export interface BlueskyRecord {
     repost?: string;
     reply?: string;
   };
+  /** The record's facets for rich text rendering */
+  facets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
 }
 
 export interface BlueskyEmbed {

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -131,9 +132,11 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         </ThemedView>
 
         <ThemedView style={styles.content}>
-          <ThemedText style={[styles.text, { color: textColor }]} numberOfLines={3}>
-            {quotedText}
-          </ThemedText>
+          <RichTextWithFacets
+            text={quotedText}
+            facets={(embed.record as any)?.facets}
+            style={[styles.text, { color: textColor }]}
+          />
 
           {/* Show media preview if the quoted post has media */}
           {(embed.record.embed || embed.media || embed.record.embeds) && (

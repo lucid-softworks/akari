@@ -193,6 +193,7 @@ export default function SearchScreen() {
           embeds: post.embeds,
           labels: post.labels,
           viewer: post.viewer,
+          facets: (post.record as any)?.facets,
           replyTo,
         }}
         onPress={() => {

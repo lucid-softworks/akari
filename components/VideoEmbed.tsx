@@ -28,27 +28,15 @@ type VideoEmbedProps = {
       $type: string;
       images?: {
         alt: string;
-        image: {
+        image?: {
           ref: {
             $link: string;
           };
           mimeType: string;
           size: number;
         };
-        thumb: {
-          ref: {
-            $link: string;
-          };
-          mimeType: string;
-          size: number;
-        };
-        fullsize: {
-          ref: {
-            $link: string;
-          };
-          mimeType: string;
-          size: number;
-        };
+        thumb: string;
+        fullsize: string;
         aspectRatio?: {
           width: number;
           height: number;

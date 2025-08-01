@@ -81,6 +81,7 @@ export function VideosTab({ handle }: VideosTabProps) {
                 embeds: item.embeds,
                 labels: item.labels,
                 viewer: item.viewer,
+                facets: (item.record as any)?.facets,
                 replyTo,
               }}
               onPress={() => {

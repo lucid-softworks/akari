@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
-import { StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -16,13 +15,7 @@ type PostsTabProps = {
 
 export function PostsTab({ handle }: PostsTabProps) {
   const { t } = useTranslation();
-  const { 
-    data: posts, 
-    isLoading, 
-    fetchNextPage, 
-    hasNextPage, 
-    isFetchingNextPage 
-  } = useAuthorPosts(handle);
+  const { data: posts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorPosts(handle);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -88,6 +81,7 @@ export function PostsTab({ handle }: PostsTabProps) {
                 embeds: item.embeds,
                 labels: item.labels,
                 viewer: item.viewer,
+                facets: (item.record as any)?.facets,
                 replyTo,
               }}
               onPress={() => {

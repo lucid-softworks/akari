@@ -20,6 +20,11 @@ export default function PostDetailScreen() {
   const { t } = useTranslation();
 
   const { data: post, isLoading: postLoading, error: postError } = usePost(id);
+
+  // Debug: Log post data to see if facets are present
+  console.log('PostDetailScreen - mainPost:', post);
+  console.log('PostDetailScreen - mainPost.facets:', post?.facets);
+  console.log('PostDetailScreen - mainPost.record:', post?.record);
   const { data: threadData, isLoading: threadLoading } = usePostThread(id);
 
   const comments = threadData?.thread?.replies || [];
@@ -130,6 +135,9 @@ export default function PostDetailScreen() {
             repostCount: post.repostCount || 0,
             embed: post.embed,
             embeds: post.embeds,
+            labels: post.labels,
+            viewer: post.viewer,
+            facets: (post.record as any)?.facets,
             replyTo: commentReplyTo,
           }}
         />
@@ -164,6 +172,7 @@ export default function PostDetailScreen() {
           embeds: postItem.embeds,
           labels: postItem.labels,
           viewer: postItem.viewer,
+          facets: (postItem.record as any)?.facets,
         }}
       />
     );
@@ -200,6 +209,7 @@ export default function PostDetailScreen() {
           embeds: parentPost.embeds,
           labels: parentPost.labels,
           viewer: parentPost.viewer,
+          facets: (parentPost.record as any)?.facets,
         }}
       />
     );
@@ -228,7 +238,9 @@ export default function PostDetailScreen() {
           repostCount: rootPost.repostCount || 0,
           embed: rootPost.embed,
           embeds: rootPost.embeds,
+          labels: rootPost.labels,
           viewer: rootPost.viewer,
+          facets: (rootPost.record as any)?.facets,
         }}
       />
     );
@@ -315,6 +327,7 @@ export default function PostDetailScreen() {
                 embeds: mainPost?.embeds,
                 labels: mainPost?.labels,
                 viewer: mainPost?.viewer,
+                facets: (mainPost?.record as any)?.facets,
               }}
             />
           </View>
