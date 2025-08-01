@@ -101,13 +101,30 @@ export interface BlueskyExternal {
 export interface BlueskyRecord {
   uri: string;
   cid: string;
+  $type?: string; // For blocked records like 'app.bsky.embed.record#viewBlocked'
   author: {
     did: string;
     handle: string;
     displayName: string;
     avatar: string;
+    viewer?: {
+      blockedBy?: boolean;
+      blocking?: string;
+    };
   };
-  record: Record<string, unknown>;
+  record: Record<string, unknown> & {
+    $type?: string;
+    author?: {
+      did: string;
+      handle: string;
+      displayName: string;
+      avatar: string;
+      viewer?: {
+        blockedBy?: boolean;
+        blocking?: string;
+      };
+    };
+  };
   value?: Record<string, unknown>; // For record embeds, contains the actual post data
   embed?: BlueskyEmbed;
   embeds?: BlueskyEmbed[]; // Array of embeds in the record

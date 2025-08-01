@@ -171,30 +171,6 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
 
   const segments = parseTextWithFacets();
 
-  // Debug: Log segments to see if parsing is working
-  console.log('RichTextWithFacets - Text:', text);
-  console.log('RichTextWithFacets - Facets:', facets);
-  console.log('RichTextWithFacets - Segments:', segments);
-
-  // Debug: Log each facet to see the byte indices and text
-  if (facets) {
-    console.log('=== FACET DEBUG ===');
-    console.log('Full text:', JSON.stringify(text));
-    console.log('Text length:', text.length);
-
-    facets.forEach((facet, index) => {
-      const facetText = text.slice(facet.index.byteStart, facet.index.byteEnd);
-      console.log(`Facet ${index}:`, {
-        byteStart: facet.index.byteStart,
-        byteEnd: facet.index.byteEnd,
-        text: JSON.stringify(facetText),
-        feature: facet.features[0],
-        expectedTag: facet.features[0]?.tag,
-      });
-    });
-    console.log('=== END FACET DEBUG ===');
-  }
-
   // Convert URI to short URL for display
   const toShortUrl = (href: string): string => {
     try {

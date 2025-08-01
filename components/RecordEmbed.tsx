@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyEmbed, BlueskyRecord } from '@/utils/bluesky/types';
@@ -89,25 +90,89 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const quotedText = getQuotedText();
 
+  // Check if this is a blocked record by checking the $type field
+  const isBlockedRecord = embed.record.record?.$type === 'app.bsky.embed.record#viewBlocked';
+
+  // Get the author's DID or handle for profile lookup
+  const authorIdentifier = isBlockedRecord
+    ? embed.record.record?.author?.did
+    : embed.record.author?.handle || embed.record.author?.did;
+
+  // Fetch profile information if needed
+  const { data: profileData } = useProfile(authorIdentifier);
+
+  // Determine the blocking scenario
+  const getBlockingMessage = () => {
+    if (!isBlockedRecord || !embed.record.record?.author?.viewer) {
+      return null;
+    }
+
+    const { blockedBy, blocking } = embed.record.record.author.viewer;
+
+    if (blockedBy && blocking) {
+      return t('profile.mutualBlock');
+    } else if (blockedBy) {
+      return t('profile.youAreBlockedByUser');
+    } else if (blocking) {
+      return t('profile.youHaveBlockedUser');
+    }
+
+    return null;
+  };
+
+  const blockingMessage = getBlockingMessage();
+
+  // Get author information from available sources
+  const getAuthorInfo = () => {
+    if (!isBlockedRecord && embed.record.author?.handle && embed.record.author?.displayName) {
+      return {
+        handle: embed.record.author.handle,
+        displayName: embed.record.author.displayName,
+        avatar: embed.record.author.avatar,
+      };
+    }
+
+    if (isBlockedRecord && profileData) {
+      return {
+        handle: profileData.handle,
+        displayName: profileData.displayName || profileData.handle,
+        avatar: profileData.avatar,
+      };
+    }
+
+    if (isBlockedRecord && embed.record.record?.author?.did) {
+      return {
+        handle: embed.record.record.author.did,
+        displayName: embed.record.record.author.did,
+        avatar: undefined,
+      };
+    }
+
+    return null;
+  };
+
+  const authorInfo = getAuthorInfo();
+
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
-          {embed.record.author ? (
+          {authorInfo ? (
             <TouchableOpacity onPress={handleAuthorPress} activeOpacity={0.7} style={styles.authorSection}>
               <Image
                 source={{
-                  uri: embed.record.author.avatar || 'https://bsky.app/static/default-avatar.png',
+                  uri: authorInfo.avatar || 'https://bsky.app/static/default-avatar.png',
                 }}
                 style={styles.authorAvatar}
                 contentFit="cover"
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
               <ThemedView style={styles.authorInfo}>
-                <ThemedText style={[styles.displayName, { color: textColor }]}>
-                  {embed.record.author.displayName || embed.record.author.handle}
-                </ThemedText>
-                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@{embed.record.author.handle}</ThemedText>
+                <ThemedText style={[styles.displayName, { color: textColor }]}>{authorInfo.displayName}</ThemedText>
+                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@{authorInfo.handle}</ThemedText>
+                {blockingMessage && (
+                  <ThemedText style={[styles.blockingMessage, { color: secondaryTextColor }]}>{blockingMessage}</ThemedText>
+                )}
               </ThemedView>
             </TouchableOpacity>
           ) : (
@@ -121,8 +186,10 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
               <ThemedView style={styles.authorInfo}>
-                <ThemedText style={[styles.displayName, { color: textColor }]}>{t('common.unknown')}</ThemedText>
-                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@unknown</ThemedText>
+                <ThemedText style={[styles.displayName, { color: textColor }]}>
+                  {blockingMessage || t('profile.youAreBlockedByUser')}
+                </ThemedText>
+                <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>{t('common.block')}</ThemedText>
               </ThemedView>
             </ThemedView>
           )}
@@ -131,166 +198,15 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
           </ThemedText>
         </ThemedView>
 
-        <ThemedView style={styles.content}>
-          <RichTextWithFacets
-            text={quotedText}
-            facets={(embed.record as any)?.facets}
-            style={[styles.text, { color: textColor }]}
-          />
-
-          {/* Show media preview if the quoted post has media */}
-          {(embed.record.embed || embed.media || embed.record.embeds) && (
-            <ThemedView style={styles.mediaPreview}>
-              {/* Handle recordWithMedia embeds - media is in embed.media */}
-              {embed.media?.images && embed.media.images.length > 0 && (
-                <ThemedView style={styles.imagesContainer}>
-                  {embed.media.images.map((image, index) => {
-                    const dimensions = imageDimensions[image.fullsize];
-                    const screenWidth = 400; // Approximate screen width minus padding
-                    const imageHeight =
-                      dimensions &&
-                      dimensions.width > 0 &&
-                      dimensions.height > 0 &&
-                      isFinite(dimensions.width) &&
-                      isFinite(dimensions.height)
-                        ? (dimensions.height / dimensions.width) * screenWidth
-                        : 300;
-
-                    return (
-                      <Image
-                        key={index}
-                        source={{ uri: image.fullsize }}
-                        style={[styles.image, { height: imageHeight }]}
-                        contentFit="contain"
-                        placeholder={require('@/assets/images/partial-react-logo.png')}
-                        onLoad={(event) => handleImageLoad(image.fullsize, event.source.width, event.source.height)}
-                      />
-                    );
-                  })}
-                </ThemedView>
-              )}
-
-              {/* Handle regular record embeds - media is in embed.record.embed */}
-              {embed.record.embed?.images && embed.record.embed.images.length > 0 && (
-                <ThemedView style={styles.imagesContainer}>
-                  {embed.record.embed.images.map((image, index) => {
-                    const dimensions = imageDimensions[image.fullsize];
-                    const screenWidth = 400; // Approximate screen width minus padding
-                    const imageHeight =
-                      dimensions && dimensions.width > 0 ? (dimensions.height / dimensions.width) * screenWidth : 300;
-
-                    return (
-                      <Image
-                        key={index}
-                        source={{ uri: image.fullsize }}
-                        style={[styles.image, { height: imageHeight }]}
-                        contentFit="contain"
-                        placeholder={require('@/assets/images/partial-react-logo.png')}
-                        onLoad={(event) => handleImageLoad(image.fullsize, event.source.width, event.source.height)}
-                      />
-                    );
-                  })}
-                </ThemedView>
-              )}
-
-              {/* Handle embeds array in record */}
-              {embed.record.embeds &&
-                embed.record.embeds.length > 0 &&
-                embed.record.embeds.map((recordEmbed: BlueskyEmbed, index: number) => (
-                  <ThemedView key={index}>
-                    {/* Handle images in embeds array */}
-                    {recordEmbed.images && recordEmbed.images.length > 0 && (
-                      <ThemedView style={styles.imagesContainer}>
-                        {recordEmbed.images.map((image, imageIndex) => {
-                          const dimensions = imageDimensions[image.fullsize];
-                          const screenWidth = 400; // Approximate screen width minus padding
-                          const imageHeight =
-                            dimensions && dimensions.width > 0 ? (dimensions.height / dimensions.width) * screenWidth : 300;
-
-                          return (
-                            <Image
-                              key={imageIndex}
-                              source={{ uri: image.fullsize }}
-                              style={[styles.image, { height: imageHeight }]}
-                              contentFit="contain"
-                              placeholder={require('@/assets/images/partial-react-logo.png')}
-                              onLoad={(event) => handleImageLoad(image.fullsize, event.source.width, event.source.height)}
-                            />
-                          );
-                        })}
-                      </ThemedView>
-                    )}
-
-                    {/* Handle external embeds in embeds array */}
-                    {recordEmbed.external && (
-                      <ThemedView style={styles.externalPreview}>
-                        {recordEmbed.external.thumb?.ref?.$link && (
-                          <Image
-                            source={{ uri: recordEmbed.external.thumb.ref.$link }}
-                            style={styles.mediaThumbnail}
-                            contentFit="cover"
-                            placeholder={require('@/assets/images/partial-react-logo.png')}
-                          />
-                        )}
-                        <ThemedView style={styles.externalInfo}>
-                          <ThemedText style={[styles.externalTitle, { color: textColor }]} numberOfLines={1}>
-                            {recordEmbed.external.title}
-                          </ThemedText>
-                          <ThemedText style={[styles.externalDescription, { color: secondaryTextColor }]} numberOfLines={1}>
-                            {recordEmbed.external.description}
-                          </ThemedText>
-                        </ThemedView>
-                      </ThemedView>
-                    )}
-                  </ThemedView>
-                ))}
-
-              {/* Handle external embeds in recordWithMedia */}
-              {embed.media?.external && (
-                <ThemedView style={styles.externalPreview}>
-                  {embed.media.external.thumb?.ref?.$link && (
-                    <Image
-                      source={{ uri: embed.media.external.thumb.ref.$link }}
-                      style={styles.mediaThumbnail}
-                      contentFit="cover"
-                      placeholder={require('@/assets/images/partial-react-logo.png')}
-                    />
-                  )}
-                  <ThemedView style={styles.externalInfo}>
-                    <ThemedText style={[styles.externalTitle, { color: textColor }]} numberOfLines={1}>
-                      {embed.media.external.title}
-                    </ThemedText>
-                    <ThemedText style={[styles.externalDescription, { color: secondaryTextColor }]} numberOfLines={1}>
-                      {embed.media.external.description}
-                    </ThemedText>
-                  </ThemedView>
-                </ThemedView>
-              )}
-
-              {/* Handle external embeds in regular record embeds */}
-              {embed.record.embed?.external && (
-                <ThemedView style={styles.externalPreview}>
-                  {embed.record.embed.external.thumb?.ref?.$link && (
-                    <Image
-                      source={{ uri: embed.record.embed.external.thumb.ref.$link }}
-                      style={styles.mediaThumbnail}
-                      contentFit="cover"
-                      placeholder={require('@/assets/images/partial-react-logo.png')}
-                    />
-                  )}
-                  <ThemedView style={styles.externalInfo}>
-                    <ThemedText style={[styles.externalTitle, { color: textColor }]} numberOfLines={1}>
-                      {embed.record.embed.external.title}
-                    </ThemedText>
-                    <ThemedText style={[styles.externalDescription, { color: secondaryTextColor }]} numberOfLines={1}>
-                      {embed.record.embed.external.description}
-                    </ThemedText>
-                  </ThemedView>
-                </ThemedView>
-              )}
-            </ThemedView>
-          )}
-        </ThemedView>
+        {!isBlockedRecord && (
+          <ThemedView style={styles.content}>
+            <RichTextWithFacets
+              text={quotedText}
+              facets={(embed.record as any)?.facets}
+              style={[styles.text, { color: textColor }]}
+            />
+          </ThemedView>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -384,5 +300,10 @@ const styles = StyleSheet.create({
   quoteIndicator: {
     fontSize: 10,
     fontStyle: 'italic',
+  },
+  blockingMessage: {
+    fontSize: 10,
+    fontStyle: 'italic',
+    marginTop: 2,
   },
 });

@@ -116,6 +116,20 @@ export function PostCard({ post, onPress }: PostCardProps) {
       return { urls, altTexts };
     }
 
+    // Handle record with media embeds (quoted post with media added by quoter)
+    if (embedData.$type === 'app.bsky.embed.recordWithMedia#view' && embedData.media) {
+      if (embedData.media.$type === 'app.bsky.embed.images#view' && embedData.media.images) {
+        // Filter out video files, only show actual images
+        const imageFiles = embedData.media.images.filter(
+          (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
+        );
+
+        const urls = imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean);
+        const altTexts = imageFiles.map((img: BlueskyImage) => img.alt);
+        return { urls, altTexts };
+      }
+    }
+
     // Handle other embed types that might contain images
     if (embedData.images) {
       // Filter out video files, only show actual images
@@ -479,15 +493,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           return isExternal && embedData && <ExternalEmbed embed={embedData} />;
         })()}
 
-        {/* Render record embed (quoted post) if present */}
-        {(() => {
-          const isRecord = isRecordEmbed();
-          const isRecordWithMedia = isRecordWithMediaEmbed();
-          const recordData = getRecordEmbedData();
-          return (isRecord || isRecordWithMedia) && recordData && <RecordEmbed embed={recordData} />;
-        })()}
-
-        {/* Render images if present */}
+        {/* Render images if present (should come before record embed for recordWithMedia) */}
         {imageUrls.length > 0 && (
           <ThemedView style={styles.imagesContainer}>
             {imageUrls.map((imageUrl: string, index: number) => {
@@ -513,6 +519,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
             })}
           </ThemedView>
         )}
+
+        {/* Render record embed (quoted post) if present */}
+        {(() => {
+          const isRecord = isRecordEmbed();
+          const isRecordWithMedia = isRecordWithMediaEmbed();
+          const recordData = getRecordEmbedData();
+          return (isRecord || isRecordWithMedia) && recordData && <RecordEmbed embed={recordData} />;
+        })()}
       </ThemedView>
 
       {/* Labels */}

@@ -21,10 +21,6 @@ export default function PostDetailScreen() {
 
   const { data: post, isLoading: postLoading, error: postError } = usePost(id);
 
-  // Debug: Log post data to see if facets are present
-  console.log('PostDetailScreen - mainPost:', post);
-  console.log('PostDetailScreen - mainPost.facets:', post?.facets);
-  console.log('PostDetailScreen - mainPost.record:', post?.record);
   const { data: threadData, isLoading: threadLoading } = usePostThread(id);
 
   const comments = threadData?.thread?.replies || [];

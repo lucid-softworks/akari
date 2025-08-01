@@ -142,6 +142,8 @@
       "noReplies": "No replies yet",
       "noContent": "No content yet",
       "youAreBlockedByUser": "You are blocked by this user",
+      "youHaveBlockedUser": "You have blocked this user",
+      "mutualBlock": "You have blocked each other",
       "unfollowConfirmation": "Are you sure you want to unfollow @{{handle}}?",
       "unblockConfirmation": "Are you sure you want to unblock @{{handle}}?",
       "blockConfirmation": "Are you sure you want to block @{{handle}}?",
