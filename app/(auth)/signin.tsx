@@ -227,7 +227,7 @@ export default function AuthScreen() {
             )}
 
             <TouchableOpacity
-              style={[styles.button, isLoading && styles.buttonDisabled]}
+              style={[styles.button, isLoading ? styles.buttonDisabled : null]}
               onPress={isSignUp ? handleSignUp : handleSignIn}
               disabled={isLoading}
             >

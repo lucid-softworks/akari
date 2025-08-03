@@ -212,10 +212,10 @@ export default function SettingsScreen() {
 
                   <ThemedView style={styles.accountDetails}>
                     <ThemedText style={styles.accountHandle}>@{account.handle}</ThemedText>
-                    {displayName && <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText>}
-                    {account.did === currentAccount?.did && (
+                    {displayName ? <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText> : null}
+                    {account.did === currentAccount?.did ? (
                       <ThemedText style={styles.currentAccountBadge}>{t('common.current')}</ThemedText>
-                    )}
+                    ) : null}
                   </ThemedView>
 
                   <ThemedView style={styles.accountActions}>

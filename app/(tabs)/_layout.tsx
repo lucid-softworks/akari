@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
+import { Sidebar } from '@/components/Sidebar';
 import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -13,6 +14,7 @@ import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useResponsive } from '@/hooks/useResponsive';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 /**
@@ -51,6 +53,7 @@ function CustomTabButton(props: any) {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { isLargeScreen } = useResponsive();
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -74,6 +77,48 @@ export default function TabLayout() {
     return <Redirect href="/(auth)/signin" />;
   }
 
+  // For large screens, show tabs without the tab bar
+  if (isLargeScreen) {
+    return (
+      <ThemedView style={{ flex: 1, flexDirection: 'row' }}>
+        <Sidebar />
+        <View
+          style={{
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            minHeight: 0,
+          }}
+        >
+          <View
+            style={{
+              width: '100%',
+              maxWidth: 500,
+              flex: 1,
+              paddingHorizontal: 16,
+            }}
+          >
+            <Tabs
+              screenOptions={{
+                headerShown: false,
+                tabBarStyle: { display: 'none' },
+              }}
+            >
+              <Tabs.Screen name="index" />
+              <Tabs.Screen name="search" />
+              <Tabs.Screen name="messages" />
+              <Tabs.Screen name="notifications" />
+              <Tabs.Screen name="profile" />
+              <Tabs.Screen name="settings" />
+            </Tabs>
+          </View>
+        </View>
+      </ThemedView>
+    );
+  }
+
+  // For mobile screens, show the traditional tab bar
   return (
     <Tabs
       screenOptions={{

@@ -1,6 +1,7 @@
+import { useResponsive } from '@/hooks/useResponsive';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PostCard } from '@/components/PostCard';
@@ -23,6 +24,7 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
+  const { isLargeScreen } = useResponsive();
 
   const { data: currentAccount } = useCurrentAccount();
 
@@ -181,7 +183,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
       {/* Feed Tabs */}
       <TabBar
         tabs={allFeeds.map((feed) => ({
@@ -194,33 +196,26 @@ export default function HomeScreen() {
 
       {/* Feed Content */}
       {selectedFeed ? (
-        <FlatList
-          ref={flatListRef}
-          data={allPosts}
-          renderItem={renderFeedItem}
-          keyExtractor={(item) => `${item.post.uri}-${item.post.indexedAt}`}
-          style={styles.feedList}
-          contentContainerStyle={styles.feedListContent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          onEndReached={loadMorePosts}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            isFetchingNextPage ? (
-              <ThemedView style={styles.loadingMore}>
-                <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
-              </ThemedView>
-            ) : null
-          }
-          ListEmptyComponent={
-            feedLoading ? (
-              <FeedSkeleton count={5} />
-            ) : (
-              <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
-              </ThemedView>
-            )
-          }
-        />
+        <ScrollView style={styles.feedList}>
+          {feedLoading ? (
+            <FeedSkeleton count={5} />
+          ) : allPosts.length === 0 ? (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
+            </ThemedView>
+          ) : (
+            <>
+              {allPosts.map((item) => (
+                <View key={`${item.post.uri}-${item.post.indexedAt}`}>{renderFeedItem({ item })}</View>
+              ))}
+              {isFetchingNextPage && (
+                <ThemedView style={styles.loadingMore}>
+                  <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
+                </ThemedView>
+              )}
+            </>
+          )}
+        </ScrollView>
       ) : (
         <ThemedView style={styles.selectFeedPrompt}>
           <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>

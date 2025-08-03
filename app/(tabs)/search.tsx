@@ -130,28 +130,28 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push(`/profile/${encodeURIComponent(profile.handle)}`)}
+        onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
-          {profile.avatar && (
+          {profile.avatar ? (
             <Image
               source={{ uri: profile.avatar }}
               style={styles.profileAvatar}
               contentFit="cover"
               placeholder={require('@/assets/images/partial-react-logo.png')}
             />
-          )}
+          ) : null}
           <ThemedView style={styles.profileInfo}>
             <ThemedText style={[styles.displayName, { color: textColor }]}>
               {profile.displayName || profile.handle}
             </ThemedText>
             <ThemedText style={[styles.handle, { color: textColor }]}>@{profile.handle}</ThemedText>
-            {profile.description && (
+            {profile.description ? (
               <ThemedText style={[styles.description, { color: textColor }]} numberOfLines={2}>
                 {profile.description}
               </ThemedText>
-            )}
+            ) : null}
             <Labels labels={profile.labels} maxLabels={3} />
           </ThemedView>
         </ThemedView>
@@ -199,7 +199,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(post.uri)}`);
+          router.push('/post/' + encodeURIComponent(post.uri));
         }}
       />
     );
@@ -282,7 +282,7 @@ export default function SearchScreen() {
         </TouchableOpacity>
       </ThemedView>
 
-      {searchQuery && allResults.length > 0 && <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />}
+      {searchQuery && allResults.length > 0 ? <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} /> : null}
 
       <FlatList
         ref={flatListRef}

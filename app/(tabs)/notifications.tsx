@@ -1,7 +1,8 @@
+import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
-import { Dimensions, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -209,9 +210,9 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
           <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
-          {notification.type === 'reply' && <ThemedText style={styles.replyIndicator}>Reply to you</ThemedText>}
+          {notification.type === 'reply' ? <ThemedText style={styles.replyIndicator}>Reply to you</ThemedText> : null}
         </View>
-        {!notification.isRead && <View style={styles.unreadIndicator} />}
+        {!notification.isRead ? <View style={styles.unreadIndicator} /> : null}
       </View>
       {notification.postContent && (
         <View style={styles.postContentContainer}>
@@ -334,6 +335,7 @@ export default function NotificationsScreen() {
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
+  const { isLargeScreen } = useResponsive();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -402,47 +404,40 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+    <ScrollView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
       <ThemedView style={styles.header}>
         <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
       </ThemedView>
 
-      <FlatList
-        ref={flatListRef}
-        data={groupedNotifications}
-        renderItem={renderNotification}
-        keyExtractor={(item) => item.id}
-        style={styles.notificationsList}
-        contentContainerStyle={styles.notificationsListContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ThemedView style={styles.loadingMore}>
-              <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
-            </ThemedView>
-          ) : null
-        }
-        ListEmptyComponent={
-          isLoading ? (
-            <ThemedView style={styles.skeletonContainer}>
-              {Array.from({ length: 12 }).map((_, index) => (
-                <NotificationSkeleton key={index} />
-              ))}
-            </ThemedView>
-          ) : (
-            renderEmptyState()
-          )
-        }
-      />
-    </ThemedView>
+      <View style={styles.notificationsList}>
+        {isLoading ? (
+          <ThemedView style={styles.skeletonContainer}>
+            {Array.from({ length: 12 }).map((_, index) => (
+              <NotificationSkeleton key={index} />
+            ))}
+          </ThemedView>
+        ) : groupedNotifications.length === 0 ? (
+          renderEmptyState()
+        ) : (
+          <>
+            {groupedNotifications.map((item) => (
+              <View key={item.id}>{renderNotification({ item })}</View>
+            ))}
+            {isFetchingNextPage && (
+              <ThemedView style={styles.loadingMore}>
+                <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
+              </ThemedView>
+            )}
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // Remove all flex constraints to allow natural flow
   },
   header: {
     paddingHorizontal: 16,
@@ -619,7 +614,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   notificationsList: {
-    flex: 1,
+    // Remove flex constraint to allow content to expand
   },
   notificationsListContent: {
     paddingBottom: 16, // Add some padding at the bottom for the footer

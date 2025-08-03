@@ -247,7 +247,7 @@ export default function ConversationScreen() {
               maxLength={500}
             />
             <TouchableOpacity
-              style={[styles.sendButton, !messageText.trim() && styles.sendButtonDisabled]}
+              style={[styles.sendButton, !messageText.trim() ? styles.sendButtonDisabled : null]}
               onPress={handleSendMessage}
               disabled={!messageText.trim()}
             >

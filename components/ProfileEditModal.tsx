@@ -71,7 +71,7 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
 
             <TouchableOpacity
               onPress={handleSave}
-              style={[styles.headerButton, (!isFormChanged || isLoading) && styles.headerButtonDisabled]}
+              style={[styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null]}
               disabled={!isFormChanged || isLoading}
             >
               <ThemedText style={[styles.headerButtonText, { color: isFormChanged && !isLoading ? '#007AFF' : '#8E8E93' }]}>
