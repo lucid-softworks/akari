@@ -146,6 +146,8 @@ export default function HomeScreen() {
           viewer: item.post.viewer,
           facets: (item.post.record as any)?.facets,
           replyTo,
+          uri: item.post.uri,
+          cid: item.post.cid,
         }}
         onPress={() => {
           router.push(`/post/${encodeURIComponent(item.post.uri)}`);

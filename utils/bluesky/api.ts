@@ -91,11 +91,11 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   async getAuthorFeed(
-    accessJwt: string, 
-    actor: string, 
-    limit: number = 20, 
+    accessJwt: string,
+    actor: string,
+    limit: number = 20,
     cursor?: string,
-    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads'
+    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads',
   ): Promise<BlueskyFeedResponse> {
     return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor, filter);
   }
@@ -125,6 +125,15 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyStarterPacksResponse> {
     return this.feeds.getAuthorStarterpacks(accessJwt, actor, limit, cursor);
+  }
+
+  // Like/Unlike methods
+  async likePost(accessJwt: string, postUri: string, postCid: string, userDid: string) {
+    return this.feeds.likePost(accessJwt, postUri, postCid, userDid);
+  }
+
+  async unlikePost(accessJwt: string, likeUri: string, userDid: string) {
+    return this.feeds.unlikePost(accessJwt, likeUri, userDid);
   }
 
   // Conversation methods

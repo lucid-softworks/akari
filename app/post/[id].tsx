@@ -169,6 +169,8 @@ export default function PostDetailScreen() {
           labels: postItem.labels,
           viewer: postItem.viewer,
           facets: (postItem.record as any)?.facets,
+          uri: postItem.uri,
+          cid: postItem.cid,
         }}
       />
     );
@@ -206,6 +208,8 @@ export default function PostDetailScreen() {
           labels: parentPost.labels,
           viewer: parentPost.viewer,
           facets: (parentPost.record as any)?.facets,
+          uri: parentPost.uri,
+          cid: parentPost.cid,
         }}
       />
     );
@@ -237,6 +241,8 @@ export default function PostDetailScreen() {
           labels: rootPost.labels,
           viewer: rootPost.viewer,
           facets: (rootPost.record as any)?.facets,
+          uri: rootPost.uri,
+          cid: rootPost.cid,
         }}
       />
     );
@@ -324,6 +330,8 @@ export default function PostDetailScreen() {
                 labels: mainPost?.labels,
                 viewer: mainPost?.viewer,
                 facets: (mainPost?.record as any)?.facets,
+                uri: mainPost?.uri,
+                cid: mainPost?.cid,
               }}
             />
           </View>

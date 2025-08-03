@@ -13,6 +13,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/utils/bluesky/types';
@@ -60,6 +61,9 @@ type PostCardProps = {
         tag?: string;
       }[];
     }[];
+    /** Post URI and CID for like functionality */
+    uri?: string;
+    cid?: string;
   };
   onPress?: () => void;
 };
@@ -70,6 +74,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
     [key: string]: { width: number; height: number };
   }>({});
   const { t } = useTranslation();
+  const likeMutation = useLikePost();
 
   const borderColor = useThemeColor(
     {
@@ -89,6 +94,26 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   const handleProfilePress = () => {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+  };
+
+  const handleLikePress = () => {
+    if (!post.uri || !post.cid) return;
+
+    if (!!post.viewer?.like) {
+      // Unlike the post
+      likeMutation.mutate({
+        postUri: post.uri,
+        likeUri: post.viewer.like,
+        action: 'unlike',
+      });
+    } else {
+      // Like the post
+      likeMutation.mutate({
+        postUri: post.uri,
+        postCid: post.cid,
+        action: 'like',
+      });
+    }
   };
 
   const handleImageLoad = (imageUrl: string, width: number, height: number) => {
@@ -541,7 +566,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
         </ThemedView>
-        <ThemedView style={styles.interactionItem}>
+        <TouchableOpacity style={styles.interactionItem} onPress={handleLikePress} activeOpacity={0.7}>
           <IconSymbol
             name={post.viewer?.like ? 'heart.fill' : 'heart'}
             size={16}
@@ -549,7 +574,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
             style={styles.interactionIcon}
           />
           <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
-        </ThemedView>
+        </TouchableOpacity>
       </ThemedView>
     </>
   );

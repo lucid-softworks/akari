@@ -195,6 +195,8 @@ export default function SearchScreen() {
           viewer: post.viewer,
           facets: (post.record as any)?.facets,
           replyTo,
+          uri: post.uri,
+          cid: post.cid,
         }}
         onPress={() => {
           router.push(`/post/${encodeURIComponent(post.uri)}`);

@@ -105,11 +105,11 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @returns Promise resolving to author feed data
    */
   async getAuthorFeed(
-    accessJwt: string, 
-    actor: string, 
-    limit: number = 20, 
+    accessJwt: string,
+    actor: string,
+    limit: number = 20,
     cursor?: string,
-    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads'
+    filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads',
   ): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       actor,
@@ -205,6 +205,58 @@ export class BlueskyFeeds extends BlueskyApiClient {
 
     return this.makeAuthenticatedRequest<BlueskyStarterPacksResponse>('/app.bsky.graph.getActorStarterPacks', accessJwt, {
       params,
+    });
+  }
+
+  /**
+   * Likes a post
+   * @param accessJwt - Valid access JWT token
+   * @param postUri - The post's URI
+   * @param postCid - The post's CID
+   * @param userDid - The user's DID (required for repo field)
+   * @returns Promise resolving to like operation result
+   */
+  async likePost(accessJwt: string, postUri: string, postCid: string, userDid: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.feed.like',
+        record: {
+          subject: {
+            uri: postUri,
+            cid: postCid,
+          },
+          createdAt: new Date().toISOString(),
+          $type: 'app.bsky.feed.like',
+        },
+      },
+    });
+  }
+
+  /**
+   * Unlikes a post
+   * @param accessJwt - Valid access JWT token
+   * @param likeUri - The like record's URI to delete
+   * @param userDid - The user's DID (required for repo field)
+   * @returns Promise resolving to unlike operation result
+   */
+  async unlikePost(accessJwt: string, likeUri: string, userDid: string) {
+    // Extract the rkey from the like URI
+    // URI format: at://did:plc:xxx/app.bsky.feed.like/rkey
+    const rkey = likeUri.split('/').pop();
+
+    if (!rkey) {
+      throw new Error('Invalid like URI: could not extract rkey');
+    }
+
+    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        collection: 'app.bsky.feed.like',
+        repo: userDid,
+        rkey: rkey,
+      },
     });
   }
 }

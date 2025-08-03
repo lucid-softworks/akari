@@ -54,6 +54,8 @@ export function MediaTab({ handle }: MediaTabProps) {
           viewer: item.viewer,
           facets: (item.record as any)?.facets,
           replyTo,
+          uri: item.uri,
+          cid: item.cid,
         }}
         onPress={() => {
           router.push(`/post/${encodeURIComponent(item.uri)}`);
