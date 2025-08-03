@@ -2,9 +2,11 @@ import { BlueskyApiClient } from './client';
 import type {
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
+  BlueskyLikeResponse,
   BlueskyPostView,
   BlueskyStarterPacksResponse,
   BlueskyThreadResponse,
+  BlueskyUnlikeResponse,
 } from './types';
 
 /**
@@ -216,8 +218,8 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param userDid - The user's DID (required for repo field)
    * @returns Promise resolving to like operation result
    */
-  async likePost(accessJwt: string, postUri: string, postCid: string, userDid: string) {
-    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
+  async likePost(accessJwt: string, postUri: string, postCid: string, userDid: string): Promise<BlueskyLikeResponse> {
+    return this.makeAuthenticatedRequest<BlueskyLikeResponse>('/com.atproto.repo.createRecord', accessJwt, {
       method: 'POST',
       body: {
         repo: userDid,
@@ -241,7 +243,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param userDid - The user's DID (required for repo field)
    * @returns Promise resolving to unlike operation result
    */
-  async unlikePost(accessJwt: string, likeUri: string, userDid: string) {
+  async unlikePost(accessJwt: string, likeUri: string, userDid: string): Promise<BlueskyUnlikeResponse> {
     // Extract the rkey from the like URI
     // URI format: at://did:plc:xxx/app.bsky.feed.like/rkey
     const rkey = likeUri.split('/').pop();
@@ -250,7 +252,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
       throw new Error('Invalid like URI: could not extract rkey');
     }
 
-    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+    return this.makeAuthenticatedRequest<BlueskyUnlikeResponse>('/com.atproto.repo.deleteRecord', accessJwt, {
       method: 'POST',
       body: {
         collection: 'app.bsky.feed.like',

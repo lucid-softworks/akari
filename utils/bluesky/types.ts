@@ -244,6 +244,38 @@ export type BlueskyPostView = {
 };
 
 /**
+ * Response from like operations
+ */
+export type BlueskyLikeResponse = {
+  /** The like record's URI */
+  uri: string;
+  /** The like record's CID */
+  cid: string;
+  /** Commit information */
+  commit: {
+    /** Commit CID */
+    cid: string;
+    /** Commit revision */
+    rev: string;
+  };
+  /** Validation status */
+  validationStatus: string;
+};
+
+/**
+ * Response from unlike operations
+ */
+export type BlueskyUnlikeResponse = {
+  /** Commit information */
+  commit: {
+    /** Commit CID */
+    cid: string;
+    /** Commit revision */
+    rev: string;
+  };
+};
+
+/**
  * Bluesky conversation member
  */
 export type BlueskyConvoMember = {

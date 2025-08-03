@@ -4,5 +4,18 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "cSpell.words": ["bsky", "convo", "Convos", "repost", "reposted", "reposts", "Starterpack", "Starterpacks", "unliking"]
+  "cSpell.words": [
+    "atproto",
+    "bsky",
+    "convo",
+    "Convos",
+    "repost",
+    "reposted",
+    "reposts",
+    "rkey",
+    "Starterpack",
+    "Starterpacks",
+    "Unlikes",
+    "unliking"
+  ]
 }
