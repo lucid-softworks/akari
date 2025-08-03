@@ -9,7 +9,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -51,11 +51,11 @@ function CustomTabButton(props: any) {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { data: currentAccount, isLoading: isLoadingCurrentAccount } = useCurrentAccount();
+  const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
-  if (isLoadingCurrentAccount) {
+  if (isLoading) {
     return (
       <ThemedView
         style={{
@@ -70,7 +70,7 @@ export default function TabLayout() {
   }
 
   // Don't render tabs if not authenticated or still loading
-  if (!currentAccount) {
+  if (!authStatus?.isAuthenticated) {
     return <Redirect href="/(auth)/signin" />;
   }
 
