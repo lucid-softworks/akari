@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -72,6 +72,17 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
     }
   };
 
+  const renderItem = ({ item }: { item: BlueskyStarterPack }) => <StarterpackItem starterpack={item} />;
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <ThemedView style={styles.loadingFooter}>
+        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
+      </ThemedView>
+    );
+  };
+
   if (isLoading) {
     return <FeedSkeleton count={3} />;
   }
@@ -85,38 +96,23 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
   }
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollViewContent}
+    <FlatList
+      data={starterpacks}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}
+      ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
-      onScroll={(event) => {
-        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-        const paddingToBottom = 20;
-        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-          handleLoadMore();
-        }
-      }}
-      scrollEventThrottle={400}
-    >
-      {starterpacks.map((starterpack) => (
-        <StarterpackItem key={starterpack.uri} starterpack={starterpack} />
-      ))}
-
-      {isFetchingNextPage && (
-        <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-        </ThemedView>
-      )}
-    </ScrollView>
+      scrollEnabled={false}
+      style={styles.flatList}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  flatList: {
     flex: 1,
-  },
-  scrollViewContent: {
-    paddingVertical: 8,
   },
   emptyContainer: {
     paddingVertical: 60,

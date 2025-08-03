@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -75,6 +75,17 @@ export function FeedsTab({ handle }: FeedsTabProps) {
     }
   };
 
+  const renderItem = ({ item }: { item: BlueskyFeed }) => <FeedItem feed={item} />;
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <ThemedView style={styles.loadingFooter}>
+        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
+      </ThemedView>
+    );
+  };
+
   if (isLoading) {
     return <FeedSkeleton count={3} />;
   }
@@ -88,38 +99,23 @@ export function FeedsTab({ handle }: FeedsTabProps) {
   }
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollViewContent}
+    <FlatList
+      data={feeds}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}
+      ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
-      onScroll={(event) => {
-        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-        const paddingToBottom = 20;
-        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-          handleLoadMore();
-        }
-      }}
-      scrollEventThrottle={400}
-    >
-      {feeds.map((feed) => (
-        <FeedItem key={feed.uri} feed={feed} />
-      ))}
-
-      {isFetchingNextPage && (
-        <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-        </ThemedView>
-      )}
-    </ScrollView>
+      scrollEnabled={false}
+      style={styles.flatList}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  flatList: {
     flex: 1,
-  },
-  scrollViewContent: {
-    paddingVertical: 8,
   },
   emptyContainer: {
     paddingVertical: 60,

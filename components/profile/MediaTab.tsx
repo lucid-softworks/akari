@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -23,6 +23,54 @@ export function MediaTab({ handle }: MediaTabProps) {
     }
   };
 
+  const renderItem = ({ item }: { item: any }) => {
+    const replyTo = item.reply?.parent
+      ? {
+          author: {
+            handle: item.reply.parent.author?.handle || 'unknown',
+            displayName: item.reply.parent.author?.displayName,
+          },
+          text: item.reply.parent.record?.text as string | undefined,
+        }
+      : undefined;
+
+    return (
+      <PostCard
+        post={{
+          id: item.uri,
+          text: item.record?.text as string | undefined,
+          author: {
+            handle: item.author.handle,
+            displayName: item.author.displayName,
+            avatar: item.author.avatar,
+          },
+          createdAt: formatRelativeTime(item.indexedAt),
+          likeCount: item.likeCount || 0,
+          commentCount: item.replyCount || 0,
+          repostCount: item.repostCount || 0,
+          embed: item.embed,
+          embeds: item.embeds,
+          labels: item.labels,
+          viewer: item.viewer,
+          facets: (item.record as any)?.facets,
+          replyTo,
+        }}
+        onPress={() => {
+          router.push(`/post/${encodeURIComponent(item.uri)}`);
+        }}
+      />
+    );
+  };
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <ThemedView style={styles.loadingFooter}>
+        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
+      </ThemedView>
+    );
+  };
+
   if (isLoading) {
     return <FeedSkeleton count={3} />;
   }
@@ -35,78 +83,26 @@ export function MediaTab({ handle }: MediaTabProps) {
     );
   }
 
+  const filteredMedia = media.filter((item) => item && item.uri);
+
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollViewContent}
+    <FlatList
+      data={filteredMedia}
+      renderItem={renderItem}
+      keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}
+      ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
-      onScroll={(event) => {
-        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-        const paddingToBottom = 20;
-        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-          handleLoadMore();
-        }
-      }}
-      scrollEventThrottle={400}
-    >
-      {media
-        .filter((item) => item && item.uri)
-        .map((item) => {
-          const replyTo = item.reply?.parent
-            ? {
-                author: {
-                  handle: item.reply.parent.author?.handle || 'unknown',
-                  displayName: item.reply.parent.author?.displayName,
-                },
-                text: item.reply.parent.record?.text as string | undefined,
-              }
-            : undefined;
-
-          return (
-            <PostCard
-              key={`${item.uri}-${item.indexedAt}`}
-              post={{
-                id: item.uri,
-                text: item.record?.text as string | undefined,
-                author: {
-                  handle: item.author.handle,
-                  displayName: item.author.displayName,
-                  avatar: item.author.avatar,
-                },
-                createdAt: formatRelativeTime(item.indexedAt),
-                likeCount: item.likeCount || 0,
-                commentCount: item.replyCount || 0,
-                repostCount: item.repostCount || 0,
-                embed: item.embed,
-                embeds: item.embeds,
-                labels: item.labels,
-                viewer: item.viewer,
-                facets: (item.record as any)?.facets,
-                replyTo,
-              }}
-              onPress={() => {
-                router.push(`/post/${encodeURIComponent(item.uri)}`);
-              }}
-            />
-          );
-        })}
-
-      {/* Loading indicator for infinite scroll */}
-      {isFetchingNextPage && (
-        <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-        </ThemedView>
-      )}
-    </ScrollView>
+      scrollEnabled={false}
+      style={styles.flatList}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  flatList: {
     flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 20,
   },
   emptyContainer: {
     paddingVertical: 40,
