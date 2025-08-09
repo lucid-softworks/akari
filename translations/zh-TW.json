@@ -51,7 +51,11 @@
       "removeAccount": "移除帳戶",
       "translationReport": "翻譯報告",
       "checkConsoleForReport": "查看控制台取得缺失翻譯報告",
-      "checkOutImage": "查看這張圖片！"
+      "checkOutImage": "查看這張圖片！",
+      "save": "儲存",
+      "saving": "儲存中...",
+      "mute": "靜音",
+      "unmute": "取消靜音"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "載入通知時發生錯誤",
       "somethingWentWrong": "發生了一些問題",
       "loadingMoreNotifications": "載入更多通知...",
-      "loadingNotifications": "載入通知中..."
+      "loadingNotifications": "載入通知中...",
+      "pushNotifications": "推播通知",
+      "permissionStatus": "權限狀態",
+      "permissionGranted": "權限已授予",
+      "permissionDenied": "權限被拒絕",
+      "permissionUndetermined": "權限未確定",
+      "permissionUnknown": "權限未知",
+      "enablePushNotifications": "啟用推播通知",
+      "pushNotificationsEnabled": "推播通知已啟用",
+      "pushNotificationsDisabled": "推播通知已停用",
+      "sound": "聲音",
+      "playSoundForNotifications": "為通知播放聲音",
+      "vibration": "震動",
+      "vibrateForNotifications": "為通知震動",
+      "badge": "徽章",
+      "showBadgeOnAppIcon": "在應用程式圖示上顯示徽章",
+      "permissionsGranted": "權限已授予",
+      "youWillReceiveNotifications": "您將收到通知",
+      "permissionsDenied": "權限被拒絕",
+      "pleaseEnableInSettings": "請在設定中啟用",
+      "error": "錯誤",
+      "failedToEnable": "啟用失敗",
+      "openSettings": "開啟設定",
+      "iosSettingsInstructions": "前往設定 > 通知 > Akari",
+      "androidSettingsInstructions": "前往設定 > 應用程式 > Akari > 通知",
+      "badgeCleared": "徽章已清除",
+      "badgeClearedMessage": "徽章已被清除",
+      "clearBadge": "清除徽章",
+      "testNotifications": "測試通知",
+      "testNotificationsDescription": "傳送測試通知",
+      "sendTest": "傳送測試",
+      "scheduleTest": "安排測試",
+      "sending": "傳送中...",
+      "scheduling": "安排中..."
     },
     "profile": {
       "media": "媒體",
@@ -142,7 +179,26 @@
       "starterpacks": "入門包",
       "noVideos": "暫無影片",
       "noFeeds": "暫無動態",
-      "noStarterpacks": "暫無入門包"
+      "noStarterpacks": "暫無入門包",
+      "youHaveBlockedUser": "您已封鎖此使用者",
+      "mutualBlock": "你們互相封鎖了",
+      "copyLink": "複製連結",
+      "addToLists": "新增到清單",
+      "muteAccount": "靜音帳戶",
+      "reportAccount": "檢舉帳戶",
+      "linkCopied": "連結已複製到剪貼簿",
+      "linkCopyError": "複製連結失敗",
+      "muteConfirmation": "靜音此帳戶？",
+      "unmuteConfirmation": "取消此帳戶的靜音？",
+      "reportConfirmation": "檢舉此帳戶？",
+      "editProfile": "編輯個人資料",
+      "displayName": "顯示名稱",
+      "description": "描述",
+      "displayNamePlaceholder": "輸入您的顯示名稱",
+      "descriptionPlaceholder": "告訴我們關於您自己",
+      "noBanner": "無橫幅",
+      "profileUpdated": "個人資料更新成功",
+      "profileUpdateError": "更新個人資料失敗"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -158,7 +214,14 @@
       "loadingPost": "載入貼文...",
       "postNotFound": "找不到貼文",
       "comments": "留言 ({{count}})",
-      "noCommentsYet": "尚無留言"
+      "noCommentsYet": "尚無留言",
+      "newPost": "新貼文",
+      "reply": "回覆",
+      "post": "發布",
+      "posting": "發布中...",
+      "replyingTo": "回覆",
+      "replyPlaceholder": "寫下你的回覆...",
+      "postPlaceholder": "發生了什麼？"
     },
     "messages": {
       "typeMessage": "輸入訊息..."
@@ -169,7 +232,8 @@
       "about": "關於",
       "version": "版本",
       "checkMissingTranslations": "🔍 檢查缺失的翻譯",
-      "developmentTool": "開發工具"
+      "developmentTool": "開發工具",
+      "notifications": "通知"
     }
   }
 }

@@ -51,7 +51,11 @@
       "removeAccount": "Konto entfernen",
       "translationReport": "Übersetzungsbericht",
       "checkConsoleForReport": "Überprüfe die Konsole für den Bericht über fehlende Übersetzungen",
-      "checkOutImage": "Schau dir dieses Bild an!"
+      "checkOutImage": "Schau dir dieses Bild an!",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "mute": "Stumm",
+      "unmute": "Stummschaltung aufheben"
     },
     "auth": {
       "fillAllFields": "Bitte fülle alle Felder aus",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Fehler beim Laden der Benachrichtigungen",
       "somethingWentWrong": "Etwas ist schiefgelaufen",
       "loadingMoreNotifications": "Lade weitere Benachrichtigungen...",
-      "loadingNotifications": "Lade Benachrichtigungen..."
+      "loadingNotifications": "Lade Benachrichtigungen...",
+      "pushNotifications": "Push-Benachrichtigungen",
+      "permissionStatus": "Berechtigungsstatus",
+      "permissionGranted": "Berechtigung erteilt",
+      "permissionDenied": "Berechtigung verweigert",
+      "permissionUndetermined": "Berechtigung unbestimmt",
+      "permissionUnknown": "Berechtigung unbekannt",
+      "enablePushNotifications": "Push-Benachrichtigungen aktivieren",
+      "pushNotificationsEnabled": "Push-Benachrichtigungen aktiviert",
+      "pushNotificationsDisabled": "Push-Benachrichtigungen deaktiviert",
+      "sound": "Ton",
+      "playSoundForNotifications": "Ton für Benachrichtigungen abspielen",
+      "vibration": "Vibration",
+      "vibrateForNotifications": "Für Benachrichtigungen vibrieren",
+      "badge": "Badge",
+      "showBadgeOnAppIcon": "Badge auf App-Symbol anzeigen",
+      "permissionsGranted": "Berechtigungen erteilt",
+      "youWillReceiveNotifications": "Sie erhalten Benachrichtigungen",
+      "permissionsDenied": "Berechtigungen verweigert",
+      "pleaseEnableInSettings": "Bitte in den Einstellungen aktivieren",
+      "error": "Fehler",
+      "failedToEnable": "Aktivierung fehlgeschlagen",
+      "openSettings": "Einstellungen öffnen",
+      "iosSettingsInstructions": "Gehen Sie zu Einstellungen > Benachrichtigungen > Akari",
+      "androidSettingsInstructions": "Gehen Sie zu Einstellungen > Apps > Akari > Benachrichtigungen",
+      "badgeCleared": "Badge gelöscht",
+      "badgeClearedMessage": "Badge wurde gelöscht",
+      "clearBadge": "Badge löschen",
+      "testNotifications": "Benachrichtigungen testen",
+      "testNotificationsDescription": "Testbenachrichtigung senden",
+      "sendTest": "Test senden",
+      "scheduleTest": "Test planen",
+      "sending": "Senden...",
+      "scheduling": "Planen..."
     },
     "profile": {
       "media": "Medien",
@@ -142,7 +179,26 @@
       "removeAccountConfirmation": "Bist du sicher, dass du @{{handle}} entfernen möchtest?",
       "posts": "Beiträge {{count}}",
       "followers": "Follower {{count}}",
-      "following": "Folgt {{count}}"
+      "following": "Folgt {{count}}",
+      "youHaveBlockedUser": "Sie haben diesen Benutzer blockiert",
+      "mutualBlock": "Sie haben sich gegenseitig blockiert",
+      "copyLink": "Link kopieren",
+      "addToLists": "Zu Listen hinzufügen",
+      "muteAccount": "Konto stummschalten",
+      "reportAccount": "Konto melden",
+      "linkCopied": "Link in Zwischenablage kopiert",
+      "linkCopyError": "Link konnte nicht kopiert werden",
+      "muteConfirmation": "Dieses Konto stummschalten?",
+      "unmuteConfirmation": "Stummschaltung für dieses Konto aufheben?",
+      "reportConfirmation": "Dieses Konto melden?",
+      "editProfile": "Profil bearbeiten",
+      "displayName": "Anzeigename",
+      "description": "Beschreibung",
+      "displayNamePlaceholder": "Geben Sie Ihren Anzeigenamen ein",
+      "descriptionPlaceholder": "Erzählen Sie uns von sich",
+      "noBanner": "Kein Banner",
+      "profileUpdated": "Profil erfolgreich aktualisiert",
+      "profileUpdateError": "Profil konnte nicht aktualisiert werden"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",
@@ -158,7 +214,14 @@
       "loadingPost": "Lade Beitrag...",
       "postNotFound": "Beitrag nicht gefunden",
       "comments": "Kommentare ({{count}})",
-      "noCommentsYet": "Noch keine Kommentare"
+      "noCommentsYet": "Noch keine Kommentare",
+      "newPost": "Neuer Beitrag",
+      "reply": "Antworten",
+      "post": "Beitrag",
+      "posting": "Beitrag wird veröffentlicht...",
+      "replyingTo": "Antworten auf",
+      "replyPlaceholder": "Schreiben Sie Ihre Antwort...",
+      "postPlaceholder": "Was passiert?"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben..."
@@ -169,7 +232,8 @@
       "about": "Über",
       "version": "Version",
       "checkMissingTranslations": "🔍 Fehlende Übersetzungen prüfen",
-      "developmentTool": "Entwicklungstool"
+      "developmentTool": "Entwicklungstool",
+      "notifications": "Benachrichtigungen"
     }
   }
 }

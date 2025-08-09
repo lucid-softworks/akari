@@ -51,7 +51,11 @@
       "removeAccount": "移除账户",
       "translationReport": "翻译报告",
       "checkConsoleForReport": "查看控制台获取缺失翻译报告",
-      "checkOutImage": "查看这张图片！"
+      "checkOutImage": "查看这张图片！",
+      "save": "保存",
+      "saving": "保存中...",
+      "mute": "静音",
+      "unmute": "取消静音"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "加载通知时出错",
       "somethingWentWrong": "出现错误",
       "loadingMoreNotifications": "加载更多通知...",
-      "loadingNotifications": "加载通知中..."
+      "loadingNotifications": "加载通知中...",
+      "pushNotifications": "推送通知",
+      "permissionStatus": "权限状态",
+      "permissionGranted": "权限已授予",
+      "permissionDenied": "权限被拒绝",
+      "permissionUndetermined": "权限未确定",
+      "permissionUnknown": "权限未知",
+      "enablePushNotifications": "启用推送通知",
+      "pushNotificationsEnabled": "推送通知已启用",
+      "pushNotificationsDisabled": "推送通知已禁用",
+      "sound": "声音",
+      "playSoundForNotifications": "为通知播放声音",
+      "vibration": "震动",
+      "vibrateForNotifications": "为通知震动",
+      "badge": "徽章",
+      "showBadgeOnAppIcon": "在应用图标上显示徽章",
+      "permissionsGranted": "权限已授予",
+      "youWillReceiveNotifications": "您将收到通知",
+      "permissionsDenied": "权限被拒绝",
+      "pleaseEnableInSettings": "请在设置中启用",
+      "error": "错误",
+      "failedToEnable": "启用失败",
+      "openSettings": "打开设置",
+      "iosSettingsInstructions": "前往设置 > 通知 > Akari",
+      "androidSettingsInstructions": "前往设置 > 应用 > Akari > 通知",
+      "badgeCleared": "徽章已清除",
+      "badgeClearedMessage": "徽章已被清除",
+      "clearBadge": "清除徽章",
+      "testNotifications": "测试通知",
+      "testNotificationsDescription": "发送测试通知",
+      "sendTest": "发送测试",
+      "scheduleTest": "安排测试",
+      "sending": "发送中...",
+      "scheduling": "安排中..."
     },
     "profile": {
       "media": "媒体",
@@ -142,7 +179,26 @@
       "starterpacks": "入门包",
       "noVideos": "暂无视频",
       "noFeeds": "暂无信息流",
-      "noStarterpacks": "暂无入门包"
+      "noStarterpacks": "暂无入门包",
+      "youHaveBlockedUser": "您已屏蔽此用户",
+      "mutualBlock": "你们互相屏蔽了",
+      "copyLink": "复制链接",
+      "addToLists": "添加到列表",
+      "muteAccount": "静音账户",
+      "reportAccount": "举报账户",
+      "linkCopied": "链接已复制到剪贴板",
+      "linkCopyError": "复制链接失败",
+      "muteConfirmation": "静音此账户？",
+      "unmuteConfirmation": "取消此账户的静音？",
+      "reportConfirmation": "举报此账户？",
+      "editProfile": "编辑个人资料",
+      "displayName": "显示名称",
+      "description": "描述",
+      "displayNamePlaceholder": "输入您的显示名称",
+      "descriptionPlaceholder": "告诉我们关于您自己",
+      "noBanner": "无横幅",
+      "profileUpdated": "个人资料更新成功",
+      "profileUpdateError": "更新个人资料失败"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -158,7 +214,14 @@
       "loadingPost": "加载帖子...",
       "postNotFound": "未找到帖子",
       "comments": "评论 ({{count}})",
-      "noCommentsYet": "暂无评论"
+      "noCommentsYet": "暂无评论",
+      "newPost": "新帖子",
+      "reply": "回复",
+      "post": "发布",
+      "posting": "发布中...",
+      "replyingTo": "回复",
+      "replyPlaceholder": "写下你的回复...",
+      "postPlaceholder": "发生了什么？"
     },
     "messages": {
       "typeMessage": "输入消息..."
@@ -169,7 +232,8 @@
       "about": "关于",
       "version": "版本",
       "checkMissingTranslations": "🔍 检查缺失的翻译",
-      "developmentTool": "开发工具"
+      "developmentTool": "开发工具",
+      "notifications": "通知"
     }
   }
 }

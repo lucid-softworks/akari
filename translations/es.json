@@ -51,7 +51,11 @@
       "removeAccount": "Eliminar cuenta",
       "translationReport": "Reporte de traducción",
       "checkConsoleForReport": "Revisa la consola para el reporte de traducciones faltantes",
-      "checkOutImage": "¡Mira esta imagen!"
+      "checkOutImage": "¡Mira esta imagen!",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "mute": "Silenciar",
+      "unmute": "Activar sonido"
     },
     "auth": {
       "fillAllFields": "Por favor completa todos los campos",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Error al cargar notificaciones",
       "somethingWentWrong": "Algo salió mal",
       "loadingMoreNotifications": "Cargando más notificaciones...",
-      "loadingNotifications": "Cargando notificaciones..."
+      "loadingNotifications": "Cargando notificaciones...",
+      "pushNotifications": "Notificaciones Push",
+      "permissionStatus": "Estado de Permisos",
+      "permissionGranted": "Permiso Concedido",
+      "permissionDenied": "Permiso Denegado",
+      "permissionUndetermined": "Permiso Indeterminado",
+      "permissionUnknown": "Permiso Desconocido",
+      "enablePushNotifications": "Activar Notificaciones Push",
+      "pushNotificationsEnabled": "Notificaciones Push Activadas",
+      "pushNotificationsDisabled": "Notificaciones Push Desactivadas",
+      "sound": "Sonido",
+      "playSoundForNotifications": "Reproducir Sonido para Notificaciones",
+      "vibration": "Vibración",
+      "vibrateForNotifications": "Vibrar para Notificaciones",
+      "badge": "Insignia",
+      "showBadgeOnAppIcon": "Mostrar Insignia en el Icono de la App",
+      "permissionsGranted": "Permisos Concedidos",
+      "youWillReceiveNotifications": "Recibirás notificaciones",
+      "permissionsDenied": "Permisos Denegados",
+      "pleaseEnableInSettings": "Por favor activa en Configuración",
+      "error": "Error",
+      "failedToEnable": "Error al activar",
+      "openSettings": "Abrir Configuración",
+      "iosSettingsInstructions": "Ve a Configuración > Notificaciones > Akari",
+      "androidSettingsInstructions": "Ve a Configuración > Aplicaciones > Akari > Notificaciones",
+      "badgeCleared": "Insignia Limpiada",
+      "badgeClearedMessage": "La insignia ha sido limpiada",
+      "clearBadge": "Limpiar Insignia",
+      "testNotifications": "Probar Notificaciones",
+      "testNotificationsDescription": "Enviar notificación de prueba",
+      "sendTest": "Enviar Prueba",
+      "scheduleTest": "Programar Prueba",
+      "sending": "Enviando...",
+      "scheduling": "Programando..."
     },
     "profile": {
       "media": "Medios",
@@ -142,7 +179,26 @@
       "removeAccountConfirmation": "¿Estás seguro de que quieres eliminar @{{handle}}?",
       "posts": "Publicaciones {{count}}",
       "followers": "Seguidores {{count}}",
-      "following": "Siguiendo {{count}}"
+      "following": "Siguiendo {{count}}",
+      "youHaveBlockedUser": "Has bloqueado a este usuario",
+      "mutualBlock": "Se han bloqueado mutuamente",
+      "copyLink": "Copiar enlace",
+      "addToLists": "Añadir a listas",
+      "muteAccount": "Silenciar cuenta",
+      "reportAccount": "Reportar cuenta",
+      "linkCopied": "Enlace copiado al portapapeles",
+      "linkCopyError": "Error al copiar enlace",
+      "muteConfirmation": "¿Silenciar esta cuenta?",
+      "unmuteConfirmation": "¿Activar sonido de esta cuenta?",
+      "reportConfirmation": "¿Reportar esta cuenta?",
+      "editProfile": "Editar perfil",
+      "displayName": "Nombre para mostrar",
+      "description": "Descripción",
+      "displayNamePlaceholder": "Ingresa tu nombre para mostrar",
+      "descriptionPlaceholder": "Cuéntanos sobre ti",
+      "noBanner": "Sin banner",
+      "profileUpdated": "Perfil actualizado exitosamente",
+      "profileUpdateError": "Error al actualizar perfil"
     },
     "feed": {
       "loadingMorePosts": "Cargando más publicaciones...",
@@ -158,7 +214,14 @@
       "loadingPost": "Cargando publicación...",
       "postNotFound": "Publicación no encontrada",
       "comments": "Comentarios ({{count}})",
-      "noCommentsYet": "Aún no hay comentarios"
+      "noCommentsYet": "Aún no hay comentarios",
+      "newPost": "Nueva Publicación",
+      "reply": "Responder",
+      "post": "Publicar",
+      "posting": "Publicando...",
+      "replyingTo": "Respondiendo a",
+      "replyPlaceholder": "Escribe tu respuesta...",
+      "postPlaceholder": "¿Qué está pasando?"
     },
     "messages": {
       "typeMessage": "Escribe un mensaje..."
@@ -169,7 +232,8 @@
       "about": "Acerca de",
       "version": "Versión",
       "checkMissingTranslations": "🔍 Verificar traducciones faltantes",
-      "developmentTool": "Herramienta de desarrollo"
+      "developmentTool": "Herramienta de desarrollo",
+      "notifications": "Notificaciones"
     }
   }
 }

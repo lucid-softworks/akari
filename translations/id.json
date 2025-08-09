@@ -51,7 +51,11 @@
       "removeAccount": "Hapus Akun",
       "translationReport": "Laporan Terjemahan",
       "checkConsoleForReport": "Periksa konsol untuk laporan terjemahan yang hilang",
-      "checkOutImage": "Lihat gambar ini!"
+      "checkOutImage": "Lihat gambar ini!",
+      "save": "Simpan",
+      "saving": "Menyimpan...",
+      "mute": "Bisukan",
+      "unmute": "Aktifkan Suara"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Kesalahan memuat notifikasi",
       "somethingWentWrong": "Terjadi kesalahan",
       "loadingMoreNotifications": "Memuat lebih banyak notifikasi...",
-      "loadingNotifications": "Memuat notifikasi..."
+      "loadingNotifications": "Memuat notifikasi...",
+      "pushNotifications": "Notifikasi Push",
+      "permissionStatus": "Status Izin",
+      "permissionGranted": "Izin Diberikan",
+      "permissionDenied": "Izin Ditolak",
+      "permissionUndetermined": "Izin Tidak Ditentukan",
+      "permissionUnknown": "Izin Tidak Diketahui",
+      "enablePushNotifications": "Aktifkan Notifikasi Push",
+      "pushNotificationsEnabled": "Notifikasi Push Diaktifkan",
+      "pushNotificationsDisabled": "Notifikasi Push Dinonaktifkan",
+      "sound": "Suara",
+      "playSoundForNotifications": "Putar Suara untuk Notifikasi",
+      "vibration": "Getaran",
+      "vibrateForNotifications": "Bergetar untuk Notifikasi",
+      "badge": "Lencana",
+      "showBadgeOnAppIcon": "Tampilkan Lencana pada Ikon Aplikasi",
+      "permissionsGranted": "Izin Diberikan",
+      "youWillReceiveNotifications": "Anda akan menerima notifikasi",
+      "permissionsDenied": "Izin Ditolak",
+      "pleaseEnableInSettings": "Aktifkan di Pengaturan",
+      "error": "Kesalahan",
+      "failedToEnable": "Gagal mengaktifkan",
+      "openSettings": "Buka Pengaturan",
+      "iosSettingsInstructions": "Pergi ke Pengaturan > Notifikasi > Akari",
+      "androidSettingsInstructions": "Pergi ke Pengaturan > Aplikasi > Akari > Notifikasi",
+      "badgeCleared": "Lencana Dihapus",
+      "badgeClearedMessage": "Lencana telah dihapus",
+      "clearBadge": "Hapus Lencana",
+      "testNotifications": "Tes Notifikasi",
+      "testNotificationsDescription": "Kirim notifikasi tes",
+      "sendTest": "Kirim Tes",
+      "scheduleTest": "Jadwalkan Tes",
+      "sending": "Mengirim...",
+      "scheduling": "Menjadwalkan..."
     },
     "profile": {
       "media": "Media",
@@ -142,7 +179,26 @@
       "starterpacks": "Starterpacks",
       "noVideos": "Belum ada video",
       "noFeeds": "Belum ada feed",
-      "noStarterpacks": "Belum ada starterpack"
+      "noStarterpacks": "Belum ada starterpack",
+      "youHaveBlockedUser": "Anda telah memblokir pengguna ini",
+      "mutualBlock": "Anda telah saling memblokir",
+      "copyLink": "Salin Tautan",
+      "addToLists": "Tambahkan ke Daftar",
+      "muteAccount": "Bisukan Akun",
+      "reportAccount": "Laporkan Akun",
+      "linkCopied": "Tautan disalin ke clipboard",
+      "linkCopyError": "Gagal menyalin tautan",
+      "muteConfirmation": "Bisukan akun ini?",
+      "unmuteConfirmation": "Aktifkan suara akun ini?",
+      "reportConfirmation": "Laporkan akun ini?",
+      "editProfile": "Edit Profil",
+      "displayName": "Nama Tampilan",
+      "description": "Deskripsi",
+      "displayNamePlaceholder": "Masukkan nama tampilan Anda",
+      "descriptionPlaceholder": "Ceritakan tentang diri Anda",
+      "noBanner": "Tidak Ada Banner",
+      "profileUpdated": "Profil berhasil diperbarui",
+      "profileUpdateError": "Gagal memperbarui profil"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -158,7 +214,14 @@
       "loadingPost": "Memuat postingan...",
       "postNotFound": "Postingan tidak ditemukan",
       "comments": "Komentar ({{count}})",
-      "noCommentsYet": "Belum ada komentar"
+      "noCommentsYet": "Belum ada komentar",
+      "newPost": "Post Baru",
+      "reply": "Balas",
+      "post": "Kirim",
+      "posting": "Mengirim...",
+      "replyingTo": "Membalas",
+      "replyPlaceholder": "Tulis balasan Anda...",
+      "postPlaceholder": "Apa yang sedang terjadi?"
     },
     "messages": {
       "typeMessage": "Ketik pesan..."
@@ -169,7 +232,8 @@
       "about": "Tentang",
       "version": "Versi",
       "checkMissingTranslations": "🔍 Periksa Terjemahan yang Hilang",
-      "developmentTool": "Alat Pengembangan"
+      "developmentTool": "Alat Pengembangan",
+      "notifications": "Notifikasi"
     }
   }
 }

@@ -51,7 +51,11 @@
       "removeAccount": "Usuń konto",
       "translationReport": "Raport tłumaczenia",
       "checkConsoleForReport": "Sprawdź konsolę, aby uzyskać raport o brakujących tłumaczeniach",
-      "checkOutImage": "Sprawdź ten obraz!"
+      "checkOutImage": "Sprawdź ten obraz!",
+      "save": "Zapisz",
+      "saving": "Zapisywanie...",
+      "mute": "Wycisz",
+      "unmute": "Włącz dźwięk"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Błąd ładowania powiadomień",
       "somethingWentWrong": "Coś poszło nie tak",
       "loadingMoreNotifications": "Ładowanie większej liczby powiadomień...",
-      "loadingNotifications": "Ładowanie powiadomień..."
+      "loadingNotifications": "Ładowanie powiadomień...",
+      "pushNotifications": "Powiadomienia Push",
+      "permissionStatus": "Status Uprawnień",
+      "permissionGranted": "Uprawnienie Przyznane",
+      "permissionDenied": "Uprawnienie Odrzucone",
+      "permissionUndetermined": "Uprawnienie Nieokreślone",
+      "permissionUnknown": "Uprawnienie Nieznane",
+      "enablePushNotifications": "Włącz Powiadomienia Push",
+      "pushNotificationsEnabled": "Powiadomienia Push Włączone",
+      "pushNotificationsDisabled": "Powiadomienia Push Wyłączone",
+      "sound": "Dźwięk",
+      "playSoundForNotifications": "Odtwarzaj Dźwięk dla Powiadomień",
+      "vibration": "Wibracje",
+      "vibrateForNotifications": "Wibruj dla Powiadomień",
+      "badge": "Odznaka",
+      "showBadgeOnAppIcon": "Pokaż Odznakę na Ikonie Aplikacji",
+      "permissionsGranted": "Uprawnienia Przyznane",
+      "youWillReceiveNotifications": "Będziesz otrzymywać powiadomienia",
+      "permissionsDenied": "Uprawnienia Odrzucone",
+      "pleaseEnableInSettings": "Włącz w Ustawieniach",
+      "error": "Błąd",
+      "failedToEnable": "Nie udało się włączyć",
+      "openSettings": "Otwórz Ustawienia",
+      "iosSettingsInstructions": "Przejdź do Ustawienia > Powiadomienia > Akari",
+      "androidSettingsInstructions": "Przejdź do Ustawienia > Aplikacje > Akari > Powiadomienia",
+      "badgeCleared": "Odznaka Wyczyszczona",
+      "badgeClearedMessage": "Odznaka została wyczyszczona",
+      "clearBadge": "Wyczyść Odznakę",
+      "testNotifications": "Testuj Powiadomienia",
+      "testNotificationsDescription": "Wyślij powiadomienie testowe",
+      "sendTest": "Wyślij Test",
+      "scheduleTest": "Zaplanuj Test",
+      "sending": "Wysyłanie...",
+      "scheduling": "Planowanie..."
     },
     "profile": {
       "media": "Media",
@@ -142,7 +179,26 @@
       "starterpacks": "Starterpacks",
       "noVideos": "Brak filmów",
       "noFeeds": "Brak kanałów",
-      "noStarterpacks": "Brak starterpacków"
+      "noStarterpacks": "Brak starterpacków",
+      "youHaveBlockedUser": "Zablokowałeś tego użytkownika",
+      "mutualBlock": "Zablokowaliście się nawzajem",
+      "copyLink": "Kopiuj link",
+      "addToLists": "Dodaj do list",
+      "muteAccount": "Wycisz konto",
+      "reportAccount": "Zgłoś konto",
+      "linkCopied": "Link skopiowany do schowka",
+      "linkCopyError": "Nie udało się skopiować linku",
+      "muteConfirmation": "Wyciszyć to konto?",
+      "unmuteConfirmation": "Włączyć dźwięk dla tego konta?",
+      "reportConfirmation": "Zgłosić to konto?",
+      "editProfile": "Edytuj profil",
+      "displayName": "Nazwa wyświetlana",
+      "description": "Opis",
+      "displayNamePlaceholder": "Wprowadź nazwę wyświetlaną",
+      "descriptionPlaceholder": "Opowiedz nam o sobie",
+      "noBanner": "Brak banera",
+      "profileUpdated": "Profil zaktualizowany pomyślnie",
+      "profileUpdateError": "Nie udało się zaktualizować profilu"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",
@@ -158,7 +214,14 @@
       "loadingPost": "Ładowanie posta...",
       "postNotFound": "Nie znaleziono posta",
       "comments": "Komentarze ({{count}})",
-      "noCommentsYet": "Brak komentarzy"
+      "noCommentsYet": "Brak komentarzy",
+      "newPost": "Nowy Post",
+      "reply": "Odpowiedz",
+      "post": "Opublikuj",
+      "posting": "Publikowanie...",
+      "replyingTo": "Odpowiadanie na",
+      "replyPlaceholder": "Napisz swoją odpowiedź...",
+      "postPlaceholder": "Co się dzieje?"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość..."
@@ -169,7 +232,8 @@
       "about": "O aplikacji",
       "version": "Wersja",
       "checkMissingTranslations": "🔍 Sprawdź brakujące tłumaczenia",
-      "developmentTool": "Narzędzie deweloperskie"
+      "developmentTool": "Narzędzie deweloperskie",
+      "notifications": "Powiadomienia"
     }
   }
 }

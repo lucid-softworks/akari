@@ -51,7 +51,11 @@
       "removeAccount": "Remover conta",
       "translationReport": "Relatório de tradução",
       "checkConsoleForReport": "Verifique o console para o relatório de traduções ausentes",
-      "checkOutImage": "Confira esta imagem!"
+      "checkOutImage": "Confira esta imagem!",
+      "save": "Salvar",
+      "saving": "Salvando...",
+      "mute": "Silenciar",
+      "unmute": "Ativar som"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Erro ao carregar notificações",
       "somethingWentWrong": "Algo deu errado",
       "loadingMoreNotifications": "Carregando mais notificações...",
-      "loadingNotifications": "Carregando notificações..."
+      "loadingNotifications": "Carregando notificações...",
+      "pushNotifications": "Notificações Push",
+      "permissionStatus": "Status de Permissão",
+      "permissionGranted": "Permissão Concedida",
+      "permissionDenied": "Permissão Negada",
+      "permissionUndetermined": "Permissão Indeterminada",
+      "permissionUnknown": "Permissão Desconhecida",
+      "enablePushNotifications": "Ativar Notificações Push",
+      "pushNotificationsEnabled": "Notificações Push Ativadas",
+      "pushNotificationsDisabled": "Notificações Push Desativadas",
+      "sound": "Som",
+      "playSoundForNotifications": "Tocar Som para Notificações",
+      "vibration": "Vibração",
+      "vibrateForNotifications": "Vibrar para Notificações",
+      "badge": "Distintivo",
+      "showBadgeOnAppIcon": "Mostrar Distintivo no Ícone do App",
+      "permissionsGranted": "Permissões Concedidas",
+      "youWillReceiveNotifications": "Você receberá notificações",
+      "permissionsDenied": "Permissões Negadas",
+      "pleaseEnableInSettings": "Ative nas Configurações",
+      "error": "Erro",
+      "failedToEnable": "Falha ao ativar",
+      "openSettings": "Abrir Configurações",
+      "iosSettingsInstructions": "Vá para Configurações > Notificações > Akari",
+      "androidSettingsInstructions": "Vá para Configurações > Aplicativos > Akari > Notificações",
+      "badgeCleared": "Distintivo Limpo",
+      "badgeClearedMessage": "O distintivo foi limpo",
+      "clearBadge": "Limpar Distintivo",
+      "testNotifications": "Testar Notificações",
+      "testNotificationsDescription": "Enviar notificação de teste",
+      "sendTest": "Enviar Teste",
+      "scheduleTest": "Agendar Teste",
+      "sending": "Enviando...",
+      "scheduling": "Agendando..."
     },
     "profile": {
       "media": "Mídia",
@@ -142,7 +179,26 @@
       "starterpacks": "Starterpacks",
       "noVideos": "Ainda sem vídeos",
       "noFeeds": "Ainda sem feeds",
-      "noStarterpacks": "Ainda sem starterpacks"
+      "noStarterpacks": "Ainda sem starterpacks",
+      "youHaveBlockedUser": "Você bloqueou este usuário",
+      "mutualBlock": "Vocês se bloquearam mutuamente",
+      "copyLink": "Copiar link",
+      "addToLists": "Adicionar às listas",
+      "muteAccount": "Silenciar conta",
+      "reportAccount": "Reportar conta",
+      "linkCopied": "Link copiado para a área de transferência",
+      "linkCopyError": "Erro ao copiar link",
+      "muteConfirmation": "Silenciar esta conta?",
+      "unmuteConfirmation": "Ativar som desta conta?",
+      "reportConfirmation": "Reportar esta conta?",
+      "editProfile": "Editar perfil",
+      "displayName": "Nome de exibição",
+      "description": "Descrição",
+      "displayNamePlaceholder": "Digite seu nome de exibição",
+      "descriptionPlaceholder": "Conte-nos sobre você",
+      "noBanner": "Sem banner",
+      "profileUpdated": "Perfil atualizado com sucesso",
+      "profileUpdateError": "Erro ao atualizar perfil"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",
@@ -158,7 +214,14 @@
       "loadingPost": "Carregando post...",
       "postNotFound": "Post não encontrado",
       "comments": "Comentários ({{count}})",
-      "noCommentsYet": "Ainda não há comentários"
+      "noCommentsYet": "Ainda não há comentários",
+      "newPost": "Nova Publicação",
+      "reply": "Responder",
+      "post": "Publicar",
+      "posting": "Publicando...",
+      "replyingTo": "Respondendo a",
+      "replyPlaceholder": "Escreva sua resposta...",
+      "postPlaceholder": "O que está acontecendo?"
     },
     "messages": {
       "typeMessage": "Digite uma mensagem..."
@@ -169,7 +232,8 @@
       "about": "Sobre",
       "version": "Versão",
       "checkMissingTranslations": "🔍 Verificar traduções ausentes",
-      "developmentTool": "Ferramenta de desenvolvimento"
+      "developmentTool": "Ferramenta de desenvolvimento",
+      "notifications": "Notificações"
     }
   }
 }

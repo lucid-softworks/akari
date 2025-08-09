@@ -51,7 +51,11 @@
       "removeAccount": "アカウントを削除",
       "translationReport": "翻訳レポート",
       "checkConsoleForReport": "不足している翻訳のレポートについてはコンソールを確認してください",
-      "checkOutImage": "この画像をチェックしてください！"
+      "checkOutImage": "この画像をチェックしてください！",
+      "save": "保存",
+      "saving": "保存中...",
+      "mute": "ミュート",
+      "unmute": "ミュート解除"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "通知の読み込みエラー",
       "somethingWentWrong": "何か問題が発生しました",
       "loadingMoreNotifications": "さらに通知を読み込み中...",
-      "loadingNotifications": "通知を読み込み中..."
+      "loadingNotifications": "通知を読み込み中...",
+      "pushNotifications": "プッシュ通知",
+      "permissionStatus": "権限ステータス",
+      "permissionGranted": "権限付与済み",
+      "permissionDenied": "権限拒否",
+      "permissionUndetermined": "権限未決定",
+      "permissionUnknown": "権限不明",
+      "enablePushNotifications": "プッシュ通知を有効にする",
+      "pushNotificationsEnabled": "プッシュ通知有効",
+      "pushNotificationsDisabled": "プッシュ通知無効",
+      "sound": "音",
+      "playSoundForNotifications": "通知で音を再生",
+      "vibration": "振動",
+      "vibrateForNotifications": "通知で振動",
+      "badge": "バッジ",
+      "showBadgeOnAppIcon": "アプリアイコンにバッジを表示",
+      "permissionsGranted": "権限付与済み",
+      "youWillReceiveNotifications": "通知を受信します",
+      "permissionsDenied": "権限拒否",
+      "pleaseEnableInSettings": "設定で有効にしてください",
+      "error": "エラー",
+      "failedToEnable": "有効化に失敗",
+      "openSettings": "設定を開く",
+      "iosSettingsInstructions": "設定 > 通知 > Akari に移動",
+      "androidSettingsInstructions": "設定 > アプリ > Akari > 通知 に移動",
+      "badgeCleared": "バッジクリア",
+      "badgeClearedMessage": "バッジがクリアされました",
+      "clearBadge": "バッジをクリア",
+      "testNotifications": "通知をテスト",
+      "testNotificationsDescription": "テスト通知を送信",
+      "sendTest": "テスト送信",
+      "scheduleTest": "テスト予約",
+      "sending": "送信中...",
+      "scheduling": "予約中..."
     },
     "profile": {
       "media": "メディア",
@@ -142,7 +179,26 @@
       "starterpacks": "スターターパック",
       "noVideos": "動画はまだありません",
       "noFeeds": "フィードはまだありません",
-      "noStarterpacks": "スターターパックはまだありません"
+      "noStarterpacks": "スターターパックはまだありません",
+      "youHaveBlockedUser": "このユーザーをブロックしました",
+      "mutualBlock": "お互いにブロックしました",
+      "copyLink": "リンクをコピー",
+      "addToLists": "リストに追加",
+      "muteAccount": "アカウントをミュート",
+      "reportAccount": "アカウントを報告",
+      "linkCopied": "リンクをクリップボードにコピーしました",
+      "linkCopyError": "リンクのコピーに失敗しました",
+      "muteConfirmation": "このアカウントをミュートしますか？",
+      "unmuteConfirmation": "このアカウントのミュートを解除しますか？",
+      "reportConfirmation": "このアカウントを報告しますか？",
+      "editProfile": "プロフィールを編集",
+      "displayName": "表示名",
+      "description": "説明",
+      "displayNamePlaceholder": "表示名を入力",
+      "descriptionPlaceholder": "あなたについて教えてください",
+      "noBanner": "バナーなし",
+      "profileUpdated": "プロフィールが正常に更新されました",
+      "profileUpdateError": "プロフィールの更新に失敗しました"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",
@@ -158,7 +214,14 @@
       "loadingPost": "投稿を読み込み中...",
       "postNotFound": "投稿が見つかりません",
       "comments": "コメント ({{count}})",
-      "noCommentsYet": "まだコメントがありません"
+      "noCommentsYet": "まだコメントがありません",
+      "newPost": "新しい投稿",
+      "reply": "返信",
+      "post": "投稿",
+      "posting": "投稿中...",
+      "replyingTo": "返信中",
+      "replyPlaceholder": "返信を書いてください...",
+      "postPlaceholder": "何が起こっていますか？"
     },
     "messages": {
       "typeMessage": "メッセージを入力..."
@@ -169,7 +232,8 @@
       "about": "について",
       "version": "バージョン",
       "checkMissingTranslations": "🔍 不足している翻訳をチェック",
-      "developmentTool": "開発ツール"
+      "developmentTool": "開発ツール",
+      "notifications": "通知"
     }
   }
 }

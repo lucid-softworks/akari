@@ -214,7 +214,14 @@
       "loadingPost": "Loading post...",
       "postNotFound": "Post not found",
       "comments": "Comments ({{count}})",
-      "noCommentsYet": "No comments yet"
+      "noCommentsYet": "No comments yet",
+      "newPost": "New Post",
+      "reply": "Reply",
+      "post": "Post",
+      "posting": "Posting...",
+      "replyingTo": "Replying to",
+      "replyPlaceholder": "Write your reply...",
+      "postPlaceholder": "What's happening?"
     },
     "messages": {
       "typeMessage": "Type a message..."

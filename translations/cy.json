@@ -51,7 +51,11 @@
       "removeAccount": "Tynnu Cyfrif",
       "translationReport": "Adroddiad Cyfieithiad",
       "checkConsoleForReport": "Gwiriwch y consol am adroddiad cyfieithiadau coll",
-      "checkOutImage": "Edrychwch ar y ddelwedd hon!"
+      "checkOutImage": "Edrychwch ar y ddelwedd hon!",
+      "save": "Cadw",
+      "saving": "Cadw...",
+      "mute": "Tewi",
+      "unmute": "Ailgychwyn Sain"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Gwall wrth lwytho hysbysiadau",
       "somethingWentWrong": "Aeth rhywbeth o'i le",
       "loadingMoreNotifications": "Wrthi'n llwytho mwy o hysbysiadau...",
-      "loadingNotifications": "Wrthi'n llwytho hysbysiadau..."
+      "loadingNotifications": "Wrthi'n llwytho hysbysiadau...",
+      "pushNotifications": "Hysbysiadau Gwthio",
+      "permissionStatus": "Statws Caniatâd",
+      "permissionGranted": "Caniatâd a Ryddhawyd",
+      "permissionDenied": "Caniatâd a Wrthodwyd",
+      "permissionUndetermined": "Caniatâd Heb ei Benderfynu",
+      "permissionUnknown": "Caniatâd Anhysbys",
+      "enablePushNotifications": "Galluogi Hysbysiadau Gwthio",
+      "pushNotificationsEnabled": "Hysbysiadau Gwthio wedi eu Galluogi",
+      "pushNotificationsDisabled": "Hysbysiadau Gwthio wedi eu Hanalluogi",
+      "sound": "Sain",
+      "playSoundForNotifications": "Chwarae Sain ar gyfer Hysbysiadau",
+      "vibration": "Dirgryniad",
+      "vibrateForNotifications": "Dirgrynu ar gyfer Hysbysiadau",
+      "badge": "Bathodyn",
+      "showBadgeOnAppIcon": "Dangos Bathodyn ar Eicon yr Ap",
+      "permissionsGranted": "Caniatâdau a Ryddhawyd",
+      "youWillReceiveNotifications": "Byddwch yn derbyn hysbysiadau",
+      "permissionsDenied": "Caniatâdau a Wrthodwyd",
+      "pleaseEnableInSettings": "Galluogwch yn y Gosodiadau",
+      "error": "Gwall",
+      "failedToEnable": "Methu galluogi",
+      "openSettings": "Agor Gosodiadau",
+      "iosSettingsInstructions": "Ewch i Gosodiadau > Hysbysiadau > Akari",
+      "androidSettingsInstructions": "Ewch i Gosodiadau > Apiau > Akari > Hysbysiadau",
+      "badgeCleared": "Bathodyn wedi ei Glirio",
+      "badgeClearedMessage": "Mae r bathodyn wedi ei glirio",
+      "clearBadge": "Clirio Bathodyn",
+      "testNotifications": "Profi Hysbysiadau",
+      "testNotificationsDescription": "Anfon hysbysiad prawf",
+      "sendTest": "Anfon Prawf",
+      "scheduleTest": "Amseru Prawf",
+      "sending": "Anfon...",
+      "scheduling": "Amseru..."
     },
     "profile": {
       "media": "Cyfryngau",
@@ -142,7 +179,26 @@
       "starterpacks": "Pecynnau Cychwyn",
       "noVideos": "Dim fideos eto",
       "noFeeds": "Dim porthiant eto",
-      "noStarterpacks": "Dim pecynnau cychwyn eto"
+      "noStarterpacks": "Dim pecynnau cychwyn eto",
+      "youHaveBlockedUser": "Rydych wedi blocio y defnyddiwr hwn",
+      "mutualBlock": "Rydych wedi blocio eich gilydd",
+      "copyLink": "Copio Dolen",
+      "addToLists": "Ychwanegu at Restrau",
+      "muteAccount": "Tewi Cyfrif",
+      "reportAccount": "Adrodd ar Gyfrif",
+      "linkCopied": "Dolen wedi ei chopio i clipfwrdd",
+      "linkCopyError": "Methu copio dolen",
+      "muteConfirmation": "Tewi y cyfrif hwn?",
+      "unmuteConfirmation": "Ailgychwyn sain y cyfrif hwn?",
+      "reportConfirmation": "Adrodd ar y cyfrif hwn?",
+      "editProfile": "Golygu Proffil",
+      "displayName": "Enw Arddangos",
+      "description": "Disgrifiad",
+      "displayNamePlaceholder": "Rhowch eich enw arddangos",
+      "descriptionPlaceholder": "Dywedwch wrthym amdanoch chi",
+      "noBanner": "Dim Baner",
+      "profileUpdated": "Proffil wedi ei ddiweddaru yn llwyddiannus",
+      "profileUpdateError": "Methu diweddaru proffil"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -158,7 +214,14 @@
       "loadingPost": "Wrth lwytho'r post...",
       "postNotFound": "Heb ddod o hyd i'r post",
       "comments": "Sylwadau ({{count}})",
-      "noCommentsYet": "Dim sylwadau eto"
+      "noCommentsYet": "Dim sylwadau eto",
+      "newPost": "Post Newydd",
+      "reply": "Ateb",
+      "post": "Postio",
+      "posting": "Postio...",
+      "replyingTo": "Ateb i",
+      "replyPlaceholder": "Ysgrifennwch eich ateb...",
+      "postPlaceholder": "Beth sy'n digwydd?"
     },
     "messages": {
       "typeMessage": "Teipiwch neges..."
@@ -169,7 +232,8 @@
       "about": "Am",
       "version": "Fersiwn",
       "checkMissingTranslations": "🔍 Gwiriwch Cyfieithiadau Coll",
-      "developmentTool": "Offeryn datblygu"
+      "developmentTool": "Offeryn datblygu",
+      "notifications": "Hysbysiadau"
     }
   }
 }

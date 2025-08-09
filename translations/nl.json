@@ -51,7 +51,11 @@
       "removeAccount": "Account verwijderen",
       "translationReport": "Vertalingsrapport",
       "checkConsoleForReport": "Controleer de console voor het rapport over ontbrekende vertalingen",
-      "checkOutImage": "Bekijk deze afbeelding!"
+      "checkOutImage": "Bekijk deze afbeelding!",
+      "save": "Opslaan",
+      "saving": "Opslaan...",
+      "mute": "Dempen",
+      "unmute": "Dempen opheffen"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Fout bij laden van meldingen",
       "somethingWentWrong": "Er is iets misgegaan",
       "loadingMoreNotifications": "Meer meldingen laden...",
-      "loadingNotifications": "Meldingen laden..."
+      "loadingNotifications": "Meldingen laden...",
+      "pushNotifications": "Push-meldingen",
+      "permissionStatus": "Toestemmingsstatus",
+      "permissionGranted": "Toestemming verleend",
+      "permissionDenied": "Toestemming geweigerd",
+      "permissionUndetermined": "Toestemming onbepaald",
+      "permissionUnknown": "Toestemming onbekend",
+      "enablePushNotifications": "Push-meldingen inschakelen",
+      "pushNotificationsEnabled": "Push-meldingen ingeschakeld",
+      "pushNotificationsDisabled": "Push-meldingen uitgeschakeld",
+      "sound": "Geluid",
+      "playSoundForNotifications": "Geluid afspelen voor meldingen",
+      "vibration": "Trillingen",
+      "vibrateForNotifications": "Trillen voor meldingen",
+      "badge": "Badge",
+      "showBadgeOnAppIcon": "Badge tonen op app-pictogram",
+      "permissionsGranted": "Toestemmingen verleend",
+      "youWillReceiveNotifications": "U ontvangt meldingen",
+      "permissionsDenied": "Toestemmingen geweigerd",
+      "pleaseEnableInSettings": "Schakel in bij Instellingen",
+      "error": "Fout",
+      "failedToEnable": "Inschakelen mislukt",
+      "openSettings": "Instellingen openen",
+      "iosSettingsInstructions": "Ga naar Instellingen > Meldingen > Akari",
+      "androidSettingsInstructions": "Ga naar Instellingen > Apps > Akari > Meldingen",
+      "badgeCleared": "Badge gewist",
+      "badgeClearedMessage": "Badge is gewist",
+      "clearBadge": "Badge wissen",
+      "testNotifications": "Meldingen testen",
+      "testNotificationsDescription": "Testmelding verzenden",
+      "sendTest": "Test verzenden",
+      "scheduleTest": "Test plannen",
+      "sending": "Verzenden...",
+      "scheduling": "Plannen..."
     },
     "profile": {
       "media": "Media",
@@ -142,7 +179,26 @@
       "starterpacks": "Starterpacks",
       "noVideos": "Nog geen video's",
       "noFeeds": "Nog geen feeds",
-      "noStarterpacks": "Nog geen starterpacks"
+      "noStarterpacks": "Nog geen starterpacks",
+      "youHaveBlockedUser": "U heeft deze gebruiker geblokkeerd",
+      "mutualBlock": "U heeft elkaar geblokkeerd",
+      "copyLink": "Link kopiëren",
+      "addToLists": "Toevoegen aan lijsten",
+      "muteAccount": "Account dempen",
+      "reportAccount": "Account rapporteren",
+      "linkCopied": "Link gekopieerd naar klembord",
+      "linkCopyError": "Link kon niet worden gekopieerd",
+      "muteConfirmation": "Dit account dempen?",
+      "unmuteConfirmation": "Dempen voor dit account opheffen?",
+      "reportConfirmation": "Dit account rapporteren?",
+      "editProfile": "Profiel bewerken",
+      "displayName": "Weergavenaam",
+      "description": "Beschrijving",
+      "displayNamePlaceholder": "Voer uw weergavenaam in",
+      "descriptionPlaceholder": "Vertel ons over uzelf",
+      "noBanner": "Geen banner",
+      "profileUpdated": "Profiel succesvol bijgewerkt",
+      "profileUpdateError": "Profiel kon niet worden bijgewerkt"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",
@@ -158,7 +214,14 @@
       "loadingPost": "Bericht laden...",
       "postNotFound": "Bericht niet gevonden",
       "comments": "Reacties ({{count}})",
-      "noCommentsYet": "Nog geen reacties"
+      "noCommentsYet": "Nog geen reacties",
+      "newPost": "Nieuw Bericht",
+      "reply": "Beantwoorden",
+      "post": "Bericht",
+      "posting": "Bericht plaatsen...",
+      "replyingTo": "Beantwoorden aan",
+      "replyPlaceholder": "Schrijf je antwoord...",
+      "postPlaceholder": "Wat gebeurt er?"
     },
     "messages": {
       "typeMessage": "Typ een bericht..."
@@ -169,7 +232,8 @@
       "about": "Over",
       "version": "Versie",
       "checkMissingTranslations": "🔍 Controleer ontbrekende vertalingen",
-      "developmentTool": "Ontwikkelingshulpmiddel"
+      "developmentTool": "Ontwikkelingshulpmiddel",
+      "notifications": "Meldingen"
     }
   }
 }

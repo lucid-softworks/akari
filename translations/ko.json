@@ -51,7 +51,11 @@
       "removeAccount": "계정 제거",
       "translationReport": "번역 보고서",
       "checkConsoleForReport": "누락된 번역 보고서는 콘솔을 확인하세요",
-      "checkOutImage": "이 이미지를 확인해보세요!"
+      "checkOutImage": "이 이미지를 확인해보세요!",
+      "save": "저장",
+      "saving": "저장 중...",
+      "mute": "음소거",
+      "unmute": "음소거 해제"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "알림 로딩 오류",
       "somethingWentWrong": "문제가 발생했습니다",
       "loadingMoreNotifications": "더 많은 알림 로딩 중...",
-      "loadingNotifications": "알림 로딩 중..."
+      "loadingNotifications": "알림 로딩 중...",
+      "pushNotifications": "푸시 알림",
+      "permissionStatus": "권한 상태",
+      "permissionGranted": "권한 허용됨",
+      "permissionDenied": "권한 거부됨",
+      "permissionUndetermined": "권한 미결정",
+      "permissionUnknown": "권한 알 수 없음",
+      "enablePushNotifications": "푸시 알림 활성화",
+      "pushNotificationsEnabled": "푸시 알림 활성화됨",
+      "pushNotificationsDisabled": "푸시 알림 비활성화됨",
+      "sound": "소리",
+      "playSoundForNotifications": "알림에 소리 재생",
+      "vibration": "진동",
+      "vibrateForNotifications": "알림에 진동",
+      "badge": "배지",
+      "showBadgeOnAppIcon": "앱 아이콘에 배지 표시",
+      "permissionsGranted": "권한 허용됨",
+      "youWillReceiveNotifications": "알림을 받게 됩니다",
+      "permissionsDenied": "권한 거부됨",
+      "pleaseEnableInSettings": "설정에서 활성화하세요",
+      "error": "오류",
+      "failedToEnable": "활성화 실패",
+      "openSettings": "설정 열기",
+      "iosSettingsInstructions": "설정 > 알림 > Akari로 이동",
+      "androidSettingsInstructions": "설정 > 앱 > Akari > 알림으로 이동",
+      "badgeCleared": "배지 지워짐",
+      "badgeClearedMessage": "배지가 지워졌습니다",
+      "clearBadge": "배지 지우기",
+      "testNotifications": "알림 테스트",
+      "testNotificationsDescription": "테스트 알림 보내기",
+      "sendTest": "테스트 보내기",
+      "scheduleTest": "테스트 예약",
+      "sending": "보내는 중...",
+      "scheduling": "예약 중..."
     },
     "profile": {
       "media": "미디어",
@@ -142,7 +179,26 @@
       "starterpacks": "스타터팩",
       "noVideos": "아직 동영상이 없습니다",
       "noFeeds": "아직 피드가 없습니다",
-      "noStarterpacks": "아직 스타터팩이 없습니다"
+      "noStarterpacks": "아직 스타터팩이 없습니다",
+      "youHaveBlockedUser": "이 사용자를 차단했습니다",
+      "mutualBlock": "서로 차단했습니다",
+      "copyLink": "링크 복사",
+      "addToLists": "목록에 추가",
+      "muteAccount": "계정 음소거",
+      "reportAccount": "계정 신고",
+      "linkCopied": "링크가 클립보드에 복사되었습니다",
+      "linkCopyError": "링크 복사에 실패했습니다",
+      "muteConfirmation": "이 계정을 음소거하시겠습니까?",
+      "unmuteConfirmation": "이 계정의 음소거를 해제하시겠습니까?",
+      "reportConfirmation": "이 계정을 신고하시겠습니까?",
+      "editProfile": "프로필 편집",
+      "displayName": "표시 이름",
+      "description": "설명",
+      "displayNamePlaceholder": "표시 이름을 입력하세요",
+      "descriptionPlaceholder": "자신에 대해 알려주세요",
+      "noBanner": "배너 없음",
+      "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
+      "profileUpdateError": "프로필 업데이트에 실패했습니다"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
@@ -158,7 +214,14 @@
       "loadingPost": "게시물 로딩 중...",
       "postNotFound": "게시물을 찾을 수 없습니다",
       "comments": "댓글 ({{count}})",
-      "noCommentsYet": "아직 댓글이 없습니다"
+      "noCommentsYet": "아직 댓글이 없습니다",
+      "newPost": "새 게시물",
+      "reply": "답장",
+      "post": "게시",
+      "posting": "게시 중...",
+      "replyingTo": "답장 중",
+      "replyPlaceholder": "답장을 작성하세요...",
+      "postPlaceholder": "무슨 일이 일어나고 있나요?"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요..."
@@ -169,7 +232,8 @@
       "about": "정보",
       "version": "버전",
       "checkMissingTranslations": "🔍 누락된 번역 확인",
-      "developmentTool": "개발 도구"
+      "developmentTool": "개발 도구",
+      "notifications": "알림"
     }
   }
 }

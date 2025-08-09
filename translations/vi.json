@@ -51,7 +51,11 @@
       "removeAccount": "Xóa tài khoản",
       "translationReport": "Báo cáo dịch thuật",
       "checkConsoleForReport": "Kiểm tra bảng điều khiển để xem báo cáo dịch thuật bị thiếu",
-      "checkOutImage": "Xem hình ảnh này!"
+      "checkOutImage": "Xem hình ảnh này!",
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "mute": "Tắt tiếng",
+      "unmute": "Bật tiếng"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Lỗi tải thông báo",
       "somethingWentWrong": "Đã xảy ra lỗi",
       "loadingMoreNotifications": "Đang tải thêm thông báo...",
-      "loadingNotifications": "Đang tải thông báo..."
+      "loadingNotifications": "Đang tải thông báo...",
+      "pushNotifications": "Thông Báo Đẩy",
+      "permissionStatus": "Trạng Thái Quyền",
+      "permissionGranted": "Quyền Được Cấp",
+      "permissionDenied": "Quyền Bị Từ Chối",
+      "permissionUndetermined": "Quyền Chưa Xác Định",
+      "permissionUnknown": "Quyền Không Xác Định",
+      "enablePushNotifications": "Bật Thông Báo Đẩy",
+      "pushNotificationsEnabled": "Thông Báo Đẩy Đã Bật",
+      "pushNotificationsDisabled": "Thông Báo Đẩy Đã Tắt",
+      "sound": "Âm Thanh",
+      "playSoundForNotifications": "Phát Âm Thanh Cho Thông Báo",
+      "vibration": "Rung",
+      "vibrateForNotifications": "Rung Cho Thông Báo",
+      "badge": "Huy Hiệu",
+      "showBadgeOnAppIcon": "Hiển Thị Huy Hiệu Trên Biểu Tượng Ứng Dụng",
+      "permissionsGranted": "Quyền Được Cấp",
+      "youWillReceiveNotifications": "Bạn sẽ nhận thông báo",
+      "permissionsDenied": "Quyền Bị Từ Chối",
+      "pleaseEnableInSettings": "Vui lòng bật trong Cài Đặt",
+      "error": "Lỗi",
+      "failedToEnable": "Bật Thất Bại",
+      "openSettings": "Mở Cài Đặt",
+      "iosSettingsInstructions": "Đi đến Cài Đặt > Thông Báo > Akari",
+      "androidSettingsInstructions": "Đi đến Cài Đặt > Ứng Dụng > Akari > Thông Báo",
+      "badgeCleared": "Huy Hiệu Đã Xóa",
+      "badgeClearedMessage": "Huy hiệu đã được xóa",
+      "clearBadge": "Xóa Huy Hiệu",
+      "testNotifications": "Kiểm Tra Thông Báo",
+      "testNotificationsDescription": "Gửi thông báo kiểm tra",
+      "sendTest": "Gửi Kiểm Tra",
+      "scheduleTest": "Lên Lịch Kiểm Tra",
+      "sending": "Đang Gửi...",
+      "scheduling": "Đang Lên Lịch..."
     },
     "profile": {
       "media": "Phương tiện",
@@ -142,7 +179,26 @@
       "starterpacks": "Gói khởi đầu",
       "noVideos": "Chưa có video",
       "noFeeds": "Chưa có nguồn cấp",
-      "noStarterpacks": "Chưa có gói khởi đầu"
+      "noStarterpacks": "Chưa có gói khởi đầu",
+      "youHaveBlockedUser": "Bạn đã chặn người dùng này",
+      "mutualBlock": "Bạn đã chặn lẫn nhau",
+      "copyLink": "Sao Chép Liên Kết",
+      "addToLists": "Thêm Vào Danh Sách",
+      "muteAccount": "Tắt Tiếng Tài Khoản",
+      "reportAccount": "Báo Cáo Tài Khoản",
+      "linkCopied": "Liên kết đã được sao chép vào bộ nhớ tạm",
+      "linkCopyError": "Sao chép liên kết thất bại",
+      "muteConfirmation": "Tắt tiếng tài khoản này?",
+      "unmuteConfirmation": "Bật tiếng tài khoản này?",
+      "reportConfirmation": "Báo cáo tài khoản này?",
+      "editProfile": "Chỉnh Sửa Hồ Sơ",
+      "displayName": "Tên Hiển Thị",
+      "description": "Mô Tả",
+      "displayNamePlaceholder": "Nhập tên hiển thị của bạn",
+      "descriptionPlaceholder": "Kể cho chúng tôi về bạn",
+      "noBanner": "Không Có Banner",
+      "profileUpdated": "Cập nhật hồ sơ thành công",
+      "profileUpdateError": "Cập nhật hồ sơ thất bại"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",
@@ -158,7 +214,14 @@
       "loadingPost": "Đang tải bài viết...",
       "postNotFound": "Không tìm thấy bài viết",
       "comments": "Bình luận ({{count}})",
-      "noCommentsYet": "Chưa có bình luận nào"
+      "noCommentsYet": "Chưa có bình luận nào",
+      "newPost": "Bài Đăng Mới",
+      "reply": "Trả Lời",
+      "post": "Đăng",
+      "posting": "Đang đăng...",
+      "replyingTo": "Trả lời",
+      "replyPlaceholder": "Viết câu trả lời của bạn...",
+      "postPlaceholder": "Chuyện gì đang xảy ra?"
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn..."
@@ -169,7 +232,8 @@
       "about": "Giới thiệu",
       "version": "Phiên bản",
       "checkMissingTranslations": "🔍 Kiểm tra bản dịch bị thiếu",
-      "developmentTool": "Công cụ phát triển"
+      "developmentTool": "Công cụ phát triển",
+      "notifications": "Thông Báo"
     }
   }
 }

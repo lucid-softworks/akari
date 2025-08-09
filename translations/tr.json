@@ -51,7 +51,11 @@
       "removeAccount": "Hesabı Kaldır",
       "translationReport": "Çeviri Raporu",
       "checkConsoleForReport": "Eksik çeviriler raporu için konsolu kontrol edin",
-      "checkOutImage": "Bu resme bakın!"
+      "checkOutImage": "Bu resme bakın!",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "mute": "Sessiz",
+      "unmute": "Sesi Aç"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Bildirimler yüklenirken hata",
       "somethingWentWrong": "Bir şeyler ters gitti",
       "loadingMoreNotifications": "Daha fazla bildirim yükleniyor...",
-      "loadingNotifications": "Bildirimler yükleniyor..."
+      "loadingNotifications": "Bildirimler yükleniyor...",
+      "pushNotifications": "Push Bildirimleri",
+      "permissionStatus": "İzin Durumu",
+      "permissionGranted": "İzin Verildi",
+      "permissionDenied": "İzin Reddedildi",
+      "permissionUndetermined": "İzin Belirsiz",
+      "permissionUnknown": "İzin Bilinmiyor",
+      "enablePushNotifications": "Push Bildirimlerini Etkinleştir",
+      "pushNotificationsEnabled": "Push Bildirimleri Etkin",
+      "pushNotificationsDisabled": "Push Bildirimleri Devre Dışı",
+      "sound": "Ses",
+      "playSoundForNotifications": "Bildirimler için Ses Çal",
+      "vibration": "Titreşim",
+      "vibrateForNotifications": "Bildirimler için Titreşim",
+      "badge": "Rozet",
+      "showBadgeOnAppIcon": "Uygulama Simgesinde Rozet Göster",
+      "permissionsGranted": "İzinler Verildi",
+      "youWillReceiveNotifications": "Bildirim alacaksınız",
+      "permissionsDenied": "İzinler Reddedildi",
+      "pleaseEnableInSettings": "Lütfen Ayarlarda etkinleştirin",
+      "error": "Hata",
+      "failedToEnable": "Etkinleştirme başarısız",
+      "openSettings": "Ayarları Aç",
+      "iosSettingsInstructions": "Ayarlar > Bildirimler > Akari'ye gidin",
+      "androidSettingsInstructions": "Ayarlar > Uygulamalar > Akari > Bildirimler'e gidin",
+      "badgeCleared": "Rozet Temizlendi",
+      "badgeClearedMessage": "Rozet temizlendi",
+      "clearBadge": "Rozeti Temizle",
+      "testNotifications": "Bildirimleri Test Et",
+      "testNotificationsDescription": "Test bildirimi gönder",
+      "sendTest": "Test Gönder",
+      "scheduleTest": "Test Planla",
+      "sending": "Gönderiliyor...",
+      "scheduling": "Planlanıyor..."
     },
     "profile": {
       "media": "Medya",
@@ -142,7 +179,26 @@
       "starterpacks": "Başlangıç Paketleri",
       "noVideos": "Henüz video yok",
       "noFeeds": "Henüz akış yok",
-      "noStarterpacks": "Henüz başlangıç paketi yok"
+      "noStarterpacks": "Henüz başlangıç paketi yok",
+      "youHaveBlockedUser": "Bu kullanıcıyı engellediniz",
+      "mutualBlock": "Birbirinizi engellediniz",
+      "copyLink": "Bağlantıyı Kopyala",
+      "addToLists": "Listelere Ekle",
+      "muteAccount": "Hesabı Sessize Al",
+      "reportAccount": "Hesabı Bildir",
+      "linkCopied": "Bağlantı panoya kopyalandı",
+      "linkCopyError": "Bağlantı kopyalanamadı",
+      "muteConfirmation": "Bu hesabı sessize al?",
+      "unmuteConfirmation": "Bu hesabın sesini aç?",
+      "reportConfirmation": "Bu hesabı bildir?",
+      "editProfile": "Profili Düzenle",
+      "displayName": "Görünen Ad",
+      "description": "Açıklama",
+      "displayNamePlaceholder": "Görünen adınızı girin",
+      "descriptionPlaceholder": "Kendiniz hakkında bize anlatın",
+      "noBanner": "Banner Yok",
+      "profileUpdated": "Profil başarıyla güncellendi",
+      "profileUpdateError": "Profil güncellenemedi"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
@@ -158,7 +214,14 @@
       "loadingPost": "Gönderi yükleniyor...",
       "postNotFound": "Gönderi bulunamadı",
       "comments": "Yorumlar ({{count}})",
-      "noCommentsYet": "Henüz yorum yok"
+      "noCommentsYet": "Henüz yorum yok",
+      "newPost": "Yeni Gönderi",
+      "reply": "Yanıtla",
+      "post": "Gönder",
+      "posting": "Gönderiliyor...",
+      "replyingTo": "Yanıtlıyor",
+      "replyPlaceholder": "Yanıtınızı yazın...",
+      "postPlaceholder": "Ne oluyor?"
     },
     "messages": {
       "typeMessage": "Mesaj yazın..."
@@ -169,7 +232,8 @@
       "about": "Hakkında",
       "version": "Sürüm",
       "checkMissingTranslations": "🔍 Eksik çevirileri kontrol et",
-      "developmentTool": "Geliştirme aracı"
+      "developmentTool": "Geliştirme aracı",
+      "notifications": "Bildirimler"
     }
   }
 }

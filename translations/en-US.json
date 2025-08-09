@@ -51,7 +51,11 @@
       "removeAccount": "Remove Account",
       "translationReport": "Translation Report",
       "checkConsoleForReport": "Check the console for missing translations report",
-      "checkOutImage": "Check out this image!"
+      "checkOutImage": "Check out this image!",
+      "save": "Save",
+      "saving": "Saving...",
+      "mute": "Mute",
+      "unmute": "Unmute"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -119,7 +123,40 @@
       "errorLoadingNotifications": "Error loading notifications",
       "somethingWentWrong": "Something went wrong",
       "loadingMoreNotifications": "Loading more notifications...",
-      "loadingNotifications": "Loading notifications..."
+      "loadingNotifications": "Loading notifications...",
+      "pushNotifications": "Push Notifications",
+      "permissionStatus": "Permission Status",
+      "permissionGranted": "Permission Granted",
+      "permissionDenied": "Permission Denied",
+      "permissionUndetermined": "Permission Undetermined",
+      "permissionUnknown": "Permission Unknown",
+      "enablePushNotifications": "Enable Push Notifications",
+      "pushNotificationsEnabled": "Push Notifications Enabled",
+      "pushNotificationsDisabled": "Push Notifications Disabled",
+      "sound": "Sound",
+      "playSoundForNotifications": "Play Sound for Notifications",
+      "vibration": "Vibration",
+      "vibrateForNotifications": "Vibrate for Notifications",
+      "badge": "Badge",
+      "showBadgeOnAppIcon": "Show Badge on App Icon",
+      "permissionsGranted": "Permissions Granted",
+      "youWillReceiveNotifications": "You will receive notifications",
+      "permissionsDenied": "Permissions Denied",
+      "pleaseEnableInSettings": "Please enable in Settings",
+      "error": "Error",
+      "failedToEnable": "Failed to enable",
+      "openSettings": "Open Settings",
+      "iosSettingsInstructions": "Go to Settings > Notifications > Akari",
+      "androidSettingsInstructions": "Go to Settings > Apps > Akari > Notifications",
+      "badgeCleared": "Badge Cleared",
+      "badgeClearedMessage": "Badge has been cleared",
+      "clearBadge": "Clear Badge",
+      "testNotifications": "Test Notifications",
+      "testNotificationsDescription": "Send test notification",
+      "sendTest": "Send Test",
+      "scheduleTest": "Schedule Test",
+      "sending": "Sending...",
+      "scheduling": "Scheduling..."
     },
     "profile": {
       "media": "Media",
@@ -142,7 +179,26 @@
       "starterpacks": "Starterpacks",
       "noVideos": "No videos yet",
       "noFeeds": "No feeds yet",
-      "noStarterpacks": "No starterpacks yet"
+      "noStarterpacks": "No starterpacks yet",
+      "youHaveBlockedUser": "You have blocked this user",
+      "mutualBlock": "You have blocked each other",
+      "copyLink": "Copy Link",
+      "addToLists": "Add to Lists",
+      "muteAccount": "Mute Account",
+      "reportAccount": "Report Account",
+      "linkCopied": "Link copied to clipboard",
+      "linkCopyError": "Failed to copy link",
+      "muteConfirmation": "Mute this account?",
+      "unmuteConfirmation": "Unmute this account?",
+      "reportConfirmation": "Report this account?",
+      "editProfile": "Edit Profile",
+      "displayName": "Display Name",
+      "description": "Description",
+      "displayNamePlaceholder": "Enter your display name",
+      "descriptionPlaceholder": "Tell us about yourself",
+      "noBanner": "No Banner",
+      "profileUpdated": "Profile updated successfully",
+      "profileUpdateError": "Failed to update profile"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
@@ -158,7 +214,14 @@
       "loadingPost": "Loading post...",
       "postNotFound": "Post not found",
       "comments": "Comments ({{count}})",
-      "noCommentsYet": "No comments yet"
+      "noCommentsYet": "No comments yet",
+      "newPost": "New Post",
+      "reply": "Reply",
+      "post": "Post",
+      "posting": "Posting...",
+      "replyingTo": "Replying to",
+      "replyPlaceholder": "Write your reply...",
+      "postPlaceholder": "What's happening?"
     },
     "messages": {
       "typeMessage": "Type a message..."
@@ -169,7 +232,8 @@
       "about": "About",
       "version": "Version",
       "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool"
+      "developmentTool": "Development tool",
+      "notifications": "Notifications"
     }
   }
 }
