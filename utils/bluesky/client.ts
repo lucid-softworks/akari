@@ -1,4 +1,4 @@
-import type { BlueskyError } from "./types";
+import type { BlueskyError } from './types';
 
 /**
  * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
@@ -12,7 +12,7 @@ export class BlueskyApiClient {
    */
   constructor(pdsUrl?: string) {
     // Default to bsky.social, but allow custom PDS
-    this.baseUrl = pdsUrl || "https://bsky.social/xrpc";
+    this.baseUrl = pdsUrl || 'https://bsky.social/xrpc';
   }
 
   /**
@@ -24,13 +24,13 @@ export class BlueskyApiClient {
   protected async makeRequest<T>(
     endpoint: string,
     options: {
-      method?: "GET" | "POST";
+      method?: 'GET' | 'POST';
       headers?: Record<string, string>;
-      body?: Record<string, unknown>;
+      body?: Record<string, unknown> | FormData | Blob;
       params?: Record<string, string>;
-    } = {}
+    } = {},
   ): Promise<T> {
-    const { method = "GET", headers = {}, body, params } = options;
+    const { method = 'GET', headers = {}, body, params } = options;
 
     let url = `${this.baseUrl}${endpoint}`;
 
@@ -47,22 +47,21 @@ export class BlueskyApiClient {
     const requestOptions: RequestInit = {
       method,
       headers: {
-        "Content-Type": "application/json",
         ...headers,
+        // Only set Content-Type for JSON, let browser handle FormData and Blob
+        ...(body && !(body instanceof FormData) && !(body instanceof Blob) && { 'Content-Type': 'application/json' }),
       },
     };
 
     if (body) {
-      requestOptions.body = JSON.stringify(body);
+      requestOptions.body = body instanceof FormData || body instanceof Blob ? body : JSON.stringify(body);
     }
 
     const response = await fetch(url, requestOptions);
 
     if (!response.ok) {
       const error: BlueskyError = await response.json();
-      throw new Error(
-        error.message || `Request failed with status ${response.status}`
-      );
+      throw new Error(error.message || `Request failed with status ${response.status}`);
     }
 
     return await response.json();
@@ -79,20 +78,62 @@ export class BlueskyApiClient {
     endpoint: string,
     accessJwt: string,
     options: {
-      method?: "GET" | "POST";
-      body?: Record<string, unknown>;
+      method?: 'GET' | 'POST';
+      body?: Record<string, unknown> | FormData | Blob;
       params?: Record<string, string>;
-    } = {}
+      headers?: Record<string, string>;
+    } = {},
   ): Promise<T> {
     return this.makeRequest<T>(endpoint, {
       ...options,
       headers: {
         Authorization: `Bearer ${accessJwt}`,
-        // Include labelers to get labels in responses
-        "atproto-accept-labelers":
-          "did:plc:ar7c4by46qjdydhdevvrndac;redact, did:plc:gvkp7euswjjrctjmqwhhfzif;redact, did:plc:newitj5jo3uel7o4mnf3vj2o, did:plc:pbmxe3tfpkts72wi74weijpo, did:plc:wkoofae5uytcm7bjncmev6n6, did:plc:blwl5jhgk7eygww2bhkt56hg, did:plc:mjyeurqmqjeexbgigk3yytvb, did:plc:i65enriuag7n5fgkopbqtkyk, did:plc:zal76px7lfptnpgn4j3v6i7d, did:plc:wp7hxfjl5l4zlptn7y6774lk, did:plc:xpxsa5aviwecd7cv6bzbmr5n, did:plc:gwqqyezoxusulkn5g2nzd6t2, did:plc:xss2sw5p4bfhjqjorl7gk6z4, did:plc:mtbmlt62wuf454ztne5wacev, did:plc:bfsapbnzx54ypg2mgrflkjlx, did:plc:gclep67kb2bifr3praijwoun, did:plc:aksxl7qy5azlzfm2jstcwqtz, did:plc:yb2gz6yxpebbzlundrrfkv4d, did:plc:vfibt4bgozsdx6rnnnpha3x7",
+        ...options.headers,
       },
     });
+  }
+
+  /**
+   * Uploads a blob (image) to the Bluesky API
+   * @param accessJwt - Valid access JWT token
+   * @param blob - The blob data to upload
+   * @param mimeType - The MIME type of the blob
+   * @returns Promise resolving to the uploaded blob reference
+   */
+  protected async uploadBlob(
+    accessJwt: string,
+    blob: Blob,
+    mimeType: string,
+  ): Promise<{
+    blob: {
+      ref: {
+        $link: string;
+      };
+      mimeType: string;
+      size: number;
+    };
+  }> {
+    // Get the blob data as array buffer and create a new blob with correct MIME type
+    const arrayBuffer = await blob.arrayBuffer();
+    const typedBlob = new Blob([arrayBuffer], { type: mimeType });
+
+    const result = await this.makeAuthenticatedRequest<{
+      blob: {
+        ref: {
+          $link: string;
+        };
+        mimeType: string;
+        size: number;
+      };
+    }>('/com.atproto.repo.uploadBlob', accessJwt, {
+      method: 'POST',
+      body: typedBlob,
+      headers: {
+        'Content-Type': mimeType,
+      },
+    });
+
+    return result;
   }
 
   /**

@@ -22,6 +22,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
   async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getTimeline', accessJwt, {
       params: { limit: limit.toString() },
+      headers: {
+        'atproto-accept-labelers':
+          'did:plc:ar7c4by46qjdydhdevvrndac;redact, did:plc:gvkp7euswjjrctjmqwhhfzif;redact, did:plc:newitj5jo3uel7o4mnf3vj2o, did:plc:pbmxe3tfpkts72wi74weijpo, did:plc:wkoofae5uytcm7bjncmev6n6, did:plc:blwl5jhgk7eygww2bhkt56hg, did:plc:mjyeurqmqjeexbgigk3yytvb, did:plc:i65enriuag7n5fgkopbqtkyk, did:plc:zal76px7lfptnpgn4j3v6i7d, did:plc:wp7hxfjl5l4zlptn7y6774lk, did:plc:xpxsa5aviwecd7cv6bzbmr5n, did:plc:gwqqyezoxusulkn5g2nzd6t2, did:plc:xss2sw5p4bfhjqjorl7gk6z4, did:plc:mtbmlt62wuf454ztne5wacev, did:plc:bfsapbnzx54ypg2mgrflkjlx, did:plc:gclep67kb2bifr3praijwoun, did:plc:aksxl7qy5azlzfm2jstcwqtz, did:plc:yb2gz6yxpebbzlundrrfkv4d, did:plc:vfibt4bgozsdx6rnnnpha3x7',
+      },
     });
   }
 
@@ -263,30 +267,85 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
+   * Uploads an image and returns the blob reference
+   * @param accessJwt - Valid access JWT token
+   * @param imageUri - The local URI of the image
+   * @param mimeType - The MIME type of the image
+   * @returns Promise resolving to the uploaded blob reference
+   */
+  async uploadImage(
+    accessJwt: string,
+    imageUri: string,
+    mimeType: string,
+  ): Promise<{
+    blob: {
+      ref: {
+        $link: string;
+      };
+      mimeType: string;
+      size: number;
+    };
+  }> {
+    // Convert image URI to blob
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+
+    return this.uploadBlob(accessJwt, blob, mimeType);
+  }
+
+  /**
    * Creates a new post
    * @param accessJwt - Valid access JWT token
    * @param userDid - The user's DID (required for repo field)
-   * @param text - The post text content
-   * @param replyTo - Optional reply context
+   * @param post - Post data including text, optional reply context, and optional images
    * @returns Promise resolving to post creation result
    */
   async createPost(
     accessJwt: string,
     userDid: string,
-    text: string,
-    replyTo?: {
-      root: string;
-      parent: string;
+    post: {
+      text: string;
+      replyTo?: {
+        root: string;
+        parent: string;
+      };
+      images?: {
+        uri: string;
+        alt: string;
+        mimeType: string;
+      }[];
     },
   ) {
-    const record: Record<string, unknown> = {
+    const { text, replyTo, images } = post;
+
+    let record: Record<string, unknown> = {
       text,
       createdAt: new Date().toISOString(),
       $type: 'app.bsky.feed.post',
     };
 
+    // Add reply context if provided
     if (replyTo) {
       record.reply = replyTo;
+    }
+
+    // Add image embed if images are provided
+    if (images && images.length > 0) {
+      // Upload all images first
+      const uploadedImages = await Promise.all(
+        images.map(async (image) => {
+          const blobRef = await this.uploadImage(accessJwt, image.uri, image.mimeType);
+          return {
+            alt: image.alt,
+            image: blobRef.blob,
+          };
+        }),
+      );
+
+      record.embed = {
+        $type: 'app.bsky.embed.images',
+        images: uploadedImages,
+      };
     }
 
     return this.makeAuthenticatedRequest<{

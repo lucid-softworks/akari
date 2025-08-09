@@ -64,6 +64,12 @@
           "icon": "./assets/images/icon.png",
           "color": "#007AFF"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them in your posts."
+        }
       ]
     ],
     "experiments": {

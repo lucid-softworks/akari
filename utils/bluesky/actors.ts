@@ -34,7 +34,7 @@ export class BlueskyActors extends BlueskyApiClient {
   ): Promise<BlueskyProfileResponse> {
     return this.makeAuthenticatedRequest<BlueskyProfileResponse>('/app.bsky.actor.updateProfile', accessJwt, {
       method: 'POST',
-      data: {
+      body: {
         displayName: profileData.displayName,
         description: profileData.description,
         avatar: profileData.avatar,

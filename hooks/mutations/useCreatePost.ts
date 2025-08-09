@@ -13,9 +13,11 @@ export function useCreatePost() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
+    mutationKey: ['createPost'],
     mutationFn: async ({
       text,
       replyTo,
+      images,
     }: {
       /** The post text content */
       text: string;
@@ -24,13 +26,23 @@ export function useCreatePost() {
         root: string;
         parent: string;
       };
+      /** Optional array of images to attach */
+      images?: {
+        uri: string;
+        alt: string;
+        mimeType: string;
+      }[];
     }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
 
-      return await blueskyApi.createPost(token, currentAccount.did, text, replyTo);
+      return await blueskyApi.createPost(token, currentAccount.did, {
+        text,
+        replyTo,
+        images,
+      });
     },
-    onMutate: async ({ text, replyTo }) => {
+    onMutate: async ({ text, replyTo, images }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['timeline'] });
       await queryClient.cancelQueries({ queryKey: ['feed'] });
@@ -56,6 +68,22 @@ export function useCreatePost() {
                 parent: { uri: replyTo.parent, cid: 'temp' },
               }
             : undefined,
+          embed:
+            images && images.length > 0
+              ? {
+                  $type: 'app.bsky.embed.images',
+                  images: images.map((img, index) => ({
+                    alt: img.alt,
+                    image: {
+                      ref: { $link: `temp-image-${index}` },
+                      mimeType: img.mimeType,
+                      size: 0,
+                    },
+                    thumb: img.uri,
+                    fullsize: img.uri,
+                  })),
+                }
+              : undefined,
         },
         author: {
           handle: currentAccount?.handle || '',
@@ -67,7 +95,22 @@ export function useCreatePost() {
         replyCount: 0,
         repostCount: 0,
         viewer: {},
-        embed: undefined,
+        embed:
+          images && images.length > 0
+            ? {
+                $type: 'app.bsky.embed.images#view',
+                images: images.map((img, index) => ({
+                  alt: img.alt,
+                  image: {
+                    ref: { $link: `temp-image-${index}` },
+                    mimeType: img.mimeType,
+                    size: 0,
+                  },
+                  thumb: img.uri,
+                  fullsize: img.uri,
+                })),
+              }
+            : undefined,
         embeds: [],
         labels: [],
       };

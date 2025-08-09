@@ -33,10 +33,12 @@ const MAPPING = {
   pin: 'push-pin',
   ellipsis: 'more-horiz',
   camera: 'camera-alt',
+  photo: 'photo',
   at: 'alternate-email',
   'quote.bubble': 'format-quote',
   bell: 'notifications',
   plus: 'add',
+  'xmark.circle.fill': 'cancel',
 } as IconMapping;
 
 /**

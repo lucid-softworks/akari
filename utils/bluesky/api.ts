@@ -130,13 +130,24 @@ export class BlueskyApi extends BlueskyApiClient {
   async createPost(
     accessJwt: string,
     userDid: string,
-    text: string,
-    replyTo?: {
-      root: string;
-      parent: string;
-    }
+    post: {
+      text: string;
+      replyTo?: {
+        root: string;
+        parent: string;
+      };
+      images?: {
+        uri: string;
+        alt: string;
+        mimeType: string;
+      }[];
+    },
   ) {
-    return this.feeds.createPost(accessJwt, userDid, text, replyTo);
+    return this.feeds.createPost(accessJwt, userDid, post);
+  }
+
+  async uploadImage(accessJwt: string, imageUri: string, mimeType: string) {
+    return this.feeds.uploadImage(accessJwt, imageUri, mimeType);
   }
 
   // Like/Unlike methods

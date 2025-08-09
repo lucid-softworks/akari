@@ -1,5 +1,16 @@
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -18,9 +29,16 @@ type PostComposerProps = {
   };
 };
 
+type AttachedImage = {
+  uri: string;
+  alt: string;
+  mimeType: string;
+};
+
 export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const { t } = useTranslation();
   const [text, setText] = useState('');
+  const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const createPostMutation = useCreatePost();
 
   // Theme colors
@@ -31,7 +49,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const tintColor = useThemeColor({}, 'tint');
 
   const handlePost = async () => {
-    if (!text.trim()) return;
+    if (!text.trim() && attachedImages.length === 0) return;
 
     try {
       await createPostMutation.mutateAsync({
@@ -42,10 +60,12 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
               parent: replyTo.parent,
             }
           : undefined,
+        images: attachedImages.length > 0 ? attachedImages : undefined,
       });
 
       // Reset form and close
       setText('');
+      setAttachedImages([]);
       onClose();
     } catch (error) {
       // Error handling could be improved with a proper error display
@@ -55,10 +75,56 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
 
   const handleClose = () => {
     setText('');
+    setAttachedImages([]);
     onClose();
   };
 
-  const isPostDisabled = !text.trim() || createPostMutation.isPending;
+  const handleAddImage = async () => {
+    // Request permissions
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      // Handle permission denied
+      return;
+    }
+
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 0.8,
+      aspect: [4, 3],
+    });
+
+    if (!result.canceled && result.assets) {
+      const newImages = result.assets.map((asset) => ({
+        uri: asset.uri,
+        alt: '', // User can edit this later
+        mimeType: asset.mimeType || 'image/jpeg',
+      }));
+
+      // Limit to 4 images (Bluesky limit)
+      const totalImages = attachedImages.length + newImages.length;
+      if (totalImages <= 4) {
+        setAttachedImages([...attachedImages, ...newImages]);
+      } else {
+        // Only add images up to the limit
+        const remainingSlots = 4 - attachedImages.length;
+        setAttachedImages([...attachedImages, ...newImages.slice(0, remainingSlots)]);
+      }
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setAttachedImages(attachedImages.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateImageAlt = (index: number, alt: string) => {
+    const updatedImages = [...attachedImages];
+    updatedImages[index] = { ...updatedImages[index], alt };
+    setAttachedImages(updatedImages);
+  };
+
+  const isPostDisabled = (!text.trim() && attachedImages.length === 0) || createPostMutation.isPending;
   const characterCount = text.length;
   const maxCharacters = 300;
   const isNearLimit = characterCount > maxCharacters * 0.8;
@@ -113,26 +179,61 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
               </ThemedView>
             )}
 
-            {/* Text Input */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[styles.textInput, { color: textColor }, Platform.OS === 'web' && { outline: 'none' }]}
-                value={text}
-                onChangeText={setText}
-                placeholder={replyTo ? t('post.replyPlaceholder') : t('post.postPlaceholder')}
-                placeholderTextColor={iconColor}
-                multiline
-                autoFocus
-                maxLength={maxCharacters}
-                textAlignVertical="top"
-                selectionColor="transparent"
-                cursorColor={textColor}
-              />
-            </View>
+            {/* Content Area */}
+            <ScrollView style={styles.contentArea} showsVerticalScrollIndicator={false}>
+              {/* Text Input */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.textInput, { color: textColor }, Platform.OS === 'web' && { outline: 'none' }]}
+                  value={text}
+                  onChangeText={setText}
+                  placeholder={replyTo ? t('post.replyPlaceholder') : t('post.postPlaceholder')}
+                  placeholderTextColor={iconColor}
+                  multiline
+                  autoFocus
+                  maxLength={maxCharacters}
+                  textAlignVertical="top"
+                  selectionColor="transparent"
+                  cursorColor={textColor}
+                />
+              </View>
+
+              {/* Attached Images */}
+              {attachedImages.length > 0 && (
+                <View style={styles.imagesContainer}>
+                  {attachedImages.map((image, index) => (
+                    <View key={index} style={styles.imageItem}>
+                      <View style={styles.imageContainer}>
+                        <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
+                        <TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(index)}>
+                          <ThemedText style={styles.removeImageText}>✕</ThemedText>
+                        </TouchableOpacity>
+                      </View>
+                      <TextInput
+                        style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
+                        value={image.alt}
+                        onChangeText={(alt) => handleUpdateImageAlt(index, alt)}
+                        placeholder={t('post.imageAltTextPlaceholder')}
+                        placeholderTextColor={iconColor}
+                        maxLength={1000}
+                      />
+                    </View>
+                  ))}
+                </View>
+              )}
+            </ScrollView>
 
             {/* Footer with Character Count and Actions */}
             <View style={[styles.footer, { borderTopColor: borderColor }]}>
-              <View style={styles.footerLeft}>{/* Add action buttons here in the future */}</View>
+              <View style={styles.footerLeft}>
+                <TouchableOpacity
+                  style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
+                  onPress={handleAddImage}
+                  disabled={attachedImages.length >= 4}
+                >
+                  <IconSymbol name="photo" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
+                </TouchableOpacity>
+              </View>
 
               <View style={styles.footerRight}>
                 <View style={styles.characterCountContainer}>
@@ -168,8 +269,8 @@ const styles = StyleSheet.create({
   },
   container: {
     margin: 20,
-    minHeight: 400,
-    maxHeight: '70%',
+    minHeight: 300,
+    maxHeight: '80%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -245,17 +346,57 @@ const styles = StyleSheet.create({
   replyAuthor: {
     fontWeight: '600',
   },
-  inputContainer: {
+  contentArea: {
     flex: 1,
+  },
+  inputContainer: {
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
   textInput: {
-    flex: 1,
     fontSize: 18,
     lineHeight: 26,
     minHeight: 140,
     textAlignVertical: 'top',
+  },
+  imagesContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  imageItem: {
+    marginBottom: 16,
+  },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  attachedImage: {
+    width: '100%',
+    height: 200,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 12,
+    padding: 6,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+  removeImageText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  altTextInput: {
+    padding: 12,
+    fontSize: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#e1e5e9',
   },
   footer: {
     flexDirection: 'row',
@@ -270,6 +411,13 @@ const styles = StyleSheet.create({
   },
   footerRight: {
     alignItems: 'flex-end',
+  },
+  actionButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  actionButtonDisabled: {
+    opacity: 0.5,
   },
   characterCountContainer: {
     flexDirection: 'row',
