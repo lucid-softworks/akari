@@ -40,7 +40,9 @@ export default function RootLayout() {
             </Stack>
             <StatusBar style="auto" />
           </ThemeProvider>
-          {Platform.OS === 'web' ? <ReactQueryDevtools /> : null}
+          {Platform.OS === 'web' ? (
+            <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
+          ) : null}
         </QueryClientProvider>
       </LanguageProvider>
     </GestureHandlerRootView>

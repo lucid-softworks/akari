@@ -261,4 +261,49 @@ export class BlueskyFeeds extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Creates a new post
+   * @param accessJwt - Valid access JWT token
+   * @param userDid - The user's DID (required for repo field)
+   * @param text - The post text content
+   * @param replyTo - Optional reply context
+   * @returns Promise resolving to post creation result
+   */
+  async createPost(
+    accessJwt: string,
+    userDid: string,
+    text: string,
+    replyTo?: {
+      root: string;
+      parent: string;
+    },
+  ) {
+    const record: Record<string, unknown> = {
+      text,
+      createdAt: new Date().toISOString(),
+      $type: 'app.bsky.feed.post',
+    };
+
+    if (replyTo) {
+      record.reply = replyTo;
+    }
+
+    return this.makeAuthenticatedRequest<{
+      uri: string;
+      cid: string;
+      commit: {
+        cid: string;
+        rev: string;
+      };
+      validationStatus: string;
+    }>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.feed.post',
+        record,
+      },
+    });
+  }
 }

@@ -36,6 +36,7 @@ const MAPPING = {
   at: 'alternate-email',
   'quote.bubble': 'format-quote',
   bell: 'notifications',
+  plus: 'add',
 } as IconMapping;
 
 /**

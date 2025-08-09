@@ -1,14 +1,16 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PostCard } from '@/components/PostCard';
+import { PostComposer } from '@/components/PostComposer';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeed } from '@/hooks/queries/useFeed';
@@ -22,6 +24,7 @@ import { formatRelativeTime } from '@/utils/timeUtils';
 export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
+  const [showPostComposer, setShowPostComposer] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
@@ -227,6 +230,14 @@ export default function HomeScreen() {
           </ThemedView>
         )}
       </ScrollView>
+
+      {/* Floating Action Button for creating posts */}
+      <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
+        <IconSymbol name="plus" size={24} color="white" />
+      </TouchableOpacity>
+
+      {/* Post Composer Modal */}
+      <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />
     </ThemedView>
   );
 }
@@ -292,5 +303,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.6,
     textAlign: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
 });

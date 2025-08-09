@@ -127,6 +127,18 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.getAuthorStarterpacks(accessJwt, actor, limit, cursor);
   }
 
+  async createPost(
+    accessJwt: string,
+    userDid: string,
+    text: string,
+    replyTo?: {
+      root: string;
+      parent: string;
+    }
+  ) {
+    return this.feeds.createPost(accessJwt, userDid, text, replyTo);
+  }
+
   // Like/Unlike methods
   async likePost(accessJwt: string, postUri: string, postCid: string, userDid: string) {
     return this.feeds.likePost(accessJwt, postUri, postCid, userDid);

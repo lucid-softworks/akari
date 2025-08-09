@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { Labels } from '@/components/Labels';
+import { PostComposer } from '@/components/PostComposer';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
@@ -70,6 +71,7 @@ type PostCardProps = {
 
 export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{
     [key: string]: { width: number; height: number };
   }>({});
@@ -114,6 +116,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
         action: 'like',
       });
     }
+  };
+
+  const handleReplyPress = () => {
+    setShowReplyComposer(true);
   };
 
   const handleImageLoad = (imageUrl: string, width: number, height: number) => {
@@ -558,10 +564,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
       <Labels labels={post.labels} maxLabels={3} />
 
       <ThemedView style={styles.interactions}>
-        <ThemedView style={styles.interactionItem}>
+        <TouchableOpacity style={styles.interactionItem} onPress={handleReplyPress} activeOpacity={0.7}>
           <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
-        </ThemedView>
+        </TouchableOpacity>
         <ThemedView style={styles.interactionItem}>
           <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
@@ -602,6 +608,17 @@ export function PostCard({ post, onPress }: PostCardProps) {
           altText={altTexts[selectedImageIndex]}
         />
       )}
+
+      {/* Reply Composer Modal */}
+      <PostComposer
+        visible={showReplyComposer}
+        onClose={() => setShowReplyComposer(false)}
+        replyTo={{
+          root: post.uri || '',
+          parent: post.uri || '',
+          authorHandle: post.author.handle,
+        }}
+      />
     </>
   );
 }
