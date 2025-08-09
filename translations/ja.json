@@ -221,7 +221,8 @@
       "posting": "投稿中...",
       "replyingTo": "返信中",
       "replyPlaceholder": "返信を書いてください...",
-      "postPlaceholder": "何が起こっていますか？"
+      "postPlaceholder": "何が起こっていますか？",
+      "imageAltTextPlaceholder": "アクセシビリティのため、この画像を説明してください..."
     },
     "messages": {
       "typeMessage": "メッセージを入力..."

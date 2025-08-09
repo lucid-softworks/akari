@@ -221,7 +221,8 @@
       "posting": "Posting...",
       "replyingTo": "Replying to",
       "replyPlaceholder": "Write your reply...",
-      "postPlaceholder": "What's happening?"
+      "postPlaceholder": "What's happening?",
+      "imageAltTextPlaceholder": "Describe this image for accessibility..."
     },
     "messages": {
       "typeMessage": "Type a message..."
