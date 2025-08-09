@@ -121,24 +121,25 @@ export function Sidebar() {
     <ThemedView
       style={{
         width: 240,
-        borderRightWidth: 1,
-        borderRightColor: Colors[colorScheme ?? 'light'].border,
-        paddingVertical: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 8,
+        borderRadius: 12,
+        backgroundColor: Colors[colorScheme ?? 'light'].background,
+        borderWidth: 1,
+        borderColor: Colors[colorScheme ?? 'light'].border,
       }}
     >
-      <ThemedView style={{ paddingHorizontal: 8 }}>
-        {navigationItems.map((item) => (
-          <SidebarItem
-            key={item.path}
-            name={item.name}
-            icon={item.icon}
-            path={item.path}
-            badge={item.badge}
-            isActive={isActive(item.path)}
-            onPress={() => handleNavigation(item.path)}
-          />
-        ))}
-      </ThemedView>
+      {navigationItems.map((item) => (
+        <SidebarItem
+          key={item.path}
+          name={item.name}
+          icon={item.icon}
+          path={item.path}
+          badge={item.badge}
+          isActive={isActive(item.path)}
+          onPress={() => handleNavigation(item.path)}
+        />
+      ))}
     </ThemedView>
   );
 }

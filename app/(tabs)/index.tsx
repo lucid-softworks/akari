@@ -184,43 +184,49 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
-      {/* Feed Tabs */}
-      <TabBar
-        tabs={allFeeds.map((feed) => ({
-          key: feed.uri,
-          label: feed.displayName,
-        }))}
-        activeTab={selectedFeed || ''}
-        onTabChange={handleFeedSelection}
-      />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Feed Tabs */}
+        <TabBar
+          tabs={allFeeds.map((feed) => ({
+            key: feed.uri,
+            label: feed.displayName,
+          }))}
+          activeTab={selectedFeed || ''}
+          onTabChange={handleFeedSelection}
+        />
 
-      {/* Feed Content */}
-      {selectedFeed ? (
-        <ScrollView style={styles.feedList}>
-          {feedLoading ? (
-            <FeedSkeleton count={5} />
-          ) : allPosts.length === 0 ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
-            </ThemedView>
-          ) : (
-            <>
-              {allPosts.map((item) => (
-                <View key={`${item.post.uri}-${item.post.indexedAt}`}>{renderFeedItem({ item })}</View>
-              ))}
-              {isFetchingNextPage && (
-                <ThemedView style={styles.loadingMore}>
-                  <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
-                </ThemedView>
-              )}
-            </>
-          )}
-        </ScrollView>
-      ) : (
-        <ThemedView style={styles.selectFeedPrompt}>
-          <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
-        </ThemedView>
-      )}
+        {/* Feed Content - Full height, no ScrollView */}
+        {selectedFeed ? (
+          <View style={styles.feedList}>
+            {feedLoading ? (
+              <FeedSkeleton count={5} />
+            ) : allPosts.length === 0 ? (
+              <ThemedView style={styles.emptyState}>
+                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
+              </ThemedView>
+            ) : (
+              <>
+                {allPosts.map((item) => (
+                  <View key={`${item.post.uri}-${item.post.indexedAt}`}>{renderFeedItem({ item })}</View>
+                ))}
+                {isFetchingNextPage && (
+                  <ThemedView style={styles.loadingMore}>
+                    <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
+                  </ThemedView>
+                )}
+              </>
+            )}
+          </View>
+        ) : (
+          <ThemedView style={styles.selectFeedPrompt}>
+            <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
+          </ThemedView>
+        )}
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -228,6 +234,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 100, // Account for tab bar
   },
   header: {
     alignItems: 'center',
@@ -246,7 +258,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   feedList: {
-    flex: 1,
+    paddingBottom: 100, // Account for tab bar
   },
   feedListContent: {
     paddingBottom: 100, // Account for tab bar

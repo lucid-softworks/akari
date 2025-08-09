@@ -80,38 +80,45 @@ export default function TabLayout() {
   // For large screens, show tabs without the tab bar
   if (isLargeScreen) {
     return (
-      <ThemedView style={{ flex: 1, flexDirection: 'row' }}>
-        <Sidebar />
+      <ThemedView style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,
-            display: 'flex',
-            justifyContent: 'flex-start',
             alignItems: 'center',
-            minHeight: 0,
+            paddingTop: 16,
+            paddingHorizontal: 16,
           }}
         >
           <View
             style={{
+              flexDirection: 'row',
+              gap: 24,
               width: '100%',
-              maxWidth: 500,
-              flex: 1,
-              paddingHorizontal: 16,
+              maxWidth: 1200,
+              minHeight: '100%',
             }}
           >
-            <Tabs
-              screenOptions={{
-                headerShown: false,
-                tabBarStyle: { display: 'none' },
+            <Sidebar />
+            <View
+              style={{
+                flex: 1,
+                minHeight: '100%',
               }}
             >
-              <Tabs.Screen name="index" />
-              <Tabs.Screen name="search" />
-              <Tabs.Screen name="messages" />
-              <Tabs.Screen name="notifications" />
-              <Tabs.Screen name="profile" />
-              <Tabs.Screen name="settings" />
-            </Tabs>
+              <Tabs
+                screenOptions={{
+                  headerShown: false,
+                  tabBarStyle: { display: 'none' },
+                }}
+              >
+                <Tabs.Screen name="index" />
+                <Tabs.Screen name="search" />
+                <Tabs.Screen name="messages" />
+                <Tabs.Screen name="notifications" />
+                <Tabs.Screen name="profile" />
+                <Tabs.Screen name="settings" />
+              </Tabs>
+            </View>
           </View>
         </View>
       </ThemedView>

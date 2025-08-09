@@ -14,26 +14,31 @@ export function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
 
   if (isLargeScreen) {
     return (
-      <ThemedView style={{ flex: 1, flexDirection: 'row' }}>
-        <Sidebar />
+      <ThemedView style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-            minHeight: 0,
+            paddingTop: 16,
+            paddingHorizontal: 16,
           }}
         >
           <View
             style={{
+              flexDirection: 'row',
+              gap: 24,
               width: '100%',
-              maxWidth: 500,
-              height: '100%',
-              paddingHorizontal: 16,
+              maxWidth: 1200,
             }}
           >
-            {children}
+            <Sidebar />
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              {children}
+            </View>
           </View>
         </View>
       </ThemedView>
