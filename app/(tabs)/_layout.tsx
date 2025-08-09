@@ -14,6 +14,7 @@ import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -57,6 +58,9 @@ export default function TabLayout() {
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
+
+  // Initialize push notifications
+  usePushNotifications();
 
   if (isLoading) {
     return (

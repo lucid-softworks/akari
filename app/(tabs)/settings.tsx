@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { NotificationSettings } from '@/components/NotificationSettings';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
@@ -174,6 +175,12 @@ export default function SettingsScreen() {
         {/* Language Section */}
         <ThemedView style={styles.section}>
           <LanguageSelector />
+        </ThemedView>
+
+        {/* Notifications Section */}
+        <ThemedView style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>{t('settings.notifications')}</ThemedText>
+          <NotificationSettings />
         </ThemedView>
 
         {/* Accounts Section */}

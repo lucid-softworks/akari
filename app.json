@@ -14,7 +14,8 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleAllowMixedLocalizations": true
-      }
+      },
+      "entitlements": "./ios/akariv2/akariv2.entitlements"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,6 +56,13 @@
             "ios": ["en", "en-US", "ja", "ar", "fr"],
             "android": ["en", "en-US", "ja", "ar", "fr"]
           }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#007AFF"
         }
       ]
     ],
