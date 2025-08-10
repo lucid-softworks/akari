@@ -24,13 +24,11 @@ export function useAccountProfiles() {
             console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
             continue;
           }
-          console.log(`Fetching profile for ${account.handle} from ${account.pdsUrl}`);
           const api = new BlueskyApi(account.pdsUrl);
           const profile = await api.getProfile(account.jwtToken, account.handle);
 
           if (profile) {
             profiles[account.did] = profile;
-            console.log(`Successfully fetched profile for ${account.handle}`);
           }
         } catch (error) {
           console.error(`Error fetching profile for ${account.handle}:`, error);
