@@ -1,5 +1,5 @@
-import { BlueskyApiClient } from "./client";
-import type { BlueskyConvosResponse, BlueskyMessagesResponse } from "./types";
+import { BlueskyApiClient } from './client';
+import type { BlueskyConvosResponse, BlueskyMessagesResponse } from './types';
 
 /**
  * Bluesky API conversation methods
@@ -18,50 +18,21 @@ export class BlueskyConversations extends BlueskyApiClient {
     accessJwt: string,
     limit: number = 50,
     cursor?: string,
-    readState?: "unread",
-    status?: "request" | "accepted"
+    readState?: 'unread',
+    status?: 'request' | 'accepted',
   ): Promise<BlueskyConvosResponse> {
-    const params: Record<string, string | number | boolean> = { limit };
+    const params: Record<string, string> = { limit: limit.toString() };
 
     if (cursor) params.cursor = cursor;
     if (readState) params.readState = readState;
     if (status) params.status = status;
 
-    try {
-      // Use the dedicated chat service URL
-      const chatBaseUrl = "https://api.bsky.chat/xrpc";
-      let url = `${chatBaseUrl}/chat.bsky.convo.listConvos`;
-
-      if (params && Object.keys(params).length > 0) {
-        const searchParams = new URLSearchParams();
-        Object.entries(params).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            searchParams.append(key, value.toString());
-          }
-        });
-        url += `?${searchParams.toString()}`;
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessJwt}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(
-          error.message || `Request failed with status ${response.status}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
-    }
+    return this.makeAuthenticatedRequest<BlueskyConvosResponse>('/chat.bsky.convo.listConvos', accessJwt, {
+      params,
+      headers: {
+        'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+      },
+    });
   }
 
   /**
@@ -76,44 +47,16 @@ export class BlueskyConversations extends BlueskyApiClient {
     accessJwt: string,
     convoId: string,
     limit: number = 50,
-    cursor?: string
+    cursor?: string,
   ): Promise<BlueskyMessagesResponse> {
-    const params = { convoId, limit, cursor };
+    const params: Record<string, string> = { convoId, limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
 
-    try {
-      // Use the dedicated chat service URL
-      const chatBaseUrl = "https://api.bsky.chat/xrpc";
-      let url = `${chatBaseUrl}/chat.bsky.convo.getMessages`;
-
-      if (params && Object.keys(params).length > 0) {
-        const searchParams = new URLSearchParams();
-        Object.entries(params).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            searchParams.append(key, value.toString());
-          }
-        });
-        url += `?${searchParams.toString()}`;
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessJwt}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(
-          error.message || `Request failed with status ${response.status}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
-    }
+    return this.makeAuthenticatedRequest<BlueskyMessagesResponse>('/chat.bsky.convo.getMessages', accessJwt, {
+      params,
+      headers: {
+        'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+      },
+    });
   }
 }
