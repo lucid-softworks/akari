@@ -7,7 +7,8 @@ export class BlueskyNotifications {
   private pdsUrl: string;
 
   constructor(pdsUrl: string = 'https://bsky.social') {
-    this.pdsUrl = pdsUrl;
+    // Ensure the PDS URL doesn't end with /xrpc (it will be added in API calls)
+    this.pdsUrl = pdsUrl.endsWith('/xrpc') ? pdsUrl.slice(0, -5) : pdsUrl;
   }
 
   /**

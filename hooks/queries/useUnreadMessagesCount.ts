@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Hook to get the total count of unread messages across all conversations
@@ -17,10 +17,12 @@ export function useUnreadMessagesCount(enabled: boolean = true) {
     queryKey: ['unreadMessagesCount', currentUserDid],
     queryFn: async () => {
       if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
         // Fetch conversations to get unread counts
-        const response = await blueskyApi.listConversations(
+        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const response = await api.listConversations(
           token,
           100, // Fetch up to 100 conversations to get a good sample
           undefined, // cursor

@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching feeds created by a user
@@ -10,14 +11,17 @@ import { blueskyApi } from '@/utils/blueskyApi';
  */
 export function useAuthorFeeds(identifier: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorFeeds', identifier, limit],
+    queryKey: ['authorFeeds', identifier, limit, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const feeds = await blueskyApi.getAuthorFeeds(token, identifier, limit, pageParam);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const feeds = await api.getAuthorFeeds(token, identifier, limit, pageParam);
 
       return {
         feeds: feeds.feeds,

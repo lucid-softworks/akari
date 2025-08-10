@@ -8,11 +8,10 @@ export class BlueskyApiClient {
 
   /**
    * Creates a new BlueskyApiClient instance
-   * @param pdsUrl - Optional custom PDS URL (defaults to bsky.social)
+   * @param pdsUrl - The PDS URL to use (required)
    */
-  constructor(pdsUrl?: string) {
-    // Default to bsky.social, but allow custom PDS
-    this.baseUrl = pdsUrl || 'https://bsky.social/xrpc';
+  constructor(pdsUrl: string) {
+    this.baseUrl = pdsUrl;
   }
 
   /**
@@ -32,7 +31,7 @@ export class BlueskyApiClient {
   ): Promise<T> {
     const { method = 'GET', headers = {}, body, params } = options;
 
-    let url = `${this.baseUrl}${endpoint}`;
+    let url = `${this.baseUrl}/xrpc${endpoint}`;
 
     if (params && Object.keys(params).length > 0) {
       const searchParams = new URLSearchParams();
@@ -134,14 +133,5 @@ export class BlueskyApiClient {
     });
 
     return result;
-  }
-
-  /**
-   * Creates a new BlueskyApiClient instance with a custom PDS URL
-   * @param pdsUrl - The custom PDS URL
-   * @returns New BlueskyApiClient instance
-   */
-  static createWithPDS(pdsUrl: string): BlueskyApiClient {
-    return new BlueskyApiClient(pdsUrl);
   }
 }

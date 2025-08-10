@@ -1,26 +1,27 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching feed posts
  * @param feedUri - The feed URI to fetch posts from
  * @param limit - Number of posts to fetch per page (default: 20)
  */
-export function useFeed(
-  feedUri: string | null,
-  limit: number = 20
-) {
+export function useFeed(feedUri: string | null, limit: number = 20) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ["feed", feedUri],
+    queryKey: ['feed', feedUri, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
-      if (!token) throw new Error("No access token");
-      if (!feedUri) throw new Error("No feed URI provided");
+      if (!token) throw new Error('No access token');
+      if (!feedUri) throw new Error('No feed URI provided');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      return await blueskyApi.getFeed(token, feedUri, limit, pageParam);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      return await api.getFeed(token, feedUri, limit, pageParam);
     },
     enabled: !!feedUri && !!token,
     initialPageParam: undefined as string | undefined,

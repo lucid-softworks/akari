@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching a user's original posts (not replies or reposts)
@@ -10,14 +11,17 @@ import { blueskyApi } from '@/utils/blueskyApi';
  */
 export function useAuthorPosts(identifier: string | undefined, limit: number = 20) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorPosts', identifier, limit],
+    queryKey: ['authorPosts', identifier, limit, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const feed = await blueskyApi.getAuthorFeed(token, identifier, limit, pageParam);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
 
       // Filter to only show original posts (not reposts or replies)
       const originalPosts = feed.feed

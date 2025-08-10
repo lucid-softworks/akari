@@ -33,7 +33,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
 
-  constructor(pdsUrl?: string) {
+  constructor(pdsUrl: string) {
     super(pdsUrl);
     this.actors = new BlueskyActors(pdsUrl);
     this.auth = new BlueskyAuth(pdsUrl);

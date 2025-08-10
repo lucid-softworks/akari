@@ -1,7 +1,7 @@
-import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
-import { useQuery } from "@tanstack/react-query";
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { BlueskyApi } from '@/utils/blueskyApi';
+import { useQuery } from '@tanstack/react-query';
 
 /**
  * Query hook for fetching the user's timeline feed
@@ -14,11 +14,13 @@ export function useTimeline(limit: number = 20, enabled: boolean = true) {
   const currentUserDid = currentAccount?.did;
 
   return useQuery({
-    queryKey: ["timeline", limit, currentUserDid],
+    queryKey: ['timeline', limit, currentUserDid],
     queryFn: async () => {
-      if (!token) throw new Error("No access token");
+      if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      return await blueskyApi.getTimeline(token, limit);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      return await api.getTimeline(token, limit);
     },
     enabled: enabled && !!token && !!currentUserDid,
     staleTime: 2 * 60 * 1000, // 2 minutes

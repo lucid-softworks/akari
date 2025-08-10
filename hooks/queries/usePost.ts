@@ -1,17 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
+import { BlueskyApi } from "@/utils/blueskyApi";
 
 export function usePost(postUri: string | null) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ["post", postUri],
+    queryKey: ["post", postUri, currentAccount?.pdsUrl],
     queryFn: async () => {
       if (!token || !postUri) throw new Error("No access token or post URI");
+      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      return await blueskyApi.getPost(token, postUri);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      return await api.getPost(token, postUri);
     },
     enabled: !!postUri,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -23,17 +27,20 @@ export function usePost(postUri: string | null) {
  */
 export function useParentPost(parentUri: string | null) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   const {
     data: parentPost,
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["parentPost", parentUri],
+    queryKey: ["parentPost", parentUri, currentAccount?.pdsUrl],
     queryFn: async () => {
       if (!parentUri) return null;
       if (!token) throw new Error("No access token");
-      const result = await blueskyApi.getPost(token, parentUri);
+      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const result = await api.getPost(token, parentUri);
       return result;
     },
     enabled: !!parentUri,
@@ -47,17 +54,20 @@ export function useParentPost(parentUri: string | null) {
  */
 export function useRootPost(rootUri: string | null) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   const {
     data: rootPost,
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["rootPost", rootUri],
+    queryKey: ["rootPost", rootUri, currentAccount?.pdsUrl],
     queryFn: async () => {
       if (!rootUri) return null;
       if (!token) throw new Error("No access token");
-      const result = await blueskyApi.getPost(token, rootUri);
+      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const result = await api.getPost(token, rootUri);
       return result;
     },
     enabled: !!rootUri,

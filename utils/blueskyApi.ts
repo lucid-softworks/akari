@@ -1,5 +1,5 @@
 // Import the main API class and types
-import { BlueskyApi } from "./bluesky/api";
+import { BlueskyApi } from './bluesky/api';
 import type {
   BlueskyError,
   BlueskyFeed,
@@ -12,7 +12,7 @@ import type {
   BlueskySearchPostsResponse,
   BlueskySession,
   BlueskyThreadResponse,
-} from "./bluesky/types";
+} from './bluesky/types';
 
 // Export the main API class
 export { BlueskyApi };
@@ -31,6 +31,3 @@ export type {
   BlueskySession,
   BlueskyThreadResponse,
 };
-
-// Create and export the default instance
-export const blueskyApi = new BlueskyApi();

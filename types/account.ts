@@ -5,4 +5,5 @@ export type Account = {
   avatar?: string;
   jwtToken: string;
   refreshToken: string;
+  pdsUrl?: string;
 };

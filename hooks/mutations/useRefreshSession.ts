@@ -1,6 +1,7 @@
-import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
-import { BlueskyApi, blueskyApi } from "@/utils/blueskyApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { BlueskyApi } from '@/utils/blueskyApi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 /**
  * Mutation hook for refreshing the Bluesky session
@@ -9,18 +10,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export function useRefreshSession() {
   const queryClient = useQueryClient();
   const setAuthMutation = useSetAuthentication();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
     mutationFn: async ({
       refreshToken,
-      pdsUrl,
     }: {
       /** The refresh JWT token */
       refreshToken: string;
-      /** Optional custom PDS URL (defaults to bsky.social) */
-      pdsUrl?: string;
     }) => {
-      const api = pdsUrl ? BlueskyApi.createWithPDS(pdsUrl) : blueskyApi;
+      if (!currentAccount?.pdsUrl) {
+        throw new Error('No PDS URL available for this account');
+      }
+      const api = new BlueskyApi(currentAccount.pdsUrl);
       return await api.refreshSession(refreshToken);
     },
     onSuccess: (session) => {
@@ -33,7 +35,7 @@ export function useRefreshSession() {
       });
 
       // Invalidate auth queries with the new user-specific key
-      queryClient.invalidateQueries({ queryKey: ["auth", session.did] });
+      queryClient.invalidateQueries({ queryKey: ['auth', session.did] });
     },
   });
 }

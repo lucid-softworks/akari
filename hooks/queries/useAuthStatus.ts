@@ -1,10 +1,10 @@
-import { useClearAuthentication } from "@/hooks/mutations/useClearAuthentication";
-import { useSetAuthentication } from "@/hooks/mutations/useSetAuthentication";
-import { blueskyApi } from "@/utils/blueskyApi";
-import { useQuery } from "@tanstack/react-query";
-import { useCurrentAccount } from "./useCurrentAccount";
-import { useJwtToken } from "./useJwtToken";
-import { useRefreshToken } from "./useRefreshToken";
+import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
+import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
+import { BlueskyApi } from '@/utils/blueskyApi';
+import { useQuery } from '@tanstack/react-query';
+import { useCurrentAccount } from './useCurrentAccount';
+import { useJwtToken } from './useJwtToken';
+import { useRefreshToken } from './useRefreshToken';
 
 /**
  * Query hook for checking authentication status
@@ -20,7 +20,7 @@ export function useAuthStatus() {
   const currentUserDid = currentAccount?.did || null;
 
   return useQuery({
-    queryKey: ["auth", currentUserDid],
+    queryKey: ['auth', currentUserDid],
     queryFn: async () => {
       if (!token || !refreshToken) {
         return { isAuthenticated: false };
@@ -28,7 +28,11 @@ export function useAuthStatus() {
 
       try {
         // Try to refresh the session to validate tokens
-        const session = await blueskyApi.refreshSession(refreshToken);
+        if (!currentAccount?.pdsUrl) {
+          throw new Error('No PDS URL available for this account');
+        }
+        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const session = await api.refreshSession(refreshToken);
 
         // Update stored tokens with fresh ones
         setAuthMutation.mutate({
@@ -36,6 +40,7 @@ export function useAuthStatus() {
           refreshToken: session.refreshJwt,
           did: session.did,
           handle: session.handle,
+          pdsUrl: currentAccount.pdsUrl,
         });
 
         return {

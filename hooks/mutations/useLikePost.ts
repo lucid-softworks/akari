@@ -9,7 +9,7 @@ import type {
   BlueskyPostView,
   BlueskyUnlikeResponse,
 } from '@/utils/bluesky/types';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Mutation hook for liking and unliking posts
@@ -37,13 +37,16 @@ export function useLikePost() {
     }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+
+      const api = new BlueskyApi(currentAccount.pdsUrl);
 
       if (action === 'like') {
         if (!postCid) throw new Error('Post CID is required for like');
-        return await blueskyApi.likePost(token, postUri, postCid, currentAccount.did);
+        return await api.likePost(token, postUri, postCid, currentAccount.did);
       } else {
         if (!likeUri) throw new Error('Like URI is required for unlike');
-        return await blueskyApi.unlikePost(token, likeUri, currentAccount.did);
+        return await api.unlikePost(token, likeUri, currentAccount.did);
       }
     },
     onMutate: async ({ postUri, action }) => {

@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching starterpacks created by a user
@@ -10,14 +11,17 @@ import { blueskyApi } from '@/utils/blueskyApi';
  */
 export function useAuthorStarterpacks(identifier: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorStarterpacks', identifier, limit],
+    queryKey: ['authorStarterpacks', identifier, limit, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const starterpacks = await blueskyApi.getAuthorStarterpacks(token, identifier, limit, pageParam);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const starterpacks = await api.getAuthorStarterpacks(token, identifier, limit, pageParam);
 
       return {
         starterpacks: starterpacks.starterPacks,

@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyEmbed } from '@/utils/bluesky/types';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 type NotificationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -26,9 +26,11 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
     queryKey: ['notifications', limit, reasons, priority, currentUserDid],
     queryFn: async ({ pageParam }) => {
       if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const response = await blueskyApi.listNotifications(
+        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const response = await api.listNotifications(
           token,
           limit,
           pageParam, // cursor

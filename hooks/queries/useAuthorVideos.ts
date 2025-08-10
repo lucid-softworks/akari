@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching a user's posts with videos
@@ -10,14 +11,17 @@ import { blueskyApi } from '@/utils/blueskyApi';
  */
 export function useAuthorVideos(identifier: string | undefined, limit: number = 20) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorVideos', identifier, limit],
+    queryKey: ['authorVideos', identifier, limit, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const feed = await blueskyApi.getAuthorVideos(token, identifier, limit, pageParam);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const feed = await api.getAuthorVideos(token, identifier, limit, pageParam);
 
       // Map the feed items to posts (they should already be filtered for videos by the API)
       const videoPosts = feed.feed.map((item) => item.post);

@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 /**
  * Mutation hook for blocking and unblocking users
@@ -9,6 +10,7 @@ import { blueskyApi } from "@/utils/blueskyApi";
 export function useBlockUser() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
     mutationFn: async ({
@@ -21,21 +23,24 @@ export function useBlockUser() {
       /** The block URI (required for unblock) */
       blockUri?: string;
       /** Whether to block or unblock */
-      action: "block" | "unblock";
+      action: 'block' | 'unblock';
     }) => {
-      if (!token) throw new Error("No access token");
+      if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      if (action === "block") {
-        return await blueskyApi.blockUser(token, did);
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+
+      if (action === 'block') {
+        return await api.blockUser(token, did);
       } else {
-        if (!blockUri) throw new Error("Block URI is required for unblock");
-        return await blueskyApi.unblockUser(token, blockUri);
+        if (!blockUri) throw new Error('Block URI is required for unblock');
+        return await api.unblockUser(token, blockUri);
       }
     },
     onSuccess: (_, variables) => {
       // Invalidate profile queries to refresh block status
-      queryClient.invalidateQueries({ queryKey: ["profile", variables.did] });
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ['profile', variables.did] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
   });
 }

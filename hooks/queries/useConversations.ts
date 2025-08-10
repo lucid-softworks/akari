@@ -1,11 +1,11 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
-import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { BlueskyApi } from '@/utils/blueskyApi';
 
 type ConversationError = {
-  type: "permission" | "network" | "unknown";
+  type: 'permission' | 'network' | 'unknown';
   message: string;
 };
 
@@ -18,37 +18,37 @@ type ConversationError = {
  */
 export function useConversations(
   limit: number = 50,
-  readState?: "unread",
-  status?: "request" | "accepted",
-  enabled: boolean = true
+  readState?: 'unread',
+  status?: 'request' | 'accepted',
+  enabled: boolean = true,
 ) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
-    queryKey: ["conversations", limit, readState, status, currentUserDid],
+    queryKey: ['conversations', limit, readState, status, currentUserDid],
     queryFn: async ({ pageParam }) => {
-      if (!token) throw new Error("No access token");
+      if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const response = await blueskyApi.listConversations(
+        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const response = await api.listConversations(
           token,
           limit,
           pageParam, // cursor
           readState,
-          status
+          status,
         );
 
         // Transform the data to match our UI needs
         const conversations = response.convos.map((convo) => {
           // Find the other member (not the current user)
-          const otherMember = convo.members.find(
-            (member) => member.did !== currentAccount?.did
-          );
+          const otherMember = convo.members.find((member) => member.did !== currentAccount?.did);
 
           if (!otherMember) {
-            throw new Error("No other member found in conversation");
+            throw new Error('No other member found in conversation');
           }
 
           return {
@@ -57,10 +57,8 @@ export function useConversations(
             handle: otherMember.handle,
             displayName: otherMember.displayName || otherMember.handle,
             avatar: otherMember.avatar,
-            lastMessage: convo.lastMessage?.text || "No messages yet",
-            timestamp: convo.lastMessage?.sentAt
-              ? new Date(convo.lastMessage.sentAt).toLocaleDateString()
-              : "No messages",
+            lastMessage: convo.lastMessage?.text || 'No messages yet',
+            timestamp: convo.lastMessage?.sentAt ? new Date(convo.lastMessage.sentAt).toLocaleDateString() : 'No messages',
             unreadCount: convo.unreadCount,
             status: convo.status,
             muted: convo.muted,
@@ -73,8 +71,8 @@ export function useConversations(
         };
       } catch (error: unknown) {
         // Determine the type of error
-        let errorType: ConversationError["type"] = "unknown";
-        let errorMessage = "Failed to load conversations";
+        let errorType: ConversationError['type'] = 'unknown';
+        let errorMessage = 'Failed to load conversations';
 
         const errorObj = error as {
           response?: { status?: number };
@@ -83,30 +81,21 @@ export function useConversations(
         };
 
         if (errorObj?.response?.status === 401) {
-          errorType = "permission";
-          errorMessage =
-            "Your app password doesn't have permission to access messages";
+          errorType = 'permission';
+          errorMessage = "Your app password doesn't have permission to access messages";
         } else if (errorObj?.response?.status === 403) {
-          errorType = "permission";
-          errorMessage =
-            "Access to messages is not allowed with this app password";
-        } else if (errorObj?.message?.includes("Bad token scope")) {
-          errorType = "permission";
+          errorType = 'permission';
+          errorMessage = 'Access to messages is not allowed with this app password';
+        } else if (errorObj?.message?.includes('Bad token scope')) {
+          errorType = 'permission';
           errorMessage =
             "Your app password doesn't have chat permissions. Please create a new app password with chat access in your Bluesky settings.";
-        } else if (
-          errorObj?.message?.includes("network") ||
-          errorObj?.code === "NETWORK_ERROR"
-        ) {
-          errorType = "network";
-          errorMessage =
-            "Network error. Please check your connection and try again";
-        } else if (
-          errorObj?.response?.status &&
-          errorObj.response.status >= 500
-        ) {
-          errorType = "network";
-          errorMessage = "Server error. Please try again later";
+        } else if (errorObj?.message?.includes('network') || errorObj?.code === 'NETWORK_ERROR') {
+          errorType = 'network';
+          errorMessage = 'Network error. Please check your connection and try again';
+        } else if (errorObj?.response?.status && errorObj.response.status >= 500) {
+          errorType = 'network';
+          errorMessage = 'Server error. Please try again later';
         }
 
         const conversationError: ConversationError = {
@@ -123,7 +112,7 @@ export function useConversations(
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: ConversationError) => {
       // Don't retry permission errors
-      if (error?.type === "permission") {
+      if (error?.type === 'permission') {
         return false;
       }
       // Retry network errors up to 3 times

@@ -1,6 +1,7 @@
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
+import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
-import { blueskyApi } from "@/utils/blueskyApi";
+import { BlueskyApi } from "@/utils/blueskyApi";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 type SearchTabType = "all" | "users" | "posts";
@@ -28,19 +29,23 @@ export function useSearch(
   limit: number = 20
 ) {
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ["search", query, activeTab, limit],
+    queryKey: ["search", query, activeTab, limit, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
       if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");
+      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
+
+      const api = new BlueskyApi(currentAccount.pdsUrl);
 
       try {
         // Check if this is a "from:handle" search
         const fromMatch = query.match(/^from:(\S+)/);
         if (fromMatch) {
           // For "from:handle" searches, only search posts
-          const postResults = await blueskyApi.searchPosts(
+          const postResults = await api.searchPosts(
             token,
             query,
             limit,
@@ -62,7 +67,7 @@ export function useSearch(
 
         // Regular search based on active tab
         if (activeTab === "users") {
-          const profileResults = await blueskyApi.searchProfiles(
+          const profileResults = await api.searchProfiles(
             token,
             query,
             limit,
@@ -81,7 +86,7 @@ export function useSearch(
             cursor: profileResults.cursor,
           };
         } else if (activeTab === "posts") {
-          const postResults = await blueskyApi.searchPosts(
+          const postResults = await api.searchPosts(
             token,
             query,
             limit,
@@ -102,8 +107,8 @@ export function useSearch(
         } else if (activeTab === "all") {
           // For "all" tab, combine both searches
           const [profileResults, postResults] = await Promise.all([
-            blueskyApi.searchProfiles(token, query, limit, pageParam),
-            blueskyApi.searchPosts(token, query, limit, pageParam),
+            api.searchProfiles(token, query, limit, pageParam),
+            api.searchPosts(token, query, limit, pageParam),
           ]);
 
           const results: SearchResult[] = [

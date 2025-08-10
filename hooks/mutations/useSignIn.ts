@@ -1,5 +1,5 @@
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
-import { BlueskyApi, blueskyApi } from '@/utils/blueskyApi';
+import { BlueskyApi } from '@/utils/blueskyApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 /**
@@ -20,10 +20,10 @@ export function useSignIn() {
       identifier: string;
       /** App password from Bluesky settings */
       password: string;
-      /** Optional custom PDS URL (defaults to bsky.social) */
-      pdsUrl?: string;
+      /** PDS URL to use for authentication */
+      pdsUrl: string;
     }) => {
-      const api = pdsUrl ? BlueskyApi.createWithPDS(pdsUrl) : blueskyApi;
+      const api = new BlueskyApi(pdsUrl);
       return await api.createSession(identifier, password);
     },
     onSuccess: async (session) => {

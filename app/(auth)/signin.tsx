@@ -10,6 +10,7 @@ import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { getPdsUrlFromHandle } from '@/utils/bluesky/pds';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -20,8 +21,6 @@ export default function AuthScreen() {
   const [mode, setMode] = useState<AuthMode>('signin');
   const [handle, setHandle] = useState('');
   const [appPassword, setAppPassword] = useState('');
-  const [pdsUrl, setPdsUrl] = useState('');
-  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const signInMutation = useSignIn();
   const addAccountMutation = useAddAccount();
@@ -51,10 +50,21 @@ export default function AuthScreen() {
     }
 
     try {
+      // Automatically detect PDS URL from handle
+      const detectedPdsUrl = await getPdsUrlFromHandle(handle);
+
+      if (!detectedPdsUrl) {
+        showAlert({
+          title: t('common.error'),
+          message: 'Could not detect PDS server for this handle',
+        });
+        return;
+      }
+
       const session = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
-        pdsUrl: pdsUrl || undefined,
+        pdsUrl: detectedPdsUrl,
       });
       console.info('session', session);
 
@@ -63,6 +73,7 @@ export default function AuthScreen() {
         handle: session.handle,
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
+        pdsUrl: detectedPdsUrl,
       });
       console.info('newAccount', newAccount);
 
@@ -106,10 +117,21 @@ export default function AuthScreen() {
     }
 
     try {
+      // Automatically detect PDS URL from handle
+      const detectedPdsUrl = await getPdsUrlFromHandle(handle);
+
+      if (!detectedPdsUrl) {
+        showAlert({
+          title: t('common.error'),
+          message: 'Could not detect PDS server for this handle',
+        });
+        return;
+      }
+
       const session = await signInMutation.mutateAsync({
         identifier: handle,
         password: appPassword,
-        pdsUrl: pdsUrl || undefined,
+        pdsUrl: detectedPdsUrl,
       });
       console.info('session', session);
 
@@ -119,6 +141,7 @@ export default function AuthScreen() {
         handle: session.handle,
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
+        pdsUrl: detectedPdsUrl,
       });
       console.info('newAccount', newAccount);
 
@@ -202,29 +225,6 @@ export default function AuthScreen() {
               />
               <ThemedText style={styles.helperText}>{t('auth.appPasswordHelperText')}</ThemedText>
             </ThemedView>
-
-            <TouchableOpacity style={styles.advancedToggle} onPress={() => setShowAdvanced(!showAdvanced)}>
-              <ThemedText style={styles.advancedToggleText}>
-                {showAdvanced ? t('common.hide') : t('common.show')} {t('auth.advancedOptions')}
-              </ThemedText>
-            </TouchableOpacity>
-
-            {showAdvanced && (
-              <ThemedView style={styles.inputContainer}>
-                <ThemedText style={styles.label}>{t('auth.customPdsServer')}</ThemedText>
-                <TextInput
-                  style={styles.input}
-                  value={pdsUrl}
-                  onChangeText={setPdsUrl}
-                  placeholder={t('auth.pdsUrlPlaceholder')}
-                  placeholderTextColor="#999"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  autoComplete="off"
-                />
-                <ThemedText style={styles.helperText}>{t('auth.pdsUrlHelperText')}</ThemedText>
-              </ThemedView>
-            )}
 
             <TouchableOpacity
               style={[styles.button, isLoading ? styles.buttonDisabled : null]}
@@ -317,14 +317,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.6,
     fontStyle: 'italic',
-  },
-  advancedToggle: {
-    paddingVertical: 8,
-  },
-  advancedToggleText: {
-    fontSize: 14,
-    color: '#007AFF',
-    textAlign: 'center',
   },
   button: {
     backgroundColor: '#007AFF',
