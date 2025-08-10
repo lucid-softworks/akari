@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,9 +12,9 @@ import { ThemedView } from '@/components/ThemedView';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
+import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { useProfile } from '@/hooks/queries/useProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
@@ -27,7 +27,6 @@ export default function SettingsScreen() {
   const { t } = useTranslation();
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
-  const [accountProfiles, setAccountProfiles] = useState<Record<string, any>>({});
   const scrollViewRef = useRef<ScrollView>(null);
 
   const switchAccountMutation = useSwitchAccount();
@@ -46,56 +45,8 @@ export default function SettingsScreen() {
     tabScrollRegistry.register('settings', handleScrollToTop);
   }, [handleScrollToTop]);
 
-  // Get current account profile data
-  const { data: currentProfile } = useProfile(currentAccount?.handle);
-
-  // Update current account profile data
-  useEffect(() => {
-    if (currentAccount && currentProfile) {
-      setAccountProfiles((prev) => ({
-        ...prev,
-        [currentAccount.did]: currentProfile,
-      }));
-    }
-  }, [currentAccount, currentProfile]);
-
-  // Fetch profile data for each account to get avatars
-  useEffect(() => {
-    if (accounts && accounts.length > 0) {
-      const fetchProfiles = async () => {
-        const profiles: Record<string, any> = {};
-
-        for (const account of accounts) {
-          try {
-            // Skip current account as it's handled by the profile hook
-            if (account.did === currentAccount?.did) {
-              continue;
-            }
-
-            // For other accounts, fetch profile data directly
-            const response = await fetch(`https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${account.handle}`, {
-              headers: {
-                Authorization: `Bearer ${account.jwtToken}`,
-              },
-            });
-
-            if (response.ok) {
-              const profile = await response.json();
-              if (profile.data) {
-                profiles[account.did] = profile.data;
-              }
-            }
-          } catch (error) {
-            console.error(`Error fetching profile for ${account.handle}:`, error);
-          }
-        }
-
-        setAccountProfiles((prev) => ({ ...prev, ...profiles }));
-      };
-
-      fetchProfiles();
-    }
-  }, [accounts, currentAccount]);
+  // Get profile data for all accounts
+  const { data: accountProfiles } = useAccountProfiles();
 
   const handleLogout = async () => {
     try {
@@ -196,7 +147,7 @@ export default function SettingsScreen() {
           )}
 
           {accounts?.map((account) => {
-            const profile = accountProfiles[account.did];
+            const profile = accountProfiles?.[account.did];
             const avatar = profile?.avatar || account.avatar;
             const displayName = profile?.displayName || account.displayName;
 
