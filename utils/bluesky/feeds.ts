@@ -267,10 +267,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
-   * Uploads an image and returns the blob reference
+   * Uploads an image or GIF and returns the blob reference
    * @param accessJwt - Valid access JWT token
-   * @param imageUri - The local URI of the image
-   * @param mimeType - The MIME type of the image
+   * @param imageUri - The local URI of the image or GIF
+   * @param mimeType - The MIME type of the image or GIF
    * @returns Promise resolving to the uploaded blob reference
    */
   async uploadImage(
@@ -290,14 +290,17 @@ export class BlueskyFeeds extends BlueskyApiClient {
     const response = await fetch(imageUri);
     const blob = await response.blob();
 
-    return this.uploadBlob(accessJwt, blob, mimeType);
+    // Ensure proper MIME type for GIFs
+    const finalMimeType = mimeType === 'image/gif' ? 'image/gif' : mimeType;
+
+    return this.uploadBlob(accessJwt, blob, finalMimeType);
   }
 
   /**
    * Creates a new post
    * @param accessJwt - Valid access JWT token
    * @param userDid - The user's DID (required for repo field)
-   * @param post - Post data including text, optional reply context, and optional images
+   * @param post - Post data including text, optional reply context, and optional images/GIFs
    * @returns Promise resolving to post creation result
    */
   async createPost(
@@ -313,6 +316,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
         uri: string;
         alt: string;
         mimeType: string;
+        tenorId?: string;
       }[];
     },
   ) {
@@ -322,6 +326,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
       text,
       createdAt: new Date().toISOString(),
       $type: 'app.bsky.feed.post',
+      langs: ['en'],
     };
 
     // Add reply context if provided
@@ -329,23 +334,54 @@ export class BlueskyFeeds extends BlueskyApiClient {
       record.reply = replyTo;
     }
 
-    // Add image embed if images are provided
+    // Add embeds if images/GIFs are provided
     if (images && images.length > 0) {
-      // Upload all images first
-      const uploadedImages = await Promise.all(
-        images.map(async (image) => {
-          const blobRef = await this.uploadImage(accessJwt, image.uri, image.mimeType);
-          return {
-            alt: image.alt,
-            image: blobRef.blob,
-          };
-        }),
-      );
+      // Separate regular images from GIFs
+      const regularImages = images.filter((img) => img.mimeType !== 'image/gif');
+      const gifs = images.filter((img) => img.mimeType === 'image/gif');
 
-      record.embed = {
-        $type: 'app.bsky.embed.images',
-        images: uploadedImages,
-      };
+      // Handle regular images as image embeds
+      if (regularImages.length > 0) {
+        const uploadedImages = await Promise.all(
+          regularImages.map(async (image) => {
+            const blobRef = await this.uploadImage(accessJwt, image.uri, image.mimeType);
+            return {
+              alt: image.alt,
+              image: blobRef.blob,
+            };
+          }),
+        );
+
+        record.embed = {
+          $type: 'app.bsky.embed.images',
+          images: uploadedImages,
+        };
+      }
+
+      // Handle GIFs as external embeds
+      if (gifs.length > 0) {
+        // For now, we'll use the first GIF as the external embed
+        // In the future, we could support multiple GIFs
+        const gif = gifs[0];
+
+        // Upload the GIF as a JPEG thumbnail (Bluesky requires JPEG, not GIF)
+        const thumbnailBlob = await this.uploadImage(accessJwt, gif.uri, 'image/jpeg');
+
+        record.embed = {
+          $type: 'app.bsky.embed.external',
+          external: {
+            uri: gif.uri,
+            title: gif.alt || 'GIF',
+            description: `Alt: ${gif.alt || 'GIF'}`,
+            thumb: {
+              $type: 'blob',
+              ref: thumbnailBlob.blob.ref,
+              mimeType: thumbnailBlob.blob.mimeType,
+              size: thumbnailBlob.blob.size,
+            },
+          },
+        };
+      }
     }
 
     return this.makeAuthenticatedRequest<{

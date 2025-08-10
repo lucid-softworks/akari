@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 检查缺失的翻译",
       "developmentTool": "开发工具",
       "notifications": "通知"
+    },
+    "gif": {
+      "selectGif": "选择GIF",
+      "searchPlaceholder": "搜索GIF...",
+      "loadingMore": "加载更多...",
+      "noResults": "未找到GIF",
+      "noTrending": "没有热门GIF",
+      "addGif": "添加GIF",
+      "gifAltTextPlaceholder": "为无障碍访问描述此GIF...",
+      "apiError": "无法加载GIF。请检查您的网络连接。"
     }
   }
 }

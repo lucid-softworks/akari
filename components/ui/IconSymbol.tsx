@@ -39,7 +39,8 @@ const MAPPING = {
   bell: 'notifications',
   plus: 'add',
   'xmark.circle.fill': 'cancel',
-} as IconMapping;
+  gif: 'gif',
+} as unknown as IconMapping;
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.

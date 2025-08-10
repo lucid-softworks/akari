@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Verificar traduções ausentes",
       "developmentTool": "Ferramenta de desenvolvimento",
       "notifications": "Notificações"
+    },
+    "gif": {
+      "selectGif": "Selecionar GIF",
+      "searchPlaceholder": "Pesquisar GIF...",
+      "loadingMore": "Carregando mais...",
+      "noResults": "Nenhum GIF encontrado",
+      "noTrending": "Nenhum GIF popular disponível",
+      "addGif": "Adicionar GIF",
+      "gifAltTextPlaceholder": "Descreva este GIF para acessibilidade...",
+      "apiError": "Não foi possível carregar GIF. Verifique sua conexão com a internet."
     }
   }
 }

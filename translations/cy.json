@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Gwiriwch Cyfieithiadau Coll",
       "developmentTool": "Offeryn datblygu",
       "notifications": "Hysbysiadau"
+    },
+    "gif": {
+      "selectGif": "Dewis GIF",
+      "searchPlaceholder": "Chwilio GIF...",
+      "loadingMore": "Llwytho mwy...",
+      "noResults": "Dim GIF wedi'u canfod",
+      "noTrending": "Dim GIF poblogaidd ar gael",
+      "addGif": "Ychwanegu GIF",
+      "gifAltTextPlaceholder": "Disgrifiwch y GIF hwn ar gyfer hygyrchedd...",
+      "apiError": "Methu llwytho GIF. Gwiriwch eich cysylltiad rhyngrwyd."
     }
   }
 }

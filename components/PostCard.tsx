@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ExternalEmbed } from '@/components/ExternalEmbed';
+import { GifEmbed } from '@/components/GifEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { Labels } from '@/components/Labels';
 import { PostComposer } from '@/components/PostComposer';
@@ -289,7 +290,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
     return uri.includes('youtube.com') || uri.includes('youtu.be') || uri.includes('music.youtube.com');
   };
 
-  // Check if embed is an external embed (non-YouTube)
+  // Check if embed is an external embed (non-YouTube, non-GIF)
   const isExternalEmbed = () => {
     const embedData = post.embed || (post.embeds && post.embeds[0]);
 
@@ -298,7 +299,26 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
 
     const uri = embedData.external?.uri || '';
-    return !uri.includes('youtube.com') && !uri.includes('youtu.be') && !uri.includes('music.youtube.com');
+    return (
+      !uri.includes('youtube.com') &&
+      !uri.includes('youtu.be') &&
+      !uri.includes('music.youtube.com') &&
+      !uri.includes('tenor.com') &&
+      !uri.includes('media.tenor.com') &&
+      !uri.endsWith('.gif')
+    );
+  };
+
+  // Check if embed is a GIF embed
+  const isGifEmbed = () => {
+    const embedData = post.embed || (post.embeds && post.embeds[0]);
+
+    if (!embedData || !embedData.$type?.includes('app.bsky.embed.external')) {
+      return false;
+    }
+
+    const uri = embedData.external?.uri || '';
+    return uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif');
   };
 
   // Check if embed is a native video embed
@@ -517,7 +537,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
           return isYouTube && embedData && <YouTubeEmbed embed={embedData} />;
         })()}
 
-        {/* Render external embed if present (non-YouTube) */}
+        {/* Render GIF embed if present */}
+        {(() => {
+          const isGif = isGifEmbed();
+          const embedData = getEmbedData();
+          return isGif && embedData && <GifEmbed embed={embedData} />;
+        })()}
+
+        {/* Render external embed if present (non-YouTube, non-GIF) */}
         {(() => {
           const isExternal = isExternalEmbed();
           const embedData = getEmbedData();

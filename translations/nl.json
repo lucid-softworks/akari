@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Controleer ontbrekende vertalingen",
       "developmentTool": "Ontwikkelingshulpmiddel",
       "notifications": "Meldingen"
+    },
+    "gif": {
+      "selectGif": "GIF selecteren",
+      "searchPlaceholder": "GIF zoeken...",
+      "loadingMore": "Meer laden...",
+      "noResults": "Geen GIF gevonden",
+      "noTrending": "Geen populaire GIF beschikbaar",
+      "addGif": "GIF toevoegen",
+      "gifAltTextPlaceholder": "Beschrijf deze GIF voor toegankelijkheid...",
+      "apiError": "Kan GIF niet laden. Controleer je internetverbinding."
     }
   }
 }

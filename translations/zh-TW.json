@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 檢查缺失的翻譯",
       "developmentTool": "開發工具",
       "notifications": "通知"
+    },
+    "gif": {
+      "selectGif": "選擇GIF",
+      "searchPlaceholder": "搜尋GIF...",
+      "loadingMore": "載入更多...",
+      "noResults": "找不到GIF",
+      "noTrending": "沒有熱門GIF",
+      "addGif": "新增GIF",
+      "gifAltTextPlaceholder": "為無障礙存取描述此GIF...",
+      "apiError": "無法載入GIF。請檢查您的網路連線。"
     }
   }
 }

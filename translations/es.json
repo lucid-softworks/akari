@@ -224,6 +224,16 @@
       "postPlaceholder": "¿Qué está pasando?",
       "imageAltTextPlaceholder": "Describe esta imagen para accesibilidad..."
     },
+    "gif": {
+      "selectGif": "Seleccionar GIF",
+      "searchPlaceholder": "Buscar GIFs...",
+      "loadingMore": "Cargando más...",
+      "noResults": "No se encontraron GIFs",
+      "noTrending": "No hay GIFs populares disponibles",
+      "addGif": "Añadir GIF",
+      "gifAltTextPlaceholder": "Describe este GIF para accesibilidad...",
+      "apiError": "No se pudieron cargar los GIFs. Verifica tu conexión a internet."
+    },
     "messages": {
       "typeMessage": "Escribe un mensaje..."
     },

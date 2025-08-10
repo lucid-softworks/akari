@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Kiểm tra bản dịch bị thiếu",
       "developmentTool": "Công cụ phát triển",
       "notifications": "Thông Báo"
+    },
+    "gif": {
+      "selectGif": "Chọn GIF",
+      "searchPlaceholder": "Tìm kiếm GIF...",
+      "loadingMore": "Đang tải thêm...",
+      "noResults": "Không tìm thấy GIF",
+      "noTrending": "Không có GIF phổ biến",
+      "addGif": "Thêm GIF",
+      "gifAltTextPlaceholder": "Mô tả GIF này cho khả năng truy cập...",
+      "apiError": "Không thể tải GIF. Vui lòng kiểm tra kết nối internet."
     }
   }
 }

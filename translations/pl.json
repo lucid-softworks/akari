@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Sprawdź brakujące tłumaczenia",
       "developmentTool": "Narzędzie deweloperskie",
       "notifications": "Powiadomienia"
+    },
+    "gif": {
+      "selectGif": "Wybierz GIF",
+      "searchPlaceholder": "Szukaj GIF...",
+      "loadingMore": "Ładowanie więcej...",
+      "noResults": "Nie znaleziono GIF",
+      "noTrending": "Brak popularnych GIF",
+      "addGif": "Dodaj GIF",
+      "gifAltTextPlaceholder": "Opisz ten GIF dla dostępności...",
+      "apiError": "Nie można załadować GIF. Sprawdź połączenie internetowe."
     }
   }
 }

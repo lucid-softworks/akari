@@ -235,6 +235,16 @@
       "checkMissingTranslations": "🔍 不足している翻訳をチェック",
       "developmentTool": "開発ツール",
       "notifications": "通知"
+    },
+    "gif": {
+      "selectGif": "GIFを選択",
+      "searchPlaceholder": "GIFを検索...",
+      "loadingMore": "さらに読み込み中...",
+      "noResults": "GIFが見つかりません",
+      "noTrending": "人気のGIFがありません",
+      "addGif": "GIFを追加",
+      "gifAltTextPlaceholder": "このGIFをアクセシビリティのために説明してください...",
+      "apiError": "GIFを読み込めませんでした。インターネット接続を確認してください。"
     }
   }
 }

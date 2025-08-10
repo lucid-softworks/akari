@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ExternalEmbed } from '@/components/ExternalEmbed';
+import { GifEmbed } from '@/components/GifEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -100,16 +101,22 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     const embedsData = embed.record.embeds;
 
     if (embedData?.images && embedData.images.length > 0) {
-      const urls = embedData.images.map((img) => img.fullsize);
-      const altTexts = embedData.images.map((img) => img.alt);
+      // Filter out video files, only show actual images (including GIFs)
+      const imageFiles = embedData.images.filter((img) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'));
+      const urls = imageFiles.map((img) => img.fullsize);
+      const altTexts = imageFiles.map((img) => img.alt);
       return { urls, altTexts };
     }
 
     if (embedsData) {
       for (const embedItem of embedsData) {
         if (embedItem.images && embedItem.images.length > 0) {
-          const urls = embedItem.images.map((img) => img.fullsize);
-          const altTexts = embedItem.images.map((img) => img.alt);
+          // Filter out video files, only show actual images (including GIFs)
+          const imageFiles = embedItem.images.filter(
+            (img) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
+          );
+          const urls = imageFiles.map((img) => img.fullsize);
+          const altTexts = imageFiles.map((img) => img.alt);
           return { urls, altTexts };
         }
       }
@@ -225,6 +232,15 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     return null;
   };
 
+  // Check if embed is a GIF embed
+  const isGifEmbed = () => {
+    const embedData = getEmbedData();
+    if (!embedData) return false;
+
+    const uri = embedData.external?.uri || '';
+    return uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif');
+  };
+
   // Check for video embeds
   const getVideoEmbedData = () => {
     if (embed.record.embed?.external) {
@@ -270,7 +286,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const isExternalEmbed = () => {
     const embedData = getEmbedData();
-    return embedData && !isYouTubeEmbed();
+    return embedData && !isYouTubeEmbed() && !isGifEmbed();
   };
 
   const isNativeVideoEmbed = () => {
@@ -426,7 +442,14 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
               return isYouTube && embedData && <YouTubeEmbed embed={embedData} />;
             })()}
 
-            {/* Render external embed if present (non-YouTube) */}
+            {/* Render GIF embed if present */}
+            {(() => {
+              const isGif = isGifEmbed();
+              const embedData = getEmbedData();
+              return isGif && embedData && <GifEmbed embed={embedData} />;
+            })()}
+
+            {/* Render external embed if present (non-YouTube, non-GIF) */}
             {(() => {
               const isExternal = isExternalEmbed();
               const embedData = getEmbedData();

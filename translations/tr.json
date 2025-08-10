@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Eksik çevirileri kontrol et",
       "developmentTool": "Geliştirme aracı",
       "notifications": "Bildirimler"
+    },
+    "gif": {
+      "selectGif": "GIF Seç",
+      "searchPlaceholder": "GIF Ara...",
+      "loadingMore": "Daha fazla yükleniyor...",
+      "noResults": "GIF bulunamadı",
+      "noTrending": "Popüler GIF yok",
+      "addGif": "GIF Ekle",
+      "gifAltTextPlaceholder": "Bu GIF'i erişilebilirlik için açıklayın...",
+      "apiError": "GIF yüklenemedi. İnternet bağlantınızı kontrol edin."
     }
   }
 }

@@ -222,7 +222,19 @@
       "replyingTo": "Replying to",
       "replyPlaceholder": "Write your reply...",
       "postPlaceholder": "What's happening?",
-      "imageAltTextPlaceholder": "Describe this image for accessibility..."
+      "imageAltTextPlaceholder": "Describe this image for accessibility...",
+      "addPhoto": "Add photo",
+      "selectPhoto": "Select photo from gallery"
+    },
+    "gif": {
+      "selectGif": "Select GIF",
+      "searchPlaceholder": "Search GIFs...",
+      "loadingMore": "Loading more...",
+      "noResults": "No GIFs found",
+      "noTrending": "No trending GIFs available",
+      "addGif": "Add GIF",
+      "gifAltTextPlaceholder": "Describe this GIF for accessibility...",
+      "apiError": "Unable to load GIFs. Please check your internet connection."
     },
     "messages": {
       "typeMessage": "Type a message..."

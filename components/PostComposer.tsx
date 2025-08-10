@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 
+import { GifPicker } from '@/components/GifPicker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -33,12 +34,14 @@ type AttachedImage = {
   uri: string;
   alt: string;
   mimeType: string;
+  tenorId?: string;
 };
 
 export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const { t } = useTranslation();
   const [text, setText] = useState('');
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
+  const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const createPostMutation = useCreatePost();
 
   // Theme colors
@@ -76,6 +79,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const handleClose = () => {
     setText('');
     setAttachedImages([]);
+    setGifPickerVisible(false);
     onClose();
   };
 
@@ -122,6 +126,17 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
     const updatedImages = [...attachedImages];
     updatedImages[index] = { ...updatedImages[index], alt };
     setAttachedImages(updatedImages);
+  };
+
+  const handleAddGif = () => {
+    setGifPickerVisible(true);
+  };
+
+  const handleSelectGif = (gif: AttachedImage) => {
+    // Limit to 4 images (Bluesky limit)
+    if (attachedImages.length < 4) {
+      setAttachedImages([...attachedImages, gif]);
+    }
   };
 
   const isPostDisabled = (!text.trim() && attachedImages.length === 0) || createPostMutation.isPending;
@@ -230,8 +245,19 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                   style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
                   onPress={handleAddImage}
                   disabled={attachedImages.length >= 4}
+                  accessibilityLabel={t('post.addPhoto')}
+                  accessibilityHint={t('post.selectPhoto')}
                 >
                   <IconSymbol name="photo" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
+                  onPress={handleAddGif}
+                  disabled={attachedImages.length >= 4}
+                  accessibilityLabel={t('gif.addGif')}
+                  accessibilityHint={t('gif.selectGif')}
+                >
+                  <IconSymbol name="gif" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
                 </TouchableOpacity>
               </View>
 
@@ -254,6 +280,9 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
           </ThemedView>
         </ThemedView>
       </KeyboardAvoidingView>
+
+      {/* GIF Picker Modal */}
+      <GifPicker visible={gifPickerVisible} onClose={() => setGifPickerVisible(false)} onSelectGif={handleSelectGif} />
     </Modal>
   );
 }
@@ -271,6 +300,9 @@ const styles = StyleSheet.create({
     margin: 20,
     minHeight: 300,
     maxHeight: '80%',
+    maxWidth: 600,
+    alignSelf: 'center',
+    width: '100%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -403,18 +435,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
     borderTopWidth: 0.5,
   },
   footerLeft: {
     flex: 1,
+    flexDirection: 'row',
+    gap: 4,
   },
   footerRight: {
     alignItems: 'flex-end',
   },
   actionButton: {
-    padding: 8,
-    borderRadius: 8,
+    padding: 6,
+    borderRadius: 6,
   },
   actionButtonDisabled: {
     opacity: 0.5,

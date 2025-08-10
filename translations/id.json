@@ -234,6 +234,16 @@
       "checkMissingTranslations": "🔍 Periksa Terjemahan yang Hilang",
       "developmentTool": "Alat Pengembangan",
       "notifications": "Notifikasi"
+    },
+    "gif": {
+      "selectGif": "Pilih GIF",
+      "searchPlaceholder": "Cari GIF...",
+      "loadingMore": "Memuat lebih banyak...",
+      "noResults": "Tidak ada GIF ditemukan",
+      "noTrending": "Tidak ada GIF populer",
+      "addGif": "Tambah GIF",
+      "gifAltTextPlaceholder": "Jelaskan GIF ini untuk aksesibilitas...",
+      "apiError": "Tidak dapat memuat GIF. Periksa koneksi internet Anda."
     }
   }
 }

@@ -8,6 +8,7 @@ This is a [React Native](https://reactnative.dev) project built with [Expo](http
 - 🔄 **TanStack Query** - Efficient data fetching and caching
 - 🎨 **Themed UI** - Light/dark mode support
 - 📱 **Cross-platform** - iOS, Android, and Web support
+- 🎬 **GIF Support** - Tenor GIF integration for enhanced posts
 
 ## Get started
 
