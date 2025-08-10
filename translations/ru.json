@@ -224,7 +224,8 @@
       "postPlaceholder": "Что происходит?"
     },
     "messages": {
-      "typeMessage": "Введите сообщение..."
+      "typeMessage": "Введите сообщение...",
+      "errorSendingMessage": "Не удалось отправить сообщение. Попробуйте еще раз."
     },
     "settings": {
       "account": "Аккаунт",

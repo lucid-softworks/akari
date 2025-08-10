@@ -224,7 +224,8 @@
       "postPlaceholder": "Wat gebeurt er?"
     },
     "messages": {
-      "typeMessage": "Typ een bericht..."
+      "typeMessage": "Typ een bericht...",
+      "errorSendingMessage": "Bericht kon niet worden verzonden. Probeer het opnieuw."
     },
     "settings": {
       "account": "Account",

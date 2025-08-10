@@ -224,7 +224,8 @@
       "postPlaceholder": "Cosa sta succedendo?"
     },
     "messages": {
-      "typeMessage": "Scrivi un messaggio..."
+      "typeMessage": "Scrivi un messaggio...",
+      "errorSendingMessage": "Impossibile inviare il messaggio. Riprova."
     },
     "settings": {
       "account": "Account",

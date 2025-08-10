@@ -224,7 +224,8 @@
       "postPlaceholder": "ماذا يحدث؟"
     },
     "messages": {
-      "typeMessage": "اكتب رسالة..."
+      "typeMessage": "اكتب رسالة...",
+      "errorSendingMessage": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى."
     },
     "settings": {
       "account": "الحساب",

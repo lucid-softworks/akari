@@ -40,6 +40,8 @@ const MAPPING = {
   plus: 'add',
   'xmark.circle.fill': 'cancel',
   gif: 'gif',
+  clock: 'schedule',
+  'arrow.up.circle.fill': 'keyboard-arrow-up',
 } as unknown as IconMapping;
 
 /**

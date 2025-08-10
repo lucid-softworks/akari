@@ -224,7 +224,8 @@
       "postPlaceholder": "發生了什麼？"
     },
     "messages": {
-      "typeMessage": "輸入訊息..."
+      "typeMessage": "輸入訊息...",
+      "errorSendingMessage": "發送訊息失敗。請重試。"
     },
     "settings": {
       "account": "帳戶",

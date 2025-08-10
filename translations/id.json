@@ -224,7 +224,8 @@
       "postPlaceholder": "Apa yang sedang terjadi?"
     },
     "messages": {
-      "typeMessage": "Ketik pesan..."
+      "typeMessage": "Ketik pesan...",
+      "errorSendingMessage": "Gagal mengirim pesan. Silakan coba lagi."
     },
     "settings": {
       "account": "Akun",

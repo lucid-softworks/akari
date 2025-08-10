@@ -224,7 +224,8 @@
       "postPlaceholder": "O que está acontecendo?"
     },
     "messages": {
-      "typeMessage": "Digite uma mensagem..."
+      "typeMessage": "Digite uma mensagem...",
+      "errorSendingMessage": "Falha ao enviar mensagem. Tente novamente."
     },
     "settings": {
       "account": "Conta",

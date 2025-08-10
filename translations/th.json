@@ -224,7 +224,8 @@
       "postPlaceholder": "เกิดอะไรขึ้น?"
     },
     "messages": {
-      "typeMessage": "พิมพ์ข้อความ..."
+      "typeMessage": "พิมพ์ข้อความ...",
+      "errorSendingMessage": "ส่งข้อความไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
     },
     "settings": {
       "account": "บัญชี",

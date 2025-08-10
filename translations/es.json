@@ -235,7 +235,8 @@
       "apiError": "No se pudieron cargar los GIFs. Verifica tu conexión a internet."
     },
     "messages": {
-      "typeMessage": "Escribe un mensaje..."
+      "typeMessage": "Escribe un mensaje...",
+      "errorSendingMessage": "No se pudo enviar el mensaje. Por favor, inténtalo de nuevo."
     },
     "settings": {
       "account": "Cuenta",

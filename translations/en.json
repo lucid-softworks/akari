@@ -237,7 +237,8 @@
       "apiError": "Unable to load GIFs. Please check your internet connection."
     },
     "messages": {
-      "typeMessage": "Type a message..."
+      "typeMessage": "Type a message...",
+      "errorSendingMessage": "Failed to send message. Please try again."
     },
     "settings": {
       "account": "Account",

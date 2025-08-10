@@ -235,7 +235,8 @@
       "apiError": "Impossible de charger les GIFs. Vérifiez votre connexion internet."
     },
     "messages": {
-      "typeMessage": "Tapez un message..."
+      "typeMessage": "Tapez un message...",
+      "errorSendingMessage": "Impossible d'envoyer le message. Veuillez réessayer."
     },
     "settings": {
       "account": "Compte",

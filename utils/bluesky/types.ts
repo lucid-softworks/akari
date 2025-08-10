@@ -331,6 +331,38 @@ export type BlueskyMessagesResponse = {
 };
 
 /**
+ * Bluesky send message response
+ */
+export type BlueskySendMessageResponse = {
+  id: string;
+  rev: string;
+  text: string;
+  facets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
+  embed?: BlueskyEmbed;
+  reactions?: {
+    value: string;
+    sender: {
+      did: string;
+    };
+    createdAt: string;
+  }[];
+  sender: {
+    did: string;
+  };
+  sentAt: string;
+};
+
+/**
  * Bluesky conversation
  */
 export type BlueskyConvo = {

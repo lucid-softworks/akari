@@ -224,7 +224,8 @@
       "postPlaceholder": "Beth sy'n digwydd?"
     },
     "messages": {
-      "typeMessage": "Teipiwch neges..."
+      "typeMessage": "Teipiwch neges...",
+      "errorSendingMessage": "Methwyd anfon y neges. Rhowch gynnig arall arni."
     },
     "settings": {
       "account": "Cyfrif",

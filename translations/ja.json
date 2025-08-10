@@ -225,7 +225,8 @@
       "imageAltTextPlaceholder": "アクセシビリティのため、この画像を説明してください..."
     },
     "messages": {
-      "typeMessage": "メッセージを入力..."
+      "typeMessage": "メッセージを入力...",
+      "errorSendingMessage": "メッセージの送信に失敗しました。もう一度お試しください。"
     },
     "settings": {
       "account": "アカウント",

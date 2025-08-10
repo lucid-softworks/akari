@@ -7,6 +7,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -70,16 +71,22 @@ export default function ConversationScreen() {
     isFetchingNextPage,
   } = useMessages(conversation?.convoId, 50);
 
+  // Send message mutation
+  const sendMessageMutation = useSendMessage();
+
   const handleSendMessage = async () => {
-    if (!messageText.trim()) return;
+    if (!messageText.trim() || !conversation?.convoId) return;
 
     try {
-      // TODO: Send message via API
+      await sendMessageMutation.mutateAsync({
+        convoId: conversation.convoId,
+        text: messageText.trim(),
+      });
       setMessageText('');
-    } catch {
+    } catch (error) {
       showAlert({
         title: t('common.error'),
-        message: t('common.errorLoadingMessages'),
+        message: t('messages.errorSendingMessage'),
       });
     }
   };
@@ -247,11 +254,18 @@ export default function ConversationScreen() {
               maxLength={500}
             />
             <TouchableOpacity
-              style={[styles.sendButton, !messageText.trim() ? styles.sendButtonDisabled : null]}
+              style={[
+                styles.sendButton,
+                !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null,
+              ]}
               onPress={handleSendMessage}
-              disabled={!messageText.trim()}
+              disabled={!messageText.trim() || sendMessageMutation.isPending}
             >
-              <IconSymbol name="arrow.up.circle.fill" size={32} color={messageText.trim() ? '#007AFF' : '#C7C7CC'} />
+              <IconSymbol
+                name={sendMessageMutation.isPending ? 'clock' : 'arrow.up.circle.fill'}
+                size={32}
+                color={messageText.trim() && !sendMessageMutation.isPending ? '#007AFF' : '#C7C7CC'}
+              />
             </TouchableOpacity>
           </ThemedView>
         </ThemedView>

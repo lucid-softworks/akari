@@ -224,7 +224,8 @@
       "postPlaceholder": "Ne oluyor?"
     },
     "messages": {
-      "typeMessage": "Mesaj yazın..."
+      "typeMessage": "Mesaj yazın...",
+      "errorSendingMessage": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
     },
     "settings": {
       "account": "Hesap",

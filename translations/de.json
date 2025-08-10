@@ -224,7 +224,8 @@
       "postPlaceholder": "Was passiert?"
     },
     "messages": {
-      "typeMessage": "Nachricht eingeben..."
+      "typeMessage": "Nachricht eingeben...",
+      "errorSendingMessage": "Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
     },
     "settings": {
       "account": "Konto",

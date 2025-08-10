@@ -224,7 +224,8 @@
       "postPlaceholder": "क्या हो रहा है?"
     },
     "messages": {
-      "typeMessage": "संदेश लिखें..."
+      "typeMessage": "संदेश लिखें...",
+      "errorSendingMessage": "संदेश भेजने में विफल। कृपया पुनः प्रयास करें।"
     },
     "settings": {
       "account": "खाता",

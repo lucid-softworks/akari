@@ -224,7 +224,8 @@
       "postPlaceholder": "发生了什么？"
     },
     "messages": {
-      "typeMessage": "输入消息..."
+      "typeMessage": "输入消息...",
+      "errorSendingMessage": "发送消息失败。请重试。"
     },
     "settings": {
       "account": "账户",

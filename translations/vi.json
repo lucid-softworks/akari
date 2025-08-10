@@ -224,7 +224,8 @@
       "postPlaceholder": "Chuyện gì đang xảy ra?"
     },
     "messages": {
-      "typeMessage": "Nhập tin nhắn..."
+      "typeMessage": "Nhập tin nhắn...",
+      "errorSendingMessage": "Không thể gửi tin nhắn. Vui lòng thử lại."
     },
     "settings": {
       "account": "Tài khoản",

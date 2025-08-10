@@ -16,6 +16,7 @@ import type {
   BlueskyProfileResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
+  BlueskySendMessageResponse,
   BlueskySession,
   BlueskyStarterPacksResponse,
   BlueskyThreadResponse,
@@ -177,6 +178,16 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyMessagesResponse> {
     return this.conversations.getMessages(accessJwt, convoId, limit, cursor);
+  }
+
+  async sendMessage(
+    accessJwt: string,
+    convoId: string,
+    message: {
+      text: string;
+    },
+  ): Promise<BlueskySendMessageResponse> {
+    return this.conversations.sendMessage(accessJwt, convoId, message);
   }
 
   // Graph methods (follow/block)

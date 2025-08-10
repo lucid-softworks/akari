@@ -1,5 +1,5 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyConvosResponse, BlueskyMessagesResponse } from './types';
+import type { BlueskyConvosResponse, BlueskyMessagesResponse, BlueskySendMessageResponse } from './types';
 
 /**
  * Bluesky API conversation methods
@@ -56,6 +56,32 @@ export class BlueskyConversations extends BlueskyApiClient {
       params,
       headers: {
         'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+      },
+    });
+  }
+
+  /**
+   * Sends a message to a conversation
+   * @param accessJwt - Valid access JWT token
+   * @param convoId - The conversation ID
+   * @param message - The message to send
+   * @returns Promise resolving to the sent message data
+   */
+  async sendMessage(
+    accessJwt: string,
+    convoId: string,
+    message: {
+      text: string;
+    },
+  ): Promise<BlueskySendMessageResponse> {
+    return this.makeAuthenticatedRequest<BlueskySendMessageResponse>('/chat.bsky.convo.sendMessage', accessJwt, {
+      method: 'POST',
+      headers: {
+        'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+      },
+      body: {
+        convoId,
+        message,
       },
     });
   }
