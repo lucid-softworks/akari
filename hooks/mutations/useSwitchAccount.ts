@@ -1,6 +1,7 @@
 import { Account } from '@/types/account';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetAuthentication } from './useSetAuthentication';
+import { useSetCurrentAccount } from './useSetCurrentAccount';
 
 /**
  * Mutation hook for switching accounts
@@ -8,14 +9,15 @@ import { useSetAuthentication } from './useSetAuthentication';
 export function useSwitchAccount() {
   const queryClient = useQueryClient();
   const setAuthMutation = useSetAuthentication();
+  const setCurrentAccountMutation = useSetCurrentAccount();
 
   return useMutation({
     mutationFn: async (account: Account) => {
       return account;
     },
     onSuccess: async (account) => {
-      // Set the current account
-      queryClient.setQueryData(['currentAccount'], account);
+      // Set the current account (updates both cache and storage)
+      await setCurrentAccountMutation.mutateAsync(account);
 
       // Set authentication data for the new account
       await setAuthMutation.mutateAsync({
