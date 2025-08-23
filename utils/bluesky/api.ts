@@ -190,7 +190,7 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.conversations.sendMessage(accessJwt, convoId, message);
   }
 
-  // Graph methods (follow/block)
+  // Graph methods (follow/block/mute)
   async followUser(accessJwt: string, did: string) {
     return this.graph.followUser(accessJwt, did);
   }
@@ -205,6 +205,22 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async unblockUser(accessJwt: string, blockUri: string) {
     return this.graph.unblockUser(accessJwt, blockUri);
+  }
+
+  async muteUser(accessJwt: string, actor: string) {
+    return this.graph.muteUser(accessJwt, actor);
+  }
+
+  async unmuteUser(accessJwt: string, actor: string) {
+    return this.graph.unmuteUser(accessJwt, actor);
+  }
+
+  async muteActorList(accessJwt: string, list: string) {
+    return this.graph.muteActorList(accessJwt, list);
+  }
+
+  async muteThread(accessJwt: string, root: string) {
+    return this.graph.muteThread(accessJwt, root);
   }
 
   // Search methods
