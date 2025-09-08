@@ -1,0 +1,42 @@
+{
+  "name": "clearsky-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "ClearSky API client for React Native and web applications",
+  "main": "dist/api.js",
+  "types": "dist/api.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/api.d.ts",
+      "import": "./dist/api.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "keywords": [
+    "clearsky",
+    "api",
+    "client",
+    "bluesky",
+    "moderation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vitest": "^2.0.0",
+    "eslint": "^9.25.0",
+    "eslint-config-expo": "~9.2.0",
+    "@eslint/eslintrc": "^3.0.0",
+    "@eslint/js": "^9.25.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.70.0"
+  }
+}
