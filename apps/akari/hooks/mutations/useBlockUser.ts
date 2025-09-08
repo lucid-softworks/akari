@@ -13,6 +13,7 @@ export function useBlockUser() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
+    mutationKey: ['blockUser'],
     mutationFn: async ({
       did,
       blockUri,

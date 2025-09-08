@@ -13,6 +13,7 @@ export function useUpdateProfile() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
+    mutationKey: ['updateProfile'],
     mutationFn: async ({
       displayName,
       description,

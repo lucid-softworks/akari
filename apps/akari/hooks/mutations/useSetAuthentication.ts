@@ -8,6 +8,7 @@ export function useSetAuthentication() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ['setAuthentication'],
     mutationFn: async ({
       token,
       refreshToken,

@@ -13,6 +13,7 @@ export function useFollowUser() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
+    mutationKey: ['followUser'],
     mutationFn: async ({
       did,
       followUri,
