@@ -1,21 +1,17 @@
 {
-  "name": "akari-monorepo",
-  "private": true,
+  "name": "akari",
+  "main": "expo-router/entry",
   "version": "1.0.0",
-  "packageManager": "npm@10.9.2",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "clean": "turbo run clean",
-    "ios": "turbo run ios --filter=akari",
-    "android": "turbo run android --filter=akari",
-    "web": "turbo run web --filter=akari",
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "deploy": "npx expo export -p web && eas deploy",
+    "deploy:prod": "npm run deploy -- --prod",
     "reset-project": "node ./scripts/reset-project.js",
     "update-translations": "node ./scripts/update-translations.js",
     "validate-translations": "node ./scripts/validate-translations.js",
@@ -37,6 +33,7 @@
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
     "@tanstack/react-query-persist-client": "^5.83.0",
+    "bluesky-api": "*",
     "expo": "~53.0.20",
     "expo-blur": "~14.1.5",
     "expo-clipboard": "~7.1.5",
@@ -74,6 +71,12 @@
     "react-native-webview": "13.13.5"
   },
   "devDependencies": {
-    "turbo": "^2.3.0"
-  }
+    "@babel/core": "^7.25.2",
+    "@types/react": "~19.0.10",
+    "eslint": "^9.25.0",
+    "eslint-config-expo": "~9.2.0",
+    "typescript": "~5.8.3",
+    "vitest": "^2.0.0"
+  },
+  "private": true
 }
