@@ -1,5 +1,6 @@
 import { BlueskyApiClient } from './client';
 import type {
+  BlueskyFeed,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyLikeResponse,
@@ -69,6 +70,22 @@ export class BlueskyFeeds extends BlueskyApiClient {
     }
 
     return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, { params });
+  }
+
+  /**
+   * Gets feed generator metadata for specific feed URIs
+   * @param accessJwt - Valid access JWT token
+   * @param feeds - Array of feed URIs to get metadata for
+   * @returns Promise resolving to feed generators data
+   */
+  async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<{ feeds: BlueskyFeed[] }> {
+    const params: Record<string, string> = {
+      feeds: feeds.join(','),
+    };
+
+    return this.makeAuthenticatedRequest<{ feeds: BlueskyFeed[] }>('/app.bsky.feed.getFeedGenerators', accessJwt, {
+      params,
+    });
   }
 
   /**

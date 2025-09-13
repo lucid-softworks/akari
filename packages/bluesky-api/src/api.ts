@@ -8,11 +8,13 @@ import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
 import type {
   BlueskyConvosResponse,
+  BlueskyFeed,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyMessagesResponse,
   BlueskyNotificationsResponse,
   BlueskyPostView,
+  BlueskyPreferencesResponse,
   BlueskyProfileResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
@@ -71,6 +73,10 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.actors.updateProfile(accessJwt, profileData);
   }
 
+  async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
+    return this.actors.getPreferences(accessJwt);
+  }
+
   async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.feeds.getTimeline(accessJwt, limit);
   }
@@ -81,6 +87,10 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
     return this.feeds.getFeed(accessJwt, feed, limit, cursor);
+  }
+
+  async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<{ feeds: BlueskyFeed[] }> {
+    return this.feeds.getFeedGenerators(accessJwt, feeds);
   }
 
   async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {

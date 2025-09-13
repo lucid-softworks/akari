@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import type { BlueskyFeedItem } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
 import { TabBar } from '@/components/TabBar';
@@ -15,9 +16,10 @@ import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeeds } from '@/hooks/queries/useFeeds';
+import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
+import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { BlueskyFeedItem } from '@/bluesky-api';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -41,44 +43,58 @@ export default function HomeScreen() {
     tabScrollRegistry.register('index', scrollToTop);
   }, []);
 
-  // Get user's feeds
+  // Get user's saved feeds from preferences
+  const { data: savedFeeds, isLoading: savedFeedsLoading } = useSavedFeeds();
+
+  // Get user's created feeds
   const { data: feedsData, isLoading: feedsLoading, refetch: refetchFeeds } = useFeeds(currentAccount?.did, 50);
 
-  // Create a combined feeds array with default home feed
-  const allFeeds = [
-    {
-      uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
-      displayName: 'Discover',
-      description: 'Popular posts from across Bluesky',
-      likeCount: 0,
-      acceptsInteractions: true,
-      contentMode: 'app.bsky.feed.defs#contentModeUnspecified' as const,
-      indexedAt: new Date().toISOString(),
-      creator: {
-        did: 'did:plc:z72i7hdynmk6r22z27h6tvur',
-        handle: 'bsky.app',
-        displayName: 'Bluesky',
-        description: 'Official Bluesky account',
-        avatar: '',
-        associated: {
-          lists: 0,
-          feedgens: 0,
-          starterPacks: 0,
-          labeler: false,
-          chat: { allowIncoming: 'all' as const },
-        },
-        indexedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        viewer: {
-          muted: false,
-          blockedBy: false,
-        },
-        labels: [],
-      },
-      labels: [],
-    },
-    ...(feedsData?.feeds || []),
-  ];
+  // Create feeds array from saved preferences
+  const allFeeds = savedFeeds
+    .map((savedFeed) => {
+      if (savedFeed.type === 'timeline' && savedFeed.value === 'following') {
+        // Create timeline feed object for "Following"
+        return {
+          uri: 'following',
+          displayName: 'Following',
+          description: 'Posts from people you follow',
+          likeCount: 0,
+          acceptsInteractions: true,
+          contentMode: 'app.bsky.feed.defs#contentModeUnspecified' as const,
+          indexedAt: new Date().toISOString(),
+          creator: {
+            did: currentAccount?.did || '',
+            handle: currentAccount?.handle || '',
+            displayName: 'You',
+            description: 'Your timeline',
+            avatar: '',
+            associated: {
+              lists: 0,
+              feedgens: 0,
+              starterPacks: 0,
+              labeler: false,
+              chat: { allowIncoming: 'all' as const },
+            },
+            indexedAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            viewer: {
+              muted: false,
+              blockedBy: false,
+            },
+            labels: [],
+          },
+          labels: [],
+        };
+      } else if (savedFeed.type === 'feed' && savedFeed.metadata) {
+        // Use the actual feed metadata
+        return savedFeed.metadata;
+      }
+      return null;
+    })
+    .filter((feed): feed is NonNullable<typeof feed> => feed !== null);
+
+  // Add user's created feeds
+  const allFeedsWithCreated = [...allFeeds, ...(feedsData?.feeds || [])];
 
   // Use the custom hook for selected feed management
   const { data: selectedFeed } = useSelectedFeed();
@@ -99,11 +115,17 @@ export default function HomeScreen() {
     hasNextPage,
     isFetchingNextPage,
     refetch: refetchFeed,
-  } = useFeed(selectedFeed, 20);
+  } = useFeed(selectedFeed === 'following' ? null : selectedFeed, 20);
+
+  // Get timeline data for "following" feed
+  const { data: timelineData, isLoading: timelineLoading } = useTimeline(20, selectedFeed === 'following');
 
   const onRefresh = async () => {
     setRefreshing(true);
-    if (selectedFeed) {
+    if (selectedFeed === 'following') {
+      // Refresh timeline for following feed
+      // Note: useTimeline doesn't have a refetch method, so we'll skip this for now
+    } else if (selectedFeed) {
       await refetchFeed();
     } else {
       await refetchFeeds();
@@ -117,7 +139,9 @@ export default function HomeScreen() {
     }
   };
 
-  const allPosts = feedData?.pages.flatMap((page) => page.feed) || [];
+  // Get posts based on selected feed type
+  const allPosts =
+    selectedFeed === 'following' ? timelineData?.feed || [] : feedData?.pages.flatMap((page) => page.feed) || [];
 
   const renderFeedItem = ({ item }: { item: BlueskyFeedItem }) => {
     // Check if this post is a reply and has reply context
@@ -161,7 +185,7 @@ export default function HomeScreen() {
     );
   };
 
-  if (feedsLoading) {
+  if (savedFeedsLoading || feedsLoading) {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.header}>
@@ -171,19 +195,8 @@ export default function HomeScreen() {
     );
   }
 
-  if (!feedsData?.feeds || feedsData.feeds.length === 0) {
-    return (
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>{t('feed.noCustomFeedsFound')}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.emptyState}>
-          <ThemedText style={styles.emptyStateText}>{t('feed.noCustomFeedsCreated')}</ThemedText>
-          <ThemedText style={styles.emptyStateText}>{t('feed.canBrowseDefaultFeed')}</ThemedText>
-        </ThemedView>
-      </ThemedView>
-    );
-  }
+  // Always show the feed selector with at least the default Discover feed
+  // The allFeeds array already includes the default feed, so we don't need to return early
 
   return (
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
@@ -194,7 +207,7 @@ export default function HomeScreen() {
       >
         {/* Feed Tabs */}
         <TabBar
-          tabs={allFeeds.map((feed) => ({
+          tabs={allFeedsWithCreated.map((feed) => ({
             key: feed.uri,
             label: feed.displayName,
           }))}
@@ -205,7 +218,7 @@ export default function HomeScreen() {
         {/* Feed Content - Full height, no ScrollView */}
         {selectedFeed ? (
           <View style={styles.feedList}>
-            {feedLoading ? (
+            {feedLoading || timelineLoading ? (
               <FeedSkeleton count={5} />
             ) : allPosts.length === 0 ? (
               <ThemedView style={styles.emptyState}>

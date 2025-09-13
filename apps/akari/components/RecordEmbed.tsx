@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
@@ -13,7 +14,6 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type RecordEmbedProps = {
@@ -81,14 +81,13 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   // Extract text from the quoted post's record
   const getQuotedText = (): string => {
-    // Check if the record has a 'value' property (which contains the actual post data)
-    if (typeof embed.record.value === 'object' && embed.record.value && 'text' in embed.record.value) {
-      return (embed.record.value as { text: string }).text;
+    // Check multiple possible locations for the text content
+    const recordValue = embed.record.record?.record?.value || embed.record.record?.value || embed.record.value;
+
+    if (recordValue?.text) {
+      return recordValue.text;
     }
-    // Fallback to checking record.record (for older format)
-    if (typeof embed.record.record === 'object' && embed.record.record && 'text' in embed.record.record) {
-      return (embed.record.record as { text: string }).text;
-    }
+
     return '';
   };
 
@@ -304,14 +303,18 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const imageData = getImageData();
   const videoData = getVideoData();
-  const { urls: imageUrls, altTexts } = imageData;
+  const { urls: imageUrls } = imageData;
 
   // Check if this is a blocked record by checking the $type field
-  const isBlockedRecord = embed.record.record?.$type === 'app.bsky.embed.record#viewBlocked';
+  // For recordWithMedia, check the nested record.record.$type
+  // For regular record embeds, check record.$type
+  const isBlockedRecord =
+    embed.record.record?.record?.$type === 'app.bsky.embed.record#viewBlocked' ||
+    embed.record.record?.$type === 'app.bsky.embed.record#viewBlocked';
 
   // Get the author's DID or handle for profile lookup
   const authorIdentifier = isBlockedRecord
-    ? embed.record.record?.author?.did
+    ? embed.record.record?.record?.author?.did || embed.record.record?.author?.did
     : embed.record.author?.handle || embed.record.author?.did;
 
   // Fetch profile information if needed
@@ -319,11 +322,19 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   // Determine the blocking scenario
   const getBlockingMessage = () => {
-    if (!isBlockedRecord || !embed.record.record?.author?.viewer) {
+    if (!isBlockedRecord) {
       return null;
     }
 
-    const { blockedBy, blocking } = embed.record.record.author.viewer;
+    // Only show blocking message if we have proper viewer info
+    const viewer =
+      embed.record.record?.record?.author?.viewer || embed.record.record?.author?.viewer || embed.record.author?.viewer;
+
+    if (!viewer) {
+      return null; // Don't show blocking message without proper viewer info
+    }
+
+    const { blockedBy, blocking } = viewer;
 
     if (blockedBy && blocking) {
       return t('profile.mutualBlock');
@@ -340,14 +351,18 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   // Get author information from available sources
   const getAuthorInfo = () => {
-    if (!isBlockedRecord && embed.record.author?.handle && embed.record.author?.displayName) {
+    // For normal (non-blocked) records, check multiple possible locations for author info
+    const author = embed.record.record?.record?.author || embed.record.record?.author || embed.record.author;
+
+    if (!isBlockedRecord && author?.handle) {
       return {
-        handle: embed.record.author.handle,
-        displayName: embed.record.author.displayName,
-        avatar: embed.record.author.avatar,
+        handle: author.handle,
+        displayName: author.displayName || author.handle,
+        avatar: author.avatar,
       };
     }
 
+    // For blocked records, use the blocking-specific logic
     if (isBlockedRecord && profileData) {
       return {
         handle: profileData.handle,
@@ -356,10 +371,11 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
       };
     }
 
-    if (isBlockedRecord && embed.record.record?.author?.did) {
+    if (isBlockedRecord && (embed.record.record?.record?.author?.did || embed.record.record?.author?.did)) {
+      const authorDid = embed.record.record?.record?.author?.did || embed.record.record?.author?.did;
       return {
-        handle: embed.record.record.author.did,
-        displayName: embed.record.record.author.did,
+        handle: authorDid,
+        displayName: authorDid,
         avatar: undefined,
       };
     }
@@ -402,9 +418,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
               <ThemedView style={styles.authorInfo}>
-                <ThemedText style={[styles.displayName, { color: textColor }]}>
-                  {blockingMessage || t('profile.youAreBlockedByUser')}
-                </ThemedText>
+                <ThemedText style={[styles.displayName, { color: textColor }]}>{blockingMessage}</ThemedText>
                 <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>{t('common.block')}</ThemedText>
               </ThemedView>
             </ThemedView>

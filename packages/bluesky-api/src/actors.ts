@@ -1,5 +1,5 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyProfileResponse } from './types';
+import type { BlueskyPreferencesResponse, BlueskyProfileResponse } from './types';
 
 /**
  * Bluesky API actor/profile methods
@@ -41,5 +41,14 @@ export class BlueskyActors extends BlueskyApiClient {
         banner: profileData.banner,
       },
     });
+  }
+
+  /**
+   * Gets user preferences including saved feeds, content labels, etc.
+   * @param accessJwt - Valid access JWT token
+   * @returns Promise resolving to user preferences
+   */
+  async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
+    return this.makeAuthenticatedRequest<BlueskyPreferencesResponse>('/app.bsky.actor.getPreferences', accessJwt);
   }
 }

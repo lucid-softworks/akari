@@ -98,34 +98,58 @@ export interface BlueskyExternal {
   };
 }
 
+export type BlueskyRecordAuthor = {
+  did: string;
+  handle: string;
+  displayName: string;
+  avatar: string;
+  viewer?: {
+    blockedBy?: boolean;
+    blocking?: string;
+  };
+};
+
+export type BlueskyRecordValue = {
+  $type?: string;
+  text?: string;
+  createdAt?: string;
+  facets?: {
+    index: {
+      byteStart: number;
+      byteEnd: number;
+    };
+    features: {
+      $type: string;
+      uri?: string;
+      tag?: string;
+    }[];
+  }[];
+  langs?: string[];
+};
+
+export type BlueskyNestedRecord = {
+  $type?: string;
+  author?: BlueskyRecordAuthor;
+  value?: BlueskyRecordValue;
+  record?: BlueskyNestedRecord; // For deeply nested records (recordWithMedia)
+  uri?: string;
+  cid?: string;
+  indexedAt?: string;
+  likeCount?: number;
+  replyCount?: number;
+  repostCount?: number;
+  quoteCount?: number;
+  embeds?: BlueskyEmbed[];
+  labels?: BlueskyLabel[];
+};
+
 export interface BlueskyRecord {
   uri: string;
   cid: string;
   $type?: string; // For blocked records like 'app.bsky.embed.record#viewBlocked'
-  author: {
-    did: string;
-    handle: string;
-    displayName: string;
-    avatar: string;
-    viewer?: {
-      blockedBy?: boolean;
-      blocking?: string;
-    };
-  };
-  record: Record<string, unknown> & {
-    $type?: string;
-    author?: {
-      did: string;
-      handle: string;
-      displayName: string;
-      avatar: string;
-      viewer?: {
-        blockedBy?: boolean;
-        blocking?: string;
-      };
-    };
-  };
-  value?: Record<string, unknown>; // For record embeds, contains the actual post data
+  author: BlueskyRecordAuthor;
+  record?: BlueskyNestedRecord;
+  value?: BlueskyRecordValue; // For record embeds, contains the actual post data
   embed?: BlueskyEmbed;
   embeds?: BlueskyEmbed[]; // Array of embeds in the record
   replyCount: number;
@@ -714,4 +738,102 @@ export type BlueskyError = {
   error: string;
   /** Human-readable error message */
   message: string;
+};
+
+/**
+ * Saved feed item from preferences
+ */
+export type BlueskySavedFeedItem = {
+  /** Type of feed item */
+  type: 'feed' | 'timeline';
+  /** Feed URI or timeline identifier */
+  value: string;
+  /** Whether the feed is pinned */
+  pinned: boolean;
+  /** Unique identifier for the saved feed */
+  id: string;
+};
+
+/**
+ * Saved feeds preference
+ */
+export type BlueskySavedFeedsPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#savedFeedsPrefV2';
+  /** Array of saved feed items */
+  items: BlueskySavedFeedItem[];
+};
+
+/**
+ * Personal details preference
+ */
+export type BlueskyPersonalDetailsPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#personalDetailsPref';
+  /** Birth date */
+  birthDate?: string;
+};
+
+/**
+ * Interests preference
+ */
+export type BlueskyInterestsPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#interestsPref';
+  /** Array of interest tags */
+  tags: string[];
+};
+
+/**
+ * Adult content preference
+ */
+export type BlueskyAdultContentPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#adultContentPref';
+  /** Whether adult content is enabled */
+  enabled: boolean;
+};
+
+/**
+ * Content label preference
+ */
+export type BlueskyContentLabelPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#contentLabelPref';
+  /** Label name */
+  label: string;
+  /** Visibility setting */
+  visibility: 'show' | 'warn' | 'hide' | 'ignore';
+};
+
+/**
+ * App state preference
+ */
+export type BlueskyAppStatePref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#bskyAppStatePref';
+  /** NUX completion status */
+  nuxs?: Array<{
+    id: string;
+    completed: boolean;
+  }>;
+};
+
+/**
+ * Union type for all preference types
+ */
+export type BlueskyPreference = 
+  | BlueskySavedFeedsPref
+  | BlueskyPersonalDetailsPref
+  | BlueskyInterestsPref
+  | BlueskyAdultContentPref
+  | BlueskyContentLabelPref
+  | BlueskyAppStatePref;
+
+/**
+ * Response from the getPreferences endpoint
+ */
+export type BlueskyPreferencesResponse = {
+  /** Array of user preferences */
+  preferences: BlueskyPreference[];
 };

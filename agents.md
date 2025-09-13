@@ -203,3 +203,53 @@ apps/akari/hooks/
 ```
 
 This pattern ensures consistent, maintainable, and performant data fetching across the entire application.
+
+## TypeScript Type Safety
+
+**CRITICAL**: Never use `any` type assertions. Always use proper TypeScript types.
+
+### Why avoid `any`?
+
+1. **Type Safety**: `any` defeats the purpose of TypeScript's type checking
+2. **Maintainability**: Code with `any` is harder to maintain and debug
+3. **IDE Support**: Loss of autocomplete, refactoring, and error detection
+4. **Runtime Errors**: `any` can lead to runtime errors that TypeScript should catch
+
+### ❌ **Incorrect**:
+
+```typescript
+// Never do this - using any type assertions
+const data = (response as any).nested.property;
+const record = (embed.record as any).record?.record;
+```
+
+### ✅ **Correct**:
+
+```typescript
+// Use proper type definitions
+type NestedResponse = {
+  nested: {
+    property: string;
+  };
+};
+
+const data = (response as NestedResponse).nested.property;
+
+// Or use type guards
+function isNestedResponse(obj: unknown): obj is NestedResponse {
+  return typeof obj === 'object' && obj !== null && 'nested' in obj;
+}
+
+if (isNestedResponse(response)) {
+  const data = response.nested.property;
+}
+```
+
+### When you encounter complex nested types:
+
+1. **Define proper types** for the data structures you're working with
+2. **Use type guards** to safely check types at runtime
+3. **Use optional chaining** with proper type definitions
+4. **Create utility types** for complex nested structures
+
+This ensures type safety while maintaining code readability and maintainability.
