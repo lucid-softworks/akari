@@ -253,3 +253,52 @@ if (isNestedResponse(response)) {
 4. **Create utility types** for complex nested structures
 
 This ensures type safety while maintaining code readability and maintainability.
+
+## Testing Guidelines
+
+**CRITICAL**: Always import all necessary testing utilities from vitest, including `beforeEach` when using it.
+
+### Why proper imports matter?
+
+1. **Type Safety**: Missing imports cause TypeScript errors
+2. **Consistency**: All test files should follow the same import pattern
+3. **Maintainability**: Clear imports make tests easier to understand and maintain
+
+### ✅ **Correct Import Pattern**:
+
+```typescript
+import { render } from '@testing-library/react-native';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ComponentName } from './ComponentName';
+```
+
+### ❌ **Incorrect**:
+
+```typescript
+// Missing beforeEach import
+import { describe, expect, it, vi } from 'vitest';
+
+// Or missing other necessary imports
+import { describe, it } from 'vitest';
+```
+
+### Testing Best Practices:
+
+1. **Always import all used utilities** from vitest (describe, it, expect, vi, beforeEach, afterEach, etc.)
+2. **Mock external dependencies** properly using vi.mock()
+3. **Use beforeEach** to reset mocks and setup test state
+4. **Test all props and behaviors** comprehensively
+5. **Include edge cases** and error scenarios
+6. **Follow consistent naming** patterns for test descriptions
+7. **Use proper TypeScript types** in test files
+
+### Test File Organization:
+
+```
+components/
+├── ComponentName.tsx
+├── ComponentName.test.tsx  # Test file next to component
+```
+
+This ensures all tests are properly typed and follow consistent patterns across the project.
