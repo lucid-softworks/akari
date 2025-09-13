@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Tell us about yourself",
       "noBanner": "No banner",
       "profileUpdated": "Profile updated successfully",
-      "profileUpdateError": "Failed to update profile. Please try again."
+      "profileUpdateError": "Failed to update profile. Please try again.",
+      "handleHistory": "Handle History",
+      "noHandleHistory": "No handle history",
+      "noHandleHistoryDescription": "This user hasn't changed their handle yet."
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

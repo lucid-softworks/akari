@@ -188,7 +188,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   }, [loading, searchLoading, searchQuery, iconColor, t, gifs.length]);
 
   return (
-    <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
+    <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
       <ThemedView style={styles.overlay}>
         <ThemedView style={[styles.container, { backgroundColor }]}>
           {/* Header */}

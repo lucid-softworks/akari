@@ -6,14 +6,9 @@
     "esModuleInterop": true,
     "paths": {
       "@/*": ["./*"],
-      "@/bluesky-api": ["../../packages/bluesky-api"]
+      "@/bluesky-api": ["../../packages/bluesky-api"],
+      "@/clearsky-api": ["../../packages/clearsky-api"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.json",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

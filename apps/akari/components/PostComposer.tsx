@@ -146,13 +146,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const isOverLimit = characterCount > maxCharacters;
 
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={handleClose}
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
-    >
+    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={handleClose}>
       <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ThemedView style={styles.overlay}>
           <ThemedView style={[styles.container, { backgroundColor }]}>

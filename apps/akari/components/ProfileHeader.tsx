@@ -1,9 +1,10 @@
 import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { Labels } from '@/components/Labels';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { RichText } from '@/components/RichText';
@@ -67,6 +68,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showHandleHistory, setShowHandleHistory] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
@@ -317,7 +319,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           {/* Name and Handle */}
           <View style={styles.nameHandleSection}>
             <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
-            <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
+            <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={0.7}>
+              <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
+              <IconSymbol name="clock" size={14} color="#666" style={styles.handleHistoryIcon} />
+            </TouchableOpacity>
           </View>
 
           {/* Action Buttons */}
@@ -397,6 +402,16 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         }}
         isLoading={updateProfileMutation.isPending}
       />
+
+      {/* Handle History Modal */}
+      {profile.did && (
+        <HandleHistoryModal
+          visible={showHandleHistory}
+          onClose={() => setShowHandleHistory(false)}
+          did={profile.did}
+          currentHandle={profile.handle}
+        />
+      )}
     </>
   );
 }
@@ -476,6 +491,14 @@ const styles = StyleSheet.create({
   handle: {
     fontSize: 15,
     opacity: 0.7,
+  },
+  handleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  handleHistoryIcon: {
+    marginLeft: 6,
+    opacity: 0.5,
   },
   actionButtons: {
     flexDirection: 'row',
