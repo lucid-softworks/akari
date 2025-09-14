@@ -40,7 +40,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [ ] YouTubeEmbed.tsx
 - [ ] profile/FeedsTab.tsx
 - [ ] profile/LikesTab.tsx
-- [ ] profile/MediaTab.tsx
+- [x] profile/MediaTab.tsx
 - [ ] profile/PostsTab.tsx
 - [ ] profile/RepliesTab.tsx
 - [x] profile/StarterpacksTab.tsx
