@@ -98,6 +98,8 @@ export function RepliesTab({ handle }: RepliesTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      accessibilityRole="list"
+      accessible
     />
   );
 }
