@@ -43,9 +43,30 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const url = '${{ steps.deploy.outputs.page_url }}';
-            await github.rest.issues.createComment({
+            const marker = '<!-- coverage-report -->';
+            const body = url
+              ? `${marker}\nHTML coverage report: ${url}`
+              : `${marker}\nHTML coverage report not available`;
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `HTML coverage report: ${url}`
             });
+            const existing = comments.find(
+              (c) => c.user?.login === 'github-actions[bot]' && c.body.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            }
