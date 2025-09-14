@@ -7,7 +7,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] ExternalLink.tsx
 - [x] GifEmbed.tsx
 - [x] GifPicker.tsx
-- [ ] HandleHistoryModal.tsx
+- [x] HandleHistoryModal.tsx
 - [x] HapticTab.tsx
 - [ ] ImageViewer.tsx
 - [x] Label.tsx
