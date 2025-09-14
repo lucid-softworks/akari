@@ -27,7 +27,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] RichText.tsx
 - [ ] RichTextWithFacets.tsx
 - [x] SearchTabs.tsx
- - [x] Sidebar.tsx
+- [x] Sidebar.tsx
 - [x] TabBadge.tsx
 - [x] TabBar.tsx
 - [x] ThemedCard.tsx
