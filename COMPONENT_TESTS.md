@@ -12,18 +12,18 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [ ] ImageViewer.tsx
 - [x] Label.tsx
 - [x] Labels.tsx
-- [ ] LanguageSelector.tsx
-- [ ] NotificationSettings.tsx
-- [ ] NotificationTest.tsx
+- [x] LanguageSelector.tsx
+- [x] NotificationSettings.tsx
+- [x] NotificationTest.tsx
 - [ ] ParallaxScrollView.tsx
 - [x] PostCard.tsx
 - [ ] PostComposer.tsx
-- [ ] ProfileDropdown.tsx
+- [x] ProfileDropdown.tsx
 - [ ] ProfileEditModal.tsx
 - [ ] ProfileHeader.tsx
 - [ ] ProfileTabs.tsx
 - [x] RecordEmbed.tsx
-- [ ] ResponsiveLayout.tsx
+- [x] ResponsiveLayout.tsx
 - [ ] RichText.tsx
 - [ ] RichTextWithFacets.tsx
 - [ ] SearchTabs.tsx
