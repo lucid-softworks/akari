@@ -1,0 +1,61 @@
+# Component Test Coverage
+
+This checklist shows which components under `apps/akari/components` have tests.
+
+- [x] Collapsible.tsx
+- [ ] ExternalEmbed.tsx
+- [x] ExternalLink.tsx
+- [ ] GifEmbed.tsx
+- [ ] GifPicker.tsx
+- [ ] HandleHistoryModal.tsx
+- [x] HapticTab.tsx
+- [ ] ImageViewer.tsx
+- [x] Label.tsx
+- [ ] Labels.tsx
+- [ ] LanguageSelector.tsx
+- [ ] NotificationSettings.tsx
+- [ ] NotificationTest.tsx
+- [ ] ParallaxScrollView.tsx
+- [ ] PostCard.tsx
+- [ ] PostComposer.tsx
+- [ ] ProfileDropdown.tsx
+- [ ] ProfileEditModal.tsx
+- [ ] ProfileHeader.tsx
+- [ ] ProfileTabs.tsx
+- [x] RecordEmbed.tsx
+- [ ] ResponsiveLayout.tsx
+- [ ] RichText.tsx
+- [ ] RichTextWithFacets.tsx
+- [ ] SearchTabs.tsx
+- [ ] Sidebar.tsx
+- [ ] TabBadge.tsx
+- [ ] TabBar.tsx
+- [ ] ThemedCard.tsx
+- [x] ThemedFeatureCard.tsx
+- [ ] ThemedText.tsx
+- [ ] ThemedView.tsx
+- [ ] VideoEmbed.tsx
+- [ ] VideoPlayer.tsx
+- [ ] VideoPlayer.web.tsx
+- [ ] YouTubeEmbed.tsx
+- [ ] profile/FeedsTab.tsx
+- [ ] profile/LikesTab.tsx
+- [ ] profile/MediaTab.tsx
+- [ ] profile/PostsTab.tsx
+- [ ] profile/RepliesTab.tsx
+- [ ] profile/StarterpacksTab.tsx
+- [ ] profile/VideosTab.tsx
+- [ ] skeletons/ConversationSkeleton.tsx
+- [ ] skeletons/FeedSkeleton.tsx
+- [ ] skeletons/NotificationSkeleton.tsx
+- [ ] skeletons/PostCardSkeleton.tsx
+- [ ] skeletons/PostDetailSkeleton.tsx
+- [ ] skeletons/ProfileHeaderSkeleton.tsx
+- [ ] skeletons/SearchResultSkeleton.tsx
+- [ ] skeletons/SettingsSkeleton.tsx
+- [ ] ui/IconSymbol.ios.tsx
+- [ ] ui/IconSymbol.tsx
+- [ ] ui/Skeleton.tsx
+- [ ] ui/TabBarBackground.ios.tsx
+- [ ] ui/TabBarBackground.tsx
+- [ ] ui/withSkeleton.tsx
