@@ -1,4 +1,6 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
@@ -8,6 +10,11 @@ jest.mock('react-native-reanimated', () => {
 
 import type { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { RecordEmbed } from '@/components/RecordEmbed';
+import { ExternalEmbed } from '@/components/ExternalEmbed';
+import { GifEmbed } from '@/components/GifEmbed';
+import { VideoEmbed } from '@/components/VideoEmbed';
+import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -26,6 +33,12 @@ jest.mock('expo-router', () => ({
     push: jest.fn(),
   },
 }));
+
+const mockExternalEmbed = ExternalEmbed as jest.Mock;
+const mockGifEmbed = GifEmbed as jest.Mock;
+const mockVideoEmbed = VideoEmbed as jest.Mock;
+const mockYouTubeEmbed = YouTubeEmbed as jest.Mock;
+const mockRichTextWithFacets = RichTextWithFacets as jest.Mock;
 
 // Mock the useProfile hook
 const mockUseProfile = useProfile as jest.Mock;
@@ -222,5 +235,196 @@ describe('RecordEmbed Component', () => {
     // The component should render a TouchableOpacity
     const touchable = getByTestId('record-embed-touchable');
     expect(touchable).toBeTruthy();
+  });
+
+  it('should navigate to post and author when pressed', () => {
+    const embed = createMockEmbed();
+
+    const { getByTestId, getByText } = render(<RecordEmbed embed={embed} />);
+
+    fireEvent.press(getByTestId('record-embed-touchable'));
+    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(embed.record.uri)}`);
+
+    fireEvent.press(getByText('Test User'));
+    expect(router.push).toHaveBeenCalledWith(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+  });
+
+  it('should render images and handle load events', () => {
+    const embed = createMockEmbed({
+      record: {
+        ...createMockEmbed().record,
+        embed: {
+          images: [
+            { fullsize: 'https://example.com/img.jpg', alt: 'img', image: { mimeType: 'image/jpeg' } },
+            { fullsize: 'https://example.com/vid.mp4', image: { mimeType: 'video/mp4' } },
+          ],
+        },
+      },
+    });
+
+    const { UNSAFE_getAllByType } = render(<RecordEmbed embed={embed} />);
+    const images = UNSAFE_getAllByType(Image);
+
+    fireEvent(images[1], 'load', { source: { width: 100, height: 50 } });
+    fireEvent(images[1], 'load', { source: { width: 0, height: 0 } });
+  });
+
+  it('should render images from embeds array', () => {
+    const embed = createMockEmbed({
+      record: {
+        ...createMockEmbed().record,
+        embeds: [
+          {
+            images: [{ fullsize: 'https://example.com/alt-img.jpg', alt: 'alt' }],
+          },
+        ],
+      },
+    });
+
+    const { UNSAFE_getAllByType } = render(<RecordEmbed embed={embed} />);
+    const images = UNSAFE_getAllByType(Image);
+    expect(images.length).toBeGreaterThan(1);
+  });
+
+  it('should render a GIF, YouTube, external, and video embeds', () => {
+    const baseRecord = createMockEmbed().record;
+
+    render(
+      <RecordEmbed
+        embed={createMockEmbed({
+          record: {
+            ...baseRecord,
+            embed: { external: { uri: 'https://example.com/anim.gif' } },
+          },
+        })}
+      />,
+    );
+    expect(mockGifEmbed).toHaveBeenCalled();
+
+    render(
+      <RecordEmbed
+        embed={createMockEmbed({
+          record: {
+            ...baseRecord,
+            embed: { external: { uri: 'https://youtube.com/watch?v=1' } },
+          },
+        })}
+      />,
+    );
+    expect(mockYouTubeEmbed).toHaveBeenCalled();
+
+    render(
+      <RecordEmbed
+        embed={createMockEmbed({
+          record: {
+            ...baseRecord,
+            embed: { external: { uri: 'https://example.com' } },
+          },
+        })}
+      />,
+    );
+    expect(mockExternalEmbed).toHaveBeenCalled();
+
+    render(
+      <RecordEmbed
+        embed={createMockEmbed({
+          record: {
+            ...baseRecord,
+            embed: {
+              $type: 'app.bsky.embed.video#view',
+              playlist: 'https://video.example/playlist.m3u8',
+              thumbnail: 'https://video.example/thumb.jpg',
+              alt: 'video',
+              aspectRatio: { width: 1, height: 1 },
+            },
+          },
+        })}
+      />,
+    );
+    expect(mockVideoEmbed).toHaveBeenCalled();
+  });
+
+  it('should render video from embeds array', () => {
+    const embed = createMockEmbed({
+      record: {
+        ...createMockEmbed().record,
+        embeds: [
+          {
+            $type: 'app.bsky.embed.video#view',
+            playlist: 'https://video.example/playlist.m3u8',
+            thumbnail: 'https://video.example/thumb.jpg',
+            alt: 'video',
+            aspectRatio: { width: 1, height: 1 },
+          },
+        ],
+      },
+    });
+
+    render(<RecordEmbed embed={embed} />);
+    expect(mockVideoEmbed).toHaveBeenCalled();
+  });
+
+  it('should handle blocking message scenarios', () => {
+    const blocked = (viewer: any) =>
+      createMockEmbed({
+        record: {
+          uri: 'at://did:plc:blocked/app.bsky.feed.post/999',
+          cid: 'blocked-cid',
+          record: {
+            $type: 'app.bsky.embed.record#viewBlocked',
+            author: { did: 'did:plc:blocked', viewer },
+          },
+        },
+      });
+
+    const { getByText: getByTextMutual } = render(<RecordEmbed embed={blocked({ blockedBy: true, blocking: true })} />);
+    expect(getByTextMutual('profile.mutualBlock')).toBeTruthy();
+
+    const { getByText: getByTextBlockedBy } = render(<RecordEmbed embed={blocked({ blockedBy: true })} />);
+    expect(getByTextBlockedBy('profile.youAreBlockedByUser')).toBeTruthy();
+
+    const { getByText: getByTextBlocking } = render(<RecordEmbed embed={blocked({ blocking: true })} />);
+    expect(getByTextBlocking('profile.youHaveBlockedUser')).toBeTruthy();
+  });
+
+  it('should use profile data for blocked authors', () => {
+    mockUseProfile.mockReturnValueOnce({
+      data: { handle: 'profile.user', displayName: 'Profile User', avatar: 'https://avatar.com/p.jpg' },
+      isLoading: false,
+      error: null,
+    });
+
+    const embed = createMockEmbed({
+      record: {
+        uri: 'at://did:plc:blocked/app.bsky.feed.post/999',
+        cid: 'blocked-cid',
+        record: {
+          $type: 'app.bsky.embed.record#viewBlocked',
+          author: { did: 'did:plc:blocked', viewer: { blockedBy: true, blocking: true } },
+        },
+      },
+    });
+
+    const { getByText } = render(<RecordEmbed embed={embed} />);
+    expect(getByText('Profile User')).toBeTruthy();
+  });
+
+  it('should extract nested quoted text', () => {
+    const embed = createMockEmbed({
+      record: {
+        ...createMockEmbed().record,
+        record: {
+          record: {
+            value: { text: 'Nested text' },
+          },
+        },
+      },
+    });
+
+    render(<RecordEmbed embed={embed} />);
+    expect(mockRichTextWithFacets).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'Nested text' }),
+      undefined,
+    );
   });
 });
