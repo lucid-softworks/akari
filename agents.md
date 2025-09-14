@@ -1,5 +1,10 @@
 # Agent Guidelines
 
+## Pull Request Titles
+
+All pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/) syntax.
+Use prefixes such as `feat:`, `fix:`, or `docs:` to concisely describe the change.
+
 ## TypeScript Type Definitions
 
 **CRITICAL**: Always use `type` instead of `interface` for TypeScript definitions unless absolutely necessary.
