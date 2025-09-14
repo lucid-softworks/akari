@@ -13,8 +13,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest run --passWithNoTests",
-    "test:run": "vitest run --passWithNoTests",
+    "test": "vitest run",
+    "test:run": "vitest run",
     "lint": "eslint src --ext .ts,.tsx"
   },
   "keywords": [
