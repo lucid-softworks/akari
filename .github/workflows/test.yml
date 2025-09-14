@@ -6,7 +6,7 @@ on:
 jobs:
   coverage:
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       checks: write
     runs-on: ubuntu-latest
@@ -17,7 +17,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --workspace=apps/akari
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+      - run: npm --prefix apps/akari run test:coverage
+      - name: Report coverage
+        uses: vebr/jest-lcov-reporter@v0.2.0
         with:
-          working-directory: apps/akari
-          test-script: npm run test:coverage
+          github-token: ${{ github.token }}
+          lcov-file: apps/akari/coverage/lcov.info
+          name: apps/akari
+          update-comment: true
