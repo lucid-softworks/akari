@@ -125,19 +125,9 @@ export function VideoPlayer({
   }, [shouldShowVideo, playerStatus, videoSource]);
 
   const handlePress = () => {
-    /* istanbul ignore next */
-    if (shouldShowVideo && playerStatus === 'readyToPlay' && videoRef.current) {
-      if (isPlaying) {
-        setIsPlaying(false);
-      } else {
-        videoRef.current.seek(0);
-        setIsPlaying(true);
-      }
-    } else {
-      // Show the video player when clicking the thumbnail
-      setShouldShowVideo(true);
-      setPlayerStatus('loading'); // Set loading state immediately
-    }
+    // Show the video player when clicking the thumbnail
+    setShouldShowVideo(true);
+    setPlayerStatus('loading'); // Set loading state immediately
   };
 
   const handleLoadStart = () => {
@@ -213,7 +203,7 @@ export function VideoPlayer({
             {
               aspectRatio:
                 aspectRatio
-                  ? /* istanbul ignore next */ aspectRatio.width / aspectRatio.height
+                  ? aspectRatio.width / aspectRatio.height
                   : 16 / 9,
             },
           ]}
@@ -227,9 +217,7 @@ export function VideoPlayer({
             }}
           >
             <ThemedView style={styles.errorContainer}>
-              {/* istanbul ignore next */}
-              <ThemedText style={[styles.errorText, { color: textColor }]}> 
-                {/* istanbul ignore next */}
+              <ThemedText style={[styles.errorText, { color: textColor }]}>
                 {playerError && playerError.trim() ? playerError : 'Failed to load video'}
               </ThemedText>
               <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>Tap to retry</ThemedText>
@@ -243,7 +231,6 @@ export function VideoPlayer({
   // Show video player when user clicked to show video
   if (shouldShowVideo && videoSource) {
     // Calculate aspect ratio
-    /* istanbul ignore next */
     const videoAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
 
     return (
@@ -281,20 +268,17 @@ export function VideoPlayer({
             const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
             const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
 
-            /* istanbul ignore next */
             if (!hasTitle && !hasDescription) {
               return null;
             }
 
             return (
               <ThemedView style={styles.content}>
-                {/* istanbul ignore next */}
                 {hasTitle && (
                   <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
                     {title}
                   </ThemedText>
                 )}
-                {/* istanbul ignore next */}
                 {hasDescription && (
                   <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
                     {description}
@@ -334,20 +318,17 @@ export function VideoPlayer({
           const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
           const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
 
-          /* istanbul ignore next */
           if (!hasTitle && !hasDescription) {
             return null;
           }
 
           return (
             <ThemedView style={styles.content}>
-              {/* istanbul ignore next */}
               {hasTitle ? (
                 <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
                   {title}
                 </ThemedText>
               ) : null}
-              {/* istanbul ignore next */}
               {hasDescription ? (
                 <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
                   {description}

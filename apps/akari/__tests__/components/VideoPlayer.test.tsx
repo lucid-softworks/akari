@@ -141,5 +141,21 @@ describe('VideoPlayer', () => {
       mockVideo.mockClear();
     }
   });
+
+  it('renders video without metadata when none provided', () => {
+    const { getByText, queryByText } = render(<VideoPlayer videoUrl="https://example.com/video.mp4" />);
+    const play = getByText('▶');
+    fireEvent.press(play);
+
+    const videoProps = mockVideo.mock.calls[0][0];
+
+    act(() => {
+      videoProps.onLoadStart?.({});
+      videoProps.onLoad?.({});
+      jest.advanceTimersByTime(100);
+    });
+
+    expect(queryByText('Tap to retry')).toBeNull();
+  });
 });
 
