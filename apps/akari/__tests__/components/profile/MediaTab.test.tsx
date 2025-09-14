@@ -97,6 +97,56 @@ describe('MediaTab', () => {
     expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://post1'));
   });
 
+  it('formats reply data and uses unknown handle when missing', () => {
+    const media: MediaItem[] = [
+      {
+        uri: 'at://p1',
+        indexedAt: '2024-01-01T00:00:00Z',
+        record: { text: 'with handle' },
+        author: { handle: 'user1', displayName: 'User 1' },
+        reply: {
+          parent: {
+            author: { handle: 'bob', displayName: 'Bob' },
+            record: { text: 'parent' },
+          },
+        },
+      } as any,
+      {
+        uri: 'at://p2',
+        indexedAt: '2024-01-02T00:00:00Z',
+        record: { text: 'without handle' },
+        author: { handle: 'user2', displayName: 'User 2' },
+        reply: {
+          parent: {
+            author: { displayName: 'Anon' },
+            record: { text: 'mystery' },
+          },
+        },
+      } as any,
+    ];
+
+    mockUseAuthorMedia.mockReturnValue({
+      data: media,
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    render(<MediaTab handle="alice" />);
+    expect(PostCardMock).toHaveBeenCalledTimes(2);
+    const first = PostCardMock.mock.calls[0][0].post.replyTo;
+    const second = PostCardMock.mock.calls[1][0].post.replyTo;
+    expect(first).toEqual({
+      author: { handle: 'bob', displayName: 'Bob' },
+      text: 'parent',
+    });
+    expect(second).toEqual({
+      author: { handle: 'unknown', displayName: 'Anon' },
+      text: 'mystery',
+    });
+  });
+
   it('fetches next page when end is reached', () => {
     const fetchNextPage = jest.fn();
     mockUseAuthorMedia.mockReturnValue({
@@ -140,5 +190,27 @@ describe('MediaTab', () => {
     list.props.onEndReached();
     expect(fetchNextPage).not.toHaveBeenCalled();
     expect(getByText('common.loading')).toBeTruthy();
+  });
+
+  it('does not fetch when no further media', () => {
+    const fetchNextPage = jest.fn();
+    mockUseAuthorMedia.mockReturnValue({
+      data: [
+        {
+          uri: 'at://post1',
+          indexedAt: '2024-01-01T00:00:00Z',
+          author: { handle: 'user1' },
+        },
+      ],
+      isLoading: false,
+      fetchNextPage,
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
+    const list = UNSAFE_getByType(FlatList);
+    list.props.onEndReached();
+    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 });

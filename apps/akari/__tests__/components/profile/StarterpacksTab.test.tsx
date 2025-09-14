@@ -125,5 +125,41 @@ describe('StarterpacksTab', () => {
     const { getByText } = render(<StarterpacksTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
   });
+
+  it('does not fetch when no more starterpacks', () => {
+    const fetchNextPage = jest.fn();
+    mockUseAuthorStarterpacks.mockReturnValue({
+      data: [
+        {
+          uri: 'at://pack/1',
+          cid: 'cid1',
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            createdAt: '',
+            description: 'cool pack',
+            feeds: [],
+            list: '',
+            name: 'Pack One',
+            updatedAt: '',
+          },
+          creator: { handle: 'alice' },
+          joinedWeekCount: 0,
+          joinedAllTimeCount: 5,
+          labels: [],
+          indexedAt: '',
+        },
+      ],
+      isLoading: false,
+      fetchNextPage,
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    const { UNSAFE_getByType } = render(<StarterpacksTab handle="alice" />);
+    act(() => {
+      UNSAFE_getByType(FlatList).props.onEndReached();
+    });
+    expect(fetchNextPage).not.toHaveBeenCalled();
+  });
 });
 

@@ -24,14 +24,15 @@ jest.mock('@/components/PostCard', () => {
   const React = require('react');
   const { Text } = require('react-native');
   return {
-    PostCard: ({ post, onPress }: { post: any; onPress: () => void }) => (
+    PostCard: jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => (
       <Text onPress={onPress}>{post.text}</Text>
-    ),
+    )),
   };
 });
 
 const mockUseAuthorLikes = useAuthorLikes as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const PostCardMock = require('@/components/PostCard').PostCard as jest.Mock;
 
 type Like = {
   uri: string;
@@ -137,6 +138,49 @@ describe('LikesTab', () => {
       list.props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
+  });
+
+  it('formats reply information and falls back to unknown handle', () => {
+    const likeWithHandle = createLike({
+      reply: {
+        parent: {
+          author: { handle: 'bob', displayName: 'Bob' },
+          record: { text: 'parent' },
+        },
+      },
+    } as any);
+
+    const likeWithoutHandle = createLike({
+      uri: 'at://did:plc:test/app.bsky.feed.post/2',
+      indexedAt: '2024-01-02T00:00:00.000Z',
+      reply: {
+        parent: {
+          author: { displayName: 'Anon' },
+          record: { text: 'mystery' },
+        },
+      },
+    } as any);
+
+    mockUseAuthorLikes.mockReturnValue({
+      data: [likeWithHandle, likeWithoutHandle],
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    render(<LikesTab handle="tester" />);
+    expect(PostCardMock).toHaveBeenCalledTimes(2);
+    const first = PostCardMock.mock.calls[0][0].post.replyTo;
+    const second = PostCardMock.mock.calls[1][0].post.replyTo;
+    expect(first).toEqual({
+      author: { handle: 'bob', displayName: 'Bob' },
+      text: 'parent',
+    });
+    expect(second).toEqual({
+      author: { handle: 'unknown', displayName: 'Anon' },
+      text: 'mystery',
+    });
   });
 });
 
