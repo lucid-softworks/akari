@@ -9,7 +9,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] GifPicker.tsx
 - [x] HandleHistoryModal.tsx
 - [x] HapticTab.tsx
-- [ ] ImageViewer.tsx
+- [x] ImageViewer.tsx
 - [x] Label.tsx
 - [x] Labels.tsx
 - [x] LanguageSelector.tsx
@@ -26,25 +26,25 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] ResponsiveLayout.tsx
 - [ ] RichText.tsx
 - [ ] RichTextWithFacets.tsx
-- [ ] SearchTabs.tsx
+- [x] SearchTabs.tsx
 - [ ] Sidebar.tsx
 - [x] TabBadge.tsx
-- [ ] TabBar.tsx
+- [x] TabBar.tsx
 - [x] ThemedCard.tsx
 - [x] ThemedFeatureCard.tsx
 - [x] ThemedText.tsx
 - [x] ThemedView.tsx
 - [ ] VideoEmbed.tsx
-- [ ] VideoPlayer.tsx
-- [ ] VideoPlayer.web.tsx
+- [x] VideoPlayer.tsx
+- [x] VideoPlayer.web.tsx
 - [ ] YouTubeEmbed.tsx
 - [ ] profile/FeedsTab.tsx
 - [x] profile/LikesTab.tsx
-- [ ] profile/MediaTab.tsx
-- [ ] profile/PostsTab.tsx
-- [ ] profile/RepliesTab.tsx
-- [ ] profile/StarterpacksTab.tsx
-- [ ] profile/VideosTab.tsx
+- [x] profile/MediaTab.tsx
+- [x] profile/PostsTab.tsx
+- [x] profile/RepliesTab.tsx
+- [x] profile/StarterpacksTab.tsx
+- [x] profile/VideosTab.tsx
 - [ ] skeletons/ConversationSkeleton.tsx
 - [ ] skeletons/FeedSkeleton.tsx
 - [ ] skeletons/NotificationSkeleton.tsx
