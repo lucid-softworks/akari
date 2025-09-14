@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm ci --workspace=apps/akari
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           working-directory: apps/akari

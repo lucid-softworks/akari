@@ -7,7 +7,7 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
     "test:run": "vitest run",
     "lint": "eslint src --ext .ts,.tsx"
   },

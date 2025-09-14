@@ -18,6 +18,7 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'chevron.down': 'expand-more',
   'bell.fill': 'notifications',
   sparkles: 'auto-awesome',
   magnifyingglass: 'search',

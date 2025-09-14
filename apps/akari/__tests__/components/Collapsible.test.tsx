@@ -1,5 +1,11 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  Reanimated.default.call = () => {};
+  return Reanimated;
+});
+
 import { Collapsible } from '@/components/Collapsible';
 import { useColorScheme } from '@/hooks/useColorScheme';
 

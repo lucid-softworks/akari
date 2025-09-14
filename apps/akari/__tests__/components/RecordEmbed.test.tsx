@@ -1,5 +1,11 @@
 import { render } from '@testing-library/react-native';
 
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  Reanimated.default.call = () => {};
+  return Reanimated;
+});
+
 import type { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';

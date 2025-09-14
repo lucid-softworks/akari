@@ -17,7 +17,7 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
   moduleNameMapper: {
-    '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/dist',
-    '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/dist',
+    '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',
+    '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src',
   },
 };
