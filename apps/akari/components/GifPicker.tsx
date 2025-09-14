@@ -9,11 +9,11 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tenorApi, TenorGif } from '@/utils/tenor';
 
-interface GifPickerProps {
+type GifPickerProps = {
   visible: boolean;
   onClose: () => void;
   onSelectGif: (gif: { uri: string; alt: string; mimeType: string; tenorId?: string }) => void;
-}
+};
 
 export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const { t } = useTranslation();
@@ -145,7 +145,13 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       }
 
       return (
-        <TouchableOpacity style={styles.gifItem} onPress={() => handleSelectGif(item)} activeOpacity={0.8}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel={item.content_description || item.title || 'GIF'}
+          style={styles.gifItem}
+          onPress={() => handleSelectGif(item)}
+          activeOpacity={0.8}
+        >
           <Image
             source={{ uri: gifUrl }}
             style={styles.gifImage}
@@ -193,7 +199,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
         <ThemedView style={[styles.container, { backgroundColor }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity onPress={onClose} style={styles.headerButton}>
+            <TouchableOpacity accessibilityRole="button" onPress={onClose} style={styles.headerButton}>
               <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
             </TouchableOpacity>
 
