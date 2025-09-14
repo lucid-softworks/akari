@@ -1,0 +1,150 @@
+:root {
+  /* Light mode syntax colors (default) */
+  --syntax-plain: #000;
+  --syntax-string: #080;
+  --syntax-keyword: #008;
+  --syntax-comment: #800;
+  --syntax-type: #606;
+  --syntax-literal: #066;
+  --syntax-punctuation: #660;
+  --syntax-tag: #008;
+  --syntax-attribute-name: #606;
+  --syntax-attribute-value: #080;
+  --syntax-declaration: #606;
+  --syntax-variable: #606;
+  --syntax-function: red;
+  --syntax-border: #888;
+  --syntax-line-bg: #eee;
+}
+
+/* Dark mode syntax colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --syntax-plain: #e0e0e0;
+    --syntax-string: #98d982;
+    --syntax-keyword: #5da9f7;
+    --syntax-comment: #7c7c7c;
+    --syntax-type: #d197d9;
+    --syntax-literal: #79c0da;
+    --syntax-punctuation: #bbbbbb;
+    --syntax-tag: #5da9f7;
+    --syntax-attribute-name: #d197d9;
+    --syntax-attribute-value: #98d982;
+    --syntax-declaration: #d197d9;
+    --syntax-variable: #d197d9;
+    --syntax-function: #ff6b6b;
+    --syntax-border: #555;
+    --syntax-line-bg: #2a2a2a;
+  }
+}
+
+.pln {
+  color: var(--syntax-plain);
+}
+
+@media screen {
+  .str {
+    color: var(--syntax-string);
+  }
+  .kwd {
+    color: var(--syntax-keyword);
+  }
+  .com {
+    color: var(--syntax-comment);
+  }
+  .typ {
+    color: var(--syntax-type);
+  }
+  .lit {
+    color: var(--syntax-literal);
+  }
+  .pun,
+  .opn,
+  .clo {
+    color: var(--syntax-punctuation);
+  }
+  .tag {
+    color: var(--syntax-tag);
+  }
+  .atn {
+    color: var(--syntax-attribute-name);
+  }
+  .atv {
+    color: var(--syntax-attribute-value);
+  }
+  .dec,
+  .var {
+    color: var(--syntax-variable);
+  }
+  .fun {
+    color: var(--syntax-function);
+  }
+}
+
+@media print, projection {
+  .str {
+    color: #060;
+  }
+  .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  .com {
+    color: #600;
+    font-style: italic;
+  }
+  .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  .lit {
+    color: #044;
+  }
+  .pun,
+  .opn,
+  .clo {
+    color: #440;
+  }
+  .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  .atn {
+    color: #404;
+  }
+  .atv {
+    color: #060;
+  }
+}
+
+pre.prettyprint {
+  padding: 2px;
+  border: 1px solid var(--syntax-border);
+  transition: border-color 0.3s ease;
+}
+
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 {
+  list-style-type: none;
+}
+
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 {
+  background: var(--syntax-line-bg);
+  transition: background-color 0.3s ease;
+}
+
