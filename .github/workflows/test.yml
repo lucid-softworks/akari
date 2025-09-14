@@ -35,7 +35,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           script: |
-            const url = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${context.issue.number}/`;
+            const url = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${context.issue.number}/index.html`;
             const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
