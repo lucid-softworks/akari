@@ -3,7 +3,7 @@
 This checklist shows which components under `apps/akari/components` have tests.
 
 - [x] Collapsible.tsx
-- [ ] ExternalEmbed.tsx
+- [x] ExternalEmbed.tsx
 - [x] ExternalLink.tsx
 - [ ] GifEmbed.tsx
 - [x] GifPicker.tsx
