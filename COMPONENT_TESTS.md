@@ -9,7 +9,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] GifPicker.tsx
 - [x] HandleHistoryModal.tsx
 - [x] HapticTab.tsx
-- [ ] ImageViewer.tsx
+- [x] ImageViewer.tsx
 - [x] Label.tsx
 - [x] Labels.tsx
 - [x] LanguageSelector.tsx
@@ -26,10 +26,10 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] ResponsiveLayout.tsx
 - [ ] RichText.tsx
 - [ ] RichTextWithFacets.tsx
-- [ ] SearchTabs.tsx
+- [x] SearchTabs.tsx
 - [ ] Sidebar.tsx
 - [x] TabBadge.tsx
-- [ ] TabBar.tsx
+- [x] TabBar.tsx
 - [x] ThemedCard.tsx
 - [x] ThemedFeatureCard.tsx
 - [x] ThemedText.tsx
