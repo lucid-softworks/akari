@@ -1,0 +1,14 @@
+name: test
+
+on:
+  pull_request:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          working-directory: apps/akari
+          test-script: npm run test:coverage
