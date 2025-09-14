@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
@@ -18,7 +19,6 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/bluesky-api';
 
 type PostCardProps = {
   post: {
@@ -485,9 +485,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
       {post.replyTo && (
         <ThemedView style={styles.replyContext}>
           <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
-          <ThemedText style={styles.replyText}>
-            Replying to <ThemedText style={styles.replyAuthor}>@{post.replyTo.author.handle}</ThemedText>
-          </ThemedText>
+          <ThemedText style={styles.replyText}>Replying to @{post.replyTo.author.handle}</ThemedText>
           <ThemedText style={styles.replyPreview} numberOfLines={1}>
             {post.replyTo.text}
           </ThemedText>
@@ -506,7 +504,12 @@ export function PostCard({ post, onPress }: PostCardProps) {
           />
           <ThemedView style={styles.authorInfo}>
             <ThemedText style={styles.displayName}>{post.author.displayName || post.author.handle}</ThemedText>
-            <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+            <TouchableOpacity
+              onPress={handleProfilePress}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={`View profile of ${post.author.displayName || post.author.handle}`}
+            >
               <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
@@ -591,7 +594,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
       <Labels labels={post.labels} maxLabels={3} />
 
       <ThemedView style={styles.interactions}>
-        <TouchableOpacity style={styles.interactionItem} onPress={handleReplyPress} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.interactionItem}
+          onPress={handleReplyPress}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={`Reply to post by ${post.author.displayName || post.author.handle}`}
+        >
           <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
         </TouchableOpacity>
@@ -599,7 +608,17 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
         </ThemedView>
-        <TouchableOpacity style={styles.interactionItem} onPress={handleLikePress} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.interactionItem}
+          onPress={handleLikePress}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={
+            post.viewer?.like
+              ? `Unlike post by ${post.author.displayName || post.author.handle}`
+              : `Like post by ${post.author.displayName || post.author.handle}`
+          }
+        >
           <IconSymbol
             name={post.viewer?.like ? 'heart.fill' : 'heart'}
             size={16}
