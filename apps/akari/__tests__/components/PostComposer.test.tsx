@@ -76,4 +76,43 @@ describe('PostComposer', () => {
     fireEvent.press(getByText('✕'));
     expect(queryByPlaceholderText('post.imageAltTextPlaceholder')).toBeNull();
   });
+
+  it('does not post when empty', async () => {
+    const mutateAsync = jest.fn();
+    mockUseCreatePost.mockReturnValue({ mutateAsync, isPending: false });
+    const onClose = jest.fn();
+
+    const { getByText } = render(<PostComposer visible onClose={onClose} />);
+
+    await act(async () => {
+      fireEvent.press(getByText('post.post'));
+    });
+
+    expect(mutateAsync).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('adds gif through GifPicker', async () => {
+    mockUseCreatePost.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+    const { getByLabelText, getByPlaceholderText } = render(
+      <PostComposer visible onClose={jest.fn()} />,
+    );
+
+    const gifPickerMock = require('@/components/GifPicker').GifPicker as jest.Mock;
+
+    fireEvent.press(getByLabelText('gif.addGif'));
+
+    const lastCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
+    expect(lastCall).toEqual(
+      expect.objectContaining({ visible: true, onSelectGif: expect.any(Function) }),
+    );
+
+    const { onSelectGif } = lastCall;
+
+    act(() => {
+      onSelectGif({ uri: 'gif.gif', alt: '', mimeType: 'image/gif', tenorId: '1' });
+    });
+
+    expect(getByPlaceholderText('post.imageAltTextPlaceholder')).toBeTruthy();
+  });
 });
