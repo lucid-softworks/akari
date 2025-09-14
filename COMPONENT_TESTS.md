@@ -21,7 +21,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] ProfileDropdown.tsx
 - [ ] ProfileEditModal.tsx
 - [x] ProfileHeader.tsx
-- [ ] ProfileTabs.tsx
+- [x] ProfileTabs.tsx
 - [x] RecordEmbed.tsx
 - [x] ResponsiveLayout.tsx
 - [x] RichText.tsx
