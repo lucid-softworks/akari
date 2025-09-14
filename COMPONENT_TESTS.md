@@ -32,8 +32,8 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [ ] TabBar.tsx
 - [x] ThemedCard.tsx
 - [x] ThemedFeatureCard.tsx
-- [ ] ThemedText.tsx
-- [ ] ThemedView.tsx
+- [x] ThemedText.tsx
+- [x] ThemedView.tsx
 - [ ] VideoEmbed.tsx
 - [ ] VideoPlayer.tsx
 - [ ] VideoPlayer.web.tsx
