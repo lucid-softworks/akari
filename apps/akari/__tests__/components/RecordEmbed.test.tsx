@@ -6,6 +6,8 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+
 // Mock the hooks and components that RecordEmbed depends on
 jest.mock('@/hooks/queries/useProfile');
 jest.mock('@/hooks/useThemeColor');

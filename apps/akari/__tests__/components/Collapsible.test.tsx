@@ -3,6 +3,8 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+
 // Mock the useColorScheme hook
 jest.mock('@/hooks/useColorScheme');
 const mockUseColorScheme = useColorScheme as jest.Mock;
