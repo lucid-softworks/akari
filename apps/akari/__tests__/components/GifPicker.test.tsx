@@ -4,7 +4,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { GifPicker } from '@/components/GifPicker';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { tenorApi, type TenorGif } from '@/utils/tenor';
+import { tenorApi } from '@/utils/tenor';
 
 jest.mock('@/utils/tenor', () => ({
   tenorApi: {
@@ -24,7 +24,7 @@ describe('GifPicker', () => {
   const mockUseTranslation = useTranslation as jest.Mock;
   const mockTenor = tenorApi as jest.Mocked<typeof tenorApi>;
 
-  const sampleGif: TenorGif = {
+  const sampleGif = {
     id: '1',
     title: 'funny',
     media_formats: {
@@ -93,6 +93,36 @@ describe('GifPicker', () => {
       <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
     );
 
+    expect(await findByText('gif.apiError')).toBeTruthy();
+    consoleError.mockRestore();
+  });
+
+  it('reloads trending GIFs when search is cleared', async () => {
+    const { getByPlaceholderText } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    const input = getByPlaceholderText('gif.searchPlaceholder');
+    await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1));
+
+    fireEvent.changeText(input, 'cats');
+    await waitFor(() => expect(mockTenor.searchGifs).toHaveBeenCalledWith('cats', 20));
+    expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1);
+
+    fireEvent.changeText(input, '');
+    await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(2));
+    expect(mockTenor.searchGifs).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows error message when search fails', async () => {
+    mockTenor.searchGifs.mockRejectedValueOnce(new Error('search fail'));
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { getByPlaceholderText, findByText } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    fireEvent.changeText(getByPlaceholderText('gif.searchPlaceholder'), 'dogs');
     expect(await findByText('gif.apiError')).toBeTruthy();
     consoleError.mockRestore();
   });
