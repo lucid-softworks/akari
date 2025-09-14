@@ -16,7 +16,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [ ] NotificationSettings.tsx
 - [ ] NotificationTest.tsx
 - [ ] ParallaxScrollView.tsx
-- [ ] PostCard.tsx
+- [x] PostCard.tsx
 - [ ] PostComposer.tsx
 - [ ] ProfileDropdown.tsx
 - [ ] ProfileEditModal.tsx
