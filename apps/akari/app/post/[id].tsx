@@ -13,6 +13,110 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
+export const renderComment = (
+  item:
+    | BlueskyFeedItem
+    | {
+        uri: string;
+        notFound?: boolean;
+        blocked?: boolean;
+        author?: BlueskyPostView['author'];
+      },
+) => {
+  // Skip null or blocked replies
+  if (!item || 'notFound' in item || 'blocked' in item) return null;
+
+  // Handle BlueskyFeedItem type
+  if ('post' in item) {
+    const post = item.post;
+    if (!post.author || !post.author.handle) {
+      return null;
+    }
+
+    const commentReplyTo = post.reply?.parent
+      ? {
+          author: {
+            handle: post.reply.parent.author?.handle || 'unknown',
+            displayName: post.reply.parent.author?.displayName,
+          },
+          text:
+            typeof post.reply.parent.record === 'object' &&
+            post.reply.parent.record &&
+            'text' in post.reply.parent.record
+              ? (post.reply.parent.record as { text: string }).text
+              : undefined,
+        }
+      : undefined;
+
+    return (
+      <PostCard
+        key={`${post.uri}-${post.indexedAt}`}
+        post={{
+          id: post.uri,
+          text:
+            typeof post.record === 'object' &&
+            post.record &&
+            'text' in post.record
+              ? (post.record as { text: string }).text
+              : undefined,
+          author: {
+            handle: post.author.handle,
+            displayName: post.author.displayName,
+            avatar: post.author.avatar,
+          },
+          createdAt: formatRelativeTime(post.indexedAt),
+          likeCount: post.likeCount || 0,
+          commentCount: post.replyCount || 0,
+          repostCount: post.repostCount || 0,
+          embed: post.embed,
+          embeds: post.embeds,
+          labels: post.labels,
+          viewer: post.viewer,
+          facets: (post.record as any)?.facets,
+          replyTo: commentReplyTo,
+        }}
+      />
+    );
+  }
+
+  // Handle direct post type
+  if (!item.author || !item.author.handle) {
+    return null;
+  }
+
+  const postItem = item as BlueskyPostView;
+  return (
+    <PostCard
+      key={`${postItem.uri}-${postItem.indexedAt}`}
+      post={{
+        id: postItem.uri,
+        text:
+          typeof postItem.record === 'object' &&
+          postItem.record &&
+          'text' in postItem.record
+            ? (postItem.record as { text: string }).text
+            : undefined,
+        author: {
+          handle: postItem.author.handle,
+          displayName: postItem.author.displayName,
+          avatar: postItem.author.avatar,
+        },
+        createdAt: formatRelativeTime(postItem.indexedAt),
+        likeCount: postItem.likeCount || 0,
+        commentCount: postItem.replyCount || 0,
+        repostCount: postItem.repostCount || 0,
+        embed: postItem.embed,
+        embeds: postItem.embeds,
+        labels: postItem.labels,
+        viewer: postItem.viewer,
+        facets: (postItem.record as any)?.facets,
+        uri: postItem.uri,
+        cid: postItem.cid,
+      }}
+    />
+  );
+};
+
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -76,105 +180,6 @@ export default function PostDetailScreen() {
       }, 100);
     }
   }, [postLoading, threadLoading, parentLoading, rootLoading, isReply]);
-
-  // Check if this comment is a reply to another comment
-  const renderComment = (
-    item:
-      | BlueskyFeedItem
-      | {
-          uri: string;
-          notFound?: boolean;
-          blocked?: boolean;
-          author?: BlueskyPostView['author'];
-        },
-  ) => {
-    // Skip null or blocked replies
-    if (!item || 'notFound' in item || 'blocked' in item) return null;
-
-    // Handle BlueskyFeedItem type
-    if ('post' in item) {
-      const post = item.post;
-      if (!post.author || !post.author.handle) {
-        return null;
-      }
-
-      const commentReplyTo = post.reply?.parent
-        ? {
-            author: {
-              handle: post.reply.parent.author?.handle || 'unknown',
-              displayName: post.reply.parent.author?.displayName,
-            },
-            text:
-              typeof post.reply.parent.record === 'object' && post.reply.parent.record && 'text' in post.reply.parent.record
-                ? (post.reply.parent.record as { text: string }).text
-                : undefined,
-          }
-        : undefined;
-
-      return (
-        <PostCard
-          key={`${post.uri}-${post.indexedAt}`}
-          post={{
-            id: post.uri,
-            text:
-              typeof post.record === 'object' && post.record && 'text' in post.record
-                ? (post.record as { text: string }).text
-                : undefined,
-            author: {
-              handle: post.author.handle,
-              displayName: post.author.displayName,
-              avatar: post.author.avatar,
-            },
-            createdAt: formatRelativeTime(post.indexedAt),
-            likeCount: post.likeCount || 0,
-            commentCount: post.replyCount || 0,
-            repostCount: post.repostCount || 0,
-            embed: post.embed,
-            embeds: post.embeds,
-            labels: post.labels,
-            viewer: post.viewer,
-            facets: (post.record as any)?.facets,
-            replyTo: commentReplyTo,
-          }}
-        />
-      );
-    }
-
-    // Handle direct post type
-    if (!item.author || !item.author.handle) {
-      return null;
-    }
-
-    const postItem = item as BlueskyPostView;
-    return (
-      <PostCard
-        key={`${postItem.uri}-${postItem.indexedAt}`}
-        post={{
-          id: postItem.uri,
-          text:
-            typeof postItem.record === 'object' && postItem.record && 'text' in postItem.record
-              ? (postItem.record as { text: string }).text
-              : undefined,
-          author: {
-            handle: postItem.author.handle,
-            displayName: postItem.author.displayName,
-            avatar: postItem.author.avatar,
-          },
-          createdAt: formatRelativeTime(postItem.indexedAt),
-          likeCount: postItem.likeCount || 0,
-          commentCount: postItem.replyCount || 0,
-          repostCount: postItem.repostCount || 0,
-          embed: postItem.embed,
-          embeds: postItem.embeds,
-          labels: postItem.labels,
-          viewer: postItem.viewer,
-          facets: (postItem.record as any)?.facets,
-          uri: postItem.uri,
-          cid: postItem.cid,
-        }}
-      />
-    );
-  };
 
   // Render parent post if this is a reply
   const renderParentPost = () => {
