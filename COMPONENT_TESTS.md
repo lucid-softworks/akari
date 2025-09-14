@@ -19,7 +19,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] PostCard.tsx
 - [ ] PostComposer.tsx
 - [x] ProfileDropdown.tsx
-- [ ] ProfileEditModal.tsx
+- [x] ProfileEditModal.tsx
 - [x] ProfileHeader.tsx
 - [x] ProfileTabs.tsx
 - [x] RecordEmbed.tsx

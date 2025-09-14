@@ -3,7 +3,6 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useThemeColor } from '@/hooks/useThemeColor';
-
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useThemeColor');
@@ -18,27 +17,35 @@ describe('ProfileEditModal', () => {
     mockUseThemeColor.mockReturnValue('#fff');
   });
 
-  it('enables save and submits trimmed profile data', () => {
+  it('handles image actions and submits trimmed profile data', () => {
     const onSave = jest.fn();
-    const { getByPlaceholderText, getByText } = render(
+    const { getByPlaceholderText, getByText, getAllByRole } = render(
       <ProfileEditModal
         visible
         onClose={() => {}}
         onSave={onSave}
-        profile={{ displayName: 'John', description: 'Bio' }}
+        profile={{
+          displayName: 'John',
+          description: 'Bio',
+          avatar: 'avatar-url',
+          banner: 'banner-url',
+        }}
       />,
     );
+
+    const buttons = getAllByRole('button');
+    fireEvent.press(buttons[2]);
+    fireEvent.press(buttons[3]);
 
     fireEvent.changeText(getByPlaceholderText('profile.displayNamePlaceholder'), ' New Name ');
     fireEvent.changeText(getByPlaceholderText('profile.descriptionPlaceholder'), ' New Bio ');
 
     fireEvent.press(getByText('common.save'));
-
     expect(onSave).toHaveBeenCalledWith({
       displayName: 'New Name',
       description: 'New Bio',
-      avatar: undefined,
-      banner: undefined,
+      avatar: 'avatar-url',
+      banner: 'banner-url',
     });
   });
 
@@ -63,16 +70,25 @@ describe('ProfileEditModal', () => {
     expect(nameInput.props.value).toBe('John');
   });
 
+  it('resets to empty values when profile fields are missing', () => {
+    const onClose = jest.fn();
+    const { getByPlaceholderText, getByText } = render(
+      <ProfileEditModal visible onClose={onClose} onSave={() => {}} profile={{}} />,
+    );
+
+    const nameInput = getByPlaceholderText('profile.displayNamePlaceholder');
+    fireEvent.changeText(nameInput, 'Temp');
+
+    fireEvent.press(getByText('common.cancel'));
+
+    expect(onClose).toHaveBeenCalled();
+    expect(nameInput.props.value).toBe('');
+  });
+
   it('shows saving state when loading', () => {
     const onSave = jest.fn();
     const { getByText } = render(
-      <ProfileEditModal
-        visible
-        onClose={() => {}}
-        onSave={onSave}
-        profile={{}}
-        isLoading
-      />,
+      <ProfileEditModal visible onClose={() => {}} onSave={onSave} profile={{}} isLoading />,
     );
 
     fireEvent.press(getByText('common.saving'));

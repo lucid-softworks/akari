@@ -63,13 +63,18 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
         <ThemedView style={[styles.container, { backgroundColor }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={handleCancel}
+              style={styles.headerButton}
+            >
               <ThemedText style={[styles.headerButtonText, { color: '#007AFF' }]}>{t('common.cancel')}</ThemedText>
             </TouchableOpacity>
 
             <ThemedText style={[styles.headerTitle, { color: textColor }]}>{t('profile.editProfile')}</ThemedText>
 
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={handleSave}
               style={[styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null]}
               disabled={!isFormChanged || isLoading}
@@ -92,7 +97,7 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
                   </ThemedText>
                 </View>
               )}
-              <TouchableOpacity style={styles.cameraButton} onPress={() => {}}>
+              <TouchableOpacity accessibilityRole="button" style={styles.cameraButton} onPress={() => {}}>
                 <IconSymbol name="camera" size={16} color="#ffffff" />
               </TouchableOpacity>
             </View>
@@ -108,7 +113,7 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
                   <ThemedText style={styles.avatarFallbackText}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
                 </View>
               )}
-              <TouchableOpacity style={styles.cameraButton} onPress={() => {}}>
+              <TouchableOpacity accessibilityRole="button" style={styles.cameraButton} onPress={() => {}}>
                 <IconSymbol name="camera" size={16} color="#ffffff" />
               </TouchableOpacity>
             </View>
