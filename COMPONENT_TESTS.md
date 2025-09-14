@@ -24,7 +24,7 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [ ] ProfileTabs.tsx
 - [x] RecordEmbed.tsx
 - [x] ResponsiveLayout.tsx
-- [ ] RichText.tsx
+- [x] RichText.tsx
 - [ ] RichTextWithFacets.tsx
 - [x] SearchTabs.tsx
 - [ ] Sidebar.tsx
