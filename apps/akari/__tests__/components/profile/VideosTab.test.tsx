@@ -12,14 +12,14 @@ jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
+let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
-  return {
-    PostCard: ({ post, onPress }: any) => (
-      <Text onPress={onPress}>{post.id}</Text>
-    ),
-  };
+  mockPostCard = jest.fn(({ post, onPress }: any) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return <Text onPress={onPress}>{post.id}</Text>;
+  });
+  return { PostCard: mockPostCard };
 });
 
 jest.mock('@/components/skeletons', () => ({
@@ -145,6 +145,82 @@ describe('VideosTab', () => {
 
     const { getByText } = render(<VideosTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
+  });
+
+  it('does not fetch when no more videos', () => {
+    const video: Video = {
+      uri: 'at://video/1',
+      author: { handle: 'alice' },
+      indexedAt: '2024-01-01',
+      cid: 'cid1',
+    };
+    const fetchNextPage = jest.fn();
+    mockUseAuthorVideos.mockReturnValue({
+      data: [video],
+      isLoading: false,
+      fetchNextPage,
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
+    const list = UNSAFE_getByType(FlatList);
+    act(() => {
+      list.props.onEndReached();
+    });
+    expect(fetchNextPage).not.toHaveBeenCalled();
+  });
+
+  it('formats reply data and handles missing parent handle', () => {
+    const videos: Video[] = [
+      {
+        uri: 'at://video/1',
+        record: { text: 'child1' },
+        author: { handle: 'alice' },
+        indexedAt: '2024-01-01',
+        cid: 'c1',
+        reply: {
+          parent: {
+            author: { handle: 'bob', displayName: 'Bob' },
+            record: { text: 'parent1' },
+          },
+        },
+      } as any,
+      {
+        uri: 'at://video/2',
+        record: { text: 'child2' },
+        author: { handle: 'carol' },
+        indexedAt: '2024-01-02',
+        cid: 'c2',
+        reply: {
+          parent: {
+            author: { displayName: 'Anon' },
+            record: { text: 'parent2' },
+          },
+        },
+      } as any,
+    ];
+
+    mockUseAuthorVideos.mockReturnValue({
+      data: videos,
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    render(<VideosTab handle="alice" />);
+    expect(mockPostCard).toHaveBeenCalledTimes(2);
+    const first = mockPostCard.mock.calls[0][0].post.replyTo;
+    const second = mockPostCard.mock.calls[1][0].post.replyTo;
+    expect(first).toEqual({
+      author: { handle: 'bob', displayName: 'Bob' },
+      text: 'parent1',
+    });
+    expect(second).toEqual({
+      author: { handle: 'unknown', displayName: 'Anon' },
+      text: 'parent2',
+    });
   });
 });
 

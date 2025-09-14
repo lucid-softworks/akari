@@ -148,5 +148,39 @@ describe('PostsTab', () => {
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
+
+  it('falls back to unknown when parent handle missing', () => {
+    const post = {
+      uri: 'at://example/post2',
+      indexedAt: '2024-01-01T00:00:00Z',
+      record: { text: 'child' },
+      author: { handle: 'alice', displayName: 'Alice', avatar: 'a' },
+      reply: {
+        parent: {
+          author: { displayName: 'NoHandle' },
+          record: { text: 'parent' },
+        },
+      },
+      likeCount: 0,
+      replyCount: 0,
+      repostCount: 0,
+      cid: 'cid',
+    } as any;
+
+    mockUseAuthorPosts.mockReturnValue({
+      data: [post],
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    render(<PostsTab handle="alice" />);
+    const call = mockPostCard.mock.calls[0][0];
+    expect(call.post.replyTo).toEqual({
+      author: { handle: 'unknown', displayName: 'NoHandle' },
+      text: 'parent',
+    });
+  });
 });
 

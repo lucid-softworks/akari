@@ -9,16 +9,18 @@ import { router } from 'expo-router';
 jest.mock('@/hooks/queries/useAuthorReplies');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
-  const React = require('react');
-  const { Pressable, Text } = require('react-native');
-  return {
-    PostCard: ({ post, onPress }: { post: any; onPress: () => void }) => (
+  mockPostCard = jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => {
+    const React = require('react');
+    const { Pressable, Text } = require('react-native');
+    return (
       <Pressable onPress={onPress} accessibilityRole="button">
         <Text>{post.text}</Text>
       </Pressable>
-    ),
-  };
+    );
+  });
+  return { PostCard: mockPostCard };
 });
 jest.mock('@/components/skeletons', () => {
   const React = require('react');
@@ -136,6 +138,62 @@ describe('RepliesTab', () => {
     expect(getByText('common.loading')).toBeTruthy();
     fireEvent(getByRole('list'), 'onEndReached');
     expect(fetchNextPage).not.toHaveBeenCalled();
+  });
+
+  it('formats reply data and handles missing parent handle', () => {
+    const replies = [
+      {
+        uri: 'at://p1',
+        record: { text: 'child1' },
+        author: { handle: 'user1' },
+        indexedAt: '2024-01-01T00:00:00Z',
+        likeCount: 0,
+        replyCount: 0,
+        repostCount: 0,
+        reply: {
+          parent: {
+            author: { handle: 'bob', displayName: 'Bob' },
+            record: { text: 'parent1' },
+          },
+        },
+      },
+      {
+        uri: 'at://p2',
+        record: { text: 'child2' },
+        author: { handle: 'user2' },
+        indexedAt: '2024-01-02T00:00:00Z',
+        likeCount: 0,
+        replyCount: 0,
+        repostCount: 0,
+        reply: {
+          parent: {
+            author: { displayName: 'Anon' },
+            record: { text: 'parent2' },
+          },
+        },
+      },
+    ] as any;
+
+    mockUseAuthorReplies.mockReturnValue({
+      data: replies,
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    render(<RepliesTab handle="alice" />);
+    expect(mockPostCard).toHaveBeenCalledTimes(2);
+    const first = mockPostCard.mock.calls[0][0].post.replyTo;
+    const second = mockPostCard.mock.calls[1][0].post.replyTo;
+    expect(first).toEqual({
+      author: { handle: 'bob', displayName: 'Bob' },
+      text: 'parent1',
+    });
+    expect(second).toEqual({
+      author: { handle: 'unknown', displayName: 'Anon' },
+      text: 'parent2',
+    });
   });
 });
 
