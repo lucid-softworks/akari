@@ -80,7 +80,6 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "jsdom": "^27.0.0",
-    "react-test-renderer": "^19.0.0",
     "typescript": "~5.8.3",
     "vitest": "^2.1.9"
   },
