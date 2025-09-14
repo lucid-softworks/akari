@@ -329,10 +329,10 @@ This ensures all tests are properly typed and follow consistent patterns across 
 
 1. **Minimum Coverage Targets**:
 
-   - **Statements**: 80%+ coverage
-   - **Branches**: 70%+ coverage
-   - **Functions**: 80%+ coverage
-   - **Lines**: 80%+ coverage
+   - **Statements**: 100% coverage
+   - **Branches**: 100% coverage
+   - **Functions**: 100% coverage
+   - **Lines**: 100% coverage
 
 2. **Always Run Coverage**: Use `npm run test:coverage` to identify uncovered code paths and missing test scenarios.
 
@@ -386,9 +386,18 @@ This ensures all tests are properly typed and follow consistent patterns across 
 - ✅ Test error boundaries and fallback UI
 - ✅ Test accessibility edge cases
 
-### Comprehensive Test Examples
+### Testing Best Practices
 
-#### ✅ **Comprehensive Component Test**:
+#### **Accessibility-First Testing**
+
+**CRITICAL**: Always test components the way users interact with them. Avoid test IDs unless absolutely necessary.
+
+1. **Use semantic queries** - `getByRole`, `getByLabelText`, `getByText`, `getByPlaceholderText`
+2. **Test accessibility** - Ensure screen readers can navigate your components
+3. **Minimal mocking** - Only mock what you need to isolate the component under test
+4. **Real user interactions** - Test buttons, links, and form inputs as users would use them
+
+#### ✅ **Accessibility-First Test Examples**:
 
 ```typescript
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
@@ -398,7 +407,7 @@ import { PostCard } from '@/components/PostCard';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-// Mock all dependencies
+// Only mock what's necessary for isolation
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/useThemeColor');
 
@@ -641,17 +650,76 @@ describe('useLikePost Hook - Comprehensive Tests', () => {
 });
 ```
 
+### Accessibility Testing Guidelines
+
+#### **Query Priority (in order of preference)**:
+
+1. **`getByRole`** - Most accessible, tests actual user interactions
+
+   ```typescript
+   const button = getByRole('button', { name: /like post/i });
+   const link = getByRole('link', { name: /view profile/i });
+   ```
+
+2. **`getByLabelText`** - For form inputs and labeled elements
+
+   ```typescript
+   const input = getByLabelText(/search/i);
+   const checkbox = getByLabelText(/notifications/i);
+   ```
+
+3. **`getByText`** - For visible text content
+
+   ```typescript
+   const heading = getByText('Welcome to Akari');
+   const errorMessage = getByText(/invalid email/i);
+   ```
+
+4. **`getByPlaceholderText`** - For inputs with placeholders
+
+   ```typescript
+   const searchInput = getByPlaceholderText(/search posts/i);
+   ```
+
+5. **`getByDisplayValue`** - For inputs with values
+
+   ```typescript
+   const emailInput = getByDisplayValue('user@example.com');
+   ```
+
+6. **`getByTestId`** - **LAST RESORT ONLY** - When no other query works
+   ```typescript
+   // Only use when component has no accessible attributes
+   const complexChart = getByTestId('analytics-chart');
+   ```
+
+#### **When to Mock vs. When Not to Mock**:
+
+✅ **DO Mock**:
+
+- External API calls and network requests
+- Complex child components that aren't the focus of the test
+- Hooks that have side effects (navigation, storage, etc.)
+- Time-dependent functions (timers, dates)
+
+❌ **DON'T Mock**:
+
+- Simple presentational components
+- Utility functions that are pure
+- Components you're testing integration with
+- Theme/styling logic (unless testing theme switching)
+
 ### Test Quality Checklist
 
 Before considering a test complete, ensure:
 
 - [ ] **All code paths are tested** (check coverage report)
 - [ ] **All props and their combinations are tested**
-- [ ] **All user interactions are tested**
+- [ ] **All user interactions are tested with semantic queries**
 - [ ] **Error states and edge cases are covered**
-- [ ] **Hooks are properly mocked and tested**
+- [ ] **Only necessary dependencies are mocked**
 - [ ] **Theme variations are tested**
-- [ ] **Accessibility is considered**
+- [ ] **Accessibility is tested with screen reader queries**
 - [ ] **Performance edge cases are covered**
 - [ ] **Integration with parent/child components is tested**
 - [ ] **Data transformation logic is verified**
@@ -659,7 +727,7 @@ Before considering a test complete, ensure:
 ### Coverage Monitoring
 
 1. **Always run `npm run test:coverage`** before committing tests
-2. **Aim for 80%+ coverage** across all metrics
+2. **Aim for 100% coverage** across all metrics
 3. **Identify uncovered lines** and write tests for them
 4. **Focus on critical business logic** first
 5. **Don't sacrifice quality for quantity** - better to have fewer, comprehensive tests
