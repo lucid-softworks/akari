@@ -256,7 +256,9 @@ This ensures type safety while maintaining code readability and maintainability.
 
 ## Testing Guidelines
 
-**CRITICAL**: Always import all necessary testing utilities from vitest, including `beforeEach` when using it.
+**CRITICAL**: Always use `npm run test:run` or `npm run test:coverage` instead of `npm test` to avoid Jest hanging in interactive/watch mode.
+
+**CRITICAL**: This project uses Jest with jest-expo preset for testing. Use Jest's built-in functions like `jest.useFakeTimers()` instead of vitest equivalents.
 
 ### Why proper imports matter?
 
@@ -268,7 +270,6 @@ This ensures type safety while maintaining code readability and maintainability.
 
 ```typescript
 import { render } from '@testing-library/react-native';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ComponentName } from './ComponentName';
 ```
@@ -276,17 +277,14 @@ import { ComponentName } from './ComponentName';
 ### ❌ **Incorrect**:
 
 ```typescript
-// Missing beforeEach import
-import { describe, expect, it, vi } from 'vitest';
-
-// Or missing other necessary imports
-import { describe, it } from 'vitest';
+// Don't import Jest globals - they're available globally
+import { describe, expect, it, jest } from 'jest';
 ```
 
 ### Testing Best Practices:
 
-1. **Always import all used utilities** from vitest (describe, it, expect, vi, beforeEach, afterEach, etc.)
-2. **Mock external dependencies** properly using vi.mock()
+1. **Jest globals are available** - no need to import describe, it, expect, jest, beforeEach, afterEach
+2. **Mock external dependencies** properly using jest.mock()
 3. **Use beforeEach** to reset mocks and setup test state
 4. **Test all props and behaviors** comprehensively
 5. **Include edge cases** and error scenarios
@@ -296,9 +294,29 @@ import { describe, it } from 'vitest';
 ### Test File Organization:
 
 ```
+__tests__/
+├── components/           # Component tests
+│   ├── ComponentName.test.tsx
+│   └── AnotherComponent.test.tsx
+├── utils/               # Utility function tests
+│   └── utilityName.test.ts
+└── hooks/               # Hook tests (when needed)
+    └── hookName.test.ts
+
+# Main app structure
 components/
 ├── ComponentName.tsx
-├── ComponentName.test.tsx  # Test file next to component
+utils/
+├── utilityName.ts
+hooks/
+├── hookName.ts
+```
+
+**Import Pattern**: Always use `@/` alias for imports in test files:
+
+```typescript
+import { ComponentName } from '@/components/ComponentName';
+import { utilityFunction } from '@/utils/utilityName';
 ```
 
 This ensures all tests are properly typed and follow consistent patterns across the project.

@@ -386,7 +386,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const authorInfo = getAuthorInfo();
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} testID="record-embed-touchable">
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
           {authorInfo ? (
