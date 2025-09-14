@@ -9,6 +9,8 @@ jobs:
       contents: read
       pull-requests: write
       checks: write
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,23 +23,25 @@ jobs:
         with:
           working-directory: apps/akari
           test-script: npm run test:coverage
-      - name: Upload HTML coverage report
+      - name: Setup Pages
         if: always()
-        id: upload-coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/configure-pages@v5
+      - name: Upload coverage to Pages
+        if: always()
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: coverage-html
           path: apps/akari/coverage
+      - name: Deploy Pages
+        if: always()
+        id: deploy
+        uses: actions/deploy-pages@v4
       - name: Comment coverage link
         if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ github.token }}
           script: |
-            const artifactId = '${{ steps.upload-coverage.outputs.artifact-id }}';
-            const runId = process.env.GITHUB_RUN_ID;
-            const repo = process.env.GITHUB_REPOSITORY;
-            const url = `https://github.com/${repo}/actions/runs/${runId}/artifacts/${artifactId}`;
+            const url = '${{ steps.deploy.outputs.page_url }}';
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
