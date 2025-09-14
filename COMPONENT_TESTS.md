@@ -45,14 +45,14 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] profile/RepliesTab.tsx
 - [x] profile/StarterpacksTab.tsx
 - [x] profile/VideosTab.tsx
-- [ ] skeletons/ConversationSkeleton.tsx
-- [ ] skeletons/FeedSkeleton.tsx
-- [ ] skeletons/NotificationSkeleton.tsx
-- [ ] skeletons/PostCardSkeleton.tsx
-- [ ] skeletons/PostDetailSkeleton.tsx
-- [ ] skeletons/ProfileHeaderSkeleton.tsx
-- [ ] skeletons/SearchResultSkeleton.tsx
-- [ ] skeletons/SettingsSkeleton.tsx
+- [x] skeletons/ConversationSkeleton.tsx
+- [x] skeletons/FeedSkeleton.tsx
+- [x] skeletons/NotificationSkeleton.tsx
+- [x] skeletons/PostCardSkeleton.tsx
+- [x] skeletons/PostDetailSkeleton.tsx
+- [x] skeletons/ProfileHeaderSkeleton.tsx
+- [x] skeletons/SearchResultSkeleton.tsx
+- [x] skeletons/SettingsSkeleton.tsx
 - [ ] ui/IconSymbol.ios.tsx
 - [ ] ui/IconSymbol.tsx
 - [ ] ui/Skeleton.tsx
