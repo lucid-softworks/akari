@@ -5,13 +5,13 @@ This checklist shows which components under `apps/akari/components` have tests.
 - [x] Collapsible.tsx
 - [x] ExternalEmbed.tsx
 - [x] ExternalLink.tsx
-- [ ] GifEmbed.tsx
+- [x] GifEmbed.tsx
 - [x] GifPicker.tsx
 - [ ] HandleHistoryModal.tsx
 - [x] HapticTab.tsx
 - [ ] ImageViewer.tsx
 - [x] Label.tsx
-- [ ] Labels.tsx
+- [x] Labels.tsx
 - [ ] LanguageSelector.tsx
 - [ ] NotificationSettings.tsx
 - [ ] NotificationTest.tsx
