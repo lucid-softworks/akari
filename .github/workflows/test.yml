@@ -23,6 +23,7 @@ jobs:
         with:
           working-directory: apps/akari
           test-script: npm run test:coverage
+        # Publish coverage report to GitHub Pages
       - name: Setup Pages
         if: always()
         uses: actions/configure-pages@v5
