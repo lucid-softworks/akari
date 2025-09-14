@@ -320,3 +320,348 @@ import { utilityFunction } from '@/utils/utilityName';
 ```
 
 This ensures all tests are properly typed and follow consistent patterns across the project.
+
+## Comprehensive Testing Strategy
+
+**CRITICAL**: All tests must be comprehensive, not just surface-level smoke tests. We aim for high code coverage and thorough testing of component behavior, user interactions, and edge cases.
+
+### Testing Coverage Requirements
+
+1. **Minimum Coverage Targets**:
+
+   - **Statements**: 80%+ coverage
+   - **Branches**: 70%+ coverage
+   - **Functions**: 80%+ coverage
+   - **Lines**: 80%+ coverage
+
+2. **Always Run Coverage**: Use `npm run test:coverage` to identify uncovered code paths and missing test scenarios.
+
+### Comprehensive Test Categories
+
+#### 1. **Component Rendering Tests**
+
+- ✅ Basic rendering without crashing
+- ✅ Rendering with all prop combinations
+- ✅ Rendering with missing/optional props
+- ✅ Rendering with edge case data (empty strings, null values, etc.)
+- ✅ Rendering with different theme modes (light/dark)
+
+#### 2. **Props and State Testing**
+
+- ✅ Test all prop types and combinations
+- ✅ Test prop validation and error handling
+- ✅ Test state changes and updates
+- ✅ Test conditional rendering based on props/state
+- ✅ Test default prop values
+
+#### 3. **User Interaction Testing**
+
+- ✅ Test all touchable elements (buttons, links, etc.)
+- ✅ Test form inputs and validation
+- ✅ Test navigation and routing
+- ✅ Test modal open/close behavior
+- ✅ Test gesture interactions (swipe, long press, etc.)
+
+#### 4. **Hook Integration Testing**
+
+- ✅ Test custom hook usage and return values
+- ✅ Test hook error states and loading states
+- ✅ Test hook side effects and cleanup
+- ✅ Test hook dependencies and re-renders
+- ✅ Mock external hook dependencies properly
+
+#### 5. **Data Flow Testing**
+
+- ✅ Test data transformation and formatting
+- ✅ Test API data handling and error states
+- ✅ Test optimistic updates and rollbacks
+- ✅ Test cache invalidation and refetching
+- ✅ Test data validation and sanitization
+
+#### 6. **Edge Cases and Error Handling**
+
+- ✅ Test network failures and timeouts
+- ✅ Test invalid data formats
+- ✅ Test boundary conditions (empty arrays, null objects)
+- ✅ Test error boundaries and fallback UI
+- ✅ Test accessibility edge cases
+
+### Comprehensive Test Examples
+
+#### ✅ **Comprehensive Component Test**:
+
+```typescript
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { PostCard } from '@/components/PostCard';
+import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { useThemeColor } from '@/hooks/useThemeColor';
+
+// Mock all dependencies
+jest.mock('@/hooks/mutations/useLikePost');
+jest.mock('@/hooks/useThemeColor');
+
+const mockUseLikePost = useLikePost as jest.Mock;
+const mockUseThemeColor = useThemeColor as jest.Mock;
+
+describe('PostCard Component - Comprehensive Tests', () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    jest.clearAllMocks();
+    mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+    mockUseThemeColor.mockReturnValue('#000000');
+  });
+
+  const renderWithQueryClient = (component: React.ReactElement) => {
+    return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
+  };
+
+  describe('Rendering Tests', () => {
+    it('should render with complete post data', () => {
+      const mockPost = {
+        id: 'test-1',
+        text: 'Hello World',
+        author: { handle: 'user.bsky.social', displayName: 'User', avatar: 'avatar.jpg' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+        likeCount: 5,
+        commentCount: 2,
+        repostCount: 1,
+      };
+
+      const { getByText, getByTestId } = renderWithQueryClient(<PostCard post={mockPost} />);
+
+      expect(getByText('User')).toBeTruthy();
+      expect(getByText('@user.bsky.social')).toBeTruthy();
+      expect(getByText('Hello World')).toBeTruthy();
+      expect(getByText('5')).toBeTruthy(); // like count
+    });
+
+    it('should render with minimal post data', () => {
+      const minimalPost = {
+        id: 'test-2',
+        author: { handle: 'minimal.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
+
+      const { getByText, queryByText } = renderWithQueryClient(<PostCard post={minimalPost} />);
+
+      expect(getByText('@minimal.bsky.social')).toBeTruthy();
+      expect(queryByText('Hello World')).toBeNull();
+    });
+
+    it('should render with reply context', () => {
+      const postWithReply = {
+        id: 'test-3',
+        text: 'Reply text',
+        author: { handle: 'replier.bsky.social', displayName: 'Replier' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+        replyTo: {
+          author: { handle: 'original.bsky.social', displayName: 'Original' },
+          text: 'Original post text',
+        },
+      };
+
+      const { getByText } = renderWithQueryClient(<PostCard post={postWithReply} />);
+
+      expect(getByText('Replying to')).toBeTruthy();
+      expect(getByText('@original.bsky.social')).toBeTruthy();
+    });
+  });
+
+  describe('User Interaction Tests', () => {
+    it('should handle like button press', async () => {
+      const mockMutate = jest.fn();
+      mockUseLikePost.mockReturnValue({ mutate: mockMutate });
+
+      const mockPost = {
+        id: 'test-4',
+        text: 'Test post',
+        author: { handle: 'user.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+        uri: 'at://test/post',
+        cid: 'test-cid',
+      };
+
+      const { getByTestId } = renderWithQueryClient(<PostCard post={mockPost} />);
+
+      const likeButton = getByTestId('like-button');
+      fireEvent.press(likeButton);
+
+      expect(mockMutate).toHaveBeenCalledWith({
+        postUri: 'at://test/post',
+        postCid: 'test-cid',
+        action: 'like',
+      });
+    });
+
+    it('should handle unlike when already liked', async () => {
+      const mockMutate = jest.fn();
+      mockUseLikePost.mockReturnValue({ mutate: mockMutate });
+
+      const likedPost = {
+        id: 'test-5',
+        text: 'Liked post',
+        author: { handle: 'user.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+        uri: 'at://test/post',
+        viewer: { like: 'at://test/like' },
+      };
+
+      const { getByTestId } = renderWithQueryClient(<PostCard post={likedPost} />);
+
+      const likeButton = getByTestId('like-button');
+      fireEvent.press(likeButton);
+
+      expect(mockMutate).toHaveBeenCalledWith({
+        postUri: 'at://test/post',
+        likeUri: 'at://test/like',
+        action: 'unlike',
+      });
+    });
+  });
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should handle missing URI for like action', () => {
+      const postWithoutUri = {
+        id: 'test-6',
+        text: 'No URI post',
+        author: { handle: 'user.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+        // No uri or cid
+      };
+
+      const { getByTestId } = renderWithQueryClient(<PostCard post={postWithoutUri} />);
+
+      const likeButton = getByTestId('like-button');
+      fireEvent.press(likeButton);
+
+      // Should not call mutate when URI is missing
+      expect(mockUseLikePost().mutate).not.toHaveBeenCalled();
+    });
+
+    it('should handle empty text gracefully', () => {
+      const postWithoutText = {
+        id: 'test-7',
+        author: { handle: 'user.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
+
+      const { getByText } = renderWithQueryClient(<PostCard post={postWithoutText} />);
+
+      expect(getByText('@user.bsky.social')).toBeTruthy();
+      // Should not crash with empty text
+    });
+  });
+
+  describe('Theme and Styling Tests', () => {
+    it('should use correct theme colors', () => {
+      mockUseThemeColor.mockReturnValue('#ff0000');
+
+      const mockPost = {
+        id: 'test-8',
+        text: 'Theme test',
+        author: { handle: 'user.bsky.social' },
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
+
+      renderWithQueryClient(<PostCard post={mockPost} />);
+
+      expect(mockUseThemeColor).toHaveBeenCalledWith(
+        expect.objectContaining({
+          light: expect.any(String),
+          dark: expect.any(String),
+        }),
+        'background',
+      );
+    });
+  });
+});
+```
+
+#### ✅ **Comprehensive Hook Test**:
+
+```typescript
+import { renderHook, waitFor } from '@testing-library/react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { useLikePost } from '@/hooks/mutations/useLikePost';
+
+describe('useLikePost Hook - Comprehensive Tests', () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+  });
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
+  it('should handle successful like mutation', async () => {
+    const { result } = renderHook(() => useLikePost(), { wrapper });
+
+    const likeData = {
+      postUri: 'at://test/post',
+      postCid: 'test-cid',
+      action: 'like' as const,
+    };
+
+    result.current.mutate(likeData);
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+  });
+
+  it('should handle mutation error', async () => {
+    // Mock API to return error
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { result } = renderHook(() => useLikePost(), { wrapper });
+
+    const likeData = {
+      postUri: 'invalid-uri',
+      postCid: 'test-cid',
+      action: 'like' as const,
+    };
+
+    result.current.mutate(likeData);
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+});
+```
+
+### Test Quality Checklist
+
+Before considering a test complete, ensure:
+
+- [ ] **All code paths are tested** (check coverage report)
+- [ ] **All props and their combinations are tested**
+- [ ] **All user interactions are tested**
+- [ ] **Error states and edge cases are covered**
+- [ ] **Hooks are properly mocked and tested**
+- [ ] **Theme variations are tested**
+- [ ] **Accessibility is considered**
+- [ ] **Performance edge cases are covered**
+- [ ] **Integration with parent/child components is tested**
+- [ ] **Data transformation logic is verified**
+
+### Coverage Monitoring
+
+1. **Always run `npm run test:coverage`** before committing tests
+2. **Aim for 80%+ coverage** across all metrics
+3. **Identify uncovered lines** and write tests for them
+4. **Focus on critical business logic** first
+5. **Don't sacrifice quality for quantity** - better to have fewer, comprehensive tests
+
+This comprehensive testing strategy ensures robust, maintainable code with high confidence in component behavior and user interactions.
