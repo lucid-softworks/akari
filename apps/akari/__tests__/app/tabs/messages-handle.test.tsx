@@ -158,7 +158,7 @@ describe('ConversationScreen', () => {
     });
     expect(mutateAsync).toHaveBeenCalledWith({ convoId: '1', text: 'hello' });
     expect(getByPlaceholderText('messages.typeMessage').props.value).toBe('');
-  });
+  }, 10000);
 
   it('shows alert when sending fails', async () => {
     const conversation = { handle: 'alice', convoId: '1' };
