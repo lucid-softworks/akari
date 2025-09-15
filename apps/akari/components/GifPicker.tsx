@@ -7,7 +7,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { tenorApi, TenorGif } from '@/utils/tenor';
+import type { TenorGif } from '@/tenor-api';
+import { tenorApi } from '@/utils/tenor';
 
 type GifPickerProps = {
   visible: boolean;
