@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import ProfileScreen from '@/app/profile/[handle]';
@@ -126,6 +126,8 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
   return { StarterpacksTab: ({ handle }: any) => <Text>{`starterpacks ${handle}`}</Text> };
 });
 
+const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');
+
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseProfile = useProfile as jest.Mock;
@@ -149,6 +151,14 @@ describe('ProfileScreen', () => {
   it('shows error when profile not found', () => {
     mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
     mockUseProfile.mockReturnValue({ data: undefined, isLoading: false, error: new Error('x') });
+
+    const { getByText } = render(<ProfileScreen />);
+    expect(getByText('common.noProfile')).toBeTruthy();
+  });
+
+  it('shows error when profile data is missing', () => {
+    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseProfile.mockReturnValue({ data: undefined, isLoading: false, error: null });
 
     const { getByText } = render(<ProfileScreen />);
     expect(getByText('common.noProfile')).toBeTruthy();
@@ -221,6 +231,34 @@ describe('ProfileScreen', () => {
     expect(logSpy).toHaveBeenCalledWith('Report account');
 
     logSpy.mockRestore();
+  });
+
+  it('toggles dropdown visibility when closing', () => {
+    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseProfile.mockReturnValue({
+      data: {
+        handle: 'alice',
+        avatar: null,
+        displayName: 'Alice',
+        description: '',
+        banner: null,
+        did: 'did',
+        followersCount: 1,
+        followsCount: 1,
+        postsCount: 1,
+        viewer: {},
+        labels: [],
+      },
+      isLoading: false,
+      error: null,
+    });
+
+    const { queryByText } = render(<ProfileScreen />);
+    const headerInstance = (ProfileHeaderMock as jest.Mock).mock.calls[0][0];
+    act(() => headerInstance.onDropdownToggle(true));
+    expect(queryByText('copy link')).not.toBeNull();
+    act(() => headerInstance.onDropdownToggle(false));
+    expect(queryByText('copy link')).toBeNull();
   });
 
   it('returns no tab content when handle missing', () => {
