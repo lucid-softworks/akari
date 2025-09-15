@@ -1,5 +1,6 @@
 import type { NotificationChannel } from '@/utils/notifications';
 
+const mockSetNotificationHandler = jest.fn();
 const mockSetBadgeCountAsync = jest.fn();
 const mockGetBadgeCountAsync = jest.fn();
 const mockGetPermissionsAsync = jest.fn();
@@ -22,7 +23,7 @@ const mockConstants = {
 let mockIsDevice = true;
 
 jest.mock('expo-notifications', () => ({
-  setNotificationHandler: jest.fn(),
+  setNotificationHandler: mockSetNotificationHandler,
   getPermissionsAsync: mockGetPermissionsAsync,
   requestPermissionsAsync: mockRequestPermissionsAsync,
   getExpoPushTokenAsync: mockGetExpoPushTokenAsync,
@@ -52,6 +53,7 @@ jest.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
 
 describe('notifications utils', () => {
   beforeEach(() => {
+    jest.resetModules();
     jest.clearAllMocks();
     const Device = require('expo-device');
     Device.__setIsDevice(true);
@@ -59,6 +61,18 @@ describe('notifications utils', () => {
     Platform.OS = 'ios';
     mockConstants.expoConfig.extra.eas.projectId = 'test-project';
     mockConstants.easConfig.projectId = 'test-project';
+  });
+
+  it('registers a notification handler that always shows notifications', async () => {
+    require('@/utils/notifications');
+    expect(mockSetNotificationHandler).toHaveBeenCalledTimes(1);
+    const handler = mockSetNotificationHandler.mock.calls[0][0];
+    await expect(handler.handleNotification()).resolves.toEqual({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    });
   });
 
   it('sets badge count', async () => {
@@ -156,6 +170,17 @@ describe('notifications utils', () => {
       expect(result).toBeNull();
       errorSpy.mockRestore();
     });
+
+    it('uses easConfig project id when expo config is missing', async () => {
+      mockGetPermissionsAsync.mockResolvedValueOnce({ status: 'granted' });
+      mockConstants.expoConfig.extra.eas.projectId = undefined;
+      mockConstants.easConfig.projectId = 'fallback-project';
+      mockGetExpoPushTokenAsync.mockResolvedValueOnce({ data: 'expo-token' });
+      const { registerForPushNotifications } = require('@/utils/notifications');
+      const result = await registerForPushNotifications();
+      expect(mockGetExpoPushTokenAsync).toHaveBeenCalledWith({ projectId: 'fallback-project' });
+      expect(result).toEqual({ expoPushToken: 'expo-token', devicePushToken: undefined });
+    });
   });
 
   describe('createNotificationChannels', () => {
@@ -196,6 +221,19 @@ describe('notifications utils', () => {
       trigger: null,
     });
     expect(id).toBe('id-1');
+  });
+
+  it('schedules a local notification with custom data and trigger', async () => {
+    mockScheduleNotificationAsync.mockResolvedValueOnce('id-2');
+    const trigger = { seconds: 30 } as any;
+    const data = { foo: 'bar' };
+    const { scheduleLocalNotification } = require('@/utils/notifications');
+    const id = await scheduleLocalNotification('Other Title', 'Other Body', data, trigger);
+    expect(mockScheduleNotificationAsync).toHaveBeenCalledWith({
+      content: { title: 'Other Title', body: 'Other Body', data, sound: true },
+      trigger,
+    });
+    expect(id).toBe('id-2');
   });
 
   it('cancels a scheduled notification', async () => {
