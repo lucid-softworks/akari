@@ -1,22 +1,22 @@
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
 import { TenorAPI, type TenorGif, type TenorSearchResponse, type TenorTrendingResponse } from '../src';
 
+const server = setupServer();
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' });
+});
+
+afterEach(() => {
+  server.resetHandlers();
+});
+
+afterAll(() => {
+  server.close();
+});
+
 describe('TenorAPI', () => {
-  const originalFetch = global.fetch;
-  let fetchMock: jest.Mock;
-
-  beforeEach(() => {
-    fetchMock = jest.fn();
-    global.fetch = fetchMock as unknown as typeof fetch;
-  });
-
-  afterEach(() => {
-    fetchMock.mockReset();
-  });
-
-  afterAll(() => {
-    global.fetch = originalFetch;
-  });
-
   const createGif = (overrides: Partial<TenorGif> = {}): TenorGif => {
     const base: TenorGif = {
       id: 'gif-id',
@@ -42,44 +42,58 @@ describe('TenorAPI', () => {
 
   it('searchGifs builds the correct request and returns data', async () => {
     const payload: TenorSearchResponse = { results: [], next: 'cursor-2' };
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => payload,
-    });
+    let capturedUrl: URL | undefined;
+    let callCount = 0;
+
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/search', ({ request }) => {
+        callCount += 1;
+        capturedUrl = new URL(request.url);
+        return HttpResponse.json(payload);
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     const result = await api.searchGifs('cats', 5, 'cursor-1');
 
     expect(result).toEqual(payload);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(callCount).toBe(1);
 
-    const requestUrl = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(requestUrl.origin + requestUrl.pathname).toBe('https://tenor.googleapis.com/v2/search');
-    expect(requestUrl.searchParams.get('q')).toBe('cats');
-    expect(requestUrl.searchParams.get('limit')).toBe('5');
-    expect(requestUrl.searchParams.get('pos')).toBe('cursor-1');
-    expect(requestUrl.searchParams.get('key')).toBe('test-key');
-    expect(requestUrl.searchParams.get('media_filter')).toBe('gif');
-    expect(requestUrl.searchParams.get('contentfilter')).toBe('medium');
+    expect(capturedUrl).toBeDefined();
+    const url = capturedUrl!;
+    expect(url.origin + url.pathname).toBe('https://tenor.googleapis.com/v2/search');
+    expect(url.searchParams.get('q')).toBe('cats');
+    expect(url.searchParams.get('limit')).toBe('5');
+    expect(url.searchParams.get('pos')).toBe('cursor-1');
+    expect(url.searchParams.get('key')).toBe('test-key');
+    expect(url.searchParams.get('media_filter')).toBe('gif');
+    expect(url.searchParams.get('contentfilter')).toBe('medium');
   });
 
   it('searchGifs omits optional parameters when not provided', async () => {
     const payload: TenorSearchResponse = { results: [], next: 'cursor' };
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => payload,
-    });
+    let capturedUrl: URL | undefined;
+
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/search', ({ request }) => {
+        capturedUrl = new URL(request.url);
+        return HttpResponse.json(payload);
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     await api.searchGifs('dogs');
 
-    const requestUrl = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(requestUrl.searchParams.get('limit')).toBe('20');
-    expect(requestUrl.searchParams.get('pos')).toBeNull();
+    expect(capturedUrl?.searchParams.get('limit')).toBe('20');
+    expect(capturedUrl?.searchParams.get('pos')).toBeNull();
   });
 
   it('searchGifs throws an error when the response is not ok', async () => {
-    fetchMock.mockResolvedValue({ ok: false, status: 500, statusText: 'Server Error' });
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/search', () =>
+        HttpResponse.json({}, { status: 500, statusText: 'Server Error' }),
+      ),
+    );
 
     const api = new TenorAPI('test-key');
     await expect(api.searchGifs('cats')).rejects.toThrow('Tenor API error: 500 Server Error');
@@ -87,40 +101,52 @@ describe('TenorAPI', () => {
 
   it('getTrendingGifs builds the correct request and returns data', async () => {
     const payload: TenorTrendingResponse = { results: [], next: 'cursor' };
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => payload,
-    });
+    let capturedUrl: URL | undefined;
+
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/featured', ({ request }) => {
+        capturedUrl = new URL(request.url);
+        return HttpResponse.json(payload);
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     const result = await api.getTrendingGifs(10, 'cursor-1');
 
     expect(result).toEqual(payload);
 
-    const requestUrl = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(requestUrl.origin + requestUrl.pathname).toBe('https://tenor.googleapis.com/v2/featured');
-    expect(requestUrl.searchParams.get('limit')).toBe('10');
-    expect(requestUrl.searchParams.get('pos')).toBe('cursor-1');
-    expect(requestUrl.searchParams.get('key')).toBe('test-key');
+    expect(capturedUrl).toBeDefined();
+    const url = capturedUrl!;
+    expect(url.origin + url.pathname).toBe('https://tenor.googleapis.com/v2/featured');
+    expect(url.searchParams.get('limit')).toBe('10');
+    expect(url.searchParams.get('pos')).toBe('cursor-1');
+    expect(url.searchParams.get('key')).toBe('test-key');
   });
 
   it('getTrendingGifs uses defaults when arguments are omitted', async () => {
     const payload: TenorTrendingResponse = { results: [], next: 'cursor' };
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => payload,
-    });
+    let capturedUrl: URL | undefined;
+
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/featured', ({ request }) => {
+        capturedUrl = new URL(request.url);
+        return HttpResponse.json(payload);
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     await api.getTrendingGifs();
 
-    const requestUrl = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(requestUrl.searchParams.get('limit')).toBe('20');
-    expect(requestUrl.searchParams.get('pos')).toBeNull();
+    expect(capturedUrl?.searchParams.get('limit')).toBe('20');
+    expect(capturedUrl?.searchParams.get('pos')).toBeNull();
   });
 
   it('getTrendingGifs throws an error when the response is not ok', async () => {
-    fetchMock.mockResolvedValue({ ok: false, status: 404, statusText: 'Not Found' });
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/featured', () =>
+        HttpResponse.json({}, { status: 404, statusText: 'Not Found' }),
+      ),
+    );
 
     const api = new TenorAPI('test-key');
     await expect(api.getTrendingGifs()).rejects.toThrow('Tenor API error: 404 Not Found');
@@ -128,44 +154,65 @@ describe('TenorAPI', () => {
 
   it('getGifById fetches the GIF and returns the first result', async () => {
     const gif = createGif();
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({ results: [gif] }),
-    });
+    let capturedUrl: URL | undefined;
+
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/posts', ({ request }) => {
+        capturedUrl = new URL(request.url);
+        return HttpResponse.json({ results: [gif] });
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     const result = await api.getGifById('gif-id');
 
-    expect(result).toBe(gif);
+    expect(result).toEqual(gif);
 
-    const requestUrl = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(requestUrl.origin + requestUrl.pathname).toBe('https://tenor.googleapis.com/v2/posts');
-    expect(requestUrl.searchParams.get('ids')).toBe('gif-id');
+    expect(capturedUrl).toBeDefined();
+    const url = capturedUrl!;
+    expect(url.origin + url.pathname).toBe('https://tenor.googleapis.com/v2/posts');
+    expect(url.searchParams.get('ids')).toBe('gif-id');
   });
 
   it('getGifById throws an error when the response is not ok', async () => {
-    fetchMock.mockResolvedValue({ ok: false, status: 400, statusText: 'Bad Request' });
+    server.use(
+      http.get('https://tenor.googleapis.com/v2/posts', () =>
+        HttpResponse.json({}, { status: 400, statusText: 'Bad Request' }),
+      ),
+    );
 
     const api = new TenorAPI('test-key');
     await expect(api.getGifById('gif-id')).rejects.toThrow('Tenor API error: 400 Bad Request');
   });
 
   it('downloadGifAsBlob returns the blob from the response', async () => {
-    const blob = { size: 123 } as unknown as Blob;
-    fetchMock.mockResolvedValue({
-      ok: true,
-      blob: async () => blob,
-    });
+    const blobContent = 'gif-data';
+    let capturedUrl: string | undefined;
+
+    server.use(
+      http.get('https://example.com/g.gif', ({ request }) => {
+        capturedUrl = request.url;
+        return new HttpResponse(blobContent, {
+          status: 200,
+          headers: { 'Content-Type': 'image/gif' },
+        });
+      }),
+    );
 
     const api = new TenorAPI('test-key');
     const result = await api.downloadGifAsBlob('https://example.com/g.gif');
 
-    expect(result).toBe(blob);
-    expect(fetchMock).toHaveBeenCalledWith('https://example.com/g.gif');
+    expect(await result.text()).toBe(blobContent);
+    expect(result.type).toBe('image/gif');
+    expect(capturedUrl).toBe('https://example.com/g.gif');
   });
 
   it('downloadGifAsBlob throws when the response is not ok', async () => {
-    fetchMock.mockResolvedValue({ ok: false, status: 503, statusText: 'Failure' });
+    server.use(
+      http.get('https://example.com/g.gif', () =>
+        HttpResponse.json({}, { status: 503, statusText: 'Failure' }),
+      ),
+    );
 
     const api = new TenorAPI('test-key');
     await expect(api.downloadGifAsBlob('https://example.com/g.gif')).rejects.toThrow(
