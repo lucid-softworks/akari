@@ -12,6 +12,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test --filter=akari",
+    "test:coverage": "turbo run test:coverage",
     "clean": "turbo run clean",
     "ios": "turbo run ios --filter=akari",
     "android": "turbo run android --filter=akari",
