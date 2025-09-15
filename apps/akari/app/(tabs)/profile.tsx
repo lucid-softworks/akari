@@ -59,13 +59,11 @@ export default function ProfileScreen() {
 
   const handleCopyLink = async () => {
     // TODO: Implement copy link functionality
-    console.log('Copy link');
     setShowDropdown(false);
   };
 
   const handleSearchPosts = () => {
     // TODO: Implement search posts functionality
-    console.log('Search posts');
     setShowDropdown(false);
   };
 
@@ -145,19 +143,19 @@ export default function ProfileScreen() {
         onCopyLink={handleCopyLink}
         onSearchPosts={handleSearchPosts}
         onAddToLists={() => {
-          console.log('Add to lists');
+          // TODO: Implement add to lists functionality
           setShowDropdown(false);
         }}
         onMuteAccount={() => {
-          console.log('Mute account');
+          // TODO: Implement mute account functionality
           setShowDropdown(false);
         }}
         onBlockPress={() => {
-          console.log('Block account');
+          // TODO: Implement block account functionality
           setShowDropdown(false);
         }}
         onReportAccount={() => {
-          console.log('Report account');
+          // TODO: Implement report account functionality
           setShowDropdown(false);
         }}
         isFollowing={false}
