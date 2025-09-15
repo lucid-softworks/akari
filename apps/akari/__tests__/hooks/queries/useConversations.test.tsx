@@ -142,6 +142,18 @@ describe('useConversations', () => {
     expect(options.getNextPageParam({ cursor: 'next' })).toBe('next');
   });
 
+  it('uses default configuration values when parameters are omitted', async () => {
+    mockListConversations.mockResolvedValue({ cursor: undefined, convos: [] });
+
+    const options = renderUseConversations();
+
+    await options.queryFn({ pageParam: undefined });
+
+    expect(mockListConversations).toHaveBeenCalledWith('token', 50, undefined, undefined, undefined);
+    expect(options.queryKey).toEqual(['conversations', 50, undefined, undefined, 'did:me']);
+    expect(options.enabled).toBe(true);
+  });
+
   it('passes filters and cursor to the API', async () => {
     mockListConversations.mockResolvedValue({ cursor: 'cursor-2', convos: [] });
 
