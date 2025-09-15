@@ -1,14 +1,108 @@
 const fs = require('fs');
 const path = require('path');
-const { createCoverageMap, createFileCoverage } = require('istanbul-lib-coverage');
+const {
+  createCoverageMap,
+  createFileCoverage,
+  createCoverageSummary,
+} = require('istanbul-lib-coverage');
 const libReport = require('istanbul-lib-report');
 const reports = require('istanbul-reports');
+const { BaseNode, BaseTree } = require('istanbul-lib-report/lib/tree');
 
 const rootDir = process.cwd();
 const coverageDirName = 'coverage';
 const outputPath = path.join(rootDir, coverageDirName, 'lcov.info');
 
 const coverageEntries = [];
+
+class WorkspaceReportNode extends BaseNode {
+  constructor(pathSegments, fileCoverage) {
+    super();
+    this.pathSegments = Array.isArray(pathSegments) ? pathSegments : [];
+    this.fileCoverage = fileCoverage || null;
+    this.parent = null;
+    this.children = [];
+    this.childBySegment = new Map();
+  }
+
+  addChildNode(node) {
+    node.parent = this;
+    this.children.push(node);
+    const key = node.pathSegments.length > 0 ? node.pathSegments[node.pathSegments.length - 1] : '';
+    this.childBySegment.set(key, node);
+  }
+
+  getChild(segment) {
+    return this.childBySegment.get(segment);
+  }
+
+  getQualifiedName() {
+    return this.pathSegments.join('/');
+  }
+
+  getRelativeName() {
+    const parentNode = this.getParent();
+    if (!parentNode) {
+      return this.getQualifiedName();
+    }
+    const parentSegments = parentNode.pathSegments || [];
+    const relative = this.pathSegments.slice(parentSegments.length);
+    return relative.join('/');
+  }
+
+  getParent() {
+    return this.parent;
+  }
+
+  getChildren() {
+    return this.children;
+  }
+
+  isSummary() {
+    return !this.fileCoverage;
+  }
+
+  getFileCoverage() {
+    return this.fileCoverage;
+  }
+
+  getCoverageSummary(filesOnly) {
+    const cacheKey = filesOnly ? '_workspaceFilesSummary' : '_workspaceFullSummary';
+    if (this[cacheKey]) {
+      return this[cacheKey];
+    }
+
+    let summary;
+    if (!this.isSummary()) {
+      summary = this.fileCoverage.toSummary();
+    } else {
+      let count = 0;
+      summary = createCoverageSummary();
+      for (const child of this.children) {
+        if (filesOnly && child.isSummary()) {
+          continue;
+        }
+        const childSummary = child.getCoverageSummary(filesOnly);
+        if (childSummary) {
+          summary.merge(childSummary);
+          count += 1;
+        }
+      }
+      if (filesOnly && count === 0) {
+        summary = null;
+      }
+    }
+
+    this[cacheKey] = summary;
+    return summary;
+  }
+}
+
+class WorkspaceReportTree extends BaseTree {
+  constructor(root) {
+    super(root);
+  }
+}
 
 function walk(currentDir) {
   const entries = fs.readdirSync(currentDir, { withFileTypes: true });
@@ -117,12 +211,16 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
   }
 
   const coverageMap = createCoverageMap({});
+  const fileWorkspaceMap = new Map();
   let hasCoverage = false;
 
   for (const entry of entries) {
     const { coverageJsonPath, lcovPath, prefix } = entry;
     if (coverageJsonPath && fs.existsSync(coverageJsonPath)) {
       const normalizedData = normalizeCoverageJson(coverageJsonPath, prefix);
+      for (const filePath of Object.keys(normalizedData)) {
+        registerFileWorkspace(fileWorkspaceMap, filePath, prefix);
+      }
       coverageMap.merge(normalizedData);
       if (!hasCoverage) {
         hasCoverage = Object.keys(normalizedData).length > 0;
@@ -141,6 +239,9 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
     }
 
     mergeLcovRecordsIntoCoverageMap(records, coverageMap);
+    for (const record of records) {
+      registerFileWorkspace(fileWorkspaceMap, record.path, prefix);
+    }
     hasCoverage = true;
   }
 
@@ -152,12 +253,23 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
   const coverageJsonPath = path.join(coverageDir, 'coverage-final.json');
   fs.writeFileSync(coverageJsonPath, `${JSON.stringify(coverageMap.toJSON(), null, 2)}\n`);
 
+  const workspaceTree = createWorkspaceTree(coverageMap, fileWorkspaceMap);
   const context = libReport.createContext({
     dir: coverageDir,
     defaultSummarizer: 'pkg',
     coverageMap,
     sourceFinder: createSourceFinder(),
   });
+
+  if (workspaceTree) {
+    const originalGetTree = context.getTree.bind(context);
+    context.getTree = (name = 'defaultSummarizer') => {
+      if (!name || name === 'defaultSummarizer' || name === 'pkg') {
+        return workspaceTree;
+      }
+      return originalGetTree(name);
+    };
+  }
 
   reports.create('html', { skipEmpty: false, skipFull: false }).execute(context);
 
@@ -389,6 +501,21 @@ function mergeLcovRecordsIntoCoverageMap(records, coverageMap) {
   }
 }
 
+function registerFileWorkspace(map, filePath, prefix) {
+  if (!filePath) {
+    return;
+  }
+
+  if (!prefix) {
+    return;
+  }
+
+  if (!map.has(filePath)) {
+    map.set(filePath, prefix);
+  }
+}
+
+
 function normalizeCoverageJson(coverageJsonPath, prefix) {
   const content = fs.readFileSync(coverageJsonPath, 'utf8');
   let data;
@@ -528,4 +655,177 @@ function isWithinPath(baseDir, targetPath) {
     relative === '' ||
     (!relative.startsWith('..') && !path.isAbsolute(relative))
   );
+}
+
+function createWorkspaceTree(coverageMap, fileWorkspaceMap) {
+  if (!coverageMap || typeof coverageMap.files !== 'function') {
+    return null;
+  }
+
+  const files = coverageMap.files();
+  if (!Array.isArray(files) || files.length === 0) {
+    return null;
+  }
+
+  const root = new WorkspaceReportNode([]);
+
+  for (const filePath of files) {
+    const fileCoverage = coverageMap.fileCoverageFor(filePath);
+    if (!fileCoverage) {
+      continue;
+    }
+
+    const workspaceKey = resolveWorkspaceKey(fileWorkspaceMap, filePath);
+    const treeSegments = buildTreeSegments(filePath, workspaceKey);
+    if (treeSegments.length === 0) {
+      continue;
+    }
+
+    insertCoverageNode(root, treeSegments, fileCoverage);
+  }
+
+  sortWorkspaceNodeChildren(root);
+
+  return new WorkspaceReportTree(root);
+}
+
+function resolveWorkspaceKey(fileWorkspaceMap, filePath) {
+  if (fileWorkspaceMap && fileWorkspaceMap.has(filePath)) {
+    const key = fileWorkspaceMap.get(filePath);
+    if (key) {
+      return key;
+    }
+  }
+
+  return inferWorkspaceKey(filePath);
+}
+
+function buildTreeSegments(filePath, workspaceKey) {
+  const trimmedPath = stripLeadingDotSlash(filePath);
+  const pathSegments = splitPathSegments(trimmedPath);
+  const treeSegments = [];
+
+  if (pathSegments.length === 0) {
+    return treeSegments;
+  }
+
+  let startIndex = 0;
+  if (workspaceKey) {
+    const expectedSegments = workspaceKey.split('/');
+    if (startsWithSegments(pathSegments, expectedSegments)) {
+      startIndex = expectedSegments.length;
+      treeSegments.push(workspaceKey);
+    }
+  }
+
+  const remaining = pathSegments.slice(startIndex);
+  const normalizedRemaining = combineRouteGroupSegments(remaining);
+  for (const segment of normalizedRemaining) {
+    treeSegments.push(segment);
+  }
+
+  return treeSegments;
+}
+
+function stripLeadingDotSlash(p) {
+  if (p.startsWith('./')) {
+    return p.slice(2);
+  }
+  return p;
+}
+
+function splitPathSegments(p) {
+  return p.split('/').filter((segment) => segment && segment !== '.');
+}
+
+function startsWithSegments(fullSegments, prefixSegments) {
+  if (prefixSegments.length === 0) {
+    return true;
+  }
+
+  if (prefixSegments.length > fullSegments.length) {
+    return false;
+  }
+
+  for (let index = 0; index < prefixSegments.length; index += 1) {
+    if (fullSegments[index] !== prefixSegments[index]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function combineRouteGroupSegments(segments) {
+  const result = [];
+  for (const segment of segments) {
+    if (segment.startsWith('(') && segment.endsWith(')') && result.length > 0) {
+      const lastIndex = result.length - 1;
+      result[lastIndex] = `${result[lastIndex]}/${segment}`;
+    } else {
+      result.push(segment);
+    }
+  }
+  return result;
+}
+
+function insertCoverageNode(root, segments, fileCoverage) {
+  if (!Array.isArray(segments) || segments.length === 0) {
+    return;
+  }
+
+  let current = root;
+  for (let index = 0; index < segments.length; index += 1) {
+    const segment = segments[index];
+    const isLeaf = index === segments.length - 1;
+
+    if (isLeaf) {
+      const existing = current.getChild(segment);
+      if (existing) {
+        if (!existing.fileCoverage) {
+          existing.fileCoverage = fileCoverage;
+        }
+      } else {
+        current.addChildNode(new WorkspaceReportNode([...current.pathSegments, segment], fileCoverage));
+      }
+      continue;
+    }
+
+    let nextNode = current.getChild(segment);
+    if (!nextNode) {
+      nextNode = new WorkspaceReportNode([...current.pathSegments, segment]);
+      current.addChildNode(nextNode);
+    }
+    current = nextNode;
+  }
+}
+
+function sortWorkspaceNodeChildren(node) {
+  if (!node || !Array.isArray(node.children) || node.children.length === 0) {
+    return;
+  }
+
+  node.children.sort((a, b) => {
+    if (a.isSummary() !== b.isSummary()) {
+      return a.isSummary() ? -1 : 1;
+    }
+    const aName = a.getRelativeName();
+    const bName = b.getRelativeName();
+    return aName.localeCompare(bName);
+  });
+
+  for (const child of node.children) {
+    sortWorkspaceNodeChildren(child);
+  }
+}
+
+function inferWorkspaceKey(filePath) {
+  const segments = splitPathSegments(stripLeadingDotSlash(filePath));
+  if (segments.length >= 2) {
+    const [first, second] = segments;
+    if (first === 'apps' || first === 'packages') {
+      return `${first}/${second}`;
+    }
+  }
+  return null;
 }
