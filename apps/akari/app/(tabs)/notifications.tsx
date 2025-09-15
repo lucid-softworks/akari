@@ -352,8 +352,6 @@ export default function NotificationsScreen() {
     isLoading,
     isError,
     error,
-    hasNextPage,
-    fetchNextPage,
     isFetchingNextPage,
     refetch,
     isRefetching,
@@ -361,12 +359,6 @@ export default function NotificationsScreen() {
 
   const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
   const groupedNotifications = groupNotifications(notifications);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
 
   const handleNotificationPress = (notification: GroupedNotification) => {
     if (notification.type === 'follow') {
