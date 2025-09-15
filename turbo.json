@@ -21,6 +21,7 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:coverage": {},
     "ios": {
       "cache": false,
       "persistent": true
