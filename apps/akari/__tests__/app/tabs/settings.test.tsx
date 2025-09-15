@@ -1,0 +1,150 @@
+import React from 'react';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
+
+import SettingsScreen from '@/app/(tabs)/settings';
+import { Account } from '@/types/account';
+import { router } from 'expo-router';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { showAlert } from '@/utils/alert';
+
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
+import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
+import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
+import { useAccounts } from '@/hooks/queries/useAccounts';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTranslation } from '@/hooks/useTranslation';
+
+jest.mock('expo-constants', () => ({ expoConfig: { version: '1.0.0' } }));
+
+jest.mock('expo-image', () => {
+  const React = require('react');
+  const { Image } = require('react-native');
+  return { Image: React.forwardRef((props: any, ref: any) => <Image ref={ref} {...props} />) };
+});
+
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), replace: jest.fn() } }));
+
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+}));
+
+jest.mock('@/components/LanguageSelector', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { LanguageSelector: () => <Text>language</Text> };
+});
+
+jest.mock('@/components/NotificationSettings', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { NotificationSettings: () => <Text>notifications</Text> };
+});
+
+jest.mock('@/components/ThemedText', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { ThemedText: (props: any) => <Text {...props} /> };
+});
+
+jest.mock('@/components/ThemedView', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
+});
+
+jest.mock('@/hooks/mutations/useSwitchAccount');
+jest.mock('@/hooks/mutations/useRemoveAccount');
+jest.mock('@/hooks/mutations/useWipeAllData');
+jest.mock('@/hooks/queries/useAccountProfiles');
+jest.mock('@/hooks/queries/useAccounts');
+jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/useBorderColor');
+jest.mock('@/hooks/useTranslation');
+
+jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+
+const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
+const mockUseRemoveAccount = useRemoveAccount as jest.Mock;
+const mockUseWipeAllData = useWipeAllData as jest.Mock;
+const mockUseAccountProfiles = useAccountProfiles as jest.Mock;
+const mockUseAccounts = useAccounts as jest.Mock;
+const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockUseTranslation = useTranslation as jest.Mock;
+const mockShowAlert = showAlert as jest.Mock;
+const mockRouterPush = router.push as jest.Mock;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockUseBorderColor.mockReturnValue('#000');
+  mockUseTranslation.mockReturnValue({ t: (key: string) => key });
+  mockUseAccountProfiles.mockReturnValue({ data: {} });
+  mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
+  mockUseRemoveAccount.mockReturnValue({ mutate: jest.fn() });
+  mockUseWipeAllData.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue(undefined) });
+});
+
+describe('SettingsScreen', () => {
+  it('renders accounts and handles actions', async () => {
+    const accounts: Account[] = [
+      { did: 'did1', handle: 'user1', displayName: 'User One', jwtToken: 't', refreshToken: 'r' },
+      { did: 'did2', handle: 'user2', displayName: 'User Two', jwtToken: 't', refreshToken: 'r' },
+    ];
+    mockUseAccounts.mockReturnValue({ data: accounts });
+    mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
+
+    const registerSpy = jest.spyOn(tabScrollRegistry, 'register');
+
+    const { getByText, getAllByText } = render(<SettingsScreen />);
+
+    await waitFor(() => expect(registerSpy).toHaveBeenCalledWith('settings', expect.any(Function)));
+
+    expect(getAllByText('@user1').length).toBeGreaterThan(0);
+    expect(getByText('@user2')).toBeTruthy();
+    expect(getAllByText('common.switch')).toHaveLength(1);
+
+    fireEvent.press(getByText('common.switch'));
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'common.switchAccount' })
+    );
+
+    fireEvent.press(getAllByText('common.remove')[1]);
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'common.removeAccount' })
+    );
+  });
+
+  it('shows message when no accounts exist', () => {
+    mockUseAccounts.mockReturnValue({ data: [] });
+    mockUseCurrentAccount.mockReturnValue({ data: null });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    expect(getByText('common.noAccounts')).toBeTruthy();
+  });
+
+  it('navigates to add account screen', () => {
+    mockUseAccounts.mockReturnValue({ data: [] });
+    mockUseCurrentAccount.mockReturnValue({ data: null });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    fireEvent.press(getByText('common.addAccount'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
+  });
+
+  it('logs out all accounts', async () => {
+    mockUseAccounts.mockReturnValue({ data: [] });
+    mockUseCurrentAccount.mockReturnValue({ data: null });
+    const mutateAsync = jest.fn().mockResolvedValue(undefined);
+    mockUseWipeAllData.mockReturnValue({ mutateAsync });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    fireEvent.press(getByText('common.disconnectAllAccounts'));
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+  });
+});
+
