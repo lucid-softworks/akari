@@ -46,16 +46,74 @@ describe('useCreatePost mutation hook', () => {
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useCreatePost(), { wrapper });
 
-    result.current.mutate({ text: 'hello' });
+    const postData = {
+      text: 'hello',
+      replyTo: { root: 'r', parent: 'p' },
+      images: [{ uri: 'i', alt: 'a', mimeType: 'image/png' }],
+    };
+
+    result.current.mutate(postData);
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockCreatePostApi).toHaveBeenCalledWith('token', 'did', {
-      text: 'hello',
-      replyTo: undefined,
-      images: undefined,
+    expect(mockCreatePostApi).toHaveBeenCalledWith('token', 'did', postData);
+  });
+
+  it('optimistically updates caches and rolls back on error', async () => {
+    const { queryClient, wrapper } = createWrapper();
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: { did: 'did', pdsUrl: 'https://pds' },
     });
+    mockCreatePostApi.mockRejectedValueOnce(new Error('fail'));
+
+    const initial = {
+      pages: [{ feed: [{ uri: 'old', cid: 'cid', record: {}, author: {} }] }],
+      pageParams: [],
+    };
+    queryClient.setQueryData(['timeline'], initial);
+    queryClient.setQueryData(['feed'], initial);
+    queryClient.setQueryData(['authorFeed', 'did'], initial);
+    queryClient.setQueryData(['authorPosts', 'did'], initial);
+
+    const { result } = renderHook(() => useCreatePost(), { wrapper });
+
+    result.current.mutate({
+      text: 'err',
+      replyTo: { root: 'rr', parent: 'pp' },
+      images: [{ uri: 'u', alt: 'alt', mimeType: 'image/png' }],
+    });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(queryClient.getQueryData(['timeline'])).toEqual(initial);
+    expect(queryClient.getQueryData(['feed'])).toEqual(initial);
+    expect(queryClient.getQueryData(['authorFeed', 'did'])).toEqual(initial);
+    expect(queryClient.getQueryData(['authorPosts', 'did'])).toEqual(initial);
+  });
+
+  it('returns early when cached feeds are empty', async () => {
+    const { queryClient, wrapper } = createWrapper();
+    const empty = { pages: [{}], pageParams: [] };
+    queryClient.setQueryData(['timeline'], empty);
+    queryClient.setQueryData(['feed'], empty);
+    queryClient.setQueryData(['authorFeed', 'did'], empty);
+    queryClient.setQueryData(['authorPosts', 'did'], empty);
+
+    const { result } = renderHook(() => useCreatePost(), { wrapper });
+
+    result.current.mutate({ text: 'none' });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(queryClient.getQueryData(['timeline'])).toEqual(empty);
+    expect(queryClient.getQueryData(['feed'])).toEqual(empty);
+    expect(queryClient.getQueryData(['authorFeed', 'did'])).toEqual(empty);
+    expect(queryClient.getQueryData(['authorPosts', 'did'])).toEqual(empty);
   });
 
   it('errors when token missing', async () => {
