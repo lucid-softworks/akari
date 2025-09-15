@@ -8,7 +8,7 @@ const rootDir = process.cwd();
 const coverageDirName = 'coverage';
 const outputPath = path.join(rootDir, coverageDirName, 'lcov.info');
 
-const coverageFiles = [];
+const coverageEntries = [];
 
 function walk(currentDir) {
   const entries = fs.readdirSync(currentDir, { withFileTypes: true });
@@ -30,26 +30,34 @@ function walk(currentDir) {
       path.basename(path.dirname(entryPath)) === coverageDirName &&
       path.resolve(entryPath) !== outputPath
     ) {
-      coverageFiles.push(entryPath);
+      const coverageDir = path.dirname(entryPath);
+      const workspaceRoot = path.dirname(coverageDir);
+      const relativePrefix = path.relative(rootDir, workspaceRoot).replace(/\\/g, '/');
+      const prefix = relativePrefix && relativePrefix !== '.' ? relativePrefix : '';
+      const coverageJsonPath = path.join(coverageDir, 'coverage-final.json');
+
+      coverageEntries.push({
+        lcovPath: entryPath,
+        coverageJsonPath,
+        prefix,
+      });
     }
   }
 }
 
 walk(rootDir);
-coverageFiles.sort();
+coverageEntries.sort((a, b) => a.lcovPath.localeCompare(b.lcovPath));
 
-if (coverageFiles.length === 0) {
+if (coverageEntries.length === 0) {
   throw new Error('No coverage reports were found to merge.');
 }
 
 const mergedLines = [];
 
-for (const filePath of coverageFiles) {
-  const reportContent = fs.readFileSync(filePath, 'utf8');
+for (const entry of coverageEntries) {
+  const { lcovPath, prefix } = entry;
+  const reportContent = fs.readFileSync(lcovPath, 'utf8');
   const lines = reportContent.split(/\r?\n/);
-  const workspaceRoot = path.dirname(path.dirname(filePath));
-  const relativePrefix = path.relative(rootDir, workspaceRoot).replace(/\\/g, '/');
-  const prefix = relativePrefix && relativePrefix !== '.' ? `${relativePrefix}/` : '';
 
   for (const line of lines) {
     if (line.startsWith('SF:')) {
@@ -65,7 +73,7 @@ for (const filePath of coverageFiles) {
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${mergedLines.join('\n')}\n`);
 
-generateHtmlReportFromLcov(outputPath);
+generateHtmlReportFromCoverage(coverageEntries, outputPath);
 
 function normalizeSourcePath(sourcePath, prefix) {
   if (!sourcePath) {
@@ -74,50 +82,73 @@ function normalizeSourcePath(sourcePath, prefix) {
 
   let sanitized = sourcePath.replace(/\\/g, '/');
 
-  if (sanitized.startsWith('./')) {
-    sanitized = sanitized.slice(2);
+  if (sanitized.startsWith('file://')) {
+    sanitized = sanitized.slice('file://'.length);
   }
 
-  if (sanitized.startsWith('/')) {
-    return sanitized;
+  if (isAbsolutePath(sanitized)) {
+    return normalizeAbsolutePath(sanitized);
   }
 
-  const combined = `${prefix}${sanitized}`
-    .replace(/\\/g, '/')
-    .replace(/\/{2,}/g, '/');
-  if (combined.startsWith('./')) {
-    return combined;
+  const baseDir = path.resolve(rootDir, prefix || '');
+  const absoluteFromPrefix = path.resolve(baseDir, sanitized);
+
+  if (isWithinPath(rootDir, absoluteFromPrefix)) {
+    return formatRelative(path.relative(rootDir, absoluteFromPrefix));
   }
 
-  return `./${combined}`;
+  const combined = prefix ? `${prefix}/${sanitized}` : sanitized;
+  const normalizedCombined = path.posix.normalize(combined);
+
+  if (!normalizedCombined || normalizedCombined === '.') {
+    return './';
+  }
+
+  if (normalizedCombined.startsWith('../')) {
+    return normalizedCombined;
+  }
+
+  return normalizedCombined.startsWith('./') ? normalizedCombined : `./${normalizedCombined}`;
 }
 
-function generateHtmlReportFromLcov(lcovPath) {
-  if (!fs.existsSync(lcovPath)) {
-    return;
-  }
-
-  const lcovContent = fs.readFileSync(lcovPath, 'utf8');
-  const records = parseLcov(lcovContent);
-
-  if (records.length === 0) {
+function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
+  if (!Array.isArray(entries) || entries.length === 0) {
     return;
   }
 
   const coverageMap = createCoverageMap({});
+  let hasCoverage = false;
 
-  for (const record of records) {
-    const fileCoverage = createFileCoverageFromRecord(record);
-    if (fileCoverage) {
-      coverageMap.merge(fileCoverage);
+  for (const entry of entries) {
+    const { coverageJsonPath, lcovPath, prefix } = entry;
+    if (coverageJsonPath && fs.existsSync(coverageJsonPath)) {
+      const normalizedData = normalizeCoverageJson(coverageJsonPath, prefix);
+      coverageMap.merge(normalizedData);
+      if (!hasCoverage) {
+        hasCoverage = Object.keys(normalizedData).length > 0;
+      }
+      continue;
     }
+
+    if (!fs.existsSync(lcovPath)) {
+      continue;
+    }
+
+    const lcovContent = fs.readFileSync(lcovPath, 'utf8');
+    const records = parseLcov(lcovContent, prefix);
+    if (records.length === 0) {
+      continue;
+    }
+
+    mergeLcovRecordsIntoCoverageMap(records, coverageMap);
+    hasCoverage = true;
   }
 
-  if (coverageMap.files().length === 0) {
+  if (!hasCoverage || coverageMap.files().length === 0) {
     return;
   }
 
-  const coverageDir = path.dirname(lcovPath);
+  const coverageDir = path.dirname(mergedLcovPath);
   const coverageJsonPath = path.join(coverageDir, 'coverage-final.json');
   fs.writeFileSync(coverageJsonPath, `${JSON.stringify(coverageMap.toJSON(), null, 2)}\n`);
 
@@ -133,7 +164,7 @@ function generateHtmlReportFromLcov(lcovPath) {
   copyCoverageStyles(coverageDir);
 }
 
-function parseLcov(content) {
+function parseLcov(content, prefix) {
   const records = [];
   const lines = content.split(/\r?\n/);
   let currentRecord = null;
@@ -150,7 +181,7 @@ function parseLcov(content) {
         records.push(currentRecord);
       }
 
-      const filePath = line.slice(3).trim();
+      const filePath = normalizeSourcePath(line.slice(3).trim(), prefix);
       currentRecord = {
         path: filePath,
         functions: [],
@@ -347,4 +378,154 @@ function copyCoverageStyles(destinationDir) {
     const targetPath = path.join(destinationDir, fileName);
     fs.copyFileSync(sourcePath, targetPath);
   }
+}
+
+function mergeLcovRecordsIntoCoverageMap(records, coverageMap) {
+  for (const record of records) {
+    const fileCoverage = createFileCoverageFromRecord(record);
+    if (fileCoverage) {
+      coverageMap.merge(fileCoverage);
+    }
+  }
+}
+
+function normalizeCoverageJson(coverageJsonPath, prefix) {
+  const content = fs.readFileSync(coverageJsonPath, 'utf8');
+  let data;
+
+  try {
+    data = JSON.parse(content);
+  } catch (error) {
+    throw new Error(`Failed to parse coverage JSON at ${coverageJsonPath}: ${error.message}`);
+  }
+
+  const normalized = {};
+
+  for (const [originalPath, fileData] of Object.entries(data || {})) {
+    if (!fileData || typeof fileData !== 'object') {
+      continue;
+    }
+
+    const normalizedPath = normalizeSourcePath(fileData.path || originalPath, prefix);
+    const cloned = cloneFileCoverageData(fileData, normalizedPath, prefix);
+    normalized[normalizedPath] = cloned;
+  }
+
+  return normalized;
+}
+
+function cloneFileCoverageData(fileData, normalizedPath, prefix) {
+  const cloned = {
+    ...fileData,
+    path: normalizedPath,
+    statementMap: cloneStatementMap(fileData.statementMap),
+    fnMap: cloneFunctionMap(fileData.fnMap),
+    branchMap: cloneBranchMap(fileData.branchMap),
+    s: { ...(fileData.s || {}) },
+    f: { ...(fileData.f || {}) },
+    b: cloneBranchHits(fileData.b),
+  };
+
+  if (fileData.inputSourceMap) {
+    cloned.inputSourceMap = {
+      ...fileData.inputSourceMap,
+      sources: Array.isArray(fileData.inputSourceMap.sources)
+        ? fileData.inputSourceMap.sources.map((source) => normalizeSourcePath(source, prefix))
+        : fileData.inputSourceMap.sources,
+    };
+  }
+
+  return cloned;
+}
+
+function cloneStatementMap(statementMap = {}) {
+  const cloned = {};
+  for (const [key, value] of Object.entries(statementMap)) {
+    cloned[key] = cloneLocation(value);
+  }
+  return cloned;
+}
+
+function cloneFunctionMap(fnMap = {}) {
+  const cloned = {};
+  for (const [key, value] of Object.entries(fnMap)) {
+    cloned[key] = {
+      ...value,
+      decl: cloneLocation(value?.decl),
+      loc: cloneLocation(value?.loc),
+    };
+  }
+  return cloned;
+}
+
+function cloneBranchMap(branchMap = {}) {
+  const cloned = {};
+  for (const [key, value] of Object.entries(branchMap)) {
+    cloned[key] = {
+      ...value,
+      loc: cloneLocation(value?.loc),
+      locations: Array.isArray(value?.locations)
+        ? value.locations.map((location) => cloneLocation(location))
+        : [],
+    };
+  }
+  return cloned;
+}
+
+function cloneBranchHits(branchHits = {}) {
+  const cloned = {};
+  for (const [key, value] of Object.entries(branchHits)) {
+    cloned[key] = Array.isArray(value) ? [...value] : value;
+  }
+  return cloned;
+}
+
+function cloneLocation(location) {
+  if (!location) {
+    return location;
+  }
+
+  return {
+    start: { ...location.start },
+    end: { ...location.end },
+  };
+}
+
+function isAbsolutePath(p) {
+  return Boolean(p) && (p.startsWith('/') || /^[a-zA-Z]:\//.test(p));
+}
+
+function convertToOsPath(p) {
+  if (/^[a-zA-Z]:\//.test(p)) {
+    return p;
+  }
+
+  return path.resolve('/', p.replace(/^\//, ''));
+}
+
+function normalizeAbsolutePath(absolutePath) {
+  const osPath = convertToOsPath(absolutePath);
+  if (isWithinPath(rootDir, osPath)) {
+    return formatRelative(path.relative(rootDir, osPath));
+  }
+
+  return absolutePath.replace(/\\/g, '/');
+}
+
+function formatRelative(relativePath) {
+  const normalized = path.posix.normalize(relativePath.replace(/\\/g, '/'));
+
+  if (!normalized || normalized === '.') {
+    return './';
+  }
+
+  return normalized.startsWith('./') ? normalized : `./${normalized}`;
+}
+
+function isWithinPath(baseDir, targetPath) {
+  const relative = path.relative(baseDir, targetPath);
+  return (
+    relative === '' ||
+    (!relative.startsWith('..') && !path.isAbsolute(relative))
+  );
 }
