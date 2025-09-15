@@ -41,6 +41,14 @@ describe('VideoPlayer.web', () => {
     expect(queryByText('Hidden')).toBeNull();
   });
 
+  it('ignores empty title and description', () => {
+    const { queryByText } = render(
+      <VideoPlayer videoUrl="https://example.com/video.mp4" title="   " description="" />,
+    );
+
+    expect(queryByText(/\S/)).toBeNull();
+  });
+
   it('shows error state and resets on tap', () => {
     const setStatus = jest.fn();
     const setError = jest.fn();
