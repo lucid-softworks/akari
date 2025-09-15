@@ -65,5 +65,69 @@ describe('useSendMessage mutation hook', () => {
       expect(result.current.isError).toBe(true);
     });
   });
+
+  it('errors when user DID missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: { pdsUrl: 'https://pds' },
+    });
+    const { queryClient, wrapper } = createWrapper();
+    queryClient.setQueryData(['messages', 'c1'], { pages: [{}] });
+    const { result } = renderHook(() => useSendMessage(), { wrapper });
+
+    result.current.mutate({ convoId: 'c1', text: 'hi' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('errors when pdsUrl missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: { did: 'did' },
+    });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useSendMessage(), { wrapper });
+
+    result.current.mutate({ convoId: 'c1', text: 'hi' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('rolls back optimistic update on error', async () => {
+    mockSendMessage.mockRejectedValue(new Error('fail'));
+    const { queryClient, wrapper } = createWrapper();
+    const original = {
+      pages: [
+        {
+          messages: [
+            {
+              id: 'm1',
+              rev: 'rev1',
+              text: 'old',
+              facets: undefined,
+              embed: undefined,
+              reactions: [],
+              sender: { did: 'did' },
+              sentAt: '2023-01-01T00:00:00Z',
+            },
+          ],
+        },
+      ],
+    };
+    queryClient.setQueryData(['messages', 'c1'], original);
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result } = renderHook(() => useSendMessage(), { wrapper });
+
+    result.current.mutate({ convoId: 'c1', text: 'hi' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(queryClient.getQueryData(['messages', 'c1'])).toEqual(original);
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['messages', 'c1'] });
+  });
 });
 
