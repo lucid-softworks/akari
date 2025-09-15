@@ -1,16 +1,15 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
 import { getPdsUrlFromDid, getPdsUrlFromHandle } from './pds';
 
 describe('getPdsUrlFromDid', () => {
-  const originalFetch = globalThis.fetch;
+  const originalFetch = globalThis.fetch as typeof fetch;
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     globalThis.fetch = originalFetch;
   });
 
   it('returns PDS endpoint when service is available', async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
+    const mockFetch = jest.fn().mockResolvedValue({
       ok: true,
       json: () =>
         Promise.resolve({
@@ -26,8 +25,8 @@ describe('getPdsUrlFromDid', () => {
   });
 
   it('returns null when response is not ok', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 404 } as Response);
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404 } as Response);
 
     const url = await getPdsUrlFromDid('did:bad');
 
@@ -36,8 +35,8 @@ describe('getPdsUrlFromDid', () => {
   });
 
   it('returns null when service is missing', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    globalThis.fetch = vi.fn().mockResolvedValue({
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ service: [] }),
     });
@@ -49,8 +48,8 @@ describe('getPdsUrlFromDid', () => {
   });
 
   it('returns null when fetch throws', async () => {
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    globalThis.fetch = vi.fn().mockRejectedValue(new Error('network error'));
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    globalThis.fetch = jest.fn().mockRejectedValue(new Error('network error'));
 
     const url = await getPdsUrlFromDid('did:error');
 
@@ -60,15 +59,15 @@ describe('getPdsUrlFromDid', () => {
 });
 
 describe('getPdsUrlFromHandle', () => {
-  const originalFetch = globalThis.fetch;
+  const originalFetch = globalThis.fetch as typeof fetch;
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     globalThis.fetch = originalFetch;
   });
 
   it('resolves handle and returns PDS URL', async () => {
-    const mockFetch = vi
+    const mockFetch = jest
       .fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -94,8 +93,8 @@ describe('getPdsUrlFromHandle', () => {
   });
 
   it('returns null when handle resolution fails', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 } as Response);
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 } as Response);
 
     const url = await getPdsUrlFromHandle('bad.handle');
 
@@ -104,8 +103,8 @@ describe('getPdsUrlFromHandle', () => {
   });
 
   it('returns null when no DID is returned', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
 
     const url = await getPdsUrlFromHandle('nodid.handle');
 
@@ -114,8 +113,8 @@ describe('getPdsUrlFromHandle', () => {
   });
 
   it('returns null when PDS lookup yields no service', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    globalThis.fetch = vi
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    globalThis.fetch = jest
       .fn()
       .mockResolvedValueOnce({
         ok: true,
