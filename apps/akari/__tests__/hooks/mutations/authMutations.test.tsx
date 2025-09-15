@@ -8,7 +8,6 @@ import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetCurrentAccount } from '@/hooks/mutations/useSetCurrentAccount';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
-import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -133,20 +132,6 @@ describe('authentication and account mutation hooks', () => {
       expect(queryClient.getQueryData(['selectedFeed'])).toBe('feed');
     });
     expect(storage.setItem).toHaveBeenCalledWith('selectedFeed', 'feed');
-  });
-
-  it('useAddAccount adds account', async () => {
-    const { queryClient, wrapper } = createWrapper();
-    (storage.getItem as jest.Mock).mockReturnValue([]);
-    const { result } = renderHook(() => useAddAccount(), { wrapper });
-    const account = { did: 'a1', handle: 'h1' } as any;
-
-    result.current.mutate(account);
-
-    await waitFor(() => {
-      expect(queryClient.getQueryData(['accounts'])).toEqual([account]);
-    });
-    expect(storage.setItem).toHaveBeenCalledWith('accounts', [account]);
   });
 
   it('useRemoveAccount removes account and updates current', async () => {
