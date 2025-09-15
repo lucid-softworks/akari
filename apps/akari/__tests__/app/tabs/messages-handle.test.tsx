@@ -1,9 +1,9 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard } from 'react-native';
+import { FlatList, Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[handle]';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
@@ -62,6 +62,9 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
+const mockRouterBack = router.back as jest.Mock;
+const mockRouterPush = router.push as jest.Mock;
+let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -72,12 +75,24 @@ beforeEach(() => {
     return c.light ?? '#000';
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
-  jest.spyOn(Keyboard, 'addListener').mockImplementation(() => ({ remove: jest.fn() } as any));
-  jest.spyOn(Keyboard, 'removeAllListeners').mockImplementation(() => {});
+  keyboardListeners = {};
+  jest.spyOn(Keyboard, 'addListener').mockImplementation((event: string, callback: () => void) => {
+    if (event === 'keyboardWillShow') {
+      keyboardListeners.show = callback;
+    }
+    if (event === 'keyboardWillHide') {
+      keyboardListeners.hide = callback;
+    }
+    return { remove: jest.fn() } as any;
+  });
+  jest.spyOn(Keyboard, 'removeAllListeners').mockImplementation(() => {
+    keyboardListeners = {};
+  });
 });
 
 afterEach(() => {
   jest.restoreAllMocks();
+  keyboardListeners = {};
 });
 
 type Message = { id: string; text: string; timestamp: string; isFromMe: boolean; sentAt: string };
@@ -97,6 +112,8 @@ describe('ConversationScreen', () => {
 
     const { getByText } = render(<ConversationScreen />);
     expect(getByText('common.loading common.conversations...')).toBeTruthy();
+    fireEvent.press(getByText('chevron.left'));
+    expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 
   it('renders error state when messages query fails', () => {
@@ -115,6 +132,8 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
     expect(getByText('no access')).toBeTruthy();
     expect(getByText('common.errorLoadingMessages')).toBeTruthy();
+    fireEvent.press(getByText('chevron.left'));
+    expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 
   it('sends a message and clears input', async () => {
@@ -208,6 +227,138 @@ describe('ConversationScreen', () => {
       UNSAFE_getByType(FlatList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
+  });
+
+  it('navigates to the profile and back from the header', () => {
+    const conversation = { handle: 'alice', convoId: '1', avatar: 'a.png', displayName: 'Alice' };
+    mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+    mockUseMessages.mockReturnValue({
+      data: { pages: [{ messages: [] }] },
+      isLoading: false,
+      error: null,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+    mockUseSendMessage.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+
+    const { getByText } = render(<ConversationScreen />);
+
+    fireEvent.press(getByText('@alice'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+
+    fireEvent.press(getByText('chevron.left'));
+    expect(mockRouterBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns early when message text is empty', () => {
+    const conversation = { handle: 'alice', convoId: '1' };
+    mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+    mockUseMessages.mockReturnValue({
+      data: { pages: [{ messages: [] }] },
+      isLoading: false,
+      error: null,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+    const mutateAsync = jest.fn();
+    mockUseSendMessage.mockReturnValue({ mutateAsync, isPending: false });
+
+    const { getByText, UNSAFE_getAllByType } = render(<ConversationScreen />);
+
+    act(() => {
+      const sendButton = UNSAFE_getAllByType(TouchableOpacity).find(
+        (button) => button.props.onPress && button.props.disabled !== undefined,
+      ) as any;
+      sendButton.props.onPress();
+    });
+
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('shows loading indicator while messages are fetching', () => {
+    const conversation = { handle: 'alice', convoId: '1' };
+    mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+    mockUseMessages.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      error: null,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+    mockUseSendMessage.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+
+    const { getByText } = render(<ConversationScreen />);
+
+    expect(getByText('Loading messages...')).toBeTruthy();
+  });
+
+  it('renders outgoing messages and updates keyboard spacing', () => {
+    const originalPlatform = Platform.OS;
+    Platform.OS = 'ios';
+
+    try {
+      const conversation = { handle: 'alice', convoId: '1' };
+      const messages: Message[] = [
+        { id: 'm2', text: 'from me', timestamp: 'now', isFromMe: true, sentAt: '' },
+      ];
+      mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+      mockUseMessages.mockReturnValue({
+        data: { pages: [{ messages }] },
+        isLoading: false,
+        error: null,
+        fetchNextPage: jest.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
+      });
+      mockUseSendMessage.mockReturnValue({ mutateAsync: jest.fn(), isPending: true });
+
+      const { getByPlaceholderText, getByText } = render(<ConversationScreen />);
+
+      expect(getByText('clock')).toBeTruthy();
+
+      act(() => {
+        keyboardListeners.show?.();
+      });
+
+      const inputContainer = getByPlaceholderText('messages.typeMessage').parent?.parent as any;
+      expect(inputContainer.props.style).toEqual(
+        expect.arrayContaining([expect.objectContaining({ paddingBottom: 12 })]),
+      );
+
+      act(() => {
+        keyboardListeners.hide?.();
+      });
+    } finally {
+      Platform.OS = originalPlatform;
+    }
+  });
+
+  it('uses height behavior for non-iOS platforms', () => {
+    const originalPlatform = Platform.OS;
+    Platform.OS = 'android';
+
+    try {
+      const conversation = { handle: 'alice', convoId: '1' };
+      mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+      mockUseMessages.mockReturnValue({
+        data: { pages: [{ messages: [] }] },
+        isLoading: false,
+        error: null,
+        fetchNextPage: jest.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
+      });
+      mockUseSendMessage.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+
+      const { UNSAFE_getByType } = render(<ConversationScreen />);
+
+      expect(UNSAFE_getByType(KeyboardAvoidingView).props.behavior).toBe('height');
+    } finally {
+      Platform.OS = originalPlatform;
+    }
   });
 });
 
