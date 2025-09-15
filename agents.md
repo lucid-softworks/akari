@@ -714,6 +714,12 @@ describe('useLikePost Hook - Comprehensive Tests', () => {
 - Components you're testing integration with
 - Theme/styling logic (unless testing theme switching)
 
+### Network Request Mocking Standard
+
+- Use [Mock Service Worker (MSW)](https://mswjs.io/) to intercept HTTP requests in tests. Set up `setupServer`/`setupWorker` fixtures instead of reassigning `fetch` or other globals.
+- Prefer inspecting requests within MSW handlers to assert headers, payloads, and query parameters.
+- Reset MSW handlers between tests to avoid cross-test pollution.
+
 ### Test Quality Checklist
 
 Before considering a test complete, ensure:
