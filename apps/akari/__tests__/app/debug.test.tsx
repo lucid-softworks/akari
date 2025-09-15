@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react-native';
+import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import DebugScreen from '@/app/debug';
@@ -60,6 +60,106 @@ describe('DebugScreen', () => {
 
     fireEvent.press(getByText('Remove'));
     expect(removeSpy).toHaveBeenCalledWith({ queryKey: ['test'] });
+  });
+
+  it('handles edge cases in query formatting and toggling', async () => {
+    const client = new QueryClient();
+
+    const circular: any = {};
+    circular.self = circular;
+
+    let errorAccessCount = 0;
+    const customQuery: any = {
+      queryKey: ['edge'],
+      state: {
+        status: 'idle',
+        data: circular,
+        dataUpdatedAt: Date.now(),
+        errorUpdatedAt: Date.now(),
+        get error() {
+          errorAccessCount += 1;
+          return errorAccessCount === 1 ? { message: 'first' } : null;
+        },
+      },
+    };
+
+    const pendingQuery: any = {
+      queryKey: ['pending'],
+      state: {
+        status: 'pending',
+        data: { loading: true },
+        dataUpdatedAt: Date.now(),
+        errorUpdatedAt: Date.now(),
+      },
+    };
+
+    const errorQuery: any = {
+      queryKey: ['error'],
+      state: {
+        status: 'error',
+        error: { message: 'failure' },
+        dataUpdatedAt: Date.now(),
+        errorUpdatedAt: Date.now(),
+      },
+    };
+
+    const getAllSpy = jest.spyOn(client.getQueryCache(), 'getAll');
+    getAllSpy.mockReturnValue([customQuery, pendingQuery, errorQuery]);
+
+    const { getByText, getAllByText, queryByText } = renderScreen(client);
+
+    const statusToggle = () => getAllByText('Unknown')[0];
+
+    fireEvent.press(statusToggle());
+
+    expect(getByText('Query Key:')).toBeTruthy();
+    expect(getByText('Unable to stringify data')).toBeTruthy();
+    expect(getByText('null')).toBeTruthy();
+    expect(getByText('Loading')).toBeTruthy();
+    expect(getByText('Error')).toBeTruthy();
+
+    fireEvent.press(statusToggle());
+
+    await waitFor(() => {
+      expect(queryByText('Query Key:')).toBeNull();
+    });
+
+    getAllSpy.mockRestore();
+  });
+
+  it('falls back to light theme values and truncates long query keys', () => {
+    const client = new QueryClient();
+    mockUseColorScheme.mockReturnValue(undefined);
+
+    const longKey = 'x'.repeat(150);
+    const longQuery: any = {
+      queryKey: [longKey],
+      state: {
+        status: 'pending',
+        data: { value: 42 },
+        dataUpdatedAt: 0,
+        errorUpdatedAt: 0,
+        fetchCount: 5,
+        error: { message: 'failure' },
+      },
+    };
+
+    const getAllSpy = jest.spyOn(client.getQueryCache(), 'getAll');
+    getAllSpy.mockReturnValue([longQuery]);
+
+    const { getByText, getAllByText } = renderScreen(client);
+
+    const fullKey = JSON.stringify(longQuery.queryKey, null, 2);
+    const truncatedKey = fullKey.substring(0, 100) + '...';
+    expect(getByText(truncatedKey)).toBeTruthy();
+
+    const statusToggle = getAllByText('Loading')[0];
+    fireEvent.press(statusToggle);
+
+    expect(getByText(fullKey)).toBeTruthy();
+    expect(getAllByText('Never').length).toBeGreaterThanOrEqual(2);
+
+    getAllSpy.mockRestore();
   });
 
   it('invalidates and clears all queries through alerts', () => {
