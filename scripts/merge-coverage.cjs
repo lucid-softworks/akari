@@ -684,6 +684,7 @@ function createWorkspaceTree(coverageMap, fileWorkspaceMap) {
     insertCoverageNode(root, treeSegments, fileCoverage);
   }
 
+  flattenWorkspaceNode(root);
   sortWorkspaceNodeChildren(root);
 
   return new WorkspaceReportTree(root);
@@ -797,6 +798,110 @@ function insertCoverageNode(root, segments, fileCoverage) {
       current.addChildNode(nextNode);
     }
     current = nextNode;
+  }
+}
+
+function flattenWorkspaceNode(node) {
+  if (!node || !Array.isArray(node.children) || node.children.length === 0) {
+    return;
+  }
+
+  for (const child of node.children) {
+    flattenWorkspaceNode(child);
+  }
+
+  if (node.pathSegments.length === 0) {
+    return;
+  }
+
+  for (let index = 0; index < node.children.length; index += 1) {
+    let child = node.children[index];
+    while (canCollapseWorkspaceNode(child)) {
+      collapseWorkspaceChild(node, child);
+      child = node.children[index];
+    }
+  }
+}
+
+function canCollapseWorkspaceNode(node) {
+  if (!node || !node.isSummary()) {
+    return false;
+  }
+
+  if (!Array.isArray(node.children) || node.children.length !== 1) {
+    return false;
+  }
+
+  const [onlyChild] = node.children;
+  return Boolean(onlyChild && onlyChild.isSummary());
+}
+
+function collapseWorkspaceChild(parent, child) {
+  const grandchild = child.children[0];
+  if (!grandchild) {
+    return;
+  }
+
+  const oldChildKey = getLastPathSegment(child.pathSegments);
+  const grandchildKey = getLastPathSegment(grandchild.pathSegments);
+  const combinedKey = combineSegmentNames(oldChildKey, grandchildKey);
+  const newChildSegments = [...parent.pathSegments, combinedKey];
+  const oldGrandchildSegments = grandchild.pathSegments.slice();
+
+  if (oldChildKey !== undefined) {
+    parent.childBySegment.delete(oldChildKey);
+  }
+  parent.childBySegment.set(combinedKey, child);
+
+  child.pathSegments = newChildSegments;
+
+  const adoptedChildren = Array.isArray(grandchild.children) ? [...grandchild.children] : [];
+  child.children = [];
+  child.childBySegment = new Map();
+
+  for (const descendant of adoptedChildren) {
+    rebaseWorkspacePath(descendant, oldGrandchildSegments, newChildSegments);
+    child.addChildNode(descendant);
+  }
+}
+
+function getLastPathSegment(segments) {
+  if (!Array.isArray(segments) || segments.length === 0) {
+    return '';
+  }
+
+  return segments[segments.length - 1];
+}
+
+function combineSegmentNames(parentName, childName) {
+  if (!parentName) {
+    return childName || '';
+  }
+
+  if (!childName) {
+    return parentName;
+  }
+
+  return `${parentName}/${childName}`;
+}
+
+function rebaseWorkspacePath(node, oldBase, newBase) {
+  if (!node || !Array.isArray(node.pathSegments)) {
+    return;
+  }
+
+  if (!startsWithSegments(node.pathSegments, oldBase)) {
+    return;
+  }
+
+  node.pathSegments = [...newBase, ...node.pathSegments.slice(oldBase.length)];
+
+  if (!Array.isArray(node.children) || node.children.length === 0) {
+    return;
+  }
+
+  for (const child of node.children) {
+    rebaseWorkspacePath(child, oldBase, newBase);
   }
 }
 
