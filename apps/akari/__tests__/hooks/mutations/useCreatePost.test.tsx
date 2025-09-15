@@ -69,5 +69,54 @@ describe('useCreatePost mutation hook', () => {
       expect(result.current.isError).toBe(true);
     });
   });
+
+  it('errors when DID missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: { pdsUrl: 'https://pds', handle: 'h' },
+    });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useCreatePost(), { wrapper });
+
+    result.current.mutate({ text: 'hello' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('errors when PDS URL missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: { did: 'did', handle: 'h' },
+    });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useCreatePost(), { wrapper });
+
+    result.current.mutate({ text: 'hello' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('invalidates queries on success', async () => {
+    const { queryClient, wrapper } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result } = renderHook(() => useCreatePost(), { wrapper });
+
+    result.current.mutate({ text: 'hello' });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(invalidateSpy).toHaveBeenNthCalledWith(1, { queryKey: ['timeline'] });
+    expect(invalidateSpy).toHaveBeenNthCalledWith(2, { queryKey: ['feed'] });
+    expect(invalidateSpy).toHaveBeenNthCalledWith(3, {
+      queryKey: ['authorFeed', 'did'],
+    });
+    expect(invalidateSpy).toHaveBeenNthCalledWith(4, {
+      queryKey: ['authorPosts', 'did'],
+    });
+  });
 });
 
