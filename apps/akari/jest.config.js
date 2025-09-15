@@ -19,6 +19,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   moduleNameMapper: {
     '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',
-    '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src',
+    '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
   },
 };
