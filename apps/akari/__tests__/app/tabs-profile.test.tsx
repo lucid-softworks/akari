@@ -7,6 +7,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+
+let mockLatestDropdownMeasure: jest.Mock | null = null;
 
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useProfile');
@@ -17,15 +20,101 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useBorderColor');
 
+jest.mock('@/utils/tabScrollRegistry', () => ({
+  tabScrollRegistry: {
+    register: jest.fn(),
+  },
+}));
+
+jest.mock('react-native/Libraries/Components/ScrollView/ScrollView', () => {
+  const React = require('react');
+  const { View } = jest.requireActual('react-native');
+  const scrollToMock = jest.fn();
+
+  const ScrollViewMock = React.forwardRef((props: any, ref: any) => {
+    React.useImperativeHandle(ref, () => ({
+      scrollTo: scrollToMock,
+    }));
+
+    return (
+      <View {...props}>
+        {props.children}
+      </View>
+    );
+  });
+
+  return {
+    __esModule: true,
+    default: ScrollViewMock,
+    ScrollView: ScrollViewMock,
+    scrollToMock,
+  };
+});
+
+const { scrollToMock } = require('react-native/Libraries/Components/ScrollView/ScrollView') as {
+  scrollToMock: jest.Mock;
+};
+
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
   const { Text, TouchableOpacity } = require('react-native');
   return {
-    ProfileHeader: ({ onDropdownToggle }: any) => (
-      <TouchableOpacity onPress={() => onDropdownToggle(true)}>
-        <Text>open dropdown</Text>
-      </TouchableOpacity>
-    ),
+    ProfileHeader: ({ onDropdownToggle, dropdownRef }: any) => {
+      if (dropdownRef && !dropdownRef.current) {
+        mockLatestDropdownMeasure = jest.fn((callback: any) => callback(0, 0, 0, 40, 0, 100));
+        dropdownRef.current = {
+          measure: mockLatestDropdownMeasure,
+        };
+      }
+
+      return (
+        <TouchableOpacity onPress={() => onDropdownToggle(true)}>
+          <Text>open dropdown</Text>
+        </TouchableOpacity>
+      );
+    },
+  };
+});
+
+jest.mock('@/components/ProfileDropdown', () => {
+  const React = require('react');
+  const { Text, TouchableOpacity, View } = require('react-native');
+  return {
+    ProfileDropdown: ({
+      isVisible,
+      onCopyLink,
+      onSearchPosts,
+      onAddToLists,
+      onMuteAccount,
+      onBlockPress,
+      onReportAccount,
+      style,
+    }: any) => {
+      if (!isVisible) return null;
+
+      return (
+        <View testID="profile-dropdown" style={style}>
+          <TouchableOpacity onPress={onCopyLink}>
+            <Text>profile.copyLink</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onSearchPosts}>
+            <Text>common.search</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onAddToLists}>
+            <Text>profile.addToLists</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onMuteAccount}>
+            <Text>profile.muteAccount</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onBlockPress}>
+            <Text>common.block</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onReportAccount}>
+            <Text>profile.reportAccount</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    },
   };
 });
 
@@ -38,8 +127,26 @@ jest.mock('@/components/ProfileTabs', () => {
         <TouchableOpacity onPress={() => onTabChange('posts')}>
           <Text>posts tab</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('replies')}>
+          <Text>replies tab</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => onTabChange('likes')}>
           <Text>likes tab</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('media')}>
+          <Text>media tab</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('videos')}>
+          <Text>videos tab</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('feeds')}>
+          <Text>feeds tab</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('starterpacks')}>
+          <Text>starterpacks tab</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('unknown' as any)}>
+          <Text>unknown tab</Text>
         </TouchableOpacity>
       </View>
     ),
@@ -106,14 +213,17 @@ const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockRegister = tabScrollRegistry.register as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockLatestDropdownMeasure = null;
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
   mockUseSafeAreaInsets.mockReturnValue({ top: 0 });
   mockUseProfile.mockReturnValue({ data: {} });
   mockUseThemeColor.mockReturnValue('#fff');
   mockUseBorderColor.mockReturnValue('#ccc');
+  scrollToMock.mockClear();
 });
 
 describe('ProfileScreen', () => {
@@ -123,27 +233,74 @@ describe('ProfileScreen', () => {
     expect(getByText('common.loading')).toBeTruthy();
   });
 
-  it('renders posts tab when handle is present', () => {
+  it('renders all tab content and registers scroll handler', () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
+
     const { getByText } = render(<ProfileScreen />);
+
     expect(getByText('posts alice')).toBeTruthy();
+
+    fireEvent.press(getByText('replies tab'));
+    expect(getByText('replies alice')).toBeTruthy();
+
+    fireEvent.press(getByText('likes tab'));
+    expect(getByText('likes alice')).toBeTruthy();
+
+    fireEvent.press(getByText('media tab'));
+    expect(getByText('media alice')).toBeTruthy();
+
+    fireEvent.press(getByText('videos tab'));
+    expect(getByText('videos alice')).toBeTruthy();
+
+    fireEvent.press(getByText('feeds tab'));
+    expect(getByText('feeds alice')).toBeTruthy();
+
+    fireEvent.press(getByText('starterpacks tab'));
+    expect(getByText('starterpacks alice')).toBeTruthy();
+
+    fireEvent.press(getByText('unknown tab'));
+    expect(getByText('profile.noContent')).toBeTruthy();
+
+    expect(scrollToMock).toHaveBeenCalled();
+
+    expect(mockRegister).toHaveBeenCalledWith('profile', expect.any(Function));
+    const [, scrollHandler] = mockRegister.mock.calls[0];
+    scrollToMock.mockClear();
+    scrollHandler();
+    expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
   });
 
-  it('closes dropdown after selecting actions', () => {
+  it('positions dropdown using measurement and closes for all actions', () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
-    const { getByText, queryByText } = render(<ProfileScreen />);
 
-    expect(queryByText('profile.copyLink')).toBeNull();
-
-    fireEvent.press(getByText('open dropdown'));
-
-    fireEvent.press(getByText('profile.copyLink'));
-    expect(queryByText('profile.copyLink')).toBeNull();
+    const { getByText, getByTestId, queryByTestId } = render(<ProfileScreen />);
 
     fireEvent.press(getByText('open dropdown'));
 
-    fireEvent.press(getByText('common.search'));
-    expect(queryByText('common.search')).toBeNull();
+    expect(mockLatestDropdownMeasure).toBeTruthy();
+    expect(mockLatestDropdownMeasure).toHaveBeenCalled();
+
+    const dropdown = getByTestId('profile-dropdown');
+    expect(dropdown.props.style).toEqual(expect.objectContaining({ top: 144, right: 20 }));
+
+    const actions = [
+      'profile.copyLink',
+      'common.search',
+      'profile.addToLists',
+      'profile.muteAccount',
+      'common.block',
+      'profile.reportAccount',
+    ];
+
+    actions.forEach((action, index) => {
+      fireEvent.press(getByText(action));
+      expect(queryByTestId('profile-dropdown')).toBeNull();
+
+      if (index < actions.length - 1) {
+        fireEvent.press(getByText('open dropdown'));
+      }
+    });
   });
 });
 
