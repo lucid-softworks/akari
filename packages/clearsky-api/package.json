@@ -13,8 +13,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest run",
-    "test:run": "vitest run",
+    "test": "npm run test:run",
+    "test:run": "jest --runInBand",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src --ext .ts,.tsx"
   },
   "keywords": [
@@ -28,12 +29,14 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "~5.8.3",
-    "vitest": "^2.0.0",
+    "@eslint/eslintrc": "^3.0.0",
+    "@eslint/js": "^9.25.0",
+    "@types/jest": "^29.5.12",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
-    "@eslint/eslintrc": "^3.0.0",
-    "@eslint/js": "^9.25.0"
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "typescript": "~5.8.3"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
