@@ -77,6 +77,8 @@ export const LanguageSelector = () => {
       <ThemedText style={styles.title}>{t("settings.language")}</ThemedText>
 
       <TouchableOpacity
+        accessibilityLabel={t("settings.language")}
+        accessibilityRole="button"
         style={styles.selector}
         onPress={() => setIsModalVisible(true)}
       >
@@ -101,11 +103,18 @@ export const LanguageSelector = () => {
         onRequestClose={() => setIsModalVisible(false)}
       >
         <TouchableOpacity
+          accessibilityLabel={t("common.cancel")}
+          accessibilityRole="button"
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setIsModalVisible(false)}
         >
-          <ThemedView style={styles.modalContent}>
+          <ThemedView
+            accessible
+            accessibilityRole="menu"
+            accessibilityLabel={t("settings.language")}
+            style={styles.modalContent}
+          >
             <ThemedText style={styles.modalTitle}>
               {t("settings.language")}
             </ThemedText>
@@ -113,6 +122,10 @@ export const LanguageSelector = () => {
               {languages.map((language) => (
                 <TouchableOpacity
                   key={language.code}
+                  accessibilityRole="menuitem"
+                  accessibilityState={{
+                    selected: currentLocale === language.code,
+                  }}
                   style={[
                     styles.languageOption,
                     currentLocale === language.code && styles.selectedLanguage,
