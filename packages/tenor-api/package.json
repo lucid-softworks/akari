@@ -7,8 +7,9 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "test": "vitest run",
-    "test:run": "vitest run",
+    "test": "jest --config ./jest.config.cjs",
+    "test:run": "jest --config ./jest.config.cjs",
+    "test:coverage": "jest --config ./jest.config.cjs --coverage",
     "lint": "eslint src --ext .ts"
   },
   "keywords": ["tenor", "api", "gif"],
@@ -16,8 +17,10 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "~29.7.0",
+    "ts-jest": "^29.4.1",
     "typescript": "~5.8.3",
-    "vitest": "^2.0.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "@eslint/eslintrc": "^3.0.0",
