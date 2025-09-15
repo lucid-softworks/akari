@@ -7,6 +7,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 const mockBlockUser = jest.fn();
+const mockUnblockUser = jest.fn();
 
 jest.mock('@/hooks/queries/useJwtToken', () => ({
   useJwtToken: jest.fn(),
@@ -19,7 +20,7 @@ jest.mock('@/hooks/queries/useCurrentAccount', () => ({
 jest.mock('@/bluesky-api', () => ({
   BlueskyApi: jest.fn(() => ({
     blockUser: mockBlockUser,
-    unblockUser: jest.fn(),
+    unblockUser: mockUnblockUser,
   })),
 }));
 
@@ -41,6 +42,7 @@ describe('useBlockUser mutation hook', () => {
       data: { pdsUrl: 'https://pds' },
     });
     mockBlockUser.mockResolvedValue({});
+    mockUnblockUser.mockResolvedValue({});
   });
 
   it('blocks a user successfully', async () => {
@@ -57,6 +59,45 @@ describe('useBlockUser mutation hook', () => {
 
   it('errors when token missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useBlockUser(), { wrapper });
+
+    result.current.mutate({ did: 'did', action: 'block' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('unblocks a user successfully', async () => {
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useBlockUser(), { wrapper });
+
+    result.current.mutate({
+      did: 'did',
+      blockUri: 'block-uri',
+      action: 'unblock',
+    });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+    expect(mockUnblockUser).toHaveBeenCalledWith('token', 'block-uri');
+  });
+
+  it('errors when blockUri missing for unblock', async () => {
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useBlockUser(), { wrapper });
+
+    result.current.mutate({ did: 'did', action: 'unblock' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('errors when PDS URL missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: { pdsUrl: undefined } });
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useBlockUser(), { wrapper });
 
