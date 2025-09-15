@@ -45,6 +45,20 @@ describe('alert utilities', () => {
     expect(onConfirm).not.toHaveBeenCalled();
   });
 
+  it('falls back to title when message is missing and no buttons supplied', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const confirmMock = jest.fn(() => true);
+    window.confirm = confirmMock;
+    const module = require('@/utils/alert');
+
+    module.showAlert({ title: 'Title Only' });
+
+    expect(confirmMock).toHaveBeenCalledWith('Title Only');
+  });
+
   it('calls Alert.alert on native platforms', () => {
     const alertMock = jest.fn();
     jest.doMock('react-native', () => ({
