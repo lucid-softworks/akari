@@ -63,5 +63,22 @@ describe('useRefreshSession mutation hook', () => {
     });
     expect(invalidateSpy).toHaveBeenCalled();
   });
+
+  it('throws if no PDS URL is available', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValueOnce({ data: undefined });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useRefreshSession(), { wrapper });
+
+    result.current.mutate({ refreshToken: 'refresh' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+    expect(result.current.error).toEqual(
+      new Error('No PDS URL available for this account'),
+    );
+    expect(mockRefreshSession).not.toHaveBeenCalled();
+    expect(mockSetAuth.mutate).not.toHaveBeenCalled();
+  });
 });
 
