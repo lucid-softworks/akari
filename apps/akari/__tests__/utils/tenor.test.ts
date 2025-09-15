@@ -1,4 +1,4 @@
-import { TenorAPI } from '@/utils/tenor';
+import { TenorAPI } from '@/tenor-api';
 
 describe('TenorAPI', () => {
   const originalFetch = global.fetch;
