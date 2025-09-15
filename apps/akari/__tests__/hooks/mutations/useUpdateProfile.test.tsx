@@ -43,20 +43,27 @@ describe('useUpdateProfile mutation hook', () => {
   });
 
   it('updates profile successfully', async () => {
-    const { wrapper } = createWrapper();
+    const { wrapper, queryClient } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
     const { result } = renderHook(() => useUpdateProfile(), { wrapper });
 
-    result.current.mutate({ displayName: 'name' });
+    result.current.mutate({
+      displayName: 'name',
+      description: 'desc',
+      avatar: 'avatar',
+      banner: 'banner',
+    });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
     expect(mockUpdateProfile).toHaveBeenCalledWith('token', {
       displayName: 'name',
-      description: undefined,
-      avatar: undefined,
-      banner: undefined,
+      description: 'desc',
+      avatar: 'avatar',
+      banner: 'banner',
     });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['profile'] });
   });
 
   it('errors when token missing', async () => {
@@ -69,6 +76,20 @@ describe('useUpdateProfile mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
     });
+    expect(mockUpdateProfile).not.toHaveBeenCalled();
+  });
+
+  it('errors when PDS URL missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: undefined });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useUpdateProfile(), { wrapper });
+
+    result.current.mutate({ displayName: 'name' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+    expect(mockUpdateProfile).not.toHaveBeenCalled();
   });
 });
 
