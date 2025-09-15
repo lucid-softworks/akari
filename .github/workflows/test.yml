@@ -19,7 +19,7 @@ jobs:
       - run: npm ci
       - run: npm run test:coverage --workspaces --if-present
       - name: Merge coverage reports
-        run: mkdir -p coverage && rm -f coverage/lcov.info && npx --yes lcov-result-merger "**/coverage/lcov.info" coverage/lcov.info --ignore "node_modules/**"
+        run: node ./scripts/merge-coverage.cjs
       - name: Report coverage
         uses: vebr/jest-lcov-reporter@v0.2.0
         with:
