@@ -56,6 +56,60 @@ describe('MessagesScreen', () => {
   });
 
   it('renders conversations and navigates', () => {
+    const fetchNextPage = jest.fn();
+    const conversations = [
+      {
+        id: '1',
+        handle: 'alice',
+        displayName: 'Alice',
+        lastMessage: 'hi',
+        timestamp: 'now',
+        unreadCount: 3,
+        status: 'accepted',
+        muted: false,
+      },
+      {
+        id: '2',
+        handle: 'bob smith',
+        displayName: 'Bob Smith',
+        lastMessage: 'hello',
+        timestamp: 'earlier',
+        unreadCount: 150,
+        status: 'request',
+        muted: false,
+        avatar: 'https://example.com/avatar.png',
+      },
+    ];
+    mockUseConversations.mockReturnValue({
+      data: { pages: [{ conversations }] },
+      isLoading: false,
+      error: null,
+      fetchNextPage,
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    const { getByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<MessagesScreen />);
+
+    expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
+    expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
+    expect(getByText('3')).toBeTruthy();
+    expect(getByText('Alice')).toBeTruthy();
+    expect(getByText('Bob Smith')).toBeTruthy();
+    expect(getByText('99+')).toBeTruthy();
+    expect(getByText('common.pending')).toBeTruthy();
+
+    fireEvent.press(getByText('Alice'));
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/alice');
+
+    fireEvent.press(getByText('Bob Smith'));
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/bob%20smith');
+
+    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[1]);
+    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
+  });
+
+  it('scrolls to top when registry callback is triggered', () => {
     const conversations = [
       {
         id: '1',
@@ -77,16 +131,18 @@ describe('MessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { getByText, UNSAFE_getAllByType } = render(<MessagesScreen />);
+    const { UNSAFE_getByType } = render(<MessagesScreen />);
 
-    expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
-    expect(getByText('Alice')).toBeTruthy();
+    const flatListInstance = UNSAFE_getByType(FlatList).instance as { scrollToOffset: jest.Mock };
+    flatListInstance.scrollToOffset = jest.fn();
 
-    fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/messages/alice');
+    const scrollToTop = mockRegister.mock.calls[0][1];
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[1]);
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+    act(() => {
+      scrollToTop();
+    });
+
+    expect(flatListInstance.scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
   });
 
   it('shows loading skeletons', () => {
@@ -151,17 +207,23 @@ describe('MessagesScreen', () => {
   });
 
   it('shows loading footer when fetching', () => {
+    const fetchNextPage = jest.fn();
     mockUseConversations.mockReturnValue({
       data: { pages: [{ conversations: [] }] },
       isLoading: false,
       error: null,
-      fetchNextPage: jest.fn(),
+      fetchNextPage,
       hasNextPage: true,
       isFetchingNextPage: true,
     });
 
-    const { getByText } = render(<MessagesScreen />);
+    const { getByText, UNSAFE_getByType } = render(<MessagesScreen />);
     expect(getByText('common.loading...')).toBeTruthy();
+
+    act(() => {
+      UNSAFE_getByType(FlatList).props.onEndReached();
+    });
+
+    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 });
-
