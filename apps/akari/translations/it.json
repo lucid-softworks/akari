@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Parlaci di te",
       "noBanner": "Nessun banner",
       "profileUpdated": "Profilo aggiornato con successo",
-      "profileUpdateError": "Errore nell'aggiornamento del profilo"
+      "profileUpdateError": "Errore nell'aggiornamento del profilo",
+      "handleHistory": "Cronologia dell'handle",
+      "noHandleHistory": "Nessuna cronologia dell'handle",
+      "noHandleHistoryDescription": "Questo utente non ha ancora cambiato handle."
     },
     "feed": {
       "loadingMorePosts": "Caricamento di altri post...",
@@ -221,7 +224,10 @@
       "posting": "Pubblicazione...",
       "replyingTo": "Rispondendo a",
       "replyPlaceholder": "Scrivi la tua risposta...",
-      "postPlaceholder": "Cosa sta succedendo?"
+      "postPlaceholder": "Cosa sta succedendo?",
+      "addPhoto": "Aggiungi foto",
+      "selectPhoto": "Seleziona foto dalla galleria",
+      "imageAltTextPlaceholder": "Descrivi questa immagine per l'accessibilità..."
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",

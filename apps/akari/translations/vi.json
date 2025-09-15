@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Kể cho chúng tôi về bạn",
       "noBanner": "Không Có Banner",
       "profileUpdated": "Cập nhật hồ sơ thành công",
-      "profileUpdateError": "Cập nhật hồ sơ thất bại"
+      "profileUpdateError": "Cập nhật hồ sơ thất bại",
+      "handleHistory": "Lịch sử tên định danh",
+      "noHandleHistory": "Chưa có lịch sử tên định danh",
+      "noHandleHistoryDescription": "Người dùng này chưa từng đổi tên định danh."
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",
@@ -221,7 +224,10 @@
       "posting": "Đang đăng...",
       "replyingTo": "Trả lời",
       "replyPlaceholder": "Viết câu trả lời của bạn...",
-      "postPlaceholder": "Chuyện gì đang xảy ra?"
+      "postPlaceholder": "Chuyện gì đang xảy ra?",
+      "addPhoto": "Thêm ảnh",
+      "selectPhoto": "Chọn ảnh từ thư viện",
+      "imageAltTextPlaceholder": "Mô tả hình ảnh này để hỗ trợ khả năng tiếp cận..."
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

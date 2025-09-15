@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Расскажите о себе",
       "noBanner": "Без баннера",
       "profileUpdated": "Профиль успешно обновлен",
-      "profileUpdateError": "Не удалось обновить профиль"
+      "profileUpdateError": "Не удалось обновить профиль",
+      "handleHistory": "История хэндла",
+      "noHandleHistory": "Нет истории хэндла",
+      "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл."
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",
@@ -221,7 +224,10 @@
       "posting": "Публикация...",
       "replyingTo": "Ответ на",
       "replyPlaceholder": "Напишите ваш ответ...",
-      "postPlaceholder": "Что происходит?"
+      "postPlaceholder": "Что происходит?",
+      "addPhoto": "Добавить фото",
+      "selectPhoto": "Выбрать фото из галереи",
+      "imageAltTextPlaceholder": "Опишите это изображение для доступности..."
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

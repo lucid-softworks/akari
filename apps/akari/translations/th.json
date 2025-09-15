@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "บอกเราเกี่ยวกับตัวคุณ",
       "noBanner": "ไม่มีแบนเนอร์",
       "profileUpdated": "อัปเดตโปรไฟล์สำเร็จแล้ว",
-      "profileUpdateError": "อัปเดตโปรไฟล์ไม่สำเร็จ"
+      "profileUpdateError": "อัปเดตโปรไฟล์ไม่สำเร็จ",
+      "handleHistory": "ประวัติแฮนเดิล",
+      "noHandleHistory": "ไม่มีประวัติแฮนเดิล",
+      "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
@@ -221,7 +224,10 @@
       "posting": "กำลังโพสต์...",
       "replyingTo": "ตอบกลับ",
       "replyPlaceholder": "เขียนคำตอบของคุณ...",
-      "postPlaceholder": "เกิดอะไรขึ้น?"
+      "postPlaceholder": "เกิดอะไรขึ้น?",
+      "addPhoto": "เพิ่มรูปภาพ",
+      "selectPhoto": "เลือกรูปจากแกลเลอรี",
+      "imageAltTextPlaceholder": "อธิบายรูปภาพนี้เพื่อการเข้าถึง..."
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Cuéntanos sobre ti",
       "noBanner": "Sin banner",
       "profileUpdated": "Perfil actualizado exitosamente",
-      "profileUpdateError": "Error al actualizar perfil"
+      "profileUpdateError": "Error al actualizar perfil",
+      "handleHistory": "Historial del identificador",
+      "noHandleHistory": "Sin historial de identificador",
+      "noHandleHistoryDescription": "Este usuario aún no ha cambiado su identificador."
     },
     "feed": {
       "loadingMorePosts": "Cargando más publicaciones...",
@@ -222,7 +225,9 @@
       "replyingTo": "Respondiendo a",
       "replyPlaceholder": "Escribe tu respuesta...",
       "postPlaceholder": "¿Qué está pasando?",
-      "imageAltTextPlaceholder": "Describe esta imagen para accesibilidad..."
+      "imageAltTextPlaceholder": "Describe esta imagen para la accesibilidad...",
+      "addPhoto": "Agregar foto",
+      "selectPhoto": "Seleccionar foto de la galería"
     },
     "gif": {
       "selectGif": "Seleccionar GIF",

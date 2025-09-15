@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "あなたについて教えてください",
       "noBanner": "バナーなし",
       "profileUpdated": "プロフィールが正常に更新されました",
-      "profileUpdateError": "プロフィールの更新に失敗しました"
+      "profileUpdateError": "プロフィールの更新に失敗しました",
+      "handleHistory": "ハンドルの履歴",
+      "noHandleHistory": "ハンドルの履歴はありません",
+      "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",
@@ -222,7 +225,9 @@
       "replyingTo": "返信中",
       "replyPlaceholder": "返信を書いてください...",
       "postPlaceholder": "何が起こっていますか？",
-      "imageAltTextPlaceholder": "アクセシビリティのため、この画像を説明してください..."
+      "imageAltTextPlaceholder": "アクセシビリティのため、この画像を説明してください...",
+      "addPhoto": "写真を追加",
+      "selectPhoto": "ギャラリーから写真を選択"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

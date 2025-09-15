@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "告訴我們關於您自己",
       "noBanner": "無橫幅",
       "profileUpdated": "個人資料更新成功",
-      "profileUpdateError": "更新個人資料失敗"
+      "profileUpdateError": "更新個人資料失敗",
+      "handleHistory": "使用者代號歷程",
+      "noHandleHistory": "沒有使用者代號歷程",
+      "noHandleHistoryDescription": "此使用者尚未變更過代號。"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -221,7 +224,10 @@
       "posting": "發布中...",
       "replyingTo": "回覆",
       "replyPlaceholder": "寫下你的回覆...",
-      "postPlaceholder": "發生了什麼？"
+      "postPlaceholder": "發生了什麼？",
+      "addPhoto": "新增照片",
+      "selectPhoto": "從相簿選擇照片",
+      "imageAltTextPlaceholder": "請描述此圖片以利無障礙使用..."
     },
     "messages": {
       "typeMessage": "輸入訊息...",

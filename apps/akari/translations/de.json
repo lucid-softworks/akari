@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Erzählen Sie uns von sich",
       "noBanner": "Kein Banner",
       "profileUpdated": "Profil erfolgreich aktualisiert",
-      "profileUpdateError": "Profil konnte nicht aktualisiert werden"
+      "profileUpdateError": "Profil konnte nicht aktualisiert werden",
+      "handleHistory": "Handle-Verlauf",
+      "noHandleHistory": "Kein Handle-Verlauf",
+      "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert."
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",
@@ -221,7 +224,10 @@
       "posting": "Beitrag wird veröffentlicht...",
       "replyingTo": "Antworten auf",
       "replyPlaceholder": "Schreiben Sie Ihre Antwort...",
-      "postPlaceholder": "Was passiert?"
+      "postPlaceholder": "Was passiert?",
+      "addPhoto": "Foto hinzufügen",
+      "selectPhoto": "Foto aus der Galerie auswählen",
+      "imageAltTextPlaceholder": "Beschreiben Sie dieses Bild für die Barrierefreiheit..."
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

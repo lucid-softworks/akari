@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Parlez-nous de vous",
       "noBanner": "Pas de bannière",
       "profileUpdated": "Profil mis à jour avec succès",
-      "profileUpdateError": "Échec de la mise à jour du profil"
+      "profileUpdateError": "Échec de la mise à jour du profil",
+      "handleHistory": "Historique du handle",
+      "noHandleHistory": "Aucun historique de handle",
+      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle."
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",
@@ -222,7 +225,9 @@
       "replyingTo": "Répondre à",
       "replyPlaceholder": "Écrivez votre réponse...",
       "postPlaceholder": "Que se passe-t-il ?",
-      "imageAltTextPlaceholder": "Décrivez cette image pour l'accessibilité..."
+      "imageAltTextPlaceholder": "Décrivez cette image pour l'accessibilité...",
+      "addPhoto": "Ajouter une photo",
+      "selectPhoto": "Sélectionner une photo depuis la galerie"
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

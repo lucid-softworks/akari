@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Dywedwch wrthym amdanoch chi",
       "noBanner": "Dim Baner",
       "profileUpdated": "Proffil wedi ei ddiweddaru yn llwyddiannus",
-      "profileUpdateError": "Methu diweddaru proffil"
+      "profileUpdateError": "Methu diweddaru proffil",
+      "handleHistory": "Hanes handlen",
+      "noHandleHistory": "Dim hanes handlen",
+      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto."
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -221,7 +224,10 @@
       "posting": "Postio...",
       "replyingTo": "Ateb i",
       "replyPlaceholder": "Ysgrifennwch eich ateb...",
-      "postPlaceholder": "Beth sy'n digwydd?"
+      "postPlaceholder": "Beth sy'n digwydd?",
+      "addPhoto": "Ychwanegu llun",
+      "selectPhoto": "Dewis llun o'r oriel",
+      "imageAltTextPlaceholder": "Disgrifiwch y ddelwedd hon ar gyfer hygyrchedd..."
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

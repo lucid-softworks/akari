@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "告诉我们关于您自己",
       "noBanner": "无横幅",
       "profileUpdated": "个人资料更新成功",
-      "profileUpdateError": "更新个人资料失败"
+      "profileUpdateError": "更新个人资料失败",
+      "handleHistory": "用户名历史记录",
+      "noHandleHistory": "暂无用户名历史记录",
+      "noHandleHistoryDescription": "该用户尚未更改过用户名。"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -221,7 +224,10 @@
       "posting": "发布中...",
       "replyingTo": "回复",
       "replyPlaceholder": "写下你的回复...",
-      "postPlaceholder": "发生了什么？"
+      "postPlaceholder": "发生了什么？",
+      "addPhoto": "添加照片",
+      "selectPhoto": "从相册选择照片",
+      "imageAltTextPlaceholder": "请为无障碍功能描述此图像..."
     },
     "messages": {
       "typeMessage": "输入消息...",

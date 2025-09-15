@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Tell us about yourself",
       "noBanner": "No Banner",
       "profileUpdated": "Profile updated successfully",
-      "profileUpdateError": "Failed to update profile"
+      "profileUpdateError": "Failed to update profile",
+      "handleHistory": "Handle History",
+      "noHandleHistory": "No handle history",
+      "noHandleHistoryDescription": "This user hasn't changed their handle yet."
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
@@ -221,10 +224,14 @@
       "posting": "Posting...",
       "replyingTo": "Replying to",
       "replyPlaceholder": "Write your reply...",
-      "postPlaceholder": "What's happening?"
+      "postPlaceholder": "What's happening?",
+      "addPhoto": "Add photo",
+      "selectPhoto": "Select photo from gallery",
+      "imageAltTextPlaceholder": "Describe this image for accessibility..."
     },
     "messages": {
-      "typeMessage": "Type a message..."
+      "typeMessage": "Type a message...",
+      "errorSendingMessage": "Failed to send message. Please try again."
     },
     "settings": {
       "account": "Account",
@@ -234,6 +241,16 @@
       "checkMissingTranslations": "🔍 Check Missing Translations",
       "developmentTool": "Development tool",
       "notifications": "Notifications"
+    },
+    "gif": {
+      "selectGif": "Select GIF",
+      "searchPlaceholder": "Search GIFs...",
+      "loadingMore": "Loading more...",
+      "noResults": "No GIFs found",
+      "noTrending": "No trending GIFs available",
+      "addGif": "Add GIF",
+      "gifAltTextPlaceholder": "Describe this GIF for accessibility...",
+      "apiError": "Unable to load GIFs. Please check your internet connection."
     }
   }
 }
