@@ -7,6 +7,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 const mockFollowUser = jest.fn();
+const mockUnfollowUser = jest.fn();
 
 jest.mock('@/hooks/queries/useJwtToken', () => ({
   useJwtToken: jest.fn(),
@@ -19,7 +20,7 @@ jest.mock('@/hooks/queries/useCurrentAccount', () => ({
 jest.mock('@/bluesky-api', () => ({
   BlueskyApi: jest.fn(() => ({
     followUser: mockFollowUser,
-    unfollowUser: jest.fn(),
+    unfollowUser: mockUnfollowUser,
   })),
 }));
 
@@ -41,6 +42,7 @@ describe('useFollowUser mutation hook', () => {
       data: { pdsUrl: 'https://pds' },
     });
     mockFollowUser.mockResolvedValue({});
+    mockUnfollowUser.mockResolvedValue({});
   });
 
   it('follows a user successfully', async () => {
@@ -57,6 +59,45 @@ describe('useFollowUser mutation hook', () => {
 
   it('errors when token missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useFollowUser(), { wrapper });
+
+    result.current.mutate({ did: 'did', action: 'follow' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('unfollows a user successfully', async () => {
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useFollowUser(), { wrapper });
+
+    result.current.mutate({
+      did: 'did',
+      action: 'unfollow',
+      followUri: 'uri',
+    });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+    expect(mockUnfollowUser).toHaveBeenCalledWith('token', 'uri');
+  });
+
+  it('errors when followUri missing for unfollow', async () => {
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useFollowUser(), { wrapper });
+
+    result.current.mutate({ did: 'did', action: 'unfollow' });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+
+  it('errors when pdsUrl missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: undefined });
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useFollowUser(), { wrapper });
 
