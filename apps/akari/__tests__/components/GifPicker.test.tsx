@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { FlatList } from 'react-native';
 
 import { GifPicker } from '@/components/GifPicker';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -136,5 +137,78 @@ describe('GifPicker', () => {
     const cancel = await findByRole('button', { name: 'common.cancel' });
     fireEvent.press(cancel);
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('loads more trending GIFs when end is reached', async () => {
+    mockTenor.getTrendingGifs
+      .mockResolvedValueOnce({ results: [sampleGif], next: 'next' })
+      .mockResolvedValueOnce({ results: [sampleGif], next: undefined });
+
+    const { UNSAFE_getByType } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1));
+
+    const list = UNSAFE_getByType(FlatList);
+    fireEvent(list, 'onEndReached');
+
+    await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledWith(20, 'next'));
+
+    fireEvent(list, 'onEndReached');
+    expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(2);
+  });
+
+  it('loads more search results when end is reached', async () => {
+    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [], next: undefined });
+    mockTenor.searchGifs
+      .mockResolvedValueOnce({ results: [sampleGif], next: 'next' })
+      .mockResolvedValueOnce({ results: [sampleGif], next: undefined });
+
+    const { getByPlaceholderText, UNSAFE_getByType } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    fireEvent.changeText(getByPlaceholderText('gif.searchPlaceholder'), 'cats');
+    await waitFor(() => expect(mockTenor.searchGifs).toHaveBeenCalledWith('cats', 20));
+
+    const list = UNSAFE_getByType(FlatList);
+    fireEvent(list, 'onEndReached');
+
+    await waitFor(() =>
+      expect(mockTenor.searchGifs).toHaveBeenCalledWith('cats', 20, 'next'),
+    );
+  });
+
+  it('handles errors when loading more GIFs', async () => {
+    mockTenor.getTrendingGifs
+      .mockResolvedValueOnce({ results: [sampleGif], next: 'next' })
+      .mockRejectedValueOnce(new Error('load more fail'));
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { UNSAFE_getByType } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1));
+
+    fireEvent(UNSAFE_getByType(FlatList), 'onEndReached');
+
+    await waitFor(() =>
+      expect(consoleError).toHaveBeenCalledWith('Failed to load more GIFs:', expect.any(Error)),
+    );
+    consoleError.mockRestore();
+  });
+
+  it('skips GIFs without valid URLs', async () => {
+    const invalidGif = { ...sampleGif, id: '2', media_formats: {} as any, url: '' };
+    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [invalidGif], next: undefined });
+
+    const { findAllByRole } = render(
+      <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
+    );
+
+    const buttons = await findAllByRole('button');
+    expect(buttons).toHaveLength(1);
   });
 });
