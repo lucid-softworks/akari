@@ -154,7 +154,7 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
 
   const context = libReport.createContext({
     dir: coverageDir,
-    defaultSummarizer: 'nested',
+    defaultSummarizer: 'pkg',
     coverageMap,
     sourceFinder: createSourceFinder(),
   });
