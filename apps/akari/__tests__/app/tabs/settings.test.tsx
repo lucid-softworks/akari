@@ -75,6 +75,7 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
+const mockRouterReplace = router.replace as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -145,6 +146,72 @@ describe('SettingsScreen', () => {
 
     fireEvent.press(getByText('common.disconnectAllAccounts'));
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+  });
+
+  it('confirms switching accounts', () => {
+    const accounts: Account[] = [
+      { did: 'did1', handle: 'user1', displayName: 'User One', jwtToken: 't', refreshToken: 'r' },
+      { did: 'did2', handle: 'user2', displayName: 'User Two', jwtToken: 't', refreshToken: 'r' },
+    ];
+
+    const mutate = jest.fn();
+    mockUseAccounts.mockReturnValue({ data: accounts });
+    mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
+    mockUseSwitchAccount.mockReturnValue({ mutate });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    fireEvent.press(getByText('common.switch'));
+
+    const alertConfig = mockShowAlert.mock.calls[0][0];
+    const confirmButton = alertConfig.buttons?.find((button: any) => button.text === 'common.switch');
+    confirmButton?.onPress?.();
+
+    expect(mutate).toHaveBeenCalledWith(accounts[1]);
+  });
+
+  it('removes current account and navigates home', () => {
+    const account: Account = {
+      did: 'did1',
+      handle: 'user1',
+      displayName: 'User One',
+      jwtToken: 't',
+      refreshToken: 'r',
+    };
+
+    const mutate = jest.fn();
+    mockUseAccounts.mockReturnValue({ data: [account] });
+    mockUseCurrentAccount.mockReturnValue({ data: account });
+    mockUseRemoveAccount.mockReturnValue({ mutate });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    fireEvent.press(getByText('common.remove'));
+
+    const alertConfig = mockShowAlert.mock.calls[0][0];
+    const removeButton = alertConfig.buttons?.find((button: any) => button.text === 'common.remove');
+    removeButton?.onPress?.();
+
+    expect(mutate).toHaveBeenCalledWith(account.did);
+    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+  });
+
+  it('shows error alert when logout fails', async () => {
+    mockUseAccounts.mockReturnValue({ data: [] });
+    mockUseCurrentAccount.mockReturnValue({ data: null });
+    const mutateAsync = jest.fn().mockRejectedValue(new Error('fail'));
+    mockUseWipeAllData.mockReturnValue({ mutateAsync });
+
+    const { getByText } = render(<SettingsScreen />);
+
+    fireEvent.press(getByText('common.disconnectAllAccounts'));
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(mockShowAlert).toHaveBeenCalledWith(
+        expect.objectContaining({ title: 'common.error', message: 'common.failedToLogout' })
+      )
+    );
   });
 });
 
