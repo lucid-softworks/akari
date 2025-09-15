@@ -203,5 +203,176 @@ describe('HomeScreen', () => {
 
     expect(getByText('feed.noPostsInFeed')).toBeTruthy();
   });
+
+  it('shows loading state while feeds are loading', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [],
+      isLoading: true,
+    });
+    mockUseFeeds.mockReturnValue({
+      data: { feeds: [] },
+      isLoading: true,
+      refetch: jest.fn(),
+    });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: null });
+    mockUseFeed.mockReturnValue({
+      data: { pages: [] },
+      isLoading: true,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: true });
+
+    const { getByText } = render(<HomeScreen />);
+
+    expect(getByText('feed.loadingFeeds')).toBeTruthy();
+  });
+
+  it('renders timeline posts when the following feed is selected', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [
+        { type: 'timeline', value: 'following' },
+        { type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } },
+      ],
+      isLoading: false,
+    });
+    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: 'following' });
+    mockUseFeed.mockReturnValue({
+      data: { pages: [] },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({
+      data: {
+        feed: [
+          {
+            post: {
+              uri: 'timeline-post',
+              record: { text: 'Timeline Post' },
+              author: { handle: 'bob', displayName: 'Bob', avatar: '' },
+              indexedAt: new Date().toISOString(),
+              likeCount: 0,
+              replyCount: 0,
+              repostCount: 0,
+              embed: null,
+              embeds: [],
+              labels: [],
+              viewer: {},
+              cid: 'timeline-post',
+            },
+          },
+        ],
+      },
+      isLoading: false,
+    });
+
+    const { getByText } = render(<HomeScreen />);
+
+    expect(getByText('Following')).toBeTruthy();
+    expect(getByText('Timeline Post')).toBeTruthy();
+  });
+
+  it('shows loading indicator when fetching additional posts', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
+      isLoading: false,
+    });
+    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
+    mockUseFeed.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [
+              {
+                post: {
+                  uri: 'p1',
+                  record: { text: 'Post 1' },
+                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
+                  indexedAt: new Date().toISOString(),
+                  likeCount: 0,
+                  replyCount: 0,
+                  repostCount: 0,
+                  embed: null,
+                  embeds: [],
+                  labels: [],
+                  viewer: {},
+                  cid: 'cid1',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: true,
+      isFetchingNextPage: true,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+
+    const { getByText } = render(<HomeScreen />);
+
+    expect(getByText('Post 1')).toBeTruthy();
+    expect(getByText('feed.loadingMorePosts')).toBeTruthy();
+  });
+
+  it('opens the post composer when the compose button is pressed', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
+      isLoading: false,
+    });
+    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
+    mockUseFeed.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [
+              {
+                post: {
+                  uri: 'p1',
+                  record: { text: 'Post 1' },
+                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
+                  indexedAt: new Date().toISOString(),
+                  likeCount: 0,
+                  replyCount: 0,
+                  repostCount: 0,
+                  embed: null,
+                  embeds: [],
+                  labels: [],
+                  viewer: {},
+                  cid: 'cid1',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+
+    const { getByText, queryByText } = render(<HomeScreen />);
+
+    expect(queryByText('composer')).toBeNull();
+    fireEvent.press(getByText('icon'));
+    expect(getByText('composer')).toBeTruthy();
+  });
 });
 
