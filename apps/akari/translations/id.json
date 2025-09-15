@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Ceritakan tentang diri Anda",
       "noBanner": "Tidak Ada Banner",
       "profileUpdated": "Profil berhasil diperbarui",
-      "profileUpdateError": "Gagal memperbarui profil"
+      "profileUpdateError": "Gagal memperbarui profil",
+      "handleHistory": "Riwayat handle",
+      "noHandleHistory": "Tidak ada riwayat handle",
+      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya."
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -221,7 +224,10 @@
       "posting": "Mengirim...",
       "replyingTo": "Membalas",
       "replyPlaceholder": "Tulis balasan Anda...",
-      "postPlaceholder": "Apa yang sedang terjadi?"
+      "postPlaceholder": "Apa yang sedang terjadi?",
+      "addPhoto": "Tambah foto",
+      "selectPhoto": "Pilih foto dari galeri",
+      "imageAltTextPlaceholder": "Deskripsikan gambar ini untuk aksesibilitas..."
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

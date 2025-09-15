@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "자신에 대해 알려주세요",
       "noBanner": "배너 없음",
       "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
-      "profileUpdateError": "프로필 업데이트에 실패했습니다"
+      "profileUpdateError": "프로필 업데이트에 실패했습니다",
+      "handleHistory": "핸들 변경 기록",
+      "noHandleHistory": "핸들 변경 기록이 없습니다",
+      "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다."
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
@@ -221,7 +224,10 @@
       "posting": "게시 중...",
       "replyingTo": "답장 중",
       "replyPlaceholder": "답장을 작성하세요...",
-      "postPlaceholder": "무슨 일이 일어나고 있나요?"
+      "postPlaceholder": "무슨 일이 일어나고 있나요?",
+      "addPhoto": "사진 추가",
+      "selectPhoto": "갤러리에서 사진 선택",
+      "imageAltTextPlaceholder": "접근성을 위해 이 이미지를 설명해주세요..."
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

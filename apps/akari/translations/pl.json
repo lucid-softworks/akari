@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "Opowiedz nam o sobie",
       "noBanner": "Brak banera",
       "profileUpdated": "Profil zaktualizowany pomyślnie",
-      "profileUpdateError": "Nie udało się zaktualizować profilu"
+      "profileUpdateError": "Nie udało się zaktualizować profilu",
+      "handleHistory": "Historia handle'u",
+      "noHandleHistory": "Brak historii handle'u",
+      "noHandleHistoryDescription": "Ten użytkownik jeszcze nie zmienił swojego handle'u."
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",
@@ -221,7 +224,10 @@
       "posting": "Publikowanie...",
       "replyingTo": "Odpowiadanie na",
       "replyPlaceholder": "Napisz swoją odpowiedź...",
-      "postPlaceholder": "Co się dzieje?"
+      "postPlaceholder": "Co się dzieje?",
+      "addPhoto": "Dodaj zdjęcie",
+      "selectPhoto": "Wybierz zdjęcie z galerii",
+      "imageAltTextPlaceholder": "Opisz ten obraz dla dostępności..."
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

@@ -198,7 +198,10 @@
       "descriptionPlaceholder": "हमें अपने बारे में बताएं",
       "noBanner": "कोई बैनर नहीं",
       "profileUpdated": "प्रोफ़ाइल सफलतापूर्वक अपडेट किया गया",
-      "profileUpdateError": "प्रोफ़ाइल अपडेट करने में विफल"
+      "profileUpdateError": "प्रोफ़ाइल अपडेट करने में विफल",
+      "handleHistory": "हैंडल इतिहास",
+      "noHandleHistory": "कोई हैंडल इतिहास नहीं",
+      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",
@@ -221,7 +224,10 @@
       "posting": "पोस्ट हो रही है...",
       "replyingTo": "जवाब दे रहे हैं",
       "replyPlaceholder": "अपना जवाब लिखें...",
-      "postPlaceholder": "क्या हो रहा है?"
+      "postPlaceholder": "क्या हो रहा है?",
+      "addPhoto": "फ़ोटो जोड़ें",
+      "selectPhoto": "गैलरी से फ़ोटो चुनें",
+      "imageAltTextPlaceholder": "सुगम्यता के लिए इस छवि का वर्णन करें..."
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",
