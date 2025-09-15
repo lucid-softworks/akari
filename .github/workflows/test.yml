@@ -16,12 +16,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --workspace=apps/akari
-      - run: npm --prefix apps/akari run test:coverage
+      - run: npm ci
+      - run: npm run test:coverage --workspaces --if-present
+      - name: Merge coverage reports
+        run: mkdir -p coverage && rm -f coverage/lcov.info && npx --yes lcov-result-merger "**/coverage/lcov.info" coverage/lcov.info --ignore "node_modules/**"
       - name: Report coverage
         uses: vebr/jest-lcov-reporter@v0.2.0
         with:
           github-token: ${{ github.token }}
-          lcov-file: apps/akari/coverage/lcov.info
-          name: apps/akari
+          lcov-file: coverage/lcov.info
+          name: akari-monorepo
           update-comment: true
