@@ -96,6 +96,42 @@ beforeEach(() => {
 });
 
 describe('PostComposer', () => {
+  it(
+    'posts trimmed text and closes composer',
+    async () => {
+      const mutateAsync = jest.fn().mockResolvedValue(undefined);
+      mockUseCreatePost.mockReturnValue({ mutateAsync, isPending: false });
+      const onClose = jest.fn();
+
+      const { getByPlaceholderText, getByText } = render(
+        <PostComposer visible onClose={onClose} />,
+      );
+
+      await act(async () => {
+        fireEvent.changeText(
+          getByPlaceholderText('post.postPlaceholder'),
+          '  Hello World  ',
+        );
+      });
+
+      await act(async () => {
+        fireEvent.press(getByText('post.post'));
+      });
+
+      await waitFor(() => {
+        expect(mutateAsync).toHaveBeenCalled();
+      });
+      expect(mutateAsync).toHaveBeenCalledWith({
+        text: 'Hello World',
+        replyTo: undefined,
+        images: undefined,
+      });
+      expect(onClose).toHaveBeenCalled();
+      expect(getByPlaceholderText('post.postPlaceholder').props.value).toBe('');
+    },
+    30000,
+  );
+
   it('renders reply context and posts a reply', async () => {
     const mutateAsync = jest.fn().mockResolvedValue(undefined);
     mockUseCreatePost.mockReturnValue({ mutateAsync, isPending: false });
