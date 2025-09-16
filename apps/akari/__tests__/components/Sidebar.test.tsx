@@ -34,23 +34,27 @@ describe('Sidebar', () => {
     mockUseColorScheme.mockReturnValue('light');
   });
 
-  it('renders navigation items with badges', () => {
+  it('renders workspace header, navigation sections, and badges', () => {
     mockUseUnreadMessagesCount.mockReturnValue({ data: 3 });
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 5 });
 
     const { getByText } = render(<Sidebar />);
 
-    expect(getByText('Discover')).toBeTruthy();
-    expect(getByText('Inbox')).toBeTruthy();
-    expect(getByText('You')).toBeTruthy();
+    expect(getByText('Akari')).toBeTruthy();
+    expect(getByText('Product workspace')).toBeTruthy();
+    expect(getByText('Focus')).toBeTruthy();
+    expect(getByText('Updates')).toBeTruthy();
+    expect(getByText('Workspace')).toBeTruthy();
     expect(getByText('Home')).toBeTruthy();
     expect(getByText('Search')).toBeTruthy();
     expect(getByText('Messages')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
     expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
-    expect(getByText('Your personalized feed')).toBeTruthy();
-    expect(getByText('Find people and communities')).toBeTruthy();
+    expect(getByText('⌘1')).toBeTruthy();
+    expect(getByText('⌘K')).toBeTruthy();
+    expect(getByText('⌘2')).toBeTruthy();
+    expect(getByText('⌘3')).toBeTruthy();
 
     expect(getByText('3')).toBeTruthy();
     expect(getByText('5')).toBeTruthy();
@@ -81,7 +85,7 @@ describe('Sidebar', () => {
       expect.arrayContaining([expect.objectContaining({ fontWeight: '600' })]),
     );
     expect(inactiveStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]),
+      expect.arrayContaining([expect.objectContaining({ fontWeight: '500' })]),
     );
   });
 });

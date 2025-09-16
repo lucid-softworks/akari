@@ -11,31 +11,32 @@ import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-const ACCENT_COLOR = '#0a7ea4';
+const ACCENT_LIGHT = '#4E5AF7';
+const ACCENT_DARK = '#A6B1FF';
 
 type SidebarItemProps = {
   name: string;
-  description?: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
   badge?: number;
+  shortcut?: string;
   isActive: boolean;
   onPress: () => void;
 };
 
-function SidebarItem({ name, description, icon, badge, isActive, onPress }: SidebarItemProps) {
+function SidebarItem({ name, icon, badge, shortcut, isActive, onPress }: SidebarItemProps) {
   const colorScheme = useColorScheme();
   const resolvedScheme = colorScheme ?? 'light';
   const theme = Colors[resolvedScheme];
-  const activeBackground =
-    resolvedScheme === 'dark' ? 'rgba(10, 126, 164, 0.24)' : 'rgba(10, 126, 164, 0.14)';
-  const idleBackground = resolvedScheme === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'transparent';
-  const iconBackground =
-    resolvedScheme === 'dark' ? 'rgba(10, 126, 164, 0.25)' : 'rgba(10, 126, 164, 0.08)';
-  const descriptionColor = isActive
-    ? ACCENT_COLOR
+  const accentColor = resolvedScheme === 'dark' ? ACCENT_DARK : ACCENT_LIGHT;
+  const inactiveText = resolvedScheme === 'dark' ? 'rgba(224, 228, 244, 0.68)' : '#586075';
+  const shortcutColor = resolvedScheme === 'dark' ? 'rgba(196, 202, 225, 0.65)' : '#8A92AB';
+  const iconColor = isActive
+    ? accentColor
     : resolvedScheme === 'dark'
-    ? 'rgba(236, 237, 238, 0.65)'
-    : '#627489';
+    ? 'rgba(177, 184, 205, 0.7)'
+    : '#9AA2BE';
+  const activeBackground = resolvedScheme === 'dark' ? 'rgba(78, 90, 247, 0.18)' : 'rgba(78, 90, 247, 0.12)';
+  const pressedBackground = resolvedScheme === 'dark' ? 'rgba(78, 90, 247, 0.08)' : 'rgba(78, 90, 247, 0.06)';
 
   return (
     <Pressable
@@ -45,110 +46,110 @@ function SidebarItem({ name, description, icon, badge, isActive, onPress }: Side
       style={({ pressed }) => [
         styles.item,
         {
-          backgroundColor: isActive ? activeBackground : idleBackground,
-          borderColor: isActive ? ACCENT_COLOR : 'transparent',
-          transform: [{ scale: pressed ? 0.98 : 1 }],
+          backgroundColor: isActive ? activeBackground : pressed ? pressedBackground : 'transparent',
         },
       ]}
     >
-      {isActive ? <View style={[styles.indicator, { backgroundColor: ACCENT_COLOR }]} /> : null}
       <View
         style={[
-          styles.iconWrapper,
-          { backgroundColor: isActive ? ACCENT_COLOR : iconBackground },
+          styles.itemIndicator,
+          { backgroundColor: accentColor, opacity: isActive ? 1 : 0 },
         ]}
-      >
-        <IconSymbol name={icon} size={18} color={isActive ? '#ffffff' : ACCENT_COLOR} />
+      />
+      <View style={styles.iconSlot}>
+        <IconSymbol name={icon} size={18} color={iconColor} />
         {badge && badge > 0 ? <TabBadge count={badge} size="small" /> : null}
       </View>
-      <View style={styles.textWrapper}>
-        <ThemedText
-          style={[
-            styles.label,
-            {
-              color: isActive ? ACCENT_COLOR : theme.text,
-              fontWeight: isActive ? '600' : '400',
-            },
-          ]}
-        >
-          {name}
-        </ThemedText>
-        {description ? (
-          <ThemedText
-            numberOfLines={1}
-            style={[
-              styles.description,
-              {
-                color: descriptionColor,
-              },
-            ]}
-          >
-            {description}
-          </ThemedText>
-        ) : null}
-      </View>
+      <ThemedText
+        style={[
+          styles.label,
+          {
+            color: isActive ? theme.text : inactiveText,
+            fontWeight: isActive ? '600' : '500',
+          },
+        ]}
+      >
+        {name}
+      </ThemedText>
+      {shortcut ? (
+        <ThemedText style={[styles.shortcut, { color: shortcutColor }]}>{shortcut}</ThemedText>
+      ) : null}
     </Pressable>
   );
 }
+
+type NavigationSection = {
+  title: string;
+  items: Array<{
+    name: string;
+    icon: React.ComponentProps<typeof IconSymbol>['name'];
+    path: string;
+    badge?: number;
+    shortcut?: string;
+  }>;
+};
 
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const colorScheme = useColorScheme();
   const resolvedScheme = colorScheme ?? 'light';
+  const theme = Colors[resolvedScheme];
+  const accentColor = resolvedScheme === 'dark' ? ACCENT_DARK : ACCENT_LIGHT;
+  const dividerColor = resolvedScheme === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(78, 90, 247, 0.08)';
+  const workspaceFill = resolvedScheme === 'dark' ? 'rgba(78, 90, 247, 0.16)' : 'rgba(78, 90, 247, 0.08)';
+  const workspaceMeta = resolvedScheme === 'dark' ? 'rgba(204, 210, 232, 0.72)' : '#6D748B';
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
-  const navigationSections = [
+  const navigationSections: NavigationSection[] = [
     {
-      title: 'Discover',
+      title: 'Focus',
       items: [
         {
           name: 'Home',
-          description: 'Your personalized feed',
-          icon: 'house.fill' as const,
+          icon: 'house.fill',
           path: '/(tabs)',
+          shortcut: '⌘1',
         },
         {
           name: 'Search',
-          description: 'Find people and communities',
-          icon: 'magnifyingglass' as const,
+          icon: 'magnifyingglass',
           path: '/(tabs)/search',
+          shortcut: '⌘K',
         },
       ],
     },
     {
-      title: 'Inbox',
+      title: 'Updates',
       items: [
         {
           name: 'Messages',
-          description: 'Conversations and requests',
-          icon: 'message.fill' as const,
+          icon: 'message.fill',
           path: '/(tabs)/messages',
           badge: unreadMessagesCount,
+          shortcut: '⌘2',
         },
         {
           name: 'Notifications',
-          description: 'Mentions and new activity',
-          icon: 'bell.fill' as const,
+          icon: 'bell.fill',
           path: '/(tabs)/notifications',
           badge: unreadNotificationsCount,
+          shortcut: '⌘3',
         },
       ],
     },
     {
-      title: 'You',
+      title: 'Workspace',
       items: [
         {
           name: 'Profile',
-          description: 'Manage how others see you',
-          icon: 'person.fill' as const,
+          icon: 'person.fill',
           path: '/(tabs)/profile',
         },
         {
           name: 'Settings',
-          description: 'Adjust your preferences',
-          icon: 'gearshape.fill' as const,
+          icon: 'gearshape.fill',
           path: '/(tabs)/settings',
         },
       ],
@@ -168,85 +169,42 @@ export function Sidebar() {
 
   return (
     <ThemedView
-      lightColor="#F7FBFF"
-      darkColor="rgba(15, 17, 19, 0.92)"
+      lightColor="#F8FAFF"
+      darkColor="rgba(17, 20, 28, 0.92)"
       style={[
         styles.container,
         {
-          borderColor:
-            resolvedScheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(10, 126, 164, 0.12)',
-          shadowColor: resolvedScheme === 'dark' ? '#000000' : ACCENT_COLOR,
+          borderColor: resolvedScheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(78, 90, 247, 0.08)',
+          shadowColor: resolvedScheme === 'dark' ? '#0B0D16' : '#1A1F3D',
         },
       ]}
     >
       <View
-        pointerEvents="none"
         style={[
-          styles.glow,
+          styles.workspace,
           {
-            backgroundColor:
-              resolvedScheme === 'dark'
-                ? 'rgba(124, 212, 255, 0.14)'
-                : 'rgba(10, 126, 164, 0.12)',
-          },
-        ]}
-      />
-      <View
-        style={[
-          styles.header,
-          {
-            backgroundColor:
-              resolvedScheme === 'dark'
-                ? 'rgba(10, 126, 164, 0.22)'
-                : 'rgba(10, 126, 164, 0.1)',
-            borderColor:
-              resolvedScheme === 'dark'
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(10, 126, 164, 0.18)',
+            backgroundColor: workspaceFill,
           },
         ]}
       >
-        <View
-          style={[
-            styles.headerBadge,
-            {
-              backgroundColor:
-                resolvedScheme === 'dark'
-                  ? 'rgba(124, 212, 255, 0.16)'
-                  : 'rgba(10, 126, 164, 0.18)',
-            },
-          ]}
-        >
-          <IconSymbol name="sparkles" size={16} color={ACCENT_COLOR} />
+        <View style={[styles.workspaceAvatar, { backgroundColor: accentColor }]}>
+          <ThemedText style={styles.workspaceInitials}>AK</ThemedText>
+        </View>
+        <View style={styles.workspaceDetails}>
           <ThemedText
             style={[
-              styles.headerBadgeText,
-              { color: ACCENT_COLOR },
+              styles.workspaceName,
+              { color: theme.text },
             ]}
           >
             Akari
           </ThemedText>
+          <ThemedText style={[styles.workspaceMeta, { color: workspaceMeta }]}>Product workspace</ThemedText>
         </View>
-        <ThemedText
-          type="subtitle"
-          style={[styles.headerTitle, { color: Colors[resolvedScheme].text }]}
-        >
-          Navigate with ease
-        </ThemedText>
-        <ThemedText
-          style={[
-            styles.headerSubtitle,
-            {
-              color:
-                resolvedScheme === 'dark'
-                  ? 'rgba(236, 237, 238, 0.75)'
-                  : '#567086',
-            },
-          ]}
-        >
-          Jump back into conversations, explore the network, and stay on top of updates with a fresh sidebar layout.
-        </ThemedText>
+        <IconSymbol name="chevron.down" size={16} color={workspaceMeta} />
       </View>
+
+      <View style={[styles.divider, { backgroundColor: dividerColor }]} />
 
       {navigationSections.map((section) => (
         <View key={section.title} style={styles.section}>
@@ -254,37 +212,20 @@ export function Sidebar() {
             style={[
               styles.sectionLabel,
               {
-                color:
-                  resolvedScheme === 'dark'
-                    ? 'rgba(236, 237, 238, 0.55)'
-                    : '#5D6F82',
+                color: resolvedScheme === 'dark' ? 'rgba(208, 214, 235, 0.6)' : '#7B849C',
               },
             ]}
           >
             {section.title}
           </ThemedText>
-          <View
-            style={[
-              styles.sectionContent,
-              {
-                backgroundColor:
-                  resolvedScheme === 'dark'
-                    ? 'rgba(10, 126, 164, 0.08)'
-                    : 'rgba(10, 126, 164, 0.04)',
-                borderColor:
-                  resolvedScheme === 'dark'
-                    ? 'rgba(255, 255, 255, 0.05)'
-                    : 'rgba(10, 126, 164, 0.08)',
-              },
-            ]}
-          >
+          <View style={styles.sectionItems}>
             {section.items.map((item) => (
               <SidebarItem
                 key={item.path}
                 name={item.name}
-                description={item.description}
                 icon={item.icon}
                 badge={item.badge}
+                shortcut={item.shortcut}
                 isActive={isActive(item.path)}
                 onPress={() => handleNavigation(item.path)}
               />
@@ -298,107 +239,95 @@ export function Sidebar() {
 
 const styles = StyleSheet.create({
   container: {
-    width: 272,
-    borderRadius: 24,
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    width: 256,
+    borderRadius: 20,
+    padding: 16,
     borderWidth: 1,
-    position: 'relative',
-    overflow: 'hidden',
     shadowOffset: { width: 0, height: 18 },
-    shadowOpacity: 0.14,
+    shadowOpacity: 0.12,
     shadowRadius: 28,
-    elevation: 6,
+    elevation: 4,
   },
-  glow: {
-    position: 'absolute',
-    right: -60,
-    top: -80,
-    width: 220,
-    height: 220,
-    borderRadius: 220,
-  },
-  header: {
-    borderRadius: 22,
-    padding: 20,
-    marginBottom: 12,
-    borderWidth: 1,
-  },
-  headerBadge: {
+  workspace: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 999,
-    marginBottom: 14,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginBottom: 16,
   },
-  headerBadgeText: {
-    fontSize: 12,
+  workspaceAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  workspaceInitials: {
+    color: '#ffffff',
     fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 1.1,
-    marginLeft: 6,
-  },
-  headerTitle: {
-    fontSize: 20,
-    marginBottom: 8,
-  },
-  headerSubtitle: {
     fontSize: 13,
-    lineHeight: 20,
+  },
+  workspaceDetails: {
+    flex: 1,
+  },
+  workspaceName: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  workspaceMeta: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    marginBottom: 16,
   },
   section: {
-    marginTop: 18,
+    marginBottom: 18,
   },
   sectionLabel: {
     fontSize: 12,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginBottom: 10,
+    fontWeight: '600',
+    marginBottom: 6,
   },
-  sectionContent: {
-    borderRadius: 18,
-    paddingVertical: 4,
-    borderWidth: 1,
+  sectionItems: {
+    marginTop: 2,
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 16,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     position: 'relative',
-    marginHorizontal: 6,
-    marginVertical: 4,
-    borderWidth: 1,
+    marginBottom: 4,
   },
-  indicator: {
+  itemIndicator: {
     position: 'absolute',
-    left: -6,
-    top: 10,
-    bottom: 10,
-    width: 4,
-    borderRadius: 4,
+    left: 6,
+    top: 6,
+    bottom: 6,
+    width: 3,
+    borderRadius: 999,
   },
-  iconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 14,
+  iconSlot: {
+    width: 28,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     position: 'relative',
   },
-  textWrapper: {
-    flex: 1,
-  },
   label: {
-    fontSize: 16,
+    flex: 1,
+    fontSize: 15,
   },
-  description: {
+  shortcut: {
     fontSize: 12,
-    lineHeight: 18,
-    marginTop: 4,
+    fontWeight: '500',
   },
 });
