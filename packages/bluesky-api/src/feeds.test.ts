@@ -97,11 +97,9 @@ describe('BlueskyFeeds', () => {
     const result = await feeds.getPost('jwt', 'at://post/1');
 
     expect(result).toEqual(post);
-    expect(feeds.makeAuthenticatedRequestMock).toHaveBeenCalledWith(
-      '/app.bsky.feed.getPostThread',
-      'jwt',
-      { params: { uri: 'at://post/1' } },
-    );
+    expect(feeds.makeAuthenticatedRequestMock).toHaveBeenCalledWith('/app.bsky.feed.getPostThread', 'jwt', {
+      params: { uri: 'at://post/1' },
+    });
   });
 
   it('throws when a post is missing in thread response', async () => {
@@ -124,9 +122,7 @@ describe('BlueskyFeeds', () => {
     const feeds = new MockFeeds();
     const imageBlobOne = { ref: { $link: 'blob-1' }, mimeType: 'image/png', size: 10 };
     const imageBlobTwo = { ref: { $link: 'blob-2' }, mimeType: 'image/jpeg', size: 20 };
-    feeds.uploadImageMock
-      .mockResolvedValueOnce({ blob: imageBlobOne })
-      .mockResolvedValueOnce({ blob: imageBlobTwo });
+    feeds.uploadImageMock.mockResolvedValueOnce({ blob: imageBlobOne }).mockResolvedValueOnce({ blob: imageBlobTwo });
 
     const response = { uri: 'at://post/created', cid: 'cid' };
     feeds.makeAuthenticatedRequestMock.mockResolvedValueOnce(response);
@@ -174,9 +170,7 @@ describe('BlueskyFeeds', () => {
 
     const result = await feeds.createPost('jwt', 'did:example', {
       text: 'GIF post',
-      images: [
-        { uri: 'https://gif.example/gif.gif', alt: 'Funny gif', mimeType: 'image/gif', tenorId: '123' },
-      ],
+      images: [{ uri: 'https://gif.example/gif.gif', alt: 'Funny gif', mimeType: 'image/gif', tenorId: '123' }],
     });
 
     expect(result).toBe(response);
