@@ -40,12 +40,17 @@ describe('Sidebar', () => {
 
     const { getByText } = render(<Sidebar />);
 
+    expect(getByText('Discover')).toBeTruthy();
+    expect(getByText('Inbox')).toBeTruthy();
+    expect(getByText('You')).toBeTruthy();
     expect(getByText('Home')).toBeTruthy();
     expect(getByText('Search')).toBeTruthy();
     expect(getByText('Messages')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
     expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
+    expect(getByText('Your personalized feed')).toBeTruthy();
+    expect(getByText('Find people and communities')).toBeTruthy();
 
     expect(getByText('3')).toBeTruthy();
     expect(getByText('5')).toBeTruthy();
