@@ -34,6 +34,7 @@ const MAPPING = {
   'pin.fill': 'push-pin',
   pin: 'push-pin',
   ellipsis: 'more-horiz',
+  xmark: 'close',
   camera: 'camera-alt',
   photo: 'photo',
   at: 'alternate-email',

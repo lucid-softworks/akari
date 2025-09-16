@@ -5,10 +5,14 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AddAccountPanel } from '@/components/AddAccountPanel';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { DialogModal } from '@/components/ui/DialogModal';
+import { useDialogManager } from '@/contexts/DialogContext';
+import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -105,9 +109,19 @@ export default function SettingsScreen() {
     });
   };
 
+  const dialogManager = useDialogManager();
+
   const handleAddAccount = () => {
-    // Navigate to sign in with option to add account
-    router.push('/(auth)/signin?addAccount=true');
+    const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
+
+    dialogManager.open({
+      id: ADD_ACCOUNT_PANEL_ID,
+      component: (
+        <DialogModal onRequestClose={closePanel}>
+          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
+        </DialogModal>
+      ),
+    });
   };
 
   return (

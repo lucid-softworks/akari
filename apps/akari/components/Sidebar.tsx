@@ -3,7 +3,11 @@ import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AddAccountPanel } from '@/components/AddAccountPanel';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { DialogModal } from '@/components/ui/DialogModal';
+import { useDialogManager } from '@/contexts/DialogContext';
+import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -52,6 +56,7 @@ export function Sidebar() {
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
+  const dialogManager = useDialogManager();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -121,7 +126,15 @@ export function Sidebar() {
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
-    router.push('/(auth)/signin?addAccount=true');
+    const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
+    dialogManager.open({
+      id: ADD_ACCOUNT_PANEL_ID,
+      component: (
+        <DialogModal onRequestClose={closePanel}>
+          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
+        </DialogModal>
+      ),
+    });
   };
 
   const renderBadge = (count: number | null | undefined, isActive: boolean, collapsedState: boolean) => {
