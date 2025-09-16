@@ -21,7 +21,14 @@
     "test": {
       "dependsOn": ["^build"]
     },
-    "test:coverage": {},
+    "test:coverage": {
+      "dependsOn": ["^test:coverage"],
+      "outputs": ["coverage/**"]
+    },
+    "merge-coverage": {
+      "dependsOn": ["^test:coverage", "test:coverage"],
+      "cache": false
+    },
     "ios": {
       "cache": false,
       "persistent": true
