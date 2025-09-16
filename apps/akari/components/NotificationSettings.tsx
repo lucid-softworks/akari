@@ -5,7 +5,6 @@ import { NotificationTest } from '@/components/NotificationTest';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -13,7 +12,16 @@ interface NotificationSettingsProps {
   onSettingsChange?: () => void;
 }
 
-const palette = SIDEBAR_PALETTE;
+const palette = {
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  textMuted: '#6B7280',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+} as const;
 
 export function NotificationSettings({ onSettingsChange }: NotificationSettingsProps) {
   const { t } = useTranslation();
@@ -239,7 +247,7 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
 
 const styles = StyleSheet.create({
   container: {
-    gap: 24,
+    gap: 16,
   },
   header: {
     flexDirection: 'row',
@@ -253,7 +261,7 @@ const styles = StyleSheet.create({
     color: palette.textPrimary,
   },
   section: {
-    paddingVertical: 18,
+    paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: palette.border,
   },
@@ -284,13 +292,13 @@ const styles = StyleSheet.create({
   statusIndicator: {
     width: 12,
     height: 12,
-    borderRadius: 6,
+    borderRadius: 0,
   },
   errorContainer: {
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
     padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 0,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#f87171',
   },
   errorText: {
@@ -299,14 +307,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   actionsContainer: {
-    marginTop: 24,
+    marginTop: 16,
     alignItems: 'center',
   },
   clearBadgeButton: {
     paddingHorizontal: 18,
     paddingVertical: 10,
-    borderRadius: 999,
-    borderWidth: 1,
+    borderRadius: 0,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.highlight,
     backgroundColor: palette.activeBackground,
   },

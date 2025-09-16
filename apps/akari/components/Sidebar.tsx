@@ -8,7 +8,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
-import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -19,7 +18,20 @@ import { Account } from '@/types/account';
 const COLLAPSED_WIDTH = 68;
 const EXPANDED_WIDTH = 264;
 
-const palette = SIDEBAR_PALETTE;
+const palette = {
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  textMuted: '#6B7280',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+  hover: '#1A1D27',
+  countAccent: '#EA580C',
+  activeCount: '#7C8CF9',
+  trendingAccent: '#38BDF8',
+} as const;
 
 const TRENDING_TAGS = [
   '#BlueskyMigration',

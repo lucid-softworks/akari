@@ -4,7 +4,6 @@ import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useTranslation } from '@/hooks/useTranslation';
 import { scheduleLocalNotification } from '@/utils/notifications';
 
@@ -12,7 +11,15 @@ interface NotificationTestProps {
   onNotificationSent?: () => void;
 }
 
-const palette = SIDEBAR_PALETTE;
+const palette = {
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+} as const;
 
 export function NotificationTest({ onNotificationSent }: NotificationTestProps) {
   const { t } = useTranslation();
@@ -106,12 +113,12 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
-    padding: 20,
-    borderRadius: 18,
-    borderWidth: 1,
+    marginTop: 16,
+    padding: 16,
+    borderRadius: 0,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
-    backgroundColor: palette.activeBackground,
+    backgroundColor: palette.headerBackground,
   },
   header: {
     flexDirection: 'row',
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: palette.textSecondary,
-    marginBottom: 18,
+    marginBottom: 16,
     lineHeight: 20,
   },
   buttonContainer: {
@@ -141,10 +148,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 0,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
-    backgroundColor: palette.headerBackground,
+    backgroundColor: palette.activeBackground,
   },
   testButtonDisabled: {
     opacity: 0.6,

@@ -13,7 +13,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
-import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -25,7 +24,16 @@ import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
-const palette = SIDEBAR_PALETTE;
+const palette = {
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  textMuted: '#6B7280',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+} as const;
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -277,41 +285,37 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingTop: 16,
-    paddingBottom: 120,
-    paddingHorizontal: 24,
+    paddingBottom: 100,
+    paddingHorizontal: 16,
   },
   header: {
     backgroundColor: palette.headerBackground,
-    borderColor: palette.border,
-    borderWidth: 1,
-    borderRadius: 28,
-    paddingHorizontal: 24,
-    paddingVertical: 28,
+    borderBottomColor: palette.border,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     color: palette.textPrimary,
   },
   section: {
-    marginTop: 24,
-    borderRadius: 24,
-    borderWidth: 1,
+    marginTop: 16,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
     backgroundColor: palette.headerBackground,
-    paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
     color: palette.textMuted,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   settingItem: {
-    paddingVertical: 18,
+    paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: palette.border,
   },
@@ -336,18 +340,18 @@ const styles = StyleSheet.create({
   accountInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
   },
   accountAvatarContainer: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
   },
   accountAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
   },
   accountAvatarImage: {
@@ -357,15 +361,15 @@ const styles = StyleSheet.create({
   accountAvatarFallback: {
     width: '100%',
     height: '100%',
-    borderRadius: 22,
+    borderRadius: 20,
     backgroundColor: palette.activeBackground,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: palette.highlight,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: palette.border,
   },
   accountAvatarFallbackText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: palette.textPrimary,
   },
@@ -384,35 +388,30 @@ const styles = StyleSheet.create({
   },
   currentAccountBadge: {
     alignSelf: 'flex-start',
-    marginTop: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: palette.activeBackground,
-    color: palette.highlight,
+    marginTop: 4,
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
+    color: palette.highlight,
   },
   accountActions: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
   },
   actionButton: {
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 999,
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.highlight,
-    backgroundColor: palette.activeBackground,
+    backgroundColor: palette.highlight,
   },
   actionButtonText: {
-    color: palette.highlight,
+    color: palette.background,
     fontSize: 14,
     fontWeight: '700',
   },
   removeButton: {
     borderColor: '#f87171',
-    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    backgroundColor: 'rgba(248, 113, 113, 0.1)',
   },
   removeButtonText: {
     color: '#f87171',

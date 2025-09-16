@@ -3,7 +3,6 @@ import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-nat
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getAvailableLocales, getTranslationData } from '@/utils/i18n';
 
@@ -54,7 +53,16 @@ const getLanguages = (): LanguageOption[] => {
   return languages.sort((a, b) => a.name.localeCompare(b.name));
 };
 
-const palette = SIDEBAR_PALETTE;
+const palette = {
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  textMuted: '#6B7280',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+} as const;
 
 export const LanguageSelector = () => {
   const { t, currentLocale, changeLanguage } = useTranslation();
@@ -144,25 +152,23 @@ export const LanguageSelector = () => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 16,
+    gap: 12,
   },
   title: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
     color: palette.textMuted,
   },
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    borderWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 0,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
-    backgroundColor: palette.activeBackground,
+    backgroundColor: palette.headerBackground,
   },
   selectorContent: {
     flexDirection: 'row',
@@ -196,11 +202,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '82%',
-    maxHeight: '72%',
-    borderRadius: 18,
-    padding: 20,
-    borderWidth: 1,
+    width: '80%',
+    maxHeight: '70%',
+    borderRadius: 0,
+    padding: 16,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
     backgroundColor: palette.headerBackground,
   },
@@ -220,9 +226,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 0,
     marginBottom: 8,
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: palette.border,
     backgroundColor: palette.background,
   },
@@ -251,7 +257,7 @@ const styles = StyleSheet.create({
   checkmark: {
     width: 22,
     height: 22,
-    borderRadius: 11,
+    borderRadius: 0,
     backgroundColor: palette.highlight,
     alignItems: 'center',
     justifyContent: 'center',
