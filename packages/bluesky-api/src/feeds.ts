@@ -1,5 +1,6 @@
 import { BlueskyApiClient } from './client';
 import type {
+  BlueskyBookmarksResponse,
   BlueskyFeed,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
@@ -84,6 +85,31 @@ export class BlueskyFeeds extends BlueskyApiClient {
     };
 
     return this.makeAuthenticatedRequest<{ feeds: BlueskyFeed[] }>('/app.bsky.feed.getFeedGenerators', accessJwt, {
+      params,
+    });
+  }
+
+  /**
+   * Gets the authenticated user's bookmarked posts
+   * @param accessJwt - Valid access JWT token
+   * @param limit - Number of bookmarks to fetch (default: 50, max: 100)
+   * @param cursor - Pagination cursor
+   * @returns Promise resolving to bookmarks data
+   */
+  async getBookmarks(
+    accessJwt: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyBookmarksResponse> {
+    const params: Record<string, string> = {
+      limit: limit.toString(),
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyBookmarksResponse>('/app.bsky.bookmark.getBookmarks', accessJwt, {
       params,
     });
   }
