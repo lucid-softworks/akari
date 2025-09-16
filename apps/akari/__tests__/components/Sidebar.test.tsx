@@ -174,6 +174,21 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
   });
 
+  it('renders a close button when provided and hides collapse controls', () => {
+    const handleClose = jest.fn();
+
+    const { getByLabelText, queryByText } = render(
+      <DialogProvider>
+        <Sidebar onClose={handleClose} />
+      </DialogProvider>,
+    );
+
+    const closeButton = getByLabelText('Close navigation menu');
+    fireEvent.press(closeButton);
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(queryByText('Collapse')).toBeNull();
+  });
+
   it('opens the account selector, allows switching accounts, and opens the add account panel', () => {
     const { getByText, getByPlaceholderText } = render(
       <DialogProvider>

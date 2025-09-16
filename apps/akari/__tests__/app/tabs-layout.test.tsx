@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 import TabLayout from '@/app/(tabs)/_layout';
 import { ActivityIndicator } from 'react-native';
@@ -28,6 +28,10 @@ jest.mock('@react-navigation/native', () => ({
   useNavigationState: jest.fn(),
 }));
 
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: jest.fn(() => ({ top: 0, bottom: 0, left: 0, right: 0 })),
+}));
+
 jest.mock('@/hooks/queries/useAuthStatus');
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
@@ -43,8 +47,23 @@ jest.mock('@/components/HapticTab', () => {
 
 jest.mock('@/components/Sidebar', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { Sidebar: () => <Text>Sidebar</Text> };
+  const { Pressable, Text } = require('react-native');
+  return {
+    Sidebar: ({ onClose }: { onClose?: () => void }) => (
+      <>
+        <Text>Sidebar</Text>
+        {onClose ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Close navigation menu"
+            onPress={onClose}
+          >
+            <Text>close</Text>
+          </Pressable>
+        ) : null}
+      </>
+    ),
+  };
 });
 
 jest.mock('@/components/TabBadge', () => {
@@ -173,6 +192,27 @@ describe('TabLayout', () => {
     render(notificationsOptions.tabBarIcon({ color: 'blue' }));
     expect(mockTabBadge.mock.calls[0][0].count).toBe(0);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(0);
+  });
+
+  it('allows opening and closing the mobile sidebar', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+    const { getByLabelText, queryByText } = render(<TabLayout />);
+
+    expect(queryByText('Sidebar')).toBeNull();
+
+    act(() => {
+      fireEvent.press(getByLabelText('Open navigation menu'));
+    });
+
+    expect(queryByText('Sidebar')).toBeTruthy();
+    const closeButton = getByLabelText('Close navigation menu');
+
+    act(() => {
+      fireEvent.press(closeButton);
+    });
+
+    expect(queryByText('Sidebar')).toBeNull();
   });
 });
 
