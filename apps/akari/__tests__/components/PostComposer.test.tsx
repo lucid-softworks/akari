@@ -103,22 +103,19 @@ describe('PostComposer', () => {
 
     const { getByPlaceholderText, getByText } = render(<PostComposer visible onClose={onClose} />);
 
-    await act(async () => {
-      fireEvent.changeText(getByPlaceholderText('post.postPlaceholder'), '  Hello World  ');
-    });
+    fireEvent.changeText(getByPlaceholderText('post.postPlaceholder'), '  Hello World  ');
+    fireEvent.press(getByText('post.post'));
 
-    await act(async () => {
-      fireEvent.press(getByText('post.post'));
+    await waitFor(() => {
+      expect(mutateAsync).toHaveBeenCalledTimes(1);
+      expect(mutateAsync).toHaveBeenCalledWith({
+        text: 'Hello World',
+        replyTo: undefined,
+        images: undefined,
+      });
+      expect(onClose).toHaveBeenCalled();
+      expect(getByPlaceholderText('post.postPlaceholder').props.value).toBe('');
     });
-
-    expect(mutateAsync).toHaveBeenCalledTimes(1);
-    expect(mutateAsync).toHaveBeenCalledWith({
-      text: 'Hello World',
-      replyTo: undefined,
-      images: undefined,
-    });
-    expect(onClose).toHaveBeenCalled();
-    expect(getByPlaceholderText('post.postPlaceholder').props.value).toBe('');
   });
 
   it('renders reply context and posts a reply', async () => {
