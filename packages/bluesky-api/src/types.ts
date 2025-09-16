@@ -535,6 +535,29 @@ export type BlueskyFeedsResponse = {
 };
 
 /**
+ * Bluesky trending topic entry
+ */
+export type BlueskyTrendingTopic = {
+  /** Display text for the trending topic */
+  topic: string;
+  /** Relative link to the curated feed for the topic */
+  link: string;
+};
+
+/**
+ * Response from the getTrendingTopics endpoint
+ */
+export type BlueskyTrendingTopicsResponse = {
+  /**
+   * Array of trending topics surfaced by Bluesky. Each entry links to a curated
+   * feed that aggregates posts about the topic.
+   */
+  topics: BlueskyTrendingTopic[];
+  /** Optional list of suggested curated feeds for broader discovery */
+  suggested?: BlueskyTrendingTopic[];
+};
+
+/**
  * Bluesky session response from the createSession/refreshSession endpoints
  */
 export type BlueskySession =
