@@ -30,9 +30,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <LanguageProvider>
-        <DialogProvider>
-          <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <DialogProvider>
             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <Stack>
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -42,12 +42,12 @@ export default function RootLayout() {
               </Stack>
               <StatusBar style="auto" />
             </ThemeProvider>
-            {Platform.OS === 'web' ? (
-              <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
-            ) : null}
-          </QueryClientProvider>
-        </DialogProvider>
-      </LanguageProvider>
+          </DialogProvider>
+        </LanguageProvider>
+        {Platform.OS === 'web' ? (
+          <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
+        ) : null}
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
