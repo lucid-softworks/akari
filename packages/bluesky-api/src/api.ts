@@ -22,6 +22,7 @@ import type {
   BlueskySession,
   BlueskyStarterPacksResponse,
   BlueskyThreadResponse,
+  BlueskyTrendingTopicsResponse,
 } from './types';
 
 /**
@@ -79,6 +80,10 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.feeds.getTimeline(accessJwt, limit);
+  }
+
+  async getTrendingTopics(limit: number = 10): Promise<BlueskyTrendingTopicsResponse> {
+    return this.feeds.getTrendingTopics(limit);
   }
 
   async getFeeds(accessJwt: string, actor: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedsResponse> {

@@ -6,10 +6,23 @@ import { BlueskyFeeds } from './feeds';
 describe('BlueskyFeeds', () => {
   class MockFeeds extends BlueskyFeeds {
     public makeAuthenticatedRequestMock = jest.fn();
+    public makeRequestMock = jest.fn();
     public uploadImageMock = jest.fn();
 
     constructor() {
       super('https://pds.example');
+    }
+
+    protected async makeRequest<T>(
+      endpoint: string,
+      options: {
+        method?: 'GET' | 'POST';
+        headers?: Record<string, string>;
+        body?: Record<string, unknown> | FormData | Blob;
+        params?: Record<string, string>;
+      } = {},
+    ): Promise<T> {
+      return this.makeRequestMock(endpoint, options);
     }
 
     protected async makeAuthenticatedRequest<T>(
@@ -88,6 +101,41 @@ describe('BlueskyFeeds', () => {
   });
 
   afterAll(() => server.close());
+
+  it('fetches trending topics with a custom limit', async () => {
+    const feeds = new MockFeeds();
+    const trending = {
+      topics: [
+        { topic: 'Cory Booker', link: '/profile/trending.bsky.app/feed/417836453' },
+        { topic: 'Luigi Mangione', link: '/profile/trending.bsky.app/feed/417636752' },
+      ],
+      suggested: [{ topic: 'Popular with Friends', link: '/profile/bsky.app/feed/with-friends' }],
+    };
+    feeds.makeRequestMock.mockResolvedValueOnce(trending);
+
+    const result = await feeds.getTrendingTopics(14);
+
+    expect(result).toEqual(trending);
+    expect(feeds.makeRequestMock).toHaveBeenCalledWith('/app.bsky.unspecced.getTrendingTopics', {
+      params: { limit: '14' },
+    });
+  });
+
+  it('fetches trending topics with the default limit', async () => {
+    const feeds = new MockFeeds();
+    const trending = {
+      topics: [],
+      suggested: [],
+    };
+    feeds.makeRequestMock.mockResolvedValueOnce(trending);
+
+    const result = await feeds.getTrendingTopics();
+
+    expect(result).toEqual(trending);
+    expect(feeds.makeRequestMock).toHaveBeenCalledWith('/app.bsky.unspecced.getTrendingTopics', {
+      params: { limit: '10' },
+    });
+  });
 
   it('returns a post from a thread response', async () => {
     const feeds = new MockFeeds();
