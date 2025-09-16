@@ -13,14 +13,14 @@
       "bundleIdentifier": "com.imlunahey.akariv2",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "ExpoLocalization_supportsRTL": true
       },
       "entitlements": {
         "aps-environment": "development",
-        "com.apple.developer.associated-domains": [
-          "applinks:*.expo.dev"
-        ]
-      }
+        "com.apple.developer.associated-domains": ["applinks:*.expo.dev"]
+      },
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.imlunahey.akariv2"
+      "package": "com.imlunahey.akariv2",
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -87,6 +91,9 @@
         "projectId": "544afaeb-5cfb-40ab-b8ff-6e7154c49d1d"
       },
       "supportsRTL": true
+    },
+    "updates": {
+      "url": "https://u.expo.dev/544afaeb-5cfb-40ab-b8ff-6e7154c49d1d"
     }
   }
 }
