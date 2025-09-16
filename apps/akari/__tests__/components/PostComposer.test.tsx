@@ -111,9 +111,7 @@ describe('PostComposer', () => {
       fireEvent.press(getByText('post.post'));
     });
 
-    await waitFor(() => {
-      expect(mutateAsync).toHaveBeenCalled();
-    });
+    expect(mutateAsync).toHaveBeenCalledTimes(1);
     expect(mutateAsync).toHaveBeenCalledWith({
       text: 'Hello World',
       replyTo: undefined,
