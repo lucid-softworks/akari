@@ -7,6 +7,7 @@ import { BlueskyGraph } from './graph';
 import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
 import type {
+  BlueskyBookmarksResponse,
   BlueskyConvosResponse,
   BlueskyFeed,
   BlueskyFeedResponse,
@@ -91,6 +92,14 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<{ feeds: BlueskyFeed[] }> {
     return this.feeds.getFeedGenerators(accessJwt, feeds);
+  }
+
+  async getBookmarks(
+    accessJwt: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyBookmarksResponse> {
+    return this.feeds.getBookmarks(accessJwt, limit, cursor);
   }
 
   async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {
