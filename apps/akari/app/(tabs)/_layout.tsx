@@ -182,12 +182,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="bookmarks"
-        options={{
-          href: null,
-        }}
-      />
+      <Tabs.Screen name="bookmarks" options={{ href: null }} />
       <Tabs.Screen
         name="profile"
         options={{
