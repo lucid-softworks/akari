@@ -79,6 +79,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const { t } = useTranslation();
   const likeMutation = useLikePost();
 
+  const authorName = post.author.displayName || post.author.handle;
+
   const borderColor = useThemeColor(
     {
       light: '#e8eaed',
@@ -494,21 +496,28 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
       <ThemedView style={styles.header}>
         <ThemedView style={styles.authorSection}>
-          <Image
-            source={{
-              uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
-            }}
-            style={styles.authorAvatar}
-            contentFit="cover"
-            placeholder={require('@/assets/images/partial-react-logo.png')}
-          />
+          <TouchableOpacity
+            onPress={handleProfilePress}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={`View ${authorName}'s profile via avatar`}
+          >
+            <Image
+              source={{
+                uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
+              }}
+              style={styles.authorAvatar}
+              contentFit="cover"
+              placeholder={require('@/assets/images/partial-react-logo.png')}
+            />
+          </TouchableOpacity>
           <ThemedView style={styles.authorInfo}>
-            <ThemedText style={styles.displayName}>{post.author.displayName || post.author.handle}</ThemedText>
+            <ThemedText style={styles.displayName}>{authorName}</ThemedText>
             <TouchableOpacity
               onPress={handleProfilePress}
               activeOpacity={0.7}
               accessibilityRole="button"
-              accessibilityLabel={`View profile of ${post.author.displayName || post.author.handle}`}
+              accessibilityLabel={`View profile of ${authorName}`}
             >
               <ThemedText style={styles.handle}>@{post.author.handle}</ThemedText>
             </TouchableOpacity>
@@ -599,7 +608,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           onPress={handleReplyPress}
           activeOpacity={0.7}
           accessibilityRole="button"
-          accessibilityLabel={`Reply to post by ${post.author.displayName || post.author.handle}`}
+          accessibilityLabel={`Reply to post by ${authorName}`}
         >
           <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
@@ -615,8 +624,8 @@ export function PostCard({ post, onPress }: PostCardProps) {
           accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
-              ? `Unlike post by ${post.author.displayName || post.author.handle}`
-              : `Like post by ${post.author.displayName || post.author.handle}`
+              ? `Unlike post by ${authorName}`
+              : `Like post by ${authorName}`
           }
         >
           <IconSymbol
