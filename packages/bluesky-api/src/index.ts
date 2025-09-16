@@ -6,6 +6,7 @@ export * from './client';
 export * from './conversations';
 export * from './feeds';
 export * from './graph';
+export * from './ip';
 export * from './notifications';
 export * from './pds';
 export * from './search';

@@ -813,10 +813,10 @@ export type BlueskyAppStatePref = {
   /** Type identifier */
   $type: 'app.bsky.actor.defs#bskyAppStatePref';
   /** NUX completion status */
-  nuxs?: Array<{
+  nuxs?: {
     id: string;
     completed: boolean;
-  }>;
+  }[];
 };
 
 /**
@@ -836,4 +836,30 @@ export type BlueskyPreference =
 export type BlueskyPreferencesResponse = {
   /** Array of user preferences */
   preferences: BlueskyPreference[];
+};
+
+/**
+ * Geographic restriction information for a specific country/region
+ */
+export type BlueskyGeoRestriction = {
+  /** ISO 3166-1 alpha-2 country code */
+  countryCode: string;
+  /** Optional ISO 3166-2 region code */
+  regionCode: string | null;
+};
+
+/**
+ * Response structure for the https://ip.bsky.app/config endpoint
+ */
+export type BlueskyIpConfigResponse = {
+  /** Country code detected for the current IP */
+  countryCode: string;
+  /** Region code detected for the current IP */
+  regionCode: string | null;
+  /** Geos where age restrictions apply */
+  ageRestrictedGeos: BlueskyGeoRestriction[];
+  /** Geos where access is fully blocked due to age restrictions */
+  ageBlockedGeos: BlueskyGeoRestriction[];
+  /** Whether the current geo is age restricted */
+  isAgeRestrictedGeo: boolean;
 };

@@ -4,6 +4,7 @@ import { BlueskyApiClient } from './client';
 import { BlueskyConversations } from './conversations';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
+import { getBlueskyIpConfig } from './ip';
 import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
 import type {
@@ -16,6 +17,7 @@ import type {
   BlueskyPostView,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
+  BlueskyIpConfigResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySendMessageResponse,
@@ -266,6 +268,11 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async getUnreadNotificationsCount(accessJwt: string): Promise<{ count: number }> {
     return this.notifications.getUnreadCount(accessJwt);
+  }
+
+  // Public endpoints
+  async getIpConfig(): Promise<BlueskyIpConfigResponse> {
+    return getBlueskyIpConfig();
   }
 
   // Static factory method for custom PDS
