@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { ResponsiveLayout } from '@/components/ResponsiveLayout';
 import { PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -270,7 +271,9 @@ export default function PostDetailScreen() {
             headerBackButtonDisplayMode: 'minimal',
           }}
         />
-        <PostDetailSkeleton />
+        <ResponsiveLayout>
+          <PostDetailSkeleton />
+        </ResponsiveLayout>
       </>
     );
   }
@@ -284,9 +287,11 @@ export default function PostDetailScreen() {
             headerBackButtonDisplayMode: 'minimal',
           }}
         />
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>{t('post.postNotFound')}</ThemedText>
-        </ThemedView>
+        <ResponsiveLayout>
+          <ThemedView style={styles.container}>
+            <ThemedText style={styles.errorText}>{t('post.postNotFound')}</ThemedText>
+          </ThemedView>
+        </ResponsiveLayout>
       </>
     );
   }
@@ -299,13 +304,14 @@ export default function PostDetailScreen() {
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
-      <ThemedView style={styles.container}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
+      <ResponsiveLayout>
+        <ThemedView style={styles.container}>
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollViewContent}
+            showsVerticalScrollIndicator={false}
+          >
           {/* Thread Context - Root Post (if this is a reply to a reply) */}
           {renderGrandparentPost()}
 
@@ -347,28 +353,29 @@ export default function PostDetailScreen() {
           </ThemedView>
 
           {/* Comments List */}
-          {comments.length > 0 ? (
-            comments
-              .filter(
-                (
-                  item,
-                ): item is
-                  | BlueskyFeedItem
-                  | {
-                      uri: string;
-                      notFound?: boolean;
-                      blocked?: boolean;
-                      author?: BlueskyPostView['author'];
-                    } => item !== null && !('notFound' in item) && !('blocked' in item),
-              )
-              .map(renderComment)
-          ) : (
-            <ThemedView style={styles.emptyComments}>
-              <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
-            </ThemedView>
-          )}
-        </ScrollView>
-      </ThemedView>
+            {comments.length > 0 ? (
+              comments
+                .filter(
+                  (
+                    item,
+                  ): item is
+                    | BlueskyFeedItem
+                    | {
+                        uri: string;
+                        notFound?: boolean;
+                        blocked?: boolean;
+                        author?: BlueskyPostView['author'];
+                      } => item !== null && !('notFound' in item) && !('blocked' in item),
+                )
+                .map(renderComment)
+            ) : (
+              <ThemedView style={styles.emptyComments}>
+                <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
+              </ThemedView>
+            )}
+          </ScrollView>
+        </ThemedView>
+      </ResponsiveLayout>
     </>
   );
 }
