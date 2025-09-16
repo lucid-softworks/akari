@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { Alert, Platform, StyleSheet, Switch, View } from 'react-native';
+import { Alert, Platform, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 
 import { NotificationTest } from '@/components/NotificationTest';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface NotificationSettingsProps {
   onSettingsChange?: () => void;
 }
+
+const palette = SIDEBAR_PALETTE;
 
 export function NotificationSettings({ onSettingsChange }: NotificationSettingsProps) {
   const { t } = useTranslation();
@@ -24,8 +26,7 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
     badgeEnabled: true,
   });
 
-  const borderColor = useThemeColor({}, 'border');
-  const textColor = useThemeColor({}, 'text');
+  const showTokenInfo = __DEV__ && !!expoPushToken;
 
   const handlePermissionToggle = async () => {
     if (localSettings.pushEnabled) {
@@ -111,14 +112,12 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <IconSymbol name="bell" size={24} color={textColor} />
+        <IconSymbol name="bell" size={24} color={palette.highlight} />
         <ThemedText style={styles.headerTitle}>{t('notifications.pushNotifications')}</ThemedText>
       </View>
 
-      {/* Permission Status */}
-      <View style={[styles.section, { borderBottomColor: borderColor }]}>
+      <View style={styles.section}>
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <ThemedText style={styles.settingTitle}>{t('notifications.permissionStatus')}</ThemedText>
@@ -128,8 +127,12 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
         </View>
       </View>
 
-      {/* Main Toggle */}
-      <View style={[styles.section, { borderBottomColor: borderColor }]}>
+      <View
+        style={[
+          styles.section,
+          !localSettings.pushEnabled && !showTokenInfo && styles.sectionLast,
+        ]}
+      >
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <ThemedText style={styles.settingTitle}>{t('notifications.enablePushNotifications')}</ThemedText>
@@ -143,16 +146,15 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
             value={localSettings.pushEnabled}
             onValueChange={handlePermissionToggle}
             disabled={isLoading}
-            trackColor={{ false: '#E5E5EA', true: '#007AFF' }}
-            thumbColor={localSettings.pushEnabled ? '#FFFFFF' : '#FFFFFF'}
+            trackColor={{ false: palette.border, true: palette.highlight }}
+            thumbColor="#FFFFFF"
           />
         </View>
       </View>
 
-      {/* Notification Preferences */}
-      {localSettings.pushEnabled && (
+      {localSettings.pushEnabled ? (
         <>
-          <View style={[styles.section, { borderBottomColor: borderColor }]}>
+          <View style={styles.section}>
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
                 <ThemedText style={styles.settingTitle}>{t('notifications.sound')}</ThemedText>
@@ -161,13 +163,13 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
               <Switch
                 value={localSettings.soundEnabled}
                 onValueChange={() => handleSettingToggle('soundEnabled')}
-                trackColor={{ false: '#E5E5EA', true: '#007AFF' }}
-                thumbColor={localSettings.soundEnabled ? '#FFFFFF' : '#FFFFFF'}
+                trackColor={{ false: palette.border, true: palette.highlight }}
+                thumbColor="#FFFFFF"
               />
             </View>
           </View>
 
-          <View style={[styles.section, { borderBottomColor: borderColor }]}>
+          <View style={styles.section}>
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
                 <ThemedText style={styles.settingTitle}>{t('notifications.vibration')}</ThemedText>
@@ -176,13 +178,13 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
               <Switch
                 value={localSettings.vibrationEnabled}
                 onValueChange={() => handleSettingToggle('vibrationEnabled')}
-                trackColor={{ false: '#E5E5EA', true: '#007AFF' }}
-                thumbColor={localSettings.vibrationEnabled ? '#FFFFFF' : '#FFFFFF'}
+                trackColor={{ false: palette.border, true: palette.highlight }}
+                thumbColor="#FFFFFF"
               />
             </View>
           </View>
 
-          <View style={[styles.section, { borderBottomColor: borderColor }]}>
+          <View style={[styles.section, !showTokenInfo && styles.sectionLast]}>
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
                 <ThemedText style={styles.settingTitle}>{t('notifications.badge')}</ThemedText>
@@ -191,17 +193,16 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
               <Switch
                 value={localSettings.badgeEnabled}
                 onValueChange={() => handleSettingToggle('badgeEnabled')}
-                trackColor={{ false: '#E5E5EA', true: '#007AFF' }}
-                thumbColor={localSettings.badgeEnabled ? '#FFFFFF' : '#FFFFFF'}
+                trackColor={{ false: palette.border, true: palette.highlight }}
+                thumbColor="#FFFFFF"
               />
             </View>
           </View>
         </>
-      )}
+      ) : null}
 
-      {/* Token Information (for debugging) */}
-      {__DEV__ && expoPushToken && (
-        <View style={[styles.section, { borderBottomColor: borderColor }]}>
+      {showTokenInfo ? (
+        <View style={[styles.section, styles.sectionLast]}>
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
               <ThemedText style={styles.settingTitle}>Expo Push Token</ThemedText>
@@ -211,52 +212,59 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
             </View>
           </View>
         </View>
-      )}
+      ) : null}
 
-      {/* Error Display */}
-      {error && (
+      {error ? (
         <View style={styles.errorContainer}>
           <ThemedText style={styles.errorText}>{error}</ThemedText>
         </View>
-      )}
+      ) : null}
 
-      {/* Actions */}
-      {localSettings.pushEnabled && (
+      {localSettings.pushEnabled ? (
         <View style={styles.actionsContainer}>
-          <ThemedText style={styles.actionButton} onPress={handleClearBadge}>
-            {t('notifications.clearBadge')}
-          </ThemedText>
+          <TouchableOpacity
+            accessibilityRole="button"
+            style={styles.clearBadgeButton}
+            onPress={handleClearBadge}
+          >
+            <ThemedText style={styles.clearBadgeButtonText}>{t('notifications.clearBadge')}</ThemedText>
+          </TouchableOpacity>
         </View>
-      )}
+      ) : null}
 
-      {/* Test Notifications */}
-      {localSettings.pushEnabled && <NotificationTest />}
+      {localSettings.pushEnabled ? <NotificationTest /> : null}
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    gap: 24,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    gap: 12,
+    marginBottom: 16,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginLeft: 12,
+    color: palette.textPrimary,
   },
   section: {
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: palette.border,
+  },
+  sectionLast: {
+    borderBottomWidth: 0,
   },
   settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: 16,
   },
   settingInfo: {
     flex: 1,
@@ -264,12 +272,13 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
+    fontWeight: '600',
+    marginBottom: 6,
+    color: palette.textPrimary,
   },
   settingDescription: {
     fontSize: 14,
-    opacity: 0.7,
+    color: palette.textSecondary,
     lineHeight: 18,
   },
   statusIndicator: {
@@ -278,13 +287,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   errorContainer: {
-    backgroundColor: '#FFE5E5',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 16,
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#f87171',
   },
   errorText: {
-    color: '#FF3B30',
+    color: '#f87171',
     fontSize: 14,
     textAlign: 'center',
   },
@@ -292,11 +302,17 @@ const styles = StyleSheet.create({
     marginTop: 24,
     alignItems: 'center',
   },
-  actionButton: {
-    color: '#007AFF',
-    fontSize: 16,
-    fontWeight: '500',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+  clearBadgeButton: {
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: palette.highlight,
+    backgroundColor: palette.activeBackground,
+  },
+  clearBadgeButtonText: {
+    color: palette.highlight,
+    fontSize: 15,
+    fontWeight: '700',
   },
 });

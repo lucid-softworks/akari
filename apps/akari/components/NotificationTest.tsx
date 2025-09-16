@@ -4,7 +4,7 @@ import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useTranslation } from '@/hooks/useTranslation';
 import { scheduleLocalNotification } from '@/utils/notifications';
 
@@ -12,13 +12,11 @@ interface NotificationTestProps {
   onNotificationSent?: () => void;
 }
 
+const palette = SIDEBAR_PALETTE;
+
 export function NotificationTest({ onNotificationSent }: NotificationTestProps) {
   const { t } = useTranslation();
   const [isSending, setIsSending] = useState(false);
-
-  const textColor = useThemeColor({}, 'text');
-  const backgroundColor = useThemeColor({}, 'background');
-  const borderColor = useThemeColor({}, 'border');
 
   const handleTestNotification = async () => {
     setIsSending(true);
@@ -71,9 +69,9 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
   };
 
   return (
-    <ThemedView style={[styles.container, { borderColor }]}>
+    <ThemedView style={styles.container}>
       <View style={styles.header}>
-        <IconSymbol name="bell.badge" size={20} color={textColor} />
+        <IconSymbol name="bell.badge" size={20} color={palette.highlight} />
         <ThemedText style={styles.headerTitle}>{t('notifications.testNotifications')}</ThemedText>
       </View>
 
@@ -81,23 +79,23 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.testButton, { backgroundColor: backgroundColor, borderColor }]}
+          style={[styles.testButton, isSending && styles.testButtonDisabled]}
           onPress={handleTestNotification}
           disabled={isSending}
         >
-          <IconSymbol name="bell" size={16} color={textColor} />
-          <ThemedText style={[styles.buttonText, { color: textColor }]}>
+          <IconSymbol name="bell" size={16} color={palette.textPrimary} />
+          <ThemedText style={styles.buttonText}>
             {isSending ? t('notifications.sending') : t('notifications.sendTest')}
           </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.testButton, { backgroundColor: backgroundColor, borderColor }]}
+          style={[styles.testButton, isSending && styles.testButtonDisabled]}
           onPress={handleTestDelayedNotification}
           disabled={isSending}
         >
-          <IconSymbol name="clock" size={16} color={textColor} />
-          <ThemedText style={[styles.buttonText, { color: textColor }]}>
+          <IconSymbol name="clock" size={16} color={palette.textPrimary} />
+          <ThemedText style={styles.buttonText}>
             {isSending ? t('notifications.scheduling') : t('notifications.scheduleTest')}
           </ThemedText>
         </TouchableOpacity>
@@ -108,26 +106,29 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 12,
-    marginTop: 16,
+    marginTop: 24,
+    padding: 20,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: palette.border,
+    backgroundColor: palette.activeBackground,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
     marginBottom: 12,
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: '600',
-    marginLeft: 8,
+    color: palette.textPrimary,
   },
   description: {
     fontSize: 14,
-    opacity: 0.7,
-    marginBottom: 16,
-    lineHeight: 18,
+    color: palette.textSecondary,
+    marginBottom: 18,
+    lineHeight: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -140,12 +141,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: palette.border,
+    backgroundColor: palette.headerBackground,
+  },
+  testButtonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 14,
-    fontWeight: '500',
-    marginLeft: 6,
+    fontWeight: '600',
+    marginLeft: 8,
+    color: palette.textPrimary,
   },
 });

@@ -1,16 +1,11 @@
-import React, { useState } from "react";
-import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useState } from 'react';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useTranslation } from "@/hooks/useTranslation";
-import { getAvailableLocales, getTranslationData } from "@/utils/i18n";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { SIDEBAR_PALETTE } from '@/constants/palette';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getAvailableLocales, getTranslationData } from '@/utils/i18n';
 
 type LanguageOption = {
   code: string;
@@ -59,13 +54,14 @@ const getLanguages = (): LanguageOption[] => {
   return languages.sort((a, b) => a.name.localeCompare(b.name));
 };
 
+const palette = SIDEBAR_PALETTE;
+
 export const LanguageSelector = () => {
   const { t, currentLocale, changeLanguage } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const languages = getLanguages();
-  const currentLanguage =
-    languages.find((lang) => lang.code === currentLocale) || languages[0];
+  const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0];
 
   const handleLanguageChange = (languageCode: string) => {
     changeLanguage(languageCode);
@@ -74,10 +70,10 @@ export const LanguageSelector = () => {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>{t("settings.language")}</ThemedText>
+      <ThemedText style={styles.title}>{t('settings.language')}</ThemedText>
 
       <TouchableOpacity
-        accessibilityLabel={t("settings.language")}
+        accessibilityLabel={t('settings.language')}
         accessibilityRole="button"
         style={styles.selector}
         onPress={() => setIsModalVisible(true)}
@@ -85,12 +81,8 @@ export const LanguageSelector = () => {
         <View style={styles.selectorContent}>
           <ThemedText style={styles.flag}>{currentLanguage.flag}</ThemedText>
           <View style={styles.selectorTextContainer}>
-            <ThemedText style={styles.selectorText}>
-              {currentLanguage.name}
-            </ThemedText>
-            <ThemedText style={styles.selectorNativeText}>
-              {currentLanguage.nativeName}
-            </ThemedText>
+            <ThemedText style={styles.selectorText}>{currentLanguage.name}</ThemedText>
+            <ThemedText style={styles.selectorNativeText}>{currentLanguage.nativeName}</ThemedText>
           </View>
         </View>
         <ThemedText style={styles.chevron}>▼</ThemedText>
@@ -98,12 +90,12 @@ export const LanguageSelector = () => {
 
       <Modal
         visible={isModalVisible}
-        transparent={true}
+        transparent
         animationType="fade"
         onRequestClose={() => setIsModalVisible(false)}
       >
         <TouchableOpacity
-          accessibilityLabel={t("common.cancel")}
+          accessibilityLabel={t('common.cancel')}
           accessibilityRole="button"
           style={styles.modalOverlay}
           activeOpacity={1}
@@ -112,44 +104,36 @@ export const LanguageSelector = () => {
           <ThemedView
             accessible
             accessibilityRole="menu"
-            accessibilityLabel={t("settings.language")}
+            accessibilityLabel={t('settings.language')}
             style={styles.modalContent}
           >
-            <ThemedText style={styles.modalTitle}>
-              {t("settings.language")}
-            </ThemedText>
+            <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
             <ScrollView style={styles.languageList}>
-              {languages.map((language) => (
-                <TouchableOpacity
-                  key={language.code}
-                  accessibilityRole="menuitem"
-                  accessibilityState={{
-                    selected: currentLocale === language.code,
-                  }}
-                  style={[
-                    styles.languageOption,
-                    currentLocale === language.code && styles.selectedLanguage,
-                  ]}
-                  onPress={() => handleLanguageChange(language.code)}
-                >
-                  <View style={styles.languageInfo}>
-                    <ThemedText style={styles.flag}>{language.flag}</ThemedText>
-                    <View style={styles.languageTextContainer}>
-                      <ThemedText style={styles.languageName}>
-                        {language.nativeName}
-                      </ThemedText>
-                      <ThemedText style={styles.languageEnglishName}>
-                        {language.name}
-                      </ThemedText>
+              {languages.map((language) => {
+                const selected = currentLocale === language.code;
+                return (
+                  <TouchableOpacity
+                    key={language.code}
+                    accessibilityRole="menuitem"
+                    accessibilityState={{ selected }}
+                    style={[styles.languageOption, selected && styles.selectedLanguage]}
+                    onPress={() => handleLanguageChange(language.code)}
+                  >
+                    <View style={styles.languageInfo}>
+                      <ThemedText style={styles.flag}>{language.flag}</ThemedText>
+                      <View style={styles.languageTextContainer}>
+                        <ThemedText style={styles.languageName}>{language.nativeName}</ThemedText>
+                        <ThemedText style={styles.languageEnglishName}>{language.name}</ThemedText>
+                      </View>
                     </View>
-                  </View>
-                  {currentLocale === language.code && (
-                    <View style={styles.checkmark}>
-                      <ThemedText style={styles.checkmarkText}>✓</ThemedText>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              ))}
+                    {selected ? (
+                      <View style={styles.checkmark}>
+                        <ThemedText style={styles.checkmarkText}>✓</ThemedText>
+                      </View>
+                    ) : null}
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </ThemedView>
         </TouchableOpacity>
@@ -160,109 +144,122 @@ export const LanguageSelector = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
+    gap: 16,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
+    fontSize: 13,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: palette.textMuted,
   },
   selector: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderColor: palette.border,
+    backgroundColor: palette.activeBackground,
   },
   selectorContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   selectorTextContainer: {
     flex: 1,
   },
   flag: {
     fontSize: 20,
-    marginRight: 8,
+    marginRight: 12,
   },
   selectorText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '600',
+    color: palette.textPrimary,
   },
   selectorNativeText: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: 13,
+    color: palette.textSecondary,
     marginTop: 2,
   },
   chevron: {
     fontSize: 12,
-    opacity: 0.6,
+    color: palette.textMuted,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
-    width: "80%",
-    maxHeight: "70%",
-    borderRadius: 12,
-    padding: 16,
+    width: '82%',
+    maxHeight: '72%',
+    borderRadius: 18,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: palette.border,
+    backgroundColor: palette.headerBackground,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 16,
-    textAlign: "center",
+    fontWeight: '600',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: palette.textPrimary,
   },
   languageList: {
-    maxHeight: 300,
+    maxHeight: 320,
   },
   languageOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 4,
+    borderRadius: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: palette.border,
+    backgroundColor: palette.background,
   },
   selectedLanguage: {
-    backgroundColor: "rgba(0, 122, 255, 0.1)",
-  },
-  languageName: {
-    fontSize: 16,
-    fontWeight: "500",
+    backgroundColor: palette.activeBackground,
+    borderColor: palette.highlight,
   },
   languageInfo: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   languageTextContainer: {
     flex: 1,
   },
+  languageName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: palette.textPrimary,
+  },
   languageEnglishName: {
     fontSize: 12,
-    opacity: 0.6,
+    color: palette.textSecondary,
     marginTop: 2,
   },
   checkmark: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: palette.highlight,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   checkmarkText: {
-    color: "white",
+    color: palette.background,
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: '700',
   },
 });
 

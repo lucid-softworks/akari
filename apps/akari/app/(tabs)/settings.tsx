@@ -13,21 +13,22 @@ import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
+import { SIDEBAR_PALETTE } from '@/constants/palette';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
+const palette = SIDEBAR_PALETTE;
+
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
-  const borderColor = useBorderColor();
   const { t } = useTranslation();
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
@@ -155,7 +156,7 @@ export default function SettingsScreen() {
           </ThemedText>
 
           {accounts?.length === 0 && (
-            <ThemedView style={styles.settingItem}>
+            <ThemedView style={[styles.settingItem, styles.settingItemLast]}>
               <ThemedText style={styles.settingValue}>{t('common.noAccounts')}</ThemedText>
             </ThemedView>
           )}
@@ -166,7 +167,7 @@ export default function SettingsScreen() {
             const displayName = profile?.displayName || account.displayName;
 
             return (
-              <ThemedView key={account.did} style={[styles.settingItem, { borderBottomColor: borderColor }]}>
+              <ThemedView key={account.did} style={styles.settingItem}>
                 <ThemedView style={styles.accountInfo}>
                   <ThemedView style={styles.accountAvatarContainer}>
                     {avatar ? (
@@ -209,7 +210,7 @@ export default function SettingsScreen() {
             );
           })}
 
-          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleAddAccount}>
+          <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]} onPress={handleAddAccount}>
             <ThemedView style={styles.settingInfo}>
               <ThemedText style={styles.settingLabel}>{t('common.addAccount')}</ThemedText>
               <ThemedText style={styles.settingValue}>{t('common.connectAnotherAccount')}</ThemedText>
@@ -229,7 +230,7 @@ export default function SettingsScreen() {
               </ThemedView>
             </ThemedView>
 
-            <ThemedView style={styles.settingItem}>
+            <ThemedView style={[styles.settingItem, styles.settingItemLast]}>
               <ThemedView style={styles.settingInfo}>
                 <ThemedText style={styles.settingLabel}>DID</ThemedText>
                 <ThemedText style={styles.settingValue}>{currentAccount.did}</ThemedText>
@@ -242,7 +243,7 @@ export default function SettingsScreen() {
         <ThemedView style={styles.section}>
           <ThemedText style={styles.sectionTitle}>{t('common.actions')}</ThemedText>
 
-          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleLogout}>
+          <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]} onPress={handleLogout}>
             <ThemedView style={styles.settingInfo}>
               <ThemedText style={styles.settingLabel}>{t('common.disconnectAllAccounts')}</ThemedText>
               <ThemedText style={styles.settingValue}>{t('common.removeAllConnections')}</ThemedText>
@@ -254,7 +255,7 @@ export default function SettingsScreen() {
         <ThemedView style={styles.section}>
           <ThemedText style={styles.sectionTitle}>{t('settings.about')}</ThemedText>
 
-          <ThemedView style={styles.settingItem}>
+          <ThemedView style={[styles.settingItem, styles.settingItemLast]}>
             <ThemedView style={styles.settingInfo}>
               <ThemedText style={styles.settingLabel}>{t('settings.version')}</ThemedText>
               <ThemedText style={styles.settingValue}>{Constants.expoConfig?.version || t('common.unknown')}</ThemedText>
@@ -269,82 +270,104 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: palette.background,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
+    paddingTop: 16,
+    paddingBottom: 120,
+    paddingHorizontal: 24,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingTop: 20,
-    borderBottomWidth: 0.5,
+    backgroundColor: palette.headerBackground,
+    borderColor: palette.border,
+    borderWidth: 1,
+    borderRadius: 28,
+    paddingHorizontal: 24,
+    paddingVertical: 28,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
+    color: palette.textPrimary,
   },
   section: {
-    marginTop: 20,
+    marginTop: 24,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: palette.border,
+    backgroundColor: palette.headerBackground,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 13,
     fontWeight: '600',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    opacity: 0.8,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: palette.textMuted,
+    marginBottom: 16,
   },
   settingItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 0.5,
+    paddingVertical: 18,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: palette.border,
+  },
+  settingItemLast: {
+    borderBottomWidth: 0,
   },
   settingInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 16,
   },
   settingLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: palette.textPrimary,
   },
   settingValue: {
-    fontSize: 16,
-    opacity: 0.7,
+    fontSize: 14,
+    color: palette.textSecondary,
   },
   accountInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 16,
   },
   accountAvatarContainer: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
   },
   accountAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: palette.border,
   },
   accountAvatarImage: {
-    width: 40,
-    height: 40,
+    width: '100%',
+    height: '100%',
   },
   accountAvatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#007AFF',
+    width: '100%',
+    height: '100%',
+    borderRadius: 22,
+    backgroundColor: palette.activeBackground,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: palette.highlight,
   },
   accountAvatarFallbackText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+    color: palette.textPrimary,
   },
   accountDetails: {
     flex: 1,
@@ -352,39 +375,48 @@ const styles = StyleSheet.create({
   },
   accountHandle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: palette.textPrimary,
   },
   accountDisplayName: {
     fontSize: 14,
-    opacity: 0.7,
+    color: palette.textSecondary,
   },
   currentAccountBadge: {
+    alignSelf: 'flex-start',
+    marginTop: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: palette.activeBackground,
+    color: palette.highlight,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#007AFF',
-    marginTop: 4,
+    fontWeight: '700',
   },
   accountActions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
   },
   actionButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: '#007AFF',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: palette.highlight,
+    backgroundColor: palette.activeBackground,
   },
   actionButtonText: {
-    color: 'white',
+    color: palette.highlight,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   removeButton: {
-    backgroundColor: '#dc3545',
+    borderColor: '#f87171',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
   },
   removeButtonText: {
-    color: 'white',
+    color: '#f87171',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
