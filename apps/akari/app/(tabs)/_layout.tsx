@@ -139,7 +139,7 @@ export default function TabLayout() {
   const openSidebar = () => setIsSidebarOpen(true);
   const closeSidebar = () => setIsSidebarOpen(false);
 
-  const renderMobileSidebarToggle = () => {
+  const renderMobileSidebarToggle = ({ tintColor }: { tintColor?: string } = {}) => {
     if (isSidebarOpen) {
       return null;
     }
@@ -149,16 +149,10 @@ export default function TabLayout() {
         accessibilityRole="button"
         accessibilityLabel="Open navigation menu"
         onPress={openSidebar}
-        style={({ pressed }) => [
-          styles.mobileSidebarToggle,
-          {
-            backgroundColor: themeColors.background,
-            borderColor: themeColors.border,
-          },
-          pressed && { opacity: 0.8 },
-        ]}
+        hitSlop={10}
+        style={({ pressed }) => [styles.mobileSidebarToggle, pressed && styles.mobileSidebarTogglePressed]}
       >
-        <IconSymbol name="line.3.horizontal" size={20} color={themeColors.text} />
+        <IconSymbol name="line.3.horizontal" size={22} color={tintColor ?? themeColors.text} />
       </Pressable>
     );
   };
@@ -169,20 +163,19 @@ export default function TabLayout() {
         screenOptions={{
           tabBarActiveTintColor: themeColors.tint,
           headerShown: true,
-          headerTransparent: true,
+          headerTransparent: false,
           headerTitle: '',
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: 'transparent',
+            backgroundColor: themeColors.background,
           },
+          headerTintColor: themeColors.text,
           headerLeft: renderMobileSidebarToggle,
           headerLeftContainerStyle: {
             paddingLeft: Math.max(insets.left, 16),
-            paddingTop: Math.max(insets.top, 12),
           },
           headerRightContainerStyle: {
             paddingRight: Math.max(insets.right, 16),
-            paddingTop: Math.max(insets.top, 12),
           },
           tabBarButton: CustomTabButton,
           tabBarBackground: TabBarBackground,
@@ -282,15 +275,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 999,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    minHeight: 44,
+    minWidth: 44,
+    paddingHorizontal: 8,
+  },
+  mobileSidebarTogglePressed: {
+    opacity: 0.5,
   },
   mobileSidebarOverlay: {
     ...StyleSheet.absoluteFillObject,

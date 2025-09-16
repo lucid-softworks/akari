@@ -167,7 +167,9 @@ describe('TabLayout', () => {
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
-    expect(screenOptions.headerTransparent).toBe(true);
+    expect(screenOptions.headerTransparent).toBe(false);
+    expect(screenOptions.headerTintColor).toBe(Colors.light.text);
+    expect(screenOptions.headerStyle).toMatchObject({ backgroundColor: Colors.light.background });
     expect(typeof screenOptions.headerLeft).toBe('function');
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
     const screensWithIcons = screens.filter((screen) => typeof screen.options?.tabBarIcon === 'function');
@@ -196,7 +198,7 @@ describe('TabLayout', () => {
     const TabsModule = require('expo-router');
     const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
     expect(screenOptions.tabBarActiveTintColor).toBe(Colors.light.tint);
-    expect(screenOptions.headerTransparent).toBe(true);
+    expect(screenOptions.headerTransparent).toBe(false);
     const messagesOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[2][0].options;
     const notificationsOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[3][0].options;
     render(messagesOptions.tabBarIcon({ color: 'blue' }));
