@@ -1,8 +1,12 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { Sidebar } from '@/components/Sidebar';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useAccounts } from '@/hooks/queries/useAccounts';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { Account } from '@/types/account';
 import { usePathname, useRouter } from 'expo-router';
 
 jest.mock('expo-router', () => ({
@@ -12,19 +16,55 @@ jest.mock('expo-router', () => ({
 
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
+jest.mock('@/hooks/queries/useAccounts');
+jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/mutations/useSwitchAccount');
 
 const mockUseRouter = useRouter as jest.Mock;
 const mockUsePathname = usePathname as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
+const mockUseAccounts = useAccounts as jest.Mock;
+const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
+
+const accounts: Account[] = [
+  {
+    did: 'did:plc:alice',
+    handle: 'alice',
+    displayName: 'Alice Chen',
+    avatar: undefined,
+    jwtToken: 'token-1',
+    refreshToken: 'refresh-1',
+    pdsUrl: 'https://pds.one',
+  },
+  {
+    did: 'did:plc:alice-work',
+    handle: 'alice.work',
+    displayName: 'Alice Work',
+    avatar: undefined,
+    jwtToken: 'token-2',
+    refreshToken: 'refresh-2',
+    pdsUrl: 'https://pds.two',
+  },
+];
+
+let push: jest.Mock;
+let switchAccountMutate: jest.Mock;
 
 describe('Sidebar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseRouter.mockReturnValue({ push: jest.fn() });
+    push = jest.fn();
+    switchAccountMutate = jest.fn();
+
+    mockUseRouter.mockReturnValue({ push });
     mockUsePathname.mockReturnValue('/(tabs)');
     mockUseUnreadMessagesCount.mockReturnValue({ data: 1 });
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
+    mockUseAccounts.mockReturnValue({ data: accounts });
+    mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
+    mockUseSwitchAccount.mockReturnValue({ mutate: switchAccountMutate });
   });
 
   it('renders navigation items, trending tags, and account information', () => {
@@ -35,6 +75,7 @@ describe('Sidebar', () => {
     expect(getByText('Messages')).toBeTruthy();
     expect(getByText('Discover')).toBeTruthy();
     expect(getByText('Bookmarks')).toBeTruthy();
+    expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
 
     expect(getByText('#BlueskyMigration')).toBeTruthy();
@@ -43,13 +84,10 @@ describe('Sidebar', () => {
   });
 
   it('navigates to the correct route when a navigation item is pressed', () => {
-    const push = jest.fn();
-    mockUseRouter.mockReturnValue({ push });
-
     const { getByText } = render(<Sidebar />);
 
-    fireEvent.press(getByText('Discover'));
-    expect(push).toHaveBeenCalledWith('/(tabs)/search');
+    fireEvent.press(getByText('Bookmarks'));
+    expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
   });
 
   it('toggles the collapsed state of the sidebar', () => {
@@ -63,17 +101,18 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
   });
 
-  it('opens the account selector and add account modal', () => {
-    const { getByText, queryByText } = render(<Sidebar />);
+  it('opens the account selector, allows switching accounts, and routes to add account flow', () => {
+    const { getByText } = render(<Sidebar />);
 
     fireEvent.press(getByText('Alice Chen'));
-    expect(getByText('+ Add account')).toBeTruthy();
+    expect(getByText('@alice.work')).toBeTruthy();
 
+    fireEvent.press(getByText('Alice Work'));
+    expect(switchAccountMutate).toHaveBeenCalledWith(accounts[1]);
+
+    fireEvent.press(getByText('Alice Chen'));
     fireEvent.press(getByText('+ Add account'));
-    expect(getByText('Add Account')).toBeTruthy();
-
-    fireEvent.press(getByText('Cancel'));
-    expect(queryByText('Add Account')).toBeNull();
+    expect(push).toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
   });
 
   it('marks the active navigation item based on the current path', () => {

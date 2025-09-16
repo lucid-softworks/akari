@@ -1,29 +1,32 @@
 import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image } from 'expo-image';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
+import { useAccounts } from '@/hooks/queries/useAccounts';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
 const EXPANDED_WIDTH = 264;
 
 const palette = {
-  background: '#171717',
-  border: '#3F3F46',
-  headerBackground: '#262626',
-  textPrimary: '#E5E5E5',
-  textSecondary: '#A3A3A3',
-  textMuted: '#737373',
-  highlight: '#2563EB',
-  highlightSoft: 'rgba(37, 99, 235, 0.18)',
-  hover: '#27272A',
+  background: '#0F1115',
+  border: '#1F212D',
+  headerBackground: '#151823',
+  textPrimary: '#F4F4F5',
+  textSecondary: '#A1A1AA',
+  textMuted: '#6B7280',
+  highlight: '#7C8CF9',
+  activeBackground: '#1E2537',
+  hover: '#1A1D27',
   countAccent: '#EA580C',
-  activeCount: '#2563EB',
-  trendingAccent: '#22C55E',
-  overlay: 'rgba(0, 0, 0, 0.5)',
-  inputBackground: '#1F1F1F',
+  activeCount: '#7C8CF9',
+  trendingAccent: '#38BDF8',
 } as const;
 
 const TRENDING_TAGS = [
@@ -34,33 +37,21 @@ const TRENDING_TAGS = [
 ] as const;
 
 type NavigationItem = {
-  id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'settings';
+  id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'profile' | 'settings';
   label: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
   route: string;
   badge?: number | null;
 };
 
-type Account = {
-  username: string;
-  displayName: string;
-  avatar: string;
-  active: boolean;
-};
-
-const INITIAL_ACCOUNTS: Account[] = [
-  { username: 'alice.bsky.social', displayName: 'Alice Chen', avatar: '👩‍💻', active: true },
-  { username: 'alice-work.bsky.social', displayName: 'Alice (Work)', avatar: '💼', active: false },
-  { username: 'alice-art.bsky.social', displayName: 'Alice Art', avatar: '🎨', active: false },
-];
-
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>(INITIAL_ACCOUNTS);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
-  const [showAddAccountModal, setShowAddAccountModal] = useState(false);
+  const { data: accounts = [] } = useAccounts();
+  const { data: currentAccount } = useCurrentAccount();
+  const switchAccountMutation = useSwitchAccount();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -83,13 +74,27 @@ export function Sidebar() {
         badge: unreadMessagesCount,
       },
       { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/profile' },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
       { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
 
-  const activeAccount = accounts.find((account) => account.active) ?? accounts[0];
+  const activeAccount: Account | undefined = currentAccount ?? accounts[0];
+
+  const getAccountInitial = (account?: Account) => {
+    if (!account) {
+      return 'U';
+    }
+
+    const source = account.displayName || account.handle;
+    if (!source) {
+      return 'U';
+    }
+
+    return source.charAt(0).toUpperCase();
+  };
 
   const isActiveRoute = (item: NavigationItem) => {
     if (item.route === '/(tabs)') {
@@ -104,23 +109,19 @@ export function Sidebar() {
     router.push(item.route as any);
   };
 
-  const handleAccountSelect = (username: string) => {
-    setAccounts((previous) =>
-      previous.map((account) => ({
-        ...account,
-        active: account.username === username,
-      })),
-    );
+  const handleAccountSelect = (account: Account) => {
     setShowAccountSelector(false);
+
+    if (!account || account.did === currentAccount?.did) {
+      return;
+    }
+
+    switchAccountMutation.mutate(account);
   };
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
-    setShowAddAccountModal(true);
-  };
-
-  const closeModal = () => {
-    setShowAddAccountModal(false);
+    router.push('/(auth)/signin?addAccount=true');
   };
 
   const renderBadge = (count: number | null | undefined, isActive: boolean, collapsedState: boolean) => {
@@ -157,12 +158,20 @@ export function Sidebar() {
           ]}
         >
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{activeAccount.avatar}</Text>
+            {activeAccount?.avatar ? (
+              <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
+            ) : (
+              <Text style={styles.avatarText}>{getAccountInitial(activeAccount)}</Text>
+            )}
           </View>
           {!collapsed ? (
             <View style={styles.accountTextContainer}>
-              <Text style={styles.accountName}>{activeAccount.displayName}</Text>
-              <Text style={styles.accountHandle}>@{activeAccount.username.split('.')[0]}</Text>
+              <Text style={styles.accountName} numberOfLines={1}>
+                {activeAccount?.displayName ?? activeAccount?.handle ?? 'Add account'}
+              </Text>
+              {activeAccount?.handle ? (
+                <Text style={styles.accountHandle}>@{activeAccount.handle}</Text>
+              ) : null}
             </View>
           ) : null}
           {!collapsed ? (
@@ -187,7 +196,7 @@ export function Sidebar() {
                   collapsed && styles.navItemCollapsed,
                   {
                     backgroundColor: active
-                      ? palette.highlightSoft
+                      ? palette.activeBackground
                       : pressed
                       ? palette.hover
                       : 'transparent',
@@ -272,26 +281,34 @@ export function Sidebar() {
           ]}
         >
           <View style={styles.accountSelectorList}>
-            {accounts.map((account) => {
-              const selected = account.active;
+              {accounts.map((account) => {
+                const selected = account.did === activeAccount?.did;
               return (
                 <Pressable
-                  key={account.username}
+                  key={account.did}
                   accessibilityRole="button"
-                  accessibilityLabel={`Switch to ${account.displayName}`}
-                  onPress={() => handleAccountSelect(account.username)}
+                  accessibilityLabel={`Switch to ${account.displayName ?? account.handle ?? 'account'}`}
+                  onPress={() => handleAccountSelect(account)}
                   style={({ pressed }) => [
                     styles.accountOption,
-                    (selected || pressed) && { backgroundColor: palette.highlightSoft },
+                    (selected || pressed) && { backgroundColor: palette.activeBackground },
                   ]}
                 >
                   <View style={styles.avatarSmall}>
-                    <Text style={styles.avatarText}>{account.avatar}</Text>
+                    {account.avatar ? (
+                      <Image source={{ uri: account.avatar }} style={styles.avatarImage} contentFit="cover" />
+                    ) : (
+                      <Text style={styles.avatarText}>{getAccountInitial(account)}</Text>
+                    )}
                   </View>
                   {!collapsed ? (
                     <View style={styles.accountDetails}>
-                      <Text style={styles.accountDisplay}>{account.displayName}</Text>
-                      <Text style={styles.accountUsername}>@{account.username}</Text>
+                      <Text style={styles.accountDisplay} numberOfLines={1}>
+                        {account.displayName ?? account.handle}
+                      </Text>
+                      {account.handle ? (
+                        <Text style={styles.accountUsername}>@{account.handle}</Text>
+                      ) : null}
                     </View>
                   ) : null}
                   {selected ? <View style={styles.accountActiveDot} /> : null}
@@ -315,72 +332,6 @@ export function Sidebar() {
         </View>
       ) : null}
 
-      <Modal transparent visible={showAddAccountModal} animationType="fade" onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <Pressable style={StyleSheet.absoluteFill} onPress={closeModal} />
-          <View style={styles.modalCard}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add Account</Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close add account"
-                onPress={closeModal}
-                style={({ pressed }) => [styles.closeButton, pressed && { backgroundColor: palette.hover }]}
-              >
-                <IconSymbol name="xmark.circle.fill" size={18} color={palette.textSecondary} />
-              </Pressable>
-            </View>
-            <View style={styles.modalBody}>
-              <Text style={styles.modalDescription}>
-                Sign in to your Bluesky account to add it to this app.
-              </Text>
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Handle or Email</Text>
-                <TextInput
-                  placeholder="username.bsky.social or email@example.com"
-                  placeholderTextColor={palette.textMuted}
-                  style={styles.input}
-                />
-              </View>
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Password</Text>
-                <TextInput
-                  placeholder="Enter your password"
-                  placeholderTextColor={palette.textMuted}
-                  secureTextEntry
-                  style={styles.input}
-                />
-              </View>
-              <Text style={styles.credentialsNote}>
-                Your login credentials are stored securely and only used to authenticate with Bluesky.
-              </Text>
-              <View style={styles.modalActions}>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Cancel"
-                  onPress={closeModal}
-                  style={({ pressed }) => [
-                    styles.secondaryButton,
-                    pressed && { backgroundColor: palette.hover },
-                  ]}
-                >
-                  <Text style={styles.secondaryButtonText}>Cancel</Text>
-                </Pressable>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Sign in"
-                  style={({ pressed }) => [
-                    styles.primaryButton,
-                    pressed && { opacity: 0.9 },
-                  ]}
-                >
-                  <Text style={styles.primaryButtonText}>Sign In</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -390,8 +341,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.background,
     borderColor: palette.border,
     borderWidth: 1,
-    borderRadius: 18,
-    overflow: 'hidden',
     flexShrink: 0,
     height: '100%',
   },
@@ -405,7 +354,6 @@ const styles = StyleSheet.create({
   accountButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
     paddingVertical: 6,
     paddingHorizontal: 6,
   },
@@ -434,6 +382,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 14,
   },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 14,
+  },
   accountTextContainer: {
     flex: 1,
   },
@@ -459,7 +412,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginBottom: 8,
@@ -514,11 +466,10 @@ const styles = StyleSheet.create({
   },
   activeIndicator: {
     position: 'absolute',
-    left: 4,
-    top: 6,
-    bottom: 6,
+    left: 0,
+    top: 4,
+    bottom: 4,
     width: 3,
-    borderRadius: 999,
     backgroundColor: palette.highlight,
   },
   trendingSection: {
@@ -539,7 +490,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   trendingItem: {
-    borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 10,
     marginBottom: 6,
@@ -560,7 +510,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
     paddingVertical: 10,
   },
   collapseText: {
@@ -575,7 +524,6 @@ const styles = StyleSheet.create({
     right: 16,
     top: 88,
     backgroundColor: palette.headerBackground,
-    borderRadius: 14,
     borderWidth: 1,
     borderColor: palette.border,
     shadowColor: '#000000',
@@ -595,7 +543,6 @@ const styles = StyleSheet.create({
   accountOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 8,
     marginBottom: 4,
@@ -616,8 +563,7 @@ const styles = StyleSheet.create({
   accountActiveDot: {
     width: 8,
     height: 8,
-    borderRadius: 999,
-    backgroundColor: '#22C55E',
+    backgroundColor: palette.highlight,
     marginLeft: 12,
   },
   accountSelectorFooter: {
@@ -626,7 +572,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   addAccountButton: {
-    borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 8,
   },
@@ -634,102 +579,5 @@ const styles = StyleSheet.create({
     color: palette.highlight,
     fontSize: 13,
     fontWeight: '600',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: palette.overlay,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  modalCard: {
-    width: '100%',
-    maxWidth: 360,
-    borderRadius: 16,
-    backgroundColor: palette.background,
-    borderWidth: 1,
-    borderColor: palette.border,
-    overflow: 'hidden',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: palette.border,
-    backgroundColor: palette.headerBackground,
-  },
-  modalTitle: {
-    color: palette.textPrimary,
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  closeButton: {
-    borderRadius: 999,
-    padding: 4,
-  },
-  modalBody: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  modalDescription: {
-    color: palette.textSecondary,
-    fontSize: 13,
-    marginBottom: 16,
-    lineHeight: 20,
-  },
-  inputGroup: {
-    marginBottom: 12,
-  },
-  inputLabel: {
-    color: palette.textMuted,
-    fontSize: 12,
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: palette.inputBackground,
-    borderColor: palette.border,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    color: palette.textPrimary,
-    fontSize: 14,
-  },
-  credentialsNote: {
-    color: palette.textMuted,
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 4,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 16,
-  },
-  secondaryButton: {
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    marginRight: 8,
-    backgroundColor: palette.inputBackground,
-  },
-  secondaryButtonText: {
-    color: palette.textSecondary,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  primaryButton: {
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: palette.highlight,
-  },
-  primaryButtonText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '700',
   },
 });
