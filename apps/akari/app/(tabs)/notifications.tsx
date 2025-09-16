@@ -341,11 +341,17 @@ export default function NotificationsScreen() {
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
+    scrollOffsetRef.current = 0;
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   }, []);
 
   const scrollBy = useCallback((deltaY: number) => {
+    if (!Number.isFinite(deltaY) || deltaY === 0) {
+      return;
+    }
+
     const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollOffsetRef.current = nextOffset;
     scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
   }, []);
 

@@ -34,11 +34,17 @@ export default function MessagesScreen() {
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
+    scrollOffsetRef.current = 0;
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   const scrollBy = useCallback((deltaY: number) => {
+    if (!Number.isFinite(deltaY) || deltaY === 0) {
+      return;
+    }
+
     const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollOffsetRef.current = nextOffset;
     flatListRef.current?.scrollToOffset({ offset: nextOffset, animated: false });
   }, []);
 

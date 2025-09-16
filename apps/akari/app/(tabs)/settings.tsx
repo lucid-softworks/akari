@@ -41,13 +41,19 @@ export default function SettingsScreen() {
 
   // Create scroll to top function
   const handleScrollToTop = useCallback(() => {
+    scrollOffsetRef.current = 0;
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
   }, []);
 
   const scrollBy = useCallback((deltaY: number) => {
+    if (!Number.isFinite(deltaY) || deltaY === 0) {
+      return;
+    }
+
     const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollOffsetRef.current = nextOffset;
     scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
   }, []);
 
