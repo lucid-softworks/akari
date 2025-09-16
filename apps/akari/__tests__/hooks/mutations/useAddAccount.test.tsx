@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { Account } from '@/types/account';
 import { storage } from '@/utils/secureStorage';
 
 jest.mock('@/utils/secureStorage', () => ({
@@ -57,6 +58,7 @@ describe('useAddAccount', () => {
 
     await waitFor(() => {
       expect(queryClient.getQueryData(['accounts'])).toEqual([
+        ...existingStoredAccounts,
         ...existingQueryAccounts,
         newAccount,
       ]);
@@ -64,7 +66,45 @@ describe('useAddAccount', () => {
     expect(storage.getItem).toHaveBeenCalledWith('accounts');
     expect(storage.setItem).toHaveBeenCalledWith('accounts', [
       ...existingStoredAccounts,
+      ...existingQueryAccounts,
       newAccount,
     ]);
+  });
+
+  it('updates existing account when the same DID already exists', async () => {
+    const { queryClient, wrapper } = createWrapper();
+
+    const existingAccount = {
+      did: 'did:example:123',
+      handle: 'old.handle',
+      displayName: 'Existing User',
+      jwtToken: 'oldToken',
+      refreshToken: 'oldRefresh',
+    };
+
+    queryClient.setQueryData(['accounts'], [existingAccount]);
+    (storage.getItem as jest.Mock).mockReturnValue([existingAccount]);
+
+    const { result } = renderHook(() => useAddAccount(), { wrapper });
+
+    const updatedAccount = {
+      did: 'did:example:123',
+      handle: 'new.handle',
+      jwtToken: 'newToken',
+      refreshToken: 'newRefresh',
+    } as Account;
+
+    result.current.mutate(updatedAccount);
+
+    const expectedAccount = {
+      ...existingAccount,
+      ...updatedAccount,
+    };
+
+    await waitFor(() => {
+      expect(queryClient.getQueryData(['accounts'])).toEqual([expectedAccount]);
+    });
+
+    expect(storage.setItem).toHaveBeenCalledWith('accounts', [expectedAccount]);
   });
 });
