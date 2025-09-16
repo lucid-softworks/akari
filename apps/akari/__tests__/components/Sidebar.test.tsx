@@ -1,6 +1,8 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { Sidebar } from '@/components/Sidebar';
+import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -8,6 +10,16 @@ import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { Account } from '@/types/account';
 import { usePathname, useRouter } from 'expo-router';
+
+jest.mock('react-native/Libraries/Modal/Modal', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: ({ visible, children, ...props }: any) =>
+      visible ? React.createElement(View, props, children) : null,
+  };
+});
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
@@ -19,6 +31,38 @@ jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/mutations/useSwitchAccount');
+jest.mock('@/hooks/mutations/useAddAccount');
+jest.mock('@/hooks/mutations/useSignIn');
+jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+jest.mock('@/hooks/useTranslation', () => {
+  const en = require('@/translations/en.json');
+
+  const flatten = (object: Record<string, unknown>, prefix = ''): Record<string, string> => {
+    return Object.entries(object).reduce<Record<string, string>>((acc, [key, value]) => {
+      const nextKey = prefix ? `${prefix}.${key}` : key;
+
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        Object.assign(acc, flatten(value as Record<string, unknown>, nextKey));
+      } else if (typeof value === 'string') {
+        acc[nextKey] = value;
+      }
+
+      return acc;
+    }, {});
+  };
+
+  const translations = flatten(en.translations);
+
+  return {
+    useTranslation: () => ({
+      t: (key: string) => translations[key] ?? key,
+      changeLanguage: jest.fn(),
+      currentLocale: 'en',
+      availableLocales: ['en'],
+      locale: 'en',
+    }),
+  };
+});
 
 const mockUseRouter = useRouter as jest.Mock;
 const mockUsePathname = usePathname as jest.Mock;
@@ -27,6 +71,8 @@ const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock
 const mockUseAccounts = useAccounts as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
+const mockUseAddAccount = useAddAccount as jest.Mock;
+const mockUseSignIn = useSignIn as jest.Mock;
 
 const accounts: Account[] = [
   {
@@ -50,21 +96,35 @@ const accounts: Account[] = [
 ];
 
 let push: jest.Mock;
+let replace: jest.Mock;
 let switchAccountMutate: jest.Mock;
+let switchAccountMutateAsync: jest.Mock;
+let addAccountMutateAsync: jest.Mock;
+let signInMutateAsync: jest.Mock;
 
 describe('Sidebar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     push = jest.fn();
+    replace = jest.fn();
     switchAccountMutate = jest.fn();
+    switchAccountMutateAsync = jest.fn();
+    addAccountMutateAsync = jest.fn();
+    signInMutateAsync = jest.fn();
 
-    mockUseRouter.mockReturnValue({ push });
+    mockUseRouter.mockReturnValue({ push, replace });
     mockUsePathname.mockReturnValue('/(tabs)');
     mockUseUnreadMessagesCount.mockReturnValue({ data: 1 });
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
     mockUseAccounts.mockReturnValue({ data: accounts });
     mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
-    mockUseSwitchAccount.mockReturnValue({ mutate: switchAccountMutate });
+    mockUseSwitchAccount.mockReturnValue({
+      mutate: switchAccountMutate,
+      mutateAsync: switchAccountMutateAsync,
+      isPending: false,
+    });
+    mockUseAddAccount.mockReturnValue({ mutateAsync: addAccountMutateAsync, isPending: false });
+    mockUseSignIn.mockReturnValue({ mutateAsync: signInMutateAsync, isPending: false });
   });
 
   it('renders navigation items, trending tags, and account information', () => {
@@ -101,8 +161,8 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
   });
 
-  it('opens the account selector, allows switching accounts, and routes to add account flow', () => {
-    const { getByText } = render(<Sidebar />);
+  it('opens the account selector, allows switching accounts, and opens the add account modal', () => {
+    const { getByText, getByPlaceholderText } = render(<Sidebar />);
 
     fireEvent.press(getByText('Alice Chen'));
     expect(getByText('@alice.work')).toBeTruthy();
@@ -112,7 +172,8 @@ describe('Sidebar', () => {
 
     fireEvent.press(getByText('Alice Chen'));
     fireEvent.press(getByText('+ Add account'));
-    expect(push).toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
+    expect(push).not.toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
+    expect(getByPlaceholderText('username.bsky.social or @username')).toBeTruthy();
   });
 
   it('marks the active navigation item based on the current path', () => {

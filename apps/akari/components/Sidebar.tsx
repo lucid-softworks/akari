@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AddAccountModal } from '@/components/AddAccountModal';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
@@ -49,6 +50,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
+  const [showAddAccountModal, setShowAddAccountModal] = useState(false);
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
@@ -121,7 +123,7 @@ export function Sidebar() {
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
-    router.push('/(auth)/signin?addAccount=true');
+    setShowAddAccountModal(true);
   };
 
   const renderBadge = (count: number | null | undefined, isActive: boolean, collapsedState: boolean) => {
@@ -331,6 +333,11 @@ export function Sidebar() {
           </View>
         </View>
       ) : null}
+
+      <AddAccountModal
+        visible={showAddAccountModal}
+        onClose={() => setShowAddAccountModal(false)}
+      />
 
     </View>
   );
