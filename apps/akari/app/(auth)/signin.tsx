@@ -66,7 +66,6 @@ export default function AuthScreen() {
         password: appPassword,
         pdsUrl: detectedPdsUrl,
       });
-      console.info('session', session);
 
       const newAccount = await addAccountMutation.mutateAsync({
         did: session.did,
@@ -75,11 +74,9 @@ export default function AuthScreen() {
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,
       });
-      console.info('newAccount', newAccount);
 
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
-      console.info('switched account');
 
       showAlert({
         title: t('common.success'),
@@ -133,7 +130,6 @@ export default function AuthScreen() {
         password: appPassword,
         pdsUrl: detectedPdsUrl,
       });
-      console.info('session', session);
 
       // For sign up, use the multi-account system
       const newAccount = await addAccountMutation.mutateAsync({
@@ -143,11 +139,9 @@ export default function AuthScreen() {
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,
       });
-      console.info('newAccount', newAccount);
 
       // Set the newly added account as current
       await switchAccountMutation.mutateAsync(newAccount);
-      console.info('switched account');
 
       showAlert({
         title: t('common.success'),
