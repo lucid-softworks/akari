@@ -3,8 +3,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Sidebar } from '@/components/Sidebar';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRouter, usePathname } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
@@ -13,79 +12,78 @@ jest.mock('expo-router', () => ({
 
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
-jest.mock('@/hooks/useColorScheme');
 
 const mockUseRouter = useRouter as jest.Mock;
 const mockUsePathname = usePathname as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
-const mockUseColorScheme = useColorScheme as jest.Mock;
-
-const flattenStyles = (style: unknown): any[] =>
-  Array.isArray(style) ? style.flat(Infinity) : [style];
 
 describe('Sidebar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseRouter.mockReturnValue({ push: jest.fn() });
     mockUsePathname.mockReturnValue('/(tabs)');
-    mockUseUnreadMessagesCount.mockReturnValue({ data: 0 });
-    mockUseUnreadNotificationsCount.mockReturnValue({ data: 0 });
-    mockUseColorScheme.mockReturnValue('light');
+    mockUseUnreadMessagesCount.mockReturnValue({ data: 1 });
+    mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
   });
 
-  it('renders workspace header, navigation sections, and badges', () => {
-    mockUseUnreadMessagesCount.mockReturnValue({ data: 3 });
-    mockUseUnreadNotificationsCount.mockReturnValue({ data: 5 });
-
+  it('renders navigation items, trending tags, and account information', () => {
     const { getByText } = render(<Sidebar />);
 
-    expect(getByText('Akari')).toBeTruthy();
-    expect(getByText('Product workspace')).toBeTruthy();
-    expect(getByText('Focus')).toBeTruthy();
-    expect(getByText('Updates')).toBeTruthy();
-    expect(getByText('Workspace')).toBeTruthy();
-    expect(getByText('Home')).toBeTruthy();
-    expect(getByText('Search')).toBeTruthy();
-    expect(getByText('Messages')).toBeTruthy();
+    expect(getByText('Timeline')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
-    expect(getByText('Profile')).toBeTruthy();
+    expect(getByText('Messages')).toBeTruthy();
+    expect(getByText('Discover')).toBeTruthy();
+    expect(getByText('Bookmarks')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
-    expect(getByText('⌘1')).toBeTruthy();
-    expect(getByText('⌘K')).toBeTruthy();
-    expect(getByText('⌘2')).toBeTruthy();
-    expect(getByText('⌘3')).toBeTruthy();
 
-    expect(getByText('3')).toBeTruthy();
-    expect(getByText('5')).toBeTruthy();
+    expect(getByText('#BlueskyMigration')).toBeTruthy();
+    expect(getByText('Alice Chen')).toBeTruthy();
+    expect(getByText('@alice')).toBeTruthy();
   });
 
-  it('navigates to path on press', () => {
+  it('navigates to the correct route when a navigation item is pressed', () => {
     const push = jest.fn();
     mockUseRouter.mockReturnValue({ push });
 
     const { getByText } = render(<Sidebar />);
 
-    fireEvent.press(getByText('Search'));
+    fireEvent.press(getByText('Discover'));
     expect(push).toHaveBeenCalledWith('/(tabs)/search');
   });
 
-  it('highlights the active item', () => {
-    mockUsePathname.mockReturnValue('/(tabs)/search');
+  it('toggles the collapsed state of the sidebar', () => {
+    const { getByText, getByLabelText, queryByText } = render(<Sidebar />);
 
-    const { getByText } = render(<Sidebar />);
+    fireEvent.press(getByText('Collapse'));
+    expect(queryByText('Timeline')).toBeNull();
+    expect(queryByText('#BlueskyMigration')).toBeNull();
 
-    const activeText = getByText('Search');
-    const inactiveText = getByText('Home');
+    fireEvent.press(getByLabelText('Expand sidebar'));
+    expect(getByText('Timeline')).toBeTruthy();
+  });
 
-    const activeStyles = flattenStyles(activeText.props.style);
-    const inactiveStyles = flattenStyles(inactiveText.props.style);
+  it('opens the account selector and add account modal', () => {
+    const { getByText, queryByText } = render(<Sidebar />);
 
-    expect(activeStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fontWeight: '600' })]),
-    );
-    expect(inactiveStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fontWeight: '500' })]),
+    fireEvent.press(getByText('Alice Chen'));
+    expect(getByText('+ Add account')).toBeTruthy();
+
+    fireEvent.press(getByText('+ Add account'));
+    expect(getByText('Add Account')).toBeTruthy();
+
+    fireEvent.press(getByText('Cancel'));
+    expect(queryByText('Add Account')).toBeNull();
+  });
+
+  it('marks the active navigation item based on the current path', () => {
+    mockUsePathname.mockReturnValue('/(tabs)/notifications');
+
+    const { getByLabelText } = render(<Sidebar />);
+    const notificationsButton = getByLabelText('Notifications');
+
+    expect(notificationsButton.props.accessibilityState).toEqual(
+      expect.objectContaining({ selected: true }),
     );
   });
 });
