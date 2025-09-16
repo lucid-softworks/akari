@@ -16,7 +16,14 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 jest.mock('expo-router', () => {
   const React = require('react');
   const { Text } = require('react-native');
-  const Tabs = jest.fn(({ children }: { children: React.ReactNode }) => <>{children}</>);
+  const Tabs = jest.fn(
+    ({ children, screenOptions }: { children: React.ReactNode; screenOptions?: Record<string, unknown> }) => (
+      <>
+        {screenOptions?.headerLeft ? screenOptions.headerLeft() : null}
+        {children}
+      </>
+    ),
+  );
   const Screen = jest.fn(() => null);
   // @ts-ignore
   Tabs.Screen = Screen;
@@ -159,6 +166,9 @@ describe('TabLayout', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 3 });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
+    const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
+    expect(screenOptions.headerTransparent).toBe(true);
+    expect(typeof screenOptions.headerLeft).toBe('function');
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
     const screensWithIcons = screens.filter((screen) => typeof screen.options?.tabBarIcon === 'function');
     const [indexOptions, searchOptions, messagesOptions, notificationsOptions, profileOptions, settingsOptions] =
@@ -186,6 +196,7 @@ describe('TabLayout', () => {
     const TabsModule = require('expo-router');
     const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
     expect(screenOptions.tabBarActiveTintColor).toBe(Colors.light.tint);
+    expect(screenOptions.headerTransparent).toBe(true);
     const messagesOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[2][0].options;
     const notificationsOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[3][0].options;
     render(messagesOptions.tabBarIcon({ color: 'blue' }));

@@ -139,12 +139,51 @@ export default function TabLayout() {
   const openSidebar = () => setIsSidebarOpen(true);
   const closeSidebar = () => setIsSidebarOpen(false);
 
+  const renderMobileSidebarToggle = () => {
+    if (isSidebarOpen) {
+      return null;
+    }
+
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Open navigation menu"
+        onPress={openSidebar}
+        style={({ pressed }) => [
+          styles.mobileSidebarToggle,
+          {
+            backgroundColor: themeColors.background,
+            borderColor: themeColors.border,
+          },
+          pressed && { opacity: 0.8 },
+        ]}
+      >
+        <IconSymbol name="line.3.horizontal" size={20} color={themeColors.text} />
+      </Pressable>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: themeColors.tint,
-          headerShown: false,
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+          headerLeft: renderMobileSidebarToggle,
+          headerLeftContainerStyle: {
+            paddingLeft: Math.max(insets.left, 16),
+            paddingTop: Math.max(insets.top, 12),
+          },
+          headerRightContainerStyle: {
+            paddingRight: Math.max(insets.right, 16),
+            paddingTop: Math.max(insets.top, 12),
+          },
           tabBarButton: CustomTabButton,
           tabBarBackground: TabBarBackground,
           tabBarShowLabel: false,
@@ -211,26 +250,6 @@ export default function TabLayout() {
         />
       </Tabs>
 
-      {!isSidebarOpen ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Open navigation menu"
-          onPress={openSidebar}
-          style={({ pressed }) => [
-            styles.mobileSidebarToggle,
-            {
-              top: insets.top + 12,
-              left: insets.left + 16,
-              backgroundColor: themeColors.background,
-              borderColor: themeColors.border,
-            },
-            pressed && { opacity: 0.8 },
-          ]}
-        >
-          <IconSymbol name="line.3.horizontal" size={20} color={themeColors.text} />
-        </Pressable>
-      ) : null}
-
       {isSidebarOpen ? (
         <View style={styles.mobileSidebarOverlay}>
           <Pressable
@@ -260,9 +279,9 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   mobileSidebarToggle: {
-    position: 'absolute',
-    left: 16,
-    zIndex: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 999,
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -286,9 +305,9 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    width: '82%',
-    maxWidth: 320,
-    minWidth: 264,
+    width: '92%',
+    maxWidth: 360,
+    minWidth: 280,
     paddingHorizontal: 12,
   },
 });

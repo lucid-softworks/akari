@@ -161,8 +161,14 @@ export function Sidebar({ onClose }: SidebarProps = {}) {
     );
   };
 
+  const resolvedWidth: number | string = collapsed
+    ? COLLAPSED_WIDTH
+    : onClose
+    ? '100%'
+    : EXPANDED_WIDTH;
+
   return (
-    <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
+    <View style={[styles.container, { width: resolvedWidth }]}>
       <View style={styles.header}>
         <Pressable
           accessibilityRole="button"
