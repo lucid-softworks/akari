@@ -447,6 +447,38 @@ export type BlueskyFeedResponse = {
 };
 
 /**
+ * Subject information for a bookmark
+ */
+export type BlueskyBookmarkSubject = {
+  /** The URI of the bookmarked record */
+  uri: string;
+  /** The CID of the bookmarked record */
+  cid: string;
+};
+
+/**
+ * Bluesky bookmark entry containing the bookmarked post and metadata
+ */
+export type BlueskyBookmark = {
+  /** When the bookmark was created */
+  createdAt: string;
+  /** The subject record information */
+  subject: BlueskyBookmarkSubject;
+  /** The bookmarked post */
+  item: BlueskyPostView;
+};
+
+/**
+ * Response from the getBookmarks endpoint
+ */
+export type BlueskyBookmarksResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of bookmarks */
+  bookmarks: BlueskyBookmark[];
+};
+
+/**
  * Bluesky feed generator response from the getFeeds endpoint
  */
 export type BlueskyFeed = {

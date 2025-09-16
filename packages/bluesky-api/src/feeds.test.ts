@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { BlueskyFeeds } from './feeds';
+import type { BlueskyBookmarksResponse } from './types';
 
 describe('BlueskyFeeds', () => {
   class MockFeeds extends BlueskyFeeds {
@@ -135,6 +136,34 @@ describe('BlueskyFeeds', () => {
     expect(feeds.makeRequestMock).toHaveBeenCalledWith('/app.bsky.unspecced.getTrendingTopics', {
       params: { limit: '10' },
     });
+  it('fetches bookmarks with default parameters', async () => {
+    const feeds = new MockFeeds();
+    const response: BlueskyBookmarksResponse = { bookmarks: [] };
+    feeds.makeAuthenticatedRequestMock.mockResolvedValueOnce(response);
+
+    const result = await feeds.getBookmarks('jwt');
+
+    expect(result).toBe(response);
+    expect(feeds.makeAuthenticatedRequestMock).toHaveBeenCalledWith(
+      '/app.bsky.bookmark.getBookmarks',
+      'jwt',
+      { params: { limit: '50' } },
+    );
+  });
+
+  it('fetches bookmarks with custom limit and cursor', async () => {
+    const feeds = new MockFeeds();
+    const response: BlueskyBookmarksResponse = { bookmarks: [], cursor: 'next' };
+    feeds.makeAuthenticatedRequestMock.mockResolvedValueOnce(response);
+
+    const result = await feeds.getBookmarks('jwt', 25, 'cursor123');
+
+    expect(result).toBe(response);
+    expect(feeds.makeAuthenticatedRequestMock).toHaveBeenCalledWith(
+      '/app.bsky.bookmark.getBookmarks',
+      'jwt',
+      { params: { limit: '25', cursor: 'cursor123' } },
+    );
   });
 
   it('returns a post from a thread response', async () => {
