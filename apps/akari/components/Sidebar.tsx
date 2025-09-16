@@ -3,8 +3,9 @@ import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AddAccountModal } from '@/components/AddAccountModal';
+import { AddAccountDialog, ADD_ACCOUNT_DIALOG_ID } from '@/components/AddAccountDialog';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -50,10 +51,10 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
-  const [showAddAccountModal, setShowAddAccountModal] = useState(false);
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
+  const dialogManager = useDialogManager();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -123,7 +124,10 @@ export function Sidebar() {
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
-    setShowAddAccountModal(true);
+    dialogManager.open({
+      id: ADD_ACCOUNT_DIALOG_ID,
+      component: <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />,
+    });
   };
 
   const renderBadge = (count: number | null | undefined, isActive: boolean, collapsedState: boolean) => {
@@ -333,11 +337,6 @@ export function Sidebar() {
           </View>
         </View>
       ) : null}
-
-      <AddAccountModal
-        visible={showAddAccountModal}
-        onClose={() => setShowAddAccountModal(false)}
-      />
 
     </View>
   );

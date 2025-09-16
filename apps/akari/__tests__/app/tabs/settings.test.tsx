@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import SettingsScreen from '@/app/(tabs)/settings';
+import { DialogProvider } from '@/contexts/DialogContext';
 import { Account } from '@/types/account';
 import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -10,6 +11,8 @@ import { showAlert } from '@/utils/alert';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
+import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -24,7 +27,15 @@ jest.mock('expo-image', () => {
   return { Image: React.forwardRef((props: any, ref: any) => <Image ref={ref} {...props} />) };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), replace: jest.fn() } }));
+jest.mock('expo-router', () => {
+  const push = jest.fn();
+  const replace = jest.fn();
+
+  return {
+    router: { push, replace },
+    useRouter: () => ({ push, replace }),
+  };
+});
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
@@ -57,6 +68,8 @@ jest.mock('@/components/ThemedView', () => {
 jest.mock('@/hooks/mutations/useSwitchAccount');
 jest.mock('@/hooks/mutations/useRemoveAccount');
 jest.mock('@/hooks/mutations/useWipeAllData');
+jest.mock('@/hooks/mutations/useAddAccount');
+jest.mock('@/hooks/mutations/useSignIn');
 jest.mock('@/hooks/queries/useAccountProfiles');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
@@ -68,6 +81,8 @@ jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
 const mockUseRemoveAccount = useRemoveAccount as jest.Mock;
 const mockUseWipeAllData = useWipeAllData as jest.Mock;
+const mockUseAddAccount = useAddAccount as jest.Mock;
+const mockUseSignIn = useSignIn as jest.Mock;
 const mockUseAccountProfiles = useAccountProfiles as jest.Mock;
 const mockUseAccounts = useAccounts as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
@@ -77,6 +92,13 @@ const mockShowAlert = showAlert as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRouterReplace = router.replace as jest.Mock;
 
+const renderSettings = () =>
+  render(
+    <DialogProvider>
+      <SettingsScreen />
+    </DialogProvider>,
+  );
+
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseBorderColor.mockReturnValue('#000');
@@ -85,6 +107,8 @@ beforeEach(() => {
   mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseRemoveAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseWipeAllData.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue(undefined) });
+  mockUseAddAccount.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+  mockUseSignIn.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
 });
 
 describe('SettingsScreen', () => {
@@ -98,7 +122,7 @@ describe('SettingsScreen', () => {
 
     const registerSpy = jest.spyOn(tabScrollRegistry, 'register');
 
-    const { getByText, getAllByText } = render(<SettingsScreen />);
+    const { getByText, getAllByText } = renderSettings();
 
     await waitFor(() => expect(registerSpy).toHaveBeenCalledWith('settings', expect.any(Function)));
 
@@ -121,19 +145,20 @@ describe('SettingsScreen', () => {
     mockUseAccounts.mockReturnValue({ data: [] });
     mockUseCurrentAccount.mockReturnValue({ data: null });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText } = renderSettings();
 
     expect(getByText('common.noAccounts')).toBeTruthy();
   });
 
-  it('navigates to add account screen', () => {
+  it('opens the add account dialog', () => {
     mockUseAccounts.mockReturnValue({ data: [] });
     mockUseCurrentAccount.mockReturnValue({ data: null });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText, getByPlaceholderText } = renderSettings();
 
     fireEvent.press(getByText('common.addAccount'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
+    expect(mockRouterPush).not.toHaveBeenCalled();
+    expect(getByPlaceholderText('auth.blueskyHandlePlaceholder')).toBeTruthy();
   });
 
   it('logs out all accounts', async () => {
@@ -142,7 +167,7 @@ describe('SettingsScreen', () => {
     const mutateAsync = jest.fn().mockResolvedValue(undefined);
     mockUseWipeAllData.mockReturnValue({ mutateAsync });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText } = renderSettings();
 
     fireEvent.press(getByText('common.disconnectAllAccounts'));
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
@@ -159,7 +184,7 @@ describe('SettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
     mockUseSwitchAccount.mockReturnValue({ mutate });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText } = renderSettings();
 
     fireEvent.press(getByText('common.switch'));
 
@@ -184,7 +209,7 @@ describe('SettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: account });
     mockUseRemoveAccount.mockReturnValue({ mutate });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText } = renderSettings();
 
     fireEvent.press(getByText('common.remove'));
 
@@ -202,7 +227,7 @@ describe('SettingsScreen', () => {
     const mutateAsync = jest.fn().mockRejectedValue(new Error('fail'));
     mockUseWipeAllData.mockReturnValue({ mutateAsync });
 
-    const { getByText } = render(<SettingsScreen />);
+    const { getByText } = renderSettings();
 
     fireEvent.press(getByText('common.disconnectAllAccounts'));
 

@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { Sidebar } from '@/components/Sidebar';
+import { DialogProvider } from '@/contexts/DialogContext';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -128,7 +129,11 @@ describe('Sidebar', () => {
   });
 
   it('renders navigation items, trending tags, and account information', () => {
-    const { getByText } = render(<Sidebar />);
+    const { getByText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
 
     expect(getByText('Timeline')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
@@ -144,14 +149,22 @@ describe('Sidebar', () => {
   });
 
   it('navigates to the correct route when a navigation item is pressed', () => {
-    const { getByText } = render(<Sidebar />);
+    const { getByText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
 
     fireEvent.press(getByText('Bookmarks'));
     expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
   });
 
   it('toggles the collapsed state of the sidebar', () => {
-    const { getByText, getByLabelText, queryByText } = render(<Sidebar />);
+    const { getByText, getByLabelText, queryByText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
 
     fireEvent.press(getByText('Collapse'));
     expect(queryByText('Timeline')).toBeNull();
@@ -162,7 +175,11 @@ describe('Sidebar', () => {
   });
 
   it('opens the account selector, allows switching accounts, and opens the add account modal', () => {
-    const { getByText, getByPlaceholderText } = render(<Sidebar />);
+    const { getByText, getByPlaceholderText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
 
     fireEvent.press(getByText('Alice Chen'));
     expect(getByText('@alice.work')).toBeTruthy();
@@ -179,7 +196,11 @@ describe('Sidebar', () => {
   it('marks the active navigation item based on the current path', () => {
     mockUsePathname.mockReturnValue('/(tabs)/notifications');
 
-    const { getByLabelText } = render(<Sidebar />);
+    const { getByLabelText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
     const notificationsButton = getByLabelText('Notifications');
 
     expect(notificationsButton.props.accessibilityState).toEqual(

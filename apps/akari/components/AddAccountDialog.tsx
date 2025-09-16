@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,8 +11,10 @@ import {
 
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
+import { DialogModal } from '@/components/ui/DialogModal';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Panel } from '@/components/ui/Panel';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -21,16 +23,18 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
-type AddAccountModalProps = {
-  visible: boolean;
-  onClose: () => void;
+export const ADD_ACCOUNT_DIALOG_ID = 'add-account-dialog';
+
+type AddAccountDialogProps = {
+  dialogId?: string;
 };
 
 const HANDLE_REGEX = /^@?[a-zA-Z0-9._-]+$/;
 
-export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
+export function AddAccountDialog({ dialogId = ADD_ACCOUNT_DIALOG_ID }: AddAccountDialogProps) {
   const { t } = useTranslation();
   const router = useRouter();
+  const dialogManager = useDialogManager();
   const { data: currentAccount } = useCurrentAccount();
 
   const [handle, setHandle] = useState('');
@@ -45,13 +49,6 @@ export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
   const helperColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const inputBackground = useThemeColor({ light: '#ffffff', dark: '#111827' }, 'background');
   const iconColor = useThemeColor({ light: '#4B5563', dark: '#9CA3AF' }, 'icon');
-
-  useEffect(() => {
-    if (!visible) {
-      setHandle('');
-      setAppPassword('');
-    }
-  }, [visible]);
 
   const isSubmitting =
     signInMutation.isPending || addAccountMutation.isPending || switchAccountMutation.isPending;
@@ -76,7 +73,7 @@ export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
       return;
     }
 
-    onClose();
+    dialogManager.close(dialogId);
   };
 
   const handleSubmit = async () => {
@@ -137,7 +134,7 @@ export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
           {
             text: t('common.ok'),
             onPress: () => {
-              onClose();
+              dialogManager.close(dialogId);
               router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
             },
           },
@@ -152,82 +149,86 @@ export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
   };
 
   return (
-    <Panel
-      visible={visible}
-      title={title}
-      onRequestClose={handleDismiss}
-      headerActions={
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel={t('common.cancel')}
-          onPress={handleDismiss}
-          disabled={isSubmitting}
-          style={[styles.iconButton, isSubmitting ? styles.disabledButton : null]}
-        >
-          <IconSymbol name="xmark" size={18} color={iconColor} />
-        </TouchableOpacity>
-      }
-      footerActions={
-        <View style={styles.footerActions}>
+    <DialogModal onRequestClose={handleDismiss}>
+      <Panel
+        title={title}
+        headerActions={
           <TouchableOpacity
             accessibilityRole="button"
+            accessibilityLabel={t('common.cancel')}
             onPress={handleDismiss}
             disabled={isSubmitting}
-            style={[styles.secondaryButton, isSubmitting ? styles.disabledButton : null]}
+            style={[styles.iconButton, isSubmitting ? styles.disabledButton : null]}
           >
-            <ThemedText style={styles.secondaryButtonText}>{t('common.cancel')}</ThemedText>
+            <IconSymbol name="xmark" size={18} color={iconColor} />
           </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-            style={[styles.primaryButton, isSubmitting ? styles.disabledPrimary : null]}
-          >
-            <ThemedText style={styles.primaryButtonText}>{primaryActionLabel}</ThemedText>
-          </TouchableOpacity>
-        </View>
-      }
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.keyboardAvoider}
+        }
+        footerActions={
+          <View style={styles.footerActions}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={handleDismiss}
+              disabled={isSubmitting}
+              style={[styles.secondaryButton, isSubmitting ? styles.disabledButton : null]}
+            >
+              <ThemedText style={styles.secondaryButtonText}>{t('common.cancel')}</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+              style={[styles.primaryButton, isSubmitting ? styles.disabledPrimary : null]}
+            >
+              <ThemedText style={styles.primaryButtonText}>{primaryActionLabel}</ThemedText>
+            </TouchableOpacity>
+          </View>
+        }
       >
-        <View style={styles.content}>
-          <ThemedText style={[styles.description, { color: helperColor }]}>{description}</ThemedText>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardAvoider}
+        >
+          <View style={styles.content}>
+            <ThemedText style={[styles.description, { color: helperColor }]}>{description}</ThemedText>
 
-          <View style={styles.fieldGroup}>
-            <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
-            <TextInput
-              style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
-              value={handle}
-              onChangeText={setHandle}
-              placeholder={t('auth.blueskyHandlePlaceholder')}
-              placeholderTextColor="#9CA3AF"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="off"
-            />
-            <ThemedText style={[styles.helperText, { color: helperColor }]}>{t('auth.handleHelperText')}</ThemedText>
-          </View>
+            <View style={styles.fieldGroup}>
+              <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
+              <TextInput
+                style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+                value={handle}
+                onChangeText={setHandle}
+                placeholder={t('auth.blueskyHandlePlaceholder')}
+                placeholderTextColor="#9CA3AF"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="off"
+              />
+              <ThemedText style={[styles.helperText, { color: helperColor }]}>
+                {t('auth.handleHelperText')}
+              </ThemedText>
+            </View>
 
-          <View style={styles.fieldGroup}>
-            <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.appPassword')}</ThemedText>
-            <TextInput
-              style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
-              value={appPassword}
-              onChangeText={setAppPassword}
-              placeholder={t('auth.appPasswordPlaceholder')}
-              placeholderTextColor="#9CA3AF"
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="off"
-            />
-            <ThemedText style={[styles.helperText, { color: helperColor }]}>{t('auth.appPasswordHelperText')}</ThemedText>
+            <View style={styles.fieldGroup}>
+              <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.appPassword')}</ThemedText>
+              <TextInput
+                style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+                value={appPassword}
+                onChangeText={setAppPassword}
+                placeholder={t('auth.appPasswordPlaceholder')}
+                placeholderTextColor="#9CA3AF"
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="off"
+              />
+              <ThemedText style={[styles.helperText, { color: helperColor }]}>
+                {t('auth.appPasswordHelperText')}
+              </ThemedText>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Panel>
+        </KeyboardAvoidingView>
+      </Panel>
+    </DialogModal>
   );
 }
 
