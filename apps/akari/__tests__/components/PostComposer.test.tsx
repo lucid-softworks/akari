@@ -97,7 +97,7 @@ beforeEach(() => {
 
 describe('PostComposer', () => {
   it('posts trimmed text and closes composer', async () => {
-    const mutateAsync = jest.fn().mockResolvedValue(undefined);
+    const mutateAsync = jest.fn().mockImplementation(async () => undefined);
     mockUseCreatePost.mockReturnValue({ mutateAsync, isPending: false });
     const onClose = jest.fn();
 
