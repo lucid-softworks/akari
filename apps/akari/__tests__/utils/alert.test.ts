@@ -59,6 +59,88 @@ describe('alert utilities', () => {
     expect(confirmMock).toHaveBeenCalledWith('Title Only');
   });
 
+  it('uses the first button when only cancel buttons are provided', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const cancelPress = jest.fn();
+    window.confirm = jest.fn(() => true);
+    const module = require('@/utils/alert');
+
+    module.showAlert({
+      title: 'Title',
+      buttons: [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: cancelPress,
+        },
+      ],
+    });
+
+    expect(cancelPress).toHaveBeenCalled();
+  });
+
+  it('does not attempt to call a missing primary button handler', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const cancelPress = jest.fn();
+    window.confirm = jest.fn(() => true);
+    const module = require('@/utils/alert');
+
+    module.showAlert({
+      title: 'Title',
+      buttons: [
+        { text: 'Cancel', style: 'cancel', onPress: cancelPress },
+        { text: 'OK' },
+      ],
+    });
+
+    expect(cancelPress).not.toHaveBeenCalled();
+  });
+
+  it('gracefully handles cancel buttons without handlers when declined', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const confirmPress = jest.fn();
+    window.confirm = jest.fn(() => false);
+    const module = require('@/utils/alert');
+
+    expect(() =>
+      module.showAlert({
+        title: 'Title',
+        buttons: [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'OK', onPress: confirmPress },
+        ],
+      }),
+    ).not.toThrow();
+
+    expect(confirmPress).not.toHaveBeenCalled();
+  });
+
+  it('ignores empty button arrays', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const confirmMock = jest.fn(() => true);
+    window.confirm = confirmMock;
+    const module = require('@/utils/alert');
+
+    module.showAlert({
+      title: 'Title',
+      buttons: [],
+    });
+
+    expect(confirmMock).toHaveBeenCalledWith('Title');
+  });
+
   it('calls Alert.alert on native platforms', () => {
     const alertMock = jest.fn();
     jest.doMock('react-native', () => ({
@@ -101,5 +183,25 @@ describe('alert utilities', () => {
     module.showDestructiveConfirm('T', 'M', 'Remove', onConfirm, onCancel);
     expect(onConfirm).toHaveBeenCalled();
     expect(onCancel).not.toHaveBeenCalled();
+  });
+
+  it('showDestructiveConfirm works when confirm text is omitted', () => {
+    jest.doMock('react-native', () => ({
+      Platform: { OS: 'web' },
+      Alert: { alert: jest.fn() },
+    }));
+    const module = require('@/utils/alert');
+    const onConfirm = jest.fn();
+    const onCancel = jest.fn();
+    const confirmMock = jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false);
+    window.confirm = confirmMock;
+
+    module.showDestructiveConfirm('T', 'M', undefined, onConfirm, onCancel);
+    expect(onConfirm).toHaveBeenCalledTimes(1);
+    expect(onCancel).not.toHaveBeenCalled();
+
+    module.showDestructiveConfirm('T', 'M', undefined, onConfirm, onCancel);
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 });
