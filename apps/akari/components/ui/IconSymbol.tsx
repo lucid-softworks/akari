@@ -25,6 +25,7 @@ const MAPPING = {
   'message.fill': 'message',
   'person.fill': 'person',
   'gearshape.fill': 'settings',
+  'bookmark.fill': 'bookmark',
   'arrowshape.turn.up.left': 'reply',
   'bubble.left': 'chat-bubble-outline',
   'arrow.2.squarepath': 'repeat',

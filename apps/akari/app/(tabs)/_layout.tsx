@@ -119,6 +119,7 @@ export default function TabLayout() {
                 <Tabs.Screen name="search" />
                 <Tabs.Screen name="messages" />
                 <Tabs.Screen name="notifications" />
+                <Tabs.Screen name="bookmarks" options={{ href: null }} />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
               </Tabs>
@@ -179,6 +180,12 @@ export default function TabLayout() {
               <TabBadge count={unreadNotificationsCount} size="small" />
             </View>
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="bookmarks"
+        options={{
+          href: null,
         }}
       />
       <Tabs.Screen

@@ -130,7 +130,7 @@ describe('TabLayout', () => {
       tabBarStyle: { display: 'none' },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile', 'settings']);
   });
 
   it('renders mobile tabs with badges', () => {
@@ -140,13 +140,11 @@ describe('TabLayout', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 3 });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
-    const indexOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[0][0].options;
-    const searchOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[1][0].options;
+    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
+    const screensWithIcons = screens.filter((screen) => typeof screen.options?.tabBarIcon === 'function');
+    const [indexOptions, searchOptions, messagesOptions, notificationsOptions, profileOptions, settingsOptions] =
+      screensWithIcons.map((screen) => screen.options);
     // Invoke tabBarIcon functions to ensure badge rendering
-    const messagesOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[2][0].options;
-    const notificationsOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[3][0].options;
-    const profileOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[4][0].options;
-    const settingsOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[5][0].options;
     render(indexOptions.tabBarIcon({ color: 'red' }));
     render(searchOptions.tabBarIcon({ color: 'red' }));
     render(messagesOptions.tabBarIcon({ color: 'red' }));
@@ -157,7 +155,7 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     expect(TabsModule.Tabs.mock.calls[0][0].screenOptions.tabBarShowLabel).toBe(false);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile', 'settings']);
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
