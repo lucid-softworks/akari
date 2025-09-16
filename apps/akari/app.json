@@ -15,7 +15,12 @@
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleAllowMixedLocalizations": true
       },
-      "entitlements": "./ios/akariv2/akariv2.entitlements"
+      "entitlements": {
+        "aps-environment": "development",
+        "com.apple.developer.associated-domains": [
+          "applinks:*.expo.dev"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
