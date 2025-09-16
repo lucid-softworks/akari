@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,6 +23,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 export default function SettingsScreen() {
@@ -32,6 +33,7 @@ export default function SettingsScreen() {
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0);
 
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
@@ -44,10 +46,21 @@ export default function SettingsScreen() {
     }
   }, []);
 
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(scrollViewRef), []);
+
   // Register with the tab scroll registry
   useEffect(() => {
-    tabScrollRegistry.register('settings', handleScrollToTop);
-  }, [handleScrollToTop]);
+    tabScrollRegistry.register('settings', {
+      scrollToTop: handleScrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, handleScrollToTop, scrollBy]);
 
   // Get profile data for all accounts
   const { data: accountProfiles } = useAccountProfiles();
@@ -131,6 +144,10 @@ export default function SettingsScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
       >
         {/* Header */}
         <ThemedView style={styles.header}>

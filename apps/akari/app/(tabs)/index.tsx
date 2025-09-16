@@ -1,7 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
@@ -20,6 +20,7 @@ import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useTranslation } from '@/hooks/useTranslation';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -27,21 +28,33 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
-  const flatListRef = useRef<FlatList>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
 
   const { data: currentAccount } = useCurrentAccount();
 
   // Create scroll to top function
-  const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  const scrollToTop = useCallback(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(scrollViewRef), []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('index', scrollToTop);
-  }, []);
+    tabScrollRegistry.register('index', {
+      scrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, scrollBy, scrollToTop]);
 
   // Get user's saved feeds from preferences
   const { data: savedFeeds, isLoading: savedFeedsLoading } = useSavedFeeds();
@@ -104,7 +117,7 @@ export default function HomeScreen() {
   const handleFeedSelection = (feedUri: string) => {
     setSelectedFeedMutation.mutate(feedUri);
     // Scroll to top when switching feeds
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   // Get posts from selected feed
@@ -201,9 +214,14 @@ export default function HomeScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
       >
         {/* Feed Tabs */}
         <TabBar

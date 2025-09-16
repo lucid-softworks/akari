@@ -155,7 +155,14 @@ describe('HomeScreen', () => {
     fireEvent.press(getByText('Feed Two'));
     expect(mutate).toHaveBeenCalledWith('feed2');
 
-    expect(tabScrollRegistry.register).toHaveBeenCalledWith('index', expect.any(Function));
+    expect(tabScrollRegistry.register).toHaveBeenCalledWith(
+      'index',
+      expect.objectContaining({
+        scrollToTop: expect.any(Function),
+        scrollBy: expect.any(Function),
+        containsTarget: expect.any(Function),
+      }),
+    );
   });
 
   it('prompts to select a feed when none is chosen', () => {

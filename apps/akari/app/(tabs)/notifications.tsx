@@ -1,8 +1,8 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -14,6 +14,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyEmbed } from '@/bluesky-api';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -333,19 +334,31 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = useRef<FlatList>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
 
   // Create scroll to top function
-  const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  const scrollToTop = useCallback(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(scrollViewRef), []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('notifications', scrollToTop);
-  }, []);
+    tabScrollRegistry.register('notifications', {
+      scrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, scrollBy, scrollToTop]);
 
   const {
     data: notificationsData,
@@ -396,7 +409,14 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}
+      onScroll={(event) => {
+        scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+      }}
+      scrollEventThrottle={16}
+    >
       <ThemedView style={styles.header}>
         <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
       </ThemedView>

@@ -122,7 +122,14 @@ describe('NotificationsScreen', () => {
 
     const { getByText } = render(<NotificationsScreen />);
 
-    expect(mockRegister).toHaveBeenCalledWith('notifications', expect.any(Function));
+    expect(mockRegister).toHaveBeenCalledWith(
+      'notifications',
+      expect.objectContaining({
+        scrollToTop: expect.any(Function),
+        scrollBy: expect.any(Function),
+        containsTarget: expect.any(Function),
+      }),
+    );
     expect(getByText('alice and bob')).toBeTruthy();
     expect(getByText('notifications.andOneOther')).toBeTruthy();
     expect(getByText('Carol')).toBeTruthy();
@@ -275,10 +282,10 @@ describe('NotificationsScreen', () => {
     const andOthersCall = tMock.mock.calls.find(([key]) => key === 'notifications.andOthers');
     expect(andOthersCall?.[1]).toMatchObject({ count: 4, action: 'notifications.likedYourPost' });
 
-    const scrollCallback = mockRegister.mock.calls[0][1];
-    expect(scrollCallback).toEqual(expect.any(Function));
+    const scrollHandlers = mockRegister.mock.calls[0][1];
+    expect(scrollHandlers.scrollToTop).toEqual(expect.any(Function));
     act(() => {
-      scrollCallback();
+      scrollHandlers.scrollToTop();
     });
   });
 

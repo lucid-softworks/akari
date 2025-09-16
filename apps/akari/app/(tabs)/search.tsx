@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -31,17 +32,29 @@ export default function SearchScreen() {
   const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
+  const scrollOffsetRef = useRef(0);
   const { t } = useTranslation();
 
   // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  }, []);
+
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    flatListRef.current?.scrollToOffset({ offset: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(flatListRef), []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('search', scrollToTop);
-  }, []);
+    tabScrollRegistry.register('search', {
+      scrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, scrollBy, scrollToTop]);
 
   const backgroundColor = useThemeColor(
     {
@@ -295,6 +308,10 @@ export default function SearchScreen() {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
+        onScroll={(event) => {
+          scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
         ListEmptyComponent={
           isLoading ? (
             <ThemedView style={styles.emptyState}>

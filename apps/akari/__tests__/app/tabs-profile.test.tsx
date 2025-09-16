@@ -264,10 +264,17 @@ describe('ProfileScreen', () => {
 
     expect(scrollToMock).toHaveBeenCalled();
 
-    expect(mockRegister).toHaveBeenCalledWith('profile', expect.any(Function));
-    const [, scrollHandler] = mockRegister.mock.calls[0];
+    expect(mockRegister).toHaveBeenCalledWith(
+      'profile',
+      expect.objectContaining({
+        scrollToTop: expect.any(Function),
+        scrollBy: expect.any(Function),
+        containsTarget: expect.any(Function),
+      }),
+    );
+    const [, scrollHandlers] = mockRegister.mock.calls[0];
     scrollToMock.mockClear();
-    scrollHandler();
+    scrollHandlers.scrollToTop();
     expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
   });
 

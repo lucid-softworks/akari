@@ -1,6 +1,6 @@
 import { useNavigationState } from '@react-navigation/native';
 import { Redirect, Tabs } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -58,9 +58,39 @@ export default function TabLayout() {
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
+  const navigationState = useNavigationState((state) => state);
+  const activeRouteName = navigationState?.routes?.[navigationState.index]?.name;
 
   // Initialize push notifications
   usePushNotifications();
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !isLargeScreen || !activeRouteName) {
+      return;
+    }
+
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const handleWheel = (event: WheelEvent) => {
+      if (tabScrollRegistry.isEventWithinScrollArea(activeRouteName, event.target)) {
+        return;
+      }
+
+      if (event.deltaY === 0) {
+        return;
+      }
+
+      tabScrollRegistry.scrollBy(activeRouteName, event.deltaY);
+    };
+
+    document.addEventListener('wheel', handleWheel);
+
+    return () => {
+      document.removeEventListener('wheel', handleWheel);
+    };
+  }, [activeRouteName, isLargeScreen]);
 
   if (isLoading) {
     return (

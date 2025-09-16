@@ -91,7 +91,14 @@ describe('MessagesScreen', () => {
 
     const { getByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<MessagesScreen />);
 
-    expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
+    expect(mockRegister).toHaveBeenCalledWith(
+      'messages',
+      expect.objectContaining({
+        scrollToTop: expect.any(Function),
+        scrollBy: expect.any(Function),
+        containsTarget: expect.any(Function),
+      }),
+    );
     expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
     expect(getByText('3')).toBeTruthy();
     expect(getByText('Alice')).toBeTruthy();
@@ -136,10 +143,10 @@ describe('MessagesScreen', () => {
     const flatListInstance = UNSAFE_getByType(FlatList).instance as { scrollToOffset: jest.Mock };
     flatListInstance.scrollToOffset = jest.fn();
 
-    const scrollToTop = mockRegister.mock.calls[0][1];
+    const scrollHandlers = mockRegister.mock.calls[0][1];
 
     act(() => {
-      scrollToTop();
+      scrollHandlers.scrollToTop();
     });
 
     expect(flatListInstance.scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });

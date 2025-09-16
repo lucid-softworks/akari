@@ -124,7 +124,16 @@ describe('SettingsScreen', () => {
 
     const { getByText, getAllByText } = renderSettings();
 
-    await waitFor(() => expect(registerSpy).toHaveBeenCalledWith('settings', expect.any(Function)));
+    await waitFor(() =>
+      expect(registerSpy).toHaveBeenCalledWith(
+        'settings',
+        expect.objectContaining({
+          scrollToTop: expect.any(Function),
+          scrollBy: expect.any(Function),
+          containsTarget: expect.any(Function),
+        }),
+      ),
+    );
 
     expect(getAllByText('@user1').length).toBeGreaterThan(0);
     expect(getByText('@user2')).toBeTruthy();

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,6 +9,7 @@ import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
 
@@ -28,17 +29,29 @@ export default function MessagesScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
+  const scrollOffsetRef = useRef(0);
   const { t } = useTranslation();
 
   // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  }, []);
+
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    flatListRef.current?.scrollToOffset({ offset: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(flatListRef), []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('messages', scrollToTop);
-  }, []);
+    tabScrollRegistry.register('messages', {
+      scrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, scrollBy, scrollToTop]);
 
   const {
     data: conversationsData,
@@ -136,6 +149,10 @@ export default function MessagesScreen() {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
+        onScroll={(event) => {
+          scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
         ListEmptyComponent={
           conversationsLoading ? (
             <ThemedView style={styles.skeletonContainer}>

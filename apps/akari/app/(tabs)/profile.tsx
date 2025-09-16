@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -16,6 +16,7 @@ import { VideosTab } from '@/components/profile/VideosTab';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
+import { createContainsTarget } from '@/utils/scrollHelpers';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -28,17 +29,29 @@ export default function ProfileScreen() {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0);
   const { t } = useTranslation();
 
   // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
+  }, []);
+
+  const scrollBy = useCallback((deltaY: number) => {
+    const nextOffset = Math.max(0, scrollOffsetRef.current + deltaY);
+    scrollViewRef.current?.scrollTo({ y: nextOffset, animated: false });
+  }, []);
+
+  const containsTarget = useMemo(() => createContainsTarget(scrollViewRef), []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('profile', scrollToTop);
-  }, []);
+    tabScrollRegistry.register('profile', {
+      scrollToTop,
+      scrollBy,
+      containsTarget,
+    });
+  }, [containsTarget, scrollBy, scrollToTop]);
 
   const { data: profile } = useProfile(currentAccount?.handle);
 
@@ -113,6 +126,10 @@ export default function ProfileScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
       >
         <ProfileHeader
           profile={{
