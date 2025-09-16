@@ -7,7 +7,7 @@
     "paths": {
       "@/*": ["./*"],
       "@/bluesky-api": ["../../packages/bluesky-api"],
-      "@/clearsky-api": ["../../packages/clearsky-api/dist/api"],
+      "@/clearsky-api": ["../../packages/clearsky-api"],
       "@/tenor-api": ["../../packages/tenor-api"]
     }
   },

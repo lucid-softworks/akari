@@ -13,7 +13,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
     "test": "npm run test:run",
     "test:run": "jest --runInBand",
     "test:coverage": "jest --coverage",
