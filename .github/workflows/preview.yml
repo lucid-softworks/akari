@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build ClearSky API package
+        run: npm --workspace clearsky-api run build
+
       - name: Create preview
         uses: expo/expo-github-action/preview@v8
         with:
