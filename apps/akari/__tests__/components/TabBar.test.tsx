@@ -14,7 +14,9 @@ describe('TabBar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseBorderColor.mockReturnValue('#ccc');
-    mockUseThemeColor.mockReturnValue('#000');
+    mockUseThemeColor.mockImplementation(
+      (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000'
+    );
   });
 
   const flattenStyles = (style: unknown): any[] =>
@@ -26,21 +28,35 @@ describe('TabBar', () => {
       { key: 'settings', label: 'Settings' },
     ] as const;
 
-    const { getByText } = render(
+    const { getByTestId, getByText } = render(
       <TabBar tabs={tabs} activeTab="home" onTabChange={() => {}} />,
     );
 
+    const activeTab = getByTestId('tab-home');
+    const inactiveTab = getByTestId('tab-settings');
     const activeText = getByText('Home');
     const inactiveText = getByText('Settings');
 
+    const activeTabStyles = flattenStyles(activeTab.props.style);
+    const inactiveTabStyles = flattenStyles(inactiveTab.props.style);
     const activeStyles = flattenStyles(activeText.props.style);
     const inactiveStyles = flattenStyles(inactiveText.props.style);
 
+    expect(activeTabStyles).toEqual(
+      expect.arrayContaining([expect.objectContaining({ borderColor: '#7C8CF9' })]),
+    );
+    expect(inactiveTabStyles).toEqual(
+      expect.arrayContaining([expect.objectContaining({ borderColor: 'transparent' })]),
+    );
     expect(activeStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fontWeight: '600' })]),
+      expect.arrayContaining([
+        expect.objectContaining({ fontWeight: '600', color: '#111827' }),
+      ]),
     );
     expect(inactiveStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]),
+      expect.arrayContaining([
+        expect.objectContaining({ fontWeight: '500', color: '#6B7280' }),
+      ]),
     );
   });
 
@@ -51,11 +67,11 @@ describe('TabBar', () => {
     ] as const;
     const onTabChange = jest.fn();
 
-    const { getByText } = render(
+    const { getByTestId } = render(
       <TabBar tabs={tabs} activeTab="home" onTabChange={onTabChange} />,
     );
 
-    fireEvent.press(getByText('Settings'));
+    fireEvent.press(getByTestId('tab-settings'));
 
     expect(onTabChange).toHaveBeenCalledWith('settings');
   });

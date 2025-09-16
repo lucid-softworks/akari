@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -34,43 +34,72 @@ export function TabBar<T extends string>({
   onTabChange,
 }: TabBarProps<T>) {
   const borderColor = useBorderColor();
-  const activeColor = useThemeColor({}, "tint");
-  const inactiveColor = useThemeColor({}, "text");
+  const surfaceColor = useThemeColor({ light: "#F3F4F6", dark: "#141720" }, "background");
+  const activeBackground = useThemeColor({ light: "#FFFFFF", dark: "#1E2537" }, "background");
+  const inactiveTextColor = useThemeColor({ light: "#6B7280", dark: "#9CA3AF" }, "text");
+  const activeTextColor = useThemeColor({ light: "#111827", dark: "#F4F4F5" }, "text");
+  const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
+  const accentShadowColor = useThemeColor(
+    { light: "rgba(124, 140, 249, 0.25)", dark: "rgba(12, 14, 24, 0.55)" },
+    "background"
+  );
 
   return (
-    <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
+    <ThemedView
+      style={[
+        styles.container,
+        {
+          borderColor,
+          backgroundColor: surfaceColor,
+        },
+      ]}
+    >
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {tabs.map((tab) => (
-          <TouchableOpacity
-            key={tab.key}
-            style={styles.tab}
-            onPress={() => onTabChange(tab.key)}
-          >
-            <ThemedText
+        {tabs.map((tab, index) => {
+          const isActive = activeTab === tab.key;
+          const isLast = index === tabs.length - 1;
+
+          return (
+            <TouchableOpacity
+              key={tab.key}
+              testID={`tab-${tab.key}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              activeOpacity={0.85}
+              onPress={() => onTabChange(tab.key)}
               style={[
-                styles.tabText,
-                {
-                  color: activeTab === tab.key ? activeColor : inactiveColor,
-                  fontWeight: activeTab === tab.key ? "600" : "400",
-                },
+                styles.tab,
+                !isLast ? styles.tabSpacing : undefined,
+                isActive
+                  ? [
+                      styles.tabActive,
+                      {
+                        backgroundColor: activeBackground,
+                        borderColor: accentColor,
+                        shadowColor: accentShadowColor,
+                      },
+                    ]
+                  : styles.tabInactive,
               ]}
             >
-              {tab.label}
-            </ThemedText>
-            {activeTab === tab.key && (
-              <View
+              <ThemedText
                 style={[
-                  styles.activeIndicator,
-                  { backgroundColor: activeColor },
+                  styles.tabText,
+                  {
+                    color: isActive ? activeTextColor : inactiveTextColor,
+                    fontWeight: isActive ? "600" : "500",
+                  },
                 ]}
-              />
-            )}
-          </TouchableOpacity>
-        ))}
+              >
+                {tab.label}
+              </ThemedText>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </ThemedView>
   );
@@ -78,26 +107,41 @@ export function TabBar<T extends string>({
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomWidth: 0.5,
+    width: "100%",
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginBottom: 12,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 4,
   },
   tab: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    position: "relative",
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "transparent",
+    backgroundColor: "transparent",
+    justifyContent: "center",
     alignItems: "center",
   },
-  tabText: {
-    fontSize: 16,
+  tabSpacing: {
+    marginRight: 8,
   },
-  activeIndicator: {
-    position: "absolute",
-    bottom: 0,
-    left: "25%",
-    right: "25%",
-    height: 2,
-    borderRadius: 1,
+  tabActive: {
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 2,
+  },
+  tabInactive: {
+    opacity: 0.9,
+  },
+  tabText: {
+    fontSize: 15,
   },
 });
