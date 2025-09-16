@@ -52,6 +52,7 @@
       "translationReport": "Rapport de traduction",
       "checkConsoleForReport": "Vérifiez la console pour le rapport des traductions manquantes",
       "checkOutImage": "Regardez cette image !",
+      "bookmarks": "Favoris",
       "save": "Enregistrer",
       "saving": "Enregistrement...",
       "mute": "Muet",
@@ -251,6 +252,11 @@
       "checkMissingTranslations": "🔍 Vérifier les traductions manquantes",
       "developmentTool": "Outil de développement",
       "notifications": "Notifications"
+    },
+    "bookmarks": {
+      "subtitle": "Les publications et fils enregistrés apparaîtront ici.",
+      "emptyState": "Vous n'avez pas encore enregistré de publication.",
+      "error": "Nous n'avons pas pu charger vos publications enregistrées."
     }
   }
 }

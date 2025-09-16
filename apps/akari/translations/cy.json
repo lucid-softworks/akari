@@ -52,6 +52,7 @@
       "translationReport": "Adroddiad Cyfieithiad",
       "checkConsoleForReport": "Gwiriwch y consol am adroddiad cyfieithiadau coll",
       "checkOutImage": "Edrychwch ar y ddelwedd hon!",
+      "bookmarks": "Nodau Tudalen",
       "save": "Cadw",
       "saving": "Cadw...",
       "mute": "Tewi",
@@ -251,6 +252,11 @@
       "addGif": "Ychwanegu GIF",
       "gifAltTextPlaceholder": "Disgrifiwch y GIF hwn ar gyfer hygyrchedd...",
       "apiError": "Methu llwytho GIF. Gwiriwch eich cysylltiad rhyngrwyd."
+    },
+    "bookmarks": {
+      "subtitle": "Bydd postiadau a llinynnau a gadwyd yn ymddangos yma.",
+      "emptyState": "Nid ydych wedi cadw unrhyw bostiadau eto.",
+      "error": "Doedden ni ddim yn gallu llwytho'ch postiadau a gadwyd."
     }
   }
 }
