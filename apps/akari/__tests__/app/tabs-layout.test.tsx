@@ -7,9 +7,9 @@ import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { TabBadge } from '@/components/TabBadge';
-import { Colors } from '@/constants/Colors';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNavigationState } from '@react-navigation/native';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -32,7 +32,8 @@ jest.mock('@/hooks/queries/useAuthStatus');
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/useResponsive');
-jest.mock('@/hooks/useColorScheme');
+jest.mock('@/hooks/useBorderColor');
+jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
 
 jest.mock('@/components/HapticTab', () => {
@@ -80,7 +81,8 @@ const mockUseAuthStatus = useAuthStatus as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
-const mockUseColorScheme = useColorScheme as jest.Mock;
+const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseNavigationState = useNavigationState as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
@@ -90,10 +92,13 @@ const mockHapticTab = HapticTab as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockUseColorScheme.mockReturnValue('light');
   mockUseUnreadMessagesCount.mockReturnValue({ data: 0 });
   mockUseUnreadNotificationsCount.mockReturnValue({ data: 0 });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+  mockUseBorderColor.mockReturnValue('#ccc');
+  mockUseThemeColor.mockImplementation(
+    (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000',
+  );
   mockUseNavigationState.mockImplementation((selector: (state: any) => any) => {
     const defaultState = {
       index: 0,
@@ -105,12 +110,11 @@ beforeEach(() => {
 
 describe('TabLayout', () => {
   it('shows loading indicator while auth status is loading', () => {
-    mockUseColorScheme.mockReturnValueOnce(null);
     mockUseAuthStatus.mockReturnValue({ data: null, isLoading: true });
     const { UNSAFE_getByType } = render(<TabLayout />);
     const indicator = UNSAFE_getByType(ActivityIndicator);
     expect(indicator).toBeTruthy();
-    expect(indicator.props.color).toBe(Colors.light.tint);
+    expect(indicator.props.color).toBe('#7C8CF9');
   });
 
   it('redirects to signin when not authenticated', () => {
@@ -159,14 +163,13 @@ describe('TabLayout', () => {
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
-    mockUseColorScheme.mockReturnValue(null);
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     mockUseUnreadMessagesCount.mockReturnValue({});
     mockUseUnreadNotificationsCount.mockReturnValue({});
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
-    expect(screenOptions.tabBarActiveTintColor).toBe(Colors.light.tint);
+    expect(screenOptions.tabBarActiveTintColor).toBe('#7C8CF9');
     const messagesOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[2][0].options;
     const notificationsOptions = (TabsModule.Tabs.Screen as jest.Mock).mock.calls[3][0].options;
     render(messagesOptions.tabBarIcon({ color: 'blue' }));
