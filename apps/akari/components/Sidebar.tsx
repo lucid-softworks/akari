@@ -3,9 +3,11 @@ import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AddAccountDialog, ADD_ACCOUNT_DIALOG_ID } from '@/components/AddAccountDialog';
+import { AddAccountDialog } from '@/components/AddAccountDialog';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
+import { ADD_ACCOUNT_DIALOG_ID } from '@/constants/dialogs';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -124,9 +126,14 @@ export function Sidebar() {
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
+    const closeDialog = () => dialogManager.close(ADD_ACCOUNT_DIALOG_ID);
     dialogManager.open({
       id: ADD_ACCOUNT_DIALOG_ID,
-      component: <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />,
+      component: (
+        <DialogModal onRequestClose={closeDialog}>
+          <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />
+        </DialogModal>
+      ),
     });
   };
 

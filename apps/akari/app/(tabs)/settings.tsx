@@ -5,12 +5,14 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddAccountDialog, ADD_ACCOUNT_DIALOG_ID } from '@/components/AddAccountDialog';
+import { AddAccountDialog } from '@/components/AddAccountDialog';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
+import { ADD_ACCOUNT_DIALOG_ID } from '@/constants/dialogs';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -110,9 +112,15 @@ export default function SettingsScreen() {
   const dialogManager = useDialogManager();
 
   const handleAddAccount = () => {
+    const closeDialog = () => dialogManager.close(ADD_ACCOUNT_DIALOG_ID);
+
     dialogManager.open({
       id: ADD_ACCOUNT_DIALOG_ID,
-      component: <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />,
+      component: (
+        <DialogModal onRequestClose={closeDialog}>
+          <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />
+        </DialogModal>
+      ),
     });
   };
 
