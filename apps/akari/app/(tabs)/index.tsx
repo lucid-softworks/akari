@@ -199,10 +199,11 @@ export default function HomeScreen() {
   // The allFeeds array already includes the default feed, so we don't need to return early
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}> 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
+        stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
       >
         {/* Feed Tabs */}

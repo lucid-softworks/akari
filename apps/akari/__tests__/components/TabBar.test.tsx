@@ -43,10 +43,10 @@ describe('TabBar', () => {
     const inactiveStyles = flattenStyles(inactiveText.props.style);
 
     expect(activeTabStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ borderColor: '#7C8CF9' })]),
+      expect.arrayContaining([expect.objectContaining({ borderBottomColor: '#7C8CF9' })]),
     );
     expect(inactiveTabStyles).toEqual(
-      expect.arrayContaining([expect.objectContaining({ borderColor: 'transparent' })]),
+      expect.arrayContaining([expect.objectContaining({ borderBottomColor: 'transparent' })]),
     );
     expect(activeStyles).toEqual(
       expect.arrayContaining([

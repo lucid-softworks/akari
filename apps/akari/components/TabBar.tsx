@@ -34,15 +34,10 @@ export function TabBar<T extends string>({
   onTabChange,
 }: TabBarProps<T>) {
   const borderColor = useBorderColor();
-  const surfaceColor = useThemeColor({ light: "#F3F4F6", dark: "#141720" }, "background");
-  const activeBackground = useThemeColor({ light: "#FFFFFF", dark: "#1E2537" }, "background");
+  const surfaceColor = useThemeColor({ light: "#FFFFFF", dark: "#0F1115" }, "background");
   const inactiveTextColor = useThemeColor({ light: "#6B7280", dark: "#9CA3AF" }, "text");
   const activeTextColor = useThemeColor({ light: "#111827", dark: "#F4F4F5" }, "text");
   const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
-  const accentShadowColor = useThemeColor(
-    { light: "rgba(124, 140, 249, 0.25)", dark: "rgba(12, 14, 24, 0.55)" },
-    "background"
-  );
 
   return (
     <ThemedView
@@ -74,16 +69,7 @@ export function TabBar<T extends string>({
               style={[
                 styles.tab,
                 !isLast ? styles.tabSpacing : undefined,
-                isActive
-                  ? [
-                      styles.tabActive,
-                      {
-                        backgroundColor: activeBackground,
-                        borderColor: accentColor,
-                        shadowColor: accentShadowColor,
-                      },
-                    ]
-                  : styles.tabInactive,
+                { borderBottomColor: isActive ? accentColor : "transparent" },
               ]}
             >
               <ThemedText
@@ -108,38 +94,33 @@ export function TabBar<T extends string>({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 16,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingTop: 8,
+    paddingBottom: 4,
+    paddingHorizontal: 12,
     marginBottom: 12,
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 1,
+    zIndex: 10,
   },
   scrollContent: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 4,
+    alignItems: "flex-end",
+    paddingBottom: 4,
   },
   tab: {
-    paddingHorizontal: 18,
     paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "transparent",
-    backgroundColor: "transparent",
+    paddingHorizontal: 4,
+    borderBottomWidth: 3,
+    borderBottomColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
   },
   tabSpacing: {
-    marginRight: 8,
-  },
-  tabActive: {
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    elevation: 2,
-  },
-  tabInactive: {
-    opacity: 0.9,
+    marginRight: 24,
   },
   tabText: {
     fontSize: 15,
