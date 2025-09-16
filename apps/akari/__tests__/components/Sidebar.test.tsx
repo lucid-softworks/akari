@@ -174,7 +174,7 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
   });
 
-  it('opens the account selector, allows switching accounts, and opens the add account modal', () => {
+  it('opens the account selector, allows switching accounts, and opens the add account panel', () => {
     const { getByText, getByPlaceholderText } = render(
       <DialogProvider>
         <Sidebar />

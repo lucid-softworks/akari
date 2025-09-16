@@ -1,1 +1,1 @@
-export const ADD_ACCOUNT_DIALOG_ID = 'add-account-dialog';
+export const ADD_ACCOUNT_PANEL_ID = 'add-account-panel';

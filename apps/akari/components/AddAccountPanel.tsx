@@ -14,7 +14,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Panel } from '@/components/ui/Panel';
 import { useDialogManager } from '@/contexts/DialogContext';
-import { ADD_ACCOUNT_DIALOG_ID } from '@/constants/dialogs';
+import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -23,13 +23,13 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
-type AddAccountDialogProps = {
-  dialogId?: string;
+type AddAccountPanelProps = {
+  panelId?: string;
 };
 
 const HANDLE_REGEX = /^@?[a-zA-Z0-9._-]+$/;
 
-export function AddAccountDialog({ dialogId = ADD_ACCOUNT_DIALOG_ID }: AddAccountDialogProps) {
+export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPanelProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const dialogManager = useDialogManager();
@@ -71,7 +71,7 @@ export function AddAccountDialog({ dialogId = ADD_ACCOUNT_DIALOG_ID }: AddAccoun
       return;
     }
 
-    dialogManager.close(dialogId);
+    dialogManager.close(panelId);
   };
 
   const handleSubmit = async () => {
@@ -132,7 +132,7 @@ export function AddAccountDialog({ dialogId = ADD_ACCOUNT_DIALOG_ID }: AddAccoun
           {
             text: t('common.ok'),
             onPress: () => {
-              dialogManager.close(dialogId);
+              dialogManager.close(panelId);
               router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
             },
           },

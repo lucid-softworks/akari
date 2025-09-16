@@ -150,7 +150,7 @@ describe('SettingsScreen', () => {
     expect(getByText('common.noAccounts')).toBeTruthy();
   });
 
-  it('opens the add account dialog', () => {
+  it('opens the add account panel', () => {
     mockUseAccounts.mockReturnValue({ data: [] });
     mockUseCurrentAccount.mockReturnValue({ data: null });
 

@@ -3,11 +3,11 @@ import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AddAccountDialog } from '@/components/AddAccountDialog';
+import { AddAccountPanel } from '@/components/AddAccountPanel';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
-import { ADD_ACCOUNT_DIALOG_ID } from '@/constants/dialogs';
+import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -126,12 +126,12 @@ export function Sidebar() {
 
   const handleAddAccount = () => {
     setShowAccountSelector(false);
-    const closeDialog = () => dialogManager.close(ADD_ACCOUNT_DIALOG_ID);
+    const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
     dialogManager.open({
-      id: ADD_ACCOUNT_DIALOG_ID,
+      id: ADD_ACCOUNT_PANEL_ID,
       component: (
-        <DialogModal onRequestClose={closeDialog}>
-          <AddAccountDialog dialogId={ADD_ACCOUNT_DIALOG_ID} />
+        <DialogModal onRequestClose={closePanel}>
+          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
         </DialogModal>
       ),
     });
