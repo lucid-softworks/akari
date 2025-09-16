@@ -10,7 +10,6 @@ export function useAddAccount() {
 
   return useMutation({
     mutationFn: async (account: Account) => {
-      console.info('account', account);
       return account;
     },
     onSuccess: async (newAccount) => {
@@ -18,7 +17,6 @@ export function useAddAccount() {
 
       // Manually persist the updated accounts query
       const oldAccounts = storage.getItem('accounts') ?? [];
-      console.info('oldAccounts', oldAccounts);
       storage.setItem('accounts', [...oldAccounts, newAccount]);
     },
   });
