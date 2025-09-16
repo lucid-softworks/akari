@@ -13,6 +13,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -57,6 +58,7 @@ export function Sidebar() {
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
+  const { data: accountProfiles } = useAccountProfiles();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -87,19 +89,6 @@ export function Sidebar() {
   );
 
   const activeAccount: Account | undefined = currentAccount ?? accounts[0];
-
-  const getAccountInitial = (account?: Account) => {
-    if (!account) {
-      return 'U';
-    }
-
-    const source = account.displayName || account.handle;
-    if (!source) {
-      return 'U';
-    }
-
-    return source.charAt(0).toUpperCase();
-  };
 
   const isActiveRoute = (item: NavigationItem) => {
     if (item.route === '/(tabs)') {
@@ -157,6 +146,11 @@ export function Sidebar() {
     );
   };
 
+  const activeAccountProfile = activeAccount?.did ? accountProfiles?.[activeAccount.did] : undefined;
+  const activeAccountAvatar = activeAccountProfile?.avatar ?? activeAccount?.avatar;
+  const activeAccountDisplayName =
+    activeAccountProfile?.displayName ?? activeAccount?.displayName ?? activeAccount?.handle;
+  const activeAccountHandle = activeAccountProfile?.handle ?? activeAccount?.handle;
   return (
     <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
       <View style={styles.header}>
@@ -171,19 +165,23 @@ export function Sidebar() {
           ]}
         >
           <View style={styles.avatar}>
-            {activeAccount?.avatar ? (
-              <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
+            {activeAccountAvatar ? (
+              <Image source={{ uri: activeAccountAvatar }} style={styles.avatarImage} contentFit="cover" />
             ) : (
-              <Text style={styles.avatarText}>{getAccountInitial(activeAccount)}</Text>
+              <Text style={styles.avatarText}>
+                {(activeAccountDisplayName ?? activeAccountHandle ?? 'U')
+                  .charAt(0)
+                  .toUpperCase()}
+              </Text>
             )}
           </View>
           {!collapsed ? (
             <View style={styles.accountTextContainer}>
               <Text style={styles.accountName} numberOfLines={1}>
-                {activeAccount?.displayName ?? activeAccount?.handle ?? 'Add account'}
+                {activeAccountDisplayName ?? 'Add account'}
               </Text>
-              {activeAccount?.handle ? (
-                <Text style={styles.accountHandle}>@{activeAccount.handle}</Text>
+              {activeAccountHandle ? (
+                <Text style={styles.accountHandle}>@{activeAccountHandle}</Text>
               ) : null}
             </View>
           ) : null}
@@ -294,13 +292,18 @@ export function Sidebar() {
           ]}
         >
           <View style={styles.accountSelectorList}>
-              {accounts.map((account) => {
-                const selected = account.did === activeAccount?.did;
+            {accounts.map((account) => {
+              const selected = account.did === activeAccount?.did;
+              const profile = accountProfiles?.[account.did];
+              const accountAvatar = profile?.avatar ?? account.avatar;
+              const accountDisplayName = profile?.displayName ?? account.displayName ?? account.handle;
+              const accountHandle = profile?.handle ?? account.handle;
+              const accessibilityLabel = `Switch to ${accountDisplayName ?? 'account'}`;
               return (
                 <Pressable
                   key={account.did}
                   accessibilityRole="button"
-                  accessibilityLabel={`Switch to ${account.displayName ?? account.handle ?? 'account'}`}
+                  accessibilityLabel={accessibilityLabel}
                   onPress={() => handleAccountSelect(account)}
                   style={({ pressed }) => [
                     styles.accountOption,
@@ -308,19 +311,23 @@ export function Sidebar() {
                   ]}
                 >
                   <View style={styles.avatarSmall}>
-                    {account.avatar ? (
-                      <Image source={{ uri: account.avatar }} style={styles.avatarImage} contentFit="cover" />
+                    {accountAvatar ? (
+                      <Image source={{ uri: accountAvatar }} style={styles.avatarImage} contentFit="cover" />
                     ) : (
-                      <Text style={styles.avatarText}>{getAccountInitial(account)}</Text>
+                      <Text style={styles.avatarText}>
+                        {(accountDisplayName ?? accountHandle ?? 'U')
+                          .charAt(0)
+                          .toUpperCase()}
+                      </Text>
                     )}
                   </View>
                   {!collapsed ? (
                     <View style={styles.accountDetails}>
                       <Text style={styles.accountDisplay} numberOfLines={1}>
-                        {account.displayName ?? account.handle}
+                        {accountDisplayName}
                       </Text>
-                      {account.handle ? (
-                        <Text style={styles.accountUsername}>@{account.handle}</Text>
+                      {accountHandle ? (
+                        <Text style={styles.accountUsername}>@{accountHandle}</Text>
                       ) : null}
                     </View>
                   ) : null}

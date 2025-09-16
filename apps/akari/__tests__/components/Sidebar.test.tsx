@@ -9,6 +9,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { Account } from '@/types/account';
 import { usePathname, useRouter } from 'expo-router';
 
@@ -31,6 +32,7 @@ jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/queries/useAccountProfiles');
 jest.mock('@/hooks/mutations/useSwitchAccount');
 jest.mock('@/hooks/mutations/useAddAccount');
 jest.mock('@/hooks/mutations/useSignIn');
@@ -71,6 +73,7 @@ const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
 const mockUseAccounts = useAccounts as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseAccountProfiles = useAccountProfiles as jest.Mock;
 const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
 const mockUseAddAccount = useAddAccount as jest.Mock;
 const mockUseSignIn = useSignIn as jest.Mock;
@@ -96,6 +99,23 @@ const accounts: Account[] = [
   },
 ];
 
+const accountProfiles = {
+  'did:plc:alice': {
+    did: 'did:plc:alice',
+    handle: 'alice',
+    displayName: 'Alice Chen',
+    avatar: 'https://example.com/alice.jpg',
+    indexedAt: '2024-01-01T00:00:00.000Z',
+  },
+  'did:plc:alice-work': {
+    did: 'did:plc:alice-work',
+    handle: 'alice.work',
+    displayName: 'Alice Work',
+    avatar: 'https://example.com/alice-work.jpg',
+    indexedAt: '2024-01-01T00:00:00.000Z',
+  },
+};
+
 let push: jest.Mock;
 let replace: jest.Mock;
 let switchAccountMutate: jest.Mock;
@@ -119,6 +139,7 @@ describe('Sidebar', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
     mockUseAccounts.mockReturnValue({ data: accounts });
     mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
+    mockUseAccountProfiles.mockReturnValue({ data: accountProfiles });
     mockUseSwitchAccount.mockReturnValue({
       mutate: switchAccountMutate,
       mutateAsync: switchAccountMutateAsync,
