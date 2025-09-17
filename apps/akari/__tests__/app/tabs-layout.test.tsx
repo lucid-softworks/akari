@@ -42,6 +42,11 @@ jest.mock('@/components/HapticTab', () => {
   return { HapticTab: MockHapticTab };
 });
 
+jest.mock('@/components/AccountSwitcherSheet', () => {
+  const React = require('react');
+  return { AccountSwitcherSheet: jest.fn(() => null) };
+});
+
 jest.mock('@/components/Sidebar', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -89,6 +94,8 @@ const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
+const { AccountSwitcherSheet } = require('@/components/AccountSwitcherSheet');
+const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -106,6 +113,7 @@ beforeEach(() => {
     };
     return selector ? selector(defaultState) : defaultState;
   });
+  mockAccountSwitcherSheet.mockClear();
 });
 
 describe('TabLayout', () => {
@@ -176,6 +184,37 @@ describe('TabLayout', () => {
     render(notificationsOptions.tabBarIcon({ color: 'blue' }));
     expect(mockTabBadge.mock.calls[0][0].count).toBe(0);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(0);
+  });
+
+  it('opens the account switcher when the profile tab is long pressed', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    render(<TabLayout />);
+
+    const TabsModule = require('expo-router');
+    const screenCalls = (TabsModule.Tabs.Screen as jest.Mock).mock.calls;
+    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === 'profile');
+    expect(profileScreenCall).toBeTruthy();
+
+    const listeners = profileScreenCall?.[0].listeners;
+    expect(typeof listeners).toBe('function');
+
+    const preventDefault = jest.fn();
+
+    act(() => {
+      listeners?.({} as any).tabLongPress?.({ preventDefault } as any);
+    });
+
+    expect(preventDefault).toHaveBeenCalled();
+    expect(mockAccountSwitcherSheet.mock.calls.length).toBeGreaterThanOrEqual(2);
+    const latestCall = mockAccountSwitcherSheet.mock.calls.at(-1);
+    expect(latestCall?.[0].visible).toBe(true);
+
+    act(() => {
+      latestCall?.[0].onClose();
+    });
+
+    const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
+    expect(closeCall?.[0].visible).toBe(false);
   });
 });
 
