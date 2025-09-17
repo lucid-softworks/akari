@@ -1,8 +1,9 @@
 import { useNavigationState } from '@react-navigation/native';
 import { Redirect, Tabs } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
+import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { HapticTab } from '@/components/HapticTab';
 import { Sidebar } from '@/components/Sidebar';
 import { TabBadge } from '@/components/TabBadge';
@@ -57,6 +58,7 @@ export default function TabLayout() {
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
+  const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
@@ -83,6 +85,18 @@ export default function TabLayout() {
       },
     }),
   } as const;
+
+  const handleOpenAccountSwitcher = useCallback(() => {
+    if (isLargeScreen) {
+      return;
+    }
+
+    setAccountSwitcherVisible(true);
+  }, [isLargeScreen]);
+
+  const handleCloseAccountSwitcher = useCallback(() => {
+    setAccountSwitcherVisible(false);
+  }, []);
 
   // Initialize push notifications
   usePushNotifications();
@@ -157,73 +171,82 @@ export default function TabLayout() {
 
   // For mobile screens, show the traditional tab bar
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: accentColor,
-        tabBarInactiveTintColor: inactiveTint,
-        headerShown: false,
-        tabBarButton: CustomTabButton,
-        tabBarBackground: TabBarBackground,
-        tabBarShowLabel: false,
-        tabBarStyle,
-        tabBarItemStyle: {
-          marginHorizontal: 4,
-          paddingVertical: 0,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: accentColor,
+          tabBarInactiveTintColor: inactiveTint,
+          headerShown: false,
+          tabBarButton: CustomTabButton,
+          tabBarBackground: TabBarBackground,
+          tabBarShowLabel: false,
+          tabBarStyle,
+          tabBarItemStyle: {
+            marginHorizontal: 4,
+            paddingVertical: 0,
+          },
         }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="messages"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <View style={{ position: 'relative' }}>
-              <TabBarIcon name="message.fill" color={color} />
-              <TabBadge count={unreadMessagesCount} size="small" />
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <View style={{ position: 'relative' }}>
-              <TabBarIcon name="bell.fill" color={color} />
-              <TabBadge count={unreadNotificationsCount} size="small" />
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="bookmarks"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="search"
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="messages"
+          options={{
+            tabBarIcon: ({ color }) => (
+              <View style={{ position: 'relative' }}>
+                <TabBarIcon name="message.fill" color={color} />
+                <TabBadge count={unreadMessagesCount} size="small" />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="notifications"
+          options={{
+            tabBarIcon: ({ color }) => (
+              <View style={{ position: 'relative' }}>
+                <TabBarIcon name="bell.fill" color={color} />
+                <TabBadge count={unreadNotificationsCount} size="small" />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="bookmarks"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
+          }}
+          listeners={() => ({
+            tabLongPress: (event) => {
+              event.preventDefault();
+              handleOpenAccountSwitcher();
+            },
+          })}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
+          }}
+        />
+      </Tabs>
+      <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
+    </>
   );
 }
