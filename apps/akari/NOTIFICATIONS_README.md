@@ -24,7 +24,7 @@ The following packages are already installed:
 
 ### 2. Configuration
 
-The app.json has been configured with:
+The Expo config (`app.config.ts`) has been configured with:
 
 - Expo Notifications plugin
 - Custom notification icon and color
@@ -32,13 +32,13 @@ The app.json has been configured with:
 
 ### 3. Project ID
 
-Make sure your EAS project ID is configured in `app.json`:
+Make sure your EAS project ID is configured in `app.config.ts`:
 
-```json
-"extra": {
-  "eas": {
-    "projectId": "your-project-id-here"
-  }
+```ts
+extra: {
+  eas: {
+    projectId: 'your-project-id-here',
+  },
 }
 ```
 

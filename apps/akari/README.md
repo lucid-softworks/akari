@@ -24,6 +24,43 @@ This is a [React Native](https://reactnative.dev) project built with [Expo](http
    npx expo start
    ```
 
+## App Variants
+
+The Expo configuration supports separate application IDs for each build profile so you can install development, preview, and production builds on the same device. Select the variant by setting the `APP_VARIANT` environment variable when running Expo commands. If the variable is not provided the configuration defaults to `development`.
+
+Available variants:
+
+- `development` → bundle/package `com.imlunahey.akariv2.dev`
+- `preview` → bundle/package `com.imlunahey.akariv2.preview`
+- `production` → bundle/package `com.imlunahey.akariv2`
+
+Examples:
+
+```bash
+APP_VARIANT=development npx expo start
+APP_VARIANT=preview npx expo run:android
+APP_VARIANT=production npx expo run:ios
+```
+
+Workspace scripts are available if you prefer not to set `APP_VARIANT` manually:
+
+```bash
+npm run start:preview --workspace apps/akari
+npm run android:production --workspace apps/akari
+npm run ios:development --workspace apps/akari
+```
+
+From the repository root you can run the Turbo-powered aliases:
+
+```bash
+npm run start:preview
+npm run android:preview
+npm run ios:production
+```
+
+EAS build profiles in `eas.json` export the correct `APP_VARIANT` automatically.
+
+
 ## 🔐 Secure Storage Configuration
 
 ### Development Setup
