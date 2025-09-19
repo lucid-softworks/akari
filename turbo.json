@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": ["APP_VARIANT"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -14,6 +15,21 @@
       "persistent": true
     },
     "start": {
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "start:development": {
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "start:preview": {
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "start:production": {
       "cache": false,
       "persistent": true,
       "interactive": true
@@ -33,11 +49,47 @@
       "cache": false,
       "persistent": true
     },
+    "ios:development": {
+      "cache": false,
+      "persistent": true
+    },
+    "ios:preview": {
+      "cache": false,
+      "persistent": true
+    },
+    "ios:production": {
+      "cache": false,
+      "persistent": true
+    },
     "android": {
       "cache": false,
       "persistent": true
     },
+    "android:development": {
+      "cache": false,
+      "persistent": true
+    },
+    "android:preview": {
+      "cache": false,
+      "persistent": true
+    },
+    "android:production": {
+      "cache": false,
+      "persistent": true
+    },
     "web": {
+      "cache": false,
+      "persistent": true
+    },
+    "web:development": {
+      "cache": false,
+      "persistent": true
+    },
+    "web:preview": {
+      "cache": false,
+      "persistent": true
+    },
+    "web:production": {
       "cache": false,
       "persistent": true
     }
