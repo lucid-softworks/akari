@@ -4,7 +4,6 @@ type AppVariant = 'development' | 'preview' | 'production';
 
 type VariantDefinition = {
   appName: string;
-  slug: string;
   scheme: string;
   iosBundleIdentifier: string;
   androidPackage: string;
@@ -12,24 +11,24 @@ type VariantDefinition = {
 
 const DEFAULT_VARIANT: AppVariant = 'development';
 
+const FALLBACK_SLUG = 'akari-v2';
+const FALLBACK_PROJECT_ID = '544afaeb-5cfb-40ab-b8ff-6e7154c49d1d';
+
 const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
     appName: 'akari-v2 Dev',
-    slug: 'akari-v2-dev',
     scheme: 'akariv2dev',
     iosBundleIdentifier: 'com.imlunahey.akariv2.dev',
     androidPackage: 'com.imlunahey.akariv2.dev',
   },
   preview: {
     appName: 'akari-v2 Preview',
-    slug: 'akari-v2-preview',
     scheme: 'akariv2preview',
     iosBundleIdentifier: 'com.imlunahey.akariv2.preview',
     androidPackage: 'com.imlunahey.akariv2.preview',
   },
   production: {
     appName: 'akari-v2',
-    slug: 'akari-v2',
     scheme: 'akariv2',
     iosBundleIdentifier: 'com.imlunahey.akariv2',
     androidPackage: 'com.imlunahey.akariv2',
@@ -56,140 +55,69 @@ const resolveVariant = (): AppVariant => {
   return DEFAULT_VARIANT;
 };
 
-const createConfigForVariant = (variant: AppVariant): ExpoConfig => {
+const createConfigForVariant = (
+  variant: AppVariant,
+  baseConfig: ExpoConfig,
+): Partial<ExpoConfig> => {
   const variantDefinition = VARIANT_DEFINITIONS[variant];
+
+  const slug = baseConfig.slug ?? FALLBACK_SLUG;
+  const projectId = baseConfig.extra?.eas?.projectId ?? FALLBACK_PROJECT_ID;
 
   return {
     name: variantDefinition.appName,
-    slug: variantDefinition.slug,
-    version: '1.0.0',
-    orientation: 'portrait',
-    icon: './assets/images/icon.png',
+    slug,
     scheme: variantDefinition.scheme,
-    userInterfaceStyle: 'automatic',
-    newArchEnabled: true,
     ios: {
-      supportsTablet: true,
+      ...(baseConfig.ios ?? {}),
       bundleIdentifier: variantDefinition.iosBundleIdentifier,
-      infoPlist: {
-        ITSAppUsesNonExemptEncryption: false,
-        CFBundleAllowMixedLocalizations: true,
-        ExpoLocalization_supportsRTL: true,
-      },
-      entitlements: {
-        'aps-environment': 'development',
-        'com.apple.developer.associated-domains': ['applinks:*.expo.dev'],
-      },
-      runtimeVersion: '1.0.0',
     },
     android: {
-      adaptiveIcon: {
-        foregroundImage: './assets/images/adaptive-icon.png',
-        backgroundColor: '#ffffff',
-      },
-      edgeToEdgeEnabled: true,
+      ...(baseConfig.android ?? {}),
       package: variantDefinition.androidPackage,
-      permissions: ['android.permission.RECORD_AUDIO'],
-      runtimeVersion: {
-        policy: 'appVersion',
-      },
-    },
-    web: {
-      bundler: 'metro',
-      output: 'static',
-      favicon: './assets/images/favicon.png',
-      template: './web/index.html',
-    },
-    plugins: [
-      'expo-router',
-      [
-        'expo-splash-screen',
-        {
-          image: './assets/images/splash-icon.png',
-          imageWidth: 200,
-          resizeMode: 'contain',
-          backgroundColor: '#ffffff',
-        },
-      ],
-      [
-        'expo-video',
-        {
-          supportsBackgroundPlayback: true,
-          supportsPictureInPicture: true,
-        },
-      ],
-      [
-        'expo-localization',
-        {
-          supportedLocales: {
-            ios: ['en', 'en-US', 'ja', 'ar', 'fr'],
-            android: ['en', 'en-US', 'ja', 'ar', 'fr'],
-          },
-        },
-      ],
-      [
-        'expo-notifications',
-        {
-          icon: './assets/images/icon.png',
-          color: '#007AFF',
-        },
-      ],
-      [
-        'expo-image-picker',
-        {
-          photosPermission: 'The app accesses your photos to let you share them in your posts.',
-        },
-      ],
-    ],
-    experiments: {
-      typedRoutes: true,
-      turboModules: true,
     },
     extra: {
-      router: {},
+      ...(baseConfig.extra ?? {}),
       eas: {
-        projectId: '544afaeb-5cfb-40ab-b8ff-6e7154c49d1d',
+        ...(baseConfig.extra?.eas ?? {}),
+        projectId,
       },
-      supportsRTL: true,
       variant,
     },
-    updates: {
-      url: 'https://u.expo.dev/544afaeb-5cfb-40ab-b8ff-6e7154c49d1d',
-    },
-  } satisfies ExpoConfig;
+  } satisfies Partial<ExpoConfig>;
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const variant = resolveVariant();
-  const variantConfig = createConfigForVariant(variant);
+  const variantConfig = createConfigForVariant(variant, config as ExpoConfig);
 
   return {
     ...config,
     ...variantConfig,
     ios: {
       ...(config.ios ?? {}),
-      ...variantConfig.ios,
+      ...(variantConfig.ios ?? {}),
     },
     android: {
       ...(config.android ?? {}),
-      ...variantConfig.android,
+      ...(variantConfig.android ?? {}),
     },
     web: {
       ...(config.web ?? {}),
-      ...variantConfig.web,
+      ...(variantConfig.web ?? {}),
     },
-    plugins: variantConfig.plugins,
+    plugins: variantConfig.plugins ?? config.plugins,
     experiments: {
       ...(config.experiments ?? {}),
-      ...variantConfig.experiments,
+      ...(variantConfig.experiments ?? {}),
     },
     extra: {
       ...(config.extra ?? {}),
-      ...variantConfig.extra,
+      ...(variantConfig.extra ?? {}),
     },
     updates: {
       ...(config.updates ?? {}),
-      ...variantConfig.updates,
+      ...(variantConfig.updates ?? {}),
     },
   } satisfies ExpoConfig;
 };
