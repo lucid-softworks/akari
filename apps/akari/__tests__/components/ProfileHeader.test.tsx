@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { showAlert } from '@/utils/alert';
+import { useProfileBlocks } from '@/hooks/useProfileBlocks';
 
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/contexts/LanguageContext');
@@ -19,6 +20,7 @@ jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/mutations/useFollowUser');
 jest.mock('@/hooks/mutations/useBlockUser');
 jest.mock('@/hooks/mutations/useUpdateProfile');
+jest.mock('@/hooks/useProfileBlocks');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('@/components/Labels', () => ({ Labels: jest.fn(() => null) }));
@@ -43,6 +45,7 @@ const mockUseUpdateProfile = useUpdateProfile as jest.Mock;
 const mockHandleHistoryModal = HandleHistoryModal as jest.Mock;
 const mockProfileEditModal = ProfileEditModal as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
+const mockUseProfileBlocks = useProfileBlocks as jest.Mock;
 
 const baseProfile = {
   handle: 'alice',
@@ -61,6 +64,11 @@ describe('ProfileHeader', () => {
     mockUseFollowUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseBlockUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+    mockUseProfileBlocks.mockReturnValue({
+      data: { blocking: 0, blocked: 0 },
+      isLoading: false,
+      isError: false,
+    });
     mockShowAlert.mockReset();
   });
 
@@ -94,6 +102,20 @@ describe('ProfileHeader', () => {
         }}
       />,
     );
+  });
+
+  it('renders block statistics from ClearSky', () => {
+    mockUseProfileBlocks.mockReturnValue({
+      data: { blocking: 12, blocked: 4 },
+      isLoading: false,
+      isError: false,
+    });
+
+    const { getByText } = render(<ProfileHeader profile={baseProfile} />);
+
+    expect(getByText('profile.blocksTitle')).toBeTruthy();
+    expect(getByText('profile.blockingLabel')).toBeTruthy();
+    expect(getByText('profile.blockedLabel')).toBeTruthy();
   });
 
   it('falls back to displayName and U when avatar missing', () => {

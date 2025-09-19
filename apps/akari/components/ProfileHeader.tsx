@@ -17,6 +17,7 @@ import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useProfileBlocks } from '@/hooks/useProfileBlocks';
 import { showAlert } from '@/utils/alert';
 
 type ProfileHeaderProps = {
@@ -73,6 +74,12 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
+  const identifier = profile.did ?? profile.handle;
+  const {
+    data: blockTotals,
+    isLoading: isBlockTotalsLoading,
+    isError: isBlockTotalsError,
+  } = useProfileBlocks(identifier);
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -372,6 +379,31 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           </ThemedText>
         </View>
 
+        <ThemedView style={[styles.blockStatsCard, { borderColor }]}>
+          <ThemedText style={styles.blockStatsTitle}>{t('profile.blocksTitle')}</ThemedText>
+          {isBlockTotalsLoading ? (
+            <ThemedText style={styles.blockStatsMessage}>{t('common.loading')}</ThemedText>
+          ) : isBlockTotalsError || !blockTotals ? (
+            <ThemedText style={styles.blockStatsMessage}>{t('profile.blockStatsUnavailable')}</ThemedText>
+          ) : (
+            <View style={styles.blockStatsRow}>
+              <View style={styles.blockStatItem}>
+                <ThemedText style={styles.blockStatValue}>
+                  {formatNumber(blockTotals.blocking, currentLocale)}
+                </ThemedText>
+                <ThemedText style={styles.blockStatLabel}>{t('profile.blockingLabel')}</ThemedText>
+              </View>
+              <View style={[styles.blockStatDivider, { backgroundColor: borderColor }]} />
+              <View style={styles.blockStatItem}>
+                <ThemedText style={styles.blockStatValue}>
+                  {formatNumber(blockTotals.blocked, currentLocale)}
+                </ThemedText>
+                <ThemedText style={styles.blockStatLabel}>{t('profile.blockedLabel')}</ThemedText>
+              </View>
+            </View>
+          )}
+        </ThemedView>
+
         {/* Description */}
         {profile.description && (
           <View style={styles.descriptionContainer}>
@@ -544,6 +576,46 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     marginBottom: 12,
+  },
+  blockStatsCard: {
+    marginBottom: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  blockStatsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  blockStatsMessage: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
+  blockStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  blockStatItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  blockStatValue: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  blockStatLabel: {
+    fontSize: 13,
+    opacity: 0.7,
+    marginTop: 4,
+  },
+  blockStatDivider: {
+    width: 1,
+    alignSelf: 'stretch',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    marginHorizontal: 16,
   },
   statText: {
     fontSize: 15,

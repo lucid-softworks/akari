@@ -201,7 +201,11 @@
       "profileUpdateError": "Échec de la mise à jour du profil",
       "handleHistory": "Historique du handle",
       "noHandleHistory": "Aucun historique de handle",
-      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle."
+      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",

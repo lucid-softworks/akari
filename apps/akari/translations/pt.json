@@ -201,7 +201,11 @@
       "profileUpdateError": "Erro ao atualizar perfil",
       "handleHistory": "Histórico do identificador",
       "noHandleHistory": "Nenhum histórico do identificador",
-      "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador."
+      "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",

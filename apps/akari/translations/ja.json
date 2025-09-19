@@ -201,7 +201,11 @@
       "profileUpdateError": "プロフィールの更新に失敗しました",
       "handleHistory": "ハンドルの履歴",
       "noHandleHistory": "ハンドルの履歴はありません",
-      "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。"
+      "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",

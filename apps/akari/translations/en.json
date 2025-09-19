@@ -201,7 +201,11 @@
       "profileUpdateError": "Failed to update profile. Please try again.",
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
-      "noHandleHistoryDescription": "This user hasn't changed their handle yet."
+      "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

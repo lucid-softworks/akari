@@ -201,7 +201,11 @@
       "profileUpdateError": "Methu diweddaru proffil",
       "handleHistory": "Hanes handlen",
       "noHandleHistory": "Dim hanes handlen",
-      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto."
+      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

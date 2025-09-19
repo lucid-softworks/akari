@@ -201,7 +201,11 @@
       "profileUpdateError": "Profil güncellenemedi",
       "handleHistory": "Kullanıcı adı geçmişi",
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
-      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi."
+      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",

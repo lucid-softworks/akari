@@ -201,7 +201,11 @@
       "profileUpdateError": "Не удалось обновить профиль",
       "handleHistory": "История хэндла",
       "noHandleHistory": "Нет истории хэндла",
-      "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл."
+      "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",

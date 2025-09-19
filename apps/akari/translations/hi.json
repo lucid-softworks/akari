@@ -201,7 +201,11 @@
       "profileUpdateError": "प्रोफ़ाइल अपडेट करने में विफल",
       "handleHistory": "हैंडल इतिहास",
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
-      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।"
+      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

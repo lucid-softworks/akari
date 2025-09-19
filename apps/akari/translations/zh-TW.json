@@ -201,7 +201,11 @@
       "profileUpdateError": "更新個人資料失敗",
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
-      "noHandleHistoryDescription": "此使用者尚未變更過代號。"
+      "noHandleHistoryDescription": "此使用者尚未變更過代號。",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

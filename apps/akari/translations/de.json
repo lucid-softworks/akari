@@ -201,7 +201,11 @@
       "profileUpdateError": "Profil konnte nicht aktualisiert werden",
       "handleHistory": "Handle-Verlauf",
       "noHandleHistory": "Kein Handle-Verlauf",
-      "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert."
+      "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",

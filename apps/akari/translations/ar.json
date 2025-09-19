@@ -201,7 +201,11 @@
       "profileUpdateError": "فشل في تحديث الملف الشخصي",
       "handleHistory": "سجل المعرف",
       "noHandleHistory": "لا يوجد سجل للمعرف",
-      "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد."
+      "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",

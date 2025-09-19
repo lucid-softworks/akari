@@ -201,7 +201,11 @@
       "profileUpdateError": "Gagal memperbarui profil",
       "handleHistory": "Riwayat handle",
       "noHandleHistory": "Tidak ada riwayat handle",
-      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya."
+      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

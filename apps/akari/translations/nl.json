@@ -201,7 +201,11 @@
       "profileUpdateError": "Profiel kon niet worden bijgewerkt",
       "handleHistory": "Handle-geschiedenis",
       "noHandleHistory": "Geen handle-geschiedenis",
-      "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd."
+      "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd.",
+      "blocksTitle": "Blocks",
+      "blockingLabel": "Blocking",
+      "blockedLabel": "Blocked",
+      "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",
