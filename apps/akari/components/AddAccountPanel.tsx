@@ -47,6 +47,20 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
   const helperColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const inputBackground = useThemeColor({ light: '#ffffff', dark: '#111827' }, 'background');
   const iconColor = useThemeColor({ light: '#4B5563', dark: '#9CA3AF' }, 'icon');
+  const placeholderColor = useThemeColor({ light: '#9CA3AF', dark: '#6B7280' }, 'icon');
+  const selectionColor = useThemeColor({ light: '#2563EB', dark: '#7C8CF9' }, 'tint');
+  const primaryButtonBackground = useThemeColor({ light: '#2563EB', dark: '#2563EB' }, 'tint');
+  const secondaryButtonBackground = useThemeColor(
+    { light: '#F3F4F6', dark: 'transparent' },
+    'background',
+  );
+  const secondaryButtonTextColor = useThemeColor({ light: '#1F2937', dark: '#E2E8F0' }, 'text');
+  const footerBackground = useThemeColor({ light: '#F9FAFB', dark: 'transparent' }, 'background');
+
+  const secondaryButtonBorderColor =
+    secondaryButtonBackground === 'transparent' ? 'transparent' : borderColor;
+  const secondaryButtonBorderWidth =
+    secondaryButtonBackground === 'transparent' ? 0 : StyleSheet.hairlineWidth;
 
   const isSubmitting =
     signInMutation.isPending || addAccountMutation.isPending || switchAccountMutation.isPending;
@@ -160,21 +174,38 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
           <IconSymbol name="xmark" size={18} color={iconColor} />
         </TouchableOpacity>
       }
+      footerStyle={[{ backgroundColor: footerBackground }]}
       footerActions={
         <View style={styles.footerActions}>
           <TouchableOpacity
             accessibilityRole="button"
             onPress={handleDismiss}
             disabled={isSubmitting}
-            style={[styles.secondaryButton, isSubmitting ? styles.disabledButton : null]}
+            style={[
+              styles.secondaryButton,
+              {
+                backgroundColor: secondaryButtonBackground,
+                borderColor: secondaryButtonBorderColor,
+                borderWidth: secondaryButtonBorderWidth,
+              },
+              isSubmitting ? styles.disabledButton : null,
+            ]}
           >
-            <ThemedText style={styles.secondaryButtonText}>{t('common.cancel')}</ThemedText>
+            <ThemedText
+              style={[styles.secondaryButtonText, { color: secondaryButtonTextColor }]}
+            >
+              {t('common.cancel')}
+            </ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
             onPress={handleSubmit}
             disabled={isSubmitting}
-            style={[styles.primaryButton, isSubmitting ? styles.disabledPrimary : null]}
+            style={[
+              styles.primaryButton,
+              { backgroundColor: primaryButtonBackground },
+              isSubmitting ? styles.disabledPrimary : null,
+            ]}
           >
             <ThemedText style={styles.primaryButtonText}>{primaryActionLabel}</ThemedText>
           </TouchableOpacity>
@@ -195,7 +226,8 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
               value={handle}
               onChangeText={setHandle}
               placeholder={t('auth.blueskyHandlePlaceholder')}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={placeholderColor}
+              selectionColor={selectionColor}
               autoCapitalize="none"
               autoCorrect={false}
               autoComplete="off"
@@ -212,7 +244,8 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
               value={appPassword}
               onChangeText={setAppPassword}
               placeholder={t('auth.appPasswordPlaceholder')}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={placeholderColor}
+              selectionColor={selectionColor}
               secureTextEntry
               autoCapitalize="none"
               autoCorrect={false}
