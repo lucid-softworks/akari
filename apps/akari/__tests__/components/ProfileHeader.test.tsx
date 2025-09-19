@@ -113,9 +113,22 @@ describe('ProfileHeader', () => {
 
     const { getByText } = render(<ProfileHeader profile={baseProfile} />);
 
-    expect(getByText('profile.blocksTitle')).toBeTruthy();
-    expect(getByText('profile.blockingLabel')).toBeTruthy();
-    expect(getByText('profile.blockedLabel')).toBeTruthy();
+    const statsLine = getByText(/profile\.blocking/);
+
+    expect(statsLine.props.children).toContain('profile.blocking');
+    expect(statsLine.props.children).toContain('profile.blocked');
+  });
+
+  it('shows an error message when block totals fail to load', () => {
+    mockUseProfileBlocks.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+    });
+
+    const { getByText } = render(<ProfileHeader profile={baseProfile} />);
+
+    expect(getByText('profile.blockStatsUnavailable')).toBeTruthy();
   });
 
   it('falls back to displayName and U when avatar missing', () => {

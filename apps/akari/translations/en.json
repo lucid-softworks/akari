@@ -166,6 +166,8 @@
       "posts": "Posts {{count}}",
       "followers": "Followers {{count}}",
       "following": "Following {{count}}",
+      "blocking": "Blocking {{count}}",
+      "blocked": "Blocked {{count}}",
       "noPosts": "No posts yet",
       "noLikes": "No likes yet",
       "noMedia": "No media yet",
@@ -202,9 +204,6 @@
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
       "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
-      "blocksTitle": "Blocks",
-      "blockingLabel": "Blocking",
-      "blockedLabel": "Blocked",
       "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {

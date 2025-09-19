@@ -174,6 +174,8 @@
       "posts": "Posts {{count}}",
       "followers": "Followers {{count}}",
       "following": "Following {{count}}",
+      "blocking": "Blocking {{count}}",
+      "blocked": "Blocked {{count}}",
       "videos": "Videos",
       "feeds": "Feeds",
       "starterpacks": "Starterpacks",
@@ -202,9 +204,6 @@
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
       "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
-      "blocksTitle": "Blocks",
-      "blockingLabel": "Blocking",
-      "blockedLabel": "Blocked",
       "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {

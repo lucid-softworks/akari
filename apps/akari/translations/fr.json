@@ -180,6 +180,8 @@
       "posts": "Publications {{count}}",
       "followers": "Abonnés {{count}}",
       "following": "Abonnements {{count}}",
+      "blocking": "Blocking {{count}}",
+      "blocked": "Blocked {{count}}",
       "youHaveBlockedUser": "Vous avez bloqué cet utilisateur",
       "mutualBlock": "Vous vous êtes mutuellement bloqués",
       "copyLink": "Copier le lien",
@@ -202,9 +204,6 @@
       "handleHistory": "Historique du handle",
       "noHandleHistory": "Aucun historique de handle",
       "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle.",
-      "blocksTitle": "Blocks",
-      "blockingLabel": "Blocking",
-      "blockedLabel": "Blocked",
       "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {

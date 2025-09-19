@@ -174,6 +174,8 @@
       "posts": "貼文 {{count}}",
       "followers": "追蹤者 {{count}}",
       "following": "追蹤 {{count}}",
+      "blocking": "Blocking {{count}}",
+      "blocked": "Blocked {{count}}",
       "videos": "影片",
       "feeds": "動態",
       "starterpacks": "入門包",
@@ -202,9 +204,6 @@
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
       "noHandleHistoryDescription": "此使用者尚未變更過代號。",
-      "blocksTitle": "Blocks",
-      "blockingLabel": "Blocking",
-      "blockedLabel": "Blocked",
       "blockStatsUnavailable": "Unable to load block data"
     },
     "feed": {
