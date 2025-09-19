@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -15,10 +16,12 @@ import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
+import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
+import { showAlert } from '@/utils/alert';
 
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
@@ -28,6 +31,7 @@ export default function ProfileScreen() {
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
+  const { showToast } = useToast();
 
   const { data: profile, isLoading, error } = useProfile(handle);
 
@@ -59,9 +63,34 @@ export default function ProfileScreen() {
   };
 
   const handleCopyLink = async () => {
-    // TODO: Implement copy link functionality
-    console.log('Copy link');
-    setShowDropdown(false);
+    const profileHandle = profile?.handle;
+
+    if (!profileHandle) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+      setShowDropdown(false);
+      return;
+    }
+
+    try {
+      const profileUrl = `https://bsky.app/profile/${profileHandle}`;
+      await Clipboard.setStringAsync(profileUrl);
+      showToast({
+        message: t('profile.linkCopied'),
+        type: 'success',
+      });
+    } catch (error) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    } finally {
+      setShowDropdown(false);
+    }
   };
 
   const handleSearchPosts = () => {

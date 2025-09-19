@@ -45,6 +45,9 @@ const MAPPING = {
   gif: 'gif',
   clock: 'schedule',
   'arrow.up.circle.fill': 'keyboard-arrow-up',
+  'checkmark.circle.fill': 'check-circle',
+  'info.circle.fill': 'info',
+  'exclamationmark.triangle.fill': 'warning',
 } as unknown as IconMapping;
 
 /**

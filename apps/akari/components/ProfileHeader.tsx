@@ -1,4 +1,3 @@
-import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -124,25 +123,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
 
   const handleSearchPosts = () => {
     router.push(`/(tabs)/search?query=from:${profile.handle}`);
-  };
-
-  const handleCopyLink = async () => {
-    try {
-      const profileUrl = `https://bsky.app/profile/${profile.handle}`;
-      await Clipboard.setStringAsync(profileUrl);
-      showAlert({
-        title: t('common.success'),
-        message: t('profile.linkCopied'),
-        buttons: [{ text: t('common.ok') }],
-      });
-      setShowDropdown(false);
-    } catch (error) {
-      showAlert({
-        title: t('common.error'),
-        message: t('profile.linkCopyError'),
-        buttons: [{ text: t('common.ok') }],
-      });
-    }
   };
 
   const handleAddToLists = () => {
