@@ -174,8 +174,8 @@
       "posts": "पोस्ट {{count}}",
       "followers": "फॉलोअर्स {{count}}",
       "following": "फॉलोइंग {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "ब्लॉक किए गए खाते {{count}}",
+      "blocked": "आपको ब्लॉक करने वाले खाते {{count}}",
       "videos": "वीडियो",
       "feeds": "फीड्स",
       "starterpacks": "स्टार्टरपैक्स",
@@ -204,7 +204,7 @@
       "handleHistory": "हैंडल इतिहास",
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
       "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "ब्लॉक डेटा लोड नहीं हो सका"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

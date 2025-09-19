@@ -174,8 +174,8 @@
       "posts": "المنشورات {{count}}",
       "followers": "المتابعون {{count}}",
       "following": "المتابَعون {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "الحسابات المحظورة {{count}}",
+      "blocked": "حسابات تحظرك {{count}}",
       "videos": "فيديوهات",
       "feeds": "التدفقات",
       "starterpacks": "حزم البداية",
@@ -204,7 +204,7 @@
       "handleHistory": "سجل المعرف",
       "noHandleHistory": "لا يوجد سجل للمعرف",
       "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "تعذر تحميل بيانات الحظر"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",

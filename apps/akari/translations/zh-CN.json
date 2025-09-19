@@ -174,8 +174,8 @@
       "posts": "帖子 {{count}}",
       "followers": "关注者 {{count}}",
       "following": "关注 {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "您屏蔽的 {{count}}",
+      "blocked": "屏蔽您的 {{count}}",
       "videos": "视频",
       "feeds": "信息流",
       "starterpacks": "入门包",
@@ -204,7 +204,7 @@
       "handleHistory": "用户名历史记录",
       "noHandleHistory": "暂无用户名历史记录",
       "noHandleHistoryDescription": "该用户尚未更改过用户名。",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "无法加载屏蔽数据"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",

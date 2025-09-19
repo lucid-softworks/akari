@@ -174,8 +174,8 @@
       "posts": "โพสต์ {{count}}",
       "followers": "ผู้ติดตาม {{count}}",
       "following": "กำลังติดตาม {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "กำลังบล็อก {{count}}",
+      "blocked": "บัญชีที่บล็อกคุณ {{count}}",
       "videos": "วิดีโอ",
       "feeds": "ฟีด",
       "starterpacks": "สตาร์เตอร์แพ็ค",
@@ -204,7 +204,7 @@
       "handleHistory": "ประวัติแฮนเดิล",
       "noHandleHistory": "ไม่มีประวัติแฮนเดิล",
       "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "ไม่สามารถโหลดข้อมูลการบล็อกได้"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",

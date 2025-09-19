@@ -174,8 +174,8 @@
       "posts": "Swyddi {{count}}",
       "followers": "Dilynwyr {{count}}",
       "following": "Dilyn {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Yn blocio {{count}}",
+      "blocked": "Wedi'ch blocio gan {{count}}",
       "videos": "Fideos",
       "feeds": "Porthiant",
       "starterpacks": "Pecynnau Cychwyn",
@@ -204,7 +204,7 @@
       "handleHistory": "Hanes handlen",
       "noHandleHistory": "Dim hanes handlen",
       "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "Methu llwytho data blocio"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

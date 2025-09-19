@@ -174,8 +174,8 @@
       "posts": "投稿 {{count}}",
       "followers": "フォロワー {{count}}",
       "following": "フォロー中 {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "ブロック中 {{count}}",
+      "blocked": "あなたをブロックしている {{count}}",
       "videos": "動画",
       "feeds": "フィード",
       "starterpacks": "スターターパック",
@@ -204,7 +204,7 @@
       "handleHistory": "ハンドルの履歴",
       "noHandleHistory": "ハンドルの履歴はありません",
       "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "ブロックデータを読み込めませんでした"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",

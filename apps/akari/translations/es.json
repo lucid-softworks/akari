@@ -180,8 +180,8 @@
       "posts": "Publicaciones {{count}}",
       "followers": "Seguidores {{count}}",
       "following": "Siguiendo {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Bloqueando {{count}}",
+      "blocked": "Bloqueado por {{count}}",
       "youHaveBlockedUser": "Has bloqueado a este usuario",
       "mutualBlock": "Se han bloqueado mutuamente",
       "copyLink": "Copiar enlace",
@@ -204,7 +204,7 @@
       "handleHistory": "Historial del identificador",
       "noHandleHistory": "Sin historial de identificador",
       "noHandleHistoryDescription": "Este usuario aún no ha cambiado su identificador.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "No se pudieron cargar los datos de bloqueos"
     },
     "feed": {
       "loadingMorePosts": "Cargando más publicaciones...",

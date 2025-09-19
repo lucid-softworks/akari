@@ -174,8 +174,8 @@
       "posts": "Posty {{count}}",
       "followers": "Obserwujący {{count}}",
       "following": "Obserwowani {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Blokujesz {{count}}",
+      "blocked": "Blokują Cię {{count}}",
       "videos": "Filmy",
       "feeds": "Kanały",
       "starterpacks": "Starterpacks",
@@ -204,7 +204,7 @@
       "handleHistory": "Historia handle'u",
       "noHandleHistory": "Brak historii handle'u",
       "noHandleHistoryDescription": "Ten użytkownik jeszcze nie zmienił swojego handle'u.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "Nie można wczytać danych blokowania"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",

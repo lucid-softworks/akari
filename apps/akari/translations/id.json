@@ -174,8 +174,8 @@
       "posts": "Postingan {{count}}",
       "followers": "Pengikut {{count}}",
       "following": "Mengikuti {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Memblokir {{count}}",
+      "blocked": "Diblokir oleh {{count}}",
       "videos": "Video",
       "feeds": "Feed",
       "starterpacks": "Starterpacks",
@@ -204,7 +204,7 @@
       "handleHistory": "Riwayat handle",
       "noHandleHistory": "Tidak ada riwayat handle",
       "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "Tidak dapat memuat data blokir"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

@@ -174,8 +174,8 @@
       "posts": "게시물 {{count}}",
       "followers": "팔로워 {{count}}",
       "following": "팔로잉 {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "차단한 계정 {{count}}",
+      "blocked": "나를 차단한 계정 {{count}}",
       "videos": "동영상",
       "feeds": "피드",
       "starterpacks": "스타터팩",
@@ -204,7 +204,7 @@
       "handleHistory": "핸들 변경 기록",
       "noHandleHistory": "핸들 변경 기록이 없습니다",
       "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "차단 데이터를 불러올 수 없습니다"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",

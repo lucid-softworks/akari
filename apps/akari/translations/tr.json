@@ -174,8 +174,8 @@
       "posts": "Gönderiler {{count}}",
       "followers": "Takipçiler {{count}}",
       "following": "Takip {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Engellediğiniz {{count}}",
+      "blocked": "Sizi engelleyen {{count}}",
       "videos": "Videolar",
       "feeds": "Akışlar",
       "starterpacks": "Başlangıç Paketleri",
@@ -204,7 +204,7 @@
       "handleHistory": "Kullanıcı adı geçmişi",
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
       "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "Engelleme verileri yüklenemedi"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",

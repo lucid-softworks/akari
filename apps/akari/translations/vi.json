@@ -174,8 +174,8 @@
       "posts": "Bài viết {{count}}",
       "followers": "Người theo dõi {{count}}",
       "following": "Đang theo dõi {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "Đang chặn {{count}}",
+      "blocked": "Bị chặn bởi {{count}}",
       "videos": "Video",
       "feeds": "Nguồn cấp",
       "starterpacks": "Gói khởi đầu",
@@ -204,7 +204,7 @@
       "handleHistory": "Lịch sử tên định danh",
       "noHandleHistory": "Chưa có lịch sử tên định danh",
       "noHandleHistoryDescription": "Người dùng này chưa từng đổi tên định danh.",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "Không thể tải dữ liệu chặn"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",

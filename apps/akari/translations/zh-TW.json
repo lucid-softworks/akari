@@ -174,8 +174,8 @@
       "posts": "貼文 {{count}}",
       "followers": "追蹤者 {{count}}",
       "following": "追蹤 {{count}}",
-      "blocking": "Blocking {{count}}",
-      "blocked": "Blocked {{count}}",
+      "blocking": "您封鎖的 {{count}}",
+      "blocked": "封鎖您的 {{count}}",
       "videos": "影片",
       "feeds": "動態",
       "starterpacks": "入門包",
@@ -204,7 +204,7 @@
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
       "noHandleHistoryDescription": "此使用者尚未變更過代號。",
-      "blockStatsUnavailable": "Unable to load block data"
+      "blockStatsUnavailable": "無法載入封鎖資料"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
