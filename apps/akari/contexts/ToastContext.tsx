@@ -157,7 +157,7 @@ function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
   }
 
   return (
-    <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
+    <View pointerEvents="box-none" style={[StyleSheet.absoluteFillObject, styles.viewportOverlay]}>
       <View
         pointerEvents="box-none"
         style={[styles.viewport, { paddingBottom: Math.max(insets.bottom, 24) }]}
@@ -254,6 +254,10 @@ export function useToast(): ToastContextValue {
 }
 
 const styles = StyleSheet.create({
+  viewportOverlay: {
+    zIndex: 1000,
+    elevation: 1000,
+  },
   viewport: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -274,6 +278,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     shadowRadius: 20,
     elevation: 8,
+    zIndex: 1,
   },
   toastContent: {
     flex: 1,
