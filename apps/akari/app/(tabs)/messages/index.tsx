@@ -43,7 +43,7 @@ type MessagesListScreenProps = {
 };
 
 export function MessagesListScreen({
-  status,
+  status = 'accepted',
   titleKey,
   pendingButtonConfig,
   tabRegistryKey = 'messages',
@@ -71,7 +71,11 @@ export function MessagesListScreen({
     isFetchingNextPage,
   } = useConversations(50, undefined, status);
 
-  const conversations = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
+  const conversations = React.useMemo(() => {
+    const flattened = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
+
+    return flattened.filter((conversation) => conversation.status === status);
+  }, [conversationsData, status]);
 
   const renderConversation = ({ item }: { item: Conversation }) => (
     <TouchableOpacity
