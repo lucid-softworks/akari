@@ -1,6 +1,6 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -20,6 +20,7 @@ import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -30,6 +31,8 @@ export default function HomeScreen() {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   const { data: currentAccount } = useCurrentAccount();
 
@@ -246,8 +249,12 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Floating Action Button for creating posts */}
-      <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
-        <IconSymbol name="plus" size={24} color="white" />
+      <TouchableOpacity
+        style={[styles.fab, { bottom: 20 }]}
+        onPress={() => setShowPostComposer(true)}
+        activeOpacity={0.8}
+      >
+        <IconSymbol name="plus" size={24} color={colors.inverseText} />
       </TouchableOpacity>
 
       {/* Post Composer Modal */}
@@ -256,84 +263,98 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  header: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 14,
-    opacity: 0.8,
-    textAlign: 'center',
-  },
-  feedList: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  feedListContent: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  loadingMore: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.6,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-  selectFeedPrompt: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  selectFeedText: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-});
+    scrollView: {
+      flex: 1,
+    },
+    scrollViewContent: {
+      paddingBottom: 100,
+    },
+    header: {
+      alignItems: 'center',
+      marginTop: 20,
+      marginBottom: 12,
+      paddingHorizontal: 16,
+      gap: 4,
+      backgroundColor: colors.surface,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.borderMuted,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      fontSize: 14,
+      opacity: 0.8,
+      textAlign: 'center',
+    },
+    feedList: {
+      paddingBottom: 100,
+      backgroundColor: colors.background,
+    },
+    feedListContent: {
+      paddingBottom: 100,
+    },
+    loadingMore: {
+      alignItems: 'center',
+      paddingVertical: 16,
+      backgroundColor: colors.surface,
+    },
+    loadingMoreText: {
+      fontSize: 14,
+      opacity: 0.6,
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 40,
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
+    selectFeedPrompt: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 40,
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+    },
+    selectFeedText: {
+      fontSize: 16,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
+    fab: {
+      position: 'absolute',
+      right: 20,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.accent,
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 8,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+    },
+  });
+}

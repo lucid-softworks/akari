@@ -1,12 +1,13 @@
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { useMemo } from 'react';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import type { BlueskyFeed } from '@/bluesky-api';
 
 type FeedsTabProps = {
@@ -18,11 +19,9 @@ type FeedItemProps = {
 };
 
 function FeedItem({ feed }: FeedItemProps) {
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
-  const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
-  const secondaryTextColor = useThemeColor({ light: '#666666', dark: '#8e8e93' }, 'text');
-  const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
+  const { colors } = useAppTheme();
+  const themedStyles = useMemo(() => createThemedStyles(colors), [colors]);
+  const iconColor = colors.accent;
 
   const handlePinPress = () => {
     // TODO: Implement pin functionality
@@ -30,33 +29,33 @@ function FeedItem({ feed }: FeedItemProps) {
   };
 
   return (
-    <ThemedView style={[styles.feedContainer, { backgroundColor, borderColor }]}>
+    <ThemedView style={[styles.feedContainer, themedStyles.feedContainer]}>
       <ThemedView style={styles.feedContent}>
         <ThemedView style={styles.feedHeader}>
           <ThemedView style={styles.feedInfo}>
-            <ThemedText style={[styles.feedName, { color: textColor }]} numberOfLines={1}>
+            <ThemedText style={styles.feedName} numberOfLines={1}>
               {feed.displayName}
             </ThemedText>
-            <ThemedText style={[styles.feedCreator, { color: secondaryTextColor }]}>by @{feed.creator.handle}</ThemedText>
+            <ThemedText style={[styles.feedCreator, themedStyles.feedCreator]}>by @{feed.creator.handle}</ThemedText>
           </ThemedView>
 
-          <TouchableOpacity style={styles.pinButton} onPress={handlePinPress} activeOpacity={0.6}>
+          <TouchableOpacity style={[styles.pinButton, themedStyles.pinButton]} onPress={handlePinPress} activeOpacity={0.6}>
             <IconSymbol name="pin" size={18} color={iconColor} />
           </TouchableOpacity>
         </ThemedView>
 
         {feed.description && (
-          <ThemedText style={[styles.feedDescription, { color: secondaryTextColor }]} numberOfLines={2}>
+          <ThemedText style={[styles.feedDescription, themedStyles.feedDescription]} numberOfLines={2}>
             {feed.description}
           </ThemedText>
         )}
 
         <ThemedView style={styles.feedFooter}>
-          <ThemedText style={[styles.likeCount, { color: secondaryTextColor }]}>{feed.likeCount} likes</ThemedText>
+          <ThemedText style={[styles.likeCount, themedStyles.likeCount]}>{feed.likeCount} likes</ThemedText>
 
           {feed.acceptsInteractions && (
-            <ThemedView style={styles.interactionIndicator}>
-              <ThemedText style={styles.interactionText}>Interactive</ThemedText>
+            <ThemedView style={[styles.interactionIndicator, themedStyles.interactionIndicator]}>
+              <ThemedText style={[styles.interactionText, themedStyles.interactionText]}>Interactive</ThemedText>
             </ThemedView>
           )}
         </ThemedView>
@@ -137,8 +136,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 6,
     borderRadius: 12,
-    borderWidth: 1,
-    shadowColor: '#000',
+    borderWidth: StyleSheet.hairlineWidth,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -187,7 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   interactionIndicator: {
-    backgroundColor: '#007AFF',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 10,
@@ -195,6 +192,33 @@ const styles = StyleSheet.create({
   interactionText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#ffffff',
   },
 });
+
+function createThemedStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    feedContainer: {
+      backgroundColor: colors.surface,
+      borderColor: colors.borderMuted,
+      shadowColor: colors.shadow,
+    },
+    pinButton: {
+      backgroundColor: colors.surfaceSecondary,
+    },
+    feedCreator: {
+      color: colors.textSecondary,
+    },
+    feedDescription: {
+      color: colors.textSecondary,
+    },
+    likeCount: {
+      color: colors.textMuted,
+    },
+    interactionIndicator: {
+      backgroundColor: colors.accent,
+    },
+    interactionText: {
+      color: colors.inverseText,
+    },
+  });
+}

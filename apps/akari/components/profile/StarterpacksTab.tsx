@@ -1,11 +1,12 @@
 import { FlatList, StyleSheet } from 'react-native';
+import { useMemo } from 'react';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import type { BlueskyStarterPack } from '@/bluesky-api';
 
 type StarterpacksTabProps = {
@@ -17,27 +18,25 @@ type StarterpackItemProps = {
 };
 
 function StarterpackItem({ starterpack }: StarterpackItemProps) {
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
-  const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
-  const secondaryTextColor = useThemeColor({ light: '#666666', dark: '#8e8e93' }, 'text');
+  const { colors } = useAppTheme();
+  const themedStyles = useMemo(() => createThemedStyles(colors), [colors]);
 
   return (
-    <ThemedView style={[styles.starterpackContainer, { backgroundColor, borderColor }]}>
+    <ThemedView style={[styles.starterpackContainer, themedStyles.starterpackContainer]}>
       <ThemedView style={styles.starterpackContent}>
         <ThemedView style={styles.starterpackHeader}>
           <ThemedView style={styles.starterpackInfo}>
-            <ThemedText style={[styles.starterpackName, { color: textColor }]} numberOfLines={1}>
+            <ThemedText style={[styles.starterpackName, themedStyles.starterpackName]} numberOfLines={1}>
               {starterpack.record.name}
             </ThemedText>
-            <ThemedText style={[styles.starterpackCreator, { color: secondaryTextColor }]}>
+            <ThemedText style={[styles.starterpackCreator, themedStyles.starterpackCreator]}>
               by @{starterpack.creator.handle}
             </ThemedText>
           </ThemedView>
         </ThemedView>
 
         {starterpack.record.description && (
-          <ThemedText style={[styles.starterpackDescription, { color: secondaryTextColor }]} numberOfLines={2}>
+          <ThemedText style={[styles.starterpackDescription, themedStyles.starterpackDescription]} numberOfLines={2}>
             {starterpack.record.description}
           </ThemedText>
         )}
@@ -45,14 +44,14 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
         <ThemedView style={styles.starterpackFooter}>
           <ThemedView style={styles.statsRow}>
             <ThemedView style={styles.statItem}>
-              <ThemedText style={[styles.statValue, { color: textColor }]}>{starterpack.joinedAllTimeCount}</ThemedText>
-              <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>joined</ThemedText>
+              <ThemedText style={[styles.statValue, themedStyles.statValue]}>{starterpack.joinedAllTimeCount}</ThemedText>
+              <ThemedText style={[styles.statLabel, themedStyles.statLabel]}>joined</ThemedText>
             </ThemedView>
 
             {starterpack.joinedWeekCount > 0 && (
               <ThemedView style={styles.statItem}>
-                <ThemedText style={[styles.statValue, { color: textColor }]}>{starterpack.joinedWeekCount}</ThemedText>
-                <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>this week</ThemedText>
+                <ThemedText style={[styles.statValue, themedStyles.statValue]}>{starterpack.joinedWeekCount}</ThemedText>
+                <ThemedText style={[styles.statLabel, themedStyles.statLabel]}>this week</ThemedText>
               </ThemedView>
             )}
           </ThemedView>
@@ -134,8 +133,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 6,
     borderRadius: 12,
-    borderWidth: 1,
-    shadowColor: '#000',
+    borderWidth: StyleSheet.hairlineWidth,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -191,3 +189,28 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
+function createThemedStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    starterpackContainer: {
+      backgroundColor: colors.surface,
+      borderColor: colors.borderMuted,
+      shadowColor: colors.shadow,
+    },
+    starterpackName: {
+      color: colors.text,
+    },
+    starterpackCreator: {
+      color: colors.textSecondary,
+    },
+    starterpackDescription: {
+      color: colors.textSecondary,
+    },
+    statValue: {
+      color: colors.text,
+    },
+    statLabel: {
+      color: colors.textMuted,
+    },
+  });
+}

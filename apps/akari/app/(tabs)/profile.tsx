@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -18,6 +18,7 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 
 import type { ProfileTabType } from '@/types/profile';
 
@@ -29,6 +30,8 @@ export default function ProfileScreen() {
   const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -171,22 +174,30 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  emptyState: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
-});
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollViewContent: {
+      paddingBottom: 100, // Account for tab bar
+      backgroundColor: colors.background,
+    },
+    emptyState: {
+      paddingVertical: 40,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+      marginHorizontal: 16,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      opacity: 0.6,
+    },
+  });
+}

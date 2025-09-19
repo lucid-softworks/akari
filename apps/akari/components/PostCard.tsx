@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/bluesky-api';
@@ -17,8 +17,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 
 type PostCardProps = {
   post: {
@@ -78,24 +78,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
   }>({});
   const { t } = useTranslation();
   const likeMutation = useLikePost();
+  const { colors } = useAppTheme();
+  const themedStyles = useMemo(() => createThemedStyles(colors), [colors]);
 
   const authorName = post.author.displayName || post.author.handle;
-
-  const borderColor = useThemeColor(
-    {
-      light: '#e8eaed',
-      dark: '#2d3133',
-    },
-    'background',
-  );
-
-  const iconColor = useThemeColor(
-    {
-      light: '#687076',
-      dark: '#9BA1A6',
-    },
-    'text',
-  );
+  const iconColor = colors.textSecondary;
+  const mutedIconColor = colors.textMuted;
+  const accentColor = colors.accent;
+  const dangerColor = colors.danger;
 
   const handleProfilePress = () => {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
@@ -485,8 +475,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
     <>
       {/* Reply Context */}
       {post.replyTo && (
-        <ThemedView style={styles.replyContext}>
-          <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
+        <ThemedView style={[styles.replyContext, themedStyles.replyContext]}>
+          <IconSymbol
+            name="arrowshape.turn.up.left"
+            size={12}
+            color={mutedIconColor}
+            style={styles.replyIcon}
+          />
           <ThemedText style={styles.replyText}>Replying to @{post.replyTo.author.handle}</ThemedText>
           <ThemedText style={styles.replyPreview} numberOfLines={1}>
             {post.replyTo.text}
@@ -579,7 +574,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
                 >
                   <Image
                     source={{ uri: imageUrl }}
-                    style={[styles.image, { height: imageHeight }]}
+                    style={[styles.image, themedStyles.image, { height: imageHeight }]}
                     contentFit="contain"
                     placeholder={require('@/assets/images/partial-react-logo.png')}
                     onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
@@ -610,11 +605,11 @@ export function PostCard({ post, onPress }: PostCardProps) {
           accessibilityRole="button"
           accessibilityLabel={`Reply to post by ${authorName}`}
         >
-          <IconSymbol name="bubble.left" size={16} color={iconColor} style={styles.interactionIcon} />
+          <IconSymbol name="bubble.left" size={16} color={mutedIconColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.commentCount || 0}</ThemedText>
         </TouchableOpacity>
         <ThemedView style={styles.interactionItem}>
-          <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} style={styles.interactionIcon} />
+          <IconSymbol name="arrow.2.squarepath" size={16} color={accentColor} style={styles.interactionIcon} />
           <ThemedText style={styles.interactionCount}>{post.repostCount || 0}</ThemedText>
         </ThemedView>
         <TouchableOpacity
@@ -631,7 +626,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           <IconSymbol
             name={post.viewer?.like ? 'heart.fill' : 'heart'}
             size={16}
-            color={post.viewer?.like ? '#ff3b30' : iconColor}
+            color={post.viewer?.like ? dangerColor : iconColor}
             style={styles.interactionIcon}
           />
           <ThemedText style={styles.interactionCount}>{post.likeCount || 0}</ThemedText>
@@ -644,14 +639,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
     <>
       {onPress ? (
         <TouchableOpacity
-          style={[styles.container, { borderBottomColor: borderColor }]}
+          style={[styles.container, themedStyles.container]}
           onPress={onPress}
           activeOpacity={0.7}
         >
           {postContent}
         </TouchableOpacity>
       ) : (
-        <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>{postContent}</ThemedView>
+        <ThemedView style={[styles.container, themedStyles.container]}>{postContent}</ThemedView>
       )}
 
       {/* Image Viewer Modal */}
@@ -763,7 +758,6 @@ const styles = StyleSheet.create({
   videoContainer: {
     marginTop: 8,
     padding: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -792,3 +786,22 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
+
+function createThemedStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: colors.surface,
+      borderBottomColor: colors.borderMuted,
+    },
+    replyContext: {
+      backgroundColor: colors.surfaceSecondary,
+    },
+    image: {
+      borderColor: colors.borderMuted,
+      backgroundColor: colors.surfaceSecondary,
+    },
+    videoContainer: {
+      backgroundColor: colors.surfaceSecondary,
+    },
+  });
+}

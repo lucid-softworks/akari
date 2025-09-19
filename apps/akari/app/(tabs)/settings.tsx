@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,6 +21,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -32,6 +33,8 @@ export default function SettingsScreen() {
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
@@ -266,125 +269,141 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingTop: 20,
-    borderBottomWidth: 0.5,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  section: {
-    marginTop: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    opacity: 0.8,
-  },
-  settingItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 0.5,
-  },
-  settingInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  settingLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  settingValue: {
-    fontSize: 16,
-    opacity: 0.7,
-  },
-  accountInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  accountAvatarContainer: {
-    width: 40,
-    height: 40,
-  },
-  accountAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  accountAvatarImage: {
-    width: 40,
-    height: 40,
-  },
-  accountAvatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  accountAvatarFallbackText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  accountDetails: {
-    flex: 1,
-    gap: 4,
-  },
-  accountHandle: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  accountDisplayName: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  currentAccountBadge: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#007AFF',
-    marginTop: 4,
-  },
-  accountActions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: '#007AFF',
-  },
-  actionButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  removeButton: {
-    backgroundColor: '#dc3545',
-  },
-  removeButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-});
+
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollViewContent: {
+      paddingBottom: 100,
+    },
+    header: {
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      paddingTop: 20,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    headerTitle: {
+      fontSize: 24,
+      fontWeight: '700',
+    },
+    section: {
+      marginTop: 20,
+      backgroundColor: colors.surface,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.borderMuted,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      opacity: 0.8,
+    },
+    settingItem: {
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.borderMuted,
+      backgroundColor: colors.surface,
+    },
+    settingInfo: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    settingLabel: {
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    settingValue: {
+      fontSize: 16,
+      opacity: 0.7,
+    },
+    accountInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+    },
+    accountAvatarContainer: {
+      width: 40,
+      height: 40,
+    },
+    accountAvatar: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      overflow: 'hidden',
+      backgroundColor: colors.surfaceSecondary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    accountAvatarImage: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+    },
+    accountAvatarFallback: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    accountAvatarFallbackText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: colors.inverseText,
+    },
+    accountDetails: {
+      flex: 1,
+      gap: 4,
+    },
+    accountHandle: {
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    accountDisplayName: {
+      fontSize: 14,
+      opacity: 0.7,
+    },
+    currentAccountBadge: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: colors.accent,
+      marginTop: 4,
+    },
+    accountActions: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    actionButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 6,
+      backgroundColor: colors.accent,
+    },
+    actionButtonText: {
+      color: colors.inverseText,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    removeButton: {
+      backgroundColor: colors.danger,
+    },
+    removeButtonText: {
+      color: colors.inverseText,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+  });
+}
+

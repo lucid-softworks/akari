@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,6 +9,7 @@ import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
 
@@ -29,6 +30,8 @@ export default function MessagesScreen() {
   const borderColor = useBorderColor();
   const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -158,180 +161,143 @@ export default function MessagesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  list: {
-    flex: 1,
-  },
-  conversationsContent: {
-    paddingBottom: 100, // Add extra padding to account for tab bar
-  },
-  conversationItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-  },
-  conversationContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatarContainer: {
-    marginRight: 12,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  avatarFallback: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  conversationInfo: {
-    flex: 1,
-  },
-  conversationHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  displayName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  timestamp: {
-    fontSize: 12,
-    opacity: 0.6,
-  },
-  conversationFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  lastMessage: {
-    fontSize: 14,
-    opacity: 0.7,
-    flex: 1,
-    marginRight: 8,
-  },
-  unreadBadge: {
-    backgroundColor: '#007AFF',
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 6,
-  },
-  unreadCount: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  statusBadge: {
-    backgroundColor: '#FF9500',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    alignSelf: 'flex-start',
-    marginTop: 4,
-  },
-  statusText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: 'white',
-  },
-  loadingState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
-  errorState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  errorSubtitle: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  errorHelp: {
-    fontSize: 14,
-    opacity: 0.7,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  emptyState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  skeletonContainer: {
-    flex: 1,
-    paddingBottom: 100, // Account for tab bar
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-  emptyStateText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  errorLoadingConversations: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  noConversations: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-});
+
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
+    list: {
+      flex: 1,
+    },
+    conversationsContent: {
+      paddingBottom: 100,
+      backgroundColor: colors.background,
+    },
+    conversationItem: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      backgroundColor: colors.surface,
+    },
+    conversationContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    avatarContainer: {
+      marginRight: 12,
+    },
+    avatar: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      backgroundColor: colors.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+    },
+    avatarImage: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+    },
+    avatarFallback: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.inverseText,
+    },
+    conversationInfo: {
+      flex: 1,
+    },
+    conversationHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    displayName: {
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    timestamp: {
+      fontSize: 12,
+      opacity: 0.6,
+    },
+    conversationFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    lastMessage: {
+      fontSize: 14,
+      opacity: 0.7,
+      flex: 1,
+      marginRight: 8,
+    },
+    unreadBadge: {
+      backgroundColor: colors.accent,
+      borderRadius: 10,
+      minWidth: 20,
+      height: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 6,
+    },
+    unreadCount: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      color: colors.inverseText,
+    },
+    statusBadge: {
+      backgroundColor: colors.warning,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      alignSelf: 'flex-start',
+      marginTop: 4,
+    },
+    statusText: {
+      fontSize: 10,
+      fontWeight: '600',
+      color: colors.inverseText,
+    },
+    loadingFooter: {
+      paddingVertical: 20,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    loadingText: {
+      fontSize: 16,
+      opacity: 0.6,
+    },
+    emptyState: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 32,
+      backgroundColor: colors.surface,
+    },
+    skeletonContainer: {
+      flex: 1,
+      paddingBottom: 100,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
+  });
+}
+

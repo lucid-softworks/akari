@@ -3,14 +3,20 @@ import { FlatList, Text } from 'react-native';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, themes } from '@/theme';
 
 jest.mock('@/hooks/queries/useAuthorFeeds');
 
 jest.mock('@/hooks/useTranslation');
 
-jest.mock('@/hooks/useThemeColor');
+jest.mock('@/theme', () => {
+  const actual = jest.requireActual('@/theme');
+  return {
+    ...actual,
+    useAppTheme: jest.fn(),
+  };
+});
 
 jest.mock('@/components/skeletons', () => {
   const { Text } = require('react-native');
@@ -24,15 +30,13 @@ jest.mock('@/components/ui/IconSymbol', () => {
 
 const mockUseAuthorFeeds = useAuthorFeeds as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockUseThemeColor = useThemeColor as jest.Mock;
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 describe('FeedsTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
-    mockUseThemeColor.mockImplementation((colors) =>
-      typeof colors === 'string' ? colors : colors.light,
-    );
+    mockUseAppTheme.mockReturnValue(themes.light);
   });
 
   it('shows skeleton while loading', () => {

@@ -1,7 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
@@ -18,6 +18,7 @@ import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 
 type ProfileHeaderProps = {
   profile: {
@@ -73,6 +74,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -319,9 +322,13 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           {/* Name and Handle */}
           <View style={styles.nameHandleSection}>
             <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
-            <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={0.7}>
+            <TouchableOpacity
+              style={styles.handleContainer}
+              onPress={() => setShowHandleHistory(true)}
+              activeOpacity={0.7}
+            >
               <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
-              <IconSymbol name="clock" size={14} color="#666" style={styles.handleHistoryIcon} />
+              <IconSymbol name="clock" size={14} color={colors.textMuted} style={styles.handleHistoryIcon} />
             </TouchableOpacity>
           </View>
 
@@ -334,19 +341,19 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
                 </TouchableOpacity>
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
                   <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
-                    <IconSymbol name="ellipsis" size={20} color="#ffffff" />
+                    <IconSymbol name="ellipsis" size={20} color={colors.inverseText} />
                   </TouchableOpacity>
                 </View>
               </>
             ) : (
               <>
                 <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts}>
-                  <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
+                  <IconSymbol name="magnifyingglass" size={20} color={colors.accent} />
                 </TouchableOpacity>
                 {!isBlockedBy && (
                   <View style={styles.moreButtonContainer} ref={dropdownRef}>
                     <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle}>
-                      <IconSymbol name="ellipsis" size={20} color="#007AFF" />
+                      <IconSymbol name="ellipsis" size={20} color={colors.accent} />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -416,160 +423,169 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   );
 }
 
-const styles = StyleSheet.create({
-  banner: {
-    height: 150,
-    backgroundColor: '#f0f0f0',
-  },
-  bannerImage: {
-    flex: 1,
-  },
-  bannerPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#e0e0e0',
-  },
-  bannerPlaceholderText: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
-  profileHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    borderBottomWidth: 0.5,
-    position: 'relative',
-  },
-  avatarContainer: {
-    marginTop: -50,
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: 'white',
-    overflow: 'hidden',
-    backgroundColor: 'transparent',
-  },
-  avatarImage: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
-  },
-  avatarFallbackContainer: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarFallback: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  profileInfoSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  nameHandleSection: {
-    flex: 1,
-    marginRight: 10,
-  },
-  displayName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 2,
-  },
-  handle: {
-    fontSize: 15,
-    opacity: 0.7,
-  },
-  handleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  handleHistoryIcon: {
-    marginLeft: 6,
-    opacity: 0.5,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
-  },
-  editButton: {
-    height: 32,
-    paddingHorizontal: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#007AFF',
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  editButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  moreButtonContainer: {
-    position: 'relative',
-    zIndex: 999999,
-  },
-  moreButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statsContainer: {
-    marginBottom: 12,
-  },
-  statText: {
-    fontSize: 15,
-    lineHeight: 20,
-  },
-  statNumber: {
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  descriptionContainer: {
-    marginBottom: 12,
-  },
-
-  blockedMessage: {
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#ffebee',
-    borderRadius: 8,
-  },
-  blockedText: {
-    fontSize: 14,
-    color: '#c62828',
-    textAlign: 'center',
-  },
-});
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    banner: {
+      height: 150,
+      backgroundColor: colors.surfaceSecondary,
+    },
+    bannerImage: {
+      flex: 1,
+    },
+    bannerPlaceholder: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surfaceTertiary,
+    },
+    bannerPlaceholderText: {
+      fontSize: 16,
+      opacity: 0.6,
+      color: colors.textSecondary,
+    },
+    profileHeader: {
+      paddingHorizontal: 16,
+      paddingVertical: 20,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      position: 'relative',
+      backgroundColor: colors.surface,
+    },
+    avatarContainer: {
+      marginTop: -50,
+      marginBottom: 12,
+    },
+    avatar: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 3,
+      borderColor: colors.background,
+      overflow: 'hidden',
+      backgroundColor: colors.surfaceSecondary,
+    },
+    avatarImage: {
+      width: 74,
+      height: 74,
+      borderRadius: 37,
+    },
+    avatarFallbackContainer: {
+      width: 74,
+      height: 74,
+      borderRadius: 37,
+      backgroundColor: colors.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarFallback: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.inverseText,
+    },
+    profileInfoSection: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: 12,
+    },
+    nameHandleSection: {
+      flex: 1,
+      marginRight: 10,
+    },
+    displayName: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 2,
+    },
+    handle: {
+      fontSize: 15,
+      color: colors.textSecondary,
+    },
+    handleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    handleHistoryIcon: {
+      marginLeft: 6,
+      opacity: 0.6,
+    },
+    actionButtons: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    iconButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      borderWidth: StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surfaceSecondary,
+      borderColor: colors.borderMuted,
+    },
+    editButton: {
+      height: 32,
+      paddingHorizontal: 16,
+      borderRadius: 16,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.accent,
+      backgroundColor: colors.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    editButtonText: {
+      color: colors.inverseText,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    moreButtonContainer: {
+      position: 'relative',
+      zIndex: 999999,
+    },
+    moreButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+      backgroundColor: colors.surfaceActive,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    statsContainer: {
+      marginBottom: 12,
+    },
+    statText: {
+      fontSize: 15,
+      lineHeight: 20,
+      color: colors.textSecondary,
+    },
+    statNumber: {
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    description: {
+      fontSize: 14,
+      lineHeight: 18,
+      color: colors.text,
+    },
+    descriptionContainer: {
+      marginBottom: 12,
+    },
+    blockedMessage: {
+      marginTop: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: `${colors.danger}1A`,
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.danger,
+    },
+    blockedText: {
+      fontSize: 14,
+      color: colors.danger,
+      textAlign: 'center',
+    },
+  });
+}

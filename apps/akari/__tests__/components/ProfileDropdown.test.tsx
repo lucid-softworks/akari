@@ -2,23 +2,29 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useAppTheme, themes } from '@/theme';
 
 jest.mock('@/hooks/useTranslation');
-jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useBorderColor');
+jest.mock('@/theme', () => {
+  const actual = jest.requireActual('@/theme');
+  return {
+    ...actual,
+    useAppTheme: jest.fn(),
+  };
+});
 
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 describe('ProfileDropdown', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
-    mockUseThemeColor.mockReturnValue('#fff');
     mockUseBorderColor.mockReturnValue('#ccc');
+    mockUseAppTheme.mockReturnValue(themes.light);
   });
 
   it('does not render when not visible', () => {

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 
 type ProfileDropdownProps = {
   isVisible: boolean;
@@ -38,19 +38,13 @@ export function ProfileDropdown({
 }: ProfileDropdownProps) {
   const { t } = useTranslation();
   const borderColor = useBorderColor();
-
-  const dropdownBackgroundColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#1c1c1e',
-    },
-    'background',
-  );
+  const { colors } = useAppTheme();
+  const themedStyles = useMemo(() => createStyles(colors), [colors]);
 
   if (!isVisible) return null;
 
   return (
-    <ThemedView style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }, style]}>
+    <ThemedView style={[styles.dropdown, themedStyles.dropdown, { borderColor: borderColor }, style]}>
       {isOwnProfile ? (
         <>
           <TouchableOpacity style={styles.dropdownItem} onPress={onSearchPosts}>
@@ -76,12 +70,12 @@ export function ProfileDropdown({
             <ThemedText style={styles.dropdownText}>{isMuted ? t('common.unmute') : t('profile.muteAccount')}</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.dropdownItem} onPress={onBlockPress}>
-            <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
+            <ThemedText style={[styles.dropdownText, themedStyles.dropdownTextDestructive]}>
               {isBlocking ? t('common.unblock') : t('common.block')}
             </ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.dropdownItem} onPress={onReportAccount}>
-            <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
+            <ThemedText style={[styles.dropdownText, themedStyles.dropdownTextDestructive]}>
               {t('profile.reportAccount')}
             </ThemedText>
           </TouchableOpacity>
@@ -95,14 +89,13 @@ const styles = StyleSheet.create({
   dropdown: {
     position: 'absolute',
     borderRadius: 8,
-    borderWidth: 1,
-    shadowColor: '#000',
+    borderWidth: StyleSheet.hairlineWidth,
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
     elevation: 5,
     minWidth: 140,
     zIndex: 9999999,
@@ -119,7 +112,17 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 14,
   },
-  dropdownTextDestructive: {
-    color: '#c62828',
-  },
 });
+
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    dropdown: {
+      backgroundColor: colors.surface,
+      shadowColor: colors.shadow,
+      borderColor: colors.borderMuted,
+    },
+    dropdownTextDestructive: {
+      color: colors.danger,
+    },
+  });
+}

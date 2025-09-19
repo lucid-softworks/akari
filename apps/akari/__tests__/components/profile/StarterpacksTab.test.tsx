@@ -3,26 +3,32 @@ import { FlatList, Text } from 'react-native';
 
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, themes } from '@/theme';
 
 jest.mock('@/hooks/queries/useAuthorStarterpacks');
-jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/theme', () => {
+  const actual = jest.requireActual('@/theme');
+  return {
+    ...actual,
+    useAppTheme: jest.fn(),
+  };
+});
 jest.mock('@/components/skeletons', () => {
   const { Text } = require('react-native');
   return { FeedSkeleton: () => <Text>feed skeleton</Text> };
 });
 
 const mockUseAuthorStarterpacks = useAuthorStarterpacks as jest.Mock;
-const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 describe('StarterpacksTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseThemeColor.mockImplementation((colors) => colors.light);
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
+    mockUseAppTheme.mockReturnValue(themes.light);
   });
 
   it('shows loading skeleton while fetching data', () => {

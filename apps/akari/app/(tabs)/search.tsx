@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,8 +12,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -32,6 +32,8 @@ export default function SearchScreen() {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -42,30 +44,6 @@ export default function SearchScreen() {
   React.useEffect(() => {
     tabScrollRegistry.register('search', scrollToTop);
   }, []);
-
-  const backgroundColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#000000',
-    },
-    'background',
-  );
-
-  const textColor = useThemeColor(
-    {
-      light: '#000000',
-      dark: '#ffffff',
-    },
-    'text',
-  );
-
-  const borderColor = useThemeColor(
-    {
-      light: '#e8eaed',
-      dark: '#2d3133',
-    },
-    'background',
-  );
 
   // Use the infinite search hook with searchQuery (not query) - always fetch "all" data
   const {
@@ -129,7 +107,7 @@ export default function SearchScreen() {
     const profile = item.data;
     return (
       <TouchableOpacity
-        style={[styles.resultItem, { borderBottomColor: borderColor }]}
+        style={styles.resultItem}
         onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
         activeOpacity={0.7}
       >
@@ -143,12 +121,10 @@ export default function SearchScreen() {
             />
           ) : null}
           <ThemedView style={styles.profileInfo}>
-            <ThemedText style={[styles.displayName, { color: textColor }]}>
-              {profile.displayName || profile.handle}
-            </ThemedText>
-            <ThemedText style={[styles.handle, { color: textColor }]}>@{profile.handle}</ThemedText>
+            <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
+            <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
             {profile.description ? (
-              <ThemedText style={[styles.description, { color: textColor }]} numberOfLines={2}>
+              <ThemedText style={styles.description} numberOfLines={2}>
                 {profile.description}
               </ThemedText>
             ) : null}
@@ -218,7 +194,7 @@ export default function SearchScreen() {
     if (isFetchingNextPage) {
       return (
         <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={[styles.loadingText, { color: textColor }]}>{t('search.loadingMoreResults')}</ThemedText>
+          <ThemedText style={styles.loadingText}>{t('search.loadingMoreResults')}</ThemedText>
         </ThemedView>
       );
     }
@@ -251,21 +227,14 @@ export default function SearchScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
+        <ThemedText style={styles.title}>{t('navigation.search')}</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.searchContainer}>
         <TextInput
-          style={[
-            styles.searchInput,
-            {
-              backgroundColor: backgroundColor,
-              borderColor: borderColor,
-              color: textColor,
-            },
-          ]}
+          style={styles.searchInput}
           placeholder={t('search.searchInputPlaceholder')}
-          placeholderTextColor="#999999"
+          placeholderTextColor={colors.textMuted}
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={handleSearch}
@@ -274,7 +243,7 @@ export default function SearchScreen() {
           autoCorrect={false}
         />
         <TouchableOpacity
-          style={[styles.searchButton, { backgroundColor: borderColor }]}
+          style={[styles.searchButton, isLoading && styles.searchButtonDisabled]}
           onPress={handleSearch}
           disabled={isLoading}
         >
@@ -291,7 +260,9 @@ export default function SearchScreen() {
         keyExtractor={(item, index) => `${item.type}-${index}`}
         style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} tintColor={colors.accent} />
+        }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
@@ -304,7 +275,7 @@ export default function SearchScreen() {
             </ThemedView>
           ) : (
             <ThemedView style={styles.emptyState}>
-              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
+              <ThemedText style={styles.emptyStateText}>{getEmptyStateText()}</ThemedText>
             </ThemedView>
           )
         }
@@ -313,96 +284,117 @@ export default function SearchScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
-  },
-  searchInput: {
-    flex: 1,
-    height: 44,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    fontSize: 16,
-  },
-  searchButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  searchButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  resultsList: {
-    flex: 1,
-  },
-  resultsListContent: {
-    paddingBottom: 100,
-  },
-  resultItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-  },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  profileAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  profileInfo: {
-    flex: 1,
-    gap: 4,
-  },
-  displayName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  handle: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 18,
-    marginTop: 4,
-  },
-  emptyState: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
-    opacity: 0.6,
-  },
-});
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: colors.surface,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+    },
+    searchContainer: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      gap: 8,
+      backgroundColor: colors.surface,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.borderMuted,
+    },
+    searchInput: {
+      flex: 1,
+      height: 44,
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      fontSize: 16,
+      backgroundColor: colors.surfaceSecondary,
+      borderColor: colors.border,
+      color: colors.text,
+    },
+    searchButton: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.accent,
+    },
+    searchButtonDisabled: {
+      opacity: 0.7,
+    },
+    searchButtonText: {
+      color: colors.inverseText,
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    resultsList: {
+      flex: 1,
+    },
+    resultsListContent: {
+      paddingBottom: 100,
+      backgroundColor: colors.background,
+    },
+    resultItem: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.borderMuted,
+      backgroundColor: colors.surface,
+    },
+    profileContainer: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 12,
+    },
+    profileAvatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+    },
+    profileInfo: {
+      flex: 1,
+      gap: 4,
+    },
+    displayName: {
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    handle: {
+      fontSize: 14,
+      opacity: 0.7,
+    },
+    description: {
+      fontSize: 14,
+      lineHeight: 18,
+      marginTop: 4,
+    },
+    emptyState: {
+      paddingVertical: 40,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      opacity: 0.6,
+    },
+    loadingFooter: {
+      paddingVertical: 20,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    loadingText: {
+      fontSize: 14,
+      opacity: 0.6,
+    },
+  });
+}

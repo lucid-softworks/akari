@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { showAlert } from '@/utils/alert';
+import { useAppTheme, themes } from '@/theme';
 
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/contexts/LanguageContext');
@@ -26,6 +27,13 @@ jest.mock('@/components/RichText', () => ({ RichText: jest.fn(() => null) }));
 jest.mock('@/components/HandleHistoryModal', () => ({ HandleHistoryModal: jest.fn(() => null) }));
 jest.mock('@/components/ProfileEditModal', () => ({ ProfileEditModal: jest.fn(() => null) }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+jest.mock('@/theme', () => {
+  const actual = jest.requireActual('@/theme');
+  return {
+    ...actual,
+    useAppTheme: jest.fn(),
+  };
+});
 jest.mock('@/components/ui/IconSymbol', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -43,6 +51,7 @@ const mockUseUpdateProfile = useUpdateProfile as jest.Mock;
 const mockHandleHistoryModal = HandleHistoryModal as jest.Mock;
 const mockProfileEditModal = ProfileEditModal as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 const baseProfile = {
   handle: 'alice',
@@ -62,6 +71,7 @@ describe('ProfileHeader', () => {
     mockUseBlockUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
     mockShowAlert.mockReset();
+    mockUseAppTheme.mockReturnValue(themes.light);
   });
 
   it('opens handle history modal when handle is pressed', () => {

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,16 +9,18 @@ import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const flatListRef = useRef<FlatList<BlueskyBookmark>>(null);
-  const refreshTintColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
+  const refreshTintColor = colors.text;
 
   const scrollToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -150,54 +152,66 @@ export default function BookmarksScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
-  listContent: {
-    paddingBottom: 32,
-  },
-  emptyListContent: {
-    flexGrow: 1,
-  },
-  postCardContainer: {
-    paddingHorizontal: 24,
-    marginBottom: 16,
-  },
-  emptyState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 64,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-  loadingMore: {
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.6,
-  },
-  skeletonContainer: {
-    paddingHorizontal: 24,
-  },
-});
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 24,
+      paddingBottom: 16,
+      gap: 4,
+      backgroundColor: colors.surface,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+    },
+    subtitle: {
+      fontSize: 16,
+      opacity: 0.6,
+    },
+    listContent: {
+      paddingBottom: 32,
+      backgroundColor: colors.background,
+    },
+    emptyListContent: {
+      flexGrow: 1,
+    },
+    postCardContainer: {
+      paddingHorizontal: 24,
+      marginBottom: 16,
+    },
+    emptyState: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+      paddingVertical: 64,
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
+    loadingMore: {
+      paddingVertical: 16,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    loadingMoreText: {
+      fontSize: 14,
+      opacity: 0.6,
+    },
+    skeletonContainer: {
+      paddingHorizontal: 24,
+      backgroundColor: colors.background,
+    },
+  });
+}

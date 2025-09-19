@@ -1,7 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,8 +11,8 @@ import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppTheme, type AppThemeColors } from '@/theme';
 import { BlueskyEmbed } from '@/bluesky-api';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -44,13 +44,15 @@ type NotificationItemProps = {
   notification: GroupedNotification;
   onPress: () => void;
   borderColor: string;
+  colors: AppThemeColors;
 };
 
-function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
+function NotificationItem({ notification, onPress, borderColor, colors }: NotificationItemProps) {
   const { t } = useTranslation();
-  const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
-  const likeColor = '#ff3b30';
-  const repostColor = '#34c759';
+  const itemStyles = useMemo(() => createNotificationItemStyles(colors), [colors]);
+  const iconColor = colors.accent;
+  const likeColor = colors.danger;
+  const repostColor = colors.success;
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -119,12 +121,12 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const remainingCount = notification.authors.length - maxAvatars;
 
     return (
-      <View style={styles.avatarsContainer}>
+      <View style={itemStyles.avatarsContainer}>
         {avatarsToShow.map((author, index) => (
           <View
             key={author.did}
             style={[
-              styles.avatarWrapper,
+              itemStyles.avatarWrapper,
               {
                 marginLeft: index > 0 ? -6 : 0,
                 zIndex: maxAvatars - index,
@@ -134,13 +136,13 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             {author.avatar ? (
               <Image
                 source={{ uri: author.avatar }}
-                style={styles.avatar}
+                style={itemStyles.avatar}
                 contentFit="cover"
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
             ) : (
-              <View style={[styles.avatar, styles.avatarFallback]}>
-                <Text style={styles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
+              <View style={[itemStyles.avatar, itemStyles.avatarFallback]}>
+                <Text style={itemStyles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
               </View>
             )}
           </View>
@@ -148,15 +150,15 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
         {remainingCount > 0 && (
           <View
             style={[
-              styles.avatarWrapper,
+              itemStyles.avatarWrapper,
               {
                 marginLeft: -6,
                 zIndex: 0,
               },
             ]}
           >
-            <View style={[styles.avatar, styles.avatarOverflow]}>
-              <Text style={styles.avatarOverflowText}>+{remainingCount}</Text>
+            <View style={[itemStyles.avatar, itemStyles.avatarOverflow]}>
+              <Text style={itemStyles.avatarOverflowText}>+{remainingCount}</Text>
             </View>
           </View>
         )}
@@ -175,12 +177,12 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const imageHeight = fullWidth / aspectRatio;
 
     return (
-      <View style={styles.embedImagesContainer}>
+      <View style={itemStyles.embedImagesContainer}>
         {images.map((image, index) => (
           <Image
             key={index}
             source={{ uri: image.fullsize }}
-            style={[styles.embedImage, { width: fullWidth, height: imageHeight }]}
+            style={[itemStyles.embedImage, { width: fullWidth, height: imageHeight }]}
             contentFit="cover"
             placeholder={require('@/assets/images/partial-react-logo.png')}
           />
@@ -193,30 +195,30 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
 
   return (
     <TouchableOpacity
-      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
+      style={[itemStyles.notificationItem, { borderBottomColor: borderColor }]}
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <View style={styles.mainContent}>
-        <View style={styles.iconContainer}>
+      <View style={itemStyles.mainContent}>
+        <View style={itemStyles.iconContainer}>
           <IconSymbol name={notificationIcon.name} size={18} color={notificationIcon.color} />
         </View>
-        <View style={styles.avatarContainer}>{renderAvatars()}</View>
-        <View style={styles.contentContainer}>
-          <View style={styles.headerRow}>
-            <ThemedText style={styles.authorNames} numberOfLines={1}>
+        <View style={itemStyles.avatarContainer}>{renderAvatars()}</View>
+        <View style={itemStyles.contentContainer}>
+          <View style={itemStyles.headerRow}>
+            <ThemedText style={itemStyles.authorNames} numberOfLines={1}>
               {formatAuthorNames(notification.authors)}
             </ThemedText>
-            <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
+            <ThemedText style={itemStyles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
-          <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
-          {notification.type === 'reply' ? <ThemedText style={styles.replyIndicator}>Reply to you</ThemedText> : null}
+          <ThemedText style={itemStyles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
+          {notification.type === 'reply' ? <ThemedText style={itemStyles.replyIndicator}>Reply to you</ThemedText> : null}
         </View>
-        {!notification.isRead ? <View style={styles.unreadIndicator} /> : null}
+        {!notification.isRead ? <View style={itemStyles.unreadIndicator} /> : null}
       </View>
       {notification.postContent && (
-        <View style={styles.postContentContainer}>
-          <ThemedText style={styles.postContent} numberOfLines={2}>
+        <View style={itemStyles.postContentContainer}>
+          <ThemedText style={itemStyles.postContent} numberOfLines={2}>
             {notification.postContent}
           </ThemedText>
           {renderEmbedImages()}
@@ -336,6 +338,8 @@ export default function NotificationsScreen() {
   const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -374,7 +378,12 @@ export default function NotificationsScreen() {
   };
 
   const renderNotification = ({ item }: { item: GroupedNotification }) => (
-    <NotificationItem notification={item} onPress={() => handleNotificationPress(item)} borderColor={borderColor} />
+    <NotificationItem
+      notification={item}
+      onPress={() => handleNotificationPress(item)}
+      borderColor={borderColor}
+      colors={colors}
+    />
   );
 
   const renderEmptyState = () => (
@@ -427,230 +436,176 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    // Remove all flex constraints to allow natural flow
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  listContainer: {
-    flexGrow: 1,
-  },
-  notificationItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    minHeight: 72,
-  },
-  mainContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  notificationContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  avatarsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatarWrapper: {
-    position: 'relative',
-  },
-  avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-  },
-  avatarFallback: {
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  avatarFallbackText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  avatarOverflow: {
-    backgroundColor: '#666',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  avatarOverflowText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  notificationText: {
-    flex: 1,
-  },
-  authorInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  authorName: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginRight: 8,
-  },
-  authorHandle: {
-    fontSize: 14,
-  },
-  reasonText: {
-    fontSize: 13,
-    marginBottom: 6,
-    opacity: 0.7,
-  },
-  replyIndicator: {
-    fontSize: 12,
-    marginBottom: 4,
-    opacity: 0.6,
-  },
-  postContent: {
-    fontSize: 13,
-    marginBottom: 4,
-    opacity: 0.8,
-    lineHeight: 16,
-  },
-  postContentContainer: {
-    marginTop: 4,
-  },
-  embedImagesContainer: {
-    flexDirection: 'row',
-    marginTop: 4,
-    gap: 4,
-  },
-  embedImage: {
-    borderRadius: 8,
-  },
-  timeText: {
-    fontSize: 12,
-  },
-  unreadIndicator: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginLeft: 8,
-    alignSelf: 'center',
-    backgroundColor: '#007AFF',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  skeletonContainer: {
-    flex: 1,
-    paddingBottom: 100, // Account for tab bar
-  },
-  emptyStateTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  emptyStateSubtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    opacity: 0.7,
-  },
-  errorState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  errorMessage: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 16,
-    opacity: 0.7,
-  },
-  retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  loadingFooter: {
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  notificationsList: {
-    // Remove flex constraint to allow content to expand
-  },
-  notificationsListContent: {
-    paddingBottom: 16, // Add some padding at the bottom for the footer
-  },
-  loadingMore: {
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.7,
-  },
-  avatarContainer: {
-    marginRight: 12,
-    marginTop: 2,
-  },
-  contentContainer: {
-    flex: 1,
-    paddingRight: 4,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  authorNames: {
-    fontSize: 14,
-    fontWeight: '600',
-    flex: 1,
-    marginRight: 8,
-  },
-  timestamp: {
-    fontSize: 12,
-    opacity: 0.6,
-  },
-  iconContainer: {
-    marginRight: 10,
-    marginTop: 4,
-    width: 18,
-    alignItems: 'center',
-  },
-});
+function createStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      paddingTop: 16,
+      backgroundColor: colors.surface,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: '700',
+    },
+    notificationsList: {
+      backgroundColor: colors.background,
+    },
+    skeletonContainer: {
+      flex: 1,
+      paddingBottom: 100,
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 32,
+      paddingVertical: 48,
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+    },
+    emptyStateTitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    emptyStateSubtitle: {
+      fontSize: 16,
+      textAlign: 'center',
+      opacity: 0.7,
+    },
+    loadingMore: {
+      paddingVertical: 16,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    loadingMoreText: {
+      fontSize: 14,
+      opacity: 0.7,
+    },
+  });
+}
+
+function createNotificationItemStyles(colors: AppThemeColors) {
+  return StyleSheet.create({
+    notificationItem: {
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      minHeight: 72,
+      backgroundColor: colors.surface,
+    },
+    mainContent: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+    iconContainer: {
+      marginRight: 10,
+      marginTop: 4,
+      width: 18,
+      alignItems: 'center',
+    },
+    avatarsContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    avatarWrapper: {
+      position: 'relative',
+    },
+    avatar: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+    },
+    avatarFallback: {
+      backgroundColor: colors.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.border,
+    },
+    avatarFallbackText: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: colors.inverseText,
+    },
+    avatarOverflow: {
+      backgroundColor: colors.surfaceSecondary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.borderMuted,
+    },
+    avatarOverflowText: {
+      fontSize: 10,
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    avatarContainer: {
+      marginRight: 12,
+      marginTop: 2,
+    },
+    contentContainer: {
+      flex: 1,
+      paddingRight: 4,
+    },
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    authorNames: {
+      fontSize: 14,
+      fontWeight: '600',
+      flex: 1,
+      marginRight: 8,
+    },
+    timestamp: {
+      fontSize: 12,
+      opacity: 0.6,
+    },
+    reasonText: {
+      fontSize: 13,
+      marginBottom: 6,
+      opacity: 0.7,
+    },
+    replyIndicator: {
+      fontSize: 12,
+      marginBottom: 4,
+      opacity: 0.6,
+    },
+    postContentContainer: {
+      marginTop: 4,
+    },
+    postContent: {
+      fontSize: 13,
+      marginBottom: 4,
+      opacity: 0.8,
+      lineHeight: 16,
+    },
+    embedImagesContainer: {
+      flexDirection: 'row',
+      marginTop: 4,
+      gap: 4,
+    },
+    embedImage: {
+      borderRadius: 8,
+    },
+    unreadIndicator: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      marginLeft: 8,
+      alignSelf: 'center',
+      backgroundColor: colors.accent,
+    },
+  });
+}
