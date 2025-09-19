@@ -52,6 +52,7 @@
       "translationReport": "Vertalingsrapport",
       "checkConsoleForReport": "Controleer de console voor het rapport over ontbrekende vertalingen",
       "checkOutImage": "Bekijk deze afbeelding!",
+      "bookmarks": "Bladwijzers",
       "save": "Opslaan",
       "saving": "Opslaan...",
       "mute": "Dempen",
@@ -253,6 +254,11 @@
       "addGif": "GIF toevoegen",
       "gifAltTextPlaceholder": "Beschrijf deze GIF voor toegankelijkheid...",
       "apiError": "Kan GIF niet laden. Controleer je internetverbinding."
+    },
+    "bookmarks": {
+      "subtitle": "Opgeslagen berichten en threads verschijnen hier.",
+      "emptyState": "Je hebt nog geen berichten opgeslagen.",
+      "error": "We konden je opgeslagen berichten niet laden."
     }
   }
 }

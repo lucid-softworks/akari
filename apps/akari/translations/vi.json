@@ -52,6 +52,7 @@
       "translationReport": "Báo cáo dịch thuật",
       "checkConsoleForReport": "Kiểm tra bảng điều khiển để xem báo cáo dịch thuật bị thiếu",
       "checkOutImage": "Xem hình ảnh này!",
+      "bookmarks": "Đánh dấu",
       "save": "Lưu",
       "saving": "Đang lưu...",
       "mute": "Tắt tiếng",
@@ -253,6 +254,11 @@
       "addGif": "Thêm GIF",
       "gifAltTextPlaceholder": "Mô tả GIF này cho khả năng truy cập...",
       "apiError": "Không thể tải GIF. Vui lòng kiểm tra kết nối internet."
+    },
+    "bookmarks": {
+      "subtitle": "Bài đăng và chuỗi đã lưu sẽ xuất hiện ở đây.",
+      "emptyState": "Bạn chưa lưu bài đăng nào.",
+      "error": "Chúng tôi không thể tải các bài đăng đã lưu của bạn."
     }
   }
 }

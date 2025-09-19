@@ -52,6 +52,7 @@
       "translationReport": "翻譯報告",
       "checkConsoleForReport": "查看控制台取得缺失翻譯報告",
       "checkOutImage": "查看這張圖片！",
+      "bookmarks": "書籤",
       "save": "儲存",
       "saving": "儲存中...",
       "mute": "靜音",
@@ -253,6 +254,11 @@
       "addGif": "新增GIF",
       "gifAltTextPlaceholder": "為無障礙存取描述此GIF...",
       "apiError": "無法載入GIF。請檢查您的網路連線。"
+    },
+    "bookmarks": {
+      "subtitle": "已儲存的貼文和討論串會顯示在這裡。",
+      "emptyState": "你還沒有儲存任何貼文。",
+      "error": "我們無法載入你儲存的貼文。"
     }
   }
 }

@@ -52,6 +52,7 @@
       "translationReport": "翻訳レポート",
       "checkConsoleForReport": "不足している翻訳のレポートについてはコンソールを確認してください",
       "checkOutImage": "この画像をチェックしてください！",
+      "bookmarks": "ブックマーク",
       "save": "保存",
       "saving": "保存中...",
       "mute": "ミュート",
@@ -253,6 +254,11 @@
       "addGif": "GIFを追加",
       "gifAltTextPlaceholder": "このGIFをアクセシビリティのために説明してください...",
       "apiError": "GIFを読み込めませんでした。インターネット接続を確認してください。"
+    },
+    "bookmarks": {
+      "subtitle": "保存した投稿とスレッドがここに表示されます。",
+      "emptyState": "まだ投稿を保存していません。",
+      "error": "保存した投稿を読み込めませんでした。"
     }
   }
 }

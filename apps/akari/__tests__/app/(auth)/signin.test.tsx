@@ -209,6 +209,36 @@ describe('AuthScreen', () => {
     expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
   });
 
+  it('submits sign in when pressing enter on the password input', async () => {
+    const utils = renderScreen();
+
+    fillCredentials(utils);
+    fireEvent(utils.getByPlaceholderText(passwordPlaceholder), 'submitEditing');
+
+    await waitFor(() => {
+      expect(signInMutate).toHaveBeenCalledWith({
+        identifier: 'user',
+        password: 'password',
+        pdsUrl: 'https://pds',
+      });
+    });
+  });
+
+  it('submits sign in when pressing enter on the handle input', async () => {
+    const utils = renderScreen();
+
+    fillCredentials(utils);
+    fireEvent(utils.getByPlaceholderText(handlePlaceholder), 'submitEditing');
+
+    await waitFor(() => {
+      expect(signInMutate).toHaveBeenCalledWith({
+        identifier: 'user',
+        password: 'password',
+        pdsUrl: 'https://pds',
+      });
+    });
+  });
+
   it('signs in and routes to settings when adding an account', async () => {
     mockUseCurrentAccount.mockReturnValue({ data: { did: 'did:existing' } });
     const utils = renderScreen();

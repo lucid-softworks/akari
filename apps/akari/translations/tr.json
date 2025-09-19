@@ -52,6 +52,7 @@
       "translationReport": "Çeviri Raporu",
       "checkConsoleForReport": "Eksik çeviriler raporu için konsolu kontrol edin",
       "checkOutImage": "Bu resme bakın!",
+      "bookmarks": "Yer İşaretleri",
       "save": "Kaydet",
       "saving": "Kaydediliyor...",
       "mute": "Sessiz",
@@ -253,6 +254,11 @@
       "addGif": "GIF Ekle",
       "gifAltTextPlaceholder": "Bu GIF'i erişilebilirlik için açıklayın...",
       "apiError": "GIF yüklenemedi. İnternet bağlantınızı kontrol edin."
+    },
+    "bookmarks": {
+      "subtitle": "Kaydettiğiniz gönderiler ve konular burada görünecek.",
+      "emptyState": "Henüz herhangi bir gönderi kaydetmediniz.",
+      "error": "Kaydedilmiş gönderilerinizi yükleyemedik."
     }
   }
 }

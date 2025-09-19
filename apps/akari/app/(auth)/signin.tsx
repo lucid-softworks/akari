@@ -181,6 +181,19 @@ export default function AuthScreen() {
   const isSignUp = mode === 'signup';
   const isLoading = signInMutation.isPending;
 
+  const submitAuth = () => {
+    if (isLoading) {
+      return;
+    }
+
+    if (isSignUp) {
+      void handleSignUp();
+      return;
+    }
+
+    void handleSignIn();
+  };
+
   const panelTitle = useMemo(() => {
     if (currentAccount) {
       return t('common.addAccount');
@@ -247,6 +260,8 @@ export default function AuthScreen() {
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="off"
+                  returnKeyType="done"
+                  onSubmitEditing={submitAuth}
                 />
                 <ThemedText style={[styles.helperText, { color: helperColor }]}>
                   {t('auth.handleHelperText')}
@@ -265,6 +280,8 @@ export default function AuthScreen() {
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="off"
+                  returnKeyType="done"
+                  onSubmitEditing={submitAuth}
                 />
                 <ThemedText style={[styles.helperText, { color: helperColor }]}>
                   {t('auth.appPasswordHelperText')}

@@ -77,7 +77,6 @@ export function Panel({
 const styles = StyleSheet.create({
   panel: {
     width: '100%',
-    borderRadius: 12,
     overflow: 'hidden',
     borderWidth: StyleSheet.hairlineWidth,
   },

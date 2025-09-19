@@ -52,6 +52,7 @@
       "translationReport": "Raport tłumaczenia",
       "checkConsoleForReport": "Sprawdź konsolę, aby uzyskać raport o brakujących tłumaczeniach",
       "checkOutImage": "Sprawdź ten obraz!",
+      "bookmarks": "Zakładki",
       "save": "Zapisz",
       "saving": "Zapisywanie...",
       "mute": "Wycisz",
@@ -253,6 +254,11 @@
       "addGif": "Dodaj GIF",
       "gifAltTextPlaceholder": "Opisz ten GIF dla dostępności...",
       "apiError": "Nie można załadować GIF. Sprawdź połączenie internetowe."
+    },
+    "bookmarks": {
+      "subtitle": "Zapisane posty i wątki pojawią się tutaj.",
+      "emptyState": "Nie zapisałeś jeszcze żadnych postów.",
+      "error": "Nie udało nam się wczytać zapisanych postów."
     }
   }
 }

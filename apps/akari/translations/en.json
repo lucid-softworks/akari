@@ -58,6 +58,7 @@
       "checkOutImage": "Check out this image!",
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats"
+      "bookmarks": "Bookmarks"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -253,6 +254,11 @@
       "version": "Version",
       "checkMissingTranslations": "🔍 Check Missing Translations",
       "developmentTool": "Development tool"
+    },
+    "bookmarks": {
+      "subtitle": "Saved posts and threads will appear here.",
+      "emptyState": "You haven't saved any posts yet.",
+      "error": "We couldn't load your saved posts."
     }
   }
 }
