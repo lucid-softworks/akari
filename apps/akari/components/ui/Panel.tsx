@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 
 type PanelProps = {
   title: React.ReactNode;
@@ -25,10 +25,11 @@ export function Panel({
   contentStyle,
   footerStyle,
 }: PanelProps) {
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#0F1115' }, 'background');
-  const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F212D' }, 'border');
-  const headerBackground = useThemeColor({ light: '#F9FAFB', dark: '#151823' }, 'background');
-  const titleColor = useThemeColor({ light: '#111827', dark: '#F4F4F5' }, 'text');
+  const { colors } = useAppTheme();
+  const backgroundColor = colors.surface;
+  const borderColor = colors.border;
+  const headerBackground = colors.surfaceSecondary;
+  const titleColor = colors.text;
 
   return (
     <View

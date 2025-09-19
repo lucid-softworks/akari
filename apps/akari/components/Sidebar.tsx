@@ -13,25 +13,11 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useAppTheme, type AppTheme } from '@/theme';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
 const EXPANDED_WIDTH = 264;
-
-const palette = {
-  background: '#0F1115',
-  border: '#1F212D',
-  headerBackground: '#151823',
-  textPrimary: '#F4F4F5',
-  textSecondary: '#A1A1AA',
-  textMuted: '#6B7280',
-  highlight: '#7C8CF9',
-  activeBackground: '#1E2537',
-  hover: '#1A1D27',
-  countAccent: '#EA580C',
-  activeCount: '#7C8CF9',
-  trendingAccent: '#38BDF8',
-} as const;
 
 const TRENDING_TAGS = [
   '#BlueskyMigration',
@@ -51,6 +37,9 @@ type NavigationItem = {
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const theme = useAppTheme();
+  const { colors } = theme;
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
   const { data: accounts = [] } = useAccounts();
@@ -151,7 +140,10 @@ export function Sidebar() {
     }
 
     return (
-      <View style={[styles.badge, { backgroundColor: isActive ? palette.activeCount : palette.countAccent }]} pointerEvents="none">
+      <View
+        style={[styles.badge, { backgroundColor: isActive ? colors.badgeActive : colors.badge }]}
+        pointerEvents="none"
+      >
         <Text style={styles.badgeText}>{count}</Text>
       </View>
     );
@@ -167,7 +159,7 @@ export function Sidebar() {
           style={({ pressed }) => [
             styles.accountButton,
             collapsed && styles.accountButtonCollapsed,
-            pressed && { backgroundColor: palette.hover },
+            pressed && { backgroundColor: colors.surfaceHover },
           ]}
         >
           <View style={styles.avatar}>
@@ -188,7 +180,7 @@ export function Sidebar() {
             </View>
           ) : null}
           {!collapsed ? (
-            <IconSymbol name="chevron.down" size={16} color={palette.textSecondary} />
+            <IconSymbol name="chevron.down" size={16} color={colors.textSecondary} />
           ) : null}
         </Pressable>
       </View>
@@ -209,9 +201,9 @@ export function Sidebar() {
                   collapsed && styles.navItemCollapsed,
                   {
                     backgroundColor: active
-                      ? palette.activeBackground
+                      ? colors.surfaceActive
                       : pressed
-                      ? palette.hover
+                      ? colors.surfaceHover
                       : 'transparent',
                   },
                 ]}
@@ -221,7 +213,7 @@ export function Sidebar() {
                   <IconSymbol
                     name={item.icon}
                     size={18}
-                    color={active ? palette.highlight : palette.textSecondary}
+                    color={active ? colors.accent : colors.textSecondary}
                   />
                 </View>
                 {!collapsed ? (
@@ -230,7 +222,7 @@ export function Sidebar() {
                       style={[
                         styles.navLabel,
                         {
-                          color: active ? palette.highlight : palette.textSecondary,
+                          color: active ? colors.accent : colors.textSecondary,
                           fontWeight: active ? '600' : '500',
                         },
                       ]}
@@ -249,7 +241,7 @@ export function Sidebar() {
         {!collapsed ? (
           <View style={styles.trendingSection}>
             <View style={styles.trendingHeader}>
-              <IconSymbol name="sparkles" size={14} color={palette.trendingAccent} />
+              <IconSymbol name="sparkles" size={14} color={colors.info} />
               <Text style={styles.trendingLabel}>Trending</Text>
             </View>
             <View>
@@ -260,7 +252,7 @@ export function Sidebar() {
                   accessibilityLabel={tag}
                   style={({ pressed }) => [
                     styles.trendingItem,
-                    pressed && { backgroundColor: palette.hover },
+                    pressed && { backgroundColor: colors.surfaceHover },
                   ]}
                 >
                   <Text style={styles.trendingText}>{tag}</Text>
@@ -278,11 +270,11 @@ export function Sidebar() {
           onPress={() => setCollapsed((value) => !value)}
           style={({ pressed }) => [
             styles.collapseButton,
-            pressed && { backgroundColor: palette.hover },
+            pressed && { backgroundColor: colors.surfaceHover },
           ]}
         >
           {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
-          <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
+          <IconSymbol name="ellipsis" size={18} color={colors.textSecondary} />
         </Pressable>
       </View>
 
@@ -294,8 +286,9 @@ export function Sidebar() {
           ]}
         >
           <View style={styles.accountSelectorList}>
-              {accounts.map((account) => {
-                const selected = account.did === activeAccount?.did;
+            {accounts.map((account) => {
+              const selected = account.did === activeAccount?.did;
+
               return (
                 <Pressable
                   key={account.did}
@@ -304,7 +297,7 @@ export function Sidebar() {
                   onPress={() => handleAccountSelect(account)}
                   style={({ pressed }) => [
                     styles.accountOption,
-                    (selected || pressed) && { backgroundColor: palette.activeBackground },
+                    (selected || pressed) && { backgroundColor: colors.surfaceActive },
                   ]}
                 >
                   <View style={styles.avatarSmall}>
@@ -336,7 +329,7 @@ export function Sidebar() {
               onPress={handleAddAccount}
               style={({ pressed }) => [
                 styles.addAccountButton,
-                pressed && { backgroundColor: palette.hover },
+                pressed && { backgroundColor: colors.surfaceHover },
               ]}
             >
               <Text style={styles.addAccountText}>+ Add account</Text>
@@ -349,248 +342,252 @@ export function Sidebar() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: palette.background,
-    borderColor: palette.border,
-    borderWidth: 1,
-    flexShrink: 0,
-    height: '100%',
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: palette.border,
-    backgroundColor: palette.headerBackground,
-  },
-  accountButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 6,
-  },
-  accountButtonCollapsed: {
-    justifyContent: 'center',
-  },
-  avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
-    backgroundColor: palette.highlight,
-  },
-  avatarSmall: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-    backgroundColor: palette.highlight,
-  },
-  avatarText: {
-    color: '#ffffff',
-    fontSize: 14,
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 14,
-  },
-  accountTextContainer: {
-    flex: 1,
-  },
-  accountName: {
-    color: palette.textPrimary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  accountHandle: {
-    color: palette.textSecondary,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  menu: {
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  navigationList: {
-    flexGrow: 1,
-  },
-  navItem: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    marginBottom: 8,
-  },
-  navItemCollapsed: {
-    justifyContent: 'center',
-    paddingHorizontal: 0,
-  },
-  iconContainer: {
-    width: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  iconCollapsedSpacing: {
-    marginRight: 0,
-  },
-  navLabel: {
-    flex: 1,
-    fontSize: 14,
-  },
-  badge: {
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    marginLeft: 8,
-    minWidth: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  collapsedBadge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    backgroundColor: palette.countAccent,
-    borderRadius: 999,
-    minWidth: 18,
-    height: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  collapsedBadgeText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  activeIndicator: {
-    position: 'absolute',
-    left: 0,
-    top: 4,
-    bottom: 4,
-    width: 3,
-    backgroundColor: palette.highlight,
-  },
-  trendingSection: {
-    borderTopWidth: 1,
-    borderColor: palette.border,
-    marginTop: 12,
-    paddingTop: 12,
-  },
-  trendingHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  trendingLabel: {
-    color: palette.textMuted,
-    fontSize: 12,
-    marginLeft: 6,
-    fontWeight: '600',
-  },
-  trendingItem: {
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    marginBottom: 6,
-  },
-  trendingText: {
-    color: palette.textSecondary,
-    fontSize: 12,
-    fontWeight: '500',
-  },
-  footer: {
-    borderTopWidth: 1,
-    borderColor: palette.border,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: palette.headerBackground,
-  },
-  collapseButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-  },
-  collapseText: {
-    color: palette.textSecondary,
-    fontSize: 13,
-    fontWeight: '500',
-    marginRight: 8,
-  },
-  accountSelector: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    top: 88,
-    backgroundColor: palette.headerBackground,
-    borderWidth: 1,
-    borderColor: palette.border,
-    shadowColor: '#000000',
-    shadowOpacity: 0.45,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 18 },
-    elevation: 16,
-    padding: 8,
-  },
-  accountSelectorCollapsed: {
-    left: 8,
-    right: 8,
-  },
-  accountSelectorList: {
-    paddingBottom: 8,
-  },
-  accountOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    marginBottom: 4,
-  },
-  accountDetails: {
-    flex: 1,
-  },
-  accountDisplay: {
-    color: palette.textPrimary,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  accountUsername: {
-    color: palette.textSecondary,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  accountActiveDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: palette.highlight,
-    marginLeft: 12,
-  },
-  accountSelectorFooter: {
-    borderTopWidth: 1,
-    borderColor: palette.border,
-    paddingTop: 8,
-  },
-  addAccountButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-  },
-  addAccountText: {
-    color: palette.highlight,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: AppTheme) {
+  const { colors } = theme;
+  return StyleSheet.create({
+    container: {
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderWidth: 1,
+      flexShrink: 0,
+      height: '100%',
+    },
+    header: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surfaceSecondary,
+    },
+    accountButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 6,
+      paddingHorizontal: 6,
+    },
+    accountButtonCollapsed: {
+      justifyContent: 'center',
+    },
+    avatar: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 8,
+      backgroundColor: colors.accent,
+    },
+    avatarSmall: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 10,
+      backgroundColor: colors.accent,
+    },
+    avatarText: {
+      color: colors.inverseText,
+      fontSize: 14,
+    },
+    avatarImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 14,
+    },
+    accountTextContainer: {
+      flex: 1,
+    },
+    accountName: {
+      color: colors.text,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    accountHandle: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      marginTop: 2,
+    },
+    menu: {
+      flex: 1,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+    },
+    navigationList: {
+      flexGrow: 1,
+    },
+    navItem: {
+      position: 'relative',
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      marginBottom: 8,
+    },
+    navItemCollapsed: {
+      justifyContent: 'center',
+      paddingHorizontal: 0,
+    },
+    iconContainer: {
+      width: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 12,
+    },
+    iconCollapsedSpacing: {
+      marginRight: 0,
+    },
+    navLabel: {
+      flex: 1,
+      fontSize: 14,
+    },
+    badge: {
+      borderRadius: 999,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginLeft: 8,
+      minWidth: 26,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    badgeText: {
+      color: colors.inverseText,
+      fontSize: 12,
+      fontWeight: '600',
+    },
+    collapsedBadge: {
+      position: 'absolute',
+      top: 4,
+      right: 4,
+      backgroundColor: colors.badge,
+      borderRadius: 999,
+      minWidth: 18,
+      height: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 4,
+    },
+    collapsedBadgeText: {
+      color: colors.inverseText,
+      fontSize: 11,
+      fontWeight: '700',
+    },
+    activeIndicator: {
+      position: 'absolute',
+      left: 0,
+      top: 4,
+      bottom: 4,
+      width: 3,
+      backgroundColor: colors.accent,
+    },
+    trendingSection: {
+      borderTopWidth: 1,
+      borderColor: colors.border,
+      marginTop: 12,
+      paddingTop: 12,
+    },
+    trendingHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    trendingLabel: {
+      color: colors.textMuted,
+      fontSize: 12,
+      marginLeft: 6,
+      fontWeight: '600',
+    },
+    trendingItem: {
+      paddingVertical: 6,
+      paddingHorizontal: 10,
+      marginBottom: 6,
+    },
+    trendingText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '500',
+    },
+    footer: {
+      borderTopWidth: 1,
+      borderColor: colors.border,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      backgroundColor: colors.surfaceSecondary,
+    },
+    collapseButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+    },
+    collapseText: {
+      color: colors.textSecondary,
+      fontSize: 13,
+      fontWeight: '500',
+      marginRight: 8,
+    },
+    accountSelector: {
+      position: 'absolute',
+      left: 16,
+      right: 16,
+      top: 88,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: colors.shadow,
+      shadowOpacity: 0.45,
+      shadowRadius: 20,
+      shadowOffset: { width: 0, height: 18 },
+      elevation: 16,
+      padding: 8,
+    },
+    accountSelectorCollapsed: {
+      left: 8,
+      right: 8,
+    },
+    accountSelectorList: {
+      paddingBottom: 8,
+    },
+    accountOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 8,
+      paddingHorizontal: 8,
+      marginBottom: 4,
+    },
+    accountDetails: {
+      flex: 1,
+    },
+    accountDisplay: {
+      color: colors.text,
+      fontSize: 14,
+      fontWeight: '500',
+    },
+    accountUsername: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      marginTop: 2,
+    },
+    accountActiveDot: {
+      width: 8,
+      height: 8,
+      backgroundColor: colors.accent,
+      borderRadius: 4,
+      marginLeft: 12,
+    },
+    accountSelectorFooter: {
+      borderTopWidth: 1,
+      borderColor: colors.border,
+      paddingTop: 8,
+    },
+    addAccountButton: {
+      paddingVertical: 8,
+      paddingHorizontal: 8,
+    },
+    addAccountText: {
+      color: colors.accent,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+  });
+}

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useBorderColor } from "@/hooks/useBorderColor";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useAppTheme } from "@/theme";
 
 /**
  * Tab item configuration
@@ -33,11 +33,12 @@ export function TabBar<T extends string>({
   activeTab,
   onTabChange,
 }: TabBarProps<T>) {
+  const { colors } = useAppTheme();
   const borderColor = useBorderColor();
-  const surfaceColor = useThemeColor({ light: "#FFFFFF", dark: "#0F1115" }, "background");
-  const inactiveTextColor = useThemeColor({ light: "#6B7280", dark: "#9CA3AF" }, "text");
-  const activeTextColor = useThemeColor({ light: "#111827", dark: "#F4F4F5" }, "text");
-  const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
+  const surfaceColor = colors.surface;
+  const inactiveTextColor = colors.textMuted;
+  const activeTextColor = colors.text;
+  const accentColor = colors.accent;
 
   return (
     <ThemedView
@@ -46,6 +47,7 @@ export function TabBar<T extends string>({
         {
           borderColor,
           backgroundColor: surfaceColor,
+          shadowColor: colors.shadow,
         },
       ]}
     >
@@ -99,7 +101,6 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingHorizontal: 12,
     marginBottom: 12,
-    shadowColor: "rgba(0, 0, 0, 0.1)",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 4,

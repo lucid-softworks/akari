@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 
-jest.mock('@/hooks/useThemeColor');
-const mockUseThemeColor = useThemeColor as jest.Mock;
+jest.mock('@/theme');
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 const loadTabBadge = () => {
   let TabBadge: any;
@@ -23,7 +23,12 @@ const loadTabBadge = () => {
 describe('TabBadge', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseThemeColor.mockImplementation((colors) => colors.light);
+    mockUseAppTheme.mockReturnValue({
+      colors: {
+        danger: '#ff3b30',
+        inverseText: '#ffffff',
+      },
+    });
   });
 
   it('returns null when count is zero', () => {
@@ -65,20 +70,18 @@ describe('TabBadge', () => {
     expect(style.height).toBe(20);
   });
 
-  it('calls useThemeColor for background and text colors', () => {
+  it('uses theme colors for background and text', () => {
     const TabBadge = loadTabBadge();
 
-    render(<TabBadge count={1} />);
-    expect(mockUseThemeColor).toHaveBeenNthCalledWith(
-      1,
-      { light: '#ff3b30', dark: '#ff453a' },
-      'tint',
-    );
-    expect(mockUseThemeColor).toHaveBeenNthCalledWith(
-      2,
-      { light: '#ffffff', dark: '#ffffff' },
-      'text',
-    );
+    const { getByText } = render(<TabBadge count={1} />);
+    const textInstance = getByText('1');
+    const badgeInstance = textInstance.parent as { props: { style?: unknown } } | null;
+    expect(badgeInstance).toBeTruthy();
+    const badgeStyle = StyleSheet.flatten(badgeInstance?.props.style);
+    const textStyle = StyleSheet.flatten((textInstance as any).props.style);
+
+    expect(badgeStyle.backgroundColor).toBe('#ff3b30');
+    expect(textStyle.color).toBe('#ffffff');
   });
 
   it('uses Android offsets for badge positioning', () => {

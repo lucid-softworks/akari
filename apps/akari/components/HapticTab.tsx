@@ -4,7 +4,7 @@ import * as Haptics from "expo-haptics";
 import { StyleSheet, View } from "react-native";
 
 import { useBorderColor } from "@/hooks/useBorderColor";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useAppTheme } from "@/theme";
 
 type HapticTabProps = BottomTabBarButtonProps & {
   onTabPress?: () => void;
@@ -12,11 +12,12 @@ type HapticTabProps = BottomTabBarButtonProps & {
 
 export function HapticTab(props: HapticTabProps) {
   const { onTabPress, style, children, accessibilityState, ...restProps } = props;
+  const { colors } = useAppTheme();
   const borderColor = useBorderColor();
-  const inactiveBackground = useThemeColor({ light: "#F3F4F6", dark: "#111827" }, "background");
-  const activeBackground = useThemeColor({ light: "#FFFFFF", dark: "#1E2537" }, "background");
-  const pressedBackground = useThemeColor({ light: "#E5E7EB", dark: "#1B2332" }, "background");
-  const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
+  const inactiveBackground = colors.surfaceSecondary;
+  const activeBackground = colors.surface;
+  const pressedBackground = colors.surfaceHover;
+  const accentColor = colors.accent;
   const isActive = accessibilityState?.selected ?? false;
 
   return (

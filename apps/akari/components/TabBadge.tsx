@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 
 type TabBadgeProps = {
   count: number;
@@ -10,21 +10,9 @@ type TabBadgeProps = {
 };
 
 export function TabBadge({ count, size = 'medium' }: TabBadgeProps) {
-  const backgroundColor = useThemeColor(
-    {
-      light: '#ff3b30',
-      dark: '#ff453a',
-    },
-    'tint',
-  );
-
-  const textColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#ffffff',
-    },
-    'text',
-  );
+  const { colors } = useAppTheme();
+  const backgroundColor = colors.danger;
+  const textColor = colors.inverseText;
 
   // Don't show badge if count is 0
   if (count === 0) {

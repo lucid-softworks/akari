@@ -16,7 +16,7 @@ import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificati
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 /**
@@ -59,10 +59,11 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
+  const { colors } = useAppTheme();
   const borderColor = useBorderColor();
-  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
+  const accentColor = colors.accent;
+  const inactiveTint = colors.textMuted;
+  const tabBarSurface = colors.surface;
   const tabBarStyle = {
     borderTopWidth: StyleSheet.hairlineWidth,
     borderColor,
@@ -70,7 +71,7 @@ export default function TabLayout() {
     paddingTop: 8,
     paddingBottom: 18,
     height: 86,
-    shadowColor: 'rgba(12, 14, 24, 0.28)',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: -8 },
     shadowOpacity: 0.18,
     shadowRadius: 20,

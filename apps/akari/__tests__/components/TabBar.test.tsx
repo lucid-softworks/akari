@@ -2,21 +2,27 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import { TabBar } from '@/components/TabBar';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 
 jest.mock('@/hooks/useBorderColor');
-jest.mock('@/hooks/useThemeColor');
+jest.mock('@/theme');
 
 const mockUseBorderColor = useBorderColor as jest.Mock;
-const mockUseThemeColor = useThemeColor as jest.Mock;
+const mockUseAppTheme = useAppTheme as jest.Mock;
 
 describe('TabBar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseBorderColor.mockReturnValue('#ccc');
-    mockUseThemeColor.mockImplementation(
-      (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000'
-    );
+    mockUseAppTheme.mockReturnValue({
+      colors: {
+        surface: '#FFFFFF',
+        textMuted: '#6B7280',
+        text: '#111827',
+        accent: '#7C8CF9',
+        shadow: 'rgba(0, 0, 0, 0.1)',
+      },
+    });
   });
 
   const flattenStyles = (style: unknown): any[] =>

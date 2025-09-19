@@ -21,7 +21,7 @@ import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAppTheme } from '@/theme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 
@@ -38,13 +38,9 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
 
-  const sheetBackground = useThemeColor({ light: '#FFFFFF', dark: '#0F172A' }, 'background');
-  const backdropColor = 'rgba(12, 18, 32, 0.65)';
-  const secondaryTextColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const avatarBackground = useThemeColor({ light: '#E0E7FF', dark: '#1E2537' }, 'background');
-  const handleColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
+  const { colors } = useAppTheme();
   const borderColor = useBorderColor();
+  const handleColor = useBorderColor('muted');
 
   const activeAccount: Account | undefined = useMemo(
     () => currentAccount ?? accounts[0],
@@ -98,7 +94,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
 
   return (
     <Modal visible transparent animationType="slide" onRequestClose={onClose}>
-      <View style={[styles.overlay, { backgroundColor: backdropColor }]}>
+      <View style={[styles.overlay, { backgroundColor: colors.overlayStrong }]}>
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={onClose}
@@ -109,7 +105,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
           style={[
             styles.sheet,
             {
-              backgroundColor: sheetBackground,
+              backgroundColor: colors.surface,
               paddingBottom: bottom + 16,
               borderTopColor: borderColor,
             },
@@ -121,7 +117,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
 
           <View style={styles.header}>
             <ThemedText type="defaultSemiBold">{t('common.switchAccount')}</ThemedText>
-            <ThemedText style={[styles.subtitle, { color: secondaryTextColor }]}>
+            <ThemedText style={[styles.subtitle, { color: colors.textMuted }]}>
               {t('common.accounts')} ({accounts.length})
             </ThemedText>
           </View>
@@ -133,7 +129,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
           >
             {accounts.length === 0 ? (
               <View style={styles.emptyState}>
-                <ThemedText style={[styles.emptyStateText, { color: secondaryTextColor }]}>
+                <ThemedText style={[styles.emptyStateText, { color: colors.textMuted }]}>
                   {t('common.noAccounts')}
                 </ThemedText>
               </View>
@@ -151,13 +147,20 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
                     accessibilityState={{ selected }}
                     accessibilityLabel={accessibilityLabel}
                     onPress={() => handleAccountSelect(account)}
-                    style={styles.accountOption}
+                    style={({ pressed }) => [
+                      styles.accountOption,
+                      (selected || pressed) && { backgroundColor: colors.surfaceActive },
+                    ]}
                   >
-                    <View style={[styles.avatar, { backgroundColor: avatarBackground }]}>
+                    <View style={[styles.avatar, { backgroundColor: colors.accentMuted }]}>
                       {account.avatar ? (
                         <Image source={{ uri: account.avatar }} style={styles.avatarImage} contentFit="cover" />
                       ) : (
-                        <ThemedText style={styles.avatarFallback} lightColor="#ffffff" darkColor="#ffffff">
+                        <ThemedText
+                          style={styles.avatarFallback}
+                          lightColor={colors.inverseText}
+                          darkColor={colors.inverseText}
+                        >
                           {getAccountInitial(account)}
                         </ThemedText>
                       )}
@@ -168,11 +171,11 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
                         {account.displayName ?? account.handle}
                       </ThemedText>
                       {account.handle ? (
-                        <ThemedText style={[styles.accountHandle, { color: secondaryTextColor }]}>@{account.handle}</ThemedText>
+                        <ThemedText style={[styles.accountHandle, { color: colors.textMuted }]}>@{account.handle}</ThemedText>
                       ) : null}
                       {selected ? (
-                        <View style={[styles.currentBadge, { backgroundColor: avatarBackground }]}>
-                          <ThemedText style={[styles.currentBadgeText, { color: accentColor }]}>
+                        <View style={[styles.currentBadge, { backgroundColor: colors.accentMuted }]}>
+                          <ThemedText style={[styles.currentBadgeText, { color: colors.accent }]}>
                             {t('common.current')}
                           </ThemedText>
                         </View>
@@ -180,7 +183,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
                     </View>
 
                     {selected ? (
-                      <IconSymbol name="checkmark.circle.fill" size={22} color={accentColor} />
+                      <IconSymbol name="checkmark.circle.fill" size={22} color={colors.accent} />
                     ) : (
                       <IconSymbol name="circle" size={22} color={handleColor} />
                     )}
@@ -195,8 +198,8 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
             onPress={handleAddAccount}
             style={[styles.addAccountButton, { borderColor }]}
           >
-            <IconSymbol name="plus" size={18} color={accentColor} style={styles.addAccountIcon} />
-            <ThemedText style={[styles.addAccountText, { color: accentColor }]}>
+            <IconSymbol name="plus" size={18} color={colors.accent} style={styles.addAccountIcon} />
+            <ThemedText style={[styles.addAccountText, { color: colors.accent }]}>
               {t('common.addAccount')}
             </ThemedText>
           </TouchableOpacity>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
+import { useAppTheme } from '@/theme';
+
 type DialogModalProps = {
   children: React.ReactNode;
   isVisible?: boolean;
@@ -9,6 +11,7 @@ type DialogModalProps = {
 };
 
 export function DialogModal({ children, isVisible = true, onRequestClose, testID }: DialogModalProps) {
+  const { colors } = useAppTheme();
   const overlayProps = onRequestClose
     ? {
         accessibilityRole: 'button' as const,
@@ -27,7 +30,7 @@ export function DialogModal({ children, isVisible = true, onRequestClose, testID
       onRequestClose={onRequestClose}
       statusBarTranslucent
     >
-      <View style={styles.overlay} testID={testID}>
+      <View style={[styles.overlay, { backgroundColor: colors.overlay }]} testID={testID}>
         <Pressable style={StyleSheet.absoluteFill} {...overlayProps} />
         <View style={styles.centerContainer} pointerEvents="box-none">
           <Pressable style={styles.contentWrapper} onPress={() => {}}>
@@ -42,7 +45,6 @@ export function DialogModal({ children, isVisible = true, onRequestClose, testID
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
