@@ -55,7 +55,8 @@
       "save": "Save",
       "saving": "Saving...",
       "mute": "Mute",
-      "unmute": "Unmute"
+      "unmute": "Unmute",
+      "bookmarks": "Bookmarks"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -251,6 +252,11 @@
       "addGif": "Add GIF",
       "gifAltTextPlaceholder": "Describe this GIF for accessibility...",
       "apiError": "Unable to load GIFs. Please check your internet connection."
+    },
+    "bookmarks": {
+      "subtitle": "Saved posts and threads will appear here.",
+      "emptyState": "You haven't saved any posts yet.",
+      "error": "We couldn't load your saved posts."
     }
   }
 }

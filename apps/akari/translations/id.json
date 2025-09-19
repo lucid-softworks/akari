@@ -52,6 +52,7 @@
       "translationReport": "Laporan Terjemahan",
       "checkConsoleForReport": "Periksa konsol untuk laporan terjemahan yang hilang",
       "checkOutImage": "Lihat gambar ini!",
+      "bookmarks": "Penanda",
       "save": "Simpan",
       "saving": "Menyimpan...",
       "mute": "Bisukan",
@@ -251,6 +252,11 @@
       "addGif": "Tambah GIF",
       "gifAltTextPlaceholder": "Jelaskan GIF ini untuk aksesibilitas...",
       "apiError": "Tidak dapat memuat GIF. Periksa koneksi internet Anda."
+    },
+    "bookmarks": {
+      "subtitle": "Postingan dan utas yang disimpan akan muncul di sini.",
+      "emptyState": "Anda belum menyimpan postingan apa pun.",
+      "error": "Kami tidak dapat memuat postingan tersimpan Anda."
     }
   }
 }

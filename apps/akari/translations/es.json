@@ -52,6 +52,7 @@
       "translationReport": "Reporte de traducción",
       "checkConsoleForReport": "Revisa la consola para el reporte de traducciones faltantes",
       "checkOutImage": "¡Mira esta imagen!",
+      "bookmarks": "Marcadores",
       "save": "Guardar",
       "saving": "Guardando...",
       "mute": "Silenciar",
@@ -251,6 +252,11 @@
       "checkMissingTranslations": "🔍 Verificar traducciones faltantes",
       "developmentTool": "Herramienta de desarrollo",
       "notifications": "Notificaciones"
+    },
+    "bookmarks": {
+      "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",
+      "emptyState": "Aún no has guardado ninguna publicación.",
+      "error": "No pudimos cargar tus publicaciones guardadas."
     }
   }
 }

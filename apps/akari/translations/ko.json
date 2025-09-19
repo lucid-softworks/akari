@@ -52,6 +52,7 @@
       "translationReport": "번역 보고서",
       "checkConsoleForReport": "누락된 번역 보고서는 콘솔을 확인하세요",
       "checkOutImage": "이 이미지를 확인해보세요!",
+      "bookmarks": "북마크",
       "save": "저장",
       "saving": "저장 중...",
       "mute": "음소거",
@@ -251,6 +252,11 @@
       "addGif": "GIF 추가",
       "gifAltTextPlaceholder": "접근성을 위해 이 GIF를 설명하세요...",
       "apiError": "GIF를 로드할 수 없습니다. 인터넷 연결을 확인하세요."
+    },
+    "bookmarks": {
+      "subtitle": "저장한 게시물과 스레드가 여기에 표시됩니다.",
+      "emptyState": "아직 저장한 게시물이 없습니다.",
+      "error": "저장한 게시물을 불러오지 못했습니다."
     }
   }
 }

@@ -52,6 +52,7 @@
       "translationReport": "翻译报告",
       "checkConsoleForReport": "查看控制台获取缺失翻译报告",
       "checkOutImage": "查看这张图片！",
+      "bookmarks": "书签",
       "save": "保存",
       "saving": "保存中...",
       "mute": "静音",
@@ -251,6 +252,11 @@
       "addGif": "添加GIF",
       "gifAltTextPlaceholder": "为无障碍访问描述此GIF...",
       "apiError": "无法加载GIF。请检查您的网络连接。"
+    },
+    "bookmarks": {
+      "subtitle": "已保存的帖子和话题会显示在这里。",
+      "emptyState": "你还没有保存任何帖子。",
+      "error": "我们无法加载你保存的帖子。"
     }
   }
 }

@@ -52,6 +52,7 @@
       "translationReport": "Übersetzungsbericht",
       "checkConsoleForReport": "Überprüfe die Konsole für den Bericht über fehlende Übersetzungen",
       "checkOutImage": "Schau dir dieses Bild an!",
+      "bookmarks": "Lesezeichen",
       "save": "Speichern",
       "saving": "Speichern...",
       "mute": "Stumm",
@@ -251,6 +252,11 @@
       "addGif": "GIF hinzufügen",
       "gifAltTextPlaceholder": "Beschreibe dieses GIF für Barrierefreiheit...",
       "apiError": "GIFs konnten nicht geladen werden. Überprüfe deine Internetverbindung."
+    },
+    "bookmarks": {
+      "subtitle": "Gespeicherte Beiträge und Threads erscheinen hier.",
+      "emptyState": "Du hast noch keine Beiträge gespeichert.",
+      "error": "Wir konnten deine gespeicherten Beiträge nicht laden."
     }
   }
 }

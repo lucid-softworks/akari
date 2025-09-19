@@ -52,6 +52,7 @@
       "translationReport": "Relatório de tradução",
       "checkConsoleForReport": "Verifique o console para o relatório de traduções ausentes",
       "checkOutImage": "Confira esta imagem!",
+      "bookmarks": "Favoritos",
       "save": "Salvar",
       "saving": "Salvando...",
       "mute": "Silenciar",
@@ -251,6 +252,11 @@
       "addGif": "Adicionar GIF",
       "gifAltTextPlaceholder": "Descreva este GIF para acessibilidade...",
       "apiError": "Não foi possível carregar GIF. Verifique sua conexão com a internet."
+    },
+    "bookmarks": {
+      "subtitle": "As postagens e tópicos salvos aparecerão aqui.",
+      "emptyState": "Você ainda não salvou nenhuma postagem.",
+      "error": "Não foi possível carregar suas postagens salvas."
     }
   }
 }
