@@ -56,7 +56,9 @@
       "save": "저장",
       "saving": "저장 중...",
       "mute": "음소거",
-      "unmute": "음소거 해제"
+      "unmute": "음소거 해제",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",

@@ -56,7 +56,9 @@
       "save": "Сохранить",
       "saving": "Сохранение...",
       "mute": "Отключить звук",
-      "unmute": "Включить звук"
+      "unmute": "Включить звук",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Заполните все поля",

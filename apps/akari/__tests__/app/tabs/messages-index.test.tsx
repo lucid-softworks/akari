@@ -14,7 +14,7 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -34,6 +34,10 @@ jest.mock('@/components/skeletons', () => {
   const { Text } = require('react-native');
   return { ConversationSkeleton: () => <Text>Skeleton</Text> };
 });
+
+jest.mock('@/components/ui/IconSymbol', () => ({
+  IconSymbol: () => null,
+}));
 
 jest.mock('@/hooks/queries/useConversations');
 jest.mock('@/hooks/useBorderColor');
@@ -55,7 +59,7 @@ describe('MessagesScreen', () => {
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   });
 
-  it('renders conversations and navigates', () => {
+  it('renders accepted conversations and navigates', () => {
     const fetchNextPage = jest.fn();
     const conversations = [
       {
@@ -70,14 +74,24 @@ describe('MessagesScreen', () => {
       },
       {
         id: '2',
-        handle: 'bob smith',
-        displayName: 'Bob Smith',
+        handle: 'charlie',
+        displayName: 'Charlie',
         lastMessage: 'hello',
         timestamp: 'earlier',
         unreadCount: 150,
-        status: 'request',
+        status: 'accepted',
         muted: false,
         avatar: 'https://example.com/avatar.png',
+      },
+      {
+        id: '3',
+        handle: 'bob smith',
+        displayName: 'Bob Smith',
+        lastMessage: 'hey there',
+        timestamp: 'earlier',
+        unreadCount: 2,
+        status: 'request',
+        muted: false,
       },
     ];
     mockUseConversations.mockReturnValue({
@@ -89,23 +103,29 @@ describe('MessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { getByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<MessagesScreen />);
+    const { getByText, queryByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<MessagesScreen />);
 
+    expect(mockUseConversations).toHaveBeenCalled();
+    const [limitArg, , statusArg] = mockUseConversations.mock.calls[0];
+    expect(limitArg).toBe(50);
+    expect(statusArg).toBe('accepted');
     expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
     expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
     expect(getByText('3')).toBeTruthy();
     expect(getByText('Alice')).toBeTruthy();
-    expect(getByText('Bob Smith')).toBeTruthy();
+    expect(getByText('Charlie')).toBeTruthy();
+    expect(queryByText('Bob Smith')).toBeNull();
     expect(getByText('99+')).toBeTruthy();
-    expect(getByText('common.pending')).toBeTruthy();
+    expect(queryByText('common.pending')).toBeNull();
+    expect(getByText('common.viewPendingChats')).toBeTruthy();
+
+    fireEvent.press(getByText('common.viewPendingChats'));
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
 
-    fireEvent.press(getByText('Bob Smith'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/bob%20smith');
-
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[1]);
+    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
   });
 

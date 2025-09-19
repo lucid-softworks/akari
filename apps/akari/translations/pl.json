@@ -56,7 +56,9 @@
       "save": "Zapisz",
       "saving": "Zapisywanie...",
       "mute": "Wycisz",
-      "unmute": "Włącz dźwięk"
+      "unmute": "Włącz dźwięk",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",

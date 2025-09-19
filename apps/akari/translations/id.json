@@ -56,7 +56,9 @@
       "save": "Simpan",
       "saving": "Menyimpan...",
       "mute": "Bisukan",
-      "unmute": "Aktifkan Suara"
+      "unmute": "Aktifkan Suara",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",

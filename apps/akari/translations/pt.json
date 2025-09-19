@@ -56,7 +56,9 @@
       "save": "Salvar",
       "saving": "Salvando...",
       "mute": "Silenciar",
-      "unmute": "Ativar som"
+      "unmute": "Ativar som",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",

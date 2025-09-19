@@ -56,7 +56,9 @@
       "save": "حفظ",
       "saving": "جاري الحفظ...",
       "mute": "كتم الصوت",
-      "unmute": "إلغاء كتم الصوت"
+      "unmute": "إلغاء كتم الصوت",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",

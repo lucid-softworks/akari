@@ -56,7 +56,9 @@
       "save": "Guardar",
       "saving": "Guardando...",
       "mute": "Silenciar",
-      "unmute": "Activar sonido"
+      "unmute": "Activar sonido",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Por favor completa todos los campos",

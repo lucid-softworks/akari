@@ -56,7 +56,9 @@
       "save": "Opslaan",
       "saving": "Opslaan...",
       "mute": "Dempen",
-      "unmute": "Dempen opheffen"
+      "unmute": "Dempen opheffen",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
