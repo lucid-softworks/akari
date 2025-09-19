@@ -4,7 +4,10 @@ import { FlatList, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
+import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
 import { useSearch } from '@/hooks/queries/useSearch';
+import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -68,7 +71,10 @@ jest.mock('@/components/skeletons', () => {
   return { SearchResultSkeleton: () => <Text>Skeleton</Text> };
 });
 
+jest.mock('@/hooks/mutations/useSetSelectedFeed');
+jest.mock('@/hooks/queries/useFeedGenerators');
 jest.mock('@/hooks/queries/useSearch');
+jest.mock('@/hooks/queries/useTrendingTopics');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/utils/tabScrollRegistry', () => ({
@@ -76,7 +82,10 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 }));
 
 const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
+const mockUseFeedGenerators = useFeedGenerators as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
+const mockUseSetSelectedFeed = useSetSelectedFeed as jest.Mock;
+const mockUseTrendingTopics = useTrendingTopics as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 
@@ -85,6 +94,18 @@ describe('SearchScreen', () => {
     jest.clearAllMocks();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockUseTrendingTopics.mockReturnValue({
+      data: { topics: [], suggested: [] },
+      isLoading: false,
+      error: null,
+      refetch: jest.fn(),
+      isRefetching: false,
+    });
+    mockUseFeedGenerators.mockReturnValue({
+      data: { feeds: [] },
+      isLoading: false,
+    });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
   });
 
   it('trims query and triggers search', async () => {

@@ -107,7 +107,16 @@
       "all": "All",
       "users": "Users",
       "posts": "Posts",
-      "loadingMoreResults": "Loading more results..."
+      "loadingMoreResults": "Loading more results...",
+      "yourInterests": "Your interests",
+      "interestsDescription": "Your interests help us find what you like!",
+      "editInterests": "Edit interests",
+      "hotLabel": "Hot",
+      "discoverNewFeeds": "Discover New Feeds",
+      "viewFeed": "View Feed",
+      "noInterestsAvailable": "Interests will appear here once we have recommendations for you.",
+      "noSuggestedFeeds": "Suggested feeds will show up here soon.",
+      "unableToLoadSuggestions": "We couldn't load recommendations right now."
     },
     "notifications": {
       "likedYourPost": "liked your post",
