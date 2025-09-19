@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import ProfileScreen from '@/app/profile/[handle]';
@@ -6,6 +6,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useToast } from '@/contexts/ToastContext';
+import * as Clipboard from 'expo-clipboard';
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
@@ -14,6 +16,10 @@ jest.mock('expo-router', () => ({
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useProfile');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/contexts/ToastContext');
+jest.mock('expo-clipboard', () => ({
+  setStringAsync: jest.fn(),
+}));
 
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
@@ -132,12 +138,19 @@ const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseProfile = useProfile as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseToast = useToast as jest.Mock;
+const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
+
+let mockShowToast: jest.Mock;
 
 describe('ProfileScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockClipboardSetStringAsync.mockResolvedValue(undefined);
+    mockShowToast = jest.fn();
+    mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   });
 
   it('shows skeleton while loading', () => {
@@ -164,7 +177,7 @@ describe('ProfileScreen', () => {
     expect(getByText('common.noProfile')).toBeTruthy();
   });
 
-  it('renders profile, switches tabs and handles dropdown actions', () => {
+  it('renders profile, switches tabs and handles dropdown actions', async () => {
     mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
     mockUseProfile.mockReturnValue({
       data: {
@@ -207,8 +220,12 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByText('header'));
     const dropdownItem = getByText('copy link');
     fireEvent.press(dropdownItem);
-    expect(logSpy).toHaveBeenCalledWith('Copy link');
-    expect(queryByText('copy link')).toBeNull();
+
+    await waitFor(() => expect(queryByText('copy link')).toBeNull());
+    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
+    expect(mockShowToast).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
+    );
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('search posts'));

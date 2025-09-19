@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import ProfileScreen from '@/app/(tabs)/profile';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -8,6 +8,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { useToast } from '@/contexts/ToastContext';
+import * as Clipboard from 'expo-clipboard';
 
 let mockLatestDropdownMeasure: jest.Mock | null = null;
 
@@ -19,6 +21,10 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useBorderColor');
+jest.mock('@/contexts/ToastContext');
+jest.mock('expo-clipboard', () => ({
+  setStringAsync: jest.fn(),
+}));
 
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: {
@@ -213,7 +219,11 @@ const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockUseToast = useToast as jest.Mock;
+const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+
+let mockShowToast: jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -223,6 +233,9 @@ beforeEach(() => {
   mockUseProfile.mockReturnValue({ data: {} });
   mockUseThemeColor.mockReturnValue('#fff');
   mockUseBorderColor.mockReturnValue('#ccc');
+  mockClipboardSetStringAsync.mockResolvedValue(undefined);
+  mockShowToast = jest.fn();
+  mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   scrollToMock.mockClear();
 });
 
@@ -271,7 +284,7 @@ describe('ProfileScreen', () => {
     expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
   });
 
-  it('positions dropdown using measurement and closes for all actions', () => {
+  it('positions dropdown using measurement and closes for all actions', async () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
 
     const { getByText, getByTestId, queryByTestId } = render(<ProfileScreen />);
@@ -284,8 +297,18 @@ describe('ProfileScreen', () => {
     const dropdown = getByTestId('profile-dropdown');
     expect(dropdown.props.style).toEqual(expect.objectContaining({ top: 144, right: 20 }));
 
-    const actions = [
-      'profile.copyLink',
+    fireEvent.press(getByText('profile.copyLink'));
+
+    await waitFor(() => {
+      expect(queryByTestId('profile-dropdown')).toBeNull();
+    });
+
+    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
+    expect(mockShowToast).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
+    );
+
+    const remainingActions = [
       'common.search',
       'profile.addToLists',
       'profile.muteAccount',
@@ -293,13 +316,10 @@ describe('ProfileScreen', () => {
       'profile.reportAccount',
     ];
 
-    actions.forEach((action, index) => {
+    remainingActions.forEach((action) => {
+      fireEvent.press(getByText('open dropdown'));
       fireEvent.press(getByText(action));
       expect(queryByTestId('profile-dropdown')).toBeNull();
-
-      if (index < actions.length - 1) {
-        fireEvent.press(getByText('open dropdown'));
-      }
     });
   });
 });
