@@ -1,14 +1,16 @@
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
+import React from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import en from '@/translations/en.json';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
 
@@ -24,21 +26,41 @@ type Conversation = {
   muted: boolean;
 };
 
-export default function MessagesScreen() {
+type CommonTranslationKey = keyof typeof en.translations.common;
+type CommonTranslationPath = `common.${CommonTranslationKey}`;
+
+type PendingButtonConfig = {
+  labelKey: CommonTranslationPath;
+  onPress: () => void;
+};
+
+type MessagesListScreenProps = {
+  status?: 'request' | 'accepted';
+  titleKey: CommonTranslationPath;
+  pendingButtonConfig?: PendingButtonConfig;
+  tabRegistryKey?: string;
+  onBackPress?: () => void;
+};
+
+export function MessagesListScreen({
+  status,
+  titleKey,
+  pendingButtonConfig,
+  tabRegistryKey = 'messages',
+  onBackPress,
+}: MessagesListScreenProps) {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = React.useRef<FlatList>(null);
   const { t } = useTranslation();
 
-  // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
-
-  // Register with the tab scroll registry
-  React.useEffect(() => {
-    tabScrollRegistry.register('messages', scrollToTop);
   }, []);
+
+  React.useEffect(() => {
+    tabScrollRegistry.register(tabRegistryKey, scrollToTop);
+  }, [scrollToTop, tabRegistryKey]);
 
   const {
     data: conversationsData,
@@ -47,13 +69,14 @@ export default function MessagesScreen() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useConversations();
+  } = useConversations(50, undefined, status);
+
+  const conversations = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
 
   const renderConversation = ({ item }: { item: Conversation }) => (
     <TouchableOpacity
       style={[styles.conversationItem, { borderBottomColor: borderColor }]}
       onPress={() => {
-        // Navigate to conversation detail within the messages tab
         router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
       }}
     >
@@ -61,7 +84,6 @@ export default function MessagesScreen() {
         <TouchableOpacity
           style={styles.avatarContainer}
           onPress={() => {
-            // Navigate to profile when avatar is clicked
             router.push(`/profile/${encodeURIComponent(item.handle)}`);
           }}
           activeOpacity={0.7}
@@ -110,6 +132,7 @@ export default function MessagesScreen() {
         </ThemedView>
       );
     }
+
     return null;
   };
 
@@ -122,12 +145,28 @@ export default function MessagesScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>{t('common.messages')}</ThemedText>
+        <ThemedView style={styles.headerTitleContainer}>
+          {onBackPress ? (
+            <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}>
+              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ) : null}
+          <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
+        </ThemedView>
+        {pendingButtonConfig ? (
+          <TouchableOpacity
+            style={styles.pendingButton}
+            onPress={pendingButtonConfig.onPress}
+            activeOpacity={0.7}
+          >
+            <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
+          </TouchableOpacity>
+        ) : null}
       </ThemedView>
 
       <FlatList
         ref={flatListRef}
-        data={conversationsData?.pages.flatMap((page) => page.conversations) ?? []}
+        data={conversations}
         renderItem={renderConversation}
         keyExtractor={(item) => item.id}
         style={styles.list}
@@ -158,6 +197,22 @@ export default function MessagesScreen() {
   );
 }
 
+export default function MessagesScreen() {
+  const handleNavigateToPending = React.useCallback(() => {
+    router.push('/(tabs)/messages/pending');
+  }, []);
+
+  return (
+    <MessagesListScreen
+      titleKey="common.messages"
+      pendingButtonConfig={{
+        labelKey: 'common.viewPendingChats',
+        onPress: handleNavigateToPending,
+      }}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -166,10 +221,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  backButton: {
+    marginRight: 12,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  pendingButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  pendingButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
   },
   list: {
     flex: 1,

@@ -55,7 +55,9 @@
       "save": "บันทึก",
       "saving": "กำลังบันทึก...",
       "mute": "ปิดเสียง",
-      "unmute": "เปิดเสียง"
+      "unmute": "เปิดเสียง",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",

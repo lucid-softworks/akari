@@ -55,7 +55,9 @@
       "save": "Cadw",
       "saving": "Cadw...",
       "mute": "Tewi",
-      "unmute": "Ailgychwyn Sain"
+      "unmute": "Ailgychwyn Sain",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",

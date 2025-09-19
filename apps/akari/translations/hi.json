@@ -55,7 +55,9 @@
       "save": "सहेजें",
       "saving": "सहेज रहा है...",
       "mute": "म्यूट",
-      "unmute": "म्यूट हटाएं"
+      "unmute": "म्यूट हटाएं",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",

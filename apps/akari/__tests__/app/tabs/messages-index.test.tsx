@@ -14,7 +14,7 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -34,6 +34,10 @@ jest.mock('@/components/skeletons', () => {
   const { Text } = require('react-native');
   return { ConversationSkeleton: () => <Text>Skeleton</Text> };
 });
+
+jest.mock('@/components/ui/IconSymbol', () => ({
+  IconSymbol: () => null,
+}));
 
 jest.mock('@/hooks/queries/useConversations');
 jest.mock('@/hooks/useBorderColor');
@@ -98,15 +102,19 @@ describe('MessagesScreen', () => {
     expect(getByText('Bob Smith')).toBeTruthy();
     expect(getByText('99+')).toBeTruthy();
     expect(getByText('common.pending')).toBeTruthy();
+    expect(getByText('common.viewPendingChats')).toBeTruthy();
+
+    fireEvent.press(getByText('common.viewPendingChats'));
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
 
     fireEvent.press(getByText('Bob Smith'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/bob%20smith');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/(tabs)/messages/bob%20smith');
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[1]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
+    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
+    expect(mockRouterPush).toHaveBeenNthCalledWith(4, '/profile/alice');
   });
 
   it('scrolls to top when registry callback is triggered', () => {

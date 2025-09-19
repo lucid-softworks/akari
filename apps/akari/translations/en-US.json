@@ -55,7 +55,9 @@
       "save": "Save",
       "saving": "Saving...",
       "mute": "Mute",
-      "unmute": "Unmute"
+      "unmute": "Unmute",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",

@@ -55,7 +55,9 @@
       "save": "Kaydet",
       "saving": "Kaydediliyor...",
       "mute": "Sessiz",
-      "unmute": "Sesi Aç"
+      "unmute": "Sesi Aç",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
