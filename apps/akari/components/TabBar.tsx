@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -34,43 +34,58 @@ export function TabBar<T extends string>({
   onTabChange,
 }: TabBarProps<T>) {
   const borderColor = useBorderColor();
-  const activeColor = useThemeColor({}, "tint");
-  const inactiveColor = useThemeColor({}, "text");
+  const surfaceColor = useThemeColor({ light: "#FFFFFF", dark: "#0F1115" }, "background");
+  const inactiveTextColor = useThemeColor({ light: "#6B7280", dark: "#9CA3AF" }, "text");
+  const activeTextColor = useThemeColor({ light: "#111827", dark: "#F4F4F5" }, "text");
+  const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
 
   return (
-    <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
+    <ThemedView
+      style={[
+        styles.container,
+        {
+          borderColor,
+          backgroundColor: surfaceColor,
+        },
+      ]}
+    >
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {tabs.map((tab) => (
-          <TouchableOpacity
-            key={tab.key}
-            style={styles.tab}
-            onPress={() => onTabChange(tab.key)}
-          >
-            <ThemedText
+        {tabs.map((tab, index) => {
+          const isActive = activeTab === tab.key;
+          const isLast = index === tabs.length - 1;
+
+          return (
+            <TouchableOpacity
+              key={tab.key}
+              testID={`tab-${tab.key}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              activeOpacity={0.85}
+              onPress={() => onTabChange(tab.key)}
               style={[
-                styles.tabText,
-                {
-                  color: activeTab === tab.key ? activeColor : inactiveColor,
-                  fontWeight: activeTab === tab.key ? "600" : "400",
-                },
+                styles.tab,
+                !isLast ? styles.tabSpacing : undefined,
+                { borderBottomColor: isActive ? accentColor : "transparent" },
               ]}
             >
-              {tab.label}
-            </ThemedText>
-            {activeTab === tab.key && (
-              <View
+              <ThemedText
                 style={[
-                  styles.activeIndicator,
-                  { backgroundColor: activeColor },
+                  styles.tabText,
+                  {
+                    color: isActive ? activeTextColor : inactiveTextColor,
+                    fontWeight: isActive ? "600" : "500",
+                  },
                 ]}
-              />
-            )}
-          </TouchableOpacity>
-        ))}
+              >
+                {tab.label}
+              </ThemedText>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </ThemedView>
   );
@@ -78,26 +93,36 @@ export function TabBar<T extends string>({
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomWidth: 0.5,
+    width: "100%",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingTop: 8,
+    paddingBottom: 4,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 1,
+    zIndex: 10,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    paddingBottom: 4,
   },
   tab: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    position: "relative",
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    borderBottomWidth: 3,
+    borderBottomColor: "transparent",
+    justifyContent: "center",
     alignItems: "center",
   },
-  tabText: {
-    fontSize: 16,
+  tabSpacing: {
+    marginRight: 24,
   },
-  activeIndicator: {
-    position: "absolute",
-    bottom: 0,
-    left: "25%",
-    right: "25%",
-    height: 2,
-    borderRadius: 1,
+  tabText: {
+    fontSize: 15,
   },
 });

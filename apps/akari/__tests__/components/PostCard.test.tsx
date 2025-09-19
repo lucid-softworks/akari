@@ -77,8 +77,16 @@ describe('PostCard', () => {
   it('navigates to profile when handle pressed', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
     const { getByRole } = render(<PostCard post={basePost} />);
-    const button = getByRole('button', { name: /view profile of Alice/i });
+    const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
+    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+  });
+
+  it('navigates to profile when avatar pressed', () => {
+    mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+    const { getByRole } = render(<PostCard post={basePost} />);
+    const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
+    fireEvent.press(avatarButton);
     expect(router.push).toHaveBeenCalledWith('/profile/alice');
   });
 
