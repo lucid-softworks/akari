@@ -73,12 +73,13 @@ describe('TabBadge', () => {
   it('uses theme colors for background and text', () => {
     const TabBadge = loadTabBadge();
 
-    const { getByText } = render(<TabBadge count={1} />);
-    const textInstance = getByText('1');
-    const badgeInstance = textInstance.parent as { props: { style?: unknown } } | null;
-    expect(badgeInstance).toBeTruthy();
-    const badgeStyle = StyleSheet.flatten(badgeInstance?.props.style);
-    const textStyle = StyleSheet.flatten((textInstance as any).props.style);
+    const { toJSON } = render(<TabBadge count={1} />);
+    const tree = toJSON() as { props: { style?: unknown }; children?: any[] } | null;
+    expect(tree).not.toBeNull();
+
+    const badgeStyle = StyleSheet.flatten(tree?.props.style);
+    const textElement = tree?.children?.[0] as { props?: { style?: unknown } } | undefined;
+    const textStyle = StyleSheet.flatten(textElement?.props?.style);
 
     expect(badgeStyle.backgroundColor).toBe('#ff3b30');
     expect(textStyle.color).toBe('#ffffff');

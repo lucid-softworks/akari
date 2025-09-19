@@ -10,7 +10,13 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 describe('ThemedText', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseThemeColor.mockImplementation((colors) => colors.light ?? '#fff');
+    mockUseThemeColor.mockImplementation((colors, colorName) => {
+      if (colorName === 'tint') {
+        return '#0a7ea4';
+      }
+
+      return colors.light ?? '#fff';
+    });
   });
 
   it('renders with default style', () => {

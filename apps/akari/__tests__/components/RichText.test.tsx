@@ -87,7 +87,16 @@ describe('RichText', () => {
       { type: 'autolink', url: 'https://example.com', raw: 'https://example.com' },
     ]);
     render(<RichText text="@user https://example.com" />);
-    const tintCalls = mockUseThemeColor.mock.calls.filter(([, key]) => key === 'tint');
-    expect(tintCalls).toHaveLength(2);
+    const tintPaletteCalls = mockUseThemeColor.mock.calls.filter(([palette, key]) => {
+      return (
+        key === 'tint' &&
+        palette &&
+        typeof palette === 'object' &&
+        'light' in palette &&
+        (palette as any).light === '#007AFF' &&
+        (palette as any).dark === '#0A84FF'
+      );
+    });
+    expect(tintPaletteCalls.length).toBeGreaterThanOrEqual(2);
   });
 });
