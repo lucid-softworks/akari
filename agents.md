@@ -53,6 +53,10 @@ export interface UserProfile {
 
 This preference should be applied consistently across all TypeScript files in the entire project.
 
+## UI Component Styling
+
+- Panel-style surfaces (including the `Panel` component in `apps/akari/components/ui/Panel.tsx` and any derivatives) **must use square corners**. Do not set a `borderRadius` or otherwise round their edges.
+
 ## API and Data Fetching Patterns
 
 **CRITICAL**: Always use React Query hooks for API calls and data fetching. Never use raw `fetch` calls or direct API client calls in components.
