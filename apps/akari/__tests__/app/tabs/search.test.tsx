@@ -12,6 +12,7 @@ import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -94,6 +95,7 @@ const mockUseSetSelectedFeed = useSetSelectedFeed as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
+const mockTabRegister = tabScrollRegistry.register as jest.Mock;
 
 describe('SearchScreen', () => {
   beforeEach(() => {
@@ -139,6 +141,57 @@ describe('SearchScreen', () => {
     expect(dismissSpy).toHaveBeenCalled();
   });
 
+  it('clears the current search from the input button', async () => {
+    mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
+    const hookState = {
+      isLoading: false,
+      isError: false,
+      error: null,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+      isRefetching: false,
+    };
+    const searchResults = {
+      pages: [
+        {
+          results: [
+            { type: 'profile', data: { handle: 'alice', displayName: 'Alice' } },
+          ],
+        },
+      ],
+    };
+    const emptyResults = { pages: [] };
+
+    mockUseSearch.mockImplementation((queryValue?: string) => ({
+      ...hookState,
+      data: queryValue ? searchResults : emptyResults,
+    }));
+
+    const { getByPlaceholderText, getByLabelText, queryByLabelText, getByText, queryByText } = render(
+      <SearchScreen />,
+    );
+
+    expect(getByPlaceholderText('search.searchInputPlaceholder').props.value).toBe('foo');
+    expect(getByText('Alice')).toBeTruthy();
+
+    const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
+    fireEvent.press(getByLabelText('search.clearSearch'));
+
+    await waitFor(() => {
+      expect(mockUseSearch).toHaveBeenLastCalledWith(undefined, 'all', 20);
+    });
+    await waitFor(() => {
+      expect(getByPlaceholderText('search.searchInputPlaceholder').props.value).toBe('');
+    });
+    await waitFor(() => {
+      expect(queryByText('Alice')).toBeNull();
+    });
+    expect(queryByLabelText('search.clearSearch')).toBeNull();
+    expect(dismissSpy).toHaveBeenCalled();
+  });
+
   it('filters results by selected tab', () => {
     mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
     const searchData = {
@@ -180,6 +233,52 @@ describe('SearchScreen', () => {
     fireEvent.press(getByText('Users'));
     expect(getByText('Alice')).toBeTruthy();
     expect(queryByText('Hello')).toBeNull();
+  });
+
+  it('resets the search when the search tab is pressed again', async () => {
+    mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
+    const hookState = {
+      isLoading: false,
+      isError: false,
+      error: null,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+      isRefetching: false,
+    };
+    const searchResults = {
+      pages: [
+        {
+          results: [
+            { type: 'profile', data: { handle: 'alice', displayName: 'Alice' } },
+          ],
+        },
+      ],
+    };
+    const emptyResults = { pages: [] };
+
+    mockUseSearch.mockImplementation((queryValue?: string) => ({
+      ...hookState,
+      data: queryValue ? searchResults : emptyResults,
+    }));
+
+    const { getByPlaceholderText } = render(<SearchScreen />);
+    expect(mockTabRegister).toHaveBeenCalledWith('search', expect.any(Function));
+    const [, registeredHandler] = mockTabRegister.mock.calls[0];
+    const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
+
+    act(() => {
+      registeredHandler();
+    });
+
+    await waitFor(() => {
+      expect(mockUseSearch).toHaveBeenLastCalledWith(undefined, 'all', 20);
+    });
+    await waitFor(() => {
+      expect(getByPlaceholderText('search.searchInputPlaceholder').props.value).toBe('');
+    });
+    expect(dismissSpy).toHaveBeenCalled();
   });
 
   it('loads more results and refreshes', () => {

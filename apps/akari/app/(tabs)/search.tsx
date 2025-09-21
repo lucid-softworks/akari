@@ -21,6 +21,7 @@ import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SearchResultSkeleton } from '@/components/skeletons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Panel } from '@/components/ui/Panel';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
@@ -163,9 +164,17 @@ export default function SearchScreen() {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
-  useEffect(() => {
-    tabScrollRegistry.register('search', scrollToTop);
+  const handleResetSearch = useCallback(() => {
+    setQuery('');
+    setSearchQuery('');
+    setActiveTab('all');
+    scrollToTop();
+    Keyboard.dismiss();
   }, [scrollToTop]);
+
+  useEffect(() => {
+    tabScrollRegistry.register('search', handleResetSearch);
+  }, [handleResetSearch]);
 
   useEffect(() => {
     if (initialQuery) {
@@ -198,9 +207,10 @@ export default function SearchScreen() {
     if (query.trim()) {
       setSearchQuery(query.trim());
       setActiveTab('all');
+      scrollToTop();
       Keyboard.dismiss();
     }
-  }, [query]);
+  }, [query, scrollToTop]);
 
   const handleInterestPress = useCallback(
     (interest: string) => {
@@ -258,6 +268,8 @@ export default function SearchScreen() {
   }, [refetch, searchQuery]);
 
   const allResults = searchData?.pages.flatMap((page) => page.results) || [];
+
+  const hasSearchContent = query.length > 0 || searchQuery.length > 0;
 
   const filteredResults = useMemo(() => {
     switch (activeTab) {
@@ -695,24 +707,37 @@ export default function SearchScreen() {
           </ThemedView>
 
           <ThemedView style={styles.searchContainer}>
-            <TextInput
-              style={[
-                styles.searchInput,
-                {
-                  backgroundColor: backgroundColor,
-                  borderColor: borderColor,
-                  color: textColor,
-                },
-              ]}
-              placeholder={t('search.searchInputPlaceholder')}
-              placeholderTextColor="#999999"
-              value={query}
-              onChangeText={setQuery}
-              onSubmitEditing={handleSearch}
-              returnKeyType="search"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            <View style={styles.searchInputWrapper}>
+              <TextInput
+                style={[
+                  styles.searchInput,
+                  {
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    color: textColor,
+                  },
+                ]}
+                placeholder={t('search.searchInputPlaceholder')}
+                placeholderTextColor="#999999"
+                value={query}
+                onChangeText={setQuery}
+                onSubmitEditing={handleSearch}
+                returnKeyType="search"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              {hasSearchContent ? (
+                <TouchableOpacity
+                  style={styles.clearButton}
+                  onPress={handleResetSearch}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('search.clearSearch')}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                >
+                  <IconSymbol name="xmark.circle.fill" color={secondaryTextColor} size={20} />
+                </TouchableOpacity>
+              ) : null}
+            </View>
             <TouchableOpacity
               style={[styles.searchButton, { backgroundColor: accentColor }]}
               onPress={handleSearch}
@@ -808,13 +833,27 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 8,
   },
+  searchInputWrapper: {
+    flex: 1,
+    position: 'relative',
+    justifyContent: 'center',
+  },
   searchInput: {
     flex: 1,
     height: 44,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
+    paddingRight: 40,
     fontSize: 16,
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 12,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchButton: {
     paddingHorizontal: 16,
