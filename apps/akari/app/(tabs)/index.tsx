@@ -28,7 +28,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
-  const flatListRef = useRef<VirtualizedListHandle<BlueskyFeedItem>>(null);
+  const feedListRef = useRef<VirtualizedListHandle<BlueskyFeedItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
 
@@ -36,7 +36,7 @@ export default function HomeScreen() {
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    feedListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   // Register with the tab scroll registry
@@ -266,7 +266,7 @@ export default function HomeScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
       <VirtualizedList
-        ref={flatListRef}
+        ref={feedListRef}
         data={selectedFeed ? allPosts : []}
         renderItem={renderFeedItem}
         keyExtractor={keyExtractor}
