@@ -159,7 +159,9 @@
       "sendTest": "Enviar Teste",
       "scheduleTest": "Agendar Teste",
       "sending": "Enviando...",
-      "scheduling": "Agendando..."
+      "scheduling": "Agendando...",
+      "all": "Todos",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "Mídia",

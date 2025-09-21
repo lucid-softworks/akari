@@ -159,7 +159,9 @@
       "sendTest": "Wyślij Test",
       "scheduleTest": "Zaplanuj Test",
       "sending": "Wysyłanie...",
-      "scheduling": "Planowanie..."
+      "scheduling": "Planowanie...",
+      "all": "Wszystko",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "Media",

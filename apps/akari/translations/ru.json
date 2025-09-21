@@ -159,7 +159,9 @@
       "sendTest": "Отправить тест",
       "scheduleTest": "Запланировать тест",
       "sending": "Отправка...",
-      "scheduling": "Планирование..."
+      "scheduling": "Планирование...",
+      "all": "Все",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "Медиа",

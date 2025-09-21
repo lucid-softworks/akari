@@ -159,7 +159,9 @@
       "sendTest": "テスト送信",
       "scheduleTest": "テスト予約",
       "sending": "送信中...",
-      "scheduling": "予約中..."
+      "scheduling": "予約中...",
+      "all": "すべて",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "メディア",

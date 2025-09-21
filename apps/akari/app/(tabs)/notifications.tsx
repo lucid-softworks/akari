@@ -2,13 +2,14 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { TabBar } from '@/components/TabBar';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -36,6 +37,8 @@ type GroupedNotification = {
   latestTimestamp: string;
   count: number;
 };
+
+type NotificationsTab = 'all' | 'mentions';
 
 /**
  * Notification item component
@@ -333,13 +336,21 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
+  const scrollViewRef = useRef<ScrollView | null>(null);
+  const [activeTab, setActiveTab] = React.useState<NotificationsTab>('all');
+  const tabs = React.useMemo(
+    () => [
+      { key: 'all' as const, label: t('notifications.all') },
+      { key: 'mentions' as const, label: t('notifications.mentions') },
+    ],
+    [t],
+  );
 
   // Create scroll to top function
   const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   // Register with the tab scroll registry
@@ -347,18 +358,29 @@ export default function NotificationsScreen() {
     tabScrollRegistry.register('notifications', scrollToTop);
   }, []);
 
+  React.useEffect(() => {
+    scrollToTop();
+  }, [activeTab]);
+
   const {
     data: notificationsData,
     isLoading,
     isError,
     error,
     isFetchingNextPage,
-    refetch,
-    isRefetching,
   } = useNotifications();
 
   const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
   const groupedNotifications = groupNotifications(notifications);
+  const filteredNotifications = React.useMemo(() => {
+    if (activeTab === 'mentions') {
+      return groupedNotifications.filter(
+        (notification) => notification.type === 'reply' || notification.type === 'quote',
+      );
+    }
+
+    return groupedNotifications;
+  }, [activeTab, groupedNotifications]);
 
   const handleNotificationPress = (notification: GroupedNotification) => {
     if (notification.type === 'follow') {
@@ -396,10 +418,14 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}
+    >
       <ThemedView style={styles.header}>
         <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
       </ThemedView>
+      <TabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
       <View style={styles.notificationsList}>
         {isLoading ? (
@@ -408,11 +434,11 @@ export default function NotificationsScreen() {
               <NotificationSkeleton key={index} />
             ))}
           </ThemedView>
-        ) : groupedNotifications.length === 0 ? (
+        ) : filteredNotifications.length === 0 ? (
           renderEmptyState()
         ) : (
           <>
-            {groupedNotifications.map((item) => (
+            {filteredNotifications.map((item) => (
               <View key={item.id}>{renderNotification({ item })}</View>
             ))}
             {isFetchingNextPage && (

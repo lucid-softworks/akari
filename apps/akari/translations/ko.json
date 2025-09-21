@@ -159,7 +159,9 @@
       "sendTest": "테스트 보내기",
       "scheduleTest": "테스트 예약",
       "sending": "보내는 중...",
-      "scheduling": "예약 중..."
+      "scheduling": "예약 중...",
+      "all": "전체",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "미디어",

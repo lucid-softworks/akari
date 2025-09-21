@@ -159,7 +159,9 @@
       "sendTest": "ส่งการทดสอบ",
       "scheduleTest": "กำหนดเวลาการทดสอบ",
       "sending": "กำลังส่ง...",
-      "scheduling": "กำลังกำหนดเวลา..."
+      "scheduling": "กำลังกำหนดเวลา...",
+      "all": "ทั้งหมด",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "สื่อ",

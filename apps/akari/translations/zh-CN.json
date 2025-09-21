@@ -159,7 +159,9 @@
       "sendTest": "发送测试",
       "scheduleTest": "安排测试",
       "sending": "发送中...",
-      "scheduling": "安排中..."
+      "scheduling": "安排中...",
+      "all": "全部",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "媒体",
