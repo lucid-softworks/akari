@@ -44,6 +44,7 @@
       "externalLink": "외부 링크",
       "failedToDownloadImage": "이미지 다운로드 실패",
       "failedToLoadImage": "이미지 로딩 실패",
+      "failedToOpenLink": "링크를 열 수 없습니다",
       "failedToLogout": "로그아웃 실패",
       "switchAccount": "계정 전환",
       "cannotRemoveAccount": "계정을 제거할 수 없습니다",

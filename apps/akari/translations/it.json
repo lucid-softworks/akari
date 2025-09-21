@@ -44,6 +44,7 @@
       "externalLink": "Link esterno",
       "failedToDownloadImage": "Impossibile scaricare l'immagine",
       "failedToLoadImage": "Impossibile caricare l'immagine",
+      "failedToOpenLink": "Impossibile aprire il link",
       "failedToLogout": "Impossibile disconnettersi",
       "switchAccount": "Cambia account",
       "cannotRemoveAccount": "Impossibile rimuovere l'account",

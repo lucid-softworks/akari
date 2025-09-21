@@ -44,6 +44,7 @@
       "externalLink": "Externe link",
       "failedToDownloadImage": "Afbeelding downloaden mislukt",
       "failedToLoadImage": "Afbeelding laden mislukt",
+      "failedToOpenLink": "Kan de link niet openen",
       "failedToLogout": "Uitloggen mislukt",
       "switchAccount": "Account wisselen",
       "cannotRemoveAccount": "Account kan niet worden verwijderd",

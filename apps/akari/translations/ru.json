@@ -44,6 +44,7 @@
       "externalLink": "Внешняя ссылка",
       "failedToDownloadImage": "Не удалось скачать изображение",
       "failedToLoadImage": "Не удалось загрузить изображение",
+      "failedToOpenLink": "Не удалось открыть ссылку",
       "failedToLogout": "Не удалось выйти",
       "switchAccount": "Переключить аккаунт",
       "cannotRemoveAccount": "Невозможно удалить аккаунт",

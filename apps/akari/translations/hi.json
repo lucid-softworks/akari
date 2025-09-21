@@ -44,6 +44,7 @@
       "externalLink": "बाहरी लिंक",
       "failedToDownloadImage": "छवि डाउनलोड करने में विफल",
       "failedToLoadImage": "छवि लोड करने में विफल",
+      "failedToOpenLink": "लिंक खोलने में विफल",
       "failedToLogout": "लॉगआउट करने में विफल",
       "switchAccount": "खाता बदलें",
       "cannotRemoveAccount": "खाता हटा नहीं सकते",

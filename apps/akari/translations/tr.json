@@ -44,6 +44,7 @@
       "externalLink": "Dış Bağlantı",
       "failedToDownloadImage": "Resim indirilemedi",
       "failedToLoadImage": "Resim yüklenemedi",
+      "failedToOpenLink": "Bağlantı açılamadı",
       "failedToLogout": "Çıkış yapılamadı",
       "switchAccount": "Hesap Değiştir",
       "cannotRemoveAccount": "Hesap kaldırılamaz",

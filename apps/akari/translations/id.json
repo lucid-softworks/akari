@@ -44,6 +44,7 @@
       "externalLink": "Tautan Eksternal",
       "failedToDownloadImage": "Gagal mengunduh gambar",
       "failedToLoadImage": "Gagal memuat gambar",
+      "failedToOpenLink": "Gagal membuka tautan",
       "failedToLogout": "Gagal keluar",
       "switchAccount": "Ganti Akun",
       "cannotRemoveAccount": "Tidak dapat menghapus akun",

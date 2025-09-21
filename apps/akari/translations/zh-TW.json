@@ -44,6 +44,7 @@
       "externalLink": "外部連結",
       "failedToDownloadImage": "下載圖片失敗",
       "failedToLoadImage": "載入圖片失敗",
+      "failedToOpenLink": "無法開啟連結",
       "failedToLogout": "登出失敗",
       "switchAccount": "切換帳戶",
       "cannotRemoveAccount": "無法移除帳戶",

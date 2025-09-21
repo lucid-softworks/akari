@@ -44,6 +44,7 @@
       "externalLink": "外部链接",
       "failedToDownloadImage": "下载图片失败",
       "failedToLoadImage": "加载图片失败",
+      "failedToOpenLink": "无法打开链接",
       "failedToLogout": "退出登录失败",
       "switchAccount": "切换账户",
       "cannotRemoveAccount": "无法移除账户",

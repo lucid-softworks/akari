@@ -44,6 +44,7 @@
       "externalLink": "Liên kết ngoài",
       "failedToDownloadImage": "Không thể tải xuống hình ảnh",
       "failedToLoadImage": "Không thể tải hình ảnh",
+      "failedToOpenLink": "Không thể mở liên kết",
       "failedToLogout": "Không thể đăng xuất",
       "switchAccount": "Chuyển đổi tài khoản",
       "cannotRemoveAccount": "Không thể xóa tài khoản",

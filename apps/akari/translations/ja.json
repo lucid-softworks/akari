@@ -44,6 +44,7 @@
       "externalLink": "外部リンク",
       "failedToDownloadImage": "画像のダウンロードに失敗しました",
       "failedToLoadImage": "画像の読み込みに失敗しました",
+      "failedToOpenLink": "リンクを開くことができませんでした",
       "failedToLogout": "ログアウトに失敗しました",
       "switchAccount": "アカウントを切り替え",
       "cannotRemoveAccount": "アカウントを削除できません",

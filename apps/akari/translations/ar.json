@@ -44,6 +44,7 @@
       "externalLink": "رابط خارجي",
       "failedToDownloadImage": "فشل في تحميل الصورة",
       "failedToLoadImage": "فشل في تحميل الصورة",
+      "failedToOpenLink": "تعذر فتح الرابط",
       "failedToLogout": "فشل في تسجيل الخروج",
       "switchAccount": "تبديل الحساب",
       "cannotRemoveAccount": "لا يمكن إزالة الحساب",
