@@ -239,11 +239,21 @@
     "settings": {
       "account": "Akun",
       "language": "Bahasa",
+      "notifications": "Notifikasi",
+      "help": "Bantuan",
+      "helpCenter": "Pusat Bantuan",
       "about": "Tentang",
+      "status": "Status",
+      "changeLog": "Catatan perubahan",
+      "feedback": "Masukan",
+      "privacy": "Privasi",
+      "terms": "Ketentuan",
       "version": "Versi",
+      "buildNumber": "Nomor build",
+      "development": "Pengembangan",
+      "appVariant": "Varian aplikasi",
       "checkMissingTranslations": "🔍 Periksa Terjemahan yang Hilang",
-      "developmentTool": "Alat Pengembangan",
-      "notifications": "Notifikasi"
+      "developmentTool": "Alat Pengembangan"
     },
     "gif": {
       "selectGif": "Pilih GIF",

@@ -239,11 +239,21 @@
     "settings": {
       "account": "Conta",
       "language": "Idioma",
+      "notifications": "Notificações",
+      "help": "Ajuda",
+      "helpCenter": "Central de ajuda",
       "about": "Sobre",
+      "status": "Status",
+      "changeLog": "Registro de alterações",
+      "feedback": "Comentários",
+      "privacy": "Privacidade",
+      "terms": "Termos",
       "version": "Versão",
+      "buildNumber": "Número da compilação",
+      "development": "Desenvolvimento",
+      "appVariant": "Variante do aplicativo",
       "checkMissingTranslations": "🔍 Verificar traduções ausentes",
-      "developmentTool": "Ferramenta de desenvolvimento",
-      "notifications": "Notificações"
+      "developmentTool": "Ferramenta de desenvolvimento"
     },
     "gif": {
       "selectGif": "Selecionar GIF",

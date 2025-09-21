@@ -239,11 +239,21 @@
     "settings": {
       "account": "帳戶",
       "language": "語言",
+      "notifications": "通知",
+      "help": "幫助",
+      "helpCenter": "幫助中心",
       "about": "關於",
+      "status": "狀態",
+      "changeLog": "更新日誌",
+      "feedback": "回饋",
+      "privacy": "隱私",
+      "terms": "條款",
       "version": "版本",
+      "buildNumber": "建置號碼",
+      "development": "開發",
+      "appVariant": "應用程式變體",
       "checkMissingTranslations": "🔍 檢查缺失的翻譯",
-      "developmentTool": "開發工具",
-      "notifications": "通知"
+      "developmentTool": "開發工具"
     },
     "gif": {
       "selectGif": "選擇GIF",

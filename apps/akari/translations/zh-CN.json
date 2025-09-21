@@ -239,11 +239,21 @@
     "settings": {
       "account": "账户",
       "language": "语言",
+      "notifications": "通知",
+      "help": "帮助",
+      "helpCenter": "帮助中心",
       "about": "关于",
+      "status": "状态",
+      "changeLog": "更新日志",
+      "feedback": "反馈",
+      "privacy": "隐私",
+      "terms": "条款",
       "version": "版本",
+      "buildNumber": "构建号",
+      "development": "开发",
+      "appVariant": "应用变体",
       "checkMissingTranslations": "🔍 检查缺失的翻译",
-      "developmentTool": "开发工具",
-      "notifications": "通知"
+      "developmentTool": "开发工具"
     },
     "gif": {
       "selectGif": "选择GIF",

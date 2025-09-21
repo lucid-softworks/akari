@@ -239,11 +239,21 @@
     "settings": {
       "account": "계정",
       "language": "언어",
+      "notifications": "알림",
+      "help": "도움말",
+      "helpCenter": "도움말 센터",
       "about": "정보",
+      "status": "상태",
+      "changeLog": "변경 로그",
+      "feedback": "피드백",
+      "privacy": "개인정보 보호",
+      "terms": "이용 약관",
       "version": "버전",
+      "buildNumber": "빌드 번호",
+      "development": "개발",
+      "appVariant": "앱 변형",
       "checkMissingTranslations": "🔍 누락된 번역 확인",
-      "developmentTool": "개발 도구",
-      "notifications": "알림"
+      "developmentTool": "개발 도구"
     },
     "gif": {
       "selectGif": "GIF 선택",

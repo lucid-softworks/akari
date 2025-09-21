@@ -239,11 +239,21 @@
     "settings": {
       "account": "Account",
       "language": "Lingua",
+      "notifications": "Notifiche",
+      "help": "Aiuto",
+      "helpCenter": "Centro assistenza",
       "about": "Informazioni",
+      "status": "Stato",
+      "changeLog": "Registro delle modifiche",
+      "feedback": "Feedback",
+      "privacy": "Privacy",
+      "terms": "Termini",
       "version": "Versione",
+      "buildNumber": "Numero build",
+      "development": "Sviluppo",
+      "appVariant": "Variante dell'app",
       "checkMissingTranslations": "🔍 Controlla traduzioni mancanti",
-      "developmentTool": "Strumento di sviluppo",
-      "notifications": "Notifiche"
+      "developmentTool": "Strumento di sviluppo"
     },
     "gif": {
       "selectGif": "Seleziona GIF",

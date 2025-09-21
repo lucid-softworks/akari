@@ -249,11 +249,21 @@
     "settings": {
       "account": "Cuenta",
       "language": "Idioma",
+      "notifications": "Notificaciones",
+      "help": "Ayuda",
+      "helpCenter": "Centro de ayuda",
       "about": "Acerca de",
+      "status": "Estado",
+      "changeLog": "Registro de cambios",
+      "feedback": "Comentarios",
+      "privacy": "Privacidad",
+      "terms": "Términos",
       "version": "Versión",
+      "buildNumber": "Número de compilación",
+      "development": "Desarrollo",
+      "appVariant": "Variante de la aplicación",
       "checkMissingTranslations": "🔍 Verificar traducciones faltantes",
-      "developmentTool": "Herramienta de desarrollo",
-      "notifications": "Notificaciones"
+      "developmentTool": "Herramienta de desarrollo"
     },
     "bookmarks": {
       "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",

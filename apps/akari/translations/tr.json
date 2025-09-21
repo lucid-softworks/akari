@@ -239,11 +239,21 @@
     "settings": {
       "account": "Hesap",
       "language": "Dil",
+      "notifications": "Bildirimler",
+      "help": "Yardım",
+      "helpCenter": "Yardım Merkezi",
       "about": "Hakkında",
+      "status": "Durum",
+      "changeLog": "Değişiklik günlüğü",
+      "feedback": "Geri bildirim",
+      "privacy": "Gizlilik",
+      "terms": "Koşullar",
       "version": "Sürüm",
+      "buildNumber": "Derleme numarası",
+      "development": "Geliştirme",
+      "appVariant": "Uygulama varyantı",
       "checkMissingTranslations": "🔍 Eksik çevirileri kontrol et",
-      "developmentTool": "Geliştirme aracı",
-      "notifications": "Bildirimler"
+      "developmentTool": "Geliştirme aracı"
     },
     "gif": {
       "selectGif": "GIF Seç",
