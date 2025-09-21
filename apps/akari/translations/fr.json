@@ -57,8 +57,8 @@
       "saving": "Enregistrement...",
       "mute": "Muet",
       "unmute": "Activer le son",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Discussions en attente",
+      "viewPendingChats": "Voir les discussions en attente"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",
