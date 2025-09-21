@@ -16,15 +16,15 @@ describe('MessagesLayout', () => {
     jest.clearAllMocks();
   });
 
-  it('renders stack with index and [handle] screens', () => {
+  it('renders stack with index, pending, and [handle] screens', () => {
     const { Stack } = require('expo-router');
     render(<MessagesLayout />);
     expect(Stack.mock.calls[0][0].screenOptions).toEqual({ headerShown: false });
-    expect(Stack.Screen).toHaveBeenCalledTimes(2);
+    expect(Stack.Screen).toHaveBeenCalledTimes(3);
     const names: string[] = [];
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
-    expect(names).toEqual(['index', '[handle]']);
+    expect(names).toEqual(['index', 'pending', '[handle]']);
   });
 });
