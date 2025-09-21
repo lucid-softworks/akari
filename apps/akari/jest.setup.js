@@ -6,6 +6,20 @@ jest.mock('react-native-reanimated', () => {
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
 
+jest.mock(
+  '@shopify/flash-list',
+  () => {
+    const React = require('react');
+    const { FlatList } = require('react-native');
+
+    const FlashList = React.forwardRef((props, ref) => <FlatList ref={ref} {...props} />);
+    FlashList.displayName = 'FlashList';
+
+    return { FlashList };
+  },
+  { virtual: true },
+);
+
 const { act } = require('@testing-library/react-native');
 
 beforeEach(() => {
