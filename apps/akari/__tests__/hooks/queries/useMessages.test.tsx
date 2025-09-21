@@ -104,10 +104,51 @@ describe('useMessages', () => {
           timestamp,
           isFromMe: false,
           sentAt: '2023-01-01T00:00:00Z',
+          embed: undefined,
         },
       ],
       cursor: 'cursor',
     });
+  });
+
+  it('includes embed data when provided', async () => {
+    const embed = {
+      $type: 'app.bsky.embed.external#view',
+      external: {
+        uri: 'https://example.com/article',
+        title: 'Example article',
+        description: 'An external link',
+      },
+    };
+
+    mockGetMessages.mockResolvedValueOnce({
+      messages: [
+        {
+          id: '3',
+          text: 'with embed',
+          sentAt: '2023-01-01T02:00:00Z',
+          sender: { did: 'did:other' },
+          embed,
+        },
+      ],
+      cursor: undefined,
+    });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useMessages('convo', 10), {
+      wrapper,
+    });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data?.pages[0].messages[0]).toEqual(
+      expect.objectContaining({
+        id: '3',
+        embed,
+      }),
+    );
   });
 
   it('uses default limit and handles messages without text', async () => {
@@ -147,6 +188,7 @@ describe('useMessages', () => {
           timestamp,
           isFromMe: true,
           sentAt: '2023-01-01T01:00:00Z',
+          embed: undefined,
         },
       ],
       cursor: null,

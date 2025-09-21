@@ -4,8 +4,14 @@ import { useEffect, useState } from 'react';
 import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BlueskyEmbed } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ExternalEmbed } from '@/components/ExternalEmbed';
+import { GifEmbed } from '@/components/GifEmbed';
+import { RecordEmbed } from '@/components/RecordEmbed';
+import { VideoEmbed } from '@/components/VideoEmbed';
+import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -15,12 +21,26 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
+const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
+
+type RecordEmbedData = Parameters<typeof RecordEmbed>[0]['embed'];
+type ExternalEmbedData = Parameters<typeof ExternalEmbed>[0]['embed'];
+type GifEmbedData = Parameters<typeof GifEmbed>[0]['embed'];
+type YouTubeEmbedData = Parameters<typeof YouTubeEmbed>[0]['embed'];
+type VideoEmbedData = Parameters<typeof VideoEmbed>[0]['embed'];
+
+type MessageImageData = {
+  url: string;
+  alt: string;
+};
+
 type Message = {
   id: string;
   text: string;
   timestamp: string;
   isFromMe: boolean;
   sentAt: string;
+  embed?: BlueskyEmbed;
 };
 
 type MessageError = {
@@ -28,10 +48,195 @@ type MessageError = {
   message: string;
 };
 
+const isYouTubeUrl = (uri: string | undefined): boolean => {
+  if (!uri) {
+    return false;
+  }
+
+  const normalized = uri.toLowerCase();
+  return (
+    normalized.includes('youtube.com/watch') ||
+    normalized.includes('youtu.be/') ||
+    normalized.includes('music.youtube.com/watch') ||
+    normalized.includes('youtube.com/embed/')
+  );
+};
+
+const isGifUrl = (uri: string | undefined): boolean => {
+  if (!uri) {
+    return false;
+  }
+
+  const normalized = uri.toLowerCase();
+  return (
+    normalized.includes('tenor.com') ||
+    normalized.includes('media.tenor.com') ||
+    normalized.endsWith('.gif')
+  );
+};
+
+const isVideoUrl = (uri: string | undefined): boolean => {
+  if (!uri) {
+    return false;
+  }
+
+  const normalized = uri.toLowerCase();
+  const videoDomains = ['vimeo.com', 'dailymotion.com', 'twitch.tv', 'tiktok.com'];
+
+  for (const domain of videoDomains) {
+    if (normalized.includes(domain)) {
+      return true;
+    }
+  }
+
+  const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.m3u8'];
+
+  for (const extension of videoExtensions) {
+    if (normalized.includes(extension)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const getRecordEmbedData = (embed: BlueskyEmbed | undefined): RecordEmbedData | null => {
+  if (!embed) {
+    return null;
+  }
+
+  if (embed.$type === 'app.bsky.embed.record#view' && embed.record) {
+    return embed as RecordEmbedData;
+  }
+
+  if (embed.$type === 'app.bsky.embed.recordWithMedia#view' && embed.record) {
+    return embed as RecordEmbedData;
+  }
+
+  return null;
+};
+
+const getVideoEmbedData = (embed: BlueskyEmbed | undefined): VideoEmbedData | null => {
+  if (!embed) {
+    return null;
+  }
+
+  if (embed.$type === 'app.bsky.embed.video#view' && embed.playlist) {
+    return {
+      videoUrl: embed.playlist,
+      thumbnailUrl: embed.thumbnail,
+      altText: embed.alt,
+      aspectRatio: embed.aspectRatio,
+    } as VideoEmbedData;
+  }
+
+  if (embed.video?.ref?.$link) {
+    return {
+      videoUrl: embed.video.ref.$link,
+      thumbnailUrl: embed.video.ref.$link,
+      altText: embed.video.alt,
+      aspectRatio: embed.aspectRatio,
+    } as VideoEmbedData;
+  }
+
+  if (embed.media?.$type === 'app.bsky.embed.video#view' && embed.media.playlist) {
+    return {
+      videoUrl: embed.media.playlist,
+      thumbnailUrl: embed.media.thumbnail,
+      altText: embed.media.alt,
+      aspectRatio: embed.media.aspectRatio,
+    } as VideoEmbedData;
+  }
+
+  if (embed.media?.video?.ref?.$link) {
+    return {
+      videoUrl: embed.media.video.ref.$link,
+      thumbnailUrl: embed.media.video.ref.$link,
+      altText: embed.media.video.alt,
+      aspectRatio: embed.media.aspectRatio,
+    } as VideoEmbedData;
+  }
+
+  if (embed.$type?.includes('app.bsky.embed.external') && embed.external) {
+    const uri = embed.external.uri;
+    if (!isYouTubeUrl(uri) && !isGifUrl(uri) && isVideoUrl(uri)) {
+      return embed as VideoEmbedData;
+    }
+  }
+
+  return null;
+};
+
+const getYouTubeEmbedData = (embed: BlueskyEmbed | undefined): YouTubeEmbedData | null => {
+  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
+    return null;
+  }
+
+  return isYouTubeUrl(embed.external.uri) ? (embed as YouTubeEmbedData) : null;
+};
+
+const getGifEmbedData = (embed: BlueskyEmbed | undefined): GifEmbedData | null => {
+  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
+    return null;
+  }
+
+  return isGifUrl(embed.external.uri) ? (embed as GifEmbedData) : null;
+};
+
+const getExternalEmbedData = (embed: BlueskyEmbed | undefined): ExternalEmbedData | null => {
+  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
+    return null;
+  }
+
+  const uri = embed.external.uri;
+  if (isYouTubeUrl(uri) || isGifUrl(uri) || isVideoUrl(uri)) {
+    return null;
+  }
+
+  return embed as ExternalEmbedData;
+};
+
+const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] => {
+  if (!embed) {
+    return [];
+  }
+
+  const images: MessageImageData[] = [];
+
+  const collectImages = (imageList: BlueskyEmbed['images'] | undefined) => {
+    if (!imageList) {
+      return;
+    }
+
+    for (const image of imageList) {
+      if (image.image?.mimeType && image.image.mimeType.startsWith('video/')) {
+        continue;
+      }
+
+      const url = image.fullsize || image.thumb;
+      if (url) {
+        images.push({
+          url,
+          alt: image.alt,
+        });
+      }
+    }
+  };
+
+  collectImages(embed.images);
+
+  if (embed.media?.images) {
+    collectImages(embed.media.images);
+  }
+
+  return images;
+};
+
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
@@ -78,6 +283,70 @@ export default function ConversationScreen() {
   // Send message mutation
   const sendMessageMutation = useSendMessage();
 
+  const handleMessageImageLoad = (imageUrl: string, width: number, height: number) => {
+    if (width > 0 && height > 0 && Number.isFinite(width) && Number.isFinite(height)) {
+      setImageDimensions((prev) => ({
+        ...prev,
+        [imageUrl]: { width, height },
+      }));
+    }
+  };
+
+  const renderMessageEmbed = (embed: BlueskyEmbed, messageId: string) => {
+    const recordEmbed = getRecordEmbedData(embed);
+    if (recordEmbed) {
+      return <RecordEmbed embed={recordEmbed} />;
+    }
+
+    const videoEmbed = getVideoEmbedData(embed);
+    if (videoEmbed) {
+      return <VideoEmbed embed={{ ...videoEmbed, altText: videoEmbed.altText || t('common.video') }} />;
+    }
+
+    const youTubeEmbed = getYouTubeEmbedData(embed);
+    if (youTubeEmbed) {
+      return <YouTubeEmbed embed={youTubeEmbed} />;
+    }
+
+    const gifEmbed = getGifEmbedData(embed);
+    if (gifEmbed) {
+      return <GifEmbed embed={gifEmbed} />;
+    }
+
+    const externalEmbed = getExternalEmbedData(embed);
+    if (externalEmbed) {
+      return <ExternalEmbed embed={externalEmbed} />;
+    }
+
+    const imageData = getImageEmbedData(embed);
+    if (imageData.length > 0) {
+      return (
+        <ThemedView style={styles.messageImagesContainer}>
+          {imageData.map((image, index) => {
+            const dimensions = imageDimensions[image.url];
+            const imageWidth = 260;
+            const imageHeight = dimensions ? (dimensions.height / dimensions.width) * imageWidth : 220;
+
+            return (
+              <Image
+                key={`${messageId}-image-${index}`}
+                source={{ uri: image.url }}
+                style={[styles.messageImage, { width: imageWidth, height: imageHeight }]}
+                contentFit="cover"
+                placeholder={PLACEHOLDER_IMAGE}
+                onLoad={(event) => handleMessageImageLoad(image.url, event.source.width, event.source.height)}
+                accessible
+                accessibilityLabel={image.alt || 'Image attachment'}
+              />
+            );
+          })}
+        </ThemedView>
+      );
+    }
+
+    return null;
+  };
+
   const handleSendMessage = async () => {
     if (!messageText.trim() || !conversation?.convoId) return;
 
@@ -95,24 +364,56 @@ export default function ConversationScreen() {
     }
   };
 
-  const renderMessage = ({ item }: { item: Message }) => (
-    <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
-      <ThemedView
-        style={[
-          styles.messageBubble,
-          item.isFromMe ? styles.myBubble : styles.theirBubble,
-          {
-            backgroundColor: item.isFromMe ? '#007AFF' : incomingMessageBackground,
-          },
-        ]}
-      >
-        <ThemedText style={[styles.messageText, { color: item.isFromMe ? 'white' : textColor }]}>{item.text}</ThemedText>
-        <ThemedText style={[styles.messageTimestamp, { color: item.isFromMe ? 'rgba(255,255,255,0.6)' : iconColor }]}>
-          {item.timestamp}
-        </ThemedText>
+  const renderMessage = ({ item }: { item: Message }) => {
+    const hasText = item.text.trim().length > 0;
+    const embedContent = item.embed ? renderMessageEmbed(item.embed, item.id) : null;
+
+    return (
+      <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
+        {(hasText || !item.embed) && (
+          <ThemedView
+            style={[
+              styles.messageBubble,
+              item.isFromMe ? styles.myBubble : styles.theirBubble,
+              {
+                backgroundColor: item.isFromMe ? '#007AFF' : incomingMessageBackground,
+              },
+            ]}
+          >
+            {hasText && (
+              <ThemedText style={[styles.messageText, { color: item.isFromMe ? 'white' : textColor }]}>
+                {item.text}
+              </ThemedText>
+            )}
+            <ThemedText style={[styles.messageTimestamp, { color: item.isFromMe ? 'rgba(255,255,255,0.6)' : iconColor }]}>
+              {item.timestamp}
+            </ThemedText>
+          </ThemedView>
+        )}
+
+        {item.embed && (
+          <ThemedView style={[styles.embedContainer, item.isFromMe ? styles.myEmbed : styles.theirEmbed]}>
+            {embedContent ?? (
+              <ThemedText style={[styles.unsupportedEmbedText, { color: iconColor }]}>
+                {t('common.unknown')}
+              </ThemedText>
+            )}
+            {!hasText && (
+              <ThemedText
+                style={[
+                  styles.messageTimestamp,
+                  !item.isFromMe ? styles.timestampIncoming : null,
+                  { color: iconColor },
+                ]}
+              >
+                {item.timestamp}
+              </ThemedText>
+            )}
+          </ThemedView>
+        )}
       </ThemedView>
-    </ThemedView>
-  );
+    );
+  };
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
@@ -349,6 +650,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.6,
     alignSelf: 'flex-end',
+  },
+  timestampIncoming: {
+    alignSelf: 'flex-start',
+  },
+  embedContainer: {
+    maxWidth: '80%',
+    marginTop: 8,
+    gap: 8,
+  },
+  myEmbed: {
+    alignSelf: 'flex-end',
+  },
+  theirEmbed: {
+    alignSelf: 'flex-start',
+  },
+  messageImagesContainer: {
+    gap: 8,
+  },
+  messageImage: {
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  unsupportedEmbedText: {
+    fontSize: 14,
+    opacity: 0.8,
   },
   inputContainer: {
     flexDirection: 'row',

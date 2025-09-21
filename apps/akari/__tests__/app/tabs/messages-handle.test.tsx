@@ -95,7 +95,14 @@ afterEach(() => {
   keyboardListeners = {};
 });
 
-type Message = { id: string; text: string; timestamp: string; isFromMe: boolean; sentAt: string };
+type Message = {
+  id: string;
+  text: string;
+  timestamp: string;
+  isFromMe: boolean;
+  sentAt: string;
+  embed?: unknown;
+};
 
 describe('ConversationScreen', () => {
   it('shows loading state when conversation is missing', () => {

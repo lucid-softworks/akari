@@ -48,6 +48,7 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
             }),
             isFromMe,
             sentAt: message.sentAt,
+            embed: message.embed,
           };
         });
 
