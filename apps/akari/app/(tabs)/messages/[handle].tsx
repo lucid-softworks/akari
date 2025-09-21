@@ -40,6 +40,10 @@ export default function ConversationScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
+  const incomingMessageBackground = useThemeColor(
+    { light: '#F3F4F6', dark: '#1E2537' },
+    'background',
+  );
 
   // Keyboard state
   useEffect(() => {
@@ -98,7 +102,7 @@ export default function ConversationScreen() {
           styles.messageBubble,
           item.isFromMe ? styles.myBubble : styles.theirBubble,
           {
-            backgroundColor: item.isFromMe ? '#007AFF' : backgroundColor,
+            backgroundColor: item.isFromMe ? '#007AFF' : incomingMessageBackground,
           },
         ]}
       >
