@@ -26,7 +26,7 @@ export class BlueskyApiClient {
       method?: 'GET' | 'POST';
       headers?: Record<string, string>;
       body?: Record<string, unknown> | FormData | Blob;
-      params?: Record<string, string>;
+      params?: Record<string, string | string[]>;
     } = {},
   ): Promise<T> {
     const { method = 'GET', headers = {}, body, params } = options;
@@ -36,9 +36,20 @@ export class BlueskyApiClient {
     if (params && Object.keys(params).length > 0) {
       const searchParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchParams.append(key, value);
+        if (value === undefined || value === null) {
+          return;
         }
+
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            if (item !== undefined && item !== null) {
+              searchParams.append(key, item);
+            }
+          }
+          return;
+        }
+
+        searchParams.append(key, value);
       });
       url += `?${searchParams.toString()}`;
     }
@@ -79,7 +90,7 @@ export class BlueskyApiClient {
     options: {
       method?: 'GET' | 'POST';
       body?: Record<string, unknown> | FormData | Blob;
-      params?: Record<string, string>;
+      params?: Record<string, string | string[]>;
       headers?: Record<string, string>;
     } = {},
   ): Promise<T> {

@@ -5,7 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { StartChatPanel } from '@/components/StartChatPanel';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { DialogModal } from '@/components/ui/DialogModal';
+import { useDialogManager } from '@/contexts/DialogContext';
+import { NEW_CHAT_PANEL_ID } from '@/constants/dialogs';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -53,6 +57,7 @@ export function MessagesListScreen({
   const borderColor = useBorderColor();
   const flatListRef = React.useRef<FlatList>(null);
   const { t } = useTranslation();
+  const dialogManager = useDialogManager();
 
   const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -76,6 +81,19 @@ export function MessagesListScreen({
 
     return flattened.filter((conversation) => conversation.status === status);
   }, [conversationsData, status]);
+
+  const handleOpenNewChat = React.useCallback(() => {
+    const closePanel = () => dialogManager.close(NEW_CHAT_PANEL_ID);
+
+    dialogManager.open({
+      id: NEW_CHAT_PANEL_ID,
+      component: (
+        <DialogModal onRequestClose={closePanel}>
+          <StartChatPanel panelId={NEW_CHAT_PANEL_ID} />
+        </DialogModal>
+      ),
+    });
+  }, [dialogManager]);
 
   const renderConversation = ({ item }: { item: Conversation }) => (
     <TouchableOpacity
@@ -157,15 +175,27 @@ export function MessagesListScreen({
           ) : null}
           <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
         </ThemedView>
-        {pendingButtonConfig ? (
+        <ThemedView style={styles.headerActions}>
           <TouchableOpacity
-            style={styles.pendingButton}
-            onPress={pendingButtonConfig.onPress}
-            activeOpacity={0.7}
+            style={styles.newChatButton}
+            onPress={handleOpenNewChat}
+            activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.newChat')}
           >
-            <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
+            <IconSymbol name="plus" size={16} color="#ffffff" />
+            <ThemedText style={styles.newChatButtonText}>{t('common.newChat')}</ThemedText>
           </TouchableOpacity>
-        ) : null}
+          {pendingButtonConfig ? (
+            <TouchableOpacity
+              style={styles.pendingButton}
+              onPress={pendingButtonConfig.onPress}
+              activeOpacity={0.7}
+            >
+              <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
+            </TouchableOpacity>
+          ) : null}
+        </ThemedView>
       </ThemedView>
 
       <FlatList
@@ -241,11 +271,30 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  newChatButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0A84FF',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 16,
+  },
+  newChatButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
   pendingButton: {
     backgroundColor: '#007AFF',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
+    marginLeft: 8,
   },
   pendingButtonText: {
     color: 'white',

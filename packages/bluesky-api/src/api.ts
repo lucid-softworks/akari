@@ -8,6 +8,7 @@ import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
 import type {
   BlueskyBookmarksResponse,
+  BlueskyConvoResponse,
   BlueskyConvosResponse,
   BlueskyFeed,
   BlueskyFeedResponse,
@@ -193,6 +194,10 @@ export class BlueskyApi extends BlueskyApiClient {
     status?: 'request' | 'accepted',
   ): Promise<BlueskyConvosResponse> {
     return this.conversations.listConversations(accessJwt, limit, cursor, readState, status);
+  }
+
+  async getConversationForMembers(accessJwt: string, members: string[]): Promise<BlueskyConvoResponse> {
+    return this.conversations.getConversationForMembers(accessJwt, members);
   }
 
   async getMessages(

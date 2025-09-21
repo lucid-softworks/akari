@@ -418,6 +418,13 @@ export type BlueskyConvosResponse = {
 };
 
 /**
+ * Bluesky single conversation response
+ */
+export type BlueskyConvoResponse = {
+  convo: BlueskyConvo;
+};
+
+/**
  * Bluesky feed item (post with context)
  */
 export type BlueskyFeedItem = {
@@ -868,10 +875,10 @@ export type BlueskyAppStatePref = {
   /** Type identifier */
   $type: 'app.bsky.actor.defs#bskyAppStatePref';
   /** NUX completion status */
-  nuxs?: Array<{
+  nuxs?: {
     id: string;
     completed: boolean;
-  }>;
+  }[];
 };
 
 /**

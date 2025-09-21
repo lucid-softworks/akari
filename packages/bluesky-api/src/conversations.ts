@@ -1,5 +1,10 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyConvosResponse, BlueskyMessagesResponse, BlueskySendMessageResponse } from './types';
+import type {
+  BlueskyConvoResponse,
+  BlueskyConvosResponse,
+  BlueskyMessagesResponse,
+  BlueskySendMessageResponse,
+} from './types';
 
 /**
  * Bluesky API conversation methods
@@ -33,6 +38,25 @@ export class BlueskyConversations extends BlueskyApiClient {
         'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
       },
     });
+  }
+
+  /**
+   * Gets (or creates) a conversation for the specified members
+   * @param accessJwt - Valid access JWT token
+   * @param members - Array of member DIDs (including the current user)
+   * @returns Promise resolving to the conversation data
+   */
+  async getConversationForMembers(accessJwt: string, members: string[]): Promise<BlueskyConvoResponse> {
+    return this.makeAuthenticatedRequest<BlueskyConvoResponse>(
+      '/chat.bsky.convo.getConvoForMembers',
+      accessJwt,
+      {
+        params: { members },
+        headers: {
+          'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+        },
+      },
+    );
   }
 
   /**

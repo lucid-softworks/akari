@@ -58,6 +58,7 @@
       "unmute": "Unmute",
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
+      "newChat": "New chat",
       "bookmarks": "Bookmarks"
     },
     "auth": {
@@ -234,7 +235,16 @@
     },
     "messages": {
       "typeMessage": "Type a message...",
-      "errorSendingMessage": "Failed to send message. Please try again."
+      "errorSendingMessage": "Failed to send message. Please try again.",
+      "startNewChat": "Start a new chat",
+      "startNewChatDescription": "Search for someone on Bluesky to begin a conversation.",
+      "searchInputLabel": "Find someone",
+      "searchPlaceholder": "Search by handle or display name",
+      "searchMinimumCharacters": "Enter at least 2 characters to search.",
+      "startChat": "Start chat",
+      "startingChat": "Starting chat...",
+      "errorStartingChat": "We couldn't start this chat. Please try again.",
+      "cannotStartChatWithSelf": "You can't start a chat with yourself."
     },
     "settings": {
       "account": "Account",
