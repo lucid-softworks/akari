@@ -1,7 +1,16 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -32,6 +41,9 @@ export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 16 });
+  const menuButtonRef = useRef<View | null>(null);
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
@@ -40,6 +52,13 @@ export default function ConversationScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
+  const menuBackgroundColor = useThemeColor(
+    {
+      light: '#ffffff',
+      dark: '#1c1c1e',
+    },
+    'background',
+  );
 
   // Keyboard state
   useEffect(() => {
@@ -60,6 +79,10 @@ export default function ConversationScreen() {
   const conversation = conversationsData?.pages
     .flatMap((page) => page.conversations)
     .find((conv) => conv.handle === decodeURIComponent(handle));
+
+  const muteMenuLabel = conversation?.muted
+    ? t('messages.unmuteConversation')
+    : t('messages.muteConversation');
 
   // Fetch messages for this conversation
   const {
@@ -83,12 +106,69 @@ export default function ConversationScreen() {
         text: messageText.trim(),
       });
       setMessageText('');
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('messages.errorSendingMessage'),
       });
     }
+  };
+
+  const closeMenu = () => {
+    setIsMenuVisible(false);
+  };
+
+  const openMenu = () => {
+    if (menuButtonRef.current) {
+      menuButtonRef.current.measure((_x, _y, _width, height, _pageX, pageY) => {
+        setMenuPosition({
+          top: pageY + height + 4,
+          right: 16,
+        });
+        setIsMenuVisible(true);
+      });
+    } else {
+      setIsMenuVisible(true);
+    }
+  };
+
+  const handleMenuToggle = () => {
+    if (isMenuVisible) {
+      closeMenu();
+      return;
+    }
+
+    openMenu();
+  };
+
+  const handleGoToProfile = () => {
+    closeMenu();
+    router.push(`/profile/${encodeURIComponent(handle)}`);
+  };
+
+  const handleUnavailableAction = (title: string) => {
+    closeMenu();
+    showAlert({
+      title,
+      message: t('messages.actionUnavailable'),
+      buttons: [{ text: t('common.ok') }],
+    });
+  };
+
+  const handleMuteConversation = () => {
+    handleUnavailableAction(muteMenuLabel);
+  };
+
+  const handleBlockAccount = () => {
+    handleUnavailableAction(t('messages.blockAccount'));
+  };
+
+  const handleReportConversation = () => {
+    handleUnavailableAction(t('messages.reportConversation'));
+  };
+
+  const handleLeaveConversation = () => {
+    handleUnavailableAction(t('messages.leaveConversation'));
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
@@ -205,6 +285,16 @@ export default function ConversationScreen() {
                 <ThemedText style={styles.headerHandle}>@{decodeURIComponent(handle)}</ThemedText>
               </ThemedView>
             </TouchableOpacity>
+            <TouchableOpacity
+              ref={menuButtonRef}
+              style={styles.menuButton}
+              onPress={handleMenuToggle}
+              accessibilityRole="button"
+              accessibilityLabel={t('messages.conversationOptions')}
+              hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+            >
+              <IconSymbol name="ellipsis" size={20} color={iconColor} />
+            </TouchableOpacity>
           </ThemedView>
 
           {/* Messages */}
@@ -268,6 +358,50 @@ export default function ConversationScreen() {
               />
             </TouchableOpacity>
           </ThemedView>
+
+          {isMenuVisible ? (
+            <View style={styles.menuOverlay} pointerEvents="box-none">
+              <TouchableOpacity style={styles.menuBackdrop} activeOpacity={1} onPress={closeMenu} />
+              <ThemedView
+                style={[
+                  styles.menuContainer,
+                  {
+                    top: menuPosition.top,
+                    right: menuPosition.right,
+                    backgroundColor: menuBackgroundColor,
+                    borderColor: borderColor,
+                  },
+                ]}
+              >
+                <TouchableOpacity style={styles.menuItem} onPress={handleGoToProfile} accessibilityRole="button">
+                  <ThemedText style={styles.menuItemText}>{t('messages.goToProfile')}</ThemedText>
+                  <IconSymbol name="person.fill" size={18} color={iconColor} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menuItem} onPress={handleMuteConversation} accessibilityRole="button">
+                  <ThemedText style={styles.menuItemText}>{muteMenuLabel}</ThemedText>
+                  <IconSymbol
+                    name={conversation?.muted ? 'bell.fill' : 'speaker.slash.fill'}
+                    size={18}
+                    color={iconColor}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menuItem} onPress={handleBlockAccount} accessibilityRole="button">
+                  <ThemedText style={styles.menuItemText}>{t('messages.blockAccount')}</ThemedText>
+                  <IconSymbol name="hand.raised.fill" size={18} color={iconColor} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menuItem} onPress={handleReportConversation} accessibilityRole="button">
+                  <ThemedText style={styles.menuItemText}>{t('messages.reportConversation')}</ThemedText>
+                  <IconSymbol name="flag.fill" size={18} color={iconColor} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menuItem} onPress={handleLeaveConversation} accessibilityRole="button">
+                  <ThemedText style={[styles.menuItemText, styles.menuDestructiveText]}>
+                    {t('messages.leaveConversation')}
+                  </ThemedText>
+                  <IconSymbol name="rectangle.portrait.and.arrow.right" size={18} color={iconColor} />
+                </TouchableOpacity>
+              </ThemedView>
+            </View>
+          ) : null}
         </ThemedView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -291,6 +425,7 @@ const styles = StyleSheet.create({
   headerInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   headerAvatar: {
     width: 40,
@@ -368,6 +503,42 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     opacity: 0.5,
+  },
+  menuOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  menuContainer: {
+    position: 'absolute',
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingVertical: 4,
+    minWidth: 220,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  menuButton: {
+    marginLeft: 12,
+    padding: 4,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  menuItemText: {
+    fontSize: 16,
+  },
+  menuDestructiveText: {
+    color: '#c62828',
   },
   loadingState: {
     flex: 1,

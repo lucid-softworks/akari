@@ -244,7 +244,15 @@
     },
     "messages": {
       "typeMessage": "Type a message...",
-      "errorSendingMessage": "Failed to send message. Please try again."
+      "errorSendingMessage": "Failed to send message. Please try again.",
+      "goToProfile": "Go to profile",
+      "muteConversation": "Mute conversation",
+      "unmuteConversation": "Unmute conversation",
+      "blockAccount": "Block account",
+      "reportConversation": "Report conversation",
+      "leaveConversation": "Leave conversation",
+      "actionUnavailable": "This action isn't available yet.",
+      "conversationOptions": "Conversation options"
     },
     "settings": {
       "account": "Account",

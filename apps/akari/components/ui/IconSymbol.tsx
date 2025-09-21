@@ -48,6 +48,10 @@ const MAPPING = {
   'checkmark.circle.fill': 'check-circle',
   'info.circle.fill': 'info',
   'exclamationmark.triangle.fill': 'warning',
+  'speaker.slash.fill': 'volume-off',
+  'hand.raised.fill': 'block',
+  'flag.fill': 'flag',
+  'rectangle.portrait.and.arrow.right': 'logout',
 } as unknown as IconMapping;
 
 /**
