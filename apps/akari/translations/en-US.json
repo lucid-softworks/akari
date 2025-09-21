@@ -44,6 +44,7 @@
       "externalLink": "External Link",
       "failedToDownloadImage": "Failed to download image",
       "failedToLoadImage": "Failed to load image",
+      "failedToOpenLink": "Failed to open link",
       "failedToLogout": "Failed to logout",
       "switchAccount": "Switch Account",
       "cannotRemoveAccount": "Cannot Remove Account",
@@ -239,11 +240,21 @@
     "settings": {
       "account": "Account",
       "language": "Language",
+      "notifications": "Notifications",
+      "help": "Help",
+      "helpCenter": "Help Center",
       "about": "About",
+      "status": "Status",
+      "changeLog": "Change log",
+      "feedback": "Feedback",
+      "privacy": "Privacy",
+      "terms": "Terms",
       "version": "Version",
+      "buildNumber": "Build number",
+      "development": "Development",
+      "appVariant": "App variant",
       "checkMissingTranslations": "🔍 Check Missing Translations",
-      "developmentTool": "Development tool",
-      "notifications": "Notifications"
+      "developmentTool": "Development tool"
     },
     "gif": {
       "selectGif": "Select GIF",

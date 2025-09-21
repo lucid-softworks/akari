@@ -17,9 +17,14 @@ import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 jest.mock('expo-constants', () => ({ expoConfig: { version: '1.0.0' } }));
+
+jest.mock('expo-web-browser', () => ({
+  openBrowserAsync: jest.fn().mockResolvedValue({ type: 'dismiss' }),
+}));
 
 jest.mock('expo-image', () => {
   const React = require('react');
@@ -74,6 +79,7 @@ jest.mock('@/hooks/queries/useAccountProfiles');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/useBorderColor');
+jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
@@ -87,6 +93,7 @@ const mockUseAccountProfiles = useAccountProfiles as jest.Mock;
 const mockUseAccounts = useAccounts as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
+const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
@@ -102,6 +109,11 @@ const renderSettings = () =>
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseBorderColor.mockReturnValue('#000');
+  mockUseThemeColor.mockImplementation((props: { light?: string; dark?: string }) => {
+    if (props.light) return props.light;
+    if (props.dark) return props.dark;
+    return '#000';
+  });
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
   mockUseAccountProfiles.mockReturnValue({ data: {} });
   mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
