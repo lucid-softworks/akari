@@ -110,7 +110,17 @@
       "all": "すべて",
       "users": "ユーザー",
       "posts": "投稿",
-      "loadingMoreResults": "さらに結果を読み込み中..."
+      "loadingMoreResults": "さらに結果を読み込み中...",
+      "yourInterests": "Your interests",
+      "editInterests": "Edit interests",
+      "noInterests": "Add interests to personalize your Discover experience.",
+      "searchTopic": "Search posts",
+      "trendingTopics": "Trending topics",
+      "loadingTrendingTopics": "Loading trending topics...",
+      "noTrendingTopics": "No trending topics right now.",
+      "discoverFeeds": "Discover new feeds",
+      "openFeed": "Open feed",
+      "feedByCreator": "By {{author}}"
     },
     "notifications": {
       "likedYourPost": "があなたの投稿にいいねしました",

@@ -110,7 +110,17 @@
       "all": "Wszystko",
       "users": "Użytkownicy",
       "posts": "Posty",
-      "loadingMoreResults": "Ładowanie większej liczby wyników..."
+      "loadingMoreResults": "Ładowanie większej liczby wyników...",
+      "yourInterests": "Your interests",
+      "editInterests": "Edit interests",
+      "noInterests": "Add interests to personalize your Discover experience.",
+      "searchTopic": "Search posts",
+      "trendingTopics": "Trending topics",
+      "loadingTrendingTopics": "Loading trending topics...",
+      "noTrendingTopics": "No trending topics right now.",
+      "discoverFeeds": "Discover new feeds",
+      "openFeed": "Open feed",
+      "feedByCreator": "By {{author}}"
     },
     "notifications": {
       "likedYourPost": "polubił Twój post",

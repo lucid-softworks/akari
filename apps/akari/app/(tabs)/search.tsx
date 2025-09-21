@@ -1,7 +1,17 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  FlatList,
+  Keyboard,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Labels } from '@/components/Labels';
@@ -11,9 +21,17 @@ import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SearchResultSkeleton } from '@/components/skeletons';
+import { Panel } from '@/components/ui/Panel';
+import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
+import { usePreferences } from '@/hooks/queries/usePreferences';
 import { useSearch } from '@/hooks/queries/useSearch';
+import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { BlueskyFeed, BlueskyTrendingTopic } from '@/bluesky-api';
+import { extractFeedUriFromLink, resolveBskyLink } from '@/utils/feedLinks';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -24,24 +42,42 @@ type SearchResult = {
 
 type SearchTabType = 'all' | 'users' | 'posts';
 
+type DiscoverableFeed = {
+  topic: BlueskyTrendingTopic;
+  feedUri?: string;
+  feed?: BlueskyFeed;
+};
+
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
   const [query, setQuery] = useState(initialQuery || '');
   const [searchQuery, setSearchQuery] = useState(initialQuery || '');
   const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList<SearchResult>>(null);
   const { t } = useTranslation();
+  const { isLargeScreen } = useResponsive();
+  const setSelectedFeedMutation = useSetSelectedFeed();
 
-  // Create scroll to top function
-  const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  const {
+    data: preferencesData,
+    isLoading: preferencesLoading,
+    error: preferencesError,
+  } = usePreferences();
 
-  // Register with the tab scroll registry
-  React.useEffect(() => {
-    tabScrollRegistry.register('search', scrollToTop);
-  }, []);
+  const {
+    data: trendingData,
+    isLoading: trendingLoading,
+    error: trendingError,
+  } = useTrendingTopics(12);
+
+  const accentColor = useThemeColor(
+    {
+      light: '#7C8CF9',
+      dark: '#7C8CF9',
+    },
+    'tint',
+  );
 
   const backgroundColor = useThemeColor(
     {
@@ -59,6 +95,14 @@ export default function SearchScreen() {
     'text',
   );
 
+  const secondaryTextColor = useThemeColor(
+    {
+      light: '#6B7280',
+      dark: '#9CA3AF',
+    },
+    'text',
+  );
+
   const borderColor = useThemeColor(
     {
       light: '#e8eaed',
@@ -67,7 +111,111 @@ export default function SearchScreen() {
     'background',
   );
 
-  // Use the infinite search hook with searchQuery (not query) - always fetch "all" data
+  const discoverableFeedsInfo = useMemo(() => {
+    return (trendingData?.suggested ?? []).map((topic) => ({
+      topic,
+      feedUri: extractFeedUriFromLink(topic.link),
+    }));
+  }, [trendingData?.suggested]);
+
+  const feedUris = useMemo(
+    () =>
+      discoverableFeedsInfo
+        .map((item) => item.feedUri)
+        .filter((value): value is string => !!value),
+    [discoverableFeedsInfo],
+  );
+
+  const { data: feedGeneratorsData, isLoading: feedGeneratorsLoading } = useFeedGenerators(feedUris);
+
+  const feedMetadataMap = useMemo(() => {
+    const map = new Map<string, BlueskyFeed>();
+    feedGeneratorsData?.feeds.forEach((feed) => {
+      map.set(feed.uri, feed);
+    });
+    return map;
+  }, [feedGeneratorsData]);
+
+  const discoverableFeeds = useMemo<DiscoverableFeed[]>(() => {
+    if (discoverableFeedsInfo.length === 0) {
+      return [];
+    }
+
+    return discoverableFeedsInfo.map((item) => ({
+      topic: item.topic,
+      feedUri: item.feedUri,
+      feed: item.feedUri ? feedMetadataMap.get(item.feedUri) : undefined,
+    }));
+  }, [discoverableFeedsInfo, feedMetadataMap]);
+
+  const interestTags = useMemo(() => {
+    const interestsPref = preferencesData?.preferences.find(
+      (pref): pref is { $type: 'app.bsky.actor.defs#interestsPref'; tags: string[] } =>
+        pref.$type === 'app.bsky.actor.defs#interestsPref',
+    );
+
+    return interestsPref?.tags ?? [];
+  }, [preferencesData]);
+
+  const trendingTopics = trendingData?.topics ?? [];
+
+  const scrollToTop = useCallback(() => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  }, []);
+
+  useEffect(() => {
+    tabScrollRegistry.register('search', scrollToTop);
+  }, [scrollToTop]);
+
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+      setSearchQuery(initialQuery);
+    }
+  }, [initialQuery]);
+
+  const performQuickSearch = useCallback(
+    (value: string) => {
+      if (!value) return;
+
+      setQuery(value);
+      setSearchQuery(value);
+      setActiveTab('all');
+      scrollToTop();
+    },
+    [scrollToTop],
+  );
+
+  const handleTabChange = useCallback(
+    (tab: SearchTabType) => {
+      setActiveTab(tab);
+      scrollToTop();
+    },
+    [scrollToTop],
+  );
+
+  const handleSearch = useCallback(() => {
+    if (query.trim()) {
+      setSearchQuery(query.trim());
+      setActiveTab('all');
+      Keyboard.dismiss();
+    }
+  }, [query]);
+
+  const handleInterestPress = useCallback(
+    (interest: string) => {
+      performQuickSearch(interest);
+    },
+    [performQuickSearch],
+  );
+
+  const handleTrendingTopicPress = useCallback(
+    (topic: string) => {
+      performQuickSearch(topic);
+    },
+    [performQuickSearch],
+  );
+
   const {
     data: searchData,
     isLoading,
@@ -78,50 +226,335 @@ export default function SearchScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useSearch(searchQuery.trim() || undefined, 'all', 20);
+  } = useSearch(searchQuery.trim() || undefined, activeTab, 20);
 
-  // Flatten all search results from all pages
-  const allResults = searchData?.pages.flatMap((page) => page.results) || [];
+  const handleOpenFeed = useCallback(
+    (feedUri?: string, fallbackLink?: string) => {
+      if (feedUri) {
+        setSelectedFeedMutation.mutate(feedUri);
+        router.push('/(tabs)');
+        return;
+      }
 
-  // Filter results based on active tab
-  const filteredResults = allResults.filter((result) => {
-    switch (activeTab) {
-      case 'users':
-        return result.type === 'profile';
-      case 'posts':
-        return result.type === 'post';
-      case 'all':
-      default:
-        return true;
-    }
-  });
+      if (fallbackLink) {
+        Linking.openURL(resolveBskyLink(fallbackLink)).catch((linkError) => {
+          console.warn('Failed to open feed link', linkError);
+        });
+      }
+    },
+    [setSelectedFeedMutation],
+  );
 
-  // Handle initial query from URL
-  useEffect(() => {
-    if (initialQuery) {
-      setQuery(initialQuery);
-      setSearchQuery(initialQuery);
-    }
-  }, [initialQuery]);
-
-  const handleSearch = () => {
-    if (query.trim()) {
-      setSearchQuery(query.trim());
-      Keyboard.dismiss();
-    }
-  };
-
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     if (searchQuery.trim()) {
       await refetch();
     }
-  };
+  }, [refetch, searchQuery]);
+
+  const allResults = searchData?.pages.flatMap((page) => page.results) || [];
+
+  const filteredResults = useMemo(() => {
+    switch (activeTab) {
+      case 'users':
+        return allResults.filter((result) => result.type === 'profile');
+      case 'posts':
+        return allResults.filter((result) => result.type === 'post');
+      default:
+        return allResults;
+    }
+  }, [activeTab, allResults]);
+
+  const handleEditInterests = useCallback(() => {
+    router.push('/(tabs)/settings');
+  }, []);
+
+  const interestsPanel = useMemo(() => {
+    const headerActions = (
+      <TouchableOpacity onPress={handleEditInterests} accessibilityRole="button">
+        <ThemedText style={[styles.headerActionText, { color: accentColor }]}>
+          {t('search.editInterests')}
+        </ThemedText>
+      </TouchableOpacity>
+    );
+
+    if (preferencesLoading) {
+      return (
+        <Panel title={t('search.yourInterests')} headerActions={headerActions}>
+          <ThemedText style={[styles.panelSubtleText, { color: secondaryTextColor }]}>
+            {t('common.loading')}
+          </ThemedText>
+        </Panel>
+      );
+    }
+
+    if (preferencesError) {
+      const message =
+        preferencesError instanceof Error ? preferencesError.message : t('search.searchFailed');
+
+      return (
+        <Panel title={t('search.yourInterests')} headerActions={headerActions}>
+          <ThemedText style={styles.panelErrorText}>{message}</ThemedText>
+        </Panel>
+      );
+    }
+
+    if (interestTags.length === 0) {
+      return (
+        <Panel title={t('search.yourInterests')} headerActions={headerActions}>
+          <ThemedText style={[styles.panelSubtleText, { color: secondaryTextColor }]}>
+            {t('search.noInterests')}
+          </ThemedText>
+        </Panel>
+      );
+    }
+
+    return (
+      <Panel title={t('search.yourInterests')} headerActions={headerActions}>
+        <View style={styles.interestsList}>
+          {interestTags.map((tag, index) => (
+            <TouchableOpacity
+              key={tag}
+              style={[
+                styles.interestItem,
+                index !== interestTags.length - 1
+                  ? { borderBottomColor: borderColor }
+                  : styles.interestItemLast,
+              ]}
+              onPress={() => handleInterestPress(tag)}
+              accessibilityRole="button"
+            >
+              <ThemedText style={styles.interestName}>{tag}</ThemedText>
+              <ThemedText style={[styles.interestAction, { color: accentColor }]}>
+                {t('search.searchTopic')}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Panel>
+    );
+  }, [
+    accentColor,
+    borderColor,
+    handleEditInterests,
+    handleInterestPress,
+    interestTags,
+    preferencesError,
+    preferencesLoading,
+    secondaryTextColor,
+    t,
+  ]);
+
+  const trendingPanel = useMemo(() => {
+    if (trendingLoading) {
+      return (
+        <Panel title={t('search.trendingTopics')}>
+          <ThemedText style={[styles.panelSubtleText, { color: secondaryTextColor }]}>
+            {t('search.loadingTrendingTopics')}
+          </ThemedText>
+        </Panel>
+      );
+    }
+
+    if (trendingError) {
+      const message = trendingError instanceof Error ? trendingError.message : t('search.searchFailed');
+      return (
+        <Panel title={t('search.trendingTopics')}>
+          <ThemedText style={styles.panelErrorText}>{message}</ThemedText>
+        </Panel>
+      );
+    }
+
+    if (trendingTopics.length === 0) {
+      return (
+        <Panel title={t('search.trendingTopics')}>
+          <ThemedText style={[styles.panelSubtleText, { color: secondaryTextColor }]}>
+            {t('search.noTrendingTopics')}
+          </ThemedText>
+        </Panel>
+      );
+    }
+
+    return (
+      <Panel title={t('search.trendingTopics')}>
+        <View style={styles.trendingList}>
+          {trendingTopics.map((topic, index) => (
+            <TouchableOpacity
+              key={`${topic.topic}-${index}`}
+              style={[
+                styles.trendingItem,
+                index !== trendingTopics.length - 1
+                  ? { borderBottomColor: borderColor }
+                  : styles.trendingItemLast,
+              ]}
+              onPress={() => handleTrendingTopicPress(topic.topic)}
+              accessibilityRole="button"
+            >
+              <ThemedText style={styles.trendingTopic}>{topic.topic}</ThemedText>
+              <ThemedText style={[styles.trendingAction, { color: accentColor }]}>
+                {t('search.searchTopic')}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Panel>
+    );
+  }, [
+    accentColor,
+    borderColor,
+    handleTrendingTopicPress,
+    secondaryTextColor,
+    t,
+    trendingError,
+    trendingLoading,
+    trendingTopics,
+  ]);
+
+  const discoverFeedsPanel = useMemo(() => {
+    if (feedGeneratorsLoading && discoverableFeeds.length === 0) {
+      return (
+        <Panel title={t('search.discoverFeeds')}>
+          <ThemedText style={[styles.panelSubtleText, { color: secondaryTextColor }]}>
+            {t('common.loading')}
+          </ThemedText>
+        </Panel>
+      );
+    }
+
+    if (discoverableFeeds.length === 0) {
+      return null;
+    }
+
+    return (
+      <Panel title={t('search.discoverFeeds')}>
+        <View style={styles.feedList}>
+          {discoverableFeeds.map(({ topic, feedUri, feed }) => {
+            const key = feedUri ?? topic.link ?? topic.topic;
+            const displayName = feed?.displayName ?? topic.topic;
+            const author = feed?.creator?.displayName || feed?.creator?.handle;
+
+            return (
+              <View key={key} style={[styles.feedCard, { borderColor }]}>
+                <View style={styles.feedCardHeader}>
+                  {feed?.avatar ? (
+                    <Image
+                      source={{ uri: feed.avatar }}
+                      style={styles.feedAvatar}
+                      contentFit="cover"
+                      placeholder={require('@/assets/images/partial-react-logo.png')}
+                    />
+                  ) : (
+                    <View style={[styles.feedAvatarFallback, { backgroundColor: borderColor }]}>
+                      <ThemedText style={styles.feedAvatarFallbackText}>
+                        {displayName.charAt(0).toUpperCase()}
+                      </ThemedText>
+                    </View>
+                  )}
+                  <View style={styles.feedCardInfo}>
+                    <ThemedText style={styles.feedTitle}>{displayName}</ThemedText>
+                    {author ? (
+                      <ThemedText style={[styles.feedSubtitle, { color: secondaryTextColor }]}>
+                        {t('search.feedByCreator', { author })}
+                      </ThemedText>
+                    ) : null}
+                  </View>
+                </View>
+                {feed?.description ? (
+                  <ThemedText style={styles.feedDescription} numberOfLines={3}>
+                    {feed.description}
+                  </ThemedText>
+                ) : null}
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  style={[styles.feedActionButton, { backgroundColor: accentColor }]}
+                  onPress={() => handleOpenFeed(feedUri, topic.link)}
+                >
+                  <ThemedText style={styles.feedActionButtonText}>{t('search.openFeed')}</ThemedText>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
+      </Panel>
+    );
+  }, [
+    accentColor,
+    borderColor,
+    discoverableFeeds,
+    feedGeneratorsLoading,
+    handleOpenFeed,
+    secondaryTextColor,
+    t,
+  ]);
+
+  const exploreSections = useMemo(() => {
+    const sections: Array<{ key: string; node: React.ReactNode }> = [];
+
+    if (interestsPanel) {
+      sections.push({ key: 'interests', node: interestsPanel });
+    }
+
+    if (trendingPanel) {
+      sections.push({ key: 'trending', node: trendingPanel });
+    }
+
+    if (discoverFeedsPanel) {
+      sections.push({ key: 'feeds', node: discoverFeedsPanel });
+    }
+
+    return sections;
+  }, [discoverFeedsPanel, interestsPanel, trendingPanel]);
+
+  const renderExploreContent = useCallback(() => {
+    if (exploreSections.length === 0) {
+      return null;
+    }
+
+    return (
+      <View style={styles.exploreSections}>
+        {exploreSections.map((section, index) => (
+          <View key={section.key} style={index > 0 ? styles.sectionSpacing : undefined}>
+            {section.node}
+          </View>
+        ))}
+      </View>
+    );
+  }, [exploreSections]);
+
+  const renderLoadMoreFooter = useCallback(() => {
+    if (!isFetchingNextPage) {
+      return null;
+    }
+
+    return (
+      <ThemedView style={styles.loadingFooter}>
+        <ThemedText style={[styles.loadingText, { color: secondaryTextColor }]}>
+          {t('search.loadingMoreResults')}
+        </ThemedText>
+      </ThemedView>
+    );
+  }, [isFetchingNextPage, secondaryTextColor, t]);
+
+  const renderListFooter = useCallback(() => {
+    const loadMoreFooter = renderLoadMoreFooter();
+    const exploreContent = !isLargeScreen ? renderExploreContent() : null;
+
+    if (!loadMoreFooter && !exploreContent) {
+      return null;
+    }
+
+    return (
+      <View style={styles.listFooter}>
+        {loadMoreFooter}
+        {exploreContent}
+      </View>
+    );
+  }, [isLargeScreen, renderExploreContent, renderLoadMoreFooter]);
 
   const renderProfileResult = ({ item }: { item: SearchResult }) => {
     if (item.type !== 'profile') return null;
@@ -143,10 +576,12 @@ export default function SearchScreen() {
             />
           ) : null}
           <ThemedView style={styles.profileInfo}>
-            <ThemedText style={[styles.displayName, { color: textColor }]}>
+            <ThemedText style={[styles.displayName, { color: textColor }]}> 
               {profile.displayName || profile.handle}
             </ThemedText>
-            <ThemedText style={[styles.handle, { color: textColor }]}>@{profile.handle}</ThemedText>
+            <ThemedText style={[styles.handle, { color: textColor }]}>
+              @{profile.handle}
+            </ThemedText>
             {profile.description ? (
               <ThemedText style={[styles.description, { color: textColor }]} numberOfLines={2}>
                 {profile.description}
@@ -164,7 +599,6 @@ export default function SearchScreen() {
 
     const post = item.data;
 
-    // Check if this post is a reply and has reply context
     const replyTo = post.reply?.parent
       ? {
           author: {
@@ -208,20 +642,12 @@ export default function SearchScreen() {
   const renderResult = ({ item }: { item: SearchResult }) => {
     if (item.type === 'profile') {
       return renderProfileResult({ item });
-    } else if (item.type === 'post') {
+    }
+
+    if (item.type === 'post') {
       return renderPostResult({ item });
     }
-    return null;
-  };
 
-  const renderFooter = () => {
-    if (isFetchingNextPage) {
-      return (
-        <ThemedView style={styles.loadingFooter}>
-          <ThemedText style={[styles.loadingText, { color: textColor }]}>{t('search.loadingMoreResults')}</ThemedText>
-        </ThemedView>
-      );
-    }
     return null;
   };
 
@@ -249,66 +675,98 @@ export default function SearchScreen() {
   };
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ThemedView style={styles.header}>
-        <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
-      </ThemedView>
-
-      <ThemedView style={styles.searchContainer}>
-        <TextInput
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}> 
+      <ThemedView
+        style={[
+          styles.contentWrapper,
+          isLargeScreen ? styles.contentWrapperLarge : undefined,
+        ]}
+      >
+        <ThemedView
           style={[
-            styles.searchInput,
-            {
-              backgroundColor: backgroundColor,
-              borderColor: borderColor,
-              color: textColor,
-            },
+            styles.mainColumn,
+            isLargeScreen ? styles.mainColumnLarge : undefined,
           ]}
-          placeholder={t('search.searchInputPlaceholder')}
-          placeholderTextColor="#999999"
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSearch}
-          returnKeyType="search"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <TouchableOpacity
-          style={[styles.searchButton, { backgroundColor: borderColor }]}
-          onPress={handleSearch}
-          disabled={isLoading}
         >
-          <ThemedText style={styles.searchButtonText}>{isLoading ? t('search.searching') : t('common.search')}</ThemedText>
-        </TouchableOpacity>
+          <ThemedView style={styles.header}>
+            <ThemedText style={[styles.title, { color: textColor }]}>
+              {t('navigation.search')}
+            </ThemedText>
+          </ThemedView>
+
+          <ThemedView style={styles.searchContainer}>
+            <TextInput
+              style={[
+                styles.searchInput,
+                {
+                  backgroundColor: backgroundColor,
+                  borderColor: borderColor,
+                  color: textColor,
+                },
+              ]}
+              placeholder={t('search.searchInputPlaceholder')}
+              placeholderTextColor="#999999"
+              value={query}
+              onChangeText={setQuery}
+              onSubmitEditing={handleSearch}
+              returnKeyType="search"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TouchableOpacity
+              style={[styles.searchButton, { backgroundColor: accentColor }]}
+              onPress={handleSearch}
+              disabled={isLoading}
+            >
+              <ThemedText style={styles.searchButtonText}>
+                {isLoading ? t('search.searching') : t('common.search')}
+              </ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+
+          {searchQuery ? (
+            <SearchTabs activeTab={activeTab} onTabChange={handleTabChange} />
+          ) : null}
+
+          <FlatList
+            ref={flatListRef}
+            data={filteredResults}
+            renderItem={renderResult}
+            keyExtractor={(item, index) => `${item.type}-${index}`}
+            style={styles.resultsList}
+            contentContainerStyle={styles.resultsListContent}
+            refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={renderListFooter}
+            ListEmptyComponent={
+              isLoading ? (
+                <ThemedView style={styles.emptyState}>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <SearchResultSkeleton key={index} />
+                  ))}
+                </ThemedView>
+              ) : (
+                <ThemedView style={styles.emptyState}>
+                  <ThemedText style={[styles.emptyStateText, { color: textColor }]}>
+                    {getEmptyStateText()}
+                  </ThemedText>
+                </ThemedView>
+              )
+            }
+          />
+        </ThemedView>
+
+        {isLargeScreen ? (
+          <ScrollView
+            style={styles.sidebar}
+            contentContainerStyle={styles.sidebarContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {renderExploreContent()}
+          </ScrollView>
+        ) : null}
       </ThemedView>
-
-      {searchQuery && allResults.length > 0 ? <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} /> : null}
-
-      <FlatList
-        ref={flatListRef}
-        data={filteredResults}
-        renderItem={renderResult}
-        keyExtractor={(item, index) => `${item.type}-${index}`}
-        style={styles.resultsList}
-        contentContainerStyle={styles.resultsListContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-        ListEmptyComponent={
-          isLoading ? (
-            <ThemedView style={styles.emptyState}>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <SearchResultSkeleton key={index} />
-              ))}
-            </ThemedView>
-          ) : (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
-            </ThemedView>
-          )
-        }
-      />
     </ThemedView>
   );
 }
@@ -316,6 +774,25 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
+  contentWrapperLarge: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  mainColumn: {
+    flex: 1,
+  },
+  mainColumnLarge: {
+    paddingRight: 24,
+  },
+  sidebar: {
+    width: 320,
+  },
+  sidebarContent: {
+    paddingBottom: 120,
   },
   header: {
     paddingHorizontal: 16,
@@ -355,7 +832,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   resultsListContent: {
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   resultItem: {
     paddingHorizontal: 16,
@@ -404,5 +881,124 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 14,
     opacity: 0.6,
+  },
+  listFooter: {
+    paddingBottom: 80,
+  },
+  exploreSections: {
+    width: '100%',
+  },
+  sectionSpacing: {
+    marginTop: 16,
+  },
+  headerActionText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  panelSubtleText: {
+    fontSize: 14,
+  },
+  panelErrorText: {
+    fontSize: 14,
+    color: '#ef4444',
+  },
+  interestsList: {
+    width: '100%',
+  },
+  interestItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  interestItemLast: {
+    borderBottomWidth: 0,
+  },
+  interestName: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  interestAction: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  trendingList: {
+    width: '100%',
+  },
+  trendingItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  trendingItemLast: {
+    borderBottomWidth: 0,
+  },
+  trendingTopic: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  trendingAction: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  feedList: {
+    width: '100%',
+    gap: 16,
+  },
+  feedCard: {
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 16,
+  },
+  feedCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 12,
+  },
+  feedAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+  },
+  feedAvatarFallback: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  feedAvatarFallbackText: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  feedCardInfo: {
+    flex: 1,
+  },
+  feedTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  feedSubtitle: {
+    fontSize: 14,
+  },
+  feedDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  feedActionButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  feedActionButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

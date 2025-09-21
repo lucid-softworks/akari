@@ -4,9 +4,14 @@ import { FlatList, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
+import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
+import { usePreferences } from '@/hooks/queries/usePreferences';
 import { useSearch } from '@/hooks/queries/useSearch';
+import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useResponsive } from '@/hooks/useResponsive';
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -68,23 +73,46 @@ jest.mock('@/components/skeletons', () => {
   return { SearchResultSkeleton: () => <Text>Skeleton</Text> };
 });
 
+jest.mock('@/hooks/mutations/useSetSelectedFeed');
+jest.mock('@/hooks/queries/useFeedGenerators');
+jest.mock('@/hooks/queries/usePreferences');
 jest.mock('@/hooks/queries/useSearch');
+jest.mock('@/hooks/queries/useTrendingTopics');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useResponsive');
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));
 
 const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
+const mockUsePreferences = usePreferences as jest.Mock;
+const mockUseTrendingTopics = useTrendingTopics as jest.Mock;
+const mockUseFeedGenerators = useFeedGenerators as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
+const mockUseSetSelectedFeed = useSetSelectedFeed as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseResponsive = useResponsive as jest.Mock;
 
 describe('SearchScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+    mockUsePreferences.mockReturnValue({
+      data: { preferences: [] },
+      isLoading: false,
+      error: null,
+    });
+    mockUseTrendingTopics.mockReturnValue({
+      data: { topics: [], suggested: [] },
+      isLoading: false,
+      error: null,
+    });
+    mockUseFeedGenerators.mockReturnValue({ data: { feeds: [] }, isLoading: false });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
   });
 
   it('trims query and triggers search', async () => {
