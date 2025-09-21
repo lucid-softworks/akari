@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { FlashList } from '@shopify/flash-list';
 import ProfileScreen from '@/app/(tabs)/profile';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -31,35 +32,6 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
     register: jest.fn(),
   },
 }));
-
-jest.mock('react-native/Libraries/Components/ScrollView/ScrollView', () => {
-  const React = require('react');
-  const { View } = jest.requireActual('react-native');
-  const scrollToMock = jest.fn();
-
-  const ScrollViewMock = React.forwardRef((props: any, ref: any) => {
-    React.useImperativeHandle(ref, () => ({
-      scrollTo: scrollToMock,
-    }));
-
-    return (
-      <View {...props}>
-        {props.children}
-      </View>
-    );
-  });
-
-  return {
-    __esModule: true,
-    default: ScrollViewMock,
-    ScrollView: ScrollViewMock,
-    scrollToMock,
-  };
-});
-
-const { scrollToMock } = require('react-native/Libraries/Components/ScrollView/ScrollView') as {
-  scrollToMock: jest.Mock;
-};
 
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
@@ -236,7 +208,6 @@ beforeEach(() => {
   mockClipboardSetStringAsync.mockResolvedValue(undefined);
   mockShowToast = jest.fn();
   mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
-  scrollToMock.mockClear();
 });
 
 describe('ProfileScreen', () => {
@@ -250,7 +221,10 @@ describe('ProfileScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
     mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
 
-    const { getByText } = render(<ProfileScreen />);
+    const { getByText, UNSAFE_getByType } = render(<ProfileScreen />);
+
+    const flashListInstance = UNSAFE_getByType(FlashList).instance as { scrollToOffset: (...args: unknown[]) => void; _scrollToOffset?: jest.Mock };
+    const scrollToOffsetMock = flashListInstance._scrollToOffset ?? (flashListInstance.scrollToOffset as jest.Mock);
 
     expect(getByText('posts alice')).toBeTruthy();
 
@@ -275,13 +249,13 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByText('unknown tab'));
     expect(getByText('profile.noContent')).toBeTruthy();
 
-    expect(scrollToMock).toHaveBeenCalled();
+    expect(scrollToOffsetMock).toHaveBeenCalled();
 
     expect(mockRegister).toHaveBeenCalledWith('profile', expect.any(Function));
     const [, scrollHandler] = mockRegister.mock.calls[0];
-    scrollToMock.mockClear();
+    scrollToOffsetMock.mockClear();
     scrollHandler();
-    expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
+    expect(scrollToOffsetMock).toHaveBeenCalledWith({ offset: 0, animated: true });
   });
 
   it('positions dropdown using measurement and closes for all actions', async () => {

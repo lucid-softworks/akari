@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import PostDetailScreen, { renderComment } from '@/app/post/[id]';
 import { useLocalSearchParams } from 'expo-router';
@@ -125,17 +126,6 @@ describe('PostDetailScreen', () => {
   it('renders full thread and scrolls to main post', async () => {
     jest.useFakeTimers();
 
-    const scrollTo = jest.fn();
-    const measureLayout = jest.fn((_: any, success: any, failure: any) => {
-      success(0, 10);
-      failure();
-    });
-    const scrollRef = { current: null as any };
-    const viewRef = { current: null as any };
-    const useRefSpy = jest.spyOn(React, 'useRef');
-    useRefSpy.mockReturnValueOnce(scrollRef);
-    useRefSpy.mockReturnValueOnce(viewRef);
-
     const mainPost = {
       uri: 'post:reply',
       cid: 'cidR',
@@ -224,9 +214,12 @@ describe('PostDetailScreen', () => {
     mockUseRootPost.mockReturnValue({ rootPost, isLoading: false });
     mockUsePostThread.mockReturnValue({ data: { thread: { replies: [feedItem, directComment] } }, isLoading: false });
 
-    const { getByText } = render(<PostDetailScreen />);
-    scrollRef.current = { scrollTo };
-    viewRef.current = { measureLayout };
+    const { getByText, UNSAFE_getByType } = render(<PostDetailScreen />);
+    const flashListInstance = UNSAFE_getByType(FlashList).instance as {
+      _scrollToIndex?: jest.Mock;
+      _scrollToOffset?: jest.Mock;
+    };
+
     await act(async () => {
       jest.runAllTimers();
     });
@@ -235,10 +228,9 @@ describe('PostDetailScreen', () => {
       expect(getByText(id)).toBeTruthy();
     }
 
-    expect(scrollTo).toHaveBeenCalledWith({ y: 10, animated: false });
-    expect(scrollTo).toHaveBeenCalledWith({ y: 0, animated: false });
+    expect(flashListInstance._scrollToIndex).toHaveBeenCalledWith({ index: 2, animated: false });
+    expect(flashListInstance._scrollToOffset).not.toHaveBeenCalled();
 
-    useRefSpy.mockRestore();
     jest.useRealTimers();
   });
 

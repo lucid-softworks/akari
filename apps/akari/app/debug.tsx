@@ -5,8 +5,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { showAlert } from '@/utils/alert';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 export default function DebugScreen() {
   const queryClient = useQueryClient();
