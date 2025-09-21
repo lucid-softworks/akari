@@ -57,8 +57,8 @@
       "saving": "Đang lưu...",
       "mute": "Tắt tiếng",
       "unmute": "Bật tiếng",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Cuộc trò chuyện đang chờ",
+      "viewPendingChats": "Xem các cuộc trò chuyện đang chờ"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",

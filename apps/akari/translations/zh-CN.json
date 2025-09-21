@@ -57,8 +57,8 @@
       "saving": "保存中...",
       "mute": "静音",
       "unmute": "取消静音",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "待处理聊天",
+      "viewPendingChats": "查看待处理聊天"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",

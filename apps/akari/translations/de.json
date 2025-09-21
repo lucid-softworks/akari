@@ -57,8 +57,8 @@
       "saving": "Speichern...",
       "mute": "Stumm",
       "unmute": "Stummschaltung aufheben",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Ausstehende Chats",
+      "viewPendingChats": "Ausstehende Chats anzeigen"
     },
     "auth": {
       "fillAllFields": "Bitte fülle alle Felder aus",
