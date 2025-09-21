@@ -13,6 +13,11 @@ jest.mock('expo-router', () => {
     Stack: { Screen: jest.fn(() => null) },
   };
 });
+jest.mock('@/components/ResponsiveLayout', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return { ResponsiveLayout: ({ children }: any) => <View>{children}</View> };
+});
 
 jest.mock('@/components/PostCard', () => {
   const React = require('react');

@@ -16,6 +16,7 @@ import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
+import { ResponsiveLayout } from '@/components/ResponsiveLayout';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -36,14 +37,22 @@ export default function ProfileScreen() {
   const { data: profile, isLoading, error } = useProfile(handle);
 
   if (isLoading) {
-    return <ProfileHeaderSkeleton />;
+    return (
+      <ResponsiveLayout>
+        <ThemedView style={styles.container}>
+          <ProfileHeaderSkeleton />
+        </ThemedView>
+      </ResponsiveLayout>
+    );
   }
 
   if (error || !profile) {
     return (
-      <ThemedView style={styles.container}>
-        <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
-      </ThemedView>
+      <ResponsiveLayout>
+        <ThemedView style={styles.container}>
+          <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
+        </ThemedView>
+      </ResponsiveLayout>
     );
   }
 
@@ -147,57 +156,59 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <ProfileHeader
-          profile={{
-            avatar: profile?.avatar,
-            displayName: profile?.displayName,
-            handle: profile?.handle,
-            description: profile?.description,
-            banner: profile?.banner,
-            did: profile?.did,
-            followersCount: profile?.followersCount,
-            followsCount: profile?.followsCount,
-            postsCount: profile?.postsCount,
-            viewer: profile?.viewer,
-            labels: profile?.labels,
-          }}
+    <ResponsiveLayout>
+      <ThemedView style={styles.container}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ProfileHeader
+            profile={{
+              avatar: profile?.avatar,
+              displayName: profile?.displayName,
+              handle: profile?.handle,
+              description: profile?.description,
+              banner: profile?.banner,
+              did: profile?.did,
+              followersCount: profile?.followersCount,
+              followsCount: profile?.followsCount,
+              postsCount: profile?.postsCount,
+              viewer: profile?.viewer,
+              labels: profile?.labels,
+            }}
+            isOwnProfile={isOwnProfile}
+            onDropdownToggle={handleDropdownToggle}
+            dropdownRef={dropdownRef}
+          />
+
+          {/* Tabs */}
+          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
+
+          {/* Content */}
+          {renderTabContent()}
+        </ScrollView>
+
+        {/* Dropdown rendered at root level */}
+        <ProfileDropdown
+          isVisible={showDropdown}
+          onCopyLink={handleCopyLink}
+          onSearchPosts={handleSearchPosts}
+          onAddToLists={handleAddToLists}
+          onMuteAccount={handleMuteAccount}
+          onBlockPress={handleBlockPress}
+          onReportAccount={handleReportAccount}
+          isFollowing={!!profile?.viewer?.following}
+          isBlocking={!!profile?.viewer?.blocking}
+          isMuted={!!profile?.viewer?.muted}
           isOwnProfile={isOwnProfile}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
+          style={{
+            top: dropdownPosition.top,
+            right: dropdownPosition.right,
+          }}
         />
-
-        {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
-
-        {/* Content */}
-        {renderTabContent()}
-      </ScrollView>
-
-      {/* Dropdown rendered at root level */}
-      <ProfileDropdown
-        isVisible={showDropdown}
-        onCopyLink={handleCopyLink}
-        onSearchPosts={handleSearchPosts}
-        onAddToLists={handleAddToLists}
-        onMuteAccount={handleMuteAccount}
-        onBlockPress={handleBlockPress}
-        onReportAccount={handleReportAccount}
-        isFollowing={!!profile?.viewer?.following}
-        isBlocking={!!profile?.viewer?.blocking}
-        isMuted={!!profile?.viewer?.muted}
-        isOwnProfile={isOwnProfile}
-        style={{
-          top: dropdownPosition.top,
-          right: dropdownPosition.right,
-        }}
-      />
-    </ThemedView>
+      </ThemedView>
+    </ResponsiveLayout>
   );
 }
 

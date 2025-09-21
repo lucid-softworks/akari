@@ -1,18 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 
+import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { Sidebar } from '@/components/Sidebar';
 import { ThemedView } from '@/components/ThemedView';
 import { useResponsive } from '@/hooks/useResponsive';
 
-interface ResponsiveLayoutProps {
+type ResponsiveLayoutProps = {
   children: React.ReactNode;
-}
+};
 
 export function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
   const { isLargeScreen } = useResponsive();
+  const shouldShowSidebar = Platform.OS === 'web' || isLargeScreen;
 
-  if (isLargeScreen) {
+  if (shouldShowSidebar) {
     return (
       <ThemedView style={{ flex: 1 }}>
         <View
@@ -45,5 +47,10 @@ export function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>{children}</View>
+      <MobileBottomNav />
+    </View>
+  );
 }

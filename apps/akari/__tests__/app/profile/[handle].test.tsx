@@ -20,6 +20,11 @@ jest.mock('@/contexts/ToastContext');
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
+jest.mock('@/components/ResponsiveLayout', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return { ResponsiveLayout: ({ children }: any) => <View>{children}</View> };
+});
 
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
