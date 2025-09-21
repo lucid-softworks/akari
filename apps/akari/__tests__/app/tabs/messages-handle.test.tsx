@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -300,6 +300,38 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
 
     expect(getByText('Loading messages...')).toBeTruthy();
+  });
+
+  it('applies distinct backgrounds to incoming and outgoing messages', () => {
+    const conversation = { handle: 'alice', convoId: '1' };
+    const messages: Message[] = [
+      { id: 'incoming', text: 'incoming message', timestamp: '10:00', isFromMe: false, sentAt: '' },
+      { id: 'outgoing', text: 'outgoing message', timestamp: '10:05', isFromMe: true, sentAt: '' },
+    ];
+    mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
+    mockUseMessages.mockReturnValue({
+      data: { pages: [{ messages }] },
+      isLoading: false,
+      error: null,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+    mockUseSendMessage.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+
+    const { getByText } = render(<ConversationScreen />);
+
+    const incomingNode = getByText('incoming message');
+    const outgoingNode = getByText('outgoing message');
+
+    const incomingBubble = incomingNode.parent?.parent?.parent as any;
+    const outgoingBubble = outgoingNode.parent?.parent?.parent as any;
+
+    const incomingStyles = StyleSheet.flatten(incomingBubble?.props.style);
+    const outgoingStyles = StyleSheet.flatten(outgoingBubble?.props.style);
+
+    expect(incomingStyles?.backgroundColor).toBe('#F3F4F6');
+    expect(outgoingStyles?.backgroundColor).toBe('#007AFF');
   });
 
   it('renders outgoing messages and updates keyboard spacing', () => {
