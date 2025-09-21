@@ -2,7 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -16,6 +16,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyEmbed } from '@/bluesky-api';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 /**
  * Grouped notification type
@@ -333,13 +337,13 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = useRef<FlatList>(null);
+  const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
 
   // Create scroll to top function
   const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
   // Register with the tab scroll registry
@@ -355,6 +359,8 @@ export default function NotificationsScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
+    fetchNextPage,
+    hasNextPage,
   } = useNotifications();
 
   const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
@@ -377,6 +383,12 @@ export default function NotificationsScreen() {
     <NotificationItem notification={item} onPress={() => handleNotificationPress(item)} borderColor={borderColor} />
   );
 
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <ThemedText style={styles.emptyStateTitle}>{t('notifications.noNotificationsYet')}</ThemedText>
@@ -395,41 +407,55 @@ export default function NotificationsScreen() {
     return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
   }
 
-  return (
-    <ScrollView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-      </ThemedView>
+  const listData = groupedNotifications;
 
-      <View style={styles.notificationsList}>
-        {isLoading ? (
+  return (
+    <VirtualizedList
+      ref={listRef}
+      data={listData}
+      renderItem={renderNotification}
+      keyExtractor={(item) => item.id}
+      style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}
+      contentContainerStyle={styles.notificationsListContent}
+      ListHeaderComponent={
+        <ThemedView style={styles.header}>
+          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+        </ThemedView>
+      }
+      ListEmptyComponent={
+        isLoading ? (
           <ThemedView style={styles.skeletonContainer}>
             {Array.from({ length: 12 }).map((_, index) => (
               <NotificationSkeleton key={index} />
             ))}
           </ThemedView>
-        ) : groupedNotifications.length === 0 ? (
-          renderEmptyState()
         ) : (
-          <>
-            {groupedNotifications.map((item) => (
-              <View key={item.id}>{renderNotification({ item })}</View>
-            ))}
-            {isFetchingNextPage && (
-              <ThemedView style={styles.loadingMore}>
-                <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
-              </ThemedView>
-            )}
-          </>
-        )}
-      </View>
-    </ScrollView>
+          renderEmptyState()
+        )
+      }
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <ThemedView style={styles.loadingMore}>
+            <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
+          </ThemedView>
+        ) : null
+      }
+      refreshing={isRefetching}
+      onRefresh={() => {
+        void refetch();
+      }}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      estimatedItemSize={180}
+      overscan={4}
+      showsVerticalScrollIndicator={false}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // Remove all flex constraints to allow natural flow
+    flex: 1,
   },
   header: {
     paddingHorizontal: 16,
@@ -440,9 +466,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-  },
-  listContainer: {
-    flexGrow: 1,
   },
   notificationItem: {
     paddingHorizontal: 16,
@@ -596,17 +619,6 @@ const styles = StyleSheet.create({
   retryButtonText: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  loadingFooter: {
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  notificationsList: {
-    // Remove flex constraint to allow content to expand
   },
   notificationsListContent: {
     paddingBottom: 16, // Add some padding at the bottom for the footer

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,6 +8,7 @@ import { FeedSkeleton } from '@/components/skeletons';
 import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type RepliesTabProps = {
   handle: string;
@@ -88,7 +89,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
   const filteredReplies = replies.filter((item) => item && item.uri);
 
   return (
-    <FlatList
+    <VirtualizedList
       data={filteredReplies}
       renderItem={renderItem}
       keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
@@ -100,6 +101,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
       style={styles.flatList}
       accessibilityRole="list"
       accessible
+      estimatedItemSize={320}
     />
   );
 }

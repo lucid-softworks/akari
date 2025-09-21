@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Text } from 'react-native';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
@@ -102,7 +103,7 @@ describe('FeedsTab', () => {
     logSpy.mockRestore();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -127,7 +128,7 @@ describe('FeedsTab', () => {
     const { getByText, UNSAFE_getByType } = render(<FeedsTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
@@ -151,7 +152,7 @@ describe('FeedsTab', () => {
 
     const { UNSAFE_getByType } = render(<FeedsTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

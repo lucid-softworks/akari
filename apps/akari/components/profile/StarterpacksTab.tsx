@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,6 +7,7 @@ import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyStarterPack } from '@/bluesky-api';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type StarterpacksTabProps = {
   handle: string;
@@ -96,7 +97,7 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
   }
 
   return (
-    <FlatList
+    <VirtualizedList
       data={starterpacks}
       renderItem={renderItem}
       keyExtractor={(item) => item.uri}
@@ -106,6 +107,7 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={220}
     />
   );
 }

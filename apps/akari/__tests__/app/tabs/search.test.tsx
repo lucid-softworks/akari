@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { FlatList, Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
@@ -172,11 +173,11 @@ describe('SearchScreen', () => {
 
     const { UNSAFE_getByType } = render(<SearchScreen />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
     act(() => {
-      UNSAFE_getByType(FlatList).props.refreshControl.props.onRefresh();
+      UNSAFE_getByType(FlashList).props.onRefresh();
     });
     expect(refetch).toHaveBeenCalled();
   });

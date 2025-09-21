@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Text } from 'react-native';
 
 import { VideosTab } from '@/components/profile/VideosTab';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
@@ -120,7 +121,7 @@ describe('VideosTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     act(() => {
       list.props.onEndReached();
     });
@@ -164,7 +165,7 @@ describe('VideosTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     act(() => {
       list.props.onEndReached();
     });

@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useRef } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ResponsiveLayout } from '@/components/ResponsiveLayout';
@@ -13,17 +13,29 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
-export const renderComment = (
-  item:
-    | BlueskyFeedItem
-    | {
-        uri: string;
-        notFound?: boolean;
-        blocked?: boolean;
-        author?: BlueskyPostView['author'];
-      },
-) => {
+type ThreadRenderableComment =
+  | BlueskyFeedItem
+  | {
+      uri: string;
+      notFound?: boolean;
+      blocked?: boolean;
+      author?: BlueskyPostView['author'];
+    };
+
+type ThreadListItem =
+  | { type: 'grandparent'; post: BlueskyPostView }
+  | { type: 'parent'; post: BlueskyPostView }
+  | { type: 'main'; post: BlueskyPostView }
+  | { type: 'commentsHeader'; count: number }
+  | { type: 'comment'; comment: ThreadRenderableComment }
+  | { type: 'emptyComments' };
+
+export const renderComment = (item: ThreadRenderableComment) => {
   // Skip null or blocked replies
   if (!item || 'notFound' in item || 'blocked' in item) return null;
 
@@ -120,8 +132,7 @@ export const renderComment = (
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const scrollViewRef = useRef<ScrollView>(null);
-  const mainPostRef = useRef<View>(null);
+  const listRef = useRef<VirtualizedListHandle<ThreadListItem>>(null);
   const { t } = useTranslation();
 
   const { data: post, isLoading: postLoading, error: postError } = usePost(id);
@@ -129,6 +140,17 @@ export default function PostDetailScreen() {
   const { data: threadData, isLoading: threadLoading } = usePostThread(id);
 
   const comments = threadData?.thread?.replies || [];
+
+  const safeComments = useMemo(
+    () =>
+      comments.filter(
+        (
+          item,
+        ): item is ThreadRenderableComment =>
+          item !== null && !('notFound' in item) && !('blocked' in item),
+      ),
+    [comments],
+  );
 
   // Check if this post is a reply and fetch parent/root posts
   // Use the main post data (from getPost) since threadData doesn't include the main post
@@ -162,33 +184,59 @@ export default function PostDetailScreen() {
   const { parentPost, isLoading: parentLoading } = useParentPost(parentUri || null);
   const { rootPost, isLoading: rootLoading } = useRootPost(rootUri || null);
 
+  const threadItems = useMemo<ThreadListItem[]>(() => {
+    const items: ThreadListItem[] = [];
+
+    if (rootPost) {
+      items.push({ type: 'grandparent', post: rootPost });
+    }
+
+    if (parentPost && parentPost.author) {
+      items.push({ type: 'parent', post: parentPost });
+    }
+
+    if (mainPost) {
+      items.push({ type: 'main', post: mainPost });
+    }
+
+    items.push({ type: 'commentsHeader', count: safeComments.length });
+
+    if (safeComments.length === 0) {
+      items.push({ type: 'emptyComments' });
+    } else {
+      for (const comment of safeComments) {
+        items.push({ type: 'comment', comment });
+      }
+    }
+
+    return items;
+  }, [mainPost, parentPost, rootPost, safeComments]);
+
+  const mainPostIndex = useMemo(
+    () => threadItems.findIndex((item) => item.type === 'main'),
+    [threadItems],
+  );
+
   // Scroll to the main post after everything is loaded
   useEffect(() => {
-    if (!postLoading && !threadLoading && !parentLoading && !rootLoading && isReply) {
-      // Wait a bit for the layout to complete, then scroll to the main post
-      setTimeout(() => {
-        mainPostRef.current?.measureLayout(
-          scrollViewRef.current as unknown as View,
-          (x: number, y: number) => {
-            // Scroll to make the main post flush with the top
-            scrollViewRef.current?.scrollTo({ y: y, animated: false });
-          },
-          () => {
-            // Fallback if measureLayout fails - scroll to a reasonable position
-            scrollViewRef.current?.scrollTo({ y: 0, animated: false });
-          },
-        );
+    if (!postLoading && !threadLoading && !parentLoading && !rootLoading && isReply && mainPostIndex >= 0) {
+      const timeout = setTimeout(() => {
+        try {
+          listRef.current?.scrollToIndex({ index: mainPostIndex, animated: false });
+        } catch {
+          listRef.current?.scrollToOffset({ offset: 0, animated: false });
+        }
       }, 100);
+
+      return () => clearTimeout(timeout);
     }
-  }, [postLoading, threadLoading, parentLoading, rootLoading, isReply]);
+
+    return undefined;
+  }, [postLoading, threadLoading, parentLoading, rootLoading, isReply, mainPostIndex]);
 
   // Render parent post if this is a reply
   const renderParentPost = () => {
-    if (!isReply || !parentPost) {
-      return null;
-    }
-
-    if (!parentPost.author) {
+    if (!isReply || !parentPost || !parentPost.author) {
       return null;
     }
 
@@ -221,7 +269,6 @@ export default function PostDetailScreen() {
     );
   };
 
-  // Render grandparent post if this is a reply to a reply
   const renderGrandparentPost = () => {
     if (!rootPost) return null;
 
@@ -252,6 +299,81 @@ export default function PostDetailScreen() {
         }}
       />
     );
+  };
+
+  const renderThreadItem = ({ item }: { item: ThreadListItem }) => {
+    switch (item.type) {
+      case 'grandparent':
+        return renderGrandparentPost();
+      case 'parent':
+        return renderParentPost();
+      case 'main':
+        return (
+          <PostCard
+            post={{
+              id: item.post?.uri || '',
+              text:
+                typeof item.post?.record === 'object' && item.post?.record && 'text' in item.post.record
+                  ? (item.post.record as { text: string }).text
+                  : undefined,
+              author: {
+                handle: item.post?.author?.handle || '',
+                displayName: item.post?.author?.displayName,
+                avatar: item.post?.author?.avatar,
+              },
+              createdAt: formatRelativeTime(item.post?.indexedAt || new Date()),
+              likeCount: item.post?.likeCount || 0,
+              commentCount: item.post?.replyCount || 0,
+              repostCount: item.post?.repostCount || 0,
+              embed: item.post?.embed,
+              embeds: item.post?.embeds,
+              labels: item.post?.labels,
+              viewer: item.post?.viewer,
+              facets: (item.post?.record as any)?.facets,
+              uri: item.post?.uri,
+              cid: item.post?.cid,
+            }}
+          />
+        );
+      case 'commentsHeader':
+        return (
+          <ThemedView style={[styles.commentsSection, { borderBottomColor: borderColor }]}>
+            <ThemedText style={styles.commentsTitle}>{t('post.comments', { count: item.count })}</ThemedText>
+          </ThemedView>
+        );
+      case 'emptyComments':
+        return (
+          <ThemedView style={styles.emptyComments}>
+            <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
+          </ThemedView>
+        );
+      case 'comment':
+        return renderComment(item.comment);
+      default:
+        return null;
+    }
+  };
+
+  const keyExtractor = (item: ThreadListItem, index: number) => {
+    switch (item.type) {
+      case 'grandparent':
+        return 'grandparent';
+      case 'parent':
+        return 'parent';
+      case 'main':
+        return 'main';
+      case 'commentsHeader':
+        return 'comments-header';
+      case 'emptyComments':
+        return 'comments-empty';
+      case 'comment':
+        if ('post' in item.comment && item.comment.post) {
+          return `comment-${item.comment.post.uri}`;
+        }
+        return `comment-${item.comment.uri}-${index}`;
+      default:
+        return `item-${index}`;
+    }
   };
 
   const borderColor = useThemeColor(
@@ -306,74 +428,15 @@ export default function PostDetailScreen() {
       />
       <ResponsiveLayout>
         <ThemedView style={styles.container}>
-          <ScrollView
-            ref={scrollViewRef}
-            style={styles.scrollView}
+          <VirtualizedList
+            ref={listRef}
+            data={threadItems}
+            renderItem={renderThreadItem}
+            keyExtractor={keyExtractor}
             contentContainerStyle={styles.scrollViewContent}
+            estimatedItemSize={320}
             showsVerticalScrollIndicator={false}
-          >
-          {/* Thread Context - Root Post (if this is a reply to a reply) */}
-          {renderGrandparentPost()}
-
-          {/* Thread Context - Parent Post */}
-          {renderParentPost()}
-
-          {/* Main Post (the reply you're viewing) */}
-          <View ref={mainPostRef}>
-            <PostCard
-              post={{
-                id: mainPost?.uri || '',
-                text:
-                  typeof mainPost?.record === 'object' && mainPost?.record && 'text' in mainPost.record
-                    ? (mainPost.record as { text: string }).text
-                    : undefined,
-                author: {
-                  handle: mainPost?.author?.handle || '',
-                  displayName: mainPost?.author?.displayName,
-                  avatar: mainPost?.author?.avatar,
-                },
-                createdAt: formatRelativeTime(mainPost?.indexedAt || new Date()),
-                likeCount: mainPost?.likeCount || 0,
-                commentCount: mainPost?.replyCount || 0,
-                repostCount: mainPost?.repostCount || 0,
-                embed: mainPost?.embed,
-                embeds: mainPost?.embeds,
-                labels: mainPost?.labels,
-                viewer: mainPost?.viewer,
-                facets: (mainPost?.record as any)?.facets,
-                uri: mainPost?.uri,
-                cid: mainPost?.cid,
-              }}
-            />
-          </View>
-
-          {/* Comments Section */}
-          <ThemedView style={[styles.commentsSection, { borderBottomColor: borderColor }]}>
-            <ThemedText style={styles.commentsTitle}>{t('post.comments', { count: comments?.length || 0 })}</ThemedText>
-          </ThemedView>
-
-          {/* Comments List */}
-            {comments.length > 0 ? (
-              comments
-                .filter(
-                  (
-                    item,
-                  ): item is
-                    | BlueskyFeedItem
-                    | {
-                        uri: string;
-                        notFound?: boolean;
-                        blocked?: boolean;
-                        author?: BlueskyPostView['author'];
-                      } => item !== null && !('notFound' in item) && !('blocked' in item),
-                )
-                .map(renderComment)
-            ) : (
-              <ThemedView style={styles.emptyComments}>
-                <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
-              </ThemedView>
-            )}
-          </ScrollView>
+          />
         </ThemedView>
       </ResponsiveLayout>
     </>
@@ -382,9 +445,6 @@ export default function PostDetailScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   scrollViewContent: {

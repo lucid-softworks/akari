@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -203,7 +204,7 @@ describe('ConversationScreen', () => {
     const { getByText, UNSAFE_getByType } = render(<ConversationScreen />);
     expect(getByText('common.loading common.messages...')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
@@ -224,7 +225,7 @@ describe('ConversationScreen', () => {
 
     const { UNSAFE_getByType } = render(<ConversationScreen />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });

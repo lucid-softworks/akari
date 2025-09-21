@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,6 +8,7 @@ import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyFeed } from '@/bluesky-api';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type FeedsTabProps = {
   handle: string;
@@ -99,7 +100,7 @@ export function FeedsTab({ handle }: FeedsTabProps) {
   }
 
   return (
-    <FlatList
+    <VirtualizedList
       data={feeds}
       renderItem={renderItem}
       keyExtractor={(item) => item.uri}
@@ -109,6 +110,7 @@ export function FeedsTab({ handle }: FeedsTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={200}
     />
   );
 }

@@ -89,6 +89,181 @@ export default function DebugScreen() {
     return 'Unknown';
   };
 
+  const renderQueryItem = ({ item: query }: { item: any; index: number }) => {
+    const queryKeyString = formatQueryKey(query.queryKey);
+    const isExpanded = expandedQueries.has(queryKeyString);
+    const statusColor = getQueryStatusColor(query);
+    const statusText = getQueryStatusText(query);
+
+    return (
+      <View style={[styles.queryContainer, { borderColor: Colors[colorScheme ?? 'light'].icon }]}> 
+        <TouchableOpacity
+          style={[
+            styles.queryHeader,
+            {
+              backgroundColor: Colors[colorScheme ?? 'light'].background,
+            },
+          ]}
+          onPress={() => toggleQueryExpansion(queryKeyString)}
+        >
+          <View style={styles.queryHeaderLeft}>
+            <View style={[styles.statusIndicator, { backgroundColor: statusColor }]} />
+            <ThemedText style={styles.queryKey}>
+              {queryKeyString.length > 100 ? queryKeyString.substring(0, 100) + '...' : queryKeyString}
+            </ThemedText>
+          </View>
+          <View style={styles.queryHeaderRight}>
+            <ThemedText style={styles.statusText}>{statusText}</ThemedText>
+            <ThemedText style={styles.expandIcon}>{isExpanded ? '▼' : '▶'}</ThemedText>
+          </View>
+        </TouchableOpacity>
+
+        {isExpanded && (
+          <View
+            style={[
+              styles.queryDetails,
+              {
+                backgroundColor: Colors[colorScheme ?? 'light'].background,
+              },
+            ]}
+          >
+            <View style={styles.detailSection}>
+              <ThemedText style={styles.detailLabel}>Query Key:</ThemedText>
+              <Text
+                style={[
+                  styles.detailValue,
+                  {
+                    backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    color: Colors[colorScheme ?? 'light'].text,
+                  },
+                ]}
+              >
+                {queryKeyString}
+              </Text>
+            </View>
+
+            <View style={styles.detailSection}>
+              <ThemedText style={styles.detailLabel}>Status:</ThemedText>
+              <ThemedText
+                style={[
+                  styles.detailValue,
+                  {
+                    backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    color: Colors[colorScheme ?? 'light'].text,
+                  },
+                ]}
+              >
+                {statusText}
+              </ThemedText>
+            </View>
+
+            <View style={styles.detailSection}>
+              <ThemedText style={styles.detailLabel}>Data Updated At:</ThemedText>
+              <ThemedText
+                style={[
+                  styles.detailValue,
+                  {
+                    backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    color: Colors[colorScheme ?? 'light'].text,
+                  },
+                ]}
+              >
+                {query.state.dataUpdatedAt ? new Date(query.state.dataUpdatedAt).toLocaleString() : 'Never'}
+              </ThemedText>
+            </View>
+
+            <View style={styles.detailSection}>
+              <ThemedText style={styles.detailLabel}>Error Updated At:</ThemedText>
+              <ThemedText
+                style={[
+                  styles.detailValue,
+                  {
+                    backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    color: Colors[colorScheme ?? 'light'].text,
+                  },
+                ]}
+              >
+                {query.state.errorUpdatedAt ? new Date(query.state.errorUpdatedAt).toLocaleString() : 'Never'}
+              </ThemedText>
+            </View>
+
+            <View style={styles.detailSection}>
+              <ThemedText style={styles.detailLabel}>Fetch Count:</ThemedText>
+              <ThemedText
+                style={[
+                  styles.detailValue,
+                  {
+                    backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    color: Colors[colorScheme ?? 'light'].text,
+                  },
+                ]}
+              >
+                {(query.state as any).fetchCount || 0}
+              </ThemedText>
+            </View>
+
+            {query.state.error && (
+              <View style={styles.detailSection}>
+                <ThemedText style={styles.detailLabel}>Error:</ThemedText>
+                <Text
+                  style={[
+                    styles.detailValue,
+                    styles.errorText,
+                    {
+                      backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                    },
+                  ]}
+                >
+                  {formatQueryData(query.state.error as any)}
+                </Text>
+              </View>
+            )}
+
+            {(query.state.data as any) && (
+              <View style={styles.detailSection}>
+                <ThemedText style={styles.detailLabel}>Data:</ThemedText>
+                <Text
+                  style={[
+                    styles.detailValue,
+                    {
+                      backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                      color: Colors[colorScheme ?? 'light'].text,
+                    },
+                  ]}
+                >
+                  {formatQueryData(query.state.data as any)}
+                </Text>
+              </View>
+            )}
+
+            <View style={styles.queryActions}>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.refetchButton]}
+                onPress={() =>
+                  queryClient.invalidateQueries({
+                    queryKey: query.queryKey,
+                  })
+                }
+              >
+                <ThemedText style={styles.actionButtonText}>Refetch</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.removeButton]}
+                onPress={() =>
+                  queryClient.removeQueries({
+                    queryKey: query.queryKey,
+                  })
+                }
+              >
+                <ThemedText style={styles.actionButtonText}>Remove</ThemedText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ThemedView style={styles.container}>
@@ -117,188 +292,19 @@ export default function DebugScreen() {
           </ThemedText>
         </View>
 
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          {queries.length === 0 ? (
+        <VirtualizedList
+          data={queries}
+          renderItem={renderQueryItem}
+          keyExtractor={(item, index) => item.queryHash ?? formatQueryKey(item.queryKey) ?? `${index}`}
+          ListEmptyComponent={
             <View style={styles.emptyState}>
               <ThemedText style={styles.emptyStateText}>No queries in cache</ThemedText>
             </View>
-          ) : (
-            queries.map((query, index) => {
-              const queryKeyString = formatQueryKey(query.queryKey);
-              const isExpanded = expandedQueries.has(queryKeyString);
-              const statusColor = getQueryStatusColor(query);
-              const statusText = getQueryStatusText(query);
-
-              return (
-                <View key={index} style={[styles.queryContainer, { borderColor: Colors[colorScheme ?? 'light'].icon }]}>
-                  <TouchableOpacity
-                    style={[
-                      styles.queryHeader,
-                      {
-                        backgroundColor: Colors[colorScheme ?? 'light'].background,
-                      },
-                    ]}
-                    onPress={() => toggleQueryExpansion(queryKeyString)}
-                  >
-                    <View style={styles.queryHeaderLeft}>
-                      <View style={[styles.statusIndicator, { backgroundColor: statusColor }]} />
-                      <ThemedText style={styles.queryKey}>
-                        {queryKeyString.length > 100 ? queryKeyString.substring(0, 100) + '...' : queryKeyString}
-                      </ThemedText>
-                    </View>
-                    <View style={styles.queryHeaderRight}>
-                      <ThemedText style={styles.statusText}>{statusText}</ThemedText>
-                      <ThemedText style={styles.expandIcon}>{isExpanded ? '▼' : '▶'}</ThemedText>
-                    </View>
-                  </TouchableOpacity>
-
-                  {isExpanded && (
-                    <View
-                      style={[
-                        styles.queryDetails,
-                        {
-                          backgroundColor: Colors[colorScheme ?? 'light'].background,
-                        },
-                      ]}
-                    >
-                      <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Query Key:</ThemedText>
-                        <Text
-                          style={[
-                            styles.detailValue,
-                            {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
-                            },
-                          ]}
-                        >
-                          {queryKeyString}
-                        </Text>
-                      </View>
-
-                      <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Status:</ThemedText>
-                        <ThemedText
-                          style={[
-                            styles.detailValue,
-                            {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
-                            },
-                          ]}
-                        >
-                          {statusText}
-                        </ThemedText>
-                      </View>
-
-                      <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Data Updated At:</ThemedText>
-                        <ThemedText
-                          style={[
-                            styles.detailValue,
-                            {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
-                            },
-                          ]}
-                        >
-                          {query.state.dataUpdatedAt ? new Date(query.state.dataUpdatedAt).toLocaleString() : 'Never'}
-                        </ThemedText>
-                      </View>
-
-                      <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Error Updated At:</ThemedText>
-                        <ThemedText
-                          style={[
-                            styles.detailValue,
-                            {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
-                            },
-                          ]}
-                        >
-                          {query.state.errorUpdatedAt ? new Date(query.state.errorUpdatedAt).toLocaleString() : 'Never'}
-                        </ThemedText>
-                      </View>
-
-                      <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Fetch Count:</ThemedText>
-                        <ThemedText
-                          style={[
-                            styles.detailValue,
-                            {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
-                            },
-                          ]}
-                        >
-                          {(query.state as any).fetchCount || 0}
-                        </ThemedText>
-                      </View>
-
-                      {query.state.error && (
-                        <View style={styles.detailSection}>
-                          <ThemedText style={styles.detailLabel}>Error:</ThemedText>
-                          <Text
-                            style={[
-                              styles.detailValue,
-                              styles.errorText,
-                              {
-                                backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              },
-                            ]}
-                          >
-                            {formatQueryData(query.state.error as any)}
-                          </Text>
-                        </View>
-                      )}
-
-                      {(query.state.data as any) && (
-                        <View style={styles.detailSection}>
-                          <ThemedText style={styles.detailLabel}>Data:</ThemedText>
-                          <Text
-                            style={[
-                              styles.detailValue,
-                              {
-                                backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                                color: Colors[colorScheme ?? 'light'].text,
-                              },
-                            ]}
-                          >
-                            {formatQueryData(query.state.data as any)}
-                          </Text>
-                        </View>
-                      )}
-
-                      <View style={styles.queryActions}>
-                        <TouchableOpacity
-                          style={[styles.actionButton, styles.refetchButton]}
-                          onPress={() =>
-                            queryClient.invalidateQueries({
-                              queryKey: query.queryKey,
-                            })
-                          }
-                        >
-                          <ThemedText style={styles.actionButtonText}>Refetch</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={[styles.actionButton, styles.removeButton]}
-                          onPress={() =>
-                            queryClient.removeQueries({
-                              queryKey: query.queryKey,
-                            })
-                          }
-                        >
-                          <ThemedText style={styles.actionButtonText}>Remove</ThemedText>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-                </View>
-              );
-            })
-          )}
-        </ScrollView>
+          }
+          estimatedItemSize={260}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+        />
       </ThemedView>
     </SafeAreaView>
   );
@@ -346,8 +352,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 4,
   },
-  scrollView: {
-    flex: 1,
+  listContent: {
+    paddingBottom: 24,
   },
   emptyState: {
     flex: 1,

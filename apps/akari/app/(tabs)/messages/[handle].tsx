@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -14,6 +14,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type Message = {
   id: string;
@@ -213,7 +214,7 @@ export default function ConversationScreen() {
               <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
             </ThemedView>
           ) : (
-            <FlatList
+            <VirtualizedList
               data={messages}
               renderItem={renderMessage}
               keyExtractor={(item) => item.id}
@@ -223,7 +224,9 @@ export default function ConversationScreen() {
               onEndReached={handleLoadMore}
               onEndReachedThreshold={0.5}
               ListFooterComponent={renderFooter}
-              inverted={true} // Show newest messages at the bottom
+              inverted
+              estimatedItemSize={72}
+              overscan={6}
             />
           )}
 
