@@ -1,7 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
@@ -12,6 +12,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeed } from '@/hooks/queries/useFeed';
@@ -27,21 +28,21 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<VirtualizedListHandle<BlueskyFeedItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
 
   const { data: currentAccount } = useCurrentAccount();
 
   // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  }, []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
     tabScrollRegistry.register('index', scrollToTop);
-  }, []);
+  }, [scrollToTop]);
 
   // Get user's saved feeds from preferences
   const { data: savedFeeds, isLoading: savedFeedsLoading } = useSavedFeeds();
@@ -50,62 +51,71 @@ export default function HomeScreen() {
   const { data: feedsData, isLoading: feedsLoading, refetch: refetchFeeds } = useFeeds(currentAccount?.did, 50);
 
   // Create feeds array from saved preferences
-  const allFeeds = savedFeeds
-    .map((savedFeed) => {
-      if (savedFeed.type === 'timeline' && savedFeed.value === 'following') {
-        // Create timeline feed object for "Following"
-        return {
-          uri: 'following',
-          displayName: 'Following',
-          description: 'Posts from people you follow',
-          likeCount: 0,
-          acceptsInteractions: true,
-          contentMode: 'app.bsky.feed.defs#contentModeUnspecified' as const,
-          indexedAt: new Date().toISOString(),
-          creator: {
-            did: currentAccount?.did || '',
-            handle: currentAccount?.handle || '',
-            displayName: 'You',
-            description: 'Your timeline',
-            avatar: '',
-            associated: {
-              lists: 0,
-              feedgens: 0,
-              starterPacks: 0,
-              labeler: false,
-              chat: { allowIncoming: 'all' as const },
-            },
+  const allFeeds = useMemo(() => {
+    return (savedFeeds ?? [])
+      .map((savedFeed) => {
+        if (savedFeed.type === 'timeline' && savedFeed.value === 'following') {
+          // Create timeline feed object for "Following"
+          return {
+            uri: 'following',
+            displayName: 'Following',
+            description: 'Posts from people you follow',
+            likeCount: 0,
+            acceptsInteractions: true,
+            contentMode: 'app.bsky.feed.defs#contentModeUnspecified' as const,
             indexedAt: new Date().toISOString(),
-            createdAt: new Date().toISOString(),
-            viewer: {
-              muted: false,
-              blockedBy: false,
+            creator: {
+              did: currentAccount?.did || '',
+              handle: currentAccount?.handle || '',
+              displayName: 'You',
+              description: 'Your timeline',
+              avatar: '',
+              associated: {
+                lists: 0,
+                feedgens: 0,
+                starterPacks: 0,
+                labeler: false,
+                chat: { allowIncoming: 'all' as const },
+              },
+              indexedAt: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+              viewer: {
+                muted: false,
+                blockedBy: false,
+              },
+              labels: [],
             },
             labels: [],
-          },
-          labels: [],
-        };
-      } else if (savedFeed.type === 'feed' && savedFeed.metadata) {
-        // Use the actual feed metadata
-        return savedFeed.metadata;
-      }
-      return null;
-    })
-    .filter((feed): feed is NonNullable<typeof feed> => feed !== null);
+          };
+        }
+
+        if (savedFeed.type === 'feed' && savedFeed.metadata) {
+          // Use the actual feed metadata
+          return savedFeed.metadata;
+        }
+
+        return null;
+      })
+      .filter((feed): feed is NonNullable<typeof feed> => feed !== null);
+  }, [currentAccount?.did, currentAccount?.handle, savedFeeds]);
 
   // Add user's created feeds
-  const allFeedsWithCreated = [...allFeeds, ...(feedsData?.feeds || [])];
+  const allFeedsWithCreated = useMemo(() => {
+    return [...allFeeds, ...(feedsData?.feeds ?? [])];
+  }, [allFeeds, feedsData]);
 
   // Use the custom hook for selected feed management
   const { data: selectedFeed } = useSelectedFeed();
   const setSelectedFeedMutation = useSetSelectedFeed();
 
   // Handle feed selection with scroll to top
-  const handleFeedSelection = (feedUri: string) => {
-    setSelectedFeedMutation.mutate(feedUri);
-    // Scroll to top when switching feeds
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  const handleFeedSelection = useCallback(
+    (feedUri: string) => {
+      setSelectedFeedMutation.mutate(feedUri);
+      scrollToTop();
+    },
+    [scrollToTop, setSelectedFeedMutation],
+  );
 
   // Get posts from selected feed
   const {
@@ -120,7 +130,7 @@ export default function HomeScreen() {
   // Get timeline data for "following" feed
   const { data: timelineData, isLoading: timelineLoading } = useTimeline(20, selectedFeed === 'following');
 
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     if (selectedFeed === 'following') {
       // Refresh timeline for following feed
@@ -131,19 +141,24 @@ export default function HomeScreen() {
       await refetchFeeds();
     }
     setRefreshing(false);
-  };
+  }, [refetchFeed, refetchFeeds, selectedFeed]);
 
-  const loadMorePosts = () => {
+  const loadMorePosts = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Get posts based on selected feed type
-  const allPosts =
-    selectedFeed === 'following' ? timelineData?.feed || [] : feedData?.pages.flatMap((page) => page.feed) || [];
+  const allPosts = useMemo(() => {
+    if (selectedFeed === 'following') {
+      return timelineData?.feed ?? [];
+    }
 
-  const renderFeedItem = ({ item }: { item: BlueskyFeedItem }) => {
+    return feedData?.pages.flatMap((page) => page.feed) ?? [];
+  }, [feedData, selectedFeed, timelineData]);
+
+  const renderFeedItem = useCallback(({ item }: { item: BlueskyFeedItem }) => {
     // Check if this post is a reply and has reply context
     const replyTo = item.post.reply?.parent
       ? {
@@ -183,7 +198,57 @@ export default function HomeScreen() {
         }}
       />
     );
-  };
+  }, []);
+
+  const keyExtractor = useCallback((item: BlueskyFeedItem) => `${item.post.cid}-${item.post.uri}`, []);
+
+  const listHeaderComponent = useMemo(
+    () => (
+      <ThemedView style={styles.listHeader}>
+        <TabBar
+          tabs={allFeedsWithCreated.map((feed) => ({
+            key: feed.uri,
+            label: feed.displayName,
+          }))}
+          activeTab={selectedFeed || ''}
+          onTabChange={handleFeedSelection}
+        />
+      </ThemedView>
+    ),
+    [allFeedsWithCreated, handleFeedSelection, selectedFeed],
+  );
+
+  const listFooterComponent = useMemo(() => {
+    if (!isFetchingNextPage) {
+      return null;
+    }
+
+    return (
+      <ThemedView style={styles.loadingMore}>
+        <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
+      </ThemedView>
+    );
+  }, [isFetchingNextPage, t]);
+
+  const listEmptyComponent = useMemo(() => {
+    if (!selectedFeed) {
+      return (
+        <ThemedView style={styles.selectFeedPrompt}>
+          <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
+        </ThemedView>
+      );
+    }
+
+    if (feedLoading || timelineLoading) {
+      return <FeedSkeleton count={5} />;
+    }
+
+    return (
+      <ThemedView style={styles.emptyState}>
+        <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
+      </ThemedView>
+    );
+  }, [feedLoading, selectedFeed, t, timelineLoading]);
 
   if (savedFeedsLoading || feedsLoading) {
     return (
@@ -199,51 +264,27 @@ export default function HomeScreen() {
   // The allFeeds array already includes the default feed, so we don't need to return early
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}> 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        stickyHeaderIndices={[0]}
+    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+      <VirtualizedList
+        ref={flatListRef}
+        data={selectedFeed ? allPosts : []}
+        renderItem={renderFeedItem}
+        keyExtractor={keyExtractor}
+        estimatedItemSize={320}
+        overscan={3}
+        ListHeaderComponent={listHeaderComponent}
+        ListFooterComponent={listFooterComponent ?? undefined}
+        ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={styles.listContent}
+        style={styles.list}
+        onEndReached={loadMorePosts}
+        onEndReachedThreshold={0.4}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
-      >
-        {/* Feed Tabs */}
-        <TabBar
-          tabs={allFeedsWithCreated.map((feed) => ({
-            key: feed.uri,
-            label: feed.displayName,
-          }))}
-          activeTab={selectedFeed || ''}
-          onTabChange={handleFeedSelection}
-        />
-
-        {/* Feed Content - Full height, no ScrollView */}
-        {selectedFeed ? (
-          <View style={styles.feedList}>
-            {feedLoading || timelineLoading ? (
-              <FeedSkeleton count={5} />
-            ) : allPosts.length === 0 ? (
-              <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
-              </ThemedView>
-            ) : (
-              <>
-                {allPosts.map((item) => (
-                  <View key={`${item.post.uri}-${item.post.indexedAt}`}>{renderFeedItem({ item })}</View>
-                ))}
-                {isFetchingNextPage && (
-                  <ThemedView style={styles.loadingMore}>
-                    <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
-                  </ThemedView>
-                )}
-              </>
-            )}
-          </View>
-        ) : (
-          <ThemedView style={styles.selectFeedPrompt}>
-            <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
-          </ThemedView>
-        )}
-      </ScrollView>
+        keyboardDismissMode="on-drag"
+        stickyHeaderIndices={[0]}
+      />
 
       {/* Floating Action Button for creating posts */}
       <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
@@ -260,11 +301,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollView: {
+  list: {
     flex: 1,
   },
-  scrollViewContent: {
+  listContent: {
     paddingBottom: 100, // Account for tab bar
+  },
+  listHeader: {
+    paddingBottom: 12,
   },
   header: {
     alignItems: 'center',
@@ -281,12 +325,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.8,
     textAlign: 'center',
-  },
-  feedList: {
-    paddingBottom: 100, // Account for tab bar
-  },
-  feedListContent: {
-    paddingBottom: 100, // Account for tab bar
   },
   loadingMore: {
     alignItems: 'center',
