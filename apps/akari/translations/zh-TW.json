@@ -57,8 +57,8 @@
       "saving": "儲存中...",
       "mute": "靜音",
       "unmute": "取消靜音",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "待處理聊天",
+      "viewPendingChats": "查看待處理聊天"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",

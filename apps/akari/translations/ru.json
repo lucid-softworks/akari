@@ -57,8 +57,8 @@
       "saving": "Сохранение...",
       "mute": "Отключить звук",
       "unmute": "Включить звук",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Ожидающие чаты",
+      "viewPendingChats": "Просмотреть ожидающие чаты"
     },
     "auth": {
       "fillAllFields": "Заполните все поля",

@@ -57,8 +57,8 @@
       "saving": "保存中...",
       "mute": "ミュート",
       "unmute": "ミュート解除",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "保留中のチャット",
+      "viewPendingChats": "保留中のチャットを表示"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",

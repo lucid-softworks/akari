@@ -57,8 +57,8 @@
       "saving": "Cadw...",
       "mute": "Tewi",
       "unmute": "Ailgychwyn Sain",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Sgyrsiau ar y gweill",
+      "viewPendingChats": "Gweld sgyrsiau ar y gweill"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",

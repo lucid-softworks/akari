@@ -57,8 +57,8 @@
       "saving": "Salvataggio...",
       "mute": "Silenzia",
       "unmute": "Riattiva audio",
-      "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "pendingChats": "Chat in sospeso",
+      "viewPendingChats": "Vedi le chat in sospeso"
     },
     "auth": {
       "fillAllFields": "Compila tutti i campi",
