@@ -5,6 +5,7 @@ import { ActivityIndicator, FlatList, Modal, StyleSheet, TextInput, TouchableOpa
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useToast } from '@/contexts/ToastContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { TenorGif } from '@/tenor-api';
@@ -24,6 +25,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const [searchLoading, setSearchLoading] = useState(false);
   const [nextPos, setNextPos] = useState<string | undefined>();
   const [hasMore, setHasMore] = useState(true);
+  const { showToast } = useToast();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -32,6 +34,15 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const iconColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
   const inputBackgroundColor = useThemeColor({}, 'background');
+
+  const showGifErrorToast = useCallback(() => {
+    showToast({
+      id: 'gif-error',
+      type: 'error',
+      title: t('gif.addGif'),
+      message: t('gif.apiError'),
+    });
+  }, [showToast, t]);
 
   // Load trending GIFs on mount
   useEffect(() => {
@@ -54,10 +65,11 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       // Show empty state with error message
       setGifs([]);
       setHasMore(false);
+      showGifErrorToast();
     } finally {
       setLoading(false);
     }
-  }, [loading]);
+  }, [loading, showGifErrorToast]);
 
   const searchGifs = useCallback(
     async (query: string, isNewSearch = false) => {
@@ -81,11 +93,12 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
         // Show empty state with error message
         setGifs([]);
         setHasMore(false);
+        showGifErrorToast();
       } finally {
         setSearchLoading(false);
       }
     },
-    [searchLoading, loadTrendingGifs],
+    [searchLoading, loadTrendingGifs, showGifErrorToast],
   );
 
   const loadMoreGifs = useCallback(async () => {
@@ -110,6 +123,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       setHasMore(!!response.next);
     } catch (error) {
       console.error('Failed to load more GIFs:', error);
+      showGifErrorToast();
     } finally {
       if (searchQuery.trim()) {
         setSearchLoading(false);
@@ -117,7 +131,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
         setLoading(false);
       }
     }
-  }, [hasMore, loading, searchLoading, nextPos, searchQuery]);
+  }, [hasMore, loading, searchLoading, nextPos, searchQuery, showGifErrorToast]);
 
   const handleSearch = useCallback(
     (query: string) => {

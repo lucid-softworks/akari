@@ -11,6 +11,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
@@ -72,6 +73,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
+  const { showToast } = useToast();
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -96,6 +98,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
       setShowDropdown(false);
     } catch (error) {
       console.error('Follow error:', error);
+      showToast({
+        type: 'error',
+        title: isFollowing ? t('common.unfollow') : t('common.follow'),
+        message: t('common.somethingWentWrong'),
+      });
     }
   };
 
@@ -116,8 +123,13 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         });
       }
       setShowDropdown(false);
-    } catch {
-      // Handle block error
+    } catch (error) {
+      console.error('Block error:', error);
+      showToast({
+        type: 'error',
+        title: isBlocking ? t('common.unblock') : t('common.block'),
+        message: t('common.somethingWentWrong'),
+      });
     }
   };
 

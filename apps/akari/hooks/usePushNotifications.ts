@@ -175,6 +175,7 @@ export function usePushNotifications() {
       await Notifications.setBadgeCountAsync(0);
     } catch (error) {
       console.error('Failed to clear badge:', error);
+      throw error;
     }
   };
 

@@ -19,6 +19,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useToast } from '@/contexts/ToastContext';
 
 type PostComposerProps = {
   visible: boolean;
@@ -43,6 +44,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const createPostMutation = useCreatePost();
+  const { showToast } = useToast();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -73,6 +75,11 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
     } catch (error) {
       // Error handling could be improved with a proper error display
       console.error('Failed to create post:', error);
+      showToast({
+        type: 'error',
+        title: t('post.post'),
+        message: t('common.somethingWentWrong'),
+      });
     }
   };
 

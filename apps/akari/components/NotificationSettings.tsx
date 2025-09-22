@@ -5,6 +5,7 @@ import { NotificationTest } from '@/components/NotificationTest';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useToast } from '@/contexts/ToastContext';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -16,6 +17,7 @@ interface NotificationSettingsProps {
 export function NotificationSettings({ onSettingsChange }: NotificationSettingsProps) {
   const { t } = useTranslation();
   const { permissionStatus, expoPushToken, isLoading, error, initialize, clearBadge } = usePushNotifications();
+  const { showToast } = useToast();
 
   const [localSettings, setLocalSettings] = useState({
     pushEnabled: permissionStatus === 'granted',
@@ -80,6 +82,11 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
       Alert.alert(t('notifications.badgeCleared'), t('notifications.badgeClearedMessage'), [{ text: 'OK' }]);
     } catch (error) {
       console.error('Failed to clear badge:', error);
+      showToast({
+        type: 'error',
+        title: t('notifications.clearBadge'),
+        message: t('common.somethingWentWrong'),
+      });
     }
   };
 
