@@ -15,7 +15,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Replace the `FlatList`/`useRef<FlatList>` pair with `VirtualizedList` and `VirtualizedListHandle<SearchResult>`.
   - FlashList expects `refreshing`/`onRefresh` props rather than a `RefreshControl` element—rework pull-to-refresh accordingly.
   - Supply an `estimatedItemSize` that balances profile and post rows, and keep the tab scroll registry hook working.
-- [ ] `apps/akari/app/(tabs)/bookmarks.tsx`
+- [x] `apps/akari/app/(tabs)/bookmarks.tsx`
   - Use `VirtualizedList` instead of `FlatList`, updating the ref type to `VirtualizedListHandle<BlueskyBookmark>`.
   - Convert the `RefreshControl` usage to FlashList-style refreshing and ensure header/footer/empty states render through the wrapper.
   - Choose an `estimatedItemSize` that matches a `PostCard` to keep overscan tight.
