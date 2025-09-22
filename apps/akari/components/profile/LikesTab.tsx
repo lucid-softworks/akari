@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
@@ -12,6 +13,8 @@ import { formatRelativeTime } from '@/utils/timeUtils';
 type LikesTabProps = {
   handle: string;
 };
+
+const ESTIMATED_POST_CARD_HEIGHT = 320;
 
 export function LikesTab({ handle }: LikesTabProps) {
   const { t } = useTranslation();
@@ -88,7 +91,7 @@ export function LikesTab({ handle }: LikesTabProps) {
   const filteredLikes = likes.filter((item) => item && item.uri);
 
   return (
-    <FlatList
+    <VirtualizedList
       data={filteredLikes}
       renderItem={renderItem}
       keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
@@ -98,6 +101,7 @@ export function LikesTab({ handle }: LikesTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
     />
   );
 }
