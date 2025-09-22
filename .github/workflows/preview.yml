@@ -1,6 +1,12 @@
 name: preview
 
-on: pull_request
+on:
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.mdx'
+      - 'docs/**'
+      - '**/docs/**'
 
 jobs:
   update:
