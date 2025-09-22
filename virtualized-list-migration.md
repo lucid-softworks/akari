@@ -27,7 +27,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 - [x] `apps/akari/components/profile/MediaTab.tsx`
   - Swap to `VirtualizedList` and adjust the filtered media list to provide an `estimatedItemSize`.
   - Keep `scrollEnabled={false}` behaviour and verify reply metadata still renders through the virtualization.
-- [ ] `apps/akari/components/profile/LikesTab.tsx`
+- [x] `apps/akari/components/profile/LikesTab.tsx`
   - Move to `VirtualizedList` with an appropriate `estimatedItemSize` and maintain the non-scrollable embedding inside parent tabs.
   - Re-test pagination and footer rendering.
 - [ ] `apps/akari/components/profile/RepliesTab.tsx`
