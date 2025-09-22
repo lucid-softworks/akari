@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -21,6 +21,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { showAlert } from '@/utils/alert';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 import type { ProfileTabType } from '@/types/profile';
 
@@ -30,13 +34,13 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const listRef = useRef<VirtualizedListHandle<{ key: string }>>(null);
   const { t } = useTranslation();
   const { showToast } = useToast();
 
   // Create scroll to top function
   const scrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
   // Register with the tab scroll registry
@@ -100,7 +104,7 @@ export default function ProfileScreen() {
   const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
     // Scroll to top when switching tabs
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
   const renderTabContent = () => {
@@ -136,36 +140,43 @@ export default function ProfileScreen() {
     }
   };
 
+  const listData = React.useMemo(() => [{ key: 'profile-content' }], []);
+
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <ProfileHeader
-          profile={{
-            avatar: profile?.avatar,
-            displayName: profile?.displayName || currentAccount?.handle || '',
-            handle: currentAccount?.handle || '',
-            description: profile?.description,
-            banner: profile?.banner,
-            did: profile?.did,
-            followersCount: profile?.followersCount,
-            followsCount: profile?.followsCount,
-            postsCount: profile?.postsCount,
-            viewer: profile?.viewer,
-            labels: profile?.labels,
-          }}
-          isOwnProfile={true}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
-        />
-        <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
+      <VirtualizedList
+        ref={listRef}
+        data={listData}
+        keyExtractor={(item) => item.key}
+        renderItem={() => (
+          <>
+            <ProfileHeader
+              profile={{
+                avatar: profile?.avatar,
+                displayName: profile?.displayName || currentAccount?.handle || '',
+                handle: currentAccount?.handle || '',
+                description: profile?.description,
+                banner: profile?.banner,
+                did: profile?.did,
+                followersCount: profile?.followersCount,
+                followsCount: profile?.followsCount,
+                postsCount: profile?.postsCount,
+                viewer: profile?.viewer,
+                labels: profile?.labels,
+              }}
+              isOwnProfile={true}
+              onDropdownToggle={handleDropdownToggle}
+              dropdownRef={dropdownRef}
+            />
+            <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
 
-        {renderTabContent()}
-      </ScrollView>
+            {renderTabContent()}
+          </>
+        )}
+        contentContainerStyle={styles.scrollViewContent}
+        estimatedItemSize={1200}
+        showsVerticalScrollIndicator={false}
+      />
 
       {/* Dropdown rendered at root level */}
       <ProfileDropdown
@@ -203,9 +214,6 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   scrollViewContent: {

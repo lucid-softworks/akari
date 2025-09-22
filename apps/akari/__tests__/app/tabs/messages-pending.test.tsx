@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { TouchableOpacity } from 'react-native';
 
 import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
 import { router } from 'expo-router';
@@ -90,7 +91,7 @@ describe('PendingMessagesScreen', () => {
     expect(status).toBe('request');
 
     expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
-    expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
+    expect(UNSAFE_getByType(FlashList).props.ListFooterComponent()).toBeNull();
     expect(getByText('common.pendingChats')).toBeTruthy();
     expect(getByText('Pending Pal')).toBeTruthy();
     expect(getByText('common.pending')).toBeTruthy();

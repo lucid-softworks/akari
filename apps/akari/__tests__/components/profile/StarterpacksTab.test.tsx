@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Text } from 'react-native';
 
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
@@ -88,7 +89,7 @@ describe('StarterpacksTab', () => {
     expect(queryByText('common.loading')).toBeNull();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
 
     expect(fetchNextPage).toHaveBeenCalled();
@@ -157,7 +158,7 @@ describe('StarterpacksTab', () => {
 
     const { UNSAFE_getByType } = render(<StarterpacksTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

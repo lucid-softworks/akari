@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
@@ -24,6 +24,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -31,7 +35,7 @@ export default function SettingsScreen() {
   const { t } = useTranslation();
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
-  const scrollViewRef = useRef<ScrollView>(null);
+  const listRef = useRef<VirtualizedListHandle<{ key: string }>>(null);
 
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
@@ -39,9 +43,7 @@ export default function SettingsScreen() {
 
   // Create scroll to top function
   const handleScrollToTop = useCallback(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: 0, animated: true });
-    }
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   // Register with the tab scroll registry
@@ -124,153 +126,157 @@ export default function SettingsScreen() {
     });
   };
 
+  const listData = React.useMemo(() => [{ key: 'settings-content' }], []);
+
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <ThemedView style={styles.header}>
-          <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
-        </ThemedView>
-
-        {/* Language Section */}
-        <ThemedView style={styles.section}>
-          <LanguageSelector />
-        </ThemedView>
-
-        {/* Notifications Section */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>{t('settings.notifications')}</ThemedText>
-          <NotificationSettings />
-        </ThemedView>
-
-        {/* Accounts Section */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>
-            {t('common.accounts')} ({accounts?.length || 0})
-          </ThemedText>
-
-          {accounts?.length === 0 && (
-            <ThemedView style={styles.settingItem}>
-              <ThemedText style={styles.settingValue}>{t('common.noAccounts')}</ThemedText>
+      <VirtualizedList
+        ref={listRef}
+        data={listData}
+        keyExtractor={(item) => item.key}
+        renderItem={() => (
+          <>
+            {/* Header */}
+            <ThemedView style={styles.header}>
+              <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
             </ThemedView>
-          )}
 
-          {accounts?.map((account) => {
-            const profile = accountProfiles?.[account.did];
-            const avatar = profile?.avatar || account.avatar;
-            const displayName = profile?.displayName || account.displayName;
+            {/* Language Section */}
+            <ThemedView style={styles.section}>
+              <LanguageSelector />
+            </ThemedView>
 
-            return (
-              <ThemedView key={account.did} style={[styles.settingItem, { borderBottomColor: borderColor }]}>
-                <ThemedView style={styles.accountInfo}>
-                  <ThemedView style={styles.accountAvatarContainer}>
-                    {avatar ? (
-                      <ThemedView style={styles.accountAvatar}>
-                        <Image source={{ uri: avatar }} style={styles.accountAvatarImage} contentFit="cover" />
+            {/* Notifications Section */}
+            <ThemedView style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>{t('settings.notifications')}</ThemedText>
+              <NotificationSettings />
+            </ThemedView>
+
+            {/* Accounts Section */}
+            <ThemedView style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>
+                {t('common.accounts')} ({accounts?.length || 0})
+              </ThemedText>
+
+              {accounts?.length === 0 && (
+                <ThemedView style={styles.settingItem}>
+                  <ThemedText style={styles.settingValue}>{t('common.noAccounts')}</ThemedText>
+                </ThemedView>
+              )}
+
+              {accounts?.map((account) => {
+                const profile = accountProfiles?.[account.did];
+                const avatar = profile?.avatar || account.avatar;
+                const displayName = profile?.displayName || account.displayName;
+
+                return (
+                  <ThemedView key={account.did} style={[styles.settingItem, { borderBottomColor: borderColor }]}>
+                    <ThemedView style={styles.accountInfo}>
+                      <ThemedView style={styles.accountAvatarContainer}>
+                        {avatar ? (
+                          <ThemedView style={styles.accountAvatar}>
+                            <Image source={{ uri: avatar }} style={styles.accountAvatarImage} contentFit="cover" />
+                          </ThemedView>
+                        ) : (
+                          <ThemedView style={styles.accountAvatarFallback}>
+                            <ThemedText style={styles.accountAvatarFallbackText}>
+                              {(displayName || account.handle || 'U')[0].toUpperCase()}
+                            </ThemedText>
+                          </ThemedView>
+                        )}
                       </ThemedView>
-                    ) : (
-                      <ThemedView style={styles.accountAvatarFallback}>
-                        <ThemedText style={styles.accountAvatarFallbackText}>
-                          {(displayName || account.handle || 'U')[0].toUpperCase()}
-                        </ThemedText>
+
+                      <ThemedView style={styles.accountDetails}>
+                        <ThemedText style={styles.accountHandle}>@{account.handle}</ThemedText>
+                        {displayName ? <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText> : null}
+                        {account.did === currentAccount?.did ? (
+                          <ThemedText style={styles.currentAccountBadge}>{t('common.current')}</ThemedText>
+                        ) : null}
                       </ThemedView>
-                    )}
+
+                      <ThemedView style={styles.accountActions}>
+                        {account.did !== currentAccount?.did && (
+                          <TouchableOpacity style={styles.actionButton} onPress={() => handleSwitchAccount(account)}>
+                            <ThemedText style={styles.actionButtonText}>{t('common.switch')}</ThemedText>
+                          </TouchableOpacity>
+                        )}
+
+                        <TouchableOpacity
+                          style={[styles.actionButton, styles.removeButton]}
+                          onPress={() => handleRemoveAccount(account)}
+                        >
+                          <ThemedText style={styles.removeButtonText}>{t('common.remove')}</ThemedText>
+                        </TouchableOpacity>
+                      </ThemedView>
+                    </ThemedView>
                   </ThemedView>
+                );
+              })}
 
-                  <ThemedView style={styles.accountDetails}>
-                    <ThemedText style={styles.accountHandle}>@{account.handle}</ThemedText>
-                    {displayName ? <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText> : null}
-                    {account.did === currentAccount?.did ? (
-                      <ThemedText style={styles.currentAccountBadge}>{t('common.current')}</ThemedText>
-                    ) : null}
+              <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleAddAccount}>
+                <ThemedView style={styles.settingInfo}>
+                  <ThemedText style={styles.settingLabel}>{t('common.addAccount')}</ThemedText>
+                  <ThemedText style={styles.settingValue}>{t('common.connectAnotherAccount')}</ThemedText>
+                </ThemedView>
+              </TouchableOpacity>
+            </ThemedView>
+
+            {/* Current Account Section */}
+            {currentAccount && (
+              <ThemedView style={styles.section}>
+                <ThemedText style={styles.sectionTitle}>{t('common.currentAccount')}</ThemedText>
+
+                <ThemedView style={styles.settingItem}>
+                  <ThemedView style={styles.settingInfo}>
+                    <ThemedText style={styles.settingLabel}>{t('common.handle')}</ThemedText>
+                    <ThemedText style={styles.settingValue}>@{currentAccount.handle}</ThemedText>
                   </ThemedView>
+                </ThemedView>
 
-                  <ThemedView style={styles.accountActions}>
-                    {account.did !== currentAccount?.did && (
-                      <TouchableOpacity style={styles.actionButton} onPress={() => handleSwitchAccount(account)}>
-                        <ThemedText style={styles.actionButtonText}>{t('common.switch')}</ThemedText>
-                      </TouchableOpacity>
-                    )}
-
-                    <TouchableOpacity
-                      style={[styles.actionButton, styles.removeButton]}
-                      onPress={() => handleRemoveAccount(account)}
-                    >
-                      <ThemedText style={styles.removeButtonText}>{t('common.remove')}</ThemedText>
-                    </TouchableOpacity>
+                <ThemedView style={styles.settingItem}>
+                  <ThemedView style={styles.settingInfo}>
+                    <ThemedText style={styles.settingLabel}>DID</ThemedText>
+                    <ThemedText style={styles.settingValue}>{currentAccount.did}</ThemedText>
                   </ThemedView>
                 </ThemedView>
               </ThemedView>
-            );
-          })}
+            )}
 
-          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleAddAccount}>
-            <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>{t('common.addAccount')}</ThemedText>
-              <ThemedText style={styles.settingValue}>{t('common.connectAnotherAccount')}</ThemedText>
+            {/* Actions Section */}
+            <ThemedView style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>{t('common.actions')}</ThemedText>
+
+              <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleLogout}>
+                <ThemedView style={styles.settingInfo}>
+                  <ThemedText style={styles.settingLabel}>{t('common.disconnectAllAccounts')}</ThemedText>
+                  <ThemedText style={styles.settingValue}>{t('common.removeAllConnections')}</ThemedText>
+                </ThemedView>
+              </TouchableOpacity>
             </ThemedView>
-          </TouchableOpacity>
-        </ThemedView>
 
-        {/* Current Account Section */}
-        {currentAccount && (
-          <ThemedView style={styles.section}>
-            <ThemedText style={styles.sectionTitle}>{t('common.currentAccount')}</ThemedText>
+            {/* About Section */}
+            <ThemedView style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>{t('settings.about')}</ThemedText>
 
-            <ThemedView style={styles.settingItem}>
-              <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>{t('common.handle')}</ThemedText>
-                <ThemedText style={styles.settingValue}>@{currentAccount.handle}</ThemedText>
+              <ThemedView style={styles.settingItem}>
+                <ThemedView style={styles.settingInfo}>
+                  <ThemedText style={styles.settingLabel}>{t('settings.version')}</ThemedText>
+                  <ThemedText style={styles.settingValue}>{Constants.expoConfig?.version || t('common.unknown')}</ThemedText>
+                </ThemedView>
               </ThemedView>
             </ThemedView>
-
-            <ThemedView style={styles.settingItem}>
-              <ThemedView style={styles.settingInfo}>
-                <ThemedText style={styles.settingLabel}>DID</ThemedText>
-                <ThemedText style={styles.settingValue}>{currentAccount.did}</ThemedText>
-              </ThemedView>
-            </ThemedView>
-          </ThemedView>
+          </>
         )}
-
-        {/* Actions Section */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>{t('common.actions')}</ThemedText>
-
-          <TouchableOpacity style={[styles.settingItem, { borderBottomColor: borderColor }]} onPress={handleLogout}>
-            <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>{t('common.disconnectAllAccounts')}</ThemedText>
-              <ThemedText style={styles.settingValue}>{t('common.removeAllConnections')}</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-        </ThemedView>
-
-        {/* About Section */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>{t('settings.about')}</ThemedText>
-
-          <ThemedView style={styles.settingItem}>
-            <ThemedView style={styles.settingInfo}>
-              <ThemedText style={styles.settingLabel}>{t('settings.version')}</ThemedText>
-              <ThemedText style={styles.settingValue}>{Constants.expoConfig?.version || t('common.unknown')}</ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </ThemedView>
-      </ScrollView>
+        estimatedItemSize={1100}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      />
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   scrollViewContent: {

@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Labels } from '@/components/Labels';
@@ -16,6 +16,10 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 type SearchResult = {
   type: 'profile' | 'post';
@@ -30,12 +34,12 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState(initialQuery || '');
   const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlatList>(null);
+  const listRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
 
   // Create scroll to top function
   const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
   // Register with the tab scroll registry
@@ -284,14 +288,15 @@ export default function SearchScreen() {
 
       {searchQuery && allResults.length > 0 ? <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} /> : null}
 
-      <FlatList
-        ref={flatListRef}
+      <VirtualizedList
+        ref={listRef}
         data={filteredResults}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}
         style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
+        refreshing={isRefetching}
+        onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
@@ -308,6 +313,8 @@ export default function SearchScreen() {
             </ThemedView>
           )
         }
+        estimatedItemSize={160}
+        overscan={4}
       />
     </ThemedView>
   );

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import { MediaTab } from '@/components/profile/MediaTab';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
@@ -18,7 +18,7 @@ const PostCardMock = require('@/components/PostCard').PostCard as jest.Mock;
 const FeedSkeletonMock = require('@/components/skeletons').FeedSkeleton as jest.Mock;
 const mockUseAuthorMedia = useAuthorMedia as jest.Mock;
 
- type MediaItem = {
+type MediaItem = {
   uri?: string;
   indexedAt: string;
   record?: { text?: string };
@@ -164,7 +164,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     list.props.onEndReached();
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -186,7 +186,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType, getByText } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     list.props.onEndReached();
     expect(fetchNextPage).not.toHaveBeenCalled();
     expect(getByText('common.loading')).toBeTruthy();
@@ -209,7 +209,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     list.props.onEndReached();
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

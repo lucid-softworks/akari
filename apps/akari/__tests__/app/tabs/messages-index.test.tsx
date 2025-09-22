@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { TouchableOpacity } from 'react-native';
 
 import MessagesScreen from '@/app/(tabs)/messages';
 import { router } from 'expo-router';
@@ -110,7 +111,7 @@ describe('MessagesScreen', () => {
     expect(limitArg).toBe(50);
     expect(statusArg).toBe('accepted');
     expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
-    expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
+    expect(UNSAFE_getByType(FlashList).props.ListFooterComponent()).toBeNull();
     expect(getByText('3')).toBeTruthy();
     expect(getByText('Alice')).toBeTruthy();
     expect(getByText('Charlie')).toBeTruthy();
@@ -153,8 +154,8 @@ describe('MessagesScreen', () => {
 
     const { UNSAFE_getByType } = render(<MessagesScreen />);
 
-    const flatListInstance = UNSAFE_getByType(FlatList).instance as { scrollToOffset: jest.Mock };
-    flatListInstance.scrollToOffset = jest.fn();
+    const flashListInstance = UNSAFE_getByType(FlashList).instance as { scrollToOffset: jest.Mock };
+    flashListInstance.scrollToOffset = jest.fn();
 
     const scrollToTop = mockRegister.mock.calls[0][1];
 
@@ -162,7 +163,7 @@ describe('MessagesScreen', () => {
       scrollToTop();
     });
 
-    expect(flatListInstance.scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
+    expect(flashListInstance.scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
   });
 
   it('shows loading skeletons', () => {
@@ -221,7 +222,7 @@ describe('MessagesScreen', () => {
     const { UNSAFE_getByType } = render(<MessagesScreen />);
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -241,7 +242,7 @@ describe('MessagesScreen', () => {
     expect(getByText('common.loading...')).toBeTruthy();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
 
     expect(fetchNextPage).not.toHaveBeenCalled();

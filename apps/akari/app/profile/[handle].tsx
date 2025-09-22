@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -22,6 +22,7 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
 import { showAlert } from '@/utils/alert';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
@@ -146,38 +147,45 @@ export default function ProfileScreen() {
     }
   };
 
+  const listData = React.useMemo(() => [{ key: 'profile-content' }], []);
+
   return (
     <ThemedView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
+      <VirtualizedList
+        data={listData}
+        keyExtractor={(item) => item.key}
+        renderItem={() => (
+          <>
+            <ProfileHeader
+              profile={{
+                avatar: profile?.avatar,
+                displayName: profile?.displayName,
+                handle: profile?.handle,
+                description: profile?.description,
+                banner: profile?.banner,
+                did: profile?.did,
+                followersCount: profile?.followersCount,
+                followsCount: profile?.followsCount,
+                postsCount: profile?.postsCount,
+                viewer: profile?.viewer,
+                labels: profile?.labels,
+              }}
+              isOwnProfile={isOwnProfile}
+              onDropdownToggle={handleDropdownToggle}
+              dropdownRef={dropdownRef}
+            />
+
+            {/* Tabs */}
+            <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
+
+            {/* Content */}
+            {renderTabContent()}
+          </>
+        )}
         contentContainerStyle={styles.scrollViewContent}
+        estimatedItemSize={1200}
         showsVerticalScrollIndicator={false}
-      >
-        <ProfileHeader
-          profile={{
-            avatar: profile?.avatar,
-            displayName: profile?.displayName,
-            handle: profile?.handle,
-            description: profile?.description,
-            banner: profile?.banner,
-            did: profile?.did,
-            followersCount: profile?.followersCount,
-            followsCount: profile?.followsCount,
-            postsCount: profile?.postsCount,
-            viewer: profile?.viewer,
-            labels: profile?.labels,
-          }}
-          isOwnProfile={isOwnProfile}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
-        />
-
-        {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
-
-        {/* Content */}
-        {renderTabContent()}
-      </ScrollView>
+      />
 
       {/* Dropdown rendered at root level */}
       <ProfileDropdown
@@ -203,9 +211,6 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   scrollViewContent: {

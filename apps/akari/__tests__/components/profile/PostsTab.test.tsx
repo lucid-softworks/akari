@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 let mockPostCard: jest.Mock;
 
@@ -126,7 +126,7 @@ describe('PostsTab', () => {
 
     const { UNSAFE_getByType } = render(<PostsTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -144,7 +144,7 @@ describe('PostsTab', () => {
     const { getByText, UNSAFE_getByType } = render(<PostsTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(FlashList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
