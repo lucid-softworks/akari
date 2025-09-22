@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.0](https://github.com/ImLunaHey/akari/compare/v1.1.0...v1.2.0) (2025-09-22)
+
+
+### Features
+
+* add mentions tab to notifications ([#215](https://github.com/ImLunaHey/akari/issues/215)) ([717ef23](https://github.com/ImLunaHey/akari/commit/717ef230427aa79f64d4beaf90495c7f457acfb4))
+* add mobile navigation to responsive layout ([#214](https://github.com/ImLunaHey/akari/issues/214)) ([03a1220](https://github.com/ImLunaHey/akari/commit/03a12209ec1683029a1e079a91b959ff63227e00))
+* add pending chats view to messages ([#202](https://github.com/ImLunaHey/akari/issues/202)) ([b1ed410](https://github.com/ImLunaHey/akari/commit/b1ed41056cd953dd167f660dfd335a3840133cb0))
+* add toast notifications for profile link actions ([#205](https://github.com/ImLunaHey/akari/issues/205)) ([7bc9615](https://github.com/ImLunaHey/akari/commit/7bc961599f9c2ab2f2006fd0e17b975a9b63d133))
+* add VirtualizedList ([#207](https://github.com/ImLunaHey/akari/issues/207)) ([bdf3d79](https://github.com/ImLunaHey/akari/commit/bdf3d79a1448184817eb0f1aa34d9aa59f280fc1))
+* bookmarks page ([#192](https://github.com/ImLunaHey/akari/issues/192)) ([90b8154](https://github.com/ImLunaHey/akari/commit/90b8154982e8319398f1804ab4ce93de4dfbbad0))
+* expand settings resources ([#218](https://github.com/ImLunaHey/akari/issues/218)) ([856dfeb](https://github.com/ImLunaHey/akari/commit/856dfeba30a66fcb465dfbd6178f619f7cc7be78))
+* support expo app variants ([#196](https://github.com/ImLunaHey/akari/issues/196)) ([5518a03](https://github.com/ImLunaHey/akari/commit/5518a037a4ad4c98625752f97a93a1291221465b))
+
+
+### Bug Fixes
+
+* add background for incoming messages ([#213](https://github.com/ImLunaHey/akari/issues/213)) ([710be9a](https://github.com/ImLunaHey/akari/commit/710be9af24fd4cc213d8b5b0d88420aad0265fbc))
+* align expo doctor deps ([#211](https://github.com/ImLunaHey/akari/issues/211)) ([ce30fbf](https://github.com/ImLunaHey/akari/commit/ce30fbf88d260f39fb3113d841215a461b9189d4))
+* display embeds in conversations ([#216](https://github.com/ImLunaHey/akari/issues/216)) ([f43ccaf](https://github.com/ImLunaHey/akari/commit/f43ccafd829fb14c5d65d4c12c9f098d77ff5b8f))
+* localize pending chat labels ([#208](https://github.com/ImLunaHey/akari/issues/208)) ([08abf9f](https://github.com/ImLunaHey/akari/commit/08abf9f9a3d12e7917efd68aa4706cdce7ae8457))
+* prevent duplicate feed overlay in home feed ([#220](https://github.com/ImLunaHey/akari/issues/220)) ([f754b78](https://github.com/ImLunaHey/akari/commit/f754b7808e8c217a6da63a1e4c5370ccb5cd9c9b))
+* square panel corners ([#198](https://github.com/ImLunaHey/akari/issues/198)) ([721e7fe](https://github.com/ImLunaHey/akari/commit/721e7fe3ef47a52c8832e06701efa37898bf6b0d))
+* submit auth form with enter key ([#203](https://github.com/ImLunaHey/akari/issues/203)) ([16ba99c](https://github.com/ImLunaHey/akari/commit/16ba99c5623527f24eb3c368aebd24223f030361))
+
 ## [1.1.0](https://github.com/ImLunaHey/akari/compare/v1.0.0...v1.1.0) (2025-09-18)
 
 
