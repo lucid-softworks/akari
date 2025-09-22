@@ -390,6 +390,11 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
+  const contentContainerStyle = useMemo(
+    () => [styles.listContent, { paddingTop: isLargeScreen ? 0 : insets.top }],
+    [insets.top, isLargeScreen],
+  );
+
   const handleNotificationPress = useCallback((notification: GroupedNotification) => {
     if (notification.type === 'follow') {
       // Navigate to the first author's profile
@@ -432,14 +437,14 @@ export default function NotificationsScreen() {
 
   const listHeaderComponent = useMemo(
     () => (
-      <ThemedView style={[styles.listHeader, { paddingTop: isLargeScreen ? 0 : insets.top }]}> 
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
+      <ThemedView style={styles.listHeader}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
         </ThemedView>
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
     ),
-    [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, tabs, t],
+    [activeTab, borderColor, handleTabChange, tabs, t],
   );
 
   const listEmptyComponent = useMemo(() => {
@@ -492,8 +497,8 @@ export default function NotificationsScreen() {
         ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
         ListEmptyComponent={listEmptyComponent}
-        contentContainerStyle={styles.listContent}
-        style={styles.list}
+        contentContainerStyle={contentContainerStyle}
+        style={[styles.list, { paddingTop: 0 }]}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         showsVerticalScrollIndicator={false}
