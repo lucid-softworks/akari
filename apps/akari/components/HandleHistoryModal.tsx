@@ -1,8 +1,9 @@
-import { FlatList, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useHandleHistory } from '@/hooks/useHandleHistory';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -83,12 +84,13 @@ export function HandleHistoryModal({ visible, onClose, did, currentHandle }: Han
             ) : handleHistory.length === 0 ? (
               renderEmptyState()
             ) : (
-              <FlatList
+              <VirtualizedList
                 data={handleHistory}
                 renderItem={renderHandleEntry}
                 keyExtractor={(item, index) => `${item.handle}-${index}`}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
+                estimatedItemSize={72}
               />
             )}
           </View>
