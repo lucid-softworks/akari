@@ -748,3 +748,7 @@ Before considering a test complete, ensure:
 5. **Don't sacrifice quality for quantity** - better to have fewer, comprehensive tests
 
 This comprehensive testing strategy ensures robust, maintainable code with high confidence in component behavior and user interactions.
+
+## Translations
+
+- Provide localized strings in every non-English translation file when adding new keys. English placeholders are not acceptable in non-English locale files—coordinate with localization resources or supply an appropriate translation before merging. If a locale genuinely uses the same spelling as English for a term, call it out in the PR summary for clarity.
