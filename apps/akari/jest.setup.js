@@ -20,9 +20,24 @@ jest.mock(
   { virtual: true },
 );
 
+const mockToastContext = {
+  showToast: jest.fn(),
+  hideToast: jest.fn(),
+};
+
+jest.mock('@/contexts/ToastContext', () => ({
+  __esModule: true,
+  ToastProvider: ({ children }) => children,
+  useToast: jest.fn(() => mockToastContext),
+}));
+
 const { act } = require('@testing-library/react-native');
+const { useToast } = require('@/contexts/ToastContext');
 
 beforeEach(() => {
+  mockToastContext.showToast = jest.fn();
+  mockToastContext.hideToast = jest.fn();
+  useToast.mockReturnValue(mockToastContext);
   jest.useFakeTimers();
 });
 
