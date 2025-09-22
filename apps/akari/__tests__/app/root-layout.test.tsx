@@ -6,6 +6,10 @@ import { useFonts } from 'expo-font';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Platform } from 'react-native';
 
+jest.mock('@/utils/crashReporter', () => ({
+  initializeCrashReporter: jest.fn(),
+}));
+
 jest.mock('@react-navigation/native', () => {
   const React = require('react');
   const actual = jest.requireActual('@react-navigation/native');

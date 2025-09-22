@@ -13,10 +13,13 @@ import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import '@/utils/i18n';
+import { initializeCrashReporter } from '@/utils/crashReporter';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
 
 const queryClient = new QueryClient();
+
+initializeCrashReporter();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
