@@ -1,24 +1,25 @@
 import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
+const ESTIMATED_POST_CARD_HEIGHT = 320;
+
 export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const flatListRef = useRef<FlatList<BlueskyBookmark>>(null);
-  const refreshTintColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
+  const flatListRef = useRef<VirtualizedListHandle<BlueskyBookmark>>(null);
 
   const scrollToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -98,7 +99,7 @@ export default function BookmarksScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <FlatList
+      <VirtualizedList
         ref={flatListRef}
         data={bookmarks}
         keyExtractor={(item) => `${item.subject.uri}-${item.createdAt}`}
@@ -108,15 +109,11 @@ export default function BookmarksScreen() {
           styles.listContent,
           bookmarks.length === 0 ? styles.emptyListContent : null,
         ]}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching}
-            onRefresh={handleRefresh}
-            tintColor={refreshTintColor}
-          />
-        }
+        refreshing={isRefetching}
+        onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
         ListHeaderComponent={
           <ThemedView style={styles.header}>
             <ThemedText style={styles.title}>{t('common.bookmarks')}</ThemedText>
