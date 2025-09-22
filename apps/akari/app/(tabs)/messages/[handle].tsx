@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
@@ -13,6 +13,7 @@ import { RecordEmbed } from '@/components/RecordEmbed';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -22,6 +23,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
 const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
+
+const ESTIMATED_MESSAGE_HEIGHT = 160; // balances standard bubbles and media embeds
 
 type RecordEmbedData = Parameters<typeof RecordEmbed>[0]['embed'];
 type ExternalEmbedData = Parameters<typeof ExternalEmbed>[0]['embed'];
@@ -518,7 +521,7 @@ export default function ConversationScreen() {
               <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
             </ThemedView>
           ) : (
-            <FlatList
+            <VirtualizedList
               data={messages}
               renderItem={renderMessage}
               keyExtractor={(item) => item.id}
@@ -526,9 +529,10 @@ export default function ConversationScreen() {
               contentContainerStyle={styles.messagesContent}
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0.2}
               ListFooterComponent={renderFooter}
               inverted={true} // Show newest messages at the bottom
+              estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
             />
           )}
 
