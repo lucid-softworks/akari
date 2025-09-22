@@ -3,7 +3,7 @@
 The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/VirtualizedList.tsx` is the new standard list implementation. The feed and notifications tabs already use it; the items below still depend on React Native's `FlatList`. Use this checklist to migrate everything over.
 
 ## App screens
-- [ ] `apps/akari/app/(tabs)/messages/index.tsx`
+- [x] `apps/akari/app/(tabs)/messages/index.tsx`
   - Replace the `FlatList` import with `VirtualizedList` and update `flatListRef` to `React.useRef<VirtualizedListHandle<Conversation>>`.
   - Pass an `estimatedItemSize` that matches the conversation row height and keep `overscan` conservative so the request list stays responsive.
   - Verify `tabScrollRegistry`'s scroll-to-top helper still works and that footer/empty states render correctly after the swap.
