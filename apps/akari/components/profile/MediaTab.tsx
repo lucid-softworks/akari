@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,6 +8,7 @@ import { FeedSkeleton } from '@/components/skeletons';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type MediaTabProps = {
   handle: string;
@@ -88,7 +89,7 @@ export function MediaTab({ handle }: MediaTabProps) {
   const filteredMedia = media.filter((item) => item && item.uri);
 
   return (
-    <FlatList
+    <VirtualizedList
       data={filteredMedia}
       renderItem={renderItem}
       keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
@@ -98,6 +99,7 @@ export function MediaTab({ handle }: MediaTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={320}
     />
   );
 }

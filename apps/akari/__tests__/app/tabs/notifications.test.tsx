@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Image, ScrollView } from 'react-native';
+import { Image } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import NotificationsScreen from '@/app/(tabs)/notifications';
 import { router } from 'expo-router';
@@ -265,8 +266,8 @@ describe('NotificationsScreen', () => {
     expect(getByText('quote.bubble')).toBeTruthy();
     expect(getByText('notifications.loadingMoreNotifications')).toBeTruthy();
 
-    const scrollView = UNSAFE_getByType(ScrollView);
-    const styleArray = Array.isArray(scrollView.props.style) ? scrollView.props.style : [scrollView.props.style];
+    const flashList = UNSAFE_getByType(FlashList);
+    const styleArray = Array.isArray(flashList.props.style) ? flashList.props.style : [flashList.props.style];
     expect(styleArray[1]).toEqual(expect.objectContaining({ paddingTop: 0 }));
 
     const images = UNSAFE_getAllByType(Image);

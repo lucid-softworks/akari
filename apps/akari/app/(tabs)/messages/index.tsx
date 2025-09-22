@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -13,6 +13,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import en from '@/translations/en.json';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 type Conversation = {
   id: string;
@@ -51,11 +55,11 @@ export function MessagesListScreen({
 }: MessagesListScreenProps) {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = React.useRef<FlatList>(null);
+  const listRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
 
   const scrollToTop = React.useCallback(() => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   React.useEffect(() => {
@@ -168,8 +172,8 @@ export function MessagesListScreen({
         ) : null}
       </ThemedView>
 
-      <FlatList
-        ref={flatListRef}
+      <VirtualizedList
+        ref={listRef}
         data={conversations}
         renderItem={renderConversation}
         keyExtractor={(item) => item.id}
@@ -196,6 +200,8 @@ export function MessagesListScreen({
             </ThemedView>
           )
         }
+        estimatedItemSize={96}
+        overscan={4}
       />
     </ThemedView>
   );

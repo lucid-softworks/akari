@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
@@ -9,19 +9,20 @@ import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import {
+  VirtualizedList,
+  type VirtualizedListHandle,
+} from '@/components/ui/VirtualizedList';
 
 export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const flatListRef = useRef<FlatList<BlueskyBookmark>>(null);
-  const refreshTintColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
-
+  const listRef = useRef<VirtualizedListHandle<BlueskyBookmark>>(null);
   const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
   useEffect(() => {
@@ -98,8 +99,8 @@ export default function BookmarksScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <FlatList
-        ref={flatListRef}
+      <VirtualizedList
+        ref={listRef}
         data={bookmarks}
         keyExtractor={(item) => `${item.subject.uri}-${item.createdAt}`}
         renderItem={renderBookmark}
@@ -108,15 +109,12 @@ export default function BookmarksScreen() {
           styles.listContent,
           bookmarks.length === 0 ? styles.emptyListContent : null,
         ]}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching}
-            onRefresh={handleRefresh}
-            tintColor={refreshTintColor}
-          />
-        }
+        refreshing={isRefetching}
+        onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        estimatedItemSize={320}
+        overscan={3}
         ListHeaderComponent={
           <ThemedView style={styles.header}>
             <ThemedText style={styles.title}>{t('common.bookmarks')}</ThemedText>

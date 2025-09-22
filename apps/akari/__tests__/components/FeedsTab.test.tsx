@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
@@ -81,7 +81,7 @@ describe('FeedsTab', () => {
     expect(getByText('5 likes')).toBeTruthy();
     expect(getByText('Interactive')).toBeTruthy();
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     fireEvent(list, 'onEndReached');
     expect(fetchNextPage).toHaveBeenCalled();
   });

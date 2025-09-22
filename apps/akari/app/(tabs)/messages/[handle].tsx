@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -14,6 +14,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 type Message = {
   id: string;
@@ -110,7 +111,16 @@ export default function ConversationScreen() {
     </ThemedView>
   );
 
-  const renderFooter = () => {
+  const maintainVisibleContentConfig = useMemo(
+    () => ({
+      autoscrollToTopThreshold: 200,
+      autoscrollToBottomThreshold: 200,
+      startRenderingFromBottom: true,
+    }),
+    [],
+  );
+
+  const renderTopLoader = () => {
     if (!isFetchingNextPage) return null;
 
     return (
@@ -180,6 +190,19 @@ export default function ConversationScreen() {
   // Flatten all pages of messages into a single array
   const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
 
+  const sortedMessages = useMemo(() => {
+    if (!messages.length) {
+      return [] as Message[];
+    }
+
+    const toTimestamp = (value: string) => {
+      const parsed = new Date(value).getTime();
+      return Number.isNaN(parsed) ? 0 : parsed;
+    };
+
+    return [...messages].sort((first, second) => toTimestamp(first.sentAt) - toTimestamp(second.sentAt));
+  }, [messages]);
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -213,17 +236,19 @@ export default function ConversationScreen() {
               <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
             </ThemedView>
           ) : (
-            <FlatList
-              data={messages}
+            <VirtualizedList
+              data={sortedMessages}
               renderItem={renderMessage}
               keyExtractor={(item) => item.id}
               style={styles.messagesList}
               contentContainerStyle={styles.messagesContent}
               showsVerticalScrollIndicator={false}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={renderFooter}
-              inverted={true} // Show newest messages at the bottom
+              onStartReached={handleLoadMore}
+              onStartReachedThreshold={0.5}
+              ListHeaderComponent={renderTopLoader}
+              maintainVisibleContentPosition={maintainVisibleContentConfig}
+              estimatedItemSize={72}
+              overscan={6}
             />
           )}
 

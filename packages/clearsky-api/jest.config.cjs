@@ -5,6 +5,7 @@ module.exports = {
   roots: ['<rootDir>/src'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    'until-async': '<rootDir>/../../test-shims/until-async.js',
   },
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/*.d.ts'],

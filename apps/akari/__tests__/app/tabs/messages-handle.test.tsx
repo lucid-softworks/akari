@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -183,7 +184,7 @@ describe('ConversationScreen', () => {
     expect(mockShowAlert).toHaveBeenCalled();
   });
 
-  it('loads more messages and shows footer', () => {
+  it('loads more messages and shows header loader', () => {
     const conversation = { handle: 'alice', convoId: '1' };
     const messages: Message[] = [
       { id: 'm1', text: 'hi', timestamp: '10:00', isFromMe: false, sentAt: '' },
@@ -203,12 +204,12 @@ describe('ConversationScreen', () => {
     const { getByText, UNSAFE_getByType } = render(<ConversationScreen />);
     expect(getByText('common.loading common.messages...')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onStartReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
 
-  it('fetches next page when end reached', () => {
+  it('fetches next page when start reached', () => {
     const conversation = { handle: 'alice', convoId: '1' };
     const fetchNextPage = jest.fn();
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
@@ -224,7 +225,7 @@ describe('ConversationScreen', () => {
 
     const { UNSAFE_getByType } = render(<ConversationScreen />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onStartReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });

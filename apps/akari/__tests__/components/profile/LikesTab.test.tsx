@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Text, FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Text } from 'react-native';
 import { router } from 'expo-router';
 
 import { LikesTab } from '@/components/profile/LikesTab';
@@ -113,7 +114,7 @@ describe('LikesTab', () => {
     fireEvent.press(getByText('liked post'));
     expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(like.uri)}`);
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     act(() => {
       list.props.onEndReached();
     });
@@ -133,7 +134,7 @@ describe('LikesTab', () => {
     const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
     expect(getByText('common.loading')).toBeTruthy();
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(FlashList);
     act(() => {
       list.props.onEndReached();
     });
