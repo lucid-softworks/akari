@@ -48,7 +48,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Swap the GIF grid to `VirtualizedList`, keeping `numColumns`, `ListFooterComponent`, and `ListEmptyComponent` working.
   - FlashList needs an `estimatedItemSize` for grid tiles—base it on the GIF thumbnail height.
   - Re-run the infinite scroll logic to ensure `onEndReached` continues to request additional Tenor pages.
-- [ ] `apps/akari/components/HandleHistoryModal.tsx`
+- [x] `apps/akari/components/HandleHistoryModal.tsx`
   - Use `VirtualizedList` for the history list, set an `estimatedItemSize`, and keep the modal layout constraints intact.
   - Verify the divider styling still renders between items when FlashList virtualizes them.
 
