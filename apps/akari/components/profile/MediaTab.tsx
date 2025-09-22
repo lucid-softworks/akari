@@ -1,7 +1,9 @@
+import { useCallback, useMemo } from 'react';
 import { router } from 'expo-router';
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
@@ -13,15 +15,22 @@ type MediaTabProps = {
   handle: string;
 };
 
+const ESTIMATED_MEDIA_POST_CARD_HEIGHT = 360;
+
 export function MediaTab({ handle }: MediaTabProps) {
   const { t } = useTranslation();
   const { data: media, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorMedia(handle);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const filteredMedia = useMemo(
+    () => (media ?? []).filter((item) => item && item.uri),
+    [media],
+  );
 
   const renderItem = ({ item }: { item: any }) => {
     const replyTo = item.reply?.parent
@@ -64,20 +73,20 @@ export function MediaTab({ handle }: MediaTabProps) {
     );
   };
 
-  const renderFooter = () => {
+  const footer = useMemo(() => {
     if (!isFetchingNextPage) return null;
     return (
       <ThemedView style={styles.loadingFooter}>
         <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
       </ThemedView>
     );
-  };
+  }, [isFetchingNextPage, t]);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
   }
 
-  if (!media || media.length === 0) {
+  if (filteredMedia.length === 0) {
     return (
       <ThemedView style={styles.emptyContainer}>
         <ThemedText style={styles.emptyText}>{t('profile.noMedia')}</ThemedText>
@@ -85,19 +94,18 @@ export function MediaTab({ handle }: MediaTabProps) {
     );
   }
 
-  const filteredMedia = media.filter((item) => item && item.uri);
-
   return (
-    <FlatList
+    <VirtualizedList
       data={filteredMedia}
       renderItem={renderItem}
       keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
+      ListFooterComponent={footer}
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={ESTIMATED_MEDIA_POST_CARD_HEIGHT}
     />
   );
 }

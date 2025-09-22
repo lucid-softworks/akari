@@ -24,7 +24,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 - [x] `apps/akari/components/profile/PostsTab.tsx`
   - Replace the `FlatList` with `VirtualizedList`, disable scrolling the same way, and provide an `estimatedItemSize` suited to `PostCard` entries.
   - Confirm pagination still triggers via `onEndReached` and that the loading footer stays visible while fetching.
-- [ ] `apps/akari/components/profile/MediaTab.tsx`
+- [x] `apps/akari/components/profile/MediaTab.tsx`
   - Swap to `VirtualizedList` and adjust the filtered media list to provide an `estimatedItemSize`.
   - Keep `scrollEnabled={false}` behaviour and verify reply metadata still renders through the virtualization.
 - [ ] `apps/akari/components/profile/LikesTab.tsx`
