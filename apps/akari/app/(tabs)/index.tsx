@@ -27,7 +27,7 @@ import { formatRelativeTime } from '@/utils/timeUtils';
 type FeedListItem =
   | { type: 'header' }
   | { type: 'empty'; state: 'select' | 'loading' | 'empty' }
-  | { type: 'post'; post: BlueskyFeedItem };
+  | { type: 'post'; item: BlueskyFeedItem };
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -176,7 +176,7 @@ export default function HomeScreen() {
       return items;
     }
 
-    return items.concat(allPosts.map((post) => ({ type: 'post', post })));
+    return items.concat(allPosts.map((item) => ({ type: 'post', item })));
   }, [allPosts, feedLoading, selectedFeed, timelineLoading]);
 
   const renderFeedItem = useCallback(
@@ -216,41 +216,42 @@ export default function HomeScreen() {
         );
       }
 
-      const replyTo = item.post.reply?.parent
+      const post = item.item.post;
+      const replyTo = post.reply?.parent
         ? {
             author: {
-              handle: item.post.reply.parent.author?.handle || 'unknown',
-              displayName: item.post.reply.parent.author?.displayName,
+              handle: post.reply.parent.author?.handle || 'unknown',
+              displayName: post.reply.parent.author?.displayName,
             },
-            text: item.post.reply.parent.record?.text as string,
+            text: post.reply.parent.record?.text as string,
           }
         : undefined;
 
       return (
         <PostCard
           post={{
-            id: item.post.uri,
-            text: item.post.record?.text as string,
+            id: post.uri,
+            text: post.record?.text as string,
             author: {
-              handle: item.post.author.handle,
-              displayName: item.post.author.displayName,
-              avatar: item.post.author.avatar,
+              handle: post.author.handle,
+              displayName: post.author.displayName,
+              avatar: post.author.avatar,
             },
-            createdAt: formatRelativeTime(item.post.indexedAt),
-            likeCount: item.post.likeCount || 0,
-            commentCount: item.post.replyCount || 0,
-            repostCount: item.post.repostCount || 0,
-            embed: item.post.embed,
-            embeds: item.post.embeds,
-            labels: item.post.labels,
-            viewer: item.post.viewer,
-            facets: (item.post.record as any)?.facets,
+            createdAt: formatRelativeTime(post.indexedAt),
+            likeCount: post.likeCount || 0,
+            commentCount: post.replyCount || 0,
+            repostCount: post.repostCount || 0,
+            embed: post.embed,
+            embeds: post.embeds,
+            labels: post.labels,
+            viewer: post.viewer,
+            facets: (post.record as any)?.facets,
             replyTo,
-            uri: item.post.uri,
-            cid: item.post.cid,
+            uri: post.uri,
+            cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(item.post.uri)}`);
+            router.push(`/post/${encodeURIComponent(post.uri)}`);
           }}
         />
       );
@@ -267,7 +268,7 @@ export default function HomeScreen() {
       return `feed-empty-${item.state}`;
     }
 
-    return `${item.post.cid ?? 'unknown'}-${item.post.uri}`;
+    return `${item.item.post.cid ?? 'unknown'}-${item.item.post.uri}`;
   }, []);
 
   const listFooterComponent = useMemo(() => {
