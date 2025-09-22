@@ -5,6 +5,11 @@
 All pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/) syntax.
 Use prefixes such as `feat:`, `fix:`, or `docs:` to concisely describe the change.
 
+## Mandatory Quality Checks
+
+- Run `npm run lint -- --filter=akari` (and any other impacted scripts) before calling the PR tool.
+- Do not open or submit a PR while lint or test commands are failing—fix the issues first so everything passes locally.
+
 ## TypeScript Type Definitions
 
 **CRITICAL**: Always use `type` instead of `interface` for TypeScript definitions unless absolutely necessary.

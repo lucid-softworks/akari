@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
 
 import { MediaTab } from '@/components/profile/MediaTab';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { router } from 'expo-router';
 
@@ -18,7 +18,7 @@ const PostCardMock = require('@/components/PostCard').PostCard as jest.Mock;
 const FeedSkeletonMock = require('@/components/skeletons').FeedSkeleton as jest.Mock;
 const mockUseAuthorMedia = useAuthorMedia as jest.Mock;
 
- type MediaItem = {
+type MediaItem = {
   uri?: string;
   indexedAt: string;
   record?: { text?: string };
@@ -55,6 +55,25 @@ describe('MediaTab', () => {
   it('shows empty state when no media is available', () => {
     mockUseAuthorMedia.mockReturnValue({
       data: [],
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    });
+
+    const { getByText } = render(<MediaTab handle="alice" />);
+    expect(getByText('profile.noMedia')).toBeTruthy();
+  });
+
+  it('shows empty state when filtered media has no valid entries', () => {
+    mockUseAuthorMedia.mockReturnValue({
+      data: [
+        {
+          uri: undefined,
+          indexedAt: '2024-01-01T00:00:00Z',
+          author: { handle: 'user1' },
+        },
+      ],
       isLoading: false,
       fetchNextPage: jest.fn(),
       hasNextPage: false,
@@ -164,7 +183,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     list.props.onEndReached();
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -186,7 +205,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType, getByText } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     list.props.onEndReached();
     expect(fetchNextPage).not.toHaveBeenCalled();
     expect(getByText('common.loading')).toBeTruthy();
@@ -209,7 +228,7 @@ describe('MediaTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     list.props.onEndReached();
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
