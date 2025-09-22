@@ -1,4 +1,4 @@
-import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import ProfileScreen from '@/app/profile/[handle]';
@@ -6,8 +6,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useToast } from '@/contexts/ToastContext';
-import * as Clipboard from 'expo-clipboard';
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
@@ -16,25 +14,11 @@ jest.mock('expo-router', () => ({
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useProfile');
 jest.mock('@/hooks/useTranslation');
-jest.mock('@/contexts/ToastContext');
-jest.mock('expo-clipboard', () => ({
-  setStringAsync: jest.fn(),
-}));
 
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
   const { Text } = require('react-native');
-  const mock = jest.fn(({ onDropdownToggle, dropdownRef }: any) => {
-    dropdownRef.current = {
-      measure: (cb: any) => cb(0, 0, 0, 0, 0, 0),
-    };
-    return (
-      <Text accessibilityRole="button" onPress={() => onDropdownToggle(true)}>
-        header
-      </Text>
-    );
-  });
-  return { ProfileHeader: mock };
+  return { ProfileHeader: jest.fn(() => <Text>header</Text>) };
 });
 
 jest.mock('@/components/ProfileTabs', () => {
@@ -55,32 +39,6 @@ jest.mock('@/components/ProfileTabs', () => {
   };
 });
 
-jest.mock('@/components/ProfileDropdown', () => {
-  const React = require('react');
-  const { Text, View } = require('react-native');
-  return {
-    ProfileDropdown: ({
-      isVisible,
-      onCopyLink,
-      onSearchPosts,
-      onAddToLists,
-      onMuteAccount,
-      onBlockPress,
-      onReportAccount,
-      style,
-    }: any) =>
-      isVisible ? (
-        <View style={style}>
-          <Text onPress={onCopyLink}>copy link</Text>
-          <Text onPress={onSearchPosts}>search posts</Text>
-          <Text onPress={onAddToLists}>add to lists</Text>
-          <Text onPress={onMuteAccount}>mute account</Text>
-          <Text onPress={onBlockPress}>block account</Text>
-          <Text onPress={onReportAccount}>report account</Text>
-        </View>
-      ) : null,
-  };
-});
 
 jest.mock('@/components/ThemedView', () => {
   const { View } = require('react-native');
@@ -132,25 +90,16 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
   return { StarterpacksTab: ({ handle }: any) => <Text>{`starterpacks ${handle}`}</Text> };
 });
 
-const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');
-
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseProfile = useProfile as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockUseToast = useToast as jest.Mock;
-const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
-
-let mockShowToast: jest.Mock;
 
 describe('ProfileScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
-    mockClipboardSetStringAsync.mockResolvedValue(undefined);
-    mockShowToast = jest.fn();
-    mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   });
 
   it('shows skeleton while loading', () => {
@@ -177,7 +126,7 @@ describe('ProfileScreen', () => {
     expect(getByText('common.noProfile')).toBeTruthy();
   });
 
-  it('renders profile, switches tabs and handles dropdown actions', async () => {
+  it('renders profile and switches tabs', () => {
     mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
     mockUseProfile.mockReturnValue({
       data: {
@@ -197,7 +146,6 @@ describe('ProfileScreen', () => {
       error: null,
     });
 
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     const { getByText, queryByText } = render(<ProfileScreen />);
 
     expect(getByText('posts alice')).toBeTruthy();
@@ -216,66 +164,6 @@ describe('ProfileScreen', () => {
     expect(getByText('starterpacks alice')).toBeTruthy();
     fireEvent.press(getByText('unknown'));
     expect(queryByText('unknown alice')).toBeNull();
-
-    fireEvent.press(getByText('header'));
-    const dropdownItem = getByText('copy link');
-    fireEvent.press(dropdownItem);
-
-    await waitFor(() => expect(queryByText('copy link')).toBeNull());
-    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
-    );
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('search posts'));
-    expect(logSpy).toHaveBeenCalledWith('Search posts');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('add to lists'));
-    expect(logSpy).toHaveBeenCalledWith('Add to lists');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('mute account'));
-    expect(logSpy).toHaveBeenCalledWith('Mute account');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('block account'));
-    expect(logSpy).toHaveBeenCalledWith('Block account');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('report account'));
-    expect(logSpy).toHaveBeenCalledWith('Report account');
-
-    logSpy.mockRestore();
-  });
-
-  it('toggles dropdown visibility when closing', () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
-    mockUseProfile.mockReturnValue({
-      data: {
-        handle: 'alice',
-        avatar: null,
-        displayName: 'Alice',
-        description: '',
-        banner: null,
-        did: 'did',
-        followersCount: 1,
-        followsCount: 1,
-        postsCount: 1,
-        viewer: {},
-        labels: [],
-      },
-      isLoading: false,
-      error: null,
-    });
-
-    const { queryByText } = render(<ProfileScreen />);
-    const headerInstance = (ProfileHeaderMock as jest.Mock).mock.calls[0][0];
-    act(() => headerInstance.onDropdownToggle(true));
-    expect(queryByText('copy link')).not.toBeNull();
-    act(() => headerInstance.onDropdownToggle(false));
-    expect(queryByText('copy link')).toBeNull();
   });
 
   it('returns no tab content when handle missing', () => {

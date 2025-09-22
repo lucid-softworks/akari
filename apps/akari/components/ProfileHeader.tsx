@@ -2,7 +2,9 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
+import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { Labels } from '@/components/Labels';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
@@ -11,6 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
@@ -50,8 +53,6 @@ type ProfileHeaderProps = {
     }[];
   };
   isOwnProfile?: boolean;
-  onDropdownToggle?: (isOpen: boolean) => void;
-  dropdownRef?: React.RefObject<View | null>;
 };
 
 const formatNumber = (num: number, locale: string): string => {
@@ -62,7 +63,7 @@ const formatNumber = (num: number, locale: string): string => {
   return formatter.format(num);
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -72,6 +73,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
+  const { showToast } = useToast();
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -123,6 +125,42 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
 
   const handleSearchPosts = () => {
     router.push(`/(tabs)/search?query=from:${profile.handle}`);
+  };
+
+  const handleDropdownSearch = () => {
+    handleSearchPosts();
+    setShowDropdown(false);
+  };
+
+  const handleCopyLink = async () => {
+    const profileHandle = profile.handle;
+
+    if (!profileHandle) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+      setShowDropdown(false);
+      return;
+    }
+
+    try {
+      const profileUrl = `https://bsky.app/profile/${profileHandle}`;
+      await Clipboard.setStringAsync(profileUrl);
+      showToast({
+        message: t('profile.linkCopied'),
+        type: 'success',
+      });
+    } catch (error) {
+      showAlert({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    } finally {
+      setShowDropdown(false);
+    }
   };
 
   const handleAddToLists = () => {
@@ -181,9 +219,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   };
 
   const handleDropdownToggle = () => {
-    const newState = !showDropdown;
-    setShowDropdown(newState);
-    onDropdownToggle?.(newState);
+    setShowDropdown((previous) => !previous);
   };
 
   const handleFollowPress = () => {
@@ -206,6 +242,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   };
 
   const handleBlockPress = () => {
+    setShowDropdown(false);
     if (isBlocking) {
       showAlert({
         title: t('common.unblock'),
@@ -312,10 +349,23 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
                 <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
                   <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
                 </TouchableOpacity>
-                <View style={styles.moreButtonContainer} ref={dropdownRef}>
+                <View style={styles.moreButtonContainer}>
                   <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
                     <IconSymbol name="ellipsis" size={20} color="#ffffff" />
                   </TouchableOpacity>
+                  <ProfileDropdown
+                    isVisible={showDropdown}
+                    onCopyLink={handleCopyLink}
+                    onSearchPosts={handleDropdownSearch}
+                    onAddToLists={handleAddToLists}
+                    onMuteAccount={handleMuteAccount}
+                    onBlockPress={handleBlockPress}
+                    onReportAccount={handleReportAccount}
+                    isFollowing={isFollowing}
+                    isBlocking={isBlocking}
+                    isMuted={!!profile.viewer?.muted}
+                    isOwnProfile={isOwnProfile}
+                  />
                 </View>
               </>
             ) : (
@@ -324,10 +374,23 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
                   <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
                 </TouchableOpacity>
                 {!isBlockedBy && (
-                  <View style={styles.moreButtonContainer} ref={dropdownRef}>
+                  <View style={styles.moreButtonContainer}>
                     <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle}>
                       <IconSymbol name="ellipsis" size={20} color="#007AFF" />
                     </TouchableOpacity>
+                    <ProfileDropdown
+                      isVisible={showDropdown}
+                      onCopyLink={handleCopyLink}
+                      onSearchPosts={handleDropdownSearch}
+                      onAddToLists={handleAddToLists}
+                      onMuteAccount={handleMuteAccount}
+                      onBlockPress={handleBlockPress}
+                      onReportAccount={handleReportAccount}
+                      isFollowing={isFollowing}
+                      isBlocking={isBlocking}
+                      isMuted={!!profile.viewer?.muted}
+                      isOwnProfile={isOwnProfile}
+                    />
                   </View>
                 )}
               </>

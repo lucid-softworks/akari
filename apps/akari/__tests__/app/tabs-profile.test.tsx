@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import ProfileScreen from '@/app/(tabs)/profile';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -8,10 +8,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-import { useToast } from '@/contexts/ToastContext';
-import * as Clipboard from 'expo-clipboard';
-
-let mockLatestDropdownMeasure: jest.Mock | null = null;
 
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useProfile');
@@ -21,10 +17,6 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useBorderColor');
-jest.mock('@/contexts/ToastContext');
-jest.mock('expo-clipboard', () => ({
-  setStringAsync: jest.fn(),
-}));
 
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: {
@@ -63,66 +55,12 @@ const { scrollToMock } = require('react-native/Libraries/Components/ScrollView/S
 
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
-  const { Text, TouchableOpacity } = require('react-native');
+  const { Text } = require('react-native');
   return {
-    ProfileHeader: ({ onDropdownToggle, dropdownRef }: any) => {
-      if (dropdownRef && !dropdownRef.current) {
-        mockLatestDropdownMeasure = jest.fn((callback: any) => callback(0, 0, 0, 40, 0, 100));
-        dropdownRef.current = {
-          measure: mockLatestDropdownMeasure,
-        };
-      }
-
-      return (
-        <TouchableOpacity onPress={() => onDropdownToggle(true)}>
-          <Text>open dropdown</Text>
-        </TouchableOpacity>
-      );
-    },
+    ProfileHeader: () => <Text>header</Text>,
   };
 });
 
-jest.mock('@/components/ProfileDropdown', () => {
-  const React = require('react');
-  const { Text, TouchableOpacity, View } = require('react-native');
-  return {
-    ProfileDropdown: ({
-      isVisible,
-      onCopyLink,
-      onSearchPosts,
-      onAddToLists,
-      onMuteAccount,
-      onBlockPress,
-      onReportAccount,
-      style,
-    }: any) => {
-      if (!isVisible) return null;
-
-      return (
-        <View testID="profile-dropdown" style={style}>
-          <TouchableOpacity onPress={onCopyLink}>
-            <Text>profile.copyLink</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onSearchPosts}>
-            <Text>common.search</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onAddToLists}>
-            <Text>profile.addToLists</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onMuteAccount}>
-            <Text>profile.muteAccount</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onBlockPress}>
-            <Text>common.block</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onReportAccount}>
-            <Text>profile.reportAccount</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    },
-  };
-});
 
 jest.mock('@/components/ProfileTabs', () => {
   const React = require('react');
@@ -219,23 +157,15 @@ const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
-const mockUseToast = useToast as jest.Mock;
-const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
-
-let mockShowToast: jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockLatestDropdownMeasure = null;
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
   mockUseSafeAreaInsets.mockReturnValue({ top: 0 });
   mockUseProfile.mockReturnValue({ data: {} });
   mockUseThemeColor.mockReturnValue('#fff');
   mockUseBorderColor.mockReturnValue('#ccc');
-  mockClipboardSetStringAsync.mockResolvedValue(undefined);
-  mockShowToast = jest.fn();
-  mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   scrollToMock.mockClear();
 });
 
@@ -284,43 +214,12 @@ describe('ProfileScreen', () => {
     expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
   });
 
-  it('positions dropdown using measurement and closes for all actions', async () => {
+  it('renders header placeholder when profile is available', () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
 
-    const { getByText, getByTestId, queryByTestId } = render(<ProfileScreen />);
-
-    fireEvent.press(getByText('open dropdown'));
-
-    expect(mockLatestDropdownMeasure).toBeTruthy();
-    expect(mockLatestDropdownMeasure).toHaveBeenCalled();
-
-    const dropdown = getByTestId('profile-dropdown');
-    expect(dropdown.props.style).toEqual(expect.objectContaining({ top: 144, right: 20 }));
-
-    fireEvent.press(getByText('profile.copyLink'));
-
-    await waitFor(() => {
-      expect(queryByTestId('profile-dropdown')).toBeNull();
-    });
-
-    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
-    );
-
-    const remainingActions = [
-      'common.search',
-      'profile.addToLists',
-      'profile.muteAccount',
-      'common.block',
-      'profile.reportAccount',
-    ];
-
-    remainingActions.forEach((action) => {
-      fireEvent.press(getByText('open dropdown'));
-      fireEvent.press(getByText(action));
-      expect(queryByTestId('profile-dropdown')).toBeNull();
-    });
+    const { getByText } = render(<ProfileScreen />);
+    expect(getByText('header')).toBeTruthy();
   });
 });
 

@@ -1,9 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
+import { useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 
-import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
@@ -16,22 +14,16 @@ import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
-import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
-import { showAlert } from '@/utils/alert';
 
 export default function ProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
-  const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
-  const { showToast } = useToast();
 
   const { data: profile, isLoading, error } = useProfile(handle);
 
@@ -48,80 +40,6 @@ export default function ProfileScreen() {
   }
 
   const isOwnProfile = currentUser?.handle === profile?.handle;
-
-  const handleDropdownToggle = (isOpen: boolean) => {
-    if (isOpen && dropdownRef.current) {
-      // Measure the position of the more button
-      dropdownRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setDropdownPosition({
-          top: pageY + height - 62, // Position with final fine-tuned adjustment
-          right: 20, // 20px from right edge
-        });
-      });
-    }
-    setShowDropdown(isOpen);
-  };
-
-  const handleCopyLink = async () => {
-    const profileHandle = profile?.handle;
-
-    if (!profileHandle) {
-      showAlert({
-        title: t('common.error'),
-        message: t('profile.linkCopyError'),
-        buttons: [{ text: t('common.ok') }],
-      });
-      setShowDropdown(false);
-      return;
-    }
-
-    try {
-      const profileUrl = `https://bsky.app/profile/${profileHandle}`;
-      await Clipboard.setStringAsync(profileUrl);
-      showToast({
-        message: t('profile.linkCopied'),
-        type: 'success',
-      });
-    } catch (error) {
-      showAlert({
-        title: t('common.error'),
-        message: t('profile.linkCopyError'),
-        buttons: [{ text: t('common.ok') }],
-      });
-    } finally {
-      setShowDropdown(false);
-    }
-  };
-
-  const handleSearchPosts = () => {
-    // TODO: Implement search posts functionality
-    console.log('Search posts');
-    setShowDropdown(false);
-  };
-
-  const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
-    console.log('Add to lists');
-    setShowDropdown(false);
-  };
-
-  const handleMuteAccount = () => {
-    // TODO: Implement mute functionality
-    console.log('Mute account');
-    setShowDropdown(false);
-  };
-
-  const handleBlockPress = () => {
-    // TODO: Implement block functionality
-    console.log('Block account');
-    setShowDropdown(false);
-  };
-
-  const handleReportAccount = () => {
-    // TODO: Implement report functionality
-    console.log('Report account');
-    setShowDropdown(false);
-  };
 
   const renderTabContent = () => {
     if (!handle) return null;
@@ -168,8 +86,6 @@ export default function ProfileScreen() {
             labels: profile?.labels,
           }}
           isOwnProfile={isOwnProfile}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
         />
 
         {/* Tabs */}
@@ -179,24 +95,6 @@ export default function ProfileScreen() {
         {renderTabContent()}
       </ScrollView>
 
-      {/* Dropdown rendered at root level */}
-      <ProfileDropdown
-        isVisible={showDropdown}
-        onCopyLink={handleCopyLink}
-        onSearchPosts={handleSearchPosts}
-        onAddToLists={handleAddToLists}
-        onMuteAccount={handleMuteAccount}
-        onBlockPress={handleBlockPress}
-        onReportAccount={handleReportAccount}
-        isFollowing={!!profile?.viewer?.following}
-        isBlocking={!!profile?.viewer?.blocking}
-        isMuted={!!profile?.viewer?.muted}
-        isOwnProfile={isOwnProfile}
-        style={{
-          top: dropdownPosition.top,
-          right: dropdownPosition.right,
-        }}
-      />
     </ThemedView>
   );
 }

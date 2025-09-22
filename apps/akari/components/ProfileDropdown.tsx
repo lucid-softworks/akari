@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -19,7 +20,7 @@ type ProfileDropdownProps = {
   isBlocking: boolean;
   isMuted: boolean;
   isOwnProfile: boolean;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function ProfileDropdown({
@@ -50,7 +51,14 @@ export function ProfileDropdown({
   if (!isVisible) return null;
 
   return (
-    <ThemedView style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }, style]}>
+    <ThemedView
+      testID="profile-dropdown"
+      style={[
+        styles.dropdown,
+        { backgroundColor: dropdownBackgroundColor, borderColor: borderColor },
+        style,
+      ]}
+    >
       {isOwnProfile ? (
         <>
           <TouchableOpacity style={styles.dropdownItem} onPress={onSearchPosts}>
@@ -93,7 +101,6 @@ export function ProfileDropdown({
 
 const styles = StyleSheet.create({
   dropdown: {
-    position: 'absolute',
     borderRadius: 8,
     borderWidth: 1,
     shadowColor: '#000',
@@ -106,6 +113,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     minWidth: 140,
     zIndex: 9999999,
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: 8,
   },
   dropdownItem: {
     paddingHorizontal: 12,

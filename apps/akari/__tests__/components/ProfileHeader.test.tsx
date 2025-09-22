@@ -12,6 +12,8 @@ import { router } from 'expo-router';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { showAlert } from '@/utils/alert';
+import { useToast } from '@/contexts/ToastContext';
+import * as Clipboard from 'expo-clipboard';
 
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/contexts/LanguageContext');
@@ -26,6 +28,8 @@ jest.mock('@/components/RichText', () => ({ RichText: jest.fn(() => null) }));
 jest.mock('@/components/HandleHistoryModal', () => ({ HandleHistoryModal: jest.fn(() => null) }));
 jest.mock('@/components/ProfileEditModal', () => ({ ProfileEditModal: jest.fn(() => null) }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+jest.mock('@/contexts/ToastContext');
+jest.mock('expo-clipboard', () => ({ setStringAsync: jest.fn() }));
 jest.mock('@/components/ui/IconSymbol', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -43,6 +47,10 @@ const mockUseUpdateProfile = useUpdateProfile as jest.Mock;
 const mockHandleHistoryModal = HandleHistoryModal as jest.Mock;
 const mockProfileEditModal = ProfileEditModal as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
+const mockUseToast = useToast as jest.Mock;
+const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
+
+let mockShowToast: jest.Mock;
 
 const baseProfile = {
   handle: 'alice',
@@ -62,6 +70,10 @@ describe('ProfileHeader', () => {
     mockUseBlockUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
     mockShowAlert.mockReset();
+    mockClipboardSetStringAsync.mockReset();
+    mockClipboardSetStringAsync.mockResolvedValue(undefined);
+    mockShowToast = jest.fn();
+    mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   });
 
   it('opens handle history modal when handle is pressed', () => {
@@ -109,17 +121,60 @@ describe('ProfileHeader', () => {
     );
   });
 
-  it('toggles dropdown when more button pressed', () => {
-    const onToggle = jest.fn();
-    const { getByText } = render(
-      <ProfileHeader profile={baseProfile} onDropdownToggle={onToggle} />,
+  it('handles dropdown actions and closes after each selection', () => {
+    const { getByText, queryByTestId } = render(
+      <ProfileHeader
+        profile={{
+          ...baseProfile,
+          viewer: { following: undefined, blocking: undefined, muted: false },
+        }}
+      />,
     );
-    fireEvent.press(getByText(/ellipsis/));
-    expect(onToggle).toHaveBeenCalledWith(true);
-    fireEvent.press(getByText(/ellipsis/));
-    expect(onToggle).toHaveBeenLastCalledWith(false);
-  });
 
+    const toggle = getByText(/ellipsis/);
+
+    fireEvent.press(toggle);
+    const copyLink = getByText('profile.copyLink');
+    fireEvent.press(copyLink);
+    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
+    expect(mockShowToast).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    fireEvent.press(toggle);
+    fireEvent.press(getByText('common.search'));
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    fireEvent.press(toggle);
+    fireEvent.press(getByText('profile.addToLists'));
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'profile.addToLists' }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    fireEvent.press(toggle);
+    fireEvent.press(getByText('profile.muteAccount'));
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'common.mute' }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    fireEvent.press(toggle);
+    fireEvent.press(getByText('common.block'));
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'common.block' }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    fireEvent.press(toggle);
+    fireEvent.press(getByText('profile.reportAccount'));
+    expect(mockShowAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'profile.reportAccount' }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+  });
 
   it('saves profile and handles errors', async () => {
     const updateMutate = jest.fn().mockResolvedValue(undefined);
