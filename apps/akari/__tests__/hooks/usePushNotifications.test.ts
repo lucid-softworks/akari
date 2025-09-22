@@ -509,9 +509,11 @@ describe('usePushNotifications', () => {
 
     const { result } = await renderPushNotificationsHook();
 
-    await act(async () => {
-      await result.current.clearBadge();
-    });
+    await expect(
+      act(async () => {
+        await result.current.clearBadge();
+      }),
+    ).rejects.toThrow('clear failed');
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'Failed to clear badge:',
