@@ -160,7 +160,9 @@
       "sendTest": "Gửi Kiểm Tra",
       "scheduleTest": "Lên Lịch Kiểm Tra",
       "sending": "Đang Gửi...",
-      "scheduling": "Đang Lên Lịch..."
+      "scheduling": "Đang Lên Lịch...",
+      "all": "Tất cả",
+      "mentions": "Lượt nhắc đến"
     },
     "profile": {
       "media": "Phương tiện",

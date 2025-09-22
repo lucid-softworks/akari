@@ -160,7 +160,9 @@
       "sendTest": "傳送測試",
       "scheduleTest": "安排測試",
       "sending": "傳送中...",
-      "scheduling": "安排中..."
+      "scheduling": "安排中...",
+      "all": "全部",
+      "mentions": "提及"
     },
     "profile": {
       "media": "媒體",

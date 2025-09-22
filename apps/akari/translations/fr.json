@@ -160,7 +160,9 @@
       "sendTest": "Envoyer le Test",
       "scheduleTest": "Programmer le Test",
       "sending": "Envoi...",
-      "scheduling": "Programmation..."
+      "scheduling": "Programmation...",
+      "all": "Tout",
+      "mentions": "Mentions"
     },
     "profile": {
       "media": "Médias",

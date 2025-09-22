@@ -160,7 +160,9 @@
       "sendTest": "टेस्ट भेजें",
       "scheduleTest": "टेस्ट शेड्यूल करें",
       "sending": "भेज रहा है...",
-      "scheduling": "शेड्यूलिंग..."
+      "scheduling": "शेड्यूलिंग...",
+      "all": "सभी",
+      "mentions": "उल्लेख"
     },
     "profile": {
       "media": "मीडिया",

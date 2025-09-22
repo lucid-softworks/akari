@@ -160,7 +160,9 @@
       "sendTest": "Kirim Tes",
       "scheduleTest": "Jadwalkan Tes",
       "sending": "Mengirim...",
-      "scheduling": "Menjadwalkan..."
+      "scheduling": "Menjadwalkan...",
+      "all": "Semua",
+      "mentions": "Sebutan"
     },
     "profile": {
       "media": "Media",

@@ -160,7 +160,9 @@
       "sendTest": "إرسال الاختبار",
       "scheduleTest": "جدولة الاختبار",
       "sending": "جاري الإرسال...",
-      "scheduling": "جاري الجدولة..."
+      "scheduling": "جاري الجدولة...",
+      "all": "الكل",
+      "mentions": "الإشارات"
     },
     "profile": {
       "media": "الوسائط",

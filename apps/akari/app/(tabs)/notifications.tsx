@@ -1,14 +1,16 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { TabBar } from '@/components/TabBar';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -36,6 +38,8 @@ type GroupedNotification = {
   latestTimestamp: string;
   count: number;
 };
+
+type NotificationsTab = 'all' | 'mentions';
 
 /**
  * Notification item component
@@ -333,18 +337,32 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = useRef<FlatList>(null);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
+  const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
+  const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
+  const tabs = useMemo(
+    () => [
+      { key: 'all' as const, label: t('notifications.all') },
+      { key: 'mentions' as const, label: t('notifications.mentions') },
+    ],
+    [t],
+  );
 
-  // Create scroll to top function
-  const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  const scrollToTop = useCallback(() => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
+  }, []);
 
-  // Register with the tab scroll registry
   React.useEffect(() => {
     tabScrollRegistry.register('notifications', scrollToTop);
+  }, [scrollToTop]);
+
+  React.useEffect(() => {
+    scrollToTop();
+  }, [activeTab, scrollToTop]);
+
+  const handleTabChange = useCallback((tab: NotificationsTab) => {
+    setActiveTab(tab);
   }, []);
 
   const {
@@ -353,14 +371,31 @@ export default function NotificationsScreen() {
     isError,
     error,
     isFetchingNextPage,
-    refetch,
-    isRefetching,
+    fetchNextPage,
+    hasNextPage,
   } = useNotifications();
 
-  const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
-  const groupedNotifications = groupNotifications(notifications);
+  const notifications = useMemo(
+    () => notificationsData?.pages.flatMap((page) => page.notifications) ?? [],
+    [notificationsData],
+  );
+  const groupedNotifications = useMemo(() => groupNotifications(notifications), [notifications]);
+  const filteredNotifications = useMemo(() => {
+    if (activeTab === 'mentions') {
+      return groupedNotifications.filter(
+        (notification) => notification.type === 'reply' || notification.type === 'quote',
+      );
+    }
 
-  const handleNotificationPress = (notification: GroupedNotification) => {
+    return groupedNotifications;
+  }, [activeTab, groupedNotifications]);
+
+  const contentContainerStyle = useMemo(
+    () => [styles.listContent, { paddingTop: isLargeScreen ? 0 : insets.top }],
+    [insets.top, isLargeScreen],
+  );
+
+  const handleNotificationPress = useCallback((notification: GroupedNotification) => {
     if (notification.type === 'follow') {
       // Navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
@@ -371,65 +406,121 @@ export default function NotificationsScreen() {
       // For notifications without a subject, navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     }
-  };
+  }, []);
 
-  const renderNotification = ({ item }: { item: GroupedNotification }) => (
-    <NotificationItem notification={item} onPress={() => handleNotificationPress(item)} borderColor={borderColor} />
+  const renderNotification = useCallback(
+    ({ item }: { item: GroupedNotification }) => (
+      <NotificationItem
+        notification={item}
+        onPress={() => handleNotificationPress(item)}
+        borderColor={borderColor}
+      />
+    ),
+    [borderColor, handleNotificationPress],
   );
 
-  const renderEmptyState = () => (
+  const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
+
+  const renderEmptyState = useCallback(() => (
     <View style={styles.emptyState}>
       <ThemedText style={styles.emptyStateTitle}>{t('notifications.noNotificationsYet')}</ThemedText>
       <ThemedText style={styles.emptyStateSubtitle}>{t('notifications.notificationsWillAppearHere')}</ThemedText>
     </View>
-  );
+  ), [t]);
 
-  const renderErrorState = () => (
+  const renderErrorState = useCallback(() => (
     <View style={styles.emptyState}>
       <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
       <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
     </View>
+  ), [error?.message, t]);
+
+  const listHeaderComponent = useMemo(
+    () => (
+      <ThemedView style={styles.listHeader}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+        </ThemedView>
+        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+      </ThemedView>
+    ),
+    [activeTab, borderColor, handleTabChange, tabs, t],
   );
+
+  const listEmptyComponent = useMemo(() => {
+    if (isLoading) {
+      return (
+        <ThemedView style={styles.skeletonContainer}>
+          {Array.from({ length: 12 }).map((_, index) => (
+            <NotificationSkeleton key={index} />
+          ))}
+        </ThemedView>
+      );
+    }
+
+    return renderEmptyState();
+  }, [isLoading, renderEmptyState]);
+
+  const listFooterComponent = useMemo(() => {
+    if (!isFetchingNextPage) {
+      return null;
+    }
+
+    return (
+      <ThemedView style={styles.loadingMore}>
+        <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
+      </ThemedView>
+    );
+  }, [isFetchingNextPage, t]);
+
+  const handleEndReached = useCallback(() => {
+    if (!hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    fetchNextPage();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isError) {
     return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
   }
 
   return (
-    <ScrollView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-      </ThemedView>
-
-      <View style={styles.notificationsList}>
-        {isLoading ? (
-          <ThemedView style={styles.skeletonContainer}>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <NotificationSkeleton key={index} />
-            ))}
-          </ThemedView>
-        ) : groupedNotifications.length === 0 ? (
-          renderEmptyState()
-        ) : (
-          <>
-            {groupedNotifications.map((item) => (
-              <View key={item.id}>{renderNotification({ item })}</View>
-            ))}
-            {isFetchingNextPage && (
-              <ThemedView style={styles.loadingMore}>
-                <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
-              </ThemedView>
-            )}
-          </>
-        )}
-      </View>
-    </ScrollView>
+    <ThemedView style={styles.container}>
+      <VirtualizedList
+        ref={listRef}
+        data={filteredNotifications}
+        renderItem={renderNotification}
+        keyExtractor={keyExtractor}
+        estimatedItemSize={160}
+        overscan={2}
+        ListHeaderComponent={listHeaderComponent}
+        ListFooterComponent={listFooterComponent ?? undefined}
+        ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={contentContainerStyle}
+        style={[styles.list, { paddingTop: 0 }]}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
+        stickyHeaderIndices={[0]}
+      />
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // Remove all flex constraints to allow natural flow
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    paddingBottom: 100,
+  },
+  listHeader: {
+    paddingBottom: 12,
   },
   header: {
     paddingHorizontal: 16,
@@ -604,12 +695,6 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 14,
     opacity: 0.7,
-  },
-  notificationsList: {
-    // Remove flex constraint to allow content to expand
-  },
-  notificationsListContent: {
-    paddingBottom: 16, // Add some padding at the bottom for the footer
   },
   loadingMore: {
     paddingVertical: 16,

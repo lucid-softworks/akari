@@ -160,7 +160,9 @@
       "sendTest": "Test Gönder",
       "scheduleTest": "Test Planla",
       "sending": "Gönderiliyor...",
-      "scheduling": "Planlanıyor..."
+      "scheduling": "Planlanıyor...",
+      "all": "Tümü",
+      "mentions": "Bahsetmeler"
     },
     "profile": {
       "media": "Medya",
