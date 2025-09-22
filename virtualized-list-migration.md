@@ -21,7 +21,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Choose an `estimatedItemSize` that matches a `PostCard` to keep overscan tight.
 
 ## Profile tabs
-- [ ] `apps/akari/components/profile/PostsTab.tsx`
+- [x] `apps/akari/components/profile/PostsTab.tsx`
   - Replace the `FlatList` with `VirtualizedList`, disable scrolling the same way, and provide an `estimatedItemSize` suited to `PostCard` entries.
   - Confirm pagination still triggers via `onEndReached` and that the loading footer stays visible while fetching.
 - [ ] `apps/akari/components/profile/MediaTab.tsx`
