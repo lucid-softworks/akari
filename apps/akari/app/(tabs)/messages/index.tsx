@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -34,6 +35,8 @@ type PendingButtonConfig = {
   onPress: () => void;
 };
 
+const ESTIMATED_CONVERSATION_HEIGHT = 88;
+
 type MessagesListScreenProps = {
   status?: 'request' | 'accepted';
   titleKey: CommonTranslationPath;
@@ -51,7 +54,7 @@ export function MessagesListScreen({
 }: MessagesListScreenProps) {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const flatListRef = React.useRef<FlatList>(null);
+  const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
 
   const scrollToTop = React.useCallback(() => {
@@ -77,58 +80,61 @@ export function MessagesListScreen({
     return flattened.filter((conversation) => conversation.status === status);
   }, [conversationsData, status]);
 
-  const renderConversation = ({ item }: { item: Conversation }) => (
-    <TouchableOpacity
-      style={[styles.conversationItem, { borderBottomColor: borderColor }]}
-      onPress={() => {
-        router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
-      }}
-    >
-      <ThemedView style={styles.conversationContent}>
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={() => {
-            router.push(`/profile/${encodeURIComponent(item.handle)}`);
-          }}
-          activeOpacity={0.7}
-        >
-          {item.avatar ? (
-            <ThemedView style={styles.avatar}>
-              <Image source={{ uri: item.avatar }} style={styles.avatarImage} contentFit="cover" />
-            </ThemedView>
-          ) : (
-            <ThemedView style={styles.avatar}>
-              <ThemedText style={styles.avatarFallback}>{item.displayName[0].toUpperCase()}</ThemedText>
-            </ThemedView>
-          )}
-        </TouchableOpacity>
+  const renderConversation = React.useCallback(
+    ({ item }: { item: Conversation }) => (
+      <TouchableOpacity
+        style={[styles.conversationItem, { borderBottomColor: borderColor }]}
+        onPress={() => {
+          router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
+        }}
+      >
+        <ThemedView style={styles.conversationContent}>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={() => {
+              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+            }}
+            activeOpacity={0.7}
+          >
+            {item.avatar ? (
+              <ThemedView style={styles.avatar}>
+                <Image source={{ uri: item.avatar }} style={styles.avatarImage} contentFit="cover" />
+              </ThemedView>
+            ) : (
+              <ThemedView style={styles.avatar}>
+                <ThemedText style={styles.avatarFallback}>{item.displayName[0].toUpperCase()}</ThemedText>
+              </ThemedView>
+            )}
+          </TouchableOpacity>
 
-        <ThemedView style={styles.conversationInfo}>
-          <ThemedView style={styles.conversationHeader}>
-            <ThemedText style={styles.displayName}>{item.displayName}</ThemedText>
-            <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.conversationFooter}>
-            <ThemedText style={styles.lastMessage} numberOfLines={1}>
-              {item.lastMessage}
-            </ThemedText>
-            {item.unreadCount > 0 && (
-              <ThemedView style={styles.unreadBadge}>
-                <ThemedText style={styles.unreadCount}>{item.unreadCount > 99 ? '99+' : item.unreadCount}</ThemedText>
+          <ThemedView style={styles.conversationInfo}>
+            <ThemedView style={styles.conversationHeader}>
+              <ThemedText style={styles.displayName}>{item.displayName}</ThemedText>
+              <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.conversationFooter}>
+              <ThemedText style={styles.lastMessage} numberOfLines={1}>
+                {item.lastMessage}
+              </ThemedText>
+              {item.unreadCount > 0 && (
+                <ThemedView style={styles.unreadBadge}>
+                  <ThemedText style={styles.unreadCount}>{item.unreadCount > 99 ? '99+' : item.unreadCount}</ThemedText>
+                </ThemedView>
+              )}
+            </ThemedView>
+            {item.status === 'request' && (
+              <ThemedView style={styles.statusBadge}>
+                <ThemedText style={styles.statusText}>{t('common.pending')}</ThemedText>
               </ThemedView>
             )}
           </ThemedView>
-          {item.status === 'request' && (
-            <ThemedView style={styles.statusBadge}>
-              <ThemedText style={styles.statusText}>{t('common.pending')}</ThemedText>
-            </ThemedView>
-          )}
         </ThemedView>
-      </ThemedView>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    ),
+    [borderColor, t],
   );
 
-  const renderFooter = () => {
+  const renderFooter = React.useCallback(() => {
     if (isFetchingNextPage) {
       return (
         <ThemedView style={styles.loadingFooter}>
@@ -138,13 +144,13 @@ export function MessagesListScreen({
     }
 
     return null;
-  };
+  }, [isFetchingNextPage, t]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = React.useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -168,7 +174,7 @@ export function MessagesListScreen({
         ) : null}
       </ThemedView>
 
-      <FlatList
+      <VirtualizedList
         ref={flatListRef}
         data={conversations}
         renderItem={renderConversation}
@@ -178,6 +184,8 @@ export function MessagesListScreen({
         showsVerticalScrollIndicator={false}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
+        overscan={2}
+        estimatedItemSize={ESTIMATED_CONVERSATION_HEIGHT}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           conversationsLoading ? (
