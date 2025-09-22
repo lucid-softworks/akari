@@ -121,7 +121,14 @@
       "noTrendingTopics": "No trending topics right now.",
       "discoverFeeds": "Discover new feeds",
       "openFeed": "Open feed",
-      "feedByCreator": "By {{author}}"
+      "feedByCreator": "By {{author}}",
+      "quickActions": "Quick actions",
+      "quickAction.whatsHot": "What's Hot",
+      "quickAction.whatsHotDescription": "Catch up with the official trending feed.",
+      "quickAction.discoverFeeds": "Discover feeds",
+      "quickAction.discoverFeedsDescription": "Browse curated feeds and find new voices.",
+      "quickAction.editInterests": "Edit interests",
+      "quickAction.editInterestsDescription": "Update your interests to personalize Explore."
     },
     "notifications": {
       "likedYourPost": "liked your post",

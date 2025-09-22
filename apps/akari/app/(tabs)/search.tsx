@@ -23,6 +23,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Panel } from '@/components/ui/Panel';
+import { ThemedFeatureCard } from '@/components/ThemedFeatureCard';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
 import { usePreferences } from '@/hooks/queries/usePreferences';
@@ -47,6 +48,14 @@ type DiscoverableFeed = {
   topic: BlueskyTrendingTopic;
   feedUri?: string;
   feed?: BlueskyFeed;
+};
+
+type QuickAction = {
+  key: string;
+  title: string;
+  description: string;
+  icon: React.ComponentProps<typeof IconSymbol>['name'];
+  onPress: () => void;
 };
 
 export default function SearchScreen() {
@@ -102,6 +111,38 @@ export default function SearchScreen() {
       dark: '#9CA3AF',
     },
     'text',
+  );
+
+  const quickActionCardColor = useThemeColor(
+    {
+      light: '#F5F6FF',
+      dark: '#141827',
+    },
+    'background',
+  );
+
+  const quickActionIconBackground = useThemeColor(
+    {
+      light: '#E1E6FF',
+      dark: '#232840',
+    },
+    'background',
+  );
+
+  const chipBackgroundColor = useThemeColor(
+    {
+      light: '#EEF2FF',
+      dark: '#1C2335',
+    },
+    'background',
+  );
+
+  const chipBorderColor = useThemeColor(
+    {
+      light: '#D5DBFF',
+      dark: '#2A3149',
+    },
+    'border',
   );
 
   const borderColor = useThemeColor(
@@ -282,9 +323,101 @@ export default function SearchScreen() {
     }
   }, [activeTab, allResults]);
 
+
   const handleEditInterests = useCallback(() => {
     router.push('/(tabs)/settings');
   }, []);
+
+  const quickActions = useMemo<QuickAction[]>(
+    () => [
+      {
+        key: 'whatsHot',
+        title: t('search.quickAction.whatsHot'),
+        description: t('search.quickAction.whatsHotDescription'),
+        icon: 'flame.fill',
+        onPress: () =>
+          handleOpenFeed(
+            'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+            '/profile/bsky.app/feed/whats-hot',
+          ),
+      },
+      {
+        key: 'discoverFeeds',
+        title: t('search.quickAction.discoverFeeds'),
+        description: t('search.quickAction.discoverFeedsDescription'),
+        icon: 'sparkles',
+        onPress: () => {
+          if (discoverableFeeds.length > 0) {
+            const [first] = discoverableFeeds;
+            handleOpenFeed(first.feedUri, first.topic.link);
+          } else {
+            handleOpenFeed(undefined, '/discover');
+          }
+        },
+      },
+      {
+        key: 'editInterests',
+        title: t('search.quickAction.editInterests'),
+        description: t('search.quickAction.editInterestsDescription'),
+        icon: 'slider.horizontal.3',
+        onPress: handleEditInterests,
+      },
+    ],
+    [discoverableFeeds, handleEditInterests, handleOpenFeed, t],
+  );
+
+  const quickActionsPanel = useMemo(() => {
+    if (quickActions.length === 0) {
+      return null;
+    }
+
+    return (
+      <Panel title={t('search.quickActions')} contentStyle={styles.quickActionsContent}>
+        <View style={styles.quickActionsGrid}>
+          {quickActions.map((action) => (
+            <TouchableOpacity
+              key={action.key}
+              style={[
+                styles.quickActionCard,
+                {
+                  backgroundColor: quickActionCardColor,
+                  borderColor,
+                },
+              ]}
+              onPress={action.onPress}
+              accessibilityRole="button"
+              accessibilityLabel={action.title}
+            >
+              <View
+                style={[styles.quickActionIcon, { backgroundColor: quickActionIconBackground }]}
+              >
+                <IconSymbol name={action.icon} color={accentColor} size={20} />
+              </View>
+              <View style={styles.quickActionContent}>
+                <ThemedText style={[styles.quickActionTitle, { color: textColor }]}>
+                  {action.title}
+                </ThemedText>
+                <ThemedText
+                  style={[styles.quickActionDescription, { color: secondaryTextColor }]}
+                >
+                  {action.description}
+                </ThemedText>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Panel>
+    );
+  }, [
+    accentColor,
+    borderColor,
+    quickActionCardColor,
+    quickActionIconBackground,
+    quickActions,
+    secondaryTextColor,
+    t,
+    textColor,
+  ]);
 
   const interestsPanel = useMemo(() => {
     const headerActions = (
@@ -327,23 +460,28 @@ export default function SearchScreen() {
     }
 
     return (
-      <Panel title={t('search.yourInterests')} headerActions={headerActions}>
-        <View style={styles.interestsList}>
-          {interestTags.map((tag, index) => (
+      <Panel
+        title={t('search.yourInterests')}
+        headerActions={headerActions}
+        contentStyle={styles.panelContentSpacing}
+      >
+        <View style={styles.tagGrid}>
+          {interestTags.map((tag) => (
             <TouchableOpacity
               key={tag}
               style={[
-                styles.interestItem,
-                index !== interestTags.length - 1
-                  ? { borderBottomColor: borderColor }
-                  : styles.interestItemLast,
+                styles.tagChip,
+                {
+                  backgroundColor: chipBackgroundColor,
+                  borderColor: chipBorderColor,
+                },
               ]}
               onPress={() => handleInterestPress(tag)}
               accessibilityRole="button"
+              accessibilityLabel={t('search.searchTopic')}
             >
-              <ThemedText style={styles.interestName}>{tag}</ThemedText>
-              <ThemedText style={[styles.interestAction, { color: accentColor }]}>
-                {t('search.searchTopic')}
+              <ThemedText style={[styles.tagChipText, { color: accentColor }]}>
+                {tag}
               </ThemedText>
             </TouchableOpacity>
           ))}
@@ -352,7 +490,8 @@ export default function SearchScreen() {
     );
   }, [
     accentColor,
-    borderColor,
+    chipBackgroundColor,
+    chipBorderColor,
     handleEditInterests,
     handleInterestPress,
     interestTags,
@@ -393,23 +532,24 @@ export default function SearchScreen() {
     }
 
     return (
-      <Panel title={t('search.trendingTopics')}>
-        <View style={styles.trendingList}>
+      <Panel title={t('search.trendingTopics')} contentStyle={styles.panelContentSpacing}>
+        <View style={styles.tagGrid}>
           {trendingTopics.map((topic, index) => (
             <TouchableOpacity
               key={`${topic.topic}-${index}`}
               style={[
-                styles.trendingItem,
-                index !== trendingTopics.length - 1
-                  ? { borderBottomColor: borderColor }
-                  : styles.trendingItemLast,
+                styles.tagChip,
+                {
+                  backgroundColor: chipBackgroundColor,
+                  borderColor: chipBorderColor,
+                },
               ]}
               onPress={() => handleTrendingTopicPress(topic.topic)}
               accessibilityRole="button"
+              accessibilityLabel={t('search.searchTopic')}
             >
-              <ThemedText style={styles.trendingTopic}>{topic.topic}</ThemedText>
-              <ThemedText style={[styles.trendingAction, { color: accentColor }]}>
-                {t('search.searchTopic')}
+              <ThemedText style={[styles.tagChipText, { color: accentColor }]}>
+                {topic.topic}
               </ThemedText>
             </TouchableOpacity>
           ))}
@@ -418,7 +558,8 @@ export default function SearchScreen() {
     );
   }, [
     accentColor,
-    borderColor,
+    chipBackgroundColor,
+    chipBorderColor,
     handleTrendingTopicPress,
     secondaryTextColor,
     t,
@@ -443,52 +584,74 @@ export default function SearchScreen() {
     }
 
     return (
-      <Panel title={t('search.discoverFeeds')}>
+      <Panel title={t('search.discoverFeeds')} contentStyle={styles.panelContentSpacing}>
         <View style={styles.feedList}>
           {discoverableFeeds.map(({ topic, feedUri, feed }) => {
             const key = feedUri ?? topic.link ?? topic.topic;
             const displayName = feed?.displayName ?? topic.topic;
-            const author = feed?.creator?.displayName || feed?.creator?.handle;
+            const creator = feed?.creator;
+            const creatorLabel = creator
+              ? creator.displayName || (creator.handle ? `@${creator.handle}` : undefined)
+              : undefined;
+            const fallbackInitial = displayName.charAt(0).toUpperCase();
 
             return (
-              <View key={key} style={[styles.feedCard, { borderColor }]}>
-                <View style={styles.feedCardHeader}>
-                  {feed?.avatar ? (
-                    <Image
-                      source={{ uri: feed.avatar }}
-                      style={styles.feedAvatar}
-                      contentFit="cover"
-                      placeholder={require('@/assets/images/partial-react-logo.png')}
-                    />
-                  ) : (
-                    <View style={[styles.feedAvatarFallback, { backgroundColor: borderColor }]}>
-                      <ThemedText style={styles.feedAvatarFallbackText}>
-                        {displayName.charAt(0).toUpperCase()}
-                      </ThemedText>
-                    </View>
-                  )}
-                  <View style={styles.feedCardInfo}>
-                    <ThemedText style={styles.feedTitle}>{displayName}</ThemedText>
-                    {author ? (
-                      <ThemedText style={[styles.feedSubtitle, { color: secondaryTextColor }]}>
-                        {t('search.feedByCreator', { author })}
-                      </ThemedText>
-                    ) : null}
+              <ThemedFeatureCard
+                key={key}
+                style={[styles.feedCard, { borderColor }]}
+                lightColor="#F9FAFF"
+                darkColor="#161B2E"
+              >
+                {feed?.avatar ? (
+                  <Image
+                    source={{ uri: feed.avatar }}
+                    style={styles.feedAvatarLarge}
+                    contentFit="cover"
+                    placeholder={require('@/assets/images/partial-react-logo.png')}
+                  />
+                ) : (
+                  <View
+                    style={[
+                      styles.feedAvatarFallback,
+                      { backgroundColor: quickActionIconBackground },
+                    ]}
+                  >
+                    <ThemedText style={[styles.feedAvatarFallbackText, { color: accentColor }]}>
+                      {fallbackInitial}
+                    </ThemedText>
                   </View>
-                </View>
-                {feed?.description ? (
-                  <ThemedText style={styles.feedDescription} numberOfLines={3}>
-                    {feed.description}
+                )}
+                <View style={styles.feedCardInfo}>
+                  <ThemedText style={[styles.feedTitle, { color: textColor }]} numberOfLines={1}>
+                    {displayName}
                   </ThemedText>
-                ) : null}
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  style={[styles.feedActionButton, { backgroundColor: accentColor }]}
-                  onPress={() => handleOpenFeed(feedUri, topic.link)}
-                >
-                  <ThemedText style={styles.feedActionButtonText}>{t('search.openFeed')}</ThemedText>
-                </TouchableOpacity>
-              </View>
+                  {creatorLabel ? (
+                    <ThemedText
+                      style={[styles.feedSubtitle, { color: secondaryTextColor }]}
+                      numberOfLines={1}
+                    >
+                      {t('search.feedByCreator', { author: creatorLabel })}
+                    </ThemedText>
+                  ) : null}
+                  {feed?.description ? (
+                    <ThemedText
+                      style={[styles.feedDescription, { color: secondaryTextColor }]}
+                      numberOfLines={2}
+                    >
+                      {feed.description}
+                    </ThemedText>
+                  ) : null}
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    style={[styles.feedActionButton, { backgroundColor: accentColor }]}
+                    onPress={() => handleOpenFeed(feedUri, topic.link)}
+                  >
+                    <ThemedText style={styles.feedActionButtonText}>
+                      {t('search.openFeed')}
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
+              </ThemedFeatureCard>
             );
           })}
         </View>
@@ -500,12 +663,18 @@ export default function SearchScreen() {
     discoverableFeeds,
     feedGeneratorsLoading,
     handleOpenFeed,
+    quickActionIconBackground,
     secondaryTextColor,
     t,
+    textColor,
   ]);
 
   const exploreSections = useMemo(() => {
     const sections: Array<{ key: string; node: React.ReactNode }> = [];
+
+    if (quickActionsPanel) {
+      sections.push({ key: 'quick-actions', node: quickActionsPanel });
+    }
 
     if (interestsPanel) {
       sections.push({ key: 'interests', node: interestsPanel });
@@ -520,8 +689,7 @@ export default function SearchScreen() {
     }
 
     return sections;
-  }, [discoverFeedsPanel, interestsPanel, trendingPanel]);
-
+  }, [discoverFeedsPanel, interestsPanel, quickActionsPanel, trendingPanel]);
   const renderExploreContent = useCallback(() => {
     if (exploreSections.length === 0) {
       return null;
@@ -941,45 +1109,54 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#ef4444',
   },
-  interestsList: {
-    width: '100%',
+  quickActionsContent: {
+    gap: 16,
   },
-  interestItem: {
+  quickActionsGrid: {
+    gap: 12,
+  },
+  quickActionCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    gap: 12,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
   },
-  interestItemLast: {
-    borderBottomWidth: 0,
+  quickActionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  interestName: {
+  quickActionContent: {
+    flex: 1,
+    gap: 4,
+  },
+  quickActionTitle: {
     fontSize: 16,
-    fontWeight: '500',
-  },
-  interestAction: {
-    fontSize: 14,
     fontWeight: '600',
   },
-  trendingList: {
-    width: '100%',
+  quickActionDescription: {
+    fontSize: 14,
+    lineHeight: 18,
   },
-  trendingItem: {
+  panelContentSpacing: {
+    gap: 12,
+  },
+  tagGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  trendingItemLast: {
-    borderBottomWidth: 0,
+  tagChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
   },
-  trendingTopic: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  trendingAction: {
+  tagChipText: {
     fontSize: 14,
     fontWeight: '600',
   },
@@ -988,38 +1165,30 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   feedCard: {
-    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'flex-start',
+    gap: 16,
     padding: 16,
-  },
-  feedCardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    gap: 12,
-  },
-  feedAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   feedAvatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+    width: 48,
+    height: 48,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   feedAvatarFallbackText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
   feedCardInfo: {
     flex: 1,
+    gap: 8,
   },
   feedTitle: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 2,
   },
   feedSubtitle: {
     fontSize: 14,
@@ -1027,17 +1196,22 @@ const styles = StyleSheet.create({
   feedDescription: {
     fontSize: 14,
     lineHeight: 20,
-    marginBottom: 12,
   },
   feedActionButton: {
     alignSelf: 'flex-start',
+    marginTop: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 999,
   },
   feedActionButtonText: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '600',
+  },
+  feedAvatarLarge: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
   },
 });
