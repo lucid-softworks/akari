@@ -80,12 +80,14 @@ export function StartChatPanel({ panelId = NEW_CHAT_PANEL_ID }: StartChatPanelPr
     dialogManager.close(panelId);
   };
 
-  const handleStartChat = async () => {
-    if (!selectedProfile) {
+  const startChat = async (profile: ProfileSearchResult) => {
+    if (createConversationMutation.isPending) {
       return;
     }
 
-    if (selectedProfile.did === currentAccount?.did) {
+    setSelectedProfile(profile);
+
+    if (profile.did === currentAccount?.did) {
       showAlert({
         title: t('common.error'),
         message: t('messages.cannotStartChatWithSelf'),
@@ -94,9 +96,9 @@ export function StartChatPanel({ panelId = NEW_CHAT_PANEL_ID }: StartChatPanelPr
     }
 
     try {
-      await createConversationMutation.mutateAsync({ did: selectedProfile.did });
+      await createConversationMutation.mutateAsync({ did: profile.did });
       dialogManager.close(panelId);
-      router.push(`/(tabs)/messages/${encodeURIComponent(selectedProfile.handle)}`);
+      router.push(`/(tabs)/messages/${encodeURIComponent(profile.handle)}`);
     } catch (mutationError) {
       const createError = mutationError as CreateConversationError | Error;
       const message = 'message' in createError ? createError.message : undefined;
@@ -106,6 +108,14 @@ export function StartChatPanel({ panelId = NEW_CHAT_PANEL_ID }: StartChatPanelPr
         message: message ?? t('messages.errorStartingChat'),
       });
     }
+  };
+
+  const handleStartChat = () => {
+    if (!selectedProfile) {
+      return;
+    }
+
+    void startChat(selectedProfile);
   };
 
   const renderResults = () => {
@@ -144,7 +154,9 @@ export function StartChatPanel({ panelId = NEW_CHAT_PANEL_ID }: StartChatPanelPr
               key={profile.did}
               accessibilityRole="button"
               activeOpacity={0.8}
-              onPress={() => setSelectedProfile(profile)}
+              onPress={() => {
+                void startChat(profile);
+              }}
               disabled={isSubmitting}
               style={[
                 styles.resultItem,

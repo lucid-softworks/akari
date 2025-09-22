@@ -33,13 +33,6 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const tintColor = useThemeColor({}, 'tint');
   const inputBackgroundColor = useThemeColor({}, 'background');
 
-  // Load trending GIFs on mount
-  useEffect(() => {
-    if (visible) {
-      loadTrendingGifs();
-    }
-  }, [visible]);
-
   const loadTrendingGifs = useCallback(async () => {
     if (loading) return;
 
@@ -58,6 +51,13 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       setLoading(false);
     }
   }, [loading]);
+
+  // Load trending GIFs on mount or when visibility changes
+  useEffect(() => {
+    if (visible) {
+      loadTrendingGifs();
+    }
+  }, [visible, loadTrendingGifs]);
 
   const searchGifs = useCallback(
     async (query: string, isNewSearch = false) => {

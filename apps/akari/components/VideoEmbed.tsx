@@ -6,7 +6,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useTranslation } from '@/hooks/useTranslation';
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 
 type VideoEmbedProps = {
@@ -83,7 +82,6 @@ type VideoEmbedProps = {
  * Supports both native Bluesky videos and external video links
  */
 export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
-  const { t } = useTranslation();
   const [resolvedVideoUrl, setResolvedVideoUrl] = useState<string | null>(null);
 
   const textColor = useThemeColor(

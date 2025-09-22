@@ -347,15 +347,7 @@ export default function NotificationsScreen() {
     tabScrollRegistry.register('notifications', scrollToTop);
   }, []);
 
-  const {
-    data: notificationsData,
-    isLoading,
-    isError,
-    error,
-    isFetchingNextPage,
-    refetch,
-    isRefetching,
-  } = useNotifications();
+  const { data: notificationsData, isLoading, isError, error, isFetchingNextPage } = useNotifications();
 
   const notifications = notificationsData?.pages.flatMap((page) => page.notifications) ?? [];
   const groupedNotifications = groupNotifications(notifications);

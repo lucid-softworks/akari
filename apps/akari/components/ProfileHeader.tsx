@@ -11,8 +11,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useBlockUser } from '@/hooks/mutations/useBlockUser';
-import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -69,170 +67,18 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const borderColor = useBorderColor();
-  const followMutation = useFollowUser();
-  const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
 
-  const isFollowing = !!profile.viewer?.following;
-  const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
-
-  const handleFollow = async () => {
-    if (!profile.did) return;
-
-    try {
-      if (isFollowing) {
-        await followMutation.mutateAsync({
-          did: profile.did,
-          followUri: profile.viewer?.following,
-          action: 'unfollow',
-        });
-      } else {
-        await followMutation.mutateAsync({
-          did: profile.did,
-          action: 'follow',
-        });
-      }
-      setShowDropdown(false);
-    } catch (error) {
-      console.error('Follow error:', error);
-    }
-  };
-
-  const handleBlock = async () => {
-    if (!profile.did) return;
-
-    try {
-      if (isBlocking) {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          blockUri: profile.viewer?.blocking,
-          action: 'unblock',
-        });
-      } else {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          action: 'block',
-        });
-      }
-      setShowDropdown(false);
-    } catch {
-      // Handle block error
-    }
-  };
 
   const handleSearchPosts = () => {
     router.push(`/(tabs)/search?query=from:${profile.handle}`);
-  };
-
-  const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
-    // This would typically open a modal or navigate to a lists management screen
-    showAlert({
-      title: t('profile.addToLists'),
-      message: 'Lists functionality coming soon!',
-      buttons: [{ text: t('common.ok') }],
-    });
-    setShowDropdown(false);
-  };
-
-  const handleMuteAccount = () => {
-    // TODO: Implement mute functionality
-    const isMuted = profile.viewer?.muted;
-    const message = isMuted
-      ? t('profile.unmuteConfirmation', { handle: profile.handle })
-      : t('profile.muteConfirmation', { handle: profile.handle });
-
-    showAlert({
-      title: isMuted ? t('common.unmute') : t('common.mute'),
-      message,
-      buttons: [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: isMuted ? t('common.unmute') : t('common.mute'),
-          style: 'destructive',
-          onPress: () => {
-            // TODO: Implement actual mute/unmute API call
-            console.log(isMuted ? 'Unmuting' : 'Muting', profile.handle);
-          },
-        },
-      ],
-    });
-    setShowDropdown(false);
-  };
-
-  const handleReportAccount = () => {
-    showAlert({
-      title: t('profile.reportAccount'),
-      message: t('profile.reportConfirmation', { handle: profile.handle }),
-      buttons: [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('profile.reportAccount'),
-          style: 'destructive',
-          onPress: () => {
-            // TODO: Implement actual report API call
-            console.log('Reporting', profile.handle);
-          },
-        },
-      ],
-    });
-    setShowDropdown(false);
   };
 
   const handleDropdownToggle = () => {
     const newState = !showDropdown;
     setShowDropdown(newState);
     onDropdownToggle?.(newState);
-  };
-
-  const handleFollowPress = () => {
-    if (isFollowing) {
-      showAlert({
-        title: t('common.unfollow'),
-        message: t('profile.unfollowConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.unfollow'),
-            style: 'destructive',
-            onPress: handleFollow,
-          },
-        ],
-      });
-    } else {
-      handleFollow();
-    }
-  };
-
-  const handleBlockPress = () => {
-    if (isBlocking) {
-      showAlert({
-        title: t('common.unblock'),
-        message: t('profile.unblockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.unblock'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
-    } else {
-      showAlert({
-        title: t('common.block'),
-        message: t('profile.blockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.block'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
-    }
   };
 
   const handleEditProfile = () => {
@@ -253,7 +99,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         message: t('profile.profileUpdated'),
         buttons: [{ text: t('common.ok') }],
       });
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('profile.profileUpdateError'),

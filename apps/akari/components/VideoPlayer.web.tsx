@@ -1,4 +1,4 @@
-import Hls, { Events } from 'hls.js';
+import HlsPlayer, { Events, isSupported as isHlsSupported } from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -49,7 +49,7 @@ export function VideoPlayer({
   const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
   const [playerError, setPlayerError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hlsRef = useRef<Hls | null>(null);
+  const hlsRef = useRef<HlsPlayer | null>(null);
 
   const textColor = useThemeColor(
     {
@@ -100,8 +100,8 @@ export function VideoPlayer({
 
         if (isHLS) {
           // Use hls.js for HLS streams
-          if (Hls.isSupported()) {
-            hlsRef.current = new Hls({
+          if (isHlsSupported()) {
+            hlsRef.current = new HlsPlayer({
               enableWorker: true,
               lowLatencyMode: true,
             });
@@ -148,9 +148,7 @@ export function VideoPlayer({
         });
 
         video.addEventListener('loadedmetadata', () => {
-          if (playerStatus !== 'readyToPlay') {
-            setPlayerStatus('readyToPlay');
-          }
+          setPlayerStatus((status) => (status === 'readyToPlay' ? status : 'readyToPlay'));
         });
       } catch (error) {
         setPlayerStatus('error');
