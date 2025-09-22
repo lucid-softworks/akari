@@ -24,11 +24,16 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
+type FeedListItem =
+  | { type: 'header' }
+  | { type: 'empty'; state: 'select' | 'loading' | 'empty' }
+  | { type: 'post'; post: BlueskyFeedItem };
+
 export default function HomeScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
-  const feedListRef = useRef<VirtualizedListHandle<BlueskyFeedItem>>(null);
+  const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
 
@@ -158,65 +163,112 @@ export default function HomeScreen() {
     return feedData?.pages.flatMap((page) => page.feed) ?? [];
   }, [feedData, selectedFeed, timelineData]);
 
-  const renderFeedItem = useCallback(({ item }: { item: BlueskyFeedItem }) => {
-    // Check if this post is a reply and has reply context
-    const replyTo = item.post.reply?.parent
-      ? {
-          author: {
-            handle: item.post.reply.parent.author?.handle || 'unknown',
-            displayName: item.post.reply.parent.author?.displayName,
-          },
-          text: item.post.reply.parent.record?.text as string,
+  const feedItems = useMemo(() => {
+    const items: FeedListItem[] = [{ type: 'header' }];
+
+    if (!selectedFeed) {
+      items.push({ type: 'empty', state: 'select' });
+      return items;
+    }
+
+    if (allPosts.length === 0) {
+      items.push({ type: 'empty', state: feedLoading || timelineLoading ? 'loading' : 'empty' });
+      return items;
+    }
+
+    return items.concat(allPosts.map((post) => ({ type: 'post', post })));
+  }, [allPosts, feedLoading, selectedFeed, timelineLoading]);
+
+  const renderFeedItem = useCallback(
+    ({ item }: { item: FeedListItem }) => {
+      if (item.type === 'header') {
+        return (
+          <ThemedView style={styles.listHeader}>
+            <TabBar
+              tabs={allFeedsWithCreated.map((feed) => ({
+                key: feed.uri,
+                label: feed.displayName,
+              }))}
+              activeTab={selectedFeed || ''}
+              onTabChange={handleFeedSelection}
+            />
+          </ThemedView>
+        );
+      }
+
+      if (item.type === 'empty') {
+        if (item.state === 'loading') {
+          return <FeedSkeleton count={5} />;
         }
-      : undefined;
 
-    return (
-      <PostCard
-        post={{
-          id: item.post.uri,
-          text: item.post.record?.text as string,
-          author: {
-            handle: item.post.author.handle,
-            displayName: item.post.author.displayName,
-            avatar: item.post.author.avatar,
-          },
-          createdAt: formatRelativeTime(item.post.indexedAt),
-          likeCount: item.post.likeCount || 0,
-          commentCount: item.post.replyCount || 0,
-          repostCount: item.post.repostCount || 0,
-          embed: item.post.embed,
-          embeds: item.post.embeds,
-          labels: item.post.labels,
-          viewer: item.post.viewer,
-          facets: (item.post.record as any)?.facets,
-          replyTo,
-          uri: item.post.uri,
-          cid: item.post.cid,
-        }}
-        onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.post.uri)}`);
-        }}
-      />
-    );
-  }, []);
+        if (item.state === 'select') {
+          return (
+            <ThemedView style={styles.selectFeedPrompt}>
+              <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
+            </ThemedView>
+          );
+        }
 
-  const keyExtractor = useCallback((item: BlueskyFeedItem) => `${item.post.cid}-${item.post.uri}`, []);
+        return (
+          <ThemedView style={styles.emptyState}>
+            <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
+          </ThemedView>
+        );
+      }
 
-  const listHeaderComponent = useMemo(
-    () => (
-      <ThemedView style={styles.listHeader}>
-        <TabBar
-          tabs={allFeedsWithCreated.map((feed) => ({
-            key: feed.uri,
-            label: feed.displayName,
-          }))}
-          activeTab={selectedFeed || ''}
-          onTabChange={handleFeedSelection}
+      const replyTo = item.post.reply?.parent
+        ? {
+            author: {
+              handle: item.post.reply.parent.author?.handle || 'unknown',
+              displayName: item.post.reply.parent.author?.displayName,
+            },
+            text: item.post.reply.parent.record?.text as string,
+          }
+        : undefined;
+
+      return (
+        <PostCard
+          post={{
+            id: item.post.uri,
+            text: item.post.record?.text as string,
+            author: {
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName,
+              avatar: item.post.author.avatar,
+            },
+            createdAt: formatRelativeTime(item.post.indexedAt),
+            likeCount: item.post.likeCount || 0,
+            commentCount: item.post.replyCount || 0,
+            repostCount: item.post.repostCount || 0,
+            embed: item.post.embed,
+            embeds: item.post.embeds,
+            labels: item.post.labels,
+            viewer: item.post.viewer,
+            facets: (item.post.record as any)?.facets,
+            replyTo,
+            uri: item.post.uri,
+            cid: item.post.cid,
+          }}
+          onPress={() => {
+            router.push(`/post/${encodeURIComponent(item.post.uri)}`);
+          }}
         />
-      </ThemedView>
-    ),
-    [allFeedsWithCreated, handleFeedSelection, selectedFeed],
+      );
+    },
+    [allFeedsWithCreated, handleFeedSelection, selectedFeed, t],
   );
+
+  const keyExtractor = useCallback((item: FeedListItem) => {
+    if (item.type === 'header') {
+      return 'feed-header';
+    }
+
+    if (item.type === 'empty') {
+      return `feed-empty-${item.state}`;
+    }
+
+    return `${item.post.cid ?? 'unknown'}-${item.post.uri}`;
+  }, []);
 
   const listFooterComponent = useMemo(() => {
     if (!isFetchingNextPage) {
@@ -229,26 +281,6 @@ export default function HomeScreen() {
       </ThemedView>
     );
   }, [isFetchingNextPage, t]);
-
-  const listEmptyComponent = useMemo(() => {
-    if (!selectedFeed) {
-      return (
-        <ThemedView style={styles.selectFeedPrompt}>
-          <ThemedText style={styles.selectFeedText}>{t('feed.selectFeedToView')}</ThemedText>
-        </ThemedView>
-      );
-    }
-
-    if (feedLoading || timelineLoading) {
-      return <FeedSkeleton count={5} />;
-    }
-
-    return (
-      <ThemedView style={styles.emptyState}>
-        <ThemedText style={styles.emptyStateText}>{t('feed.noPostsInFeed')}</ThemedText>
-      </ThemedView>
-    );
-  }, [feedLoading, selectedFeed, t, timelineLoading]);
 
   if (savedFeedsLoading || feedsLoading) {
     return (
@@ -267,14 +299,12 @@ export default function HomeScreen() {
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
       <VirtualizedList
         ref={feedListRef}
-        data={selectedFeed ? allPosts : []}
+        data={feedItems}
         renderItem={renderFeedItem}
         keyExtractor={keyExtractor}
         estimatedItemSize={320}
         overscan={3}
-        ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
-        ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={styles.listContent}
         style={styles.list}
         onEndReached={loadMorePosts}
