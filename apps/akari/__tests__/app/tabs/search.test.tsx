@@ -1,12 +1,13 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { FlatList, Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -172,11 +173,11 @@ describe('SearchScreen', () => {
 
     const { UNSAFE_getByType } = render(<SearchScreen />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
     act(() => {
-      UNSAFE_getByType(FlatList).props.refreshControl.props.onRefresh();
+      UNSAFE_getByType(VirtualizedList).props.onRefresh();
     });
     expect(refetch).toHaveBeenCalled();
   });
