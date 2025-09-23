@@ -59,7 +59,10 @@
       "mute": "Bisukan",
       "unmute": "Aktifkan Suara",
       "pendingChats": "Obrolan tertunda",
-      "viewPendingChats": "Lihat obrolan tertunda"
+      "viewPendingChats": "Lihat obrolan tertunda",
+      "live": "Langsung",
+      "watchNow": "Tonton sekarang",
+      "openProfile": "Buka profil"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",

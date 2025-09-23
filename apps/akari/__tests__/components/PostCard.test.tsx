@@ -18,6 +18,7 @@ import { PostCard } from '@/components/PostCard';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
+import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
@@ -25,6 +26,7 @@ import { router } from 'expo-router';
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/usePostTranslation');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
+jest.mock('@/hooks/queries/useLiveNow');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
@@ -66,7 +68,7 @@ const YouTubeEmbedMock = require('@/components/YouTubeEmbed').YouTubeEmbed as je
 type Post = {
   id: string;
   text?: string;
-  author: { handle: string; displayName?: string; avatar?: string };
+  author: { did: string; handle: string; displayName?: string; avatar?: string };
   createdAt: string;
   likeCount?: number;
   commentCount?: number;
@@ -84,6 +86,7 @@ describe('PostCard', () => {
   const mockUseLikePost = useLikePost as jest.Mock;
   const mockUsePostTranslation = usePostTranslation as jest.Mock;
   const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
+  const mockUseLiveNow = useLiveNow as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
   let mutateAsyncMock: jest.Mock;
@@ -91,7 +94,7 @@ describe('PostCard', () => {
   const basePost: Post = {
     id: '1',
     text: 'Hello world',
-    author: { handle: 'alice', displayName: 'Alice' },
+    author: { did: 'did:plc:alice', handle: 'alice', displayName: 'Alice' },
     createdAt: '2024-01-01',
     likeCount: 0,
     commentCount: 0,
@@ -109,6 +112,7 @@ describe('PostCard', () => {
       changeLanguage: jest.fn(),
       availableLocales: ['en'],
     });
+    mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
     mutateAsyncMock = jest
       .fn()
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({

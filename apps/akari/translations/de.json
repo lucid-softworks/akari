@@ -59,7 +59,10 @@
       "mute": "Stumm",
       "unmute": "Stummschaltung aufheben",
       "pendingChats": "Ausstehende Chats",
-      "viewPendingChats": "Ausstehende Chats anzeigen"
+      "viewPendingChats": "Ausstehende Chats anzeigen",
+      "live": "LIVE",
+      "watchNow": "Jetzt ansehen",
+      "openProfile": "Profil öffnen"
     },
     "auth": {
       "fillAllFields": "Bitte fülle alle Felder aus",

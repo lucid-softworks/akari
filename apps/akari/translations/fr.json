@@ -59,7 +59,10 @@
       "mute": "Muet",
       "unmute": "Activer le son",
       "pendingChats": "Discussions en attente",
-      "viewPendingChats": "Voir les discussions en attente"
+      "viewPendingChats": "Voir les discussions en attente",
+      "live": "EN DIRECT",
+      "watchNow": "Regarder maintenant",
+      "openProfile": "Ouvrir le profil"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",
