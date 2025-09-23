@@ -233,7 +233,26 @@
       "postPlaceholder": "Co się dzieje?",
       "addPhoto": "Dodaj zdjęcie",
       "selectPhoto": "Wybierz zdjęcie z galerii",
-      "imageAltTextPlaceholder": "Opisz ten obraz dla dostępności..."
+      "imageAltTextPlaceholder": "Opisz ten obraz dla dostępności...",
+      "actions": {
+        "translate": "Przetłumacz",
+        "copyText": "Kopiuj tekst wpisu",
+        "showMoreLikeThis": "Pokaż więcej podobnych",
+        "showLessLikeThis": "Pokaż mniej podobnych",
+        "assignToLists": "Przypisz wpisy do list",
+        "muteThread": "Wycisz wątek",
+        "muteWordsAndTags": "Wycisz słowa i tagi",
+        "hidePost": "Ukryj wpis przede mną",
+        "hideAccount": "Ukryj konto"
+      },
+      "translation": {
+        "title": "Tłumaczenie",
+        "hide": "Ukryj tłumaczenie",
+        "to": "Przetłumacz na",
+        "selectLanguage": "Wybierz język",
+        "noText": "Ten wpis nie zawiera tekstu do przetłumaczenia.",
+        "error": "Nie udało się przetłumaczyć tego wpisu. Spróbuj ponownie."
+      }
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

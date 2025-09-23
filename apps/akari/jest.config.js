@@ -20,6 +20,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',
     '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
+    '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
   },
 };

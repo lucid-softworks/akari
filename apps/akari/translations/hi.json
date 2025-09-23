@@ -233,7 +233,26 @@
       "postPlaceholder": "क्या हो रहा है?",
       "addPhoto": "फ़ोटो जोड़ें",
       "selectPhoto": "गैलरी से फ़ोटो चुनें",
-      "imageAltTextPlaceholder": "सुगम्यता के लिए इस छवि का वर्णन करें..."
+      "imageAltTextPlaceholder": "सुगम्यता के लिए इस छवि का वर्णन करें...",
+      "actions": {
+        "translate": "अनुवाद करें",
+        "copyText": "पोस्ट का पाठ कॉपी करें",
+        "showMoreLikeThis": "ऐसे और दिखाएँ",
+        "showLessLikeThis": "ऐसे कम दिखाएँ",
+        "assignToLists": "पोस्ट को सूचियों में असाइन करें",
+        "muteThread": "थ्रेड को म्यूट करें",
+        "muteWordsAndTags": "शब्दों और टैग को म्यूट करें",
+        "hidePost": "पोस्ट को मुझसे छिपाएँ",
+        "hideAccount": "खाते को छिपाएँ"
+      },
+      "translation": {
+        "title": "अनुवाद",
+        "hide": "अनुवाद छिपाएँ",
+        "to": "में अनुवाद करें",
+        "selectLanguage": "भाषा चुनें",
+        "noText": "इस पोस्ट में अनुवाद करने के लिए कोई पाठ नहीं है।",
+        "error": "हम इस पोस्ट का अनुवाद नहीं कर पाए। कृपया दोबारा प्रयास करें।"
+      }
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

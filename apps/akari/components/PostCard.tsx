@@ -1,7 +1,16 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
 import { BlueskyEmbed, BlueskyImage, BlueskyLabel } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -17,8 +26,11 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
+import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
 
 type PostCardProps = {
   post: {
@@ -70,14 +82,117 @@ type PostCardProps = {
   onPress?: () => void;
 };
 
+const LANGUAGE_CODE_ALIASES: Record<string, string> = {
+  'zh-cn': 'zh',
+  'zh-hans': 'zh',
+  'zh-sg': 'zh',
+  'zh-hk': 'zh',
+  'zh-tw': 'zh',
+  'zh-hant': 'zh',
+  'pt-br': 'pt',
+  'pt-pt': 'pt',
+  'en-us': 'en',
+  'en-gb': 'en',
+  'en-au': 'en',
+  'en-ca': 'en',
+  'es-mx': 'es',
+  'es-es': 'es',
+};
+
+const normalizeLanguageCode = (code: string) => {
+  const lower = code.toLowerCase();
+  if (LANGUAGE_CODE_ALIASES[lower]) {
+    return LANGUAGE_CODE_ALIASES[lower];
+  }
+
+  if (lower.includes('-')) {
+    const [base] = lower.split('-');
+    return LANGUAGE_CODE_ALIASES[base] ?? base;
+  }
+
+  return lower;
+};
+
+const resolveLanguageCode = (locale: string | undefined, languages: LibreTranslateLanguage[]) => {
+  const fallback = languages.find((language) => language.code === 'en')?.code || languages[0]?.code || 'en';
+
+  if (!locale) {
+    return fallback;
+  }
+
+  const normalized = normalizeLanguageCode(locale);
+
+  if (languages.some((language) => language.code === normalized)) {
+    return normalized;
+  }
+
+  const alias = LANGUAGE_CODE_ALIASES[normalized];
+  if (alias && languages.some((language) => language.code === alias)) {
+    return alias;
+  }
+
+  const [base] = normalized.split('-');
+  if (languages.some((language) => language.code === base)) {
+    return base;
+  }
+
+  return fallback;
+};
+
+type PostMenuItem =
+  | {
+      key: string;
+      label: string;
+      onPress: () => void;
+      destructive?: boolean;
+      disabled?: boolean;
+    }
+  | { key: string; type: 'separator' };
+
 export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{
     [key: string]: { width: number; height: number };
   }>({});
-  const { t } = useTranslation();
+  const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
+  const translationMutation = usePostTranslation();
+
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const menuButtonRef = useRef<TouchableOpacity | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+
+  const [isTranslationVisible, setIsTranslationVisible] = useState(false);
+  const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
+  const [hasUserSelectedLanguage, setHasUserSelectedLanguage] = useState(false);
+  const [translationCache, setTranslationCache] = useState<Record<string, string>>({});
+  const [translationError, setTranslationError] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState(() =>
+    resolveLanguageCode(currentLocale, DEFAULT_LIBRETRANSLATE_LANGUAGES),
+  );
+
+  const languagesQuery = useLibreTranslateLanguages(isLanguagePickerVisible || isTranslationVisible);
+  const languages = languagesQuery.data?.languages ?? DEFAULT_LIBRETRANSLATE_LANGUAGES;
+
+  useEffect(() => {
+    if (!hasUserSelectedLanguage) {
+      setSelectedLanguage(resolveLanguageCode(currentLocale, languages));
+    }
+  }, [currentLocale, hasUserSelectedLanguage, languages]);
+
+  useEffect(() => {
+    if (!languages.some((language) => language.code === selectedLanguage)) {
+      setSelectedLanguage(resolveLanguageCode(currentLocale, languages));
+    }
+  }, [languages, selectedLanguage, currentLocale]);
+
+  const languageNameMap = useMemo(
+    () => new Map(languages.map((language) => [language.code, language.name])),
+    [languages],
+  );
+
+  const selectedLanguageName = languageNameMap.get(selectedLanguage) ?? selectedLanguage.toUpperCase();
 
   const authorName = post.author.displayName || post.author.handle;
 
@@ -95,6 +210,237 @@ export function PostCard({ post, onPress }: PostCardProps) {
       dark: '#9BA1A6',
     },
     'text',
+  );
+
+  const menuBackgroundColor = useThemeColor(
+    {
+      light: '#ffffff',
+      dark: '#1c1c1e',
+    },
+    'background',
+  );
+
+  const dividerColor = useThemeColor(
+    {
+      light: 'rgba(0, 0, 0, 0.08)',
+      dark: 'rgba(255, 255, 255, 0.16)',
+    },
+    'background',
+  );
+
+  const translationBackgroundColor = useThemeColor(
+    {
+      light: '#f1f3f5',
+      dark: '#1f2123',
+    },
+    'background',
+  );
+
+  const modalBackgroundColor = useThemeColor(
+    {
+      light: '#ffffff',
+      dark: '#1c1c1e',
+    },
+    'background',
+  );
+
+  const canTranslate = Boolean(post.text && post.text.trim());
+  const isTranslating = translationMutation.isPending;
+
+  const menuStyle = useMemo(() => {
+    const fallbackPosition = { top: 16, right: 16 };
+
+    if (!menuPosition) {
+      return fallbackPosition;
+    }
+
+    const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+    const estimatedHeight = 440;
+
+    let top = menuPosition.y + menuPosition.height + 4;
+    if (top + estimatedHeight > windowHeight) {
+      top = Math.max(16, menuPosition.y - estimatedHeight);
+    }
+
+    const right = Math.max(8, windowWidth - (menuPosition.x + menuPosition.width));
+
+    return { top, right };
+  }, [menuPosition]);
+
+  const handleMenuToggle = useCallback(() => {
+    if (showActionsMenu) {
+      setShowActionsMenu(false);
+      return;
+    }
+
+    const button = menuButtonRef.current;
+
+    if (button?.measureInWindow) {
+      button.measureInWindow((x, y, width, height) => {
+        setMenuPosition({ x, y, width, height });
+        setShowActionsMenu(true);
+      });
+      return;
+    }
+
+    setMenuPosition(null);
+    setShowActionsMenu(true);
+  }, [showActionsMenu]);
+
+  const handleMenuDismiss = useCallback(() => {
+    setShowActionsMenu(false);
+  }, []);
+
+  const handlePlaceholderAction = useCallback((actionKey: string) => {
+    setShowActionsMenu(false);
+
+    if (__DEV__) {
+      console.info(`[PostCard] Action "${actionKey}" is not implemented yet.`);
+    }
+  }, []);
+
+  const performTranslation = useCallback(
+    async (targetLanguage: string) => {
+      if (!post.text || !post.text.trim()) {
+        setTranslationError(t('post.translation.noText'));
+        return;
+      }
+
+      setTranslationError(null);
+
+      try {
+        const { translatedText } = await translationMutation.mutateAsync({
+          text: post.text,
+          targetLanguage,
+        });
+
+        setTranslationCache((previous) => ({
+          ...previous,
+          [targetLanguage]: translatedText,
+        }));
+      } catch (error) {
+        const errorMessage = error instanceof Error && error.message ? error.message : null;
+
+        if (__DEV__) {
+          console.warn('Failed to translate post', error);
+        }
+
+        setTranslationError(
+          errorMessage ? `${t('post.translation.error')} (${errorMessage})` : t('post.translation.error'),
+        );
+      }
+    },
+    [post.text, t, translationMutation],
+  );
+
+  const handleTranslatePress = useCallback(() => {
+    setShowActionsMenu(false);
+
+    if (!canTranslate) {
+      setIsTranslationVisible(true);
+      setTranslationError(t('post.translation.noText'));
+      return;
+    }
+
+    if (isTranslationVisible) {
+      setIsLanguagePickerVisible(true);
+      return;
+    }
+
+    setIsTranslationVisible(true);
+
+    if (!translationCache[selectedLanguage]) {
+      void performTranslation(selectedLanguage);
+    }
+  }, [canTranslate, isTranslationVisible, performTranslation, selectedLanguage, translationCache, t]);
+
+  const handleLanguageSelect = useCallback(
+    (languageCode: string) => {
+      setSelectedLanguage(languageCode);
+      setHasUserSelectedLanguage(true);
+      setIsLanguagePickerVisible(false);
+
+      if (translationCache[languageCode]) {
+        setTranslationError(null);
+        return;
+      }
+
+      void performTranslation(languageCode);
+    },
+    [performTranslation, translationCache],
+  );
+
+  const handleHideTranslation = useCallback(() => {
+    setIsTranslationVisible(false);
+    setTranslationError(null);
+    translationMutation.reset();
+  }, [translationMutation]);
+
+  useEffect(() => {
+    if (!isTranslationVisible || !canTranslate) {
+      return;
+    }
+
+    if (translationCache[selectedLanguage] || translationMutation.isPending) {
+      return;
+    }
+
+    void performTranslation(selectedLanguage);
+  }, [
+    canTranslate,
+    isTranslationVisible,
+    performTranslation,
+    selectedLanguage,
+    translationCache,
+    translationMutation.isPending,
+  ]);
+
+  const menuActions = useMemo<PostMenuItem[]>(
+    () => [
+      { key: 'translate', label: t('post.actions.translate'), onPress: handleTranslatePress, disabled: !canTranslate },
+      { key: 'copyText', label: t('post.actions.copyText'), onPress: () => handlePlaceholderAction('copyText') },
+      { key: 'separator-1', type: 'separator' },
+      {
+        key: 'showMoreLikeThis',
+        label: t('post.actions.showMoreLikeThis'),
+        onPress: () => handlePlaceholderAction('showMoreLikeThis'),
+      },
+      {
+        key: 'showLessLikeThis',
+        label: t('post.actions.showLessLikeThis'),
+        onPress: () => handlePlaceholderAction('showLessLikeThis'),
+      },
+      {
+        key: 'assignToLists',
+        label: t('post.actions.assignToLists'),
+        onPress: () => handlePlaceholderAction('assignToLists'),
+      },
+      { key: 'separator-2', type: 'separator' },
+      { key: 'muteThread', label: t('post.actions.muteThread'), onPress: () => handlePlaceholderAction('muteThread') },
+      {
+        key: 'muteWordsAndTags',
+        label: t('post.actions.muteWordsAndTags'),
+        onPress: () => handlePlaceholderAction('muteWordsAndTags'),
+      },
+      { key: 'separator-3', type: 'separator' },
+      { key: 'hidePost', label: t('post.actions.hidePost'), onPress: () => handlePlaceholderAction('hidePost') },
+      { key: 'hideAccount', label: t('post.actions.hideAccount'), onPress: () => handlePlaceholderAction('hideAccount') },
+      { key: 'separator-4', type: 'separator' },
+      { key: 'muteAccount', label: t('profile.muteAccount'), onPress: () => handlePlaceholderAction('muteAccount') },
+      {
+        key: 'blockAccount',
+        label: t('common.block'),
+        onPress: () => handlePlaceholderAction('blockAccount'),
+        destructive: true,
+      },
+      {
+        key: 'reportAccount',
+        label: t('profile.reportAccount'),
+        onPress: () => handlePlaceholderAction('reportAccount'),
+        destructive: true,
+      },
+    ],
+    [canTranslate, handlePlaceholderAction, handleTranslatePress, t],
   );
 
   const handleProfilePress = () => {
@@ -523,11 +869,62 @@ export function PostCard({ post, onPress }: PostCardProps) {
             </TouchableOpacity>
           </ThemedView>
         </ThemedView>
-        <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
+        <View style={styles.headerMeta}>
+          <ThemedText style={styles.timestamp}>{post.createdAt}</ThemedText>
+          <TouchableOpacity
+            ref={menuButtonRef}
+            onPress={handleMenuToggle}
+            style={styles.menuButton}
+            activeOpacity={0.6}
+            accessibilityRole="button"
+            accessibilityLabel={`${t('common.actions')} - ${authorName}`}
+          >
+            <IconSymbol name="ellipsis" size={18} color={iconColor} />
+          </TouchableOpacity>
+        </View>
       </ThemedView>
 
       <ThemedView style={styles.content}>
         <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
+
+        {isTranslationVisible && (
+          <ThemedView
+            style={[styles.translationContainer, { backgroundColor: translationBackgroundColor, borderColor }]}
+          >
+            <View style={styles.translationHeader}>
+              <ThemedText style={styles.translationTitle}>{t('post.translation.title')}</ThemedText>
+              <TouchableOpacity
+                onPress={handleHideTranslation}
+                accessibilityRole="button"
+                accessibilityLabel={t('post.translation.hide')}
+                activeOpacity={0.6}
+              >
+                <ThemedText style={[styles.translationHide, { color: iconColor }]}>
+                  {t('post.translation.hide')}
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={[styles.translationLanguageSelector, { borderColor: dividerColor }]}
+              onPress={() => setIsLanguagePickerVisible(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t('post.translation.selectLanguage')}
+              activeOpacity={0.7}
+            >
+              <ThemedText style={styles.translationLabel}>{t('post.translation.to')}</ThemedText>
+              <ThemedText style={styles.translationLanguageValue}>{selectedLanguageName}</ThemedText>
+            </TouchableOpacity>
+            <ThemedView style={styles.translationContent}>
+              {isTranslating ? (
+                <ActivityIndicator size="small" color={iconColor} />
+              ) : translationError ? (
+                <ThemedText style={styles.translationError}>{translationError}</ThemedText>
+              ) : (
+                <ThemedText style={styles.translationText}>{translationCache[selectedLanguage]}</ThemedText>
+              )}
+            </ThemedView>
+          </ThemedView>
+        )}
 
         {/* Render native video embed if present */}
         {(() => {
@@ -654,6 +1051,103 @@ export function PostCard({ post, onPress }: PostCardProps) {
         <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>{postContent}</ThemedView>
       )}
 
+      <Modal transparent animationType="fade" visible={showActionsMenu} onRequestClose={handleMenuDismiss}>
+        {showActionsMenu && (
+          <TouchableWithoutFeedback onPress={handleMenuDismiss}>
+            <View style={styles.menuOverlay}>
+              <TouchableWithoutFeedback>
+                <ThemedView
+                  style={[styles.menuContainer, menuStyle, { backgroundColor: menuBackgroundColor, borderColor }]}
+                  accessibilityRole="menu"
+                >
+                  {menuActions.map((item) => {
+                    if ('type' in item) {
+                      return <View key={item.key} style={[styles.menuSeparator, { borderColor: dividerColor }]} />;
+                    }
+
+                    return (
+                      <TouchableOpacity
+                        key={item.key}
+                        style={styles.menuItem}
+                        onPress={item.disabled ? undefined : item.onPress}
+                        disabled={item.disabled}
+                        accessibilityRole="menuitem"
+                        accessibilityState={{ disabled: item.disabled }}
+                        activeOpacity={item.disabled ? 1 : 0.7}
+                      >
+                        <ThemedText
+                          style={[
+                            styles.menuItemText,
+                            item.destructive && styles.menuItemTextDestructive,
+                            item.disabled && styles.menuItemTextDisabled,
+                          ]}
+                        >
+                          {item.label}
+                        </ThemedText>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ThemedView>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+      </Modal>
+
+      <Modal
+        transparent
+        animationType="fade"
+        visible={isLanguagePickerVisible}
+        onRequestClose={() => setIsLanguagePickerVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setIsLanguagePickerVisible(false)}>
+          <View style={styles.menuOverlay}>
+            <TouchableWithoutFeedback>
+              <ThemedView
+                style={[styles.languageModal, { backgroundColor: modalBackgroundColor, borderColor }]}
+                accessibilityRole="menu"
+              >
+                <ThemedText style={styles.languageModalTitle}>{t('post.translation.selectLanguage')}</ThemedText>
+                {languagesQuery.isLoading ? (
+                  <View style={styles.languageModalIndicator}>
+                    <ActivityIndicator size="small" color={iconColor} />
+                  </View>
+                ) : (
+                  <ScrollView style={styles.languageList}>
+                    {languages.map((language) => {
+                      const isSelected = language.code === selectedLanguage;
+                      return (
+                        <TouchableOpacity
+                          key={language.code}
+                          style={[
+                            styles.languageOption,
+                            { borderColor: dividerColor },
+                            isSelected && styles.languageOptionSelected,
+                          ]}
+                          onPress={() => handleLanguageSelect(language.code)}
+                          accessibilityRole="menuitem"
+                          accessibilityState={{ selected: isSelected }}
+                          activeOpacity={0.7}
+                        >
+                          <ThemedText
+                            style={[
+                              styles.languageOptionText,
+                              isSelected && styles.languageOptionSelectedText,
+                            ]}
+                          >
+                            {language.name}
+                          </ThemedText>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                )}
+              </ThemedView>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
       {/* Image Viewer Modal */}
       {selectedImageIndex !== null && imageUrls[selectedImageIndex] && (
         <ImageViewer
@@ -731,6 +1225,14 @@ const styles = StyleSheet.create({
   authorInfo: {
     flex: 1,
   },
+  headerMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuButton: {
+    padding: 4,
+    marginLeft: 12,
+  },
   displayName: {
     fontSize: 16,
     fontWeight: '600',
@@ -750,6 +1252,54 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 8,
+  },
+  translationContainer: {
+    borderWidth: 1,
+    marginTop: 12,
+    marginBottom: 12,
+    padding: 12,
+  },
+  translationHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  translationTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  translationHide: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  translationLanguageSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+  },
+  translationLabel: {
+    fontSize: 13,
+    opacity: 0.7,
+  },
+  translationLanguageValue: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  translationContent: {
+    marginTop: 8,
+  },
+  translationText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  translationError: {
+    fontSize: 13,
+    lineHeight: 20,
+    color: '#d13232',
   },
   imagesContainer: {
     gap: 4,
@@ -790,5 +1340,66 @@ const styles = StyleSheet.create({
   interactionCount: {
     fontSize: 14,
     opacity: 0.7,
+  },
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  menuContainer: {
+    position: 'absolute',
+    borderWidth: 1,
+    minWidth: 220,
+  },
+  menuItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  menuItemText: {
+    fontSize: 14,
+  },
+  menuItemTextDestructive: {
+    color: '#d13232',
+  },
+  menuItemTextDisabled: {
+    opacity: 0.5,
+  },
+  menuSeparator: {
+    borderTopWidth: 1,
+    marginVertical: 4,
+  },
+  languageModal: {
+    alignSelf: 'center',
+    marginTop: 120,
+    borderWidth: 1,
+    width: '80%',
+    maxHeight: '70%',
+    padding: 16,
+  },
+  languageModalTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  languageList: {
+    maxHeight: 300,
+  },
+  languageOption: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    marginBottom: 8,
+  },
+  languageOptionSelected: {
+    borderColor: '#0a84ff',
+  },
+  languageOptionText: {
+    fontSize: 14,
+  },
+  languageOptionSelectedText: {
+    fontWeight: '600',
+  },
+  languageModalIndicator: {
+    paddingVertical: 24,
+    alignItems: 'center',
   },
 });

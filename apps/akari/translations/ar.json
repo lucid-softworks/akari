@@ -233,7 +233,26 @@
       "postPlaceholder": "ماذا يحدث؟",
       "addPhoto": "إضافة صورة",
       "selectPhoto": "اختر صورة من المعرض",
-      "imageAltTextPlaceholder": "صف هذه الصورة لإمكانية الوصول..."
+      "imageAltTextPlaceholder": "صف هذه الصورة لإمكانية الوصول...",
+      "actions": {
+        "translate": "ترجمة",
+        "copyText": "نسخ نص المنشور",
+        "showMoreLikeThis": "عرض المزيد مثل هذا",
+        "showLessLikeThis": "عرض أقل مثل هذا",
+        "assignToLists": "تعيين المنشورات إلى القوائم",
+        "muteThread": "كتم المحادثة",
+        "muteWordsAndTags": "كتم الكلمات والوسوم",
+        "hidePost": "إخفاء المنشور عني",
+        "hideAccount": "إخفاء الحساب"
+      },
+      "translation": {
+        "title": "الترجمة",
+        "hide": "إخفاء الترجمة",
+        "to": "ترجمة إلى",
+        "selectLanguage": "اختيار اللغة",
+        "noText": "لا يحتوي هذا المنشور على نص لترجمته.",
+        "error": "تعذّر علينا ترجمة هذا المنشور. يرجى المحاولة مرة أخرى."
+      }
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

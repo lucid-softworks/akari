@@ -233,7 +233,26 @@
       "postPlaceholder": "Wat gebeurt er?",
       "addPhoto": "Foto toevoegen",
       "selectPhoto": "Foto uit galerij selecteren",
-      "imageAltTextPlaceholder": "Beschrijf deze afbeelding voor toegankelijkheid..."
+      "imageAltTextPlaceholder": "Beschrijf deze afbeelding voor toegankelijkheid...",
+      "actions": {
+        "translate": "Vertalen",
+        "copyText": "Berichttekst kopiëren",
+        "showMoreLikeThis": "Meer zoals deze weergeven",
+        "showLessLikeThis": "Minder zoals deze weergeven",
+        "assignToLists": "Berichten aan lijsten toewijzen",
+        "muteThread": "Draad dempen",
+        "muteWordsAndTags": "Woorden en tags dempen",
+        "hidePost": "Bericht voor mij verbergen",
+        "hideAccount": "Account verbergen"
+      },
+      "translation": {
+        "title": "Vertaling",
+        "hide": "Vertaling verbergen",
+        "to": "Vertalen naar",
+        "selectLanguage": "Taal kiezen",
+        "noText": "Dit bericht bevat geen tekst om te vertalen.",
+        "error": "We konden dit bericht niet vertalen. Probeer het opnieuw."
+      }
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

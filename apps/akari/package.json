@@ -52,7 +52,7 @@
     "@tanstack/react-query-persist-client": "^5.83.0",
     "bluesky-api": "*",
     "clearsky-api": "*",
-    "tenor-api": "*",
+    "libretranslate-api": "*",
     "expo": "~53.0.22",
     "expo-blur": "~14.1.5",
     "expo-clipboard": "~7.1.5",
@@ -71,6 +71,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.11",
+    "expo-updates": "~0.28.17",
     "expo-video": "~2.2.2",
     "expo-web-browser": "~14.2.0",
     "hls.js": "^1.6.7",
@@ -88,7 +89,7 @@
     "react-native-video": "^6.16.1",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "expo-updates": "~0.28.17"
+    "tenor-api": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

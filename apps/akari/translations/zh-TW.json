@@ -233,7 +233,26 @@
       "postPlaceholder": "發生了什麼？",
       "addPhoto": "新增照片",
       "selectPhoto": "從相簿選擇照片",
-      "imageAltTextPlaceholder": "請描述此圖片以利無障礙使用..."
+      "imageAltTextPlaceholder": "請描述此圖片以利無障礙使用...",
+      "actions": {
+        "translate": "翻譯",
+        "copyText": "複製貼文文字",
+        "showMoreLikeThis": "顯示更多類似內容",
+        "showLessLikeThis": "顯示較少類似內容",
+        "assignToLists": "將貼文指派到列表",
+        "muteThread": "將此主題靜音",
+        "muteWordsAndTags": "靜音字詞與標籤",
+        "hidePost": "對我隱藏此貼文",
+        "hideAccount": "隱藏帳號"
+      },
+      "translation": {
+        "title": "翻譯",
+        "hide": "隱藏翻譯",
+        "to": "翻譯成",
+        "selectLanguage": "選擇語言",
+        "noText": "此貼文沒有可供翻譯的文字。",
+        "error": "無法翻譯此貼文。請再試一次。"
+      }
     },
     "messages": {
       "typeMessage": "輸入訊息...",
