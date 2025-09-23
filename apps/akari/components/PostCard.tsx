@@ -380,14 +380,29 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const handleCopyPostText = useCallback(async () => {
     if (!post.text || !post.text.trim()) {
       showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      showAlert({
+        title: t('common.error'),
+        message: t('common.somethingWentWrong'),
+        buttons: [{ text: t('common.ok') }],
+      });
       return;
     }
 
     try {
       await Clipboard.setStringAsync(post.text);
       showToast({ message: t('post.actions.copyText'), type: 'success', title: t('common.success') });
+      showAlert({
+        title: t('common.success'),
+        message: t('post.actions.copyText'),
+        buttons: [{ text: t('common.ok') }],
+      });
     } catch {
       showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      showAlert({
+        title: t('common.error'),
+        message: t('common.somethingWentWrong'),
+        buttons: [{ text: t('common.ok') }],
+      });
     }
   }, [post.text, showToast, t]);
 

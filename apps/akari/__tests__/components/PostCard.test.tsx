@@ -359,6 +359,33 @@ describe('PostCard', () => {
         fireEvent.press(copyOption);
         await waitFor(() => {
           expect(mockSetStringAsync).toHaveBeenCalledWith('Hello world');
+          expect(mockShowAlert).toHaveBeenCalledWith({
+            title: 'common.success',
+            message: 'post.actions.copyText',
+            buttons: [{ text: 'common.ok' }],
+          });
+        });
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('shows error alert when copy action fails', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      mockSetStringAsync.mockRejectedValueOnce(new Error('Clipboard failure'));
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const copyOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.copyText' }));
+        fireEvent.press(copyOption);
+
+        await waitFor(() => {
+          expect(mockShowAlert).toHaveBeenCalledWith({
+            title: 'common.error',
+            message: 'common.somethingWentWrong',
+            buttons: [{ text: 'common.ok' }],
+          });
         });
       } finally {
         restoreUseState();
