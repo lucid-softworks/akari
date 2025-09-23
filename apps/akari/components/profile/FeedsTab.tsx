@@ -1,9 +1,10 @@
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -16,6 +17,8 @@ type FeedsTabProps = {
 type FeedItemProps = {
   feed: BlueskyFeed;
 };
+
+const ESTIMATED_FEED_CARD_HEIGHT = 180;
 
 function FeedItem({ feed }: FeedItemProps) {
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
@@ -99,7 +102,7 @@ export function FeedsTab({ handle }: FeedsTabProps) {
   }
 
   return (
-    <FlatList
+    <VirtualizedList
       data={feeds}
       renderItem={renderItem}
       keyExtractor={(item) => item.uri}
@@ -109,6 +112,7 @@ export function FeedsTab({ handle }: FeedsTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={ESTIMATED_FEED_CARD_HEIGHT}
     />
   );
 }
