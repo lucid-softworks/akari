@@ -81,7 +81,7 @@ export default function ProfileScreen() {
         message: t('profile.linkCopied'),
         type: 'success',
       });
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('profile.linkCopyError'),

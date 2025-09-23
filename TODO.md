@@ -8,7 +8,7 @@ This checklist aggregates the TODO comments currently in the Akari app so we can
 - [ ] Implement full mute/unmute handling, including wiring the confirmation alert to an actual API call.
 - [ ] Integrate the report account alert with the real reporting API.
 
-## Profile screens (`apps/akari/app/profile/[handle].tsx` and `apps/akari/app/(tabs)/profile.tsx`)
+## Profile screens (`apps/akari/app/(tabs)/profile/[handle].tsx` and `apps/akari/app/(tabs)/profile/index.tsx`)
 
 - [ ] Implement the "Search posts" action exposed in the profile dropdown.
 - [ ] Implement the "Add to lists" action exposed in the profile dropdown.
