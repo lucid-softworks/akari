@@ -39,7 +39,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 - [x] `apps/akari/components/profile/FeedsTab.tsx`
   - Use `VirtualizedList` for the author feed list, taking care with custom cards and `scrollEnabled={false}`.
   - Provide an `estimatedItemSize` and make sure the `IconSymbol` interactions remain accessible.
-- [ ] `apps/akari/components/profile/StarterpacksTab.tsx`
+- [x] `apps/akari/components/profile/StarterpacksTab.tsx`
   - Replace `FlatList` with `VirtualizedList`, wire up an `estimatedItemSize`, and verify the card styling survives FlashList's item container.
   - Confirm pagination, footer, and empty state behaviour after the migration.
 
