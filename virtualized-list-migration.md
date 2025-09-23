@@ -7,7 +7,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Replace the `FlatList` import with `VirtualizedList` and update `flatListRef` to `React.useRef<VirtualizedListHandle<Conversation>>`.
   - Pass an `estimatedItemSize` that matches the conversation row height and keep `overscan` conservative so the request list stays responsive.
   - Verify `tabScrollRegistry`'s scroll-to-top helper still works and that footer/empty states render correctly after the swap.
-- [ ] `apps/akari/app/(tabs)/messages/[handle].tsx`
+- [x] `apps/akari/app/(tabs)/messages/[handle].tsx`
   - Swap the conversation `FlatList` for `VirtualizedList`, keeping `inverted` pagination behaviour intact.
   - Provide an `estimatedItemSize` for message bubbles and confirm the `ListFooterComponent` continues to show the loading indicator while paging.
   - Re-check `onEndReachedThreshold` against FlashList's behaviour so we do not over-fetch.
