@@ -33,7 +33,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 - [x] `apps/akari/components/profile/RepliesTab.tsx`
   - Replace `FlatList` usage, add an `estimatedItemSize`, and ensure the component still exposes an accessible list role (tests rely on `getByRole('list')`).
   - Double-check `onEndReached` throttling so mutation hooks do not fire repeatedly.
-- [ ] `apps/akari/components/profile/VideosTab.tsx`
+- [x] `apps/akari/components/profile/VideosTab.tsx`
   - Switch to `VirtualizedList`, provide media-appropriate sizing, and maintain the existing non-scrollable behaviour.
   - Validate the loading footer and empty states once FlashList is in place.
 - [ ] `apps/akari/components/profile/FeedsTab.tsx`
