@@ -2,7 +2,15 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  type ImageStyle,
+  type StyleProp,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -50,13 +58,31 @@ type NotificationItemProps = {
   borderColor: string;
 };
 
+const getPlainImageStyle = (style: StyleProp<ImageStyle>): ImageStyle => {
+  const flattened = StyleSheet.flatten(style);
+
+  if (!flattened || typeof flattened !== 'object') {
+    return {} as ImageStyle;
+  }
+
+  const plainStyle: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(flattened)) {
+    if (value !== undefined) {
+      plainStyle[key] = value;
+    }
+  }
+
+  return plainStyle as ImageStyle;
+};
+
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
   const likeColor = '#ff3b30';
   const repostColor = '#34c759';
-  const avatarImageStyle = useMemo<ImageStyle>(() => StyleSheet.flatten(styles.avatar) ?? {}, []);
-  const embedImageBaseStyle = useMemo<ImageStyle>(() => StyleSheet.flatten(styles.embedImage) ?? {}, []);
+  const avatarImageStyle = useMemo<ImageStyle>(() => getPlainImageStyle(styles.avatar), []);
+  const embedImageBaseStyle = useMemo<ImageStyle>(() => getPlainImageStyle(styles.embedImage), []);
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -180,19 +206,17 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const aspectRatio = 16 / 9; // Default aspect ratio
     const imageHeight = fullWidth / aspectRatio;
 
-    const embedImageStyle: ImageStyle = {
-      ...embedImageBaseStyle,
-      width: fullWidth,
-      height: imageHeight,
-    };
-
     return (
       <View style={styles.embedImagesContainer}>
         {images.map((image, index) => (
           <Image
             key={index}
             source={{ uri: image.fullsize }}
-            style={embedImageStyle}
+            style={{
+              ...embedImageBaseStyle,
+              width: fullWidth,
+              height: imageHeight,
+            }}
             contentFit="cover"
             placeholder={require('@/assets/images/partial-react-logo.png')}
           />
