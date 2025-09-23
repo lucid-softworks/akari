@@ -1,8 +1,9 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -15,6 +16,8 @@ type StarterpacksTabProps = {
 type StarterpackItemProps = {
   starterpack: BlueskyStarterPack;
 };
+
+const ESTIMATED_STARTERPACK_CARD_HEIGHT = 180;
 
 function StarterpackItem({ starterpack }: StarterpackItemProps) {
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
@@ -96,7 +99,7 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
   }
 
   return (
-    <FlatList
+    <VirtualizedList
       data={starterpacks}
       renderItem={renderItem}
       keyExtractor={(item) => item.uri}
@@ -106,6 +109,7 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
       style={styles.flatList}
+      estimatedItemSize={ESTIMATED_STARTERPACK_CARD_HEIGHT}
     />
   );
 }
