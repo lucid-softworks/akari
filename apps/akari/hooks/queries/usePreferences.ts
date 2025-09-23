@@ -1,8 +1,23 @@
 import { BlueskyApi, type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFeedsPref } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { useQuery } from '@tanstack/react-query';
-import { useFeedGenerators } from './useFeedGenerators';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { SavedFeedWithMetadata } from '@/types/savedFeed';
+import { feedGeneratorsQueryOptions } from './useFeedGenerators';
+
+const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
+
+export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
+  queryKey: ['preferences', pdsUrl] as const,
+  queryFn: async (): Promise<BlueskyPreferencesResponse> => {
+    if (!token) throw new Error('No access token');
+    if (!pdsUrl) throw new Error('No PDS URL available');
+
+    const api = new BlueskyApi(pdsUrl);
+    return await api.getPreferences(token);
+  },
+  staleTime: PREFERENCES_STALE_TIME,
+});
 
 /**
  * Query hook for fetching user preferences
@@ -12,16 +27,8 @@ export function usePreferences() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['preferences', currentAccount?.pdsUrl],
-    queryFn: async (): Promise<BlueskyPreferencesResponse> => {
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-
-      const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getPreferences(token);
-    },
+    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? ''),
     enabled: !!token && !!currentAccount?.pdsUrl,
-    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -29,44 +36,63 @@ export function usePreferences() {
  * Query hook for fetching user's saved feeds from preferences with metadata
  */
 export function useSavedFeeds() {
-  const { data: preferences, isLoading: preferencesLoading, error: preferencesError } = usePreferences();
+  const queryClient = useQueryClient();
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
 
-  const savedFeedsPref = preferences?.preferences.find(
-    (pref): pref is BlueskySavedFeedsPref => pref.$type === 'app.bsky.actor.defs#savedFeedsPrefV2',
-  );
+  return useQuery({
+    queryKey: ['savedFeeds', currentAccount?.did] as const,
+    enabled: !!token && !!currentAccount?.did && !!currentAccount?.pdsUrl,
+    staleTime: PREFERENCES_STALE_TIME,
+    queryFn: async (): Promise<SavedFeedWithMetadata[]> => {
+      if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+      if (!currentAccount?.did) throw new Error('No DID available');
 
-  const savedFeeds = savedFeedsPref?.items || [];
+      const preferences = await queryClient.ensureQueryData(
+        preferencesQueryOptions(token, currentAccount.pdsUrl),
+      );
 
-  // Extract feed URIs (not timeline feeds)
-  const feedUris = savedFeeds.filter((feed) => feed.type === 'feed').map((feed) => feed.value);
+      const savedFeedsPref = preferences.preferences.find(
+        (pref): pref is BlueskySavedFeedsPref => pref.$type === 'app.bsky.actor.defs#savedFeedsPrefV2',
+      );
 
-  // Fetch metadata for custom feeds
-  const { data: feedGeneratorsData, isLoading: feedGeneratorsLoading } = useFeedGenerators(feedUris);
+      const savedFeeds = savedFeedsPref?.items ?? [];
+      if (savedFeeds.length === 0) {
+        return [];
+      }
 
-  // Create a map of URI to feed metadata
-  const feedMetadataMap = new Map<string, BlueskyFeed>();
-  feedGeneratorsData?.feeds.forEach((feed) => {
-    feedMetadataMap.set(feed.uri, feed);
+      const feedUris = savedFeeds.filter((feed) => feed.type === 'feed').map((feed) => feed.value);
+
+      if (feedUris.length === 0) {
+        return savedFeeds.map((savedFeed) => ({
+          ...savedFeed,
+          metadata: null,
+        }));
+      }
+
+      const feedGenerators = await queryClient.ensureQueryData(
+        feedGeneratorsQueryOptions(feedUris, token, currentAccount.pdsUrl),
+      );
+
+      const feedMetadataMap = new Map<string, BlueskyFeed>();
+      for (const feed of feedGenerators.feeds) {
+        feedMetadataMap.set(feed.uri, feed);
+      }
+
+      return savedFeeds.map((savedFeed) => {
+        if (savedFeed.type === 'feed') {
+          return {
+            ...savedFeed,
+            metadata: feedMetadataMap.get(savedFeed.value) ?? null,
+          };
+        }
+
+        return {
+          ...savedFeed,
+          metadata: null,
+        };
+      });
+    },
   });
-
-  // Combine saved feeds with their metadata
-  const feedsWithMetadata = savedFeeds.map((savedFeed) => {
-    if (savedFeed.type === 'timeline') {
-      return {
-        ...savedFeed,
-        metadata: null, // Timeline feeds don't have metadata
-      };
-    } else {
-      return {
-        ...savedFeed,
-        metadata: feedMetadataMap.get(savedFeed.value) || null,
-      };
-    }
-  });
-
-  return {
-    data: feedsWithMetadata,
-    isLoading: preferencesLoading || feedGeneratorsLoading,
-    error: preferencesError,
-  };
 }
