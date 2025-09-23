@@ -233,7 +233,26 @@
       "postPlaceholder": "Beth sy'n digwydd?",
       "addPhoto": "Ychwanegu llun",
       "selectPhoto": "Dewis llun o'r oriel",
-      "imageAltTextPlaceholder": "Disgrifiwch y ddelwedd hon ar gyfer hygyrchedd..."
+      "imageAltTextPlaceholder": "Disgrifiwch y ddelwedd hon ar gyfer hygyrchedd...",
+      "actions": {
+        "translate": "Cyfieithu",
+        "copyText": "Copïo testun y cofnod",
+        "showMoreLikeThis": "Dangos mwy fel hyn",
+        "showLessLikeThis": "Dangos llai fel hyn",
+        "assignToLists": "Neilltuo cofnodion i restrau",
+        "muteThread": "Tewi'r edefyn",
+        "muteWordsAndTags": "Tewi geiriau a thagiau",
+        "hidePost": "Cuddio'r cofnod oddi wrthyf",
+        "hideAccount": "Cuddio'r cyfrif"
+      },
+      "translation": {
+        "title": "Cyfieithiad",
+        "hide": "Cuddio'r cyfieithiad",
+        "to": "Cyfieithu i",
+        "selectLanguage": "Dewis iaith",
+        "noText": "Nid oes testun i'w gyfieithu yn y cofnod hwn.",
+        "error": "Methwyd cyfieithu'r cofnod hwn. Ceisiwch eto."
+      }
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

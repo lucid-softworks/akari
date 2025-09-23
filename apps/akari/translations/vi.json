@@ -233,7 +233,26 @@
       "postPlaceholder": "Chuyện gì đang xảy ra?",
       "addPhoto": "Thêm ảnh",
       "selectPhoto": "Chọn ảnh từ thư viện",
-      "imageAltTextPlaceholder": "Mô tả hình ảnh này để hỗ trợ khả năng tiếp cận..."
+      "imageAltTextPlaceholder": "Mô tả hình ảnh này để hỗ trợ khả năng tiếp cận...",
+      "actions": {
+        "translate": "Dịch",
+        "copyText": "Sao chép nội dung bài đăng",
+        "showMoreLikeThis": "Hiển thị thêm nội dung tương tự",
+        "showLessLikeThis": "Hiển thị ít nội dung tương tự",
+        "assignToLists": "Gán bài đăng vào danh sách",
+        "muteThread": "Tắt tiếng chủ đề",
+        "muteWordsAndTags": "Tắt tiếng từ và thẻ",
+        "hidePost": "Ẩn bài đăng khỏi tôi",
+        "hideAccount": "Ẩn tài khoản"
+      },
+      "translation": {
+        "title": "Bản dịch",
+        "hide": "Ẩn bản dịch",
+        "to": "Dịch sang",
+        "selectLanguage": "Chọn ngôn ngữ",
+        "noText": "Bài đăng này không có nội dung để dịch.",
+        "error": "Chúng tôi không thể dịch bài đăng này. Vui lòng thử lại."
+      }
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

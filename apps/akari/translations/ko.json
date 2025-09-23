@@ -233,7 +233,26 @@
       "postPlaceholder": "무슨 일이 일어나고 있나요?",
       "addPhoto": "사진 추가",
       "selectPhoto": "갤러리에서 사진 선택",
-      "imageAltTextPlaceholder": "접근성을 위해 이 이미지를 설명해주세요..."
+      "imageAltTextPlaceholder": "접근성을 위해 이 이미지를 설명해주세요...",
+      "actions": {
+        "translate": "번역하기",
+        "copyText": "게시글 텍스트 복사",
+        "showMoreLikeThis": "이와 같은 게시글 더 보기",
+        "showLessLikeThis": "이와 같은 게시글 덜 보기",
+        "assignToLists": "게시글을 목록에 지정",
+        "muteThread": "스레드 음소거",
+        "muteWordsAndTags": "단어 및 태그 음소거",
+        "hidePost": "나에게서 게시글 숨기기",
+        "hideAccount": "계정 숨기기"
+      },
+      "translation": {
+        "title": "번역",
+        "hide": "번역 숨기기",
+        "to": "다음으로 번역",
+        "selectLanguage": "언어 선택",
+        "noText": "이 게시글에는 번역할 텍스트가 없습니다.",
+        "error": "이 게시글을 번역하지 못했습니다. 다시 시도해 주세요."
+      }
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

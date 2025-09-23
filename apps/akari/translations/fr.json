@@ -233,7 +233,26 @@
       "postPlaceholder": "Que se passe-t-il ?",
       "imageAltTextPlaceholder": "Décrivez cette image pour l'accessibilité...",
       "addPhoto": "Ajouter une photo",
-      "selectPhoto": "Sélectionner une photo depuis la galerie"
+      "selectPhoto": "Sélectionner une photo depuis la galerie",
+      "actions": {
+        "translate": "Traduire",
+        "copyText": "Copier le texte de la publication",
+        "showMoreLikeThis": "Afficher plus comme celui-ci",
+        "showLessLikeThis": "Afficher moins comme celui-ci",
+        "assignToLists": "Attribuer des publications aux listes",
+        "muteThread": "Mettre le fil en sourdine",
+        "muteWordsAndTags": "Mettre des mots et des tags en sourdine",
+        "hidePost": "Masquer la publication pour moi",
+        "hideAccount": "Masquer le compte"
+      },
+      "translation": {
+        "title": "Traduction",
+        "hide": "Masquer la traduction",
+        "to": "Traduire en",
+        "selectLanguage": "Sélectionner une langue",
+        "noText": "Cette publication n'a aucun texte à traduire.",
+        "error": "Nous n'avons pas pu traduire cette publication. Veuillez réessayer."
+      }
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

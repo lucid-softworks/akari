@@ -233,7 +233,26 @@
       "postPlaceholder": "何が起こっていますか？",
       "imageAltTextPlaceholder": "アクセシビリティのため、この画像を説明してください...",
       "addPhoto": "写真を追加",
-      "selectPhoto": "ギャラリーから写真を選択"
+      "selectPhoto": "ギャラリーから写真を選択",
+      "actions": {
+        "translate": "翻訳する",
+        "copyText": "投稿のテキストをコピー",
+        "showMoreLikeThis": "このような投稿をもっと表示",
+        "showLessLikeThis": "このような投稿を減らす",
+        "assignToLists": "投稿をリストに割り当てる",
+        "muteThread": "スレッドをミュート",
+        "muteWordsAndTags": "単語とタグをミュート",
+        "hidePost": "自分から投稿を隠す",
+        "hideAccount": "アカウントを隠す"
+      },
+      "translation": {
+        "title": "翻訳",
+        "hide": "翻訳を非表示にする",
+        "to": "翻訳先",
+        "selectLanguage": "言語を選択",
+        "noText": "この投稿には翻訳するテキストがありません。",
+        "error": "この投稿を翻訳できませんでした。もう一度お試しください。"
+      }
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

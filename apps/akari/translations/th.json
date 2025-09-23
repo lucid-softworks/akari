@@ -233,7 +233,26 @@
       "postPlaceholder": "เกิดอะไรขึ้น?",
       "addPhoto": "เพิ่มรูปภาพ",
       "selectPhoto": "เลือกรูปจากแกลเลอรี",
-      "imageAltTextPlaceholder": "อธิบายรูปภาพนี้เพื่อการเข้าถึง..."
+      "imageAltTextPlaceholder": "อธิบายรูปภาพนี้เพื่อการเข้าถึง...",
+      "actions": {
+        "translate": "แปล",
+        "copyText": "คัดลอกข้อความโพสต์",
+        "showMoreLikeThis": "แสดงเพิ่มเติมแบบนี้",
+        "showLessLikeThis": "แสดงน้อยลงแบบนี้",
+        "assignToLists": "กำหนดโพสต์ไปยังรายการ",
+        "muteThread": "ปิดเสียงเธรด",
+        "muteWordsAndTags": "ปิดเสียงคำและแท็ก",
+        "hidePost": "ซ่อนโพสต์จากฉัน",
+        "hideAccount": "ซ่อนบัญชี"
+      },
+      "translation": {
+        "title": "การแปล",
+        "hide": "ซ่อนการแปล",
+        "to": "แปลเป็น",
+        "selectLanguage": "เลือกภาษา",
+        "noText": "โพสต์นี้ไม่มีข้อความให้แปล",
+        "error": "เราไม่สามารถแปลโพสต์นี้ได้ โปรดลองอีกครั้ง"
+      }
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

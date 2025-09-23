@@ -1,17 +1,46 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
+
+const actualReact = jest.requireActual('react');
+
+jest.mock('react', () => {
+  const actual = jest.requireActual('react');
+  const useState = jest.fn(actual.useState);
+
+  return {
+    ...actual,
+    useState,
+  };
+});
+
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
+import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
 
 jest.mock('@/hooks/mutations/useLikePost');
+jest.mock('@/hooks/mutations/usePostTranslation');
+jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
+jest.mock('react-native/Libraries/Modal/Modal', () => {
+  const React = require('react');
+
+  const MockModal = ({ children, visible }: { children?: React.ReactNode; visible?: boolean }) =>
+    visible ? <>{children}</> : null;
+
+  return {
+    __esModule: true,
+    default: MockModal,
+    Modal: MockModal,
+  };
+});
 
 // Mock heavy child components that are not under test
 jest.mock('@/components/ExternalEmbed', () => ({ ExternalEmbed: jest.fn(() => null) }));
@@ -53,8 +82,11 @@ type Post = {
 
 describe('PostCard', () => {
   const mockUseLikePost = useLikePost as jest.Mock;
+  const mockUsePostTranslation = usePostTranslation as jest.Mock;
+  const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
+  let mutateAsyncMock: jest.Mock;
 
   const basePost: Post = {
     id: '1',
@@ -71,7 +103,32 @@ describe('PostCard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockReturnValue('#000');
-    mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockUseTranslation.mockReturnValue({
+      t: (k: string) => k,
+      currentLocale: 'en',
+      changeLanguage: jest.fn(),
+      availableLocales: ['en'],
+    });
+    mutateAsyncMock = jest
+      .fn()
+      .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
+        translatedText: `translated-${targetLanguage}`,
+      }));
+    mockUsePostTranslation.mockReturnValue({
+      mutateAsync: mutateAsyncMock,
+      isPending: false,
+      reset: jest.fn(),
+    });
+    mockUseLibreTranslateLanguages.mockReturnValue({
+      data: {
+        languages: [
+          { code: 'en', name: 'English', targets: [] },
+          { code: 'es', name: 'Spanish', targets: [] },
+        ],
+        isFallback: false,
+      },
+      isLoading: false,
+    });
   });
 
   it('navigates to profile when handle pressed', () => {
@@ -123,6 +180,132 @@ describe('PostCard', () => {
     fireEvent.press(getByRole('button', { name: /like post by Alice/i }));
     expect(mutate).not.toHaveBeenCalled();
   });
+
+  describe('translation actions', () => {
+    const openMenuByDefault = () => {
+      const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
+      const useStateMock = reactModule.useState as jest.Mock;
+      const actualUseState = actualReact.useState;
+      let callCount = 0;
+
+      useStateMock.mockImplementation(<T,>(initialState: T) => {
+        callCount += 1;
+
+        if (callCount === 4) {
+          return actualUseState(true as unknown as T);
+        }
+
+        return actualUseState(initialState);
+      });
+
+      return () => {
+        useStateMock.mockImplementation(actualUseState);
+        useStateMock.mockClear();
+      };
+    };
+
+    it('shows translation panel and loads translation when translate action selected', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+
+        const translateOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.translate' }),
+        );
+        expect(translateOption.props.accessibilityState?.disabled).toBe(false);
+
+        fireEvent.press(translateOption);
+
+        await waitFor(() => {
+          expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'en' });
+        });
+
+        await waitFor(() => {
+          expect(getByText('translated-en')).toBeTruthy();
+        });
+        expect(getByText('post.translation.title')).toBeTruthy();
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('allows selecting a different language for translation', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+
+        const translateOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.translate' }),
+        );
+        fireEvent.press(translateOption);
+
+        await waitFor(() => {
+          expect(getByText('translated-en')).toBeTruthy();
+        });
+
+        const languageSelector = getByRole('button', { name: 'post.translation.selectLanguage' });
+        fireEvent.press(languageSelector);
+
+        const spanishOption = getByText('Spanish');
+        fireEvent.press(spanishOption);
+
+        await waitFor(() => {
+          expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'es' });
+        });
+
+        await waitFor(() => {
+          expect(getByText('translated-es')).toBeTruthy();
+        });
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('shows an error message when translation fails', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        mutateAsyncMock.mockRejectedValueOnce(new Error('Boom'));
+
+        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+
+        const translateOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.translate' }),
+        );
+        fireEvent.press(translateOption);
+
+        await waitFor(() => {
+          expect(getByText('post.translation.error (Boom)')).toBeTruthy();
+        });
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('disables translate option when no post text is available', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        const postWithoutText: Post = { ...basePost, text: '' };
+
+        const { getByRole } = render(<PostCard post={postWithoutText} />);
+
+        const translateOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.translate' }),
+        );
+        expect(translateOption.props.accessibilityState?.disabled).toBe(true);
+      } finally {
+        restoreUseState();
+      }
+    });
+  });
+
 
   it('shows and hides reply composer', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });

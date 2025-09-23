@@ -233,7 +233,26 @@
       "postPlaceholder": "发生了什么？",
       "addPhoto": "添加照片",
       "selectPhoto": "从相册选择照片",
-      "imageAltTextPlaceholder": "请为无障碍功能描述此图像..."
+      "imageAltTextPlaceholder": "请为无障碍功能描述此图像...",
+      "actions": {
+        "translate": "翻译",
+        "copyText": "复制帖子文字",
+        "showMoreLikeThis": "显示更多类似内容",
+        "showLessLikeThis": "显示较少类似内容",
+        "assignToLists": "将帖子分配到列表",
+        "muteThread": "静音此主题",
+        "muteWordsAndTags": "静音词语和标签",
+        "hidePost": "对我隐藏此帖子",
+        "hideAccount": "隐藏账号"
+      },
+      "translation": {
+        "title": "翻译",
+        "hide": "隐藏翻译",
+        "to": "翻译成",
+        "selectLanguage": "选择语言",
+        "noText": "此帖子没有可翻译的文本。",
+        "error": "我们无法翻译此帖子。请重试。"
+      }
     },
     "messages": {
       "typeMessage": "输入消息...",

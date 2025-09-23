@@ -233,7 +233,26 @@
       "postPlaceholder": "Ne oluyor?",
       "addPhoto": "Fotoğraf ekle",
       "selectPhoto": "Galeriden fotoğraf seç",
-      "imageAltTextPlaceholder": "Erişilebilirlik için bu görseli açıklayın..."
+      "imageAltTextPlaceholder": "Erişilebilirlik için bu görseli açıklayın...",
+      "actions": {
+        "translate": "Çevir",
+        "copyText": "Gönderi metnini kopyala",
+        "showMoreLikeThis": "Buna benzer daha fazlasını göster",
+        "showLessLikeThis": "Buna benzer daha azını göster",
+        "assignToLists": "Gönderileri listelere ata",
+        "muteThread": "Konuyu sessize al",
+        "muteWordsAndTags": "Kelimeleri ve etiketleri sessize al",
+        "hidePost": "Gönderiyi benden gizle",
+        "hideAccount": "Hesabı gizle"
+      },
+      "translation": {
+        "title": "Çeviri",
+        "hide": "Çeviriyi gizle",
+        "to": "Şuna çevir",
+        "selectLanguage": "Dil seç",
+        "noText": "Bu gönderide çevrilecek metin yok.",
+        "error": "Bu gönderiyi çeviremedik. Lütfen yeniden deneyin."
+      }
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",
