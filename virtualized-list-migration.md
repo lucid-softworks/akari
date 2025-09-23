@@ -30,7 +30,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 - [x] `apps/akari/components/profile/LikesTab.tsx`
   - Move to `VirtualizedList` with an appropriate `estimatedItemSize` and maintain the non-scrollable embedding inside parent tabs.
   - Re-test pagination and footer rendering.
-- [ ] `apps/akari/components/profile/RepliesTab.tsx`
+- [x] `apps/akari/components/profile/RepliesTab.tsx`
   - Replace `FlatList` usage, add an `estimatedItemSize`, and ensure the component still exposes an accessible list role (tests rely on `getByRole('list')`).
   - Double-check `onEndReached` throttling so mutation hooks do not fire repeatedly.
 - [ ] `apps/akari/components/profile/VideosTab.tsx`
