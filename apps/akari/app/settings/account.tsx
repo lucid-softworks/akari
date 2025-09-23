@@ -8,6 +8,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
+import { SettingsHeader } from '@/components/settings/SettingsHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
@@ -189,9 +190,11 @@ export default function AccountSettingsScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <SettingsHeader title={t('settings.account')} />
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
       >
         <SettingsSection isFirst title={t('common.accounts')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
@@ -299,6 +302,9 @@ export default function AccountSettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {

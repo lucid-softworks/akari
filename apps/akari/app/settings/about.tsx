@@ -8,6 +8,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
+import { SettingsHeader } from '@/components/settings/SettingsHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
@@ -108,7 +109,12 @@ export default function AboutSettingsScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+      <SettingsHeader title={t('settings.about')} />
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+      >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {aboutRows.map((item, index) => (
@@ -132,6 +138,9 @@ export default function AboutSettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {

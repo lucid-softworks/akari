@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -8,21 +7,11 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function SettingsLayout() {
   const { t } = useTranslation();
   const headerBackground = useThemeColor({}, 'background');
-  const headerTint = useThemeColor({}, 'text');
-  const borderColor = useThemeColor({}, 'border');
 
   return (
     <Stack
       screenOptions={{
-        headerStyle: {
-          backgroundColor: headerBackground,
-          borderBottomColor: borderColor,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        },
-        headerTintColor: headerTint,
-        headerTitleStyle: { fontWeight: '600' },
-        headerShadowVisible: false,
-        headerBackTitleVisible: false,
+        headerShown: false,
         contentStyle: { backgroundColor: headerBackground },
       }}
     >

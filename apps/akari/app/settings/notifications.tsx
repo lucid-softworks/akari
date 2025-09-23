@@ -7,6 +7,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
+import { SettingsHeader } from '@/components/settings/SettingsHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
@@ -32,7 +33,12 @@ export default function NotificationSettingsScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+      <SettingsHeader title={t('settings.notifications')} />
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+      >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
             <NotificationSettings />
@@ -61,6 +67,9 @@ export default function NotificationSettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {

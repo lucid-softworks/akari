@@ -8,6 +8,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
+import { SettingsHeader } from '@/components/settings/SettingsHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -90,7 +91,12 @@ export default function DevelopmentSettingsScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+      <SettingsHeader title={t('settings.development')} />
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+      >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             {developmentRows.map((item, index) => (
@@ -114,6 +120,9 @@ export default function DevelopmentSettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {
