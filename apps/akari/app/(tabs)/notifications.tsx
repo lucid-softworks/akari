@@ -2,7 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -48,6 +48,18 @@ type NotificationItemProps = {
   notification: GroupedNotification;
   onPress: () => void;
   borderColor: string;
+};
+
+// expo-image on web requires receiving plain object styles.
+const AVATAR_IMAGE_STYLE: ImageStyle = {
+  width: 28,
+  height: 28,
+  borderRadius: 14,
+};
+
+const EMBED_IMAGE_STYLE: ImageStyle = {
+  // Keep embed previews compatible with expo-image on web.
+  borderRadius: 8,
 };
 
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
@@ -138,7 +150,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             {author.avatar ? (
               <Image
                 source={{ uri: author.avatar }}
-                style={styles.avatar}
+                style={AVATAR_IMAGE_STYLE}
                 contentFit="cover"
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
@@ -184,7 +196,11 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
           <Image
             key={index}
             source={{ uri: image.fullsize }}
-            style={[styles.embedImage, { width: fullWidth, height: imageHeight }]}
+            style={{
+              ...EMBED_IMAGE_STYLE,
+              width: fullWidth,
+              height: imageHeight,
+            }}
             contentFit="cover"
             placeholder={require('@/assets/images/partial-react-logo.png')}
           />
@@ -558,9 +574,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    ...AVATAR_IMAGE_STYLE,
   },
   avatarFallback: {
     backgroundColor: '#007AFF',
@@ -627,7 +641,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   embedImage: {
-    borderRadius: 8,
+    ...EMBED_IMAGE_STYLE,
   },
   timeText: {
     fontSize: 12,
