@@ -33,7 +33,7 @@ export default function LanguagesSettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.language')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
             <LanguageSelector />
           </ThemedView>

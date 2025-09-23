@@ -37,7 +37,7 @@ export default function AccessibilitySettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.accessibility')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {accessibilityRows.map((item, index) => (
               <SettingsRow

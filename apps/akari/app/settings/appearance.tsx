@@ -43,7 +43,7 @@ export default function AppearanceSettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.appearance')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {appearanceRows.map((item, index) => (
               <SettingsRow

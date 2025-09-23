@@ -49,7 +49,7 @@ export default function ContentAndMediaScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.contentAndMedia')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {contentRows.map((item, index) => (
               <SettingsRow

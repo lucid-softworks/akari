@@ -7,7 +7,6 @@ import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
-import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
 import {
   SettingsRow,
   SettingsSection,
@@ -18,23 +17,17 @@ import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
-import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
-import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
-import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
-import { getTranslationReport } from '@/utils/translationLogger';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const EXTERNAL_LINKS = {
   helpCenter: 'https://blueskyweb.zendesk.com/hc/en-us',
   status: 'https://status.bsky.app/',
-  changeLog: 'https://blueskyweb.xyz/blog',
   feedback: 'https://help.bsky.app/hc/en-us/requests/new',
   privacy: 'https://blueskyweb.xyz/support/privacy-policy',
   terms: 'https://blueskyweb.xyz/support/tos',
@@ -49,10 +42,6 @@ export default function SettingsScreen() {
   const { data: accountProfiles } = useAccountProfiles();
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const switchAccountMutation = useSwitchAccount();
-  const removeAccountMutation = useRemoveAccount();
-  const wipeAllDataMutation = useWipeAllData();
-
   const handleScrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   }, []);
@@ -61,17 +50,6 @@ export default function SettingsScreen() {
     tabScrollRegistry.register('settings', handleScrollToTop);
   }, [handleScrollToTop]);
 
-  const version = Constants.expoConfig?.version ?? t('common.unknown');
-  const iosBuildNumber = Constants.expoConfig?.ios?.buildNumber;
-  const androidVersionCode = Constants.expoConfig?.android?.versionCode;
-  const buildNumber =
-    typeof iosBuildNumber === 'string'
-      ? iosBuildNumber
-      : typeof androidVersionCode === 'number'
-        ? String(androidVersionCode)
-        : typeof androidVersionCode === 'string'
-          ? androidVersionCode
-          : undefined;
   const variant =
     typeof Constants.expoConfig?.extra?.variant === 'string'
       ? (Constants.expoConfig.extra?.variant as string)
@@ -93,84 +71,6 @@ export default function SettingsScreen() {
     [t],
   );
 
-  const handleCheckMissingTranslations = useCallback(() => {
-    const report = getTranslationReport();
-
-    showAlert({
-      title: t('settings.checkMissingTranslations'),
-      message: report,
-      buttons: [{ text: t('common.ok') }],
-    });
-  }, [t]);
-
-  const handleOpenDebugTools = useCallback(() => {
-    router.push('/debug');
-  }, []);
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await wipeAllDataMutation.mutateAsync();
-    } catch {
-      showAlert({
-        title: t('common.error'),
-        message: t('common.failedToLogout'),
-      });
-    }
-  }, [t, wipeAllDataMutation]);
-
-  const handleSwitchAccount = useCallback(
-    (account: Account) => {
-      if (account.did === currentAccount?.did) {
-        return;
-      }
-
-      showAlert({
-        title: t('common.switchAccount'),
-        message: t('profile.switchToAccount', { handle: account.handle }),
-        buttons: [
-          {
-            text: t('common.cancel'),
-            style: 'cancel',
-          },
-          {
-            text: t('common.switch'),
-            onPress: () => {
-              switchAccountMutation.mutate(account);
-            },
-          },
-        ],
-      });
-    },
-    [currentAccount, switchAccountMutation, t],
-  );
-
-  const handleRemoveAccount = useCallback(
-    (account: Account) => {
-      showAlert({
-        title: t('common.removeAccount'),
-        message: t('profile.removeAccountConfirmation', { handle: account.handle }),
-        buttons: [
-          {
-            text: t('common.cancel'),
-            style: 'cancel',
-          },
-          {
-            text: t('common.remove'),
-            style: 'destructive',
-            onPress: () => {
-              removeAccountMutation.mutate(account.did);
-
-              if (account.did === currentAccount?.did) {
-                router.replace('/(tabs)');
-              }
-            },
-          },
-        ],
-      });
-    },
-    [currentAccount, removeAccountMutation, t],
-  );
-
   const dialogManager = useDialogManager();
 
   const handleAddAccount = useCallback(() => {
@@ -186,8 +86,8 @@ export default function SettingsScreen() {
     });
   }, [dialogManager]);
 
-  const navigationRows = useMemo<SettingsRowDescriptor[]>(
-    () => [
+  const navigationRows = useMemo<SettingsRowDescriptor[]>(() => {
+    const rows: SettingsRowDescriptor[] = [
       {
         key: 'account',
         icon: 'person.crop.circle',
@@ -242,9 +142,19 @@ export default function SettingsScreen() {
         label: t('settings.about'),
         onPress: () => router.push('/settings/about'),
       },
-    ],
-    [t],
-  );
+    ];
+
+    if (showDevelopmentSection) {
+      rows.push({
+        key: 'development',
+        icon: 'hammer.fill',
+        label: t('settings.development'),
+        onPress: () => router.push('/settings/development'),
+      });
+    }
+
+    return rows;
+  }, [showDevelopmentSection, t]);
 
   const supportRows = useMemo<SettingsRowDescriptor[]>(
     () => [
@@ -286,46 +196,6 @@ export default function SettingsScreen() {
       },
     ],
     [openExternalLink, t],
-  );
-
-  const developmentRows = useMemo<SettingsRowDescriptor[]>(
-    () => [
-      {
-        key: 'check-missing-translations',
-        icon: 'sparkles',
-        label: t('settings.checkMissingTranslations'),
-        onPress: handleCheckMissingTranslations,
-      },
-      {
-        key: 'development-tool',
-        icon: 'gearshape.fill',
-        label: t('settings.developmentTool'),
-        onPress: handleOpenDebugTools,
-      },
-      {
-        key: 'app-variant',
-        icon: 'info.circle.fill',
-        label: t('settings.appVariant'),
-        value: variant ?? t('common.unknown'),
-      },
-      {
-        key: 'version',
-        icon: 'number.circle',
-        label: t('settings.version'),
-        value: version,
-      },
-      ...(buildNumber
-        ? [
-            {
-              key: 'build-number',
-              icon: 'number.circle.fill',
-              label: t('settings.buildNumber'),
-              value: buildNumber,
-            } as SettingsRowDescriptor,
-          ]
-        : []),
-    ],
-    [buildNumber, handleCheckMissingTranslations, handleOpenDebugTools, t, variant, version],
   );
 
   const currentProfile = currentAccount ? accountProfiles?.[currentAccount.did] : undefined;
@@ -435,77 +305,6 @@ export default function SettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <SettingsSection title={t('common.actions')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            <SettingsRow
-              borderColor={borderColor}
-              destructive
-              icon="xmark.circle.fill"
-              label={t('settings.signOut')}
-              onPress={handleLogout}
-              showDivider={false}
-            />
-          </ThemedView>
-        </SettingsSection>
-
-        {showDevelopmentSection ? (
-          <SettingsSection title={t('settings.development')}>
-            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-              {developmentRows.map((item, index) => (
-                <SettingsRow
-                  key={item.key}
-                  borderColor={borderColor}
-                  description={item.description}
-                  icon={item.icon}
-                  label={item.label}
-                  onPress={item.onPress}
-                  showDivider={index < developmentRows.length - 1}
-                  value={item.value}
-                />
-              ))}
-            </ThemedView>
-          </SettingsSection>
-        ) : null}
-
-        {currentAccount ? (
-          <SettingsSection title={t('common.accounts')}>
-            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-              <InfoRow borderColor={borderColor} label={t('common.handle')} value={`@${currentAccount.handle}`} />
-              <InfoRow borderColor={borderColor} label="DID" monospace value={currentAccount.did} />
-            </ThemedView>
-
-            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-              {accounts.length === 0 ? null : (
-                accounts.map((account) => {
-                  const profile = accountProfiles?.[account.did];
-                  const accountAvatar = profile?.avatar || account.avatar;
-                  const accountDisplayName = profile?.displayName || account.displayName;
-                  const isCurrent = account.did === currentAccount.did;
-
-                  return (
-                    <AccountRow
-                      key={account.did}
-                      account={account}
-                      avatar={accountAvatar}
-                      borderColor={borderColor}
-                      currentLabel={t('common.current')}
-                      displayName={accountDisplayName}
-                      isCurrent={isCurrent}
-                      onRemove={() => handleRemoveAccount(account)}
-                      onSwitch={
-                        isCurrent
-                          ? undefined
-                          : () => handleSwitchAccount(account)
-                      }
-                      removeLabel={t('common.remove')}
-                      switchLabel={t('common.switch')}
-                    />
-                  );
-                })
-              )}
-            </ThemedView>
-          </SettingsSection>
-        ) : null}
       </ScrollView>
     </ThemedView>
   );

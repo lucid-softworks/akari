@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import * as WebBrowser from 'expo-web-browser';
+import { router } from 'expo-router';
 import React, { useCallback, useMemo } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -10,20 +10,12 @@ import {
 } from '@/components/settings/SettingsList';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { getTranslationReport } from '@/utils/translationLogger';
 
-const LINKS = {
-  terms: 'https://blueskyweb.xyz/support/tos',
-  privacy: 'https://blueskyweb.xyz/support/privacy-policy',
-  status: 'https://status.bsky.app/',
-  changeLog: 'https://blueskyweb.xyz/blog',
-} as const;
-
-export default function AboutSettingsScreen() {
+export default function DevelopmentSettingsScreen() {
   const borderColor = useBorderColor();
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
 
   const version = Constants.expoConfig?.version ?? t('common.unknown');
@@ -37,58 +29,48 @@ export default function AboutSettingsScreen() {
         : typeof androidVersionCode === 'string'
           ? androidVersionCode
           : undefined;
+  const variant =
+    typeof Constants.expoConfig?.extra?.variant === 'string'
+      ? (Constants.expoConfig.extra?.variant as string)
+      : undefined;
 
-  const openExternalLink = useCallback(
-    async (url: string) => {
-      try {
-        await WebBrowser.openBrowserAsync(url);
-      } catch {
-        showAlert({
-          title: t('common.error'),
-          message: t('common.failedToOpenLink'),
-          buttons: [{ text: t('common.ok') }],
-        });
-      }
-    },
-    [t],
-  );
+  const handleCheckMissingTranslations = useCallback(() => {
+    const report = getTranslationReport();
 
-  const aboutRows = useMemo<SettingsRowDescriptor[]>(
+    showAlert({
+      title: t('settings.checkMissingTranslations'),
+      message: report,
+      buttons: [{ text: t('common.ok') }],
+    });
+  }, [t]);
+
+  const handleOpenDebugTools = useCallback(() => {
+    router.push('/debug');
+  }, []);
+
+  const developmentRows = useMemo<SettingsRowDescriptor[]>(
     () => [
       {
-        key: 'terms',
-        icon: 'doc.text.fill',
-        label: t('settings.terms'),
-        onPress: () => openExternalLink(LINKS.terms),
+        key: 'check-missing-translations',
+        icon: 'sparkles',
+        label: t('settings.checkMissingTranslations'),
+        onPress: handleCheckMissingTranslations,
       },
       {
-        key: 'privacy',
-        icon: 'lock.fill',
-        label: t('settings.privacy'),
-        onPress: () => openExternalLink(LINKS.privacy),
+        key: 'development-tool',
+        icon: 'gearshape.fill',
+        label: t('settings.developmentTool'),
+        onPress: handleOpenDebugTools,
       },
       {
-        key: 'status',
-        icon: 'waveform.path',
-        label: t('settings.status'),
-        onPress: () => openExternalLink(LINKS.status),
-      },
-      {
-        key: 'change-log',
-        icon: 'clock.fill',
-        label: t('settings.changeLog'),
-        onPress: () => openExternalLink(LINKS.changeLog),
-      },
-      {
-        key: 'system-log',
-        icon: 'square.and.pencil',
-        label: t('settings.systemLog'),
-        description: t('settings.notImplemented'),
-        onPress: showNotImplemented,
+        key: 'app-variant',
+        icon: 'info.circle.fill',
+        label: t('settings.appVariant'),
+        value: variant ?? t('common.unknown'),
       },
       {
         key: 'version',
-        icon: 'info.circle.fill',
+        icon: 'number.circle',
         label: t('settings.version'),
         value: version,
       },
@@ -103,15 +85,15 @@ export default function AboutSettingsScreen() {
           ]
         : []),
     ],
-    [buildNumber, openExternalLink, showNotImplemented, t, version],
+    [buildNumber, handleCheckMissingTranslations, handleOpenDebugTools, t, variant, version],
   );
 
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
         <SettingsSection isFirst>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {aboutRows.map((item, index) => (
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            {developmentRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
                 borderColor={borderColor}
@@ -119,7 +101,7 @@ export default function AboutSettingsScreen() {
                 icon={item.icon}
                 label={item.label}
                 onPress={item.onPress}
-                showDivider={index < aboutRows.length - 1}
+                showDivider={index < developmentRows.length - 1}
                 value={item.value}
               />
             ))}
@@ -144,4 +126,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
-

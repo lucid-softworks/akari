@@ -51,7 +51,7 @@ export default function PrivacyAndSecurityScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.privacyAndSecurity')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {privacyRows.map((item, index) => (
               <SettingsRow

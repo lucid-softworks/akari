@@ -62,7 +62,7 @@ export default function ModerationSettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.moderation')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
             {moderationRows.map((item, index) => (
               <SettingsRow

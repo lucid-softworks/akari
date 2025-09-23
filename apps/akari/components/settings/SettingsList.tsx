@@ -17,7 +17,7 @@ export type SettingsRowDescriptor = {
 };
 
 type SettingsSectionProps = {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   isFirst?: boolean;
 };
@@ -30,7 +30,7 @@ type SettingsRowProps = SettingsRowDescriptor & {
 export function SettingsSection({ children, isFirst = false, title }: SettingsSectionProps) {
   return (
     <ThemedView style={[styles.section, isFirst && styles.firstSection]}>
-      <ThemedText style={styles.sectionTitle}>{title}</ThemedText>
+      {title ? <ThemedText style={styles.sectionTitle}>{title}</ThemedText> : null}
       {children}
     </ThemedView>
   );

@@ -33,7 +33,7 @@ export default function NotificationSettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SettingsSection isFirst title={t('settings.notifications')}>
+        <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
             <NotificationSettings />
           </ThemedView>
