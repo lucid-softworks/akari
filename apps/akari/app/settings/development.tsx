@@ -8,7 +8,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
-import { SettingsHeader } from '@/components/settings/SettingsHeader';
+import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -90,8 +90,7 @@ export default function DevelopmentSettingsScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
-      <SettingsHeader title={t('settings.development')} />
+    <SettingsSubpageLayout title={t('settings.development')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
@@ -114,14 +113,11 @@ export default function DevelopmentSettingsScreen() {
           </ThemedView>
         </SettingsSection>
       </ScrollView>
-    </ThemedView>
+    </SettingsSubpageLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
   },

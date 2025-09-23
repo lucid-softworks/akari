@@ -7,7 +7,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
-import { SettingsHeader } from '@/components/settings/SettingsHeader';
+import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
@@ -32,15 +32,14 @@ export default function LanguagesSettingsScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
-      <SettingsHeader title={t('settings.language')} />
+    <SettingsSubpageLayout title={t('settings.language')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
         <SettingsSection isFirst>
-          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
+          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}>
             <LanguageSelector />
           </ThemedView>
         </SettingsSection>
@@ -61,14 +60,11 @@ export default function LanguagesSettingsScreen() {
           </ThemedView>
         </SettingsSection>
       </ScrollView>
-    </ThemedView>
+    </SettingsSubpageLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
   },

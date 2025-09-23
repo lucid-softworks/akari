@@ -6,7 +6,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
-import { SettingsHeader } from '@/components/settings/SettingsHeader';
+import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -50,15 +50,14 @@ export default function PrivacyAndSecurityScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
-      <SettingsHeader title={t('settings.privacyAndSecurity')} />
+    <SettingsSubpageLayout title={t('settings.privacyAndSecurity')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
         <SettingsSection isFirst>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
             {privacyRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
@@ -73,19 +72,16 @@ export default function PrivacyAndSecurityScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <ThemedView style={[styles.noticeCard, { borderColor }]}> 
+        <ThemedView style={[styles.noticeCard, { borderColor }]}>
           <ThemedText style={styles.noticeTitle}>{t('settings.loggedOutVisibility')}</ThemedText>
           <ThemedText style={styles.noticeBody}>{t('settings.loggedOutVisibilityDescription')}</ThemedText>
         </ThemedView>
       </ScrollView>
-    </ThemedView>
+    </SettingsSubpageLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
   },

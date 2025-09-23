@@ -7,7 +7,7 @@ import {
   SettingsSection,
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
-import { SettingsHeader } from '@/components/settings/SettingsHeader';
+import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
@@ -32,21 +32,20 @@ export default function NotificationSettingsScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
-      <SettingsHeader title={t('settings.notifications')} />
+    <SettingsSubpageLayout title={t('settings.notifications')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
         <SettingsSection isFirst>
-          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
+          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}>
             <NotificationSettings />
           </ThemedView>
         </SettingsSection>
 
         <SettingsSection title={t('common.actions')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
             {stubRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
@@ -61,14 +60,11 @@ export default function NotificationSettingsScreen() {
           </ThemedView>
         </SettingsSection>
       </ScrollView>
-    </ThemedView>
+    </SettingsSubpageLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
   },

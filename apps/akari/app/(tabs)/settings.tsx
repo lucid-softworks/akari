@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
@@ -21,6 +20,7 @@ import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useSettingsNavigationItems } from '@/hooks/useSettingsNavigationItems';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -50,11 +50,7 @@ export default function SettingsScreen() {
     tabScrollRegistry.register('settings', handleScrollToTop);
   }, [handleScrollToTop]);
 
-  const variant =
-    typeof Constants.expoConfig?.extra?.variant === 'string'
-      ? (Constants.expoConfig.extra?.variant as string)
-      : undefined;
-  const showDevelopmentSection = __DEV__ || (variant ? variant !== 'production' : false);
+  const navigationItems = useSettingsNavigationItems();
 
   const openExternalLink = useCallback(
     async (url: string) => {
@@ -86,75 +82,16 @@ export default function SettingsScreen() {
     });
   }, [dialogManager]);
 
-  const navigationRows = useMemo<SettingsRowDescriptor[]>(() => {
-    const rows: SettingsRowDescriptor[] = [
-      {
-        key: 'account',
-        icon: 'person.crop.circle',
-        label: t('settings.account'),
-        onPress: () => router.push('/settings/account'),
-      },
-      {
-        key: 'privacy-security',
-        icon: 'lock.fill',
-        label: t('settings.privacyAndSecurity'),
-        onPress: () => router.push('/settings/privacy-and-security'),
-      },
-      {
-        key: 'moderation',
-        icon: 'shield.fill',
-        label: t('settings.moderation'),
-        onPress: () => router.push('/settings/moderation'),
-      },
-      {
-        key: 'notifications',
-        icon: 'bell.fill',
-        label: t('settings.notifications'),
-        onPress: () => router.push('/settings/notifications'),
-      },
-      {
-        key: 'content-media',
-        icon: 'photo.on.rectangle',
-        label: t('settings.contentAndMedia'),
-        onPress: () => router.push('/settings/content-and-media'),
-      },
-      {
-        key: 'appearance',
-        icon: 'paintpalette.fill',
-        label: t('settings.appearance'),
-        onPress: () => router.push('/settings/appearance'),
-      },
-      {
-        key: 'accessibility',
-        icon: 'figure.stand',
-        label: t('settings.accessibility'),
-        onPress: () => router.push('/settings/accessibility'),
-      },
-      {
-        key: 'languages',
-        icon: 'globe',
-        label: t('settings.language'),
-        onPress: () => router.push('/settings/languages'),
-      },
-      {
-        key: 'about',
-        icon: 'info.circle.fill',
-        label: t('settings.about'),
-        onPress: () => router.push('/settings/about'),
-      },
-    ];
-
-    if (showDevelopmentSection) {
-      rows.push({
-        key: 'development',
-        icon: 'hammer.fill',
-        label: t('settings.development'),
-        onPress: () => router.push('/settings/development'),
-      });
-    }
-
-    return rows;
-  }, [showDevelopmentSection, t]);
+  const navigationRows = useMemo<SettingsRowDescriptor[]>(
+    () =>
+      navigationItems.map((item) => ({
+        key: item.key,
+        icon: item.icon,
+        label: item.label,
+        onPress: () => router.push(item.route as never),
+      })),
+    [navigationItems],
+  );
 
   const supportRows = useMemo<SettingsRowDescriptor[]>(
     () => [
