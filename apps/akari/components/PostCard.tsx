@@ -562,63 +562,12 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
   }, [post.author.handle, showToast, t]);
 
-  const handlePlaceholderAction = useCallback(
-    (actionKey: string) => {
-      setShowActionsMenu(false);
-
-      switch (actionKey) {
-        case 'copyText':
-          void handleCopyPostText();
-          break;
-        case 'showMoreLikeThis':
-          handleShowMoreLikeThis();
-          break;
-        case 'showLessLikeThis':
-          handleShowLessLikeThis();
-          break;
-        case 'assignToLists':
-          handleAssignToLists();
-          break;
-        case 'muteThread':
-          handleMuteThread();
-          break;
-        case 'muteWordsAndTags':
-          handleMuteWordsAndTags();
-          break;
-        case 'hidePost':
-          handleHidePost();
-          break;
-        case 'hideAccount':
-          handleHideAccount();
-          break;
-        case 'muteAccount':
-          handleMuteAccountAction();
-          break;
-        case 'blockAccount':
-          handleBlockAccount();
-          break;
-        case 'reportAccount':
-          void handleReportAccount();
-          break;
-        default:
-          if (__DEV__) {
-            console.info(`[PostCard] Action "${actionKey}" is not implemented yet.`);
-          }
-      }
+  const createMenuActionHandler = useCallback(
+    (action: () => void | Promise<void>) => () => {
+      handleMenuDismiss();
+      void action();
     },
-    [
-      handleAssignToLists,
-      handleBlockAccount,
-      handleCopyPostText,
-      handleHideAccount,
-      handleHidePost,
-      handleMuteAccountAction,
-      handleMuteThread,
-      handleMuteWordsAndTags,
-      handleReportAccount,
-      handleShowLessLikeThis,
-      handleShowMoreLikeThis,
-    ],
+    [handleMenuDismiss],
   );
 
   const performTranslation = useCallback(
@@ -656,7 +605,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   );
 
   const handleTranslatePress = useCallback(() => {
-    setShowActionsMenu(false);
+    handleMenuDismiss();
 
     if (!canTranslate) {
       setIsTranslationVisible(true);
@@ -674,7 +623,15 @@ export function PostCard({ post, onPress }: PostCardProps) {
     if (!translationCache[selectedLanguage]) {
       void performTranslation(selectedLanguage);
     }
-  }, [canTranslate, isTranslationVisible, performTranslation, selectedLanguage, translationCache, t]);
+  }, [
+    canTranslate,
+    handleMenuDismiss,
+    isTranslationVisible,
+    performTranslation,
+    selectedLanguage,
+    translationCache,
+    t,
+  ]);
 
   const handleLanguageSelect = useCallback(
     (languageCode: string) => {
@@ -720,49 +677,81 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const menuActions = useMemo<PostMenuItem[]>(
     () => [
       { key: 'translate', label: t('post.actions.translate'), onPress: handleTranslatePress, disabled: !canTranslate },
-      { key: 'copyText', label: t('post.actions.copyText'), onPress: () => handlePlaceholderAction('copyText') },
+      {
+        key: 'copyText',
+        label: t('post.actions.copyText'),
+        onPress: createMenuActionHandler(handleCopyPostText),
+      },
       { key: 'separator-1', type: 'separator' },
       {
         key: 'showMoreLikeThis',
         label: t('post.actions.showMoreLikeThis'),
-        onPress: () => handlePlaceholderAction('showMoreLikeThis'),
+        onPress: createMenuActionHandler(handleShowMoreLikeThis),
       },
       {
         key: 'showLessLikeThis',
         label: t('post.actions.showLessLikeThis'),
-        onPress: () => handlePlaceholderAction('showLessLikeThis'),
+        onPress: createMenuActionHandler(handleShowLessLikeThis),
       },
       {
         key: 'assignToLists',
         label: t('post.actions.assignToLists'),
-        onPress: () => handlePlaceholderAction('assignToLists'),
+        onPress: createMenuActionHandler(handleAssignToLists),
       },
       { key: 'separator-2', type: 'separator' },
-      { key: 'muteThread', label: t('post.actions.muteThread'), onPress: () => handlePlaceholderAction('muteThread') },
+      {
+        key: 'muteThread',
+        label: t('post.actions.muteThread'),
+        onPress: createMenuActionHandler(handleMuteThread),
+      },
       {
         key: 'muteWordsAndTags',
         label: t('post.actions.muteWordsAndTags'),
-        onPress: () => handlePlaceholderAction('muteWordsAndTags'),
+        onPress: createMenuActionHandler(handleMuteWordsAndTags),
       },
       { key: 'separator-3', type: 'separator' },
-      { key: 'hidePost', label: t('post.actions.hidePost'), onPress: () => handlePlaceholderAction('hidePost') },
-      { key: 'hideAccount', label: t('post.actions.hideAccount'), onPress: () => handlePlaceholderAction('hideAccount') },
+      { key: 'hidePost', label: t('post.actions.hidePost'), onPress: createMenuActionHandler(handleHidePost) },
+      {
+        key: 'hideAccount',
+        label: t('post.actions.hideAccount'),
+        onPress: createMenuActionHandler(handleHideAccount),
+      },
       { key: 'separator-4', type: 'separator' },
-      { key: 'muteAccount', label: t('profile.muteAccount'), onPress: () => handlePlaceholderAction('muteAccount') },
+      {
+        key: 'muteAccount',
+        label: t('profile.muteAccount'),
+        onPress: createMenuActionHandler(handleMuteAccountAction),
+      },
       {
         key: 'blockAccount',
         label: t('common.block'),
-        onPress: () => handlePlaceholderAction('blockAccount'),
+        onPress: createMenuActionHandler(handleBlockAccount),
         destructive: true,
       },
       {
         key: 'reportAccount',
         label: t('profile.reportAccount'),
-        onPress: () => handlePlaceholderAction('reportAccount'),
+        onPress: createMenuActionHandler(handleReportAccount),
         destructive: true,
       },
     ],
-    [canTranslate, handlePlaceholderAction, handleTranslatePress, t],
+    [
+      canTranslate,
+      createMenuActionHandler,
+      handleAssignToLists,
+      handleBlockAccount,
+      handleCopyPostText,
+      handleHideAccount,
+      handleHidePost,
+      handleMuteAccountAction,
+      handleMuteThread,
+      handleMuteWordsAndTags,
+      handleReportAccount,
+      handleShowLessLikeThis,
+      handleShowMoreLikeThis,
+      handleTranslatePress,
+      t,
+    ],
   );
 
   const handleProfilePress = () => {
