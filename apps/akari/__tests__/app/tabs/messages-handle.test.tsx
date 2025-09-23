@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -11,6 +11,9 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
+
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -210,7 +213,7 @@ describe('ConversationScreen', () => {
     const { getByText, UNSAFE_getByType } = render(<ConversationScreen />);
     expect(getByText('common.loading common.messages...')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
@@ -231,7 +234,7 @@ describe('ConversationScreen', () => {
 
     const { UNSAFE_getByType } = render(<ConversationScreen />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });

@@ -1,5 +1,4 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
 
 let mockPostCard: jest.Mock;
 
@@ -29,12 +28,14 @@ jest.mock('@/hooks/queries/useAuthorPosts');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 import { PostsTab } from '@/components/profile/PostsTab';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 describe('PostsTab', () => {
   const mockUseAuthorPosts = useAuthorPosts as jest.Mock;
@@ -126,7 +127,7 @@ describe('PostsTab', () => {
 
     const { UNSAFE_getByType } = render(<PostsTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -144,7 +145,7 @@ describe('PostsTab', () => {
     const { getByText, UNSAFE_getByType } = render(<PostsTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

@@ -1,11 +1,11 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
 
 import { GifPicker } from '@/components/GifPicker';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tenorApi } from '@/utils/tenor';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/utils/tenor', () => ({
   tenorApi: {
@@ -19,6 +19,7 @@ jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-image', () => ({ Image: () => null }));
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: () => null }));
+jest.mock('@shopify/flash-list', () => require('../../test-utils/flash-list'));
 
 describe('GifPicker', () => {
   const mockUseThemeColor = useThemeColor as jest.Mock;
@@ -150,7 +151,7 @@ describe('GifPicker', () => {
 
     await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1));
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     fireEvent(list, 'onEndReached');
 
     await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledWith(20, 'next'));
@@ -172,7 +173,7 @@ describe('GifPicker', () => {
     fireEvent.changeText(getByPlaceholderText('gif.searchPlaceholder'), 'cats');
     await waitFor(() => expect(mockTenor.searchGifs).toHaveBeenCalledWith('cats', 20));
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     fireEvent(list, 'onEndReached');
 
     await waitFor(() =>
@@ -192,7 +193,7 @@ describe('GifPicker', () => {
 
     await waitFor(() => expect(mockTenor.getTrendingGifs).toHaveBeenCalledTimes(1));
 
-    fireEvent(UNSAFE_getByType(FlatList), 'onEndReached');
+    fireEvent(UNSAFE_getByType(VirtualizedList), 'onEndReached');
 
     await waitFor(() =>
       expect(consoleError).toHaveBeenCalledWith('Failed to load more GIFs:', expect.any(Error)),

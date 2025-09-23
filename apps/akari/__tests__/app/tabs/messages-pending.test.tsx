@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
 import { router } from 'expo-router';
@@ -8,6 +8,9 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
+
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -83,14 +86,16 @@ describe('PendingMessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { getByText, queryByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<PendingMessagesScreen />);
+    const { getByText, queryByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(
+      <PendingMessagesScreen />,
+    );
 
     expect(mockUseConversations).toHaveBeenCalled();
     const [, , status] = mockUseConversations.mock.calls[0];
     expect(status).toBe('request');
 
     expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
-    expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
+    expect(UNSAFE_getByType(VirtualizedList).props.ListFooterComponent()).toBeNull();
     expect(getByText('common.pendingChats')).toBeTruthy();
     expect(getByText('Pending Pal')).toBeTruthy();
     expect(getByText('common.pending')).toBeTruthy();

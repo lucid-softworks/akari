@@ -1,10 +1,11 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Text, FlatList } from 'react-native';
+import { Text } from 'react-native';
 import { router } from 'expo-router';
 
 import { LikesTab } from '@/components/profile/LikesTab';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorLikes');
 jest.mock('@/hooks/useTranslation');
@@ -13,6 +14,7 @@ jest.mock('expo-router', () => ({
     push: jest.fn(),
   },
 }));
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 jest.mock('@/components/skeletons', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -113,7 +115,7 @@ describe('LikesTab', () => {
     fireEvent.press(getByText('liked post'));
     expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(like.uri)}`);
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     act(() => {
       list.props.onEndReached();
     });
@@ -133,7 +135,7 @@ describe('LikesTab', () => {
     const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
     expect(getByText('common.loading')).toBeTruthy();
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     act(() => {
       list.props.onEndReached();
     });

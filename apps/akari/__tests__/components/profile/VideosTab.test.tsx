@@ -1,16 +1,18 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { VideosTab } from '@/components/profile/VideosTab';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorVideos');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
@@ -120,7 +122,7 @@ describe('VideosTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     act(() => {
       list.props.onEndReached();
     });
@@ -164,7 +166,7 @@ describe('VideosTab', () => {
     });
 
     const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     act(() => {
       list.props.onEndReached();
     });

@@ -1,10 +1,11 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorFeeds');
 
@@ -21,6 +22,8 @@ jest.mock('@/components/ui/IconSymbol', () => {
   const { Text } = require('react-native');
   return { IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text> };
 });
+
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 const mockUseAuthorFeeds = useAuthorFeeds as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
@@ -102,7 +105,7 @@ describe('FeedsTab', () => {
     logSpy.mockRestore();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -127,7 +130,7 @@ describe('FeedsTab', () => {
     const { getByText, UNSAFE_getByType } = render(<FeedsTab handle="alice" />);
     expect(getByText('common.loading')).toBeTruthy();
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
@@ -151,7 +154,7 @@ describe('FeedsTab', () => {
 
     const { UNSAFE_getByType } = render(<FeedsTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

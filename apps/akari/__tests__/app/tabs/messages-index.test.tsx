@@ -9,58 +9,9 @@ import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { mockScrollToOffset } from '../../../test-utils/flash-list';
 
-const mockScrollToOffset = jest.fn();
-
-jest.mock('@shopify/flash-list', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-
-  return {
-    FlashList: React.forwardRef((props: any, ref) => {
-      const {
-        data = [],
-        renderItem,
-        ListEmptyComponent,
-        ListFooterComponent,
-        ListHeaderComponent,
-        keyExtractor,
-      } = props;
-
-      React.useImperativeHandle(ref, () => ({
-        scrollToOffset: mockScrollToOffset,
-      }));
-
-      const renderSupplemental = (component: any) => {
-        if (!component) {
-          return null;
-        }
-
-        return typeof component === 'function' ? component() : component;
-      };
-
-      const items =
-        renderItem && data.length > 0
-          ? data.map((item: any, index: number) => {
-              const rendered = renderItem({ item, index });
-              const key = keyExtractor ? keyExtractor(item, index) : index;
-
-              return <React.Fragment key={key}>{rendered}</React.Fragment>;
-            })
-          : null;
-
-      const shouldShowEmpty = data.length === 0 && ListEmptyComponent;
-
-      return (
-        <View>
-          {renderSupplemental(ListHeaderComponent)}
-          {shouldShowEmpty ? renderSupplemental(ListEmptyComponent) : items}
-          {renderSupplemental(ListFooterComponent)}
-        </View>
-      );
-    }),
-  };
-});
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');

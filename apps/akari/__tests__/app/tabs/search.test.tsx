@@ -9,6 +9,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
+
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
   return { Image };

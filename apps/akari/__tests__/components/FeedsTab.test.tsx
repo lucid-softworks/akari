@@ -1,11 +1,11 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyFeed } from '@/bluesky-api';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorFeeds');
 jest.mock('@/hooks/useThemeColor');
@@ -15,6 +15,8 @@ jest.mock('@/components/skeletons', () => {
   return { FeedSkeleton: () => <Text testID="feed-skeleton" /> };
 });
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: () => null }));
+
+jest.mock('@shopify/flash-list', () => require('../../test-utils/flash-list'));
 
 const mockUseAuthorFeeds = useAuthorFeeds as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
@@ -81,7 +83,7 @@ describe('FeedsTab', () => {
     expect(getByText('5 likes')).toBeTruthy();
     expect(getByText('Interactive')).toBeTruthy();
 
-    const list = UNSAFE_getByType(FlatList);
+    const list = UNSAFE_getByType(VirtualizedList);
     fireEvent(list, 'onEndReached');
     expect(fetchNextPage).toHaveBeenCalled();
   });
