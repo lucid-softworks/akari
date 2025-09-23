@@ -15,6 +15,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test --filter=akari",
     "test:coverage": "turbo run test:coverage --filter=akari && npm run merge-coverage",
+    "test:e2e": "playwright test",
     "merge-coverage": "node scripts/merge-coverage.cjs",
     "clean": "turbo run clean",
     "start:development": "turbo run start:development --filter=akari",
@@ -32,6 +33,7 @@
     "web:development": "turbo run web:development --filter=akari",
     "web:preview": "turbo run web:preview --filter=akari",
     "web:production": "turbo run web:production --filter=akari",
+    "web:test": "node ./scripts/start-expo-web.cjs",
     "reset-project": "node ./scripts/reset-project.js",
     "update-translations": "node ./scripts/update-translations.js",
     "validate-translations": "node ./scripts/validate-translations.js",
@@ -90,6 +92,7 @@
     "react-native-webview": "13.13.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "turbo": "^2.3.0"
   }
 }
