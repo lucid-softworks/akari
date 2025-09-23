@@ -317,16 +317,20 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const languages = languagesQuery.data?.languages ?? DEFAULT_LIBRETRANSLATE_LANGUAGES;
 
   useEffect(() => {
-    if (!hasUserSelectedLanguage) {
-      setSelectedLanguage(resolveLanguageCode(currentLocale, languages));
-    }
-  }, [currentLocale, hasUserSelectedLanguage, languages]);
+    const resolvedLanguage = resolveLanguageCode(currentLocale, languages);
 
-  useEffect(() => {
     if (!languages.some((language) => language.code === selectedLanguage)) {
-      setSelectedLanguage(resolveLanguageCode(currentLocale, languages));
+      if (selectedLanguage !== resolvedLanguage) {
+        setSelectedLanguage(resolvedLanguage);
+      }
+
+      return;
     }
-  }, [languages, selectedLanguage, currentLocale]);
+
+    if (!hasUserSelectedLanguage && selectedLanguage !== resolvedLanguage) {
+      setSelectedLanguage(resolvedLanguage);
+    }
+  }, [currentLocale, hasUserSelectedLanguage, languages, selectedLanguage]);
 
   const languageNameMap = useMemo(
     () => new Map(languages.map((language) => [language.code, language.name])),
