@@ -1,9 +1,11 @@
+import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
+  Linking,
   Modal,
   ScrollView,
   StyleSheet,
@@ -25,11 +27,17 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { useToast } from '@/contexts/ToastContext';
+import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { useMuteAccount } from '@/hooks/mutations/useMuteAccount';
+import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { hideAccount, hidePost, useHiddenContent } from '@/utils/hiddenContentStore';
+import { showAlert } from '@/utils/alert';
 import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
 
 type PostCardProps = {
@@ -40,6 +48,12 @@ type PostCardProps = {
       handle: string;
       displayName?: string;
       avatar?: string;
+      did?: string;
+      viewer?: {
+        muted?: boolean;
+        blocking?: string;
+        blockedBy?: boolean;
+      };
     };
     createdAt: string;
     likeCount?: number;
@@ -78,6 +92,7 @@ type PostCardProps = {
     /** Post URI and CID for like functionality */
     uri?: string;
     cid?: string;
+    rootUri?: string;
   };
   onPress?: () => void;
 };
@@ -158,6 +173,46 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
   const translationMutation = usePostTranslation();
+  const { showToast } = useToast();
+  const blockMutation = useBlockUser();
+  const muteAccountMutation = useMuteAccount();
+  const muteThreadMutation = useMuteThread();
+  const hiddenContent = useHiddenContent();
+
+  const accountIdentifiers = useMemo(() => {
+    const identifiers: string[] = [];
+    if (post.author.did) {
+      identifiers.push(post.author.did);
+    }
+    if (post.author.handle) {
+      identifiers.push(post.author.handle);
+    }
+    return identifiers;
+  }, [post.author.did, post.author.handle]);
+
+  const hiddenAccounts = hiddenContent.accounts;
+  const hiddenPosts = hiddenContent.posts;
+
+  const isHidden = useMemo(() => {
+    if (post.uri && hiddenPosts.has(post.uri)) {
+      return true;
+    }
+
+    for (const identifier of accountIdentifiers) {
+      if (hiddenAccounts.has(identifier)) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [accountIdentifiers, hiddenAccounts, hiddenPosts, post.uri]);
+
+  const authorViewer = post.author.viewer ?? {};
+  const isAuthorMuted = authorViewer.muted ?? false;
+  const isBlocking = Boolean(authorViewer.blocking);
+  const blockUri = authorViewer.blocking;
+  const rootUri = post.rootUri ?? post.uri;
+  const accountId = accountIdentifiers[0];
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const menuButtonRef = useRef<TouchableOpacity | null>(null);
@@ -291,13 +346,280 @@ export function PostCard({ post, onPress }: PostCardProps) {
     setShowActionsMenu(false);
   }, []);
 
-  const handlePlaceholderAction = useCallback((actionKey: string) => {
-    setShowActionsMenu(false);
+  const extractSearchQuery = useCallback(() => {
+    if (post.facets && post.facets.length > 0) {
+      const tags: string[] = [];
+      for (const facet of post.facets) {
+        for (const feature of facet.features ?? []) {
+          if (feature.$type === 'app.bsky.richtext.facet#tag' && feature.tag) {
+            tags.push(`#${feature.tag}`);
+          }
+        }
+      }
 
-    if (__DEV__) {
-      console.info(`[PostCard] Action "${actionKey}" is not implemented yet.`);
+      if (tags.length > 0) {
+        return tags.join(' ');
+      }
     }
-  }, []);
+
+    if (post.text) {
+      const sanitized = post.text.replace(/[\n\r]+/g, ' ');
+      const words = sanitized
+        .split(' ')
+        .map((word) => word.trim())
+        .filter((word) => word.length > 2 && !word.startsWith('@') && !word.startsWith('http'));
+
+      if (words.length > 0) {
+        return words.slice(0, 5).join(' ');
+      }
+    }
+
+    return post.author.handle ? `from:${post.author.handle}` : undefined;
+  }, [post.author.handle, post.facets, post.text]);
+
+  const handleCopyPostText = useCallback(async () => {
+    if (!post.text || !post.text.trim()) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    try {
+      await Clipboard.setStringAsync(post.text);
+      showToast({ message: t('post.actions.copyText'), type: 'success', title: t('common.success') });
+    } catch {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+    }
+  }, [post.text, showToast, t]);
+
+  const handleShowMoreLikeThis = useCallback(() => {
+    const query = extractSearchQuery();
+
+    if (!query) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    router.push(`/(tabs)/search?query=${encodeURIComponent(query)}`);
+  }, [extractSearchQuery, showToast, t]);
+
+  const hidePostWithMessage = useCallback(
+    (messageKey: 'post.actions.hidePost' | 'post.actions.showLessLikeThis') => {
+      if (!post.uri) {
+        showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+        return;
+      }
+
+      hidePost(post.uri);
+      showToast({ message: t(messageKey), type: 'info', title: t('common.hide') });
+    },
+    [post.uri, showToast, t],
+  );
+
+  const handleHidePost = useCallback(() => {
+    hidePostWithMessage('post.actions.hidePost');
+  }, [hidePostWithMessage]);
+
+  const handleShowLessLikeThis = useCallback(() => {
+    hidePostWithMessage('post.actions.showLessLikeThis');
+  }, [hidePostWithMessage]);
+
+  const handleAssignToLists = useCallback(() => {
+    router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+    showToast({ message: t('post.actions.assignToLists'), type: 'info', title: t('profile.addToLists') });
+  }, [post.author.handle, showToast, t]);
+
+  const handleMuteWordsAndTags = useCallback(() => {
+    router.push('/(tabs)/settings');
+    showToast({ message: t('post.actions.muteWordsAndTags'), type: 'info' });
+  }, [showToast, t]);
+
+  const handleHideAccount = useCallback(() => {
+    if (accountIdentifiers.length === 0) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    showAlert({
+      title: t('post.actions.hideAccount'),
+      message: t('post.actions.hideAccount'),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.hide'),
+          style: 'destructive',
+          onPress: () => {
+            for (const identifier of accountIdentifiers) {
+              hideAccount(identifier);
+            }
+            showToast({ message: t('post.actions.hideAccount'), type: 'info', title: t('common.hide') });
+          },
+        },
+      ],
+    });
+  }, [accountIdentifiers, showToast, t]);
+
+  const handleMuteThread = useCallback(() => {
+    if (!rootUri) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    muteThreadMutation.mutate(
+      { root: rootUri },
+      {
+        onSuccess: () => {
+          showToast({ message: t('post.actions.muteThread'), type: 'success', title: t('common.success') });
+        },
+        onError: () => {
+          showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+        },
+      },
+    );
+  }, [muteThreadMutation, rootUri, showToast, t]);
+
+  const handleMuteAccountAction = useCallback(() => {
+    if (!accountId) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    showAlert({
+      title: isAuthorMuted ? t('common.unmute') : t('common.mute'),
+      message: t(isAuthorMuted ? 'profile.unmuteConfirmation' : 'profile.muteConfirmation', {
+        handle: post.author.handle,
+      }),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t(isAuthorMuted ? 'common.unmute' : 'common.mute'),
+          style: 'destructive',
+          onPress: () => {
+            muteAccountMutation.mutate(
+              { actor: accountId, action: isAuthorMuted ? 'unmute' : 'mute' },
+              {
+                onSuccess: () => {
+                  showToast({ message: t('profile.muteAccount'), type: 'success', title: t('common.success') });
+                },
+                onError: () => {
+                  showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+                },
+              },
+            );
+          },
+        },
+      ],
+    });
+  }, [accountId, isAuthorMuted, muteAccountMutation, post.author.handle, showToast, t]);
+
+  const handleBlockAccount = useCallback(() => {
+    if (!post.author.did) {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+      return;
+    }
+
+    showAlert({
+      title: isBlocking ? t('common.unblock') : t('common.block'),
+      message: t(isBlocking ? 'profile.unblockConfirmation' : 'profile.blockConfirmation', {
+        handle: post.author.handle,
+      }),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t(isBlocking ? 'common.unblock' : 'common.block'),
+          style: 'destructive',
+          onPress: () => {
+            blockMutation.mutate(
+              {
+                did: post.author.did!,
+                blockUri,
+                action: isBlocking ? 'unblock' : 'block',
+              },
+              {
+                onSuccess: () => {
+                  showToast({
+                    message: t(isBlocking ? 'common.unblock' : 'common.block'),
+                    type: 'success',
+                    title: t('common.success'),
+                  });
+                },
+                onError: () => {
+                  showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+                },
+              },
+            );
+          },
+        },
+      ],
+    });
+  }, [blockMutation, blockUri, isBlocking, post.author.did, post.author.handle, showToast, t]);
+
+  const handleReportAccount = useCallback(async () => {
+    try {
+      const targetHandle = encodeURIComponent(post.author.handle);
+      await Linking.openURL(`https://bsky.app/profile/${targetHandle}/report`);
+    } catch {
+      showToast({ message: t('common.somethingWentWrong'), type: 'error', title: t('common.error') });
+    }
+  }, [post.author.handle, showToast, t]);
+
+  const handlePlaceholderAction = useCallback(
+    (actionKey: string) => {
+      setShowActionsMenu(false);
+
+      switch (actionKey) {
+        case 'copyText':
+          void handleCopyPostText();
+          break;
+        case 'showMoreLikeThis':
+          handleShowMoreLikeThis();
+          break;
+        case 'showLessLikeThis':
+          handleShowLessLikeThis();
+          break;
+        case 'assignToLists':
+          handleAssignToLists();
+          break;
+        case 'muteThread':
+          handleMuteThread();
+          break;
+        case 'muteWordsAndTags':
+          handleMuteWordsAndTags();
+          break;
+        case 'hidePost':
+          handleHidePost();
+          break;
+        case 'hideAccount':
+          handleHideAccount();
+          break;
+        case 'muteAccount':
+          handleMuteAccountAction();
+          break;
+        case 'blockAccount':
+          handleBlockAccount();
+          break;
+        case 'reportAccount':
+          void handleReportAccount();
+          break;
+        default:
+          if (__DEV__) {
+            console.info(`[PostCard] Action "${actionKey}" is not implemented yet.`);
+          }
+      }
+    },
+    [
+      handleAssignToLists,
+      handleBlockAccount,
+      handleCopyPostText,
+      handleHideAccount,
+      handleHidePost,
+      handleMuteAccountAction,
+      handleMuteThread,
+      handleMuteWordsAndTags,
+      handleReportAccount,
+      handleShowLessLikeThis,
+      handleShowMoreLikeThis,
+    ],
+  );
 
   const performTranslation = useCallback(
     async (targetLanguage: string) => {
@@ -826,6 +1148,10 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const handleCloseImageViewer = () => {
     setSelectedImageIndex(null);
   };
+
+  if (isHidden) {
+    return null;
+  }
 
   const postContent = (
     <>

@@ -12,10 +12,13 @@ jest.mock('react', () => {
 });
 
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
+import { Linking, TouchableOpacity } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { useMuteAccount } from '@/hooks/mutations/useMuteAccount';
+import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -24,11 +27,17 @@ import { router } from 'expo-router';
 
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/usePostTranslation');
+jest.mock('@/hooks/mutations/useBlockUser');
+jest.mock('@/hooks/mutations/useMuteAccount');
+jest.mock('@/hooks/mutations/useMuteThread');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
+jest.mock('expo-clipboard', () => ({ setStringAsync: jest.fn() }));
+jest.mock('@/utils/hiddenContentStore');
+jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 jest.mock('react-native/Libraries/Modal/Modal', () => {
   const React = require('react');
 
@@ -62,17 +71,32 @@ const PostComposerMock = require('@/components/PostComposer').PostComposer as je
 const RecordEmbedMock = require('@/components/RecordEmbed').RecordEmbed as jest.Mock;
 const VideoEmbedMock = require('@/components/VideoEmbed').VideoEmbed as jest.Mock;
 const YouTubeEmbedMock = require('@/components/YouTubeEmbed').YouTubeEmbed as jest.Mock;
+const hiddenContentModule = require('@/utils/hiddenContentStore');
+const mockUseHiddenContent = hiddenContentModule.useHiddenContent as jest.Mock;
+const mockHidePost = hiddenContentModule.hidePost as jest.Mock;
+const mockHideAccount = hiddenContentModule.hideAccount as jest.Mock;
+const mockResetHiddenContent = hiddenContentModule.resetHiddenContent as jest.Mock;
+const mockSetStringAsync = require('expo-clipboard').setStringAsync as jest.Mock;
+const mockShowAlert = require('@/utils/alert').showAlert as jest.Mock;
+const openUrlSpy = jest.spyOn(Linking, 'openURL');
 
 type Post = {
   id: string;
   text?: string;
-  author: { handle: string; displayName?: string; avatar?: string };
+  author: {
+    handle: string;
+    displayName?: string;
+    avatar?: string;
+    did?: string;
+    viewer?: { muted?: boolean; blocking?: string };
+  };
   createdAt: string;
   likeCount?: number;
   commentCount?: number;
   repostCount?: number;
   uri?: string;
   cid?: string;
+  rootUri?: string;
   viewer?: { like?: string };
   embed?: any;
   embeds?: any[];
@@ -86,22 +110,30 @@ describe('PostCard', () => {
   const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
+  const mockUseBlockUser = useBlockUser as jest.Mock;
+  const mockUseMuteAccount = useMuteAccount as jest.Mock;
+  const mockUseMuteThread = useMuteThread as jest.Mock;
   let mutateAsyncMock: jest.Mock;
 
   const basePost: Post = {
     id: '1',
     text: 'Hello world',
-    author: { handle: 'alice', displayName: 'Alice' },
+    author: { handle: 'alice', displayName: 'Alice', did: 'did:plc:alice', viewer: { muted: false } },
     createdAt: '2024-01-01',
     likeCount: 0,
     commentCount: 0,
     repostCount: 0,
     uri: 'at://post/1',
     cid: 'cid1',
+    rootUri: 'at://post/1',
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseHiddenContent.mockReturnValue({ posts: new Set(), accounts: new Set() });
+    mockHidePost.mockReset();
+    mockHideAccount.mockReset();
+    mockResetHiddenContent.mockReset();
     mockUseThemeColor.mockReturnValue('#000');
     mockUseTranslation.mockReturnValue({
       t: (k: string) => k,
@@ -109,6 +141,9 @@ describe('PostCard', () => {
       changeLanguage: jest.fn(),
       availableLocales: ['en'],
     });
+    mockUseBlockUser.mockReturnValue({ mutate: jest.fn() });
+    mockUseMuteAccount.mockReturnValue({ mutate: jest.fn() });
+    mockUseMuteThread.mockReturnValue({ mutate: jest.fn() });
     mutateAsyncMock = jest
       .fn()
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
@@ -129,7 +164,36 @@ describe('PostCard', () => {
       },
       isLoading: false,
     });
+    mockSetStringAsync.mockResolvedValue(undefined);
+    mockShowAlert.mockImplementation(({ buttons }) => {
+      const confirmButton =
+        buttons?.find((button) => button.style === 'destructive') ?? (buttons ? buttons[buttons.length - 1] : undefined);
+      confirmButton?.onPress?.();
+    });
+    openUrlSpy.mockResolvedValue(undefined as never);
   });
+
+  const openMenuByDefault = () => {
+    const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
+    const useStateMock = reactModule.useState as jest.Mock;
+    const actualUseState = actualReact.useState;
+    let callCount = 0;
+
+    useStateMock.mockImplementation(<T,>(initialState: T) => {
+      callCount += 1;
+
+      if (callCount === 4) {
+        return actualUseState(true as unknown as T);
+      }
+
+      return actualUseState(initialState);
+    });
+
+    return () => {
+      useStateMock.mockImplementation(actualUseState);
+      useStateMock.mockClear();
+    };
+  };
 
   it('navigates to profile when handle pressed', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
@@ -182,28 +246,6 @@ describe('PostCard', () => {
   });
 
   describe('translation actions', () => {
-    const openMenuByDefault = () => {
-      const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
-      const useStateMock = reactModule.useState as jest.Mock;
-      const actualUseState = actualReact.useState;
-      let callCount = 0;
-
-      useStateMock.mockImplementation(<T,>(initialState: T) => {
-        callCount += 1;
-
-        if (callCount === 4) {
-          return actualUseState(true as unknown as T);
-        }
-
-        return actualUseState(initialState);
-      });
-
-      return () => {
-        useStateMock.mockImplementation(actualUseState);
-        useStateMock.mockClear();
-      };
-    };
-
     it('shows translation panel and loads translation when translate action selected', async () => {
       const restoreUseState = openMenuByDefault();
 
@@ -300,6 +342,183 @@ describe('PostCard', () => {
           getByRole('menuitem', { name: 'post.actions.translate' }),
         );
         expect(translateOption.props.accessibilityState?.disabled).toBe(true);
+      } finally {
+        restoreUseState();
+      }
+    });
+  });
+
+  describe('menu actions', () => {
+    it('copies post text when copy option selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const copyOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.copyText' }));
+        fireEvent.press(copyOption);
+        await waitFor(() => {
+          expect(mockSetStringAsync).toHaveBeenCalledWith('Hello world');
+        });
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('navigates to search for similar posts when show more like this selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const showMoreOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.showMoreLikeThis' }));
+        fireEvent.press(showMoreOption);
+        expect(router.push).toHaveBeenCalledWith('/(tabs)/search?query=Hello%20world');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('hides the post when hide action selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const hideOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.hidePost' }));
+        fireEvent.press(hideOption);
+        expect(mockHidePost).toHaveBeenCalledWith('at://post/1');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('hides similar posts when show less like this selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const showLessOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.showLessLikeThis' }));
+        fireEvent.press(showLessOption);
+        expect(mockHidePost).toHaveBeenCalledWith('at://post/1');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('mutes the thread when mute thread selected', async () => {
+      const muteThreadMutate = jest.fn();
+      mockUseMuteThread.mockReturnValue({ mutate: muteThreadMutate });
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const muteThreadOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.muteThread' }));
+        fireEvent.press(muteThreadOption);
+        expect(muteThreadMutate).toHaveBeenCalledWith(
+          { root: 'at://post/1' },
+          expect.objectContaining({ onSuccess: expect.any(Function), onError: expect.any(Function) }),
+        );
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('mutes the account when mute option selected', async () => {
+      const muteAccountMutate = jest.fn();
+      mockUseMuteAccount.mockReturnValue({ mutate: muteAccountMutate });
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const muteAccountOption = await waitFor(() => getByRole('menuitem', { name: 'profile.muteAccount' }));
+        fireEvent.press(muteAccountOption);
+        expect(mockShowAlert).toHaveBeenCalled();
+        expect(muteAccountMutate).toHaveBeenCalledWith(
+          { actor: 'did:plc:alice', action: 'mute' },
+          expect.objectContaining({ onSuccess: expect.any(Function), onError: expect.any(Function) }),
+        );
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('blocks the account when block option selected', async () => {
+      const blockMutate = jest.fn();
+      mockUseBlockUser.mockReturnValue({ mutate: blockMutate });
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const blockOption = await waitFor(() => getByRole('menuitem', { name: 'common.block' }));
+        fireEvent.press(blockOption);
+        expect(mockShowAlert).toHaveBeenCalled();
+        expect(blockMutate).toHaveBeenCalledWith(
+          { did: 'did:plc:alice', blockUri: undefined, action: 'block' },
+          expect.objectContaining({ onSuccess: expect.any(Function), onError: expect.any(Function) }),
+        );
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('opens the report flow when report option selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const reportOption = await waitFor(() => getByRole('menuitem', { name: 'profile.reportAccount' }));
+        fireEvent.press(reportOption);
+        expect(openUrlSpy).toHaveBeenCalledWith('https://bsky.app/profile/alice/report');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('hides the account when hide account selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const hideAccountOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.hideAccount' }));
+        fireEvent.press(hideAccountOption);
+        expect(mockShowAlert).toHaveBeenCalled();
+        expect(mockHideAccount).toHaveBeenCalledWith('did:plc:alice');
+        expect(mockHideAccount).toHaveBeenCalledWith('alice');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('navigates to profile when assign to lists selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const assignOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.assignToLists' }));
+        fireEvent.press(assignOption);
+        expect(router.push).toHaveBeenCalledWith('/profile/alice');
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('navigates to settings when mute words option selected', async () => {
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        const { getByRole } = render(<PostCard post={basePost} />);
+        const muteWordsOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.muteWordsAndTags' }));
+        fireEvent.press(muteWordsOption);
+        expect(router.push).toHaveBeenCalledWith('/(tabs)/settings');
       } finally {
         restoreUseState();
       }

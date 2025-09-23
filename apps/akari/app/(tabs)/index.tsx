@@ -236,6 +236,8 @@ export default function HomeScreen() {
               handle: post.author.handle,
               displayName: post.author.displayName,
               avatar: post.author.avatar,
+              did: post.author.did,
+              viewer: post.author.viewer,
             },
             createdAt: formatRelativeTime(post.indexedAt),
             likeCount: post.likeCount || 0,
@@ -249,6 +251,7 @@ export default function HomeScreen() {
             replyTo,
             uri: post.uri,
             cid: post.cid,
+            rootUri: post.reply?.root?.uri ?? post.uri,
           }}
           onPress={() => {
             router.push(`/post/${encodeURIComponent(post.uri)}`);

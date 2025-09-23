@@ -52,6 +52,8 @@ export function MediaTab({ handle }: MediaTabProps) {
             handle: item.author.handle,
             displayName: item.author.displayName,
             avatar: item.author.avatar,
+            did: item.author.did,
+            viewer: item.author.viewer,
           },
           createdAt: formatRelativeTime(item.indexedAt),
           likeCount: item.likeCount || 0,
@@ -65,6 +67,7 @@ export function MediaTab({ handle }: MediaTabProps) {
           replyTo,
           uri: item.uri,
           cid: item.cid,
+          rootUri: item.reply?.root?.uri ?? item.uri,
         }}
         onPress={() => {
           router.push(`/post/${encodeURIComponent(item.uri)}`);

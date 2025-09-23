@@ -63,6 +63,8 @@ export const renderComment = (
             handle: post.author.handle,
             displayName: post.author.displayName,
             avatar: post.author.avatar,
+            did: post.author.did,
+            viewer: post.author.viewer,
           },
           createdAt: formatRelativeTime(post.indexedAt),
           likeCount: post.likeCount || 0,
@@ -74,6 +76,9 @@ export const renderComment = (
           viewer: post.viewer,
           facets: (post.record as any)?.facets,
           replyTo: commentReplyTo,
+          uri: post.uri,
+          cid: post.cid,
+          rootUri: post.reply?.root?.uri ?? post.uri,
         }}
       />
     );
@@ -100,6 +105,8 @@ export const renderComment = (
           handle: postItem.author.handle,
           displayName: postItem.author.displayName,
           avatar: postItem.author.avatar,
+          did: postItem.author.did,
+          viewer: postItem.author.viewer,
         },
         createdAt: formatRelativeTime(postItem.indexedAt),
         likeCount: postItem.likeCount || 0,
@@ -112,6 +119,7 @@ export const renderComment = (
         facets: (postItem.record as any)?.facets,
         uri: postItem.uri,
         cid: postItem.cid,
+        rootUri: postItem.reply?.root?.uri ?? postItem.uri,
       }}
     />
   );
@@ -203,6 +211,8 @@ export default function PostDetailScreen() {
             handle: parentPost.author.handle,
             displayName: parentPost.author.displayName,
             avatar: parentPost.author.avatar,
+            did: parentPost.author.did,
+            viewer: parentPost.author.viewer,
           },
           createdAt: formatRelativeTime(parentPost.indexedAt),
           likeCount: parentPost.likeCount || 0,
@@ -215,6 +225,7 @@ export default function PostDetailScreen() {
           facets: (parentPost.record as any)?.facets,
           uri: parentPost.uri,
           cid: parentPost.cid,
+          rootUri: parentPost.reply?.root?.uri ?? parentPost.uri,
         }}
       />
     );
@@ -236,6 +247,8 @@ export default function PostDetailScreen() {
             handle: rootPost.author.handle,
             displayName: rootPost.author.displayName,
             avatar: rootPost.author.avatar,
+            did: rootPost.author.did,
+            viewer: rootPost.author.viewer,
           },
           createdAt: formatRelativeTime(rootPost.indexedAt),
           likeCount: rootPost.likeCount || 0,
@@ -248,6 +261,7 @@ export default function PostDetailScreen() {
           facets: (rootPost.record as any)?.facets,
           uri: rootPost.uri,
           cid: rootPost.cid,
+          rootUri: rootPost.reply?.root?.uri ?? rootPost.uri,
         }}
       />
     );
@@ -327,6 +341,8 @@ export default function PostDetailScreen() {
                   handle: mainPost?.author?.handle || '',
                   displayName: mainPost?.author?.displayName,
                   avatar: mainPost?.author?.avatar,
+                  did: mainPost?.author?.did,
+                  viewer: mainPost?.author?.viewer,
                 },
                 createdAt: formatRelativeTime(mainPost?.indexedAt || new Date()),
                 likeCount: mainPost?.likeCount || 0,
@@ -339,6 +355,19 @@ export default function PostDetailScreen() {
                 facets: (mainPost?.record as any)?.facets,
                 uri: mainPost?.uri,
                 cid: mainPost?.cid,
+                rootUri:
+                  (typeof mainPost?.record === 'object' &&
+                    mainPost?.record &&
+                    'reply' in mainPost.record &&
+                    mainPost.record.reply &&
+                    typeof mainPost.record.reply === 'object' &&
+                    'root' in mainPost.record.reply &&
+                    mainPost.record.reply.root &&
+                    typeof mainPost.record.reply.root === 'object' &&
+                    'uri' in mainPost.record.reply.root
+                    ? (mainPost.record.reply.root as { uri: string }).uri
+                    : undefined) ??
+                  mainPost?.uri,
               }}
             />
           </View>
