@@ -59,7 +59,10 @@
       "mute": "ปิดเสียง",
       "unmute": "เปิดเสียง",
       "pendingChats": "แชทที่รอดำเนินการ",
-      "viewPendingChats": "ดูแชทที่รอดำเนินการ"
+      "viewPendingChats": "ดูแชทที่รอดำเนินการ",
+      "live": "ไลฟ์สด",
+      "watchNow": "ดูตอนนี้",
+      "openProfile": "เปิดโปรไฟล์"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",

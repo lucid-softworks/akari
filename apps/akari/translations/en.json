@@ -59,7 +59,10 @@
       "checkOutImage": "Check out this image!",
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
-      "bookmarks": "Bookmarks"
+      "bookmarks": "Bookmarks",
+      "live": "LIVE",
+      "watchNow": "Watch now",
+      "openProfile": "Open profile"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",

@@ -59,7 +59,10 @@
       "mute": "음소거",
       "unmute": "음소거 해제",
       "pendingChats": "보류 중인 채팅",
-      "viewPendingChats": "보류 중인 채팅 보기"
+      "viewPendingChats": "보류 중인 채팅 보기",
+      "live": "라이브",
+      "watchNow": "지금 시청하기",
+      "openProfile": "프로필 열기"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",

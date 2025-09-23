@@ -59,7 +59,10 @@
       "mute": "Отключить звук",
       "unmute": "Включить звук",
       "pendingChats": "Ожидающие чаты",
-      "viewPendingChats": "Просмотреть ожидающие чаты"
+      "viewPendingChats": "Просмотреть ожидающие чаты",
+      "live": "В ЭФИРЕ",
+      "watchNow": "Смотреть сейчас",
+      "openProfile": "Открыть профиль"
     },
     "auth": {
       "fillAllFields": "Заполните все поля",

@@ -59,7 +59,10 @@
       "mute": "Dempen",
       "unmute": "Dempen opheffen",
       "pendingChats": "Openstaande chats",
-      "viewPendingChats": "Openstaande chats bekijken"
+      "viewPendingChats": "Openstaande chats bekijken",
+      "live": "LIVE",
+      "watchNow": "Bekijk nu",
+      "openProfile": "Profiel openen"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",

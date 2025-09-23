@@ -233,6 +233,7 @@ export default function HomeScreen() {
             id: post.uri,
             text: post.record?.text as string,
             author: {
+              did: post.author.did,
               handle: post.author.handle,
               displayName: post.author.displayName,
               avatar: post.author.avatar,

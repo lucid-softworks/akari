@@ -59,7 +59,10 @@
       "mute": "Sessiz",
       "unmute": "Sesi Aç",
       "pendingChats": "Bekleyen sohbetler",
-      "viewPendingChats": "Bekleyen sohbetleri görüntüle"
+      "viewPendingChats": "Bekleyen sohbetleri görüntüle",
+      "live": "CANLI",
+      "watchNow": "Şimdi izle",
+      "openProfile": "Profili aç"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",

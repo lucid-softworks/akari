@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
+  Linking,
   Modal,
+  Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -28,6 +31,7 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
+import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
@@ -37,6 +41,7 @@ type PostCardProps = {
     id: string;
     text?: string;
     author: {
+      did: string;
       handle: string;
       displayName?: string;
       avatar?: string;
@@ -149,6 +154,15 @@ type PostMenuItem =
     }
   | { key: string; type: 'separator' };
 
+type ExternalLiveEmbed = {
+  uri: string;
+  title?: string;
+  description?: string;
+  thumb?: string;
+};
+
+const LIVE_ACCENT_COLOR = '#ff274c';
+
 export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
@@ -171,6 +185,133 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedLanguage, setSelectedLanguage] = useState(() =>
     resolveLanguageCode(currentLocale, DEFAULT_LIBRETRANSLATE_LANGUAGES),
   );
+  const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+
+  const { data: liveNowEntries = [] } = useLiveNow();
+
+  const liveExternalEmbed = useMemo<ExternalLiveEmbed | null>(() => {
+    const inspectEmbed = (embed?: BlueskyEmbed | null): ExternalLiveEmbed | null => {
+      if (!embed) {
+        return null;
+      }
+
+      if (embed.$type?.includes('app.bsky.embed.external') && embed.external?.uri) {
+        return {
+          uri: embed.external.uri,
+          title: embed.external.title,
+          description: embed.external.description,
+          thumb: embed.external.thumb?.ref?.$link,
+        };
+      }
+
+      if (embed.media) {
+        const mediaResult = inspectEmbed(embed.media as unknown as BlueskyEmbed);
+        if (mediaResult) {
+          return mediaResult;
+        }
+      }
+
+      if (embed.record?.embed) {
+        const recordEmbed = inspectEmbed(embed.record.embed as unknown as BlueskyEmbed);
+        if (recordEmbed) {
+          return recordEmbed;
+        }
+      }
+
+      if (embed.record?.embeds) {
+        for (const nested of embed.record.embeds) {
+          const nestedResult = inspectEmbed(nested as unknown as BlueskyEmbed);
+          if (nestedResult) {
+            return nestedResult;
+          }
+        }
+      }
+
+      return null;
+    };
+
+    const direct = inspectEmbed(post.embed);
+    if (direct) {
+      return direct;
+    }
+
+    if (post.embeds) {
+      for (const embed of post.embeds) {
+        const result = inspectEmbed(embed);
+        if (result) {
+          return result;
+        }
+      }
+    }
+
+    return null;
+  }, [post.embed, post.embeds]);
+
+  const liveStreamInfo = useMemo(() => {
+    if (!post.author.did || !liveExternalEmbed?.uri) {
+      return null;
+    }
+
+    const entry = liveNowEntries.find((item) => item.did === post.author.did);
+    if (!entry) {
+      return null;
+    }
+
+    let hostname: string;
+    try {
+      hostname = new URL(liveExternalEmbed.uri).hostname.toLowerCase();
+    } catch {
+      return null;
+    }
+
+    const normalizedHost = hostname.replace(/^www\./, '');
+
+    const matchesDomain = entry.domains.some((domain) => {
+      const normalizedDomain = domain.toLowerCase().replace(/^www\./, '');
+      return normalizedHost === normalizedDomain || normalizedHost.endsWith(`.${normalizedDomain}`);
+    });
+
+    if (!matchesDomain) {
+      return null;
+    }
+
+    return {
+      uri: liveExternalEmbed.uri,
+      title: liveExternalEmbed.title,
+      description: liveExternalEmbed.description,
+      thumbnail: liveExternalEmbed.thumb,
+      domain: normalizedHost,
+    };
+  }, [liveNowEntries, liveExternalEmbed, post.author.did]);
+
+  const liveStreamUri = liveStreamInfo?.uri;
+  const isLive = Boolean(liveStreamInfo);
+
+  const handleAvatarPointerEnter = useCallback(() => {
+    if (Platform.OS === 'web') {
+      setIsAvatarHovered(true);
+    }
+  }, []);
+
+  const handleAvatarPointerLeave = useCallback(() => {
+    if (Platform.OS === 'web') {
+      setIsAvatarHovered(false);
+    }
+  }, []);
+
+  const showLivePreview = Platform.OS === 'web' && isLive && isAvatarHovered;
+
+  const handleWatchLive = useCallback(() => {
+    if (!liveStreamUri) {
+      return;
+    }
+
+    void Linking.openURL(liveStreamUri).catch((error) => {
+      if (__DEV__) {
+        console.warn('Failed to open live stream', error);
+      }
+    });
+  }, [liveStreamUri]);
 
   const languagesQuery = useLibreTranslateLanguages(isLanguagePickerVisible || isTranslationVisible);
   const languages = languagesQuery.data?.languages ?? DEFAULT_LIBRETRANSLATE_LANGUAGES;
@@ -446,6 +587,65 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const handleProfilePress = () => {
     router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
   };
+
+  const livePreview = showLivePreview && liveStreamInfo
+    ? (
+        <View
+          style={styles.livePreviewContainer}
+          onPointerEnter={handleAvatarPointerEnter}
+          onPointerLeave={handleAvatarPointerLeave}
+        >
+          <ThemedView
+            style={[styles.livePreviewCard, { backgroundColor: menuBackgroundColor, borderColor }]}
+            accessibilityRole="menu"
+          >
+            <View style={styles.livePreviewHeader}>
+              <View style={styles.livePreviewIndicator} />
+              <ThemedText style={styles.livePreviewIndicatorLabel}>{t('common.live')}</ThemedText>
+            </View>
+            {liveStreamInfo.thumbnail && (
+              <Image
+                source={{ uri: liveStreamInfo.thumbnail }}
+                style={styles.livePreviewThumbnail}
+                contentFit="cover"
+                placeholder={require('@/assets/images/partial-react-logo.png')}
+              />
+            )}
+            {liveStreamInfo.title && (
+              <ThemedText style={styles.livePreviewTitle} numberOfLines={2}>
+                {liveStreamInfo.title}
+              </ThemedText>
+            )}
+            {liveStreamInfo.description && (
+              <ThemedText style={styles.livePreviewDescription} numberOfLines={2}>
+                {liveStreamInfo.description}
+              </ThemedText>
+            )}
+            <ThemedText style={styles.livePreviewDomain}>{liveStreamInfo.domain}</ThemedText>
+            <View style={styles.livePreviewActions}>
+              <TouchableOpacity
+                style={styles.livePreviewPrimaryButton}
+                onPress={handleWatchLive}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.watchNow')}
+              >
+                <ThemedText style={styles.livePreviewPrimaryButtonText}>{t('common.watchNow')}</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.livePreviewSecondaryButton, { borderColor }]}
+                onPress={handleProfilePress}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.openProfile')}
+              >
+                <ThemedText style={styles.livePreviewSecondaryButtonText}>{t('common.openProfile')}</ThemedText>
+              </TouchableOpacity>
+            </View>
+          </ThemedView>
+        </View>
+      )
+    : null;
 
   const handleLikePress = () => {
     if (!post.uri || !post.cid) return;
@@ -842,21 +1042,30 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
       <ThemedView style={styles.header}>
         <ThemedView style={styles.authorSection}>
-          <TouchableOpacity
+          <Pressable
             onPress={handleProfilePress}
-            activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityLabel={`View ${authorName}'s profile via avatar`}
+            onPointerEnter={handleAvatarPointerEnter}
+            onPointerLeave={handleAvatarPointerLeave}
+            style={({ pressed }) => [styles.avatarPressable, pressed && styles.avatarPressablePressed]}
           >
-            <Image
-              source={{
-                uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
-              }}
-              style={styles.authorAvatar}
-              contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
-            />
-          </TouchableOpacity>
+            <View style={[styles.avatarWrapper, isLive && styles.liveAvatarWrapper]}>
+              <Image
+                source={{
+                  uri: post.author.avatar || 'https://bsky.app/static/default-avatar.png',
+                }}
+                style={styles.authorAvatar}
+                contentFit="cover"
+                placeholder={require('@/assets/images/partial-react-logo.png')}
+              />
+              {isLive && (
+                <View style={styles.liveBadge}>
+                  <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
+                </View>
+              )}
+            </View>
+          </Pressable>
           <ThemedView style={styles.authorInfo}>
             <ThemedText style={styles.displayName}>{authorName}</ThemedText>
             <TouchableOpacity
@@ -1045,10 +1254,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
           onPress={onPress}
           activeOpacity={0.7}
         >
+          {livePreview}
           {postContent}
         </TouchableOpacity>
       ) : (
-        <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>{postContent}</ThemedView>
+        <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
+          {livePreview}
+          {postContent}
+        </ThemedView>
       )}
 
       <Modal transparent animationType="fade" visible={showActionsMenu} onRequestClose={handleMenuDismiss}>
@@ -1177,6 +1390,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
+    position: 'relative',
   },
   replyContext: {
     flexDirection: 'row',
@@ -1217,6 +1431,37 @@ const styles = StyleSheet.create({
     gap: 8,
     flex: 1,
   },
+  avatarPressable: {
+    borderRadius: 24,
+  },
+  avatarPressablePressed: {
+    opacity: 0.7,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  liveAvatarWrapper: {
+    padding: 2,
+    borderWidth: 2,
+    borderColor: LIVE_ACCENT_COLOR,
+    borderRadius: 24,
+  },
+  liveBadge: {
+    position: 'absolute',
+    bottom: -10,
+    alignSelf: 'center',
+    backgroundColor: LIVE_ACCENT_COLOR,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  liveBadgeText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
   authorAvatar: {
     width: 40,
     height: 40,
@@ -1244,6 +1489,78 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 12,
     opacity: 0.6,
+  },
+  livePreviewContainer: {
+    position: 'absolute',
+    top: -16,
+    left: 16,
+    zIndex: 50,
+    width: 260,
+  },
+  livePreviewCard: {
+    borderWidth: 1,
+    padding: 12,
+    gap: 8,
+  },
+  livePreviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  livePreviewIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: LIVE_ACCENT_COLOR,
+  },
+  livePreviewIndicatorLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: LIVE_ACCENT_COLOR,
+    letterSpacing: 0.6,
+  },
+  livePreviewThumbnail: {
+    width: '100%',
+    height: 140,
+    backgroundColor: '#000000',
+  },
+  livePreviewTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  livePreviewDescription: {
+    fontSize: 13,
+    opacity: 0.7,
+    lineHeight: 18,
+  },
+  livePreviewDomain: {
+    fontSize: 12,
+    opacity: 0.6,
+  },
+  livePreviewActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  livePreviewPrimaryButton: {
+    flex: 1,
+    backgroundColor: LIVE_ACCENT_COLOR,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  livePreviewPrimaryButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  livePreviewSecondaryButton: {
+    flex: 1,
+    borderWidth: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  livePreviewSecondaryButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   content: {
     marginBottom: 12,
