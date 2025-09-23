@@ -54,6 +54,7 @@
     "@tanstack/react-query-devtools": "^5.83.0",
     "@tanstack/react-query-persist-client": "^5.83.0",
     "expo": "~53.0.22",
+    "expo-background-task": "~1.0.8",
     "expo-blur": "~14.1.5",
     "expo-clipboard": "~7.1.5",
     "expo-constants": "~17.1.7",
