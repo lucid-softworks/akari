@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import MessagesScreen from '@/app/(tabs)/messages';
 import { router } from 'expo-router';
@@ -8,6 +8,59 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
+
+const mockScrollToOffset = jest.fn();
+
+jest.mock('@shopify/flash-list', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    FlashList: React.forwardRef((props: any, ref) => {
+      const {
+        data = [],
+        renderItem,
+        ListEmptyComponent,
+        ListFooterComponent,
+        ListHeaderComponent,
+        keyExtractor,
+      } = props;
+
+      React.useImperativeHandle(ref, () => ({
+        scrollToOffset: mockScrollToOffset,
+      }));
+
+      const renderSupplemental = (component: any) => {
+        if (!component) {
+          return null;
+        }
+
+        return typeof component === 'function' ? component() : component;
+      };
+
+      const items =
+        renderItem && data.length > 0
+          ? data.map((item: any, index: number) => {
+              const rendered = renderItem({ item, index });
+              const key = keyExtractor ? keyExtractor(item, index) : index;
+
+              return <React.Fragment key={key}>{rendered}</React.Fragment>;
+            })
+          : null;
+
+      const shouldShowEmpty = data.length === 0 && ListEmptyComponent;
+
+      return (
+        <View>
+          {renderSupplemental(ListHeaderComponent)}
+          {shouldShowEmpty ? renderSupplemental(ListEmptyComponent) : items}
+          {renderSupplemental(ListFooterComponent)}
+        </View>
+      );
+    }),
+  };
+});
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
@@ -57,6 +110,7 @@ describe('MessagesScreen', () => {
     jest.clearAllMocks();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockScrollToOffset.mockReset();
   });
 
   it('renders accepted conversations and navigates', () => {
@@ -110,7 +164,7 @@ describe('MessagesScreen', () => {
     expect(limitArg).toBe(50);
     expect(statusArg).toBe('accepted');
     expect(mockRegister).toHaveBeenCalledWith('messages', expect.any(Function));
-    expect(UNSAFE_getByType(FlatList).props.ListFooterComponent()).toBeNull();
+    expect(UNSAFE_getByType(VirtualizedList).props.ListFooterComponent()).toBeNull();
     expect(getByText('3')).toBeTruthy();
     expect(getByText('Alice')).toBeTruthy();
     expect(getByText('Charlie')).toBeTruthy();
@@ -153,16 +207,13 @@ describe('MessagesScreen', () => {
 
     const { UNSAFE_getByType } = render(<MessagesScreen />);
 
-    const flatListInstance = UNSAFE_getByType(FlatList).instance as { scrollToOffset: jest.Mock };
-    flatListInstance.scrollToOffset = jest.fn();
-
     const scrollToTop = mockRegister.mock.calls[0][1];
 
     act(() => {
       scrollToTop();
     });
 
-    expect(flatListInstance.scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
+    expect(mockScrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
   });
 
   it('shows loading skeletons', () => {
@@ -221,7 +272,7 @@ describe('MessagesScreen', () => {
     const { UNSAFE_getByType } = render(<MessagesScreen />);
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).toHaveBeenCalled();
   });
@@ -241,7 +292,7 @@ describe('MessagesScreen', () => {
     expect(getByText('common.loading...')).toBeTruthy();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
 
     expect(fetchNextPage).not.toHaveBeenCalled();

@@ -53,7 +53,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Verify the divider styling still renders between items when FlashList virtualizes them.
 
 ## Tests
-- [ ] `apps/akari/__tests__/app/tabs/messages-index.test.tsx`
+- [x] `apps/akari/__tests__/app/tabs/messages-index.test.tsx`
   - Update the test to render and inspect `VirtualizedList` instead of `FlatList`, including scroll-to-top assertions.
 - [ ] `apps/akari/__tests__/app/tabs/messages-handle.test.tsx`
   - Adjust imports and `UNSAFE_getByType` calls to point at `VirtualizedList`, and confirm inverted pagination continues to trigger `onEndReached`.
