@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Keyboard, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Labels } from '@/components/Labels';
@@ -10,6 +10,7 @@ import { PostCard } from '@/components/PostCard';
 import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -24,24 +25,26 @@ type SearchResult = {
 
 type SearchTabType = 'all' | 'users' | 'posts';
 
+const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
+
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
   const [query, setQuery] = useState(initialQuery || '');
   const [searchQuery, setSearchQuery] = useState(initialQuery || '');
   const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
 
   // Create scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  };
+  }, []);
 
   // Register with the tab scroll registry
   React.useEffect(() => {
     tabScrollRegistry.register('search', scrollToTop);
-  }, []);
+  }, [scrollToTop]);
 
   const backgroundColor = useThemeColor(
     {
@@ -284,14 +287,15 @@ export default function SearchScreen() {
 
       {searchQuery && allResults.length > 0 ? <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} /> : null}
 
-      <FlatList
+      <VirtualizedList
         ref={flatListRef}
         data={filteredResults}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}
         style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} />}
+        refreshing={isRefetching}
+        onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
@@ -308,6 +312,7 @@ export default function SearchScreen() {
             </ThemedView>
           )
         }
+        estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
       />
     </ThemedView>
   );

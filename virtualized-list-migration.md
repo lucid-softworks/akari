@@ -11,7 +11,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Swap the conversation `FlatList` for `VirtualizedList`, keeping `inverted` pagination behaviour intact.
   - Provide an `estimatedItemSize` for message bubbles and confirm the `ListFooterComponent` continues to show the loading indicator while paging.
   - Re-check `onEndReachedThreshold` against FlashList's behaviour so we do not over-fetch.
-- [ ] `apps/akari/app/(tabs)/search.tsx`
+- [x] `apps/akari/app/(tabs)/search.tsx`
   - Replace the `FlatList`/`useRef<FlatList>` pair with `VirtualizedList` and `VirtualizedListHandle<SearchResult>`.
   - FlashList expects `refreshing`/`onRefresh` props rather than a `RefreshControl` element—rework pull-to-refresh accordingly.
   - Supply an `estimatedItemSize` that balances profile and post rows, and keep the tab scroll registry hook working.
