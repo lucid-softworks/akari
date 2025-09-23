@@ -178,13 +178,18 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const aspectRatio = 16 / 9; // Default aspect ratio
     const imageHeight = fullWidth / aspectRatio;
 
+    const embedImageStyle = StyleSheet.flatten([
+      styles.embedImage,
+      { width: fullWidth, height: imageHeight },
+    ]);
+
     return (
       <View style={styles.embedImagesContainer}>
         {images.map((image, index) => (
           <Image
             key={index}
             source={{ uri: image.fullsize }}
-            style={[styles.embedImage, { width: fullWidth, height: imageHeight }]}
+            style={embedImageStyle}
             contentFit="cover"
             placeholder={require('@/assets/images/partial-react-logo.png')}
           />
