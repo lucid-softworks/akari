@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
-import PostDetailScreen, { renderComment } from '@/app/post/[id]';
+import PostDetailScreen, { renderComment } from '@/app/(tabs)/post/[id]';
 import { useLocalSearchParams } from 'expo-router';
 import { usePost, useParentPost, useRootPost } from '@/hooks/queries/usePost';
 import { usePostThread } from '@/hooks/queries/usePostThread';
@@ -13,12 +13,6 @@ jest.mock('expo-router', () => {
     Stack: { Screen: jest.fn(() => null) },
   };
 });
-jest.mock('@/components/ResponsiveLayout', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  return { ResponsiveLayout: ({ children }: any) => <View>{children}</View> };
-});
-
 jest.mock('@/components/PostCard', () => {
   const React = require('react');
   const { Text } = require('react-native');

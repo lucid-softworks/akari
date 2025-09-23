@@ -16,7 +16,6 @@ import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
-import { ResponsiveLayout } from '@/components/ResponsiveLayout';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -38,21 +37,17 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <ResponsiveLayout>
-        <ThemedView style={styles.container}>
-          <ProfileHeaderSkeleton />
-        </ThemedView>
-      </ResponsiveLayout>
+      <ThemedView style={styles.container}>
+        <ProfileHeaderSkeleton />
+      </ThemedView>
     );
   }
 
   if (error || !profile) {
     return (
-      <ResponsiveLayout>
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
-        </ThemedView>
-      </ResponsiveLayout>
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
+      </ThemedView>
     );
   }
 
@@ -91,7 +86,7 @@ export default function ProfileScreen() {
         message: t('profile.linkCopied'),
         type: 'success',
       });
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
@@ -156,13 +151,12 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ResponsiveLayout>
-      <ThemedView style={styles.container}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
+    <ThemedView style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
           <ProfileHeader
             profile={{
               avatar: profile?.avatar,
@@ -187,28 +181,27 @@ export default function ProfileScreen() {
 
           {/* Content */}
           {renderTabContent()}
-        </ScrollView>
+      </ScrollView>
 
-        {/* Dropdown rendered at root level */}
-        <ProfileDropdown
-          isVisible={showDropdown}
-          onCopyLink={handleCopyLink}
-          onSearchPosts={handleSearchPosts}
-          onAddToLists={handleAddToLists}
-          onMuteAccount={handleMuteAccount}
-          onBlockPress={handleBlockPress}
-          onReportAccount={handleReportAccount}
-          isFollowing={!!profile?.viewer?.following}
-          isBlocking={!!profile?.viewer?.blocking}
-          isMuted={!!profile?.viewer?.muted}
-          isOwnProfile={isOwnProfile}
-          style={{
-            top: dropdownPosition.top,
-            right: dropdownPosition.right,
-          }}
-        />
-      </ThemedView>
-    </ResponsiveLayout>
+      {/* Dropdown rendered at root level */}
+      <ProfileDropdown
+        isVisible={showDropdown}
+        onCopyLink={handleCopyLink}
+        onSearchPosts={handleSearchPosts}
+        onAddToLists={handleAddToLists}
+        onMuteAccount={handleMuteAccount}
+        onBlockPress={handleBlockPress}
+        onReportAccount={handleReportAccount}
+        isFollowing={!!profile?.viewer?.following}
+        isBlocking={!!profile?.viewer?.blocking}
+        isMuted={!!profile?.viewer?.muted}
+        isOwnProfile={isOwnProfile}
+        style={{
+          top: dropdownPosition.top,
+          right: dropdownPosition.right,
+        }}
+      />
+    </ThemedView>
   );
 }
 

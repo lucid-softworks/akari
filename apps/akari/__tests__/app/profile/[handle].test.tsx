@@ -1,7 +1,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
-import ProfileScreen from '@/app/profile/[handle]';
+import ProfileScreen from '@/app/(tabs)/profile/[handle]';
 import { useLocalSearchParams } from 'expo-router';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -20,12 +20,6 @@ jest.mock('@/contexts/ToastContext');
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
-jest.mock('@/components/ResponsiveLayout', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  return { ResponsiveLayout: ({ children }: any) => <View>{children}</View> };
-});
-
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
   const { Text } = require('react-native');
