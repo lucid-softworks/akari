@@ -1,10 +1,11 @@
 import { act, render } from '@testing-library/react-native';
-import { FlatList, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorStarterpacks');
 jest.mock('@/hooks/useThemeColor');
@@ -13,6 +14,7 @@ jest.mock('@/components/skeletons', () => {
   const { Text } = require('react-native');
   return { FeedSkeleton: () => <Text>feed skeleton</Text> };
 });
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 const mockUseAuthorStarterpacks = useAuthorStarterpacks as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
@@ -88,7 +90,7 @@ describe('StarterpacksTab', () => {
     expect(queryByText('common.loading')).toBeNull();
 
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
 
     expect(fetchNextPage).toHaveBeenCalled();
@@ -157,7 +159,7 @@ describe('StarterpacksTab', () => {
 
     const { UNSAFE_getByType } = render(<StarterpacksTab handle="alice" />);
     act(() => {
-      UNSAFE_getByType(FlatList).props.onEndReached();
+      UNSAFE_getByType(VirtualizedList).props.onEndReached();
     });
     expect(fetchNextPage).not.toHaveBeenCalled();
   });

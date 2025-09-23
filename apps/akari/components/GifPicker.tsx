@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Modal, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useToast } from '@/contexts/ToastContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -16,6 +17,8 @@ type GifPickerProps = {
   onClose: () => void;
   onSelectGif: (gif: { uri: string; alt: string; mimeType: string; tenorId?: string }) => void;
 };
+
+const ESTIMATED_GIF_ITEM_SIZE = 140;
 
 export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const { t } = useTranslation();
@@ -244,7 +247,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
           </View>
 
           {/* GIF Grid */}
-          <FlatList
+          <VirtualizedList
             data={gifs}
             renderItem={renderGifItem}
             keyExtractor={(item) => item.id}
@@ -255,6 +258,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
             onEndReachedThreshold={0.5}
             ListFooterComponent={renderFooter}
             ListEmptyComponent={renderEmpty}
+            estimatedItemSize={ESTIMATED_GIF_ITEM_SIZE}
           />
         </ThemedView>
       </ThemedView>

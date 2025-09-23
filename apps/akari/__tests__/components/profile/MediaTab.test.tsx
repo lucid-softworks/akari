@@ -5,6 +5,8 @@ import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { router } from 'expo-router';
 
+jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
+
 jest.mock('@/hooks/queries/useAuthorMedia');
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({ t: (k: string) => k }),

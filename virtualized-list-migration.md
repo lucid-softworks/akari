@@ -44,7 +44,7 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
   - Confirm pagination, footer, and empty state behaviour after the migration.
 
 ## Shared components
-- [ ] `apps/akari/components/GifPicker.tsx`
+- [x] `apps/akari/components/GifPicker.tsx`
   - Swap the GIF grid to `VirtualizedList`, keeping `numColumns`, `ListFooterComponent`, and `ListEmptyComponent` working.
   - FlashList needs an `estimatedItemSize` for grid tiles—base it on the GIF thumbnail height.
   - Re-run the infinite scroll logic to ensure `onEndReached` continues to request additional Tenor pages.
@@ -55,27 +55,27 @@ The FlashList-backed `VirtualizedList` component in `apps/akari/components/ui/Vi
 ## Tests
 - [x] `apps/akari/__tests__/app/tabs/messages-index.test.tsx`
   - Update the test to render and inspect `VirtualizedList` instead of `FlatList`, including scroll-to-top assertions.
-- [ ] `apps/akari/__tests__/app/tabs/messages-handle.test.tsx`
+- [x] `apps/akari/__tests__/app/tabs/messages-handle.test.tsx`
   - Adjust imports and `UNSAFE_getByType` calls to point at `VirtualizedList`, and confirm inverted pagination continues to trigger `onEndReached`.
-- [ ] `apps/akari/__tests__/app/tabs/messages-pending.test.tsx`
+- [x] `apps/akari/__tests__/app/tabs/messages-pending.test.tsx`
   - Point list queries at `VirtualizedList` and make sure pending state footers still render via the wrapper.
-- [ ] `apps/akari/__tests__/app/tabs/search.test.tsx`
+- [x] `apps/akari/__tests__/app/tabs/search.test.tsx`
   - Update mocks and queries to use `VirtualizedList`, and adapt refresh assertions to the new `refreshing`/`onRefresh` API.
-- [ ] `apps/akari/__tests__/components/profile/PostsTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/PostsTab.test.tsx`
   - Replace the `FlatList` import, update `UNSAFE_getByType` references, and keep pagination tests working with FlashList.
-- [ ] `apps/akari/__tests__/components/profile/MediaTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/MediaTab.test.tsx`
   - Point assertions at `VirtualizedList` and verify loading footer expectations.
-- [ ] `apps/akari/__tests__/components/profile/LikesTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/LikesTab.test.tsx`
   - Update the list component under test to `VirtualizedList` and adjust any scroll/pagination mocks.
-- [ ] `apps/akari/__tests__/components/profile/VideosTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/VideosTab.test.tsx`
   - Swap to `VirtualizedList` assertions and ensure pagination events still fire.
-- [ ] `apps/akari/__tests__/components/profile/StarterpacksTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/StarterpacksTab.test.tsx`
   - Update imports and `UNSAFE_getByType` usage, keeping footer expectations intact.
-- [ ] `apps/akari/__tests__/components/profile/FeedsTab.test.tsx`
+- [x] `apps/akari/__tests__/components/profile/FeedsTab.test.tsx`
   - Point the test at `VirtualizedList` so end-reached assertions continue to pass.
-- [ ] `apps/akari/__tests__/components/FeedsTab.test.tsx`
+- [x] `apps/akari/__tests__/components/FeedsTab.test.tsx`
   - Update component queries to account for `VirtualizedList` and confirm `onEndReached` firing.
-- [ ] `apps/akari/__tests__/components/GifPicker.test.tsx`
+- [x] `apps/akari/__tests__/components/GifPicker.test.tsx`
   - Use `VirtualizedList` in place of `FlatList`, adjust grid assertions, and keep `onEndReached` events wired up.
 
 Once each item is migrated, re-run the relevant Jest suites to confirm FlashList behaves the same as the legacy `FlatList` implementations.
