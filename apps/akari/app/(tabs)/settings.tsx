@@ -3,16 +3,19 @@ import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
-import { LanguageSelector } from '@/components/LanguageSelector';
-import { NotificationSettings } from '@/components/NotificationSettings';
+import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
+import {
+  SettingsRow,
+  SettingsSection,
+  type SettingsRowDescriptor,
+} from '@/components/settings/SettingsList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
@@ -22,232 +25,20 @@ import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
 import { getTranslationReport } from '@/utils/translationLogger';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
-type IconName = Parameters<typeof IconSymbol>[0]['name'];
-
-type SettingsRowDescriptor = {
-  key: string;
-  icon?: IconName;
-  label: string;
-  description?: string;
-  value?: string;
-  onPress?: () => void;
-  destructive?: boolean;
-};
-
-type AccountRowProps = {
-  account: Account;
-  avatar?: string | null;
-  displayName?: string | null;
-  isCurrent: boolean;
-  onSwitch?: () => void;
-  onRemove: () => void;
-  switchLabel: string;
-  removeLabel: string;
-  currentLabel: string;
-  borderColor: string;
-  showDivider?: boolean;
-};
-
-type InfoRowProps = {
-  label: string;
-  value: string;
-  borderColor: string;
-  showDivider?: boolean;
-  monospace?: boolean;
-};
-
-type SettingsSectionProps = {
-  title: string;
-  children: React.ReactNode;
-  isFirst?: boolean;
-};
-
-type SettingsRowProps = SettingsRowDescriptor & {
-  borderColor: string;
-  showDivider?: boolean;
-};
-
 const EXTERNAL_LINKS = {
-  helpCenter: 'https://help.bsky.app/',
+  helpCenter: 'https://blueskyweb.zendesk.com/hc/en-us',
   status: 'https://status.bsky.app/',
   changeLog: 'https://blueskyweb.xyz/blog',
   feedback: 'https://help.bsky.app/hc/en-us/requests/new',
   privacy: 'https://blueskyweb.xyz/support/privacy-policy',
   terms: 'https://blueskyweb.xyz/support/tos',
 } as const;
-
-function SettingsSection({ children, isFirst = false, title }: SettingsSectionProps) {
-  return (
-    <ThemedView style={[styles.section, isFirst && styles.firstSection]}>
-      <ThemedText style={styles.sectionTitle}>{title}</ThemedText>
-      {children}
-    </ThemedView>
-  );
-}
-
-function SettingsRow({
-  borderColor,
-  description,
-  destructive = false,
-  icon,
-  label,
-  onPress,
-  showDivider = true,
-  value,
-}: SettingsRowProps) {
-  const iconColor = useThemeColor({}, 'text');
-  const chevronColor = useThemeColor(
-    { light: 'rgba(17, 24, 39, 0.35)', dark: 'rgba(255, 255, 255, 0.35)' },
-    'text',
-  );
-
-  const content = (
-    <>
-      {icon ? <IconSymbol color={iconColor} name={icon} size={20} style={styles.rowIcon} /> : null}
-      <ThemedView style={styles.rowContent}>
-        <ThemedText style={[styles.rowLabel, destructive && styles.rowLabelDestructive]}>{label}</ThemedText>
-        {description ? (
-          <ThemedText
-            darkColor="rgba(255, 255, 255, 0.6)"
-            lightColor="rgba(17, 24, 39, 0.6)"
-            style={styles.rowDescription}
-          >
-            {description}
-          </ThemedText>
-        ) : null}
-      </ThemedView>
-      {value ? (
-        <ThemedText
-          darkColor="rgba(255, 255, 255, 0.75)"
-          lightColor="rgba(17, 24, 39, 0.75)"
-          numberOfLines={1}
-          style={styles.rowValue}
-        >
-          {value}
-        </ThemedText>
-      ) : null}
-      {onPress ? <IconSymbol color={chevronColor} name="chevron.right" size={18} /> : null}
-    </>
-  );
-
-  const rowStyle = [
-    styles.row,
-    showDivider ? { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth } : styles.rowLast,
-  ];
-
-  if (onPress) {
-    return (
-      <TouchableOpacity accessibilityRole="button" activeOpacity={0.7} onPress={onPress} style={rowStyle}>
-        {content}
-      </TouchableOpacity>
-    );
-  }
-
-  return <ThemedView style={rowStyle}>{content}</ThemedView>;
-}
-
-function CardMessage({ borderColor, message, showDivider = true }: { message: string; borderColor: string; showDivider?: boolean }) {
-  return (
-    <ThemedView
-      style={[
-        styles.cardMessage,
-        showDivider ? { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth } : null,
-      ]}
-    >
-      <ThemedText style={styles.cardMessageText}>{message}</ThemedText>
-    </ThemedView>
-  );
-}
-
-function AccountRow({
-  account,
-  avatar,
-  borderColor,
-  currentLabel,
-  displayName,
-  isCurrent,
-  onRemove,
-  onSwitch,
-  removeLabel,
-  showDivider = true,
-  switchLabel,
-}: AccountRowProps) {
-  const fallbackLetter = (displayName || account.handle || 'U').charAt(0).toUpperCase();
-
-  return (
-    <ThemedView
-      style={[
-        styles.accountRow,
-        showDivider ? { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth } : null,
-      ]}
-    >
-      <ThemedView style={styles.accountAvatarContainer}>
-        {avatar ? (
-          <Image contentFit="cover" source={{ uri: avatar }} style={styles.accountAvatarImage} />
-        ) : (
-          <ThemedView style={styles.accountAvatarFallback}>
-            <ThemedText style={styles.accountAvatarFallbackText}>{fallbackLetter}</ThemedText>
-          </ThemedView>
-        )}
-      </ThemedView>
-
-      <ThemedView style={styles.accountDetails}>
-        <ThemedText style={styles.accountHandle}>@{account.handle}</ThemedText>
-        {displayName ? <ThemedText style={styles.accountDisplayName}>{displayName}</ThemedText> : null}
-        {isCurrent ? <ThemedText style={styles.currentAccountBadge}>{currentLabel}</ThemedText> : null}
-      </ThemedView>
-
-      <ThemedView style={styles.accountActions}>
-        {onSwitch ? (
-          <TouchableOpacity
-            accessibilityRole="button"
-            activeOpacity={0.7}
-            onPress={onSwitch}
-            style={[styles.accountActionButton, styles.accountActionButtonPrimary]}
-          >
-            <ThemedText style={[styles.accountActionText, styles.accountActionPrimary]}>{switchLabel}</ThemedText>
-          </TouchableOpacity>
-        ) : null}
-
-        <TouchableOpacity
-          accessibilityRole="button"
-          activeOpacity={0.7}
-          onPress={onRemove}
-          style={[styles.accountActionButton, !onSwitch && styles.accountActionButtonPrimary]}
-        >
-          <ThemedText style={[styles.accountActionText, styles.accountActionDestructive]}>{removeLabel}</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
-    </ThemedView>
-  );
-}
-
-function InfoRow({ borderColor, label, monospace = false, showDivider = true, value }: InfoRowProps) {
-  return (
-    <ThemedView
-      style={[
-        styles.infoRow,
-        showDivider ? { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth } : null,
-      ]}
-    >
-      <ThemedText style={styles.infoRowLabel}>{label}</ThemedText>
-      <ThemedText
-        numberOfLines={1}
-        selectable
-        style={[styles.infoRowValue, monospace && styles.infoRowMonospace]}
-      >
-        {value}
-      </ThemedText>
-    </ThemedView>
-  );
-}
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -395,19 +186,73 @@ export default function SettingsScreen() {
     });
   }, [dialogManager]);
 
+  const navigationRows = useMemo<SettingsRowDescriptor[]>(
+    () => [
+      {
+        key: 'account',
+        icon: 'person.crop.circle',
+        label: t('settings.account'),
+        onPress: () => router.push('/settings/account'),
+      },
+      {
+        key: 'privacy-security',
+        icon: 'lock.fill',
+        label: t('settings.privacyAndSecurity'),
+        onPress: () => router.push('/settings/privacy-and-security'),
+      },
+      {
+        key: 'moderation',
+        icon: 'shield.fill',
+        label: t('settings.moderation'),
+        onPress: () => router.push('/settings/moderation'),
+      },
+      {
+        key: 'notifications',
+        icon: 'bell.fill',
+        label: t('settings.notifications'),
+        onPress: () => router.push('/settings/notifications'),
+      },
+      {
+        key: 'content-media',
+        icon: 'photo.on.rectangle',
+        label: t('settings.contentAndMedia'),
+        onPress: () => router.push('/settings/content-and-media'),
+      },
+      {
+        key: 'appearance',
+        icon: 'paintpalette.fill',
+        label: t('settings.appearance'),
+        onPress: () => router.push('/settings/appearance'),
+      },
+      {
+        key: 'accessibility',
+        icon: 'figure.stand',
+        label: t('settings.accessibility'),
+        onPress: () => router.push('/settings/accessibility'),
+      },
+      {
+        key: 'languages',
+        icon: 'globe',
+        label: t('settings.language'),
+        onPress: () => router.push('/settings/languages'),
+      },
+      {
+        key: 'about',
+        icon: 'info.circle.fill',
+        label: t('settings.about'),
+        onPress: () => router.push('/settings/about'),
+      },
+    ],
+    [t],
+  );
+
   const supportRows = useMemo<SettingsRowDescriptor[]>(
     () => [
       {
         key: 'help-center',
         icon: 'questionmark.circle',
-        label: t('settings.helpCenter'),
+        label: t('settings.help'),
         onPress: () => openExternalLink(EXTERNAL_LINKS.helpCenter),
-      },
-      {
-        key: 'status',
-        icon: 'info.circle.fill',
-        label: t('settings.status'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.status),
       },
       {
         key: 'feedback',
@@ -433,39 +278,14 @@ export default function SettingsScreen() {
         label: t('settings.terms'),
         onPress: () => openExternalLink(EXTERNAL_LINKS.terms),
       },
+      {
+        key: 'status',
+        icon: 'waveform.path',
+        label: t('settings.status'),
+        onPress: () => openExternalLink(EXTERNAL_LINKS.status),
+      },
     ],
     [openExternalLink, t],
-  );
-
-  const aboutRows = useMemo<SettingsRowDescriptor[]>(
-    () => {
-      const rows: SettingsRowDescriptor[] = [
-        {
-          key: 'change-log',
-          icon: 'clock',
-          label: t('settings.changeLog'),
-          onPress: () => openExternalLink(EXTERNAL_LINKS.changeLog),
-        },
-        {
-          key: 'version',
-          icon: 'info.circle.fill',
-          label: t('settings.version'),
-          value: version,
-        },
-      ];
-
-      if (buildNumber) {
-        rows.push({
-          key: 'build-number',
-          icon: 'info.circle.fill',
-          label: t('settings.buildNumber'),
-          value: buildNumber,
-        });
-      }
-
-      return rows;
-    },
-    [buildNumber, openExternalLink, t, version],
   );
 
   const developmentRows = useMemo<SettingsRowDescriptor[]>(
@@ -488,9 +308,30 @@ export default function SettingsScreen() {
         label: t('settings.appVariant'),
         value: variant ?? t('common.unknown'),
       },
+      {
+        key: 'version',
+        icon: 'number.circle',
+        label: t('settings.version'),
+        value: version,
+      },
+      ...(buildNumber
+        ? [
+            {
+              key: 'build-number',
+              icon: 'number.circle.fill',
+              label: t('settings.buildNumber'),
+              value: buildNumber,
+            } as SettingsRowDescriptor,
+          ]
+        : []),
     ],
-    [handleCheckMissingTranslations, handleOpenDebugTools, t, variant],
+    [buildNumber, handleCheckMissingTranslations, handleOpenDebugTools, t, variant, version],
   );
+
+  const currentProfile = currentAccount ? accountProfiles?.[currentAccount.did] : undefined;
+  const avatar = currentProfile?.avatar ?? currentAccount?.avatar ?? null;
+  const displayName = currentProfile?.displayName ?? currentAccount?.displayName ?? null;
+  const fallbackLetter = (displayName || currentAccount?.handle || 'U').charAt(0).toUpperCase();
 
   const contentPaddingBottom = Math.max(insets.bottom, 24) + 24;
 
@@ -502,86 +343,63 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
           <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
         </ThemedView>
 
-        <SettingsSection isFirst title={t('settings.account')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {accounts.length === 0 ? (
-              <CardMessage borderColor={borderColor} message={t('common.noAccounts')} />
+        <ThemedView style={[styles.profileCard, { borderColor }]}> 
+          <ThemedView style={styles.profileInfo}>
+            {avatar ? (
+              <Image contentFit="cover" source={{ uri: avatar }} style={styles.profileAvatar} />
             ) : (
-              accounts.map((account, index) => {
-                const profile = accountProfiles?.[account.did];
-                const avatar = profile?.avatar || account.avatar;
-                const displayName = profile?.displayName || account.displayName;
-                const isCurrent = account.did === currentAccount?.did;
-
-                return (
-                  <AccountRow
-                    key={account.did}
-                    account={account}
-                    avatar={avatar}
-                    borderColor={borderColor}
-                    currentLabel={t('common.current')}
-                    displayName={displayName}
-                    isCurrent={isCurrent}
-                    onRemove={() => handleRemoveAccount(account)}
-                    onSwitch={
-                      isCurrent
-                        ? undefined
-                        : () => handleSwitchAccount(account)
-                    }
-                    removeLabel={t('common.remove')}
-                    showDivider
-                    switchLabel={t('common.switch')}
-                  />
-                );
-              })
+              <ThemedView style={styles.profileAvatarFallback}>
+                <ThemedText style={styles.profileAvatarFallbackText}>{fallbackLetter}</ThemedText>
+              </ThemedView>
             )}
 
-            <SettingsRow
-              borderColor={borderColor}
-              description={t('common.connectAnotherAccount')}
-              icon="plus"
-              key="add-account"
-              label={t('common.addAccount')}
-              onPress={handleAddAccount}
-            />
-            <SettingsRow
-              borderColor={borderColor}
-              description={t('common.removeAllConnections')}
-              destructive
-              icon="xmark.circle.fill"
-              key="disconnect-all"
-              label={t('common.disconnectAllAccounts')}
-              onPress={handleLogout}
-              showDivider={false}
-            />
+            <ThemedView style={styles.profileDetails}>
+              {displayName ? <ThemedText style={styles.profileDisplayName}>{displayName}</ThemedText> : null}
+              {currentAccount ? <ThemedText style={styles.profileHandle}>@{currentAccount.handle}</ThemedText> : null}
+            </ThemedView>
           </ThemedView>
 
-          {currentAccount ? (
-            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-              <InfoRow borderColor={borderColor} label={t('common.handle')} value={`@${currentAccount.handle}`} />
-              <InfoRow
-                borderColor={borderColor}
-                label="DID"
-                monospace
-                showDivider={false}
-                value={currentAccount.did}
-              />
-            </ThemedView>
-          ) : null}
-        </SettingsSection>
+          <ThemedView style={styles.profileActions}>
+            {accounts.length > 1 ? (
+              <TouchableOpacity
+                accessibilityRole="button"
+                activeOpacity={0.7}
+                onPress={() => router.push('/settings/account')}
+                style={[styles.primaryActionButton, styles.profileActionButton]}
+              >
+                <ThemedText style={styles.primaryActionText}>{t('common.switchAccount')}</ThemedText>
+              </TouchableOpacity>
+            ) : null}
 
-        <SettingsSection title={t('settings.preferences')}>
-          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}> 
-            <ThemedView
-              style={[styles.cardContent, { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}
+            <TouchableOpacity
+              accessibilityRole="button"
+              activeOpacity={0.7}
+              onPress={handleAddAccount}
+              style={[styles.secondaryActionButton, styles.profileActionButton]}
             >
-              <LanguageSelector />
-            </ThemedView>
-            <NotificationSettings />
+              <ThemedText style={styles.secondaryActionText}>{t('common.addAccount')}</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        </ThemedView>
+
+        <SettingsSection isFirst title={t('navigation.settings')}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
+            {navigationRows.map((item, index) => (
+              <SettingsRow
+                key={item.key}
+                borderColor={borderColor}
+                description={item.description}
+                icon={item.icon}
+                label={item.label}
+                onPress={item.onPress}
+                showDivider={index < navigationRows.length - 1}
+                value={item.value}
+              />
+            ))}
           </ThemedView>
         </SettingsSection>
 
@@ -617,20 +435,16 @@ export default function SettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <SettingsSection title={t('settings.about')}>
+        <SettingsSection title={t('common.actions')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {aboutRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                description={item.description}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < aboutRows.length - 1}
-                value={item.value}
-              />
-            ))}
+            <SettingsRow
+              borderColor={borderColor}
+              destructive
+              icon="xmark.circle.fill"
+              label={t('settings.signOut')}
+              onPress={handleLogout}
+              showDivider={false}
+            />
           </ThemedView>
         </SettingsSection>
 
@@ -649,6 +463,46 @@ export default function SettingsScreen() {
                   value={item.value}
                 />
               ))}
+            </ThemedView>
+          </SettingsSection>
+        ) : null}
+
+        {currentAccount ? (
+          <SettingsSection title={t('common.accounts')}>
+            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
+              <InfoRow borderColor={borderColor} label={t('common.handle')} value={`@${currentAccount.handle}`} />
+              <InfoRow borderColor={borderColor} label="DID" monospace value={currentAccount.did} />
+            </ThemedView>
+
+            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
+              {accounts.length === 0 ? null : (
+                accounts.map((account) => {
+                  const profile = accountProfiles?.[account.did];
+                  const accountAvatar = profile?.avatar || account.avatar;
+                  const accountDisplayName = profile?.displayName || account.displayName;
+                  const isCurrent = account.did === currentAccount.did;
+
+                  return (
+                    <AccountRow
+                      key={account.did}
+                      account={account}
+                      avatar={accountAvatar}
+                      borderColor={borderColor}
+                      currentLabel={t('common.current')}
+                      displayName={accountDisplayName}
+                      isCurrent={isCurrent}
+                      onRemove={() => handleRemoveAccount(account)}
+                      onSwitch={
+                        isCurrent
+                          ? undefined
+                          : () => handleSwitchAccount(account)
+                      }
+                      removeLabel={t('common.remove')}
+                      switchLabel={t('common.switch')}
+                    />
+                  );
+                })
+              )}
             </ThemedView>
           </SettingsSection>
         ) : null}
@@ -676,158 +530,84 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
   },
-  section: {
-    marginTop: 32,
-  },
-  firstSection: {
-    marginTop: 24,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    opacity: 0.65,
-    paddingHorizontal: 16,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
   sectionCard: {
     marginHorizontal: 16,
     marginTop: 12,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
-  cardContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+  profileCard: {
+    marginHorizontal: 16,
+    marginTop: 24,
+    padding: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: 'transparent',
   },
-  row: {
+  profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
   },
-  rowLast: {
-    borderBottomWidth: 0,
-  },
-  rowIcon: {
+  profileAvatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     marginRight: 12,
   },
-  rowContent: {
-    flex: 1,
-  },
-  rowLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  rowLabelDestructive: {
-    color: '#DC2626',
-  },
-  rowDescription: {
-    fontSize: 13,
-    marginTop: 4,
-  },
-  rowValue: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 12,
-    maxWidth: 140,
-  },
-  cardMessage: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-  },
-  cardMessageText: {
-    fontSize: 15,
-    opacity: 0.7,
-  },
-  accountRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  accountAvatarContainer: {
-    width: 40,
-    height: 40,
-    marginRight: 12,
-  },
-  accountAvatarImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  accountAvatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  profileAvatarFallback: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: '#007AFF',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12,
   },
-  accountAvatarFallbackText: {
-    fontSize: 16,
+  profileAvatarFallbackText: {
+    fontSize: 20,
     fontWeight: '700',
     color: '#FFFFFF',
   },
-  accountDetails: {
+  profileDetails: {
     flex: 1,
   },
-  accountHandle: {
-    fontSize: 16,
-    fontWeight: '600',
+  profileDisplayName: {
+    fontSize: 18,
+    fontWeight: '700',
   },
-  accountDisplayName: {
-    fontSize: 14,
+  profileHandle: {
+    fontSize: 15,
     opacity: 0.7,
-    marginTop: 2,
+    marginTop: 4,
   },
-  currentAccountBadge: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#007AFF',
-    marginTop: 6,
-  },
-  accountActions: {
+  profileActions: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 16,
+  },
+  profileActionButton: {
+    flexGrow: 1,
     alignItems: 'center',
-    marginLeft: 12,
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderWidth: StyleSheet.hairlineWidth,
   },
-  accountActionButton: {
-    marginLeft: 12,
+  primaryActionButton: {
+    borderColor: 'transparent',
+    backgroundColor: '#007AFF',
   },
-  accountActionButtonPrimary: {
-    marginLeft: 0,
-  },
-  accountActionText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  accountActionPrimary: {
-    color: '#007AFF',
-  },
-  accountActionDestructive: {
-    color: '#DC2626',
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  infoRowLabel: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  infoRowValue: {
-    marginLeft: 16,
+  primaryActionText: {
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
-    flexShrink: 1,
-    textAlign: 'right',
   },
-  infoRowMonospace: {
-    fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
+  secondaryActionButton: {
+    borderColor: 'rgba(124, 140, 249, 0.4)',
+    backgroundColor: 'transparent',
+  },
+  secondaryActionText: {
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
 
