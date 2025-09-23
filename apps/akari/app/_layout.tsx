@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
@@ -12,6 +13,7 @@ import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
 import '@/utils/i18n';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
@@ -23,6 +25,12 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  useEffect(() => {
+    setupBackgroundUpdates().catch((error) => {
+      console.error('Failed to configure background updates:', error);
+    });
+  }, []);
 
   if (!loaded) {
     // Async font loading only occurs in development.
