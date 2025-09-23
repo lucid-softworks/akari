@@ -2,15 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  type ImageStyle,
-  type StyleProp,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -58,22 +50,16 @@ type NotificationItemProps = {
   borderColor: string;
 };
 
-const getPlainImageStyle = (style: StyleProp<ImageStyle>): ImageStyle => {
-  const flattened = StyleSheet.flatten(style);
+// expo-image on web requires receiving plain object styles.
+const AVATAR_IMAGE_STYLE: ImageStyle = {
+  width: 28,
+  height: 28,
+  borderRadius: 14,
+};
 
-  if (!flattened || typeof flattened !== 'object') {
-    return {} as ImageStyle;
-  }
-
-  const plainStyle: Record<string, unknown> = {};
-
-  for (const [key, value] of Object.entries(flattened)) {
-    if (value !== undefined) {
-      plainStyle[key] = value;
-    }
-  }
-
-  return plainStyle as ImageStyle;
+const EMBED_IMAGE_STYLE: ImageStyle = {
+  // Keep embed previews compatible with expo-image on web.
+  borderRadius: 8,
 };
 
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
@@ -81,8 +67,6 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
   const likeColor = '#ff3b30';
   const repostColor = '#34c759';
-  const avatarImageStyle = useMemo<ImageStyle>(() => getPlainImageStyle(styles.avatar), []);
-  const embedImageBaseStyle = useMemo<ImageStyle>(() => getPlainImageStyle(styles.embedImage), []);
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -166,7 +150,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             {author.avatar ? (
               <Image
                 source={{ uri: author.avatar }}
-                style={avatarImageStyle}
+                style={AVATAR_IMAGE_STYLE}
                 contentFit="cover"
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
@@ -213,7 +197,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             key={index}
             source={{ uri: image.fullsize }}
             style={{
-              ...embedImageBaseStyle,
+              ...EMBED_IMAGE_STYLE,
               width: fullWidth,
               height: imageHeight,
             }}
@@ -590,9 +574,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    ...AVATAR_IMAGE_STYLE,
   },
   avatarFallback: {
     backgroundColor: '#007AFF',
@@ -659,7 +641,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   embedImage: {
-    borderRadius: 8,
+    ...EMBED_IMAGE_STYLE,
   },
   timeText: {
     fontSize: 12,
