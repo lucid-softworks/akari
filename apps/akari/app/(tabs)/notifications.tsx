@@ -2,7 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -55,6 +55,8 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
   const likeColor = '#ff3b30';
   const repostColor = '#34c759';
+  const avatarImageStyle = useMemo<ImageStyle>(() => StyleSheet.flatten(styles.avatar) ?? {}, []);
+  const embedImageBaseStyle = useMemo<ImageStyle>(() => StyleSheet.flatten(styles.embedImage) ?? {}, []);
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -138,7 +140,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             {author.avatar ? (
               <Image
                 source={{ uri: author.avatar }}
-                style={styles.avatar}
+                style={avatarImageStyle}
                 contentFit="cover"
                 placeholder={require('@/assets/images/partial-react-logo.png')}
               />
@@ -178,10 +180,11 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const aspectRatio = 16 / 9; // Default aspect ratio
     const imageHeight = fullWidth / aspectRatio;
 
-    const embedImageStyle = StyleSheet.flatten([
-      styles.embedImage,
-      { width: fullWidth, height: imageHeight },
-    ]);
+    const embedImageStyle: ImageStyle = {
+      ...embedImageBaseStyle,
+      width: fullWidth,
+      height: imageHeight,
+    };
 
     return (
       <View style={styles.embedImagesContainer}>
