@@ -59,7 +59,10 @@
       "mute": "Wycisz",
       "unmute": "Włącz dźwięk",
       "pendingChats": "Oczekujące czaty",
-      "viewPendingChats": "Zobacz oczekujące czaty"
+      "viewPendingChats": "Zobacz oczekujące czaty",
+      "live": "NA ŻYWO",
+      "watchNow": "Obejrzyj teraz",
+      "openProfile": "Otwórz profil"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",

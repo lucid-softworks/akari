@@ -59,7 +59,10 @@
       "mute": "म्यूट",
       "unmute": "म्यूट हटाएं",
       "pendingChats": "लंबित चैट्स",
-      "viewPendingChats": "लंबित चैट्स देखें"
+      "viewPendingChats": "लंबित चैट्स देखें",
+      "live": "लाइव",
+      "watchNow": "अभी देखें",
+      "openProfile": "प्रोफ़ाइल खोलें"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",

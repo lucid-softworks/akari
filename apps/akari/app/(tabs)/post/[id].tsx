@@ -60,6 +60,7 @@ export const renderComment = (
               ? (post.record as { text: string }).text
               : undefined,
           author: {
+            did: post.author.did,
             handle: post.author.handle,
             displayName: post.author.displayName,
             avatar: post.author.avatar,
@@ -102,6 +103,7 @@ export const renderComment = (
             ? (postItem.record as { text: string }).text
             : undefined,
         author: {
+          did: postItem.author.did,
           handle: postItem.author.handle,
           displayName: postItem.author.displayName,
           avatar: postItem.author.avatar,
@@ -208,6 +210,7 @@ export default function PostDetailScreen() {
               ? (parentPost.record as { text: string }).text
               : undefined,
           author: {
+            did: parentPost.author.did,
             handle: parentPost.author.handle,
             displayName: parentPost.author.displayName,
             avatar: parentPost.author.avatar,
@@ -244,6 +247,7 @@ export default function PostDetailScreen() {
               ? (rootPost.record as { text: string }).text
               : undefined,
           author: {
+            did: rootPost.author.did,
             handle: rootPost.author.handle,
             displayName: rootPost.author.displayName,
             avatar: rootPost.author.avatar,
@@ -338,6 +342,7 @@ export default function PostDetailScreen() {
                     ? (mainPost.record as { text: string }).text
                     : undefined,
                 author: {
+                  did: mainPost?.author?.did || '',
                   handle: mainPost?.author?.handle || '',
                   displayName: mainPost?.author?.displayName,
                   avatar: mainPost?.author?.avatar,

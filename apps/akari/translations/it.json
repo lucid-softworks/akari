@@ -59,7 +59,10 @@
       "mute": "Silenzia",
       "unmute": "Riattiva audio",
       "pendingChats": "Chat in sospeso",
-      "viewPendingChats": "Vedi le chat in sospeso"
+      "viewPendingChats": "Vedi le chat in sospeso",
+      "live": "IN DIRETTA",
+      "watchNow": "Guarda ora",
+      "openProfile": "Apri profilo"
     },
     "auth": {
       "fillAllFields": "Compila tutti i campi",

@@ -59,7 +59,10 @@
       "mute": "Tewi",
       "unmute": "Ailgychwyn Sain",
       "pendingChats": "Sgyrsiau ar y gweill",
-      "viewPendingChats": "Gweld sgyrsiau ar y gweill"
+      "viewPendingChats": "Gweld sgyrsiau ar y gweill",
+      "live": "Byw",
+      "watchNow": "Gwyliwch nawr",
+      "openProfile": "Agor proffil"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",

@@ -59,7 +59,10 @@
       "mute": "Silenciar",
       "unmute": "Ativar som",
       "pendingChats": "Conversas pendentes",
-      "viewPendingChats": "Ver conversas pendentes"
+      "viewPendingChats": "Ver conversas pendentes",
+      "live": "AO VIVO",
+      "watchNow": "Assistir agora",
+      "openProfile": "Abrir perfil"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",

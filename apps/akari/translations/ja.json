@@ -59,7 +59,10 @@
       "mute": "ミュート",
       "unmute": "ミュート解除",
       "pendingChats": "保留中のチャット",
-      "viewPendingChats": "保留中のチャットを表示"
+      "viewPendingChats": "保留中のチャットを表示",
+      "live": "ライブ",
+      "watchNow": "今すぐ視聴",
+      "openProfile": "プロフィールを開く"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",

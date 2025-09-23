@@ -59,7 +59,10 @@
       "mute": "靜音",
       "unmute": "取消靜音",
       "pendingChats": "待處理聊天",
-      "viewPendingChats": "查看待處理聊天"
+      "viewPendingChats": "查看待處理聊天",
+      "live": "直播",
+      "watchNow": "立即觀看",
+      "openProfile": "開啟個人檔案"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",

@@ -59,7 +59,10 @@
       "mute": "Tắt tiếng",
       "unmute": "Bật tiếng",
       "pendingChats": "Cuộc trò chuyện đang chờ",
-      "viewPendingChats": "Xem các cuộc trò chuyện đang chờ"
+      "viewPendingChats": "Xem các cuộc trò chuyện đang chờ",
+      "live": "TRỰC TIẾP",
+      "watchNow": "Xem ngay",
+      "openProfile": "Mở hồ sơ"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",

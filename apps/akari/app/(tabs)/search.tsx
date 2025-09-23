@@ -184,6 +184,7 @@ export default function SearchScreen() {
           id: post.uri,
           text: post.record?.text,
           author: {
+            did: post.author.did,
             handle: post.author.handle,
             displayName: post.author.displayName,
             avatar: post.author.avatar,

@@ -59,7 +59,10 @@
       "mute": "كتم الصوت",
       "unmute": "إلغاء كتم الصوت",
       "pendingChats": "الدردشات المعلقة",
-      "viewPendingChats": "عرض الدردشات المعلقة"
+      "viewPendingChats": "عرض الدردشات المعلقة",
+      "live": "مباشر",
+      "watchNow": "شاهد الآن",
+      "openProfile": "افتح الملف الشخصي"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",

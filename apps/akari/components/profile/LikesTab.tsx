@@ -43,6 +43,7 @@ export function LikesTab({ handle }: LikesTabProps) {
           id: item.uri,
           text: item.record?.text as string | undefined,
           author: {
+            did: item.author.did,
             handle: item.author.handle,
             displayName: item.author.displayName,
             avatar: item.author.avatar,

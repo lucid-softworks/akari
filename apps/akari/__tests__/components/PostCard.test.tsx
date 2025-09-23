@@ -21,6 +21,7 @@ import { useMuteAccount } from '@/hooks/mutations/useMuteAccount';
 import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
+import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
@@ -31,6 +32,7 @@ jest.mock('@/hooks/mutations/useBlockUser');
 jest.mock('@/hooks/mutations/useMuteAccount');
 jest.mock('@/hooks/mutations/useMuteThread');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
+jest.mock('@/hooks/queries/useLiveNow');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
@@ -108,6 +110,7 @@ describe('PostCard', () => {
   const mockUseLikePost = useLikePost as jest.Mock;
   const mockUsePostTranslation = usePostTranslation as jest.Mock;
   const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
+  const mockUseLiveNow = useLiveNow as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
   const mockUseBlockUser = useBlockUser as jest.Mock;
@@ -144,6 +147,7 @@ describe('PostCard', () => {
     mockUseBlockUser.mockReturnValue({ mutate: jest.fn() });
     mockUseMuteAccount.mockReturnValue({ mutate: jest.fn() });
     mockUseMuteThread.mockReturnValue({ mutate: jest.fn() });
+    mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
     mutateAsyncMock = jest
       .fn()
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({

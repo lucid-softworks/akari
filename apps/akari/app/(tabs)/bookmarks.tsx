@@ -72,6 +72,7 @@ export default function BookmarksScreen() {
             id: post.uri,
             text: (post.record as { text?: string } | undefined)?.text,
             author: {
+              did: post.author.did,
               handle: post.author.handle,
               displayName: post.author.displayName,
               avatar: post.author.avatar,
