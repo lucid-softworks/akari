@@ -45,8 +45,9 @@ a:hover {
 }
 
 .sidebar {
-  min-width: 290px;
-  width: max-content;
+  min-width: 220px;
+  width: -moz-fit-content;
+  width: fit-content;
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: 32px 28px;
@@ -351,7 +352,7 @@ a:hover {
   border-radius: 2px;
   padding: 8px 10px;
   font-size: 0.85rem;
-  color: var(--accent);
+  color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -361,6 +362,62 @@ a:hover {
   text-decoration: underline;
   text-decoration-color: rgba(91, 141, 239, 0.6);
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.signature-token {
+  font-weight: 400;
+}
+
+.signature-token--keyword {
+  color: #facc15;
+  font-weight: 500;
+}
+
+.signature-token--modifier {
+  color: var(--text-secondary);
+}
+
+.signature-token--name {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.signature-token--param-name {
+  color: #e5e9ff;
+}
+
+.signature-token--optional {
+  color: var(--required);
+  margin-left: 2px;
+}
+
+.signature-token--rest {
+  color: var(--text-secondary);
+}
+
+.signature-token--default {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.signature-token--punctuation {
+  color: var(--text-secondary);
+}
+
+.signature-parameter {
+  display: inline;
+}
+
+.signature-type {
+  color: #7dd3fc;
+}
+
+.signature-type--return {
+  color: #93c5fd;
+}
+
+.signature-type .signature-link {
+  text-decoration-color: rgba(125, 211, 252, 0.6);
 }
 
 .signature-link:hover,
