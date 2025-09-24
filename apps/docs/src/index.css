@@ -45,7 +45,8 @@ a:hover {
 }
 
 .sidebar {
-  width: 290px;
+  min-width: 290px;
+  width: max-content;
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: 32px 28px;
@@ -171,10 +172,8 @@ a:hover {
   border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
-  width: 100%;
-  flex-wrap: wrap;
 }
 
 .sidebar-entry-link:hover,
@@ -201,10 +200,9 @@ a:hover {
 }
 
 .sidebar-entry-label {
-  flex: 1 1 0;
+  flex: 0 1 auto;
   min-width: 0;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
   line-height: 1.4;
 }
 
