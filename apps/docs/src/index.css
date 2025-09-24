@@ -1,0 +1,308 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #0f1117;
+  color: #f5f7fa;
+  --bg: #0f1117;
+  --surface: #161b26;
+  --surface-alt: #1f2633;
+  --border: #273244;
+  --text-primary: #f5f7fa;
+  --text-secondary: #a8b3cf;
+  --accent: #5b8def;
+  --accent-soft: rgba(91, 141, 239, 0.18);
+  --code-bg: #0b121f;
+  --code-border: #1f2a3b;
+  --success: #34d399;
+  --warning: #fbbf24;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 290px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 32px 28px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar h1 {
+  margin: 0 0 24px;
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.sidebar p {
+  margin: 0 0 20px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar nav li {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.sidebar nav li a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar nav li a:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.sidebar nav ul ul {
+  margin-top: 4px;
+  margin-left: 12px;
+  border-left: 1px solid var(--border);
+  padding-left: 12px;
+  gap: 4px;
+}
+
+.content {
+  flex: 1;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.header time {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.package-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.package-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.package-header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.package-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.class-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.class-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 20px 45px rgba(8, 12, 22, 0.35);
+}
+
+.class-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.class-header h3 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.class-header .file-path {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.method-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border 0.2s ease, transform 0.2s ease;
+}
+
+.method-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.method-card h4 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.method-card .signature {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', ui-monospace, monospace;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.method-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.method-card .placeholder {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.parameter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.parameter-item {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+}
+
+.parameter-item header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.parameter-item header .type {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', ui-monospace, monospace;
+  font-size: 0.75rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: rgba(91, 141, 239, 0.12);
+  color: var(--accent);
+}
+
+.parameter-item header .meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.parameter-item p {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.section-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.functions-section {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 20px 45px rgba(8, 12, 22, 0.3);
+}
+
+@media (max-width: 1080px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .content {
+    padding: 32px 24px 48px;
+  }
+}
