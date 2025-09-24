@@ -1,10 +1,11 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
-import SettingsScreen from '@/app/(tabs)/settings';
+import SettingsScreen from '@/app/(tabs)/settings/index';
+import AccountSettingsScreen from '@/app/(tabs)/settings/account';
 import { DialogProvider } from '@/contexts/DialogContext';
 import { Account } from '@/types/account';
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { showAlert } from '@/utils/alert';
 
@@ -12,13 +13,14 @@ import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
-import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
+import { useSignIn } from '@/hooks/mutations/useSignIn';
 
 jest.mock('expo-constants', () => ({ expoConfig: { version: '1.0.0' } }));
 
@@ -35,10 +37,12 @@ jest.mock('expo-image', () => {
 jest.mock('expo-router', () => {
   const push = jest.fn();
   const replace = jest.fn();
+  const usePathname = jest.fn(() => '/(tabs)/settings/account');
 
   return {
     router: { push, replace },
     useRouter: () => ({ push, replace }),
+    usePathname,
   };
 });
 
@@ -81,6 +85,7 @@ jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useNotImplementedToast');
 
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 
@@ -95,14 +100,23 @@ const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUsePathname = usePathname as jest.Mock;
+const mockUseNotImplementedToast = useNotImplementedToast as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRouterReplace = router.replace as jest.Mock;
 
-const renderSettings = () =>
+const renderSettingsIndex = () =>
   render(
     <DialogProvider>
       <SettingsScreen />
+    </DialogProvider>,
+  );
+
+const renderAccountSettings = () =>
+  render(
+    <DialogProvider>
+      <AccountSettingsScreen />
     </DialogProvider>,
   );
 
@@ -116,15 +130,19 @@ beforeEach(() => {
   });
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
   mockUseAccountProfiles.mockReturnValue({ data: {} });
+  mockUseAccounts.mockReturnValue({ data: [] });
+  mockUseCurrentAccount.mockReturnValue({ data: null });
+  mockUsePathname.mockReturnValue('/(tabs)/settings/account');
   mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseRemoveAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseWipeAllData.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue(undefined) });
   mockUseAddAccount.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
   mockUseSignIn.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
+  mockUseNotImplementedToast.mockReturnValue(jest.fn());
 });
 
-describe('SettingsScreen', () => {
-  it('renders accounts and handles actions', async () => {
+describe('Settings index screen', () => {
+  it('registers scroll handler and navigates to account settings', async () => {
     const accounts: Account[] = [
       { did: 'did1', handle: 'user1', displayName: 'User One', jwtToken: 't', refreshToken: 'r' },
       { did: 'did2', handle: 'user2', displayName: 'User Two', jwtToken: 't', refreshToken: 'r' },
@@ -134,52 +152,40 @@ describe('SettingsScreen', () => {
 
     const registerSpy = jest.spyOn(tabScrollRegistry, 'register');
 
-    const { getByText, getAllByText } = renderSettings();
+    const { getByText } = renderSettingsIndex();
 
     await waitFor(() => expect(registerSpy).toHaveBeenCalledWith('settings', expect.any(Function)));
 
-    expect(getAllByText('@user1').length).toBeGreaterThan(0);
-    expect(getByText('@user2')).toBeTruthy();
-    expect(getAllByText('common.switch')).toHaveLength(1);
+    expect(getByText('@user1')).toBeTruthy();
 
-    fireEvent.press(getByText('common.switch'));
-    expect(mockShowAlert).toHaveBeenCalledWith(
-      expect.objectContaining({ title: 'common.switchAccount' })
-    );
+    fireEvent.press(getByText('common.switchAccount'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
 
-    fireEvent.press(getAllByText('common.remove')[1]);
-    expect(mockShowAlert).toHaveBeenCalledWith(
-      expect.objectContaining({ title: 'common.removeAccount' })
-    );
-  });
-
-  it('shows message when no accounts exist', () => {
-    mockUseAccounts.mockReturnValue({ data: [] });
-    mockUseCurrentAccount.mockReturnValue({ data: null });
-
-    const { getByText } = renderSettings();
-
-    expect(getByText('common.noAccounts')).toBeTruthy();
+    fireEvent.press(getByText('settings.account'));
+    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/settings/account');
   });
 
   it('opens the add account panel', () => {
-    mockUseAccounts.mockReturnValue({ data: [] });
-    mockUseCurrentAccount.mockReturnValue({ data: null });
-
-    const { getByText, getByPlaceholderText } = renderSettings();
+    const { getByText, getByPlaceholderText } = renderSettingsIndex();
 
     fireEvent.press(getByText('common.addAccount'));
     expect(mockRouterPush).not.toHaveBeenCalled();
     expect(getByPlaceholderText('auth.blueskyHandlePlaceholder')).toBeTruthy();
   });
+});
+
+describe('AccountSettingsScreen', () => {
+  it('shows message when no accounts exist', () => {
+    const { getByText } = renderAccountSettings();
+
+    expect(getByText('common.noAccounts')).toBeTruthy();
+  });
 
   it('logs out all accounts', async () => {
-    mockUseAccounts.mockReturnValue({ data: [] });
-    mockUseCurrentAccount.mockReturnValue({ data: null });
     const mutateAsync = jest.fn().mockResolvedValue(undefined);
     mockUseWipeAllData.mockReturnValue({ mutateAsync });
 
-    const { getByText } = renderSettings();
+    const { getByText } = renderAccountSettings();
 
     fireEvent.press(getByText('common.disconnectAllAccounts'));
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
@@ -196,7 +202,7 @@ describe('SettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
     mockUseSwitchAccount.mockReturnValue({ mutate });
 
-    const { getByText } = renderSettings();
+    const { getByText } = renderAccountSettings();
 
     fireEvent.press(getByText('common.switch'));
 
@@ -221,7 +227,7 @@ describe('SettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: account });
     mockUseRemoveAccount.mockReturnValue({ mutate });
 
-    const { getByText } = renderSettings();
+    const { getByText } = renderAccountSettings();
 
     fireEvent.press(getByText('common.remove'));
 
@@ -234,12 +240,10 @@ describe('SettingsScreen', () => {
   });
 
   it('shows error alert when logout fails', async () => {
-    mockUseAccounts.mockReturnValue({ data: [] });
-    mockUseCurrentAccount.mockReturnValue({ data: null });
     const mutateAsync = jest.fn().mockRejectedValue(new Error('fail'));
     mockUseWipeAllData.mockReturnValue({ mutateAsync });
 
-    const { getByText } = renderSettings();
+    const { getByText } = renderAccountSettings();
 
     fireEvent.press(getByText('common.disconnectAllAccounts'));
 
