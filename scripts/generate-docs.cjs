@@ -28,10 +28,12 @@ const packageConfigs = [
   },
 ];
 
+const generatedAt = new Date().toISOString();
 const documentation = {
-  generatedAt: new Date().toISOString(),
+  generatedAt,
   packages: [],
 };
+const packageCatalogues = new Map();
 
 const getRelativePath = (filePath) => path.relative(repoRoot, filePath);
 
@@ -347,17 +349,30 @@ for (const config of packageConfigs) {
   classDocs.sort((a, b) => a.name.localeCompare(b.name));
   functionDocs.sort((a, b) => a.name.localeCompare(b.name));
 
-  documentation.packages.push({
+  const packageDoc = {
     slug: config.slug,
     title: config.title,
     description: config.description,
     classes: classDocs,
     functions: functionDocs,
+  };
+
+  documentation.packages.push(packageDoc);
+  packageCatalogues.set(config.slug, {
+    generatedAt,
+    packages: [packageDoc],
   });
 }
 
-const outputPath = path.join(repoRoot, 'apps/docs/src/data/docs.json');
-fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-fs.writeFileSync(outputPath, `${JSON.stringify(documentation, null, 2)}\n`, 'utf8');
+const docsDirectory = path.join(repoRoot, 'apps/docs/src/data');
+fs.mkdirSync(docsDirectory, { recursive: true });
+
+const aggregateOutputPath = path.join(docsDirectory, 'docs.json');
+fs.writeFileSync(aggregateOutputPath, `${JSON.stringify(documentation, null, 2)}\n`, 'utf8');
+
+for (const [slug, packageDoc] of packageCatalogues.entries()) {
+  const packageOutputPath = path.join(docsDirectory, `${slug}.json`);
+  fs.writeFileSync(packageOutputPath, `${JSON.stringify(packageDoc, null, 2)}\n`, 'utf8');
+}
 
 console.log(`Generated documentation for ${documentation.packages.length} packages.`);

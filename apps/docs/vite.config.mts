@@ -12,4 +12,15 @@ export default defineConfig({
   server: {
     port: 3333,
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        bluesky: path.resolve(__dirname, 'bluesky.html'),
+        clearsky: path.resolve(__dirname, 'clearsky.html'),
+        tenor: path.resolve(__dirname, 'tenor.html'),
+        libretranslate: path.resolve(__dirname, 'libretranslate.html'),
+      },
+    },
+  },
 });
