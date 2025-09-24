@@ -170,10 +170,11 @@ a:hover {
   padding: 4px 8px;
   border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: 8px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .sidebar-entry-link:hover,
@@ -197,6 +198,14 @@ a:hover {
   color: var(--text-secondary);
   background: var(--surface-muted);
   flex-shrink: 0;
+}
+
+.sidebar-entry-label {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 .sidebar-entry-icon--type {

@@ -93,7 +93,7 @@ const SidebarNavigation = ({ packages }: NavigationProps) => {
                           <span className="sidebar-entry-icon" aria-hidden>
                             C
                           </span>
-                          <span>{classDoc.name}</span>
+                          <span className="sidebar-entry-label">{classDoc.name}</span>
                         </a>
                       </li>
                     ))}
@@ -110,7 +110,7 @@ const SidebarNavigation = ({ packages }: NavigationProps) => {
                           <span className="sidebar-entry-icon sidebar-entry-icon--type" aria-hidden>
                             T
                           </span>
-                          <span>{typeDoc.name}</span>
+                          <span className="sidebar-entry-label">{typeDoc.name}</span>
                         </a>
                       </li>
                     ))}
