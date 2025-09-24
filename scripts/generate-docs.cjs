@@ -38,6 +38,18 @@ const packageCatalogues = new Map();
 const TYPE_FORMAT_FLAGS = ts.TypeFormatFlags.NoTruncation;
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed, removeComments: true });
 
+const IMPORT_EXPRESSION_PATTERN = /import\((?:'[^']+'|"[^"]+"|`[^`]+`|[^)]+)\)\.?/g;
+
+const stripImportExpressions = (value) => {
+  if (!value) {
+    return value;
+  }
+
+  return value.replace(IMPORT_EXPRESSION_PATTERN, (match) => {
+    return match.endsWith('.') ? '' : ' ';
+  });
+};
+
 const getRelativePath = (filePath) => path.relative(repoRoot, filePath);
 
 const collectSourceFiles = (directory) => {
@@ -148,7 +160,9 @@ const parseTypeDeclaration = (node, sourceFile, filePath, kind) => {
   }
 
   const { description } = mergeJsDoc([node]);
-  const signature = stripExportModifier(printer.printNode(ts.EmitHint.Unspecified, node, sourceFile));
+  const signature = stripImportExpressions(
+    stripExportModifier(printer.printNode(ts.EmitHint.Unspecified, node, sourceFile)),
+  );
 
   return {
     kind,
@@ -164,7 +178,7 @@ const buildParameterDocs = (parameters, paramDocs, sourceFile) => {
 
   for (const parameter of parameters) {
     const name = parameter.name.getText(sourceFile);
-    const type = parameter.type ? parameter.type.getText(sourceFile) : undefined;
+    const type = parameter.type ? stripImportExpressions(parameter.type.getText(sourceFile)) : undefined;
     const optional = Boolean(parameter.questionToken) || Boolean(parameter.initializer);
     const defaultValue = parameter.initializer ? parameter.initializer.getText(sourceFile) : undefined;
     const docComment = paramDocs.get(name);
@@ -255,8 +269,10 @@ const parseMethod = (method, sourceFile, filePath, checker) => {
     modifiers.push('static');
   }
 
-  const parameterText = method.parameters.map((parameter) => parameter.getText(sourceFile)).join(', ');
-  const returnType = getReturnTypeText(method, sourceFile, checker);
+  const parameterText = stripImportExpressions(
+    method.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
+  );
+  const returnType = stripImportExpressions(getReturnTypeText(method, sourceFile, checker));
   const signature = createSignature(name, parameterText, returnType, modifiers);
 
   return {
@@ -281,8 +297,10 @@ const parseFunctionLike = (fn, name, sourceFile, filePath, docSources, checker) 
     modifiers.push('async');
   }
 
-  const parameterText = fn.parameters.map((parameter) => parameter.getText(sourceFile)).join(', ');
-  const returnType = getReturnTypeText(fn, sourceFile, checker);
+  const parameterText = stripImportExpressions(
+    fn.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
+  );
+  const returnType = stripImportExpressions(getReturnTypeText(fn, sourceFile, checker));
   const signature = createSignature(`function ${name}`, parameterText, returnType, modifiers);
 
   return {
