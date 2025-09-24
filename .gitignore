@@ -42,3 +42,5 @@ app-example
 coverage
 playwright-report/
 test-results/
+# docs site build artifacts
+apps/docs/src/data/docs.json
