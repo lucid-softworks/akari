@@ -8,7 +8,6 @@ import type { DocumentationIndex, PackageDoc, TypeReferenceIndex } from '@/types
 type DocsAppProps = {
   docs: DocumentationIndex;
   siteTitle: string;
-  introduction?: string;
 };
 
 const formatGeneratedAt = (value: string) => {
@@ -141,7 +140,7 @@ const buildTypeIndex = (packages: PackageDoc[]): TypeReferenceIndex => {
   return index;
 };
 
-const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
+const App = ({ docs, siteTitle }: DocsAppProps) => {
   const { packages, generatedAt } = docs;
   const typeIndex = useMemo(() => buildTypeIndex(packages), [packages]);
 
@@ -150,7 +149,6 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
       <div className="app-shell">
         <aside className="sidebar">
           <h1>{siteTitle}</h1>
-          {introduction ? <p>{introduction}</p> : null}
         </aside>
         <main className="content">
           <header className="header">
@@ -167,7 +165,6 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
     <div className="app-shell">
       <aside className="sidebar">
         <h1>{siteTitle}</h1>
-        {introduction ? <p>{introduction}</p> : null}
         <SidebarNavigation packages={packages} />
       </aside>
       <main className="content">

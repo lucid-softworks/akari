@@ -8,5 +8,4 @@ const docs = docsData as DocumentationIndex;
 renderDocsApp({
   docs,
   siteTitle: 'Akari API Docs',
-  introduction: 'Explore the generated documentation for the Akari API clients.',
 });

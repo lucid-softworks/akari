@@ -9,5 +9,4 @@ const [pkg] = docs.packages;
 renderDocsApp({
   docs,
   siteTitle: pkg?.title ?? 'Tenor API Docs',
-  introduction: pkg?.description,
 });

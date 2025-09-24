@@ -7,10 +7,9 @@ import type { DocumentationIndex } from './types';
 type RenderDocsAppOptions = {
   docs: DocumentationIndex;
   siteTitle: string;
-  introduction?: string;
 };
 
-export const renderDocsApp = ({ docs, siteTitle, introduction }: RenderDocsAppOptions) => {
+export const renderDocsApp = ({ docs, siteTitle }: RenderDocsAppOptions) => {
   const rootElement = document.getElementById('root');
 
   if (!rootElement) {
@@ -24,7 +23,6 @@ export const renderDocsApp = ({ docs, siteTitle, introduction }: RenderDocsAppOp
       <App
         docs={docs}
         siteTitle={siteTitle}
-        introduction={introduction}
       />
     </React.StrictMode>,
   );

@@ -45,7 +45,6 @@ a:hover {
 }
 
 .sidebar {
-  min-width: 220px;
   width: -moz-fit-content;
   width: fit-content;
   background: var(--surface);
@@ -53,10 +52,12 @@ a:hover {
   padding: 32px 28px;
   position: sticky;
   top: 0;
-  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
 .sidebar h1 {
@@ -696,6 +697,7 @@ a:hover {
     position: relative;
     width: 100%;
     max-height: none;
+    overflow-y: visible;
     border-right: none;
     border-bottom: 1px solid var(--border);
     padding: 24px;

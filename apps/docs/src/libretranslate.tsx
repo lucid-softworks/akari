@@ -9,5 +9,4 @@ const [pkg] = docs.packages;
 renderDocsApp({
   docs,
   siteTitle: pkg?.title ?? 'LibreTranslate API Docs',
-  introduction: pkg?.description,
 });
