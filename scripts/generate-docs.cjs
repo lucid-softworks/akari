@@ -35,6 +35,8 @@ const documentation = {
 };
 const packageCatalogues = new Map();
 
+const TYPE_FORMAT_FLAGS = ts.TypeFormatFlags.NoTruncation;
+
 const getRelativePath = (filePath) => path.relative(repoRoot, filePath);
 
 const collectSourceFiles = (directory) => {
@@ -203,7 +205,17 @@ const readReturnTag = (tags) => {
   return undefined;
 };
 
-const parseMethod = (method, sourceFile, filePath) => {
+const getReturnTypeText = (node, sourceFile, checker) => {
+  const signature = checker.getSignatureFromDeclaration(node);
+  if (signature) {
+    const returnType = checker.getReturnTypeOfSignature(signature);
+    return checker.typeToString(returnType, node, TYPE_FORMAT_FLAGS);
+  }
+
+  return node.type ? node.type.getText(sourceFile) : 'void';
+};
+
+const parseMethod = (method, sourceFile, filePath, checker) => {
   if (!method.name) {
     return null;
   }
@@ -223,7 +235,7 @@ const parseMethod = (method, sourceFile, filePath) => {
   }
 
   const parameterText = method.parameters.map((parameter) => parameter.getText(sourceFile)).join(', ');
-  const returnType = method.type ? method.type.getText(sourceFile) : 'void';
+  const returnType = getReturnTypeText(method, sourceFile, checker);
   const signature = createSignature(name, parameterText, returnType, modifiers);
 
   return {
@@ -237,7 +249,7 @@ const parseMethod = (method, sourceFile, filePath) => {
   };
 };
 
-const parseFunctionLike = (fn, name, sourceFile, filePath, docSources) => {
+const parseFunctionLike = (fn, name, sourceFile, filePath, docSources, checker) => {
   const { description, tags } = mergeJsDoc([fn, ...docSources]);
   const paramDocs = parseParametersFromTags(tags, sourceFile);
   const parameters = buildParameterDocs(fn.parameters, paramDocs, sourceFile);
@@ -249,7 +261,7 @@ const parseFunctionLike = (fn, name, sourceFile, filePath, docSources) => {
   }
 
   const parameterText = fn.parameters.map((parameter) => parameter.getText(sourceFile)).join(', ');
-  const returnType = fn.type ? fn.type.getText(sourceFile) : 'void';
+  const returnType = getReturnTypeText(fn, sourceFile, checker);
   const signature = createSignature(`function ${name}`, parameterText, returnType, modifiers);
 
   return {
@@ -263,7 +275,7 @@ const parseFunctionLike = (fn, name, sourceFile, filePath, docSources) => {
   };
 };
 
-const parseClass = (node, sourceFile, filePath) => {
+const parseClass = (node, sourceFile, filePath, checker) => {
   const name = node.name ? node.name.getText(sourceFile) : 'default';
   const { description } = mergeJsDoc([node]);
   const methods = [];
@@ -277,7 +289,7 @@ const parseClass = (node, sourceFile, filePath) => {
       continue;
     }
 
-    const methodDoc = parseMethod(member, sourceFile, filePath);
+    const methodDoc = parseMethod(member, sourceFile, filePath, checker);
     if (methodDoc) {
       methods.push(methodDoc);
     }
@@ -298,22 +310,70 @@ const parseClass = (node, sourceFile, filePath) => {
 };
 
 for (const config of packageConfigs) {
-  const sourceDirectory = path.join(repoRoot, 'packages', config.slug, 'src');
+  const packageRoot = path.join(repoRoot, 'packages', config.slug);
+  const sourceDirectory = path.join(packageRoot, 'src');
   if (!fs.existsSync(sourceDirectory)) {
     continue;
   }
 
+  const tsconfigPath = path.join(packageRoot, 'tsconfig.json');
+  let parsedConfig;
+
+  if (fs.existsSync(tsconfigPath)) {
+    const configFile = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
+    if (configFile.error) {
+      const message = ts.flattenDiagnosticMessageText(configFile.error.messageText, '\n');
+      throw new Error(`Failed to read ${getRelativePath(tsconfigPath)}: ${message}`);
+    }
+
+    parsedConfig = ts.parseJsonConfigFileContent(configFile.config, ts.sys, packageRoot);
+  }
+
+  const compilerOptions = parsedConfig?.options ?? {
+    target: ts.ScriptTarget.ES2022,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Node,
+    strict: true,
+    esModuleInterop: true,
+    skipLibCheck: true,
+    forceConsistentCasingInFileNames: true,
+    resolveJsonModule: true,
+  };
+
+  const fileNames = (parsedConfig?.fileNames ?? collectSourceFiles(sourceDirectory)).filter((fileName) => {
+    if (!fileName.startsWith(sourceDirectory)) {
+      return false;
+    }
+
+    if (fileName.endsWith('.d.ts') || fileName.endsWith('.test.ts')) {
+      return false;
+    }
+
+    if (fileName.includes(`${path.sep}__tests__${path.sep}`) || fileName.includes('__tests__/')) {
+      return false;
+    }
+
+    return true;
+  });
+
+  if (fileNames.length === 0) {
+    continue;
+  }
+
+  const program = ts.createProgram({ rootNames: fileNames, options: compilerOptions });
+  const checker = program.getTypeChecker();
+
   const classDocs = [];
   const functionDocs = [];
-  const files = collectSourceFiles(sourceDirectory);
-
-  for (const filePath of files) {
-    const sourceText = fs.readFileSync(filePath, 'utf8');
-    const sourceFile = ts.createSourceFile(filePath, sourceText, ts.ScriptTarget.Latest, true);
+  for (const filePath of fileNames) {
+    const sourceFile = program.getSourceFile(filePath);
+    if (!sourceFile) {
+      continue;
+    }
 
     for (const statement of sourceFile.statements) {
       if (ts.isClassDeclaration(statement) && statement.name && isExported(statement)) {
-        const classDoc = parseClass(statement, sourceFile, filePath);
+        const classDoc = parseClass(statement, sourceFile, filePath, checker);
         if (classDoc) {
           classDocs.push(classDoc);
         }
@@ -321,7 +381,14 @@ for (const config of packageConfigs) {
       }
 
       if (ts.isFunctionDeclaration(statement) && statement.name && isExported(statement)) {
-        const functionDoc = parseFunctionLike(statement, statement.name.getText(sourceFile), sourceFile, filePath, [statement]);
+        const functionDoc = parseFunctionLike(
+          statement,
+          statement.name.getText(sourceFile),
+          sourceFile,
+          filePath,
+          [statement],
+          checker,
+        );
         if (functionDoc) {
           functionDocs.push(functionDoc);
         }
@@ -336,7 +403,14 @@ for (const config of packageConfigs) {
 
           const initializer = declaration.initializer;
           if (ts.isArrowFunction(initializer) || ts.isFunctionExpression(initializer)) {
-            const functionDoc = parseFunctionLike(initializer, declaration.name.getText(sourceFile), sourceFile, filePath, [declaration, statement]);
+            const functionDoc = parseFunctionLike(
+              initializer,
+              declaration.name.getText(sourceFile),
+              sourceFile,
+              filePath,
+              [declaration, statement],
+              checker,
+            );
             if (functionDoc) {
               functionDocs.push(functionDoc);
             }
