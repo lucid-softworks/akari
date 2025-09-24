@@ -82,16 +82,40 @@ const SidebarNavigation = ({ packages }: NavigationProps) => {
                 id={sectionId}
                 className={isExpanded ? 'sidebar-entry-list sidebar-entry-list--expanded' : 'sidebar-entry-list'}
               >
-                {pkg.classes.map((classDoc) => (
-                  <li key={`${pkg.slug}-${classDoc.name}`}>
-                    <a href={`#${pkg.slug}-${slugify(classDoc.name)}`}>{classDoc.name}</a>
-                  </li>
-                ))}
-                {pkg.types.map((typeDoc) => (
-                  <li key={`${pkg.slug}-type-${typeDoc.name}`}>
-                    <a href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>{typeDoc.name}</a>
-                  </li>
-                ))}
+                {pkg.classes.length > 0 ? (
+                  <>
+                    <li className="sidebar-subheading" aria-hidden>
+                      Classes
+                    </li>
+                    {pkg.classes.map((classDoc) => (
+                      <li key={`${pkg.slug}-${classDoc.name}`} className="sidebar-entry">
+                        <a className="sidebar-entry-link" href={`#${pkg.slug}-${slugify(classDoc.name)}`}>
+                          <span className="sidebar-entry-icon" aria-hidden>
+                            C
+                          </span>
+                          <span>{classDoc.name}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </>
+                ) : null}
+                {pkg.types.length > 0 ? (
+                  <>
+                    <li className="sidebar-subheading" aria-hidden>
+                      Types
+                    </li>
+                    {pkg.types.map((typeDoc) => (
+                      <li key={`${pkg.slug}-type-${typeDoc.name}`} className="sidebar-entry">
+                        <a className="sidebar-entry-link" href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>
+                          <span className="sidebar-entry-icon sidebar-entry-icon--type" aria-hidden>
+                            T
+                          </span>
+                          <span>{typeDoc.name}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </>
+                ) : null}
               </ul>
             </li>
           );

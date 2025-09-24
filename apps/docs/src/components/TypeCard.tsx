@@ -14,7 +14,7 @@ const getKindLabel = (kind: TypeDoc['kind']) => {
     case 'enum':
       return 'Enum';
     default:
-      return 'Type alias';
+      return 'Type';
   }
 };
 
