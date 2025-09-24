@@ -50,6 +50,14 @@ const stripImportExpressions = (value) => {
   });
 };
 
+const normalizeWhitespace = (value) => {
+  if (!value) {
+    return value;
+  }
+
+  return value.replace(/\s+/g, ' ').trim();
+};
+
 const getRelativePath = (filePath) => path.relative(repoRoot, filePath);
 
 const collectSourceFiles = (directory) => {
@@ -173,14 +181,35 @@ const parseTypeDeclaration = (node, sourceFile, filePath, kind) => {
   };
 };
 
-const buildParameterDocs = (parameters, paramDocs, sourceFile) => {
+const printNode = (node, sourceFile) => {
+  return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile).trim();
+};
+
+const getParameterTypeText = (parameter, sourceFile, checker) => {
+  if (parameter.type) {
+    return normalizeWhitespace(stripImportExpressions(printNode(parameter.type, sourceFile)));
+  }
+
+  if (checker) {
+    const type = checker.getTypeAtLocation(parameter);
+    if (type) {
+      return normalizeWhitespace(stripImportExpressions(checker.typeToString(type, parameter, TYPE_FORMAT_FLAGS)));
+    }
+  }
+
+  return undefined;
+};
+
+const buildParameterDocs = (parameters, paramDocs, sourceFile, checker) => {
   const result = [];
 
   for (const parameter of parameters) {
     const name = parameter.name.getText(sourceFile);
-    const type = parameter.type ? stripImportExpressions(parameter.type.getText(sourceFile)) : undefined;
+    const type = getParameterTypeText(parameter, sourceFile, checker);
     const optional = Boolean(parameter.questionToken) || Boolean(parameter.initializer);
-    const defaultValue = parameter.initializer ? parameter.initializer.getText(sourceFile) : undefined;
+    const defaultValue = parameter.initializer
+      ? normalizeWhitespace(printNode(parameter.initializer, sourceFile))
+      : undefined;
     const docComment = paramDocs.get(name);
 
     const entry = {
@@ -215,6 +244,37 @@ const createSignature = (name, parameters, returnType, modifiers) => {
   const parameterText = parameters;
   const suffix = returnType ? `: ${returnType}` : '';
   return `${modifierText}${name}(${parameterText})${suffix}`.trim();
+};
+
+const formatParameterSignature = (parameter, sourceFile, checker) => {
+  let name = parameter.name.getText(sourceFile);
+
+  if (parameter.dotDotDotToken) {
+    name = `...${name}`;
+  }
+
+  if (parameter.questionToken) {
+    name = `${name}?`;
+  }
+
+  const type = getParameterTypeText(parameter, sourceFile, checker);
+
+  let initializer;
+  if (parameter.initializer) {
+    initializer = normalizeWhitespace(printNode(parameter.initializer, sourceFile));
+  }
+
+  let text = name;
+
+  if (type) {
+    text += `: ${type}`;
+  }
+
+  if (initializer) {
+    text += ` = ${initializer}`;
+  }
+
+  return text;
 };
 
 const parseParametersFromTags = (tags, sourceFile) => {
@@ -258,7 +318,7 @@ const parseMethod = (method, sourceFile, filePath, checker) => {
   const name = method.name.getText(sourceFile);
   const { description, tags } = mergeJsDoc([method]);
   const paramDocs = parseParametersFromTags(tags, sourceFile);
-  const parameters = buildParameterDocs(method.parameters, paramDocs, sourceFile);
+  const parameters = buildParameterDocs(method.parameters, paramDocs, sourceFile, checker);
   const returnDescription = readReturnTag(tags);
   const modifiers = [];
 
@@ -269,10 +329,10 @@ const parseMethod = (method, sourceFile, filePath, checker) => {
     modifiers.push('static');
   }
 
-  const parameterText = stripImportExpressions(
-    method.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
-  );
-  const returnType = stripImportExpressions(getReturnTypeText(method, sourceFile, checker));
+  const parameterText = method.parameters
+    .map((parameter) => formatParameterSignature(parameter, sourceFile, checker))
+    .join(', ');
+  const returnType = normalizeWhitespace(stripImportExpressions(getReturnTypeText(method, sourceFile, checker)));
   const signature = createSignature(name, parameterText, returnType, modifiers);
 
   return {
@@ -289,7 +349,7 @@ const parseMethod = (method, sourceFile, filePath, checker) => {
 const parseFunctionLike = (fn, name, sourceFile, filePath, docSources, checker) => {
   const { description, tags } = mergeJsDoc([fn, ...docSources]);
   const paramDocs = parseParametersFromTags(tags, sourceFile);
-  const parameters = buildParameterDocs(fn.parameters, paramDocs, sourceFile);
+  const parameters = buildParameterDocs(fn.parameters, paramDocs, sourceFile, checker);
   const returnDescription = readReturnTag(tags);
   const modifiers = [];
 
@@ -297,10 +357,10 @@ const parseFunctionLike = (fn, name, sourceFile, filePath, docSources, checker) 
     modifiers.push('async');
   }
 
-  const parameterText = stripImportExpressions(
-    fn.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
-  );
-  const returnType = stripImportExpressions(getReturnTypeText(fn, sourceFile, checker));
+  const parameterText = fn.parameters
+    .map((parameter) => formatParameterSignature(parameter, sourceFile, checker))
+    .join(', ');
+  const returnType = normalizeWhitespace(stripImportExpressions(getReturnTypeText(fn, sourceFile, checker)));
   const signature = createSignature(`function ${name}`, parameterText, returnType, modifiers);
 
   return {
