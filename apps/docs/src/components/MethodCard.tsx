@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-
+import { linkTypeText } from '@/lib/link-type-text';
 import { getTypeVariants, normalizeTypeText, resolveTypeAnchor } from '@/lib/type-format';
 import type { MethodDoc, TypeReferenceIndex } from '@/types';
 
@@ -55,50 +54,10 @@ const renderReturnDescription = (value?: string) => {
   return <p>{value}</p>;
 };
 
-const buildSignatureContent = (signature: string, typeIndex: TypeReferenceIndex): ReactNode => {
-  const sanitized = normalizeTypeText(signature) ?? signature;
-  const linkedSegments: ReactNode[] = [];
-  const identifierPattern = /[A-Za-z_$][A-Za-z0-9_$]*/g;
-  let lastIndex = 0;
-  let hasLinkedType = false;
-  let match: RegExpExecArray | null;
-
-  while ((match = identifierPattern.exec(sanitized)) !== null) {
-    const [identifier] = match;
-    const anchorId = resolveTypeAnchor(identifier, typeIndex);
-
-    if (!anchorId) {
-      continue;
-    }
-
-    hasLinkedType = true;
-
-    if (match.index > lastIndex) {
-      linkedSegments.push(sanitized.slice(lastIndex, match.index));
-    }
-
-    linkedSegments.push(
-      <a key={`${identifier}-${match.index}`} className="signature-link" href={`#${anchorId}`}>
-        {identifier}
-      </a>,
-    );
-
-    lastIndex = match.index + identifier.length;
-  }
-
-  if (!hasLinkedType) {
-    return sanitized;
-  }
-
-  if (lastIndex < sanitized.length) {
-    linkedSegments.push(sanitized.slice(lastIndex));
-  }
-
-  return linkedSegments;
-};
-
 export const MethodCard = ({ method, anchorId, typeIndex }: MethodCardProps) => {
-  const signatureContent = buildSignatureContent(method.signature, typeIndex);
+  const signatureContent = linkTypeText(method.signature, typeIndex, {
+    skipIdentifiers: [method.name],
+  });
 
   return (
     <article className="method-card" id={anchorId}>

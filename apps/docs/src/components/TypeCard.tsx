@@ -1,8 +1,10 @@
-import type { TypeDoc } from '@/types';
+import { linkTypeText } from '@/lib/link-type-text';
+import type { TypeDoc, TypeReferenceIndex } from '@/types';
 
 export type TypeCardProps = {
   typeDoc: TypeDoc;
   anchorId: string;
+  typeIndex: TypeReferenceIndex;
 };
 
 const getKindLabel = (kind: TypeDoc['kind']) => {
@@ -16,7 +18,11 @@ const getKindLabel = (kind: TypeDoc['kind']) => {
   }
 };
 
-export const TypeCard = ({ typeDoc, anchorId }: TypeCardProps) => {
+export const TypeCard = ({ typeDoc, anchorId, typeIndex }: TypeCardProps) => {
+  const signatureContent = linkTypeText(typeDoc.signature, typeIndex, {
+    skipIdentifiers: [typeDoc.name],
+  });
+
   return (
     <article className="type-card" id={anchorId}>
       <header className="type-header">
@@ -28,7 +34,7 @@ export const TypeCard = ({ typeDoc, anchorId }: TypeCardProps) => {
       </header>
       {typeDoc.description ? <p>{typeDoc.description}</p> : null}
       <pre className="type-signature">
-        <code>{typeDoc.signature}</code>
+        <code>{signatureContent}</code>
       </pre>
     </article>
   );

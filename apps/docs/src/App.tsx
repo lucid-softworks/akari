@@ -87,11 +87,6 @@ const SidebarNavigation = ({ packages }: NavigationProps) => {
                     <a href={`#${pkg.slug}-${slugify(classDoc.name)}`}>{classDoc.name}</a>
                   </li>
                 ))}
-                {pkg.functions.map((fn) => (
-                  <li key={`${pkg.slug}-${fn.name}`}>
-                    <a href={`#${pkg.slug}-fn-${slugify(fn.name)}`}>{fn.name}</a>
-                  </li>
-                ))}
                 {pkg.types.map((typeDoc) => (
                   <li key={`${pkg.slug}-type-${typeDoc.name}`}>
                     <a href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>{typeDoc.name}</a>
@@ -112,10 +107,6 @@ const buildTypeIndex = (packages: PackageDoc[]): TypeReferenceIndex => {
   for (const pkg of packages) {
     for (const classDoc of pkg.classes) {
       index[classDoc.name] = `${pkg.slug}-${slugify(classDoc.name)}`;
-    }
-
-    for (const fn of pkg.functions) {
-      index[fn.name] = `${pkg.slug}-fn-${slugify(fn.name)}`;
     }
 
     for (const typeDoc of pkg.types) {
@@ -191,21 +182,6 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
                 </div>
               </section>
             ))}
-            {pkg.functions.length > 0 ? (
-              <section className="functions-section" aria-label="Utility exports">
-                <h3>Utility functions</h3>
-                <div className="method-list">
-                  {pkg.functions.map((fn) => (
-                    <MethodCard
-                      key={`${pkg.slug}-fn-${fn.name}`}
-                      method={fn}
-                      typeIndex={typeIndex}
-                      anchorId={`${pkg.slug}-fn-${slugify(fn.name)}`}
-                    />
-                  ))}
-                </div>
-              </section>
-            ) : null}
             {pkg.types.length > 0 ? (
               <section className="types-section" aria-label="Type definitions">
                 <h3>Type definitions</h3>
@@ -215,6 +191,7 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
                       key={`${pkg.slug}-type-${typeDoc.name}`}
                       typeDoc={typeDoc}
                       anchorId={`${pkg.slug}-type-${slugify(typeDoc.name)}`}
+                      typeIndex={typeIndex}
                     />
                   ))}
                 </div>
