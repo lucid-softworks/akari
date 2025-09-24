@@ -1,6 +1,4 @@
-import { Fragment } from 'react';
-
-import { getTypeVariants } from '@/lib/type-format';
+import { getTypeVariants, normalizeTypeText, resolveTypeAnchor } from '@/lib/type-format';
 import type { MethodDoc, TypeReferenceIndex } from '@/types';
 
 export type MethodCardProps = {
@@ -9,57 +7,38 @@ export type MethodCardProps = {
   typeIndex: TypeReferenceIndex;
 };
 
-const renderTypeSegment = (segment: string, typeIndex: TypeReferenceIndex, key: string) => {
-  const anchorId = typeIndex[segment];
-
-  if (anchorId) {
-    return (
-      <a key={key} href={`#${anchorId}`} className="type-link">
-        {segment}
-      </a>
-    );
-  }
-
-  return (
-    <Fragment key={key}>
-      {segment}
-    </Fragment>
-  );
-};
-
-const renderTypeVariant = (variant: string, typeIndex: TypeReferenceIndex) => {
-  const segments = variant.split(/([A-Za-z_$][A-Za-z0-9_$]*)/g);
-
-  return segments.map((segment, index) => {
-    if (!segment) {
-      return null;
-    }
-
-    if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(segment)) {
-      return renderTypeSegment(segment, typeIndex, `${segment}-${index}`);
-    }
-
-    return (
-      <Fragment key={`${segment}-${index}`}>
-        {segment}
-      </Fragment>
-    );
-  });
-};
-
 const renderTypeBadges = (typeText: string | undefined, typeIndex: TypeReferenceIndex) => {
-  const variants = getTypeVariants(typeText);
+  const normalized = normalizeTypeText(typeText);
+  const variants = getTypeVariants(normalized ?? typeText);
   if (variants.length === 0) {
     return null;
   }
 
   return (
     <ul className="type-badge-list" role="list">
-      {variants.map((variant, index) => (
-        <li key={`${variant}-${index}`}>
-          <code>{renderTypeVariant(variant, typeIndex)}</code>
-        </li>
-      ))}
+      {variants.map((variant, index) => {
+        const trimmed = variant.trim();
+        if (!trimmed) {
+          return null;
+        }
+
+        const anchorId = resolveTypeAnchor(trimmed, typeIndex);
+        const content = anchorId ? (
+          <a className="type-badge type-badge--link" href={`#${anchorId}`}>
+            <code>{trimmed}</code>
+          </a>
+        ) : (
+          <span className="type-badge">
+            <code>{trimmed}</code>
+          </span>
+        );
+
+        return (
+          <li key={`${variant}-${index}`}>
+            {content}
+          </li>
+        );
+      })}
     </ul>
   );
 };

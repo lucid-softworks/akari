@@ -36,6 +36,7 @@ const documentation = {
 const packageCatalogues = new Map();
 
 const TYPE_FORMAT_FLAGS = ts.TypeFormatFlags.NoTruncation;
+const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed, removeComments: true });
 
 const getRelativePath = (filePath) => path.relative(repoRoot, filePath);
 
@@ -136,6 +137,26 @@ const mergeJsDoc = (nodes) => {
   }
 
   return { description, tags };
+};
+
+const stripExportModifier = (text) => text.replace(/^export\s+(?:default\s+)?(declare\s+)?/, '').trim();
+
+const parseTypeDeclaration = (node, sourceFile, filePath, kind) => {
+  const name = node.name ? node.name.getText(sourceFile) : undefined;
+  if (!name) {
+    return null;
+  }
+
+  const { description } = mergeJsDoc([node]);
+  const signature = stripExportModifier(printer.printNode(ts.EmitHint.Unspecified, node, sourceFile));
+
+  return {
+    kind,
+    name,
+    description,
+    signature,
+    file: getRelativePath(filePath),
+  };
 };
 
 const buildParameterDocs = (parameters, paramDocs, sourceFile) => {
@@ -365,6 +386,7 @@ for (const config of packageConfigs) {
 
   const classDocs = [];
   const functionDocs = [];
+  const typeDocs = [];
   for (const filePath of fileNames) {
     const sourceFile = program.getSourceFile(filePath);
     if (!sourceFile) {
@@ -391,6 +413,30 @@ for (const config of packageConfigs) {
         );
         if (functionDoc) {
           functionDocs.push(functionDoc);
+        }
+        continue;
+      }
+
+      if (ts.isTypeAliasDeclaration(statement) && isExported(statement)) {
+        const typeDoc = parseTypeDeclaration(statement, sourceFile, filePath, 'alias');
+        if (typeDoc) {
+          typeDocs.push(typeDoc);
+        }
+        continue;
+      }
+
+      if (ts.isInterfaceDeclaration(statement) && isExported(statement)) {
+        const typeDoc = parseTypeDeclaration(statement, sourceFile, filePath, 'interface');
+        if (typeDoc) {
+          typeDocs.push(typeDoc);
+        }
+        continue;
+      }
+
+      if (ts.isEnumDeclaration(statement) && isExported(statement)) {
+        const typeDoc = parseTypeDeclaration(statement, sourceFile, filePath, 'enum');
+        if (typeDoc) {
+          typeDocs.push(typeDoc);
         }
         continue;
       }
@@ -422,6 +468,7 @@ for (const config of packageConfigs) {
 
   classDocs.sort((a, b) => a.name.localeCompare(b.name));
   functionDocs.sort((a, b) => a.name.localeCompare(b.name));
+  typeDocs.sort((a, b) => a.name.localeCompare(b.name));
 
   const packageDoc = {
     slug: config.slug,
@@ -429,6 +476,7 @@ for (const config of packageConfigs) {
     description: config.description,
     classes: classDocs,
     functions: functionDocs,
+    types: typeDocs,
   };
 
   documentation.packages.push(packageDoc);

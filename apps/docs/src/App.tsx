@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { MethodCard } from '@/components/MethodCard';
+import { TypeCard } from '@/components/TypeCard';
 import { slugify } from '@/lib/slugify';
 import type { DocumentationIndex, PackageDoc, TypeReferenceIndex } from '@/types';
 
@@ -40,6 +41,11 @@ const renderNavigation = (packages: PackageDoc[]) => {
                   <a href={`#${pkg.slug}-fn-${slugify(fn.name)}`}>{fn.name}</a>
                 </li>
               ))}
+              {pkg.types.map((typeDoc) => (
+                <li key={`${pkg.slug}-type-${typeDoc.name}`}>
+                  <a href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>{typeDoc.name}</a>
+                </li>
+              ))}
             </ul>
           </li>
         ))}
@@ -58,6 +64,10 @@ const buildTypeIndex = (packages: PackageDoc[]): TypeReferenceIndex => {
 
     for (const fn of pkg.functions) {
       index[fn.name] = `${pkg.slug}-fn-${slugify(fn.name)}`;
+    }
+
+    for (const typeDoc of pkg.types) {
+      index[typeDoc.name] = `${pkg.slug}-type-${slugify(typeDoc.name)}`;
     }
   }
 
@@ -139,6 +149,20 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
                       method={fn}
                       typeIndex={typeIndex}
                       anchorId={`${pkg.slug}-fn-${slugify(fn.name)}`}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+            {pkg.types.length > 0 ? (
+              <section className="types-section" aria-label="Type definitions">
+                <h3>Type definitions</h3>
+                <div className="type-list">
+                  {pkg.types.map((typeDoc) => (
+                    <TypeCard
+                      key={`${pkg.slug}-type-${typeDoc.name}`}
+                      typeDoc={typeDoc}
+                      anchorId={`${pkg.slug}-type-${slugify(typeDoc.name)}`}
                     />
                   ))}
                 </div>

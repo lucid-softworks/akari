@@ -1,3 +1,16 @@
+import type { TypeReferenceIndex } from '@/types';
+
+const IMPORT_EXPRESSION_PATTERN = /import\((?:'[^']+'|"[^"]+"|`[^`]+`|[^)]+)\)\./g;
+const IDENTIFIER_PATTERN = /[A-Za-z_$][A-Za-z0-9_$]*/g;
+
+export const normalizeTypeText = (typeText?: string) => {
+  if (!typeText) {
+    return undefined;
+  }
+
+  return typeText.replace(IMPORT_EXPRESSION_PATTERN, '');
+};
+
 export const getTypeVariants = (typeText?: string) => {
   if (!typeText) {
     return [];
@@ -42,4 +55,25 @@ export const getTypeVariants = (typeText?: string) => {
   }
 
   return variants;
+};
+
+export const extractTypeIdentifiers = (variant: string) => {
+  return variant.match(IDENTIFIER_PATTERN) ?? [];
+};
+
+export const resolveTypeAnchor = (variant: string, typeIndex: TypeReferenceIndex) => {
+  const direct = typeIndex[variant];
+  if (direct) {
+    return direct;
+  }
+
+  const identifiers = extractTypeIdentifiers(variant);
+  for (const identifier of identifiers) {
+    const anchor = typeIndex[identifier];
+    if (anchor) {
+      return anchor;
+    }
+  }
+
+  return undefined;
 };

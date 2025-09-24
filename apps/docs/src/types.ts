@@ -16,6 +16,14 @@ export type MethodDoc = {
   file: string;
 };
 
+export type TypeDoc = {
+  kind: 'alias' | 'interface' | 'enum';
+  name: string;
+  description?: string;
+  signature: string;
+  file: string;
+};
+
 export type ClassDoc = {
   name: string;
   description?: string;
@@ -29,6 +37,7 @@ export type PackageDoc = {
   description?: string;
   classes: ClassDoc[];
   functions: MethodDoc[];
+  types: TypeDoc[];
 };
 
 export type DocumentationIndex = {
