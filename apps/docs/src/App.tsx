@@ -76,7 +76,7 @@ const App = () => {
                     <span className="file-path">{classDoc.file}</span>
                     {classDoc.description ? <p>{classDoc.description}</p> : null}
                   </div>
-                  <div className="method-grid">
+                  <div className="method-list">
                     {classDoc.methods.map((method) => (
                       <MethodCard
                         key={`${classDoc.name}-${method.name}`}
@@ -91,7 +91,7 @@ const App = () => {
             {pkg.functions.length > 0 ? (
               <section className="functions-section" aria-label="Utility exports">
                 <h3>Utility functions</h3>
-                <div className="method-grid">
+                <div className="method-list">
                   {pkg.functions.map((fn) => (
                     <MethodCard
                       key={`${pkg.slug}-fn-${fn.name}`}

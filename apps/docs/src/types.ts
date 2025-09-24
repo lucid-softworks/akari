@@ -12,6 +12,7 @@ export type MethodDoc = {
   description?: string;
   parameters: ParameterDoc[];
   returns?: string;
+  returnType: string;
   file: string;
 };
 

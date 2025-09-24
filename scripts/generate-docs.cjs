@@ -230,6 +230,7 @@ const parseMethod = (method, sourceFile, filePath) => {
     description,
     parameters,
     returns: returnDescription,
+    returnType,
     file: getRelativePath(filePath),
   };
 };
@@ -255,6 +256,7 @@ const parseFunctionLike = (fn, name, sourceFile, filePath, docSources) => {
     description,
     parameters,
     returns: returnDescription,
+    returnType,
     file: getRelativePath(filePath),
   };
 };
