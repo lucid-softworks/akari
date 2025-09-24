@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
 import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
@@ -79,12 +80,16 @@ export default function AccountSettingsScreen() {
             style: 'destructive',
             onPress: () => {
               removeAccountMutation.mutate(account.did);
+
+              if (account.did === currentAccount?.did) {
+                router.replace('/(tabs)');
+              }
             },
           },
         ],
       });
     },
-    [removeAccountMutation, t],
+    [currentAccount?.did, removeAccountMutation, t],
   );
 
   const handleAddAccount = useCallback(() => {

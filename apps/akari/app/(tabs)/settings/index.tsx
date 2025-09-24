@@ -175,7 +175,7 @@ export default function SettingsScreen() {
               <TouchableOpacity
                 accessibilityRole="button"
                 activeOpacity={0.7}
-                onPress={() => router.push('/settings/account')}
+                onPress={() => router.push('/(tabs)/settings/account')}
                 style={[styles.primaryActionButton, styles.profileActionButton]}
               >
                 <ThemedText style={styles.primaryActionText}>{t('common.switchAccount')}</ThemedText>
