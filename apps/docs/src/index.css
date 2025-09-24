@@ -68,38 +68,114 @@ a:hover {
   line-height: 1.5;
 }
 
-.sidebar nav ul {
+.sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-package-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-package {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.sidebar nav li {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
+.sidebar-package-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.sidebar nav li a {
-  display: block;
+.sidebar-toggle {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.sidebar-toggle:hover,
+.sidebar-toggle:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+  background: rgba(91, 141, 239, 0.1);
+}
+
+.sidebar-package-link {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.sidebar nav li a:hover {
+.sidebar-package-link:hover,
+.sidebar-package-link:focus-visible {
   background: var(--accent-soft);
   color: var(--accent);
+  outline: none;
 }
 
-.sidebar nav ul ul {
-  margin-top: 4px;
-  margin-left: 12px;
-  border-left: 1px solid var(--border);
-  padding-left: 12px;
-  gap: 4px;
+.sidebar-entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 32px;
+  border-left: 1px solid transparent;
+  display: none;
+}
+
+.sidebar-entry-list--expanded {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left-color: var(--border);
+  padding-left: 16px;
+}
+
+.sidebar-entry-list a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-entry-list a:hover,
+.sidebar-entry-list a:focus-visible {
+  background: var(--accent-soft);
+  color: var(--accent);
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .content {
@@ -454,10 +530,10 @@ a:hover {
 }
 
 .method-returns header span {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text-secondary);
+  text-transform: none;
 }
 
 .method-returns p {

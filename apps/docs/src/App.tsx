@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { MethodCard } from '@/components/MethodCard';
 import { TypeCard } from '@/components/TypeCard';
@@ -23,32 +23,84 @@ const formatGeneratedAt = (value: string) => {
   });
 };
 
-const renderNavigation = (packages: PackageDoc[]) => {
+type NavigationProps = {
+  packages: PackageDoc[];
+};
+
+const SidebarNavigation = ({ packages }: NavigationProps) => {
+  const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
+
+  const togglePackage = (slug: string) => {
+    setExpandedPackages((current) => ({
+      ...current,
+      [slug]: !current[slug],
+    }));
+  };
+
+  const ensureExpanded = (slug: string) => {
+    setExpandedPackages((current) => {
+      if (current[slug]) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [slug]: true,
+      };
+    });
+  };
+
   return (
-    <nav aria-label="Documentation navigation">
-      <ul>
-        {packages.map((pkg) => (
-          <li key={pkg.slug}>
-            <a href={`#${pkg.slug}`}>{pkg.title}</a>
-            <ul>
-              {pkg.classes.map((classDoc) => (
-                <li key={`${pkg.slug}-${classDoc.name}`}>
-                  <a href={`#${pkg.slug}-${slugify(classDoc.name)}`}>{classDoc.name}</a>
-                </li>
-              ))}
-              {pkg.functions.map((fn) => (
-                <li key={`${pkg.slug}-${fn.name}`}>
-                  <a href={`#${pkg.slug}-fn-${slugify(fn.name)}`}>{fn.name}</a>
-                </li>
-              ))}
-              {pkg.types.map((typeDoc) => (
-                <li key={`${pkg.slug}-type-${typeDoc.name}`}>
-                  <a href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>{typeDoc.name}</a>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
+    <nav aria-label="Documentation navigation" className="sidebar-navigation">
+      <ul className="sidebar-package-list">
+        {packages.map((pkg) => {
+          const isExpanded = Boolean(expandedPackages[pkg.slug]);
+          const sectionId = `${pkg.slug}-navigation`;
+
+          return (
+            <li key={pkg.slug} className="sidebar-package">
+              <div className="sidebar-package-header">
+                <button
+                  type="button"
+                  className="sidebar-toggle"
+                  aria-expanded={isExpanded}
+                  aria-controls={sectionId}
+                  onClick={() => togglePackage(pkg.slug)}
+                >
+                  <span aria-hidden>{isExpanded ? '−' : '+'}</span>
+                  <span className="sr-only">Toggle {pkg.title}</span>
+                </button>
+                <a
+                  href={`#${pkg.slug}`}
+                  className="sidebar-package-link"
+                  onClick={() => ensureExpanded(pkg.slug)}
+                >
+                  {pkg.title}
+                </a>
+              </div>
+              <ul
+                id={sectionId}
+                className={isExpanded ? 'sidebar-entry-list sidebar-entry-list--expanded' : 'sidebar-entry-list'}
+              >
+                {pkg.classes.map((classDoc) => (
+                  <li key={`${pkg.slug}-${classDoc.name}`}>
+                    <a href={`#${pkg.slug}-${slugify(classDoc.name)}`}>{classDoc.name}</a>
+                  </li>
+                ))}
+                {pkg.functions.map((fn) => (
+                  <li key={`${pkg.slug}-${fn.name}`}>
+                    <a href={`#${pkg.slug}-fn-${slugify(fn.name)}`}>{fn.name}</a>
+                  </li>
+                ))}
+                {pkg.types.map((typeDoc) => (
+                  <li key={`${pkg.slug}-type-${typeDoc.name}`}>
+                    <a href={`#${pkg.slug}-type-${slugify(typeDoc.name)}`}>{typeDoc.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );
@@ -101,7 +153,7 @@ const App = ({ docs, siteTitle, introduction }: DocsAppProps) => {
       <aside className="sidebar">
         <h1>{siteTitle}</h1>
         {introduction ? <p>{introduction}</p> : null}
-        {renderNavigation(packages)}
+        <SidebarNavigation packages={packages} />
       </aside>
       <main className="content">
         <header className="header">

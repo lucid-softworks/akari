@@ -23,13 +23,15 @@ const renderTypeBadges = (typeText: string | undefined, typeIndex: TypeReference
         }
 
         const anchorId = resolveTypeAnchor(trimmed, typeIndex);
+        const isQuoted = /^(['"`]).*\1$/.test(trimmed);
+        const label = isQuoted ? trimmed.slice(1, -1) : trimmed;
         const content = anchorId ? (
           <a className="type-badge type-badge--link" href={`#${anchorId}`}>
-            <code>{trimmed}</code>
+            <code>{label}</code>
           </a>
         ) : (
           <span className="type-badge">
-            <code>{trimmed}</code>
+            <code>{label}</code>
           </span>
         );
 
@@ -45,7 +47,7 @@ const renderTypeBadges = (typeText: string | undefined, typeIndex: TypeReference
 
 const renderReturnDescription = (value?: string) => {
   if (!value) {
-    return <p className="placeholder">Return value documented in source.</p>;
+    return null;
   }
 
   return <p>{value}</p>;
@@ -60,11 +62,7 @@ export const MethodCard = ({ method, anchorId, typeIndex }: MethodCardProps) => 
           <code className="signature">{method.signature}</code>
         </div>
       </header>
-      {method.description ? (
-        <p>{method.description}</p>
-      ) : (
-        <p className="placeholder">This member does not include additional documentation.</p>
-      )}
+      {method.description ? <p>{method.description}</p> : null}
       {method.parameters.length > 0 ? (
         <section className="parameter-list" aria-label="Parameters">
           {method.parameters.map((parameter) => {

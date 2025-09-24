@@ -26,11 +26,7 @@ export const TypeCard = ({ typeDoc, anchorId }: TypeCardProps) => {
         </div>
         <span className="file-path">{typeDoc.file}</span>
       </header>
-      {typeDoc.description ? (
-        <p>{typeDoc.description}</p>
-      ) : (
-        <p className="placeholder">This type does not include additional documentation.</p>
-      )}
+      {typeDoc.description ? <p>{typeDoc.description}</p> : null}
       <pre className="type-signature">
         <code>{typeDoc.signature}</code>
       </pre>
