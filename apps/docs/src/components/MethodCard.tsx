@@ -1,12 +1,53 @@
+import { Fragment } from 'react';
+
 import { getTypeVariants } from '@/lib/type-format';
-import type { MethodDoc } from '@/types';
+import type { MethodDoc, TypeReferenceIndex } from '@/types';
 
 export type MethodCardProps = {
   method: MethodDoc;
   anchorId: string;
+  typeIndex: TypeReferenceIndex;
 };
 
-const renderTypeBadges = (typeText?: string) => {
+const renderTypeSegment = (segment: string, typeIndex: TypeReferenceIndex, key: string) => {
+  const anchorId = typeIndex[segment];
+
+  if (anchorId) {
+    return (
+      <a key={key} href={`#${anchorId}`} className="type-link">
+        {segment}
+      </a>
+    );
+  }
+
+  return (
+    <Fragment key={key}>
+      {segment}
+    </Fragment>
+  );
+};
+
+const renderTypeVariant = (variant: string, typeIndex: TypeReferenceIndex) => {
+  const segments = variant.split(/([A-Za-z_$][A-Za-z0-9_$]*)/g);
+
+  return segments.map((segment, index) => {
+    if (!segment) {
+      return null;
+    }
+
+    if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(segment)) {
+      return renderTypeSegment(segment, typeIndex, `${segment}-${index}`);
+    }
+
+    return (
+      <Fragment key={`${segment}-${index}`}>
+        {segment}
+      </Fragment>
+    );
+  });
+};
+
+const renderTypeBadges = (typeText: string | undefined, typeIndex: TypeReferenceIndex) => {
   const variants = getTypeVariants(typeText);
   if (variants.length === 0) {
     return null;
@@ -15,7 +56,9 @@ const renderTypeBadges = (typeText?: string) => {
   return (
     <ul className="type-badge-list" role="list">
       {variants.map((variant, index) => (
-        <li key={`${variant}-${index}`}>{variant}</li>
+        <li key={`${variant}-${index}`}>
+          <code>{renderTypeVariant(variant, typeIndex)}</code>
+        </li>
       ))}
     </ul>
   );
@@ -29,7 +72,7 @@ const renderReturnDescription = (value?: string) => {
   return <p>{value}</p>;
 };
 
-export const MethodCard = ({ method, anchorId }: MethodCardProps) => {
+export const MethodCard = ({ method, anchorId, typeIndex }: MethodCardProps) => {
   return (
     <article className="method-card" id={anchorId}>
       <header className="method-header">
@@ -54,7 +97,7 @@ export const MethodCard = ({ method, anchorId }: MethodCardProps) => {
               <div key={parameter.name} className={itemClassName}>
                 <div className="parameter-heading">
                   <span className="parameter-name">{parameter.name}</span>
-                  {renderTypeBadges(parameter.type)}
+                  {renderTypeBadges(parameter.type, typeIndex)}
                 </div>
                 <div className="parameter-meta">
                   <span className={parameter.optional ? 'parameter-pill optional' : 'parameter-pill required'}>
@@ -73,7 +116,7 @@ export const MethodCard = ({ method, anchorId }: MethodCardProps) => {
       <section className="method-returns" aria-label="Return value">
         <header>
           <span>Returns</span>
-          {renderTypeBadges(method.returnType)}
+          {renderTypeBadges(method.returnType, typeIndex)}
         </header>
         {renderReturnDescription(method.returns)}
       </section>

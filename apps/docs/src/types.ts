@@ -35,3 +35,5 @@ export type DocumentationIndex = {
   generatedAt: string;
   packages: PackageDoc[];
 };
+
+export type TypeReferenceIndex = Record<string, string>;

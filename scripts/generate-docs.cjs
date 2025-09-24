@@ -438,15 +438,28 @@ for (const config of packageConfigs) {
   });
 }
 
-const docsDirectory = path.join(repoRoot, 'apps/docs/src/data');
-fs.mkdirSync(docsDirectory, { recursive: true });
+const outputDirectories = [
+  path.join(repoRoot, 'apps/docs/src/data'),
+  path.join(repoRoot, 'apps/docs/public/data'),
+];
 
-const aggregateOutputPath = path.join(docsDirectory, 'docs.json');
-fs.writeFileSync(aggregateOutputPath, `${JSON.stringify(documentation, null, 2)}\n`, 'utf8');
+for (const directory of outputDirectories) {
+  fs.mkdirSync(directory, { recursive: true });
+}
+
+const writeOutput = (fileName, payload) => {
+  const json = `${JSON.stringify(payload, null, 2)}\n`;
+
+  for (const directory of outputDirectories) {
+    const filePath = path.join(directory, fileName);
+    fs.writeFileSync(filePath, json, 'utf8');
+  }
+};
+
+writeOutput('docs.json', documentation);
 
 for (const [slug, packageDoc] of packageCatalogues.entries()) {
-  const packageOutputPath = path.join(docsDirectory, `${slug}.json`);
-  fs.writeFileSync(packageOutputPath, `${JSON.stringify(packageDoc, null, 2)}\n`, 'utf8');
+  writeOutput(`${slug}.json`, packageDoc);
 }
 
 console.log(`Generated documentation for ${documentation.packages.length} packages.`);

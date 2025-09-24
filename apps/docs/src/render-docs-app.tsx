@@ -8,10 +8,9 @@ type RenderDocsAppOptions = {
   docs: DocumentationIndex;
   siteTitle: string;
   introduction?: string;
-  dedicatedBuilds?: { href: string; label: string }[];
 };
 
-export const renderDocsApp = ({ docs, siteTitle, introduction, dedicatedBuilds }: RenderDocsAppOptions) => {
+export const renderDocsApp = ({ docs, siteTitle, introduction }: RenderDocsAppOptions) => {
   const rootElement = document.getElementById('root');
 
   if (!rootElement) {
@@ -26,7 +25,6 @@ export const renderDocsApp = ({ docs, siteTitle, introduction, dedicatedBuilds }
         docs={docs}
         siteTitle={siteTitle}
         introduction={introduction}
-        dedicatedBuilds={dedicatedBuilds}
       />
     </React.StrictMode>,
   );
