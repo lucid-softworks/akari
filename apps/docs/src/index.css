@@ -51,9 +51,11 @@ a:hover {
   padding: 32px 28px;
   position: sticky;
   top: 0;
-  align-self: flex-start;
-  max-height: 100vh;
+  height: 100vh;
   overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar h1 {
@@ -308,6 +310,20 @@ a:hover {
   color: var(--accent);
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.signature-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(91, 141, 239, 0.6);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.signature-link:hover,
+.signature-link:focus-visible {
+  color: #8fb6ff;
+  text-decoration-color: currentColor;
+  outline: none;
 }
 
 .method-card p {
