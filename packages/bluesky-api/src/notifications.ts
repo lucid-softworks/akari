@@ -1,4 +1,4 @@
-import type { BlueskyNotificationsResponse } from './types';
+import type { BlueskyNotificationsResponse, BlueskyUnreadNotificationCount } from './types';
 
 /**
  * Bluesky notifications API client
@@ -56,11 +56,11 @@ export class BlueskyNotifications {
   }
 
   /**
-   * Get the count of unread notifications
-   * @param accessJwt - JWT access token
-   * @returns Promise resolving to unread count
+   * Retrieves the unread notification counter maintained by Bluesky.
+   * @param accessJwt - JWT access token authorised to read notifications.
+   * @returns Object containing the unread notification total.
    */
-  async getUnreadCount(accessJwt: string): Promise<{ count: number }> {
+  async getUnreadCount(accessJwt: string): Promise<BlueskyUnreadNotificationCount> {
     const url = `${this.pdsUrl}/xrpc/app.bsky.notification.getUnreadCount`;
 
     const response = await fetch(url, {

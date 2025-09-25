@@ -46,6 +46,13 @@ export type TenorTrendingResponse = {
   next: string;
 };
 
+export type TenorAttachedImage = {
+  uri: string;
+  alt: string;
+  mimeType: string;
+  tenorId?: string;
+};
+
 class TenorAPI {
   private apiKey: string;
 
@@ -147,16 +154,11 @@ class TenorAPI {
   }
 
   /**
-   * Convert Tenor GIF to AttachedImage format
-   * @param gif - Tenor GIF object
-   * @returns AttachedImage object
+   * Converts a Tenor GIF response into the attachment structure used by Bluesky posts.
+   * @param gif - Tenor GIF entry returned by the search or trending endpoints.
+   * @returns Attachment metadata capturing the GIF URL, alt text and Bluesky MIME requirements.
    */
-  convertGifToAttachedImage(gif: TenorGif): {
-    uri: string;
-    alt: string;
-    mimeType: string;
-    tenorId?: string;
-  } {
+  convertGifToAttachedImage(gif: TenorGif): TenorAttachedImage {
     // Try to get the best available format
     const gifUrl = gif.media_formats.gif?.url || gif.media_formats.tinygif?.url || gif.media_formats.nanogif?.url || gif.url;
 

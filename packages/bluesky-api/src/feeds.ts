@@ -1,7 +1,6 @@
 import { BlueskyApiClient } from './client';
 import type {
   BlueskyBookmarksResponse,
-  BlueskyFeed,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
   BlueskyLikeResponse,
@@ -10,6 +9,10 @@ import type {
   BlueskyThreadResponse,
   BlueskyUnlikeResponse,
   BlueskyTrendingTopicsResponse,
+  BlueskyCreatePostInput,
+  BlueskyCreatePostResponse,
+  BlueskyFeedGeneratorsResponse,
+  BlueskyUploadBlobResponse,
 } from './types';
 
 /**
@@ -91,12 +94,12 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param feeds - Array of feed URIs to get metadata for
    * @returns Promise resolving to feed generators data
    */
-  async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<{ feeds: BlueskyFeed[] }> {
+  async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<BlueskyFeedGeneratorsResponse> {
     const params: Record<string, string> = {
       feeds: feeds.join(','),
     };
 
-    return this.makeAuthenticatedRequest<{ feeds: BlueskyFeed[] }>('/app.bsky.feed.getFeedGenerators', accessJwt, {
+    return this.makeAuthenticatedRequest<BlueskyFeedGeneratorsResponse>('/app.bsky.feed.getFeedGenerators', accessJwt, {
       params,
     });
   }
@@ -332,15 +335,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     accessJwt: string,
     imageUri: string,
     mimeType: string,
-  ): Promise<{
-    blob: {
-      ref: {
-        $link: string;
-      };
-      mimeType: string;
-      size: number;
-    };
-  }> {
+  ): Promise<BlueskyUploadBlobResponse> {
     // Convert image URI to blob
     const response = await fetch(imageUri);
     const blob = await response.blob();
@@ -361,20 +356,8 @@ export class BlueskyFeeds extends BlueskyApiClient {
   async createPost(
     accessJwt: string,
     userDid: string,
-    post: {
-      text: string;
-      replyTo?: {
-        root: string;
-        parent: string;
-      };
-      images?: {
-        uri: string;
-        alt: string;
-        mimeType: string;
-        tenorId?: string;
-      }[];
-    },
-  ) {
+    post: BlueskyCreatePostInput,
+  ): Promise<BlueskyCreatePostResponse> {
     const { text, replyTo, images } = post;
 
     let record: Record<string, unknown> = {
@@ -439,15 +422,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
       }
     }
 
-    return this.makeAuthenticatedRequest<{
-      uri: string;
-      cid: string;
-      commit: {
-        cid: string;
-        rev: string;
-      };
-      validationStatus: string;
-    }>('/com.atproto.repo.createRecord', accessJwt, {
+    return this.makeAuthenticatedRequest<BlueskyCreatePostResponse>('/com.atproto.repo.createRecord', accessJwt, {
       method: 'POST',
       body: {
         repo: userDid,

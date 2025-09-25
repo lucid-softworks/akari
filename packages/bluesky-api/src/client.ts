@@ -1,4 +1,4 @@
-import type { BlueskyError } from './types';
+import type { BlueskyError, BlueskyUploadBlobResponse } from './types';
 
 /**
  * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
@@ -103,34 +103,22 @@ export class BlueskyApiClient {
     accessJwt: string,
     blob: Blob,
     mimeType: string,
-  ): Promise<{
-    blob: {
-      ref: {
-        $link: string;
-      };
-      mimeType: string;
-      size: number;
-    };
-  }> {
+  ): Promise<BlueskyUploadBlobResponse> {
     // Get the blob data as array buffer and create a new blob with correct MIME type
     const arrayBuffer = await blob.arrayBuffer();
     const typedBlob = new Blob([arrayBuffer], { type: mimeType });
 
-    const result = await this.makeAuthenticatedRequest<{
-      blob: {
-        ref: {
-          $link: string;
-        };
-        mimeType: string;
-        size: number;
-      };
-    }>('/com.atproto.repo.uploadBlob', accessJwt, {
-      method: 'POST',
-      body: typedBlob,
-      headers: {
-        'Content-Type': mimeType,
+    const result = await this.makeAuthenticatedRequest<BlueskyUploadBlobResponse>(
+      '/com.atproto.repo.uploadBlob',
+      accessJwt,
+      {
+        method: 'POST',
+        body: typedBlob,
+        headers: {
+          'Content-Type': mimeType,
+        },
       },
-    });
+    );
 
     return result;
   }
