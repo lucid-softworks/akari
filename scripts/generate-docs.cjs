@@ -99,19 +99,7 @@ const getCommentText = (comment) => {
     return undefined;
   }
 
-  if (typeof comment === 'string') {
-    return comment.trim().replace(/^-\s*/, '');
-  }
-
-  let text = '';
-  for (const part of comment) {
-    if (ts.isJSDocText(part)) {
-      text += part.text;
-    } else {
-      text += part.getText();
-    }
-  }
-
+  const text = typeof comment === 'string' ? comment : ts.getTextOfJSDocComment(comment) ?? '';
   const trimmed = text.trim().replace(/^-\s*/, '');
   return trimmed.length > 0 ? trimmed : undefined;
 };
