@@ -3,7 +3,7 @@
  */
 
 // Common types used across multiple interfaces
-export interface BlueskyAssociated {
+export type BlueskyAssociated = {
   lists: number;
   feedgens: number;
   starterPacks: number;
@@ -11,9 +11,9 @@ export interface BlueskyAssociated {
   chat: {
     allowIncoming: string;
   };
-}
+};
 
-export interface BlueskyViewer {
+export type BlueskyViewer = {
   muted: boolean;
   mutedByList?: string;
   blockedBy: boolean;
@@ -25,23 +25,23 @@ export interface BlueskyViewer {
     count: number;
     followers: string[];
   };
-}
+};
 
-export interface BlueskyVerification {
+export type BlueskyVerification = {
   verifications: string[];
   verifiedStatus: string;
   trustedVerifierStatus: string;
-}
+};
 
-export interface BlueskyStatus {
+export type BlueskyStatus = {
   status: string;
   record: Record<string, unknown>;
   embed?: BlueskyEmbed;
   expiresAt: string;
   isActive: boolean;
-}
+};
 
-export interface BlueskyLabel {
+export type BlueskyLabel = {
   val: string;
   src: string;
   cts: string;
@@ -53,9 +53,9 @@ export interface BlueskyLabel {
   label?: string;
   ver?: number;
   exp?: string;
-}
+};
 
-export interface BlueskyImage {
+export type BlueskyImage = {
   alt: string;
   image?: {
     ref: {
@@ -70,9 +70,9 @@ export interface BlueskyImage {
     width: number;
     height: number;
   };
-}
+};
 
-export interface BlueskyVideo {
+export type BlueskyVideo = {
   alt: string;
   ref: {
     $link: string;
@@ -83,9 +83,9 @@ export interface BlueskyVideo {
     width: number;
     height: number;
   };
-}
+};
 
-export interface BlueskyExternal {
+export type BlueskyExternal = {
   uri: string;
   title: string;
   description: string;
@@ -96,7 +96,7 @@ export interface BlueskyExternal {
     mimeType: string;
     size: number;
   };
-}
+};
 
 export type BlueskyRecordAuthor = {
   did: string;
@@ -143,7 +143,64 @@ export type BlueskyNestedRecord = {
   labels?: BlueskyLabel[];
 };
 
-export interface BlueskyRecord {
+export type BlueskyProfileUpdateInput = {
+  displayName?: string;
+  description?: string;
+  avatar?: string;
+  banner?: string;
+};
+
+export type BlueskyFeedGeneratorsResponse = {
+  feeds: BlueskyFeed[];
+};
+
+export type BlueskyPostReplyReference = {
+  root: string;
+  parent: string;
+};
+
+export type BlueskyPostImageInput = {
+  uri: string;
+  alt: string;
+  mimeType: string;
+  tenorId?: string;
+};
+
+export type BlueskyCreatePostInput = {
+  text: string;
+  replyTo?: BlueskyPostReplyReference;
+  images?: BlueskyPostImageInput[];
+};
+
+export type BlueskyUploadBlobResponse = {
+  blob: {
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+};
+
+export type BlueskyCreatePostResponse = {
+  uri: string;
+  cid: string;
+  commit: {
+    cid: string;
+    rev: string;
+  };
+  validationStatus: string;
+};
+
+export type BlueskySendMessageInput = {
+  text: string;
+};
+
+export type BlueskyUnreadNotificationCount = {
+  count: number;
+};
+
+export type BlueskyRecord = {
   uri: string;
   cid: string;
   $type?: string; // For blocked records like 'app.bsky.embed.record#viewBlocked'
@@ -167,15 +224,15 @@ export interface BlueskyRecord {
       byteStart: number;
       byteEnd: number;
     };
-    features: {
+  features: {
       $type: string;
       uri?: string;
       tag?: string;
     }[];
   }[];
-}
+};
 
-export interface BlueskyEmbed {
+export type BlueskyEmbed = {
   $type: string;
   images?: BlueskyImage[];
   video?: BlueskyVideo;
@@ -190,9 +247,9 @@ export interface BlueskyEmbed {
     width: number;
     height: number;
   };
-}
+};
 
-export interface BlueskyAuthor {
+export type BlueskyAuthor = {
   did: string;
   handle: string;
   displayName: string;
@@ -203,7 +260,7 @@ export interface BlueskyAuthor {
   createdAt: string;
   verification?: BlueskyVerification;
   status?: BlueskyStatus;
-}
+};
 
 export type BlueskyPostView = {
   /** The post's URI */
@@ -868,10 +925,10 @@ export type BlueskyAppStatePref = {
   /** Type identifier */
   $type: 'app.bsky.actor.defs#bskyAppStatePref';
   /** NUX completion status */
-  nuxs?: Array<{
+  nuxs?: {
     id: string;
     completed: boolean;
-  }>;
+  }[];
 };
 
 /**

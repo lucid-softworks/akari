@@ -1,5 +1,9 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyPreferencesResponse, BlueskyProfileResponse } from './types';
+import type {
+  BlueskyPreferencesResponse,
+  BlueskyProfileResponse,
+  BlueskyProfileUpdateInput,
+} from './types';
 
 /**
  * Bluesky API actor/profile methods
@@ -25,12 +29,7 @@ export class BlueskyActors extends BlueskyApiClient {
    */
   async updateProfile(
     accessJwt: string,
-    profileData: {
-      displayName?: string;
-      description?: string;
-      avatar?: string;
-      banner?: string;
-    },
+    profileData: BlueskyProfileUpdateInput,
   ): Promise<BlueskyProfileResponse> {
     return this.makeAuthenticatedRequest<BlueskyProfileResponse>('/app.bsky.actor.updateProfile', accessJwt, {
       method: 'POST',

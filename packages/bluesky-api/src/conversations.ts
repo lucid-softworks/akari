@@ -1,5 +1,10 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyConvosResponse, BlueskyMessagesResponse, BlueskySendMessageResponse } from './types';
+import type {
+  BlueskyConvosResponse,
+  BlueskyMessagesResponse,
+  BlueskySendMessageInput,
+  BlueskySendMessageResponse,
+} from './types';
 
 /**
  * Bluesky API conversation methods
@@ -70,9 +75,7 @@ export class BlueskyConversations extends BlueskyApiClient {
   async sendMessage(
     accessJwt: string,
     convoId: string,
-    message: {
-      text: string;
-    },
+    message: BlueskySendMessageInput,
   ): Promise<BlueskySendMessageResponse> {
     return this.makeAuthenticatedRequest<BlueskySendMessageResponse>('/chat.bsky.convo.sendMessage', accessJwt, {
       method: 'POST',

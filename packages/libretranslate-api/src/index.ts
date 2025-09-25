@@ -60,6 +60,12 @@ type ErrorJson = {
   error?: unknown;
 };
 
+/**
+ * Normalises a configured LibreTranslate endpoint by removing trailing slashes and
+ * falling back to the default public instance when no value is supplied.
+ * @param endpoint - User supplied endpoint string or null/undefined.
+ * @returns Sanitised endpoint string that can be safely concatenated with request paths.
+ */
 export const sanitizeLibreTranslateEndpoint = (endpoint: string | undefined | null) => {
   if (!endpoint) {
     return DEFAULT_LIBRETRANSLATE_ENDPOINT;
@@ -73,11 +79,20 @@ export class LibreTranslateClient {
 
   private readonly apiKey?: string;
 
+  /**
+   * Creates a new client targeting the provided LibreTranslate endpoint.
+   * @param param0 - Endpoint configuration containing the base URL and optional API key.
+   */
   constructor({ endpoint, apiKey }: InternalClientConfig) {
     this.endpoint = sanitizeLibreTranslateEndpoint(endpoint);
     this.apiKey = apiKey;
   }
 
+  /**
+   * Builds an absolute URL for the supplied path relative to the configured endpoint.
+   * @param path - API path that may include a leading slash.
+   * @returns Fully qualified URL pointing at the LibreTranslate instance.
+   */
   private buildUrl(path: string) {
     if (!path.startsWith('/')) {
       return `${this.endpoint}/${path}`;
@@ -86,6 +101,11 @@ export class LibreTranslateClient {
     return `${this.endpoint}${path}`;
   }
 
+  /**
+   * Creates a baseline set of request headers with optional content type overrides.
+   * @param contentType - Content type to apply when sending JSON payloads.
+   * @returns Headers object that always includes an `Accept` header for JSON.
+   */
   private createHeaders(contentType?: string): HeadersInit {
     const headers: Record<string, string> = { Accept: 'application/json' };
 
@@ -96,6 +116,11 @@ export class LibreTranslateClient {
     return headers;
   }
 
+  /**
+   * Injects the configured API key into LibreTranslate payloads when present.
+   * @param payload - Request payload that should include the API key.
+   * @returns Payload augmented with the `api_key` property when a key is available.
+   */
   private withApiKey<T extends DetectPayload | TranslatePayload>(payload: T): T {
     if (this.apiKey) {
       return { ...payload, api_key: this.apiKey };
@@ -104,6 +129,12 @@ export class LibreTranslateClient {
     return payload;
   }
 
+  /**
+   * Extracts a meaningful error message from LibreTranslate responses when available.
+   * @param data - Parsed JSON body returned by LibreTranslate.
+   * @param fallback - Message to use when the payload does not contain an error string.
+   * @returns Error string suitable for surfacing to callers.
+   */
   private getErrorMessage(data: unknown, fallback: string) {
     if (data && typeof data === 'object' && 'error' in data) {
       const value = (data as ErrorJson).error;
@@ -116,6 +147,11 @@ export class LibreTranslateClient {
     return fallback;
   }
 
+  /**
+   * Safely parses JSON bodies while swallowing parsing failures.
+   * @param response - Fetch response object containing a JSON payload.
+   * @returns Parsed JSON body or undefined when parsing fails.
+   */
   private async safeParseJson<T>(response: Response) {
     try {
       return (await response.json()) as T;
@@ -124,6 +160,10 @@ export class LibreTranslateClient {
     }
   }
 
+  /**
+   * Retrieves the languages supported by the configured LibreTranslate instance.
+   * @returns Array of language descriptors filtered to valid entries.
+   */
   async listLanguages(): Promise<LibreTranslateLanguage[]> {
     try {
       const response = await fetch(this.buildUrl('/languages'), {
@@ -167,6 +207,11 @@ export class LibreTranslateClient {
     }
   }
 
+  /**
+   * Detects the language of the provided text.
+   * @param text - Sample text whose language should be inferred.
+   * @returns Detection response including confidence and optional error details.
+   */
   async detect(text: string): Promise<LibreTranslateDetectResponse> {
     try {
       const payload: DetectPayload = this.withApiKey({ q: text, format: 'text' });
@@ -213,6 +258,14 @@ export class LibreTranslateClient {
     }
   }
 
+  /**
+   * Translates text between languages using the LibreTranslate API.
+   * @param text - Source text to translate.
+   * @param sourceLang - Language code representing the source language.
+   * @param targetLang - Language code representing the desired target language.
+   * @param alternatives - Optional number of alternative translations to request.
+   * @returns Translation response including translated text, alternatives and error information.
+   */
   async translate(
     text: string,
     sourceLang: string,
@@ -286,6 +339,11 @@ export class LibreTranslateClient {
   }
 }
 
+/**
+ * Convenience factory that builds a client using optional configuration overrides.
+ * @param config - Endpoint and API key configuration used to initialise the client.
+ * @returns Fully configured {@link LibreTranslateClient} instance.
+ */
 export const createLibreTranslateClient = (config?: LibreTranslateClientConfig) => {
   const endpoint = sanitizeLibreTranslateEndpoint(config?.endpoint ?? undefined);
 
