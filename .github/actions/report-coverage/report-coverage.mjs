@@ -6,12 +6,11 @@ const marker = '<!-- coverage-report -->';
 const token = process.env.GITHUB_TOKEN;
 const summaryPath = process.env.COVERAGE_SUMMARY_PATH;
 const lcovPath = process.env.LCOV_PATH;
-const artifactName = process.env.ARTIFACT_NAME;
 const previewFile = process.env.HTML_PREVIEW_FILE;
 const prNumber = process.env.PR_NUMBER;
 const repository = process.env.GITHUB_REPOSITORY;
 const apiBase = process.env.GITHUB_API_URL || 'https://api.github.com';
-const commitSha = process.env.GITHUB_SHA;
+const commitSha = process.env.PR_HEAD_SHA || process.env.GITHUB_SHA;
 
 if (!token) {
   throw new Error('GITHUB_TOKEN is required.');
@@ -74,10 +73,6 @@ const table = [
 let body = `${marker}\n### Coverage Report\n\n${table}`;
 
 const resourceLines = [];
-
-if (artifactName) {
-  resourceLines.push(`- Download the **${artifactName}** workflow artifact for the complete HTML report.`);
-}
 
 if (previewLink) {
   resourceLines.push(`- [Open the HTML coverage preview ↗︎](${previewLink.url})`);

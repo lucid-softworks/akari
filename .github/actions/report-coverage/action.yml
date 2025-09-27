@@ -42,6 +42,7 @@ runs:
         ARTIFACT_NAME: ${{ inputs.artifact-name }}
         HTML_PREVIEW_FILE: ${{ inputs.html-preview-file }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         GITHUB_REPOSITORY: ${{ github.repository }}
         GITHUB_API_URL: ${{ github.api_url }}
       run: node "$GITHUB_ACTION_PATH/report-coverage.mjs"
