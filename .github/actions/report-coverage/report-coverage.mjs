@@ -1,4 +1,4 @@
-import { readFile, access, appendFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 
 const workspaceRoot = process.cwd().replace(/\\/g, '/');
 
@@ -6,11 +6,9 @@ const marker = '<!-- coverage-report -->';
 const token = process.env.GITHUB_TOKEN;
 const summaryPath = process.env.COVERAGE_SUMMARY_PATH;
 const lcovPath = process.env.LCOV_PATH;
-const previewFile = process.env.HTML_PREVIEW_FILE;
 const prNumber = process.env.PR_NUMBER;
 const repository = process.env.GITHUB_REPOSITORY;
 const apiBase = process.env.GITHUB_API_URL || 'https://api.github.com';
-const commitSha = process.env.PR_HEAD_SHA || process.env.GITHUB_SHA;
 
 if (!token) {
   throw new Error('GITHUB_TOKEN is required.');
@@ -31,7 +29,6 @@ if (!prNumber) {
 const [owner, repo] = repository.split('/');
 
 const { totals, files } = await loadCoverage();
-const previewLink = await createPreviewLink(previewFile);
 
 const summaryMetrics = [
   { key: 'lines', label: 'Lines' },
@@ -71,17 +68,6 @@ const table = [
 ].join('\n');
 
 let body = `${marker}\n### Coverage Report\n\n${table}`;
-
-const resourceLines = [];
-
-if (previewLink) {
-  resourceLines.push(`- [Open the HTML coverage preview ↗︎](${previewLink.url})`);
-  await writePreviewSummary(previewLink);
-}
-
-if (resourceLines.length > 0) {
-  body += `\n\n${resourceLines.join('\n')}`;
-}
 
 if (Array.isArray(files) && files.length > 0) {
   const fileRows = [];
@@ -180,66 +166,6 @@ async function loadCoverage() {
   }
 
   return lcovCoverage;
-}
-
-async function createPreviewLink(filePath) {
-  if (typeof filePath !== 'string') {
-    return null;
-  }
-
-  const trimmed = filePath.trim();
-  if (!trimmed) {
-    return null;
-  }
-
-  try {
-    await access(trimmed);
-  } catch {
-    console.warn(`Preview file ${trimmed} was not found. Skipping preview link.`);
-    return null;
-  }
-
-  if (!commitSha) {
-    console.warn('GITHUB_SHA is not available. Skipping preview link.');
-    return null;
-  }
-
-  const normalized = normalizeFilePath(trimmed);
-  if (!normalized) {
-    return null;
-  }
-
-  const encodedPath = normalized
-    .split('/')
-    .map((segment) => encodeURIComponent(segment))
-    .join('/');
-
-  return {
-    url: `https://htmlpreview.github.io/?https://github.com/${owner}/${repo}/blob/${commitSha}/${encodedPath}`,
-    path: normalized,
-  };
-}
-
-async function writePreviewSummary(previewLink) {
-  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-  if (!summaryPath) {
-    return;
-  }
-
-  const lines = [
-    '### Coverage HTML Preview',
-    '',
-    `Using HTML file: ${previewLink.path}`,
-    '',
-    `[Click here to preview the HTML page in your browser](${previewLink.url})`,
-    '',
-  ];
-
-  try {
-    await appendFile(summaryPath, `${lines.join('\n')}\n`);
-  } catch (error) {
-    console.warn(`Failed to write preview summary: ${error instanceof Error ? error.message : String(error)}`);
-  }
 }
 
 function normalizeTotals(total) {
