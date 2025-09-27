@@ -29,19 +29,43 @@ function VirtualizedListInner<T>(
   const typedData = data as T[];
 
   const { drawDistance, ...flashListProps } = rest;
+  const shouldAutoStickHeader = stickyHeaderIndices === undefined && Boolean(ListHeaderComponent);
   const computedStickyHeaderIndices =
     stickyHeaderIndices !== undefined
       ? stickyHeaderIndices
-      : ListHeaderComponent
-        ? [0] // FlashList treats the header as the first index when calculating sticky headers.
+      : shouldAutoStickHeader
+        ? [0]
         : undefined;
+
+  const renderItemWithStickyHeader = React.useCallback(
+    (
+      info: Parameters<NonNullable<FlashListProps<T>['renderItem']>>[0],
+    ) => {
+      if (
+        shouldAutoStickHeader &&
+        info.target === 'StickyHeader' &&
+        info.index === 0 &&
+        ListHeaderComponent
+      ) {
+        if (React.isValidElement(ListHeaderComponent)) {
+          return ListHeaderComponent;
+        }
+
+        const HeaderComponent = ListHeaderComponent;
+        return <HeaderComponent />;
+      }
+
+      return renderItem ? renderItem(info) : null;
+    },
+    [ListHeaderComponent, renderItem, shouldAutoStickHeader],
+  );
 
   return (
     <FlashList
       {...(flashListProps as FlashListProps<T>)}
       ref={ref as React.Ref<FlashList<T>>}
       data={typedData}
-      renderItem={renderItem}
+      renderItem={renderItemWithStickyHeader}
       estimatedItemSize={estimatedItemSize}
       drawDistance={drawDistance ?? overscan * estimatedItemSize}
       ListHeaderComponent={ListHeaderComponent}
