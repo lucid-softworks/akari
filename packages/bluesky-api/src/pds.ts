@@ -22,15 +22,15 @@ type PLCDocument = {
 /**
  * Extracts the PDS URL from a DID using the PLC directory
  * @param did - The DID to look up
- * @returns Promise resolving to the PDS URL or undefined if not found
+ * @returns Promise resolving to the PDS URL or null if not found
  */
-export async function getPdsUrlFromDid(did: string): Promise<string | undefined> {
+export async function getPdsUrlFromDid(did: string): Promise<string | null> {
   try {
     const response = await fetch(`https://plc.directory/${did}`);
 
     if (!response.ok) {
       console.warn(`Failed to fetch PLC document for ${did}: ${response.status}`);
-      return undefined;
+      return null;
     }
 
     const document: PLCDocument = await response.json();
@@ -43,19 +43,19 @@ export async function getPdsUrlFromDid(did: string): Promise<string | undefined>
     }
 
     console.warn(`No atproto_pds service found in PLC document for ${did}`);
-    return undefined;
+    return null;
   } catch (error) {
     console.error(`Error fetching PLC document for ${did}:`, error);
-    return undefined;
+    return null;
   }
 }
 
 /**
  * Gets the PDS URL for a handle by first resolving the DID, then looking up the PDS
  * @param handle - The Bluesky handle (with or without @)
- * @returns Promise resolving to the PDS URL or undefined if not found
+ * @returns Promise resolving to the PDS URL or null if not found
  */
-export async function getPdsUrlFromHandle(handle: string): Promise<string | undefined> {
+export async function getPdsUrlFromHandle(handle: string): Promise<string | null> {
   try {
     // Clean the handle (remove @ if present)
     const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
@@ -65,7 +65,7 @@ export async function getPdsUrlFromHandle(handle: string): Promise<string | unde
 
     if (!response.ok) {
       console.warn(`Failed to resolve handle ${cleanHandle}: ${response.status}`);
-      return undefined;
+      return null;
     }
 
     const result = await response.json();
@@ -73,13 +73,13 @@ export async function getPdsUrlFromHandle(handle: string): Promise<string | unde
 
     if (!did) {
       console.warn(`No DID found for handle ${cleanHandle}`);
-      return undefined;
+      return null;
     }
 
     // Now get the PDS URL from the DID
     return await getPdsUrlFromDid(did);
   } catch (error) {
     console.error(`Error resolving handle ${handle}:`, error);
-    return undefined;
+    return null;
   }
 }

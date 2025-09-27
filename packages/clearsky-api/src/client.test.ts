@@ -5,14 +5,14 @@ import { ClearSkyApiClient } from './client';
 import type { ClearSkyRequestOptions } from './types';
 
 class TestClient extends ClearSkyApiClient {
-  public getPublic<T>(endpoint: string, queryParameters?: Record<string, string>) {
+  public getPublic<T>(endpoint: string, queryParameters?: Record<string, string | null>) {
     return this.get<T>(endpoint, queryParameters);
   }
 
   public postPublic<T>(
     endpoint: string,
     body?: Record<string, unknown> | FormData,
-    queryParameters?: Record<string, string>,
+    queryParameters?: Record<string, string | null>,
   ) {
     return this.post<T>(endpoint, body as Record<string, unknown>, queryParameters);
   }
@@ -44,13 +44,13 @@ describe('ClearSkyApiClient', () => {
   it('makes GET requests with query parameters', async () => {
     let capturedUrl: URL | undefined;
     let capturedMethod: string | undefined;
-    let capturedContentType: string | undefined;
+    let capturedContentType: string | null = null;
 
     server.use(
       http.get('https://example.com/test', ({ request }) => {
         capturedUrl = new URL(request.url);
         capturedMethod = request.method;
-        capturedContentType = request.headers.get('Content-Type') ?? undefined;
+        capturedContentType = request.headers.get('Content-Type');
         return HttpResponse.json({ result: 'ok' });
       }),
     );
@@ -103,12 +103,12 @@ describe('ClearSkyApiClient', () => {
 
   it('merges custom headers and query parameters when making requests', async () => {
     let capturedUrl: string | undefined;
-    let capturedAuthorization: string | undefined;
+    let capturedAuthorization: string | null = null;
 
     server.use(
       http.get('https://example.com/custom', ({ request }) => {
         capturedUrl = request.url;
-        capturedAuthorization = request.headers.get('Authorization') ?? undefined;
+        capturedAuthorization = request.headers.get('Authorization');
         return HttpResponse.json({ custom: true });
       }),
     );
@@ -126,12 +126,12 @@ describe('ClearSkyApiClient', () => {
 
   it('uses default request options when none are provided', async () => {
     let capturedMethod: string | undefined;
-    let capturedContentType: string | undefined;
+    let capturedContentType: string | null = null;
 
     server.use(
       http.get('https://example.com/default-options', ({ request }) => {
         capturedMethod = request.method;
-        capturedContentType = request.headers.get('Content-Type') ?? undefined;
+        capturedContentType = request.headers.get('Content-Type');
         return HttpResponse.json({ ok: true });
       }),
     );
@@ -147,14 +147,14 @@ describe('ClearSkyApiClient', () => {
   it('makes POST requests with JSON body and query parameters', async () => {
     let capturedUrl: string | undefined;
     let capturedMethod: string | undefined;
-    let capturedContentType: string | undefined;
+    let capturedContentType: string | null = null;
     let capturedBody: unknown;
 
     server.use(
       http.post('https://example.com/create', async ({ request }) => {
         capturedUrl = request.url;
         capturedMethod = request.method;
-        capturedContentType = request.headers.get('Content-Type') ?? undefined;
+        capturedContentType = request.headers.get('Content-Type');
         capturedBody = await request.json();
         return HttpResponse.json({ success: true });
       }),

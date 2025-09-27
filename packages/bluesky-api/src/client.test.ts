@@ -15,7 +15,7 @@ describe('BlueskyApiClient', () => {
       method?: 'GET' | 'POST';
       headers?: Record<string, string>;
       body?: Record<string, unknown> | FormData | Blob;
-      queryParameters?: Record<string, string>;
+      queryParameters?: Record<string, string | null>;
     }): Promise<T> {
       return this.makeRequest<T>(endpoint, options);
     }
@@ -27,7 +27,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
-        queryParameters?: Record<string, string>;
+        queryParameters?: Record<string, string | null>;
       },
     ): Promise<T> {
       return this.makeAuthenticatedRequest<T>(endpoint, accessJwt, options);
@@ -42,7 +42,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Blob;
-        queryParameters?: Record<string, string>;
+        queryParameters?: Record<string, string | null>;
       };
     };
 
@@ -63,7 +63,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Blob;
-        queryParameters?: Record<string, string>;
+        queryParameters?: Record<string, string | null>;
       } = {},
     ): Promise<T> {
       this.lastCall = { endpoint, accessJwt, options };
@@ -86,7 +86,7 @@ describe('BlueskyApiClient', () => {
       method: string;
       headers: Record<string, string>;
       body: unknown;
-    } | undefined;
+    } | null = null;
 
     server.use(
       http.post('https://pds.example/xrpc/test.endpoint', async ({ request }) => {
@@ -109,7 +109,7 @@ describe('BlueskyApiClient', () => {
     });
 
     expect(result).toEqual({ success: true });
-    expect(capturedRequest).toBeDefined();
+    expect(capturedRequest).not.toBeNull();
     const request = capturedRequest!;
     expect(request.url).toBe('https://pds.example/xrpc/test.endpoint?q=query');
     expect(request.method).toBe('POST');
@@ -119,8 +119,8 @@ describe('BlueskyApiClient', () => {
   });
 
   it('omits content type header for FormData bodies', async () => {
-    let capturedHeaders: Record<string, string> | undefined;
-    let capturedFile: FormDataEntryValue | undefined;
+    let capturedHeaders: Record<string, string> | null = null;
+    let capturedFile: FormDataEntryValue | null = null;
 
     server.use(
       http.post('https://pds.example/xrpc/upload', async ({ request }) => {
@@ -140,7 +140,7 @@ describe('BlueskyApiClient', () => {
       body: formData,
     });
 
-    expect(capturedHeaders).toBeDefined();
+    expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers['content-type']).toMatch(/^multipart\/form-data;/);
     expect(headers['content-type']).not.toBe('application/json');
@@ -164,7 +164,7 @@ describe('BlueskyApiClient', () => {
       url: string;
       headers: Record<string, string>;
       method: string;
-    } | undefined;
+    } | null = null;
 
     server.use(
       http.get('https://pds.example/xrpc/secure', async ({ request }) => {
@@ -182,7 +182,7 @@ describe('BlueskyApiClient', () => {
       queryParameters: { cursor: 'abc' },
     });
 
-    expect(capturedRequest).toBeDefined();
+    expect(capturedRequest).not.toBeNull();
     const request = capturedRequest!;
     expect(request.url).toBe('https://pds.example/xrpc/secure?cursor=abc');
     expect(request.method).toBe('GET');

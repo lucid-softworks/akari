@@ -7,7 +7,7 @@
  * @param url The playlist URL from Bluesky
  * @returns The resolved video URL with session ID, or the original URL if not a Bluesky playlist
  */
-export async function resolveBlueskyVideoUrl(url: string): Promise<string | undefined> {
+export async function resolveBlueskyVideoUrl(url: string): Promise<string | null> {
   if (!url.includes('video.bsky.app') || !url.includes('playlist.m3u8')) {
     return url; // Not a Bluesky playlist, return as-is
   }
@@ -61,6 +61,6 @@ export async function resolveBlueskyVideoUrl(url: string): Promise<string | unde
     } else {
       console.error('Video resolution: Failed to resolve playlist:', error);
     }
-    return undefined; // Return undefined on error instead of original URL
+    return null; // Return null on error instead of original URL
   }
 }

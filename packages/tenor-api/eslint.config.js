@@ -22,6 +22,7 @@ export default [
     },
     rules: {
       'unicorn/prefer-ternary': ['error', 'only-single-line'],
+      'unicorn/no-null': 'off',
     },
   },
 ];

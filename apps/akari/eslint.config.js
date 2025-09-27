@@ -16,6 +16,7 @@ module.exports = defineConfig([
     },
     rules: {
       'unicorn/prefer-ternary': ['error', 'only-single-line'],
+      'unicorn/no-null': 'off',
     },
   },
 ]);

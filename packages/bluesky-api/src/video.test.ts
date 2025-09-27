@@ -26,7 +26,7 @@ describe('resolveBlueskyVideoUrl', () => {
 
   it('resolves playlist urls to video urls with session ids', async () => {
     const playlist = `#EXTM3U\n#EXT-X-VERSION:3\nsegment1.ts\nvideo.m3u8?session_id=abc123`;
-    let capturedHeaders: Record<string, string> | undefined;
+    let capturedHeaders: Record<string, string> | null = null;
 
     server.use(
       http.get('https://video.bsky.app/path/playlist.m3u8', async ({ request }) => {
@@ -39,14 +39,14 @@ describe('resolveBlueskyVideoUrl', () => {
 
     const result = await resolveBlueskyVideoUrl('https://video.bsky.app/path/playlist.m3u8');
 
-    expect(capturedHeaders).toBeDefined();
+    expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers.accept).toBe('application/vnd.apple.mpegurl,application/x-mpegurl,*/*');
     expect(headers['user-agent']).toBe('VideoPlayer/1.0');
     expect(result).toBe('https://video.bsky.app/path/video.m3u8?session_id=abc123');
   });
 
-  it('returns undefined and logs errors when playlist parsing fails', async () => {
+  it('returns null and logs errors when playlist parsing fails', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     server.use(
@@ -59,11 +59,11 @@ describe('resolveBlueskyVideoUrl', () => {
 
     const result = await resolveBlueskyVideoUrl('https://video.bsky.app/path/playlist.m3u8');
 
-    expect(result).toBeUndefined();
+    expect(result).toBeNull();
     expect(errorSpy).toHaveBeenCalled();
   });
 
-  it('returns undefined with http error message when fetch fails', async () => {
+  it('returns null with http error message when fetch fails', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     server.use(
@@ -74,7 +74,7 @@ describe('resolveBlueskyVideoUrl', () => {
 
     const result = await resolveBlueskyVideoUrl('https://video.bsky.app/path/playlist.m3u8');
 
-    expect(result).toBeUndefined();
+    expect(result).toBeNull();
     expect(errorSpy).toHaveBeenCalledWith('Video resolution: Failed to resolve playlist:', expect.any(Error));
   });
 
@@ -93,7 +93,7 @@ describe('resolveBlueskyVideoUrl', () => {
     jest.runOnlyPendingTimers();
     const result = await promise;
 
-    expect(result).toBeUndefined();
+    expect(result).toBeNull();
     expect(errorSpy).toHaveBeenCalledWith('Video resolution: Request timeout');
   });
 });

@@ -36,7 +36,7 @@ export class ClearSkyApiClient {
   /**
    * Builds the complete URL with query parameters
    */
-  private buildUrl(endpoint: string, queryParameters?: Record<string, string>): string {
+  private buildUrl(endpoint: string, queryParameters?: Record<string, string | null>): string {
     const url = `${this.baseUrl}${endpoint}`;
 
     if (!queryParameters || Object.keys(queryParameters).length === 0) {
@@ -45,7 +45,7 @@ export class ClearSkyApiClient {
 
     const searchParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(queryParameters)) {
-      if (value !== undefined) {
+      if (value !== undefined && value !== null) {
         searchParameters.append(key, value);
       }
     }
@@ -109,7 +109,7 @@ export class ClearSkyApiClient {
    * @param queryParameters - Query parameters
    * @returns Promise resolving to the response data
    */
-  protected async get<T>(endpoint: string, queryParameters?: Record<string, string>): Promise<T> {
+  protected async get<T>(endpoint: string, queryParameters?: Record<string, string | null>): Promise<T> {
     return this.makeRequest<T>(endpoint, {
       method: 'GET',
       queryParameters,
@@ -126,7 +126,7 @@ export class ClearSkyApiClient {
   protected async post<T>(
     endpoint: string,
     body?: Record<string, unknown>,
-    queryParameters?: Record<string, string>,
+    queryParameters?: Record<string, string | null>,
   ): Promise<T> {
     return this.makeRequest<T>(endpoint, {
       method: 'POST',
