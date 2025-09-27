@@ -19,6 +19,18 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
+const HIDDEN_TAB_ROUTES = ['post', 'post/[id]', 'profile/[handle]', 'messages/[handle]', 'messages/pending'] as const;
+
+const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
+  index: 'index',
+  search: 'search',
+  messages: 'messages',
+  notifications: 'notifications',
+  bookmarks: 'bookmarks',
+  profile: 'profile',
+  settings: 'settings',
+};
+
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
@@ -41,11 +53,13 @@ function CustomTabButton(props: any) {
 
       if (currentRoute) {
         // Check if this is the same tab pressed again
-        if (lastPressedTabRef.current === currentRoute) {
-          tabScrollRegistry.handleTabPress(currentRoute);
+        const registryKey = ROUTE_TO_REGISTRY_KEY[currentRoute] ?? currentRoute;
+
+        if (lastPressedTabRef.current === registryKey) {
+          tabScrollRegistry.handleTabPress(registryKey);
         }
 
-        lastPressedTabRef.current = currentRoute;
+        lastPressedTabRef.current = registryKey;
       }
     }, 50); // Small delay to ensure navigation state has updated
   };
@@ -161,6 +175,9 @@ export default function TabLayout() {
                 <Tabs.Screen name="bookmarks" options={{ href: null }} />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
+                {HIDDEN_TAB_ROUTES.map((route) => (
+                  <Tabs.Screen key={`large-${route}`} name={route} options={{ href: null }} />
+                ))}
               </Tabs>
             </View>
           </View>
@@ -245,6 +262,9 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
+        {HIDDEN_TAB_ROUTES.map((route) => (
+          <Tabs.Screen key={`mobile-${route}`} name={route} options={{ href: null }} />
+        ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
