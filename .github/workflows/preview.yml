@@ -102,7 +102,40 @@ jobs:
               core.info('No Expo Hosting preview URL available; skipping comment.');
               return;
             }
-            const body = `🚀 Expo Hosting preview: ${previewUrl}`;
+
+            const marker = '<!-- expo-hosting-preview -->';
+            const body = `${marker}\n🚀 Expo Hosting preview: ${previewUrl}`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo,
+              issue_number: prNumber,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => {
+              if (comment.user?.login !== 'github-actions[bot]') {
+                return false;
+              }
+
+              if (typeof comment.body !== 'string') {
+                return false;
+              }
+
+              if (comment.body.includes(marker)) {
+                return true;
+              }
+
+              return comment.body.startsWith('🚀 Expo Hosting preview:');
+            });
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
 
             await github.rest.issues.createComment({
               ...context.repo,
