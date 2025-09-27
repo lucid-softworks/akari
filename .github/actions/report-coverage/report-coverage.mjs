@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
+const workspaceRoot = process.cwd().replace(/\\/g, '/');
+
 const marker = '<!-- coverage-report -->';
 const token = process.env.GITHUB_TOKEN;
 const summaryPath = process.env.COVERAGE_SUMMARY_PATH;
@@ -29,16 +31,22 @@ const [owner, repo] = repository.split('/');
 
 const { totals, files } = await loadCoverage();
 
-const metrics = [
+const summaryMetrics = [
   { key: 'lines', label: 'Lines' },
   { key: 'statements', label: 'Statements' },
   { key: 'branches', label: 'Branches' },
   { key: 'functions', label: 'Functions' },
 ];
 
+const perFileMetrics = [
+  { key: 'branches', label: 'Branches' },
+  { key: 'functions', label: 'Funcs' },
+  { key: 'lines', label: 'Lines' },
+];
+
 const rows = [];
 
-for (const metric of metrics) {
+for (const metric of summaryMetrics) {
   const data = totals[metric.key];
   if (!data) {
     continue;
@@ -69,19 +77,38 @@ if (artifactName) {
 if (Array.isArray(files) && files.length > 0) {
   const fileRows = [];
 
-  const sortedFiles = [...files].sort((a, b) => a.path.localeCompare(b.path));
+  const sortedFiles = [...files]
+    .map((file) => ({
+      ...file,
+      path: typeof file.path === 'string' ? file.path : '',
+    }))
+    .sort((a, b) => a.path.localeCompare(b.path));
+
+  let currentDirectory = null;
 
   for (const file of sortedFiles) {
-    const cells = metrics
+    const { directory, fileName } = splitPath(file.path);
+    const directoryLabel = directory ? `./${directory}/` : './';
+
+    if (directory !== currentDirectory) {
+      currentDirectory = directory;
+      fileRows.push(`| **${escapeTableCell(directoryLabel)}** | — | — | — | — |`);
+    }
+
+    const cells = perFileMetrics
       .map((metric) => formatCoverageCell(file[metric.key]))
       .join(' | ');
-    fileRows.push(`| ${escapeTableCell(file.path)} | ${cells} |`);
+    const uncoveredLines = formatUncoveredLines(file.uncoveredLines);
+
+    fileRows.push(
+      `| ${indentFileName(fileName)} | ${cells} | ${escapeTableCell(uncoveredLines)} |`,
+    );
   }
 
   if (fileRows.length > 0) {
     const fileTable = [
-      '| File | Lines | Statements | Branches | Functions |',
-      '| ---- | ----- | ---------- | -------- | --------- |',
+      '| File | Branches | Funcs | Lines | Uncovered Lines |',
+      '| ---- | -------- | ----- | ----- | --------------- |',
       ...fileRows,
     ].join('\n');
 
@@ -92,6 +119,9 @@ if (Array.isArray(files) && files.length > 0) {
 await upsertComment(body);
 
 async function loadCoverage() {
+  const lcovContent = await readFile(lcovPath, 'utf8');
+  const lcovCoverage = deriveCoverageFromLcov(lcovContent);
+
   if (summaryPath) {
     try {
       const summaryContent = await readFile(summaryPath, 'utf8');
@@ -108,12 +138,31 @@ async function loadCoverage() {
           const normalized = normalizeTotals(data);
 
           if (Object.keys(normalized).length > 0) {
-            files.push({ path: filePath, ...normalized });
+            files.push({ path: normalizeFilePath(filePath), ...normalized, uncoveredLines: [] });
           }
         }
 
         if (Object.keys(totals).length > 0) {
-          return { totals, files };
+          finalizeCoverageMetrics(totals);
+
+          const uncoveredByPath = new Map(
+            lcovCoverage.files.map((file) => [file.path, Array.isArray(file.uncoveredLines) ? file.uncoveredLines : []]),
+          );
+
+          const mergedFiles = files.map((file) => ({
+            ...file,
+            uncoveredLines: uncoveredByPath.get(file.path) ?? [],
+          }));
+
+          const seenPaths = new Set(mergedFiles.map((file) => file.path));
+
+          for (const file of lcovCoverage.files) {
+            if (!seenPaths.has(file.path)) {
+              mergedFiles.push(file);
+            }
+          }
+
+          return { totals, files: mergedFiles };
         }
       }
     } catch (error) {
@@ -121,8 +170,7 @@ async function loadCoverage() {
     }
   }
 
-  const lcovContent = await readFile(lcovPath, 'utf8');
-  return deriveCoverageFromLcov(lcovContent);
+  return lcovCoverage;
 }
 
 function normalizeTotals(total) {
@@ -149,16 +197,28 @@ function deriveCoverageFromLcov(lcov) {
   const files = [];
   let currentFile = null;
 
+  const pushCurrentFile = () => {
+    if (currentFile) {
+      finalizeCoverageMetrics(currentFile);
+      if (currentFile.uncoveredLines instanceof Set) {
+        currentFile.uncoveredLines = Array.from(currentFile.uncoveredLines)
+          .filter((value) => typeof value === 'number' && Number.isFinite(value))
+          .sort((a, b) => a - b);
+      } else if (!Array.isArray(currentFile.uncoveredLines)) {
+        currentFile.uncoveredLines = [];
+      }
+      files.push(currentFile);
+      currentFile = null;
+    }
+  };
+
   const lines = lcov.split(/\r?\n/);
 
   for (const line of lines) {
     if (line.startsWith('SF:')) {
-      if (currentFile) {
-        finalizeCoverageMetrics(currentFile);
-        files.push(currentFile);
-      }
-      const filePath = line.slice(3).trim();
-      currentFile = { path: filePath, ...createEmptyCoverageMetrics() };
+      pushCurrentFile();
+      const filePath = normalizeFilePath(line.slice(3).trim());
+      currentFile = { path: filePath, ...createEmptyCoverageMetrics(), uncoveredLines: new Set() };
     } else if (line.startsWith('LH:')) {
       const value = Number.parseInt(line.slice(3), 10);
       if (!Number.isNaN(value)) {
@@ -211,17 +271,19 @@ function deriveCoverageFromLcov(lcov) {
           currentFile.functions.total += value;
         }
       }
-    } else if (line === 'end_of_record' && currentFile) {
-      finalizeCoverageMetrics(currentFile);
-      files.push(currentFile);
-      currentFile = null;
+    } else if (line.startsWith('DA:') && currentFile) {
+      const data = line.slice(3).split(',');
+      const lineNumber = Number.parseInt(data[0], 10);
+      const executionCount = Number.parseInt(data[1], 10);
+      if (!Number.isNaN(lineNumber) && executionCount === 0) {
+        currentFile.uncoveredLines.add(lineNumber);
+      }
+    } else if (line === 'end_of_record') {
+      pushCurrentFile();
     }
   }
 
-  if (currentFile) {
-    finalizeCoverageMetrics(currentFile);
-    files.push(currentFile);
-  }
+  pushCurrentFile();
 
   finalizeCoverageMetrics(totals);
 
@@ -246,7 +308,8 @@ function formatPercent(value) {
   if (typeof value !== 'number' || Number.isNaN(value)) {
     return '—';
   }
-  return `${value.toFixed(2)}%`;
+  const rounded = value.toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+  return `${rounded}%`;
 }
 
 function formatCoverageCell(data) {
@@ -254,15 +317,7 @@ function formatCoverageCell(data) {
     return '—';
   }
 
-  const coveredText = formatNumber(data.covered);
-  const totalText = formatNumber(data.total);
-  const percentText = formatPercent(data.pct);
-
-  if (coveredText === '—' && totalText === '—') {
-    return percentText;
-  }
-
-  return `${coveredText}/${totalText} (${percentText})`;
+  return formatPercent(data.pct);
 }
 
 function escapeTableCell(text) {
@@ -270,6 +325,13 @@ function escapeTableCell(text) {
     return formatNumber(text);
   }
   return text.replace(/\|/g, '\\|');
+}
+
+function indentFileName(fileName) {
+  if (typeof fileName !== 'string' || fileName.length === 0) {
+    return escapeTableCell(fileName ?? '');
+  }
+  return `&nbsp;&nbsp;${escapeTableCell(fileName)}`;
 }
 
 function createEmptyCoverageMetrics() {
@@ -283,11 +345,63 @@ function createEmptyCoverageMetrics() {
 
 function finalizeCoverageMetrics(metrics) {
   for (const [key, data] of Object.entries(metrics)) {
-    if (!data || typeof data !== 'object' || key === 'path') {
+    if (!data || typeof data !== 'object' || key === 'path' || key === 'uncoveredLines') {
       continue;
     }
     data.pct = computePercent(data.covered, data.total);
   }
+}
+
+function formatUncoveredLines(uncovered) {
+  if (!Array.isArray(uncovered) || uncovered.length === 0) {
+    return '—';
+  }
+
+  const sorted = [...new Set(uncovered.filter((value) => typeof value === 'number' && Number.isFinite(value)))].sort(
+    (a, b) => a - b,
+  );
+
+  if (sorted.length === 0) {
+    return '—';
+  }
+
+  const maxVisible = 20;
+  const visible = sorted.slice(0, maxVisible);
+  const remaining = sorted.length - visible.length;
+  const base = visible.join(', ');
+  return remaining > 0 ? `${base}, …` : base;
+}
+
+function normalizeFilePath(filePath) {
+  if (typeof filePath !== 'string' || filePath.length === 0) {
+    return '';
+  }
+
+  const normalized = filePath.replace(/\\/g, '/');
+
+  let relativePath = normalized;
+
+  if (normalized.startsWith(`${workspaceRoot}/`)) {
+    relativePath = normalized.slice(workspaceRoot.length + 1);
+  }
+
+  if (relativePath.startsWith('./')) {
+    return relativePath.slice(2);
+  }
+
+  return relativePath;
+}
+
+function splitPath(path) {
+  const normalized = typeof path === 'string' ? path : '';
+  const index = normalized.lastIndexOf('/');
+  if (index === -1) {
+    return { directory: '', fileName: normalized };
+  }
+  return {
+    directory: normalized.slice(0, index),
+    fileName: normalized.slice(index + 1),
+  };
 }
 
 async function upsertComment(bodyContent) {
