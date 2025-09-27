@@ -46,6 +46,26 @@ jobs:
 
       - name: Create preview
         uses: expo/expo-github-action/preview@v8
+        env:
+          APP_VARIANT: preview
         with:
           command: eas update --auto
           working-directory: apps/akari
+
+      - name: Export preview web bundle
+        working-directory: apps/akari
+        env:
+          APP_VARIANT: preview
+        run: |
+          set -euo pipefail
+          npm run build:preview -- --platform web --output-dir dist/web
+
+      - name: Deploy preview web bundle to Expo Hosting
+        working-directory: apps/akari
+        env:
+          APP_VARIANT: preview
+          EXPO_CLI_NO_PROMPT: 1
+          EXPO_NO_TELEMETRY: 1
+        run: |
+          set -euo pipefail
+          eas deploy --environment preview --alias pr-${{ github.event.pull_request.number }} --export-dir dist/web --non-interactive

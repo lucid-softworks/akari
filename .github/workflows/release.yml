@@ -85,7 +85,7 @@ jobs:
           EXPO_NO_TELEMETRY: 1
         run: |
           set -euo pipefail
-          expo deploy --prod --export-dir dist/web --non-interactive
+          eas deploy --prod --export-dir dist/web --non-interactive
 
       - name: Publish Android build to Play Store
         working-directory: apps/akari
