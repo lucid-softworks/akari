@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import HomeScreen from '@/app/(tabs)/index';
+import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
@@ -32,6 +33,8 @@ jest.mock('@/components/PostComposer', () => {
   };
 });
 
+let trendingPress: ((topic: string, link?: string) => void) | undefined;
+
 jest.mock('@/components/TabBar', () => {
   const React = require('react');
   const { Text, TouchableOpacity, View } = require('react-native');
@@ -46,6 +49,17 @@ jest.mock('@/components/TabBar', () => {
         ))}
       </View>
     ),
+  };
+});
+
+jest.mock('@/components/TrendingTopicsBar', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    TrendingTopicsBar: ({ onTopicPress }: any) => {
+      trendingPress = onTopicPress;
+      return <View testID="trending-bar" />;
+    },
   };
 });
 
@@ -94,6 +108,8 @@ const mockUseResponsive = useResponsive as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  trendingPress = undefined;
+  (router.push as jest.Mock).mockClear();
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
   mockUseCurrentAccount.mockReturnValue({ data: { did: 'did', handle: 'user' } });
@@ -202,6 +218,37 @@ describe('HomeScreen', () => {
     const { getByText } = render(<HomeScreen />);
 
     expect(getByText('feed.noPostsInFeed')).toBeTruthy();
+  });
+
+  it('navigates to search when a trending topic is pressed', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
+      isLoading: false,
+    });
+    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
+    mockUseFeed.mockReturnValue({
+      data: { pages: [{ feed: [] }] },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+
+    render(<HomeScreen />);
+
+    expect(trendingPress).toBeDefined();
+
+    trendingPress?.('#topic', '/search?q=%23topic');
+    expect(router.push).toHaveBeenCalledWith('/search?query=%23topic');
+
+    (router.push as jest.Mock).mockClear();
+
+    trendingPress?.('#fallback');
+    expect(router.push).toHaveBeenCalledWith('/search?query=%23fallback');
   });
 
   it('shows loading state while feeds are loading', () => {

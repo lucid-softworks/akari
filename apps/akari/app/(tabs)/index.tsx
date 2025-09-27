@@ -8,6 +8,7 @@ import type { BlueskyFeedItem } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
 import { TabBar } from '@/components/TabBar';
+import { TrendingTopicsBar } from '@/components/TrendingTopicsBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
@@ -122,6 +123,26 @@ export default function HomeScreen() {
     [scrollToTop, setSelectedFeedMutation],
   );
 
+  const handleTrendingTopicPress = useCallback((topic: string, link?: string) => {
+    if (link) {
+      try {
+        const parsedUrl = new URL(link, 'https://bsky.app');
+        const queryParam = parsedUrl.searchParams.get('q');
+
+        if (queryParam) {
+          router.push(`/search?query=${encodeURIComponent(queryParam)}`);
+          return;
+        }
+      } catch {
+        // Ignore malformed URLs and fall back to the topic string below.
+      }
+    }
+
+    if (topic) {
+      router.push(`/search?query=${encodeURIComponent(topic)}`);
+    }
+  }, []);
+
   // Get posts from selected feed
   const {
     data: feedData,
@@ -184,6 +205,7 @@ export default function HomeScreen() {
       if (item.type === 'header') {
         return (
           <ThemedView style={styles.listHeader}>
+            <TrendingTopicsBar onTopicPress={handleTrendingTopicPress} />
             <TabBar
               tabs={allFeedsWithCreated.map((feed) => ({
                 key: feed.uri,
@@ -257,7 +279,7 @@ export default function HomeScreen() {
         />
       );
     },
-    [allFeedsWithCreated, handleFeedSelection, selectedFeed, t],
+    [allFeedsWithCreated, handleFeedSelection, handleTrendingTopicPress, selectedFeed, t],
   );
 
   const keyExtractor = useCallback((item: FeedListItem) => {
@@ -341,6 +363,7 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     paddingBottom: 12,
+    gap: 12,
   },
   header: {
     alignItems: 'center',
