@@ -61,6 +61,7 @@ jobs:
           npm run build:preview -- --platform web --output-dir dist/web
 
       - name: Deploy preview web bundle to Expo Hosting
+        id: deploy_preview
         working-directory: apps/akari
         env:
           APP_VARIANT: preview
@@ -68,4 +69,45 @@ jobs:
           EXPO_NO_TELEMETRY: 1
         run: |
           set -euo pipefail
-          eas deploy --environment preview --alias pr-${{ github.event.pull_request.number }} --export-dir dist/web --non-interactive
+          tmpfile="$(mktemp)"
+          trap 'rm -f "$tmpfile"' EXIT
+          eas deploy --environment preview --alias pr-${{ github.event.pull_request.number }} --export-dir dist/web --non-interactive --json | tee "$tmpfile"
+          url=$(jq -r '
+            if type == "array" then
+              (.[0].deployment.url // .[0].deploymentUrl // .[0].url // empty)
+            else
+              (.deployment.url // .deploymentUrl // .url // empty)
+            end
+          ' "$tmpfile")
+          if [ -z "$url" ]; then
+            echo "Unable to locate Expo Hosting URL in deploy output" >&2
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment with Expo Hosting preview link
+        if: steps.deploy_preview.outputs.url != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) {
+              core.info('No pull request context detected; skipping comment.');
+              return;
+            }
+
+            const previewUrl = process.env.PREVIEW_URL;
+            if (!previewUrl) {
+              core.info('No Expo Hosting preview URL available; skipping comment.');
+              return;
+            }
+            const body = `🚀 Expo Hosting preview: ${previewUrl}`;
+
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body,
+            });
+        env:
+          PREVIEW_URL: ${{ steps.deploy_preview.outputs.url }}
