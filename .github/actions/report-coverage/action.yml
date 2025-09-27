@@ -1,0 +1,47 @@
+name: 'Report coverage'
+description: 'Uploads coverage artifacts and updates the pull request coverage comment'
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+  coverage-summary:
+    description: 'Path to the coverage summary JSON file'
+    required: false
+    default: ''
+  coverage-json:
+    description: 'Path to the Istanbul coverage-final.json file'
+    required: false
+    default: ''
+  lcov-path:
+    description: 'Path to the merged LCOV report file'
+    required: true
+  artifact-name:
+    description: 'Name for the uploaded coverage artifact'
+    required: false
+    default: ''
+  artifact-path:
+    description: 'Path to upload as the coverage artifact'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload coverage artifact
+      if: ${{ inputs.artifact-path != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name != '' && inputs.artifact-name || 'coverage-report' }}
+        path: ${{ inputs.artifact-path }}
+        if-no-files-found: warn
+    - name: Update coverage comment
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        COVERAGE_SUMMARY_PATH: ${{ inputs.coverage-summary }}
+        LCOV_PATH: ${{ inputs.lcov-path }}
+        COVERAGE_JSON_PATH: ${{ inputs.coverage-json }}
+        ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_API_URL: ${{ github.api_url }}
+      run: node "$GITHUB_ACTION_PATH/report-coverage.mjs"
