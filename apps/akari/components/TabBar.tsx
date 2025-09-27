@@ -1,9 +1,9 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useBorderColor } from "@/hooks/useBorderColor";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 /**
  * Tab item configuration
@@ -28,16 +28,20 @@ type TabBarProps<T extends string> = {
 /**
  * Reusable tab bar component using scrollable layout with profile-style indicators
  */
-export function TabBar<T extends string>({
-  tabs,
-  activeTab,
-  onTabChange,
-}: TabBarProps<T>) {
+export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChange }: TabBarProps<T>) {
   const borderColor = useBorderColor();
-  const surfaceColor = useThemeColor({ light: "#FFFFFF", dark: "#0F1115" }, "background");
-  const inactiveTextColor = useThemeColor({ light: "#6B7280", dark: "#9CA3AF" }, "text");
-  const activeTextColor = useThemeColor({ light: "#111827", dark: "#F4F4F5" }, "text");
-  const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
+  const surfaceColor = useThemeColor({ light: '#FFFFFF', dark: '#0F1115' }, 'background');
+  const inactiveTextColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const activeTextColor = useThemeColor({ light: '#111827', dark: '#F4F4F5' }, 'text');
+  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+
+  const tabs = tabsProp.reduce((acc, tab) => {
+    if (acc.find((t) => t.key === tab.key)) {
+      return acc;
+    }
+    acc.push(tab);
+    return acc;
+  }, [] as TabItem<T>[]);
 
   return (
     <ThemedView
@@ -49,11 +53,7 @@ export function TabBar<T extends string>({
         },
       ]}
     >
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.key;
           const isLast = index === tabs.length - 1;
@@ -69,7 +69,7 @@ export function TabBar<T extends string>({
               style={[
                 styles.tab,
                 !isLast ? styles.tabSpacing : undefined,
-                { borderBottomColor: isActive ? accentColor : "transparent" },
+                { borderBottomColor: isActive ? accentColor : 'transparent' },
               ]}
             >
               <ThemedText
@@ -77,7 +77,7 @@ export function TabBar<T extends string>({
                   styles.tabText,
                   {
                     color: isActive ? activeTextColor : inactiveTextColor,
-                    fontWeight: isActive ? "600" : "500",
+                    fontWeight: isActive ? '600' : '500',
                   },
                 ]}
               >
@@ -93,13 +93,13 @@ export function TabBar<T extends string>({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
     paddingTop: 8,
     paddingBottom: 4,
     paddingHorizontal: 12,
     marginBottom: 12,
-    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 4,
@@ -107,17 +107,17 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   scrollContent: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     paddingBottom: 4,
   },
   tab: {
     paddingVertical: 10,
     paddingHorizontal: 4,
     borderBottomWidth: 3,
-    borderBottomColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
+    borderBottomColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabSpacing: {
     marginRight: 24,
