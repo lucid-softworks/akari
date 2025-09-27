@@ -406,9 +406,8 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
-  const contentContainerStyle = useMemo(() => [styles.listContent], []);
-  const screenHeaderStyle = useMemo(
-    () => [styles.screenHeader, { paddingTop: isLargeScreen ? 0 : insets.top }],
+  const contentContainerStyle = useMemo(
+    () => [styles.listContent, { paddingTop: isLargeScreen ? 0 : insets.top }],
     [insets.top, isLargeScreen],
   );
 
@@ -452,6 +451,18 @@ export default function NotificationsScreen() {
     </View>
   ), [error?.message, t]);
 
+  const listHeaderComponent = useMemo(
+    () => (
+      <ThemedView style={styles.listHeader}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+        </ThemedView>
+        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+      </ThemedView>
+    ),
+    [activeTab, borderColor, handleTabChange, tabs, t],
+  );
+
   const listEmptyComponent = useMemo(() => {
     if (isLoading) {
       return (
@@ -492,13 +503,6 @@ export default function NotificationsScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={screenHeaderStyle}>
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-        </ThemedView>
-        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
-      </ThemedView>
-
       <VirtualizedList
         ref={listRef}
         data={filteredNotifications}
@@ -506,14 +510,16 @@ export default function NotificationsScreen() {
         keyExtractor={keyExtractor}
         estimatedItemSize={160}
         overscan={2}
+        ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
         ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={contentContainerStyle}
-        style={styles.list}
+        style={[styles.list, { paddingTop: 0 }]}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
+        stickyHeaderIndices={[0]}
       />
     </ThemedView>
   );
@@ -529,7 +535,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
   },
-  screenHeader: {
+  listHeader: {
     paddingBottom: 12,
   },
   header: {
