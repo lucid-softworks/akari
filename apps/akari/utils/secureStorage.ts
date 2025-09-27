@@ -1,3 +1,4 @@
+import type { PersistedClient } from '@tanstack/react-query-persist-client';
 import { Account } from '@/types/account';
 import { Platform } from 'react-native';
 import { MMKV } from 'react-native-mmkv';
@@ -17,7 +18,10 @@ type Data = {
   jwtToken: string;
   refreshToken: string;
   selectedFeed: string;
+  reactQueryCache: PersistedClient;
 };
+
+export const REACT_QUERY_CACHE_STORAGE_KEY: keyof Data = 'reactQueryCache';
 
 export const storage = {
   getItem: <K extends keyof Data>(key: K): Data[K] | null => {
