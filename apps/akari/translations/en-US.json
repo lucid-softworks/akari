@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Describe this image for accessibility...",
       "actions": {
         "translate": "Translate",
+        "summarizeThread": "Summarize thread",
         "copyText": "Copy post text",
         "showMoreLikeThis": "Show more like this",
         "showLessLikeThis": "Show less like this",
@@ -255,6 +256,14 @@
         "selectLanguage": "Select language",
         "noText": "This post has no text to translate.",
         "error": "We couldn't translate this post. Please try again."
+      },
+      "summary": {
+        "title": "Thread summary",
+        "generating": "Generating summary...",
+        "unavailable": "Apple Intelligence isn't available on this device yet.",
+        "noText": "We couldn't find any text to summarize in this thread.",
+        "error": "We couldn't summarize this thread. Please try again.",
+        "retry": "Try again"
       }
     },
     "messages": {

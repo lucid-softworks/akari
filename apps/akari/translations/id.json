@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Deskripsikan gambar ini untuk aksesibilitas...",
       "actions": {
         "translate": "Terjemahkan",
+        "summarizeThread": "Ringkas utas",
         "copyText": "Salin teks postingan",
         "showMoreLikeThis": "Tampilkan lebih banyak seperti ini",
         "showLessLikeThis": "Tampilkan lebih sedikit seperti ini",
@@ -255,6 +256,14 @@
         "selectLanguage": "Pilih bahasa",
         "noText": "Postingan ini tidak memiliki teks untuk diterjemahkan.",
         "error": "Kami tidak dapat menerjemahkan postingan ini. Silakan coba lagi."
+      },
+      "summary": {
+        "title": "Ringkasan utas",
+        "generating": "Membuat ringkasan...",
+        "unavailable": "Apple Intelligence belum tersedia di perangkat ini.",
+        "noText": "Kami tidak dapat menemukan teks apa pun untuk diringkas dalam utas ini.",
+        "error": "Kami tidak dapat merangkum utas ini. Silakan coba lagi.",
+        "retry": "Coba lagi"
       }
     },
     "messages": {

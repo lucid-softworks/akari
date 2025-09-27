@@ -239,6 +239,7 @@
       "selectPhoto": "Seleccionar foto de la galería",
       "actions": {
         "translate": "Traducir",
+        "summarizeThread": "Resumir hilo",
         "copyText": "Copiar texto de la publicación",
         "showMoreLikeThis": "Mostrar más como esto",
         "showLessLikeThis": "Mostrar menos como esto",
@@ -255,6 +256,14 @@
         "selectLanguage": "Seleccionar idioma",
         "noText": "Esta publicación no tiene texto para traducir.",
         "error": "No pudimos traducir esta publicación. Inténtalo de nuevo."
+      },
+      "summary": {
+        "title": "Resumen del hilo",
+        "generating": "Generando resumen...",
+        "unavailable": "Apple Intelligence aún no está disponible en este dispositivo.",
+        "noText": "No hemos podido encontrar ningún texto para resumir en este hilo.",
+        "error": "No hemos podido resumir este hilo. Inténtalo de nuevo.",
+        "retry": "Intentar de nuevo"
       }
     },
     "gif": {

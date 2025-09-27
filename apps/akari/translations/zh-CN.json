@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "请为无障碍功能描述此图像...",
       "actions": {
         "translate": "翻译",
+        "summarizeThread": "总结讨论串",
         "copyText": "复制帖子文字",
         "showMoreLikeThis": "显示更多类似内容",
         "showLessLikeThis": "显示较少类似内容",
@@ -255,6 +256,14 @@
         "selectLanguage": "选择语言",
         "noText": "此帖子没有可翻译的文本。",
         "error": "我们无法翻译此帖子。请重试。"
+      },
+      "summary": {
+        "title": "讨论串摘要",
+        "generating": "正在生成摘要...",
+        "unavailable": "Apple Intelligence 尚未在此设备上提供。",
+        "noText": "我们在此讨论串中找不到可供总结的文本。",
+        "error": "我们无法总结此讨论串。请重试。",
+        "retry": "再试一次"
       }
     },
     "messages": {

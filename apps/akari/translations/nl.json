@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Beschrijf deze afbeelding voor toegankelijkheid...",
       "actions": {
         "translate": "Vertalen",
+        "summarizeThread": "Discussie samenvatten",
         "copyText": "Berichttekst kopiëren",
         "showMoreLikeThis": "Meer zoals deze weergeven",
         "showLessLikeThis": "Minder zoals deze weergeven",
@@ -255,6 +256,14 @@
         "selectLanguage": "Taal kiezen",
         "noText": "Dit bericht bevat geen tekst om te vertalen.",
         "error": "We konden dit bericht niet vertalen. Probeer het opnieuw."
+      },
+      "summary": {
+        "title": "Samenvatting van de thread",
+        "generating": "Samenvatting wordt gegenereerd...",
+        "unavailable": "Apple Intelligence is nog niet beschikbaar op dit apparaat.",
+        "noText": "We konden in deze thread geen tekst vinden om samen te vatten.",
+        "error": "We konden deze thread niet samenvatten. Probeer het opnieuw.",
+        "retry": "Probeer het opnieuw"
       }
     },
     "messages": {

@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Beschreiben Sie dieses Bild für die Barrierefreiheit...",
       "actions": {
         "translate": "Übersetzen",
+        "summarizeThread": "Thread zusammenfassen",
         "copyText": "Beitragstext kopieren",
         "showMoreLikeThis": "Mehr wie diesen anzeigen",
         "showLessLikeThis": "Weniger wie diesen anzeigen",
@@ -255,6 +256,14 @@
         "selectLanguage": "Sprache auswählen",
         "noText": "Dieser Beitrag enthält keinen zu übersetzenden Text.",
         "error": "Dieser Beitrag konnte nicht übersetzt werden. Bitte versuche es erneut."
+      },
+      "summary": {
+        "title": "Thread-Zusammenfassung",
+        "generating": "Zusammenfassung wird erstellt...",
+        "unavailable": "Apple Intelligence ist auf diesem Gerät noch nicht verfügbar.",
+        "noText": "Wir konnten keinen Text finden, der in diesem Thread zusammengefasst werden könnte.",
+        "error": "Wir konnten diesen Thread nicht zusammenfassen. Bitte versuchen Sie es erneut.",
+        "retry": "Erneut versuchen"
       }
     },
     "messages": {

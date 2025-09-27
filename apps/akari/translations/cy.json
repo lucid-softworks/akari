@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Disgrifiwch y ddelwedd hon ar gyfer hygyrchedd...",
       "actions": {
         "translate": "Cyfieithu",
+        "summarizeThread": "Crynhowch yr edefyn",
         "copyText": "Copïo testun y cofnod",
         "showMoreLikeThis": "Dangos mwy fel hyn",
         "showLessLikeThis": "Dangos llai fel hyn",
@@ -255,6 +256,14 @@
         "selectLanguage": "Dewis iaith",
         "noText": "Nid oes testun i'w gyfieithu yn y cofnod hwn.",
         "error": "Methwyd cyfieithu'r cofnod hwn. Ceisiwch eto."
+      },
+      "summary": {
+        "title": "Crynodeb edefyn",
+        "generating": "Creu crynodeb...",
+        "unavailable": "Nid yw Apple Intelligence ar gael ar y ddyfais hon eto.",
+        "noText": "Ni allem ddod o hyd i unrhyw destun i'w grynhoi yn yr edefyn hwn.",
+        "error": "Ni allem grynhoi'r edefyn hwn. Ceisiwch eto.",
+        "retry": "Ceisiwch eto"
       }
     },
     "messages": {

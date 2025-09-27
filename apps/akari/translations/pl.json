@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Opisz ten obraz dla dostępności...",
       "actions": {
         "translate": "Przetłumacz",
+        "summarizeThread": "Podsumuj wątek",
         "copyText": "Kopiuj tekst wpisu",
         "showMoreLikeThis": "Pokaż więcej podobnych",
         "showLessLikeThis": "Pokaż mniej podobnych",
@@ -255,6 +256,14 @@
         "selectLanguage": "Wybierz język",
         "noText": "Ten wpis nie zawiera tekstu do przetłumaczenia.",
         "error": "Nie udało się przetłumaczyć tego wpisu. Spróbuj ponownie."
+      },
+      "summary": {
+        "title": "Podsumowanie wątku",
+        "generating": "Generowanie podsumowania...",
+        "unavailable": "Apple Intelligence nie jest jeszcze dostępne na tym urządzeniu.",
+        "noText": "Nie mogliśmy znaleźć żadnego tekstu do podsumowania w tym wątku.",
+        "error": "Nie mogliśmy podsumować tego wątku. Spróbuj ponownie.",
+        "retry": "Spróbuj ponownie"
       }
     },
     "messages": {

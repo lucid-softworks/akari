@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Erişilebilirlik için bu görseli açıklayın...",
       "actions": {
         "translate": "Çevir",
+        "summarizeThread": "Konuyu özetle",
         "copyText": "Gönderi metnini kopyala",
         "showMoreLikeThis": "Buna benzer daha fazlasını göster",
         "showLessLikeThis": "Buna benzer daha azını göster",
@@ -255,6 +256,14 @@
         "selectLanguage": "Dil seç",
         "noText": "Bu gönderide çevrilecek metin yok.",
         "error": "Bu gönderiyi çeviremedik. Lütfen yeniden deneyin."
+      },
+      "summary": {
+        "title": "Konu özeti",
+        "generating": "Özet oluşturuluyor...",
+        "unavailable": "Apple Intelligence henüz bu cihazda kullanılamıyor.",
+        "noText": "Bu başlıkta özetlenecek bir metin bulamadık.",
+        "error": "Bu ileti dizisini özetleyemedik. Lütfen tekrar deneyin.",
+        "retry": "Tekrar deneyin"
       }
     },
     "messages": {

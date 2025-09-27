@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Mô tả hình ảnh này để hỗ trợ khả năng tiếp cận...",
       "actions": {
         "translate": "Dịch",
+        "summarizeThread": "Tóm tắt chủ đề",
         "copyText": "Sao chép nội dung bài đăng",
         "showMoreLikeThis": "Hiển thị thêm nội dung tương tự",
         "showLessLikeThis": "Hiển thị ít nội dung tương tự",
@@ -255,6 +256,14 @@
         "selectLanguage": "Chọn ngôn ngữ",
         "noText": "Bài đăng này không có nội dung để dịch.",
         "error": "Chúng tôi không thể dịch bài đăng này. Vui lòng thử lại."
+      },
+      "summary": {
+        "title": "Tóm tắt chủ đề",
+        "generating": "Đang tạo bản tóm tắt...",
+        "unavailable": "Apple Intelligence chưa khả dụng trên thiết bị này.",
+        "noText": "Chúng tôi không tìm thấy văn bản nào để tóm tắt trong chuỗi này.",
+        "error": "Chúng tôi không thể tóm tắt chủ đề này. Vui lòng thử lại.",
+        "retry": "Thử lại"
       }
     },
     "messages": {

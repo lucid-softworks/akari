@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "Descreva esta imagem para acessibilidade...",
       "actions": {
         "translate": "Traduzir",
+        "summarizeThread": "Resumir thread",
         "copyText": "Copiar texto da publicação",
         "showMoreLikeThis": "Mostrar mais como este",
         "showLessLikeThis": "Mostrar menos como este",
@@ -255,6 +256,14 @@
         "selectLanguage": "Selecionar idioma",
         "noText": "Esta publicação não tem texto para traduzir.",
         "error": "Não conseguimos traduzir esta publicação. Tente novamente."
+      },
+      "summary": {
+        "title": "Resumo da thread",
+        "generating": "Gerando resumo...",
+        "unavailable": "O Apple Intelligence ainda não está disponível neste dispositivo.",
+        "noText": "Não encontramos nenhum texto para resumir nesta thread.",
+        "error": "Não conseguimos resumir esta thread. Tente novamente.",
+        "retry": "Tentar novamente"
       }
     },
     "messages": {

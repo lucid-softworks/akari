@@ -30,6 +30,7 @@ import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
+import { useSummarizeThread } from '@/hooks/mutations/useSummarizeThread';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -172,6 +173,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
   const translationMutation = usePostTranslation();
+  const summaryMutation = useSummarizeThread();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const menuButtonRef = useRef<TouchableOpacity | null>(null);
@@ -185,8 +187,12 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const [selectedLanguage, setSelectedLanguage] = useState(() =>
     resolveLanguageCode(currentLocale, DEFAULT_LIBRETRANSLATE_LANGUAGES),
   );
+  const [isSummaryVisible, setIsSummaryVisible] = useState(false);
+  const [summaryText, setSummaryText] = useState<string | null>(null);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
 
+  const postUri = post.uri ?? post.id;
   const { data: liveNowEntries = [] } = useLiveNow();
 
   const liveExternalEmbed = useMemo<ExternalLiveEmbed | null>(() => {
@@ -283,6 +289,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
       domain: normalizedHost,
     };
   }, [liveNowEntries, liveExternalEmbed, post.author.did]);
+
+  useEffect(() => {
+    setIsSummaryVisible(false);
+    setSummaryText(null);
+    setSummaryError(null);
+    summaryMutation.reset();
+  }, [postUri, summaryMutation]);
 
   const liveStreamUri = liveStreamInfo?.uri;
   const isLive = Boolean(liveStreamInfo);
@@ -381,6 +394,38 @@ export function PostCard({ post, onPress }: PostCardProps) {
     'background',
   );
 
+  const summaryBackgroundColor = useThemeColor(
+    {
+      light: '#f6f6f6',
+      dark: '#181a1d',
+    },
+    'background',
+  );
+
+  const summaryBorderColor = useThemeColor(
+    {
+      light: 'rgba(0, 0, 0, 0.08)',
+      dark: 'rgba(255, 255, 255, 0.12)',
+    },
+    'background',
+  );
+
+  const summaryTextColor = useThemeColor(
+    {
+      light: '#1d1d1f',
+      dark: '#f2f2f7',
+    },
+    'text',
+  );
+
+  const summaryErrorColor = useThemeColor(
+    {
+      light: '#b00020',
+      dark: '#ff453a',
+    },
+    'text',
+  );
+
   const modalBackgroundColor = useThemeColor(
     {
       light: '#ffffff',
@@ -391,6 +436,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   const canTranslate = Boolean(post.text && post.text.trim());
   const isTranslating = translationMutation.isPending;
+  const isSummarizing = summaryMutation.isPending;
 
   const menuStyle = useMemo(() => {
     const fallbackPosition = { top: 16, right: 16 };
@@ -540,9 +586,85 @@ export function PostCard({ post, onPress }: PostCardProps) {
     translationMutation.isPending,
   ]);
 
+  const getSummaryErrorMessage = useCallback(
+    (error: unknown) => {
+      if (error instanceof Error) {
+        if (error.message === 'appleUnavailable') {
+          return t('post.summary.unavailable');
+        }
+
+        if (error.message === 'noText') {
+          return t('post.summary.noText');
+        }
+      }
+
+      return t('post.summary.error');
+    },
+    [t],
+  );
+
+  const runSummary = useCallback(() => {
+    if (!postUri || summaryMutation.isPending) {
+      return;
+    }
+
+    setSummaryError(null);
+
+    summaryMutation
+      .mutateAsync({ postUri })
+      .then(({ summary }) => {
+        setSummaryText(summary);
+        setSummaryError(null);
+      })
+      .catch((error) => {
+        setSummaryText(null);
+        setSummaryError(getSummaryErrorMessage(error));
+      });
+  }, [getSummaryErrorMessage, postUri, summaryMutation]);
+
+  const handleSummarizePress = useCallback(() => {
+    setShowActionsMenu(false);
+
+    if (!postUri) {
+      setIsSummaryVisible(true);
+      setSummaryError(t('post.summary.noText'));
+      return;
+    }
+
+    setIsSummaryVisible(true);
+
+    if (summaryText || summaryMutation.isPending) {
+      return;
+    }
+
+    runSummary();
+  }, [postUri, runSummary, summaryMutation.isPending, summaryText, t]);
+
+  const handleHideSummary = useCallback(() => {
+    setIsSummaryVisible(false);
+  }, []);
+
+  const handleRetrySummary = useCallback(() => {
+    if (!postUri) {
+      setSummaryError(t('post.summary.noText'));
+      return;
+    }
+
+    setSummaryText(null);
+    setSummaryError(null);
+    summaryMutation.reset();
+    runSummary();
+  }, [postUri, runSummary, summaryMutation, t]);
+
   const menuActions = useMemo<PostMenuItem[]>(
     () => [
       { key: 'translate', label: t('post.actions.translate'), onPress: handleTranslatePress, disabled: !canTranslate },
+      {
+        key: 'summarizeThread',
+        label: t('post.actions.summarizeThread'),
+        onPress: handleSummarizePress,
+        disabled: !postUri,
+      },
       { key: 'copyText', label: t('post.actions.copyText'), onPress: () => handlePlaceholderAction('copyText') },
       { key: 'separator-1', type: 'separator' },
       {
@@ -585,7 +707,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
         destructive: true,
       },
     ],
-    [canTranslate, handlePlaceholderAction, handleTranslatePress, t],
+    [canTranslate, handlePlaceholderAction, handleSummarizePress, handleTranslatePress, postUri, t],
   );
 
   const handleProfilePress = () => {
@@ -1100,6 +1222,59 @@ export function PostCard({ post, onPress }: PostCardProps) {
       <ThemedView style={styles.content}>
         <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
 
+        {isSummaryVisible && (
+          <ThemedView
+            style={[
+              styles.summaryContainer,
+              { backgroundColor: summaryBackgroundColor, borderColor: summaryBorderColor },
+            ]}
+          >
+            <View style={styles.summaryHeader}>
+              <ThemedText style={styles.summaryTitle}>{t('post.summary.title')}</ThemedText>
+              <TouchableOpacity
+                onPress={handleHideSummary}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.hide')}
+                activeOpacity={0.6}
+              >
+                <ThemedText style={[styles.summaryHide, { color: iconColor }]}>
+                  {t('common.hide')}
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.summaryContent}>
+              {isSummarizing ? (
+                <View style={styles.summaryLoading}>
+                  <ActivityIndicator size="small" color={iconColor} />
+                  <ThemedText style={[styles.summaryLoadingLabel, { color: summaryTextColor }]}>
+                    {t('post.summary.generating')}
+                  </ThemedText>
+                </View>
+              ) : summaryError ? (
+                <View style={styles.summaryErrorContainer}>
+                  <ThemedText style={[styles.summaryError, { color: summaryErrorColor }]}>
+                    {summaryError}
+                  </ThemedText>
+                  <TouchableOpacity
+                    onPress={handleRetrySummary}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('post.summary.retry')}
+                    activeOpacity={0.7}
+                  >
+                    <ThemedText style={[styles.summaryRetry, { color: iconColor }]}>
+                      {t('post.summary.retry')}
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
+              ) : summaryText ? (
+                <ThemedText style={[styles.summaryText, { color: summaryTextColor }]}>
+                  {summaryText}
+                </ThemedText>
+              ) : null}
+            </View>
+          </ThemedView>
+        )}
+
         {isTranslationVisible && (
           <ThemedView
             style={[styles.translationContainer, { backgroundColor: translationBackgroundColor, borderColor }]}
@@ -1573,6 +1748,53 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 8,
+  },
+  summaryContainer: {
+    borderWidth: 1,
+    marginTop: 12,
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 16,
+    gap: 12,
+  },
+  summaryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  summaryTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  summaryHide: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  summaryContent: {
+    gap: 12,
+  },
+  summaryLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  summaryLoadingLabel: {
+    fontSize: 15,
+  },
+  summaryText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  summaryErrorContainer: {
+    gap: 8,
+  },
+  summaryError: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  summaryRetry: {
+    fontSize: 15,
+    fontWeight: '600',
   },
   translationContainer: {
     borderWidth: 1,

@@ -239,6 +239,7 @@
       "imageAltTextPlaceholder": "請描述此圖片以利無障礙使用...",
       "actions": {
         "translate": "翻譯",
+        "summarizeThread": "摘要討論串",
         "copyText": "複製貼文文字",
         "showMoreLikeThis": "顯示更多類似內容",
         "showLessLikeThis": "顯示較少類似內容",
@@ -255,6 +256,14 @@
         "selectLanguage": "選擇語言",
         "noText": "此貼文沒有可供翻譯的文字。",
         "error": "無法翻譯此貼文。請再試一次。"
+      },
+      "summary": {
+        "title": "討論串摘要",
+        "generating": "正在生成摘要...",
+        "unavailable": "Apple Intelligence 尚未在此裝置上提供。",
+        "noText": "在此討論串中找不到可供摘要的文字。",
+        "error": "我們無法摘要此討論串。請再試一次。",
+        "retry": "再試一次"
       }
     },
     "messages": {

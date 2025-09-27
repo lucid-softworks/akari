@@ -239,6 +239,7 @@
       "selectPhoto": "ギャラリーから写真を選択",
       "actions": {
         "translate": "翻訳する",
+        "summarizeThread": "スレッドを要約する",
         "copyText": "投稿のテキストをコピー",
         "showMoreLikeThis": "このような投稿をもっと表示",
         "showLessLikeThis": "このような投稿を減らす",
@@ -255,6 +256,14 @@
         "selectLanguage": "言語を選択",
         "noText": "この投稿には翻訳するテキストがありません。",
         "error": "この投稿を翻訳できませんでした。もう一度お試しください。"
+      },
+      "summary": {
+        "title": "スレッドの要約",
+        "generating": "要約を生成しています...",
+        "unavailable": "Apple Intelligenceはこのデバイスではまだ利用できません。",
+        "noText": "このスレッドに要約できるテキストが見つかりませんでした。",
+        "error": "このスレッドを要約できませんでした。もう一度お試しください。",
+        "retry": "もう一度試す"
       }
     },
     "messages": {
