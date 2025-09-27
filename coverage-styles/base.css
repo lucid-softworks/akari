@@ -17,6 +17,12 @@
   --cover-empty-bg: white;
   --comment-color: #999;
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --delta-increase-bg: rgba(34, 197, 94, 0.15);
+  --delta-increase-text: #0f7b36;
+  --delta-decrease-bg: rgba(239, 68, 68, 0.15);
+  --delta-decrease-text: #a61b1b;
+  --delta-neutral-bg: rgba(107, 114, 128, 0.15);
+  --delta-neutral-text: #374151;
 }
 
 /* Dark mode colors */
@@ -39,6 +45,12 @@
     --cover-empty-bg: #2a2a2a;
     --comment-color: #888;
     --shadow-color: rgba(0, 0, 0, 0.3);
+    --delta-increase-bg: rgba(34, 197, 94, 0.2);
+    --delta-increase-text: #4ade80;
+    --delta-decrease-bg: rgba(248, 113, 113, 0.2);
+    --delta-decrease-text: #fca5a5;
+    --delta-neutral-bg: rgba(148, 163, 184, 0.2);
+    --delta-neutral-text: #e2e8f0;
   }
 }
 
@@ -461,6 +473,34 @@ span.cline-neutral {
   padding-bottom: 4px;
   line-height: 1;
   color: var(--empty-color);
+}
+
+.coverage-delta-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  background-color: var(--delta-neutral-bg);
+  color: var(--delta-neutral-text);
+  border: 1px solid transparent;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.coverage-delta-chip--increase {
+  background-color: var(--delta-increase-bg);
+  color: var(--delta-increase-text);
+}
+
+.coverage-delta-chip--decrease {
+  background-color: var(--delta-decrease-bg);
+  color: var(--delta-decrease-text);
 }
 
 .cover-fill,

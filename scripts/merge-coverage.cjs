@@ -295,6 +295,8 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
 
   reports.create('html', { skipEmpty: false, skipFull: false }).execute(context);
 
+  injectCoverageDeltasIntoHtml(coverageDir, workspaceTree, deltaSummaryMap);
+
   saveCoverageSummarySnapshot(summarySnapshotPath, currentSummaryMap);
   copyCoverageStyles(coverageDir);
 }
@@ -1263,4 +1265,292 @@ function roundTo(value, precision) {
 
   const factor = 10 ** precision;
   return Math.round(value * factor) / factor;
+}
+
+function injectCoverageDeltasIntoHtml(coverageDir, workspaceTree, deltaMap) {
+  if (!coverageDir || !workspaceTree || !deltaMap) {
+    return;
+  }
+
+  const root = workspaceTree.getRoot();
+  if (!root) {
+    return;
+  }
+
+  const nodes = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) {
+      continue;
+    }
+    nodes.push(current);
+    const children = current.getChildren();
+    if (Array.isArray(children) && children.length > 0) {
+      for (const child of children) {
+        stack.push(child);
+      }
+    }
+  }
+
+  for (const node of nodes) {
+    const payload = createDeltaInjectionPayload(node, deltaMap);
+    if (!payload) {
+      continue;
+    }
+
+    const htmlRelativePath = getNodeHtmlRelativePath(node);
+    if (!htmlRelativePath) {
+      continue;
+    }
+
+    const targetPath = path.join(coverageDir, htmlRelativePath);
+    if (!fs.existsSync(targetPath)) {
+      continue;
+    }
+
+    const scriptBlock = renderDeltaInjectionBlock(payload);
+    injectCoverageDeltaIntoFile(targetPath, scriptBlock);
+  }
+}
+
+function createDeltaInjectionPayload(node, deltaMap) {
+  if (!node) {
+    return null;
+  }
+
+  const key = node.getQualifiedName() || '';
+  const deltaEntry = sanitizeDeltaEntryForInjection(deltaMap?.get(key));
+
+  const childrenPayload = [];
+  const children = node.getChildren();
+  if (Array.isArray(children) && children.length > 0) {
+    const parentHtmlPath = getNodeHtmlRelativePath(node);
+    const parentDir = parentHtmlPath ? path.posix.dirname(parentHtmlPath) : '.';
+
+    for (const child of children) {
+      const childKey = child.getQualifiedName() || '';
+      const childDelta = sanitizeDeltaEntryForInjection(deltaMap?.get(childKey));
+      if (!childDelta) {
+        continue;
+      }
+
+      const childPath = getNodeHtmlRelativePath(child);
+      if (!childPath) {
+        continue;
+      }
+
+      const href = path.posix.relative(parentDir, childPath);
+      childrenPayload.push({ href, delta: childDelta });
+    }
+  }
+
+  if (!deltaEntry && childrenPayload.length === 0) {
+    return null;
+  }
+
+  return {
+    delta: deltaEntry,
+    children: childrenPayload,
+  };
+}
+
+function getNodeHtmlRelativePath(node) {
+  if (!node) {
+    return null;
+  }
+
+  const key = node.getQualifiedName() || '';
+  if (node.isSummary()) {
+    if (!key) {
+      return 'index.html';
+    }
+    return `${key}/index.html`;
+  }
+
+  return `${key}.html`;
+}
+
+function sanitizeDeltaEntryForInjection(deltaEntry) {
+  if (!deltaEntry) {
+    return null;
+  }
+
+  const sanitized = {};
+  let hasValue = false;
+
+  for (const metricKey of METRIC_KEYS) {
+    const metric = deltaEntry[metricKey];
+    if (!metric || !Number.isFinite(metric.pct)) {
+      continue;
+    }
+
+    const pct = roundTo(metric.pct, 2);
+    if (!pct) {
+      continue;
+    }
+
+    sanitized[metricKey] = { pct };
+    hasValue = true;
+  }
+
+  return hasValue ? sanitized : null;
+}
+
+function renderDeltaInjectionBlock(payload) {
+  const json = JSON.stringify(payload);
+  const escapedJson = escapeForScriptTag(json);
+  const runtime = `
+(function() {
+  const dataElement = document.getElementById('coverage-delta-data');
+  if (!dataElement) {
+    return;
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(dataElement.textContent || '{}');
+  } catch (error) {
+    return;
+  }
+
+  dataElement.parentNode && dataElement.parentNode.removeChild(dataElement);
+
+  var METRIC_KEYS = ['statements', 'branches', 'functions', 'lines'];
+
+  function formatDeltaText(value) {
+    if (typeof value !== 'number' || !isFinite(value)) {
+      return null;
+    }
+
+    if (value === 0) {
+      return null;
+    }
+
+    var sign = value > 0 ? '+' : '';
+    return sign + value.toFixed(2) + '%';
+  }
+
+  function createChip(delta) {
+    if (!delta || typeof delta.pct !== 'number' || !isFinite(delta.pct) || delta.pct === 0) {
+      return null;
+    }
+
+    var text = formatDeltaText(delta.pct);
+    if (!text) {
+      return null;
+    }
+
+    var chip = document.createElement('span');
+    chip.className = 'coverage-delta-chip ' + (delta.pct > 0 ? 'coverage-delta-chip--increase' : 'coverage-delta-chip--decrease');
+    chip.textContent = text;
+    return chip;
+  }
+
+  function appendChip(container, delta) {
+    if (!container) {
+      return;
+    }
+
+    var chip = createChip(delta);
+    if (!chip) {
+      return;
+    }
+
+    container.appendChild(chip);
+  }
+
+  if (payload.delta) {
+    var headerMetrics = document.querySelectorAll('.pad1 .clearfix .fl.pad1y');
+    METRIC_KEYS.forEach(function(metric, index) {
+      var container = headerMetrics[index];
+      if (!container) {
+        return;
+      }
+
+      appendChip(container, payload.delta[metric]);
+    });
+  }
+
+  if (Array.isArray(payload.children) && payload.children.length > 0) {
+    var rows = document.querySelectorAll('.coverage-summary tbody tr');
+    var childByHref = {};
+
+    payload.children.forEach(function(child) {
+      if (child && typeof child.href === 'string') {
+        childByHref[child.href] = child;
+        try {
+          childByHref[encodeURI(child.href)] = child;
+        } catch (error) {
+          /* no-op */
+        }
+      }
+    });
+
+    rows.forEach(function(row) {
+      var link = row.querySelector('a[href]');
+      if (!link) {
+        return;
+      }
+
+      var href = link.getAttribute('href') || '';
+      if (!href) {
+        return;
+      }
+
+      var child = childByHref[href];
+      if (!child || !child.delta) {
+        return;
+      }
+
+      var cells = row.querySelectorAll('td.pct');
+      METRIC_KEYS.forEach(function(metric, index) {
+        var cell = cells[index];
+        if (!cell) {
+          return;
+        }
+
+        appendChip(cell, child.delta[metric]);
+      });
+    });
+  }
+})();
+`.trim();
+
+  return [
+    '<script id="coverage-delta-data" type="application/json">',
+    escapedJson,
+    '</script>',
+    '<script>',
+    runtime,
+    '</script>',
+  ].join('\n');
+}
+
+function injectCoverageDeltaIntoFile(filePath, scriptBlock) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const startMarker = '<!-- coverage-delta:begin -->';
+  const endMarker = '<!-- coverage-delta:end -->';
+
+  const pattern = new RegExp(`${startMarker}[\s\S]*?${endMarker}\n?`, 'g');
+  let updated = content.replace(pattern, '');
+
+  const injection = `${startMarker}\n${scriptBlock}\n${endMarker}`;
+
+  if (updated.includes('</body>')) {
+    updated = updated.replace('</body>', `${injection}\n</body>`);
+  } else {
+    updated = `${updated}\n${injection}`;
+  }
+
+  fs.writeFileSync(filePath, updated);
+}
+
+function escapeForScriptTag(raw) {
+  if (typeof raw !== 'string') {
+    return '';
+  }
+
+  return raw.replace(/<\/script>/gi, '<\\/script>');
 }
