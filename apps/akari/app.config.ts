@@ -55,10 +55,7 @@ const resolveVariant = (): AppVariant => {
   return DEFAULT_VARIANT;
 };
 
-const createConfigForVariant = (
-  variant: AppVariant,
-  baseConfig: ExpoConfig,
-): Partial<ExpoConfig> => {
+const createConfigForVariant = (variant: AppVariant, baseConfig: ExpoConfig): Partial<ExpoConfig> => {
   const variantDefinition = VARIANT_DEFINITIONS[variant];
 
   const slug = baseConfig.slug ?? FALLBACK_SLUG;
@@ -87,18 +84,14 @@ const createConfigForVariant = (
   } satisfies Partial<ExpoConfig>;
 };
 
-export default ({ config }: ConfigContext): ExpoConfig => {
+export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
   const variant = resolveVariant();
   const variantConfig = createConfigForVariant(variant, config as ExpoConfig);
   const rawCommitSha = process.env.EXPO_PUBLIC_COMMIT_SHA?.trim();
   const commitSha = rawCommitSha && rawCommitSha.length > 0 ? rawCommitSha : null;
 
-  const configExtra = config.extra as
-    | { buildMetadata?: { commitSha?: string | null } }
-    | undefined;
-  const variantExtra = variantConfig.extra as
-    | { buildMetadata?: { commitSha?: string | null } }
-    | undefined;
+  const configExtra = config.extra as { buildMetadata?: { commitSha?: string | null } } | undefined;
+  const variantExtra = variantConfig.extra as { buildMetadata?: { commitSha?: string | null } } | undefined;
   const configBuildMetadata = configExtra?.buildMetadata ?? {};
   const variantBuildMetadata = variantExtra?.buildMetadata ?? {};
 
@@ -117,7 +110,19 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...(config.web ?? {}),
       ...(variantConfig.web ?? {}),
     },
-    plugins: variantConfig.plugins ?? config.plugins,
+    plugins: [
+      ...(Array.isArray(variantConfig.plugins)
+        ? variantConfig.plugins
+        : Array.isArray(config.plugins)
+        ? config.plugins
+        : []),
+      'expo-background-task',
+      'expo-font',
+      'expo-localization',
+      'expo-router',
+      'expo-video',
+      'expo-web-browser',
+    ],
     experiments: {
       ...(config.experiments ?? {}),
       ...(variantConfig.experiments ?? {}),
@@ -135,5 +140,5 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...(config.updates ?? {}),
       ...(variantConfig.updates ?? {}),
     },
-  } satisfies ExpoConfig;
+  } satisfies Partial<ExpoConfig>;
 };
