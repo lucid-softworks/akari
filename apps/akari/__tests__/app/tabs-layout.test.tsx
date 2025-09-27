@@ -4,8 +4,6 @@ import TabLayout from '@/app/(tabs)/_layout';
 import { ActivityIndicator } from 'react-native';
 
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
-import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
-import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -22,8 +20,6 @@ jest.mock('expo-router', () => {
 });
 
 jest.mock('@/hooks/queries/useAuthStatus');
-jest.mock('@/hooks/queries/useUnreadMessagesCount');
-jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/useResponsive');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
@@ -41,16 +37,14 @@ jest.mock('@/components/ThemedView', () => {
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });
 
-jest.mock('@/components/TabBadge', () => {
+jest.mock('@expo/vector-icons/Ionicons', () => {
   const React = require('react');
   const { Text } = require('react-native');
-  return { TabBadge: ({ count }: { count: number }) => <Text>badge{count}</Text> };
-});
-
-jest.mock('@/components/ui/IconSymbol', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
-  return { IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text> };
+  return ({ name, color, size }: any) => (
+    <Text name={name} color={color} size={size}>
+      {name}
+    </Text>
+  );
 });
 
 jest.mock('@/utils/tabScrollRegistry', () => ({
@@ -60,8 +54,6 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 }));
 
 const mockUseAuthStatus = useAuthStatus as jest.Mock;
-const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
-const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
@@ -70,8 +62,6 @@ const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockUseUnreadMessagesCount.mockReturnValue({ data: 0 });
-  mockUseUnreadNotificationsCount.mockReturnValue({ data: 0 });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
   mockUseBorderColor.mockReturnValue('#ccc');
   mockUseThemeColor.mockImplementation(
@@ -111,19 +101,16 @@ describe('TabLayout', () => {
     const visibleScreens = screenProps.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
     const hiddenScreens = screenProps.filter((screen: any) => screen.options?.href === null);
 
-    expect(visibleScreens.map((screen: any) => screen.name)).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'profile',
-      'settings',
-    ]);
+    expect(visibleScreens.map((screen: any) => screen.name)).toEqual(['index', 'settings']);
 
     expect(hiddenScreens.map((screen: any) => screen.name)).toEqual([
+      'search',
       'bookmarks',
+      'messages',
       'messages/[handle]',
       'messages/pending',
+      'notifications',
+      'profile',
       'post/[id]',
       'profile/[handle]',
       'settings/account',
@@ -142,8 +129,6 @@ describe('TabLayout', () => {
   it('renders mobile tabs with native tab bar configuration', () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     mockUseResponsive.mockReturnValue({ isLargeScreen: false });
-    mockUseUnreadMessagesCount.mockReturnValue({ data: 2 });
-    mockUseUnreadNotificationsCount.mockReturnValue({ data: 3 });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const tabOptions = TabsModule.Tabs.mock.calls[0][0];
@@ -158,19 +143,16 @@ describe('TabLayout', () => {
     const visibleScreens = screens.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
     const hiddenScreens = screens.filter((screen: any) => screen.options?.href === null);
 
-    expect(visibleScreens.map((screen) => screen.name)).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'profile',
-      'settings',
-    ]);
+    expect(visibleScreens.map((screen: any) => screen.name)).toEqual(['index', 'settings']);
 
-    expect(hiddenScreens.map((screen) => screen.name)).toEqual([
+    expect(hiddenScreens.map((screen: any) => screen.name)).toEqual([
+      'search',
       'bookmarks',
+      'messages',
       'messages/[handle]',
       'messages/pending',
+      'notifications',
+      'profile',
       'post/[id]',
       'profile/[handle]',
       'settings/account',
@@ -185,20 +167,17 @@ describe('TabLayout', () => {
       'settings/development',
     ]);
 
-    const messagesScreen = visibleScreens.find((screen: any) => screen.name === 'messages');
-    expect(typeof messagesScreen?.options?.tabBarIcon).toBe('function');
-    const renderedIcon = messagesScreen?.options?.tabBarIcon?.({ color: '#fff' });
+    const homeScreen = visibleScreens.find((screen: any) => screen.name === 'index');
+    expect(typeof homeScreen?.options?.tabBarIcon).toBe('function');
+    const renderedIcon = homeScreen?.options?.tabBarIcon?.({ color: '#fff', size: 20 });
     expect(React.isValidElement(renderedIcon)).toBe(true);
-    const badgeText = React.Children.toArray(renderedIcon?.props.children).find(
-      (child: any) => child?.props?.children === 'badge2',
-    );
-    expect(badgeText).toBeTruthy();
+    expect(renderedIcon?.props.name).toBe('home');
+    expect(renderedIcon?.props.color).toBe('#fff');
+    expect(renderedIcon?.props.size).toBe(20);
   });
 
-  it('uses default tint and badge counts when data is unavailable', () => {
+  it('uses default tint colors when theme hooks return fallbacks', () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
-    mockUseUnreadMessagesCount.mockReturnValue({});
-    mockUseUnreadNotificationsCount.mockReturnValue({});
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const tabOptions = TabsModule.Tabs.mock.calls[0][0];
@@ -213,23 +192,23 @@ describe('TabLayout', () => {
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls
       .map((call: any[]) => call[0])
       .filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
-    const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
-    expect(messagesScreen).toBeTruthy();
+    const homeScreen = screens.find((screen: any) => screen.name === 'index');
+    expect(homeScreen).toBeTruthy();
 
     const navigation = {
       getState: jest
         .fn()
         .mockReturnValue({
-          routeNames: ['index', 'search', 'messages', 'notifications', 'profile', 'settings'],
-          index: 2,
+          routeNames: ['index', 'settings'],
+          index: 0,
         }),
     } as any;
 
-    const listeners = messagesScreen?.listeners?.({ navigation });
+    const listeners = homeScreen?.listeners?.({ navigation });
     listeners?.tabPress?.({} as any);
     listeners?.tabPress?.({} as any);
 
-    expect(mockHandleTabPress).toHaveBeenCalledWith('messages');
+    expect(mockHandleTabPress).toHaveBeenCalledWith('index');
     expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
   });
 });

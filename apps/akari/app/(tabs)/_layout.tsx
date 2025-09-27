@@ -1,15 +1,11 @@
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Redirect, Tabs } from 'expo-router';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-
-import { TabBadge } from '@/components/TabBadge';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Sidebar } from '@/components/Sidebar';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
-import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
-import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -17,23 +13,18 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const VISIBLE_TABS = [
-  { name: 'index', title: 'Home', icon: 'house.fill', accessibilityLabel: 'Home' },
-  { name: 'search', title: 'Search', icon: 'magnifyingglass', accessibilityLabel: 'Search' },
-  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
-  {
-    name: 'notifications',
-    title: 'Notifications',
-    icon: 'bell.fill',
-    accessibilityLabel: 'Notifications',
-  },
-  { name: 'profile', title: 'Profile', icon: 'person.fill', accessibilityLabel: 'Profile' },
-  { name: 'settings', title: 'Settings', icon: 'gearshape.fill', accessibilityLabel: 'Settings' },
+  { name: 'index', title: 'Home', icon: 'home', accessibilityLabel: 'Home' },
+  { name: 'settings', title: 'Settings', icon: 'settings', accessibilityLabel: 'Settings' },
 ] as const;
 
 const HIDDEN_TABS = [
+  'search',
   'bookmarks',
+  'messages',
   'messages/[handle]',
   'messages/pending',
+  'notifications',
+  'profile',
   'post/[id]',
   'profile/[handle]',
   'settings/account',
@@ -50,13 +41,6 @@ const HIDDEN_TABS = [
 
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
-  search: 'search',
-  notifications: 'notifications',
-  messages: 'messages',
-  'messages/[handle]': 'messages',
-  'messages/pending': 'messages',
-  profile: 'profile',
-  'profile/[handle]': 'profile',
   settings: 'settings',
   'post/[id]': 'index',
 };
@@ -64,8 +48,6 @@ const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
   const { data: authStatus, isLoading } = useAuthStatus();
-  const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
-  const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const lastPressedRegistryKeyRef = useRef<string | null>(null);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
@@ -98,31 +80,6 @@ export default function TabLayout() {
       lastPressedRegistryKeyRef.current = registryKey;
     },
     [lastPressedRegistryKeyRef],
-  );
-
-  const renderTabIcon = useCallback(
-    (icon: React.ComponentProps<typeof IconSymbol>['name'], color: string, badgeCount: number) => (
-      <View style={styles.iconWrapper}>
-        <IconSymbol name={icon} color={color} size={28} style={styles.icon} />
-        {badgeCount > 0 ? <TabBadge count={badgeCount} size="small" /> : null}
-      </View>
-    ),
-    [],
-  );
-
-  const getBadgeCount = useCallback(
-    (name: (typeof VISIBLE_TABS)[number]['name']) => {
-      if (name === 'messages') {
-        return unreadMessagesCount;
-      }
-
-      if (name === 'notifications') {
-        return unreadNotificationsCount;
-      }
-
-      return 0;
-    },
-    [unreadMessagesCount, unreadNotificationsCount],
   );
 
   // Initialize push notifications
@@ -220,7 +177,9 @@ export default function TabLayout() {
           options={{
             title: accessibilityLabel,
             tabBarAccessibilityLabel: accessibilityLabel,
-            tabBarIcon: ({ color = accentColor }) => renderTabIcon(icon, color, getBadgeCount(name)),
+            tabBarIcon: ({ color = accentColor, size }) => (
+              <Ionicons name={icon} color={color} size={size ?? 24} />
+            ),
           }}
           listeners={({ navigation }) => ({
             tabPress: () => handleTabPress(name, navigation),
@@ -234,13 +193,3 @@ export default function TabLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  iconWrapper: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    marginBottom: -3,
-  },
-});
