@@ -1,4 +1,7 @@
 import { readFile } from 'node:fs/promises';
+import coverageLib from 'istanbul-lib-coverage';
+
+const { createCoverageMap } = coverageLib;
 
 const workspaceRoot = process.cwd().replace(/\\/g, '/');
 
@@ -6,6 +9,7 @@ const marker = '<!-- coverage-report -->';
 const token = process.env.GITHUB_TOKEN;
 const summaryPath = process.env.COVERAGE_SUMMARY_PATH;
 const lcovPath = process.env.LCOV_PATH;
+const coverageJsonPath = process.env.COVERAGE_JSON_PATH;
 const prNumber = process.env.PR_NUMBER;
 const repository = process.env.GITHUB_REPOSITORY;
 const apiBase = process.env.GITHUB_API_URL || 'https://api.github.com';
@@ -114,6 +118,11 @@ if (Array.isArray(files) && files.length > 0) {
 await upsertComment(body);
 
 async function loadCoverage() {
+  const coverageFromJson = await loadCoverageFromCoverageJson();
+  if (coverageFromJson) {
+    return coverageFromJson;
+  }
+
   const lcovContent = await readFile(lcovPath, 'utf8');
   const lcovCoverage = deriveCoverageFromLcov(lcovContent);
 
@@ -122,7 +131,7 @@ async function loadCoverage() {
       const summaryContent = await readFile(summaryPath, 'utf8');
       const summaryJson = JSON.parse(summaryContent);
       if (summaryJson && typeof summaryJson === 'object') {
-        const totals = summaryJson?.total && typeof summaryJson.total === 'object' ? normalizeTotals(summaryJson.total) : {};
+        const totals = summaryJson?.total && typeof summaryJson.total === 'object' ? normalizeCoverageSummary(summaryJson.total) : {};
         const files = [];
 
         for (const [filePath, data] of Object.entries(summaryJson)) {
@@ -130,7 +139,7 @@ async function loadCoverage() {
             continue;
           }
 
-          const normalized = normalizeTotals(data);
+          const normalized = normalizeCoverageSummary(data);
 
           if (Object.keys(normalized).length > 0) {
             files.push({ path: normalizeFilePath(filePath), ...normalized, uncoveredLines: [] });
@@ -168,23 +177,58 @@ async function loadCoverage() {
   return lcovCoverage;
 }
 
-function normalizeTotals(total) {
-  const normalized = {};
-  for (const [key, data] of Object.entries(total)) {
-    if (!data) {
+async function loadCoverageFromCoverageJson() {
+  if (!coverageJsonPath) {
+    return null;
+  }
+
+  try {
+    const content = await readFile(coverageJsonPath, 'utf8');
+    const data = JSON.parse(content);
+    const coverageMap = createCoverageMap(data);
+    return deriveCoverageFromCoverageMap(coverageMap);
+  } catch (error) {
+    console.warn(
+      `Failed to read coverage JSON at ${coverageJsonPath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return null;
+  }
+}
+
+function deriveCoverageFromCoverageMap(coverageMap) {
+  if (!coverageMap || typeof coverageMap.files !== 'function') {
+    return null;
+  }
+
+  const totalsSummary = coverageMap.getCoverageSummary();
+  const totals = normalizeCoverageSummary(
+    typeof totalsSummary?.toJSON === 'function' ? totalsSummary.toJSON() : totalsSummary?.data,
+  );
+  finalizeCoverageMetrics(totals);
+
+  const files = [];
+  for (const filePath of coverageMap.files()) {
+    const fileCoverage = coverageMap.fileCoverageFor(filePath);
+    if (!fileCoverage) {
       continue;
     }
-    const { pct, covered, total: totalCount } = data;
-    const coveredNumber = typeof covered === 'number' ? covered : Number(covered);
-    const totalNumber = typeof totalCount === 'number' ? totalCount : Number(totalCount);
-    const percentNumber = typeof pct === 'number' ? pct : Number(pct);
-    normalized[key] = {
-      pct: Number.isFinite(percentNumber) ? percentNumber : computePercent(coveredNumber, totalNumber),
-      covered: Number.isFinite(coveredNumber) ? coveredNumber : 0,
-      total: Number.isFinite(totalNumber) ? totalNumber : 0,
-    };
+
+    const fileSummary = fileCoverage.toSummary();
+    const normalizedSummary = normalizeCoverageSummary(
+      typeof fileSummary?.toJSON === 'function' ? fileSummary.toJSON() : fileSummary?.data,
+    );
+    finalizeCoverageMetrics(normalizedSummary);
+
+    files.push({
+      path: normalizeFilePath(filePath),
+      ...normalizedSummary,
+      uncoveredLines: extractUncoveredLines(fileCoverage),
+    });
   }
-  return normalized;
+
+  files.sort((a, b) => a.path.localeCompare(b.path));
+
+  return { totals, files };
 }
 
 function deriveCoverageFromLcov(lcov) {
@@ -397,6 +441,47 @@ function splitPath(path) {
     directory: normalized.slice(0, index),
     fileName: normalized.slice(index + 1),
   };
+}
+
+function extractUncoveredLines(fileCoverage) {
+  if (!fileCoverage || typeof fileCoverage.getUncoveredLines !== 'function') {
+    return [];
+  }
+
+  const lines = fileCoverage
+    .getUncoveredLines()
+    .map((value) => Number.parseInt(value, 10))
+    .filter((value) => Number.isFinite(value));
+
+  lines.sort((a, b) => a - b);
+  return lines;
+}
+
+function normalizeCoverageSummary(summary) {
+  if (!summary || typeof summary !== 'object') {
+    return {};
+  }
+
+  const normalized = {};
+
+  for (const [key, data] of Object.entries(summary)) {
+    if (!data || typeof data !== 'object') {
+      continue;
+    }
+
+    const { pct, covered, total: totalCount } = data;
+    const coveredNumber = typeof covered === 'number' ? covered : Number(covered);
+    const totalNumber = typeof totalCount === 'number' ? totalCount : Number(totalCount);
+    const percentNumber = typeof pct === 'number' ? pct : Number(pct);
+
+    normalized[key] = {
+      pct: Number.isFinite(percentNumber) ? percentNumber : computePercent(coveredNumber, totalNumber),
+      covered: Number.isFinite(coveredNumber) ? coveredNumber : 0,
+      total: Number.isFinite(totalNumber) ? totalNumber : 0,
+    };
+  }
+
+  return normalized;
 }
 
 async function upsertComment(bodyContent) {

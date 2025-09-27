@@ -8,6 +8,10 @@ inputs:
     description: 'Path to the coverage summary JSON file'
     required: false
     default: ''
+  coverage-json:
+    description: 'Path to the Istanbul coverage-final.json file'
+    required: false
+    default: ''
   lcov-path:
     description: 'Path to the merged LCOV report file'
     required: true
@@ -35,6 +39,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         COVERAGE_SUMMARY_PATH: ${{ inputs.coverage-summary }}
         LCOV_PATH: ${{ inputs.lcov-path }}
+        COVERAGE_JSON_PATH: ${{ inputs.coverage-json }}
         ARTIFACT_NAME: ${{ inputs.artifact-name }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
         GITHUB_REPOSITORY: ${{ github.repository }}
