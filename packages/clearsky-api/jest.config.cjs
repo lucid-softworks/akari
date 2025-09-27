@@ -12,11 +12,14 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/*.d.ts'],
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
-  globals: {
-    'ts-jest': {
-      useESM: true,
-      tsconfig: '<rootDir>/tsconfig.json',
-    },
+  transform: {
+    '^.+\\.m?tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: '<rootDir>/tsconfig.json',
+      },
+    ],
   },
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };
