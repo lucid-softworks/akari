@@ -6,6 +6,7 @@ export default function MessagesLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="pending" />
       <Stack.Screen name="[handle]" />
+      <Stack.Screen name="post/[id]" />
     </Stack>
   );
 }

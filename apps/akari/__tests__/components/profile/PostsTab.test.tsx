@@ -27,7 +27,14 @@ jest.mock('@/components/PostCard', () => {
 jest.mock('@/hooks/queries/useAuthorPosts');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useThemeColor');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+
+const mockRouterPush = jest.fn();
+
+jest.mock('expo-router', () => ({
+  router: { push: mockRouterPush },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'profile'],
+}));
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 import { PostsTab } from '@/components/profile/PostsTab';
@@ -107,7 +114,7 @@ describe('PostsTab', () => {
     expect(mockPostCard).toHaveBeenCalledTimes(1);
     const button = getByRole('button');
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(post.uri)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(post.uri)}`);
     const call = mockPostCard.mock.calls[0][0];
     expect(call.post.replyTo).toEqual({
       author: { handle: 'bob', displayName: 'Bob' },

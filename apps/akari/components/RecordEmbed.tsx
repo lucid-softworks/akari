@@ -12,6 +12,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useOpenPost } from '@/hooks/useOpenPost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -33,6 +34,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     [key: string]: { width: number; height: number };
   }>({});
   const { t } = useTranslation();
+  const openPost = useOpenPost();
   const textColor = useThemeColor(
     {
       light: '#000000',
@@ -59,7 +61,9 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const handlePress = () => {
     // Navigate to the quoted post
-    router.push(`/post/${encodeURIComponent(embed.record.uri)}`);
+    if (embed.record.uri) {
+      openPost(embed.record.uri);
+    }
   };
 
   const handleAuthorPress = () => {

@@ -8,7 +8,13 @@ import { router } from 'expo-router';
 
 jest.mock('@/hooks/queries/useAuthorReplies');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+const mockRouterPush = jest.fn();
+
+jest.mock('expo-router', () => ({
+  router: { push: mockRouterPush },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'profile'],
+}));
 let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
   mockPostCard = jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => {
@@ -86,7 +92,7 @@ describe('RepliesTab', () => {
 
     const { getByText } = render(<RepliesTab handle="alice" />);
     fireEvent.press(getByText('Hello world'));
-    expect(mockPush).toHaveBeenCalledWith(`/post/${encodeURIComponent(reply.uri)}`);
+    expect(mockPush).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(reply.uri)}`);
   });
 
   it('fetches more replies on end reached', () => {

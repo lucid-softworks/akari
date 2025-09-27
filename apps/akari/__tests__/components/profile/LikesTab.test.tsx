@@ -9,10 +9,15 @@ import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorLikes');
 jest.mock('@/hooks/useTranslation');
+
+const mockRouterPush = jest.fn();
+
 jest.mock('expo-router', () => ({
   router: {
-    push: jest.fn(),
+    push: mockRouterPush,
   },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'profile'],
 }));
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 jest.mock('@/components/skeletons', () => {
@@ -113,7 +118,7 @@ describe('LikesTab', () => {
 
     const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
     fireEvent.press(getByText('liked post'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(like.uri)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(like.uri)}`);
 
     const list = UNSAFE_getByType(VirtualizedList);
     act(() => {

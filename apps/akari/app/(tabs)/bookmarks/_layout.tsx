@@ -1,10 +1,9 @@
 import { Stack } from 'expo-router';
 
-export default function ProfileLayout() {
+export default function BookmarksTabLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="[handle]" />
       <Stack.Screen name="post/[id]" />
     </Stack>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import HomeScreen from '@/app/(tabs)/index';
+import HomeScreen from '@/app/(tabs)/index/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
@@ -14,7 +14,13 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+const mockRouterPush = jest.fn();
+
+jest.mock('expo-router', () => ({
+  router: { push: mockRouterPush },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'index'],
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),

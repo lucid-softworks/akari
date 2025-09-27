@@ -9,6 +9,7 @@ import {
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
+import { useOpenPost } from './useOpenPost';
 
 export type PushNotificationState = {
   expoPushToken: string | null;
@@ -20,6 +21,7 @@ export type PushNotificationState = {
 
 export function usePushNotifications() {
   const router = useRouter();
+  const openPost = useOpenPost();
   const [state, setState] = useState<PushNotificationState>({
     expoPushToken: null,
     devicePushToken: null,
@@ -46,7 +48,7 @@ export function usePushNotifications() {
     const handleNotificationNavigation = (type: string, id: string) => {
       switch (type) {
         case 'post':
-          router.push(`/post/${encodeURIComponent(id)}`);
+          openPost(id);
           break;
         case 'profile':
           router.push(`/profile/${encodeURIComponent(id)}`);
@@ -89,7 +91,7 @@ export function usePushNotifications() {
         responseListener.current.remove();
       }
     };
-  }, [router]);
+  }, [openPost, router]);
 
   // Request notification permissions
   const requestPermissions = async (): Promise<boolean> => {

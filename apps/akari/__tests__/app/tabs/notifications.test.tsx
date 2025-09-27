@@ -2,8 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Image, ScrollView } from 'react-native';
 
-import NotificationsScreen from '@/app/(tabs)/notifications';
-import { router } from 'expo-router';
+import NotificationsScreen from '@/app/(tabs)/notifications/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -16,7 +15,13 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+const mockRouterPush = jest.fn();
+
+jest.mock('expo-router', () => ({
+  router: { push: mockRouterPush },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'notifications'],
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -58,7 +63,6 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
 let tMock: jest.Mock;
 
@@ -129,7 +133,7 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/notifications/post/post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
     expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');

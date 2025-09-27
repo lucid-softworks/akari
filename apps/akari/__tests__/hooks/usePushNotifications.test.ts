@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import {
@@ -13,6 +13,7 @@ import {
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
+  useSegments: jest.fn(),
 }));
 
 jest.mock('expo-notifications', () => ({
@@ -31,6 +32,7 @@ jest.mock('@/utils/notifications', () => ({
 }));
 
 const mockUseRouter = useRouter as jest.Mock;
+const mockUseSegments = useSegments as jest.Mock;
 const mockCreateNotificationChannels = createNotificationChannels as jest.Mock;
 const mockRegisterForPushNotifications = registerForPushNotifications as jest.Mock;
 const mockRequestNotificationPermissions = requestNotificationPermissions as jest.Mock;
@@ -65,6 +67,7 @@ describe('usePushNotifications', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseRouter.mockReturnValue({ push: jest.fn() });
+    mockUseSegments.mockReturnValue(['(tabs)', 'index']);
     mockAddNotificationReceivedListener.mockReturnValue({ remove: jest.fn() });
     mockAddNotificationResponseReceivedListener.mockReturnValue({ remove: jest.fn() });
     mockGetPermissionsAsync.mockResolvedValue({ status: 'undetermined' });
@@ -362,7 +365,7 @@ describe('usePushNotifications', () => {
     });
 
     const scenarios = [
-      { type: 'post', id: 'abc def', expected: '/post/abc%20def' },
+      { type: 'post', id: 'abc def', expected: '/(tabs)/index/post/abc%20def' },
       { type: 'profile', id: 'user', expected: '/profile/user' },
       { type: 'conversation', id: '42', expected: '/messages/42' },
       { type: 'notification', id: 'any', expected: '/notifications' },

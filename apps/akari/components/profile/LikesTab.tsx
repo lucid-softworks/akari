@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -7,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
+import { useOpenPost } from '@/hooks/useOpenPost';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -19,6 +19,7 @@ const ESTIMATED_POST_CARD_HEIGHT = 320;
 export function LikesTab({ handle }: LikesTabProps) {
   const { t } = useTranslation();
   const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorLikes(handle);
+  const openPost = useOpenPost();
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -62,7 +63,7 @@ export function LikesTab({ handle }: LikesTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          openPost(item.uri);
         }}
       />
     );

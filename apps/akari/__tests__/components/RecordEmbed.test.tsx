@@ -28,10 +28,15 @@ jest.mock('@/components/ExternalEmbed');
 jest.mock('@/components/GifEmbed');
 jest.mock('@/components/VideoEmbed');
 jest.mock('@/components/YouTubeEmbed');
+
+const mockRouterPush = jest.fn();
+
 jest.mock('expo-router', () => ({
   router: {
-    push: jest.fn(),
+    push: mockRouterPush,
   },
+  useRouter: () => ({ push: mockRouterPush }),
+  useSegments: () => ['(tabs)', 'index'],
 }));
 
 const mockExternalEmbed = ExternalEmbed as jest.Mock;
@@ -243,7 +248,7 @@ describe('RecordEmbed Component', () => {
     const { getByTestId, getByText } = render(<RecordEmbed embed={embed} />);
 
     fireEvent.press(getByTestId('record-embed-touchable'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(embed.record.uri)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/index/post/${encodeURIComponent(embed.record.uri)}`);
 
     fireEvent.press(getByText('Test User'));
     expect(router.push).toHaveBeenCalledWith(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
