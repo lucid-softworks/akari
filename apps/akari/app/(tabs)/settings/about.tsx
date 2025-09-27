@@ -30,6 +30,22 @@ export default function AboutSettingsScreen() {
   const version = Constants.expoConfig?.version ?? t('common.unknown');
   const iosBuildNumber = Constants.expoConfig?.ios?.buildNumber;
   const androidVersionCode = Constants.expoConfig?.android?.versionCode;
+  const extra = Constants.expoConfig?.extra as
+    | {
+        buildMetadata?: {
+          commitSha?: string | null;
+        };
+      }
+    | undefined;
+  const commitSha =
+    typeof extra?.buildMetadata?.commitSha === 'string' && extra.buildMetadata.commitSha.length > 0
+      ? extra.buildMetadata.commitSha
+      : undefined;
+  const shortCommitSha = commitSha?.slice(0, 7);
+  const versionDisplay = useMemo(
+    () => (shortCommitSha ? `${version} (${shortCommitSha})` : version),
+    [shortCommitSha, version],
+  );
   const buildNumber =
     typeof iosBuildNumber === 'string'
       ? iosBuildNumber
@@ -91,7 +107,7 @@ export default function AboutSettingsScreen() {
         key: 'version',
         icon: 'info.circle.fill',
         label: t('settings.version'),
-        value: version,
+        value: versionDisplay,
       },
       ...(buildNumber
         ? [
@@ -104,7 +120,7 @@ export default function AboutSettingsScreen() {
           ]
         : []),
     ],
-    [buildNumber, openExternalLink, showNotImplemented, t, version],
+    [buildNumber, openExternalLink, showNotImplemented, t, versionDisplay],
   );
 
   return (
