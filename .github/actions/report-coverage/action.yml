@@ -19,6 +19,10 @@ inputs:
     description: 'Path to upload as the coverage artifact'
     required: false
     default: ''
+  html-preview-file:
+    description: 'Path to an HTML file to expose via the comment preview link'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
@@ -36,6 +40,7 @@ runs:
         COVERAGE_SUMMARY_PATH: ${{ inputs.coverage-summary }}
         LCOV_PATH: ${{ inputs.lcov-path }}
         ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        HTML_PREVIEW_FILE: ${{ inputs.html-preview-file }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
         GITHUB_REPOSITORY: ${{ github.repository }}
         GITHUB_API_URL: ${{ github.api_url }}
