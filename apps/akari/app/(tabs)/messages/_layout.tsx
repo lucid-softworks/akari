@@ -1,11 +1,1 @@
-import { Stack } from "expo-router";
-
-export default function MessagesLayout() {
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="pending" />
-      <Stack.Screen name="[handle]" />
-    </Stack>
-  );
-}
+export { default } from '../(index,search,notifications,bookmarks,messages,profile,settings)/messages/_layout';

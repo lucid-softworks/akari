@@ -1,9 +1,1 @@
-import { Stack } from 'expo-router';
-
-export default function PostLayout() {
-  return (
-    <Stack>
-      <Stack.Screen name="[id]" />
-    </Stack>
-  );
-}
+export { default } from '../(index,search,notifications,bookmarks,messages,profile,settings)/post/_layout';
