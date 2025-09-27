@@ -33,7 +33,7 @@ function VirtualizedListInner<T>(
     stickyHeaderIndices !== undefined
       ? stickyHeaderIndices
       : ListHeaderComponent
-        ? [-1]
+        ? [0] // FlashList treats the header as the first index when calculating sticky headers.
         : undefined;
 
   return (
