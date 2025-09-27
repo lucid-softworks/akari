@@ -25,10 +25,13 @@ module.exports = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  globals: {
-    'ts-jest': {
-      useESM: true,
-      tsconfig: jestTsconfig,
-    },
+  transform: {
+    '^.+\\.m?tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: jestTsconfig,
+      },
+    ],
   },
 };
