@@ -136,8 +136,10 @@ describe('Sidebar', () => {
     );
 
     expect(getByText('Timeline')).toBeTruthy();
-    expect(getByText('Notifications')).toBeTruthy();
+    expect(getByText('Search')).toBeTruthy();
     expect(getByText('Messages')).toBeTruthy();
+    expect(getByText('Notifications')).toBeTruthy();
+    expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
 
     expect(getByText('#BlueskyMigration')).toBeTruthy();
@@ -151,6 +153,9 @@ describe('Sidebar', () => {
         <Sidebar />
       </DialogProvider>,
     );
+
+    fireEvent.press(getByText('Search'));
+    expect(push).toHaveBeenCalledWith('/(tabs)/search');
 
     fireEvent.press(getByText('Settings'));
     expect(push).toHaveBeenCalledWith('/(tabs)/settings');

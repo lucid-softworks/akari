@@ -18,22 +18,27 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const VISIBLE_TABS = [
   { name: 'index', title: 'Home', icon: 'house.fill', accessibilityLabel: 'Home' },
+  { name: 'search', title: 'Search', icon: 'magnifyingglass', accessibilityLabel: 'Search' },
+  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
   {
     name: 'notifications',
     title: 'Notifications',
     icon: 'bell.fill',
     accessibilityLabel: 'Notifications',
   },
-  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
+  { name: 'profile', title: 'Profile', icon: 'person.fill', accessibilityLabel: 'Profile' },
   { name: 'settings', title: 'Settings', icon: 'gearshape.fill', accessibilityLabel: 'Settings' },
 ] as const;
 
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
+  search: 'search',
   notifications: 'notifications',
   messages: 'messages',
   'messages/[handle]': 'messages',
   'messages/pending': 'messages',
+  profile: 'profile',
+  'profile/[handle]': 'profile',
   settings: 'settings',
   'post/[id]': 'index',
 };

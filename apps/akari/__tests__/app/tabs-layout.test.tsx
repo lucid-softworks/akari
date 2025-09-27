@@ -107,8 +107,8 @@ describe('TabLayout', () => {
     });
     const screenCalls = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls;
     const visibleNames = screenCalls.map((call: any[]) => call[0].name);
-    expect(screenCalls).toHaveLength(4);
-    expect(visibleNames).toEqual(['index', 'notifications', 'messages', 'settings']);
+    expect(screenCalls).toHaveLength(6);
+    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 
   it('renders mobile tabs with native tab bar configuration', () => {
@@ -127,9 +127,9 @@ describe('TabLayout', () => {
       }),
     });
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
-    expect(screens).toHaveLength(4);
+    expect(screens).toHaveLength(6);
     const visibleNames = screens.map((screen) => screen.name);
-    expect(visibleNames).toEqual(['index', 'notifications', 'messages', 'settings']);
+    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
 
     const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
     expect(typeof messagesScreen?.options?.tabBarIcon).toBe('function');
@@ -161,7 +161,12 @@ describe('TabLayout', () => {
     expect(messagesScreen).toBeTruthy();
 
     const navigation = {
-      getState: jest.fn().mockReturnValue({ routeNames: ['index', 'notifications', 'messages', 'settings'], index: 2 }),
+      getState: jest
+        .fn()
+        .mockReturnValue({
+          routeNames: ['index', 'search', 'messages', 'notifications', 'profile', 'settings'],
+          index: 2,
+        }),
     } as any;
 
     const listeners = messagesScreen?.listeners?.({ navigation });
