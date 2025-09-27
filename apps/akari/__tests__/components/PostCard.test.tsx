@@ -21,10 +21,12 @@ import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLan
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useSummarizeThread } from '@/hooks/mutations/useSummarizeThread';
 import { router } from 'expo-router';
 
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/usePostTranslation');
+jest.mock('@/hooks/mutations/useSummarizeThread');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/queries/useLiveNow');
 jest.mock('@/hooks/useThemeColor');
@@ -82,6 +84,28 @@ type Post = {
   facets?: any;
 };
 
+const openMenuByDefault = () => {
+  const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
+  const useStateMock = reactModule.useState as jest.Mock;
+  const actualUseState = actualReact.useState;
+  let callCount = 0;
+
+  useStateMock.mockImplementation(<T,>(initialState: T) => {
+    callCount += 1;
+
+    if (callCount === 4) {
+      return actualUseState(true as unknown as T);
+    }
+
+    return actualUseState(initialState);
+  });
+
+  return () => {
+    useStateMock.mockImplementation(actualUseState);
+    useStateMock.mockClear();
+  };
+};
+
 describe('PostCard', () => {
   const mockUseLikePost = useLikePost as jest.Mock;
   const mockUsePostTranslation = usePostTranslation as jest.Mock;
@@ -89,7 +113,10 @@ describe('PostCard', () => {
   const mockUseLiveNow = useLiveNow as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
+  const mockUseSummarizeThread = useSummarizeThread as jest.Mock;
   let mutateAsyncMock: jest.Mock;
+  let summarizeMutateAsyncMock: jest.Mock;
+  let summarizeResetMock: jest.Mock;
 
   const basePost: Post = {
     id: '1',
@@ -132,6 +159,13 @@ describe('PostCard', () => {
         isFallback: false,
       },
       isLoading: false,
+    });
+    summarizeResetMock = jest.fn();
+    summarizeMutateAsyncMock = jest.fn().mockResolvedValue({ summary: 'Thread summary' });
+    mockUseSummarizeThread.mockReturnValue({
+      mutateAsync: summarizeMutateAsyncMock,
+      isPending: false,
+      reset: summarizeResetMock,
     });
   });
 
@@ -186,28 +220,6 @@ describe('PostCard', () => {
   });
 
   describe('translation actions', () => {
-    const openMenuByDefault = () => {
-      const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
-      const useStateMock = reactModule.useState as jest.Mock;
-      const actualUseState = actualReact.useState;
-      let callCount = 0;
-
-      useStateMock.mockImplementation(<T,>(initialState: T) => {
-        callCount += 1;
-
-        if (callCount === 4) {
-          return actualUseState(true as unknown as T);
-        }
-
-        return actualUseState(initialState);
-      });
-
-      return () => {
-        useStateMock.mockImplementation(actualUseState);
-        useStateMock.mockClear();
-      };
-    };
-
     it('shows translation panel and loads translation when translate action selected', async () => {
       const restoreUseState = openMenuByDefault();
 
@@ -304,6 +316,70 @@ describe('PostCard', () => {
           getByRole('menuitem', { name: 'post.actions.translate' }),
         );
         expect(translateOption.props.accessibilityState?.disabled).toBe(true);
+      } finally {
+        restoreUseState();
+      }
+    });
+  });
+
+  describe('summary actions', () => {
+    it('shows summary when summarize option is selected', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+
+        const summarizeOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.summarizeThread' }),
+        );
+
+        fireEvent.press(summarizeOption);
+
+        await waitFor(() => {
+          expect(summarizeMutateAsyncMock).toHaveBeenCalledWith({ postUri: 'at://post/1' });
+        });
+
+        await waitFor(() => {
+          expect(getByText('post.summary.title')).toBeTruthy();
+          expect(getByText('Thread summary')).toBeTruthy();
+        });
+      } finally {
+        restoreUseState();
+      }
+    });
+
+    it('allows retrying when summary fails', async () => {
+      const restoreUseState = openMenuByDefault();
+
+      try {
+        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+        summarizeMutateAsyncMock.mockRejectedValueOnce(new Error('nope'));
+
+        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+
+        const summarizeOption = await waitFor(() =>
+          getByRole('menuitem', { name: 'post.actions.summarizeThread' }),
+        );
+
+        fireEvent.press(summarizeOption);
+
+        await waitFor(() => {
+          expect(getByText('post.summary.title')).toBeTruthy();
+          expect(getByText('post.summary.error')).toBeTruthy();
+        });
+
+        summarizeMutateAsyncMock.mockResolvedValueOnce({ summary: 'Updated summary' });
+
+        const retryButton = getByRole('button', { name: 'post.summary.retry' });
+        fireEvent.press(retryButton);
+
+        expect(summarizeResetMock).toHaveBeenCalled();
+
+        await waitFor(() => {
+          expect(summarizeMutateAsyncMock).toHaveBeenCalledTimes(2);
+          expect(getByText('Updated summary')).toBeTruthy();
+        });
       } finally {
         restoreUseState();
       }
