@@ -46,10 +46,23 @@ jest.mock('@/components/ThemedView', () => {
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });
 
-jest.mock('@/components/CustomTabBar', () => {
+jest.mock('@/components/TabBadge', () => {
   const React = require('react');
-  return { CustomTabBar: jest.fn(() => null) };
+  const { Text } = require('react-native');
+  return { TabBadge: ({ count }: { count: number }) => <Text>badge{count}</Text> };
 });
+
+jest.mock('@/components/ui/IconSymbol', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text> };
+});
+
+jest.mock('@/utils/tabScrollRegistry', () => ({
+  tabScrollRegistry: {
+    handleTabPress: jest.fn(),
+  },
+}));
 
 const mockUseAuthStatus = useAuthStatus as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
@@ -59,8 +72,8 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const { AccountSwitcherSheet } = require('@/components/AccountSwitcherSheet');
 const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
-const { CustomTabBar } = require('@/components/CustomTabBar');
-const mockCustomTabBar = CustomTabBar as jest.Mock;
+const { tabScrollRegistry } = require('@/utils/tabScrollRegistry');
+const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -72,6 +85,7 @@ beforeEach(() => {
     (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000',
   );
   mockAccountSwitcherSheet.mockClear();
+  mockHandleTabPress.mockClear();
 });
 
 describe('TabLayout', () => {
@@ -105,7 +119,7 @@ describe('TabLayout', () => {
     expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 
-  it('renders mobile tabs with badges', () => {
+  it('renders mobile tabs with native tab bar configuration', () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     mockUseResponsive.mockReturnValue({ isLargeScreen: false });
     mockUseUnreadMessagesCount.mockReturnValue({ data: 2 });
@@ -113,26 +127,26 @@ describe('TabLayout', () => {
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const tabOptions = TabsModule.Tabs.mock.calls[0][0];
-    expect(typeof tabOptions.tabBar).toBe('function');
-    const tabBarProps = {
-      state: { index: 0, routes: [{ key: 'index', name: 'index' }] },
-      navigation: { emit: jest.fn(), navigate: jest.fn() },
-      descriptors: {},
-    } as any;
-    act(() => {
-      tabOptions.tabBar?.(tabBarProps);
-    });
-    expect(mockCustomTabBar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        unreadMessagesCount: 2,
-        unreadNotificationsCount: 3,
+    expect(tabOptions).toMatchObject({
+      screenOptions: expect.objectContaining({
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#7C8CF9',
+        tabBarInactiveTintColor: '#6B7280',
       }),
-      {},
-    );
+    });
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
     expect(screens).toHaveLength(6);
     const visibleNames = screens.map((screen) => screen.name);
     expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+
+    const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
+    expect(typeof messagesScreen?.options?.tabBarIcon).toBe('function');
+    const renderedIcon = messagesScreen?.options?.tabBarIcon?.({ color: '#fff' });
+    expect(React.isValidElement(renderedIcon)).toBe(true);
+    const badgeText = React.Children.toArray(renderedIcon?.props.children).find(
+      (child: any) => child?.props?.children === 'badge2',
+    );
+    expect(badgeText).toBeTruthy();
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
@@ -142,21 +156,7 @@ describe('TabLayout', () => {
     render(<TabLayout />);
     const TabsModule = require('expo-router');
     const tabOptions = TabsModule.Tabs.mock.calls[0][0];
-    const tabBarProps = {
-      state: { index: 0, routes: [{ key: 'index', name: 'index' }] },
-      navigation: { emit: jest.fn(), navigate: jest.fn() },
-      descriptors: {},
-    } as any;
-    act(() => {
-      tabOptions.tabBar?.(tabBarProps);
-    });
-    expect(mockCustomTabBar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        unreadMessagesCount: 0,
-        unreadNotificationsCount: 0,
-      }),
-      {},
-    );
+    expect(tabOptions.screenOptions.tabBarInactiveTintColor).toBe('#6B7280');
   });
 
   it('opens the account switcher when the profile tab is long pressed', () => {
@@ -164,22 +164,16 @@ describe('TabLayout', () => {
     render(<TabLayout />);
 
     const TabsModule = require('expo-router');
-    const tabOptions = TabsModule.Tabs.mock.calls[0][0];
-    const tabBarProps = {
-      state: { index: 0, routes: [{ key: 'index', name: 'index' }] },
-      navigation: { emit: jest.fn(), navigate: jest.fn() },
-      descriptors: {},
-    } as any;
+    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
+    const profileScreen = screens.find((screen: any) => screen.name === 'profile');
+    expect(profileScreen).toBeTruthy();
 
-    act(() => {
-      tabOptions.tabBar?.(tabBarProps);
+    const listeners = profileScreen?.listeners?.({
+      navigation: { getState: () => ({ index: 4, routeNames: ['index', 'search', 'messages', 'notifications', 'profile'] }) },
     });
 
-    const renderedProps = mockCustomTabBar.mock.calls.at(-1)?.[0];
-    expect(typeof renderedProps?.onProfileLongPress).toBe('function');
-
     act(() => {
-      renderedProps?.onProfileLongPress();
+      listeners?.tabLongPress?.({} as any);
     });
 
     const latestCall = mockAccountSwitcherSheet.mock.calls.at(-1);
@@ -191,6 +185,27 @@ describe('TabLayout', () => {
 
     const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(closeCall?.[0].visible).toBe(false);
+  });
+
+  it('emits scroll-to-top events when a tab is pressed twice', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    render(<TabLayout />);
+
+    const TabsModule = require('expo-router');
+    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
+    const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
+    expect(messagesScreen).toBeTruthy();
+
+    const navigation = {
+      getState: jest.fn().mockReturnValue({ routeNames: ['index', 'messages'], index: 1 }),
+    } as any;
+
+    const listeners = messagesScreen?.listeners?.({ navigation });
+    listeners?.tabPress?.({} as any);
+    listeners?.tabPress?.({} as any);
+
+    expect(mockHandleTabPress).toHaveBeenCalledWith('messages');
+    expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
   });
 });
 

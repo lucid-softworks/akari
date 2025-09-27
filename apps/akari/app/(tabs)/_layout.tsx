@@ -1,9 +1,11 @@
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
-import { CustomTabBar } from '@/components/CustomTabBar';
+import { TabBadge } from '@/components/TabBadge';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Sidebar } from '@/components/Sidebar';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
@@ -13,15 +15,33 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const VISIBLE_TABS = [
-  { name: 'index' },
-  { name: 'search' },
-  { name: 'messages' },
-  { name: 'notifications' },
-  { name: 'profile' },
-  { name: 'settings' },
+  { name: 'index', title: 'Home', icon: 'house.fill', accessibilityLabel: 'Home' },
+  { name: 'search', title: 'Search', icon: 'magnifyingglass', accessibilityLabel: 'Search' },
+  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
+  {
+    name: 'notifications',
+    title: 'Notifications',
+    icon: 'bell.fill',
+    accessibilityLabel: 'Notifications',
+  },
+  { name: 'profile', title: 'Profile', icon: 'person.fill', accessibilityLabel: 'Profile' },
+  { name: 'settings', title: 'Settings', icon: 'gearshape.fill', accessibilityLabel: 'Settings' },
 ] as const;
+
+const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
+  index: 'index',
+  search: 'search',
+  messages: 'messages',
+  'messages/[handle]': 'messages',
+  'messages/pending': 'messages',
+  notifications: 'notifications',
+  profile: 'profile',
+  'profile/[handle]': 'profile',
+  settings: 'settings',
+};
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
@@ -29,31 +49,19 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
+  const lastPressedRegistryKeyRef = useRef<string | null>(null);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
-  const tabBarStyle = {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor,
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 18,
-    height: 86,
-    shadowColor: 'rgba(12, 14, 24, 0.28)',
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 20,
-    elevation: 10,
-    ...Platform.select({
-      ios: {
-        position: 'absolute',
-        backgroundColor: 'transparent',
-      },
-      default: {
-        backgroundColor: tabBarSurface,
-      },
+  const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const tabBarStyle = useMemo(
+    () => ({
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderColor,
+      backgroundColor: tabBarSurface,
     }),
-  } as const;
+    [borderColor, tabBarSurface],
+  );
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -66,6 +74,51 @@ export default function TabLayout() {
   const handleCloseAccountSwitcher = useCallback(() => {
     setAccountSwitcherVisible(false);
   }, []);
+
+  const handleTabPress = useCallback(
+    (routeName: (typeof VISIBLE_TABS)[number]['name'], navigation: BottomTabNavigationProp<any>) => {
+      const registryKey = ROUTE_TO_REGISTRY_KEY[routeName] ?? routeName;
+      const state = navigation.getState();
+      const focusedRouteName = state.routeNames?.[state.index];
+
+      if (focusedRouteName === routeName) {
+        if (lastPressedRegistryKeyRef.current === registryKey) {
+          tabScrollRegistry.handleTabPress(registryKey);
+        }
+
+        lastPressedRegistryKeyRef.current = registryKey;
+        return;
+      }
+
+      lastPressedRegistryKeyRef.current = registryKey;
+    },
+    [lastPressedRegistryKeyRef],
+  );
+
+  const renderTabIcon = useCallback(
+    (icon: React.ComponentProps<typeof IconSymbol>['name'], color: string, badgeCount: number) => (
+      <View style={styles.iconWrapper}>
+        <IconSymbol name={icon} color={color} size={28} style={styles.icon} />
+        {badgeCount > 0 ? <TabBadge count={badgeCount} size="small" /> : null}
+      </View>
+    ),
+    [],
+  );
+
+  const getBadgeCount = useCallback(
+    (name: (typeof VISIBLE_TABS)[number]['name']) => {
+      if (name === 'messages') {
+        return unreadMessagesCount;
+      }
+
+      if (name === 'notifications') {
+        return unreadNotificationsCount;
+      }
+
+      return 0;
+    },
+    [unreadMessagesCount, unreadNotificationsCount],
+  );
 
   // Initialize push notifications
   usePushNotifications();
@@ -124,7 +177,20 @@ export default function TabLayout() {
                 }}
               >
                 {VISIBLE_TABS.map(({ name }) => (
-                  <Tabs.Screen key={name} name={name} />
+                  <Tabs.Screen
+                    key={name}
+                    name={name}
+                    listeners={({ navigation }) => ({
+                      tabPress: () => handleTabPress(name, navigation),
+                      ...(name === 'profile'
+                        ? {
+                            tabLongPress: () => {
+                              handleOpenAccountSwitcher();
+                            },
+                          }
+                        : null),
+                    })}
+                  />
                 ))}
               </Tabs>
             </View>
@@ -141,25 +207,45 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           tabBarStyle,
-          tabBarItemStyle: {
-            marginHorizontal: 4,
-            paddingVertical: 0,
-          },
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: accentColor,
+          tabBarInactiveTintColor: inactiveTint,
         }}
-        tabBar={(props) => (
-          <CustomTabBar
-            {...props}
-            unreadMessagesCount={unreadMessagesCount}
-            unreadNotificationsCount={unreadNotificationsCount}
-            onProfileLongPress={handleOpenAccountSwitcher}
-          />
-        )}
       >
-        {VISIBLE_TABS.map(({ name }) => (
-          <Tabs.Screen key={name} name={name} />
+        {VISIBLE_TABS.map(({ name, icon, accessibilityLabel }) => (
+          <Tabs.Screen
+            key={name}
+            name={name}
+            options={{
+              title: accessibilityLabel,
+              tabBarAccessibilityLabel: accessibilityLabel,
+              tabBarIcon: ({ color = accentColor }) => renderTabIcon(icon, color, getBadgeCount(name)),
+            }}
+            listeners={({ navigation }) => ({
+              tabPress: () => handleTabPress(name, navigation),
+              ...(name === 'profile'
+                ? {
+                    tabLongPress: () => {
+                      handleOpenAccountSwitcher();
+                    },
+                  }
+                : null),
+            })}
+          />
         ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  iconWrapper: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    marginBottom: -3,
+  },
+});
