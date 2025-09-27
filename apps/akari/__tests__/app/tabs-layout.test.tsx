@@ -142,10 +142,8 @@ describe('TabLayout', () => {
       tabBarStyle: { display: 'none' },
     });
     const screenCalls = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls;
-    const visibleNames = screenCalls
-      .map((call: any[]) => call[0])
-      .filter((props: any) => props.options?.href !== null)
-      .map((props: any) => props.name);
+    const visibleNames = screenCalls.map((call: any[]) => call[0].name);
+    expect(screenCalls).toHaveLength(6);
     expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 
@@ -170,9 +168,8 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[0][0].count).toBe(2);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     expect(TabsModule.Tabs.mock.calls[0][0].screenOptions.tabBarShowLabel).toBe(false);
-    const visibleNames = screens
-      .filter((screen) => screen.options?.href !== null)
-      .map((screen) => screen.name);
+    expect(screens).toHaveLength(6);
+    const visibleNames = screens.map((screen) => screen.name);
     expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 

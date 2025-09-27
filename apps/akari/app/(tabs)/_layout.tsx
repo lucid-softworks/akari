@@ -40,16 +40,6 @@ const VISIBLE_TABS = [
   { name: 'settings', icon: 'gearshape.fill' },
 ] as const;
 
-const HIDDEN_ROUTES = [
-  'bookmarks',
-  'messages/[handle]',
-  'messages/pending',
-  'post/[id]',
-  'profile/[handle]',
-] as const;
-
-const HIDDEN_TAB_OPTIONS = { href: null, tabBarButton: () => null } as const;
-
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
@@ -190,9 +180,6 @@ export default function TabLayout() {
                 {VISIBLE_TABS.map(({ name }) => (
                   <Tabs.Screen key={name} name={name} />
                 ))}
-                {HIDDEN_ROUTES.map((name) => (
-                  <Tabs.Screen key={name} name={name} options={HIDDEN_TAB_OPTIONS} />
-                ))}
               </Tabs>
             </View>
           </View>
@@ -264,9 +251,6 @@ export default function TabLayout() {
 
           return <Tabs.Screen key={name} name={name} options={options} />;
         })}
-        {HIDDEN_ROUTES.map((name) => (
-          <Tabs.Screen key={name} name={name} options={HIDDEN_TAB_OPTIONS} />
-        ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
