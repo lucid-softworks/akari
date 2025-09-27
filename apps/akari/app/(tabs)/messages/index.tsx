@@ -158,28 +158,35 @@ export function MessagesListScreen({
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ThemedView style={styles.header}>
-        <ThemedView style={styles.headerTitleContainer}>
-          {onBackPress ? (
-            <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}>
-              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+  const listHeaderComponent = React.useCallback(
+    () => (
+      <ThemedView style={[styles.headerContainer, { paddingTop: insets.top }]}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+          <ThemedView style={styles.headerTitleContainer}>
+            {onBackPress ? (
+              <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}>
+                <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+              </TouchableOpacity>
+            ) : null}
+            <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
+          </ThemedView>
+          {pendingButtonConfig ? (
+            <TouchableOpacity
+              style={styles.pendingButton}
+              onPress={pendingButtonConfig.onPress}
+              activeOpacity={0.7}
+            >
+              <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
             </TouchableOpacity>
           ) : null}
-          <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
         </ThemedView>
-        {pendingButtonConfig ? (
-          <TouchableOpacity
-            style={styles.pendingButton}
-            onPress={pendingButtonConfig.onPress}
-            activeOpacity={0.7}
-          >
-            <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
-          </TouchableOpacity>
-        ) : null}
       </ThemedView>
+    ),
+    [borderColor, insets.top, onBackPress, pendingButtonConfig, t, titleKey],
+  );
 
+  return (
+    <ThemedView style={styles.container}>
       <VirtualizedList
         ref={flatListRef}
         data={conversations}
@@ -211,6 +218,7 @@ export function MessagesListScreen({
             </ThemedView>
           )
         }
+        ListHeaderComponent={listHeaderComponent}
       />
     </ThemedView>
   );
@@ -235,6 +243,9 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerContainer: {
+    paddingBottom: 12,
   },
   header: {
     paddingHorizontal: 16,

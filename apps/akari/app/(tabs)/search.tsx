@@ -252,42 +252,67 @@ export default function SearchScreen() {
     }
   };
 
+  const listHeaderComponent = React.useCallback(
+    () => (
+      <ThemedView style={[styles.listHeaderContainer, { paddingTop: insets.top }]}>
+        <ThemedView style={styles.header}>
+          <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
+        </ThemedView>
+
+        <ThemedView style={styles.searchContainer}>
+          <TextInput
+            style={[
+              styles.searchInput,
+              {
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                color: textColor,
+              },
+            ]}
+            placeholder={t('search.searchInputPlaceholder')}
+            placeholderTextColor="#999999"
+            value={query}
+            onChangeText={setQuery}
+            onSubmitEditing={handleSearch}
+            returnKeyType="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TouchableOpacity
+            style={[styles.searchButton, { backgroundColor: borderColor }]}
+            onPress={handleSearch}
+            disabled={isLoading}
+          >
+            <ThemedText style={styles.searchButtonText}>
+              {isLoading ? t('search.searching') : t('common.search')}
+            </ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+
+        {searchQuery && allResults.length > 0 ? (
+          <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        ) : null}
+      </ThemedView>
+    ),
+    [
+      activeTab,
+      allResults.length,
+      backgroundColor,
+      borderColor,
+      handleSearch,
+      insets.top,
+      isLoading,
+      query,
+      searchQuery,
+      setActiveTab,
+      setQuery,
+      t,
+      textColor,
+    ],
+  );
+
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <ThemedView style={styles.header}>
-        <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
-      </ThemedView>
-
-      <ThemedView style={styles.searchContainer}>
-        <TextInput
-          style={[
-            styles.searchInput,
-            {
-              backgroundColor: backgroundColor,
-              borderColor: borderColor,
-              color: textColor,
-            },
-          ]}
-          placeholder={t('search.searchInputPlaceholder')}
-          placeholderTextColor="#999999"
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSearch}
-          returnKeyType="search"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <TouchableOpacity
-          style={[styles.searchButton, { backgroundColor: borderColor }]}
-          onPress={handleSearch}
-          disabled={isLoading}
-        >
-          <ThemedText style={styles.searchButtonText}>{isLoading ? t('search.searching') : t('common.search')}</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
-
-      {searchQuery && allResults.length > 0 ? <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} /> : null}
-
+    <ThemedView style={styles.container}>
       <VirtualizedList
         ref={flatListRef}
         data={filteredResults}
@@ -313,6 +338,7 @@ export default function SearchScreen() {
           )
         }
         estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
+        ListHeaderComponent={listHeaderComponent}
       />
     </ThemedView>
   );
@@ -321,6 +347,9 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  listHeaderContainer: {
+    paddingBottom: 12,
   },
   header: {
     paddingHorizontal: 16,

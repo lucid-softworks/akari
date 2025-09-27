@@ -13,13 +13,28 @@ export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize
 };
 
 function VirtualizedListInner<T>(
-  { data, renderItem, overscan = DEFAULT_OVERSCAN, estimatedItemSize: incomingEstimatedItemSize, ...rest }: VirtualizedListProps<T>,
+  {
+    data,
+    renderItem,
+    overscan = DEFAULT_OVERSCAN,
+    estimatedItemSize: incomingEstimatedItemSize,
+    ListHeaderComponent,
+    ListHeaderComponentStyle,
+    stickyHeaderIndices,
+    ...rest
+  }: VirtualizedListProps<T>,
   ref: React.ForwardedRef<VirtualizedListHandle<T>>,
 ) {
   const estimatedItemSize = incomingEstimatedItemSize ?? DEFAULT_ESTIMATED_ITEM_SIZE;
   const typedData = data as T[];
 
   const { drawDistance, ...flashListProps } = rest;
+  const computedStickyHeaderIndices =
+    stickyHeaderIndices !== undefined
+      ? stickyHeaderIndices
+      : ListHeaderComponent
+        ? [0]
+        : undefined;
 
   return (
     <FlashList
@@ -29,6 +44,9 @@ function VirtualizedListInner<T>(
       renderItem={renderItem}
       estimatedItemSize={estimatedItemSize}
       drawDistance={drawDistance ?? overscan * estimatedItemSize}
+      ListHeaderComponent={ListHeaderComponent}
+      ListHeaderComponentStyle={ListHeaderComponentStyle}
+      stickyHeaderIndices={computedStickyHeaderIndices}
     />
   );
 }
