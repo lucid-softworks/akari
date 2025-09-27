@@ -76,32 +76,48 @@ let body = `${marker}\n### Coverage Report\n\n${table}`;
 if (Array.isArray(files) && files.length > 0) {
   const fileRows = [];
 
-  const sortedFiles = [...files]
-    .map((file) => ({
-      ...file,
-      path: typeof file.path === 'string' ? file.path : '',
-    }))
-    .sort((a, b) => a.path.localeCompare(b.path));
+  const filesByDirectory = new Map();
 
-  let currentDirectory = null;
+  for (const file of files) {
+    const normalizedPath = typeof file.path === 'string' ? file.path : '';
+    const { directory, fileName } = splitPath(normalizedPath);
+    const directoryKey = normalizeDirectory(directory);
 
-  for (const file of sortedFiles) {
-    const { directory, fileName } = splitPath(file.path);
-    const directoryLabel = directory ? `./${directory}/` : './';
-
-    if (directory !== currentDirectory) {
-      currentDirectory = directory;
-      fileRows.push(`| **${escapeTableCell(directoryLabel)}** |  |  |  |  |`);
+    if (!filesByDirectory.has(directoryKey)) {
+      filesByDirectory.set(directoryKey, []);
     }
 
-    const cells = perFileMetrics
-      .map((metric) => formatCoverageCell(file[metric.key]))
-      .join(' | ');
-    const uncoveredLines = formatUncoveredLines(file.uncoveredLines);
+    filesByDirectory.get(directoryKey).push({
+      ...file,
+      path: normalizedPath,
+      directory: directoryKey,
+      fileName,
+    });
+  }
 
-    fileRows.push(
-      `| ${indentFileName(fileName)} | ${cells} | ${escapeTableCell(uncoveredLines)} |`,
-    );
+  const sortedDirectories = [...filesByDirectory.keys()].sort((a, b) => a.localeCompare(b));
+
+  for (const directory of sortedDirectories) {
+    const directoryLabel = formatDirectoryLabel(directory);
+    fileRows.push(`| **${escapeTableCell(directoryLabel)}** |  |  |  |  |`);
+
+    const entries = filesByDirectory.get(directory);
+    entries.sort((a, b) => a.fileName.localeCompare(b.fileName));
+
+    for (const entry of entries) {
+      if (!entry.fileName) {
+        continue;
+      }
+
+      const cells = perFileMetrics
+        .map((metric) => formatCoverageCell(entry[metric.key]))
+        .join(' | ');
+      const uncoveredLines = formatUncoveredLines(entry.uncoveredLines);
+
+      fileRows.push(
+        `| ${indentFileName(entry.fileName)} | ${cells} | ${escapeTableCell(uncoveredLines)} |`,
+      );
+    }
   }
 
   if (fileRows.length > 0) {
@@ -441,6 +457,22 @@ function splitPath(path) {
     directory: normalized.slice(0, index),
     fileName: normalized.slice(index + 1),
   };
+}
+
+function normalizeDirectory(directory) {
+  if (typeof directory !== 'string' || directory.length === 0) {
+    return '';
+  }
+
+  return directory.replace(/\/+$/u, '');
+}
+
+function formatDirectoryLabel(directory) {
+  if (!directory) {
+    return '.';
+  }
+
+  return `./${directory}`;
 }
 
 function extractUncoveredLines(fileCoverage) {
