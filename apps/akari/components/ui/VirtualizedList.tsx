@@ -7,7 +7,7 @@ const DEFAULT_OVERSCAN = 2;
 
 export type VirtualizedListHandle<T> = FlashList<T>;
 
-export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize' | 'style'> & {
+export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize'> & {
   estimatedItemSize?: number;
   overscan?: number;
 };
@@ -18,6 +18,7 @@ function VirtualizedListInner<T>(
     renderItem,
     overscan = DEFAULT_OVERSCAN,
     estimatedItemSize: incomingEstimatedItemSize,
+    style,
     ListHeaderComponent,
     ListHeaderComponentStyle,
     stickyHeaderIndices,
@@ -44,6 +45,7 @@ function VirtualizedListInner<T>(
       renderItem={renderItem}
       estimatedItemSize={estimatedItemSize}
       drawDistance={drawDistance ?? overscan * estimatedItemSize}
+      style={[{ flex: 1 }, style]}
       ListHeaderComponent={ListHeaderComponent}
       ListHeaderComponentStyle={ListHeaderComponentStyle}
       stickyHeaderIndices={computedStickyHeaderIndices}
