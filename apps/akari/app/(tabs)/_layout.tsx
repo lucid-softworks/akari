@@ -174,6 +174,11 @@ export default function TabLayout() {
                 <Tabs.Screen name="notifications" />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
+                <Tabs.Screen name="bookmarks" options={{ href: null }} />
+                <Tabs.Screen name="messages/[handle]" options={{ href: null }} />
+                <Tabs.Screen name="messages/pending" options={{ href: null }} />
+                <Tabs.Screen name="post/[id]" options={{ href: null }} />
+                <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
               </Tabs>
             </View>
           </View>
@@ -252,6 +257,11 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
+        <Tabs.Screen name="bookmarks" options={{ href: null }} />
+        <Tabs.Screen name="messages/[handle]" options={{ href: null }} />
+        <Tabs.Screen name="messages/pending" options={{ href: null }} />
+        <Tabs.Screen name="post/[id]" options={{ href: null }} />
+        <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
