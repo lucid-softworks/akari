@@ -11,6 +11,8 @@ const jestTsconfig = {
   ],
 };
 
+const isGithubActions = Boolean(process.env.GITHUB_ACTIONS);
+
 /** @type {import('jest').Config} */
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
@@ -31,4 +33,5 @@ module.exports = {
       tsconfig: jestTsconfig,
     },
   },
+  ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };

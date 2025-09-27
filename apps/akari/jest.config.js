@@ -1,3 +1,5 @@
+const isGithubActions = Boolean(process.env.GITHUB_ACTIONS);
+
 module.exports = {
   preset: 'jest-expo',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
@@ -23,4 +25,5 @@ module.exports = {
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
   },
+  ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };
