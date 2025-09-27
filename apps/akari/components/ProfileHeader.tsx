@@ -12,10 +12,10 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
-import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useBlockUserHandler } from '@/hooks/useBlockUserHandler';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
@@ -71,9 +71,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const borderColor = useBorderColor();
   const followMutation = useFollowUser();
-  const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
+  const { handleBlockPress: showBlockConfirmation } = useBlockUserHandler();
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
@@ -101,33 +101,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
       showToast({
         type: 'error',
         title: isFollowing ? t('common.unfollow') : t('common.follow'),
-        message: t('common.somethingWentWrong'),
-      });
-    }
-  };
-
-  const handleBlock = async () => {
-    if (!profile.did) return;
-
-    try {
-      if (isBlocking) {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          blockUri: profile.viewer?.blocking,
-          action: 'unblock',
-        });
-      } else {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          action: 'block',
-        });
-      }
-      setShowDropdown(false);
-    } catch (error) {
-      console.error('Block error:', error);
-      showToast({
-        type: 'error',
-        title: isBlocking ? t('common.unblock') : t('common.block'),
         message: t('common.somethingWentWrong'),
       });
     }
@@ -218,33 +191,12 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   };
 
   const handleBlockPress = () => {
-    if (isBlocking) {
-      showAlert({
-        title: t('common.unblock'),
-        message: t('profile.unblockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.unblock'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
-    } else {
-      showAlert({
-        title: t('common.block'),
-        message: t('profile.blockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.block'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
-    }
+    showBlockConfirmation({
+      did: profile.did,
+      handle: profile.handle,
+      blockingUri: profile.viewer?.blocking,
+      onSuccess: () => setShowDropdown(false),
+    });
   };
 
   const handleEditProfile = () => {

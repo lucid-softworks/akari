@@ -20,6 +20,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBlockUserHandler } from '@/hooks/useBlockUserHandler';
 import type { ProfileTabType } from '@/types/profile';
 import { showAlert } from '@/utils/alert';
 
@@ -32,6 +33,7 @@ export default function ProfileScreen() {
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
+  const { handleBlockPress: showBlockConfirmation } = useBlockUserHandler();
 
   const { data: profile, isLoading, error } = useProfile(handle);
 
@@ -116,9 +118,16 @@ export default function ProfileScreen() {
   };
 
   const handleBlockPress = () => {
-    // TODO: Implement block functionality
-    console.log('Block account');
-    setShowDropdown(false);
+    if (!profile?.did) {
+      return;
+    }
+
+    showBlockConfirmation({
+      did: profile.did,
+      handle: profile.handle,
+      blockingUri: profile.viewer?.blocking,
+      onSuccess: () => setShowDropdown(false),
+    });
   };
 
   const handleReportAccount = () => {

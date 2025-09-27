@@ -10,6 +10,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useToast } from '@/contexts/ToastContext';
 import * as Clipboard from 'expo-clipboard';
+import { useBlockUserHandler } from '@/hooks/useBlockUserHandler';
 
 let mockLatestDropdownMeasure: jest.Mock | null = null;
 
@@ -25,6 +26,7 @@ jest.mock('@/contexts/ToastContext');
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
+jest.mock('@/hooks/useBlockUserHandler');
 
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: {
@@ -222,8 +224,10 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
 const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+const mockUseBlockUserHandler = useBlockUserHandler as jest.Mock;
 
 let mockShowToast: jest.Mock;
+let mockHandleBlockPress: jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -236,6 +240,8 @@ beforeEach(() => {
   mockClipboardSetStringAsync.mockResolvedValue(undefined);
   mockShowToast = jest.fn();
   mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
+  mockHandleBlockPress = jest.fn((params?: { onSuccess?: () => void }) => params?.onSuccess?.());
+  mockUseBlockUserHandler.mockReturnValue({ handleBlockPress: mockHandleBlockPress });
   scrollToMock.mockClear();
 });
 
@@ -286,6 +292,7 @@ describe('ProfileScreen', () => {
 
   it('positions dropdown using measurement and closes for all actions', async () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockUseProfile.mockReturnValue({ data: { did: 'did:example:123', handle: 'alice', viewer: {} } });
 
     const { getByText, getByTestId, queryByTestId } = render(<ProfileScreen />);
 
@@ -312,7 +319,6 @@ describe('ProfileScreen', () => {
       'common.search',
       'profile.addToLists',
       'profile.muteAccount',
-      'common.block',
       'profile.reportAccount',
     ];
 
@@ -321,6 +327,17 @@ describe('ProfileScreen', () => {
       fireEvent.press(getByText(action));
       expect(queryByTestId('profile-dropdown')).toBeNull();
     });
+
+    fireEvent.press(getByText('open dropdown'));
+    fireEvent.press(getByText('common.block'));
+    expect(mockHandleBlockPress).toHaveBeenCalledWith(
+      expect.objectContaining({
+        did: 'did:example:123',
+        handle: 'alice',
+        blockingUri: undefined,
+      }),
+    );
+    expect(queryByTestId('profile-dropdown')).toBeNull();
   });
 });
 

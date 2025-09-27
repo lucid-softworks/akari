@@ -18,6 +18,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBlockUserHandler } from '@/hooks/useBlockUserHandler';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { showAlert } from '@/utils/alert';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,6 +34,7 @@ export default function ProfileScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { handleBlockPress: showBlockConfirmation } = useBlockUserHandler();
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -181,8 +183,16 @@ export default function ProfileScreen() {
           setShowDropdown(false);
         }}
         onBlockPress={() => {
-          // TODO: Implement block account functionality
-          setShowDropdown(false);
+          if (!profile?.did || !profile?.handle) {
+            return;
+          }
+
+          showBlockConfirmation({
+            did: profile.did,
+            handle: profile.handle,
+            blockingUri: profile.viewer?.blocking,
+            onSuccess: () => setShowDropdown(false),
+          });
         }}
         onReportAccount={() => {
           // TODO: Implement report account functionality

@@ -8,6 +8,7 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useToast } from '@/contexts/ToastContext';
 import * as Clipboard from 'expo-clipboard';
+import { useBlockUserHandler } from '@/hooks/useBlockUserHandler';
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
@@ -20,6 +21,7 @@ jest.mock('@/contexts/ToastContext');
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
+jest.mock('@/hooks/useBlockUserHandler');
 jest.mock('@/components/ProfileHeader', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -139,8 +141,10 @@ const mockUseProfile = useProfile as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
 const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
+const mockUseBlockUserHandler = useBlockUserHandler as jest.Mock;
 
 let mockShowToast: jest.Mock;
+let mockHandleBlockPress: jest.Mock;
 
 describe('ProfileScreen', () => {
   beforeEach(() => {
@@ -150,6 +154,8 @@ describe('ProfileScreen', () => {
     mockClipboardSetStringAsync.mockResolvedValue(undefined);
     mockShowToast = jest.fn();
     mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
+    mockHandleBlockPress = jest.fn((params?: { onSuccess?: () => void }) => params?.onSuccess?.());
+    mockUseBlockUserHandler.mockReturnValue({ handleBlockPress: mockHandleBlockPress });
   });
 
   it('shows skeleton while loading', () => {
@@ -189,14 +195,13 @@ describe('ProfileScreen', () => {
         followersCount: 1,
         followsCount: 1,
         postsCount: 1,
-        viewer: { following: true, blocking: true, muted: true },
+        viewer: { following: true, blocking: 'at://block/123', muted: true },
         labels: [],
       },
       isLoading: false,
       error: null,
     });
 
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     const { getByText, queryByText } = render(<ProfileScreen />);
 
     expect(getByText('posts alice')).toBeTruthy();
@@ -227,26 +232,14 @@ describe('ProfileScreen', () => {
     );
 
     fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('search posts'));
-    expect(logSpy).toHaveBeenCalledWith('Search posts');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('add to lists'));
-    expect(logSpy).toHaveBeenCalledWith('Add to lists');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('mute account'));
-    expect(logSpy).toHaveBeenCalledWith('Mute account');
-
-    fireEvent.press(getByText('header'));
     fireEvent.press(getByText('block account'));
-    expect(logSpy).toHaveBeenCalledWith('Block account');
-
-    fireEvent.press(getByText('header'));
-    fireEvent.press(getByText('report account'));
-    expect(logSpy).toHaveBeenCalledWith('Report account');
-
-    logSpy.mockRestore();
+    expect(mockHandleBlockPress).toHaveBeenCalledWith(
+      expect.objectContaining({
+        did: 'did',
+        handle: 'alice',
+        blockingUri: 'at://block/123',
+      }),
+    );
   });
 
   it('toggles dropdown visibility when closing', () => {
