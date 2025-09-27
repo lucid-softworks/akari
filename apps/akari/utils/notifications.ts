@@ -13,12 +13,12 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export interface PushNotificationToken {
+export type PushNotificationToken = {
   expoPushToken: string;
   devicePushToken?: string;
-}
+};
 
-export interface NotificationChannel {
+export type NotificationChannel = {
   id: string;
   name: string;
   description?: string;
@@ -26,7 +26,7 @@ export interface NotificationChannel {
   sound?: string;
   vibrationPattern?: number[];
   lightColor?: string;
-}
+};
 
 /**
  * Request notification permissions and return the status

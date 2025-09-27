@@ -7,18 +7,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
  * Mutation hook for refreshing the Bluesky session
  * Used to renew expired access tokens
  */
+type RefreshSessionParams = {
+  /** The refresh JWT token */
+  refreshToken: string;
+};
+
 export function useRefreshSession() {
   const queryClient = useQueryClient();
   const setAuthMutation = useSetAuthentication();
   const { data: currentAccount } = useCurrentAccount();
 
   return useMutation({
-    mutationFn: async ({
-      refreshToken,
-    }: {
-      /** The refresh JWT token */
-      refreshToken: string;
-    }) => {
+    mutationFn: async ({ refreshToken }: RefreshSessionParams) => {
       if (!currentAccount?.pdsUrl) {
         throw new Error('No PDS URL available for this account');
       }

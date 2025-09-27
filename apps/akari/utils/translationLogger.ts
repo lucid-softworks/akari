@@ -1,9 +1,9 @@
-interface TranslationLog {
+type TranslationLog = {
   key: string;
   locale: string;
   timestamp: number;
   stack?: string;
-}
+};
 
 class TranslationLogger {
   private missingTranslations: TranslationLog[] = [];

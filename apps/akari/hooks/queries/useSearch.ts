@@ -1,5 +1,6 @@
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
+import { CursorPageParam } from "@/hooks/queries/types";
 import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
 import { BlueskyApi } from "@/bluesky-api";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -33,7 +34,7 @@ export function useSearch(
 
   return useInfiniteQuery({
     queryKey: ["search", query, activeTab, limit, currentAccount?.pdsUrl],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
+    queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");

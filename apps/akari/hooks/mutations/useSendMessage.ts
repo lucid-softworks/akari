@@ -7,6 +7,13 @@ import { BlueskyApi } from '@/bluesky-api';
 /**
  * Mutation hook for sending messages in conversations
  */
+type SendMessageParams = {
+  /** The conversation ID */
+  convoId: string;
+  /** The message text content */
+  text: string;
+};
+
 export function useSendMessage() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
@@ -14,15 +21,7 @@ export function useSendMessage() {
 
   return useMutation({
     mutationKey: ['sendMessage'],
-    mutationFn: async ({
-      convoId,
-      text,
-    }: {
-      /** The conversation ID */
-      convoId: string;
-      /** The message text content */
-      text: string;
-    }) => {
+    mutationFn: async ({ convoId, text }: SendMessageParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

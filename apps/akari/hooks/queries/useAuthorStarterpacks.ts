@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { CursorPageParam } from '@/hooks/queries/types';
 import { BlueskyApi } from '@/bluesky-api';
 
 /**
@@ -15,7 +16,7 @@ export function useAuthorStarterpacks(identifier: string | undefined, limit: num
 
   return useInfiniteQuery({
     queryKey: ['authorStarterpacks', identifier, limit, currentAccount?.pdsUrl],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
+    queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

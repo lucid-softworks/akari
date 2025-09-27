@@ -7,6 +7,15 @@ import { BlueskyApi } from '@/bluesky-api';
 /**
  * Mutation hook for blocking and unblocking users
  */
+type BlockUserParams = {
+  /** The user's DID */
+  did: string;
+  /** The block URI (required for unblock) */
+  blockUri?: string;
+  /** Whether to block or unblock */
+  action: 'block' | 'unblock';
+};
+
 export function useBlockUser() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
@@ -14,18 +23,7 @@ export function useBlockUser() {
 
   return useMutation({
     mutationKey: ['blockUser'],
-    mutationFn: async ({
-      did,
-      blockUri,
-      action,
-    }: {
-      /** The user's DID */
-      did: string;
-      /** The block URI (required for unblock) */
-      blockUri?: string;
-      /** Whether to block or unblock */
-      action: 'block' | 'unblock';
-    }) => {
+    mutationFn: async ({ did, blockUri, action }: BlockUserParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
