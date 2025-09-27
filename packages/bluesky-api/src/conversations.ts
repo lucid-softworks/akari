@@ -26,14 +26,14 @@ export class BlueskyConversations extends BlueskyApiClient {
     readState?: 'unread',
     status?: 'request' | 'accepted',
   ): Promise<BlueskyConvosResponse> {
-    const params: Record<string, string> = { limit: limit.toString() };
+    const queryParameters: Record<string, string> = { limit: limit.toString() };
 
-    if (cursor) params.cursor = cursor;
-    if (readState) params.readState = readState;
-    if (status) params.status = status;
+    if (cursor) queryParameters.cursor = cursor;
+    if (readState) queryParameters.readState = readState;
+    if (status) queryParameters.status = status;
 
     return this.makeAuthenticatedRequest<BlueskyConvosResponse>('/chat.bsky.convo.listConvos', accessJwt, {
-      params,
+      queryParameters,
       headers: {
         'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
       },
@@ -54,11 +54,11 @@ export class BlueskyConversations extends BlueskyApiClient {
     limit: number = 50,
     cursor?: string,
   ): Promise<BlueskyMessagesResponse> {
-    const params: Record<string, string> = { convoId, limit: limit.toString() };
-    if (cursor) params.cursor = cursor;
+    const queryParameters: Record<string, string> = { convoId, limit: limit.toString() };
+    if (cursor) queryParameters.cursor = cursor;
 
     return this.makeAuthenticatedRequest<BlueskyMessagesResponse>('/chat.bsky.convo.getMessages', accessJwt, {
-      params,
+      queryParameters,
       headers: {
         'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
       },

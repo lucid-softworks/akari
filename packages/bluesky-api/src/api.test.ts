@@ -24,24 +24,24 @@ import type {
   BlueskyCreatePostResponse,
 } from './types';
 
-describe('BlueskyApi', () => {
-  const setupApi = () => {
-    const api = new BlueskyApi('https://pds.example');
-    const internal = api as unknown as {
-      auth: Record<string, jest.Mock>;
-      actors: Record<string, jest.Mock>;
-      feeds: Record<string, jest.Mock>;
-      conversations: Record<string, jest.Mock>;
-      graph: Record<string, jest.Mock>;
-      search: Record<string, jest.Mock>;
-      notifications: Record<string, jest.Mock>;
-    };
-
-    return { api, internal };
+const createBlueskyApiHarness = () => {
+  const api = new BlueskyApi('https://pds.example');
+  const internal = api as unknown as {
+    auth: Record<string, jest.Mock>;
+    actors: Record<string, jest.Mock>;
+    feeds: Record<string, jest.Mock>;
+    conversations: Record<string, jest.Mock>;
+    graph: Record<string, jest.Mock>;
+    search: Record<string, jest.Mock>;
+    notifications: Record<string, jest.Mock>;
   };
 
+  return { api, internal };
+};
+
+describe('BlueskyApi', () => {
   it('delegates authentication operations to the auth client', async () => {
-    const { api, internal } = setupApi();
+    const { api, internal } = createBlueskyApiHarness();
     const session: BlueskySession = {
       did: 'did:example:alice',
       handle: 'alice.test',
@@ -67,7 +67,7 @@ describe('BlueskyApi', () => {
   });
 
   it('forwards actor requests to the actors client', async () => {
-    const { api, internal } = setupApi();
+    const { api, internal } = createBlueskyApiHarness();
     const profile = { handle: 'alice.test' } as unknown as BlueskyProfileResponse;
     const preferences = { preferences: [] } as BlueskyPreferencesResponse;
 
@@ -87,7 +87,7 @@ describe('BlueskyApi', () => {
   });
 
   it('routes feed operations to the feeds client', async () => {
-    const { api, internal } = setupApi();
+    const { api, internal } = createBlueskyApiHarness();
     const feed = { feed: [] } as unknown as BlueskyFeedResponse;
     const trending = { topics: [] } as unknown as BlueskyTrendingTopicsResponse;
     const feedsResponse = { feeds: [] } as unknown as BlueskyFeedsResponse;
@@ -145,7 +145,7 @@ describe('BlueskyApi', () => {
   });
 
   it('delegates conversation operations to the conversations client', async () => {
-    const { api, internal } = setupApi();
+    const { api, internal } = createBlueskyApiHarness();
     const convos = { convos: [] } as unknown as BlueskyConvosResponse;
     const messages = { messages: [] } as unknown as BlueskyMessagesResponse;
     const messageInput: BlueskySendMessageInput = { text: 'hi' };
@@ -167,7 +167,7 @@ describe('BlueskyApi', () => {
   });
 
   it('delegates graph, search, and notification helpers to their respective clients', async () => {
-    const { api, internal } = setupApi();
+    const { api, internal } = createBlueskyApiHarness();
     const notifications = { notifications: [] } as unknown as BlueskyNotificationsResponse;
     const unread = { count: 5 } as BlueskyUnreadNotificationCount;
     const actorResults = { actors: [] } as unknown as BlueskySearchActorsResponse;

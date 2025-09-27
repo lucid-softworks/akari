@@ -5,6 +5,7 @@ import { ClearSkyApi } from './api';
 
 const baseUrl = 'https://example.com';
 const server = setupServer();
+const createClearSkyApi = () => new ClearSkyApi(baseUrl);
 
 type ApiTestCase = {
   name: string;
@@ -26,7 +27,6 @@ afterAll(() => {
 });
 
 describe('ClearSkyApi', () => {
-  const createApi = () => new ClearSkyApi(baseUrl);
   const timestamp = '2024-01-01T00:00:00.000Z';
   const specialHandle = 'user/with space';
   const specialDid = 'did:plc:abc123/456';
@@ -286,7 +286,7 @@ describe('ClearSkyApi', () => {
         }),
       );
 
-      const api = createApi();
+      const api = createClearSkyApi();
       const result = await testCase.call(api);
 
       expect(capturedUrl).toBe(`${baseUrl}${testCase.path}`);
@@ -502,7 +502,7 @@ describe('ClearSkyApi', () => {
         }),
       );
 
-      const api = createApi();
+      const api = createClearSkyApi();
       const result = await testCase.call(api);
 
       expect(capturedUrl).toBe(`${baseUrl}${testCase.path}`);
@@ -517,7 +517,7 @@ describe('ClearSkyApi', () => {
       ),
     );
 
-    const api = createApi();
+    const api = createClearSkyApi();
     const blob = await api.getLogo();
 
     expect(await blob.text()).toBe('logo-bytes');
@@ -530,7 +530,7 @@ describe('ClearSkyApi', () => {
       ),
     );
 
-    const api = createApi();
+    const api = createClearSkyApi();
 
     await expect(api.getLogo()).rejects.toThrow('Failed to fetch logo: 404');
   });

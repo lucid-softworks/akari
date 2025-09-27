@@ -26,21 +26,21 @@ export class BlueskyApiClient {
       method?: 'GET' | 'POST';
       headers?: Record<string, string>;
       body?: Record<string, unknown> | FormData | Blob;
-      params?: Record<string, string>;
+      queryParameters?: Record<string, string>;
     } = {},
   ): Promise<T> {
-    const { method = 'GET', headers = {}, body, params } = options;
+    const { method = 'GET', headers = {}, body, queryParameters } = options;
 
     let url = `${this.baseUrl}/xrpc${endpoint}`;
 
-    if (params && Object.keys(params).length > 0) {
-      const searchParams = new URLSearchParams();
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchParams.append(key, value);
+    if (queryParameters && Object.keys(queryParameters).length > 0) {
+      const searchParameters = new URLSearchParams();
+      for (const [key, value] of Object.entries(queryParameters)) {
+        if (value !== undefined) {
+          searchParameters.append(key, value);
         }
-      });
-      url += `?${searchParams.toString()}`;
+      }
+      url += `?${searchParameters.toString()}`;
     }
 
     const requestOptions: RequestInit = {
@@ -79,7 +79,7 @@ export class BlueskyApiClient {
     options: {
       method?: 'GET' | 'POST';
       body?: Record<string, unknown> | FormData | Blob;
-      params?: Record<string, string>;
+      queryParameters?: Record<string, string>;
       headers?: Record<string, string>;
     } = {},
   ): Promise<T> {

@@ -17,8 +17,8 @@ describe('BlueskyNotifications', () => {
 
   it('fetches notifications with query parameters', async () => {
     const responseData = { notifications: [] };
-    let capturedUrl: string | null = null;
-    let capturedHeaders: Record<string, string> | null = null;
+    let capturedUrl: string | undefined;
+    let capturedHeaders: Record<string, string> | undefined;
 
     server.use(
       http.get('https://custom.pds/xrpc/app.bsky.notification.listNotifications', async ({ request }) => {
@@ -35,7 +35,7 @@ describe('BlueskyNotifications', () => {
     expect(capturedUrl).toBe(
       'https://custom.pds/xrpc/app.bsky.notification.listNotifications?limit=10&cursor=cursor123&priority=true&seenAt=2024-01-01T00%3A00%3A00Z&reasons=like&reasons=follow',
     );
-    expect(capturedHeaders).not.toBeNull();
+    expect(capturedHeaders).toBeDefined();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
     expect(headers['content-type']).toBe('application/json');
@@ -55,7 +55,7 @@ describe('BlueskyNotifications', () => {
 
   it('fetches unread notification counts', async () => {
     const responseData = { count: 5 };
-    let capturedHeaders: Record<string, string> | null = null;
+    let capturedHeaders: Record<string, string> | undefined;
 
     server.use(
       http.get('https://example.pds/xrpc/app.bsky.notification.getUnreadCount', async ({ request }) => {
@@ -68,7 +68,7 @@ describe('BlueskyNotifications', () => {
     const result = await client.getUnreadCount('jwt-token');
 
     expect(result).toEqual({ count: 5 });
-    expect(capturedHeaders).not.toBeNull();
+    expect(capturedHeaders).toBeDefined();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
     expect(headers['content-type']).toBe('application/json');

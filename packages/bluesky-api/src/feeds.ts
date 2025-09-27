@@ -27,7 +27,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    */
   async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
     return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getTimeline', accessJwt, {
-      params: { limit: limit.toString() },
+      queryParameters: { limit: limit.toString() },
       headers: {
         'atproto-accept-labelers':
           'did:plc:ar7c4by46qjdydhdevvrndac;redact, did:plc:gvkp7euswjjrctjmqwhhfzif;redact, did:plc:newitj5jo3uel7o4mnf3vj2o, did:plc:pbmxe3tfpkts72wi74weijpo, did:plc:wkoofae5uytcm7bjncmev6n6, did:plc:blwl5jhgk7eygww2bhkt56hg, did:plc:mjyeurqmqjeexbgigk3yytvb, did:plc:i65enriuag7n5fgkopbqtkyk, did:plc:zal76px7lfptnpgn4j3v6i7d, did:plc:wp7hxfjl5l4zlptn7y6774lk, did:plc:xpxsa5aviwecd7cv6bzbmr5n, did:plc:gwqqyezoxusulkn5g2nzd6t2, did:plc:xss2sw5p4bfhjqjorl7gk6z4, did:plc:mtbmlt62wuf454ztne5wacev, did:plc:bfsapbnzx54ypg2mgrflkjlx, did:plc:gclep67kb2bifr3praijwoun, did:plc:aksxl7qy5azlzfm2jstcwqtz, did:plc:yb2gz6yxpebbzlundrrfkv4d, did:plc:vfibt4bgozsdx6rnnnpha3x7',
@@ -42,7 +42,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    */
   async getTrendingTopics(limit: number = 10): Promise<BlueskyTrendingTopicsResponse> {
     return this.makeRequest<BlueskyTrendingTopicsResponse>('/app.bsky.unspecced.getTrendingTopics', {
-      params: { limit: limit.toString() },
+      queryParameters: { limit: limit.toString() },
     });
   }
 
@@ -55,16 +55,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @returns Promise resolving to feeds data
    */
   async getFeeds(accessJwt: string, actor: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedsResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       actor,
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { queryParameters });
   }
 
   /**
@@ -76,16 +76,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @returns Promise resolving to feed posts data
    */
   async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       feed,
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, { queryParameters });
   }
 
   /**
@@ -95,12 +95,12 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @returns Promise resolving to feed generators data
    */
   async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<BlueskyFeedGeneratorsResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       feeds: feeds.join(','),
     };
 
     return this.makeAuthenticatedRequest<BlueskyFeedGeneratorsResponse>('/app.bsky.feed.getFeedGenerators', accessJwt, {
-      params,
+      queryParameters,
     });
   }
 
@@ -116,16 +116,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
     limit: number = 50,
     cursor?: string,
   ): Promise<BlueskyBookmarksResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
     return this.makeAuthenticatedRequest<BlueskyBookmarksResponse>('/app.bsky.bookmark.getBookmarks', accessJwt, {
-      params,
+      queryParameters,
     });
   }
 
@@ -139,7 +139,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     const data = await this.makeAuthenticatedRequest<{
       thread?: { post: BlueskyPostView };
     }>('/app.bsky.feed.getPostThread', accessJwt, {
-      params: { uri },
+      queryParameters: { uri },
     });
     if (!data.thread?.post) {
       throw new Error('Post not found');
@@ -155,7 +155,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
    */
   async getPostThread(accessJwt: string, uri: string): Promise<BlueskyThreadResponse> {
     return this.makeAuthenticatedRequest<BlueskyThreadResponse>('/app.bsky.feed.getPostThread', accessJwt, {
-      params: { uri },
+      queryParameters: { uri },
     });
   }
 
@@ -175,20 +175,20 @@ export class BlueskyFeeds extends BlueskyApiClient {
     cursor?: string,
     filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads',
   ): Promise<BlueskyFeedResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       actor,
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
     if (filter) {
-      params.filter = filter;
+      queryParameters.filter = filter;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { queryParameters });
   }
 
   /**
@@ -205,17 +205,17 @@ export class BlueskyFeeds extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string,
   ): Promise<BlueskyFeedResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       actor,
       limit: limit.toString(),
       filter: 'posts_with_video',
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { queryParameters });
   }
 
   /**
@@ -232,16 +232,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
     limit: number = 50,
     cursor?: string,
   ): Promise<BlueskyFeedsResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       actor,
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedsResponse>('/app.bsky.feed.getActorFeeds', accessJwt, { queryParameters });
   }
 
   /**
@@ -258,17 +258,17 @@ export class BlueskyFeeds extends BlueskyApiClient {
     limit: number = 50,
     cursor?: string,
   ): Promise<BlueskyStarterPacksResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       actor,
       limit: limit.toString(),
     };
 
     if (cursor) {
-      params.cursor = cursor;
+      queryParameters.cursor = cursor;
     }
 
     return this.makeAuthenticatedRequest<BlueskyStarterPacksResponse>('/app.bsky.graph.getActorStarterPacks', accessJwt, {
-      params,
+      queryParameters,
     });
   }
 
@@ -382,10 +382,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
       if (regularImages.length > 0) {
         const uploadedImages = await Promise.all(
           regularImages.map(async (image) => {
-            const blobRef = await this.uploadImage(accessJwt, image.uri, image.mimeType);
+            const blobReference = await this.uploadImage(accessJwt, image.uri, image.mimeType);
             return {
               alt: image.alt,
-              image: blobRef.blob,
+              image: blobReference.blob,
             };
           }),
         );

@@ -9,7 +9,7 @@ describe('BlueskyActors', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       };
     };
@@ -26,7 +26,7 @@ describe('BlueskyActors', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -55,7 +55,7 @@ describe('BlueskyActors', () => {
       endpoint: '/app.bsky.actor.getProfile',
       accessJwt: 'jwt-token',
       options: {
-        params: { actor: 'did:example:alice' },
+        queryParameters: { actor: 'did:example:alice' },
       },
     });
   });

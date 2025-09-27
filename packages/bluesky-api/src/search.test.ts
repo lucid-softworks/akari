@@ -11,7 +11,7 @@ describe('BlueskySearch', () => {
       accessJwt: string;
       options: {
         method?: 'GET' | 'POST';
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
       };
@@ -28,7 +28,7 @@ describe('BlueskySearch', () => {
       accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
       } = {},
@@ -51,7 +51,7 @@ describe('BlueskySearch', () => {
         endpoint: '/app.bsky.actor.searchActors',
         accessJwt: 'jwt',
         options: {
-          params: {
+          queryParameters: {
             q: 'carol',
             limit: '15',
             cursor: 'cursor-abc',
@@ -74,7 +74,7 @@ describe('BlueskySearch', () => {
         endpoint: '/app.bsky.feed.searchPosts',
         accessJwt: 'jwt',
         options: {
-          params: {
+          queryParameters: {
             q: 'hello world',
             limit: '20',
           },

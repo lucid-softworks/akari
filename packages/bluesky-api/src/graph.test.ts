@@ -8,7 +8,7 @@ describe('BlueskyGraph', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       };
     }[] = [];
@@ -25,7 +25,7 @@ describe('BlueskyGraph', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {

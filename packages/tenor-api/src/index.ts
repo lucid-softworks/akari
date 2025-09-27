@@ -68,7 +68,7 @@ class TenorAPI {
    * @returns Promise with search results
    */
   async searchGifs(query: string, limit: number = 20, pos?: string): Promise<TenorSearchResponse> {
-    const params = new URLSearchParams({
+    const queryParameters = new URLSearchParams({
       q: query,
       key: this.apiKey,
       limit: limit.toString(),
@@ -77,10 +77,10 @@ class TenorAPI {
     });
 
     if (pos) {
-      params.append('pos', pos);
+      queryParameters.append('pos', pos);
     }
 
-    const response = await fetch(`${TENOR_BASE_URL}/search?${params}`);
+    const response = await fetch(`${TENOR_BASE_URL}/search?${queryParameters}`);
 
     if (!response.ok) {
       throw new Error(`Tenor API error: ${response.status} ${response.statusText}`);
@@ -96,7 +96,7 @@ class TenorAPI {
    * @returns Promise with trending results
    */
   async getTrendingGifs(limit: number = 20, pos?: string): Promise<TenorTrendingResponse> {
-    const params = new URLSearchParams({
+    const trendingParameters = new URLSearchParams({
       key: this.apiKey,
       limit: limit.toString(),
       media_filter: 'gif',
@@ -104,10 +104,10 @@ class TenorAPI {
     });
 
     if (pos) {
-      params.append('pos', pos);
+      trendingParameters.append('pos', pos);
     }
 
-    const response = await fetch(`${TENOR_BASE_URL}/featured?${params}`);
+    const response = await fetch(`${TENOR_BASE_URL}/featured?${trendingParameters}`);
 
     if (!response.ok) {
       throw new Error(`Tenor API error: ${response.status} ${response.statusText}`);
@@ -122,13 +122,13 @@ class TenorAPI {
    * @returns Promise with GIF data
    */
   async getGifById(id: string): Promise<TenorGif> {
-    const params = new URLSearchParams({
+    const lookupParameters = new URLSearchParams({
       key: this.apiKey,
       ids: id,
       media_filter: 'gif',
     });
 
-    const response = await fetch(`${TENOR_BASE_URL}/posts?${params}`);
+    const response = await fetch(`${TENOR_BASE_URL}/posts?${lookupParameters}`);
 
     if (!response.ok) {
       throw new Error(`Tenor API error: ${response.status} ${response.statusText}`);

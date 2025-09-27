@@ -14,7 +14,7 @@ describe('BlueskyConversations', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       };
     };
@@ -31,7 +31,7 @@ describe('BlueskyConversations', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -55,7 +55,7 @@ describe('BlueskyConversations', () => {
       endpoint: '/chat.bsky.convo.listConvos',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           limit: '10',
           cursor: 'cursor-1',
           readState: 'unread',
@@ -83,7 +83,7 @@ describe('BlueskyConversations', () => {
       endpoint: '/chat.bsky.convo.getMessages',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           convoId: 'convo-1',
           limit: '25',
           cursor: 'cursor-2',

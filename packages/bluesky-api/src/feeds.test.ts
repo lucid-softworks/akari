@@ -20,7 +20,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       };
     }[] = [];
@@ -30,7 +30,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       };
     }[] = [];
@@ -47,7 +47,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -60,7 +60,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -82,7 +82,7 @@ describe('BlueskyFeeds', () => {
     expect(call).toMatchObject({
       endpoint: '/app.bsky.feed.getTimeline',
       accessJwt: 'jwt',
-      options: { params: { limit: '20' } },
+      options: { queryParameters: { limit: '20' } },
     });
     expect(call.options.headers?.['atproto-accept-labelers']).toContain(
       'did:plc:ar7c4by46qjdydhdevvrndac;redact',
@@ -100,7 +100,7 @@ describe('BlueskyFeeds', () => {
     expect(feeds.requestCalls).toEqual([
       {
         endpoint: '/app.bsky.unspecced.getTrendingTopics',
-        options: { params: { limit: '10' } },
+        options: { queryParameters: { limit: '10' } },
       },
     ]);
   });
@@ -117,7 +117,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.feed.getActorFeeds',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           actor: 'did:example:alice',
           limit: '25',
           cursor: 'cursor-123',
@@ -138,7 +138,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.feed.getFeed',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           feed: 'at://feed/123',
           limit: '30',
         },
@@ -158,7 +158,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.feed.getFeedGenerators',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           feeds: 'at://feed/a,at://feed/b',
         },
       },
@@ -177,7 +177,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.bookmark.getBookmarks',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           limit: '40',
           cursor: 'cursor-abc',
         },
@@ -200,7 +200,7 @@ describe('BlueskyFeeds', () => {
     expect(feeds.authCalls[0]).toMatchObject({
       endpoint: '/app.bsky.feed.getPostThread',
       accessJwt: 'jwt',
-      options: { params: { uri: 'at://post/1' } },
+      options: { queryParameters: { uri: 'at://post/1' } },
     });
   });
 
@@ -222,7 +222,7 @@ describe('BlueskyFeeds', () => {
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getPostThread',
       accessJwt: 'jwt',
-      options: { params: { uri: 'at://post/3' } },
+      options: { queryParameters: { uri: 'at://post/3' } },
     });
   });
 
@@ -244,7 +244,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.feed.getAuthorFeed',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           actor: 'did:example:alice',
           limit: '10',
           cursor: 'cursor-1',
@@ -266,7 +266,7 @@ describe('BlueskyFeeds', () => {
       endpoint: '/app.bsky.feed.getAuthorFeed',
       accessJwt: 'jwt',
       options: {
-        params: {
+        queryParameters: {
           actor: 'did:example:bob',
           limit: '5',
           cursor: 'cursor-2',
@@ -292,12 +292,12 @@ describe('BlueskyFeeds', () => {
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getActorFeeds',
       accessJwt: 'jwt',
-      options: { params: { actor: 'did:example:carol', limit: '15' } },
+      options: { queryParameters: { actor: 'did:example:carol', limit: '15' } },
     });
     expect(feeds.authCalls[1]).toEqual({
       endpoint: '/app.bsky.graph.getActorStarterPacks',
       accessJwt: 'jwt',
-      options: { params: { actor: 'did:example:carol', limit: '15' } },
+      options: { queryParameters: { actor: 'did:example:carol', limit: '15' } },
     });
   });
 

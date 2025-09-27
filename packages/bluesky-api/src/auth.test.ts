@@ -9,7 +9,7 @@ describe('BlueskyAuth', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
       };
     };
 
@@ -25,7 +25,7 @@ describe('BlueskyAuth', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        queryParameters?: Record<string, string>;
       } = {},
     ): Promise<T> {
       this.lastCall = { endpoint, options };

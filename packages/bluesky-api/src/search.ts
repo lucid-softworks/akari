@@ -22,7 +22,7 @@ export class BlueskySearch extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string
   ): Promise<BlueskySearchActorsResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       q: query,
       limit: limit.toString(),
       ...(cursor && { cursor }),
@@ -32,7 +32,7 @@ export class BlueskySearch extends BlueskyApiClient {
       "/app.bsky.actor.searchActors",
       accessJwt,
       {
-        params,
+        queryParameters,
       }
     );
   }
@@ -51,7 +51,7 @@ export class BlueskySearch extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string
   ): Promise<BlueskySearchPostsResponse> {
-    const params: Record<string, string> = {
+    const queryParameters: Record<string, string> = {
       q: query,
       limit: limit.toString(),
       ...(cursor && { cursor }),
@@ -61,7 +61,7 @@ export class BlueskySearch extends BlueskyApiClient {
       "/app.bsky.feed.searchPosts",
       accessJwt,
       {
-        params,
+        queryParameters,
       }
     );
   }

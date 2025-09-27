@@ -21,7 +21,7 @@ export class ClearSkyApiClient {
    * @returns Promise resolving to the response data
    */
   protected async makeRequest<T>(endpoint: string, options: ClearSkyRequestOptions = {}): Promise<T> {
-    const url = this.buildUrl(endpoint, options.params);
+    const url = this.buildUrl(endpoint, options.queryParameters);
     const requestOptions = this.buildRequestOptions(options);
 
     const response = await fetch(url, requestOptions);
@@ -36,21 +36,21 @@ export class ClearSkyApiClient {
   /**
    * Builds the complete URL with query parameters
    */
-  private buildUrl(endpoint: string, params?: Record<string, string>): string {
+  private buildUrl(endpoint: string, queryParameters?: Record<string, string>): string {
     const url = `${this.baseUrl}${endpoint}`;
 
-    if (!params || Object.keys(params).length === 0) {
+    if (!queryParameters || Object.keys(queryParameters).length === 0) {
       return url;
     }
 
-    const searchParams = new URLSearchParams();
-    for (const [key, value] of Object.entries(params)) {
-      if (value !== undefined && value !== null) {
-        searchParams.append(key, value);
+    const searchParameters = new URLSearchParams();
+    for (const [key, value] of Object.entries(queryParameters)) {
+      if (value !== undefined) {
+        searchParameters.append(key, value);
       }
     }
 
-    return `${url}?${searchParams.toString()}`;
+    return `${url}?${searchParameters.toString()}`;
   }
 
   /**
@@ -106,13 +106,13 @@ export class ClearSkyApiClient {
   /**
    * Makes a GET request to the ClearSky API
    * @param endpoint - The API endpoint path
-   * @param params - Query parameters
+   * @param queryParameters - Query parameters
    * @returns Promise resolving to the response data
    */
-  protected async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+  protected async get<T>(endpoint: string, queryParameters?: Record<string, string>): Promise<T> {
     return this.makeRequest<T>(endpoint, {
       method: 'GET',
-      params,
+      queryParameters,
     });
   }
 
@@ -120,14 +120,18 @@ export class ClearSkyApiClient {
    * Makes a POST request to the ClearSky API
    * @param endpoint - The API endpoint path
    * @param body - Request body
-   * @param params - Query parameters
+   * @param queryParameters - Query parameters
    * @returns Promise resolving to the response data
    */
-  protected async post<T>(endpoint: string, body?: Record<string, unknown>, params?: Record<string, string>): Promise<T> {
+  protected async post<T>(
+    endpoint: string,
+    body?: Record<string, unknown>,
+    queryParameters?: Record<string, string>,
+  ): Promise<T> {
     return this.makeRequest<T>(endpoint, {
       method: 'POST',
       body,
-      params,
+      queryParameters,
     });
   }
 }

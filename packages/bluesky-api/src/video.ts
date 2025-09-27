@@ -7,7 +7,7 @@
  * @param url The playlist URL from Bluesky
  * @returns The resolved video URL with session ID, or the original URL if not a Bluesky playlist
  */
-export async function resolveBlueskyVideoUrl(url: string): Promise<string | null> {
+export async function resolveBlueskyVideoUrl(url: string): Promise<string | undefined> {
   if (!url.includes('video.bsky.app') || !url.includes('playlist.m3u8')) {
     return url; // Not a Bluesky playlist, return as-is
   }
@@ -15,7 +15,7 @@ export async function resolveBlueskyVideoUrl(url: string): Promise<string | null
   try {
     // Add timeout and better error handling
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 second timeout
 
     const response = await fetch(url, {
       signal: controller.signal,
@@ -37,8 +37,8 @@ export async function resolveBlueskyVideoUrl(url: string): Promise<string | null
     const lines = playlist.split('\n');
     let videoPath = '';
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
       // Look for lines that end with video.m3u8 and contain session_id (not comments)
       if (line.includes('video.m3u8') && line.includes('session_id=') && !line.startsWith('#')) {
         videoPath = line;
@@ -61,6 +61,6 @@ export async function resolveBlueskyVideoUrl(url: string): Promise<string | null
     } else {
       console.error('Video resolution: Failed to resolve playlist:', error);
     }
-    return null; // Return null on error instead of original URL
+    return undefined; // Return undefined on error instead of original URL
   }
 }

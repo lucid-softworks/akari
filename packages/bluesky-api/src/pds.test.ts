@@ -37,7 +37,7 @@ describe('getPdsUrlFromDid', () => {
     expect(requestedUrl).toBe('https://plc.directory/did:example:123');
   });
 
-  it('returns null when response is not ok', async () => {
+  it('returns undefined when response is not ok', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     server.use(
@@ -48,11 +48,11 @@ describe('getPdsUrlFromDid', () => {
 
     const url = await getPdsUrlFromDid('did:bad');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  it('returns null when service is missing', async () => {
+  it('returns undefined when service is missing', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     server.use(
@@ -63,11 +63,11 @@ describe('getPdsUrlFromDid', () => {
 
     const url = await getPdsUrlFromDid('did:noService');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  it('returns null when fetch throws', async () => {
+  it('returns undefined when fetch throws', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     server.use(
@@ -76,7 +76,7 @@ describe('getPdsUrlFromDid', () => {
 
     const url = await getPdsUrlFromDid('did:error');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(errorSpy).toHaveBeenCalled();
   });
 });
@@ -108,7 +108,7 @@ describe('getPdsUrlFromHandle', () => {
     expect(plcUrl).toBe('https://plc.directory/did:example:123');
   });
 
-  it('returns null when handle resolution fails', async () => {
+  it('returns undefined when handle resolution fails', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     server.use(
@@ -119,11 +119,11 @@ describe('getPdsUrlFromHandle', () => {
 
     const url = await getPdsUrlFromHandle('bad.handle');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  it('returns null when no DID is returned', async () => {
+  it('returns undefined when no DID is returned', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     server.use(
@@ -134,11 +134,11 @@ describe('getPdsUrlFromHandle', () => {
 
     const url = await getPdsUrlFromHandle('nodid.handle');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  it('returns null when PDS lookup yields no service', async () => {
+  it('returns undefined when PDS lookup yields no service', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     server.use(
@@ -150,7 +150,7 @@ describe('getPdsUrlFromHandle', () => {
 
     const url = await getPdsUrlFromHandle('@alice.test');
 
-    expect(url).toBeNull();
+    expect(url).toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
   });
 });

@@ -156,7 +156,7 @@ export class LibreTranslateClient {
     try {
       return (await response.json()) as T;
     } catch {
-      return undefined;
+      return;
     }
   }
 
@@ -179,7 +179,7 @@ export class LibreTranslateClient {
       }
 
       if (!Array.isArray(data)) {
-        throw new Error('Invalid languages response');
+        throw new TypeError('Invalid languages response');
       }
 
       return data

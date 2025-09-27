@@ -30,16 +30,18 @@ export class BlueskyNotifications {
   ): Promise<BlueskyNotificationsResponse> {
     const url = `${this.pdsUrl}/xrpc/app.bsky.notification.listNotifications`;
 
-    const params = new URLSearchParams();
-    if (limit) params.append('limit', limit.toString());
-    if (cursor) params.append('cursor', cursor);
-    if (priority !== undefined) params.append('priority', priority.toString());
-    if (seenAt) params.append('seenAt', seenAt);
+    const parameters = new URLSearchParams();
+    if (limit) parameters.append('limit', limit.toString());
+    if (cursor) parameters.append('cursor', cursor);
+    if (priority !== undefined) parameters.append('priority', priority.toString());
+    if (seenAt) parameters.append('seenAt', seenAt);
     if (reasons && reasons.length > 0) {
-      reasons.forEach((reason) => params.append('reasons', reason));
+      for (const reason of reasons) {
+        parameters.append('reasons', reason);
+      }
     }
 
-    const response = await fetch(`${url}?${params.toString()}`, {
+    const response = await fetch(`${url}?${parameters.toString()}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessJwt}`,

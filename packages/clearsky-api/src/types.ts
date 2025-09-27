@@ -473,7 +473,7 @@ export type ClearSkyRequestOptions = {
   method?: 'GET' | 'POST';
   headers?: Record<string, string>;
   body?: Record<string, unknown> | FormData | Blob;
-  params?: Record<string, string>;
+  queryParameters?: Record<string, string>;
 };
 
 /**

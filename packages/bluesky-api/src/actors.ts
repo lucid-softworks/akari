@@ -17,7 +17,7 @@ export class BlueskyActors extends BlueskyApiClient {
    */
   async getProfile(accessJwt: string, did: string): Promise<BlueskyProfileResponse> {
     return this.makeAuthenticatedRequest<BlueskyProfileResponse>('/app.bsky.actor.getProfile', accessJwt, {
-      params: { actor: did },
+      queryParameters: { actor: did },
     });
   }
 
