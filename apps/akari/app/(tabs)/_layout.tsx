@@ -31,6 +31,25 @@ const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   settings: 'settings',
 };
 
+const VISIBLE_TABS = [
+  { name: 'index', icon: 'house.fill' },
+  { name: 'search', icon: 'magnifyingglass' },
+  { name: 'messages', icon: 'message.fill' },
+  { name: 'notifications', icon: 'bell.fill' },
+  { name: 'profile', icon: 'person.fill' },
+  { name: 'settings', icon: 'gearshape.fill' },
+] as const;
+
+const HIDDEN_ROUTES = [
+  'bookmarks',
+  'messages/[handle]',
+  'messages/pending',
+  'post/[id]',
+  'profile/[handle]',
+] as const;
+
+const HIDDEN_TAB_OPTIONS = { href: null, tabBarButton: () => null } as const;
+
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
@@ -168,17 +187,12 @@ export default function TabLayout() {
                   tabBarStyle: { display: 'none' },
                 }}
               >
-                <Tabs.Screen name="index" />
-                <Tabs.Screen name="search" />
-                <Tabs.Screen name="messages" />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="profile" />
-                <Tabs.Screen name="settings" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="messages/[handle]" options={{ href: null }} />
-                <Tabs.Screen name="messages/pending" options={{ href: null }} />
-                <Tabs.Screen name="post/[id]" options={{ href: null }} />
-                <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
+                {VISIBLE_TABS.map(({ name }) => (
+                  <Tabs.Screen key={name} name={name} />
+                ))}
+                {HIDDEN_ROUTES.map((name) => (
+                  <Tabs.Screen key={name} name={name} options={HIDDEN_TAB_OPTIONS} />
+                ))}
               </Tabs>
             </View>
           </View>
@@ -205,63 +219,54 @@ export default function TabLayout() {
           },
         }}
       >
-        <Tabs.Screen
-          name="index"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="messages"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="message.fill" color={color} />
-                <TabBadge count={unreadMessagesCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="bell.fill" color={color} />
-                <TabBadge count={unreadNotificationsCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
-          }}
-          listeners={() => ({
-            tabLongPress: (event) => {
-              event.preventDefault();
-              handleOpenAccountSwitcher();
+        {VISIBLE_TABS.map(({ name, icon }) => {
+          const options = {
+            tabBarIcon: ({ color }: { color: string }) => {
+              const baseIcon = <TabBarIcon name={icon} color={color} />;
+
+              if (name === 'messages') {
+                return (
+                  <View style={{ position: 'relative' }}>
+                    {baseIcon}
+                    <TabBadge count={unreadMessagesCount} size="small" />
+                  </View>
+                );
+              }
+
+              if (name === 'notifications') {
+                return (
+                  <View style={{ position: 'relative' }}>
+                    {baseIcon}
+                    <TabBadge count={unreadNotificationsCount} size="small" />
+                  </View>
+                );
+              }
+
+              return baseIcon;
             },
-          })}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen name="bookmarks" options={{ href: null }} />
-        <Tabs.Screen name="messages/[handle]" options={{ href: null }} />
-        <Tabs.Screen name="messages/pending" options={{ href: null }} />
-        <Tabs.Screen name="post/[id]" options={{ href: null }} />
-        <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
+          };
+
+          if (name === 'profile') {
+            return (
+              <Tabs.Screen
+                key={name}
+                name={name}
+                options={options}
+                listeners={() => ({
+                  tabLongPress: (event) => {
+                    event.preventDefault();
+                    handleOpenAccountSwitcher();
+                  },
+                })}
+              />
+            );
+          }
+
+          return <Tabs.Screen key={name} name={name} options={options} />;
+        })}
+        {HIDDEN_ROUTES.map((name) => (
+          <Tabs.Screen key={name} name={name} options={HIDDEN_TAB_OPTIONS} />
+        ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
