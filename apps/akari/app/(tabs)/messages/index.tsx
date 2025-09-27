@@ -72,6 +72,8 @@ export function MessagesListScreen({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
+    isRefetching,
   } = useConversations(50, undefined, status);
 
   const conversations = React.useMemo(() => {
@@ -79,6 +81,10 @@ export function MessagesListScreen({
 
     return flattened.filter((conversation) => conversation.status === status);
   }, [conversationsData, status]);
+
+  const handleRefresh = React.useCallback(async () => {
+    await refetch({ throwOnError: false });
+  }, [refetch]);
 
   const renderConversation = React.useCallback(
     ({ item }: { item: Conversation }) => (
@@ -186,6 +192,8 @@ export function MessagesListScreen({
         onEndReachedThreshold={0.1}
         overscan={2}
         estimatedItemSize={ESTIMATED_CONVERSATION_HEIGHT}
+        refreshing={isRefetching}
+        onRefresh={handleRefresh}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           conversationsLoading ? (
