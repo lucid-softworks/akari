@@ -25,7 +25,6 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type FeedListItem =
-  | { type: 'header' }
   | { type: 'empty'; state: 'select' | 'loading' | 'empty' }
   | { type: 'post'; item: BlueskyFeedItem };
 
@@ -163,39 +162,36 @@ export default function HomeScreen() {
     return feedData?.pages.flatMap((page) => page.feed) ?? [];
   }, [feedData, selectedFeed, timelineData]);
 
-  const feedItems = useMemo(() => {
-    const items: FeedListItem[] = [{ type: 'header' }];
-
+  const feedItems = useMemo<FeedListItem[]>(() => {
     if (!selectedFeed) {
-      items.push({ type: 'empty', state: 'select' });
-      return items;
+      return [{ type: 'empty', state: 'select' }];
     }
 
     if (allPosts.length === 0) {
-      items.push({ type: 'empty', state: feedLoading || timelineLoading ? 'loading' : 'empty' });
-      return items;
+      return [{ type: 'empty', state: feedLoading || timelineLoading ? 'loading' : 'empty' }];
     }
 
-    return items.concat(allPosts.map((item) => ({ type: 'post', item })));
+    return allPosts.map((item) => ({ type: 'post', item }));
   }, [allPosts, feedLoading, selectedFeed, timelineLoading]);
+
+  const listHeaderComponent = useMemo(
+    () => (
+      <ThemedView style={styles.listHeader}>
+        <TabBar
+          tabs={allFeedsWithCreated.map((feed) => ({
+            key: feed.uri,
+            label: feed.displayName,
+          }))}
+          activeTab={selectedFeed || ''}
+          onTabChange={handleFeedSelection}
+        />
+      </ThemedView>
+    ),
+    [allFeedsWithCreated, handleFeedSelection, selectedFeed],
+  );
 
   const renderFeedItem = useCallback(
     ({ item }: { item: FeedListItem }) => {
-      if (item.type === 'header') {
-        return (
-          <ThemedView style={styles.listHeader}>
-            <TabBar
-              tabs={allFeedsWithCreated.map((feed) => ({
-                key: feed.uri,
-                label: feed.displayName,
-              }))}
-              activeTab={selectedFeed || ''}
-              onTabChange={handleFeedSelection}
-            />
-          </ThemedView>
-        );
-      }
-
       if (item.type === 'empty') {
         if (item.state === 'loading') {
           return <FeedSkeleton count={5} />;
@@ -257,14 +253,10 @@ export default function HomeScreen() {
         />
       );
     },
-    [allFeedsWithCreated, handleFeedSelection, selectedFeed, t],
+    [t],
   );
 
   const keyExtractor = useCallback((item: FeedListItem) => {
-    if (item.type === 'header') {
-      return 'feed-header';
-    }
-
     if (item.type === 'empty') {
       return `feed-empty-${item.state}`;
     }
@@ -306,6 +298,7 @@ export default function HomeScreen() {
         keyExtractor={keyExtractor}
         estimatedItemSize={320}
         overscan={3}
+        ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
         contentContainerStyle={styles.listContent}
         style={styles.list}
