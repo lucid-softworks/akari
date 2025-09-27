@@ -10,7 +10,9 @@ jobs:
     name: EAS Production Build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
     steps:
       - name: Check for EXPO_TOKEN
         run: |
@@ -46,6 +48,63 @@ jobs:
         run: |
           set -o pipefail
           eas build --profile production --platform all --non-interactive --wait --json | tee production-build-result.json
+
+      - name: Download native build artifacts
+        working-directory: apps/akari
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          ios_path="dist/akari-${RELEASE_TAG}-ios.ipa"
+          android_path="dist/akari-${RELEASE_TAG}-android.aab"
+          eas build:download --latest --platform ios --profile production --non-interactive --path "$ios_path"
+          eas build:download --latest --platform android --profile production --non-interactive --path "$android_path"
+
+      - name: Build production web bundle
+        working-directory: apps/akari
+        run: |
+          set -euo pipefail
+          npm run build:production -- --platform web --output-dir dist/web
+          tar -czf "dist/akari-${RELEASE_TAG}-web.tar.gz" -C dist/web .
+
+      - name: Publish Android build to Play Store
+        working-directory: apps/akari
+        run: |
+          eas submit --latest --platform android --profile production --non-interactive --wait
+
+      - name: Publish iOS build to App Store
+        working-directory: apps/akari
+        run: |
+          eas submit --latest --platform ios --profile production --non-interactive --wait
+
+      - name: Upload Android bundle to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: apps/akari/dist/akari-${{ github.event.release.tag_name }}-android.aab
+          asset_name: akari-${{ github.event.release.tag_name }}-android.aab
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload iOS binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: apps/akari/dist/akari-${{ github.event.release.tag_name }}-ios.ipa
+          asset_name: akari-${{ github.event.release.tag_name }}-ios.ipa
+          asset_content_type: application/octet-stream
+
+      - name: Upload web bundle to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: apps/akari/dist/akari-${{ github.event.release.tag_name }}-web.tar.gz
+          asset_name: akari-${{ github.event.release.tag_name }}-web.tar.gz
+          asset_content_type: application/gzip
 
       - name: Upload build manifest
         uses: actions/upload-artifact@v4
