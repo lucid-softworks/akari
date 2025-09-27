@@ -14,7 +14,7 @@ describe('BlueskyConversations', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       };
     };
@@ -31,7 +31,7 @@ describe('BlueskyConversations', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {

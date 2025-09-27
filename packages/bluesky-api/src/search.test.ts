@@ -11,7 +11,7 @@ describe('BlueskySearch', () => {
       accessJwt: string;
       options: {
         method?: 'GET' | 'POST';
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
       };
@@ -28,7 +28,7 @@ describe('BlueskySearch', () => {
       accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
       } = {},

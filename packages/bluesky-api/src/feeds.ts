@@ -95,13 +95,15 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @returns Promise resolving to feed generators data
    */
   async getFeedGenerators(accessJwt: string, feeds: string[]): Promise<BlueskyFeedGeneratorsResponse> {
-    const params: Record<string, string> = {
-      feeds: feeds.join(','),
-    };
-
-    return this.makeAuthenticatedRequest<BlueskyFeedGeneratorsResponse>('/app.bsky.feed.getFeedGenerators', accessJwt, {
-      params,
-    });
+    return this.makeAuthenticatedRequest<BlueskyFeedGeneratorsResponse>(
+      '/app.bsky.feed.getFeedGenerators',
+      accessJwt,
+      {
+        params: {
+          feeds,
+        },
+      },
+    );
   }
 
   /**
