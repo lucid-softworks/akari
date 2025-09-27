@@ -99,30 +99,14 @@ describe('TabLayout', () => {
       (call: any[]) => call[0],
     );
     const visibleScreens = screenProps.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
-    const hiddenScreens = screenProps.filter((screen: any) => screen.options?.href === null);
 
-    expect(visibleScreens.map((screen: any) => screen.name)).toEqual(['index', 'settings']);
-
-    expect(hiddenScreens.map((screen: any) => screen.name)).toEqual([
+    expect(visibleScreens.map((screen: any) => screen.name)).toEqual([
+      'index',
       'search',
-      'bookmarks',
       'messages',
-      'messages/[handle]',
-      'messages/pending',
       'notifications',
       'profile',
-      'post/[id]',
-      'profile/[handle]',
-      'settings/account',
-      'settings/privacy-and-security',
-      'settings/moderation',
-      'settings/notifications',
-      'settings/content-and-media',
-      'settings/appearance',
-      'settings/accessibility',
-      'settings/languages',
-      'settings/about',
-      'settings/development',
+      'settings',
     ]);
   });
 
@@ -141,30 +125,14 @@ describe('TabLayout', () => {
     });
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
     const visibleScreens = screens.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
-    const hiddenScreens = screens.filter((screen: any) => screen.options?.href === null);
 
-    expect(visibleScreens.map((screen: any) => screen.name)).toEqual(['index', 'settings']);
-
-    expect(hiddenScreens.map((screen: any) => screen.name)).toEqual([
+    expect(visibleScreens.map((screen: any) => screen.name)).toEqual([
+      'index',
       'search',
-      'bookmarks',
       'messages',
-      'messages/[handle]',
-      'messages/pending',
       'notifications',
       'profile',
-      'post/[id]',
-      'profile/[handle]',
-      'settings/account',
-      'settings/privacy-and-security',
-      'settings/moderation',
-      'settings/notifications',
-      'settings/content-and-media',
-      'settings/appearance',
-      'settings/accessibility',
-      'settings/languages',
-      'settings/about',
-      'settings/development',
+      'settings',
     ]);
 
     const homeScreen = visibleScreens.find((screen: any) => screen.name === 'index');
@@ -199,7 +167,7 @@ describe('TabLayout', () => {
       getState: jest
         .fn()
         .mockReturnValue({
-          routeNames: ['index', 'settings'],
+          routeNames: ['index', 'search', 'messages', 'notifications', 'profile', 'settings'],
           index: 0,
         }),
     } as any;

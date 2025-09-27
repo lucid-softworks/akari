@@ -14,35 +14,25 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const VISIBLE_TABS = [
   { name: 'index', title: 'Home', icon: 'home', accessibilityLabel: 'Home' },
+  { name: 'search', title: 'Search', icon: 'search', accessibilityLabel: 'Search' },
+  { name: 'messages', title: 'Messages', icon: 'chatbubble', accessibilityLabel: 'Messages' },
+  {
+    name: 'notifications',
+    title: 'Notifications',
+    icon: 'notifications',
+    accessibilityLabel: 'Notifications',
+  },
+  { name: 'profile', title: 'Profile', icon: 'person', accessibilityLabel: 'Profile' },
   { name: 'settings', title: 'Settings', icon: 'settings', accessibilityLabel: 'Settings' },
-] as const;
-
-const HIDDEN_TABS = [
-  'search',
-  'bookmarks',
-  'messages',
-  'messages/[handle]',
-  'messages/pending',
-  'notifications',
-  'profile',
-  'post/[id]',
-  'profile/[handle]',
-  'settings/account',
-  'settings/privacy-and-security',
-  'settings/moderation',
-  'settings/notifications',
-  'settings/content-and-media',
-  'settings/appearance',
-  'settings/accessibility',
-  'settings/languages',
-  'settings/about',
-  'settings/development',
 ] as const;
 
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
+  search: 'search',
+  messages: 'messages',
+  notifications: 'notifications',
+  profile: 'profile',
   settings: 'settings',
-  'post/[id]': 'index',
 };
 
 export default function TabLayout() {
@@ -148,9 +138,6 @@ export default function TabLayout() {
                     })}
                   />
                 ))}
-                {HIDDEN_TABS.map((name) => (
-                  <Tabs.Screen key={name} name={name} options={{ href: null }} />
-                ))}
               </Tabs>
             </View>
           </View>
@@ -185,9 +172,6 @@ export default function TabLayout() {
             tabPress: () => handleTabPress(name, navigation),
           })}
         />
-      ))}
-      {HIDDEN_TABS.map((name) => (
-        <Tabs.Screen key={name} name={name} options={{ href: null }} />
       ))}
     </Tabs>
   );
