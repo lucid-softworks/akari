@@ -101,16 +101,12 @@ export function PostsTab({ handle }: PostsTabProps) {
       ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
-      style={styles.flatList}
       estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    flex: 1,
-  },
   emptyContainer: {
     paddingVertical: 40,
     alignItems: 'center',

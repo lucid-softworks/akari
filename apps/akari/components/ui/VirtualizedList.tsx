@@ -7,7 +7,7 @@ const DEFAULT_OVERSCAN = 2;
 
 export type VirtualizedListHandle<T> = FlashList<T>;
 
-export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize'> & {
+export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize' | 'style'> & {
   estimatedItemSize?: number;
   overscan?: number;
 };

@@ -185,7 +185,6 @@ export function MessagesListScreen({
         data={conversations}
         renderItem={renderConversation}
         keyExtractor={(item) => item.id}
-        style={styles.list}
         contentContainerStyle={styles.conversationsContent}
         showsVerticalScrollIndicator={false}
         onEndReached={handleLoadMore}
@@ -267,9 +266,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
-  },
-  list: {
-    flex: 1,
   },
   conversationsContent: {
     paddingBottom: 100, // Add extra padding to account for tab bar
