@@ -5,6 +5,7 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 const mockGetProfile = jest.fn();
 const mockBlueskyApi = jest.fn(() => ({ getProfile: mockGetProfile }));
@@ -15,6 +16,10 @@ jest.mock('@/hooks/queries/useAccounts', () => ({
 
 jest.mock('@/hooks/queries/useJwtToken', () => ({
   useJwtToken: jest.fn(),
+}));
+
+jest.mock('@/hooks/queries/useCurrentAccount', () => ({
+  useCurrentAccount: jest.fn(),
 }));
 
 jest.mock('@/bluesky-api', () => ({
@@ -35,6 +40,7 @@ describe('useAccountProfiles', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: { did: 'did1' } });
   });
 
   it('returns empty object when no accounts', async () => {
@@ -81,8 +87,12 @@ describe('useAccountProfiles', () => {
     });
 
     expect(mockBlueskyApi).toHaveBeenCalledTimes(2);
-    expect(mockBlueskyApi).toHaveBeenNthCalledWith(1, 'https://pds1');
-    expect(mockBlueskyApi).toHaveBeenNthCalledWith(2, 'https://pds2');
+
+    const [[firstUrl, firstOptions], [secondUrl, secondOptions]] = mockBlueskyApi.mock.calls;
+    expect(firstUrl).toBe('https://pds1');
+    expect(firstOptions).toEqual({});
+    expect(secondUrl).toBe('https://pds2');
+    expect(secondOptions).toEqual({});
     expect(mockGetProfile).toHaveBeenNthCalledWith(1, 'token1', 'alice');
     expect(mockGetProfile).toHaveBeenNthCalledWith(2, 'token2', 'bob');
   });

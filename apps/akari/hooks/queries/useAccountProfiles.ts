@@ -2,6 +2,8 @@ import { BlueskyApi } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
 import { useAccounts } from './useAccounts';
 import { useJwtToken } from './useJwtToken';
+import { useCurrentAccount } from './useCurrentAccount';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Hook to fetch profile data for all accounts (for account switcher UI)
@@ -9,6 +11,8 @@ import { useJwtToken } from './useJwtToken';
 export function useAccountProfiles() {
   const { data: accounts } = useAccounts();
   const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ['accountProfiles', accounts?.map((a) => a.did)],
@@ -24,7 +28,8 @@ export function useAccountProfiles() {
             console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
             continue;
           }
-          const api = new BlueskyApi(account.pdsUrl);
+          const isCurrentAccount = account.did === currentAccount?.did;
+          const api = new BlueskyApi(account.pdsUrl, isCurrentAccount ? apiOptions : {});
           const profile = await api.getProfile(account.jwtToken, account.handle);
 
           if (profile) {
