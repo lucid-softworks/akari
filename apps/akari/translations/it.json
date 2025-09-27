@@ -239,7 +239,7 @@
       "imageAltTextPlaceholder": "Descrivi questa immagine per l'accessibilità...",
       "actions": {
         "translate": "Traduci",
-        "summarizeThread": "Riepiloga thread",
+        "summarizeThread": "Riepiloga discussione",
         "copyText": "Copia testo del post",
         "showMoreLikeThis": "Mostra altri come questo",
         "showLessLikeThis": "Mostra meno come questo",
@@ -258,11 +258,11 @@
         "error": "Non siamo riusciti a tradurre questo post. Riprova."
       },
       "summary": {
-        "title": "Riepilogo thread",
+        "title": "Riepilogo della discussione",
         "generating": "Generazione del riepilogo in corso...",
         "unavailable": "Apple Intelligence non è ancora disponibile su questo dispositivo.",
-        "noText": "Non siamo riusciti a trovare alcun testo da riassumere in questa conversazione.",
-        "error": "Non siamo riusciti a riassumere questo thread. Riprova.",
+        "noText": "Non abbiamo trovato testo da riassumere in questa discussione.",
+        "error": "Non siamo riusciti a riassumere questa discussione. Riprova.",
         "retry": "Prova di nuovo"
       }
     },
