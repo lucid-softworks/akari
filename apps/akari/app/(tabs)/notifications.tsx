@@ -24,7 +24,7 @@ import { formatRelativeTime } from '@/utils/timeUtils';
  */
 type GroupedNotification = {
   id: string;
-  type: 'like' | 'repost' | 'follow' | 'reply' | 'mention' | 'quote';
+  type: 'like' | 'like-via-repost' | 'repost' | 'follow' | 'reply' | 'mention' | 'quote';
   subject?: string; // Post URI for post-related notifications
   postContent?: string; // Content of the post being interacted with
   embed?: BlueskyEmbed; // Embed data for the post
@@ -72,6 +72,8 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     switch (type) {
       case 'like':
         return { name: 'heart.fill' as const, color: likeColor };
+      case 'like-via-repost':
+        return { name: 'heart.fill' as const, color: likeColor };
       case 'repost':
         return { name: 'arrow.2.squarepath' as const, color: repostColor };
       case 'follow':
@@ -91,6 +93,8 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     const action = (() => {
       switch (type) {
         case 'like':
+          return t('notifications.likedYourPost');
+        case 'like-via-repost':
           return t('notifications.likedYourPost');
         case 'repost':
           return t('notifications.repostedYourPost');
