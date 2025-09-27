@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import RootLayout from '@/app/_layout';
 import { ThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
@@ -71,36 +71,44 @@ describe('RootLayout', () => {
     expect(toJSON()).toBeNull();
   });
 
-  it('renders stack screens without devtools on native platforms', () => {
+  it('renders stack screens without devtools on native platforms', async () => {
     mockUseFonts.mockReturnValue([true]);
     const { queryByText } = render(<RootLayout />);
+
+    await waitFor(() => {
+      expect(mockThemeProvider).toHaveBeenCalled();
+    });
+
     expect(queryByText('Devtools')).toBeNull();
     const { Stack } = require('expo-router');
-    expect(Stack.Screen).toHaveBeenCalledTimes(4);
+    await waitFor(() => {
+      expect(Stack.Screen).toHaveBeenCalledTimes(4);
+    });
     const names: string[] = [];
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
     expect(names).toEqual(['(auth)', '(tabs)', 'debug', '+not-found']);
-    expect(mockThemeProvider).toHaveBeenCalled();
     const themeProps = mockThemeProvider.mock.calls[0][0];
     expect(themeProps.value).toBe(DefaultTheme);
   });
 
-  it('renders devtools on web', () => {
+  it('renders devtools on web', async () => {
     mockUseFonts.mockReturnValue([true]);
     setPlatform('web');
-    const { getByText } = render(<RootLayout />);
-    expect(getByText('Devtools')).toBeTruthy();
+    const { findByText } = render(<RootLayout />);
+    expect(await findByText('Devtools')).toBeTruthy();
   });
 
-  it('uses the dark theme when the color scheme is dark', () => {
+  it('uses the dark theme when the color scheme is dark', async () => {
     mockUseFonts.mockReturnValue([true]);
     mockUseColorScheme.mockReturnValue('dark');
 
     render(<RootLayout />);
 
-    expect(mockThemeProvider).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockThemeProvider).toHaveBeenCalled();
+    });
     const themeProps = mockThemeProvider.mock.calls[0][0];
     expect(themeProps.value).toBe(DarkTheme);
   });
