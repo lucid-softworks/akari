@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.1](https://github.com/ImLunaHey/akari/compare/v1.2.0...v1.2.1) (2025-09-27)
+
+
+### Bug Fixes
+
+* add pull-to-refresh to notifications list ([#284](https://github.com/ImLunaHey/akari/issues/284)) ([de3a15a](https://github.com/ImLunaHey/akari/commit/de3a15ad0dd35f8e31493e89d9ed5f98d1a64f10))
+* dedupe timeline feed header ([#286](https://github.com/ImLunaHey/akari/issues/286)) ([00e88d1](https://github.com/ImLunaHey/akari/commit/00e88d1eab5e4bb8909b1b2b6a4015de5d6fbe3b))
+* enable pull-to-refresh on messages list ([#285](https://github.com/ImLunaHey/akari/issues/285)) ([7076398](https://github.com/ImLunaHey/akari/commit/707639860505cc24a819c96e3527fc761ead8134))
+
 ## [1.2.0](https://github.com/ImLunaHey/akari/compare/v1.1.0...v1.2.0) (2025-09-27)
 
 
