@@ -514,7 +514,6 @@ export default function NotificationsScreen() {
         ListFooterComponent={listFooterComponent ?? undefined}
         ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={styles.listContent}
-        style={styles.list}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         refreshing={refreshing}
@@ -532,9 +531,6 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     paddingBottom: 12,
-  },
-  list: {
-    flex: 1,
   },
   listContent: {
     paddingBottom: 100,

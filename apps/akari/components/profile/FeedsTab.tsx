@@ -111,16 +111,12 @@ export function FeedsTab({ handle }: FeedsTabProps) {
       ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
-      style={styles.flatList}
       estimatedItemSize={ESTIMATED_FEED_CARD_HEIGHT}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    flex: 1,
-  },
   emptyContainer: {
     paddingVertical: 60,
     alignItems: 'center',

@@ -293,7 +293,6 @@ export default function SearchScreen() {
         data={filteredResults}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}
-        style={styles.resultsList}
         contentContainerStyle={styles.resultsListContent}
         refreshing={isRefetching}
         onRefresh={handleRefresh}
@@ -356,9 +355,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  resultsList: {
-    flex: 1,
   },
   resultsListContent: {
     paddingBottom: 100,

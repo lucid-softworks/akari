@@ -101,7 +101,6 @@ export function RepliesTab({ handle }: RepliesTabProps) {
       ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
-      style={styles.flatList}
       estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
       accessibilityRole="list"
       accessible
@@ -110,9 +109,6 @@ export function RepliesTab({ handle }: RepliesTabProps) {
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    flex: 1,
-  },
   emptyContainer: {
     paddingVertical: 40,
     alignItems: 'center',

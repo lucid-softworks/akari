@@ -108,16 +108,12 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
       ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
       scrollEnabled={false}
-      style={styles.flatList}
       estimatedItemSize={ESTIMATED_STARTERPACK_CARD_HEIGHT}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    flex: 1,
-  },
   emptyContainer: {
     paddingVertical: 60,
     alignItems: 'center',

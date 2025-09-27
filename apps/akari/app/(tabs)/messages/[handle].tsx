@@ -525,7 +525,6 @@ export default function ConversationScreen() {
               data={messages}
               renderItem={renderMessage}
               keyExtractor={(item) => item.id}
-              style={styles.messagesList}
               contentContainerStyle={styles.messagesContent}
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
@@ -617,9 +616,6 @@ const styles = StyleSheet.create({
   headerHandle: {
     fontSize: 14,
     opacity: 0.6,
-  },
-  messagesList: {
-    flex: 1,
   },
   messagesContent: {
     paddingVertical: 16,
