@@ -3,11 +3,15 @@ import { getLocales } from "expo-localization";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { MMKV } from "react-native-mmkv";
 
-interface LanguageContextType {
+type LanguageContextType = {
   currentLocale: string;
   changeLanguage: (locale: string) => void;
   availableLocales: string[];
-}
+};
+
+type LanguageProviderProps = {
+  children: React.ReactNode;
+};
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
@@ -19,9 +23,7 @@ const LANGUAGE_KEY = "app_language";
 
 export const LanguageProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+}: LanguageProviderProps) => {
   const [currentLocale, setCurrentLocale] = useState<string>("en");
   const availableLocales = getAvailableLocales();
 

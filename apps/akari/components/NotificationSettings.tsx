@@ -10,9 +10,9 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
-interface NotificationSettingsProps {
+type NotificationSettingsProps = {
   onSettingsChange?: () => void;
-}
+};
 
 export function NotificationSettings({ onSettingsChange }: NotificationSettingsProps) {
   const { t } = useTranslation();

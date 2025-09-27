@@ -7,6 +7,22 @@ import { BlueskyApi } from '@/bluesky-api';
 /**
  * Mutation hook for creating posts
  */
+type CreatePostParams = {
+  /** The post text content */
+  text: string;
+  /** Optional reply context */
+  replyTo?: {
+    root: string;
+    parent: string;
+  };
+  /** Optional array of images to attach */
+  images?: {
+    uri: string;
+    alt: string;
+    mimeType: string;
+  }[];
+};
+
 export function useCreatePost() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
@@ -14,25 +30,7 @@ export function useCreatePost() {
 
   return useMutation({
     mutationKey: ['createPost'],
-    mutationFn: async ({
-      text,
-      replyTo,
-      images,
-    }: {
-      /** The post text content */
-      text: string;
-      /** Optional reply context */
-      replyTo?: {
-        root: string;
-        parent: string;
-      };
-      /** Optional array of images to attach */
-      images?: {
-        uri: string;
-        alt: string;
-        mimeType: string;
-      }[];
-    }) => {
+    mutationFn: async ({ text, replyTo, images }: CreatePostParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

@@ -8,9 +8,9 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { scheduleLocalNotification } from '@/utils/notifications';
 
-interface NotificationTestProps {
+type NotificationTestProps = {
   onNotificationSent?: () => void;
-}
+};
 
 export function NotificationTest({ onNotificationSent }: NotificationTestProps) {
   const { t } = useTranslation();

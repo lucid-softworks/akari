@@ -7,6 +7,13 @@ import { OpaqueColorValue, type StyleProp, type TextStyle, View } from 'react-na
 
 type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
 type IconSymbolName = keyof typeof MAPPING;
+type IconSymbolProps = {
+  name: IconSymbolName;
+  size?: number;
+  color: string | OpaqueColorValue;
+  style?: StyleProp<TextStyle>;
+  weight?: SymbolWeight;
+};
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
@@ -101,13 +108,7 @@ export function IconSymbol({
   size = 24,
   color,
   style,
-}: {
-  name: IconSymbolName;
-  size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
-  weight?: SymbolWeight;
-}) {
+}: IconSymbolProps) {
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />

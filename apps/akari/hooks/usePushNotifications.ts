@@ -10,13 +10,13 @@ import {
   requestNotificationPermissions,
 } from '@/utils/notifications';
 
-export interface PushNotificationState {
+export type PushNotificationState = {
   expoPushToken: string | null;
   devicePushToken: string | null;
   permissionStatus: Notifications.PermissionStatus | null;
   isLoading: boolean;
   error: string | null;
-}
+};
 
 export function usePushNotifications() {
   const router = useRouter();

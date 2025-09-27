@@ -9,9 +9,9 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
-interface SettingsHeaderProps {
+type SettingsHeaderProps = {
   title: string;
-}
+};
 
 export function SettingsHeader({ title }: SettingsHeaderProps) {
   const insets = useSafeAreaInsets();
