@@ -25,6 +25,9 @@ jest.mock('@/contexts/ToastContext');
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
+}));
 
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: {
@@ -222,6 +225,8 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
 const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+const { router } = require('expo-router');
+const mockRouterPush = router.push as jest.Mock;
 
 let mockShowToast: jest.Mock;
 
@@ -237,6 +242,7 @@ beforeEach(() => {
   mockShowToast = jest.fn();
   mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   scrollToMock.mockClear();
+  mockRouterPush.mockClear();
 });
 
 describe('ProfileScreen', () => {
@@ -308,8 +314,12 @@ describe('ProfileScreen', () => {
       expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
     );
 
+    fireEvent.press(getByText('open dropdown'));
+    fireEvent.press(getByText('common.search'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
     const remainingActions = [
-      'common.search',
       'profile.addToLists',
       'profile.muteAccount',
       'common.block',

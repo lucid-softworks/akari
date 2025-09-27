@@ -14,6 +14,7 @@ import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
+import { searchProfilePosts } from '@/components/profile/profileActions';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -93,8 +94,10 @@ export default function ProfileScreen() {
   };
 
   const handleSearchPosts = () => {
-    // TODO: Implement search posts functionality
-    setShowDropdown(false);
+    searchProfilePosts({
+      handle: currentAccount?.handle || profile?.handle,
+      onComplete: () => setShowDropdown(false),
+    });
   };
 
   const handleTabChange = (tab: ProfileTabType) => {

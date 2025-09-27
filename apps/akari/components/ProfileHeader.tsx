@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -18,6 +17,7 @@ import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { searchProfilePosts } from '@/components/profile/profileActions';
 
 type ProfileHeaderProps = {
   profile: {
@@ -134,7 +134,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   };
 
   const handleSearchPosts = () => {
-    router.push(`/(tabs)/search?query=from:${profile.handle}`);
+    searchProfilePosts({ handle: profile.handle });
   };
 
   const handleAddToLists = () => {

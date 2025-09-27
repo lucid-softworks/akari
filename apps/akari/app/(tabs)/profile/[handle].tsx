@@ -15,6 +15,7 @@ import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
+import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -98,9 +99,10 @@ export default function ProfileScreen() {
   };
 
   const handleSearchPosts = () => {
-    // TODO: Implement search posts functionality
-    console.log('Search posts');
-    setShowDropdown(false);
+    searchProfilePosts({
+      handle: profile?.handle,
+      onComplete: () => setShowDropdown(false),
+    });
   };
 
   const handleAddToLists = () => {

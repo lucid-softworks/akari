@@ -11,6 +11,7 @@ import * as Clipboard from 'expo-clipboard';
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
+  router: { push: jest.fn() },
 }));
 
 jest.mock('@/hooks/queries/useCurrentAccount');
@@ -133,6 +134,8 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
 
 const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');
 
+const { router } = require('expo-router');
+const mockRouterPush = router.push as jest.Mock;
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseProfile = useProfile as jest.Mock;
@@ -145,6 +148,7 @@ let mockShowToast: jest.Mock;
 describe('ProfileScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockRouterPush.mockClear();
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
     mockClipboardSetStringAsync.mockResolvedValue(undefined);
@@ -228,7 +232,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('search posts'));
-    expect(logSpy).toHaveBeenCalledWith('Search posts');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));
