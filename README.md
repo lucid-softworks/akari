@@ -21,7 +21,7 @@ Akari is actively developed by volunteers. We are building toward public release
 Curious explorers can run the latest preview with the Expo toolchain. No production account changes are required—log in with your existing Bluesky credentials.
 
 1. **Set up your workstation**
-   - Install Node.js 22 (ships with npm 10) and Git.
+   - Install Node.js 23 (ships with npm 10) and Git.
    - Install Xcode (for iOS) and/or Android Studio (for Android) so you can build a development client.
    - Optional: install platform CLIs (e.g., `ios-deploy`, `adb`) if you want to target physical devices.
 2. **Install dependencies**
@@ -68,7 +68,7 @@ Each workspace includes its own README with setup and architectural notes. Highl
 
 ## For contributors
 
-The monorepo uses npm workspaces and Turbo. Node.js 22 is required and enforced via `.npmrc` and the `package.json` `engines` field.
+The monorepo uses npm workspaces and Turbo. Node.js 23 is required and enforced via `.npmrc` and the `package.json` `engines` field.
 
 ```bash
 npm run start:development -- --filter=akari    # Launch the Expo app directly
