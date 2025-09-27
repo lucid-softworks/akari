@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.2.0](https://github.com/ImLunaHey/akari/compare/v1.1.0...v1.2.0) (2025-09-27)
+
+
+### Features
+
+* add machine translations for missing locales ([#266](https://github.com/ImLunaHey/akari/issues/266)) ([d5c4047](https://github.com/ImLunaHey/akari/commit/d5c40477e41727ffbeec19929f502f455c1b2a82))
+* add mentions tab to notifications ([#215](https://github.com/ImLunaHey/akari/issues/215)) ([717ef23](https://github.com/ImLunaHey/akari/commit/717ef230427aa79f64d4beaf90495c7f457acfb4))
+* add mobile navigation to responsive layout ([#214](https://github.com/ImLunaHey/akari/issues/214)) ([03a1220](https://github.com/ImLunaHey/akari/commit/03a12209ec1683029a1e079a91b959ff63227e00))
+* add pending chats view to messages ([#202](https://github.com/ImLunaHey/akari/issues/202)) ([b1ed410](https://github.com/ImLunaHey/akari/commit/b1ed41056cd953dd167f660dfd335a3840133cb0))
+* add settings subsections and stub screens ([#256](https://github.com/ImLunaHey/akari/issues/256)) ([ecfd157](https://github.com/ImLunaHey/akari/commit/ecfd1571da42df904667b5606b0519b04fe182a7))
+* add toast notifications for profile link actions ([#205](https://github.com/ImLunaHey/akari/issues/205)) ([7bc9615](https://github.com/ImLunaHey/akari/commit/7bc961599f9c2ab2f2006fd0e17b975a9b63d133))
+* add VirtualizedList ([#207](https://github.com/ImLunaHey/akari/issues/207)) ([bdf3d79](https://github.com/ImLunaHey/akari/commit/bdf3d79a1448184817eb0f1aa34d9aa59f280fc1))
+* bookmarks page ([#192](https://github.com/ImLunaHey/akari/issues/192)) ([90b8154](https://github.com/ImLunaHey/akari/commit/90b8154982e8319398f1804ab4ce93de4dfbbad0))
+* enable background updates ([#253](https://github.com/ImLunaHey/akari/issues/253)) ([0aa1e61](https://github.com/ImLunaHey/akari/commit/0aa1e615330e8cb2a5d4eaf08843791aea5b284c))
+* expand settings resources ([#218](https://github.com/ImLunaHey/akari/issues/218)) ([856dfeb](https://github.com/ImLunaHey/akari/commit/856dfeba30a66fcb465dfbd6178f619f7cc7be78))
+* highlight live streams on post card ([#250](https://github.com/ImLunaHey/akari/issues/250)) ([f1f4dfb](https://github.com/ImLunaHey/akari/commit/f1f4dfbaad13531531606fad8bd48087ff5919a5))
+* package libretranslate client ([#248](https://github.com/ImLunaHey/akari/issues/248)) ([e8f7925](https://github.com/ImLunaHey/akari/commit/e8f7925a9a1dc0c763b136c533ed2d9501169044))
+* support expo app variants ([#196](https://github.com/ImLunaHey/akari/issues/196)) ([5518a03](https://github.com/ImLunaHey/akari/commit/5518a037a4ad4c98625752f97a93a1291221465b))
+
+
+### Bug Fixes
+
+* add background for incoming messages ([#213](https://github.com/ImLunaHey/akari/issues/213)) ([710be9a](https://github.com/ImLunaHey/akari/commit/710be9af24fd4cc213d8b5b0d88420aad0265fbc))
+* align expo doctor deps ([#211](https://github.com/ImLunaHey/akari/issues/211)) ([ce30fbf](https://github.com/ImLunaHey/akari/commit/ce30fbf88d260f39fb3113d841215a461b9189d4))
+* display embeds in conversations ([#216](https://github.com/ImLunaHey/akari/issues/216)) ([f43ccaf](https://github.com/ImLunaHey/akari/commit/f43ccafd829fb14c5d65d4c12c9f098d77ff5b8f))
+* keep notifications header sticky ([#278](https://github.com/ImLunaHey/akari/issues/278)) ([7006fe3](https://github.com/ImLunaHey/akari/commit/7006fe32ed8a2550ed713d7978d435e6479cfafe))
+* localize pending chat labels ([#208](https://github.com/ImLunaHey/akari/issues/208)) ([08abf9f](https://github.com/ImLunaHey/akari/commit/08abf9f9a3d12e7917efd68aa4706cdce7ae8457))
+* migrate replies tab to virtualized list ([#238](https://github.com/ImLunaHey/akari/issues/238)) ([a051d7d](https://github.com/ImLunaHey/akari/commit/a051d7d941748545ace0c046686b5160e4ece038))
+* persist react query cache across sessions ([#265](https://github.com/ImLunaHey/akari/issues/265)) ([7be1cb4](https://github.com/ImLunaHey/akari/commit/7be1cb4eedbd86cab970f2fcb544fe9cabda6e8d))
+* polish media tab virtualization ([#235](https://github.com/ImLunaHey/akari/issues/235)) ([9829821](https://github.com/ImLunaHey/akari/commit/9829821fdc57e6ec9999e1db0511967c5cd3fce5))
+* prevent duplicate feed overlay in home feed ([#220](https://github.com/ImLunaHey/akari/issues/220)) ([f754b78](https://github.com/ImLunaHey/akari/commit/f754b7808e8c217a6da63a1e4c5370ccb5cd9c9b))
+* prevent expo image style error on notifications ([#252](https://github.com/ImLunaHey/akari/issues/252)) ([f357594](https://github.com/ImLunaHey/akari/commit/f3575942a7ec064c73f8d0739335ee7954042882))
+* prevent PostCard language selection loop ([#257](https://github.com/ImLunaHey/akari/issues/257)) ([1a12c2d](https://github.com/ImLunaHey/akari/commit/1a12c2d66b42dd6f20829bbe78022ad32300aa2c))
+* rely on ts helper for jsdoc text ([#261](https://github.com/ImLunaHey/akari/issues/261)) ([74d1b70](https://github.com/ImLunaHey/akari/commit/74d1b7056b8e19d8a7d14b8e5dc03d2e008700ad))
+* reuse coverage comment in CI ([#268](https://github.com/ImLunaHey/akari/issues/268)) ([0050dc9](https://github.com/ImLunaHey/akari/commit/0050dc9e3b46fcbd2d8d72634539309193e25e21))
+* route detail screens through tabs layout ([#246](https://github.com/ImLunaHey/akari/issues/246)) ([d6630f3](https://github.com/ImLunaHey/akari/commit/d6630f3cccd4bebef50b91b27d136939da6277a4))
+* send repeated feed generator params ([#281](https://github.com/ImLunaHey/akari/issues/281)) ([731eab0](https://github.com/ImLunaHey/akari/commit/731eab019e9b88087b148588442662df8912c151))
+* serve docs assets correctly on GitHub Pages ([#262](https://github.com/ImLunaHey/akari/issues/262)) ([9f4e49e](https://github.com/ImLunaHey/akari/commit/9f4e49e27ab50d0ba3b734bedc6ff906904e7774))
+* square panel corners ([#198](https://github.com/ImLunaHey/akari/issues/198)) ([721e7fe](https://github.com/ImLunaHey/akari/commit/721e7fe3ef47a52c8832e06701efa37898bf6b0d))
+* submit auth form with enter key ([#203](https://github.com/ImLunaHey/akari/issues/203)) ([16ba99c](https://github.com/ImLunaHey/akari/commit/16ba99c5623527f24eb3c368aebd24223f030361))
+* surface toast feedback for user errors ([#231](https://github.com/ImLunaHey/akari/issues/231)) ([35def59](https://github.com/ImLunaHey/akari/commit/35def599c8779db42aaff7e24f57f2f415b44083))
+* use react query caching for saved feeds ([#247](https://github.com/ImLunaHey/akari/issues/247)) ([b8ad1f2](https://github.com/ImLunaHey/akari/commit/b8ad1f2c79c3c040098f6842800b2f523121b56e))
+
 ## [1.1.0](https://github.com/ImLunaHey/akari/compare/v1.0.0...v1.1.0) (2025-09-18)
 
 
