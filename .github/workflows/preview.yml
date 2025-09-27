@@ -25,9 +25,22 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Determine deploy commit
+        id: deploy_commit
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ -n "$PR_HEAD_SHA" ]; then
+            echo "sha=$PR_HEAD_SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Record commit metadata
-        run: echo "EXPO_PUBLIC_COMMIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        run: echo "EXPO_PUBLIC_COMMIT_SHA=${{ steps.deploy_commit.outputs.sha }}" >> "$GITHUB_ENV"
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -24,9 +24,30 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'release' && format('refs/tags/{0}', github.event.release.tag_name) || github.ref }}
+
+      - name: Determine deploy commit
+        id: deploy_commit
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [ "$EVENT_NAME" = "release" ] && [ -n "$RELEASE_TAG" ]; then
+            tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
+            head_commit=$(git rev-parse HEAD)
+            if [ "$tag_commit" != "$head_commit" ]; then
+              echo "Checked out commit $head_commit does not match release tag $RELEASE_TAG ($tag_commit)" >&2
+              exit 1
+            fi
+            echo "sha=$tag_commit" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Record commit metadata
-        run: echo "EXPO_PUBLIC_COMMIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        run: echo "EXPO_PUBLIC_COMMIT_SHA=${{ steps.deploy_commit.outputs.sha }}" >> "$GITHUB_ENV"
 
       - name: Setup Node
         uses: actions/setup-node@v4
