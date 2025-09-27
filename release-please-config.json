@@ -16,6 +16,10 @@
           "type": "json",
           "path": "package-lock.json",
           "jsonpath": "$.packages[\"apps/akari\"].version"
+        },
+        {
+          "type": "generic",
+          "path": "SECURITY.md"
         }
       ]
     }
