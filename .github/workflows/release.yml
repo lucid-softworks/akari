@@ -25,6 +25,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Record commit metadata
+        run: echo "EXPO_PUBLIC_COMMIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
