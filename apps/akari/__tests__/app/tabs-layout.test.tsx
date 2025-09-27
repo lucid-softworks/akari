@@ -105,10 +105,38 @@ describe('TabLayout', () => {
       headerShown: false,
       tabBarStyle: { display: 'none' },
     });
-    const screenCalls = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls;
-    const visibleNames = screenCalls.map((call: any[]) => call[0].name);
-    expect(screenCalls).toHaveLength(6);
-    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    const screenProps = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map(
+      (call: any[]) => call[0],
+    );
+    const visibleScreens = screenProps.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
+    const hiddenScreens = screenProps.filter((screen: any) => screen.options?.href === null);
+
+    expect(visibleScreens.map((screen: any) => screen.name)).toEqual([
+      'index',
+      'search',
+      'messages',
+      'notifications',
+      'profile',
+      'settings',
+    ]);
+
+    expect(hiddenScreens.map((screen: any) => screen.name)).toEqual([
+      'bookmarks',
+      'messages/[handle]',
+      'messages/pending',
+      'post/[id]',
+      'profile/[handle]',
+      'settings/account',
+      'settings/privacy-and-security',
+      'settings/moderation',
+      'settings/notifications',
+      'settings/content-and-media',
+      'settings/appearance',
+      'settings/accessibility',
+      'settings/languages',
+      'settings/about',
+      'settings/development',
+    ]);
   });
 
   it('renders mobile tabs with native tab bar configuration', () => {
@@ -127,11 +155,37 @@ describe('TabLayout', () => {
       }),
     });
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
-    expect(screens).toHaveLength(6);
-    const visibleNames = screens.map((screen) => screen.name);
-    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    const visibleScreens = screens.filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
+    const hiddenScreens = screens.filter((screen: any) => screen.options?.href === null);
 
-    const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
+    expect(visibleScreens.map((screen) => screen.name)).toEqual([
+      'index',
+      'search',
+      'messages',
+      'notifications',
+      'profile',
+      'settings',
+    ]);
+
+    expect(hiddenScreens.map((screen) => screen.name)).toEqual([
+      'bookmarks',
+      'messages/[handle]',
+      'messages/pending',
+      'post/[id]',
+      'profile/[handle]',
+      'settings/account',
+      'settings/privacy-and-security',
+      'settings/moderation',
+      'settings/notifications',
+      'settings/content-and-media',
+      'settings/appearance',
+      'settings/accessibility',
+      'settings/languages',
+      'settings/about',
+      'settings/development',
+    ]);
+
+    const messagesScreen = visibleScreens.find((screen: any) => screen.name === 'messages');
     expect(typeof messagesScreen?.options?.tabBarIcon).toBe('function');
     const renderedIcon = messagesScreen?.options?.tabBarIcon?.({ color: '#fff' });
     expect(React.isValidElement(renderedIcon)).toBe(true);
@@ -156,7 +210,9 @@ describe('TabLayout', () => {
     render(<TabLayout />);
 
     const TabsModule = require('expo-router');
-    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
+    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls
+      .map((call: any[]) => call[0])
+      .filter((screen: any) => screen.options?.tabBarAccessibilityLabel);
     const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
     expect(messagesScreen).toBeTruthy();
 

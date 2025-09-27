@@ -30,6 +30,24 @@ const VISIBLE_TABS = [
   { name: 'settings', title: 'Settings', icon: 'gearshape.fill', accessibilityLabel: 'Settings' },
 ] as const;
 
+const HIDDEN_TABS = [
+  'bookmarks',
+  'messages/[handle]',
+  'messages/pending',
+  'post/[id]',
+  'profile/[handle]',
+  'settings/account',
+  'settings/privacy-and-security',
+  'settings/moderation',
+  'settings/notifications',
+  'settings/content-and-media',
+  'settings/appearance',
+  'settings/accessibility',
+  'settings/languages',
+  'settings/about',
+  'settings/development',
+] as const;
+
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
   search: 'search',
@@ -163,14 +181,18 @@ export default function TabLayout() {
                   tabBarStyle: { display: 'none' },
                 }}
               >
-                {VISIBLE_TABS.map(({ name }) => (
+                {VISIBLE_TABS.map(({ name, accessibilityLabel }) => (
                   <Tabs.Screen
                     key={name}
                     name={name}
+                    options={{ tabBarAccessibilityLabel: accessibilityLabel }}
                     listeners={({ navigation }) => ({
                       tabPress: () => handleTabPress(name, navigation),
                     })}
                   />
+                ))}
+                {HIDDEN_TABS.map((name) => (
+                  <Tabs.Screen key={name} name={name} options={{ href: null }} />
                 ))}
               </Tabs>
             </View>
@@ -183,29 +205,32 @@ export default function TabLayout() {
   // For mobile screens, show the traditional tab bar
   return (
     <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle,
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: accentColor,
-          tabBarInactiveTintColor: inactiveTint,
-        }}
-      >
-        {VISIBLE_TABS.map(({ name, icon, accessibilityLabel }) => (
-          <Tabs.Screen
-            key={name}
-            name={name}
-            options={{
-              title: accessibilityLabel,
-              tabBarAccessibilityLabel: accessibilityLabel,
-              tabBarIcon: ({ color = accentColor }) => renderTabIcon(icon, color, getBadgeCount(name)),
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: () => handleTabPress(name, navigation),
-            })}
-          />
-        ))}
-      </Tabs>
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: accentColor,
+        tabBarInactiveTintColor: inactiveTint,
+      }}
+    >
+      {VISIBLE_TABS.map(({ name, icon, accessibilityLabel }) => (
+        <Tabs.Screen
+          key={name}
+          name={name}
+          options={{
+            title: accessibilityLabel,
+            tabBarAccessibilityLabel: accessibilityLabel,
+            tabBarIcon: ({ color = accentColor }) => renderTabIcon(icon, color, getBadgeCount(name)),
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: () => handleTabPress(name, navigation),
+          })}
+        />
+      ))}
+      {HIDDEN_TABS.map((name) => (
+        <Tabs.Screen key={name} name={name} options={{ href: null }} />
+      ))}
+    </Tabs>
   );
 }
 
