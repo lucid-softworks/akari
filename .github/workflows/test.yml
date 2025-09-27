@@ -26,11 +26,11 @@ jobs:
       - name: Merge coverage reports
         run: node ./scripts/merge-coverage.cjs
       - name: Report coverage
-        uses: vebr/jest-lcov-reporter@v0.2.0
+        uses: zgosalvez/github-actions-report-lcov@v4
         with:
           github-token: ${{ github.token }}
-          lcov-file: coverage/lcov.info
-          name: akari-monorepo
+          coverage-files: coverage/lcov.info
+          artifact-name: coverage-report
           update-comment: true
   e2e:
     runs-on: ubuntu-latest
