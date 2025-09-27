@@ -13,6 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
@@ -118,12 +119,14 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-        <AppProviders colorScheme={colorScheme} />
-        {Platform.OS === 'web' ? (
-          <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
-        ) : null}
-      </PersistQueryClientProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
+          <AppProviders colorScheme={colorScheme} />
+          {Platform.OS === 'web' ? (
+            <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
+          ) : null}
+        </PersistQueryClientProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
