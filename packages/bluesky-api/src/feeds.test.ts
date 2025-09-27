@@ -20,7 +20,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       };
     }[] = [];
@@ -30,7 +30,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       };
     }[] = [];
@@ -47,7 +47,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -60,7 +60,7 @@ describe('BlueskyFeeds', () => {
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
@@ -159,7 +159,7 @@ describe('BlueskyFeeds', () => {
       accessJwt: 'jwt',
       options: {
         params: {
-          feeds: 'at://feed/a,at://feed/b',
+          feeds: ['at://feed/a', 'at://feed/b'],
         },
       },
     });

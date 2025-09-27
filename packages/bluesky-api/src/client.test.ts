@@ -15,7 +15,7 @@ describe('BlueskyApiClient', () => {
       method?: 'GET' | 'POST';
       headers?: Record<string, string>;
       body?: Record<string, unknown> | FormData | Blob;
-      params?: Record<string, string>;
+      params?: Record<string, string | string[]>;
     }): Promise<T> {
       return this.makeRequest<T>(endpoint, options);
     }
@@ -27,7 +27,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Record<string, unknown> | FormData | Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
       },
     ): Promise<T> {
       return this.makeAuthenticatedRequest<T>(endpoint, accessJwt, options);
@@ -42,7 +42,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
       };
     };
 
@@ -63,7 +63,7 @@ describe('BlueskyApiClient', () => {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
         body?: Blob;
-        params?: Record<string, string>;
+        params?: Record<string, string | string[]>;
       } = {},
     ): Promise<T> {
       this.lastCall = { endpoint, accessJwt, options };
@@ -187,6 +187,22 @@ describe('BlueskyApiClient', () => {
     expect(request.url).toBe('https://pds.example/xrpc/secure?cursor=abc');
     expect(request.method).toBe('GET');
     expect(request.headers.authorization).toBe('Bearer token-123');
+  });
+
+  it('appends array query parameters as repeated entries', async () => {
+    let capturedUrl: string | null = null;
+
+    server.use(
+      http.get('https://pds.example/xrpc/list', async ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json({});
+      }),
+    );
+
+    const client = new TestClient();
+    await client.callMakeRequest('/list', { params: { feeds: ['one', 'two'] } });
+
+    expect(capturedUrl).toBe('https://pds.example/xrpc/list?feeds=one&feeds=two');
   });
 
   it('uploads blobs using the provided mime type', async () => {
