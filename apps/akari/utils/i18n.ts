@@ -1,11 +1,20 @@
 import ar from "@/translations/ar.json";
+import az from "@/translations/az.json";
+import bg from "@/translations/bg.json";
+import cs from "@/translations/cs.json";
 import cy from "@/translations/cy.json";
+import da from "@/translations/da.json";
 import de from "@/translations/de.json";
+import el from "@/translations/el.json";
 import enUS from "@/translations/en-US.json";
 import en from "@/translations/en.json";
 import es from "@/translations/es.json";
+import fa from "@/translations/fa.json";
+import fi from "@/translations/fi.json";
 import fr from "@/translations/fr.json";
+import he from "@/translations/he.json";
 import hi from "@/translations/hi.json";
+import hu from "@/translations/hu.json";
 import id from "@/translations/id.json";
 import it from "@/translations/it.json";
 import ja from "@/translations/ja.json";
@@ -13,10 +22,16 @@ import ko from "@/translations/ko.json";
 import nl from "@/translations/nl.json";
 import pl from "@/translations/pl.json";
 import pt from "@/translations/pt.json";
+import ro from "@/translations/ro.json";
 import ru from "@/translations/ru.json";
+import sk from "@/translations/sk.json";
+import sl from "@/translations/sl.json";
+import sv from "@/translations/sv.json";
 import th from "@/translations/th.json";
 import tr from "@/translations/tr.json";
+import uk from "@/translations/uk.json";
 import vi from "@/translations/vi.json";
+import zh from "@/translations/zh.json";
 import zhCN from "@/translations/zh-CN.json";
 import zhTW from "@/translations/zh-TW.json";
 import { getLocales } from "expo-localization";
@@ -29,21 +44,36 @@ const rawTranslations = {
   en,
   ja,
   ar,
+  az,
+  bg,
+  cs,
   cy,
-  fr,
-  es,
+  da,
   de,
-  pt,
+  el,
+  es,
+  fa,
+  fi,
+  fr,
+  he,
+  hi,
+  hu,
+  id,
   it,
   ko,
-  ru,
-  hi,
-  id,
-  tr,
   nl,
   pl,
-  vi,
+  pt,
+  ro,
+  ru,
+  sk,
+  sl,
+  sv,
   th,
+  tr,
+  uk,
+  vi,
+  zh,
   "en-US": enUS,
   "zh-CN": zhCN,
   "zh-TW": zhTW,
