@@ -357,6 +357,7 @@ export default function NotificationsScreen() {
   const { isLargeScreen } = useResponsive();
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
+  const [refreshing, setRefreshing] = useState(false);
   const tabs = useMemo(
     () => [
       { key: 'all' as const, label: t('notifications.all') },
@@ -389,6 +390,7 @@ export default function NotificationsScreen() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useNotifications();
 
   const notifications = useMemo(
@@ -480,6 +482,15 @@ export default function NotificationsScreen() {
     fetchNextPage();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
+
   if (isError) {
     return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
   }
@@ -506,6 +517,8 @@ export default function NotificationsScreen() {
         style={styles.list}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
       />
