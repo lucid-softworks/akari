@@ -41,12 +41,6 @@ type GroupedNotification = {
 
 type NotificationsTab = 'all' | 'mentions';
 
-type NotificationListItem =
-  | { type: 'header' }
-  | { type: 'loading' }
-  | { type: 'empty' }
-  | { type: 'notification'; notification: GroupedNotification };
-
 /**
  * Notification item component
  */
@@ -361,7 +355,7 @@ export default function NotificationsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
-  const listRef = useRef<VirtualizedListHandle<NotificationListItem>>(null);
+  const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const tabs = useMemo(
     () => [
@@ -412,8 +406,9 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
-  const contentContainerStyle = useMemo(
-    () => [styles.listContent, { paddingTop: isLargeScreen ? 0 : insets.top }],
+  const contentContainerStyle = useMemo(() => [styles.listContent], []);
+  const screenHeaderStyle = useMemo(
+    () => [styles.screenHeader, { paddingTop: isLargeScreen ? 0 : insets.top }],
     [insets.top, isLargeScreen],
   );
 
@@ -441,21 +436,7 @@ export default function NotificationsScreen() {
     [borderColor, handleNotificationPress],
   );
 
-  const keyExtractor = useCallback((item: NotificationListItem) => {
-    if (item.type === 'header') {
-      return 'notifications-header';
-    }
-
-    if (item.type === 'loading') {
-      return 'notifications-loading';
-    }
-
-    if (item.type === 'empty') {
-      return 'notifications-empty';
-    }
-
-    return item.notification.id;
-  }, []);
+  const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
 
   const renderEmptyState = useCallback(() => (
     <View style={styles.emptyState}>
@@ -471,56 +452,19 @@ export default function NotificationsScreen() {
     </View>
   ), [error?.message, t]);
 
-  const listHeaderComponent = useMemo(
-    () => (
-      <ThemedView style={styles.listHeader}>
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+  const listEmptyComponent = useMemo(() => {
+    if (isLoading) {
+      return (
+        <ThemedView style={styles.skeletonContainer}>
+          {Array.from({ length: 12 }).map((_, index) => (
+            <NotificationSkeleton key={index} />
+          ))}
         </ThemedView>
-        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
-      </ThemedView>
-    ),
-    [activeTab, borderColor, handleTabChange, tabs, t],
-  );
-
-  const listData = useMemo((): NotificationListItem[] => {
-    if (isLoading && filteredNotifications.length === 0) {
-      return [{ type: 'header' }, { type: 'loading' }];
+      );
     }
 
-    if (filteredNotifications.length === 0) {
-      return [{ type: 'header' }, { type: 'empty' }];
-    }
-
-    return [
-      { type: 'header' },
-      ...filteredNotifications.map((notification) => ({ type: 'notification', notification })),
-    ];
-  }, [filteredNotifications, isLoading]);
-
-  const renderListItem = useCallback(
-    ({ item }: { item: NotificationListItem }) => {
-      switch (item.type) {
-        case 'header':
-          return listHeaderComponent;
-        case 'loading':
-          return (
-            <ThemedView style={styles.skeletonContainer}>
-              {Array.from({ length: 12 }).map((_, index) => (
-                <NotificationSkeleton key={index} />
-              ))}
-            </ThemedView>
-          );
-        case 'empty':
-          return renderEmptyState();
-        case 'notification':
-          return renderNotificationItem(item.notification);
-        default:
-          return null;
-      }
-    },
-    [listHeaderComponent, renderEmptyState, renderNotificationItem],
-  );
+    return renderEmptyState();
+  }, [isLoading, renderEmptyState]);
 
   const listFooterComponent = useMemo(() => {
     if (!isFetchingNextPage) {
@@ -548,21 +492,28 @@ export default function NotificationsScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <ThemedView style={screenHeaderStyle}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+        </ThemedView>
+        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+      </ThemedView>
+
       <VirtualizedList
         ref={listRef}
-        data={listData}
-        renderItem={renderListItem}
+        data={filteredNotifications}
+        renderItem={({ item }) => renderNotificationItem(item)}
         keyExtractor={keyExtractor}
         estimatedItemSize={160}
         overscan={2}
         ListFooterComponent={listFooterComponent ?? undefined}
+        ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={contentContainerStyle}
-        style={[styles.list, { paddingTop: 0 }]}
+        style={styles.list}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
-        stickyHeaderIndices={[0]}
       />
     </ThemedView>
   );
@@ -578,7 +529,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
   },
-  listHeader: {
+  screenHeader: {
     paddingBottom: 12,
   },
   header: {
