@@ -13,22 +13,64 @@ export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize
 };
 
 function VirtualizedListInner<T>(
-  { data, renderItem, overscan = DEFAULT_OVERSCAN, estimatedItemSize: incomingEstimatedItemSize, ...rest }: VirtualizedListProps<T>,
+  {
+    data,
+    renderItem,
+    overscan = DEFAULT_OVERSCAN,
+    estimatedItemSize: incomingEstimatedItemSize,
+    ListHeaderComponent,
+    ListHeaderComponentStyle,
+    stickyHeaderIndices,
+    ...rest
+  }: VirtualizedListProps<T>,
   ref: React.ForwardedRef<VirtualizedListHandle<T>>,
 ) {
   const estimatedItemSize = incomingEstimatedItemSize ?? DEFAULT_ESTIMATED_ITEM_SIZE;
   const typedData = data as T[];
 
   const { drawDistance, ...flashListProps } = rest;
+  const shouldAutoStickHeader = stickyHeaderIndices === undefined && Boolean(ListHeaderComponent);
+  const computedStickyHeaderIndices =
+    stickyHeaderIndices !== undefined
+      ? stickyHeaderIndices
+      : shouldAutoStickHeader
+        ? [0]
+        : undefined;
+
+  const renderItemWithStickyHeader = React.useCallback(
+    (
+      info: Parameters<NonNullable<FlashListProps<T>['renderItem']>>[0],
+    ) => {
+      if (
+        shouldAutoStickHeader &&
+        info.target === 'StickyHeader' &&
+        info.index === 0 &&
+        ListHeaderComponent
+      ) {
+        if (React.isValidElement(ListHeaderComponent)) {
+          return ListHeaderComponent;
+        }
+
+        const HeaderComponent = ListHeaderComponent;
+        return <HeaderComponent />;
+      }
+
+      return renderItem ? renderItem(info) : null;
+    },
+    [ListHeaderComponent, renderItem, shouldAutoStickHeader],
+  );
 
   return (
     <FlashList
       {...(flashListProps as FlashListProps<T>)}
       ref={ref as React.Ref<FlashList<T>>}
       data={typedData}
-      renderItem={renderItem}
+      renderItem={renderItemWithStickyHeader}
       estimatedItemSize={estimatedItemSize}
       drawDistance={drawDistance ?? overscan * estimatedItemSize}
+      ListHeaderComponent={ListHeaderComponent}
+      ListHeaderComponentStyle={ListHeaderComponentStyle}
+      stickyHeaderIndices={computedStickyHeaderIndices}
     />
   );
 }

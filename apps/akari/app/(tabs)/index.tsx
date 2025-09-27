@@ -173,23 +173,29 @@ export default function HomeScreen() {
 
     return allPosts.map((item) => ({ type: 'post', item }));
   }, [allPosts, feedLoading, selectedFeed, timelineLoading]);
-
-  const listHeaderComponent = useMemo(
+  const feedTabs = useMemo(
+    () =>
+      allFeedsWithCreated.map((feed) => ({
+        key: feed.uri,
+        label: feed.displayName,
+      })),
+    [allFeedsWithCreated],
+  );
+  const listHeaderComponent = useCallback(
     () => (
-      <ThemedView style={styles.listHeader}>
-        <TabBar
-          tabs={allFeedsWithCreated.map((feed) => ({
-            key: feed.uri,
-            label: feed.displayName,
-          }))}
-          activeTab={selectedFeed || ''}
-          onTabChange={handleFeedSelection}
-        />
+      <ThemedView
+        style={[
+          styles.listHeaderContainer,
+          { paddingTop: isLargeScreen ? 0 : insets.top },
+        ]}
+      >
+        <ThemedView style={styles.listHeaderContent}>
+          <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
+        </ThemedView>
       </ThemedView>
     ),
-    [allFeedsWithCreated, handleFeedSelection, selectedFeed],
+    [feedTabs, handleFeedSelection, insets.top, isLargeScreen, selectedFeed],
   );
-
   const renderFeedItem = useCallback(
     ({ item }: { item: FeedListItem }) => {
       if (item.type === 'empty') {
@@ -290,7 +296,7 @@ export default function HomeScreen() {
   // The allFeeds array already includes the default feed, so we don't need to return early
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+    <ThemedView style={styles.container}>
       <VirtualizedList
         ref={feedListRef}
         data={feedItems}
@@ -307,7 +313,6 @@ export default function HomeScreen() {
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
-        stickyHeaderIndices={[0]}
       />
 
       {/* Floating Action Button for creating posts */}
@@ -328,8 +333,11 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  listHeader: {
+  listHeaderContainer: {
     paddingBottom: 12,
+  },
+  listHeaderContent: {
+    paddingHorizontal: 16,
   },
   header: {
     alignItems: 'center',

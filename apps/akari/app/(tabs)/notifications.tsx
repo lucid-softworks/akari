@@ -491,19 +491,29 @@ export default function NotificationsScreen() {
     }
   }, [refetch]);
 
-  if (isError) {
-    return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
-  }
-
-  return (
-    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
-      <ThemedView style={styles.headerContainer}>
+  const listHeaderComponent = useCallback(
+    () => (
+      <ThemedView
+        style={[
+          styles.headerContainer,
+          { paddingTop: isLargeScreen ? 0 : insets.top },
+        ]}
+      >
         <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
         </ThemedView>
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
+    ),
+    [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, t, tabs],
+  );
 
+  if (isError) {
+    return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
+  }
+
+  return (
+    <ThemedView style={styles.container}>
       <VirtualizedList
         ref={listRef}
         data={filteredNotifications}
@@ -520,6 +530,7 @@ export default function NotificationsScreen() {
         onRefresh={handleRefresh}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
+        ListHeaderComponent={listHeaderComponent}
       />
     </ThemedView>
   );

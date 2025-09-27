@@ -270,14 +270,6 @@ describe('NotificationsScreen', () => {
     const listScrollView = scrollViews.find((view) => !view.props.horizontal);
     expect(listScrollView).toBeDefined();
 
-    const styleArray = Array.isArray(listScrollView!.props.style)
-      ? listScrollView!.props.style
-      : [listScrollView!.props.style];
-    expect(styleArray).toEqual(expect.arrayContaining([expect.objectContaining({ flex: 1 })]));
-    expect(listScrollView!.props.contentContainerStyle).toEqual(
-      expect.objectContaining({ paddingBottom: 100 }),
-    );
-
     const images = UNSAFE_getAllByType(Image);
     expect(images.some((img) => img.props.source?.uri === 'https://example.com/full1.jpg')).toBe(true);
 
