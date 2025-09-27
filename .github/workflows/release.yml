@@ -6,6 +6,11 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       release_tag:
@@ -19,7 +24,7 @@ jobs:
     permissions:
       contents: write
     env:
-      RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || '' }}
+      RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || inputs.release_tag || '' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: |

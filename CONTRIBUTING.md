@@ -19,3 +19,7 @@ Thank you for your interest in contributing to Akari.
 - Follow the guidelines in `agents.md`, such as preferring `type` over `interface` in TypeScript code.
 
 We appreciate your contributions!
+
+## Release automation
+
+The release process is automated by the `release-please` workflow.
