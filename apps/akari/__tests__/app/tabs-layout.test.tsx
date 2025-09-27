@@ -29,11 +29,6 @@ jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
 
-jest.mock('@/components/AccountSwitcherSheet', () => {
-  const React = require('react');
-  return { AccountSwitcherSheet: jest.fn(() => null) };
-});
-
 jest.mock('@/components/Sidebar', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -70,8 +65,6 @@ const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock
 const mockUseResponsive = useResponsive as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
-const { AccountSwitcherSheet } = require('@/components/AccountSwitcherSheet');
-const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 const { tabScrollRegistry } = require('@/utils/tabScrollRegistry');
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
 
@@ -84,7 +77,6 @@ beforeEach(() => {
   mockUseThemeColor.mockImplementation(
     (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000',
   );
-  mockAccountSwitcherSheet.mockClear();
   mockHandleTabPress.mockClear();
 });
 
@@ -115,8 +107,8 @@ describe('TabLayout', () => {
     });
     const screenCalls = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls;
     const visibleNames = screenCalls.map((call: any[]) => call[0].name);
-    expect(screenCalls).toHaveLength(6);
-    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    expect(screenCalls).toHaveLength(4);
+    expect(visibleNames).toEqual(['index', 'notifications', 'messages', 'settings']);
   });
 
   it('renders mobile tabs with native tab bar configuration', () => {
@@ -135,9 +127,9 @@ describe('TabLayout', () => {
       }),
     });
     const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
-    expect(screens).toHaveLength(6);
+    expect(screens).toHaveLength(4);
     const visibleNames = screens.map((screen) => screen.name);
-    expect(visibleNames).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
+    expect(visibleNames).toEqual(['index', 'notifications', 'messages', 'settings']);
 
     const messagesScreen = screens.find((screen: any) => screen.name === 'messages');
     expect(typeof messagesScreen?.options?.tabBarIcon).toBe('function');
@@ -159,34 +151,6 @@ describe('TabLayout', () => {
     expect(tabOptions.screenOptions.tabBarInactiveTintColor).toBe('#6B7280');
   });
 
-  it('opens the account switcher when the profile tab is long pressed', () => {
-    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
-    render(<TabLayout />);
-
-    const TabsModule = require('expo-router');
-    const screens = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((call: any[]) => call[0]);
-    const profileScreen = screens.find((screen: any) => screen.name === 'profile');
-    expect(profileScreen).toBeTruthy();
-
-    const listeners = profileScreen?.listeners?.({
-      navigation: { getState: () => ({ index: 4, routeNames: ['index', 'search', 'messages', 'notifications', 'profile'] }) },
-    });
-
-    act(() => {
-      listeners?.tabLongPress?.({} as any);
-    });
-
-    const latestCall = mockAccountSwitcherSheet.mock.calls.at(-1);
-    expect(latestCall?.[0].visible).toBe(true);
-
-    act(() => {
-      latestCall?.[0].onClose();
-    });
-
-    const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
-    expect(closeCall?.[0].visible).toBe(false);
-  });
-
   it('emits scroll-to-top events when a tab is pressed twice', () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     render(<TabLayout />);
@@ -197,7 +161,7 @@ describe('TabLayout', () => {
     expect(messagesScreen).toBeTruthy();
 
     const navigation = {
-      getState: jest.fn().mockReturnValue({ routeNames: ['index', 'messages'], index: 1 }),
+      getState: jest.fn().mockReturnValue({ routeNames: ['index', 'notifications', 'messages', 'settings'], index: 2 }),
     } as any;
 
     const listeners = messagesScreen?.listeners?.({ navigation });

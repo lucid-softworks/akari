@@ -1,9 +1,8 @@
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { TabBadge } from '@/components/TabBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Sidebar } from '@/components/Sidebar';
@@ -19,45 +18,31 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const VISIBLE_TABS = [
   { name: 'index', title: 'Home', icon: 'house.fill', accessibilityLabel: 'Home' },
-  { name: 'search', title: 'Search', icon: 'magnifyingglass', accessibilityLabel: 'Search' },
-  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
   {
     name: 'notifications',
     title: 'Notifications',
     icon: 'bell.fill',
     accessibilityLabel: 'Notifications',
   },
-  { name: 'profile', title: 'Profile', icon: 'person.fill', accessibilityLabel: 'Profile' },
+  { name: 'messages', title: 'Messages', icon: 'message.fill', accessibilityLabel: 'Messages' },
   { name: 'settings', title: 'Settings', icon: 'gearshape.fill', accessibilityLabel: 'Settings' },
 ] as const;
 
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
-  search: 'search',
+  notifications: 'notifications',
   messages: 'messages',
   'messages/[handle]': 'messages',
   'messages/pending': 'messages',
-  notifications: 'notifications',
-  profile: 'profile',
-  'profile/[handle]': 'profile',
   settings: 'settings',
   'post/[id]': 'index',
 };
-
-const HIDDEN_TAB_ROUTES = [
-  'bookmarks',
-  'messages/[handle]',
-  'messages/pending',
-  'post/[id]',
-  'profile/[handle]',
-] as const;
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
-  const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
   const lastPressedRegistryKeyRef = useRef<string | null>(null);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
@@ -71,18 +56,6 @@ export default function TabLayout() {
     }),
     [borderColor, tabBarSurface],
   );
-
-  const handleOpenAccountSwitcher = useCallback(() => {
-    if (isLargeScreen) {
-      return;
-    }
-
-    setAccountSwitcherVisible(true);
-  }, [isLargeScreen]);
-
-  const handleCloseAccountSwitcher = useCallback(() => {
-    setAccountSwitcherVisible(false);
-  }, []);
 
   const handleTabPress = useCallback(
     (routeName: (typeof VISIBLE_TABS)[number]['name'], navigation: BottomTabNavigationProp<any>) => {
@@ -191,18 +164,8 @@ export default function TabLayout() {
                     name={name}
                     listeners={({ navigation }) => ({
                       tabPress: () => handleTabPress(name, navigation),
-                      ...(name === 'profile'
-                        ? {
-                            tabLongPress: () => {
-                              handleOpenAccountSwitcher();
-                            },
-                          }
-                        : null),
                     })}
                   />
-                ))}
-                {HIDDEN_TAB_ROUTES.map((name) => (
-                  <Tabs.Screen key={name} name={name} options={{ href: null }} />
                 ))}
               </Tabs>
             </View>
@@ -214,8 +177,7 @@ export default function TabLayout() {
 
   // For mobile screens, show the traditional tab bar
   return (
-    <>
-      <Tabs
+    <Tabs
         screenOptions={{
           headerShown: false,
           tabBarStyle,
@@ -235,22 +197,10 @@ export default function TabLayout() {
             }}
             listeners={({ navigation }) => ({
               tabPress: () => handleTabPress(name, navigation),
-              ...(name === 'profile'
-                ? {
-                    tabLongPress: () => {
-                      handleOpenAccountSwitcher();
-                    },
-                  }
-                : null),
             })}
           />
         ))}
-        {HIDDEN_TAB_ROUTES.map((name) => (
-          <Tabs.Screen key={name} name={name} options={{ href: null }} />
-        ))}
       </Tabs>
-      <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
-    </>
   );
 }
 

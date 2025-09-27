@@ -138,8 +138,6 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
     expect(getByText('Messages')).toBeTruthy();
-    expect(getByText('Search')).toBeTruthy();
-    expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
 
     expect(getByText('#BlueskyMigration')).toBeTruthy();
