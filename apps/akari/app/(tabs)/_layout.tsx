@@ -41,7 +41,16 @@ const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   profile: 'profile',
   'profile/[handle]': 'profile',
   settings: 'settings',
+  'post/[id]': 'index',
 };
+
+const HIDDEN_TAB_ROUTES = [
+  'bookmarks',
+  'messages/[handle]',
+  'messages/pending',
+  'post/[id]',
+  'profile/[handle]',
+] as const;
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
@@ -192,6 +201,9 @@ export default function TabLayout() {
                     })}
                   />
                 ))}
+                {HIDDEN_TAB_ROUTES.map((name) => (
+                  <Tabs.Screen key={name} name={name} options={{ href: null }} />
+                ))}
               </Tabs>
             </View>
           </View>
@@ -232,6 +244,9 @@ export default function TabLayout() {
                 : null),
             })}
           />
+        ))}
+        {HIDDEN_TAB_ROUTES.map((name) => (
+          <Tabs.Screen key={name} name={name} options={{ href: null }} />
         ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
