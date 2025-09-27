@@ -313,7 +313,6 @@ export default function HomeScreen() {
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
-        style={styles.list}
       />
 
       {/* Floating Action Button for creating posts */}
@@ -333,9 +332,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 100, // Account for tab bar
-  },
-  list: {
-    flex: 1,
   },
   listHeaderContainer: {
     paddingBottom: 12,
