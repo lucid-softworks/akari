@@ -93,6 +93,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const rawCommitSha = process.env.EXPO_PUBLIC_COMMIT_SHA?.trim();
   const commitSha = rawCommitSha && rawCommitSha.length > 0 ? rawCommitSha : null;
 
+  const configExtra = config.extra as
+    | { buildMetadata?: { commitSha?: string | null } }
+    | undefined;
+  const variantExtra = variantConfig.extra as
+    | { buildMetadata?: { commitSha?: string | null } }
+    | undefined;
+  const configBuildMetadata = configExtra?.buildMetadata ?? {};
+  const variantBuildMetadata = variantExtra?.buildMetadata ?? {};
+
   return {
     ...config,
     ...variantConfig,
@@ -117,10 +126,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...(config.extra ?? {}),
       ...(variantConfig.extra ?? {}),
       buildMetadata: {
-        // @ts-expect-error - `extra` is `Record<string, any>` so nested keys are untyped.
-        ...(config.extra?.buildMetadata ?? {}),
-        // @ts-expect-error - `extra` is `Record<string, any>` so nested keys are untyped.
-        ...(variantConfig.extra?.buildMetadata ?? {}),
+        ...configBuildMetadata,
+        ...variantBuildMetadata,
         commitSha,
       },
     },
