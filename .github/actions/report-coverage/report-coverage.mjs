@@ -423,7 +423,7 @@ function finalizeCoverageMetrics(metrics) {
 
 function formatUncoveredLines(uncovered) {
   if (!Array.isArray(uncovered) || uncovered.length === 0) {
-    return '—';
+    return '';
   }
 
   const sorted = [...new Set(uncovered.filter((value) => typeof value === 'number' && Number.isFinite(value)))].sort(
