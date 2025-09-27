@@ -92,7 +92,7 @@ if (Array.isArray(files) && files.length > 0) {
 
     if (directory !== currentDirectory) {
       currentDirectory = directory;
-      fileRows.push(`| **${escapeTableCell(directoryLabel)}** | — | — | — | — |`);
+      fileRows.push(`| **${escapeTableCell(directoryLabel)}** |  |  |  |  |`);
     }
 
     const cells = perFileMetrics
