@@ -357,7 +357,7 @@ function formatUncoveredLines(uncovered) {
   );
 
   if (sorted.length === 0) {
-    return '—';
+    return '';
   }
 
   const maxVisible = 20;
