@@ -406,11 +406,6 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
-  const contentContainerStyle = useMemo(
-    () => [styles.listContent, { paddingTop: isLargeScreen ? 0 : insets.top }],
-    [insets.top, isLargeScreen],
-  );
-
   const handleNotificationPress = useCallback((notification: GroupedNotification) => {
     if (notification.type === 'follow') {
       // Navigate to the first author's profile
@@ -424,11 +419,11 @@ export default function NotificationsScreen() {
     }
   }, []);
 
-  const renderNotification = useCallback(
-    ({ item }: { item: GroupedNotification }) => (
+  const renderNotificationItem = useCallback(
+    (notification: GroupedNotification) => (
       <NotificationItem
-        notification={item}
-        onPress={() => handleNotificationPress(item)}
+        notification={notification}
+        onPress={() => handleNotificationPress(notification)}
         borderColor={borderColor}
       />
     ),
@@ -450,18 +445,6 @@ export default function NotificationsScreen() {
       <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
     </View>
   ), [error?.message, t]);
-
-  const listHeaderComponent = useMemo(
-    () => (
-      <ThemedView style={styles.listHeader}>
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-        </ThemedView>
-        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
-      </ThemedView>
-    ),
-    [activeTab, borderColor, handleTabChange, tabs, t],
-  );
 
   const listEmptyComponent = useMemo(() => {
     if (isLoading) {
@@ -502,24 +485,29 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+      <ThemedView style={styles.headerContainer}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+        </ThemedView>
+        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+      </ThemedView>
+
       <VirtualizedList
         ref={listRef}
         data={filteredNotifications}
-        renderItem={renderNotification}
+        renderItem={({ item }) => renderNotificationItem(item)}
         keyExtractor={keyExtractor}
         estimatedItemSize={160}
         overscan={2}
-        ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
         ListEmptyComponent={listEmptyComponent}
-        contentContainerStyle={contentContainerStyle}
-        style={[styles.list, { paddingTop: 0 }]}
+        contentContainerStyle={styles.listContent}
+        style={styles.list}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
-        stickyHeaderIndices={[0]}
       />
     </ThemedView>
   );
@@ -529,14 +517,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    paddingBottom: 12,
+  },
   list: {
     flex: 1,
   },
   listContent: {
     paddingBottom: 100,
-  },
-  listHeader: {
-    paddingBottom: 12,
   },
   header: {
     paddingHorizontal: 16,

@@ -13,13 +13,7 @@ export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize
 };
 
 function VirtualizedListInner<T>(
-  {
-    data,
-    renderItem,
-    overscan = DEFAULT_OVERSCAN,
-    estimatedItemSize: incomingEstimatedItemSize,
-    ...rest
-  }: VirtualizedListProps<T>,
+  { data, renderItem, overscan = DEFAULT_OVERSCAN, estimatedItemSize: incomingEstimatedItemSize, ...rest }: VirtualizedListProps<T>,
   ref: React.ForwardedRef<VirtualizedListHandle<T>>,
 ) {
   const estimatedItemSize = incomingEstimatedItemSize ?? DEFAULT_ESTIMATED_ITEM_SIZE;

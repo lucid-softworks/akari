@@ -252,7 +252,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<NotificationsScreen />);
+    const { getByText, UNSAFE_getAllByType } = render(<NotificationsScreen />);
 
     expect(getByText('alice and 4 others')).toBeTruthy();
     expect(getByText('notifications.andOthers')).toBeTruthy();
@@ -264,10 +264,19 @@ describe('NotificationsScreen', () => {
     expect(getByText('arrow.2.squarepath')).toBeTruthy();
     expect(getByText('quote.bubble')).toBeTruthy();
     expect(getByText('notifications.loadingMoreNotifications')).toBeTruthy();
+    expect(getByText('navigation.notifications')).toBeTruthy();
 
-    const scrollView = UNSAFE_getByType(ScrollView);
-    const styleArray = Array.isArray(scrollView.props.style) ? scrollView.props.style : [scrollView.props.style];
-    expect(styleArray[1]).toEqual(expect.objectContaining({ paddingTop: 0 }));
+    const scrollViews = UNSAFE_getAllByType(ScrollView);
+    const listScrollView = scrollViews.find((view) => !view.props.horizontal);
+    expect(listScrollView).toBeDefined();
+
+    const styleArray = Array.isArray(listScrollView!.props.style)
+      ? listScrollView!.props.style
+      : [listScrollView!.props.style];
+    expect(styleArray).toEqual(expect.arrayContaining([expect.objectContaining({ flex: 1 })]));
+    expect(listScrollView!.props.contentContainerStyle).toEqual(
+      expect.objectContaining({ paddingBottom: 100 }),
+    );
 
     const images = UNSAFE_getAllByType(Image);
     expect(images.some((img) => img.props.source?.uri === 'https://example.com/full1.jpg')).toBe(true);
