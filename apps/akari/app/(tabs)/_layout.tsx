@@ -1,57 +1,19 @@
-import { useNavigationState } from '@react-navigation/native';
-import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+import { Redirect, Tabs, useNavigation } from 'expo-router';
+import { Badge, Icon, Label, NativeTabs, VectorIcon } from 'expo-router/unstable-native-tabs';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { ActivityIndicator, Platform, View } from 'react-native';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
-import { HapticTab } from '@/components/HapticTab';
 import { Sidebar } from '@/components/Sidebar';
-import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
-import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
-  return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-/**
- * Custom tab button that tracks which tab is being pressed
- */
-function CustomTabButton(props: any) {
-  const navigationState = useNavigationState((state) => state);
-  const lastPressedTabRef = useRef<string | null>(null);
-
-  const handleTabPress = () => {
-    // Use a timeout to check the navigation state after the tab press
-    // since the navigation state doesn't update immediately
-    setTimeout(() => {
-      const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
-
-      if (currentRoute) {
-        // Check if this is the same tab pressed again
-        if (lastPressedTabRef.current === currentRoute) {
-          tabScrollRegistry.handleTabPress(currentRoute);
-        }
-
-        lastPressedTabRef.current = currentRoute;
-      }
-    }, 50); // Small delay to ensure navigation state has updated
-  };
-
-  return <HapticTab {...props} onTabPress={handleTabPress} />;
-}
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
@@ -59,32 +21,11 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
-  const borderColor = useBorderColor();
+  const navigation = useNavigation();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
-  const tabBarStyle = {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor,
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 18,
-    height: 86,
-    shadowColor: 'rgba(12, 14, 24, 0.28)',
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 20,
-    elevation: 10,
-    ...Platform.select({
-      ios: {
-        position: 'absolute',
-        backgroundColor: 'transparent',
-      },
-      default: {
-        backgroundColor: tabBarSurface,
-      },
-    }),
-  } as const;
+  const badgeBackgroundColor = useThemeColor({ light: '#FF3B30', dark: '#FF453A' }, 'tint');
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -100,6 +41,81 @@ export default function TabLayout() {
 
   // Initialize push notifications
   usePushNotifications();
+
+  useEffect(() => {
+    if (isLargeScreen) {
+      return;
+    }
+
+    const removeTabPressListener = navigation.addListener('tabPress', (event) => {
+      const state = navigation.getState();
+      const currentRoute = state.routes.find((route) => route.key === event.target);
+      const focusedRoute = state.routes[state.index];
+
+      if (currentRoute && focusedRoute?.key === currentRoute.key) {
+        tabScrollRegistry.handleTabPress(currentRoute.name);
+      }
+    });
+
+    const removeTabLongPressListener = navigation.addListener('tabLongPress', (event) => {
+      const state = navigation.getState();
+      const currentRoute = state.routes.find((route) => route.key === event.target);
+
+      if (currentRoute?.name === 'profile') {
+        event.preventDefault?.();
+        handleOpenAccountSwitcher();
+      }
+    });
+
+    return () => {
+      removeTabPressListener();
+      removeTabLongPressListener();
+    };
+  }, [handleOpenAccountSwitcher, isLargeScreen, navigation]);
+
+  const renderIcon = useCallback(
+    (
+      iosIcons: { default: string; selected: string },
+      androidIcons: { default: string; selected: string },
+    ) =>
+      Platform.select({
+        ios: (
+          <Icon
+            sf={{
+              default: iosIcons.default,
+              selected: iosIcons.selected,
+            }}
+          />
+        ),
+        default: (
+          <Icon
+            src={{
+              default: (
+                <VectorIcon family={MaterialCommunityIcons} name={androidIcons.default} />
+              ),
+              selected: (
+                <VectorIcon family={MaterialCommunityIcons} name={androidIcons.selected} />
+              ),
+            }}
+          />
+        ),
+      }),
+    [],
+  );
+
+  const messagesBadge = useMemo(() => {
+    if (!unreadMessagesCount) {
+      return undefined;
+    }
+    return unreadMessagesCount > 99 ? '99+' : String(unreadMessagesCount);
+  }, [unreadMessagesCount]);
+
+  const notificationsBadge = useMemo(() => {
+    if (!unreadNotificationsCount) {
+      return undefined;
+    }
+    return unreadNotificationsCount > 99 ? '99+' : String(unreadNotificationsCount);
+  }, [unreadNotificationsCount]);
 
   if (isLoading) {
     return (
@@ -171,88 +187,65 @@ export default function TabLayout() {
   }
 
   // For mobile screens, show the traditional tab bar
+
   return (
     <>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: accentColor,
-          tabBarInactiveTintColor: inactiveTint,
-          headerShown: false,
-          tabBarButton: CustomTabButton,
-          tabBarBackground: TabBarBackground,
-          tabBarShowLabel: false,
-          tabBarStyle,
-          tabBarItemStyle: {
-            marginHorizontal: 4,
-            paddingVertical: 0,
-          },
-        }}
+      <NativeTabs
+        backgroundColor={tabBarSurface}
+        badgeBackgroundColor={badgeBackgroundColor}
+        disableTransparentOnScrollEdge
+        iconColor={inactiveTint}
+        labelStyle={{ color: inactiveTint, fontSize: 12, fontWeight: '600' }}
+        shadowColor="rgba(12, 14, 24, 0.28)"
+        tintColor={accentColor}
       >
-        <Tabs.Screen
-          name="index"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="messages"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="message.fill" color={color} />
-                <TabBadge count={unreadMessagesCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="bell.fill" color={color} />
-                <TabBadge count={unreadNotificationsCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
-          }}
-          listeners={() => ({
-            tabLongPress: (event) => {
-              event.preventDefault();
-              handleOpenAccountSwitcher();
-            },
-          })}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-          }}
-        />
-      </Tabs>
+        <NativeTabs.Trigger name="index">
+          <Label>Home</Label>
+          {renderIcon(
+            { default: 'house', selected: 'house.fill' },
+            { default: 'home-outline', selected: 'home' },
+          )}
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="search">
+          <Label>Search</Label>
+          {renderIcon(
+            { default: 'magnifyingglass', selected: 'magnifyingglass' },
+            { default: 'magnify', selected: 'magnify' },
+          )}
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="messages">
+          <Label>Messages</Label>
+          {renderIcon(
+            { default: 'message', selected: 'message.fill' },
+            { default: 'message-text-outline', selected: 'message-text' },
+          )}
+          <Badge hidden={!messagesBadge}>{messagesBadge}</Badge>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="notifications">
+          <Label>Alerts</Label>
+          {renderIcon(
+            { default: 'bell', selected: 'bell.fill' },
+            { default: 'bell-outline', selected: 'bell' },
+          )}
+          <Badge hidden={!notificationsBadge}>{notificationsBadge}</Badge>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="bookmarks" hidden options={{ href: null }} />
+        <NativeTabs.Trigger name="post" hidden options={{ href: null }} />
+        <NativeTabs.Trigger name="profile">
+          <Label>Profile</Label>
+          {renderIcon(
+            { default: 'person', selected: 'person.fill' },
+            { default: 'account-outline', selected: 'account' },
+          )}
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="settings">
+          <Label>Settings</Label>
+          {renderIcon(
+            { default: 'gearshape', selected: 'gearshape.fill' },
+            { default: 'cog-outline', selected: 'cog' },
+          )}
+        </NativeTabs.Trigger>
+      </NativeTabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
   );
