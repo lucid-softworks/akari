@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/ImLunaHey/akari/compare/v1.2.1...v1.2.2) (2025-09-27)
+
+
+### Bug Fixes
+
+* remove VirtualizedList style props ([#289](https://github.com/ImLunaHey/akari/issues/289)) ([9ad4cb3](https://github.com/ImLunaHey/akari/commit/9ad4cb308cdf414fccb877c2f956d29f000005bb))
+
 ## [1.2.1](https://github.com/ImLunaHey/akari/compare/v1.2.0...v1.2.1) (2025-09-27)
 
 
