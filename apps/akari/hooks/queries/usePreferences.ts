@@ -1,19 +1,30 @@
-import { BlueskyApi, type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFeedsPref } from '@/bluesky-api';
+import {
+  BlueskyApi,
+  type BlueskyApiClientOptions,
+  type BlueskyFeed,
+  type BlueskyPreferencesResponse,
+  type BlueskySavedFeedsPref,
+} from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SavedFeedWithMetadata } from '@/types/savedFeed';
 import { feedGeneratorsQueryOptions } from './useFeedGenerators';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
-export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
+export const preferencesQueryOptions = (
+  token: string,
+  pdsUrl: string,
+  apiOptions: BlueskyApiClientOptions,
+) => ({
   queryKey: ['preferences', pdsUrl] as const,
   queryFn: async (): Promise<BlueskyPreferencesResponse> => {
     if (!token) throw new Error('No access token');
     if (!pdsUrl) throw new Error('No PDS URL available');
 
-    const api = new BlueskyApi(pdsUrl);
+    const api = new BlueskyApi(pdsUrl, apiOptions);
     return await api.getPreferences(token);
   },
   staleTime: PREFERENCES_STALE_TIME,
@@ -25,9 +36,10 @@ export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
 export function usePreferences() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
-    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? ''),
+    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? '', apiOptions),
     enabled: !!token && !!currentAccount?.pdsUrl,
   });
 }
@@ -39,6 +51,7 @@ export function useSavedFeeds() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ['savedFeeds', currentAccount?.did] as const,
@@ -50,7 +63,7 @@ export function useSavedFeeds() {
       if (!currentAccount?.did) throw new Error('No DID available');
 
       const preferences = await queryClient.ensureQueryData(
-        preferencesQueryOptions(token, currentAccount.pdsUrl),
+        preferencesQueryOptions(token, currentAccount.pdsUrl, apiOptions),
       );
 
       const savedFeedsPref = preferences.preferences.find(
@@ -72,7 +85,7 @@ export function useSavedFeeds() {
       }
 
       const feedGenerators = await queryClient.ensureQueryData(
-        feedGeneratorsQueryOptions(feedUris, token, currentAccount.pdsUrl),
+        feedGeneratorsQueryOptions(feedUris, token, currentAccount.pdsUrl, apiOptions),
       );
 
       const feedMetadataMap = new Map<string, BlueskyFeed>();

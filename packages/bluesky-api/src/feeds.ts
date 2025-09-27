@@ -1,4 +1,4 @@
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, type BlueskyApiClientOptions } from './client';
 import type {
   BlueskyBookmarksResponse,
   BlueskyFeedResponse,
@@ -19,6 +19,10 @@ import type {
  * Bluesky API feed methods
  */
 export class BlueskyFeeds extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Gets the user's timeline feed
    * @param accessJwt - Valid access JWT token

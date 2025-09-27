@@ -10,6 +10,7 @@ import type {
   BlueskyUnlikeResponse,
 } from '@/bluesky-api';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Mutation hook for liking and unliking posts
@@ -18,6 +19,7 @@ export function useLikePost() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useMutation({
     mutationFn: async ({
@@ -39,7 +41,7 @@ export function useLikePost() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
 
       if (action === 'like') {
         if (!postCid) throw new Error('Post CID is required for like');

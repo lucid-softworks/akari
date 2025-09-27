@@ -3,10 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { BlueskyApi } from "@/bluesky-api";
+import { useAuthenticatedBluesky } from "@/hooks/useAuthenticatedBluesky";
 
 export function usePostThread(postUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ["postThread", postUri, currentAccount?.pdsUrl],
@@ -14,7 +16,7 @@ export function usePostThread(postUri: string | null) {
       if (!token || !postUri) throw new Error("No access token or post URI");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       return await api.getPostThread(token, postUri);
     },
     enabled: !!postUri && !!token,

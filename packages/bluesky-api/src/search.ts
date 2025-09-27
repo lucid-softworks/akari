@@ -1,4 +1,4 @@
-import { BlueskyApiClient } from "./client";
+import { BlueskyApiClient, type BlueskyApiClientOptions } from "./client";
 import type {
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
@@ -8,6 +8,10 @@ import type {
  * Bluesky API search methods
  */
 export class BlueskySearch extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Searches for profiles
    * @param accessJwt - Valid access JWT token

@@ -32,6 +32,7 @@ export function useRefreshSession() {
         refreshToken: session.refreshJwt,
         did: session.did,
         handle: session.handle,
+        pdsUrl: currentAccount?.pdsUrl,
       });
 
       // Invalidate auth queries with the new user-specific key

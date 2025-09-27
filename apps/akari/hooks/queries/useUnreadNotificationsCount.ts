@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Hook to get the count of unread notifications
@@ -12,6 +13,7 @@ export function useUnreadNotificationsCount(enabled: boolean = true) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ['unreadNotificationsCount', currentUserDid],
@@ -21,7 +23,7 @@ export function useUnreadNotificationsCount(enabled: boolean = true) {
 
       try {
         // Use the dedicated unread count endpoint
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
         const response = await api.getUnreadNotificationsCount(token);
         return response.count;
       } catch (error: unknown) {

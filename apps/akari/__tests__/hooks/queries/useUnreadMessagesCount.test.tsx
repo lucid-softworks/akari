@@ -55,7 +55,9 @@ describe('useUnreadMessagesCount', () => {
       expect(result.current.data).toBe(5);
     });
 
-    expect(mockBlueskyApi).toHaveBeenCalledWith('https://pds');
+    const [[pdsUrl, options]] = mockBlueskyApi.mock.calls;
+    expect(pdsUrl).toBe('https://pds');
+    expect(options).toEqual({});
     expect(mockListConversations).toHaveBeenCalledWith(
       'token',
       100,

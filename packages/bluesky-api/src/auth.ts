@@ -1,10 +1,14 @@
-import { BlueskyApiClient } from "./client";
+import { BlueskyApiClient, type BlueskyApiClientOptions } from "./client";
 import type { BlueskySession } from "./types";
 
 /**
  * Bluesky API authentication methods
  */
 export class BlueskyAuth extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Creates a new session with the Bluesky API
    * @param identifier - User's handle or email

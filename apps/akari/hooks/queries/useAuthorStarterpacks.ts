@@ -4,6 +4,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Infinite query hook for fetching starterpacks created by a user
@@ -13,6 +14,7 @@ import { BlueskyApi } from '@/bluesky-api';
 export function useAuthorStarterpacks(identifier: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery({
     queryKey: ['authorStarterpacks', identifier, limit, currentAccount?.pdsUrl],
@@ -21,7 +23,7 @@ export function useAuthorStarterpacks(identifier: string | undefined, limit: num
       if (!identifier) throw new Error('No identifier provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const starterpacks = await api.getAuthorStarterpacks(token, identifier, limit, pageParam);
 
       return {

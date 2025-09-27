@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 type ConversationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -24,6 +25,7 @@ export function useConversations(
 ) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
@@ -33,7 +35,7 @@ export function useConversations(
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
         const response = await api.listConversations(
           token,
           limit,

@@ -1,3 +1,6 @@
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+
 import { BlueskyApi } from './api';
 import type {
   BlueskyBookmarksResponse,
@@ -23,6 +26,12 @@ import type {
   BlueskyCreatePostInput,
   BlueskyCreatePostResponse,
 } from './types';
+
+const server = setupServer();
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe('BlueskyApi', () => {
   const setupApi = () => {
@@ -223,5 +232,56 @@ describe('BlueskyApi', () => {
   it('creates instances using the static helper', () => {
     const api = BlueskyApi.createWithPDS('https://pds.example');
     expect(api).toBeInstanceOf(BlueskyApi);
+  });
+
+  it('refreshes sessions and retries requests when tokens expire', async () => {
+    const timelineAuthHeaders: string[] = [];
+
+    server.use(
+      http.get('https://pds.example/xrpc/app.bsky.feed.getTimeline', async ({ request }) => {
+        timelineAuthHeaders.push(request.headers.get('authorization') ?? '');
+
+        if (timelineAuthHeaders.length === 1) {
+          return HttpResponse.json({ message: 'Expired token' }, { status: 401 });
+        }
+
+        return HttpResponse.json({ feed: [], cursor: null });
+      }),
+      http.post('https://pds.example/xrpc/com.atproto.server.refreshSession', async ({ request }) => {
+        const authorization = request.headers.get('authorization');
+        if (authorization !== 'Bearer refresh-token') {
+          return HttpResponse.json({ message: 'Invalid refresh token' }, { status: 400 });
+        }
+
+        return HttpResponse.json({
+          did: 'did:example:alice',
+          handle: 'alice.test',
+          active: true,
+          accessJwt: 'new-access',
+          refreshJwt: 'new-refresh',
+        });
+      }),
+    );
+
+    const onSessionRefreshed = jest.fn();
+    const getRefreshToken = jest.fn().mockResolvedValue('refresh-token');
+
+    const api = new BlueskyApi('https://pds.example', {
+      getRefreshToken,
+      onSessionRefreshed,
+    });
+
+    const response = await api.getTimeline('expired-access', 5);
+
+    expect(response).toEqual({ feed: [], cursor: null });
+    expect(timelineAuthHeaders).toEqual(['Bearer expired-access', 'Bearer new-access']);
+    expect(getRefreshToken).toHaveBeenCalledTimes(1);
+    expect(onSessionRefreshed).toHaveBeenCalledWith({
+      did: 'did:example:alice',
+      handle: 'alice.test',
+      active: true,
+      accessJwt: 'new-access',
+      refreshJwt: 'new-refresh',
+    });
   });
 });

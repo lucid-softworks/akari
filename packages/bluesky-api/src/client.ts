@@ -1,17 +1,64 @@
-import type { BlueskyError, BlueskyUploadBlobResponse } from './types';
+import type { BlueskyError, BlueskySession, BlueskyUploadBlobResponse } from './types';
+
+/**
+ * Error thrown when a Bluesky request fails
+ */
+export class BlueskyRequestError extends Error {
+  /** HTTP status code returned by the PDS */
+  readonly status: number;
+
+  /** Optional AT Protocol error code */
+  readonly code?: string;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = 'BlueskyRequestError';
+    this.status = status;
+    this.code = code;
+  }
+}
+
+export type BlueskyApiClientOptions = {
+  /**
+   * Callback invoked when an authenticated request fails due to an expired or invalid token.
+   * Should return a fresh access token that will be retried against the original request.
+   * Returning null signals that the request should not be retried.
+   */
+  onUnauthorized?: (error: BlueskyRequestError) => Promise<string | null>;
+
+  /**
+   * Optional provider that returns the refresh token associated with the current session.
+   * Used by higher-level clients to negotiate fresh sessions when authentication expires.
+   */
+  getRefreshToken?: () => Promise<string | null> | string | null;
+
+  /**
+   * Listener invoked after a successful session refresh so callers can persist updated tokens.
+   */
+  onSessionRefreshed?: (session: BlueskySession) => Promise<void> | void;
+
+  /**
+   * Custom predicate to decide if an error should trigger the unauthorized retry flow.
+   */
+  isUnauthorizedError?: (error: BlueskyRequestError) => boolean;
+};
 
 /**
  * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
  */
 export class BlueskyApiClient {
   protected baseUrl: string;
+  protected onUnauthorized?: (error: BlueskyRequestError) => Promise<string | null>;
+  protected isUnauthorizedError: (error: BlueskyRequestError) => boolean;
 
   /**
    * Creates a new BlueskyApiClient instance
    * @param pdsUrl - The PDS URL to use (required)
    */
-  constructor(pdsUrl: string) {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
     this.baseUrl = pdsUrl;
+    this.onUnauthorized = options.onUnauthorized;
+    this.isUnauthorizedError = options.isUnauthorizedError ?? ((error) => error.status === 401);
   }
 
   /**
@@ -53,12 +100,17 @@ export class BlueskyApiClient {
       url += `?${searchParams.toString()}`;
     }
 
+    const defaultHeaders: Record<string, string> = {};
+
+    if (!(body instanceof FormData) && !(body instanceof Blob)) {
+      defaultHeaders['Content-Type'] = 'application/json';
+    }
+
     const requestOptions: RequestInit = {
       method,
       headers: {
+        ...defaultHeaders,
         ...headers,
-        // Only set Content-Type for JSON, let browser handle FormData and Blob
-        ...(body && !(body instanceof FormData) && !(body instanceof Blob) && { 'Content-Type': 'application/json' }),
       },
     };
 
@@ -69,8 +121,22 @@ export class BlueskyApiClient {
     const response = await fetch(url, requestOptions);
 
     if (!response.ok) {
-      const error: BlueskyError = await response.json();
-      throw new Error(error.message || `Request failed with status ${response.status}`);
+      try {
+        const error: BlueskyError = await response.json();
+        throw new BlueskyRequestError(
+          error.message || `Request failed with status ${response.status}`,
+          response.status,
+          error.error,
+        );
+      } catch (parseError) {
+        if (parseError instanceof BlueskyRequestError) {
+          throw parseError;
+        }
+        throw new BlueskyRequestError(
+          `HTTP ${response.status}: ${response.statusText || 'Request failed'}`,
+          response.status,
+        );
+      }
     }
 
     return await response.json();
@@ -93,13 +159,30 @@ export class BlueskyApiClient {
       headers?: Record<string, string>;
     } = {},
   ): Promise<T> {
-    return this.makeRequest<T>(endpoint, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        ...options.headers,
-      },
-    });
+    const makeCall = async (token: string) =>
+      this.makeRequest<T>(endpoint, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...options.headers,
+        },
+      });
+
+    try {
+      return await makeCall(accessJwt);
+    } catch (error) {
+      if (
+        error instanceof BlueskyRequestError &&
+        this.onUnauthorized &&
+        this.isUnauthorizedError(error)
+      ) {
+        const nextToken = await this.onUnauthorized(error);
+        if (nextToken) {
+          return await makeCall(nextToken);
+        }
+      }
+      throw error;
+    }
   }
 
   /**

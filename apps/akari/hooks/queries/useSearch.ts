@@ -3,6 +3,7 @@ import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { CursorPageParam } from "@/hooks/queries/types";
 import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
 import { BlueskyApi } from "@/bluesky-api";
+import { useAuthenticatedBluesky } from "@/hooks/useAuthenticatedBluesky";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 type SearchTabType = "all" | "users" | "posts";
@@ -31,6 +32,7 @@ export function useSearch(
 ) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery({
     queryKey: ["search", query, activeTab, limit, currentAccount?.pdsUrl],
@@ -39,7 +41,7 @@ export function useSearch(
       if (!query) throw new Error("No query provided");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
 
       try {
         // Check if this is a "from:handle" search

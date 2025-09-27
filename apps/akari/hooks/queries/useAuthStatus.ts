@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from './useCurrentAccount';
 import { useJwtToken } from './useJwtToken';
 import { useRefreshToken } from './useRefreshToken';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Query hook for checking authentication status
@@ -16,6 +17,7 @@ export function useAuthStatus() {
   const { data: currentAccount } = useCurrentAccount();
   const setAuthMutation = useSetAuthentication();
   const clearAuthMutation = useClearAuthentication();
+  const apiOptions = useAuthenticatedBluesky();
 
   const currentUserDid = currentAccount?.did || null;
 
@@ -31,7 +33,7 @@ export function useAuthStatus() {
         if (!currentAccount?.pdsUrl) {
           throw new Error('No PDS URL available for this account');
         }
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
         const session = await api.refreshSession(refreshToken);
 
         // Update stored tokens with fresh ones

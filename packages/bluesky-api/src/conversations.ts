@@ -1,4 +1,4 @@
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, type BlueskyApiClientOptions } from './client';
 import type {
   BlueskyConvosResponse,
   BlueskyMessagesResponse,
@@ -10,6 +10,10 @@ import type {
  * Bluesky API conversation methods
  */
 export class BlueskyConversations extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Gets a list of conversations
    * @param accessJwt - Valid access JWT token

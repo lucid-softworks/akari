@@ -3,10 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { BlueskyApi } from "@/bluesky-api";
+import { useAuthenticatedBluesky } from "@/hooks/useAuthenticatedBluesky";
 
 export function usePost(postUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ["post", postUri, currentAccount?.pdsUrl],
@@ -14,7 +16,7 @@ export function usePost(postUri: string | null) {
       if (!token || !postUri) throw new Error("No access token or post URI");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       return await api.getPost(token, postUri);
     },
     enabled: !!postUri,
@@ -28,6 +30,7 @@ export function usePost(postUri: string | null) {
 export function useParentPost(parentUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   const {
     data: parentPost,
@@ -39,7 +42,7 @@ export function useParentPost(parentUri: string | null) {
       if (!parentUri) return null;
       if (!token) throw new Error("No access token");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const result = await api.getPost(token, parentUri);
       return result;
     },
@@ -55,6 +58,7 @@ export function useParentPost(parentUri: string | null) {
 export function useRootPost(rootUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   const {
     data: rootPost,
@@ -66,7 +70,7 @@ export function useRootPost(rootUri: string | null) {
       if (!rootUri) return null;
       if (!token) throw new Error("No access token");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const result = await api.getPost(token, rootUri);
       return result;
     },

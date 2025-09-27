@@ -5,6 +5,7 @@ import type { BlueskyBookmarksResponse } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Infinite query hook for fetching the authenticated user's bookmarks
@@ -13,6 +14,7 @@ import { CursorPageParam } from '@/hooks/queries/types';
 export function useBookmarks(limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery<BlueskyBookmarksResponse>({
     queryKey: ['bookmarks', limit, currentAccount?.did],
@@ -20,7 +22,7 @@ export function useBookmarks(limit: number = 20) {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       return await api.getBookmarks(token, limit, pageParam);
     },
     enabled: !!token && !!currentAccount?.did,

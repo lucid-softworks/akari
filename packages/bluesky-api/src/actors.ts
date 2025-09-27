@@ -1,4 +1,4 @@
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, type BlueskyApiClientOptions } from './client';
 import type {
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
@@ -9,6 +9,10 @@ import type {
  * Bluesky API actor/profile methods
  */
 export class BlueskyActors extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Gets a user's profile information
    * @param accessJwt - Valid access JWT token

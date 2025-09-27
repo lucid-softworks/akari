@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { BlueskyNotifications } from './notifications';
+import { BlueskyRequestError } from './client';
 
 describe('BlueskyNotifications', () => {
   const server = setupServer();
@@ -50,7 +51,10 @@ describe('BlueskyNotifications', () => {
 
     const client = new BlueskyNotifications();
 
-    await expect(client.listNotifications('jwt-token')).rejects.toThrow('Request failed');
+    await expect(client.listNotifications('jwt-token')).rejects.toMatchObject<Partial<BlueskyRequestError>>({
+      message: 'Request failed',
+      status: 500,
+    });
   });
 
   it('fetches unread notification counts', async () => {

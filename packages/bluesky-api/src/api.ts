@@ -1,6 +1,6 @@
 import { BlueskyActors } from './actors';
 import { BlueskyAuth } from './auth';
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, type BlueskyApiClientOptions, BlueskyRequestError } from './client';
 import { BlueskyConversations } from './conversations';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
@@ -32,6 +32,8 @@ import type {
   BlueskyUploadBlobResponse,
 } from './types';
 
+const RECOVERABLE_ERROR_CODES = new Set(['ExpiredToken', 'InvalidToken', 'AuthMissing']);
+
 /**
  * Main Bluesky API client that combines all functionality
  */
@@ -48,15 +50,49 @@ export class BlueskyApi extends BlueskyApiClient {
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
    * @param pdsUrl - Personal data server URL that hosts the AT Protocol endpoints.
    */
-  constructor(pdsUrl: string) {
-    super(pdsUrl);
-    this.actors = new BlueskyActors(pdsUrl);
-    this.auth = new BlueskyAuth(pdsUrl);
-    this.conversations = new BlueskyConversations(pdsUrl);
-    this.feeds = new BlueskyFeeds(pdsUrl);
-    this.graph = new BlueskyGraph(pdsUrl);
-    this.notifications = new BlueskyNotifications(pdsUrl);
-    this.search = new BlueskySearch(pdsUrl);
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+
+    const resolvedIsUnauthorized =
+      options.isUnauthorizedError ??
+      ((error: BlueskyRequestError) => error.status === 401 || RECOVERABLE_ERROR_CODES.has(error.code ?? ''));
+
+    this.isUnauthorizedError = resolvedIsUnauthorized;
+
+    const auth = new BlueskyAuth(pdsUrl, options);
+
+    const resolvedOnUnauthorized =
+      options.onUnauthorized ??
+      (options.getRefreshToken
+        ? async (error: BlueskyRequestError) => {
+            const refreshJwt = await options.getRefreshToken!();
+            if (!refreshJwt) {
+              return null;
+            }
+
+            const session = await auth.refreshSession(refreshJwt);
+            await options.onSessionRefreshed?.(session);
+            return session.accessJwt;
+          }
+        : undefined);
+
+    if (resolvedOnUnauthorized) {
+      this.onUnauthorized = resolvedOnUnauthorized;
+    }
+
+    const sharedOptions: BlueskyApiClientOptions = {
+      ...options,
+      onUnauthorized: this.onUnauthorized,
+      isUnauthorizedError: this.isUnauthorizedError,
+    };
+
+    this.auth = auth;
+    this.actors = new BlueskyActors(pdsUrl, sharedOptions);
+    this.conversations = new BlueskyConversations(pdsUrl, sharedOptions);
+    this.feeds = new BlueskyFeeds(pdsUrl, sharedOptions);
+    this.graph = new BlueskyGraph(pdsUrl, sharedOptions);
+    this.notifications = new BlueskyNotifications(pdsUrl, sharedOptions);
+    this.search = new BlueskySearch(pdsUrl, sharedOptions);
   }
 
   /**

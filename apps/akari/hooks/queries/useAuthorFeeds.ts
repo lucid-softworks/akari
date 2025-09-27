@@ -4,6 +4,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Infinite query hook for fetching feeds created by a user
@@ -13,6 +14,7 @@ import { BlueskyApi } from '@/bluesky-api';
 export function useAuthorFeeds(identifier: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery({
     queryKey: ['authorFeeds', identifier, limit, currentAccount?.pdsUrl],
@@ -21,7 +23,7 @@ export function useAuthorFeeds(identifier: string | undefined, limit: number = 5
       if (!identifier) throw new Error('No identifier provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const feeds = await api.getAuthorFeeds(token, identifier, limit, pageParam);
 
       return {

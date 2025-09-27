@@ -31,13 +31,20 @@ jest.mock('@/contexts/ToastContext', () => ({
   useToast: jest.fn(() => mockToastContext),
 }));
 
+const mockUseAuthenticatedBluesky = jest.fn(() => ({}));
+
+jest.mock('@/hooks/useAuthenticatedBluesky', () => ({
+  __esModule: true,
+  useAuthenticatedBluesky: mockUseAuthenticatedBluesky,
+}));
+
 const { act } = require('@testing-library/react-native');
 const { useToast } = require('@/contexts/ToastContext');
-
 beforeEach(() => {
   mockToastContext.showToast = jest.fn();
   mockToastContext.hideToast = jest.fn();
   useToast.mockReturnValue(mockToastContext);
+  mockUseAuthenticatedBluesky.mockReturnValue({});
   jest.useFakeTimers();
 });
 

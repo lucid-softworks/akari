@@ -60,6 +60,7 @@ describe('useRefreshSession mutation hook', () => {
       refreshToken: 'refresh',
       did: 'did',
       handle: 'handle',
+      pdsUrl: 'url',
     });
     expect(invalidateSpy).toHaveBeenCalled();
   });

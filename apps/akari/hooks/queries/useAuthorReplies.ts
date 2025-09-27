@@ -4,6 +4,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 /**
  * Infinite query hook for fetching a user's replies
@@ -13,6 +14,7 @@ import { BlueskyApi } from '@/bluesky-api';
 export function useAuthorReplies(identifier: string | undefined, limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery({
     queryKey: ['authorReplies', identifier, limit, currentAccount?.pdsUrl],
@@ -21,7 +23,7 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
       if (!identifier) throw new Error('No identifier provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, 'posts_with_replies');
 
       // Map the feed items to posts (they should already be filtered for replies by the API)

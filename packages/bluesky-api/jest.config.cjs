@@ -28,7 +28,7 @@ module.exports = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
-    '^.+\\.m?tsx?$': [
+    '^.+\\.m?[tj]sx?$': [
       'ts-jest',
       {
         useESM: true,
@@ -36,5 +36,6 @@ module.exports = {
       },
     ],
   },
+  transformIgnorePatterns: ['/node_modules/(?!(msw|@mswjs/.*|until-async)/)'],
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };

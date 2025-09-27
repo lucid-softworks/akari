@@ -4,6 +4,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyEmbed } from '@/bluesky-api';
 import { BlueskyApi } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 
 type NotificationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -21,6 +22,7 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const apiOptions = useAuthenticatedBluesky();
 
   return useInfiniteQuery({
     queryKey: ['notifications', limit, reasons, priority, currentUserDid],
@@ -29,7 +31,7 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
         const response = await api.listNotifications(
           token,
           limit,

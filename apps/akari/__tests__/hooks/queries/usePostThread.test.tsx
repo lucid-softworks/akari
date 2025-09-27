@@ -57,7 +57,9 @@ describe('usePostThread', () => {
       expect(result.current.data).toEqual(mockThread);
     });
 
-    expect(jest.mocked(BlueskyApi)).toHaveBeenCalledWith('https://pds');
+    const [[pdsUrl, options]] = jest.mocked(BlueskyApi).mock.calls;
+    expect(pdsUrl).toBe('https://pds');
+    expect(options).toEqual({});
     expect(mockGetPostThread).toHaveBeenCalledWith('token', 'at://post/1');
   });
 

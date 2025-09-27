@@ -1,6 +1,7 @@
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyApi, type BlueskyFeedsResponse } from '@/bluesky-api';
+import { useAuthenticatedBluesky } from '@/hooks/useAuthenticatedBluesky';
 import { useQuery } from '@tanstack/react-query';
 
 /**
@@ -12,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 export function useFeeds(actor: string | undefined, limit: number = 50, cursor?: string) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ['feeds', actor, limit, cursor, currentAccount?.pdsUrl],
@@ -20,7 +22,7 @@ export function useFeeds(actor: string | undefined, limit: number = 50, cursor?:
       if (!actor) throw new Error('No actor provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       return await api.getFeeds(token, actor, limit, cursor);
     },
     enabled: !!actor && !!token,

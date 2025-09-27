@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { BlueskyApi } from "@/bluesky-api";
+import { useAuthenticatedBluesky } from "@/hooks/useAuthenticatedBluesky";
 import { useCurrentAccount } from "./useCurrentAccount";
 
 /**
@@ -11,6 +12,7 @@ import { useCurrentAccount } from "./useCurrentAccount";
 export function useProfile(identifier: string | undefined) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const apiOptions = useAuthenticatedBluesky();
 
   return useQuery({
     queryKey: ["profile", identifier, currentAccount?.pdsUrl],
@@ -19,7 +21,7 @@ export function useProfile(identifier: string | undefined) {
       if (!identifier) throw new Error("No identifier provided");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = new BlueskyApi(currentAccount.pdsUrl, apiOptions);
       const profile = await api.getProfile(token, identifier);
 
       return profile;

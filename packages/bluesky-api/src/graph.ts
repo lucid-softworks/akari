@@ -1,9 +1,13 @@
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, type BlueskyApiClientOptions } from './client';
 
 /**
  * Bluesky API graph methods (follows, blocks, mutes, etc.)
  */
 export class BlueskyGraph extends BlueskyApiClient {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
+    super(pdsUrl, options);
+  }
+
   /**
    * Follows a user
    * @param accessJwt - Valid access JWT token
