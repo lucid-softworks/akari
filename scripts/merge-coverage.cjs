@@ -14,6 +14,7 @@ const coverageDirName = 'coverage';
 const outputPath = path.join(rootDir, coverageDirName, 'lcov.info');
 
 const coverageEntries = [];
+const METRIC_KEYS = ['statements', 'branches', 'functions', 'lines'];
 
 class WorkspaceReportNode extends BaseNode {
   constructor(pathSegments, fileCoverage) {
@@ -254,6 +255,27 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
   fs.writeFileSync(coverageJsonPath, `${JSON.stringify(coverageMap.toJSON(), null, 2)}\n`);
 
   const workspaceTree = createWorkspaceTree(coverageMap, fileWorkspaceMap);
+  const currentSummaryMap = workspaceTree
+    ? collectWorkspaceSummaries(workspaceTree.getRoot())
+    : new Map();
+  const summarySnapshotPath = path.join(
+    coverageDir,
+    '.cache',
+    'coverage-summary.json',
+  );
+  const previousSummaryMap = loadCoverageSummarySnapshot(summarySnapshotPath);
+  const deltaSummaryMap = computeCoverageDeltaMap(
+    currentSummaryMap,
+    previousSummaryMap,
+  );
+  const summaryReportEntries = createCoverageSummaryReport(
+    currentSummaryMap,
+    deltaSummaryMap,
+  );
+
+  writeCoverageSummaryJson(coverageDir, summaryReportEntries);
+  printCoverageSummaryTable(summaryReportEntries);
+
   const context = libReport.createContext({
     dir: coverageDir,
     defaultSummarizer: 'pkg',
@@ -273,6 +295,7 @@ function generateHtmlReportFromCoverage(entries, mergedLcovPath) {
 
   reports.create('html', { skipEmpty: false, skipFull: false }).execute(context);
 
+  saveCoverageSummarySnapshot(summarySnapshotPath, currentSummaryMap);
   copyCoverageStyles(coverageDir);
 }
 
@@ -933,4 +956,311 @@ function inferWorkspaceKey(filePath) {
     }
   }
   return null;
+}
+
+function collectWorkspaceSummaries(treeRoot) {
+  const summaryMap = new Map();
+
+  if (!treeRoot) {
+    return summaryMap;
+  }
+
+  const visit = (node) => {
+    if (!node) {
+      return;
+    }
+
+    const summary = node.getCoverageSummary();
+    if (summary && typeof summary.toJSON === 'function') {
+      const key = node.getQualifiedName() || '';
+      summaryMap.set(key, summary.toJSON());
+    }
+
+    const children = node.getChildren();
+    if (Array.isArray(children)) {
+      for (const child of children) {
+        visit(child);
+      }
+    }
+  };
+
+  visit(treeRoot);
+  return summaryMap;
+}
+
+function loadCoverageSummarySnapshot(snapshotPath) {
+  if (!snapshotPath || !fs.existsSync(snapshotPath)) {
+    return new Map();
+  }
+
+  try {
+    const raw = fs.readFileSync(snapshotPath, 'utf8');
+    if (!raw.trim()) {
+      return new Map();
+    }
+
+    const parsed = JSON.parse(raw);
+    const map = new Map();
+    for (const [key, value] of Object.entries(parsed)) {
+      if (value && typeof value === 'object') {
+        map.set(key, value);
+      }
+    }
+    return map;
+  } catch (error) {
+    return new Map();
+  }
+}
+
+function saveCoverageSummarySnapshot(snapshotPath, summaryMap) {
+  if (!snapshotPath) {
+    return;
+  }
+
+  const directory = path.dirname(snapshotPath);
+  fs.mkdirSync(directory, { recursive: true });
+
+  const payload = {};
+  for (const [key, value] of summaryMap.entries()) {
+    payload[key] = value;
+  }
+
+  fs.writeFileSync(snapshotPath, `${JSON.stringify(payload, null, 2)}\n`);
+}
+
+function computeCoverageDeltaMap(currentSummaryMap, previousSummaryMap) {
+  const deltaMap = new Map();
+
+  for (const [key, currentSummary] of currentSummaryMap.entries()) {
+    const previousSummary = previousSummaryMap.get(key);
+    const deltaEntry = createCoverageDeltaEntry(currentSummary, previousSummary);
+    if (deltaEntry) {
+      deltaMap.set(key, deltaEntry);
+    }
+  }
+
+  return deltaMap;
+}
+
+function createCoverageSummaryReport(currentSummaryMap, deltaSummaryMap) {
+  const entries = [];
+
+  if (!currentSummaryMap || typeof currentSummaryMap.entries !== 'function') {
+    return entries;
+  }
+
+  for (const [key, rawSummary] of currentSummaryMap.entries()) {
+    const includeEntry = key === '' || isWorkspaceSummaryKey(key);
+    if (!includeEntry) {
+      continue;
+    }
+
+    const summary = sanitizeCoverageSummary(rawSummary);
+    if (!summary) {
+      continue;
+    }
+
+    entries.push({
+      key,
+      label: key ? key : 'Total',
+      summary,
+      delta: deltaSummaryMap.get(key) || null,
+    });
+  }
+
+  entries.sort((a, b) => {
+    if (a.key === '' && b.key !== '') {
+      return -1;
+    }
+    if (b.key === '' && a.key !== '') {
+      return 1;
+    }
+    return a.label.localeCompare(b.label);
+  });
+
+  return entries;
+}
+
+function writeCoverageSummaryJson(coverageDir, entries) {
+  if (!coverageDir) {
+    return;
+  }
+
+  const reportPath = path.join(coverageDir, 'coverage-summary.json');
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    entries: Array.isArray(entries)
+      ? entries.map((entry) => ({
+          key: entry.key,
+          label: entry.label,
+          summary: entry.summary,
+          delta: entry.delta,
+        }))
+      : [],
+  };
+
+  fs.writeFileSync(reportPath, `${JSON.stringify(payload, null, 2)}\n`);
+}
+
+function printCoverageSummaryTable(entries) {
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return;
+  }
+
+  console.log('');
+  console.log('Coverage summary (workspace totals):');
+  console.log('');
+  console.log('| Scope | Statements | Branches | Functions | Lines |');
+  console.log('| --- | --- | --- | --- | --- |');
+
+  for (const entry of entries) {
+    const row = [
+      entry.label,
+      formatMetricForTable(entry.summary.statements, entry.delta && entry.delta.statements),
+      formatMetricForTable(entry.summary.branches, entry.delta && entry.delta.branches),
+      formatMetricForTable(entry.summary.functions, entry.delta && entry.delta.functions),
+      formatMetricForTable(entry.summary.lines, entry.delta && entry.delta.lines),
+    ];
+    console.log(`| ${row.join(' | ')} |`);
+  }
+
+  console.log('');
+}
+
+function formatMetricForTable(summaryMetric, deltaMetric) {
+  if (!summaryMetric) {
+    return '—';
+  }
+
+  const pct = Number.isFinite(summaryMetric.pct)
+    ? summaryMetric.pct.toFixed(2)
+    : '0.00';
+  const coverage = `${summaryMetric.covered}/${summaryMetric.total}`;
+  const delta = formatMetricDelta(deltaMetric);
+
+  return `${pct}%${delta} (${coverage})`;
+}
+
+function formatMetricDelta(deltaMetric) {
+  if (!deltaMetric || !Number.isFinite(deltaMetric.pct)) {
+    return '';
+  }
+
+  const pctDelta = roundTo(deltaMetric.pct, 2);
+  if (!pctDelta) {
+    return '';
+  }
+
+  const sign = pctDelta > 0 ? '+' : '';
+  return ` (${sign}${pctDelta.toFixed(2)})`;
+}
+
+function sanitizeCoverageSummary(summary) {
+  if (!summary || typeof summary !== 'object') {
+    return null;
+  }
+
+  const sanitized = {};
+  let hasMetrics = false;
+
+  for (const metricKey of METRIC_KEYS) {
+    const metric = sanitizeCoverageMetric(summary[metricKey]);
+    if (!metric) {
+      continue;
+    }
+
+    sanitized[metricKey] = {
+      pct: roundTo(metric.pct, 2),
+      covered: metric.covered,
+      total: metric.total,
+    };
+    hasMetrics = true;
+  }
+
+  return hasMetrics ? sanitized : null;
+}
+
+function isWorkspaceSummaryKey(key) {
+  if (!key || typeof key !== 'string') {
+    return false;
+  }
+
+  if (key.startsWith('apps/') || key.startsWith('packages/')) {
+    const segments = key.split('/').filter(Boolean);
+    return segments.length === 2;
+  }
+
+  return false;
+}
+
+function createCoverageDeltaEntry(currentSummary, previousSummary) {
+  if (!currentSummary || !previousSummary) {
+    return null;
+  }
+
+  let hasDelta = false;
+  const entry = {};
+
+  for (const metricKey of METRIC_KEYS) {
+    const currentMetric = currentSummary[metricKey];
+    const previousMetric = previousSummary[metricKey];
+    const metricDelta = createMetricDelta(currentMetric, previousMetric);
+    if (metricDelta) {
+      hasDelta = true;
+    }
+    entry[metricKey] = metricDelta;
+  }
+
+  return hasDelta ? entry : null;
+}
+
+function createMetricDelta(currentMetric, previousMetric) {
+  const current = sanitizeCoverageMetric(currentMetric);
+  const previous = sanitizeCoverageMetric(previousMetric);
+
+  if (!current || !previous) {
+    return null;
+  }
+
+  const pctDelta = current.pct - previous.pct;
+  const coveredDelta = current.covered - previous.covered;
+  const totalDelta = current.total - previous.total;
+
+  return {
+    pct: roundTo(pctDelta, 4),
+    covered: coveredDelta,
+    total: totalDelta,
+    previousPct: previous.pct,
+    previousCovered: previous.covered,
+    previousTotal: previous.total,
+  };
+}
+
+function sanitizeCoverageMetric(metric) {
+  if (!metric || typeof metric !== 'object') {
+    return null;
+  }
+
+  const pct = Number(metric.pct);
+  const covered = Number(metric.covered);
+  const total = Number(metric.total);
+
+  if (!Number.isFinite(covered) || !Number.isFinite(total)) {
+    return null;
+  }
+
+  return {
+    pct: Number.isFinite(pct) ? pct : 0,
+    covered,
+    total,
+  };
+}
+
+function roundTo(value, precision) {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  const factor = 10 ** precision;
+  return Math.round(value * factor) / factor;
 }
