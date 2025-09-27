@@ -142,16 +142,7 @@ describe('TabLayout', () => {
       tabBarStyle: { display: 'none' },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 
   it('renders mobile tabs with badges', () => {
@@ -176,16 +167,7 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     expect(TabsModule.Tabs.mock.calls[0][0].screenOptions.tabBarShowLabel).toBe(false);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'profile', 'settings']);
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {

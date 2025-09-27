@@ -19,15 +19,15 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
-const HIDDEN_TAB_ROUTES = ['post', 'post/[id]', 'profile/[handle]', 'messages/[handle]', 'messages/pending'] as const;
-
 const ROUTE_TO_REGISTRY_KEY: Record<string, string> = {
   index: 'index',
   search: 'search',
   messages: 'messages',
+  'messages/[handle]': 'messages',
+  'messages/pending': 'messages',
   notifications: 'notifications',
-  bookmarks: 'bookmarks',
   profile: 'profile',
+  'profile/[handle]': 'profile',
   settings: 'settings',
 };
 
@@ -172,12 +172,8 @@ export default function TabLayout() {
                 <Tabs.Screen name="search" />
                 <Tabs.Screen name="messages" />
                 <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
-                {HIDDEN_TAB_ROUTES.map((route) => (
-                  <Tabs.Screen key={`large-${route}`} name={route} options={{ href: null }} />
-                ))}
               </Tabs>
             </View>
           </View>
@@ -239,12 +235,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
           name="profile"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
@@ -262,9 +252,6 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
-        {HIDDEN_TAB_ROUTES.map((route) => (
-          <Tabs.Screen key={`mobile-${route}`} name={route} options={{ href: null }} />
-        ))}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>

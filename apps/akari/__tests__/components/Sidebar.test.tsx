@@ -138,8 +138,7 @@ describe('Sidebar', () => {
     expect(getByText('Timeline')).toBeTruthy();
     expect(getByText('Notifications')).toBeTruthy();
     expect(getByText('Messages')).toBeTruthy();
-    expect(getByText('Discover')).toBeTruthy();
-    expect(getByText('Bookmarks')).toBeTruthy();
+    expect(getByText('Search')).toBeTruthy();
     expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Settings')).toBeTruthy();
 
@@ -155,8 +154,8 @@ describe('Sidebar', () => {
       </DialogProvider>,
     );
 
-    fireEvent.press(getByText('Bookmarks'));
-    expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
+    fireEvent.press(getByText('Settings'));
+    expect(push).toHaveBeenCalledWith('/(tabs)/settings');
   });
 
   it('toggles the collapsed state of the sidebar', () => {

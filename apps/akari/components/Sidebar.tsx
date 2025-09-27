@@ -41,7 +41,7 @@ const TRENDING_TAGS = [
 ] as const;
 
 type NavigationItem = {
-  id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'profile' | 'settings';
+  id: 'timeline' | 'notifications' | 'messages' | 'search' | 'profile' | 'settings';
   label: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
   route: string;
@@ -64,13 +64,7 @@ export function Sidebar() {
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
       { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
-      {
-        id: 'notifications',
-        label: 'Notifications',
-        icon: 'bell.fill',
-        route: '/(tabs)/notifications',
-        badge: unreadNotificationsCount,
-      },
+      { id: 'search', label: 'Search', icon: 'magnifyingglass', route: '/(tabs)/search' },
       {
         id: 'messages',
         label: 'Messages',
@@ -78,8 +72,13 @@ export function Sidebar() {
         route: '/(tabs)/messages',
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
+      {
+        id: 'notifications',
+        label: 'Notifications',
+        icon: 'bell.fill',
+        route: '/(tabs)/notifications',
+        badge: unreadNotificationsCount,
+      },
       { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
       { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
     ],
