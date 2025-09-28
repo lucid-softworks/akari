@@ -137,6 +137,7 @@ export default function TabLayout() {
           tabBarInactiveTintColor: inactiveTint,
           headerShown: false,
           tabBar: (props) => <CustomBottomTabBar {...props} />,
+          tabBarShowLabel: false,
           tabBarStyle,
         }}
       >

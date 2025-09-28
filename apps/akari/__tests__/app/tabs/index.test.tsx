@@ -14,6 +14,14 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
 
+jest.mock('@react-navigation/bottom-tabs', () => {
+  const actual = jest.requireActual('@react-navigation/bottom-tabs');
+  return {
+    ...actual,
+    useBottomTabBarHeight: jest.fn(() => 64),
+  };
+});
+
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 jest.mock('react-native-safe-area-context', () => ({

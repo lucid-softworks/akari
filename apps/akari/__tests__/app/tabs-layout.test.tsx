@@ -10,8 +10,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { TabBadge } from '@/components/TabBadge';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useNavigationState } from '@react-navigation/native';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 jest.mock('expo-router', () => {
   const React = require('react');
@@ -24,10 +23,6 @@ jest.mock('expo-router', () => {
   return { Tabs, Redirect };
 });
 
-jest.mock('@react-navigation/native', () => ({
-  useNavigationState: jest.fn(),
-}));
-
 jest.mock('@/hooks/queries/useAuthStatus');
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
@@ -35,12 +30,6 @@ jest.mock('@/hooks/useResponsive');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
-
-jest.mock('@/components/HapticTab', () => {
-  const React = require('react');
-  const MockHapticTab = jest.fn(({ children }: { children?: React.ReactNode }) => <>{children}</>);
-  return { HapticTab: MockHapticTab };
-});
 
 jest.mock('@/components/AccountSwitcherSheet', () => {
   const React = require('react');
@@ -76,10 +65,8 @@ jest.mock('@/components/ui/TabBarBackground', () => {
   return () => <></>;
 });
 
-jest.mock('@/utils/tabScrollRegistry', () => ({
-  tabScrollRegistry: {
-    handleTabPress: jest.fn(),
-  },
+jest.mock('@/components/CustomBottomTabBar', () => ({
+  CustomBottomTabBar: jest.fn(() => null),
 }));
 
 const mockUseAuthStatus = useAuthStatus as jest.Mock;
@@ -89,13 +76,9 @@ const mockUseResponsive = useResponsive as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
-const mockUseNavigationState = useNavigationState as jest.Mock;
-const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
-
-const { HapticTab } = require('@/components/HapticTab');
-const mockHapticTab = HapticTab as jest.Mock;
 const { AccountSwitcherSheet } = require('@/components/AccountSwitcherSheet');
 const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
+const { CustomBottomTabBar } = require('@/components/CustomBottomTabBar');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -106,13 +89,6 @@ beforeEach(() => {
   mockUseThemeColor.mockImplementation(
     (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000',
   );
-  mockUseNavigationState.mockImplementation((selector: (state: any) => any) => {
-    const defaultState = {
-      index: 0,
-      routes: [{ name: 'index' }],
-    };
-    return selector ? selector(defaultState) : defaultState;
-  });
   mockAccountSwitcherSheet.mockClear();
 });
 
@@ -174,7 +150,17 @@ describe('TabLayout', () => {
     render(settingsOptions.tabBarIcon({ color: 'red' }));
     expect(mockTabBadge.mock.calls[0][0].count).toBe(2);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
-    expect(TabsModule.Tabs.mock.calls[0][0].screenOptions.tabBarShowLabel).toBe(false);
+    const screenOptions = TabsModule.Tabs.mock.calls[0][0].screenOptions;
+    expect(screenOptions.tabBarShowLabel).toBe(false);
+    const tabBarRenderer = screenOptions.tabBar as BottomTabBarProps['tabBar'];
+    expect(typeof tabBarRenderer).toBe('function');
+    const element = tabBarRenderer?.({
+      state: { index: 0, routes: [] },
+      descriptors: {},
+      navigation: {} as any,
+      insets: { top: 0, bottom: 0, left: 0, right: 0 },
+    } as BottomTabBarProps);
+    expect(element?.type).toBe(CustomBottomTabBar);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
       'index',
@@ -233,101 +219,6 @@ describe('TabLayout', () => {
 
     const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(closeCall?.[0].visible).toBe(false);
-  });
-});
-
-describe('CustomTabButton', () => {
-  const renderTabBarButton = () => {
-    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
-    render(<TabLayout />);
-    const TabsModule = require('expo-router');
-    const TabBarButton = TabsModule.Tabs.mock.calls[0][0].screenOptions.tabBarButton as React.ComponentType<any>;
-    render(<TabBarButton />);
-    return (mockHapticTab.mock.calls[0][0].onTabPress as () => void) ?? (() => {});
-  };
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  it('triggers tab scroll when the same tab is pressed consecutively', () => {
-    jest.useFakeTimers();
-    const navigationState = {
-      index: 0,
-      routes: [{ name: 'messages' }],
-    };
-    mockUseNavigationState.mockImplementation((selector: (state: typeof navigationState) => any) =>
-      selector(navigationState),
-    );
-
-    const onTabPress = renderTabBarButton();
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(50);
-    });
-    expect(mockHandleTabPress).not.toHaveBeenCalled();
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(50);
-    });
-    expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
-    expect(mockHandleTabPress).toHaveBeenCalledWith('messages');
-  });
-
-  it('updates the tracked tab without triggering scroll when switching tabs', () => {
-    jest.useFakeTimers();
-    const navigationState = {
-      index: 0,
-      routes: [{ name: 'messages' }, { name: 'settings' }],
-    };
-    mockUseNavigationState.mockImplementation((selector: (state: typeof navigationState) => any) =>
-      selector(navigationState),
-    );
-
-    const onTabPress = renderTabBarButton();
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(50);
-    });
-    expect(mockHandleTabPress).not.toHaveBeenCalled();
-
-    navigationState.index = 1;
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(50);
-    });
-    expect(mockHandleTabPress).not.toHaveBeenCalled();
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(50);
-    });
-    expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
-    expect(mockHandleTabPress).toHaveBeenCalledWith('settings');
-  });
-
-  it('ignores presses when the current route cannot be determined', () => {
-    jest.useFakeTimers();
-    const navigationState = {
-      index: 2,
-      routes: [{ name: 'messages' }],
-    };
-    mockUseNavigationState.mockImplementation((selector: (state: typeof navigationState) => any) =>
-      selector(navigationState),
-    );
-
-    const onTabPress = renderTabBarButton();
-
-    act(() => {
-      onTabPress();
-      jest.advanceTimersByTime(100);
-    });
-
-    expect(mockHandleTabPress).not.toHaveBeenCalled();
   });
 });
 

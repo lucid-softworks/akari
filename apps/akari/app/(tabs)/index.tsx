@@ -1,8 +1,10 @@
-import { useResponsive } from '@/hooks/useResponsive';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useResponsive } from '@/hooks/useResponsive';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
@@ -34,6 +36,7 @@ export default function HomeScreen() {
   const [showPostComposer, setShowPostComposer] = useState(false);
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
+  const bottomTabBarHeight = useBottomTabBarHeight();
   const { isLargeScreen } = useResponsive();
 
   const { data: currentAccount } = useCurrentAccount();
@@ -282,6 +285,10 @@ export default function HomeScreen() {
     );
   }, [isFetchingNextPage, t]);
 
+  const tabBarHeight = isLargeScreen ? 0 : bottomTabBarHeight;
+  const listBottomPadding = Math.max(tabBarHeight + insets.bottom + 80, 100);
+  const fabBottom = Math.max(tabBarHeight + insets.bottom + 20, 20 + insets.bottom);
+
   if (savedFeedsLoading || feedsLoading) {
     return (
       <ThemedView style={styles.container}>
@@ -306,7 +313,7 @@ export default function HomeScreen() {
         overscan={3}
         ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: listBottomPadding }]}
         onEndReached={loadMorePosts}
         onEndReachedThreshold={0.4}
         refreshing={refreshing}
@@ -316,7 +323,11 @@ export default function HomeScreen() {
       />
 
       {/* Floating Action Button for creating posts */}
-      <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={[styles.fab, { bottom: fabBottom }]}
+        onPress={() => setShowPostComposer(true)}
+        activeOpacity={0.8}
+      >
         <IconSymbol name="plus" size={24} color="white" />
       </TouchableOpacity>
 
@@ -331,7 +342,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: 0,
   },
   listHeaderContainer: {
     paddingBottom: 12,
