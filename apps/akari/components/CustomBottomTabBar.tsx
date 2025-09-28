@@ -57,7 +57,8 @@ export function CustomBottomTabBar({ state, descriptors, navigation, insets, sty
   );
 
   const BackgroundComponent = TabBarBackground;
-  const containerBackground = BackgroundComponent ? 'transparent' : surfaceColor;
+  const shouldRenderOverlayBackground = Platform.OS === 'ios' && Boolean(BackgroundComponent);
+  const containerBackground = shouldRenderOverlayBackground ? 'transparent' : surfaceColor;
 
   return (
     <View
@@ -67,10 +68,12 @@ export function CustomBottomTabBar({ state, descriptors, navigation, insets, sty
         {
           paddingBottom: bottomInset + 12,
           backgroundColor: containerBackground,
+          borderTopWidth: shouldRenderOverlayBackground ? 0 : StyleSheet.hairlineWidth,
+          borderColor: shouldRenderOverlayBackground ? undefined : borderColor,
         },
       ]}
     >
-      {BackgroundComponent ? (
+      {shouldRenderOverlayBackground ? (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <BackgroundComponent />
         </View>
