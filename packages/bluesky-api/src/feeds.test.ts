@@ -1,6 +1,7 @@
 import { BlueskyFeeds } from './feeds';
 import type {
   BlueskyBookmarksResponse,
+  BlueskyCreatePostResponse,
   BlueskyFeedGeneratorsResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
@@ -10,6 +11,7 @@ import type {
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
   BlueskyUnlikeResponse,
+  BlueskyUploadBlobResponse,
 } from './types';
 
 describe('BlueskyFeeds', () => {
@@ -36,6 +38,8 @@ describe('BlueskyFeeds', () => {
     }[] = [];
 
     public responses: unknown[] = [];
+    public uploadBlobResponses: BlueskyUploadBlobResponse[] = [];
+    public uploadBlobCalls: { accessJwt: string; blob: Blob; mimeType: string }[] = [];
 
     constructor() {
       super('https://pds.example');
@@ -66,6 +70,15 @@ describe('BlueskyFeeds', () => {
     ): Promise<T> {
       this.requestCalls.push({ endpoint, options });
       return (this.responses.shift() as T) ?? (undefined as T);
+    }
+
+    protected async uploadBlob(accessJwt: string, blob: Blob, mimeType: string): Promise<BlueskyUploadBlobResponse> {
+      this.uploadBlobCalls.push({ accessJwt, blob, mimeType });
+      const response = this.uploadBlobResponses.shift();
+      if (!response) {
+        throw new Error('No uploadBlob response configured');
+      }
+      return response;
     }
   }
 
@@ -352,5 +365,173 @@ describe('BlueskyFeeds', () => {
       'Invalid like URI: could not extract rkey',
     );
     expect(feeds.authCalls).toHaveLength(0);
+  });
+
+  it('fetches an image and uploads it with the original mime type', async () => {
+    const feeds = new TestFeeds();
+    const imageBlob = new Blob(['image-data'], { type: 'image/png' });
+    const uploadResponse: BlueskyUploadBlobResponse = {
+      blob: { ref: { $link: 'blob/png' }, mimeType: 'image/png', size: 1234 },
+    };
+    feeds.uploadBlobResponses = [uploadResponse];
+    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue({
+      blob: async () => imageBlob,
+    } as unknown as Response);
+
+    const result = await feeds.uploadImage('jwt', 'file://image.png', 'image/png');
+
+    expect(result).toBe(uploadResponse);
+    expect(fetchSpy).toHaveBeenCalledWith('file://image.png');
+    expect(feeds.uploadBlobCalls).toEqual([
+      {
+        accessJwt: 'jwt',
+        blob: imageBlob,
+        mimeType: 'image/png',
+      },
+    ]);
+
+    fetchSpy.mockRestore();
+  });
+
+  it('preserves gif mime type when uploading gif images', async () => {
+    const feeds = new TestFeeds();
+    const gifBlob = new Blob(['gif-data'], { type: 'image/gif' });
+    const uploadResponse: BlueskyUploadBlobResponse = {
+      blob: { ref: { $link: 'blob/gif' }, mimeType: 'image/gif', size: 4321 },
+    };
+    feeds.uploadBlobResponses = [uploadResponse];
+    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue({
+      blob: async () => gifBlob,
+    } as unknown as Response);
+
+    await feeds.uploadImage('jwt', 'file://image.gif', 'image/gif');
+
+    expect(feeds.uploadBlobCalls).toEqual([
+      {
+        accessJwt: 'jwt',
+        blob: gifBlob,
+        mimeType: 'image/gif',
+      },
+    ]);
+
+    fetchSpy.mockRestore();
+  });
+
+  it('creates a post with text only and default metadata', async () => {
+    const feeds = new TestFeeds();
+    const response = {
+      uri: 'at://post/created',
+      cid: 'cid123',
+      commit: { cid: 'cid123', rev: 'rev1' },
+      validationStatus: 'valid',
+    } as BlueskyCreatePostResponse;
+    feeds.responses = [response];
+
+    const result = await feeds.createPost('jwt', 'did:example:me', { text: 'Hello world' });
+
+    expect(result).toBe(response);
+    expect(feeds.authCalls).toHaveLength(1);
+    const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
+    expect(body.record).toMatchObject({
+      text: 'Hello world',
+      $type: 'app.bsky.feed.post',
+      langs: ['en'],
+    });
+    expect(typeof body.record.createdAt).toBe('string');
+    expect(body.record).not.toHaveProperty('embed');
+    expect(body.record).not.toHaveProperty('reply');
+  });
+
+  it('creates a post with reply context and image embeds', async () => {
+    const feeds = new TestFeeds();
+    const response = {
+      uri: 'at://post/with-images',
+      cid: 'cid456',
+      commit: { cid: 'cid456', rev: 'rev2' },
+      validationStatus: 'valid',
+    } as BlueskyCreatePostResponse;
+    feeds.responses = [response];
+    const uploadResult: BlueskyUploadBlobResponse = {
+      blob: { ref: { $link: 'blob/image' }, mimeType: 'image/png', size: 2048 },
+    };
+    const uploadImageSpy = jest
+      .spyOn(feeds, 'uploadImage')
+      .mockResolvedValue(uploadResult);
+
+    const result = await feeds.createPost('jwt', 'did:example:me', {
+      text: 'Check this out',
+      replyTo: { root: 'at://root', parent: 'at://parent' },
+      images: [
+        {
+          uri: 'file://image.png',
+          mimeType: 'image/png',
+          alt: 'A cool image',
+        },
+      ],
+    });
+
+    expect(result).toBe(response);
+    expect(uploadImageSpy).toHaveBeenCalledWith('jwt', 'file://image.png', 'image/png');
+    const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
+    expect(body.record.reply).toEqual({ root: 'at://root', parent: 'at://parent' });
+    expect(body.record.embed).toEqual({
+      $type: 'app.bsky.embed.images',
+      images: [
+        {
+          alt: 'A cool image',
+          image: uploadResult.blob,
+        },
+      ],
+    });
+
+    uploadImageSpy.mockRestore();
+  });
+
+  it('creates a post with a gif as an external embed and jpeg thumbnail', async () => {
+    const feeds = new TestFeeds();
+    const response = {
+      uri: 'at://post/with-gif',
+      cid: 'cid789',
+      commit: { cid: 'cid789', rev: 'rev3' },
+      validationStatus: 'valid',
+    } as BlueskyCreatePostResponse;
+    feeds.responses = [response];
+    const uploadResult: BlueskyUploadBlobResponse = {
+      blob: { ref: { $link: 'blob/thumb' }, mimeType: 'image/jpeg', size: 1024 },
+    };
+    const uploadImageSpy = jest
+      .spyOn(feeds, 'uploadImage')
+      .mockResolvedValue(uploadResult);
+
+    const result = await feeds.createPost('jwt', 'did:example:me', {
+      text: 'A fun gif',
+      images: [
+        {
+          uri: 'file://image.gif',
+          mimeType: 'image/gif',
+          alt: 'Fun gif',
+        },
+      ],
+    });
+
+    expect(result).toBe(response);
+    expect(uploadImageSpy).toHaveBeenCalledWith('jwt', 'file://image.gif', 'image/jpeg');
+    const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
+    expect(body.record.embed).toEqual({
+      $type: 'app.bsky.embed.external',
+      external: {
+        uri: 'file://image.gif',
+        title: 'Fun gif',
+        description: 'Alt: Fun gif',
+        thumb: {
+          $type: 'blob',
+          ref: uploadResult.blob.ref,
+          mimeType: uploadResult.blob.mimeType,
+          size: uploadResult.blob.size,
+        },
+      },
+    });
+
+    uploadImageSpy.mockRestore();
   });
 });
