@@ -112,6 +112,17 @@ jest.mock('@/components/profile/LikesTab', () => {
   return { LikesTab: ({ handle }: any) => <Text>{`likes ${handle}`}</Text> };
 });
 
+jest.mock('@/components/profile/ProfileListManagerModal', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    ProfileListManagerModal: ({ visible, actorHandle, onClose }: any) =>
+      visible ? (
+        <Text accessibilityRole="button" onPress={onClose}>{`lists modal ${actorHandle}`}</Text>
+      ) : null,
+  };
+});
+
 jest.mock('@/components/profile/MediaTab', () => {
   const { Text } = require('react-native');
   return { MediaTab: ({ handle }: any) => <Text>{`media ${handle}`}</Text> };
@@ -236,7 +247,8 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));
-    expect(logSpy).toHaveBeenCalledWith('Add to lists');
+    expect(getByText('lists modal alice')).toBeTruthy();
+    fireEvent.press(getByText('lists modal alice'));
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('mute account'));

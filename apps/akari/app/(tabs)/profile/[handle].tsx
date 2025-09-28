@@ -5,6 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
+import { ProfileListManagerModal } from '@/components/profile/ProfileListManagerModal';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -29,6 +30,7 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+  const [showListsModal, setShowListsModal] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
@@ -106,8 +108,7 @@ export default function ProfileScreen() {
   };
 
   const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
-    console.log('Add to lists');
+    setShowListsModal(true);
     setShowDropdown(false);
   };
 
@@ -202,6 +203,12 @@ export default function ProfileScreen() {
           top: dropdownPosition.top,
           right: dropdownPosition.right,
         }}
+      />
+      <ProfileListManagerModal
+        visible={showListsModal}
+        onClose={() => setShowListsModal(false)}
+        actorHandle={profile.handle}
+        actorDid={profile.did}
       />
     </ThemedView>
   );

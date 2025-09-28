@@ -137,17 +137,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
     searchProfilePosts({ handle: profile.handle });
   };
 
-  const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
-    // This would typically open a modal or navigate to a lists management screen
-    showAlert({
-      title: t('profile.addToLists'),
-      message: 'Lists functionality coming soon!',
-      buttons: [{ text: t('common.ok') }],
-    });
-    setShowDropdown(false);
-  };
-
   const handleMuteAccount = () => {
     // TODO: Implement mute functionality
     const isMuted = profile.viewer?.muted;

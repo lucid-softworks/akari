@@ -134,6 +134,78 @@ describe('BlueskyGraph', () => {
     });
   });
 
+  it('creates and deletes list items via repo mutations', async () => {
+    const graph = new TestGraph();
+    graph.responses = [{ uri: 'at://listitem/1', cid: 'cid' }, {}];
+
+    const createResult = await graph.createListItem('jwt', 'at://list/1', 'did:example:erin');
+    await graph.deleteListItem('jwt', 'at://listitem/1');
+
+    expect(createResult).toEqual({ uri: 'at://listitem/1', cid: 'cid' });
+
+    expect(graph.calls[0]).toMatchObject({
+      endpoint: '/com.atproto.repo.createRecord',
+      accessJwt: 'jwt',
+      options: {
+        method: 'POST',
+        body: {
+          repo: 'self',
+          collection: 'app.bsky.graph.listitem',
+          record: expect.objectContaining({
+            list: 'at://list/1',
+            subject: 'did:example:erin',
+          }),
+        },
+      },
+    });
+
+    const recordBody = (graph.calls[0].options.body as { record: { createdAt?: string } }).record;
+    expect(typeof recordBody.createdAt).toBe('string');
+
+    expect(graph.calls[1]).toEqual({
+      endpoint: '/com.atproto.repo.deleteRecord',
+      accessJwt: 'jwt',
+      options: {
+        method: 'POST',
+        body: {
+          uri: 'at://listitem/1',
+        },
+      },
+    });
+  });
+
+  it('retrieves lists and list item records with query parameters', async () => {
+    const graph = new TestGraph();
+
+    await graph.getLists('jwt', 'did:example:list-owner', 25, 'cursor-1');
+    await graph.listListItems('jwt', 'did:example:list-owner', 100, 'cursor-2');
+
+    expect(graph.calls[0]).toEqual({
+      endpoint: '/app.bsky.graph.getLists',
+      accessJwt: 'jwt',
+      options: {
+        params: {
+          actor: 'did:example:list-owner',
+          limit: '25',
+          cursor: 'cursor-1',
+        },
+      },
+    });
+
+    expect(graph.calls[1]).toEqual({
+      endpoint: '/com.atproto.repo.listRecords',
+      accessJwt: 'jwt',
+      options: {
+        params: {
+          repo: 'did:example:list-owner',
+          collection: 'app.bsky.graph.listitem',
+          limit: '100',
+          cursor: 'cursor-2',
+        },
+      },
+    });
+  });
+
   it('unmutes users using the unmute endpoint', async () => {
     const graph = new TestGraph();
     graph.responses = [{}];

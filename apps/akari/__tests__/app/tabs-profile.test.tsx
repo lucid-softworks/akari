@@ -174,6 +174,17 @@ jest.mock('@/components/profile/LikesTab', () => {
   return { LikesTab: ({ handle }: any) => <Text>likes {handle}</Text> };
 });
 
+jest.mock('@/components/profile/ProfileListManagerModal', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    ProfileListManagerModal: ({ visible, actorHandle, onClose }: any) =>
+      visible ? (
+        <Text accessibilityRole="button" onPress={onClose}>{`lists modal ${actorHandle}`}</Text>
+      ) : null,
+  };
+});
+
 jest.mock('@/components/profile/RepliesTab', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -319,12 +330,13 @@ describe('ProfileScreen', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
     expect(queryByTestId('profile-dropdown')).toBeNull();
 
-    const remainingActions = [
-      'profile.addToLists',
-      'profile.muteAccount',
-      'common.block',
-      'profile.reportAccount',
-    ];
+    fireEvent.press(getByText('open dropdown'));
+    fireEvent.press(getByText('profile.addToLists'));
+    expect(getByText('lists modal alice')).toBeTruthy();
+    fireEvent.press(getByText('lists modal alice'));
+    expect(queryByTestId('profile-dropdown')).toBeNull();
+
+    const remainingActions = ['profile.muteAccount', 'common.block', 'profile.reportAccount'];
 
     remainingActions.forEach((action) => {
       fireEvent.press(getByText('open dropdown'));

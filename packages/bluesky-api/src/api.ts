@@ -14,11 +14,14 @@ import type {
   BlueskyMessagesResponse,
   BlueskyCreatePostInput,
   BlueskyCreatePostResponse,
+  BlueskyCreateRecordResponse,
   BlueskyFeedGeneratorsResponse,
   BlueskyNotificationsResponse,
   BlueskyPostView,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
+  BlueskyListItemsResponse,
+  BlueskyListsResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySendMessageResponse,
@@ -439,6 +442,61 @@ export class BlueskyApi extends BlueskyApiClient {
    */
   async muteThread(accessJwt: string, root: string) {
     return this.graph.muteThread(accessJwt, root);
+  }
+
+  /**
+   * Adds an actor to a list owned by the authenticated user.
+   * @param accessJwt - Valid session token for the list owner.
+   * @param list - URI of the list that should receive the member.
+   * @param subject - DID of the actor being added to the list.
+   * @returns Record metadata describing the new list item.
+   */
+  async createListItem(accessJwt: string, list: string, subject: string): Promise<BlueskyCreateRecordResponse> {
+    return this.graph.createListItem(accessJwt, list, subject);
+  }
+
+  /**
+   * Removes an actor from one of the authenticated user's lists.
+   * @param accessJwt - Valid session token for the list owner.
+   * @param listItemUri - URI of the list item record to delete.
+   * @returns Response payload from the deleteRecord mutation.
+   */
+  async deleteListItem(accessJwt: string, listItemUri: string) {
+    return this.graph.deleteListItem(accessJwt, listItemUri);
+  }
+
+  /**
+   * Retrieves lists created by the supplied actor.
+   * @param accessJwt - Valid session token authorised to enumerate lists.
+   * @param actor - DID or handle identifying the list owner.
+   * @param limit - Maximum number of lists to fetch in a single page.
+   * @param cursor - Pagination cursor returned by previous requests.
+   * @returns Collection of lists created by the actor.
+   */
+  async getLists(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyListsResponse> {
+    return this.graph.getLists(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists list item records created by the supplied repository.
+   * @param accessJwt - Valid session token authorised to query the repository.
+   * @param repo - DID or handle of the repository whose list items should be listed.
+   * @param limit - Maximum number of records to fetch in a single request.
+   * @param cursor - Pagination cursor returned from previous calls.
+   * @returns Repository records belonging to the listitem collection.
+   */
+  async listListItems(
+    accessJwt: string,
+    repo: string,
+    limit: number = 100,
+    cursor?: string,
+  ): Promise<BlueskyListItemsResponse> {
+    return this.graph.listListItems(accessJwt, repo, limit, cursor);
   }
 
   /**

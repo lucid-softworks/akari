@@ -182,6 +182,10 @@ describe('BlueskyApi', () => {
       unmuteUser: jest.fn().mockResolvedValue({}),
       muteActorList: jest.fn().mockResolvedValue({}),
       muteThread: jest.fn().mockResolvedValue({}),
+      createListItem: jest.fn().mockResolvedValue({ uri: 'at://listitem/1' }),
+      deleteListItem: jest.fn().mockResolvedValue({}),
+      getLists: jest.fn().mockResolvedValue({ lists: [] }),
+      listListItems: jest.fn().mockResolvedValue({ records: [] }),
     };
 
     internal.search = {
@@ -202,6 +206,10 @@ describe('BlueskyApi', () => {
     await api.unmuteUser('jwt', 'did:example');
     await api.muteActorList('jwt', 'at://list/1');
     await api.muteThread('jwt', 'at://post/1');
+    await api.createListItem('jwt', 'at://list/1', 'did:example');
+    await api.deleteListItem('jwt', 'at://listitem/1');
+    await api.getLists('jwt', 'did:example', 25, 'cursor-1');
+    await api.listListItems('jwt', 'did:example', 100, 'cursor-2');
     await expect(api.searchProfiles('jwt', 'query', 10)).resolves.toBe(actorResults);
     await expect(api.searchPosts('jwt', 'query', 10)).resolves.toBe(postResults);
     await expect(api.listNotifications('jwt', 20)).resolves.toBe(notifications);
@@ -218,6 +226,10 @@ describe('BlueskyApi', () => {
       undefined,
     );
     expect(internal.notifications.getUnreadCount).toHaveBeenCalledWith('jwt');
+    expect(internal.graph.createListItem).toHaveBeenCalledWith('jwt', 'at://list/1', 'did:example');
+    expect(internal.graph.deleteListItem).toHaveBeenCalledWith('jwt', 'at://listitem/1');
+    expect(internal.graph.getLists).toHaveBeenCalledWith('jwt', 'did:example', 25, 'cursor-1');
+    expect(internal.graph.listListItems).toHaveBeenCalledWith('jwt', 'did:example', 100, 'cursor-2');
   });
 
   it('creates instances using the static helper', () => {

@@ -150,6 +150,64 @@ export type BlueskyProfileUpdateInput = {
   banner?: string;
 };
 
+export type BlueskyCreateRecordResponse = {
+  uri: string;
+  cid: string;
+  commit?: unknown;
+  validationStatus?: string;
+};
+
+export type BlueskyListPurpose =
+  | 'app.bsky.graph.defs#modlist'
+  | 'app.bsky.graph.defs#curatelist'
+  | 'app.bsky.graph.defs#referencelist';
+
+export type BlueskyListViewerState = {
+  muted?: boolean;
+  blocked?: string;
+};
+
+export type BlueskyListCreator = {
+  did: string;
+  handle: string;
+  displayName?: string;
+  avatar?: string;
+};
+
+export type BlueskyListView = {
+  uri: string;
+  cid: string;
+  creator: BlueskyListCreator;
+  name: string;
+  purpose: BlueskyListPurpose;
+  description?: string;
+  avatar?: string;
+  listItemCount?: number;
+  labels?: BlueskyLabel[];
+  indexedAt: string;
+  viewer?: BlueskyListViewerState;
+};
+
+export type BlueskyListsResponse = {
+  cursor?: string;
+  lists: BlueskyListView[];
+};
+
+export type BlueskyListItemRecord = {
+  uri: string;
+  cid: string;
+  value: {
+    subject: string;
+    list: string;
+    createdAt: string;
+  };
+};
+
+export type BlueskyListItemsResponse = {
+  cursor?: string;
+  records: BlueskyListItemRecord[];
+};
+
 export type BlueskyFeedGeneratorsResponse = {
   feeds: BlueskyFeed[];
 };
