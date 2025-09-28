@@ -171,7 +171,14 @@ export function PostCard({ post, onPress }: PostCardProps) {
   }>({});
   const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
-  const translationMutation = usePostTranslation();
+  const {
+    mutateAsync: translatePost,
+    data: translationResult,
+    error: translationError,
+    isPending: isTranslating,
+    reset: resetTranslation,
+    variables: translationVariables,
+  } = usePostTranslation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const menuButtonRef = useRef<TouchableOpacity | null>(null);
@@ -180,8 +187,6 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const [hasUserSelectedLanguage, setHasUserSelectedLanguage] = useState(false);
-  const [translationCache, setTranslationCache] = useState<Record<string, string>>({});
-  const [translationError, setTranslationError] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState(() =>
     resolveLanguageCode(currentLocale, DEFAULT_LIBRETRANSLATE_LANGUAGES),
   );
@@ -390,7 +395,25 @@ export function PostCard({ post, onPress }: PostCardProps) {
   );
 
   const canTranslate = Boolean(post.text && post.text.trim());
-  const isTranslating = translationMutation.isPending;
+
+  const translationLanguage = translationVariables?.targetLanguage;
+
+  const hasTranslationForSelectedLanguage =
+    Boolean(translationResult) && translationLanguage === selectedLanguage;
+
+  const hasErrorForSelectedLanguage = Boolean(translationError) && translationLanguage === selectedLanguage;
+
+  const formattedTranslationError = useMemo(() => {
+    if (!translationError) {
+      return null;
+    }
+
+    const formattedMessage = translationError.message?.trim();
+
+    return formattedMessage
+      ? `${t('post.translation.error')} (${formattedMessage})`
+      : t('post.translation.error');
+  }, [t, translationError]);
 
   const menuStyle = useMemo(() => {
     const fallbackPosition = { top: 16, right: 16 };
@@ -446,46 +469,26 @@ export function PostCard({ post, onPress }: PostCardProps) {
 
   const performTranslation = useCallback(
     async (targetLanguage: string) => {
-      if (!post.text || !post.text.trim()) {
-        setTranslationError(t('post.translation.noText'));
+      if (!post.text?.trim() || isTranslating) {
         return;
       }
 
-      setTranslationError(null);
-
       try {
-        const { translatedText } = await translationMutation.mutateAsync({
+        await translatePost({
           text: post.text,
           targetLanguage,
         });
-
-        setTranslationCache((previous) => ({
-          ...previous,
-          [targetLanguage]: translatedText,
-        }));
       } catch (error) {
-        const errorMessage = error instanceof Error && error.message ? error.message : null;
-
         if (__DEV__) {
           console.warn('Failed to translate post', error);
         }
-
-        setTranslationError(
-          errorMessage ? `${t('post.translation.error')} (${errorMessage})` : t('post.translation.error'),
-        );
       }
     },
-    [post.text, t, translationMutation],
+    [isTranslating, post.text, translatePost],
   );
 
   const handleTranslatePress = useCallback(() => {
     setShowActionsMenu(false);
-
-    if (!canTranslate) {
-      setIsTranslationVisible(true);
-      setTranslationError(t('post.translation.noText'));
-      return;
-    }
 
     if (isTranslationVisible) {
       setIsLanguagePickerVisible(true);
@@ -493,11 +496,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
 
     setIsTranslationVisible(true);
-
-    if (!translationCache[selectedLanguage]) {
-      void performTranslation(selectedLanguage);
-    }
-  }, [canTranslate, isTranslationVisible, performTranslation, selectedLanguage, translationCache, t]);
+  }, [isTranslationVisible]);
 
   const handleLanguageSelect = useCallback(
     (languageCode: string) => {
@@ -505,28 +504,30 @@ export function PostCard({ post, onPress }: PostCardProps) {
       setHasUserSelectedLanguage(true);
       setIsLanguagePickerVisible(false);
 
-      if (translationCache[languageCode]) {
-        setTranslationError(null);
-        return;
-      }
+      resetTranslation();
 
-      void performTranslation(languageCode);
+      if (canTranslate) {
+        void performTranslation(languageCode);
+      }
     },
-    [performTranslation, translationCache],
+    [canTranslate, performTranslation, resetTranslation],
   );
 
   const handleHideTranslation = useCallback(() => {
     setIsTranslationVisible(false);
-    setTranslationError(null);
-    translationMutation.reset();
-  }, [translationMutation]);
+    resetTranslation();
+  }, [resetTranslation]);
 
   useEffect(() => {
     if (!isTranslationVisible || !canTranslate) {
       return;
     }
 
-    if (translationCache[selectedLanguage] || translationMutation.isPending) {
+    if (isTranslating) {
+      return;
+    }
+
+    if (hasTranslationForSelectedLanguage || hasErrorForSelectedLanguage) {
       return;
     }
 
@@ -536,8 +537,9 @@ export function PostCard({ post, onPress }: PostCardProps) {
     isTranslationVisible,
     performTranslation,
     selectedLanguage,
-    translationCache,
-    translationMutation.isPending,
+    hasErrorForSelectedLanguage,
+    hasTranslationForSelectedLanguage,
+    isTranslating,
   ]);
 
   const menuActions = useMemo<PostMenuItem[]>(
@@ -1130,11 +1132,13 @@ export function PostCard({ post, onPress }: PostCardProps) {
             <ThemedView style={styles.translationContent}>
               {isTranslating ? (
                 <ActivityIndicator size="small" color={iconColor} />
-              ) : translationError ? (
-                <ThemedText style={styles.translationError}>{translationError}</ThemedText>
-              ) : (
-                <ThemedText style={styles.translationText}>{translationCache[selectedLanguage]}</ThemedText>
-              )}
+              ) : hasErrorForSelectedLanguage && formattedTranslationError ? (
+                <ThemedText style={styles.translationError}>{formattedTranslationError}</ThemedText>
+              ) : hasTranslationForSelectedLanguage ? (
+                <ThemedText style={styles.translationText}>
+                  {translationResult?.translatedText}
+                </ThemedText>
+              ) : null}
             </ThemedView>
           </ThemedView>
         )}

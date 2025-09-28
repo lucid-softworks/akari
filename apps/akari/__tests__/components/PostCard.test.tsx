@@ -90,6 +90,7 @@ describe('PostCard', () => {
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
   let mutateAsyncMock: jest.Mock;
+  let resetMock: jest.Mock;
 
   const basePost: Post = {
     id: '1',
@@ -118,10 +119,51 @@ describe('PostCard', () => {
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
         translatedText: `translated-${targetLanguage}`,
       }));
-    mockUsePostTranslation.mockReturnValue({
-      mutateAsync: mutateAsyncMock,
-      isPending: false,
-      reset: jest.fn(),
+    resetMock = jest.fn();
+    mockUsePostTranslation.mockImplementation(() => {
+      const mutateHandler = mutateAsyncMock;
+      const resetHandler = resetMock;
+
+      const [state, setState] = actualReact.useState<{
+        data?: { translatedText: string };
+        error: Error | null;
+        isPending: boolean;
+        variables?: { text: string; targetLanguage: string };
+      }>({ data: undefined, error: null, isPending: false, variables: undefined });
+
+      const mutateAsync = actualReact.useCallback(
+        async (variables: { text: string; targetLanguage: string }) => {
+          setState((previous) => ({ ...previous, isPending: true, variables, error: null }));
+
+          try {
+            const result = await mutateHandler(variables);
+
+            setState({ data: result, error: null, isPending: false, variables });
+
+            return result;
+          } catch (error) {
+            setState({ data: undefined, error: error as Error, isPending: false, variables });
+
+            throw error;
+          }
+        },
+        [mutateHandler],
+      );
+
+      const reset = actualReact.useCallback(() => {
+        resetHandler();
+        setState({ data: undefined, error: null, isPending: false, variables: undefined });
+      }, [resetHandler]);
+
+      return {
+        mutateAsync,
+        reset,
+        data: state.data,
+        error: state.error,
+        isPending: state.isPending,
+        variables: state.variables,
+        isError: Boolean(state.error),
+      };
     });
     mockUseLibreTranslateLanguages.mockReturnValue({
       data: {
@@ -274,7 +316,7 @@ describe('PostCard', () => {
 
       try {
         mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-        mutateAsyncMock.mockRejectedValueOnce(new Error('Boom'));
+        mutateAsyncMock.mockRejectedValue(new Error('Boom'));
 
         const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
@@ -285,6 +327,10 @@ describe('PostCard', () => {
 
         await waitFor(() => {
           expect(getByText('post.translation.error (Boom)')).toBeTruthy();
+        });
+
+        await waitFor(() => {
+          expect(mutateAsyncMock).toHaveBeenCalledTimes(1);
         });
       } finally {
         restoreUseState();

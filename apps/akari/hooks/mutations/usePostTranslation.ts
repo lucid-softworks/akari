@@ -15,6 +15,7 @@ type TranslateResult = {
 export const usePostTranslation = () => {
   return useMutation<TranslateResult, Error, TranslateVariables>({
     mutationKey: ['libretranslate', 'translate'],
+    retry: false,
     mutationFn: async ({ text, targetLanguage, sourceLanguage = 'auto' }) => {
       const trimmed = text.trim();
 
