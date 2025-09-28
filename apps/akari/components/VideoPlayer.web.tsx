@@ -6,6 +6,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -48,6 +49,9 @@ export function VideoPlayer({
 }: VideoPlayerProps) {
   const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
   const [playerError, setPlayerError] = useState<string | null>(null);
+  const [shouldShowVideo, setShouldShowVideo] = useState(false);
+  const [playbackUrl, setPlaybackUrl] = useState<string | null>(null);
+  const [isResolvingUrl, setIsResolvingUrl] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
@@ -67,6 +71,12 @@ export function VideoPlayer({
     'text',
   );
 
+  const handlePress = () => {
+    setShouldShowVideo(true);
+    setPlayerStatus('loading');
+    setPlayerError(null);
+  };
+
   // Add global error handler for abort errors
   useEffect(() => {
     const handleAbortError = (event: ErrorEvent) => {
@@ -82,10 +92,12 @@ export function VideoPlayer({
 
   // Initialize HLS player
   useEffect(() => {
-    if (!videoUrl || !videoRef.current) return;
+    if (!shouldShowVideo || !playbackUrl || !videoRef.current) {
+      return;
+    }
 
     const video = videoRef.current;
-    const isHLS = videoUrl.includes('.m3u8');
+    const isHLS = playbackUrl.includes('.m3u8');
 
     // Clean up previous HLS instance
     if (hlsRef.current) {
@@ -93,7 +105,7 @@ export function VideoPlayer({
       hlsRef.current = null;
     }
 
-    const initializeVideo = async () => {
+    const initializeVideo = () => {
       try {
         setPlayerStatus('loading');
         setPlayerError(null);
@@ -106,7 +118,7 @@ export function VideoPlayer({
               lowLatencyMode: true,
             });
 
-            hlsRef.current.loadSource(videoUrl);
+            hlsRef.current.loadSource(playbackUrl);
             hlsRef.current.attachMedia(video);
 
             hlsRef.current.on(Events.MANIFEST_PARSED, () => {
@@ -120,7 +132,7 @@ export function VideoPlayer({
             });
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Native HLS support (Safari)
-            video.src = videoUrl;
+            video.src = playbackUrl;
             video.addEventListener('loadedmetadata', () => {
               setPlayerStatus('readyToPlay');
             });
@@ -129,14 +141,10 @@ export function VideoPlayer({
           }
         } else {
           // Regular video format
-          video.src = videoUrl;
-          video.addEventListener('loadedmetadata', () => {
-            setPlayerStatus('readyToPlay');
-          });
+          video.src = playbackUrl;
         }
 
-        // Add event listeners
-        video.addEventListener('error', (event) => {
+        const handleVideoError = (event: Event) => {
           // Ignore abort errors (they're normal when pausing)
           if (event.target && (event.target as any).error && (event.target as any).error.code === 20) {
             console.log('Abort error (ignored):', event);
@@ -145,29 +153,97 @@ export function VideoPlayer({
           console.error('Video error:', event);
           setPlayerStatus('error');
           setPlayerError('Failed to load video');
-        });
+        };
 
-        video.addEventListener('loadedmetadata', () => {
-          if (playerStatus !== 'readyToPlay') {
-            setPlayerStatus('readyToPlay');
-          }
-        });
+        const handleLoadedMetadata = () => {
+          setPlayerStatus('readyToPlay');
+        };
+
+        video.addEventListener('error', handleVideoError);
+        video.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+        return () => {
+          video.removeEventListener('error', handleVideoError);
+          video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        };
       } catch (error) {
         setPlayerStatus('error');
         setPlayerError(`Failed to initialize video: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     };
 
-    initializeVideo();
+    const cleanup = initializeVideo();
 
     // Cleanup function
     return () => {
+      if (cleanup) {
+        cleanup();
+      }
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
     };
+  }, [playbackUrl, shouldShowVideo]);
+
+  // Reset state when a new video URL is provided
+  useEffect(() => {
+    setShouldShowVideo(false);
+    setPlaybackUrl(null);
+    setPlayerStatus('idle');
+    setPlayerError(null);
+    setIsResolvingUrl(false);
   }, [videoUrl]);
+
+  // Resolve Bluesky playlist URLs only when video playback is requested
+  useEffect(() => {
+    if (!shouldShowVideo) {
+      return;
+    }
+
+    if (!videoUrl || videoUrl.trim() === '') {
+      setPlaybackUrl(null);
+      return;
+    }
+
+    const needsResolution =
+      videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
+
+    if (!needsResolution) {
+      setPlaybackUrl(videoUrl);
+      setIsResolvingUrl(false);
+      return;
+    }
+
+    let isCancelled = false;
+
+    setIsResolvingUrl(true);
+
+    resolveBlueskyVideoUrl(videoUrl)
+      .then((resolvedUrl) => {
+        if (isCancelled) {
+          return;
+        }
+
+        setPlaybackUrl(resolvedUrl || videoUrl);
+      })
+      .catch(() => {
+        if (isCancelled) {
+          return;
+        }
+
+        setPlaybackUrl(videoUrl);
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsResolvingUrl(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [shouldShowVideo, videoUrl]);
 
   // Show error state
   if (playerStatus === 'error') {
@@ -180,6 +256,9 @@ export function VideoPlayer({
             onPress={() => {
               setPlayerStatus('idle');
               setPlayerError(null);
+              setShouldShowVideo(false);
+              setPlaybackUrl(null);
+              setIsResolvingUrl(false);
             }}
           >
             <ThemedView style={styles.errorContainer}>
@@ -194,26 +273,72 @@ export function VideoPlayer({
     );
   }
 
-  // Show video player directly
-  const videoAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
+  if (shouldShowVideo && playbackUrl) {
+    const videoAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
+
+    return (
+      <ThemedCard style={styles.container}>
+        <ThemedView style={[styles.videoContainer, { aspectRatio: videoAspectRatio }]}>
+          <video
+            ref={videoRef}
+            style={styles.video}
+            controls={showControls}
+            muted={muted}
+            loop={loop}
+            autoPlay={autoplay}
+            poster={thumbnailUrl || ''}
+            src={!playbackUrl.includes('.m3u8') ? playbackUrl : undefined}
+          />
+        </ThemedView>
+
+        {showControls &&
+          (() => {
+            const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
+            const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
+
+            if (!hasTitle && !hasDescription) {
+              return null;
+            }
+
+            return (
+              <ThemedView style={styles.content}>
+                {hasTitle && (
+                  <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
+                    {title}
+                  </ThemedText>
+                )}
+                {hasDescription && (
+                  <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
+                    {description}
+                  </ThemedText>
+                )}
+              </ThemedView>
+            );
+          })()}
+      </ThemedCard>
+    );
+  }
+
+  // Fallback thumbnail with play button
+  const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
 
   return (
-    <ThemedCard style={styles.container}>
-      <ThemedView style={[styles.videoContainer, { aspectRatio: videoAspectRatio }]}>
-        <video
-          ref={videoRef}
-          style={styles.video}
-          controls={showControls}
-          muted={muted}
-          loop={loop}
-          autoPlay={autoplay}
-          poster={thumbnailUrl || ''}
-          src={!videoUrl.includes('.m3u8') ? videoUrl : undefined}
-        />
-      </ThemedView>
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} disabled={isResolvingUrl}>
+      <ThemedCard style={styles.container}>
+        <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
+          {thumbnailUrl ? (
+            <img src={thumbnailUrl} alt={title || 'Video thumbnail'} style={styles.thumbnail as any} />
+          ) : (
+            <ThemedView style={styles.placeholderContainer}>
+              <ThemedText style={styles.placeholderIcon}>📹</ThemedText>
+            </ThemedView>
+          )}
+          <ThemedView style={styles.playButton}>
+            <ThemedText style={styles.playIcon}>▶</ThemedText>
+          </ThemedView>
+        </ThemedView>
 
-      {showControls &&
-        (() => {
+        {(() => {
           const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
           const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
 
@@ -223,20 +348,21 @@ export function VideoPlayer({
 
           return (
             <ThemedView style={styles.content}>
-              {hasTitle && (
+              {hasTitle ? (
                 <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
                   {title}
                 </ThemedText>
-              )}
-              {hasDescription && (
+              ) : null}
+              {hasDescription ? (
                 <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
                   {description}
                 </ThemedText>
-              )}
+              ) : null}
             </ThemedView>
           );
         })()}
-    </ThemedCard>
+      </ThemedCard>
+    </TouchableOpacity>
   );
 }
 
