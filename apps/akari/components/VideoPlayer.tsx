@@ -7,6 +7,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 
 import { VideoPlayer as WebVideoPlayer } from './VideoPlayer.web';
 
@@ -54,6 +55,8 @@ export function VideoPlayer({
   const [playerError, setPlayerError] = useState<string | null>(null);
   const [shouldShowVideo, setShouldShowVideo] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackUrl, setPlaybackUrl] = useState<string | null>(null);
+  const [isResolvingUrl, setIsResolvingUrl] = useState(false);
   const videoRef = useRef<any>(null);
 
   const textColor = useThemeColor(
@@ -74,28 +77,28 @@ export function VideoPlayer({
 
   // Determine content type for HLS streams
   const getVideoSource = () => {
-    if (!videoUrl || videoUrl.trim() === '') {
+    if (!playbackUrl || playbackUrl.trim() === '') {
       return null;
     }
 
     // Validate URL format
     try {
-      new URL(videoUrl);
+      new URL(playbackUrl);
     } catch {
       return null;
     }
 
     // Check if it's an HLS stream
-    if (videoUrl.includes('.m3u8')) {
+    if (playbackUrl.includes('.m3u8')) {
       return {
-        uri: videoUrl,
+        uri: playbackUrl,
         // Try without explicit type to let react-native-video auto-detect
       };
     }
 
     // For other video formats, let react-native-video auto-detect
     return {
-      uri: videoUrl,
+      uri: playbackUrl,
     };
   };
 
@@ -129,6 +132,66 @@ export function VideoPlayer({
     setShouldShowVideo(true);
     setPlayerStatus('loading'); // Set loading state immediately
   };
+
+  // Reset state when a new video URL is provided
+  useEffect(() => {
+    setShouldShowVideo(false);
+    setIsPlaying(false);
+    setPlaybackUrl(null);
+    setPlayerStatus('idle');
+    setPlayerError(null);
+    setIsResolvingUrl(false);
+  }, [videoUrl]);
+
+  // Lazily resolve Bluesky playlist URLs only when the user chooses to play the video
+  useEffect(() => {
+    if (!shouldShowVideo) {
+      return;
+    }
+
+    if (!videoUrl || videoUrl.trim() === '') {
+      setPlaybackUrl(null);
+      return;
+    }
+
+    const needsResolution =
+      videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
+
+    if (!needsResolution) {
+      setPlaybackUrl(videoUrl);
+      setIsResolvingUrl(false);
+      return;
+    }
+
+    let isCancelled = false;
+
+    setIsResolvingUrl(true);
+
+    resolveBlueskyVideoUrl(videoUrl)
+      .then((resolvedUrl) => {
+        if (isCancelled) {
+          return;
+        }
+
+        setPlaybackUrl(resolvedUrl || videoUrl);
+      })
+      .catch(() => {
+        if (isCancelled) {
+          return;
+        }
+
+        setPlaybackUrl(videoUrl);
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsResolvingUrl(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [shouldShowVideo, videoUrl]);
 
   const handleLoadStart = () => {
     setPlayerStatus('loading');
@@ -293,7 +356,7 @@ export function VideoPlayer({
 
   // Fallback: thumbnail with play button
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} disabled={isResolvingUrl}>
       <ThemedCard style={styles.container}>
         <ThemedView style={styles.thumbnailContainer}>
           {thumbnailUrl ? (
