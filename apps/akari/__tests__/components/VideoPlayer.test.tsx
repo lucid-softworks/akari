@@ -1,11 +1,13 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
+import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import * as WebPlayerModule from '../../components/VideoPlayer.web';
 
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('@/hooks/useThemeColor');
+jest.mock('@/bluesky-api', () => ({ resolveBlueskyVideoUrl: jest.fn() }));
 
 const mockSeek = jest.fn();
 const mockVideo = jest.fn();
@@ -26,12 +28,14 @@ const mockWebPlayer = jest.spyOn(WebPlayerModule, 'VideoPlayer').mockImplementat
 import { VideoPlayer } from '@/components/VideoPlayer';
 
 const mockUseThemeColor = useThemeColor as jest.Mock;
+const mockResolveVideoUrl = resolveBlueskyVideoUrl as jest.Mock;
 
 describe('VideoPlayer', () => {
   const originalOS = Platform.OS;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockResolveVideoUrl.mockReset();
     mockUseThemeColor.mockReturnValue('#000');
     Object.defineProperty(Platform, 'OS', { value: 'ios', configurable: true });
     jest.useFakeTimers();
@@ -70,6 +74,8 @@ describe('VideoPlayer', () => {
 
     const play = getByText('▶');
     fireEvent.press(play);
+
+    expect(mockResolveVideoUrl).not.toHaveBeenCalled();
 
     const videoProps = mockVideo.mock.calls[0][0];
 
@@ -130,6 +136,48 @@ describe('VideoPlayer', () => {
     });
 
     expect(queryByText(/Failed to load video/)).toBeNull();
+  });
+
+  it('resolves Bluesky playlist URLs only when playback starts', async () => {
+    const playlistUrl = 'https://video.bsky.app/v/123/playlist.m3u8';
+    const resolvedUrl = 'https://cdn.bsky.app/video.mp4';
+    mockResolveVideoUrl.mockResolvedValueOnce(resolvedUrl);
+
+    const { getByText } = render(<VideoPlayer videoUrl={playlistUrl} />);
+
+    expect(mockResolveVideoUrl).not.toHaveBeenCalled();
+
+    fireEvent.press(getByText('▶'));
+
+    expect(mockResolveVideoUrl).toHaveBeenCalledWith(playlistUrl);
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(mockVideo).toHaveBeenCalled());
+
+    const videoProps = mockVideo.mock.calls[0][0];
+    expect(videoProps.source?.uri).toBe(resolvedUrl);
+  });
+
+  it('falls back to the original playlist when resolution fails', async () => {
+    const playlistUrl = 'https://video.bsky.app/v/456/playlist.m3u8';
+    mockResolveVideoUrl.mockRejectedValueOnce(new Error('nope'));
+
+    const { getByText } = render(<VideoPlayer videoUrl={playlistUrl} />);
+    fireEvent.press(getByText('▶'));
+
+    expect(mockResolveVideoUrl).toHaveBeenCalledWith(playlistUrl);
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(mockVideo).toHaveBeenCalled());
+
+    const videoProps = mockVideo.mock.calls[0][0];
+    expect(videoProps.source?.uri).toBe(playlistUrl);
   });
 
   it('ignores empty or invalid video URLs', () => {
