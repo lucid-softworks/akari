@@ -33,7 +33,6 @@ export function CustomBottomTabBar({ state, descriptors, navigation, insets, sty
   const inactiveColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const surfaceColor = useThemeColor({ light: '#FFFFFF', dark: '#0F1115' }, 'background');
-  const containerBackground = Platform.OS === 'ios' ? 'transparent' : surfaceColor;
   const borderColor = useBorderColor();
   const overflow = useBottomTabOverflow();
   const bottomInset = Math.max(insets.bottom - overflow, 0);
@@ -58,6 +57,7 @@ export function CustomBottomTabBar({ state, descriptors, navigation, insets, sty
   );
 
   const BackgroundComponent = TabBarBackground;
+  const containerBackground = BackgroundComponent ? 'transparent' : surfaceColor;
 
   return (
     <View
