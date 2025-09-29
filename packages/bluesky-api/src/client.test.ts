@@ -238,7 +238,7 @@ describe('BlueskyApiClient', () => {
     client.useSession(session);
     client.configureRefresh(refreshSession);
     const listener = jest.fn();
-    client.onSessionRefreshed(listener);
+    client.onSessionChange(listener);
 
     const result = await client.callMakeAuthenticatedRequest<{ ok: boolean }>(
       '/secure',
@@ -251,6 +251,42 @@ describe('BlueskyApiClient', () => {
     expect(refreshSession).toHaveBeenCalledWith('refresh-old');
     expect(client.getSession()).toEqual(refreshedSession);
     expect(listener).toHaveBeenCalledWith(refreshedSession);
+  });
+
+  it('reuses refreshed tokens from another request without invoking the refresh handler twice', async () => {
+    const initialSession = createSession({ accessJwt: 'expired', refreshJwt: 'refresh-old' });
+    const updatedSession = createSession({ accessJwt: 'new-access', refreshJwt: 'refresh-new' });
+    const refreshSession = jest.fn().mockResolvedValue(updatedSession);
+
+    let client: TestClient;
+    const headersPerCall: Record<string, string>[] = [];
+    let callCount = 0;
+
+    server.use(
+      http.get('https://pds.example/xrpc/secure', async ({ request }) => {
+        callCount += 1;
+        headersPerCall.push(Object.fromEntries(request.headers.entries()));
+
+        if (callCount === 1) {
+          client.useSession(updatedSession);
+          return HttpResponse.json({ message: 'Expired' }, { status: 401 });
+        }
+
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    client = new TestClient();
+    client.useSession(initialSession);
+    client.configureRefresh(refreshSession);
+
+    const result = await client.callMakeAuthenticatedRequest<{ ok: boolean }>('/secure');
+
+    expect(result).toEqual({ ok: true });
+    expect(callCount).toBe(2);
+    expect(refreshSession).not.toHaveBeenCalled();
+    expect(headersPerCall[0].authorization).toBe('Bearer expired');
+    expect(headersPerCall[1].authorization).toBe('Bearer new-access');
   });
 
   it('rethrows when session refresh fails', async () => {

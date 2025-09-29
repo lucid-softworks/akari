@@ -48,7 +48,7 @@ export class BlueskyRequestError extends Error {
  *
  * Consumers may reuse the same object across requests – the client will mutate
  * {@link accessJwt} and {@link refreshJwt} with the refreshed values after a
- * successful refresh. The {@link onSessionRefreshed} callback receives the full
+ * successful refresh. The {@link onSessionChange} callback receives the full
  * refreshed session payload so applications can persist the new tokens.
  */
 export class BlueskyApiClient {
@@ -76,11 +76,11 @@ export class BlueskyApiClient {
     return this.refreshSessionHandler;
   }
 
-  protected emitSessionRefreshed(session: BlueskySession): void {
+  protected emitSessionChanged(session: BlueskySession): void {
     this.sessionEvents.emit(session);
   }
 
-  public onSessionRefreshed(listener: SessionListener): () => void {
+  public onSessionChange(listener: SessionListener): () => void {
     return this.sessionEvents.on(listener);
   }
 
@@ -110,7 +110,7 @@ export class BlueskyApiClient {
     this.useSession(session);
 
     if (emitEvent) {
-      this.emitSessionRefreshed(session);
+      this.emitSessionChanged(session);
     }
 
     return session;
@@ -238,7 +238,17 @@ export class BlueskyApiClient {
         throw error;
       }
 
-      const refreshedSession = await refreshSession(session.refreshJwt);
+      const latestSession = this.getSession();
+
+      if (!latestSession) {
+        throw new Error('Session became unavailable during an authenticated request. Call useSession() before retrying.');
+      }
+
+      if (latestSession.accessJwt !== session.accessJwt) {
+        return makeAuthenticatedCall(latestSession.accessJwt);
+      }
+
+      const refreshedSession = await refreshSession(latestSession.refreshJwt);
       const nextSession = this.applySession(refreshedSession, true);
 
       return makeAuthenticatedCall(nextSession.accessJwt);

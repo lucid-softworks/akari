@@ -1,5 +1,5 @@
-import { BlueskyApiClient } from "./client";
-import type { BlueskySession } from "./types";
+import { BlueskyApiClient } from './client';
+import type { BlueskySession } from './types';
 
 /**
  * Bluesky API authentication methods
@@ -16,9 +16,9 @@ export class BlueskyAuth extends BlueskyApiClient {
     password: string
   ): Promise<BlueskySession> {
     return this.makeRequest<BlueskySession>(
-      "/com.atproto.server.createSession",
+      '/com.atproto.server.createSession',
       {
-        method: "POST",
+        method: 'POST',
         body: {
           identifier,
           password,
@@ -34,9 +34,9 @@ export class BlueskyAuth extends BlueskyApiClient {
    */
   async refreshSession(refreshJwt: string): Promise<BlueskySession> {
     return this.makeRequest<BlueskySession>(
-      "/com.atproto.server.refreshSession",
+      '/com.atproto.server.refreshSession',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${refreshJwt}`,
         },
