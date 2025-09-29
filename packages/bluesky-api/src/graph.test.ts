@@ -1,6 +1,17 @@
 import { BlueskyGraph } from './graph';
+import type { BlueskySession } from './types';
 
 describe('BlueskyGraph', () => {
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt',
+      refreshJwt: 'refresh',
+      ...overrides,
+    } as BlueskySession);
+
   class TestGraph extends BlueskyGraph {
     public calls: {
       endpoint: string;
@@ -21,7 +32,6 @@ describe('BlueskyGraph', () => {
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
@@ -29,7 +39,8 @@ describe('BlueskyGraph', () => {
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
-      this.calls.push({ endpoint, accessJwt, options });
+      const session = this.requireSession();
+      this.calls.push({ endpoint, accessJwt: session.accessJwt, options });
       return (this.responses.shift() as T) ?? (undefined as T);
     }
   }
@@ -38,15 +49,19 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{ uri: 'follow-record' }, { success: true }];
 
-    const followResult = await graph.followUser('jwt', 'did:example:alice');
-    const unfollowResult = await graph.unfollowUser('jwt', 'at://follow/123');
+    const followSession = createSession();
+    const unfollowSession = createSession({ accessJwt: 'unfollow-token' });
+    graph.useSession(followSession);
+    const followResult = await graph.followUser('did:example:alice');
+    graph.useSession(unfollowSession);
+    const unfollowResult = await graph.unfollowUser('at://follow/123');
 
     expect(followResult).toEqual({ uri: 'follow-record' });
     expect(unfollowResult).toEqual({ success: true });
 
     expect(graph.calls[0]).toMatchObject({
       endpoint: '/com.atproto.repo.createRecord',
-      accessJwt: 'jwt',
+      accessJwt: followSession.accessJwt,
       options: {
         method: 'POST',
         body: {
@@ -61,7 +76,7 @@ describe('BlueskyGraph', () => {
 
     expect(graph.calls[1]).toEqual({
       endpoint: '/com.atproto.repo.deleteRecord',
-      accessJwt: 'jwt',
+      accessJwt: unfollowSession.accessJwt,
       options: {
         method: 'POST',
         body: {
@@ -75,8 +90,12 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{ block: true }, { success: true }];
 
-    const blockResult = await graph.blockUser('jwt', 'did:example:bob');
-    const unblockResult = await graph.unblockUser('jwt', 'at://block/1');
+    const blockSession = createSession();
+    const unblockSession = createSession({ accessJwt: 'unblock-token' });
+    graph.useSession(blockSession);
+    const blockResult = await graph.blockUser('did:example:bob');
+    graph.useSession(unblockSession);
+    const unblockResult = await graph.unblockUser('at://block/1');
 
     expect(blockResult).toEqual({ block: true });
     expect(unblockResult).toEqual({ success: true });
@@ -89,7 +108,7 @@ describe('BlueskyGraph', () => {
     });
     expect(graph.calls[1]).toEqual({
       endpoint: '/com.atproto.repo.deleteRecord',
-      accessJwt: 'jwt',
+      accessJwt: unblockSession.accessJwt,
       options: {
         method: 'POST',
         body: {
@@ -103,14 +122,16 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{}, {}, {}];
 
-    await graph.muteUser('jwt', 'did:example:carol');
-    await graph.muteActorList('jwt', 'at://list/1');
-    await graph.muteThread('jwt', 'at://post/thread');
+    const session = createSession();
+    graph.useSession(session);
+    await graph.muteUser('did:example:carol');
+    await graph.muteActorList('at://list/1');
+    await graph.muteThread('at://post/thread');
 
     expect(graph.calls).toHaveLength(3);
     expect(graph.calls[0]).toEqual({
       endpoint: '/app.bsky.graph.muteActor',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         body: { actor: 'did:example:carol' },
@@ -118,7 +139,7 @@ describe('BlueskyGraph', () => {
     });
     expect(graph.calls[1]).toEqual({
       endpoint: '/app.bsky.graph.muteActorList',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         body: { list: 'at://list/1' },
@@ -126,7 +147,7 @@ describe('BlueskyGraph', () => {
     });
     expect(graph.calls[2]).toEqual({
       endpoint: '/app.bsky.graph.muteThread',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         body: { root: 'at://post/thread' },
@@ -138,12 +159,14 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{}];
 
-    await graph.unmuteUser('jwt', 'did:example:dan');
+    const session = createSession();
+    graph.useSession(session);
+    await graph.unmuteUser('did:example:dan');
 
     expect(graph.calls).toEqual([
       {
         endpoint: '/app.bsky.graph.unmuteActor',
-        accessJwt: 'jwt',
+        accessJwt: session.accessJwt,
         options: {
           method: 'POST',
           body: { actor: 'did:example:dan' },

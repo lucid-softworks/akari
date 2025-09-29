@@ -2,9 +2,20 @@ import { BlueskySearch } from './search';
 import type {
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
+  BlueskySession,
 } from './types';
 
 describe('BlueskySearch', () => {
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt',
+      refreshJwt: 'refresh',
+      ...overrides,
+    } as BlueskySession);
+
   class TestSearch extends BlueskySearch {
     public calls: {
       endpoint: string;
@@ -25,7 +36,6 @@ describe('BlueskySearch', () => {
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         params?: Record<string, string | string[]>;
@@ -33,7 +43,8 @@ describe('BlueskySearch', () => {
         body?: Record<string, unknown> | FormData | Blob;
       } = {},
     ): Promise<T> {
-      this.calls.push({ endpoint, accessJwt, options });
+      const session = this.requireSession();
+      this.calls.push({ endpoint, accessJwt: session.accessJwt, options });
       return (this.responses.shift() as T) ?? (undefined as T);
     }
   }
@@ -43,13 +54,15 @@ describe('BlueskySearch', () => {
     const response = { actors: [] } as unknown as BlueskySearchActorsResponse;
     search.responses = [response];
 
-    const result = await search.searchProfiles('jwt', 'carol', 15, 'cursor-abc');
+    const session = createSession();
+    search.useSession(session);
+    const result = await search.searchProfiles('carol', 15, 'cursor-abc');
 
     expect(result).toBe(response);
     expect(search.calls).toEqual([
       {
         endpoint: '/app.bsky.actor.searchActors',
-        accessJwt: 'jwt',
+        accessJwt: session.accessJwt,
         options: {
           params: {
             q: 'carol',
@@ -66,13 +79,15 @@ describe('BlueskySearch', () => {
     const response = { posts: [] } as unknown as BlueskySearchPostsResponse;
     search.responses = [response];
 
-    const result = await search.searchPosts('jwt', 'hello world');
+    const session = createSession();
+    search.useSession(session);
+    const result = await search.searchPosts('hello world');
 
     expect(result).toBe(response);
     expect(search.calls).toEqual([
       {
         endpoint: '/app.bsky.feed.searchPosts',
-        accessJwt: 'jwt',
+        accessJwt: session.accessJwt,
         options: {
           params: {
             q: 'hello world',

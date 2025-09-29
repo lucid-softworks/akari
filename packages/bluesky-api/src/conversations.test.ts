@@ -4,9 +4,20 @@ import type {
   BlueskyMessagesResponse,
   BlueskySendMessageInput,
   BlueskySendMessageResponse,
+  BlueskySession,
 } from './types';
 
 describe('BlueskyConversations', () => {
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt',
+      refreshJwt: 'refresh',
+      ...overrides,
+    } as BlueskySession);
+
   class TestConversations extends BlueskyConversations {
     public lastCall?: {
       endpoint: string;
@@ -27,7 +38,6 @@ describe('BlueskyConversations', () => {
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
@@ -35,7 +45,8 @@ describe('BlueskyConversations', () => {
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
-      this.lastCall = { endpoint, accessJwt, options };
+      const session = this.requireSession();
+      this.lastCall = { endpoint, accessJwt: session.accessJwt, options };
       return this.response as T;
     }
   }
@@ -48,12 +59,14 @@ describe('BlueskyConversations', () => {
     const conversations = new TestConversations();
     conversations.response = convoResponse;
 
-    const result = await conversations.listConversations('jwt', 10, 'cursor-1', 'unread', 'accepted');
+    const session = createSession();
+    conversations.useSession(session);
+    const result = await conversations.listConversations(10, 'cursor-1', 'unread', 'accepted');
 
     expect(result).toEqual(convoResponse);
     expect(conversations.lastCall).toEqual({
       endpoint: '/chat.bsky.convo.listConvos',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           limit: '10',
@@ -76,12 +89,14 @@ describe('BlueskyConversations', () => {
     const conversations = new TestConversations();
     conversations.response = messageResponse;
 
-    const result = await conversations.getMessages('jwt', 'convo-1', 25, 'cursor-2');
+    const session = createSession();
+    conversations.useSession(session);
+    const result = await conversations.getMessages('convo-1', 25, 'cursor-2');
 
     expect(result).toEqual(messageResponse);
     expect(conversations.lastCall).toEqual({
       endpoint: '/chat.bsky.convo.getMessages',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           convoId: 'convo-1',
@@ -107,12 +122,14 @@ describe('BlueskyConversations', () => {
     conversations.response = sendResponse;
     const message: BlueskySendMessageInput = { text: 'Hello there' };
 
-    const result = await conversations.sendMessage('jwt', 'convo-1', message);
+    const session = createSession();
+    conversations.useSession(session);
+    const result = await conversations.sendMessage('convo-1', message);
 
     expect(result).toEqual(sendResponse);
     expect(conversations.lastCall).toEqual({
       endpoint: '/chat.bsky.convo.sendMessage',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         headers: {

@@ -2,13 +2,25 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { BlueskyApiClient } from './client';
+import type { BlueskyApiClientOptions } from './client';
+import type { BlueskySession } from './types';
 
 describe('BlueskyApiClient', () => {
   const server = setupServer();
 
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'access-token',
+      refreshJwt: 'refresh-token',
+      ...overrides,
+    } as BlueskySession);
+
   class TestClient extends BlueskyApiClient {
-    constructor() {
-      super('https://pds.example');
+    constructor(options?: BlueskyApiClientOptions) {
+      super('https://pds.example', options);
     }
 
     async callMakeRequest<T>(endpoint: string, options?: {
@@ -20,9 +32,12 @@ describe('BlueskyApiClient', () => {
       return this.makeRequest<T>(endpoint, options);
     }
 
+    configureRefresh(handler: (refreshJwt: string) => Promise<BlueskySession>) {
+      this.setRefreshSessionHandler(handler);
+    }
+
     async callMakeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options?: {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
@@ -30,7 +45,7 @@ describe('BlueskyApiClient', () => {
         params?: Record<string, string | string[]>;
       },
     ): Promise<T> {
-      return this.makeAuthenticatedRequest<T>(endpoint, accessJwt, options);
+      return this.makeAuthenticatedRequest<T>(endpoint, options);
     }
   }
 
@@ -48,17 +63,16 @@ describe('BlueskyApiClient', () => {
 
     public response: unknown;
 
-    constructor() {
-      super('https://pds.example');
+    constructor(options?: BlueskyApiClientOptions) {
+      super('https://pds.example', options);
     }
 
-    async callUploadBlob(accessJwt: string, blob: Blob, mimeType: string) {
-      return this.uploadBlob(accessJwt, blob, mimeType);
+    async callUploadBlob(blob: Blob, mimeType: string) {
+      return this.uploadBlob(blob, mimeType);
     }
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         headers?: Record<string, string>;
@@ -66,7 +80,8 @@ describe('BlueskyApiClient', () => {
         params?: Record<string, string | string[]>;
       } = {},
     ): Promise<T> {
-      this.lastCall = { endpoint, accessJwt, options };
+      const session = this.requireSession();
+      this.lastCall = { endpoint, accessJwt: session.accessJwt, options };
       return this.response as T;
     }
   }
@@ -178,7 +193,9 @@ describe('BlueskyApiClient', () => {
     );
 
     const client = new TestClient();
-    await client.callMakeAuthenticatedRequest('/secure', 'token-123', {
+    const session = createSession({ accessJwt: 'token-123' });
+    client.useSession(session);
+    await client.callMakeAuthenticatedRequest('/secure', {
       params: { cursor: 'abc' },
     });
 
@@ -187,6 +204,74 @@ describe('BlueskyApiClient', () => {
     expect(request.url).toBe('https://pds.example/xrpc/secure?cursor=abc');
     expect(request.method).toBe('GET');
     expect(request.headers.authorization).toBe('Bearer token-123');
+  });
+
+  it('refreshes expired sessions automatically', async () => {
+    const refreshedSession: BlueskySession = {
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'access-new',
+      refreshJwt: 'refresh-new',
+    };
+
+    const refreshSession = jest.fn().mockResolvedValue(refreshedSession);
+    const session = createSession({ accessJwt: 'access-expired', refreshJwt: 'refresh-old' });
+
+    const headersPerCall: Record<string, string>[] = [];
+    let callCount = 0;
+
+    server.use(
+      http.get('https://pds.example/xrpc/secure', async ({ request }) => {
+        callCount += 1;
+        headersPerCall.push(Object.fromEntries(request.headers.entries()));
+
+        if (callCount === 1) {
+          return HttpResponse.json({ message: 'Expired' }, { status: 401 });
+        }
+
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    const client = new TestClient();
+    client.useSession(session);
+    client.configureRefresh(refreshSession);
+    const listener = jest.fn();
+    client.onSessionRefreshed(listener);
+
+    const result = await client.callMakeAuthenticatedRequest<{ ok: boolean }>(
+      '/secure',
+    );
+
+    expect(result).toEqual({ ok: true });
+    expect(callCount).toBe(2);
+    expect(headersPerCall[0].authorization).toBe('Bearer access-expired');
+    expect(headersPerCall[1].authorization).toBe('Bearer access-new');
+    expect(refreshSession).toHaveBeenCalledWith('refresh-old');
+    expect(client.getSession()).toEqual(refreshedSession);
+    expect(listener).toHaveBeenCalledWith(refreshedSession);
+  });
+
+  it('rethrows when session refresh fails', async () => {
+    const refreshError = new Error('refresh failed');
+    const refreshSession = jest.fn().mockRejectedValue(refreshError);
+    const session = createSession({ accessJwt: 'expired', refreshJwt: 'refresh-token' });
+
+    server.use(
+      http.get('https://pds.example/xrpc/secure', () =>
+        HttpResponse.json({ message: 'Expired' }, { status: 401 }),
+      ),
+    );
+
+    const client = new TestClient();
+    client.useSession(session);
+    client.configureRefresh(refreshSession);
+
+    await expect(
+      client.callMakeAuthenticatedRequest('/secure'),
+    ).rejects.toThrow(refreshError);
+    expect(refreshSession).toHaveBeenCalledWith('refresh-token');
   });
 
   it('appends array query parameters as repeated entries', async () => {
@@ -217,7 +302,9 @@ describe('BlueskyApiClient', () => {
     client.response = response;
 
     const blob = new Blob(['content'], { type: 'text/plain' });
-    const result = await client.callUploadBlob('jwt-token', blob, 'image/png');
+    const session = createSession({ accessJwt: 'jwt-token' });
+    client.useSession(session);
+    const result = await client.callUploadBlob(blob, 'image/png');
 
     expect(result).toEqual(response);
     expect(client.lastCall).toBeDefined();

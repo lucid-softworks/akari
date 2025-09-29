@@ -2,9 +2,20 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { BlueskyNotifications } from './notifications';
+import type { BlueskySession } from './types';
 
 describe('BlueskyNotifications', () => {
   const server = setupServer();
+
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt-token',
+      refreshJwt: 'refresh-token',
+      ...overrides,
+    } as BlueskySession);
 
   beforeAll(() => server.listen());
 
@@ -29,7 +40,9 @@ describe('BlueskyNotifications', () => {
     );
 
     const client = new BlueskyNotifications('https://custom.pds');
-    const result = await client.listNotifications('jwt-token', 10, 'cursor123', ['like', 'follow'], true, '2024-01-01T00:00:00Z');
+    const session = createSession();
+    client.useSession(session);
+    const result = await client.listNotifications(10, 'cursor123', ['like', 'follow'], true, '2024-01-01T00:00:00Z');
 
     expect(result).toEqual(responseData);
     expect(capturedUrl).toBe(
@@ -38,7 +51,7 @@ describe('BlueskyNotifications', () => {
     expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
-    expect(headers['content-type']).toBe('application/json');
+    expect(headers['content-type']).toBeUndefined();
   });
 
   it('throws descriptive errors when notification request fails', async () => {
@@ -50,7 +63,9 @@ describe('BlueskyNotifications', () => {
 
     const client = new BlueskyNotifications();
 
-    await expect(client.listNotifications('jwt-token')).rejects.toThrow('Request failed');
+    const session = createSession();
+    client.useSession(session);
+    await expect(client.listNotifications()).rejects.toThrow('Request failed');
   });
 
   it('fetches unread notification counts', async () => {
@@ -65,13 +80,15 @@ describe('BlueskyNotifications', () => {
     );
 
     const client = new BlueskyNotifications('https://example.pds');
-    const result = await client.getUnreadCount('jwt-token');
+    const session = createSession();
+    client.useSession(session);
+    const result = await client.getUnreadCount();
 
     expect(result).toEqual({ count: 5 });
     expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
-    expect(headers['content-type']).toBe('application/json');
+    expect(headers['content-type']).toBeUndefined();
   });
 
   it('throws fallback errors when unread count json parsing fails', async () => {
@@ -83,6 +100,8 @@ describe('BlueskyNotifications', () => {
 
     const client = new BlueskyNotifications('https://example.pds');
 
-    await expect(client.getUnreadCount('jwt-token')).rejects.toThrow('HTTP 404: Not Found');
+    const session = createSession();
+    client.useSession(session);
+    await expect(client.getUnreadCount()).rejects.toThrow('not json');
   });
 });

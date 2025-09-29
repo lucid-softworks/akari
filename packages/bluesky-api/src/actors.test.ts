@@ -1,7 +1,17 @@
 import { BlueskyActors } from './actors';
-import type { BlueskyPreferencesResponse, BlueskyProfileResponse } from './types';
+import type { BlueskyPreferencesResponse, BlueskyProfileResponse, BlueskySession } from './types';
 
 describe('BlueskyActors', () => {
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt-token',
+      refreshJwt: 'refresh-token',
+      ...overrides,
+    } as BlueskySession);
+
   class TestActors extends BlueskyActors {
     public lastCall?: {
       endpoint: string;
@@ -22,7 +32,6 @@ describe('BlueskyActors', () => {
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
@@ -30,7 +39,8 @@ describe('BlueskyActors', () => {
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
-      this.lastCall = { endpoint, accessJwt, options };
+      const session = this.requireSession();
+      this.lastCall = { endpoint, accessJwt: session.accessJwt, options };
       return this.response as T;
     }
   }
@@ -48,12 +58,14 @@ describe('BlueskyActors', () => {
     };
     actors.response = profileResponse;
 
-    const result = await actors.getProfile('jwt-token', 'did:example:alice');
+    const session = createSession();
+    actors.useSession(session);
+    const result = await actors.getProfile('did:example:alice');
 
     expect(result).toEqual(profileResponse);
     expect(actors.lastCall).toEqual({
       endpoint: '/app.bsky.actor.getProfile',
-      accessJwt: 'jwt-token',
+      accessJwt: session.accessJwt,
       options: {
         params: { actor: 'did:example:alice' },
       },
@@ -73,7 +85,9 @@ describe('BlueskyActors', () => {
     };
     actors.response = updatedProfile;
 
-    const result = await actors.updateProfile('jwt-token', {
+    const session = createSession();
+    actors.useSession(session);
+    const result = await actors.updateProfile({
       displayName: 'Alice Updated',
       description: 'Updated bio',
       avatar: 'https://cdn.example/new-avatar.png',
@@ -83,7 +97,7 @@ describe('BlueskyActors', () => {
     expect(result).toEqual(updatedProfile);
     expect(actors.lastCall).toEqual({
       endpoint: '/app.bsky.actor.updateProfile',
-      accessJwt: 'jwt-token',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         body: {
@@ -109,12 +123,14 @@ describe('BlueskyActors', () => {
     };
     actors.response = preferencesResponse;
 
-    const result = await actors.getPreferences('jwt-token');
+    const session = createSession();
+    actors.useSession(session);
+    const result = await actors.getPreferences();
 
     expect(result).toEqual(preferencesResponse);
     expect(actors.lastCall).toEqual({
       endpoint: '/app.bsky.actor.getPreferences',
-      accessJwt: 'jwt-token',
+      accessJwt: session.accessJwt,
       options: {},
     });
   });

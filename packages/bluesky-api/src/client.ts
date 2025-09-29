@@ -1,17 +1,119 @@
-import type { BlueskyError, BlueskyUploadBlobResponse } from './types';
+import type { BlueskyError, BlueskySession, BlueskyUploadBlobResponse } from './types';
+
+type SessionListener = (session: BlueskySession) => void;
+
+type BlueskySessionState = {
+  session?: BlueskySession;
+};
+
+export class BlueskySessionEventTarget {
+  private listeners: Set<SessionListener> = new Set();
+
+  on(listener: SessionListener): () => void {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  emit(session: BlueskySession): void {
+    for (const listener of this.listeners) {
+      listener(session);
+    }
+  }
+}
+
+export type BlueskyApiClientOptions = {
+  refreshSession?: (refreshJwt: string) => Promise<BlueskySession>;
+  sessionEvents?: BlueskySessionEventTarget;
+  sessionState?: BlueskySessionState;
+};
 
 /**
- * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
+ * Error thrown when a Bluesky request fails.
+ */
+export class BlueskyRequestError extends Error {
+  public status: number;
+  public body?: unknown;
+
+  constructor(message: string, status: number, body?: unknown) {
+    super(message);
+    this.status = status;
+    this.body = body;
+  }
+}
+
+/**
+ * Authentication context that enables automatic session refresh.
+ *
+ * Consumers may reuse the same object across requests – the client will mutate
+ * {@link accessJwt} and {@link refreshJwt} with the refreshed values after a
+ * successful refresh. The {@link onSessionRefreshed} callback receives the full
+ * refreshed session payload so applications can persist the new tokens.
  */
 export class BlueskyApiClient {
   protected baseUrl: string;
+  protected sessionEvents: BlueskySessionEventTarget;
+  protected sessionState: BlueskySessionState;
+  private refreshSessionHandler?: (refreshJwt: string) => Promise<BlueskySession>;
 
   /**
    * Creates a new BlueskyApiClient instance
    * @param pdsUrl - The PDS URL to use (required)
    */
-  constructor(pdsUrl: string) {
+  constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
     this.baseUrl = pdsUrl;
+    this.sessionEvents = options.sessionEvents ?? new BlueskySessionEventTarget();
+    this.sessionState = options.sessionState ?? {};
+    this.refreshSessionHandler = options.refreshSession;
+  }
+
+  protected setRefreshSessionHandler(refreshSession: (refreshJwt: string) => Promise<BlueskySession>): void {
+    this.refreshSessionHandler = refreshSession;
+  }
+
+  protected getRefreshSessionHandler(): ((refreshJwt: string) => Promise<BlueskySession>) | undefined {
+    return this.refreshSessionHandler;
+  }
+
+  protected emitSessionRefreshed(session: BlueskySession): void {
+    this.sessionEvents.emit(session);
+  }
+
+  public onSessionRefreshed(listener: SessionListener): () => void {
+    return this.sessionEvents.on(listener);
+  }
+
+  public useSession(session: BlueskySession): void {
+    this.sessionState.session = session;
+  }
+
+  public clearSession(): void {
+    delete this.sessionState.session;
+  }
+
+  public getSession(): BlueskySession | undefined {
+    return this.sessionState.session;
+  }
+
+  protected requireSession(): BlueskySession {
+    const session = this.getSession();
+
+    if (!session) {
+      throw new Error('A Bluesky session has not been configured. Call useSession() or login() first.');
+    }
+
+    return session;
+  }
+
+  protected applySession(session: BlueskySession, emitEvent: boolean): BlueskySession {
+    this.useSession(session);
+
+    if (emitEvent) {
+      this.emitSessionRefreshed(session);
+    }
+
+    return session;
   }
 
   /**
@@ -69,8 +171,29 @@ export class BlueskyApiClient {
     const response = await fetch(url, requestOptions);
 
     if (!response.ok) {
-      const error: BlueskyError = await response.json();
-      throw new Error(error.message || `Request failed with status ${response.status}`);
+      let body: unknown = null;
+      let message = `Request failed with status ${response.status}`;
+
+      const contentType = response.headers.get('content-type') ?? '';
+
+      try {
+        if (contentType.includes('application/json')) {
+          body = await response.json();
+          const error = body as BlueskyError;
+          if (error?.message) {
+            message = error.message;
+          }
+        } else {
+          body = await response.text();
+          if (typeof body === 'string' && body.trim().length > 0) {
+            message = body;
+          }
+        }
+      } catch {
+        body = null;
+      }
+
+      throw new BlueskyRequestError(message, response.status, body);
     }
 
     return await response.json();
@@ -79,13 +202,11 @@ export class BlueskyApiClient {
   /**
    * Makes an authenticated request with JWT token
    * @param endpoint - The API endpoint path
-   * @param accessJwt - Valid access JWT token
    * @param options - Request options
    * @returns Promise resolving to the response data
    */
   protected async makeAuthenticatedRequest<T>(
     endpoint: string,
-    accessJwt: string,
     options: {
       method?: 'GET' | 'POST';
       body?: Record<string, unknown> | FormData | Blob;
@@ -93,34 +214,50 @@ export class BlueskyApiClient {
       headers?: Record<string, string>;
     } = {},
   ): Promise<T> {
-    return this.makeRequest<T>(endpoint, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        ...options.headers,
-      },
-    });
+    const session = this.requireSession();
+
+    const makeAuthenticatedCall = (accessJwt: string) =>
+      this.makeRequest<T>(endpoint, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+          ...options.headers,
+        },
+      });
+
+    try {
+      return await makeAuthenticatedCall(session.accessJwt);
+    } catch (error) {
+      if (!(error instanceof BlueskyRequestError) || error.status !== 401) {
+        throw error;
+      }
+
+      const refreshSession = this.getRefreshSessionHandler();
+
+      if (!refreshSession) {
+        throw error;
+      }
+
+      const refreshedSession = await refreshSession(session.refreshJwt);
+      const nextSession = this.applySession(refreshedSession, true);
+
+      return makeAuthenticatedCall(nextSession.accessJwt);
+    }
   }
 
   /**
-   * Uploads a blob (image) to the Bluesky API
-   * @param accessJwt - Valid access JWT token
+   * Uploads a blob (image) to the Bluesky API using the active session.
    * @param blob - The blob data to upload
    * @param mimeType - The MIME type of the blob
    * @returns Promise resolving to the uploaded blob reference
    */
-  protected async uploadBlob(
-    accessJwt: string,
-    blob: Blob,
-    mimeType: string,
-  ): Promise<BlueskyUploadBlobResponse> {
+  protected async uploadBlob(blob: Blob, mimeType: string): Promise<BlueskyUploadBlobResponse> {
     // Get the blob data as array buffer and create a new blob with correct MIME type
     const arrayBuffer = await blob.arrayBuffer();
     const typedBlob = new Blob([arrayBuffer], { type: mimeType });
 
     const result = await this.makeAuthenticatedRequest<BlueskyUploadBlobResponse>(
       '/com.atproto.repo.uploadBlob',
-      accessJwt,
       {
         method: 'POST',
         body: typedBlob,

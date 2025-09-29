@@ -1,17 +1,15 @@
 import { BlueskyApiClient } from './client';
-
 /**
  * Bluesky API graph methods (follows, blocks, mutes, etc.)
  */
 export class BlueskyGraph extends BlueskyApiClient {
   /**
    * Follows a user
-   * @param accessJwt - Valid access JWT token
    * @param did - The DID of the user to follow
    * @returns Promise resolving to follow operation result
    */
-  async followUser(accessJwt: string, did: string) {
-    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
+  async followUser(did: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', {
       method: 'POST',
       body: {
         repo: 'self',
@@ -26,12 +24,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Unfollows a user
-   * @param accessJwt - Valid access JWT token
    * @param followUri - The URI of the follow record to delete
    * @returns Promise resolving to unfollow operation result
    */
-  async unfollowUser(accessJwt: string, followUri: string) {
-    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+  async unfollowUser(followUri: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', {
       method: 'POST',
       body: {
         uri: followUri,
@@ -41,12 +38,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Blocks a user
-   * @param accessJwt - Valid access JWT token
    * @param did - The DID of the user to block
    * @returns Promise resolving to block operation result
    */
-  async blockUser(accessJwt: string, did: string) {
-    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
+  async blockUser(did: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', {
       method: 'POST',
       body: {
         repo: 'self',
@@ -61,12 +57,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Unblocks a user
-   * @param accessJwt - Valid access JWT token
    * @param blockUri - The URI of the block record to delete
    * @returns Promise resolving to unblock operation result
    */
-  async unblockUser(accessJwt: string, blockUri: string) {
-    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+  async unblockUser(blockUri: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', {
       method: 'POST',
       body: {
         uri: blockUri,
@@ -76,12 +71,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Mutes a user
-   * @param accessJwt - Valid access JWT token
    * @param actor - The actor's DID or handle to mute
    * @returns Promise resolving to mute operation result
    */
-  async muteUser(accessJwt: string, actor: string) {
-    return this.makeAuthenticatedRequest('/app.bsky.graph.muteActor', accessJwt, {
+  async muteUser(actor: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.muteActor', {
       method: 'POST',
       body: {
         actor,
@@ -91,12 +85,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Unmutes a user
-   * @param accessJwt - Valid access JWT token
    * @param actor - The actor's DID or handle to unmute
    * @returns Promise resolving to unmute operation result
    */
-  async unmuteUser(accessJwt: string, actor: string) {
-    return this.makeAuthenticatedRequest('/app.bsky.graph.unmuteActor', accessJwt, {
+  async unmuteUser(actor: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.unmuteActor', {
       method: 'POST',
       body: {
         actor,
@@ -106,12 +99,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Mutes a list of actors
-   * @param accessJwt - Valid access JWT token
    * @param list - The list URI to mute
    * @returns Promise resolving to mute list operation result
    */
-  async muteActorList(accessJwt: string, list: string) {
-    return this.makeAuthenticatedRequest('/app.bsky.graph.muteActorList', accessJwt, {
+  async muteActorList(list: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.muteActorList', {
       method: 'POST',
       body: {
         list,
@@ -121,12 +113,11 @@ export class BlueskyGraph extends BlueskyApiClient {
 
   /**
    * Mutes a thread
-   * @param accessJwt - Valid access JWT token
    * @param root - The root post URI of the thread to mute
    * @returns Promise resolving to mute thread operation result
    */
-  async muteThread(accessJwt: string, root: string) {
-    return this.makeAuthenticatedRequest('/app.bsky.graph.muteThread', accessJwt, {
+  async muteThread(root: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.muteThread', {
       method: 'POST',
       body: {
         root,

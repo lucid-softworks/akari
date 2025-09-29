@@ -12,9 +12,20 @@ import type {
   BlueskyTrendingTopicsResponse,
   BlueskyUnlikeResponse,
   BlueskyUploadBlobResponse,
+  BlueskySession,
 } from './types';
 
 describe('BlueskyFeeds', () => {
+  const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+    ({
+      handle: 'user.test',
+      did: 'did:plc:123',
+      active: true,
+      accessJwt: 'jwt',
+      refreshJwt: 'refresh',
+      ...overrides,
+    } as BlueskySession);
+
   class TestFeeds extends BlueskyFeeds {
     public authCalls: {
       endpoint: string;
@@ -47,7 +58,6 @@ describe('BlueskyFeeds', () => {
 
     protected async makeAuthenticatedRequest<T>(
       endpoint: string,
-      accessJwt: string,
       options: {
         method?: 'GET' | 'POST';
         body?: Record<string, unknown> | FormData | Blob;
@@ -55,7 +65,8 @@ describe('BlueskyFeeds', () => {
         headers?: Record<string, string>;
       } = {},
     ): Promise<T> {
-      this.authCalls.push({ endpoint, accessJwt, options });
+      const session = this.requireSession();
+      this.authCalls.push({ endpoint, accessJwt: session.accessJwt, options });
       return (this.responses.shift() as T) ?? (undefined as T);
     }
 
@@ -72,8 +83,9 @@ describe('BlueskyFeeds', () => {
       return (this.responses.shift() as T) ?? (undefined as T);
     }
 
-    protected async uploadBlob(accessJwt: string, blob: Blob, mimeType: string): Promise<BlueskyUploadBlobResponse> {
-      this.uploadBlobCalls.push({ accessJwt, blob, mimeType });
+    protected async uploadBlob(blob: Blob, mimeType: string): Promise<BlueskyUploadBlobResponse> {
+      const session = this.requireSession();
+      this.uploadBlobCalls.push({ accessJwt: session.accessJwt, blob, mimeType });
       const response = this.uploadBlobResponses.shift();
       if (!response) {
         throw new Error('No uploadBlob response configured');
@@ -87,14 +99,16 @@ describe('BlueskyFeeds', () => {
     const feedResponse = { feed: [] } as unknown as BlueskyFeedResponse;
     feeds.responses = [feedResponse];
 
-    const result = await feeds.getTimeline('jwt');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getTimeline();
 
     expect(result).toBe(feedResponse);
     expect(feeds.authCalls).toHaveLength(1);
     const call = feeds.authCalls[0];
     expect(call).toMatchObject({
       endpoint: '/app.bsky.feed.getTimeline',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: { params: { limit: '20' } },
     });
     expect(call.options.headers?.['atproto-accept-labelers']).toContain(
@@ -123,12 +137,14 @@ describe('BlueskyFeeds', () => {
     const response = { feeds: [] } as unknown as BlueskyFeedsResponse;
     feeds.responses = [response];
 
-    const result = await feeds.getFeeds('jwt', 'did:example:alice', 25, 'cursor-123');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getFeeds('did:example:alice', 25, 'cursor-123');
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getActorFeeds',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           actor: 'did:example:alice',
@@ -144,12 +160,14 @@ describe('BlueskyFeeds', () => {
     const response = { feed: [] } as unknown as BlueskyFeedResponse;
     feeds.responses = [response];
 
-    const result = await feeds.getFeed('jwt', 'at://feed/123', 30);
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getFeed('at://feed/123', 30);
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getFeed',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           feed: 'at://feed/123',
@@ -164,12 +182,14 @@ describe('BlueskyFeeds', () => {
     const response = { feeds: [] } as unknown as BlueskyFeedGeneratorsResponse;
     feeds.responses = [response];
 
-    const result = await feeds.getFeedGenerators('jwt', ['at://feed/a', 'at://feed/b']);
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getFeedGenerators(['at://feed/a', 'at://feed/b']);
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getFeedGenerators',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           feeds: ['at://feed/a', 'at://feed/b'],
@@ -183,12 +203,14 @@ describe('BlueskyFeeds', () => {
     const response = { bookmarks: [] } as unknown as BlueskyBookmarksResponse;
     feeds.responses = [response];
 
-    const result = await feeds.getBookmarks('jwt', 40, 'cursor-abc');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getBookmarks(40, 'cursor-abc');
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.bookmark.getBookmarks',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           limit: '40',
@@ -207,12 +229,14 @@ describe('BlueskyFeeds', () => {
       },
     ];
 
-    const result = await feeds.getPost('jwt', 'at://post/1');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getPost('at://post/1');
 
     expect(result).toBe(post);
     expect(feeds.authCalls[0]).toMatchObject({
       endpoint: '/app.bsky.feed.getPostThread',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: { params: { uri: 'at://post/1' } },
     });
   });
@@ -221,7 +245,9 @@ describe('BlueskyFeeds', () => {
     const feeds = new TestFeeds();
     feeds.responses = [{}];
 
-    await expect(feeds.getPost('jwt', 'at://post/2')).rejects.toThrow('Post not found');
+    const session = createSession();
+    feeds.useSession(session);
+    await expect(feeds.getPost('at://post/2')).rejects.toThrow('Post not found');
   });
 
   it('retrieves a thread without extra processing', async () => {
@@ -229,12 +255,14 @@ describe('BlueskyFeeds', () => {
     const threadResponse = { thread: {} } as unknown as BlueskyThreadResponse;
     feeds.responses = [threadResponse];
 
-    const result = await feeds.getPostThread('jwt', 'at://post/3');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getPostThread('at://post/3');
 
     expect(result).toBe(threadResponse);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getPostThread',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: { params: { uri: 'at://post/3' } },
     });
   });
@@ -244,8 +272,9 @@ describe('BlueskyFeeds', () => {
     const response = { feed: [] } as unknown as BlueskyFeedResponse;
     feeds.responses = [response];
 
+    const session = createSession();
+    feeds.useSession(session);
     const result = await feeds.getAuthorFeed(
-      'jwt',
       'did:example:alice',
       10,
       'cursor-1',
@@ -255,7 +284,7 @@ describe('BlueskyFeeds', () => {
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getAuthorFeed',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           actor: 'did:example:alice',
@@ -272,12 +301,14 @@ describe('BlueskyFeeds', () => {
     const response = { feed: [] } as unknown as BlueskyFeedResponse;
     feeds.responses = [response];
 
-    const result = await feeds.getAuthorVideos('jwt', 'did:example:bob', 5, 'cursor-2');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.getAuthorVideos('did:example:bob', 5, 'cursor-2');
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getAuthorFeed',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         params: {
           actor: 'did:example:bob',
@@ -297,19 +328,23 @@ describe('BlueskyFeeds', () => {
     } as unknown as BlueskyStarterPacksResponse;
     feeds.responses = [feedResponse, starterpacksResponse];
 
-    const feedsResult = await feeds.getAuthorFeeds('jwt', 'did:example:carol', 15);
-    const starterpacksResult = await feeds.getAuthorStarterpacks('jwt', 'did:example:carol', 15);
+    const sessionFeeds = createSession({ accessJwt: 'feeds-token' });
+    const sessionStarterpacks = createSession({ accessJwt: 'starter-token' });
+    feeds.useSession(sessionFeeds);
+    const feedsResult = await feeds.getAuthorFeeds('did:example:carol', 15);
+    feeds.useSession(sessionStarterpacks);
+    const starterpacksResult = await feeds.getAuthorStarterpacks('did:example:carol', 15);
 
     expect(feedsResult).toBe(feedResponse);
     expect(starterpacksResult).toBe(starterpacksResponse);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getActorFeeds',
-      accessJwt: 'jwt',
+      accessJwt: sessionFeeds.accessJwt,
       options: { params: { actor: 'did:example:carol', limit: '15' } },
     });
     expect(feeds.authCalls[1]).toEqual({
       endpoint: '/app.bsky.graph.getActorStarterPacks',
-      accessJwt: 'jwt',
+      accessJwt: sessionStarterpacks.accessJwt,
       options: { params: { actor: 'did:example:carol', limit: '15' } },
     });
   });
@@ -319,7 +354,9 @@ describe('BlueskyFeeds', () => {
     const response = { uri: 'at://like/1' } as unknown as BlueskyLikeResponse;
     feeds.responses = [response];
 
-    const result = await feeds.likePost('jwt', 'at://post/5', 'cid123', 'did:example:me');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.likePost('at://post/5', 'cid123', 'did:example:me');
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0].endpoint).toBe('/com.atproto.repo.createRecord');
@@ -341,12 +378,14 @@ describe('BlueskyFeeds', () => {
     const response = { success: true } as unknown as BlueskyUnlikeResponse;
     feeds.responses = [response];
 
-    const result = await feeds.unlikePost('jwt', 'at://did:example/app.bsky.feed.like/123', 'did:example:me');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.unlikePost('at://did:example/app.bsky.feed.like/123', 'did:example:me');
 
     expect(result).toBe(response);
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/com.atproto.repo.deleteRecord',
-      accessJwt: 'jwt',
+      accessJwt: session.accessJwt,
       options: {
         method: 'POST',
         body: {
@@ -361,7 +400,9 @@ describe('BlueskyFeeds', () => {
   it('throws an error when the like URI does not include an rkey', async () => {
     const feeds = new TestFeeds();
 
-    await expect(feeds.unlikePost('jwt', 'at://did:example/', 'did:example:me')).rejects.toThrow(
+    const session = createSession();
+    feeds.useSession(session);
+    await expect(feeds.unlikePost('at://did:example/', 'did:example:me')).rejects.toThrow(
       'Invalid like URI: could not extract rkey',
     );
     expect(feeds.authCalls).toHaveLength(0);
@@ -378,13 +419,15 @@ describe('BlueskyFeeds', () => {
       blob: async () => imageBlob,
     } as unknown as Response);
 
-    const result = await feeds.uploadImage('jwt', 'file://image.png', 'image/png');
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.uploadImage('file://image.png', 'image/png');
 
     expect(result).toBe(uploadResponse);
     expect(fetchSpy).toHaveBeenCalledWith('file://image.png');
     expect(feeds.uploadBlobCalls).toEqual([
       {
-        accessJwt: 'jwt',
+        accessJwt: session.accessJwt,
         blob: imageBlob,
         mimeType: 'image/png',
       },
@@ -404,11 +447,13 @@ describe('BlueskyFeeds', () => {
       blob: async () => gifBlob,
     } as unknown as Response);
 
-    await feeds.uploadImage('jwt', 'file://image.gif', 'image/gif');
+    const session = createSession();
+    feeds.useSession(session);
+    await feeds.uploadImage('file://image.gif', 'image/gif');
 
     expect(feeds.uploadBlobCalls).toEqual([
       {
-        accessJwt: 'jwt',
+        accessJwt: session.accessJwt,
         blob: gifBlob,
         mimeType: 'image/gif',
       },
@@ -427,7 +472,9 @@ describe('BlueskyFeeds', () => {
     } as BlueskyCreatePostResponse;
     feeds.responses = [response];
 
-    const result = await feeds.createPost('jwt', 'did:example:me', { text: 'Hello world' });
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.createPost('did:example:me', { text: 'Hello world' });
 
     expect(result).toBe(response);
     expect(feeds.authCalls).toHaveLength(1);
@@ -458,7 +505,9 @@ describe('BlueskyFeeds', () => {
       .spyOn(feeds, 'uploadImage')
       .mockResolvedValue(uploadResult);
 
-    const result = await feeds.createPost('jwt', 'did:example:me', {
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.createPost('did:example:me', {
       text: 'Check this out',
       replyTo: { root: 'at://root', parent: 'at://parent' },
       images: [
@@ -471,7 +520,7 @@ describe('BlueskyFeeds', () => {
     });
 
     expect(result).toBe(response);
-    expect(uploadImageSpy).toHaveBeenCalledWith('jwt', 'file://image.png', 'image/png');
+    expect(uploadImageSpy).toHaveBeenCalledWith('file://image.png', 'image/png');
     const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
     expect(body.record.reply).toEqual({ root: 'at://root', parent: 'at://parent' });
     expect(body.record.embed).toEqual({
@@ -503,7 +552,9 @@ describe('BlueskyFeeds', () => {
       .spyOn(feeds, 'uploadImage')
       .mockResolvedValue(uploadResult);
 
-    const result = await feeds.createPost('jwt', 'did:example:me', {
+    const session = createSession();
+    feeds.useSession(session);
+    const result = await feeds.createPost('did:example:me', {
       text: 'A fun gif',
       images: [
         {
@@ -515,7 +566,7 @@ describe('BlueskyFeeds', () => {
     });
 
     expect(result).toBe(response);
-    expect(uploadImageSpy).toHaveBeenCalledWith('jwt', 'file://image.gif', 'image/jpeg');
+    expect(uploadImageSpy).toHaveBeenCalledWith('file://image.gif', 'image/jpeg');
     const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
     expect(body.record.embed).toEqual({
       $type: 'app.bsky.embed.external',

@@ -24,6 +24,16 @@ import type {
   BlueskyCreatePostResponse,
 } from './types';
 
+const createSession = (overrides: Partial<BlueskySession> = {}): BlueskySession =>
+  ({
+    handle: 'user.test',
+    did: 'did:plc:123',
+    active: true,
+    accessJwt: 'jwt',
+    refreshJwt: 'refresh',
+    ...overrides,
+  } as BlueskySession);
+
 describe('BlueskyApi', () => {
   const setupApi = () => {
     const api = new BlueskyApi('https://pds.example');
@@ -60,10 +70,13 @@ describe('BlueskyApi', () => {
     };
 
     await expect(api.createSession('alice.test', 'password')).resolves.toBe(session);
-    await expect(api.refreshSession('refresh')).resolves.toBe(refreshed);
+    expect(api.getSession()).toBe(session);
+
+    await expect(api.refreshSession()).resolves.toBe(refreshed);
 
     expect(internal.auth.createSession).toHaveBeenCalledWith('alice.test', 'password');
     expect(internal.auth.refreshSession).toHaveBeenCalledWith('refresh');
+    expect(api.getSession()).toBe(refreshed);
   });
 
   it('forwards actor requests to the actors client', async () => {
@@ -77,13 +90,16 @@ describe('BlueskyApi', () => {
       getPreferences: jest.fn().mockResolvedValue(preferences),
     };
 
-    await expect(api.getProfile('jwt', 'did:example:alice')).resolves.toBe(profile);
-    await expect(api.updateProfile('jwt', { displayName: 'Alice' })).resolves.toBe(profile);
-    await expect(api.getPreferences('jwt')).resolves.toBe(preferences);
+    const session = createSession();
+    api.setSession(session);
 
-    expect(internal.actors.getProfile).toHaveBeenCalledWith('jwt', 'did:example:alice');
-    expect(internal.actors.updateProfile).toHaveBeenCalledWith('jwt', { displayName: 'Alice' });
-    expect(internal.actors.getPreferences).toHaveBeenCalledWith('jwt');
+    await expect(api.getProfile('did:example:alice')).resolves.toBe(profile);
+    await expect(api.updateProfile({ displayName: 'Alice' })).resolves.toBe(profile);
+    await expect(api.getPreferences()).resolves.toBe(preferences);
+
+    expect(internal.actors.getProfile).toHaveBeenCalledWith('did:example:alice');
+    expect(internal.actors.updateProfile).toHaveBeenCalledWith({ displayName: 'Alice' });
+    expect(internal.actors.getPreferences).toHaveBeenCalledWith();
   });
 
   it('routes feed operations to the feeds client', async () => {
@@ -119,29 +135,34 @@ describe('BlueskyApi', () => {
       unlikePost: jest.fn().mockResolvedValue({ success: true }),
     };
 
-    await expect(api.getTimeline('jwt', 10)).resolves.toBe(feed);
-    await expect(api.getTrendingTopics(5)).resolves.toBe(trending);
-    await expect(api.getFeeds('jwt', 'did:example', 25)).resolves.toBe(feedsResponse);
-    await expect(api.getFeed('jwt', 'at://feed/1', 30)).resolves.toBe(feed);
-    await expect(api.getFeedGenerators('jwt', ['at://feed/a'])).resolves.toBe(feedGenerators);
-    await expect(api.getBookmarks('jwt', 40)).resolves.toBe(bookmarks);
-    await expect(api.getPost('jwt', 'at://post/1')).resolves.toBe(post);
-    await expect(api.getPostThread('jwt', 'at://post/1')).resolves.toBe(thread);
-    await expect(api.getAuthorFeed('jwt', 'did:example', 15)).resolves.toBe(feed);
-    await expect(api.getAuthorVideos('jwt', 'did:example', 15)).resolves.toBe(feed);
-    await expect(api.getAuthorFeeds('jwt', 'did:example', 15)).resolves.toBe(feedsResponse);
-    await expect(api.getAuthorStarterpacks('jwt', 'did:example', 15)).resolves.toBe(starterpacks);
-    await expect(api.createPost('jwt', 'did:example', postInput)).resolves.toBe(postResponse);
-    await expect(api.uploadImage('jwt', 'file://image.png', 'image/png')).resolves.toBe(blob);
-    await expect(api.likePost('jwt', 'at://post/1', 'cid', 'did:example')).resolves.toEqual({ uri: 'like' });
-    await expect(api.unlikePost('jwt', 'at://like/1', 'did:example')).resolves.toEqual({ success: true });
+    const session = createSession();
+    api.setSession(session);
 
-    expect(internal.feeds.getTimeline).toHaveBeenCalledWith('jwt', 10);
+    await expect(api.getTimeline(10)).resolves.toBe(feed);
+    await expect(api.getTrendingTopics(5)).resolves.toBe(trending);
+    await expect(api.getFeeds('did:example', 25)).resolves.toBe(feedsResponse);
+    await expect(api.getFeed('at://feed/1', 30)).resolves.toBe(feed);
+    await expect(api.getFeedGenerators(['at://feed/a'])).resolves.toBe(feedGenerators);
+    await expect(api.getBookmarks(40)).resolves.toBe(bookmarks);
+    await expect(api.getPost('at://post/1')).resolves.toBe(post);
+    await expect(api.getPostThread('at://post/1')).resolves.toBe(thread);
+    await expect(api.getAuthorFeed('did:example', 15)).resolves.toBe(feed);
+    await expect(api.getAuthorVideos('did:example', 15)).resolves.toBe(feed);
+    await expect(api.getAuthorFeeds('did:example', 15)).resolves.toBe(feedsResponse);
+    await expect(api.getAuthorStarterpacks('did:example', 15)).resolves.toBe(starterpacks);
+    await expect(api.createPost('did:example', postInput)).resolves.toBe(postResponse);
+    await expect(api.uploadImage('file://image.png', 'image/png')).resolves.toBe(blob);
+    await expect(api.likePost('at://post/1', 'cid', 'did:example')).resolves.toEqual({ uri: 'like' });
+    await expect(api.unlikePost('at://like/1', 'did:example')).resolves.toEqual({ success: true });
+
+    expect(internal.feeds.getTimeline).toHaveBeenCalledWith(10);
     expect(internal.feeds.getTrendingTopics).toHaveBeenCalledWith(5);
-    expect(internal.feeds.getFeeds).toHaveBeenCalledWith('jwt', 'did:example', 25, undefined);
-    expect(internal.feeds.getFeed).toHaveBeenCalledWith('jwt', 'at://feed/1', 30, undefined);
-    expect(internal.feeds.getFeedGenerators).toHaveBeenCalledWith('jwt', ['at://feed/a']);
-    expect(internal.feeds.createPost).toHaveBeenCalledWith('jwt', 'did:example', postInput);
+    expect(internal.feeds.getFeeds).toHaveBeenCalledWith('did:example', 25, undefined);
+    expect(internal.feeds.getFeed).toHaveBeenCalledWith('at://feed/1', 30, undefined);
+    expect(internal.feeds.getFeedGenerators).toHaveBeenCalledWith(['at://feed/a']);
+    expect(internal.feeds.getBookmarks).toHaveBeenCalledWith(40, undefined);
+    expect(internal.feeds.getPost).toHaveBeenCalledWith('at://post/1');
+    expect(internal.feeds.createPost).toHaveBeenCalledWith('did:example', postInput);
   });
 
   it('delegates conversation operations to the conversations client', async () => {
@@ -157,13 +178,16 @@ describe('BlueskyApi', () => {
       sendMessage: jest.fn().mockResolvedValue(sendResponse),
     };
 
-    await expect(api.listConversations('jwt', 5)).resolves.toBe(convos);
-    await expect(api.getMessages('jwt', 'convo', 10)).resolves.toBe(messages);
-    await expect(api.sendMessage('jwt', 'convo', messageInput)).resolves.toBe(sendResponse);
+    const session = createSession();
+    api.setSession(session);
 
-    expect(internal.conversations.listConversations).toHaveBeenCalledWith('jwt', 5, undefined, undefined, undefined);
-    expect(internal.conversations.getMessages).toHaveBeenCalledWith('jwt', 'convo', 10, undefined);
-    expect(internal.conversations.sendMessage).toHaveBeenCalledWith('jwt', 'convo', messageInput);
+    await expect(api.listConversations(5)).resolves.toBe(convos);
+    await expect(api.getMessages('convo', 10)).resolves.toBe(messages);
+    await expect(api.sendMessage('convo', messageInput)).resolves.toBe(sendResponse);
+
+    expect(internal.conversations.listConversations).toHaveBeenCalledWith(5, undefined, undefined, undefined);
+    expect(internal.conversations.getMessages).toHaveBeenCalledWith('convo', 10, undefined);
+    expect(internal.conversations.sendMessage).toHaveBeenCalledWith('convo', messageInput);
   });
 
   it('delegates graph, search, and notification helpers to their respective clients', async () => {
@@ -194,30 +218,32 @@ describe('BlueskyApi', () => {
       getUnreadCount: jest.fn().mockResolvedValue(unread),
     };
 
-    await api.followUser('jwt', 'did:example');
-    await api.unfollowUser('jwt', 'at://follow/1');
-    await api.blockUser('jwt', 'did:example');
-    await api.unblockUser('jwt', 'at://block/1');
-    await api.muteUser('jwt', 'did:example');
-    await api.unmuteUser('jwt', 'did:example');
-    await api.muteActorList('jwt', 'at://list/1');
-    await api.muteThread('jwt', 'at://post/1');
-    await expect(api.searchProfiles('jwt', 'query', 10)).resolves.toBe(actorResults);
-    await expect(api.searchPosts('jwt', 'query', 10)).resolves.toBe(postResults);
-    await expect(api.listNotifications('jwt', 20)).resolves.toBe(notifications);
-    await expect(api.getUnreadNotificationsCount('jwt')).resolves.toBe(unread);
+    const session = createSession();
+    api.setSession(session);
 
-    expect(internal.graph.followUser).toHaveBeenCalledWith('jwt', 'did:example');
-    expect(internal.search.searchProfiles).toHaveBeenCalledWith('jwt', 'query', 10, undefined);
+    await api.followUser('did:example');
+    await api.unfollowUser('at://follow/1');
+    await api.blockUser('did:example');
+    await api.unblockUser('at://block/1');
+    await api.muteUser('did:example');
+    await api.unmuteUser('did:example');
+    await api.muteActorList('at://list/1');
+    await api.muteThread('at://post/1');
+    await expect(api.searchProfiles('query', 10)).resolves.toBe(actorResults);
+    await expect(api.searchPosts('query', 10)).resolves.toBe(postResults);
+    await expect(api.listNotifications(20)).resolves.toBe(notifications);
+    await expect(api.getUnreadNotificationsCount()).resolves.toBe(unread);
+
+    expect(internal.graph.followUser).toHaveBeenCalledWith('did:example');
+    expect(internal.search.searchProfiles).toHaveBeenCalledWith('query', 10, undefined);
     expect(internal.notifications.listNotifications).toHaveBeenCalledWith(
-      'jwt',
       20,
       undefined,
       undefined,
       undefined,
       undefined,
     );
-    expect(internal.notifications.getUnreadCount).toHaveBeenCalledWith('jwt');
+    expect(internal.notifications.getUnreadCount).toHaveBeenCalledWith();
   });
 
   it('creates instances using the static helper', () => {

@@ -1,8 +1,5 @@
-import { BlueskyApiClient } from "./client";
-import type {
-  BlueskySearchActorsResponse,
-  BlueskySearchPostsResponse,
-} from "./types";
+import { BlueskyApiClient } from './client';
+import type { BlueskySearchActorsResponse, BlueskySearchPostsResponse } from './types';
 
 /**
  * Bluesky API search methods
@@ -10,18 +7,12 @@ import type {
 export class BlueskySearch extends BlueskyApiClient {
   /**
    * Searches for profiles
-   * @param accessJwt - Valid access JWT token
    * @param query - Search query
    * @param limit - Number of results to fetch (default: 20)
    * @param cursor - Pagination cursor
    * @returns Promise resolving to search results
    */
-  async searchProfiles(
-    accessJwt: string,
-    query: string,
-    limit: number = 20,
-    cursor?: string
-  ): Promise<BlueskySearchActorsResponse> {
+  async searchProfiles(query: string, limit: number = 20, cursor?: string): Promise<BlueskySearchActorsResponse> {
     const params: Record<string, string> = {
       q: query,
       limit: limit.toString(),
@@ -29,28 +20,21 @@ export class BlueskySearch extends BlueskyApiClient {
     };
 
     return this.makeAuthenticatedRequest<BlueskySearchActorsResponse>(
-      "/app.bsky.actor.searchActors",
-      accessJwt,
+      '/app.bsky.actor.searchActors',
       {
         params,
-      }
+      },
     );
   }
 
   /**
    * Searches for posts
-   * @param accessJwt - Valid access JWT token
    * @param query - Search query
    * @param limit - Number of results to fetch (default: 20)
    * @param cursor - Pagination cursor
    * @returns Promise resolving to search results
    */
-  async searchPosts(
-    accessJwt: string,
-    query: string,
-    limit: number = 20,
-    cursor?: string
-  ): Promise<BlueskySearchPostsResponse> {
+  async searchPosts(query: string, limit: number = 20, cursor?: string): Promise<BlueskySearchPostsResponse> {
     const params: Record<string, string> = {
       q: query,
       limit: limit.toString(),
@@ -58,11 +42,10 @@ export class BlueskySearch extends BlueskyApiClient {
     };
 
     return this.makeAuthenticatedRequest<BlueskySearchPostsResponse>(
-      "/app.bsky.feed.searchPosts",
-      accessJwt,
+      '/app.bsky.feed.searchPosts',
       {
         params,
-      }
+      },
     );
   }
 }
