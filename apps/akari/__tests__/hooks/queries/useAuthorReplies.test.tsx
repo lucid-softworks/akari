@@ -65,26 +65,14 @@ describe('useAuthorReplies', () => {
     });
 
     await waitFor(() => expect(result.current.data).toHaveLength(2));
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith(
-      'token',
-      'alice',
-      20,
-      undefined,
-      'posts_with_replies',
-    );
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('alice', 20, undefined, 'posts_with_replies');
 
     await act(async () => {
       await result.current.fetchNextPage();
     });
 
     await waitFor(() => expect(result.current.data).toHaveLength(3));
-    expect(mockGetAuthorFeed).toHaveBeenLastCalledWith(
-      'token',
-      'alice',
-      20,
-      'cursor1',
-      'posts_with_replies',
-    );
+    expect(mockGetAuthorFeed).toHaveBeenLastCalledWith('alice', 20, 'cursor1', 'posts_with_replies');
   });
 
   it('does not fetch when identifier is undefined', async () => {

@@ -1,7 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
+
+import { BlueskyApi, type BlueskySession } from '@/bluesky-api';
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
-import { BlueskyApi } from '@/bluesky-api';
-import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from './useCurrentAccount';
 import { useJwtToken } from './useJwtToken';
 import { useRefreshToken } from './useRefreshToken';
@@ -32,30 +33,60 @@ export function useAuthStatus() {
           throw new Error('No PDS URL available for this account');
         }
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const session = await api.refreshSession(refreshToken);
+        const session: BlueskySession = currentAccount?.active === false
+          ? {
+              handle: currentAccount.handle,
+              did: currentAccount.did,
+              accessJwt: token,
+              refreshJwt: refreshToken,
+              active: false,
+              status: currentAccount.status ?? 'deactivated',
+              email: currentAccount.email,
+              emailConfirmed: currentAccount.emailConfirmed,
+              emailAuthFactor: currentAccount.emailAuthFactor,
+            }
+          : {
+              handle: currentAccount.handle,
+              did: currentAccount.did,
+              accessJwt: token,
+              refreshJwt: refreshToken,
+              active: true,
+              email: currentAccount.email,
+              emailConfirmed: currentAccount.emailConfirmed,
+              emailAuthFactor: currentAccount.emailAuthFactor,
+            };
+
+        api.setSession(session);
+
+        const refreshedSession = await api.refreshSession();
 
         // Update stored tokens with fresh ones
-        setAuthMutation.mutate({
-          token: session.accessJwt,
-          refreshToken: session.refreshJwt,
-          did: session.did,
-          handle: session.handle,
+        await setAuthMutation.mutateAsync({
+          token: refreshedSession.accessJwt,
+          refreshToken: refreshedSession.refreshJwt,
+          did: refreshedSession.did,
+          handle: refreshedSession.handle,
           pdsUrl: currentAccount.pdsUrl,
+          active: refreshedSession.active,
+          status: refreshedSession.active ? undefined : refreshedSession.status,
+          email: refreshedSession.email,
+          emailConfirmed: refreshedSession.emailConfirmed,
+          emailAuthFactor: refreshedSession.emailAuthFactor,
         });
 
         return {
           isAuthenticated: true,
           user: {
-            did: session.did,
-            handle: session.handle,
-            email: session.email,
-            active: session.active,
-            status: session.active === false ? session.status : undefined,
+            did: refreshedSession.did,
+            handle: refreshedSession.handle,
+            email: refreshedSession.email,
+            active: refreshedSession.active,
+            status: refreshedSession.active === false ? refreshedSession.status : undefined,
           },
         };
       } catch {
         // Clear invalid tokens
-        clearAuthMutation.mutate();
+        await clearAuthMutation.mutateAsync();
         return { isAuthenticated: false };
       }
     },

@@ -30,11 +30,16 @@ describe('useSignIn mutation hook', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSetAuth.mutateAsync.mockResolvedValue(undefined);
     mockCreateSession.mockResolvedValue({
       accessJwt: 'token',
       refreshJwt: 'refresh',
       did: 'did',
       handle: 'handle',
+      active: true,
+      email: 'user@example.com',
+      emailConfirmed: true,
+      emailAuthFactor: false,
     });
   });
 
@@ -54,6 +59,12 @@ describe('useSignIn mutation hook', () => {
       refreshToken: 'refresh',
       did: 'did',
       handle: 'handle',
+      pdsUrl: 'url',
+      active: true,
+      status: undefined,
+      email: 'user@example.com',
+      emailConfirmed: true,
+      emailAuthFactor: false,
     });
     expect(invalidateSpy).toHaveBeenCalled();
   });

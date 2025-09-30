@@ -56,7 +56,7 @@ describe('useLikePost mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockLikePost).toHaveBeenCalledWith('token', 'uri', 'cid', 'did');
+    expect(mockLikePost).toHaveBeenCalledWith('uri', 'cid', 'did');
   });
 
   it('throws error when postCid missing for like', async () => {
@@ -79,7 +79,7 @@ describe('useLikePost mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockUnlikePost).toHaveBeenCalledWith('token', 'like-uri', 'did');
+    expect(mockUnlikePost).toHaveBeenCalledWith('like-uri', 'did');
   });
 
   it('throws error when likeUri missing for unlike', async () => {

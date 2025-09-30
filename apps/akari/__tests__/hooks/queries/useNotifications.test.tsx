@@ -130,13 +130,7 @@ describe('useNotifications', () => {
       await result.current.fetchNextPage();
     });
 
-    expect(mockListNotifications).toHaveBeenLastCalledWith(
-      'token',
-      10,
-      'cursor1',
-      undefined,
-      undefined,
-    );
+    expect(mockListNotifications).toHaveBeenLastCalledWith(10, 'cursor1', undefined, undefined);
 
     await waitFor(() => {
       expect(result.current.data?.pages[1].notifications[0].id).toBe('notif2');

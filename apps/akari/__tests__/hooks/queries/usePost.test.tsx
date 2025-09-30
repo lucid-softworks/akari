@@ -46,7 +46,7 @@ describe('usePost', () => {
     await waitFor(() => {
       expect(result.current.data).toEqual({ uri: 'at://post/1' });
     });
-    expect(mockGetPost).toHaveBeenCalledWith('token', 'at://post/1');
+    expect(mockGetPost).toHaveBeenCalledWith('at://post/1');
   });
 
   it('returns error when pdsUrl is missing', async () => {
@@ -91,7 +91,7 @@ describe('useParentPost', () => {
     await waitFor(() => {
       expect(result.current.parentPost).toEqual({ uri: 'at://parent' });
     });
-    expect(mockGetPost).toHaveBeenCalledWith('token', 'at://parent');
+    expect(mockGetPost).toHaveBeenCalledWith('at://parent');
   });
 
   it('returns error when token is missing', async () => {
@@ -134,7 +134,7 @@ describe('useRootPost', () => {
     await waitFor(() => {
       expect(result.current.rootPost).toEqual({ uri: 'at://root' });
     });
-    expect(mockGetPost).toHaveBeenCalledWith('token', 'at://root');
+    expect(mockGetPost).toHaveBeenCalledWith('at://root');
   });
 
   it('returns error when token is missing', async () => {

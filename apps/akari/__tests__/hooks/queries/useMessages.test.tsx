@@ -90,7 +90,7 @@ describe('useMessages', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetMessages).toHaveBeenCalledWith('token', 'convo', 10, undefined);
+    expect(mockGetMessages).toHaveBeenCalledWith('convo', 10, undefined);
 
     const timestamp = new Date('2023-01-01T00:00:00Z').toLocaleTimeString([], {
       hour: '2-digit',
@@ -173,7 +173,7 @@ describe('useMessages', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetMessages).toHaveBeenCalledWith('token', 'convo', 50, undefined);
+    expect(mockGetMessages).toHaveBeenCalledWith('convo', 50, undefined);
 
     const timestamp = new Date('2023-01-01T01:00:00Z').toLocaleTimeString([], {
       hour: '2-digit',

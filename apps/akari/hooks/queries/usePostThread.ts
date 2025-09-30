@@ -15,7 +15,7 @@ export function usePostThread(postUri: string | null) {
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getPostThread(token, postUri);
+      return await api.getPostThread(postUri);
     },
     enabled: !!postUri && !!token,
     staleTime: 5 * 60 * 1000, // 5 minutes

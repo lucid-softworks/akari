@@ -57,7 +57,7 @@ describe('useUpdateProfile mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockUpdateProfile).toHaveBeenCalledWith('token', {
+    expect(mockUpdateProfile).toHaveBeenCalledWith({
       displayName: 'name',
       description: 'desc',
       avatar: 'avatar',

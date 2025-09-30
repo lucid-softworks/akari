@@ -30,13 +30,7 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
 
       try {
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const response = await api.listNotifications(
-          token,
-          limit,
-          pageParam, // cursor
-          reasons,
-          priority,
-        );
+        const response = await api.listNotifications(limit, pageParam, reasons, priority);
 
         // Transform the data to match our UI needs
         const notifications = response.notifications.map((notification) => {

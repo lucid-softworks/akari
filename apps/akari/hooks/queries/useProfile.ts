@@ -20,7 +20,7 @@ export function useProfile(identifier: string | undefined) {
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const profile = await api.getProfile(token, identifier);
+      const profile = await api.getProfile(identifier);
 
       return profile;
     },

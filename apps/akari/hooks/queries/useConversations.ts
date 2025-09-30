@@ -34,13 +34,7 @@ export function useConversations(
 
       try {
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const response = await api.listConversations(
-          token,
-          limit,
-          pageParam, // cursor
-          readState,
-          status,
-        );
+        const response = await api.listConversations(limit, pageParam, readState, status);
 
         // Transform the data to match our UI needs
         const conversations = response.convos.map((convo) => {

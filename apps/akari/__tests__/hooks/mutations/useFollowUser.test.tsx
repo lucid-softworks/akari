@@ -54,7 +54,7 @@ describe('useFollowUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockFollowUser).toHaveBeenCalledWith('token', 'did');
+    expect(mockFollowUser).toHaveBeenCalledWith('did');
   });
 
   it('errors when token missing', async () => {
@@ -82,7 +82,7 @@ describe('useFollowUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockUnfollowUser).toHaveBeenCalledWith('token', 'uri');
+    expect(mockUnfollowUser).toHaveBeenCalledWith('uri');
   });
 
   it('errors when followUri missing for unfollow', async () => {

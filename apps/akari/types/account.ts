@@ -6,4 +6,9 @@ export type Account = {
   jwtToken: string;
   refreshToken: string;
   pdsUrl?: string;
+  active?: boolean;
+  status?: 'takendown' | 'suspended' | 'deactivated';
+  email?: string;
+  emailConfirmed?: boolean;
+  emailAuthFactor?: boolean;
 };

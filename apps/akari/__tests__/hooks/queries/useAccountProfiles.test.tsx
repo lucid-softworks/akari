@@ -7,7 +7,8 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 
 const mockGetProfile = jest.fn();
-const mockBlueskyApi = jest.fn(() => ({ getProfile: mockGetProfile }));
+const mockSetSession = jest.fn();
+const mockBlueskyApi = jest.fn(() => ({ getProfile: mockGetProfile, setSession: mockSetSession }));
 
 jest.mock('@/hooks/queries/useAccounts', () => ({
   useAccounts: jest.fn(),
@@ -59,12 +60,14 @@ describe('useAccountProfiles', () => {
           handle: 'alice',
           pdsUrl: 'https://pds1',
           jwtToken: 'token1',
+          refreshToken: 'refresh1',
         },
         {
           did: 'did2',
           handle: 'bob',
           pdsUrl: 'https://pds2',
           jwtToken: 'token2',
+          refreshToken: 'refresh2',
         },
       ],
     });
@@ -83,8 +86,9 @@ describe('useAccountProfiles', () => {
     expect(mockBlueskyApi).toHaveBeenCalledTimes(2);
     expect(mockBlueskyApi).toHaveBeenNthCalledWith(1, 'https://pds1');
     expect(mockBlueskyApi).toHaveBeenNthCalledWith(2, 'https://pds2');
-    expect(mockGetProfile).toHaveBeenNthCalledWith(1, 'token1', 'alice');
-    expect(mockGetProfile).toHaveBeenNthCalledWith(2, 'token2', 'bob');
+    expect(mockSetSession).toHaveBeenCalledTimes(2);
+    expect(mockGetProfile).toHaveBeenNthCalledWith(1, 'did1');
+    expect(mockGetProfile).toHaveBeenNthCalledWith(2, 'did2');
   });
 
   it('skips accounts without PDS URL', async () => {
@@ -96,12 +100,14 @@ describe('useAccountProfiles', () => {
           handle: 'alice',
           pdsUrl: undefined,
           jwtToken: 'token1',
+          refreshToken: 'refresh1',
         },
         {
           did: 'did2',
           handle: 'bob',
           pdsUrl: 'https://pds2',
           jwtToken: 'token2',
+          refreshToken: 'refresh2',
         },
       ],
     });

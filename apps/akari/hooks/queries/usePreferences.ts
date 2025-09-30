@@ -7,14 +7,14 @@ import { feedGeneratorsQueryOptions } from './useFeedGenerators';
 
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
-export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
+export const preferencesQueryOptions = (pdsUrl: string, token?: string) => ({
   queryKey: ['preferences', pdsUrl] as const,
   queryFn: async (): Promise<BlueskyPreferencesResponse> => {
     if (!token) throw new Error('No access token');
     if (!pdsUrl) throw new Error('No PDS URL available');
 
     const api = new BlueskyApi(pdsUrl);
-    return await api.getPreferences(token);
+    return await api.getPreferences();
   },
   staleTime: PREFERENCES_STALE_TIME,
 });
@@ -27,8 +27,8 @@ export function usePreferences() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? ''),
-    enabled: !!token && !!currentAccount?.pdsUrl,
+    ...preferencesQueryOptions(currentAccount?.pdsUrl ?? '', token),
+    enabled: !!currentAccount?.pdsUrl,
   });
 }
 
@@ -50,7 +50,7 @@ export function useSavedFeeds() {
       if (!currentAccount?.did) throw new Error('No DID available');
 
       const preferences = await queryClient.ensureQueryData(
-        preferencesQueryOptions(token, currentAccount.pdsUrl),
+        preferencesQueryOptions(currentAccount.pdsUrl, token),
       );
 
       const savedFeedsPref = preferences.preferences.find(
@@ -72,7 +72,7 @@ export function useSavedFeeds() {
       }
 
       const feedGenerators = await queryClient.ensureQueryData(
-        feedGeneratorsQueryOptions(feedUris, token, currentAccount.pdsUrl),
+        feedGeneratorsQueryOptions(feedUris, currentAccount.pdsUrl, token),
       );
 
       const feedMetadataMap = new Map<string, BlueskyFeed>();

@@ -51,7 +51,7 @@ describe('useTimeline query hook', () => {
       expect(result.current.data).toEqual({ feed: [{ post: { uri: '1' } }] });
     });
 
-    expect(mockGetTimeline).toHaveBeenCalledWith('token', 10);
+    expect(mockGetTimeline).toHaveBeenCalledWith(10);
   });
 
   it('uses default limit when none provided', async () => {
@@ -60,7 +60,7 @@ describe('useTimeline query hook', () => {
     renderHook(() => useTimeline(), { wrapper });
 
     await waitFor(() => {
-      expect(mockGetTimeline).toHaveBeenCalledWith('token', 20);
+      expect(mockGetTimeline).toHaveBeenCalledWith(20);
     });
   });
 

@@ -22,7 +22,7 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, 'posts_with_replies');
+      const feed = await api.getAuthorFeed(identifier, limit, pageParam, 'posts_with_replies');
 
       // Map the feed items to posts (they should already be filtered for replies by the API)
       const replies = feed.feed.map((item) => item.post);

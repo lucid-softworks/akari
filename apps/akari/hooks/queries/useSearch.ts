@@ -46,12 +46,7 @@ export function useSearch(
         const fromMatch = query.match(/^from:(\S+)/);
         if (fromMatch) {
           // For "from:handle" searches, only search posts
-          const postResults = await api.searchPosts(
-            token,
-            query,
-            limit,
-            pageParam
-          );
+          const postResults = await api.searchPosts(query, limit, pageParam);
 
           const results: SearchResult[] = (postResults.posts || []).map(
             (post) => ({
@@ -68,12 +63,7 @@ export function useSearch(
 
         // Regular search based on active tab
         if (activeTab === "users") {
-          const profileResults = await api.searchProfiles(
-            token,
-            query,
-            limit,
-            pageParam
-          );
+          const profileResults = await api.searchProfiles(query, limit, pageParam);
 
           const results: SearchResult[] = (profileResults.actors || []).map(
             (profile) => ({
@@ -87,12 +77,7 @@ export function useSearch(
             cursor: profileResults.cursor,
           };
         } else if (activeTab === "posts") {
-          const postResults = await api.searchPosts(
-            token,
-            query,
-            limit,
-            pageParam
-          );
+          const postResults = await api.searchPosts(query, limit, pageParam);
 
           const results: SearchResult[] = (postResults.posts || []).map(
             (post: BlueskyPostView) => ({
@@ -108,8 +93,8 @@ export function useSearch(
         } else if (activeTab === "all") {
           // For "all" tab, combine both searches
           const [profileResults, postResults] = await Promise.all([
-            api.searchProfiles(token, query, limit, pageParam),
-            api.searchPosts(token, query, limit, pageParam),
+            api.searchProfiles(query, limit, pageParam),
+            api.searchPosts(query, limit, pageParam),
           ]);
 
           const results: SearchResult[] = [

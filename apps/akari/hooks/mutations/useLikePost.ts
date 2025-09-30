@@ -43,10 +43,10 @@ export function useLikePost() {
 
       if (action === 'like') {
         if (!postCid) throw new Error('Post CID is required for like');
-        return await api.likePost(token, postUri, postCid, currentAccount.did);
+        return await api.likePost(postUri, postCid, currentAccount.did);
       } else {
         if (!likeUri) throw new Error('Like URI is required for unlike');
-        return await api.unlikePost(token, likeUri, currentAccount.did);
+        return await api.unlikePost(likeUri, currentAccount.did);
       }
     },
     onMutate: async ({ postUri, action }) => {

@@ -22,7 +22,7 @@ export function useUnreadNotificationsCount(enabled: boolean = true) {
       try {
         // Use the dedicated unread count endpoint
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const response = await api.getUnreadNotificationsCount(token);
+        const response = await api.getUnreadNotificationsCount();
         return response.count;
       } catch (error: unknown) {
         // If there's an error, return 0 to avoid breaking the UI

@@ -30,10 +30,10 @@ export function useBlockUser() {
       const api = new BlueskyApi(currentAccount.pdsUrl);
 
       if (action === 'block') {
-        return await api.blockUser(token, did);
+        return await api.blockUser(did);
       } else {
         if (!blockUri) throw new Error('Block URI is required for unblock');
-        return await api.unblockUser(token, blockUri);
+        return await api.unblockUser(blockUri);
       }
     },
     onSuccess: (_, variables) => {

@@ -22,7 +22,7 @@ export function useAuthorStarterpacks(identifier: string | undefined, limit: num
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const starterpacks = await api.getAuthorStarterpacks(token, identifier, limit, pageParam);
+      const starterpacks = await api.getAuthorStarterpacks(identifier, limit, pageParam);
 
       return {
         starterpacks: starterpacks.starterPacks,

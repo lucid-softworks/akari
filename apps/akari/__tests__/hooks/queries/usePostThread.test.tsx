@@ -58,7 +58,7 @@ describe('usePostThread', () => {
     });
 
     expect(jest.mocked(BlueskyApi)).toHaveBeenCalledWith('https://pds');
-    expect(mockGetPostThread).toHaveBeenCalledWith('token', 'at://post/1');
+    expect(mockGetPostThread).toHaveBeenCalledWith('at://post/1');
   });
 
   it('returns error when pdsUrl is missing', async () => {

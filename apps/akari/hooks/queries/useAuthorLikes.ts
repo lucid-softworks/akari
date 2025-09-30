@@ -22,7 +22,7 @@ export function useAuthorLikes(identifier: string | undefined, limit: number = 2
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
+      const feed = await api.getAuthorFeed(identifier, limit, pageParam);
 
       // Filter to only show posts that the user has liked
       const likes = feed.feed

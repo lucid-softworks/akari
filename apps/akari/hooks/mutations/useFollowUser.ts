@@ -32,10 +32,10 @@ export function useFollowUser() {
       const api = new BlueskyApi(currentAccount.pdsUrl);
 
       if (action === 'follow') {
-        return await api.followUser(token, did);
+        return await api.followUser(did);
       } else {
         if (!followUri) throw new Error('Follow URI is required for unfollow');
-        return await api.unfollowUser(token, followUri);
+        return await api.unfollowUser(followUri);
       }
     },
     onSuccess: (_, variables) => {

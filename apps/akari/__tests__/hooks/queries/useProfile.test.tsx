@@ -49,7 +49,7 @@ describe('useProfile query hook', () => {
       expect(result.current.data).toEqual({ handle: 'alice' });
     });
 
-    expect(mockGetProfile).toHaveBeenCalledWith('token', 'alice');
+    expect(mockGetProfile).toHaveBeenCalledWith('alice');
   });
 
   it('errors when token is missing', async () => {

@@ -104,7 +104,7 @@ describe('useConversations', () => {
     const options = renderUseConversations(10);
     const result = await options.queryFn({ pageParam: undefined });
 
-    expect(mockListConversations).toHaveBeenCalledWith('token', 10, undefined, undefined, undefined);
+    expect(mockListConversations).toHaveBeenCalledWith(10, undefined, undefined, undefined);
     const timestamp = new Date('2023-01-01T00:00:00Z').toLocaleDateString();
     expect(result).toEqual({
       conversations: [
@@ -149,7 +149,7 @@ describe('useConversations', () => {
 
     await options.queryFn({ pageParam: undefined });
 
-    expect(mockListConversations).toHaveBeenCalledWith('token', 50, undefined, undefined, undefined);
+    expect(mockListConversations).toHaveBeenCalledWith(50, undefined, undefined, undefined);
     expect(options.queryKey).toEqual(['conversations', 50, undefined, undefined, 'did:me']);
     expect(options.enabled).toBe(true);
   });
@@ -160,7 +160,7 @@ describe('useConversations', () => {
     const options = renderUseConversations(25, 'unread', 'request');
     await options.queryFn({ pageParam: 'cursor-1' });
 
-    expect(mockListConversations).toHaveBeenCalledWith('token', 25, 'cursor-1', 'unread', 'request');
+    expect(mockListConversations).toHaveBeenCalledWith(25, 'cursor-1', 'unread', 'request');
     expect(options.queryKey).toEqual(['conversations', 25, 'unread', 'request', 'did:me']);
   });
 

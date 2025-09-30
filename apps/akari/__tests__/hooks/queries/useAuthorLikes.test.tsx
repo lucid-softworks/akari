@@ -68,18 +68,8 @@ describe('useAuthorLikes query hook', () => {
       await result.current.fetchNextPage();
     });
 
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith(
-      'token',
-      'alice',
-      20,
-      undefined,
-    );
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith(
-      'token',
-      'alice',
-      20,
-      'cursor1',
-    );
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('alice', 20, undefined);
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('alice', 20, 'cursor1');
   });
 
   it('errors when PDS url is missing', async () => {

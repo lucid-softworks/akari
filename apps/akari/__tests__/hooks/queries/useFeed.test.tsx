@@ -61,7 +61,7 @@ describe('useFeed query hook', () => {
         { post: { uri: '1' } },
       ]);
     });
-    expect(mockGetFeed).toHaveBeenCalledWith('token', 'at://feed/1', 10, undefined);
+    expect(mockGetFeed).toHaveBeenCalledWith('at://feed/1', 10, undefined);
 
     await act(async () => {
       await result.current.fetchNextPage();
@@ -72,7 +72,7 @@ describe('useFeed query hook', () => {
         { post: { uri: '2' } },
       ]);
     });
-    expect(mockGetFeed).toHaveBeenLastCalledWith('token', 'at://feed/1', 10, 'cursor1');
+    expect(mockGetFeed).toHaveBeenLastCalledWith('at://feed/1', 10, 'cursor1');
   });
 
   it('returns error when pdsUrl is missing', async () => {

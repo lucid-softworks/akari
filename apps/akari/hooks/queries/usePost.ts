@@ -15,7 +15,7 @@ export function usePost(postUri: string | null) {
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getPost(token, postUri);
+      return await api.getPost(postUri);
     },
     enabled: !!postUri,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -40,7 +40,7 @@ export function useParentPost(parentUri: string | null) {
       if (!token) throw new Error("No access token");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const result = await api.getPost(token, parentUri);
+      const result = await api.getPost(parentUri);
       return result;
     },
     enabled: !!parentUri,
@@ -67,7 +67,7 @@ export function useRootPost(rootUri: string | null) {
       if (!token) throw new Error("No access token");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const result = await api.getPost(token, rootUri);
+      const result = await api.getPost(rootUri);
       return result;
     },
     enabled: !!rootUri,

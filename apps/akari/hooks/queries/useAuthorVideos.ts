@@ -22,7 +22,7 @@ export function useAuthorVideos(identifier: string | undefined, limit: number = 
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const feed = await api.getAuthorVideos(token, identifier, limit, pageParam);
+      const feed = await api.getAuthorVideos(identifier, limit, pageParam);
 
       // Map the feed items to posts (they should already be filtered for videos by the API)
       const videoPosts = feed.feed.map((item) => item.post);

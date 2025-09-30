@@ -22,13 +22,7 @@ export function useUnreadMessagesCount(enabled: boolean = true) {
       try {
         // Fetch conversations to get unread counts
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const response = await api.listConversations(
-          token,
-          100, // Fetch up to 100 conversations to get a good sample
-          undefined, // cursor
-          undefined, // readState
-          'accepted', // Only count accepted conversations
-        );
+        const response = await api.listConversations(100, undefined, undefined, 'accepted');
 
         // Sum up all unread counts
         const totalUnreadCount = response.convos.reduce((total, convo) => total + convo.unreadCount, 0);

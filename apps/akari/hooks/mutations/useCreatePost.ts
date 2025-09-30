@@ -36,7 +36,7 @@ export function useCreatePost() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.createPost(token, currentAccount.did, {
+      return await api.createPost(currentAccount.did, {
         text,
         replyTo,
         images,

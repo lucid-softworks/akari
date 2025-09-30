@@ -49,7 +49,7 @@ describe('useUnreadNotificationsCount', () => {
     await waitFor(() => {
       expect(result.current.data).toBe(3);
     });
-    expect(mockGetUnreadNotificationsCount).toHaveBeenCalledWith('token');
+    expect(mockGetUnreadNotificationsCount).toHaveBeenCalledWith();
   });
 
   it('returns 0 when API call fails', async () => {

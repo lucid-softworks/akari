@@ -50,7 +50,7 @@ describe('usePreferences query hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetPreferences).toHaveBeenCalledWith('token');
+    expect(mockGetPreferences).toHaveBeenCalledWith();
     expect(result.current.data).toEqual(preferencesResponse);
   });
 

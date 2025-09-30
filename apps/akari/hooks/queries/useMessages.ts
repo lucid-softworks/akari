@@ -28,12 +28,7 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
 
       try {
         const api = new BlueskyApi(currentAccount.pdsUrl);
-        const response = await api.getMessages(
-          token,
-          convoId,
-          limit,
-          pageParam, // cursor
-        );
+        const response = await api.getMessages(convoId, limit, pageParam);
 
         // Transform the data to match our UI needs
         const messages = response.messages.map((message) => {

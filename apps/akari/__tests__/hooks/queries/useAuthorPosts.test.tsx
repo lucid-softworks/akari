@@ -56,7 +56,7 @@ describe('useAuthorPosts', () => {
     await waitFor(() => {
       expect(result.current.data).toEqual([{ uri: 'at://1' }, { uri: 'at://4' }]);
     });
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith('token', 'alice', 5, undefined);
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('alice', 5, undefined);
   });
 
   it('fetches next page using cursor', async () => {
@@ -83,16 +83,9 @@ describe('useAuthorPosts', () => {
       expect(result.current.data).toEqual([{ uri: 'at://1' }, { uri: 'at://2' }]);
     });
 
-    expect(mockGetAuthorFeed).toHaveBeenNthCalledWith(
-      1,
-      'token',
-      'alice',
-      20,
-      undefined,
-    );
+    expect(mockGetAuthorFeed).toHaveBeenNthCalledWith(1, 'alice', 20, undefined);
     expect(mockGetAuthorFeed).toHaveBeenNthCalledWith(
       2,
-      'token',
       'alice',
       20,
       'cursor1',

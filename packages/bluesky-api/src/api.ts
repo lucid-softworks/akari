@@ -1,6 +1,6 @@
 import { BlueskyActors } from './actors';
 import { BlueskyAuth } from './auth';
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, BlueskySessionEventTarget, type BlueskySessionState } from './client';
 import { BlueskyConversations } from './conversations';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
@@ -35,6 +35,25 @@ import type {
 /**
  * Main Bluesky API client that combines all functionality
  */
+const sessionRegistry = new Map<
+  string,
+  { state: BlueskySessionState; events: BlueskySessionEventTarget }
+>();
+
+function ensureSessionScope(pdsUrl: string): {
+  state: BlueskySessionState;
+  events: BlueskySessionEventTarget;
+} {
+  let entry = sessionRegistry.get(pdsUrl);
+
+  if (!entry) {
+    entry = { state: {}, events: new BlueskySessionEventTarget() };
+    sessionRegistry.set(pdsUrl, entry);
+  }
+
+  return entry;
+}
+
 export class BlueskyApi extends BlueskyApiClient {
   private readonly actors: BlueskyActors;
   private readonly auth: BlueskyAuth;
@@ -49,9 +68,11 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param pdsUrl - Personal data server URL that hosts the AT Protocol endpoints.
    */
   constructor(pdsUrl: string) {
-    super(pdsUrl);
+    const sharedSession = ensureSessionScope(pdsUrl);
 
-    const sharedOptions = { sessionEvents: this.sessionEvents, sessionState: this.sessionState } as const;
+    super(pdsUrl, { sessionEvents: sharedSession.events, sessionState: sharedSession.state });
+
+    const sharedOptions = { sessionEvents: sharedSession.events, sessionState: sharedSession.state } as const;
 
     this.auth = new BlueskyAuth(pdsUrl, sharedOptions);
 

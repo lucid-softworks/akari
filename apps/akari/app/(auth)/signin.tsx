@@ -88,6 +88,11 @@ export default function AuthScreen() {
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,
+        active: session.active,
+        status: session.active ? undefined : session.status,
+        email: session.email,
+        emailConfirmed: session.emailConfirmed,
+        emailAuthFactor: session.emailAuthFactor,
       });
 
       await switchAccountMutation.mutateAsync(newAccount);
@@ -150,6 +155,11 @@ export default function AuthScreen() {
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,
+        active: session.active,
+        status: session.active ? undefined : session.status,
+        email: session.email,
+        emailConfirmed: session.emailConfirmed,
+        emailAuthFactor: session.emailAuthFactor,
       });
 
       await switchAccountMutation.mutateAsync(newAccount);

@@ -82,7 +82,7 @@ describe('useSavedFeeds query', () => {
     expect(result.current.data).toEqual(expectedData);
     expect(queryClient.getQueryData(['savedFeeds', 'did:example:123'])).toEqual(expectedData);
     expect(mockGetPreferences).toHaveBeenCalledTimes(1);
-    expect(mockGetFeedGenerators).toHaveBeenCalledWith('token', ['at://feed1']);
+    expect(mockGetFeedGenerators).toHaveBeenCalledWith(['at://feed1']);
   });
 
   it('returns empty array when no saved feeds are configured', async () => {

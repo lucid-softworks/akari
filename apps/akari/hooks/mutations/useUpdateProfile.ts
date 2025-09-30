@@ -29,7 +29,7 @@ export function useUpdateProfile() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.updateProfile(token, {
+      return await api.updateProfile({
         displayName,
         description,
         avatar,

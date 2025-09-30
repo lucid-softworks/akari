@@ -52,7 +52,7 @@ describe('useAuthorMedia', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith('token', 'alice', 10, undefined, 'posts_with_media');
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('alice', 10, undefined, 'posts_with_media');
     expect(result.current.data).toEqual([{ uri: '1' }, { uri: '2' }]);
   });
 

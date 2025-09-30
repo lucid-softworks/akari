@@ -53,7 +53,7 @@ describe('useFeedGenerators query hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetFeedGenerators).toHaveBeenCalledWith('token', ['feed1']);
+    expect(mockGetFeedGenerators).toHaveBeenCalledWith(['feed1']);
     expect(result.current.data).toEqual({ feeds: [{ uri: 'feed1' }] });
   });
 
@@ -76,8 +76,9 @@ describe('useFeedGenerators query hook', () => {
       wrapper,
     });
 
-    const fetchResult = await result.current.refetch();
-    expect((fetchResult.error as Error).message).toBe('No access token');
+    await expect(result.current.refetch({ throwOnError: true })).rejects.toThrow(
+      'No access token',
+    );
     expect(mockGetFeedGenerators).not.toHaveBeenCalled();
   });
 
@@ -89,8 +90,9 @@ describe('useFeedGenerators query hook', () => {
       wrapper,
     });
 
-    const fetchResult = await result.current.refetch();
-    expect((fetchResult.error as Error).message).toBe('No PDS URL available');
+    await expect(result.current.refetch({ throwOnError: true })).rejects.toThrow(
+      'No PDS URL available',
+    );
     expect(mockGetFeedGenerators).not.toHaveBeenCalled();
   });
 });

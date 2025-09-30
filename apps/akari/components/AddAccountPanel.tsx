@@ -116,6 +116,11 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,
+        active: session.active,
+        status: session.active ? undefined : session.status,
+        email: session.email,
+        emailConfirmed: session.emailConfirmed,
+        emailAuthFactor: session.emailAuthFactor,
       });
 
       await switchAccountMutation.mutateAsync(newAccount);

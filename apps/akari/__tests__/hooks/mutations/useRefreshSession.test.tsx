@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { useRefreshSession } from '@/hooks/mutations/useRefreshSession';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
-const mockSetAuth = { mutate: jest.fn() };
+const mockSetAuth = { mutateAsync: jest.fn() };
 const mockRefreshSession = jest.fn();
 
 jest.mock('@/hooks/mutations/useSetAuthentication', () => ({
@@ -18,6 +18,7 @@ jest.mock('@/hooks/queries/useCurrentAccount', () => ({
 
 jest.mock('@/bluesky-api', () => ({
   BlueskyApi: jest.fn(() => ({
+    setSession: jest.fn(),
     refreshSession: mockRefreshSession,
   })),
 }));
@@ -35,12 +36,23 @@ describe('useRefreshSession mutation hook', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useCurrentAccount as jest.Mock).mockReturnValue({ data: { pdsUrl: 'url' } });
+    (useCurrentAccount as jest.Mock).mockReturnValue({
+      data: {
+        pdsUrl: 'url',
+        handle: 'handle',
+        did: 'did',
+        jwtToken: 'token',
+        refreshToken: 'refresh',
+        active: true,
+      },
+    });
+    mockSetAuth.mutateAsync.mockResolvedValue(undefined);
     mockRefreshSession.mockResolvedValue({
       accessJwt: 'token',
       refreshJwt: 'refresh',
       did: 'did',
       handle: 'handle',
+      active: true,
     });
   });
 
@@ -49,17 +61,20 @@ describe('useRefreshSession mutation hook', () => {
     const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
     const { result } = renderHook(() => useRefreshSession(), { wrapper });
 
-    result.current.mutate({ refreshToken: 'refresh' });
+    result.current.mutate();
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockRefreshSession).toHaveBeenCalledWith('refresh');
-    expect(mockSetAuth.mutate).toHaveBeenCalledWith({
+    expect(mockRefreshSession).toHaveBeenCalledTimes(1);
+    expect(mockRefreshSession).toHaveBeenCalledWith();
+    expect(mockSetAuth.mutateAsync).toHaveBeenCalledWith({
       token: 'token',
       refreshToken: 'refresh',
       did: 'did',
       handle: 'handle',
+      pdsUrl: 'url',
+      active: true,
     });
     expect(invalidateSpy).toHaveBeenCalled();
   });
@@ -69,16 +84,16 @@ describe('useRefreshSession mutation hook', () => {
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useRefreshSession(), { wrapper });
 
-    result.current.mutate({ refreshToken: 'refresh' });
+    result.current.mutate();
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
     });
     expect(result.current.error).toEqual(
-      new Error('No PDS URL available for this account'),
+      new Error('Missing session details for this account'),
     );
     expect(mockRefreshSession).not.toHaveBeenCalled();
-    expect(mockSetAuth.mutate).not.toHaveBeenCalled();
+    expect(mockSetAuth.mutateAsync).not.toHaveBeenCalled();
   });
 });
 

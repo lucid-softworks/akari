@@ -22,7 +22,7 @@ export function useFeed(feedUri: string | null, limit: number = 20) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getFeed(token, feedUri, limit, pageParam);
+      return await api.getFeed(feedUri, limit, pageParam);
     },
     enabled: !!feedUri && !!token,
     initialPageParam: undefined as string | undefined,

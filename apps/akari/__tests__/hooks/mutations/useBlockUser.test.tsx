@@ -54,7 +54,7 @@ describe('useBlockUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockBlockUser).toHaveBeenCalledWith('token', 'did');
+    expect(mockBlockUser).toHaveBeenCalledWith('did');
   });
 
   it('errors when token missing', async () => {
@@ -82,7 +82,7 @@ describe('useBlockUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockUnblockUser).toHaveBeenCalledWith('token', 'block-uri');
+    expect(mockUnblockUser).toHaveBeenCalledWith('block-uri');
   });
 
   it('errors when blockUri missing for unblock', async () => {

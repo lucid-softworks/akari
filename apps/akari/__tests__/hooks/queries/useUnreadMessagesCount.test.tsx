@@ -56,13 +56,7 @@ describe('useUnreadMessagesCount', () => {
     });
 
     expect(mockBlueskyApi).toHaveBeenCalledWith('https://pds');
-    expect(mockListConversations).toHaveBeenCalledWith(
-      'token',
-      100,
-      undefined,
-      undefined,
-      'accepted',
-    );
+    expect(mockListConversations).toHaveBeenCalledWith(100, undefined, undefined, 'accepted');
   });
 
   it('returns 0 and logs warning on error', async () => {

@@ -53,7 +53,7 @@ describe('useFeeds query hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockGetFeeds).toHaveBeenCalledWith('token', 'alice', 10, 'cursor');
+    expect(mockGetFeeds).toHaveBeenCalledWith('alice', 10, 'cursor');
     expect(result.current.data).toEqual(feedsResponse);
   });
 

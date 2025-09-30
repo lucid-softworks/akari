@@ -54,7 +54,7 @@ describe('useAuthorFeeds query hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockGetAuthorFeeds).toHaveBeenCalledWith('token', 'alice', 5, undefined);
+    expect(mockGetAuthorFeeds).toHaveBeenCalledWith('alice', 5, undefined);
     expect(result.current.data).toEqual([{ uri: 'a' }]);
 
     await act(async () => {

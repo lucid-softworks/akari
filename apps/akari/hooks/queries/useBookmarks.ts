@@ -21,7 +21,7 @@ export function useBookmarks(limit: number = 20) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getBookmarks(token, limit, pageParam);
+      return await api.getBookmarks(limit, pageParam);
     },
     enabled: !!token && !!currentAccount?.did,
     initialPageParam: undefined as string | undefined,

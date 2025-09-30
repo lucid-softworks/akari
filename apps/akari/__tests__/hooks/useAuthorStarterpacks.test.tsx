@@ -51,7 +51,7 @@ describe('useAuthorStarterpacks query hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
     expect(result.current.data).toEqual([{ uri: 'uri1' }]);
-    expect(mockGetAuthorStarterpacks).toHaveBeenCalledWith('token', 'did', 1, undefined);
+    expect(mockGetAuthorStarterpacks).toHaveBeenCalledWith('did', 1, undefined);
 
     await act(async () => {
       await result.current.fetchNextPage();
@@ -60,7 +60,7 @@ describe('useAuthorStarterpacks query hook', () => {
     await waitFor(() => {
       expect(result.current.data).toEqual([{ uri: 'uri1' }, { uri: 'uri2' }]);
     });
-    expect(mockGetAuthorStarterpacks).toHaveBeenCalledWith('token', 'did', 1, 'cursor1');
+    expect(mockGetAuthorStarterpacks).toHaveBeenCalledWith('did', 1, 'cursor1');
   });
 
   it('errors when token is missing', async () => {

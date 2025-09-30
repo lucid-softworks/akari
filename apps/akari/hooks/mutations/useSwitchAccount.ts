@@ -26,6 +26,13 @@ export function useSwitchAccount() {
         did: account.did,
         handle: account.handle,
         pdsUrl: account.pdsUrl,
+        active: account.active,
+        status: account.status,
+        email: account.email,
+        emailConfirmed: account.emailConfirmed,
+        emailAuthFactor: account.emailAuthFactor,
+        displayName: account.displayName,
+        avatar: account.avatar,
       });
     },
   });

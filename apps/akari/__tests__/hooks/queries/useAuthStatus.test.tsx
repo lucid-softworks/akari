@@ -8,8 +8,9 @@ import { useRefreshToken } from '@/hooks/queries/useRefreshToken';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 const mockRefreshSession = jest.fn();
-const mockSetAuth = { mutate: jest.fn() };
-const mockClearAuth = { mutate: jest.fn() };
+const mockSetSession = jest.fn();
+const mockSetAuth = { mutateAsync: jest.fn() };
+const mockClearAuth = { mutateAsync: jest.fn() };
 
 jest.mock('@/hooks/queries/useJwtToken', () => ({
   useJwtToken: jest.fn(),
@@ -33,6 +34,7 @@ jest.mock('@/hooks/mutations/useClearAuthentication', () => ({
 
 jest.mock('@/bluesky-api', () => ({
   BlueskyApi: jest.fn(() => ({
+    setSession: mockSetSession,
     refreshSession: mockRefreshSession,
   })),
 }));
@@ -50,6 +52,9 @@ const createWrapper = () => {
 describe('useAuthStatus', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSetSession.mockClear();
+    mockSetAuth.mutateAsync.mockResolvedValue(undefined);
+    mockClearAuth.mutateAsync.mockResolvedValue(undefined);
   });
 
   it('returns not authenticated when tokens are missing', async () => {
@@ -65,15 +70,15 @@ describe('useAuthStatus', () => {
     });
     expect(result.current.data).toEqual({ isAuthenticated: false });
     expect(mockRefreshSession).not.toHaveBeenCalled();
-    expect(mockSetAuth.mutate).not.toHaveBeenCalled();
-    expect(mockClearAuth.mutate).not.toHaveBeenCalled();
+    expect(mockSetAuth.mutateAsync).not.toHaveBeenCalled();
+    expect(mockClearAuth.mutateAsync).not.toHaveBeenCalled();
   });
 
   it('refreshes session and returns authenticated user', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
     (useRefreshToken as jest.Mock).mockReturnValue({ data: 'refresh' });
     (useCurrentAccount as jest.Mock).mockReturnValue({
-      data: { pdsUrl: 'https://pds', did: 'did' },
+      data: { pdsUrl: 'https://pds', did: 'did', handle: 'handle' },
     });
     mockRefreshSession.mockResolvedValue({
       accessJwt: 'newToken',
@@ -90,13 +95,28 @@ describe('useAuthStatus', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockRefreshSession).toHaveBeenCalledWith('refresh');
-    expect(mockSetAuth.mutate).toHaveBeenCalledWith({
+    expect(mockSetSession).toHaveBeenCalledWith({
+      handle: 'handle',
+      did: 'did',
+      accessJwt: 'token',
+      refreshJwt: 'refresh',
+      active: true,
+      email: undefined,
+      emailConfirmed: undefined,
+      emailAuthFactor: undefined,
+    });
+    expect(mockRefreshSession).toHaveBeenCalledWith();
+    expect(mockSetAuth.mutateAsync).toHaveBeenCalledWith({
       token: 'newToken',
       refreshToken: 'newRefresh',
       did: 'did',
       handle: 'handle',
       pdsUrl: 'https://pds',
+      active: true,
+      status: undefined,
+      email: 'email',
+      emailConfirmed: undefined,
+      emailAuthFactor: undefined,
     });
     expect(result.current.data).toEqual({
       isAuthenticated: true,
@@ -108,14 +128,14 @@ describe('useAuthStatus', () => {
         status: undefined,
       },
     });
-    expect(mockClearAuth.mutate).not.toHaveBeenCalled();
+    expect(mockClearAuth.mutateAsync).not.toHaveBeenCalled();
   });
 
   it('clears auth on refresh failure', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
     (useRefreshToken as jest.Mock).mockReturnValue({ data: 'refresh' });
     (useCurrentAccount as jest.Mock).mockReturnValue({
-      data: { pdsUrl: 'https://pds', did: 'did' },
+      data: { pdsUrl: 'https://pds', did: 'did', handle: 'handle' },
     });
     mockRefreshSession.mockRejectedValue(new Error('boom'));
 
@@ -125,9 +145,19 @@ describe('useAuthStatus', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockRefreshSession).toHaveBeenCalledWith('refresh');
-    expect(mockClearAuth.mutate).toHaveBeenCalled();
-    expect(mockSetAuth.mutate).not.toHaveBeenCalled();
+    expect(mockSetSession).toHaveBeenCalledWith({
+      handle: 'handle',
+      did: 'did',
+      accessJwt: 'token',
+      refreshJwt: 'refresh',
+      active: true,
+      email: undefined,
+      emailConfirmed: undefined,
+      emailAuthFactor: undefined,
+    });
+    expect(mockRefreshSession).toHaveBeenCalledWith();
+    expect(mockClearAuth.mutateAsync).toHaveBeenCalled();
+    expect(mockSetAuth.mutateAsync).not.toHaveBeenCalled();
     expect(result.current.data).toEqual({ isAuthenticated: false });
   });
 });

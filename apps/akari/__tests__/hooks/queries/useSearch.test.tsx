@@ -58,7 +58,7 @@ describe('useSearch', () => {
         { type: 'profile', data: { did: '1' } },
       ]);
     });
-    expect(mockSearchProfiles).toHaveBeenCalledWith('token', 'alice', 10, undefined);
+    expect(mockSearchProfiles).toHaveBeenCalledWith('alice', 10, undefined);
     expect(mockSearchPosts).not.toHaveBeenCalled();
 
     await act(async () => {
@@ -70,7 +70,7 @@ describe('useSearch', () => {
         { type: 'profile', data: { did: '2' } },
       ]);
     });
-    expect(mockSearchProfiles).toHaveBeenLastCalledWith('token', 'alice', 10, 'c1');
+    expect(mockSearchProfiles).toHaveBeenLastCalledWith('alice', 10, 'c1');
   });
 
   it('fetches post results for posts tab and paginates', async () => {
@@ -86,7 +86,7 @@ describe('useSearch', () => {
         { type: 'post', data: { uri: 'p1' } },
       ]);
     });
-    expect(mockSearchPosts).toHaveBeenCalledWith('token', 'hello', 5, undefined);
+    expect(mockSearchPosts).toHaveBeenCalledWith('hello', 5, undefined);
     expect(mockSearchProfiles).not.toHaveBeenCalled();
 
     await act(async () => {
@@ -98,7 +98,7 @@ describe('useSearch', () => {
         { type: 'post', data: { uri: 'p2' } },
       ]);
     });
-    expect(mockSearchPosts).toHaveBeenLastCalledWith('token', 'hello', 5, 'c1');
+    expect(mockSearchPosts).toHaveBeenLastCalledWith('hello', 5, 'c1');
   });
 
   it('combines profile and post results for all tab', async () => {
@@ -115,8 +115,8 @@ describe('useSearch', () => {
       ]);
       expect(result.current.data?.pages[0].cursor).toBe('c1');
     });
-    expect(mockSearchProfiles).toHaveBeenCalledWith('token', 'mix', 20, undefined);
-    expect(mockSearchPosts).toHaveBeenCalledWith('token', 'mix', 20, undefined);
+    expect(mockSearchProfiles).toHaveBeenCalledWith('mix', 20, undefined);
+    expect(mockSearchPosts).toHaveBeenCalledWith('mix', 20, undefined);
   });
 
   it('handles "from:handle" searches by only querying posts', async () => {
@@ -130,7 +130,7 @@ describe('useSearch', () => {
         { type: 'post', data: { uri: 'p1' } },
       ]);
     });
-    expect(mockSearchPosts).toHaveBeenCalledWith('token', 'from:alice', 10, undefined);
+    expect(mockSearchPosts).toHaveBeenCalledWith('from:alice', 10, undefined);
     expect(mockSearchProfiles).not.toHaveBeenCalled();
   });
 

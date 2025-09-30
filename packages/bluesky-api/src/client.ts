@@ -2,7 +2,7 @@ import type { BlueskyError, BlueskySession, BlueskyUploadBlobResponse } from './
 
 type SessionListener = (session: BlueskySession) => void;
 
-type BlueskySessionState = {
+export type BlueskySessionState = {
   session?: BlueskySession;
 };
 

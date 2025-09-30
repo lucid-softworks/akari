@@ -21,7 +21,7 @@ export function useFeeds(actor: string | undefined, limit: number = 50, cursor?:
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getFeeds(token, actor, limit, cursor);
+      return await api.getFeeds(actor, limit, cursor);
     },
     enabled: !!actor && !!token,
     staleTime: 10 * 60 * 1000, // 10 minutes

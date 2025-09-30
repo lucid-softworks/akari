@@ -52,7 +52,7 @@ describe('useAuthorVideos', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetAuthorVideos).toHaveBeenCalledWith('token', 'alice', 10, undefined);
+    expect(mockGetAuthorVideos).toHaveBeenCalledWith('alice', 10, undefined);
     expect(result.current.data).toEqual([{ uri: '1' }, { uri: '2' }]);
   });
 
@@ -82,8 +82,8 @@ describe('useAuthorVideos', () => {
       expect(result.current.data).toEqual([{ uri: 'at://1' }, { uri: 'at://2' }]);
     });
 
-    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(1, 'token', 'alice', 20, undefined);
-    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(2, 'token', 'alice', 20, 'cursor1');
+    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(1, 'alice', 20, undefined);
+    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(2, 'alice', 20, 'cursor1');
   });
 
   it('returns error when PDS URL missing', async () => {

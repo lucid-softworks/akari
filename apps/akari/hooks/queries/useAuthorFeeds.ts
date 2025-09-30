@@ -22,7 +22,7 @@ export function useAuthorFeeds(identifier: string | undefined, limit: number = 5
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const feeds = await api.getAuthorFeeds(token, identifier, limit, pageParam);
+      const feeds = await api.getAuthorFeeds(identifier, limit, pageParam);
 
       return {
         feeds: feeds.feeds,

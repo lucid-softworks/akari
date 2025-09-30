@@ -27,7 +27,7 @@ export function useSendMessage() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.sendMessage(token, convoId, { text });
+      return await api.sendMessage(convoId, { text });
     },
     onMutate: async ({ convoId, text }) => {
       // Cancel any outgoing refetches

@@ -26,13 +26,19 @@ export function useSignIn() {
       const api = new BlueskyApi(pdsUrl);
       return await api.createSession(identifier, password);
     },
-    onSuccess: async (session) => {
+    onSuccess: async (session, { pdsUrl }) => {
       // Store tokens securely - await to prevent race conditions
       await setAuthMutation.mutateAsync({
         token: session.accessJwt,
         refreshToken: session.refreshJwt,
         did: session.did,
         handle: session.handle,
+        pdsUrl,
+        active: session.active,
+        status: session.active ? undefined : session.status,
+        email: session.email,
+        emailConfirmed: session.emailConfirmed,
+        emailAuthFactor: session.emailAuthFactor,
       });
 
       // Invalidate all auth-related queries to ensure fresh data

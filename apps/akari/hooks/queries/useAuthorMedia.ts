@@ -22,7 +22,7 @@ export function useAuthorMedia(identifier: string | undefined, limit: number = 2
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, 'posts_with_media');
+      const feed = await api.getAuthorFeed(identifier, limit, pageParam, 'posts_with_media');
 
       // Map the feed items to posts (they should already be filtered for media by the API)
       const mediaPosts = feed.feed.map((item) => item.post);

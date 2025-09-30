@@ -51,7 +51,7 @@ describe('useSendMessage mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockSendMessage).toHaveBeenCalledWith('token', 'c1', { text: 'hi' });
+    expect(mockSendMessage).toHaveBeenCalledWith('c1', { text: 'hi' });
   });
 
   it('errors when token missing', async () => {

@@ -57,7 +57,7 @@ describe('useCreatePost mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockCreatePostApi).toHaveBeenCalledWith('token', 'did', postData);
+    expect(mockCreatePostApi).toHaveBeenCalledWith('did', postData);
   });
 
   it('optimistically updates caches and rolls back on error', async () => {

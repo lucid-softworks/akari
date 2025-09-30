@@ -1,6 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { useQuery } from '@tanstack/react-query';
 import { BlueskyApi } from '@/bluesky-api';
 
 /**
@@ -20,7 +21,7 @@ export function useTimeline(limit: number = 20, enabled: boolean = true) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
-      return await api.getTimeline(token, limit);
+      return await api.getTimeline(limit);
     },
     enabled: enabled && !!token && !!currentUserDid,
     staleTime: 2 * 60 * 1000, // 2 minutes
