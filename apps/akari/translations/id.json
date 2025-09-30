@@ -210,7 +210,11 @@
       "profileUpdateError": "Gagal memperbarui profil",
       "handleHistory": "Riwayat handle",
       "noHandleHistory": "Tidak ada riwayat handle",
-      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya."
+      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

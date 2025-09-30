@@ -210,7 +210,11 @@
       "profileUpdateError": "Profilini yeniləmək alınmadı. Xahiş edirəm yenidən cəhd edin.",
       "handleHistory": "Tarixi idarə edin",
       "noHandleHistory": "Dəstək tarixi yoxdur",
-      "noHandleHistoryDescription": "Bu istifadəçi hələ də saplarını dəyişməyib."
+      "noHandleHistoryDescription": "Bu istifadəçi hələ də saplarını dəyişməyib.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Daha çox yazı yüklənir ...",

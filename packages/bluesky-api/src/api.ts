@@ -6,6 +6,7 @@ import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
 import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
+import { BlueskyRepo } from './repo';
 import type {
   BlueskyBookmarksResponse,
   BlueskyConvosResponse,
@@ -19,6 +20,8 @@ import type {
   BlueskyPostView,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
+  BlueskyRepoListRecordsQuery,
+  BlueskyRepoListRecordsResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySendMessageResponse,
@@ -43,6 +46,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private graph: BlueskyGraph;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
+  private repo: BlueskyRepo;
 
   /**
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
@@ -57,6 +61,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.graph = new BlueskyGraph(pdsUrl);
     this.notifications = new BlueskyNotifications(pdsUrl);
     this.search = new BlueskySearch(pdsUrl);
+    this.repo = new BlueskyRepo(pdsUrl);
   }
 
   /**
@@ -263,6 +268,17 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyStarterPacksResponse> {
     return this.feeds.getAuthorStarterpacks(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists records from the specified collection within a repository.
+   * @param query - Parameters describing the repo, collection, and pagination options.
+   * @returns Paginated collection of records stored in the repository.
+   */
+  async listRecords<TValue = Record<string, unknown>>(
+    query: BlueskyRepoListRecordsQuery,
+  ): Promise<BlueskyRepoListRecordsResponse<TValue>> {
+    return this.repo.listRecords<TValue>(query);
   }
 
   /**

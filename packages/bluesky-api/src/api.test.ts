@@ -35,6 +35,7 @@ describe('BlueskyApi', () => {
       graph: Record<string, jest.Mock>;
       search: Record<string, jest.Mock>;
       notifications: Record<string, jest.Mock>;
+      repo: Record<string, jest.Mock>;
     };
 
     return { api, internal };
@@ -218,6 +219,25 @@ describe('BlueskyApi', () => {
       undefined,
     );
     expect(internal.notifications.getUnreadCount).toHaveBeenCalledWith('jwt');
+  });
+
+  it('delegates listRecords to the repo client', async () => {
+    const { api, internal } = setupApi();
+    const records = { records: [] };
+
+    internal.repo = {
+      listRecords: jest.fn().mockResolvedValue(records),
+    };
+
+    await expect(
+      api.listRecords({ collection: 'pub.leaflet.document', repo: 'did:example:alice', limit: 3 }),
+    ).resolves.toBe(records);
+
+    expect(internal.repo.listRecords).toHaveBeenCalledWith({
+      collection: 'pub.leaflet.document',
+      repo: 'did:example:alice',
+      limit: 3,
+    });
   });
 
   it('creates instances using the static helper', () => {

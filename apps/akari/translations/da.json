@@ -210,7 +210,11 @@
       "profileUpdateError": "Kunne ikke opdatere profilen. Prøv igen.",
       "handleHistory": "Håndtere historie",
       "noHandleHistory": "Ingen håndtagshistorie",
-      "noHandleHistoryDescription": "Denne bruger har ikke ændret deres håndtag endnu."
+      "noHandleHistoryDescription": "Denne bruger har ikke ændret deres håndtag endnu.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Indlæser flere indlæg ...",

@@ -210,7 +210,11 @@
       "profileUpdateError": "Не вдалося оновити профіль. Будь ласка, спробуйте ще раз.",
       "handleHistory": "Обробляти історію",
       "noHandleHistory": "Немає історії ручки",
-      "noHandleHistoryDescription": "Цей користувач ще не змінив свою ручку."
+      "noHandleHistoryDescription": "Цей користувач ще не змінив свою ручку.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Завантаження більше публікацій ...",

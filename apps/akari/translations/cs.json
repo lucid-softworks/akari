@@ -210,7 +210,11 @@
       "profileUpdateError": "Nepodařilo se aktualizovat profil. Zkuste to prosím znovu.",
       "handleHistory": "HISTORIE Zvládněte",
       "noHandleHistory": "Žádná historie rukojeti",
-      "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť."
+      "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Načítání více příspěvků ...",

@@ -148,6 +148,9 @@ jest.mock('@/components/ProfileTabs', () => {
         <TouchableOpacity onPress={() => onTabChange('videos')}>
           <Text>videos tab</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('leaflets')}>
+          <Text>leaflets tab</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => onTabChange('feeds')}>
           <Text>feeds tab</Text>
         </TouchableOpacity>
@@ -196,6 +199,12 @@ jest.mock('@/components/profile/FeedsTab', () => {
   const React = require('react');
   const { Text } = require('react-native');
   return { FeedsTab: ({ handle }: any) => <Text>feeds {handle}</Text> };
+});
+
+jest.mock('@/components/profile/LeafletsTab', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { LeafletsTab: ({ did }: any) => <Text>leaflets {did}</Text> };
 });
 
 jest.mock('@/components/profile/StarterpacksTab', () => {
@@ -253,7 +262,7 @@ describe('ProfileScreen', () => {
   });
 
   it('renders all tab content and registers scroll handler', () => {
-    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice', did: 'did:alice' } });
     mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
 
     const { getByText } = render(<ProfileScreen />);
@@ -271,6 +280,9 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('videos tab'));
     expect(getByText('videos alice')).toBeTruthy();
+
+    fireEvent.press(getByText('leaflets tab'));
+    expect(getByText('leaflets did:alice')).toBeTruthy();
 
     fireEvent.press(getByText('feeds tab'));
     expect(getByText('feeds alice')).toBeTruthy();

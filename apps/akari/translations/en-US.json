@@ -210,7 +210,11 @@
       "profileUpdateError": "Failed to update profile",
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
-      "noHandleHistoryDescription": "This user hasn't changed their handle yet."
+      "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

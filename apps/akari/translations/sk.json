@@ -210,7 +210,11 @@
       "profileUpdateError": "Nepodarilo sa aktualizovať profil. Skúste to znova.",
       "handleHistory": "History",
       "noHandleHistory": "Žiadna história rukovätia",
-      "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť."
+      "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Načítava viac príspevkov ...",

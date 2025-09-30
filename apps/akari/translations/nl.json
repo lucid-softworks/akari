@@ -210,7 +210,11 @@
       "profileUpdateError": "Profiel kon niet worden bijgewerkt",
       "handleHistory": "Handle-geschiedenis",
       "noHandleHistory": "Geen handle-geschiedenis",
-      "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd."
+      "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",

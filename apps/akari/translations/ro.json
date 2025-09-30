@@ -210,7 +210,11 @@
       "profileUpdateError": "Nu a reușit să actualizeze profilul. Vă rugăm să încercați din nou.",
       "handleHistory": "Gestionează istoria",
       "noHandleHistory": "Fără istorie",
-      "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul."
+      "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Încărcarea mai multor postări ...",

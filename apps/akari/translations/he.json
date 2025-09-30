@@ -210,7 +210,11 @@
       "profileUpdateError": "עדכון הפרופיל נכשל. אנא נסה שוב.",
       "handleHistory": "לטפל בהיסטוריה",
       "noHandleHistory": "אין היסטוריה של ידית",
-      "noHandleHistoryDescription": "משתמש זה עדיין לא שינה את הידית שלו."
+      "noHandleHistoryDescription": "משתמש זה עדיין לא שינה את הידית שלו.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "טוען פוסטים נוספים ...",

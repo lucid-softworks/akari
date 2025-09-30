@@ -210,7 +210,11 @@
       "profileUpdateError": "Methu diweddaru proffil",
       "handleHistory": "Hanes handlen",
       "noHandleHistory": "Dim hanes handlen",
-      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto."
+      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

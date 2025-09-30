@@ -210,7 +210,11 @@
       "profileUpdateError": "Errore nell'aggiornamento del profilo",
       "handleHistory": "Cronologia dell'handle",
       "noHandleHistory": "Nessuna cronologia dell'handle",
-      "noHandleHistoryDescription": "Questo utente non ha ancora cambiato handle."
+      "noHandleHistoryDescription": "Questo utente non ha ancora cambiato handle.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Caricamento di altri post...",

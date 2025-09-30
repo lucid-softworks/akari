@@ -843,6 +843,52 @@ export type BlueskyStarterPacksResponse = {
 };
 
 /**
+ * Query parameters for listing repository records via com.atproto.repo.listRecords
+ */
+export type BlueskyRepoListRecordsQuery = {
+  /** NSID of the collection to list (e.g. pub.leaflet.document) */
+  collection: string;
+  /** DID of the repository owner */
+  repo: string;
+  /** Pagination cursor returned from a previous response */
+  cursor?: string;
+  /** Maximum number of records to return */
+  limit?: number;
+  /** Inclusive lower bound for the rkey range */
+  rkeyStart?: string;
+  /** Inclusive upper bound for the rkey range */
+  rkeyEnd?: string;
+  /** Whether to return records in reverse order */
+  reverse?: boolean;
+};
+
+/**
+ * Generic record entry returned from com.atproto.repo.listRecords
+ */
+export type BlueskyRepoRecord<TValue = Record<string, unknown>> = {
+  /** AT URI of the record */
+  uri: string;
+  /** CID of the record */
+  cid: string;
+  /** Parsed record value */
+  value: TValue;
+  /** Optional record key associated with the URI */
+  rkey?: string;
+  /** Additional properties surfaced by the server */
+  [key: string]: unknown;
+};
+
+/**
+ * Response shape returned from com.atproto.repo.listRecords
+ */
+export type BlueskyRepoListRecordsResponse<TValue = Record<string, unknown>> = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Records stored within the requested collection */
+  records: BlueskyRepoRecord<TValue>[];
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {

@@ -210,7 +210,11 @@
       "profileUpdateError": "प्रोफ़ाइल अपडेट करने में विफल",
       "handleHistory": "हैंडल इतिहास",
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
-      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।"
+      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

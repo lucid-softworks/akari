@@ -210,7 +210,11 @@
       "profileUpdateError": "Profiilin päivittäminen epäonnistui. Yritä uudelleen.",
       "handleHistory": "Käsityshistoria",
       "noHandleHistory": "Ei kahvahistoriaa",
-      "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa."
+      "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Lataa lisää viestejä ...",

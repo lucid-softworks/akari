@@ -210,7 +210,11 @@
       "profileUpdateError": "Profil konnte nicht aktualisiert werden",
       "handleHistory": "Handle-Verlauf",
       "noHandleHistory": "Kein Handle-Verlauf",
-      "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert."
+      "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",

@@ -43,7 +43,7 @@ jest.mock('@/components/ProfileTabs', () => {
   return {
     ProfileTabs: ({ onTabChange }: any) => (
       <>
-        {['posts', 'replies', 'likes', 'media', 'videos', 'feeds', 'starterpacks', 'unknown'].map(
+        {['posts', 'replies', 'likes', 'media', 'videos', 'leaflets', 'feeds', 'starterpacks', 'unknown'].map(
           (tab) => (
             <Text key={tab} accessibilityRole="button" onPress={() => onTabChange(tab as any)}>
               {tab}
@@ -125,6 +125,11 @@ jest.mock('@/components/profile/VideosTab', () => {
 jest.mock('@/components/profile/FeedsTab', () => {
   const { Text } = require('react-native');
   return { FeedsTab: ({ handle }: any) => <Text>{`feeds ${handle}`}</Text> };
+});
+
+jest.mock('@/components/profile/LeafletsTab', () => {
+  const { Text } = require('react-native');
+  return { LeafletsTab: ({ did }: any) => <Text>{`leaflets ${did}`}</Text> };
 });
 
 jest.mock('@/components/profile/StarterpacksTab', () => {
@@ -213,6 +218,8 @@ describe('ProfileScreen', () => {
     expect(getByText('media alice')).toBeTruthy();
     fireEvent.press(getByText('videos'));
     expect(getByText('videos alice')).toBeTruthy();
+    fireEvent.press(getByText('leaflets'));
+    expect(getByText('leaflets did')).toBeTruthy();
     fireEvent.press(getByText('feeds'));
     expect(getByText('feeds alice')).toBeTruthy();
     fireEvent.press(getByText('starterpacks'));

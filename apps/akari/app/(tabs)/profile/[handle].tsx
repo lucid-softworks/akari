@@ -15,6 +15,7 @@ import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
+import { LeafletsTab } from '@/components/profile/LeafletsTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
@@ -132,6 +133,8 @@ export default function ProfileScreen() {
   const renderTabContent = () => {
     if (!handle) return null;
 
+    const did = profile?.did;
+
     switch (activeTab) {
       case 'posts':
         return <PostsTab handle={handle} />;
@@ -143,6 +146,11 @@ export default function ProfileScreen() {
         return <MediaTab handle={handle} />;
       case 'videos':
         return <VideosTab handle={handle} />;
+      case 'leaflets':
+        if (!did) {
+          return null;
+        }
+        return <LeafletsTab did={did} />;
       case 'feeds':
         return <FeedsTab handle={handle} />;
       case 'starterpacks':

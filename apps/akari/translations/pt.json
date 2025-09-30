@@ -210,7 +210,11 @@
       "profileUpdateError": "Erro ao atualizar perfil",
       "handleHistory": "Histórico do identificador",
       "noHandleHistory": "Nenhum histórico do identificador",
-      "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador."
+      "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",

@@ -210,7 +210,11 @@
       "profileUpdateError": "Ni uspelo posodobiti profila. Poskusite znova.",
       "handleHistory": "Zgodovina",
       "noHandleHistory": "Brez zgodovine ročaja",
-      "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja."
+      "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Nalaganje več objav ...",

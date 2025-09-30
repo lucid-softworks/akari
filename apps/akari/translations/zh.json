@@ -210,7 +210,11 @@
       "profileUpdateError": "无法更新配置文件。请重试。",
       "handleHistory": "处理历史",
       "noHandleHistory": "没有处理历史",
-      "noHandleHistoryDescription": "该用户尚未更改其手柄。"
+      "noHandleHistoryDescription": "该用户尚未更改其手柄。",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",

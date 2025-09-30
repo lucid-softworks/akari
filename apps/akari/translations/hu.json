@@ -210,7 +210,11 @@
       "profileUpdateError": "Nem sikerült frissíteni a profilot. Kérjük, próbálkozzon újra.",
       "handleHistory": "Kezelje a történetet",
       "noHandleHistory": "Nincs fogantyú története",
-      "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját."
+      "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "További hozzászólások betöltése ...",

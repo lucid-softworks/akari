@@ -210,7 +210,11 @@
       "profileUpdateError": "Profil güncellenemedi",
       "handleHistory": "Kullanıcı adı geçmişi",
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
-      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi."
+      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",

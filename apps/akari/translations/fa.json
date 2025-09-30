@@ -210,7 +210,11 @@
       "profileUpdateError": "به روزرسانی نمایه انجام نشد. لطفا دوباره امتحان کنید",
       "handleHistory": "تاریخ رسیدگی",
       "noHandleHistory": "بدون سابقه دسته",
-      "noHandleHistoryDescription": "این کاربر هنوز دسته خود را تغییر نداده است."
+      "noHandleHistoryDescription": "این کاربر هنوز دسته خود را تغییر نداده است.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "در حال بارگیری بیشتر پست ها ...",

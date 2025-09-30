@@ -210,7 +210,11 @@
       "profileUpdateError": "Неуспешно актуализиране на профила. Моля, опитайте отново.",
       "handleHistory": "Справяне с историята",
       "noHandleHistory": "Без дръжка история",
-      "noHandleHistoryDescription": "Този потребител все още не е променил дръжката си."
+      "noHandleHistoryDescription": "Този потребител все още не е променил дръжката си.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Зареждане на още публикации ...",

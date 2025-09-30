@@ -14,6 +14,7 @@ import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
+import { LeafletsTab } from '@/components/profile/LeafletsTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -115,6 +116,8 @@ export default function ProfileScreen() {
       );
     }
 
+    const did = profile?.did ?? currentAccount?.did;
+
     switch (activeTab) {
       case 'posts':
         return <PostsTab handle={currentAccount.handle} />;
@@ -126,6 +129,15 @@ export default function ProfileScreen() {
         return <MediaTab handle={currentAccount.handle} />;
       case 'videos':
         return <VideosTab handle={currentAccount.handle} />;
+      case 'leaflets':
+        if (!did) {
+          return (
+            <ThemedView style={styles.emptyState}>
+              <ThemedText style={styles.emptyStateText}>{t('profile.noLeaflets')}</ThemedText>
+            </ThemedView>
+          );
+        }
+        return <LeafletsTab did={did} />;
       case 'feeds':
         return <FeedsTab handle={currentAccount.handle} />;
       case 'starterpacks':

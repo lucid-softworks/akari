@@ -210,7 +210,11 @@
       "profileUpdateError": "Échec de la mise à jour du profil",
       "handleHistory": "Historique du handle",
       "noHandleHistory": "Aucun historique de handle",
-      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle."
+      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",

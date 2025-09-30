@@ -210,7 +210,11 @@
       "profileUpdateError": "Det gick inte att uppdatera profilen. Försök igen.",
       "handleHistory": "Hantera historia",
       "noHandleHistory": "Inget handtagshistorik",
-      "noHandleHistoryDescription": "Den här användaren har inte bytt handtag ännu."
+      "noHandleHistoryDescription": "Den här användaren har inte bytt handtag ännu.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Laddar fler inlägg ...",

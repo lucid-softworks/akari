@@ -210,7 +210,11 @@
       "profileUpdateError": "更新個人資料失敗",
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
-      "noHandleHistoryDescription": "此使用者尚未變更過代號。"
+      "noHandleHistoryDescription": "此使用者尚未變更過代號。",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

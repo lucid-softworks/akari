@@ -210,7 +210,11 @@
       "profileUpdateError": "Αποτυχία ενημέρωσης προφίλ. Δοκιμάστε ξανά.",
       "handleHistory": "Χειριστήριο ιστορικό",
       "noHandleHistory": "Χωρίς ιστορικό λαβής",
-      "noHandleHistoryDescription": "Αυτός ο χρήστης δεν έχει αλλάξει ακόμα τη λαβή του."
+      "noHandleHistoryDescription": "Αυτός ο χρήστης δεν έχει αλλάξει ακόμα τη λαβή του.",
+      "leaflets": "Leaflets",
+      "noLeaflets": "No leaflet posts yet",
+      "expandLeaflet": "Show full post",
+      "collapseLeaflet": "Show less"
     },
     "feed": {
       "loadingMorePosts": "Φόρτωση περισσότερων αναρτήσεων ...",

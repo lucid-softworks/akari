@@ -29,6 +29,7 @@ describe('ProfileTabs', () => {
           'profile.media': 'Media',
           'common.likes': 'Likes',
           'profile.videos': 'Videos',
+          'profile.leaflets': 'Leaflets',
           'profile.feeds': 'Feeds',
           'profile.starterpacks': 'Starterpacks',
         };
@@ -54,6 +55,7 @@ describe('ProfileTabs', () => {
       'Media',
       'Likes',
       'Videos',
+      'Leaflets',
       'Feeds',
       'Starterpacks',
     ];
@@ -74,7 +76,7 @@ describe('ProfileTabs', () => {
       />,
     );
 
-    const labels = ['Posts', 'Replies', 'Media', 'Videos', 'Feeds', 'Starterpacks'];
+    const labels = ['Posts', 'Replies', 'Media', 'Videos', 'Leaflets', 'Feeds', 'Starterpacks'];
 
     for (const label of labels) {
       expect(getByText(label)).toBeTruthy();
