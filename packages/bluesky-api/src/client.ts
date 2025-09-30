@@ -3,8 +3,23 @@ import type { BlueskyError, BlueskySession, BlueskyUploadBlobResponse } from './
 type SessionListener = (session: BlueskySession) => void;
 
 export type BlueskySessionState = {
+  baseUrl?: string;
   session?: BlueskySession;
 };
+
+function normalizePdsUrl(pdsUrl: string): string {
+  let normalized = pdsUrl.trim();
+
+  while (normalized.endsWith('/')) {
+    normalized = normalized.slice(0, -1);
+  }
+
+  if (normalized.endsWith('/xrpc')) {
+    normalized = normalized.slice(0, -5);
+  }
+
+  return normalized;
+}
 
 export class BlueskySessionEventTarget {
   private listeners: Set<SessionListener> = new Set();
@@ -52,7 +67,6 @@ export class BlueskyRequestError extends Error {
  * refreshed session payload so applications can persist the new tokens.
  */
 export class BlueskyApiClient {
-  protected baseUrl: string;
   protected sessionEvents: BlueskySessionEventTarget;
   protected sessionState: BlueskySessionState;
   private refreshSessionHandler?: (refreshJwt: string) => Promise<BlueskySession>;
@@ -62,10 +76,10 @@ export class BlueskyApiClient {
    * @param pdsUrl - The PDS URL to use (required)
    */
   constructor(pdsUrl: string, options: BlueskyApiClientOptions = {}) {
-    this.baseUrl = pdsUrl;
     this.sessionEvents = options.sessionEvents ?? new BlueskySessionEventTarget();
     this.sessionState = options.sessionState ?? {};
     this.refreshSessionHandler = options.refreshSession;
+    this.setPdsUrl(pdsUrl);
   }
 
   protected setRefreshSessionHandler(refreshSession: (refreshJwt: string) => Promise<BlueskySession>): void {
@@ -82,6 +96,28 @@ export class BlueskyApiClient {
 
   public onSessionChange(listener: SessionListener): () => void {
     return this.sessionEvents.on(listener);
+  }
+
+  public setPdsUrl(pdsUrl: string): void {
+    this.sessionState.baseUrl = normalizePdsUrl(pdsUrl);
+  }
+
+  public clearPdsUrl(): void {
+    delete this.sessionState.baseUrl;
+  }
+
+  public getPdsUrl(): string | undefined {
+    return this.sessionState.baseUrl;
+  }
+
+  protected requirePdsUrl(): string {
+    const baseUrl = this.getPdsUrl();
+
+    if (!baseUrl) {
+      throw new Error('A Bluesky PDS URL has not been configured. Call setPdsUrl() first.');
+    }
+
+    return baseUrl;
   }
 
   public useSession(session: BlueskySession): void {
@@ -133,7 +169,8 @@ export class BlueskyApiClient {
   ): Promise<T> {
     const { method = 'GET', headers = {}, body, params } = options;
 
-    let url = `${this.baseUrl}/xrpc${endpoint}`;
+    const baseUrl = this.requirePdsUrl();
+    let url = `${baseUrl}/xrpc${endpoint}`;
 
     if (params && Object.keys(params).length > 0) {
       const searchParams = new URLSearchParams();

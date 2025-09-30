@@ -133,6 +133,33 @@ describe('BlueskyApiClient', () => {
     expect(request.body).toEqual({ hello: 'world' });
   });
 
+  it('normalizes and updates the PDS URL when changed', async () => {
+    let capturedUrl: string | null = null;
+
+    server.use(
+      http.get('https://next.pds/xrpc/test.endpoint', async ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json({ success: true });
+      }),
+    );
+
+    const client = new TestClient();
+    client.setPdsUrl('https://next.pds/xrpc/');
+
+    await client.callMakeRequest('/test.endpoint');
+
+    expect(capturedUrl).toBe('https://next.pds/xrpc/test.endpoint');
+  });
+
+  it('throws when no PDS URL has been configured', async () => {
+    const client = new TestClient();
+    client.clearPdsUrl();
+
+    await expect(client.callMakeRequest('/test.endpoint')).rejects.toThrow(
+      'A Bluesky PDS URL has not been configured. Call setPdsUrl() first.',
+    );
+  });
+
   it('omits content type header for FormData bodies', async () => {
     let capturedHeaders: Record<string, string> | null = null;
     let capturedFile: FormDataEntryValue | null = null;
