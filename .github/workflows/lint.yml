@@ -10,20 +10,120 @@ on:
   workflow_dispatch:
 
 jobs:
+  discover-lint-workspaces:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.workspace-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: workspace-matrix
+        name: Determine lint workspaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          matrix=$(node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          const root = process.cwd();
+          const packageJsonPath = path.join(root, 'package.json');
+          const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+          const workspacePatterns = Array.isArray(packageJson.workspaces) ? packageJson.workspaces : [];
+
+          const expandPattern = (pattern) => {
+            const normalized = String(pattern).replace(/\\/g, '/');
+            const segments = normalized.split('/').filter(Boolean);
+            if (segments.length === 0) {
+              return [];
+            }
+
+            const results = [];
+            const traverse = (index, parts) => {
+              if (index === segments.length) {
+                results.push(parts.join('/'));
+                return;
+              }
+
+              const segment = segments[index];
+              if (segment === '*' || segment === '**') {
+                const directory = path.join(root, ...parts);
+                if (!fs.existsSync(directory) || !fs.statSync(directory).isDirectory()) {
+                  return;
+                }
+
+                for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+                  if (entry.isDirectory()) {
+                    traverse(index + 1, [...parts, entry.name]);
+                  }
+                }
+
+                return;
+              }
+
+              const nextParts = [...parts, segment];
+              const nextPath = path.join(root, ...nextParts);
+              if (!fs.existsSync(nextPath)) {
+                return;
+              }
+
+              traverse(index + 1, nextParts);
+            };
+
+            traverse(0, []);
+            return results;
+          };
+
+          const seen = new Set();
+          const workspaces = [];
+
+          for (const pattern of workspacePatterns) {
+            for (const workspacePath of expandPattern(pattern)) {
+              const packageJsonFile = path.join(root, workspacePath, 'package.json');
+              if (!fs.existsSync(packageJsonFile)) {
+                continue;
+              }
+
+              const workspacePackage = JSON.parse(fs.readFileSync(packageJsonFile, 'utf8'));
+              const workspaceName = workspacePackage.name;
+
+              if (typeof workspaceName !== 'string' || workspaceName.length === 0) {
+                continue;
+              }
+
+              if (seen.has(workspaceName)) {
+                continue;
+              }
+
+              seen.add(workspaceName);
+              workspaces.push({
+                workspace: workspaceName,
+                scripts: workspacePackage.scripts ?? {},
+              });
+            }
+          }
+
+          workspaces.sort((a, b) => a.workspace.localeCompare(b.workspace));
+
+          const lintWorkspaces = workspaces
+            .filter(({ scripts }) => typeof scripts.lint === 'string')
+            .map(({ workspace }) => ({ workspace }));
+
+          if (lintWorkspaces.length === 0) {
+            throw new Error('No lint workspaces found in the repository workspaces configuration.');
+          }
+
+          process.stdout.write(JSON.stringify({ include: lintWorkspaces }));
+          NODE
+          )
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
   lint:
+    needs: discover-lint-workspaces
     name: lint (${{ matrix.workspace }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - workspace: akari
-          - workspace: docs
-          - workspace: bluesky-api
-          - workspace: clearsky-api
-          - workspace: constellation-api
-          - workspace: libretranslate-api
-          - workspace: tenor-api
+      matrix: ${{ fromJSON(needs.discover-lint-workspaces.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
