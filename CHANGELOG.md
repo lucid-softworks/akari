@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.0](https://github.com/ImLunaHey/akari/compare/v1.2.2...v1.3.0) (2025-10-03)
+
+
+### Features
+
+* add constellation api package ([#307](https://github.com/ImLunaHey/akari/issues/307)) ([fe123b7](https://github.com/ImLunaHey/akari/commit/fe123b7c2960ee48f9fbca506af618bf60f3b55b))
+
+
+### Bug Fixes
+
+* add background processing mode to Info.plist ([#297](https://github.com/ImLunaHey/akari/issues/297)) ([fece23c](https://github.com/ImLunaHey/akari/commit/fece23cbd38f35c8e9ca7b920a70e7f6b0e60c12))
+* align react-test-renderer with react 19.1 ([#317](https://github.com/ImLunaHey/akari/issues/317)) ([2f23419](https://github.com/ImLunaHey/akari/commit/2f2341902701d55404671f8cfe1d2a80cb917fbe))
+* allow release deploy workflow to write contents ([#292](https://github.com/ImLunaHey/akari/issues/292)) ([f7974f5](https://github.com/ImLunaHey/akari/commit/f7974f5d5d8d3f8f48f8d1930e11bc9117b83485))
+* building ([#316](https://github.com/ImLunaHey/akari/issues/316)) ([3d27e92](https://github.com/ImLunaHey/akari/commit/3d27e92acd6270cc955669e38ef094189c37ea09))
+* configure release-please token fallback ([#318](https://github.com/ImLunaHey/akari/issues/318)) ([7b7bb33](https://github.com/ImLunaHey/akari/commit/7b7bb33f98b0a144573e5d3d397400bcd81bf350))
+* defer resolving videos until playback ([#310](https://github.com/ImLunaHey/akari/issues/310)) ([fa86e28](https://github.com/ImLunaHey/akari/commit/fa86e2862c8840cfb80f36fa6eea11898b7e08ae))
+* enforce release-please PAT usage ([#320](https://github.com/ImLunaHey/akari/issues/320)) ([d7e5ac3](https://github.com/ImLunaHey/akari/commit/d7e5ac3589b68c1d1008628b9a94786e40a234b4))
+* ensure until-async is transformed in package tests ([#322](https://github.com/ImLunaHey/akari/issues/322)) ([f741de4](https://github.com/ImLunaHey/akari/commit/f741de420044efee823851f6ff93455fa78ea990))
+* render like-via-repost notifications like likes ([#303](https://github.com/ImLunaHey/akari/issues/303)) ([13441b4](https://github.com/ImLunaHey/akari/commit/13441b42a88337061ff4b166f5f1070b5c81aea9))
+* sticky header via VirtualizedList ([#294](https://github.com/ImLunaHey/akari/issues/294)) ([ce92e37](https://github.com/ImLunaHey/akari/commit/ce92e37aab407589747a577db475cc94520b09c2))
+
 ## [1.2.2](https://github.com/ImLunaHey/akari/compare/v1.2.1...v1.2.2) (2025-09-27)
 
 
