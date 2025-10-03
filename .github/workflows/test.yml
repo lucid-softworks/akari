@@ -129,15 +129,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
-          cache: npm
-      - name: Cache node modules
-        id: cache-node-modules
+      - name: Cache npm
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      - if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm ci
       - name: Run tests with coverage
         run: npm run test:coverage --workspace ${{ matrix.workspace }}
       - name: Upload coverage artifact
@@ -161,15 +160,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
-          cache: npm
-      - name: Cache node modules
-        id: cache-node-modules
+      - name: Cache npm
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      - if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm ci
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
         with:
@@ -201,14 +199,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
-          cache: npm
-      - name: Cache node modules
-        id: cache-node-modules
+      - name: Cache npm
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      - if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e -- --reporter=github
