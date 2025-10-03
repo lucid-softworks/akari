@@ -11,25 +11,22 @@ type VariantDefinition = {
 
 const DEFAULT_VARIANT: AppVariant = 'development';
 
-const FALLBACK_SLUG = 'akari-v2';
-const FALLBACK_PROJECT_ID = '544afaeb-5cfb-40ab-b8ff-6e7154c49d1d';
-
 const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
-    appName: 'akari-v2 Dev',
-    scheme: 'akariv2dev',
+    appName: 'akari Dev',
+    scheme: 'akaridev',
     iosBundleIdentifier: 'works.lucidsoft.akari.dev',
     androidPackage: 'works.lucidsoft.akari.dev',
   },
   preview: {
-    appName: 'akari-v2 Preview',
-    scheme: 'akariv2preview',
+    appName: 'akari Preview',
+    scheme: 'akaripreview',
     iosBundleIdentifier: 'works.lucidsoft.akari.preview',
     androidPackage: 'works.lucidsoft.akari.preview',
   },
   production: {
-    appName: 'akari-v2',
-    scheme: 'akariv2',
+    appName: 'akari',
+    scheme: 'akari',
     iosBundleIdentifier: 'works.lucidsoft.akari',
     androidPackage: 'works.lucidsoft.akari',
   },
@@ -58,8 +55,8 @@ const resolveVariant = (): AppVariant => {
 const createConfigForVariant = (variant: AppVariant, baseConfig: ExpoConfig): Partial<ExpoConfig> => {
   const variantDefinition = VARIANT_DEFINITIONS[variant];
 
-  const slug = baseConfig.slug ?? FALLBACK_SLUG;
-  const projectId = baseConfig.extra?.eas?.projectId ?? FALLBACK_PROJECT_ID;
+  const slug = baseConfig.slug;
+  const projectId = baseConfig.extra?.eas?.projectId;
 
   return {
     name: variantDefinition.appName,

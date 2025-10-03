@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "akari-v2",
-    "slug": "akari-v2",
+    "name": "akari",
+    "slug": "akari",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "akariv2",
+    "scheme": "akari",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -89,12 +89,14 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "544afaeb-5cfb-40ab-b8ff-6e7154c49d1d"
+        "projectId": "51a386f4-6cb2-4901-ad5f-29b69a16ba28"
       },
-      "supportsRTL": true
+      "supportsRTL": true,
+      "variant": "development",
+      "buildMetadata": {
+        "commitSha": {}
+      }
     },
-    "updates": {
-      "url": "https://u.expo.dev/544afaeb-5cfb-40ab-b8ff-6e7154c49d1d"
-    }
+    "owner": "lucid-softworks"
   }
 }
