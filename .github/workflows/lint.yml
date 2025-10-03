@@ -11,7 +11,19 @@ on:
 
 jobs:
   lint:
+    name: lint (${{ matrix.workspace }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - workspace: akari
+          - workspace: docs
+          - workspace: bluesky-api
+          - workspace: clearsky-api
+          - workspace: constellation-api
+          - workspace: libretranslate-api
+          - workspace: tenor-api
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,4 +31,5 @@ jobs:
           node-version: 24.9.0
           cache: npm
       - run: npm ci
-      - run: npm run lint
+      - name: Run lint
+        run: npm run lint --workspace ${{ matrix.workspace }}

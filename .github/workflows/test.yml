@@ -10,22 +10,71 @@ on:
 
 jobs:
   unit:
-    name: unit
+    name: unit (${{ matrix.workspace }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - workspace: akari
+            path: apps/akari
+          - workspace: bluesky-api
+            path: packages/bluesky-api
+          - workspace: clearsky-api
+            path: packages/clearsky-api
+          - workspace: constellation-api
+            path: packages/constellation-api
+          - workspace: libretranslate-api
+            path: packages/libretranslate-api
+          - workspace: tenor-api
+            path: packages/tenor-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.9.0
+          cache: npm
+      - run: npm ci
+      - name: Run tests with coverage
+        run: npm run test:coverage --workspace ${{ matrix.workspace }}
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.workspace }}
+          path: ${{ matrix.path }}/coverage
+          if-no-files-found: error
+  coverage-report:
+    name: coverage report
+    needs: unit
+    if: ${{ needs.unit.result == 'success' }}
     permissions:
       contents: write
       pull-requests: write
       checks: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
           cache: npm
       - run: npm ci
-      - run: npm run test:coverage --workspaces --if-present
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: coverage-artifacts
+          pattern: coverage-*
+      - name: Restore coverage directories
+        run: |
+          shopt -s dotglob nullglob
+          for artifact in coverage-artifacts/*; do
+            if [ -d "$artifact" ]; then
+              cp -R "$artifact"/. ./
+            fi
+          done
       - name: Merge coverage reports
-        run: node ./scripts/merge-coverage.cjs
+        run: npm run merge-coverage
       - name: Report coverage
         uses: ./.github/actions/report-coverage
         with:
@@ -38,7 +87,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
