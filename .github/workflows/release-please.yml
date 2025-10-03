@@ -22,13 +22,24 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
+      - name: Verify release token is configured
+        if: env.RELEASE_PLEASE_TOKEN == ''
+        run: |
+          echo "::error::RELEASE_PLEASE_TOKEN is not configured. Add a personal access token secret with repository read and write access (classic: repo, fine-grained: Contents - Read and write)."
+          exit 1
+
       - name: Run release-please
         id: release
         uses: googleapis/release-please-action@v4
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          token: ${{ env.RELEASE_PLEASE_TOKEN != '' && env.RELEASE_PLEASE_TOKEN || github.token }}
+          token: ${{ env.RELEASE_PLEASE_TOKEN }}
+
+      - name: Surface PAT permission guidance
+        if: failure() && steps.release.outcome == 'failure'
+        run: |
+          echo "::error::release-please failed when using RELEASE_PLEASE_TOKEN. Confirm the token includes repository read and write permissions (classic: repo, fine-grained: Contents - Read and write)."
 
   deploy:
     needs: release-please
