@@ -136,7 +136,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - run: npm ci
+      - run: npm ci --prefer-offline
       - name: Run tests with coverage
         run: npm run test:coverage --workspace ${{ matrix.workspace }}
       - name: Prepare coverage artifact metadata
@@ -175,7 +175,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - run: npm ci
+      - run: npm ci --prefer-offline
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
         with:
@@ -226,6 +226,6 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - run: npm ci
+      - run: npm ci --prefer-offline
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e -- --reporter=github

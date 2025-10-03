@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 24.9.0
           cache: npm
-      - run: npm ci
+      - run: npm ci --prefer-offline
       - name: Validate translations
         id: validate_translations
         continue-on-error: true

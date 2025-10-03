@@ -136,6 +136,6 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - run: npm ci
+      - run: npm ci --prefer-offline
       - name: Run lint
         run: npm run lint --workspace ${{ matrix.workspace }}
