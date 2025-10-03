@@ -30,9 +30,9 @@ The Expo configuration supports separate application IDs for each build profile 
 
 Available variants:
 
-- `development` → bundle/package `com.imlunahey.akariv2.dev`
-- `preview` → bundle/package `com.imlunahey.akariv2.preview`
-- `production` → bundle/package `com.imlunahey.akariv2`
+- `development` → bundle/package `works.lucidsoft.akari.dev`
+- `preview` → bundle/package `works.lucidsoft.akari.preview`
+- `production` → bundle/package `works.lucidsoft.akari`
 
 Examples:
 
@@ -60,7 +60,6 @@ npm run ios:production
 
 EAS build profiles in `eas.json` export the correct `APP_VARIANT` automatically.
 
-
 ## 🔐 Secure Storage Configuration
 
 ### Development Setup
@@ -82,9 +81,8 @@ The app uses react-native-mmkv for encrypted storage of sensitive data like JWT 
 
    ```typescript
    export const secureStorage = new MMKV({
-     id: "secure-storage",
-     encryptionKey:
-       process.env.MMKV_ENCRYPTION_KEY || "your-secure-production-key-here",
+     id: 'secure-storage',
+     encryptionKey: process.env.MMKV_ENCRYPTION_KEY || 'your-secure-production-key-here',
    });
    ```
 
@@ -123,7 +121,7 @@ The app includes a complete authentication system with:
 To integrate with your backend API:
 
 ```typescript
-import { jwtStorage } from "@/utils/secureStorage";
+import { jwtStorage } from '@/utils/secureStorage';
 
 // After successful login
 jwtStorage.setToken(response.accessJwt);

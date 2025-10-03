@@ -18,20 +18,20 @@ const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
     appName: 'akari-v2 Dev',
     scheme: 'akariv2dev',
-    iosBundleIdentifier: 'com.imlunahey.akariv2.dev',
-    androidPackage: 'com.imlunahey.akariv2.dev',
+    iosBundleIdentifier: 'works.lucidsoft.akari.dev',
+    androidPackage: 'works.lucidsoft.akari.dev',
   },
   preview: {
     appName: 'akari-v2 Preview',
     scheme: 'akariv2preview',
-    iosBundleIdentifier: 'com.imlunahey.akariv2.preview',
-    androidPackage: 'com.imlunahey.akariv2.preview',
+    iosBundleIdentifier: 'works.lucidsoft.akari.preview',
+    androidPackage: 'works.lucidsoft.akari.preview',
   },
   production: {
     appName: 'akari-v2',
     scheme: 'akariv2',
-    iosBundleIdentifier: 'com.imlunahey.akariv2',
-    androidPackage: 'com.imlunahey.akariv2',
+    iosBundleIdentifier: 'works.lucidsoft.akari',
+    androidPackage: 'works.lucidsoft.akari',
   },
 };
 
