@@ -139,11 +139,19 @@ jobs:
       - run: npm ci
       - name: Run tests with coverage
         run: npm run test:coverage --workspace ${{ matrix.workspace }}
+      - name: Prepare coverage artifact metadata
+        if: always()
+        id: coverage-metadata
+        shell: bash
+        run: |
+          workspace_path='${{ matrix.path }}'
+          sanitized="${workspace_path//\//___SLASH___}"
+          echo "name=coverage-${sanitized}" >> "$GITHUB_OUTPUT"
       - name: Upload coverage artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.workspace }}
+          name: ${{ steps.coverage-metadata.outputs.name }}
           path: ${{ matrix.path }}/coverage
           if-no-files-found: error
   coverage-report:
@@ -178,7 +186,19 @@ jobs:
           shopt -s dotglob nullglob
           for artifact in coverage-artifacts/*; do
             if [ -d "$artifact" ]; then
-              cp -R "$artifact"/. ./
+              name="${artifact##*/}"
+              sanitized="${name#coverage-}"
+              workspace_path="${sanitized//___SLASH___//}"
+              coverage_dir="$artifact/coverage"
+
+              if [ ! -d "$coverage_dir" ]; then
+                echo "Coverage directory not found in $artifact" >&2
+                exit 1
+              fi
+
+              rm -rf "$workspace_path/coverage"
+              mkdir -p "$workspace_path"
+              cp -R "$coverage_dir" "$workspace_path/coverage"
             fi
           done
       - name: Merge coverage reports
