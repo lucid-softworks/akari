@@ -12,7 +12,17 @@ module.exports = {
         tsconfig: './tsconfig.json',
       },
     ],
+    'node_modules/until-async/.*\\.js$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          esModuleInterop: true,
+        },
+      },
+    ],
   },
+  transformIgnorePatterns: ['node_modules/(?!until-async)'],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/*.d.ts'],
   coverageDirectory: 'coverage',

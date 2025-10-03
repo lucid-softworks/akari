@@ -35,6 +35,16 @@ module.exports = {
         tsconfig: jestTsconfig,
       },
     ],
+    'node_modules/until-async/.*\\.js$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          esModuleInterop: true,
+        },
+      },
+    ],
   },
+  transformIgnorePatterns: ['node_modules/(?!until-async)'],
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };
