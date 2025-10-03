@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.imlunahey.akariv2",
+      "bundleIdentifier": "works.lucidsoft.akari",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleAllowMixedLocalizations": true,
@@ -29,7 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.imlunahey.akariv2",
+      "package": "works.lucidsoft.akari",
       "permissions": ["android.permission.RECORD_AUDIO"],
       "runtimeVersion": {
         "policy": "appVersion"
