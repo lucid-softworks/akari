@@ -103,8 +103,11 @@ const mockHapticTab = HapticTab as jest.Mock;
 const { AccountSwitcherSheet } = require('@/components/AccountSwitcherSheet');
 const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
+let navigateToTabRootMock: jest.Mock;
+
 beforeEach(() => {
   jest.clearAllMocks();
+  navigateToTabRootMock = jest.fn();
   mockUseCurrentAccount.mockReturnValue({
     data: {
       did: 'did:plc:test',
@@ -124,7 +127,7 @@ beforeEach(() => {
   mockUseTabNavigation.mockReturnValue({
     activeTab: 'index',
     isSharedRouteFocused: false,
-    navigateToTabRoot: jest.fn(),
+    navigateToTabRoot: navigateToTabRootMock,
     openPost: jest.fn(),
     openProfile: jest.fn(),
   });
@@ -334,6 +337,7 @@ describe('HardcodedTabBar interactions', () => {
     expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
     expect(mockHandleTabPress).toHaveBeenCalledWith('index');
     expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(navigateToTabRootMock).not.toHaveBeenCalled();
   });
 
   it('navigates to a different tab when pressed', () => {
@@ -349,7 +353,8 @@ describe('HardcodedTabBar interactions', () => {
       target: 'search-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('(search)');
+    expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(navigateToTabRootMock).toHaveBeenCalledWith('search');
     expect(mockHandleTabPress).not.toHaveBeenCalled();
   });
 
@@ -392,7 +397,8 @@ describe('HardcodedTabBar interactions', () => {
       target: 'index-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('(index)');
+    expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(navigateToTabRootMock).toHaveBeenCalledWith('index');
     expect(mockHandleTabPress).toHaveBeenCalledWith('index');
   });
 

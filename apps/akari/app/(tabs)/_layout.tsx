@@ -144,11 +144,7 @@ function HardcodedTabBar({
 
             if (isFocused && (isNestedRouteFocused || isSharedRouteFocused)) {
               if (!event.defaultPrevented) {
-                if (isSharedRouteFocused) {
-                  navigateToTabRoot(tabKey);
-                } else {
-                  navigation.navigate(route.name as never);
-                }
+                navigateToTabRoot(tabKey);
                 tabScrollRegistry.handleTabPress(tabKey);
               }
 
@@ -161,7 +157,7 @@ function HardcodedTabBar({
             }
 
             if (!event.defaultPrevented) {
-              navigation.navigate(route.name as never);
+              navigateToTabRoot(tabKey);
             }
           };
 
