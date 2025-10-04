@@ -337,7 +337,8 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   listHeaderContent: {
-    paddingHorizontal: 16,
+    width: '100%',
+    alignSelf: 'stretch',
   },
   header: {
     alignItems: 'center',
