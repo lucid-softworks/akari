@@ -5,6 +5,7 @@
 - Run `npm run lint -- --filter=akari` (and any other impacted workspace scripts) before calling the PR tool. Resolve lint failures locally.
 - Keep the worktree clean—only committed changes are evaluated. Stage and commit logically related updates together.
 - Always read nested `AGENTS.md` files. Directories define additional rules that override or extend these base expectations.
+- Skip capturing or requesting UI screenshots; they are not required for this repository.
 
 ## TypeScript and coding style
 - Prefer `type` aliases over `interface` declarations across the entire repository.
