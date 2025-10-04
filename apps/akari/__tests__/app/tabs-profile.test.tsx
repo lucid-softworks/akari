@@ -136,6 +136,9 @@ jest.mock('@/components/ProfileTabs', () => {
         <TouchableOpacity onPress={() => onTabChange('posts')}>
           <Text>posts tab</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('whitewind')}>
+          <Text>whitewind tab</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => onTabChange('replies')}>
           <Text>replies tab</Text>
         </TouchableOpacity>
@@ -211,6 +214,12 @@ jest.mock('@/components/profile/ReposTab', () => {
   const React = require('react');
   const { Text } = require('react-native');
   return { ReposTab: ({ handle }: any) => <Text>repos {handle}</Text> };
+});
+
+jest.mock('@/components/profile/WhitewindTab', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { WhitewindTab: ({ handle }: any) => <Text>whitewind {handle}</Text> };
 });
 
 jest.mock('@/components/ThemedView', () => {

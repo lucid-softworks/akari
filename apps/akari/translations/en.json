@@ -171,6 +171,7 @@
       "media": "Media",
       "videos": "Videos",
       "feeds": "Feeds",
+      "whitewind": "Whitewind",
       "repos": "Repos",
       "starterpacks": "Starterpacks",
       "posts": "Posts {{count}}",

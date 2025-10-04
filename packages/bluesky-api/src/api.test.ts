@@ -16,6 +16,7 @@ import type {
   BlueskySession,
   BlueskyStarterPacksResponse,
   BlueskyTangledReposResponse,
+  BlueskyWhtwndEntriesResponse,
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
   BlueskyUnreadNotificationCount,
@@ -99,6 +100,7 @@ describe('BlueskyApi', () => {
     const thread = { thread: {} } as unknown as BlueskyThreadResponse;
     const starterpacks = { starterPacks: [] } as unknown as BlueskyStarterPacksResponse;
     const reposResponse = { records: [] } as unknown as BlueskyTangledReposResponse;
+    const whtwndResponse = { records: [] } as unknown as BlueskyWhtwndEntriesResponse;
     const blob = { blob: { ref: { $link: 'ref' }, mimeType: 'image/png', size: 1 } } as BlueskyUploadBlobResponse;
     const postInput: BlueskyCreatePostInput = { text: 'Hello' };
     const postResponse = { uri: 'at://post/1', cid: 'cid', commit: { cid: 'cid', rev: 'rev' }, validationStatus: 'valid' } as BlueskyCreatePostResponse;
@@ -123,6 +125,7 @@ describe('BlueskyApi', () => {
     };
     internal.repos = {
       getActorRepos: jest.fn().mockResolvedValue(reposResponse),
+      getAuthorWhtwndPosts: jest.fn().mockResolvedValue(whtwndResponse),
     };
 
     await expect(api.getTimeline('jwt', 10)).resolves.toBe(feed);
@@ -138,6 +141,7 @@ describe('BlueskyApi', () => {
     await expect(api.getAuthorFeeds('jwt', 'did:example', 15)).resolves.toBe(feedsResponse);
     await expect(api.getAuthorStarterpacks('jwt', 'did:example', 15)).resolves.toBe(starterpacks);
     await expect(api.getActorRepos('jwt', 'did:example', 15)).resolves.toBe(reposResponse);
+    await expect(api.getAuthorWhtwndPosts('jwt', 'did:example', 30)).resolves.toBe(whtwndResponse);
     await expect(api.createPost('jwt', 'did:example', postInput)).resolves.toBe(postResponse);
     await expect(api.uploadImage('jwt', 'file://image.png', 'image/png')).resolves.toBe(blob);
     await expect(api.likePost('jwt', 'at://post/1', 'cid', 'did:example')).resolves.toEqual({ uri: 'like' });
@@ -150,6 +154,7 @@ describe('BlueskyApi', () => {
     expect(internal.feeds.getFeedGenerators).toHaveBeenCalledWith('jwt', ['at://feed/a']);
     expect(internal.feeds.createPost).toHaveBeenCalledWith('jwt', 'did:example', postInput);
     expect(internal.repos.getActorRepos).toHaveBeenCalledWith('jwt', 'did:example', 15, undefined);
+    expect(internal.repos.getAuthorWhtwndPosts).toHaveBeenCalledWith('jwt', 'did:example', 30, undefined);
   });
 
   it('delegates conversation operations to the conversations client', async () => {
