@@ -1,5 +1,25 @@
-import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { Account } from '@/types/account';
+import { storage } from '@/utils/secureStorage';
+
+type SetAuthenticationInput = {
+  token: string;
+  refreshToken: string;
+  did: string;
+  handle: string;
+  pdsUrl?: string;
+  displayName?: string | null;
+  avatar?: string | null;
+};
+
+const resolveAvatar = (avatar: string | null | undefined, previous?: string) => {
+  if (avatar === undefined) {
+    return previous;
+  }
+
+  return avatar ?? undefined;
+};
 
 /**
  * Mutation hook for setting all authentication data at once
@@ -9,39 +29,61 @@ export function useSetAuthentication() {
 
   return useMutation({
     mutationKey: ['setAuthentication'],
-    mutationFn: async ({
+    mutationFn: async (input: SetAuthenticationInput) => input,
+    onSuccess: async ({
       token,
       refreshToken,
       did,
       handle,
       pdsUrl,
-    }: {
-      token: string;
-      refreshToken: string;
-      did: string;
-      handle: string;
-      pdsUrl?: string;
+      displayName,
+      avatar,
     }) => {
-      return { token, refreshToken, did, handle, pdsUrl };
-    },
-    onSuccess: async ({ token, refreshToken, did, handle, pdsUrl }) => {
       queryClient.setQueryData(['jwtToken'], token);
       queryClient.setQueryData(['refreshToken'], refreshToken);
 
-      // Create and set the current account
-      const currentAccount = {
+      const cachedAccount =
+        (queryClient.getQueryData<Account | null>(['currentAccount']) ?? null) ||
+        storage.getItem('currentAccount');
+
+      const mergedAccount: Account = {
+        ...cachedAccount,
         did,
         handle,
         jwtToken: token,
         refreshToken,
-        pdsUrl,
+        pdsUrl: pdsUrl ?? cachedAccount?.pdsUrl,
+        displayName: displayName ?? cachedAccount?.displayName,
+        avatar: resolveAvatar(avatar, cachedAccount?.avatar),
       };
-      queryClient.setQueryData(['currentAccount'], currentAccount);
+
+      queryClient.setQueryData(['currentAccount'], mergedAccount);
+
+      const cachedAccounts =
+        queryClient.getQueryData<Account[]>(['accounts']) ?? storage.getItem('accounts');
+
+      const accountsList = cachedAccounts ?? [];
+      let accountFound = false;
+      const updatedAccounts = accountsList.map((account) => {
+        if (account.did !== mergedAccount.did) {
+          return account;
+        }
+
+        accountFound = true;
+        return { ...account, ...mergedAccount };
+      });
+
+      if (!accountFound) {
+        updatedAccounts.push(mergedAccount);
+      }
+
+      queryClient.setQueryData(['accounts'], updatedAccounts);
 
       // Manually persist the updated queries
       storage.setItem('jwtToken', token);
       storage.setItem('refreshToken', refreshToken);
-      storage.setItem('currentAccount', currentAccount);
+      storage.setItem('currentAccount', mergedAccount);
+      storage.setItem('accounts', updatedAccounts);
     },
   });
 }

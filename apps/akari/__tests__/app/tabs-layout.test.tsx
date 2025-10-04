@@ -4,6 +4,7 @@ import TabLayout from '@/app/(tabs)/_layout';
 import { ActivityIndicator } from 'react-native';
 
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -29,6 +30,7 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('@/hooks/queries/useAuthStatus');
+jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/useResponsive');
@@ -83,6 +85,7 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 }));
 
 const mockUseAuthStatus = useAuthStatus as jest.Mock;
+const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
@@ -99,6 +102,14 @@ const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockUseCurrentAccount.mockReturnValue({
+    data: {
+      did: 'did:plc:test',
+      handle: 'test.user',
+      displayName: 'Test User',
+      avatar: 'https://avatar.test/img.png',
+    },
+  });
   mockUseUnreadMessagesCount.mockReturnValue({ data: 0 });
   mockUseUnreadNotificationsCount.mockReturnValue({ data: 0 });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });

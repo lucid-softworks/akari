@@ -6,6 +6,7 @@ import { useSignIn } from '@/hooks/mutations/useSignIn';
 
 const mockSetAuth = { mutateAsync: jest.fn() };
 const mockCreateSession = jest.fn();
+const mockGetProfile = jest.fn();
 
 jest.mock('@/hooks/mutations/useSetAuthentication', () => ({
   useSetAuthentication: jest.fn(() => mockSetAuth),
@@ -14,6 +15,7 @@ jest.mock('@/hooks/mutations/useSetAuthentication', () => ({
 jest.mock('@/bluesky-api', () => ({
   BlueskyApi: jest.fn(() => ({
     createSession: mockCreateSession,
+    getProfile: mockGetProfile,
   })),
 }));
 
@@ -36,6 +38,13 @@ describe('useSignIn mutation hook', () => {
       did: 'did',
       handle: 'handle',
     });
+    mockGetProfile.mockResolvedValue({
+      did: 'did',
+      handle: 'handle',
+      displayName: 'Display Name',
+      avatar: 'https://avatar.test/img.png',
+      indexedAt: '2024-01-01T00:00:00.000Z',
+    });
   });
 
   it('signs in and stores auth data', async () => {
@@ -49,11 +58,15 @@ describe('useSignIn mutation hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
     expect(mockCreateSession).toHaveBeenCalledWith('user', 'pass');
+    expect(mockGetProfile).toHaveBeenCalledWith('token', 'did');
     expect(mockSetAuth.mutateAsync).toHaveBeenCalledWith({
       token: 'token',
       refreshToken: 'refresh',
       did: 'did',
       handle: 'handle',
+      pdsUrl: 'url',
+      displayName: 'Display Name',
+      avatar: 'https://avatar.test/img.png',
     });
     expect(invalidateSpy).toHaveBeenCalled();
   });
