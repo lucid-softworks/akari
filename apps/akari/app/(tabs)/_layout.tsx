@@ -284,11 +284,12 @@ export default function TabLayout() {
                 minHeight: '100%',
               }}
             >
-              <Tabs
-                screenOptions={{
-                  headerShown: false,
-                  tabBarStyle: { display: 'none' },
-                }}
+      <Tabs
+        initialRouteName="(index)"
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
               >
                 <Tabs.Screen name="(index)" />
                 <Tabs.Screen name="(search)" />
@@ -309,6 +310,7 @@ export default function TabLayout() {
   return (
     <>
       <Tabs
+        initialRouteName="(index)"
         screenOptions={{
           headerShown: false,
         }}
