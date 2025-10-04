@@ -2,9 +2,6 @@ import { render } from '@testing-library/react-native';
 import React from 'react';
 import MessagesLayout from '@/app/(tabs)/messages/_layout';
 
-jest.mock('@/app/(tabs)/post/[id]', () => () => null);
-jest.mock('@/app/(tabs)/profile/[handle]', () => () => null);
-
 jest.mock('expo-router', () => {
   const React = require('react');
   const Screen = jest.fn(() => null);
@@ -19,15 +16,15 @@ describe('MessagesLayout', () => {
     jest.clearAllMocks();
   });
 
-  it('renders stack with index, pending, [handle], post, and profile screens', () => {
+  it('renders stack with index, pending, and handle screens', () => {
     const { Stack } = require('expo-router');
     render(<MessagesLayout />);
     expect(Stack.mock.calls[0][0].screenOptions).toEqual({ headerShown: false });
-    expect(Stack.Screen).toHaveBeenCalledTimes(5);
+    expect(Stack.Screen).toHaveBeenCalledTimes(3);
     const names: string[] = [];
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
-    expect(names).toEqual(['index', 'pending', '[handle]', 'post/[id]', 'profile/[handle]']);
+    expect(names).toEqual(['index', 'pending', '[handle]']);
   });
 });

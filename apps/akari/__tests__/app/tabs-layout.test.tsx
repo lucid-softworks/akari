@@ -13,6 +13,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('expo-router', () => {
   const React = require('react');
@@ -37,6 +38,7 @@ jest.mock('@/hooks/useResponsive');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
+jest.mock('@/hooks/useTabNavigation');
 
 jest.mock('@/components/HapticTab', () => {
   const React = require('react');
@@ -94,6 +96,7 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
@@ -118,6 +121,11 @@ beforeEach(() => {
     (props: { light?: string; dark?: string }) => props?.light ?? props?.dark ?? '#000',
   );
   mockUseSafeAreaInsets.mockReturnValue({ top: 0, right: 0, bottom: 0, left: 0 });
+  mockUseTabNavigation.mockReturnValue({
+    activeTab: 'index',
+    openPost: jest.fn(),
+    openProfile: jest.fn(),
+  });
   mockAccountSwitcherSheet.mockClear();
 });
 
@@ -155,6 +163,8 @@ describe('TabLayout', () => {
       'bookmarks',
       'profile',
       'settings',
+      'post/[id]',
+      'profile/[handle]',
     ]);
   });
 
@@ -206,6 +216,8 @@ describe('TabLayout', () => {
       'bookmarks',
       'profile',
       'settings',
+      'post/[id]',
+      'profile/[handle]',
     ]);
   });
 

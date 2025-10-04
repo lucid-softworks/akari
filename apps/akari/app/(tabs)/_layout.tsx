@@ -17,6 +17,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -83,6 +84,7 @@ function HardcodedTabBar({
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
   const insets = useSafeAreaInsets();
+  const { activeTab } = useTabNavigation();
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
@@ -112,7 +114,7 @@ function HardcodedTabBar({
           }
 
           const route = state.routes[routeIndex];
-          const isFocused = state.index === routeIndex;
+          const isFocused = tabKey === activeTab;
           const color = isFocused ? accentColor : inactiveTint;
           const badgeCount =
             tabKey === 'messages'
@@ -269,6 +271,8 @@ export default function TabLayout() {
                 <Tabs.Screen name="bookmarks" options={{ href: null }} />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
+                <Tabs.Screen name="post/[id]" options={{ href: null }} />
+                <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
               </Tabs>
             </View>
           </View>
@@ -353,6 +357,8 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
+        <Tabs.Screen name="post/[id]" options={{ href: null }} />
+        <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
