@@ -74,10 +74,20 @@ beforeEach(() => {
     handle: 'handle',
     accessJwt: 'token',
     refreshJwt: 'refresh',
+    pdsUrl: 'https://pds',
+    profile: {
+      did: 'did',
+      handle: 'handle',
+      displayName: 'Display Name',
+      avatar: 'https://avatar.test/img.png',
+      indexedAt: '2024-01-01T00:00:00.000Z',
+    },
   });
   addAccountMutate = jest.fn().mockResolvedValue({
     did: 'did',
     handle: 'handle',
+    displayName: 'Display Name',
+    avatar: 'https://avatar.test/img.png',
     jwtToken: 'token',
     refreshToken: 'refresh',
     pdsUrl: 'https://pds',
@@ -190,6 +200,8 @@ describe('AuthScreen', () => {
     expect(addAccountMutate).toHaveBeenCalledWith({
       did: 'did',
       handle: 'handle',
+      displayName: 'Display Name',
+      avatar: 'https://avatar.test/img.png',
       jwtToken: 'token',
       refreshToken: 'refresh',
       pdsUrl: 'https://pds',

@@ -157,6 +157,37 @@ export function Sidebar() {
     );
   };
 
+  const renderNavigationIcon = (item: NavigationItem, isActive: boolean) => {
+    if (item.id !== 'profile') {
+      return (
+        <IconSymbol
+          name={item.icon}
+          size={18}
+          color={isActive ? palette.highlight : palette.textSecondary}
+        />
+      );
+    }
+
+    const avatarUri = activeAccount?.avatar;
+    const showInitial = !avatarUri;
+
+    return (
+      <View
+        style={[
+          styles.profileNavIcon,
+          isActive ? styles.profileNavIconActive : null,
+          showInitial ? (isActive ? styles.profileNavIconFallbackActive : styles.profileNavIconFallback) : null,
+        ]}
+      >
+        {avatarUri ? (
+          <Image source={{ uri: avatarUri }} style={styles.profileNavIconImage} contentFit="cover" />
+        ) : (
+          <Text style={styles.profileNavIconInitial}>{getAccountInitial(activeAccount)}</Text>
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
       <View style={styles.header}>
@@ -218,11 +249,7 @@ export function Sidebar() {
               >
                 {active ? <View style={styles.activeIndicator} /> : null}
                 <View style={[styles.iconContainer, collapsed && styles.iconCollapsedSpacing]}>
-                  <IconSymbol
-                    name={item.icon}
-                    size={18}
-                    color={active ? palette.highlight : palette.textSecondary}
-                  />
+                  {renderNavigationIcon(item, active)}
                 </View>
                 {!collapsed ? (
                   <>
@@ -441,6 +468,34 @@ const styles = StyleSheet.create({
   },
   iconCollapsedSpacing: {
     marginRight: 0,
+  },
+  profileNavIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  profileNavIconActive: {
+    borderColor: palette.highlight,
+  },
+  profileNavIconFallback: {
+    backgroundColor: palette.hover,
+  },
+  profileNavIconFallbackActive: {
+    backgroundColor: palette.highlight,
+  },
+  profileNavIconImage: {
+    width: '100%',
+    height: '100%',
+  },
+  profileNavIconInitial: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
   },
   navLabel: {
     flex: 1,

@@ -26,6 +26,8 @@ export function useSwitchAccount() {
         did: account.did,
         handle: account.handle,
         pdsUrl: account.pdsUrl,
+        displayName: account.displayName ?? null,
+        avatar: account.avatar ?? null,
       });
     },
   });

@@ -110,9 +110,13 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
         pdsUrl: detectedPdsUrl,
       });
 
+      const profile = session.profile;
+
       const newAccount = await addAccountMutation.mutateAsync({
         did: session.did,
         handle: session.handle,
+        displayName: profile?.displayName ?? session.handle,
+        avatar: profile?.avatar ?? undefined,
         jwtToken: session.accessJwt,
         refreshToken: session.refreshJwt,
         pdsUrl: detectedPdsUrl,

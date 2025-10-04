@@ -85,11 +85,18 @@ describe('authentication and account mutation hooks', () => {
       refreshToken: 'r',
       pdsUrl: 'url',
     });
+    expect(queryClient.getQueryData(['accounts'])).toEqual([
+      expect.objectContaining({ did: 'did', handle: 'handle' }),
+    ]);
     expect(storage.setItem).toHaveBeenCalledWith('jwtToken', 't');
     expect(storage.setItem).toHaveBeenCalledWith('refreshToken', 'r');
     expect(storage.setItem).toHaveBeenCalledWith(
       'currentAccount',
       expect.objectContaining({ did: 'did', handle: 'handle' }),
+    );
+    expect(storage.setItem).toHaveBeenCalledWith(
+      'accounts',
+      [expect.objectContaining({ did: 'did', handle: 'handle' })],
     );
   });
 
@@ -181,6 +188,8 @@ describe('authentication and account mutation hooks', () => {
       did: '3',
       handle: 'h3',
       pdsUrl: 'url',
+      displayName: null,
+      avatar: null,
     });
   });
 
