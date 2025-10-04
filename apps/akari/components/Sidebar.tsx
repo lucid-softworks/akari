@@ -1,5 +1,5 @@
-import { usePathname, useRouter } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useRouter } from 'expo-router';
+import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -13,6 +13,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { TAB_PATHS, useTabNavigation, type TabRouteKey } from '@/hooks/useTabNavigation';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -50,38 +51,38 @@ type NavigationItem = {
 
 export function Sidebar() {
   const router = useRouter();
-  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
+  const { activeTab } = useTabNavigation();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)/(index)' },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: TAB_PATHS.index },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: '/(tabs)/(notifications)',
+        route: TAB_PATHS.notifications,
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: '/(tabs)/(messages)',
+        route: TAB_PATHS.messages,
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/(search)' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/(bookmarks)' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/(profile)' },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/(settings)' },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: TAB_PATHS.search },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: TAB_PATHS.bookmarks },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: TAB_PATHS.profile },
+      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: TAB_PATHS.settings },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -101,16 +102,22 @@ export function Sidebar() {
     return source.charAt(0).toUpperCase();
   };
 
-  const normalizeRoute = useCallback((route: string) => route.replace('/(', '/').replace(')', ''), []);
+  const routeTabMap: Partial<Record<NavigationItem['id'], TabRouteKey>> = useMemo(
+    () => ({
+      timeline: 'index',
+      notifications: 'notifications',
+      messages: 'messages',
+      discover: 'search',
+      bookmarks: 'bookmarks',
+      profile: 'profile',
+      settings: 'settings',
+    }),
+    [],
+  );
 
   const isActiveRoute = (item: NavigationItem) => {
-    if (item.id === 'timeline') {
-      const timelineRoute = normalizeRoute(item.route);
-      return pathname === '/(tabs)' || pathname === item.route || pathname === timelineRoute;
-    }
-
-    const normalized = normalizeRoute(item.route);
-    return pathname === item.route || pathname === normalized;
+    const tabKey = routeTabMap[item.id];
+    return tabKey ? activeTab === tabKey : false;
   };
 
   const handleNavigate = (item: NavigationItem) => {

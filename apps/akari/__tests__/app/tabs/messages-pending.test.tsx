@@ -114,7 +114,7 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/(messages)/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/messages/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(openProfile).toHaveBeenCalledWith('pending-pal');

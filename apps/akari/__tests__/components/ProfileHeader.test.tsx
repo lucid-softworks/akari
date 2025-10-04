@@ -79,7 +79,7 @@ describe('ProfileHeader', () => {
   it('searches posts when search button pressed', () => {
     const { getByText } = render(<ProfileHeader profile={baseProfile} />);
     fireEvent.press(getByText(/magnifyingglass/));
-    expect(router.push).toHaveBeenCalledWith('/(tabs)/(search)?query=from:alice');
+    expect(router.push).toHaveBeenCalledWith('/search?query=from:alice');
   });
 
   it('renders banner, avatar, description and blocked message', () => {

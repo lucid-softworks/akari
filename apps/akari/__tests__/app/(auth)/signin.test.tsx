@@ -218,7 +218,7 @@ describe('AuthScreen', () => {
 
     const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
     alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/(index)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/');
   });
 
   it('submits sign in when pressing enter on the password input', async () => {
@@ -272,7 +272,7 @@ describe('AuthScreen', () => {
 
     const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
     alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/(settings)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/settings');
   });
 
   it('shows error when trying to sign up with empty fields', () => {
@@ -382,7 +382,7 @@ describe('AuthScreen', () => {
 
     const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
     alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/(index)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/');
   });
 
   it('toggles between modes and clears input values', () => {

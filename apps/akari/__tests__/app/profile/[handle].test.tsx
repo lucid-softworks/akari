@@ -239,7 +239,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('search posts'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/(search)?query=from:alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/search?query=from:alice');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));

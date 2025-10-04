@@ -328,7 +328,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('open dropdown'));
     fireEvent.press(getByText('common.search'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/(search)?query=from:alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/search?query=from:alice');
     expect(queryByTestId('profile-dropdown')).toBeNull();
 
     const remainingActions = [

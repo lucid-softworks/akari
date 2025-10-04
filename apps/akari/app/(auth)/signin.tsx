@@ -103,7 +103,7 @@ export default function AuthScreen() {
           {
             text: t('common.ok'),
             onPress: () =>
-              router.replace(currentAccount ? '/(tabs)/(settings)' : '/(tabs)/(index)'),
+              router.replace(currentAccount ? '/settings' : '/'),
           },
         ],
       });
@@ -169,7 +169,7 @@ export default function AuthScreen() {
         buttons: [
           {
             text: t('common.ok'),
-            onPress: () => router.replace('/(tabs)/(index)'),
+            onPress: () => router.replace('/'),
           },
         ],
       });

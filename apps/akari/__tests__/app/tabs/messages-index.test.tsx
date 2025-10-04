@@ -137,10 +137,10 @@ describe('MessagesScreen', () => {
     expect(getByText('common.viewPendingChats')).toBeTruthy();
 
     fireEvent.press(getByText('common.viewPendingChats'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/(messages)/pending');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/messages/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/(messages)/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/messages/alice');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(openProfile).toHaveBeenCalledWith('alice');

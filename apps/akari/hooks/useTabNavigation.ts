@@ -3,7 +3,7 @@ import { router, useGlobalSearchParams, useSegments } from 'expo-router';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
-type TabRouteKey =
+export type TabRouteKey =
   | 'index'
   | 'search'
   | 'messages'
@@ -28,6 +28,19 @@ type NavigateOptions = {
 };
 
 type SharedRouteKey = 'post' | 'profile';
+
+export const TAB_PATHS: Record<TabRouteKey, string> = {
+  index: '/',
+  search: '/search',
+  messages: '/messages',
+  notifications: '/notifications',
+  bookmarks: '/bookmarks',
+  profile: '/profile',
+  settings: '/settings',
+};
+
+const SHARED_POST_PATH = '/post/[id]' as const;
+const SHARED_PROFILE_PATH = '/profile/[handle]' as const;
 
 type UseTabNavigationResult = {
   activeTab: TabRouteKey;
@@ -91,6 +104,11 @@ export function useTabNavigation(): UseTabNavigationResult {
   }, [globalParams.tab, segmentTab]);
 
   const activeSharedRoute = useMemo(() => {
+    const firstSegment = segments[0];
+    if (firstSegment === 'post' || firstSegment === 'profile') {
+      return firstSegment as SharedRouteKey;
+    }
+
     if (!segmentTab) {
       return undefined;
     }
@@ -125,17 +143,12 @@ export function useTabNavigation(): UseTabNavigationResult {
     [activeTab],
   );
 
-  const resolveTabPath = useCallback(
-    (tab: TabRouteKey) => `/(tabs)/(${tab})` as const,
-    [],
-  );
-
   const navigateToTabRoot = useCallback(
     (tab?: TabRouteKey) => {
       const targetTab = tab ?? activeTab;
-      router.navigate(resolveTabPath(targetTab));
+      router.navigate(TAB_PATHS[targetTab]);
     },
-    [activeTab, resolveTabPath],
+    [activeTab],
   );
 
   const openPost = useCallback(
@@ -144,11 +157,11 @@ export function useTabNavigation(): UseTabNavigationResult {
       const action = options?.replace ? router.replace : router.push;
 
       action({
-        pathname: `${resolveTabPath(targetTab)}/post/[id]`,
+        pathname: SHARED_POST_PATH,
         params: { id: postUri, tab: targetTab },
       });
     },
-    [resolveNavigationTarget, resolveTabPath],
+    [resolveNavigationTarget],
   );
 
   const openProfile = useCallback(
@@ -158,7 +171,7 @@ export function useTabNavigation(): UseTabNavigationResult {
 
       if (isCurrentUser) {
         const action = options?.replace ? router.replace : router.push;
-        action(resolveTabPath('profile'));
+        action(TAB_PATHS.profile);
         return;
       }
 
@@ -166,11 +179,11 @@ export function useTabNavigation(): UseTabNavigationResult {
       const action = options?.replace ? router.replace : router.push;
 
       action({
-        pathname: `${resolveTabPath(targetTab)}/profile/[handle]`,
+        pathname: SHARED_PROFILE_PATH,
         params: { handle: normalizedHandle, tab: targetTab },
       });
     },
-    [currentAccount?.handle, resolveNavigationTarget, resolveTabPath],
+    [currentAccount?.handle, resolveNavigationTarget],
   );
 
   return {
