@@ -884,6 +884,43 @@ export type BlueskyTangledReposResponse = {
 };
 
 /**
+ * Whtwnd blog entry stored in the com.whtwnd.blog.entry collection
+ */
+export type BlueskyWhtwndEntry = {
+  /** AT URI of the Whtwnd blog entry */
+  uri: string;
+  /** CID of the Whtwnd blog entry */
+  cid: string;
+  /** Blog entry record value */
+  value: {
+    /** Lexicon type identifier */
+    $type: 'com.whtwnd.blog.entry';
+    /** Theme identifier used by Whitewind */
+    theme?: string;
+    /** Title of the blog entry */
+    title: string;
+    /** Markdown or plain text content of the entry */
+    content: string;
+    /** When the entry was created */
+    createdAt: string;
+    /** Visibility level for the entry */
+    visibility?: 'public' | 'unlisted' | 'author' | 'followers';
+  };
+  /** When the record was indexed */
+  indexedAt?: string;
+};
+
+/**
+ * Response from the com.atproto.repo.listRecords endpoint for Whtwnd entries
+ */
+export type BlueskyWhtwndEntriesResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Array of Whtwnd blog entries */
+  records: BlueskyWhtwndEntry[];
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {

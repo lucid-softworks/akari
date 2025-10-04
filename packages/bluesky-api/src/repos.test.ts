@@ -84,4 +84,55 @@ describe('BlueskyRepos', () => {
       },
     });
   });
+
+  it('fetches Whtwnd posts with reverse pagination ordering', async () => {
+    const repos = new TestRepos();
+    repos.responses = [
+      {
+        cursor: 'cursor-2',
+        records: [],
+      },
+    ];
+
+    const result = await repos.getAuthorWhtwndPosts('jwt', 'did:example:bob', 10, 'cursor-1');
+
+    expect(result).toEqual({ cursor: 'cursor-2', records: [] });
+    expect(repos.calls.at(-1)).toEqual({
+      endpoint: '/com.atproto.repo.listRecords',
+      accessJwt: 'jwt',
+      options: {
+        params: {
+          repo: 'did:example:bob',
+          collection: 'com.whtwnd.blog.entry',
+          limit: '10',
+          reverse: 'true',
+          cursor: 'cursor-1',
+        },
+      },
+    });
+  });
+
+  it('defaults Whtwnd limit to 25 and omits cursor when absent', async () => {
+    const repos = new TestRepos();
+    repos.responses = [
+      {
+        records: [],
+      },
+    ];
+
+    await repos.getAuthorWhtwndPosts('jwt', 'carol.test');
+
+    expect(repos.calls.at(-1)).toEqual({
+      endpoint: '/com.atproto.repo.listRecords',
+      accessJwt: 'jwt',
+      options: {
+        params: {
+          repo: 'carol.test',
+          collection: 'com.whtwnd.blog.entry',
+          limit: '25',
+          reverse: 'true',
+        },
+      },
+    });
+  });
 });

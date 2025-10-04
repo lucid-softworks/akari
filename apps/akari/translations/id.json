@@ -171,6 +171,7 @@
       "media": "Media",
       "videos": "Video",
       "feeds": "Feed",
+      "whitewind": "Whitewind",
       "repos": "Repositori",
       "starterpacks": "Starterpacks",
       "posts": "Postingan {{count}}",

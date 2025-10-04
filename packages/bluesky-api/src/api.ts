@@ -27,6 +27,7 @@ import type {
   BlueskySession,
   BlueskyStarterPacksResponse,
   BlueskyTangledReposResponse,
+  BlueskyWhtwndEntriesResponse,
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
   BlueskyProfileUpdateInput,
@@ -126,6 +127,23 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyTangledReposResponse> {
     return this.repos.getActorRepos(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists Whtwnd blog entries authored by the requested actor.
+   * @param accessJwt - Valid session token authorised to query the actor's records.
+   * @param actor - DID or handle identifying the actor whose Whtwnd posts should be loaded.
+   * @param limit - Maximum number of posts to fetch per page, defaults to 25.
+   * @param cursor - Pagination cursor from previous responses, if any.
+   * @returns Whtwnd blog entries created by the actor.
+   */
+  async getAuthorWhtwndPosts(
+    accessJwt: string,
+    actor: string,
+    limit: number = 25,
+    cursor?: string,
+  ): Promise<BlueskyWhtwndEntriesResponse> {
+    return this.repos.getAuthorWhtwndPosts(accessJwt, actor, limit, cursor);
   }
 
   /**
