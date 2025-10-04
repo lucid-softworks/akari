@@ -1,6 +1,7 @@
 import { useNavigationState } from '@react-navigation/native';
 import { Redirect, Tabs } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
+import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
@@ -11,6 +12,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -24,6 +26,40 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
  */
 function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
   return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
+}
+
+type ProfileTabIconProps = {
+  color: string;
+  focused: boolean;
+  avatarUri?: string;
+};
+
+function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
+  const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
+  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const placeholderColor = useThemeColor({ light: '#D1D5DB', dark: '#1F2937' }, 'background');
+
+  const resolvedBorderColor = focused ? accentColor : borderColor;
+  const resolvedBackgroundColor = avatarUri ? 'transparent' : focused ? accentColor : placeholderColor;
+  const resolvedIconColor = !avatarUri && focused ? '#FFFFFF' : color;
+
+  return (
+    <View
+      style={[
+        profileTabIconStyles.container,
+        {
+          borderColor: resolvedBorderColor,
+          backgroundColor: resolvedBackgroundColor,
+        },
+      ]}
+    >
+      {avatarUri ? (
+        <Image source={{ uri: avatarUri }} style={profileTabIconStyles.image} contentFit="cover" />
+      ) : (
+        <IconSymbol name="person.fill" color={resolvedIconColor} size={18} />
+      )}
+    </View>
+  );
 }
 
 /**
@@ -56,6 +92,7 @@ function CustomTabButton(props: any) {
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
   const { data: authStatus, isLoading } = useAuthStatus();
+  const { data: currentAccount } = useCurrentAccount();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
@@ -237,7 +274,9 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="person.fill" color={color} />,
+            tabBarIcon: ({ color, focused }) => (
+              <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
+            ),
           }}
           listeners={() => ({
             tabLongPress: (event) => {
@@ -257,3 +296,20 @@ export default function TabLayout() {
     </>
   );
 }
+
+const profileTabIconStyles = StyleSheet.create({
+  container: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    marginBottom: -3,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+});
