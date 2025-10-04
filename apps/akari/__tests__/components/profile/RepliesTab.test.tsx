@@ -4,11 +4,11 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@/hooks/queries/useAuthorReplies');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
   mockPostCard = jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => {
@@ -32,12 +32,15 @@ jest.mock('@/components/skeletons', () => {
 
 const mockUseAuthorReplies = useAuthorReplies as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockPush = router.push as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+let openPost: jest.Mock;
 
 describe('RepliesTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
+    openPost = jest.fn();
+    mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
   });
 
   it('renders skeleton while loading', () => {
@@ -86,7 +89,7 @@ describe('RepliesTab', () => {
 
     const { getByText } = render(<RepliesTab handle="alice" />);
     fireEvent.press(getByText('Hello world'));
-    expect(mockPush).toHaveBeenCalledWith(`/post/${encodeURIComponent(reply.uri)}`);
+    expect(openPost).toHaveBeenCalledWith(reply.uri);
   });
 
   it('fetches more replies on end reached', () => {

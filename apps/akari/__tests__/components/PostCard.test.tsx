@@ -21,7 +21,7 @@ import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLan
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/usePostTranslation');
@@ -29,7 +29,7 @@ jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/queries/useLiveNow');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('react-native/Libraries/Modal/Modal', () => {
   const React = require('react');
@@ -85,11 +85,13 @@ type Post = {
 describe('PostCard', () => {
   const mockUseLikePost = useLikePost as jest.Mock;
   const mockUsePostTranslation = usePostTranslation as jest.Mock;
-  const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
-  const mockUseLiveNow = useLiveNow as jest.Mock;
-  const mockUseThemeColor = useThemeColor as jest.Mock;
-  const mockUseTranslation = useTranslation as jest.Mock;
-  let mutateAsyncMock: jest.Mock;
+const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
+const mockUseLiveNow = useLiveNow as jest.Mock;
+const mockUseThemeColor = useThemeColor as jest.Mock;
+const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+let mutateAsyncMock: jest.Mock;
+let openProfile: jest.Mock;
 
   const basePost: Post = {
     id: '1',
@@ -113,6 +115,8 @@ describe('PostCard', () => {
       availableLocales: ['en'],
     });
     mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
+    openProfile = jest.fn();
+    mockUseTabNavigation.mockReturnValue({ openProfile, openPost: jest.fn(), activeTab: 'index' });
     mutateAsyncMock = jest
       .fn()
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
@@ -140,7 +144,7 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    expect(openProfile).toHaveBeenCalledWith('alice');
   });
 
   it('navigates to profile when avatar pressed', () => {
@@ -148,7 +152,7 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
     fireEvent.press(avatarButton);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    expect(openProfile).toHaveBeenCalledWith('alice');
   });
 
   it('likes a post when not previously liked', () => {

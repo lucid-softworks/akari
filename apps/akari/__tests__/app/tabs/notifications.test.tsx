@@ -2,21 +2,21 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Image, ScrollView } from 'react-native';
 
-import NotificationsScreen from '@/app/(tabs)/notifications';
-import { router } from 'expo-router';
+import NotificationsScreen from '@/app/(tabs)/notifications/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -58,8 +58,10 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openProfile = jest.fn();
+const openPost = jest.fn();
 let tMock: jest.Mock;
 
 describe('NotificationsScreen', () => {
@@ -70,6 +72,9 @@ describe('NotificationsScreen', () => {
     tMock = jest.fn((key: string) => key);
     mockUseTranslation.mockReturnValue({ t: tMock });
     mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+    openProfile.mockReset();
+    openPost.mockReset();
+    mockUseTabNavigation.mockReturnValue({ activeTab: 'notifications', openProfile, openPost });
   });
 
   it('renders notifications and navigates on press', () => {
@@ -129,10 +134,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(openPost).toHaveBeenCalledWith('post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
+    expect(openProfile).toHaveBeenCalledWith('carol');
   });
 
   it('renders grouped notifications with embed images and overflow avatars', () => {
@@ -389,7 +394,7 @@ describe('NotificationsScreen', () => {
     const { getByText } = render(<NotificationsScreen />);
 
     fireEvent.press(getByText('notifications.mentionedYou'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/profile/no-subject');
+    expect(openProfile).toHaveBeenLastCalledWith('no-subject');
   });
 });
 

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
-import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -11,7 +11,7 @@ jest.mock('@/hooks/queries/useAuthorMedia');
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 jest.mock('@/components/PostCard', () => ({ PostCard: jest.fn(() => null) }));
 jest.mock('@/components/skeletons', () => ({ FeedSkeleton: jest.fn(() => null) }));
 jest.mock('@/hooks/useThemeColor', () => ({ useThemeColor: () => '#000' }));
@@ -19,6 +19,8 @@ jest.mock('@/hooks/useThemeColor', () => ({ useThemeColor: () => '#000' }));
 const PostCardMock = require('@/components/PostCard').PostCard as jest.Mock;
 const FeedSkeletonMock = require('@/components/skeletons').FeedSkeleton as jest.Mock;
 const mockUseAuthorMedia = useAuthorMedia as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+let openPost: jest.Mock;
 
 type MediaItem = {
   uri?: string;
@@ -38,6 +40,8 @@ type MediaItem = {
 describe('MediaTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    openPost = jest.fn();
+    mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
   });
 
   it('renders loading skeleton when fetching media', () => {
@@ -115,7 +119,7 @@ describe('MediaTab', () => {
     expect(PostCardMock).toHaveBeenCalledTimes(1);
     const press = PostCardMock.mock.calls[0][0].onPress;
     press();
-    expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://post1'));
+    expect(openPost).toHaveBeenCalledWith('at://post1');
   });
 
   it('formats reply data and uses unknown handle when missing', () => {

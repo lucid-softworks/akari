@@ -10,6 +10,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { mockScrollToOffset } from '../../../test-utils/flash-list';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -19,6 +20,7 @@ jest.mock('expo-image', () => {
 });
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -55,6 +57,8 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openProfile = jest.fn();
 
 describe('MessagesScreen', () => {
   beforeEach(() => {
@@ -62,6 +66,8 @@ describe('MessagesScreen', () => {
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockScrollToOffset.mockReset();
+    openProfile.mockReset();
+    mockUseTabNavigation.mockReturnValue({ activeTab: 'messages', openProfile, openPost: jest.fn() });
   });
 
   it('renders accepted conversations and navigates', () => {
@@ -131,7 +137,7 @@ describe('MessagesScreen', () => {
     expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
+    expect(openProfile).toHaveBeenCalledWith('alice');
   });
 
   it('scrolls to top when registry callback is triggered', () => {

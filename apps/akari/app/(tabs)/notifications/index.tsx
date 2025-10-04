@@ -1,6 +1,5 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,6 +13,7 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { BlueskyEmbed } from '@/bluesky-api';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -360,6 +360,7 @@ export default function NotificationsScreen() {
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
+  const { openProfile, openPost } = useTabNavigation();
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
   const tabs = useMemo(
@@ -412,18 +413,22 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
-  const handleNotificationPress = useCallback((notification: GroupedNotification) => {
-    if (notification.type === 'follow') {
-      // Navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
-    } else if (notification.subject) {
-      // Navigate to the post
-      router.push(`/post/${encodeURIComponent(notification.subject)}`);
-    } else {
-      // For notifications without a subject, navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
-    }
-  }, []);
+  const handleNotificationPress = useCallback(
+    (notification: GroupedNotification) => {
+      if (notification.type === 'follow') {
+        openProfile(notification.authors[0].handle);
+        return;
+      }
+
+      if (notification.subject) {
+        openPost(notification.subject);
+        return;
+      }
+
+      openProfile(notification.authors[0].handle);
+    },
+    [openPost, openProfile],
+  );
 
   const renderNotificationItem = useCallback(
     (notification: GroupedNotification) => (

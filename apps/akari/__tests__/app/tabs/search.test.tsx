@@ -2,12 +2,13 @@ import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
-import SearchScreen from '@/app/(tabs)/search';
+import SearchScreen from '@/app/(tabs)/search/index';
 import { useLocalSearchParams } from 'expo-router';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -18,8 +19,8 @@ jest.mock('expo-image', () => {
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
-  router: { push: jest.fn() },
 }));
+jest.mock('@/hooks/useTabNavigation');
 
 jest.mock('react-native-safe-area-context', () => {
   const React = require('react');
@@ -82,12 +83,18 @@ const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openProfile = jest.fn();
+const openPost = jest.fn();
 
 describe('SearchScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    openProfile.mockReset();
+    openPost.mockReset();
+    mockUseTabNavigation.mockReturnValue({ activeTab: 'search', openProfile, openPost });
   });
 
   it('trims query and triggers search', async () => {

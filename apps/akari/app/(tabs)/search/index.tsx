@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -35,6 +36,7 @@ export default function SearchScreen() {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
+  const { openProfile, openPost } = useTabNavigation();
 
   // Create scroll to top function
   const scrollToTop = React.useCallback(() => {
@@ -107,12 +109,12 @@ export default function SearchScreen() {
     }
   }, [initialQuery]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (query.trim()) {
       setSearchQuery(query.trim());
       Keyboard.dismiss();
     }
-  };
+  }, [query]);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -133,7 +135,7 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
+        onPress={() => openProfile(profile.handle)}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
@@ -203,7 +205,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          openPost(post.uri);
         }}
       />
     );

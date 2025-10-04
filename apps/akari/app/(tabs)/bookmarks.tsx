@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +9,7 @@ import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -20,6 +20,7 @@ export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const flatListRef = useRef<VirtualizedListHandle<BlueskyBookmark>>(null);
+  const { openPost } = useTabNavigation();
 
   const scrollToTop = () => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -91,7 +92,7 @@ export default function BookmarksScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            openPost(post.uri);
           }}
         />
       </View>

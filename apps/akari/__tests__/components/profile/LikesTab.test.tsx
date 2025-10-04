@@ -1,19 +1,15 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { router } from 'expo-router';
 
 import { LikesTab } from '@/components/profile/LikesTab';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useTranslation } from '@/hooks/useTranslation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@/hooks/queries/useAuthorLikes');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({
-  router: {
-    push: jest.fn(),
-  },
-}));
+jest.mock('@/hooks/useTabNavigation');
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 jest.mock('@/components/skeletons', () => {
   const React = require('react');
@@ -35,6 +31,8 @@ jest.mock('@/components/PostCard', () => {
 const mockUseAuthorLikes = useAuthorLikes as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const PostCardMock = require('@/components/PostCard').PostCard as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+let openPost: jest.Mock;
 
 type Like = {
   uri: string;
@@ -71,6 +69,8 @@ const createLike = (overrides: Partial<Like> = {}): Like => ({
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
+  openPost = jest.fn();
+  mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
 });
 
 describe('LikesTab', () => {
@@ -113,7 +113,7 @@ describe('LikesTab', () => {
 
     const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
     fireEvent.press(getByText('liked post'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(like.uri)}`);
+    expect(openPost).toHaveBeenCalledWith(like.uri);
 
     const list = UNSAFE_getByType(VirtualizedList);
     act(() => {

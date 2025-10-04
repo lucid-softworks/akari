@@ -20,6 +20,7 @@ import { useMessages } from '@/hooks/queries/useMessages';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { showAlert } from '@/utils/alert';
 
 const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
@@ -243,6 +244,7 @@ export default function ConversationScreen() {
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { openProfile } = useTabNavigation();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -359,7 +361,7 @@ export default function ConversationScreen() {
         text: messageText.trim(),
       });
       setMessageText('');
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('messages.errorSendingMessage'),
@@ -501,7 +503,7 @@ export default function ConversationScreen() {
               style={styles.headerInfo}
               onPress={() => {
                 // Navigate to profile when header is clicked
-                router.push(`/profile/${encodeURIComponent(handle)}`);
+                openProfile(handle);
               }}
               activeOpacity={0.7}
             >

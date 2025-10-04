@@ -1,5 +1,4 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,6 +19,7 @@ import { useFeeds } from '@/hooks/queries/useFeeds';
 import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -35,6 +35,7 @@ export default function HomeScreen() {
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
+  const { openPost } = useTabNavigation();
 
   const { data: currentAccount } = useCurrentAccount();
 
@@ -254,12 +255,12 @@ export default function HomeScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            openPost(post.uri);
           }}
         />
       );
     },
-    [t],
+    [openPost, t],
   );
 
   const keyExtractor = useCallback((item: FeedListItem) => {

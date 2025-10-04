@@ -3,6 +3,8 @@ import { Stack } from 'expo-router';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import PostScreen from '../post/[id]';
+import ProfileHandleScreen from '../profile/[handle]';
 
 export default function SettingsLayout() {
   const { t } = useTranslation();
@@ -15,6 +17,7 @@ export default function SettingsLayout() {
         contentStyle: { backgroundColor: headerBackground },
       }}
     >
+      <Stack.Screen name="index" />
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
       <Stack.Screen
         name="privacy-and-security"
@@ -40,6 +43,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="languages" options={{ title: t('settings.language') }} />
       <Stack.Screen name="about" options={{ title: t('settings.about') }} />
       <Stack.Screen name="development" options={{ title: t('settings.development') }} />
+      <Stack.Screen name="post/[id]" getComponent={() => PostScreen} />
+      <Stack.Screen name="profile/[handle]" getComponent={() => ProfileHandleScreen} />
     </Stack>
   );
 }

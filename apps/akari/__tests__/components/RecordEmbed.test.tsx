@@ -1,6 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
@@ -18,6 +17,7 @@ import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 // Mock the hooks and components that RecordEmbed depends on
 jest.mock('@/hooks/queries/useProfile');
@@ -28,17 +28,16 @@ jest.mock('@/components/ExternalEmbed');
 jest.mock('@/components/GifEmbed');
 jest.mock('@/components/VideoEmbed');
 jest.mock('@/components/YouTubeEmbed');
-jest.mock('expo-router', () => ({
-  router: {
-    push: jest.fn(),
-  },
-}));
+jest.mock('@/hooks/useTabNavigation');
 
 const mockExternalEmbed = ExternalEmbed as jest.Mock;
 const mockGifEmbed = GifEmbed as jest.Mock;
 const mockVideoEmbed = VideoEmbed as jest.Mock;
 const mockYouTubeEmbed = YouTubeEmbed as jest.Mock;
 const mockRichTextWithFacets = RichTextWithFacets as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+let openPost: jest.Mock;
+let openProfile: jest.Mock;
 
 // Mock the useProfile hook
 const mockUseProfile = useProfile as jest.Mock;
@@ -84,6 +83,9 @@ describe('RecordEmbed Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    openPost = jest.fn();
+    openProfile = jest.fn();
+    mockUseTabNavigation.mockReturnValue({ openPost, openProfile, activeTab: 'index' });
   });
 
   it('should render a regular post embed', () => {
@@ -243,10 +245,10 @@ describe('RecordEmbed Component', () => {
     const { getByTestId, getByText } = render(<RecordEmbed embed={embed} />);
 
     fireEvent.press(getByTestId('record-embed-touchable'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(embed.record.uri)}`);
+    expect(openPost).toHaveBeenCalledWith(embed.record.uri);
 
     fireEvent.press(getByText('Test User'));
-    expect(router.push).toHaveBeenCalledWith(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+    expect(openProfile).toHaveBeenCalledWith(embed.record.author.handle);
   });
 
   it('should render images and handle load events', () => {
