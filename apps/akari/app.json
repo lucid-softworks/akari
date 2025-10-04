@@ -10,12 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "works.lucidsoft.akari",
+      "bundleIdentifier": "works.lucidsoft.akari.dev",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleAllowMixedLocalizations": true,
         "ExpoLocalization_supportsRTL": true,
-        "UIBackgroundModes": ["processing"]
+        "UIBackgroundModes": ["processing"],
+        "CFBundleLocalizations": ["en", "en-US", "ja", "ar", "fr"]
       },
       "entitlements": {
         "aps-environment": "development",
@@ -29,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "works.lucidsoft.akari",
+      "package": "works.lucidsoft.akari.dev",
       "permissions": ["android.permission.RECORD_AUDIO"],
       "runtimeVersion": {
         "policy": "appVersion"
@@ -97,6 +98,9 @@
         "commitSha": {}
       }
     },
-    "owner": "lucid-softworks"
+    "owner": "lucid-softworks",
+    "updates": {
+      "url": "https://u.expo.dev/51a386f4-6cb2-4901-ad5f-29b69a16ba28"
+    }
   }
 }
