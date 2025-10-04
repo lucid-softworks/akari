@@ -40,7 +40,13 @@ describe('RepliesTab', () => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
     openPost = jest.fn();
-    mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders skeleton while loading', () => {

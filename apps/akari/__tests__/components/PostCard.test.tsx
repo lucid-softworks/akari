@@ -116,7 +116,13 @@ let openProfile: jest.Mock;
     });
     mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
     openProfile = jest.fn();
-    mockUseTabNavigation.mockReturnValue({ openProfile, openPost: jest.fn(), activeTab: 'index' });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openProfile,
+      openPost: jest.fn(),
+    });
     mutateAsyncMock = jest
       .fn()
       .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({

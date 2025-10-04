@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Image, ScrollView } from 'react-native';
 
-import NotificationsScreen from '@/app/(tabs)/notifications/index';
+import NotificationsScreen from '@/app/(tabs)/(notifications)/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -74,7 +74,13 @@ describe('NotificationsScreen', () => {
     mockUseResponsive.mockReturnValue({ isLargeScreen: false });
     openProfile.mockReset();
     openPost.mockReset();
-    mockUseTabNavigation.mockReturnValue({ activeTab: 'notifications', openProfile, openPost });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'notifications',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openProfile,
+      openPost,
+    });
   });
 
   it('renders notifications and navigates on press', () => {

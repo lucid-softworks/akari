@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
-import ConversationScreen from '@/app/(tabs)/messages/[handle]';
+import ConversationScreen from '@/app/(tabs)/(messages)/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -83,7 +83,13 @@ beforeEach(() => {
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   openProfile.mockReset();
-  mockUseTabNavigation.mockReturnValue({ activeTab: 'messages', openProfile, openPost: jest.fn() });
+  mockUseTabNavigation.mockReturnValue({
+    activeTab: 'messages',
+    isSharedRouteFocused: false,
+    navigateToTabRoot: jest.fn(),
+    openProfile,
+    openPost: jest.fn(),
+  });
   keyboardListeners = {};
   jest.spyOn(Keyboard, 'addListener').mockImplementation((event: string, callback: () => void) => {
     if (event === 'keyboardWillShow') {

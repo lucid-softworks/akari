@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -63,25 +63,25 @@ export function Sidebar() {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)/(index)' },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: '/(tabs)/notifications',
+        route: '/(tabs)/(notifications)',
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: '/(tabs)/messages',
+        route: '/(tabs)/(messages)',
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/(search)' },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/(bookmarks)' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/(profile)' },
+      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/(settings)' },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -101,12 +101,16 @@ export function Sidebar() {
     return source.charAt(0).toUpperCase();
   };
 
+  const normalizeRoute = useCallback((route: string) => route.replace('/(', '/').replace(')', ''), []);
+
   const isActiveRoute = (item: NavigationItem) => {
-    if (item.route === '/(tabs)') {
-      return pathname === '/(tabs)' || pathname === '/(tabs)/index';
+    if (item.id === 'timeline') {
+      const timelineRoute = normalizeRoute(item.route);
+      return pathname === '/(tabs)' || pathname === item.route || pathname === timelineRoute;
     }
 
-    return pathname === item.route;
+    const normalized = normalizeRoute(item.route);
+    return pathname === item.route || pathname === normalized;
   };
 
   const handleNavigate = (item: NavigationItem) => {

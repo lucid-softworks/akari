@@ -26,55 +26,55 @@ export function useSettingsNavigationItems() {
         key: 'account',
         icon: 'person.crop.circle',
         label: t('settings.account'),
-        route: '/(tabs)/settings/account',
+        route: '/(tabs)/(settings)/account',
       },
       {
         key: 'privacy-security',
         icon: 'lock.fill',
         label: t('settings.privacyAndSecurity'),
-        route: '/(tabs)/settings/privacy-and-security',
+        route: '/(tabs)/(settings)/privacy-and-security',
       },
       {
         key: 'moderation',
         icon: 'shield.fill',
         label: t('settings.moderation'),
-        route: '/(tabs)/settings/moderation',
+        route: '/(tabs)/(settings)/moderation',
       },
       {
         key: 'notifications',
         icon: 'bell.fill',
         label: t('settings.notifications'),
-        route: '/(tabs)/settings/notifications',
+        route: '/(tabs)/(settings)/notifications',
       },
       {
         key: 'content-media',
         icon: 'photo.on.rectangle',
         label: t('settings.contentAndMedia'),
-        route: '/(tabs)/settings/content-and-media',
+        route: '/(tabs)/(settings)/content-and-media',
       },
       {
         key: 'appearance',
         icon: 'paintpalette.fill',
         label: t('settings.appearance'),
-        route: '/(tabs)/settings/appearance',
+        route: '/(tabs)/(settings)/appearance',
       },
       {
         key: 'accessibility',
         icon: 'figure.stand',
         label: t('settings.accessibility'),
-        route: '/(tabs)/settings/accessibility',
+        route: '/(tabs)/(settings)/accessibility',
       },
       {
         key: 'languages',
         icon: 'globe',
         label: t('settings.language'),
-        route: '/(tabs)/settings/languages',
+        route: '/(tabs)/(settings)/languages',
       },
       {
         key: 'about',
         icon: 'info.circle.fill',
         label: t('settings.about'),
-        route: '/(tabs)/settings/about',
+        route: '/(tabs)/(settings)/about',
       },
     ];
 
@@ -83,7 +83,7 @@ export function useSettingsNavigationItems() {
         key: 'development',
         icon: 'hammer.fill',
         label: t('settings.development'),
-        route: '/(tabs)/settings/development',
+        route: '/(tabs)/(settings)/development',
       });
     }
 

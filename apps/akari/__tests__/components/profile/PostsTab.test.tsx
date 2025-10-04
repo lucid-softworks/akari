@@ -49,7 +49,13 @@ describe('PostsTab', () => {
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
     mockUseThemeColor.mockReturnValue('#000');
     openPost = jest.fn();
-    mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders loading skeleton while fetching posts', () => {

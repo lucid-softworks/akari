@@ -123,6 +123,8 @@ beforeEach(() => {
   mockUseSafeAreaInsets.mockReturnValue({ top: 0, right: 0, bottom: 0, left: 0 });
   mockUseTabNavigation.mockReturnValue({
     activeTab: 'index',
+    isSharedRouteFocused: false,
+    navigateToTabRoot: jest.fn(),
     openPost: jest.fn(),
     openProfile: jest.fn(),
   });
@@ -156,15 +158,13 @@ describe('TabLayout', () => {
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'profile',
-      'settings',
-      'post/[id]',
-      'profile/[handle]',
+      '(index)',
+      '(search)',
+      '(messages)',
+      '(notifications)',
+      '(bookmarks)',
+      '(profile)',
+      '(settings)',
     ]);
   });
 
@@ -186,13 +186,13 @@ describe('TabLayout', () => {
     const state = {
       index: 0,
       routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'profile-tab', name: 'profile' },
-        { key: 'settings-tab', name: 'settings' },
+        { key: 'index-tab', name: '(index)' },
+        { key: 'search-tab', name: '(search)' },
+        { key: 'messages-tab', name: '(messages)' },
+        { key: 'notifications-tab', name: '(notifications)' },
+        { key: 'bookmarks-tab', name: '(bookmarks)' },
+        { key: 'profile-tab', name: '(profile)' },
+        { key: 'settings-tab', name: '(settings)' },
       ],
     };
 
@@ -209,15 +209,13 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'profile',
-      'settings',
-      'post/[id]',
-      'profile/[handle]',
+      '(index)',
+      '(search)',
+      '(messages)',
+      '(notifications)',
+      '(bookmarks)',
+      '(profile)',
+      '(settings)',
     ]);
   });
 
@@ -235,13 +233,13 @@ describe('TabLayout', () => {
     const state = {
       index: 0,
       routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'profile-tab', name: 'profile' },
-        { key: 'settings-tab', name: 'settings' },
+        { key: 'index-tab', name: '(index)' },
+        { key: 'search-tab', name: '(search)' },
+        { key: 'messages-tab', name: '(messages)' },
+        { key: 'notifications-tab', name: '(notifications)' },
+        { key: 'bookmarks-tab', name: '(bookmarks)' },
+        { key: 'profile-tab', name: '(profile)' },
+        { key: 'settings-tab', name: '(settings)' },
       ],
     };
 
@@ -264,7 +262,7 @@ describe('TabLayout', () => {
 
     const TabsModule = require('expo-router');
     const screenCalls = (TabsModule.Tabs.Screen as jest.Mock).mock.calls;
-    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === 'profile');
+    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === '(profile)');
     expect(profileScreenCall).toBeTruthy();
 
     const listeners = profileScreenCall?.[0].listeners;
@@ -294,15 +292,13 @@ describe('HardcodedTabBar interactions', () => {
   const buildState = () => ({
     index: 0,
     routes: [
-      { key: 'index-tab', name: 'index' },
-      { key: 'search-tab', name: 'search' },
-      { key: 'messages-tab', name: 'messages' },
-      { key: 'notifications-tab', name: 'notifications' },
-      { key: 'bookmarks-tab', name: 'bookmarks' },
-      { key: 'profile-tab', name: 'profile' },
-      { key: 'settings-tab', name: 'settings' },
-      { key: 'post-shared', name: 'post/[id]' },
-      { key: 'profile-shared', name: 'profile/[handle]' },
+      { key: 'index-tab', name: '(index)' },
+      { key: 'search-tab', name: '(search)' },
+      { key: 'messages-tab', name: '(messages)' },
+      { key: 'notifications-tab', name: '(notifications)' },
+      { key: 'bookmarks-tab', name: '(bookmarks)' },
+      { key: 'profile-tab', name: '(profile)' },
+      { key: 'settings-tab', name: '(settings)' },
     ],
   });
 
@@ -353,7 +349,7 @@ describe('HardcodedTabBar interactions', () => {
       target: 'search-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('search');
+    expect(navigation.navigate).toHaveBeenCalledWith('(search)');
     expect(mockHandleTabPress).not.toHaveBeenCalled();
   });
 
@@ -371,9 +367,18 @@ describe('HardcodedTabBar interactions', () => {
     });
   });
 
-  it('navigates back to the active tab when a shared route is focused', () => {
+  it('navigates back to the active tab when a nested route is focused', () => {
     const sharedState = buildState();
-    sharedState.index = sharedState.routes.findIndex((route: any) => route.name === 'post/[id]');
+    sharedState.routes[0] = {
+      ...sharedState.routes[0],
+      state: {
+        index: 1,
+        routes: [
+          { key: 'index-root', name: 'index' },
+          { key: 'index-post', name: 'post/[id]' },
+        ],
+      },
+    };
 
     const { navigation } = renderTabBar(sharedState);
     const onPress = mockHapticTab.mock.calls[0][0].onPress as () => void;
@@ -387,7 +392,34 @@ describe('HardcodedTabBar interactions', () => {
       target: 'index-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('index');
+    expect(navigation.navigate).toHaveBeenCalledWith('(index)');
+    expect(mockHandleTabPress).toHaveBeenCalledWith('index');
+  });
+
+  it('uses tab navigation root helper when a shared route is focused', () => {
+    const navigateToTabRoot = jest.fn();
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: true,
+      navigateToTabRoot,
+      openPost: jest.fn(),
+      openProfile: jest.fn(),
+    });
+
+    const { navigation } = renderTabBar();
+    const onPress = mockHapticTab.mock.calls[0][0].onPress as () => void;
+
+    act(() => {
+      onPress();
+    });
+
+    expect(navigation.emit).toHaveBeenCalledWith({
+      type: 'tabPress',
+      target: 'index-tab',
+      canPreventDefault: true,
+    });
+    expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(navigateToTabRoot).toHaveBeenCalledWith('index');
     expect(mockHandleTabPress).toHaveBeenCalledWith('index');
   });
 });

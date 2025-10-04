@@ -85,7 +85,13 @@ describe('RecordEmbed Component', () => {
     jest.clearAllMocks();
     openPost = jest.fn();
     openProfile = jest.fn();
-    mockUseTabNavigation.mockReturnValue({ openPost, openProfile, activeTab: 'index' });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile,
+    });
   });
 
   it('should render a regular post embed', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
-import MessagesScreen from '@/app/(tabs)/messages';
+import MessagesScreen from '@/app/(tabs)/(messages)';
 import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -67,7 +67,13 @@ describe('MessagesScreen', () => {
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockScrollToOffset.mockReset();
     openProfile.mockReset();
-    mockUseTabNavigation.mockReturnValue({ activeTab: 'messages', openProfile, openPost: jest.fn() });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'messages',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openProfile,
+      openPost: jest.fn(),
+    });
   });
 
   it('renders accepted conversations and navigates', () => {
@@ -131,10 +137,10 @@ describe('MessagesScreen', () => {
     expect(getByText('common.viewPendingChats')).toBeTruthy();
 
     fireEvent.press(getByText('common.viewPendingChats'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/(messages)/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/(messages)/alice');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(openProfile).toHaveBeenCalledWith('alice');

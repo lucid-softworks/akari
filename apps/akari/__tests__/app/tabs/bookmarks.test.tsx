@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
-import BookmarksScreen from '@/app/(tabs)/bookmarks/index';
+import BookmarksScreen from '@/app/(tabs)/(bookmarks)/index';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
@@ -123,7 +123,13 @@ describe('BookmarksScreen', () => {
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
     mockFormatRelativeTime.mockReturnValue('relative-time');
     openPost.mockReset();
-    mockUseTabNavigation.mockReturnValue({ activeTab: 'bookmarks', openPost, openProfile: jest.fn() });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'bookmarks',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders bookmarks and handles interactions', async () => {

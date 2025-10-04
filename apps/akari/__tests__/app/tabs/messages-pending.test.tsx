@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
-import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
+import PendingMessagesScreen from '@/app/(tabs)/(messages)/pending';
 import { router } from 'expo-router';
 import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -66,7 +66,13 @@ describe('PendingMessagesScreen', () => {
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     openProfile.mockReset();
-    mockUseTabNavigation.mockReturnValue({ activeTab: 'messages', openProfile, openPost: jest.fn() });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'messages',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openProfile,
+      openPost: jest.fn(),
+    });
   });
 
   it('renders pending conversations and supports navigation', () => {
@@ -108,7 +114,7 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/(messages)/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(openProfile).toHaveBeenCalledWith('pending-pal');

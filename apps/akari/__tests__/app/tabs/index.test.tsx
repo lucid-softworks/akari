@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import HomeScreen from '@/app/(tabs)/index/index';
+import HomeScreen from '@/app/(tabs)/(index)/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
@@ -101,7 +101,13 @@ beforeEach(() => {
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
   mockUseCurrentAccount.mockReturnValue({ data: { did: 'did', handle: 'user' } });
-  mockUseTabNavigation.mockReturnValue({ activeTab: 'index', openPost, openProfile: jest.fn() });
+  mockUseTabNavigation.mockReturnValue({
+    activeTab: 'index',
+    isSharedRouteFocused: false,
+    navigateToTabRoot: jest.fn(),
+    openPost,
+    openProfile: jest.fn(),
+  });
 });
 
 describe('HomeScreen', () => {

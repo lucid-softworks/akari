@@ -27,16 +27,28 @@ type NavigateOptions = {
   replace?: boolean;
 };
 
+type SharedRouteKey = 'post' | 'profile';
+
 type UseTabNavigationResult = {
   activeTab: TabRouteKey;
+  isSharedRouteFocused: boolean;
+  navigateToTabRoot: (tab?: TabRouteKey) => void;
   openPost: (postUri: string, options?: NavigateOptions) => void;
   openProfile: (handle: string, options?: NavigateOptions) => void;
 };
 
 function resolveTabFromSegments(segments: string[]): TabRouteKey | undefined {
-  const candidate = segments[1];
-  if (candidate && TAB_ROUTE_KEYS.includes(candidate as TabRouteKey)) {
-    return candidate as TabRouteKey;
+  for (const segment of segments) {
+    if (TAB_ROUTE_KEYS.includes(segment as TabRouteKey)) {
+      return segment as TabRouteKey;
+    }
+
+    if (segment.startsWith('(') && segment.endsWith(')')) {
+      const normalized = segment.slice(1, -1);
+      if (TAB_ROUTE_KEYS.includes(normalized as TabRouteKey)) {
+        return normalized as TabRouteKey;
+      }
+    }
   }
 
   return undefined;
@@ -78,9 +90,52 @@ export function useTabNavigation(): UseTabNavigationResult {
     return lastKnownTabRef.current;
   }, [globalParams.tab, segmentTab]);
 
+  const activeSharedRoute = useMemo(() => {
+    if (!segmentTab) {
+      return undefined;
+    }
+
+    const tabSegmentIndex = segments.findIndex((segment) => {
+      if (segment === segmentTab) {
+        return true;
+      }
+
+      if (segment.startsWith('(') && segment.endsWith(')')) {
+        const normalized = segment.slice(1, -1);
+        return normalized === segmentTab;
+      }
+
+      return false;
+    });
+
+    if (tabSegmentIndex === -1) {
+      return undefined;
+    }
+
+    const nextSegment = segments[tabSegmentIndex + 1];
+    if (nextSegment === 'post' || nextSegment === 'profile') {
+      return nextSegment as SharedRouteKey;
+    }
+
+    return undefined;
+  }, [segmentTab, segments]);
+
   const resolveNavigationTarget = useCallback(
     (options?: NavigateOptions) => options?.tab ?? activeTab,
     [activeTab],
+  );
+
+  const resolveTabPath = useCallback(
+    (tab: TabRouteKey) => `/(tabs)/(${tab})` as const,
+    [],
+  );
+
+  const navigateToTabRoot = useCallback(
+    (tab?: TabRouteKey) => {
+      const targetTab = tab ?? activeTab;
+      router.navigate(resolveTabPath(targetTab));
+    },
+    [activeTab, resolveTabPath],
   );
 
   const openPost = useCallback(
@@ -89,11 +144,11 @@ export function useTabNavigation(): UseTabNavigationResult {
       const action = options?.replace ? router.replace : router.push;
 
       action({
-        pathname: '/(tabs)/post/[id]',
+        pathname: `${resolveTabPath(targetTab)}/post/[id]`,
         params: { id: postUri, tab: targetTab },
       });
     },
-    [resolveNavigationTarget],
+    [resolveNavigationTarget, resolveTabPath],
   );
 
   const openProfile = useCallback(
@@ -103,7 +158,7 @@ export function useTabNavigation(): UseTabNavigationResult {
 
       if (isCurrentUser) {
         const action = options?.replace ? router.replace : router.push;
-        action('/(tabs)/profile');
+        action(resolveTabPath('profile'));
         return;
       }
 
@@ -111,15 +166,17 @@ export function useTabNavigation(): UseTabNavigationResult {
       const action = options?.replace ? router.replace : router.push;
 
       action({
-        pathname: '/(tabs)/profile/[handle]',
+        pathname: `${resolveTabPath(targetTab)}/profile/[handle]`,
         params: { handle: normalizedHandle, tab: targetTab },
       });
     },
-    [currentAccount?.handle, resolveNavigationTarget],
+    [currentAccount?.handle, resolveNavigationTarget, resolveTabPath],
   );
 
   return {
     activeTab,
+    isSharedRouteFocused: Boolean(activeSharedRoute),
+    navigateToTabRoot,
     openPost,
     openProfile,
   };

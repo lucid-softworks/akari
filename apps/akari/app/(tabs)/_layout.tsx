@@ -65,6 +65,11 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
 }
 
 type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
+type HardcodedRouteName = `(${HardcodedTabKey})`;
+
+function resolveRouteName(tabKey: HardcodedTabKey): HardcodedRouteName {
+  return `(${tabKey})`;
+}
 
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
@@ -84,10 +89,13 @@ function HardcodedTabBar({
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
   const insets = useSafeAreaInsets();
-  const { activeTab } = useTabNavigation();
+  const { activeTab, isSharedRouteFocused, navigateToTabRoot } = useTabNavigation();
   const focusedRoute = state.routes[state.index];
-  const isSharedRouteFocused =
-    focusedRoute?.name === 'post/[id]' || focusedRoute?.name === 'profile/[handle]';
+  const focusedNestedState =
+    focusedRoute?.state && typeof focusedRoute.state === 'object'
+      ? (focusedRoute.state as { index?: number })
+      : undefined;
+  const isNestedRouteFocused = typeof focusedNestedState?.index === 'number' && focusedNestedState.index > 0;
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
@@ -111,7 +119,8 @@ function HardcodedTabBar({
       ) : null}
       <View style={hardcodedTabStyles.content}>
         {hardcodedTabs.map((tabKey) => {
-          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+          const routeName = resolveRouteName(tabKey);
+          const routeIndex = state.routes.findIndex((route) => route.name === routeName);
           if (routeIndex === -1) {
             return null;
           }
@@ -133,9 +142,13 @@ function HardcodedTabBar({
               canPreventDefault: true,
             });
 
-            if (isFocused && isSharedRouteFocused) {
+            if (isFocused && (isNestedRouteFocused || isSharedRouteFocused)) {
               if (!event.defaultPrevented) {
-                navigation.navigate(route.name);
+                if (isSharedRouteFocused) {
+                  navigateToTabRoot(tabKey);
+                } else {
+                  navigation.navigate(route.name as never);
+                }
                 tabScrollRegistry.handleTabPress(tabKey);
               }
 
@@ -148,7 +161,7 @@ function HardcodedTabBar({
             }
 
             if (!event.defaultPrevented) {
-              navigation.navigate(route.name);
+              navigation.navigate(route.name as never);
             }
           };
 
@@ -277,15 +290,13 @@ export default function TabLayout() {
                   tabBarStyle: { display: 'none' },
                 }}
               >
-                <Tabs.Screen name="index" />
-                <Tabs.Screen name="search" />
-                <Tabs.Screen name="messages" />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="profile" />
-                <Tabs.Screen name="settings" />
-                <Tabs.Screen name="post/[id]" options={{ href: null }} />
-                <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
+                <Tabs.Screen name="(index)" />
+                <Tabs.Screen name="(search)" />
+                <Tabs.Screen name="(messages)" />
+                <Tabs.Screen name="(notifications)" />
+                <Tabs.Screen name="(bookmarks)" options={{ href: null }} />
+                <Tabs.Screen name="(profile)" />
+                <Tabs.Screen name="(settings)" />
               </Tabs>
             </View>
           </View>
@@ -311,19 +322,19 @@ export default function TabLayout() {
         )}
       >
         <Tabs.Screen
-          name="index"
+          name="(index)"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="(search)"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="messages"
+          name="(messages)"
           options={{
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
@@ -334,7 +345,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="notifications"
+          name="(notifications)"
           options={{
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
@@ -345,13 +356,13 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="bookmarks"
+          name="(bookmarks)"
           options={{
             href: null,
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="(profile)"
           options={{
             tabBarIcon: ({ color, focused }) => (
               <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
@@ -365,13 +376,11 @@ export default function TabLayout() {
           })}
         />
         <Tabs.Screen
-          name="settings"
+          name="(settings)"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
-        <Tabs.Screen name="post/[id]" options={{ href: null }} />
-        <Tabs.Screen name="profile/[handle]" options={{ href: null }} />
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>

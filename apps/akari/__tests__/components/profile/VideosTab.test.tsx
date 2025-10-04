@@ -55,7 +55,13 @@ describe('VideosTab', () => {
     mockUseThemeColor.mockReturnValue('#000');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     openPost = jest.fn();
-    mockUseTabNavigation.mockReturnValue({ openPost, openProfile: jest.fn(), activeTab: 'index' });
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders FeedSkeleton while loading', () => {
