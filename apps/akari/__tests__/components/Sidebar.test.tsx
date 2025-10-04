@@ -193,6 +193,27 @@ describe('Sidebar', () => {
     expect(getByPlaceholderText('username.bsky.social or @username')).toBeTruthy();
   });
 
+  it('opens the account selector when long pressing the profile navigation item', () => {
+    const { getByLabelText, getByText, queryByText } = render(
+      <DialogProvider>
+        <Sidebar />
+      </DialogProvider>,
+    );
+
+    const profileButton = getByLabelText('Profile');
+    expect(queryByText('@alice.work')).toBeNull();
+
+    fireEvent(profileButton, 'longPress');
+    expect(getByText('@alice.work')).toBeTruthy();
+    expect(push).not.toHaveBeenCalledWith('/(tabs)/profile');
+
+    fireEvent(profileButton, 'press');
+    expect(push).not.toHaveBeenCalledWith('/(tabs)/profile');
+
+    fireEvent(profileButton, 'press');
+    expect(push).toHaveBeenCalledWith('/(tabs)/profile');
+  });
+
   it('marks the active navigation item based on the current path', () => {
     mockUsePathname.mockReturnValue('/(tabs)/notifications');
 

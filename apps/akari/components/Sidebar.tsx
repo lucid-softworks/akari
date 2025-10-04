@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -53,6 +53,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
+  const skipProfileNavigationRef = useRef(false);
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
@@ -109,10 +110,34 @@ export function Sidebar() {
     return pathname === item.route;
   };
 
-  const handleNavigate = (item: NavigationItem) => {
-    setShowAccountSelector(false);
-    router.push(item.route as any);
-  };
+  const handleNavigate = useCallback(
+    (item: NavigationItem) => {
+      setShowAccountSelector(false);
+      router.push(item.route as any);
+    },
+    [router],
+  );
+
+  const handleProfileLongPress = useCallback(() => {
+    skipProfileNavigationRef.current = true;
+    setShowAccountSelector(true);
+  }, []);
+
+  const handleNavItemPress = useCallback(
+    (item: NavigationItem) => {
+      if (item.id === 'profile' && skipProfileNavigationRef.current) {
+        skipProfileNavigationRef.current = false;
+        return;
+      }
+
+      handleNavigate(item);
+    },
+    [handleNavigate],
+  );
+
+  const handleProfilePressOut = useCallback(() => {
+    skipProfileNavigationRef.current = false;
+  }, []);
 
   const handleAccountSelect = (account: Account) => {
     setShowAccountSelector(false);
@@ -203,7 +228,10 @@ export function Sidebar() {
                 accessibilityLabel={item.label}
                 accessibilityRole="button"
                 accessibilityState={{ selected: active }}
-                onPress={() => handleNavigate(item)}
+                onPress={() => handleNavItemPress(item)}
+                onLongPress={item.id === 'profile' ? handleProfileLongPress : undefined}
+                delayLongPress={item.id === 'profile' ? 350 : undefined}
+                onPressOut={item.id === 'profile' ? handleProfilePressOut : undefined}
                 style={({ pressed }) => [
                   styles.navItem,
                   collapsed && styles.navItemCollapsed,
