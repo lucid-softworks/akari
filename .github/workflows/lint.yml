@@ -20,3 +20,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Check dependency licenses
+        run: npm run check-licenses

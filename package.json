@@ -40,7 +40,8 @@
     "reset-project": "node ./scripts/reset-project.js",
     "update-translations": "node ./scripts/update-translations.js",
     "validate-translations": "node ./scripts/validate-translations.js",
-    "find-unused-translations": "node ./scripts/find-unused-translations.js"
+    "find-unused-translations": "node ./scripts/find-unused-translations.js",
+    "check-licenses": "node ./scripts/check-licenses.cjs"
   },
   "dependencies": {
     "@atcute/bluesky-richtext-parser": "^1.0.7",
@@ -99,6 +100,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",
+    "license-checker": "^25.0.1",
     "turbo": "^2.3.0"
   }
 }
