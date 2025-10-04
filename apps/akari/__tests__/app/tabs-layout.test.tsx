@@ -301,10 +301,12 @@ describe('HardcodedTabBar interactions', () => {
       { key: 'bookmarks-tab', name: 'bookmarks' },
       { key: 'profile-tab', name: 'profile' },
       { key: 'settings-tab', name: 'settings' },
+      { key: 'post-shared', name: 'post/[id]' },
+      { key: 'profile-shared', name: 'profile/[handle]' },
     ],
   });
 
-  const renderTabBar = () => {
+  const renderTabBar = (stateOverride?: any) => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
@@ -313,7 +315,7 @@ describe('HardcodedTabBar interactions', () => {
       emit: jest.fn(() => ({ defaultPrevented: false })),
       navigate: jest.fn(),
     };
-    const state = buildState();
+    const state = stateOverride ?? buildState();
     render(
       tabBar({
         state,
@@ -367,6 +369,26 @@ describe('HardcodedTabBar interactions', () => {
       type: 'tabLongPress',
       target: 'profile-tab',
     });
+  });
+
+  it('navigates back to the active tab when a shared route is focused', () => {
+    const sharedState = buildState();
+    sharedState.index = sharedState.routes.findIndex((route: any) => route.name === 'post/[id]');
+
+    const { navigation } = renderTabBar(sharedState);
+    const onPress = mockHapticTab.mock.calls[0][0].onPress as () => void;
+
+    act(() => {
+      onPress();
+    });
+
+    expect(navigation.emit).toHaveBeenCalledWith({
+      type: 'tabPress',
+      target: 'index-tab',
+      canPreventDefault: true,
+    });
+    expect(navigation.navigate).toHaveBeenCalledWith('index');
+    expect(mockHandleTabPress).toHaveBeenCalledWith('index');
   });
 });
 

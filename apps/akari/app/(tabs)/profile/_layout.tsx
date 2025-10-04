@@ -2,9 +2,12 @@ import { Stack } from 'expo-router';
 
 export default function ProfileLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="[handle]" />
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="[handle]"
+        options={{ headerShown: true, headerBackButtonDisplayMode: 'minimal', title: '' }}
+      />
     </Stack>
   );
 }

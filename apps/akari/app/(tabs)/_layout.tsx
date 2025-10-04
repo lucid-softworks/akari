@@ -85,6 +85,9 @@ function HardcodedTabBar({
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
   const insets = useSafeAreaInsets();
   const { activeTab } = useTabNavigation();
+  const focusedRoute = state.routes[state.index];
+  const isSharedRouteFocused =
+    focusedRoute?.name === 'post/[id]' || focusedRoute?.name === 'profile/[handle]';
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
@@ -130,11 +133,21 @@ function HardcodedTabBar({
               canPreventDefault: true,
             });
 
-            if (isFocused) {
-              tabScrollRegistry.handleTabPress(tabKey);
+            if (isFocused && isSharedRouteFocused) {
+              if (!event.defaultPrevented) {
+                navigation.navigate(route.name);
+                tabScrollRegistry.handleTabPress(tabKey);
+              }
+
+              return;
             }
 
-            if (!isFocused && !event.defaultPrevented) {
+            if (isFocused) {
+              tabScrollRegistry.handleTabPress(tabKey);
+              return;
+            }
+
+            if (!event.defaultPrevented) {
               navigation.navigate(route.name);
             }
           };
