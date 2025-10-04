@@ -1,7 +1,8 @@
 import { useResponsive } from '@/hooks/useResponsive';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
@@ -20,6 +21,7 @@ import { useFeeds } from '@/hooks/queries/useFeeds';
 import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -35,6 +37,27 @@ export default function HomeScreen() {
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
+  const tabBarHeight = useBottomTabBarHeight();
+  const fabBackgroundColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const fabShadowColor = useThemeColor(
+    { light: 'rgba(12, 14, 24, 0.18)', dark: 'rgba(10, 12, 20, 0.36)' },
+    'text',
+  );
+  const fabIconColor = useThemeColor({ light: '#FFFFFF', dark: '#0B0F19' }, 'background');
+
+  const fabBottom = useMemo(() => {
+    const safeInset = Math.max(insets.bottom, 16);
+
+    if (isLargeScreen) {
+      return safeInset + 24;
+    }
+
+    if (Platform.OS === 'ios') {
+      return tabBarHeight + 16;
+    }
+
+    return safeInset + 16;
+  }, [insets.bottom, isLargeScreen, tabBarHeight]);
 
   const { data: currentAccount } = useCurrentAccount();
 
@@ -316,8 +339,23 @@ export default function HomeScreen() {
       />
 
       {/* Floating Action Button for creating posts */}
-      <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
-        <IconSymbol name="plus" size={24} color="white" />
+      <TouchableOpacity
+        style={[
+          styles.fab,
+          {
+            bottom: fabBottom,
+            backgroundColor: fabBackgroundColor,
+            shadowColor: fabShadowColor,
+          },
+        ]}
+        onPress={() => setShowPostComposer(true)}
+        activeOpacity={0.8}
+        accessibilityRole="button"
+        accessibilityLabel={t('post.newPost')}
+        accessibilityHint={t('post.post')}
+        testID="compose-post-button"
+      >
+        <IconSymbol name="plus" size={24} color={fabIconColor} />
       </TouchableOpacity>
 
       {/* Post Composer Modal */}
@@ -391,11 +429,9 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#007AFF',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
