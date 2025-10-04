@@ -11,3 +11,4 @@ export * from './pds';
 export * from './search';
 export * from './types';
 export * from './video';
+export * from './repos';

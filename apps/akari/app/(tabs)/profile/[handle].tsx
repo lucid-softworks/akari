@@ -14,6 +14,7 @@ import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
+import { ReposTab } from '@/components/profile/ReposTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
@@ -145,6 +146,8 @@ export default function ProfileScreen() {
         return <VideosTab handle={handle} />;
       case 'feeds':
         return <FeedsTab handle={handle} />;
+      case 'repos':
+        return <ReposTab handle={handle} />;
       case 'starterpacks':
         return <StarterpacksTab handle={handle} />;
       default:

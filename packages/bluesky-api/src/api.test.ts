@@ -15,6 +15,7 @@ import type {
   BlueskySendMessageResponse,
   BlueskySession,
   BlueskyStarterPacksResponse,
+  BlueskyTangledReposResponse,
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
   BlueskyUnreadNotificationCount,
@@ -35,6 +36,7 @@ describe('BlueskyApi', () => {
       graph: Record<string, jest.Mock>;
       search: Record<string, jest.Mock>;
       notifications: Record<string, jest.Mock>;
+      repos: Record<string, jest.Mock>;
     };
 
     return { api, internal };
@@ -96,6 +98,7 @@ describe('BlueskyApi', () => {
     const post = { uri: 'at://post/1' } as unknown as BlueskyPostView;
     const thread = { thread: {} } as unknown as BlueskyThreadResponse;
     const starterpacks = { starterPacks: [] } as unknown as BlueskyStarterPacksResponse;
+    const reposResponse = { records: [] } as unknown as BlueskyTangledReposResponse;
     const blob = { blob: { ref: { $link: 'ref' }, mimeType: 'image/png', size: 1 } } as BlueskyUploadBlobResponse;
     const postInput: BlueskyCreatePostInput = { text: 'Hello' };
     const postResponse = { uri: 'at://post/1', cid: 'cid', commit: { cid: 'cid', rev: 'rev' }, validationStatus: 'valid' } as BlueskyCreatePostResponse;
@@ -118,6 +121,9 @@ describe('BlueskyApi', () => {
       likePost: jest.fn().mockResolvedValue({ uri: 'like' }),
       unlikePost: jest.fn().mockResolvedValue({ success: true }),
     };
+    internal.repos = {
+      getActorRepos: jest.fn().mockResolvedValue(reposResponse),
+    };
 
     await expect(api.getTimeline('jwt', 10)).resolves.toBe(feed);
     await expect(api.getTrendingTopics(5)).resolves.toBe(trending);
@@ -131,6 +137,7 @@ describe('BlueskyApi', () => {
     await expect(api.getAuthorVideos('jwt', 'did:example', 15)).resolves.toBe(feed);
     await expect(api.getAuthorFeeds('jwt', 'did:example', 15)).resolves.toBe(feedsResponse);
     await expect(api.getAuthorStarterpacks('jwt', 'did:example', 15)).resolves.toBe(starterpacks);
+    await expect(api.getActorRepos('jwt', 'did:example', 15)).resolves.toBe(reposResponse);
     await expect(api.createPost('jwt', 'did:example', postInput)).resolves.toBe(postResponse);
     await expect(api.uploadImage('jwt', 'file://image.png', 'image/png')).resolves.toBe(blob);
     await expect(api.likePost('jwt', 'at://post/1', 'cid', 'did:example')).resolves.toEqual({ uri: 'like' });
@@ -142,6 +149,7 @@ describe('BlueskyApi', () => {
     expect(internal.feeds.getFeed).toHaveBeenCalledWith('jwt', 'at://feed/1', 30, undefined);
     expect(internal.feeds.getFeedGenerators).toHaveBeenCalledWith('jwt', ['at://feed/a']);
     expect(internal.feeds.createPost).toHaveBeenCalledWith('jwt', 'did:example', postInput);
+    expect(internal.repos.getActorRepos).toHaveBeenCalledWith('jwt', 'did:example', 15, undefined);
   });
 
   it('delegates conversation operations to the conversations client', async () => {

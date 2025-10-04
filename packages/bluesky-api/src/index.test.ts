@@ -10,6 +10,7 @@ describe('index exports', () => {
     expect(Bluesky.BlueskyGraph).toBeDefined();
     expect(Bluesky.BlueskySearch).toBeDefined();
     expect(Bluesky.BlueskyNotifications).toBeDefined();
+    expect(Bluesky.BlueskyRepos).toBeDefined();
     expect(typeof Bluesky.resolveBlueskyVideoUrl).toBe('function');
     expect(typeof Bluesky.getPdsUrlFromDid).toBe('function');
     expect(typeof Bluesky.getPdsUrlFromHandle).toBe('function');

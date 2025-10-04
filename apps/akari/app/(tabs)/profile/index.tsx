@@ -13,6 +13,7 @@ import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
+import { ReposTab } from '@/components/profile/ReposTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { useToast } from '@/contexts/ToastContext';
@@ -128,6 +129,8 @@ export default function ProfileScreen() {
         return <VideosTab handle={currentAccount.handle} />;
       case 'feeds':
         return <FeedsTab handle={currentAccount.handle} />;
+      case 'repos':
+        return <ReposTab handle={currentAccount.handle} />;
       case 'starterpacks':
         return <StarterpacksTab handle={currentAccount.handle} />;
       default:

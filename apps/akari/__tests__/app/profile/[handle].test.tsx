@@ -43,7 +43,7 @@ jest.mock('@/components/ProfileTabs', () => {
   return {
     ProfileTabs: ({ onTabChange }: any) => (
       <>
-        {['posts', 'replies', 'likes', 'media', 'videos', 'feeds', 'starterpacks', 'unknown'].map(
+        {['posts', 'replies', 'likes', 'media', 'videos', 'feeds', 'repos', 'starterpacks', 'unknown'].map(
           (tab) => (
             <Text key={tab} accessibilityRole="button" onPress={() => onTabChange(tab as any)}>
               {tab}
@@ -132,6 +132,11 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
   return { StarterpacksTab: ({ handle }: any) => <Text>{`starterpacks ${handle}`}</Text> };
 });
 
+jest.mock('@/components/profile/ReposTab', () => {
+  const { Text } = require('react-native');
+  return { ReposTab: ({ handle }: any) => <Text>{`repos ${handle}`}</Text> };
+});
+
 const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');
 
 const { router } = require('expo-router');
@@ -215,6 +220,8 @@ describe('ProfileScreen', () => {
     expect(getByText('videos alice')).toBeTruthy();
     fireEvent.press(getByText('feeds'));
     expect(getByText('feeds alice')).toBeTruthy();
+    fireEvent.press(getByText('repos'));
+    expect(getByText('repos alice')).toBeTruthy();
     fireEvent.press(getByText('starterpacks'));
     expect(getByText('starterpacks alice')).toBeTruthy();
     fireEvent.press(getByText('unknown'));

@@ -843,6 +843,47 @@ export type BlueskyStarterPacksResponse = {
 };
 
 /**
+ * Tangled repo record stored in the sh.tangled.repo collection
+ */
+export type BlueskyTangledRepo = {
+  /** AT URI of the repo record */
+  uri: string;
+  /** CID of the repo record */
+  cid: string;
+  /** Tangled repo record value */
+  value: {
+    /** Lexicon type identifier */
+    $type: 'sh.tangled.repo';
+    /** Name of the repo */
+    name: string;
+    /** Knot where the repo was created */
+    knot: string;
+    /** Optional spindle/CI runner */
+    spindle?: string;
+    /** Optional repo description */
+    description?: string;
+    /** Optional source URL */
+    source?: string;
+    /** Optional list of label URIs */
+    labels?: string[];
+    /** When the repo was created */
+    createdAt: string;
+  };
+  /** When the record was indexed */
+  indexedAt?: string;
+};
+
+/**
+ * Response from the com.atproto.repo.listRecords endpoint for Tangled repos
+ */
+export type BlueskyTangledReposResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Tangled repo records */
+  records: BlueskyTangledRepo[];
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {
