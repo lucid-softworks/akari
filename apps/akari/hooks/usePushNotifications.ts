@@ -9,6 +9,8 @@ import {
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
+import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 export type PushNotificationState = {
   expoPushToken: string | null;
@@ -20,6 +22,8 @@ export type PushNotificationState = {
 
 export function usePushNotifications() {
   const router = useRouter();
+  const { data: currentAccount } = useCurrentAccount();
+  const registerPushSubscriptionMutation = useRegisterPushSubscription();
   const [state, setState] = useState<PushNotificationState>({
     expoPushToken: null,
     devicePushToken: null,
@@ -113,6 +117,18 @@ export function usePushNotifications() {
     try {
       const tokens = await registerForPushNotifications();
       if (tokens) {
+        if (!currentAccount?.did) {
+          console.error('Cannot register push notifications without a current account.');
+          throw new Error('Failed to register for push notifications');
+        }
+
+        await registerPushSubscriptionMutation.mutateAsync({
+          did: currentAccount.did,
+          expoPushToken: tokens.expoPushToken,
+          devicePushToken: tokens.devicePushToken,
+          platform: Platform.OS,
+        });
+
         setState((prev) => ({
           ...prev,
           expoPushToken: tokens.expoPushToken,

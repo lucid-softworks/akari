@@ -4,12 +4,14 @@ import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import {
   createNotificationChannels,
   DEFAULT_NOTIFICATION_CHANNELS,
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
+import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
@@ -30,10 +32,21 @@ jest.mock('@/utils/notifications', () => ({
   requestNotificationPermissions: jest.fn(),
 }));
 
+jest.mock('@/hooks/queries/useCurrentAccount', () => ({
+  useCurrentAccount: jest.fn(),
+}));
+
+jest.mock('@/hooks/mutations/useRegisterPushSubscription', () => ({
+  useRegisterPushSubscription: jest.fn(),
+}));
+
 const mockUseRouter = useRouter as jest.Mock;
 const mockCreateNotificationChannels = createNotificationChannels as jest.Mock;
 const mockRegisterForPushNotifications = registerForPushNotifications as jest.Mock;
 const mockRequestNotificationPermissions = requestNotificationPermissions as jest.Mock;
+const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseRegisterPushSubscription = useRegisterPushSubscription as jest.Mock;
+let mockRegisterPushSubscription: jest.Mock;
 const mockAddNotificationReceivedListener = Notifications.addNotificationReceivedListener as jest.Mock;
 const mockAddNotificationResponseReceivedListener = Notifications.addNotificationResponseReceivedListener as jest.Mock;
 const mockGetPermissionsAsync = Notifications.getPermissionsAsync as jest.Mock;
@@ -68,6 +81,11 @@ describe('usePushNotifications', () => {
     mockAddNotificationReceivedListener.mockReturnValue({ remove: jest.fn() });
     mockAddNotificationResponseReceivedListener.mockReturnValue({ remove: jest.fn() });
     mockGetPermissionsAsync.mockResolvedValue({ status: 'undetermined' });
+    mockUseCurrentAccount.mockReturnValue({ data: { did: 'did:example:123' } });
+    mockRegisterPushSubscription = jest.fn().mockResolvedValue(undefined);
+    mockUseRegisterPushSubscription.mockReturnValue({
+      mutateAsync: mockRegisterPushSubscription,
+    });
     Object.defineProperty(Platform, 'OS', { value: 'android' });
   });
 
@@ -186,6 +204,12 @@ describe('usePushNotifications', () => {
     expect(result.current.expoPushToken).toBe('expo-token');
     expect(result.current.devicePushToken).toBe('device-token');
     expect(result.current.error).toBeNull();
+    expect(mockRegisterPushSubscription).toHaveBeenCalledWith({
+      did: 'did:example:123',
+      expoPushToken: 'expo-token',
+      devicePushToken: 'device-token',
+      platform: 'android',
+    });
   });
 
   it('handles failed registration', async () => {
@@ -200,6 +224,7 @@ describe('usePushNotifications', () => {
 
     expect(success).toBe(false);
     expect(result.current.error).toBe('Failed to register for push notifications');
+    expect(mockRegisterPushSubscription).not.toHaveBeenCalled();
   });
 
   it('handles registration errors', async () => {
@@ -216,6 +241,22 @@ describe('usePushNotifications', () => {
     expect(result.current.error).toBe('boom');
   });
 
+  it('handles registry registration errors', async () => {
+    mockRegisterForPushNotifications.mockResolvedValue({
+      expoPushToken: 'expo-token',
+    });
+    const failure = new Error('registry failed');
+    mockRegisterPushSubscription.mockRejectedValue(failure);
+
+    const { result } = await renderPushNotificationsHook();
+
+    await act(async () => {
+      await result.current.register();
+    });
+
+    expect(result.current.error).toBe('registry failed');
+  });
+
   it('sets a null device token when not provided', async () => {
     mockRegisterForPushNotifications.mockResolvedValue({
       expoPushToken: 'expo-token',
@@ -228,6 +269,12 @@ describe('usePushNotifications', () => {
     });
 
     expect(result.current.devicePushToken).toBeNull();
+    expect(mockRegisterPushSubscription).toHaveBeenCalledWith({
+      did: 'did:example:123',
+      expoPushToken: 'expo-token',
+      devicePushToken: undefined,
+      platform: 'android',
+    });
   });
 
   it('handles registration errors with non-Error values', async () => {
@@ -258,6 +305,7 @@ describe('usePushNotifications', () => {
     expect(success).toBe(true);
     expect(mockRequestNotificationPermissions).toHaveBeenCalled();
     expect(mockRegisterForPushNotifications).toHaveBeenCalled();
+    expect(mockRegisterPushSubscription).toHaveBeenCalled();
   });
 
   it('does not register when permissions are denied', async () => {
