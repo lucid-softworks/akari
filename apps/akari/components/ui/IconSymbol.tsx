@@ -82,6 +82,7 @@ const MAPPING = {
   'speaker.slash.fill': 'volume-off',
   'hand.raised.fill': 'back-hand',
   'eye.fill': 'visibility',
+  'star.fill': 'star',
   'rectangle.stack.fill': 'collections',
   'play.circle.fill': 'play-circle-filled',
   'envelope.fill': 'email',
@@ -96,6 +97,7 @@ const MAPPING = {
   'textformat.size.larger': 'text-increase',
   'number.circle': 'numbers',
   'number.circle.fill': 'numbers',
+  'person.2.fill': 'group',
 } as unknown as IconMapping;
 
 /**

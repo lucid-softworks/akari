@@ -22,7 +22,9 @@ const mockUseTranslation = useTranslation as jest.Mock;
 describe('ReposTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseThemeColor.mockImplementation((colors) => colors.light);
+    mockUseThemeColor.mockImplementation((colors, colorName) => {
+      return colors.light ?? `mock-${colorName}`;
+    });
     mockUseTranslation.mockReturnValue({ t: (key: string) => key, locale: 'en-US' });
   });
 
@@ -78,7 +80,9 @@ describe('ReposTab', () => {
 
     const { getByText, UNSAFE_getByType, queryByText } = render(<ReposTab handle="alice" />);
 
-    expect(getByText('Repo One')).toBeTruthy();
+    expect(getByText('@knot.bsky.social/Repo One')).toBeTruthy();
+    expect(getByText('A repo')).toBeTruthy();
+    expect(getByText('https://example.com')).toBeTruthy();
     expect(queryByText('common.loading')).toBeNull();
 
     act(() => {
