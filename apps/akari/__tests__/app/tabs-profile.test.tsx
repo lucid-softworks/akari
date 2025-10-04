@@ -151,6 +151,9 @@ jest.mock('@/components/ProfileTabs', () => {
         <TouchableOpacity onPress={() => onTabChange('feeds')}>
           <Text>feeds tab</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => onTabChange('repos')}>
+          <Text>repos tab</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => onTabChange('starterpacks')}>
           <Text>starterpacks tab</Text>
         </TouchableOpacity>
@@ -202,6 +205,12 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
   const React = require('react');
   const { Text } = require('react-native');
   return { StarterpacksTab: ({ handle }: any) => <Text>starterpacks {handle}</Text> };
+});
+
+jest.mock('@/components/profile/ReposTab', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return { ReposTab: ({ handle }: any) => <Text>repos {handle}</Text> };
 });
 
 jest.mock('@/components/ThemedView', () => {
@@ -274,6 +283,9 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('feeds tab'));
     expect(getByText('feeds alice')).toBeTruthy();
+
+    fireEvent.press(getByText('repos tab'));
+    expect(getByText('repos alice')).toBeTruthy();
 
     fireEvent.press(getByText('starterpacks tab'));
     expect(getByText('starterpacks alice')).toBeTruthy();

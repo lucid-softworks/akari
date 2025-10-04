@@ -30,6 +30,7 @@ describe('ProfileTabs', () => {
           'common.likes': 'Likes',
           'profile.videos': 'Videos',
           'profile.feeds': 'Feeds',
+          'profile.repos': 'Repos',
           'profile.starterpacks': 'Starterpacks',
         };
         return map[key] ?? key;
@@ -55,6 +56,7 @@ describe('ProfileTabs', () => {
       'Likes',
       'Videos',
       'Feeds',
+      'Repos',
       'Starterpacks',
     ];
 
@@ -74,7 +76,7 @@ describe('ProfileTabs', () => {
       />,
     );
 
-    const labels = ['Posts', 'Replies', 'Media', 'Videos', 'Feeds', 'Starterpacks'];
+    const labels = ['Posts', 'Replies', 'Media', 'Videos', 'Feeds', 'Repos', 'Starterpacks'];
 
     for (const label of labels) {
       expect(getByText(label)).toBeTruthy();

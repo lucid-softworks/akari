@@ -6,6 +6,7 @@ import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
 import { BlueskyNotifications } from './notifications';
 import { BlueskySearch } from './search';
+import { BlueskyRepos } from './repos';
 import type {
   BlueskyBookmarksResponse,
   BlueskyConvosResponse,
@@ -25,6 +26,7 @@ import type {
   BlueskySendMessageInput,
   BlueskySession,
   BlueskyStarterPacksResponse,
+  BlueskyTangledReposResponse,
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
   BlueskyProfileUpdateInput,
@@ -43,6 +45,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private graph: BlueskyGraph;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
+  private repos: BlueskyRepos;
 
   /**
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
@@ -57,6 +60,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.graph = new BlueskyGraph(pdsUrl);
     this.notifications = new BlueskyNotifications(pdsUrl);
     this.search = new BlueskySearch(pdsUrl);
+    this.repos = new BlueskyRepos(pdsUrl);
   }
 
   /**
@@ -105,6 +109,23 @@ export class BlueskyApi extends BlueskyApiClient {
    */
   async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
     return this.actors.getPreferences(accessJwt);
+  }
+
+  /**
+   * Lists Tangled repos created by the requested actor.
+   * @param accessJwt - Valid session token authorised to query the actor's records.
+   * @param actor - DID or handle identifying the actor whose repos should be loaded.
+   * @param limit - Maximum number of repos to fetch per page, defaults to 50.
+   * @param cursor - Pagination cursor from previous responses, if any.
+   * @returns Tangled repo records created by the actor.
+   */
+  async getActorRepos(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyTangledReposResponse> {
+    return this.repos.getActorRepos(accessJwt, actor, limit, cursor);
   }
 
   /**
