@@ -1,8 +1,9 @@
-import { useNavigationState } from '@react-navigation/native';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { HapticTab } from '@/components/HapticTab';
@@ -62,31 +63,126 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
   );
 }
 
-/**
- * Custom tab button that tracks which tab is being pressed
- */
-function CustomTabButton(props: any) {
-  const navigationState = useNavigationState((state) => state);
-  const lastPressedTabRef = useRef<string | null>(null);
+type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
 
-  const handleTabPress = () => {
-    // Use a timeout to check the navigation state after the tab press
-    // since the navigation state doesn't update immediately
-    setTimeout(() => {
-      const currentRoute = navigationState?.routes?.[navigationState.index]?.name;
+type HardcodedTabBarProps = BottomTabBarProps & {
+  unreadMessagesCount: number;
+  unreadNotificationsCount: number;
+  avatarUri?: string;
+};
 
-      if (currentRoute) {
-        // Check if this is the same tab pressed again
-        if (lastPressedTabRef.current === currentRoute) {
-          tabScrollRegistry.handleTabPress(currentRoute);
-        }
+function HardcodedTabBar({
+  state,
+  navigation,
+  unreadMessagesCount,
+  unreadNotificationsCount,
+  avatarUri,
+}: HardcodedTabBarProps) {
+  const borderColor = useBorderColor();
+  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
+  const insets = useSafeAreaInsets();
 
-        lastPressedTabRef.current = currentRoute;
-      }
-    }, 50); // Small delay to ensure navigation state has updated
-  };
+  const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
-  return <HapticTab {...props} onTabPress={handleTabPress} />;
+  const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
+
+  return (
+    <View
+      style={[
+        hardcodedTabStyles.container,
+        {
+          borderColor,
+          backgroundColor: Platform.OS === 'ios' ? 'transparent' : tabBarSurface,
+          paddingBottom: 18 + insets.bottom,
+        },
+      ]}
+    >
+      {Platform.OS === 'ios' && TabBarBackgroundComponent ? (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <TabBarBackgroundComponent />
+        </View>
+      ) : null}
+      <View style={hardcodedTabStyles.content}>
+        {hardcodedTabs.map((tabKey) => {
+          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+          if (routeIndex === -1) {
+            return null;
+          }
+
+          const route = state.routes[routeIndex];
+          const isFocused = state.index === routeIndex;
+          const color = isFocused ? accentColor : inactiveTint;
+          const badgeCount =
+            tabKey === 'messages'
+              ? unreadMessagesCount
+              : tabKey === 'notifications'
+              ? unreadNotificationsCount
+              : 0;
+
+          const handlePress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (isFocused) {
+              tabScrollRegistry.handleTabPress(tabKey);
+            }
+
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
+
+          const handleLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+
+          return (
+            <HapticTab
+              key={tabKey}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isFocused }}
+              onPress={handlePress}
+              onLongPress={handleLongPress}
+              style={hardcodedTabStyles.tabButton}
+            >
+              <View style={hardcodedTabStyles.iconContainer}>
+                {tabKey === 'messages' || tabKey === 'notifications' ? (
+                  <View style={hardcodedTabStyles.badgeWrapper}>
+                    <TabBarIcon
+                      name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'}
+                      color={color}
+                    />
+                    <TabBadge count={badgeCount} size="small" />
+                  </View>
+                ) : tabKey === 'profile' ? (
+                  <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
+                ) : (
+                  <TabBarIcon
+                    name={
+                      tabKey === 'index'
+                        ? 'house.fill'
+                        : tabKey === 'search'
+                        ? 'magnifyingglass'
+                        : 'gearshape.fill'
+                    }
+                    color={color}
+                  />
+                )}
+              </View>
+            </HapticTab>
+          );
+        })}
+      </View>
+    </View>
+  );
 }
 
 export default function TabLayout() {
@@ -96,32 +192,7 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
-  const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
-  const tabBarStyle = {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor,
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 18,
-    height: 86,
-    shadowColor: 'rgba(12, 14, 24, 0.28)',
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 20,
-    elevation: 10,
-    ...Platform.select({
-      ios: {
-        position: 'absolute',
-        backgroundColor: 'transparent',
-      },
-      default: {
-        backgroundColor: tabBarSurface,
-      },
-    }),
-  } as const;
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -212,18 +283,16 @@ export default function TabLayout() {
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: accentColor,
-          tabBarInactiveTintColor: inactiveTint,
           headerShown: false,
-          tabBarButton: CustomTabButton,
-          tabBarBackground: TabBarBackground,
-          tabBarShowLabel: false,
-          tabBarStyle,
-          tabBarItemStyle: {
-            marginHorizontal: 4,
-            paddingVertical: 0,
-          },
         }}
+        tabBar={(props) => (
+          <HardcodedTabBar
+            {...props}
+            unreadMessagesCount={unreadMessagesCount}
+            unreadNotificationsCount={unreadNotificationsCount}
+            avatarUri={currentAccount?.avatar}
+          />
+        )}
       >
         <Tabs.Screen
           name="index"
@@ -311,5 +380,36 @@ const profileTabIconStyles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+});
+
+const hardcodedTabStyles = StyleSheet.create({
+  container: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    shadowColor: 'rgba(12, 14, 24, 0.28)',
+    shadowOffset: { width: 0, height: -8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tabButton: {
+    marginHorizontal: 4,
+    marginVertical: 0,
+    paddingVertical: 0,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeWrapper: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
