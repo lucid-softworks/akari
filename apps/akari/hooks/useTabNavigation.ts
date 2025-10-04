@@ -3,9 +3,24 @@ import { router, useSegments } from 'expo-router';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
-type TabRouteKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
+type TabRouteKey =
+  | 'index'
+  | 'search'
+  | 'messages'
+  | 'notifications'
+  | 'bookmarks'
+  | 'profile'
+  | 'settings';
 
-const TAB_ROUTE_KEYS: TabRouteKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
+const TAB_ROUTE_KEYS: TabRouteKey[] = [
+  'index',
+  'search',
+  'messages',
+  'notifications',
+  'bookmarks',
+  'profile',
+  'settings',
+];
 
 type NavigateOptions = {
   tab?: TabRouteKey;
@@ -41,7 +56,11 @@ export function useTabNavigation(): UseTabNavigationResult {
 
   const activeTab = useMemo(() => resolveTabFromSegments(segments), [segments]);
 
-  const buildTabPath = useCallback((tab: TabRouteKey, leafPath: string) => `/(tabs)/${tab}/${leafPath}`, []);
+  const buildTabPath = useCallback(
+    (tab: TabRouteKey, leafPath?: string) =>
+      leafPath && leafPath.length > 0 ? `/(tabs)/${tab}/${leafPath}` : `/(tabs)/${tab}`,
+    [],
+  );
 
   const navigate = useCallback(
     (leafPath: string, params: Record<string, string>, options?: NavigateOptions) => {
@@ -74,9 +93,12 @@ export function useTabNavigation(): UseTabNavigationResult {
         return;
       }
 
-      navigate('profile/[handle]', { handle: normalizedHandle }, options);
+      const targetTab = options?.tab ?? activeTab;
+      const leafPath = targetTab === 'profile' ? '[handle]' : 'profile/[handle]';
+
+      navigate(leafPath, { handle: normalizedHandle }, { ...options, tab: targetTab });
     },
-    [currentAccount?.handle, navigate],
+    [activeTab, currentAccount?.handle, navigate],
   );
 
   return {

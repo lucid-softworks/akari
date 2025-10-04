@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
-import BookmarksScreen from '@/app/(tabs)/bookmarks';
+import BookmarksScreen from '@/app/(tabs)/bookmarks/index';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
