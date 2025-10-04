@@ -396,7 +396,10 @@ const hardcodedTabStyles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+    width: '100%',
   },
   tabButton: {
     marginHorizontal: 4,

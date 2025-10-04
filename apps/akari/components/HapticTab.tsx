@@ -57,14 +57,6 @@ export function HapticTab(props: HapticTabProps) {
         restProps.onPress?.(ev);
       }}
     >
-      <View style={styles.indicatorContainer} pointerEvents="none">
-        <View
-          style={[
-            styles.indicator,
-            { backgroundColor: isActive ? accentColor : "transparent" },
-          ]}
-        />
-      </View>
       <View style={styles.content}>{children}</View>
     </PlatformPressable>
   );
@@ -81,16 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     alignItems: "center",
     justifyContent: "center",
-  },
-  indicatorContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-  },
-  indicator: {
-    height: 3,
   },
   content: {
     alignItems: "center",
