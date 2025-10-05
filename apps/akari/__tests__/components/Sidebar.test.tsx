@@ -44,6 +44,15 @@ jest.mock('@/hooks/useTabNavigation', () => ({
     profile: '/profile',
     settings: '/settings',
   },
+  TAB_ROUTES: {
+    index: '/(tabs)/(index)',
+    search: '/(tabs)/(search)',
+    messages: '/(tabs)/(messages)',
+    notifications: '/(tabs)/(notifications)',
+    bookmarks: '/(tabs)/(bookmarks)',
+    profile: '/(tabs)/(profile)',
+    settings: '/(tabs)/(settings)',
+  },
   useTabNavigation: jest.fn(),
 }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
@@ -174,7 +183,7 @@ describe('Sidebar', () => {
     );
 
     fireEvent.press(getByText('Bookmarks'));
-    expect(push).toHaveBeenCalledWith('/bookmarks');
+    expect(push).toHaveBeenCalledWith('/(tabs)/(bookmarks)');
   });
 
   it('toggles the collapsed state of the sidebar', () => {

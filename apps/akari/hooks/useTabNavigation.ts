@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { router, useGlobalSearchParams, useSegments } from 'expo-router';
+import { router, useGlobalSearchParams, useSegments, type Href } from 'expo-router';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
@@ -28,6 +28,16 @@ type NavigateOptions = {
 };
 
 type SharedRouteKey = 'post' | 'profile';
+
+export const TAB_ROUTES: Record<TabRouteKey, Href> = {
+  index: '/(tabs)/(index)',
+  search: '/(tabs)/(search)',
+  messages: '/(tabs)/(messages)',
+  notifications: '/(tabs)/(notifications)',
+  bookmarks: '/(tabs)/(bookmarks)',
+  profile: '/(tabs)/(profile)',
+  settings: '/(tabs)/(settings)',
+};
 
 export const TAB_PATHS: Record<TabRouteKey, string> = {
   index: '/',
@@ -146,7 +156,7 @@ export function useTabNavigation(): UseTabNavigationResult {
   const navigateToTabRoot = useCallback(
     (tab?: TabRouteKey) => {
       const targetTab = tab ?? activeTab;
-      router.navigate(TAB_PATHS[targetTab]);
+      router.navigate(TAB_ROUTES[targetTab]);
     },
     [activeTab],
   );
@@ -171,7 +181,7 @@ export function useTabNavigation(): UseTabNavigationResult {
 
       if (isCurrentUser) {
         const action = options?.replace ? router.replace : router.push;
-        action(TAB_PATHS.profile);
+        action(TAB_ROUTES.profile);
         return;
       }
 

@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -13,7 +13,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
-import { TAB_PATHS, useTabNavigation, type TabRouteKey } from '@/hooks/useTabNavigation';
+import { TAB_ROUTES, useTabNavigation, type TabRouteKey } from '@/hooks/useTabNavigation';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -45,7 +45,7 @@ type NavigationItem = {
   id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'profile' | 'settings';
   label: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
-  route: string;
+  route: Href;
   badge?: number | null;
 };
 
@@ -64,25 +64,25 @@ export function Sidebar() {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: TAB_PATHS.index },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: TAB_ROUTES.index },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: TAB_PATHS.notifications,
+        route: TAB_ROUTES.notifications,
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: TAB_PATHS.messages,
+        route: TAB_ROUTES.messages,
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: TAB_PATHS.search },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: TAB_PATHS.bookmarks },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: TAB_PATHS.profile },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: TAB_PATHS.settings },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: TAB_ROUTES.search },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: TAB_ROUTES.bookmarks },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: TAB_ROUTES.profile },
+      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: TAB_ROUTES.settings },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -122,7 +122,7 @@ export function Sidebar() {
 
   const handleNavigate = (item: NavigationItem) => {
     setShowAccountSelector(false);
-    router.push(item.route as any);
+    router.push(item.route);
   };
 
   const handleAccountSelect = (account: Account) => {
