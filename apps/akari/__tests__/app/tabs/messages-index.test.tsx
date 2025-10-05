@@ -131,7 +131,7 @@ describe('MessagesScreen', () => {
     expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/(tabs)/profile/alice');
   });
 
   it('scrolls to top when registry callback is triggered', () => {

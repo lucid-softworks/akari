@@ -91,7 +91,7 @@ export default function BookmarksScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            router.push(`/(tabs)/post/${encodeURIComponent(post.uri)}`);
           }}
         />
       </View>

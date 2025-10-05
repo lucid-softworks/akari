@@ -129,10 +129,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/post/post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/profile/carol');
   });
 
   it('renders grouped notifications with embed images and overflow avatars', () => {
@@ -389,7 +389,7 @@ describe('NotificationsScreen', () => {
     const { getByText } = render(<NotificationsScreen />);
 
     fireEvent.press(getByText('notifications.mentionedYou'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/profile/no-subject');
+    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/profile/no-subject');
   });
 });
 

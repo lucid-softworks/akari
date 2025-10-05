@@ -243,10 +243,10 @@ describe('RecordEmbed Component', () => {
     const { getByTestId, getByText } = render(<RecordEmbed embed={embed} />);
 
     fireEvent.press(getByTestId('record-embed-touchable'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(embed.record.uri)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/post/${encodeURIComponent(embed.record.uri)}`);
 
     fireEvent.press(getByText('Test User'));
-    expect(router.push).toHaveBeenCalledWith(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/profile/${encodeURIComponent(embed.record.author.handle)}`);
   });
 
   it('should render images and handle load events', () => {

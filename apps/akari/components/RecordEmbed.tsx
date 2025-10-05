@@ -59,13 +59,13 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const handlePress = () => {
     // Navigate to the quoted post
-    router.push(`/post/${encodeURIComponent(embed.record.uri)}`);
+    router.push(`/(tabs)/post/${encodeURIComponent(embed.record.uri)}`);
   };
 
   const handleAuthorPress = () => {
     // Navigate to the quoted post's author profile
     if (embed.record.author?.handle) {
-      router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+      router.push(`/(tabs)/profile/${encodeURIComponent(embed.record.author.handle)}`);
     }
   };
 

@@ -157,7 +157,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/post/at%3A%2F%2Fexample.com%2Fpost%2F1');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/post/at%3A%2F%2Fexample.com%2Fpost%2F1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

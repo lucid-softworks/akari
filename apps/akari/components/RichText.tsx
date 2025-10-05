@@ -101,7 +101,7 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'mention':
             return (
-              <Link key={index} href={`/profile/${token.handle}`}>
+              <Link key={index} href={`/(tabs)/profile/${token.handle}`}>
                 <ThemedText style={[{ color: mentionColor }]}>@{token.handle}</ThemedText>
               </Link>
             );

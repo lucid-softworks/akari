@@ -133,7 +133,7 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
+        onPress={() => router.push('/(tabs)/profile/' + encodeURIComponent(profile.handle))}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
@@ -203,7 +203,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          router.push('/(tabs)/post/' + encodeURIComponent(post.uri));
         }}
       />
     );

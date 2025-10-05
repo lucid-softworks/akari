@@ -140,7 +140,7 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/profile/alice');
   });
 
   it('navigates to profile when avatar pressed', () => {
@@ -148,7 +148,7 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
     fireEvent.press(avatarButton);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/profile/alice');
   });
 
   it('likes a post when not previously liked', () => {

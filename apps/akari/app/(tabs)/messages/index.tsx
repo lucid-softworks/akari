@@ -98,7 +98,7 @@ export function MessagesListScreen({
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+              router.push(`/(tabs)/profile/${encodeURIComponent(item.handle)}`);
             }}
             activeOpacity={0.7}
           >

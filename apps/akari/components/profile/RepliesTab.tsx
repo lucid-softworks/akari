@@ -62,7 +62,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          router.push(`/(tabs)/post/${encodeURIComponent(item.uri)}`);
         }}
       />
     );
