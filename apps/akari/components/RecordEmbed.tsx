@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -12,6 +11,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -56,16 +56,17 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     },
     'background',
   );
+  const { openPost, openProfile } = useTabNavigation();
 
   const handlePress = () => {
     // Navigate to the quoted post
-    router.push(`/post/${encodeURIComponent(embed.record.uri)}`);
+    openPost(embed.record.uri);
   };
 
   const handleAuthorPress = () => {
     // Navigate to the quoted post's author profile
     if (embed.record.author?.handle) {
-      router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+      openProfile(embed.record.author.handle);
     }
   };
 

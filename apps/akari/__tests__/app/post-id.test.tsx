@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
-import PostDetailScreen, { renderComment } from '@/app/(tabs)/post/[id]';
+import PostDetailScreen, { renderComment } from '@/app/(tabs)/(index,search,messages,notifications,bookmarks,profile,settings)/post/[id]';
 import { useLocalSearchParams } from 'expo-router';
 import { usePost, useParentPost, useRootPost } from '@/hooks/queries/usePost';
 import { usePostThread } from '@/hooks/queries/usePostThread';

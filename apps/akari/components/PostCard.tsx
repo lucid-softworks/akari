@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -33,6 +32,7 @@ import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
 
@@ -172,6 +172,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
   const translationMutation = usePostTranslation();
+  const { openProfile } = useTabNavigation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const menuButtonRef = useRef<TouchableOpacity | null>(null);
@@ -589,7 +590,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   );
 
   const handleProfilePress = () => {
-    router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+    openProfile(post.author.handle);
   };
 
   const livePreview = showLivePreview && liveStreamInfo

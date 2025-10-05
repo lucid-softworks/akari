@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
-import ConversationScreen from '@/app/(tabs)/messages/[handle]';
+import ConversationScreen from '@/app/(tabs)/(messages)/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -12,6 +12,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -56,6 +57,7 @@ jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/utils/alert');
+jest.mock('@/hooks/useTabNavigation');
 
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseConversations = useConversations as jest.Mock;
@@ -67,6 +69,8 @@ const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterBack = router.back as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openProfile = jest.fn();
 let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
 beforeEach(() => {
@@ -78,6 +82,14 @@ beforeEach(() => {
     return c.light ?? '#000';
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+  openProfile.mockReset();
+  mockUseTabNavigation.mockReturnValue({
+    activeTab: 'messages',
+    isSharedRouteFocused: false,
+    navigateToTabRoot: jest.fn(),
+    openProfile,
+    openPost: jest.fn(),
+  });
   keyboardListeners = {};
   jest.spyOn(Keyboard, 'addListener').mockImplementation((event: string, callback: () => void) => {
     if (event === 'keyboardWillShow') {
@@ -255,7 +267,7 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
 
     fireEvent.press(getByText('@alice'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+    expect(openProfile).toHaveBeenCalledWith('alice');
 
     fireEvent.press(getByText('chevron.left'));
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

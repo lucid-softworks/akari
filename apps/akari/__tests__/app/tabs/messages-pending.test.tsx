@@ -2,8 +2,9 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
-import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
+import PendingMessagesScreen from '@/app/(tabs)/(messages)/pending';
 import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -48,6 +49,7 @@ jest.mock('@/hooks/useTranslation');
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));
+jest.mock('@/hooks/useTabNavigation');
 
 const mockUseConversations = useConversations as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
@@ -55,12 +57,22 @@ const mockUseTranslation = useTranslation as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRouterBack = router.back as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openProfile = jest.fn();
 
 describe('PendingMessagesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    openProfile.mockReset();
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'messages',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openProfile,
+      openPost: jest.fn(),
+    });
   });
 
   it('renders pending conversations and supports navigation', () => {
@@ -102,10 +114,10 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/messages/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/profile/pending-pal');
+    expect(openProfile).toHaveBeenCalledWith('pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[0]);
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

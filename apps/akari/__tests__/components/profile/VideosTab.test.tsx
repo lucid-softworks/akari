@@ -5,13 +5,13 @@ import { VideosTab } from '@/components/profile/VideosTab';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorVideos');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 let mockPostCard: jest.Mock;
@@ -47,11 +47,21 @@ describe('VideosTab', () => {
   const mockUseAuthorVideos = useAuthorVideos as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
+  const mockUseTabNavigation = useTabNavigation as jest.Mock;
+  let openPost: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockReturnValue('#000');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    openPost = jest.fn();
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders FeedSkeleton while loading', () => {
@@ -101,7 +111,7 @@ describe('VideosTab', () => {
 
     const { getByText } = render(<VideosTab handle="alice" />);
     fireEvent.press(getByText('at://video/1'));
-    expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://video/1'));
+    expect(openPost).toHaveBeenCalledWith('at://video/1');
   });
 
   it('fetches next page on end reached', () => {

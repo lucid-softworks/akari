@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -7,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
 import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -19,6 +19,7 @@ const ESTIMATED_POST_CARD_HEIGHT = 320;
 export function RepliesTab({ handle }: RepliesTabProps) {
   const { t } = useTranslation();
   const { data: replies, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorReplies(handle);
+  const { openPost } = useTabNavigation();
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -62,7 +63,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          openPost(item.uri);
         }}
       />
     );

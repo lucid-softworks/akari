@@ -27,25 +27,35 @@ jest.mock('@/components/PostCard', () => {
 jest.mock('@/hooks/queries/useAuthorPosts');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useThemeColor');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 import { PostsTab } from '@/components/profile/PostsTab';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 describe('PostsTab', () => {
   const mockUseAuthorPosts = useAuthorPosts as jest.Mock;
   const mockUseTranslation = useTranslation as jest.Mock;
   const mockUseThemeColor = useThemeColor as jest.Mock;
+  const mockUseTabNavigation = useTabNavigation as jest.Mock;
+  let openPost: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
     mockUseThemeColor.mockReturnValue('#000');
+    openPost = jest.fn();
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders loading skeleton while fetching posts', () => {
@@ -107,7 +117,7 @@ describe('PostsTab', () => {
     expect(mockPostCard).toHaveBeenCalledTimes(1);
     const button = getByRole('button');
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(post.uri)}`);
+    expect(openPost).toHaveBeenCalledWith(post.uri);
     const call = mockPostCard.mock.calls[0][0];
     expect(call.post.replyTo).toEqual({
       author: { handle: 'bob', displayName: 'Bob' },

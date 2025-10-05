@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react-native';
 import React from 'react';
-import MessagesLayout from '@/app/(tabs)/messages/_layout';
+import MessagesLayout from '@/app/(tabs)/(messages)/_layout';
 
 jest.mock('expo-router', () => {
   const React = require('react');
@@ -16,7 +16,7 @@ describe('MessagesLayout', () => {
     jest.clearAllMocks();
   });
 
-  it('renders stack with index, pending, and [handle] screens', () => {
+  it('renders stack with index, pending, and handle screens', () => {
     const { Stack } = require('expo-router');
     render(<MessagesLayout />);
     expect(Stack.mock.calls[0][0].screenOptions).toEqual({ headerShown: false });

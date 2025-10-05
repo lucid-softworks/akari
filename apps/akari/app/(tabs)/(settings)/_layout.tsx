@@ -1,9 +1,7 @@
-import React from 'react';
 import { Stack } from 'expo-router';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-
 export default function SettingsLayout() {
   const { t } = useTranslation();
   const headerBackground = useThemeColor({}, 'background');
@@ -15,6 +13,7 @@ export default function SettingsLayout() {
         contentStyle: { backgroundColor: headerBackground },
       }}
     >
+      <Stack.Screen name="index" />
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
       <Stack.Screen
         name="privacy-and-security"

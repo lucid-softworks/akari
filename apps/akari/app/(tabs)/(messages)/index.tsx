@@ -10,6 +10,7 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import en from '@/translations/en.json';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -56,6 +57,7 @@ export function MessagesListScreen({
   const borderColor = useBorderColor();
   const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
+  const { openProfile } = useTabNavigation();
 
   const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -91,14 +93,14 @@ export function MessagesListScreen({
       <TouchableOpacity
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
         onPress={() => {
-          router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
+          router.push(`/messages/${encodeURIComponent(item.handle)}`);
         }}
       >
         <ThemedView style={styles.conversationContent}>
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+              openProfile(item.handle);
             }}
             activeOpacity={0.7}
           >
@@ -137,7 +139,7 @@ export function MessagesListScreen({
         </ThemedView>
       </TouchableOpacity>
     ),
-    [borderColor, t],
+    [borderColor, openProfile, t],
   );
 
   const renderFooter = React.useCallback(() => {
@@ -226,7 +228,7 @@ export function MessagesListScreen({
 
 export default function MessagesScreen() {
   const handleNavigateToPending = React.useCallback(() => {
-    router.push('/(tabs)/messages/pending');
+    router.push('/messages/pending');
   }, []);
 
   return (

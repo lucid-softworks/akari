@@ -82,7 +82,7 @@ export default function AccountSettingsScreen() {
               removeAccountMutation.mutate(account.did);
 
               if (account.did === currentAccount?.did) {
-                router.replace('/(tabs)');
+                router.replace('/');
               }
             },
           },

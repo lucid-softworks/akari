@@ -1,18 +1,18 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
-import BookmarksScreen from '@/app/(tabs)/bookmarks';
-import { router } from 'expo-router';
+import BookmarksScreen from '@/app/(tabs)/(bookmarks)/index';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { mockScrollToOffset } from '../../../test-utils/flash-list';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('@/hooks/useTabNavigation');
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -64,6 +64,8 @@ const mockUseBookmarks = useBookmarks as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
 const mockFormatRelativeTime = formatRelativeTime as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
+const openPost = jest.fn();
 
 function buildBookmark() {
   const parentPost = {
@@ -120,6 +122,14 @@ describe('BookmarksScreen', () => {
     jest.clearAllMocks();
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
     mockFormatRelativeTime.mockReturnValue('relative-time');
+    openPost.mockReset();
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'bookmarks',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost,
+      openProfile: jest.fn(),
+    });
   });
 
   it('renders bookmarks and handles interactions', async () => {
@@ -157,7 +167,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/post/at%3A%2F%2Fexample.com%2Fpost%2F1');
+    expect(openPost).toHaveBeenCalledWith('at://example.com/post/1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

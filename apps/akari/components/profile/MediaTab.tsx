@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -8,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -20,6 +20,7 @@ const ESTIMATED_MEDIA_POST_CARD_HEIGHT = 360;
 export function MediaTab({ handle }: MediaTabProps) {
   const { t } = useTranslation();
   const { data: media, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorMedia(handle);
+  const { openPost } = useTabNavigation();
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -68,7 +69,7 @@ export function MediaTab({ handle }: MediaTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          openPost(item.uri);
         }}
       />
     );

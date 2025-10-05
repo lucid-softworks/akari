@@ -10,7 +10,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { Account } from '@/types/account';
-import { usePathname, useRouter } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 
 jest.mock('react-native/Libraries/Modal/Modal', () => {
   const React = require('react');
@@ -22,11 +22,6 @@ jest.mock('react-native/Libraries/Modal/Modal', () => {
   };
 });
 
-jest.mock('expo-router', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
-}));
-
 jest.mock('@/hooks/queries/useUnreadMessagesCount');
 jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/queries/useAccounts');
@@ -34,6 +29,27 @@ jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/mutations/useSwitchAccount');
 jest.mock('@/hooks/mutations/useAddAccount');
 jest.mock('@/hooks/mutations/useSignIn');
+jest.mock('@/hooks/useTabNavigation', () => ({
+  TAB_PATHS: {
+    index: '/',
+    search: '/search',
+    messages: '/messages',
+    notifications: '/notifications',
+    bookmarks: '/bookmarks',
+    profile: '/profile',
+    settings: '/settings',
+  },
+  TAB_ROUTES: {
+    index: '/(tabs)/(index)',
+    search: '/(tabs)/(search)',
+    messages: '/(tabs)/(messages)',
+    notifications: '/(tabs)/(notifications)',
+    bookmarks: '/(tabs)/(bookmarks)',
+    profile: '/(tabs)/(profile)',
+    settings: '/(tabs)/(settings)',
+  },
+  useTabNavigation: jest.fn(),
+}));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 jest.mock('@/hooks/useTranslation', () => {
   const en = require('@/translations/en.json');
@@ -65,8 +81,6 @@ jest.mock('@/hooks/useTranslation', () => {
   };
 });
 
-const mockUseRouter = useRouter as jest.Mock;
-const mockUsePathname = usePathname as jest.Mock;
 const mockUseUnreadMessagesCount = useUnreadMessagesCount as jest.Mock;
 const mockUseUnreadNotificationsCount = useUnreadNotificationsCount as jest.Mock;
 const mockUseAccounts = useAccounts as jest.Mock;
@@ -74,6 +88,7 @@ const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseSwitchAccount = useSwitchAccount as jest.Mock;
 const mockUseAddAccount = useAddAccount as jest.Mock;
 const mockUseSignIn = useSignIn as jest.Mock;
+const mockUseTabNavigation = useTabNavigation as jest.Mock;
 
 const accounts: Account[] = [
   {
@@ -96,25 +111,28 @@ const accounts: Account[] = [
   },
 ];
 
-let push: jest.Mock;
-let replace: jest.Mock;
 let switchAccountMutate: jest.Mock;
 let switchAccountMutateAsync: jest.Mock;
 let addAccountMutateAsync: jest.Mock;
 let signInMutateAsync: jest.Mock;
+let navigateToTabRoot: jest.Mock;
 
 describe('Sidebar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    push = jest.fn();
-    replace = jest.fn();
     switchAccountMutate = jest.fn();
     switchAccountMutateAsync = jest.fn();
     addAccountMutateAsync = jest.fn();
     signInMutateAsync = jest.fn();
+    navigateToTabRoot = jest.fn();
 
-    mockUseRouter.mockReturnValue({ push, replace });
-    mockUsePathname.mockReturnValue('/(tabs)');
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'index',
+      isSharedRouteFocused: false,
+      navigateToTabRoot,
+      openPost: jest.fn(),
+      openProfile: jest.fn(),
+    });
     mockUseUnreadMessagesCount.mockReturnValue({ data: 1 });
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
     mockUseAccounts.mockReturnValue({ data: accounts });
@@ -156,7 +174,7 @@ describe('Sidebar', () => {
     );
 
     fireEvent.press(getByText('Bookmarks'));
-    expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
+    expect(navigateToTabRoot).toHaveBeenCalledWith('bookmarks');
   });
 
   it('toggles the collapsed state of the sidebar', () => {
@@ -189,12 +207,18 @@ describe('Sidebar', () => {
 
     fireEvent.press(getByText('Alice Chen'));
     fireEvent.press(getByText('+ Add account'));
-    expect(push).not.toHaveBeenCalledWith('/(auth)/signin?addAccount=true');
+    expect(navigateToTabRoot).not.toHaveBeenCalled();
     expect(getByPlaceholderText('username.bsky.social or @username')).toBeTruthy();
   });
 
   it('marks the active navigation item based on the current path', () => {
-    mockUsePathname.mockReturnValue('/(tabs)/notifications');
+    mockUseTabNavigation.mockReturnValue({
+      activeTab: 'notifications',
+      isSharedRouteFocused: false,
+      navigateToTabRoot: jest.fn(),
+      openPost: jest.fn(),
+      openProfile: jest.fn(),
+    });
 
     const { getByLabelText } = render(
       <DialogProvider>

@@ -1,4 +1,3 @@
-import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -13,6 +12,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useTabNavigation, type TabRouteKey } from '@/hooks/useTabNavigation';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -44,44 +44,43 @@ type NavigationItem = {
   id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'profile' | 'settings';
   label: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
-  route: string;
+  tab: TabRouteKey;
   badge?: number | null;
 };
 
 export function Sidebar() {
-  const router = useRouter();
-  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
+  const { activeTab, navigateToTabRoot } = useTabNavigation();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', tab: 'index' },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: '/(tabs)/notifications',
+        tab: 'notifications',
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: '/(tabs)/messages',
+        tab: 'messages',
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', tab: 'search' },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', tab: 'bookmarks' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', tab: 'profile' },
+      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', tab: 'settings' },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -101,17 +100,11 @@ export function Sidebar() {
     return source.charAt(0).toUpperCase();
   };
 
-  const isActiveRoute = (item: NavigationItem) => {
-    if (item.route === '/(tabs)') {
-      return pathname === '/(tabs)' || pathname === '/(tabs)/index';
-    }
-
-    return pathname === item.route;
-  };
+  const isActiveRoute = (item: NavigationItem) => activeTab === item.tab;
 
   const handleNavigate = (item: NavigationItem) => {
     setShowAccountSelector(false);
-    router.push(item.route as any);
+    navigateToTabRoot(item.tab);
   };
 
   const handleAccountSelect = (account: Account) => {

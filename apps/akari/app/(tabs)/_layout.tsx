@@ -17,6 +17,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { TAB_PATHS, useTabNavigation } from '@/hooks/useTabNavigation';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -64,6 +65,11 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
 }
 
 type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
+type HardcodedRouteName = `(${HardcodedTabKey})`;
+
+function resolveRouteName(tabKey: HardcodedTabKey): HardcodedRouteName {
+  return `(${tabKey})`;
+}
 
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
@@ -83,6 +89,13 @@ function HardcodedTabBar({
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
   const insets = useSafeAreaInsets();
+  const { activeTab, isSharedRouteFocused, navigateToTabRoot } = useTabNavigation();
+  const focusedRoute = state.routes[state.index];
+  const focusedNestedState =
+    focusedRoute?.state && typeof focusedRoute.state === 'object'
+      ? (focusedRoute.state as { index?: number })
+      : undefined;
+  const isNestedRouteFocused = typeof focusedNestedState?.index === 'number' && focusedNestedState.index > 0;
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
@@ -106,13 +119,14 @@ function HardcodedTabBar({
       ) : null}
       <View style={hardcodedTabStyles.content}>
         {hardcodedTabs.map((tabKey) => {
-          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+          const routeName = resolveRouteName(tabKey);
+          const routeIndex = state.routes.findIndex((route) => route.name === routeName);
           if (routeIndex === -1) {
             return null;
           }
 
           const route = state.routes[routeIndex];
-          const isFocused = state.index === routeIndex;
+          const isFocused = tabKey === activeTab;
           const color = isFocused ? accentColor : inactiveTint;
           const badgeCount =
             tabKey === 'messages'
@@ -128,12 +142,22 @@ function HardcodedTabBar({
               canPreventDefault: true,
             });
 
-            if (isFocused) {
-              tabScrollRegistry.handleTabPress(tabKey);
+            if (isFocused && (isNestedRouteFocused || isSharedRouteFocused)) {
+              if (!event.defaultPrevented) {
+                navigateToTabRoot(tabKey);
+                tabScrollRegistry.handleTabPress(tabKey);
+              }
+
+              return;
             }
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
+            if (isFocused) {
+              tabScrollRegistry.handleTabPress(tabKey);
+              return;
+            }
+
+            if (!event.defaultPrevented) {
+              navigateToTabRoot(tabKey);
             }
           };
 
@@ -256,20 +280,23 @@ export default function TabLayout() {
                 minHeight: '100%',
               }}
             >
-              <Tabs
-                screenOptions={{
-                  headerShown: false,
-                  tabBarStyle: { display: 'none' },
-                }}
+      <Tabs
+        initialRouteName="(index)"
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
               >
-                <Tabs.Screen name="index" />
-                <Tabs.Screen name="search" />
-                <Tabs.Screen name="messages" />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="post" options={{ href: null }} />
-                <Tabs.Screen name="profile" />
-                <Tabs.Screen name="settings" />
+                <Tabs.Screen name="(index)" options={{ href: TAB_PATHS.index }} />
+                <Tabs.Screen name="(search)" options={{ href: TAB_PATHS.search }} />
+                <Tabs.Screen name="(messages)" options={{ href: TAB_PATHS.messages }} />
+                <Tabs.Screen
+                  name="(notifications)"
+                  options={{ href: TAB_PATHS.notifications }}
+                />
+                <Tabs.Screen name="(bookmarks)" options={{ href: TAB_PATHS.bookmarks }} />
+                <Tabs.Screen name="(profile)" options={{ href: TAB_PATHS.profile }} />
+                <Tabs.Screen name="(settings)" options={{ href: TAB_PATHS.settings }} />
               </Tabs>
             </View>
           </View>
@@ -282,6 +309,7 @@ export default function TabLayout() {
   return (
     <>
       <Tabs
+        initialRouteName="(index)"
         screenOptions={{
           headerShown: false,
         }}
@@ -295,20 +323,23 @@ export default function TabLayout() {
         )}
       >
         <Tabs.Screen
-          name="index"
+          name="(index)"
           options={{
+            href: TAB_PATHS.index,
             tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="(search)"
           options={{
+            href: TAB_PATHS.search,
             tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="messages"
+          name="(messages)"
           options={{
+            href: TAB_PATHS.messages,
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
                 <TabBarIcon name="message.fill" color={color} />
@@ -318,8 +349,9 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="notifications"
+          name="(notifications)"
           options={{
+            href: TAB_PATHS.notifications,
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
                 <TabBarIcon name="bell.fill" color={color} />
@@ -328,21 +360,11 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen name="(bookmarks)" options={{ href: TAB_PATHS.bookmarks }} />
         <Tabs.Screen
-          name="bookmarks"
+          name="(profile)"
           options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
+            href: TAB_PATHS.profile,
             tabBarIcon: ({ color, focused }) => (
               <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
             ),
@@ -355,8 +377,9 @@ export default function TabLayout() {
           })}
         />
         <Tabs.Screen
-          name="settings"
+          name="(settings)"
           options={{
+            href: TAB_PATHS.settings,
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
