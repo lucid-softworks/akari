@@ -86,7 +86,10 @@ describe('RepliesTab', () => {
 
     const { getByText } = render(<RepliesTab handle="alice" />);
     fireEvent.press(getByText('Hello world'));
-    expect(mockPush).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(reply.uri)}`);
+    expect(mockPush).toHaveBeenCalledWith({
+      pathname: '/profile/post/[id]',
+      params: { id: reply.uri },
+    });
   });
 
   it('fetches more replies on end reached', () => {

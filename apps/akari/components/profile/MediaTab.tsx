@@ -68,7 +68,7 @@ export function MediaTab({ handle }: MediaTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/(tabs)/profile/post/${encodeURIComponent(item.uri)}`);
+          router.push({ pathname: '/profile/post/[id]', params: { id: item.uri } });
         }}
       />
     );

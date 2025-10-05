@@ -226,7 +226,10 @@ describe('SearchScreen', () => {
 
     fireEvent.press(getByText('Nested'));
 
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search/post/' + encodeURIComponent('at://example/post'));
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      pathname: '/search/post/[id]',
+      params: { id: 'at://example/post' },
+    });
   });
 });
 

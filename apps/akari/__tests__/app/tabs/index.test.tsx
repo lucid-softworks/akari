@@ -216,7 +216,10 @@ describe('HomeScreen', () => {
 
     fireEvent.press(getByText('Pressed post'));
 
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/post/' + encodeURIComponent('at://example/post'));
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      pathname: '/post/[id]',
+      params: { id: 'at://example/post' },
+    });
   });
 
   it('prompts to select a feed when none is chosen', () => {

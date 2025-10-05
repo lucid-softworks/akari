@@ -107,7 +107,10 @@ describe('PostsTab', () => {
     expect(mockPostCard).toHaveBeenCalledTimes(1);
     const button = getByRole('button');
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(post.uri)}`);
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/profile/post/[id]',
+      params: { id: post.uri },
+    });
     const call = mockPostCard.mock.calls[0][0];
     expect(call.post.replyTo).toEqual({
       author: { handle: 'bob', displayName: 'Bob' },
