@@ -39,7 +39,7 @@ export const TAB_ROUTES: Record<TabRouteKey, Href> = {
   settings: '/(tabs)/(settings)',
 };
 
-export const TAB_PATHS: Record<TabRouteKey, string> = {
+export const TAB_PATHS: Record<TabRouteKey, Href> = {
   index: '/',
   search: '/search',
   messages: '/messages',
@@ -156,7 +156,7 @@ export function useTabNavigation(): UseTabNavigationResult {
   const navigateToTabRoot = useCallback(
     (tab?: TabRouteKey) => {
       const targetTab = tab ?? activeTab;
-      router.navigate(TAB_ROUTES[targetTab]);
+      router.navigate(TAB_PATHS[targetTab]);
     },
     [activeTab],
   );
@@ -181,7 +181,7 @@ export function useTabNavigation(): UseTabNavigationResult {
 
       if (isCurrentUser) {
         const action = options?.replace ? router.replace : router.push;
-        action(TAB_ROUTES.profile);
+        action(TAB_PATHS.profile);
         return;
       }
 
