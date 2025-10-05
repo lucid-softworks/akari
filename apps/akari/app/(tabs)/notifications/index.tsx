@@ -418,7 +418,7 @@ export default function NotificationsScreen() {
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     } else if (notification.subject) {
       // Navigate to the post
-      router.push(`/post/${encodeURIComponent(notification.subject)}`);
+      router.push(`/(tabs)/notifications/post/${encodeURIComponent(notification.subject)}`);
     } else {
       // For notifications without a subject, navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);

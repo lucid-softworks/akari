@@ -254,7 +254,7 @@ export default function HomeScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            router.push(`/(tabs)/index/post/${encodeURIComponent(post.uri)}`);
           }}
         />
       );

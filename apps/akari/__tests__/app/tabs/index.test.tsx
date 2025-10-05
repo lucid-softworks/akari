@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import HomeScreen from '@/app/(tabs)/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { router } from 'expo-router';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useFeeds } from '@/hooks/queries/useFeeds';
@@ -21,8 +22,14 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('@/components/PostCard', () => {
-  const { Text } = require('react-native');
-  return { PostCard: ({ post }: any) => <Text>{post.text}</Text> };
+  const { Text, TouchableOpacity } = require('react-native');
+  return {
+    PostCard: ({ post, onPress }: any) => (
+      <TouchableOpacity onPress={onPress}>
+        <Text>{post.text}</Text>
+      </TouchableOpacity>
+    ),
+  };
 });
 
 jest.mock('@/components/PostComposer', () => {
@@ -91,12 +98,14 @@ const mockUseTimeline = useTimeline as jest.Mock;
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
+const mockRouterPush = router.push as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
   mockUseCurrentAccount.mockReturnValue({ data: { did: 'did', handle: 'user' } });
+  mockRouterPush.mockClear();
 });
 
 describe('HomeScreen', () => {
@@ -156,6 +165,58 @@ describe('HomeScreen', () => {
     expect(mutate).toHaveBeenCalledWith('feed2');
 
     expect(tabScrollRegistry.register).toHaveBeenCalledWith('index', expect.any(Function));
+  });
+
+  it('routes to nested post detail when a feed item is pressed', () => {
+    mockUseSavedFeeds.mockReturnValue({
+      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
+      isLoading: false,
+    });
+    mockUseFeeds.mockReturnValue({
+      data: { feeds: [] },
+      isLoading: false,
+      refetch: jest.fn(),
+    });
+    mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
+    mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
+    mockUseFeed.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [
+              {
+                post: {
+                  uri: 'at://example/post',
+                  record: { text: 'Pressed post' },
+                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
+                  indexedAt: new Date().toISOString(),
+                  likeCount: 0,
+                  replyCount: 0,
+                  repostCount: 0,
+                  embed: null,
+                  embeds: [],
+                  labels: [],
+                  viewer: {},
+                  cid: 'cid1',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+    });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+
+    const { getByText } = render(<HomeScreen />);
+
+    fireEvent.press(getByText('Pressed post'));
+
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/post/' + encodeURIComponent('at://example/post'));
   });
 
   it('prompts to select a feed when none is chosen', () => {

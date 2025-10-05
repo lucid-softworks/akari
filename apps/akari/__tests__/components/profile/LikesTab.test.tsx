@@ -113,7 +113,7 @@ describe('LikesTab', () => {
 
     const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
     fireEvent.press(getByText('liked post'));
-    expect(router.push).toHaveBeenCalledWith(`/post/${encodeURIComponent(like.uri)}`);
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/profile/post/${encodeURIComponent(like.uri)}`);
 
     const list = UNSAFE_getByType(VirtualizedList);
     act(() => {

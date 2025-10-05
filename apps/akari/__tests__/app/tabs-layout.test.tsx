@@ -147,16 +147,7 @@ describe('TabLayout', () => {
       tabBarStyle: { display: 'none' },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile', 'settings']);
   });
 
   it('renders mobile tabs with badges', () => {
@@ -182,7 +173,6 @@ describe('TabLayout', () => {
         { key: 'messages-tab', name: 'messages' },
         { key: 'notifications-tab', name: 'notifications' },
         { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
         { key: 'profile-tab', name: 'profile' },
         { key: 'settings-tab', name: 'settings' },
       ],
@@ -200,16 +190,7 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[0][0].count).toBe(2);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile', 'settings']);
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
@@ -223,19 +204,18 @@ describe('TabLayout', () => {
       emit: jest.fn(() => ({ defaultPrevented: false })),
       navigate: jest.fn(),
     };
-    const state = {
-      index: 0,
-      routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
-        { key: 'profile-tab', name: 'profile' },
-        { key: 'settings-tab', name: 'settings' },
-      ],
-    };
+      const state = {
+        index: 0,
+        routes: [
+          { key: 'index-tab', name: 'index' },
+          { key: 'search-tab', name: 'search' },
+          { key: 'messages-tab', name: 'messages' },
+          { key: 'notifications-tab', name: 'notifications' },
+          { key: 'bookmarks-tab', name: 'bookmarks' },
+          { key: 'profile-tab', name: 'profile' },
+          { key: 'settings-tab', name: 'settings' },
+        ],
+      };
 
     render(
       tabBar({

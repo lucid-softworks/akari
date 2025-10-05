@@ -3,7 +3,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -36,9 +36,13 @@ jest.mock('@/components/Labels', () => {
 });
 
 jest.mock('@/components/PostCard', () => {
-  const { Text } = require('react-native');
+  const { Text, TouchableOpacity } = require('react-native');
   return {
-    PostCard: ({ post }: { post: { text: string } }) => <Text>{post.text}</Text>,
+    PostCard: ({ post, onPress }: { post: { text: string }; onPress?: () => void }) => (
+      <TouchableOpacity onPress={onPress}>
+        <Text>{post.text}</Text>
+      </TouchableOpacity>
+    ),
   };
 });
 
@@ -82,12 +86,14 @@ const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockRouterPush = router.push as jest.Mock;
 
 describe('SearchScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockRouterPush.mockClear();
   });
 
   it('trims query and triggers search', async () => {
@@ -182,6 +188,45 @@ describe('SearchScreen', () => {
       UNSAFE_getByType(VirtualizedList).props.onRefresh();
     });
     expect(refetch).toHaveBeenCalled();
+  });
+
+  it('navigates to nested post route when tapping a post result', () => {
+    mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
+    const searchData = {
+      pages: [
+        {
+          results: [
+            {
+              type: 'post',
+              data: {
+                uri: 'at://example/post',
+                record: { text: 'Nested' },
+                author: { handle: 'alice', displayName: 'Alice' },
+                indexedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    mockUseSearch.mockReturnValue({
+      data: searchData,
+      isLoading: false,
+      isError: false,
+      error: null,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+      isRefetching: false,
+    });
+
+    const { getByText } = render(<SearchScreen />);
+
+    fireEvent.press(getByText('Nested'));
+
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search/post/' + encodeURIComponent('at://example/post'));
   });
 });
 

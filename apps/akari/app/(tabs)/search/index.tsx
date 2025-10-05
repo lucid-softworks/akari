@@ -203,7 +203,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          router.push('/(tabs)/search/post/' + encodeURIComponent(post.uri));
         }}
       />
     );
