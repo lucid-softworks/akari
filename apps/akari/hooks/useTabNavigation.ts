@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { router, useGlobalSearchParams, useSegments, type Href } from 'expo-router';
+import { Platform } from 'react-native';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
@@ -148,6 +149,17 @@ export function useTabNavigation(): UseTabNavigationResult {
     return undefined;
   }, [segmentTab, segments]);
 
+  const syncTabNavigation = useCallback((targetTab: TabRouteKey, replace?: boolean) => {
+    const shouldReplace = Boolean(replace);
+    const action = shouldReplace ? router.replace : router.navigate;
+    action(TAB_ROUTES[targetTab]);
+
+    if (Platform.OS === 'web' && TAB_PATHS[targetTab] !== TAB_ROUTES[targetTab]) {
+      const webAction = shouldReplace ? router.replace : router.push;
+      webAction(TAB_PATHS[targetTab]);
+    }
+  }, []);
+
   const resolveNavigationTarget = useCallback(
     (options?: NavigateOptions) => options?.tab ?? activeTab,
     [activeTab],
@@ -156,9 +168,10 @@ export function useTabNavigation(): UseTabNavigationResult {
   const navigateToTabRoot = useCallback(
     (tab?: TabRouteKey) => {
       const targetTab = tab ?? activeTab;
-      router.navigate(TAB_PATHS[targetTab]);
+      const shouldReplace = tab ? tab === activeTab : true;
+      syncTabNavigation(targetTab, shouldReplace);
     },
-    [activeTab],
+    [activeTab, syncTabNavigation],
   );
 
   const openPost = useCallback(
@@ -180,8 +193,7 @@ export function useTabNavigation(): UseTabNavigationResult {
       const isCurrentUser = normalizedHandle === currentAccount?.handle;
 
       if (isCurrentUser) {
-        const action = options?.replace ? router.replace : router.push;
-        action(TAB_PATHS.profile);
+        syncTabNavigation('profile', options?.replace);
         return;
       }
 
@@ -193,7 +205,7 @@ export function useTabNavigation(): UseTabNavigationResult {
         params: { handle: normalizedHandle, tab: targetTab },
       });
     },
-    [currentAccount?.handle, resolveNavigationTarget],
+    [currentAccount?.handle, resolveNavigationTarget, syncTabNavigation],
   );
 
   return {
