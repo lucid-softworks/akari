@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Labels } from '@/components/Labels';
 
 import { PostCard } from '@/components/PostCard';
+import { navigateInternal } from '@/components/InternalLink';
 import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -133,7 +134,10 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
+        accessibilityRole="button"
+        onPress={() =>
+          navigateInternal({ href: `/profile/${encodeURIComponent(profile.handle)}` })
+        }
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
@@ -203,7 +207,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          navigateInternal({ href: `/post/${encodeURIComponent(post.uri)}` });
         }}
       />
     );

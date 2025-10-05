@@ -1,10 +1,10 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { navigateInternal } from '@/components/InternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
@@ -415,13 +415,17 @@ export default function NotificationsScreen() {
   const handleNotificationPress = useCallback((notification: GroupedNotification) => {
     if (notification.type === 'follow') {
       // Navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
+      navigateInternal({
+        href: `/profile/${encodeURIComponent(notification.authors[0].handle)}`,
+      });
     } else if (notification.subject) {
       // Navigate to the post
-      router.push(`/post/${encodeURIComponent(notification.subject)}`);
+      navigateInternal({ href: `/post/${encodeURIComponent(notification.subject)}` });
     } else {
       // For notifications without a subject, navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
+      navigateInternal({
+        href: `/profile/${encodeURIComponent(notification.authors[0].handle)}`,
+      });
     }
   }, []);
 

@@ -17,7 +17,11 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
+
+jest.mock('@/components/InternalLink', () => ({
+  navigateInternal: jest.fn(),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -52,13 +56,15 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 const mockUseConversations = useConversations as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
+const { navigateInternal } = require('@/components/InternalLink');
+const mockNavigateInternal = navigateInternal as jest.Mock;
 const mockRouterBack = router.back as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
 
 describe('PendingMessagesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockNavigateInternal.mockReset();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   });
@@ -102,10 +108,12 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending-pal');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(1, {
+      href: '/(tabs)/messages/pending-pal',
+    });
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/profile/pending-pal');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(2, { href: '/profile/pending-pal' });
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[0]);
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

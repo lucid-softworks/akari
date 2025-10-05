@@ -22,7 +22,11 @@ jest.mock('expo-image', () => {
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
-  router: { back: jest.fn(), push: jest.fn() },
+  router: { back: jest.fn() },
+}));
+
+jest.mock('@/components/InternalLink', () => ({
+  navigateInternal: jest.fn(),
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -66,11 +70,13 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterBack = router.back as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
+const { navigateInternal } = require('@/components/InternalLink');
+const mockNavigateInternal = navigateInternal as jest.Mock;
 let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockNavigateInternal.mockReset();
   mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
   mockUseBorderColor.mockReturnValue('#ccc');
   mockUseThemeColor.mockImplementation((c: any, t?: any) => {
@@ -255,7 +261,7 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
 
     fireEvent.press(getByText('@alice'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+    expect(mockNavigateInternal).toHaveBeenCalledWith({ href: '/profile/alice' });
 
     fireEvent.press(getByText('chevron.left'));
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

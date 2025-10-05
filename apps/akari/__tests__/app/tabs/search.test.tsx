@@ -18,7 +18,10 @@ jest.mock('expo-image', () => {
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
-  router: { push: jest.fn() },
+}));
+
+jest.mock('@/components/InternalLink', () => ({
+  navigateInternal: jest.fn(),
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -38,7 +41,9 @@ jest.mock('@/components/Labels', () => {
 jest.mock('@/components/PostCard', () => {
   const { Text } = require('react-native');
   return {
-    PostCard: ({ post }: { post: { text: string } }) => <Text>{post.text}</Text>,
+    PostCard: ({ post, onPress }: { post: { text: string }; onPress?: () => void }) => (
+      <Text onPress={onPress}>{post.text}</Text>
+    ),
   };
 });
 
@@ -82,10 +87,13 @@ const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const { navigateInternal } = require('@/components/InternalLink');
+const mockNavigateInternal = navigateInternal as jest.Mock;
 
 describe('SearchScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockNavigateInternal.mockReset();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   });
@@ -155,6 +163,75 @@ describe('SearchScreen', () => {
     fireEvent.press(getByText('Users'));
     expect(getByText('Alice')).toBeTruthy();
     expect(queryByText('Hello')).toBeNull();
+  });
+
+  it('opens profile detail with internal navigation', () => {
+    mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
+    mockUseSearch.mockReturnValue({
+      data: {
+        pages: [
+          {
+            results: [
+              { type: 'profile', data: { handle: 'alice', displayName: 'Alice' } },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+      isRefetching: false,
+    });
+
+    const { getByText } = render(<SearchScreen />);
+    fireEvent.press(getByText('Alice'));
+    expect(mockNavigateInternal).toHaveBeenCalledWith({ href: '/profile/alice' });
+  });
+
+  it('opens post detail with internal navigation', () => {
+    mockUseLocalSearchParams.mockReturnValue({ query: 'foo' });
+    mockUseSearch.mockReturnValue({
+      data: {
+        pages: [
+          {
+            results: [
+              {
+                type: 'post',
+                data: {
+                  uri: 'at://did:example/post/1',
+                  record: { text: 'Hello' },
+                  author: { handle: 'bob', displayName: 'Bob', did: 'did:example:bob', avatar: '' },
+                  indexedAt: new Date().toISOString(),
+                  likeCount: 0,
+                  replyCount: 0,
+                  repostCount: 0,
+                  embed: null,
+                  embeds: null,
+                  labels: [],
+                  viewer: null,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      isFetchingNextPage: false,
+      refetch: jest.fn(),
+      isRefetching: false,
+    });
+
+    const { getByText } = render(<SearchScreen />);
+    fireEvent.press(getByText('Hello'));
+    expect(mockNavigateInternal).toHaveBeenCalledWith({ href: '/post/at%3A%2F%2Fdid%3Aexample%2Fpost%2F1' });
   });
 
   it('loads more results and refreshes', () => {

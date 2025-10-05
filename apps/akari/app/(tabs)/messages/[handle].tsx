@@ -5,6 +5,7 @@ import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, Toucha
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
+import { navigateInternal } from '@/components/InternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -501,7 +502,7 @@ export default function ConversationScreen() {
               style={styles.headerInfo}
               onPress={() => {
                 // Navigate to profile when header is clicked
-                router.push(`/profile/${encodeURIComponent(handle)}`);
+                navigateInternal({ href: `/profile/${encodeURIComponent(handle)}` });
               }}
               activeOpacity={0.7}
             >
