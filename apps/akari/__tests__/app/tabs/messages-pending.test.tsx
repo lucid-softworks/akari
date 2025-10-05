@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
-import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
+import PendingMessagesScreen from '@/app/(tabs)/(messages)/pending';
 import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -102,10 +102,10 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/(messages)/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/profile/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/users/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[0]);
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

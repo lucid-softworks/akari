@@ -156,7 +156,7 @@ describe('Sidebar', () => {
     );
 
     fireEvent.press(getByText('Bookmarks'));
-    expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
+    expect(push).toHaveBeenCalledWith('/(tabs)/(home)/bookmarks');
   });
 
   it('toggles the collapsed state of the sidebar', () => {
@@ -194,7 +194,7 @@ describe('Sidebar', () => {
   });
 
   it('marks the active navigation item based on the current path', () => {
-    mockUsePathname.mockReturnValue('/(tabs)/notifications');
+    mockUsePathname.mockReturnValue('/(tabs)/(notifications)');
 
     const { getByLabelText } = render(
       <DialogProvider>

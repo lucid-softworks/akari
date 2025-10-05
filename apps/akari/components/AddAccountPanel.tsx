@@ -137,7 +137,7 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
             text: t('common.ok'),
             onPress: () => {
               dialogManager.close(panelId);
-              router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
+              router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)/(home)');
             },
           },
         ],

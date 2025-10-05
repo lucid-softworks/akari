@@ -218,7 +218,7 @@ describe('AuthScreen', () => {
 
     const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
     alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/(home)');
   });
 
   it('submits sign in when pressing enter on the password input', async () => {
@@ -382,7 +382,7 @@ describe('AuthScreen', () => {
 
     const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
     alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/(home)');
   });
 
   it('toggles between modes and clears input values', () => {

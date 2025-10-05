@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 
-import SearchScreen from '@/app/(tabs)/search';
+import SearchScreen from '@/app/(tabs)/(search)/index';
 import { useLocalSearchParams } from 'expo-router';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';

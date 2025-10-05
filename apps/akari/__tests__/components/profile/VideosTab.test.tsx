@@ -101,7 +101,7 @@ describe('VideosTab', () => {
 
     const { getByText } = render(<VideosTab handle="alice" />);
     fireEvent.press(getByText('at://video/1'));
-    expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://video/1'));
+    expect(router.push).toHaveBeenCalledWith('/posts/' + encodeURIComponent('at://video/1'));
   });
 
   it('fetches next page on end reached', () => {

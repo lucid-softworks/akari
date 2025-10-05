@@ -120,14 +120,14 @@ export const renderComment = (
 };
 
 export default function PostDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { postId } = useLocalSearchParams<{ postId: string }>();
   const scrollViewRef = useRef<ScrollView>(null);
   const mainPostRef = useRef<View>(null);
   const { t } = useTranslation();
 
-  const { data: post, isLoading: postLoading, error: postError } = usePost(id);
+  const { data: post, isLoading: postLoading, error: postError } = usePost(postId);
 
-  const { data: threadData, isLoading: threadLoading } = usePostThread(id);
+  const { data: threadData, isLoading: threadLoading } = usePostThread(postId);
 
   const comments = threadData?.thread?.replies || [];
 

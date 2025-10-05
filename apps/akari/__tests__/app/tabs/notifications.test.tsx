@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Image, ScrollView } from 'react-native';
 
-import NotificationsScreen from '@/app/(tabs)/notifications';
+import NotificationsScreen from '@/app/(tabs)/(notifications)/index';
 import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
@@ -129,10 +129,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith('/posts/post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
+    expect(mockRouterPush).toHaveBeenCalledWith('/users/carol');
   });
 
   it('renders grouped notifications with embed images and overflow avatars', () => {
@@ -389,7 +389,7 @@ describe('NotificationsScreen', () => {
     const { getByText } = render(<NotificationsScreen />);
 
     fireEvent.press(getByText('notifications.mentionedYou'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/profile/no-subject');
+    expect(mockRouterPush).toHaveBeenLastCalledWith('/users/no-subject');
   });
 });
 

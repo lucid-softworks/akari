@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
 
 export default function MessagesLayout() {
   return (
@@ -6,6 +6,8 @@ export default function MessagesLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="pending" />
       <Stack.Screen name="[handle]" />
+      <Stack.Screen name="users/[username]" />
+      <Stack.Screen name="posts/[postId]" />
     </Stack>
   );
 }

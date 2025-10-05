@@ -501,7 +501,7 @@ export default function ConversationScreen() {
               style={styles.headerInfo}
               onPress={() => {
                 // Navigate to profile when header is clicked
-                router.push(`/profile/${encodeURIComponent(handle)}`);
+                router.push(`/users/${encodeURIComponent(handle)}`);
               }}
               activeOpacity={0.7}
             >

@@ -26,7 +26,7 @@ import type { ProfileTabType } from '@/types/profile';
 import { showAlert } from '@/utils/alert';
 
 export default function ProfileScreen() {
-  const { handle } = useLocalSearchParams<{ handle: string }>();
+  const { username } = useLocalSearchParams<{ username: string }>();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
 
-  const { data: profile, isLoading, error } = useProfile(handle);
+  const { data: profile, isLoading, error } = useProfile(username);
 
   if (isLoading) {
     return (

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
-import ProfileScreen from '@/app/(tabs)/profile/[handle]';
+import ProfileScreen from '@/app/(tabs)/(home,search,messages,notifications,profile)/users/[username]';
 import { useLocalSearchParams } from 'expo-router';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -155,14 +155,14 @@ describe('ProfileScreen', () => {
     jest.clearAllMocks();
     mockRouterPush.mockClear();
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
-    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+    mockUseCurrentAccount.mockReturnValue({ data: { username: 'alice' } });
     mockClipboardSetStringAsync.mockResolvedValue(undefined);
     mockShowToast = jest.fn();
     mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
   });
 
   it('shows skeleton while loading', () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseLocalSearchParams.mockReturnValue({ username: 'alice' });
     mockUseProfile.mockReturnValue({ data: undefined, isLoading: true, error: null });
 
     const { getByText } = render(<ProfileScreen />);
@@ -170,7 +170,7 @@ describe('ProfileScreen', () => {
   });
 
   it('shows error when profile not found', () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseLocalSearchParams.mockReturnValue({ username: 'alice' });
     mockUseProfile.mockReturnValue({ data: undefined, isLoading: false, error: new Error('x') });
 
     const { getByText } = render(<ProfileScreen />);
@@ -178,7 +178,7 @@ describe('ProfileScreen', () => {
   });
 
   it('shows error when profile data is missing', () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseLocalSearchParams.mockReturnValue({ username: 'alice' });
     mockUseProfile.mockReturnValue({ data: undefined, isLoading: false, error: null });
 
     const { getByText } = render(<ProfileScreen />);
@@ -186,7 +186,7 @@ describe('ProfileScreen', () => {
   });
 
   it('renders profile, switches tabs and handles dropdown actions', async () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseLocalSearchParams.mockReturnValue({ username: 'alice' });
     mockUseProfile.mockReturnValue({
       data: {
         handle: 'alice',
@@ -239,7 +239,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('search posts'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/(search)?query=from:alice');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));
@@ -261,7 +261,7 @@ describe('ProfileScreen', () => {
   });
 
   it('toggles dropdown visibility when closing', () => {
-    mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+    mockUseLocalSearchParams.mockReturnValue({ username: 'alice' });
     mockUseProfile.mockReturnValue({
       data: {
         handle: 'alice',
@@ -288,7 +288,7 @@ describe('ProfileScreen', () => {
     expect(queryByText('copy link')).toBeNull();
   });
 
-  it('returns no tab content when handle missing', () => {
+  it('returns no tab content when username missing', () => {
     mockUseLocalSearchParams.mockReturnValue({});
     mockUseProfile.mockReturnValue({
       data: {

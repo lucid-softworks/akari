@@ -50,10 +50,10 @@ export function usePushNotifications() {
     const handleNotificationNavigation = (type: string, id: string) => {
       switch (type) {
         case 'post':
-          router.push(`/post/${encodeURIComponent(id)}`);
+          router.push(`/posts/${encodeURIComponent(id)}`);
           break;
         case 'profile':
-          router.push(`/profile/${encodeURIComponent(id)}`);
+          router.push(`/users/${encodeURIComponent(id)}`);
           break;
         case 'conversation':
           router.push(`/messages/${encodeURIComponent(id)}`);

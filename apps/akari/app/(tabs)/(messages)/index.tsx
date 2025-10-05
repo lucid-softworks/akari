@@ -91,14 +91,14 @@ export function MessagesListScreen({
       <TouchableOpacity
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
         onPress={() => {
-          router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
+          router.push(`/(tabs)/(messages)/${encodeURIComponent(item.handle)}`);
         }}
       >
         <ThemedView style={styles.conversationContent}>
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+              router.push(`/users/${encodeURIComponent(item.handle)}`);
             }}
             activeOpacity={0.7}
           >
@@ -226,7 +226,7 @@ export function MessagesListScreen({
 
 export default function MessagesScreen() {
   const handleNavigateToPending = React.useCallback(() => {
-    router.push('/(tabs)/messages/pending');
+    router.push('/(tabs)/(messages)/pending');
   }, []);
 
   return (

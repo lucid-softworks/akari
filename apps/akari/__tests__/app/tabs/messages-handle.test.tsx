@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
-import ConversationScreen from '@/app/(tabs)/messages/[handle]';
+import ConversationScreen from '@/app/(tabs)/(messages)/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -255,7 +255,7 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
 
     fireEvent.press(getByText('@alice'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/users/alice');
 
     fireEvent.press(getByText('chevron.left'));
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

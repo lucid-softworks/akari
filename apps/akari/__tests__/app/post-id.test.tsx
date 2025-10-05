@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
-import PostDetailScreen, { renderComment } from '@/app/(tabs)/post/[id]';
+import PostDetailScreen, { renderComment } from '@/app/(tabs)/(home,search,messages,notifications,profile)/posts/[postId]';
 import { useLocalSearchParams } from 'expo-router';
 import { usePost, useParentPost, useRootPost } from '@/hooks/queries/usePost';
 import { usePostThread } from '@/hooks/queries/usePostThread';
@@ -70,7 +70,7 @@ const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockUseLocalSearchParams.mockReturnValue({ id: 'id1' });
+  mockUseLocalSearchParams.mockReturnValue({ postId: 'id1' });
 });
 
 describe('PostDetailScreen', () => {

@@ -63,7 +63,19 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
   );
 }
 
-type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
+type HardcodedTabKey = 'home' | 'search' | 'messages' | 'notifications' | 'profile';
+
+type HardcodedRouteName =
+  | '(home)'
+  | '(search)'
+  | '(messages)'
+  | '(notifications)'
+  | '(profile)';
+
+type HardcodedTabConfig = {
+  key: HardcodedTabKey;
+  routeName: HardcodedRouteName;
+};
 
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
@@ -86,7 +98,13 @@ function HardcodedTabBar({
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
-  const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
+  const tabConfigs: HardcodedTabConfig[] = [
+    { key: 'home', routeName: '(home)' },
+    { key: 'search', routeName: '(search)' },
+    { key: 'messages', routeName: '(messages)' },
+    { key: 'notifications', routeName: '(notifications)' },
+    { key: 'profile', routeName: '(profile)' },
+  ];
 
   return (
     <View
@@ -105,8 +123,8 @@ function HardcodedTabBar({
         </View>
       ) : null}
       <View style={hardcodedTabStyles.content}>
-        {hardcodedTabs.map((tabKey) => {
-          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+        {tabConfigs.map(({ key, routeName }) => {
+          const routeIndex = state.routes.findIndex((route) => route.name === routeName);
           if (routeIndex === -1) {
             return null;
           }
@@ -115,9 +133,9 @@ function HardcodedTabBar({
           const isFocused = state.index === routeIndex;
           const color = isFocused ? accentColor : inactiveTint;
           const badgeCount =
-            tabKey === 'messages'
+            key === 'messages'
               ? unreadMessagesCount
-              : tabKey === 'notifications'
+              : key === 'notifications'
               ? unreadNotificationsCount
               : 0;
 
@@ -129,7 +147,7 @@ function HardcodedTabBar({
             });
 
             if (isFocused) {
-              tabScrollRegistry.handleTabPress(tabKey);
+              tabScrollRegistry.handleTabPress(key);
             }
 
             if (!isFocused && !event.defaultPrevented) {
@@ -154,25 +172,19 @@ function HardcodedTabBar({
               style={hardcodedTabStyles.tabButton}
             >
               <View style={hardcodedTabStyles.iconContainer}>
-                {tabKey === 'messages' || tabKey === 'notifications' ? (
+                {key === 'messages' || key === 'notifications' ? (
                   <View style={hardcodedTabStyles.badgeWrapper}>
                     <TabBarIcon
-                      name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'}
+                      name={key === 'messages' ? 'message.fill' : 'bell.fill'}
                       color={color}
                     />
                     <TabBadge count={badgeCount} size="small" />
                   </View>
-                ) : tabKey === 'profile' ? (
+                ) : key === 'profile' ? (
                   <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
                 ) : (
                   <TabBarIcon
-                    name={
-                      tabKey === 'index'
-                        ? 'house.fill'
-                        : tabKey === 'search'
-                        ? 'magnifyingglass'
-                        : 'gearshape.fill'
-                    }
+                    name={key === 'home' ? 'house.fill' : 'magnifyingglass'}
                     color={color}
                   />
                 )}
@@ -262,14 +274,12 @@ export default function TabLayout() {
                   tabBarStyle: { display: 'none' },
                 }}
               >
-                <Tabs.Screen name="index" />
-                <Tabs.Screen name="search" />
-                <Tabs.Screen name="messages" />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="post" options={{ href: null }} />
-                <Tabs.Screen name="profile" />
-                <Tabs.Screen name="settings" />
+                <Tabs.Screen name="(home)" />
+                <Tabs.Screen name="(search)" />
+                <Tabs.Screen name="(messages)" />
+                <Tabs.Screen name="(notifications)" />
+                <Tabs.Screen name="(profile)" />
+                <Tabs.Screen name="settings" options={{ href: null }} />
               </Tabs>
             </View>
           </View>
@@ -295,19 +305,19 @@ export default function TabLayout() {
         )}
       >
         <Tabs.Screen
-          name="index"
+          name="(home)"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="(search)"
           options={{
             tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
           }}
         />
         <Tabs.Screen
-          name="messages"
+          name="(messages)"
           options={{
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
@@ -318,7 +328,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="notifications"
+          name="(notifications)"
           options={{
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
@@ -329,19 +339,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
+          name="(profile)"
           options={{
             tabBarIcon: ({ color, focused }) => (
               <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
@@ -357,7 +355,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="settings"
           options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
+            href: null,
           }}
         />
       </Tabs>

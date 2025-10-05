@@ -45,7 +45,7 @@ export default function HomeScreen() {
 
   // Register with the tab scroll registry
   React.useEffect(() => {
-    tabScrollRegistry.register('index', scrollToTop);
+    tabScrollRegistry.register('home', scrollToTop);
   }, [scrollToTop]);
 
   // Get user's saved feeds from preferences

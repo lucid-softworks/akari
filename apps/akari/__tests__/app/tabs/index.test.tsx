@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import HomeScreen from '@/app/(tabs)/index';
+import HomeScreen from '@/app/(tabs)/(home)/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';

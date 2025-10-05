@@ -589,7 +589,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   );
 
   const handleProfilePress = () => {
-    router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+    router.push(`/users/${encodeURIComponent(post.author.handle)}`);
   };
 
   const livePreview = showLivePreview && liveStreamInfo
