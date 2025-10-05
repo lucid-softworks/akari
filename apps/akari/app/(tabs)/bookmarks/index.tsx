@@ -1,9 +1,9 @@
-import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
+import { navigateInternal } from '@/components/InternalLink';
 import { PostCard } from '@/components/PostCard';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { FeedSkeleton } from '@/components/skeletons';
@@ -91,7 +91,7 @@ export default function BookmarksScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            navigateInternal({ href: `/post/${encodeURIComponent(post.uri)}` });
           }}
         />
       </View>

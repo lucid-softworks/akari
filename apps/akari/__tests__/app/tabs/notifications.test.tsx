@@ -3,7 +3,6 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import { Image, ScrollView } from 'react-native';
 
 import NotificationsScreen from '@/app/(tabs)/notifications';
-import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -16,7 +15,11 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({}));
+
+jest.mock('@/components/InternalLink', () => ({
+  navigateInternal: jest.fn(),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -58,13 +61,15 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
+const { navigateInternal } = require('@/components/InternalLink');
+const mockNavigateInternal = navigateInternal as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
 let tMock: jest.Mock;
 
 describe('NotificationsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockNavigateInternal.mockReset();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     tMock = jest.fn((key: string) => key);
@@ -129,10 +134,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(1, { href: '/post/post1' });
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(2, { href: '/profile/carol' });
   });
 
   it('renders grouped notifications with embed images and overflow avatars', () => {

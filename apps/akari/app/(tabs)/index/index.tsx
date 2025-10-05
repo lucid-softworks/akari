@@ -1,10 +1,10 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
+import { navigateInternal } from '@/components/InternalLink';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
 import { TabBar } from '@/components/TabBar';
@@ -254,7 +254,7 @@ export default function HomeScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            navigateInternal({ href: `/post/${encodeURIComponent(post.uri)}` });
           }}
         />
       );

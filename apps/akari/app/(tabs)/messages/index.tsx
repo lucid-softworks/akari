@@ -1,8 +1,8 @@
-import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { navigateInternal } from '@/components/InternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -91,14 +91,14 @@ export function MessagesListScreen({
       <TouchableOpacity
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
         onPress={() => {
-          router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
+          navigateInternal({ href: `/(tabs)/messages/${encodeURIComponent(item.handle)}` });
         }}
       >
         <ThemedView style={styles.conversationContent}>
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+              navigateInternal({ href: `/profile/${encodeURIComponent(item.handle)}` });
             }}
             activeOpacity={0.7}
           >
@@ -226,7 +226,7 @@ export function MessagesListScreen({
 
 export default function MessagesScreen() {
   const handleNavigateToPending = React.useCallback(() => {
-    router.push('/(tabs)/messages/pending');
+    navigateInternal({ href: '/(tabs)/messages/pending' });
   }, []);
 
   return (

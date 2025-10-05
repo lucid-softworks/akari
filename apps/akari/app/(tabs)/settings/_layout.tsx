@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 
+import { CommonStackScreens } from '../commonScreens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -40,6 +41,7 @@ export default function SettingsLayout() {
       <Stack.Screen name="languages" options={{ title: t('settings.language') }} />
       <Stack.Screen name="about" options={{ title: t('settings.about') }} />
       <Stack.Screen name="development" options={{ title: t('settings.development') }} />
+      <CommonStackScreens />
     </Stack>
   );
 }

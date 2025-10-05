@@ -18,7 +18,11 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
+
+jest.mock('@/components/InternalLink', () => ({
+  navigateInternal: jest.fn(),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -53,12 +57,14 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 const mockUseConversations = useConversations as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
+const { navigateInternal } = require('@/components/InternalLink');
+const mockNavigateInternal = navigateInternal as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
 
 describe('MessagesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockNavigateInternal.mockReset();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
     mockScrollToOffset.mockReset();
@@ -125,13 +131,17 @@ describe('MessagesScreen', () => {
     expect(getByText('common.viewPendingChats')).toBeTruthy();
 
     fireEvent.press(getByText('common.viewPendingChats'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(1, {
+      href: '/(tabs)/messages/pending',
+    });
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(2, {
+      href: '/(tabs)/messages/alice',
+    });
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');
+    expect(mockNavigateInternal).toHaveBeenNthCalledWith(3, { href: '/profile/alice' });
   });
 
   it('scrolls to top when registry callback is triggered', () => {
