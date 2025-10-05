@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Zoeken",
-      "notifications": "Meldingen",
+      "notifications": "Activiteit",
       "post": "Bericht",
       "settings": "Instellingen"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "heeft gereageerd op je bericht",
       "mentionedYou": "heeft je genoemd",
       "quotedYourPost": "heeft je bericht geciteerd",
+      "activitySummaryTitle": "Activiteitsoverzicht",
+      "activityLastNDays": "Laatste {{count}} dagen",
+      "activityNotes": "Notities",
+      "activityNewFollowers": "Nieuwe volgers",
+      "activityTotalFollowers": "Totaal aantal volgers",
       "andOneOther": "en 1 ander {{action}}",
       "andOthers": "en {{count}} anderen {{action}}",
       "noNotificationsYet": "Nog geen meldingen",

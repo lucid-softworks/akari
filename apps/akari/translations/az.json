@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Axtarış",
-      "notifications": "Bildirişlər",
+      "notifications": "Fəaliyyət",
       "post": "Post",
       "settings": "Parametrlər"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "postunuza cavab verdi",
       "mentionedYou": "səni xatırlatdı",
       "quotedYourPost": "Yazınıza sitat gətirdi",
+      "activitySummaryTitle": "Fəaliyyət xülasəsi",
+      "activityLastNDays": "Son {{count}} gün",
+      "activityNotes": "Qeydlər",
+      "activityNewFollowers": "Yeni izləyicilər",
+      "activityTotalFollowers": "Ümumi izləyicilər",
       "andOneOther": "və 1 digər {{action}}",
       "andOthers": "və {{count}} Digərləri {{action}}",
       "noNotificationsYet": "Hələ bildiriş yoxdur",

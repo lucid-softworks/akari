@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Vyhledávání",
-      "notifications": "Oznámení",
+      "notifications": "Aktivita",
       "post": "Zveřejnit",
       "settings": "Nastavení"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "odpověděl na váš příspěvek",
       "mentionedYou": "zmínil se o tom",
       "quotedYourPost": "citoval váš příspěvek",
+      "activitySummaryTitle": "Souhrn aktivity",
+      "activityLastNDays": "Posledních {{count}} dní",
+      "activityNotes": "Poznámky",
+      "activityNewFollowers": "Noví sledující",
+      "activityTotalFollowers": "Celkem sledujících",
       "andOneOther": "a 1 další {{action}}",
       "andOthers": "a {{count}} další {{action}}",
       "noNotificationsYet": "Zatím žádná oznámení",

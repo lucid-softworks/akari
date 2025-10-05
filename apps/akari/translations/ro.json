@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Căutare",
-      "notifications": "Notificări",
+      "notifications": "Activitate",
       "post": "Post",
       "settings": "Setări"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "a răspuns la postarea dvs.",
       "mentionedYou": "te -a menționat",
       "quotedYourPost": "a citat postarea ta",
+      "activitySummaryTitle": "Rezumat activitate",
+      "activityLastNDays": "Ultimele {{count}} zile",
+      "activityNotes": "Note",
+      "activityNewFollowers": "Noi urmăritori",
+      "activityTotalFollowers": "Urmăritori în total",
       "andOneOther": "și alți 1 {{action}}",
       "andOthers": "și {{count}} alții {{action}}",
       "noNotificationsYet": "Nu există încă notificări",

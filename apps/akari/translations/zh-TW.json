@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "搜尋",
-      "notifications": "通知",
+      "notifications": "動態",
       "post": "貼文",
       "settings": "設定"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "回覆了您的貼文",
       "mentionedYou": "提到了您",
       "quotedYourPost": "引用了您的貼文",
+      "activitySummaryTitle": "動態摘要",
+      "activityLastNDays": "最近 {{count}} 天",
+      "activityNotes": "筆記",
+      "activityNewFollowers": "新增追蹤者",
+      "activityTotalFollowers": "追蹤者總數",
       "andOneOther": "和 1 個其他{{action}}",
       "andOthers": "和 {{count}} 個其他{{action}}",
       "noNotificationsYet": "還沒有通知",

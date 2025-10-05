@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "جستجو",
-      "notifications": "اعلان ها",
+      "notifications": "فعالیت",
       "post": "پست",
       "settings": "تنظیمات"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "به پست شما پاسخ داد",
       "mentionedYou": "شما را ذکر کرد",
       "quotedYourPost": "به نقل از پست شما",
+      "activitySummaryTitle": "خلاصه فعالیت",
+      "activityLastNDays": "آخرین {{count}} روز",
+      "activityNotes": "یادداشت‌ها",
+      "activityNewFollowers": "دنبال‌کنندگان جدید",
+      "activityTotalFollowers": "کل دنبال‌کنندگان",
       "andOneOther": "و 1 {{action}} دیگر",
       "andOthers": "و {{count}} دیگران {{action}}",
       "noNotificationsYet": "هنوز اعلان ها وجود ندارد",

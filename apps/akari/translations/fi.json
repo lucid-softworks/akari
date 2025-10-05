@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Haku",
-      "notifications": "Ilmoitukset",
+      "notifications": "Toiminta",
       "post": "Lähettää",
       "settings": "Asetukset"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "vastasi viestiisi",
       "mentionedYou": "mainitsi sinut",
       "quotedYourPost": "lainasi viestisi",
+      "activitySummaryTitle": "Toimintayhteenveto",
+      "activityLastNDays": "Viimeiset {{count}} päivää",
+      "activityNotes": "Merkinnät",
+      "activityNewFollowers": "Uudet seuraajat",
+      "activityTotalFollowers": "Seuraajia yhteensä",
       "andOneOther": "ja 1 muuta {{action}}",
       "andOthers": "ja {{count}} muut {{action}}",
       "noNotificationsYet": "Ei vielä ilmoituksia",

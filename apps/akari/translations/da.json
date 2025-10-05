@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Søge",
-      "notifications": "Underretninger",
+      "notifications": "Aktivitet",
       "post": "Stolpe",
       "settings": "Indstillinger"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "svarede på dit indlæg",
       "mentionedYou": "nævnte dig",
       "quotedYourPost": "citerede dit indlæg",
+      "activitySummaryTitle": "Aktivitetsoversigt",
+      "activityLastNDays": "Seneste {{count}} dage",
+      "activityNotes": "Noter",
+      "activityNewFollowers": "Nye følgere",
+      "activityTotalFollowers": "Samlede følgere",
       "andOneOther": "og 1 andre {{action}}",
       "andOthers": "og {{count}} andre {{action}}",
       "noNotificationsYet": "Ingen meddelelser endnu",

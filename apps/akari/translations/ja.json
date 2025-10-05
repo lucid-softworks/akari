@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "検索",
-      "notifications": "通知",
+      "notifications": "アクティビティ",
       "post": "投稿",
       "settings": "設定"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "があなたの投稿に返信しました",
       "mentionedYou": "があなたに言及しました",
       "quotedYourPost": "があなたの投稿を引用しました",
+      "activitySummaryTitle": "アクティビティの概要",
+      "activityLastNDays": "直近{{count}}日間",
+      "activityNotes": "ノート",
+      "activityNewFollowers": "新しいフォロワー",
+      "activityTotalFollowers": "フォロワー合計",
       "andOneOther": "と1人の他の{{action}}",
       "andOthers": "と{{count}}人の他の{{action}}",
       "noNotificationsYet": "まだ通知がありません",

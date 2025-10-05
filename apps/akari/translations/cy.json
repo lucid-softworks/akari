@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Chwilio",
-      "notifications": "Hysbysiadau",
+      "notifications": "Gweithgarwch",
       "post": "Post",
       "settings": "Gosodiadau"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "atebodd eich swydd",
       "mentionedYou": "sôn amdanoch",
       "quotedYourPost": "dyfynnu eich swydd",
+      "activitySummaryTitle": "Crynodeb gweithgarwch",
+      "activityLastNDays": "Y {{count}} diwrnod diwethaf",
+      "activityNotes": "Nodiadau",
+      "activityNewFollowers": "Dilynwyr newydd",
+      "activityTotalFollowers": "Cyfanswm dilynwyr",
       "andOneOther": "ac 1 arall {{action}}",
       "andOthers": "ac {{count}} eraill {{action}}",
       "noNotificationsYet": "Dim hysbysiadau eto",

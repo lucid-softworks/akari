@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Поиск",
-      "notifications": "Уведомления",
+      "notifications": "Активность",
       "post": "Пост",
       "settings": "Настройки"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "ответил на ваш пост",
       "mentionedYou": "упомянул вас",
       "quotedYourPost": "процитировал ваш пост",
+      "activitySummaryTitle": "Сводка активности",
+      "activityLastNDays": "Последние {{count}} дней",
+      "activityNotes": "Заметки",
+      "activityNewFollowers": "Новые подписчики",
+      "activityTotalFollowers": "Всего подписчиков",
       "andOneOther": "и еще 1 {{action}}",
       "andOthers": "и еще {{count}} {{action}}",
       "noNotificationsYet": "Пока нет уведомлений",

@@ -2,7 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
+import { Dimensions, LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -12,6 +12,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { TabBar } from '@/components/TabBar';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useNotifications } from '@/hooks/queries/useNotifications';
+import { useProfile } from '@/hooks/queries/useProfile';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -40,6 +42,155 @@ type GroupedNotification = {
 };
 
 type NotificationsTab = 'all' | 'mentions';
+
+type ActivitySummaryPoint = {
+  dateKey: string;
+  label: string;
+  notes: number;
+  followers: number;
+};
+
+type ActivitySummaryProps = {
+  points: ActivitySummaryPoint[];
+  totalNotes: number;
+  newFollowers: number;
+  totalFollowers: number;
+  locale: string;
+  title: string;
+  subtitle: string;
+  notesLabel: string;
+  newFollowersLabel: string;
+  totalFollowersLabel: string;
+};
+
+function formatNumber(value: number, locale: string) {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
+function ActivitySummary({
+  points,
+  totalNotes,
+  newFollowers,
+  totalFollowers,
+  locale,
+  title,
+  subtitle,
+  notesLabel,
+  newFollowersLabel,
+  totalFollowersLabel,
+}: ActivitySummaryProps) {
+  const [graphWidth, setGraphWidth] = useState(0);
+  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
+  const textSecondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const graphHeight = 120;
+
+  const handleLayout = useCallback((event: LayoutChangeEvent) => {
+    setGraphWidth(event.nativeEvent.layout.width);
+  }, []);
+
+  const coordinates = useMemo(() => {
+    if (points.length === 0) {
+      return [] as { x: number; y: number; value: number }[];
+    }
+
+    const maxNotes = Math.max(1, ...points.map((point) => point.notes));
+    const horizontalStep = points.length > 1 ? graphWidth / (points.length - 1) : 0;
+    return points.map((point, index) => {
+      const ratio = point.notes / maxNotes;
+      const paddedHeight = graphHeight - 24; // Keep some breathing room at the top and bottom
+      const y = graphHeight - 12 - ratio * paddedHeight;
+      const x = points.length === 1 ? graphWidth / 2 : index * horizontalStep;
+      return { x, y, value: point.notes };
+    });
+  }, [graphWidth, points]);
+
+  const segments = useMemo(() => {
+    if (coordinates.length < 2) {
+      return [] as { x: number; y: number; length: number; angle: number }[];
+    }
+
+    const values: { x: number; y: number; length: number; angle: number }[] = [];
+
+    for (let index = 0; index < coordinates.length - 1; index++) {
+      const start = coordinates[index];
+      const end = coordinates[index + 1];
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx);
+      values.push({ x: start.x, y: start.y, length, angle });
+    }
+
+    return values;
+  }, [coordinates]);
+
+  return (
+    <ThemedView style={[styles.summaryCard, { borderColor }]}>
+      <View style={styles.summaryHeaderRow}>
+        <ThemedText style={styles.summaryTitle}>{title}</ThemedText>
+        <ThemedText style={[styles.summarySubtitle, { color: textSecondary }]}>{subtitle}</ThemedText>
+      </View>
+      <View style={[styles.graphContainer, { borderColor }]} onLayout={handleLayout}>
+        <View style={styles.graphGrid}>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <View
+              key={index}
+              style={[styles.graphGridLine, { top: ((index + 1) / 4) * 100 + '%' }]}
+            />
+          ))}
+        </View>
+        {segments.map((segment, index) => (
+          <View
+            key={`segment-${segment.x}-${index}`}
+            style={{
+              position: 'absolute',
+              left: segment.x,
+              top: segment.y,
+              width: segment.length,
+              borderTopWidth: 2,
+              borderTopColor: accentColor,
+              transform: [{ rotateZ: `${segment.angle}rad` }],
+            }}
+          />
+        ))}
+        {coordinates.map((point, index) => (
+          <React.Fragment key={`point-${index}`}>
+            <View
+              style={{
+                position: 'absolute',
+                left: point.x - 6,
+                top: point.y - 6,
+                width: 12,
+                height: 12,
+                borderRadius: 6,
+                backgroundColor: accentColor,
+              }}
+            />
+            <ThemedText style={[styles.graphValueLabel, { left: point.x - 12, top: point.y - 28 }]}>
+              {point.value}
+            </ThemedText>
+            <ThemedText style={[styles.graphDateLabel, { left: point.x - 18 }]}>{points[index]?.label}</ThemedText>
+          </React.Fragment>
+        ))}
+      </View>
+      <View style={styles.summaryStatsRow}>
+        <View style={styles.summaryStat}>
+          <ThemedText style={styles.summaryStatValue}>{formatNumber(totalNotes, locale)}</ThemedText>
+          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{notesLabel}</ThemedText>
+        </View>
+        <View style={styles.summaryStat}>
+          <ThemedText style={styles.summaryStatValue}>{formatNumber(newFollowers, locale)}</ThemedText>
+          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{newFollowersLabel}</ThemedText>
+        </View>
+        <View style={styles.summaryStat}>
+          <ThemedText style={styles.summaryStatValue}>{formatNumber(totalFollowers, locale)}</ThemedText>
+          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{totalFollowersLabel}</ThemedText>
+        </View>
+      </View>
+    </ThemedView>
+  );
+}
 
 /**
  * Notification item component
@@ -357,11 +508,13 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
-  const { t } = useTranslation();
+  const { t, currentLocale } = useTranslation();
   const { isLargeScreen } = useResponsive();
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const { data: currentAccount } = useCurrentAccount();
+  const { data: profile } = useProfile(currentAccount?.handle);
   const tabs = useMemo(
     () => [
       { key: 'all' as const, label: t('notifications.all') },
@@ -495,6 +648,69 @@ export default function NotificationsScreen() {
     }
   }, [refetch]);
 
+  const activitySummary = useMemo(() => {
+    const DAYS_TO_SHOW = 7;
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const days: { key: string; date: Date; notes: number; followers: number }[] = [];
+    for (let index = DAYS_TO_SHOW - 1; index >= 0; index--) {
+      const day = new Date(now);
+      day.setDate(day.getDate() - index);
+      const key = day.toISOString().split('T')[0];
+      days.push({ key, date: day, notes: 0, followers: 0 });
+    }
+
+    const daysByKey = new Map(days.map((day) => [day.key, day] as const));
+    const noteReasons = new Set(['like', 'repost', 'quote']);
+
+    for (const notification of notifications) {
+      if (!notification.indexedAt) {
+        continue;
+      }
+
+      const indexedDate = new Date(notification.indexedAt);
+      indexedDate.setHours(0, 0, 0, 0);
+      const key = indexedDate.toISOString().split('T')[0];
+      const targetDay = daysByKey.get(key);
+
+      if (!targetDay) {
+        continue;
+      }
+
+      if (noteReasons.has(notification.reason)) {
+        targetDay.notes += 1;
+      }
+
+      if (notification.reason === 'follow') {
+        targetDay.followers += 1;
+      }
+    }
+
+    const dateFormatter = new Intl.DateTimeFormat(currentLocale, {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const points: ActivitySummaryPoint[] = days.map((day) => ({
+      dateKey: day.key,
+      label: dateFormatter.format(day.date),
+      notes: day.notes,
+      followers: day.followers,
+    }));
+
+    const totalNotes = points.reduce((sum, point) => sum + point.notes, 0);
+    const newFollowers = points.reduce((sum, point) => sum + point.followers, 0);
+    const totalFollowers = profile?.followersCount ?? 0;
+
+    return {
+      points,
+      totalNotes,
+      newFollowers,
+      totalFollowers,
+    };
+  }, [currentLocale, notifications, profile?.followersCount]);
+
   const listHeaderComponent = useCallback(
     () => (
       <ThemedView
@@ -503,13 +719,35 @@ export default function NotificationsScreen() {
           { paddingTop: isLargeScreen ? 0 : insets.top },
         ]}
       >
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
           <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
         </ThemedView>
+        <ActivitySummary
+          points={activitySummary.points}
+          totalNotes={activitySummary.totalNotes}
+          newFollowers={activitySummary.newFollowers}
+          totalFollowers={activitySummary.totalFollowers}
+          locale={currentLocale}
+          title={t('notifications.activitySummaryTitle')}
+          subtitle={t('notifications.activityLastNDays', { count: activitySummary.points.length })}
+          notesLabel={t('notifications.activityNotes')}
+          newFollowersLabel={t('notifications.activityNewFollowers')}
+          totalFollowersLabel={t('notifications.activityTotalFollowers')}
+        />
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
     ),
-    [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, t, tabs],
+    [
+      activitySummary,
+      activeTab,
+      borderColor,
+      currentLocale,
+      handleTabChange,
+      insets.top,
+      isLargeScreen,
+      t,
+      tabs,
+    ],
   );
 
   if (isError) {
@@ -559,6 +797,76 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
+  },
+  summaryCard: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    gap: 16,
+  },
+  summaryHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  summaryTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  summarySubtitle: {
+    fontSize: 14,
+  },
+  graphContainer: {
+    position: 'relative',
+    marginTop: 8,
+    marginBottom: 8,
+    height: 160,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
+    overflow: 'hidden',
+  },
+  graphGrid: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  graphGridLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(124, 140, 249, 0.2)',
+  },
+  graphValueLabel: {
+    position: 'absolute',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  graphDateLabel: {
+    position: 'absolute',
+    bottom: 8,
+    fontSize: 12,
+    opacity: 0.7,
+  },
+  summaryStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  summaryStat: {
+    flex: 1,
+  },
+  summaryStatValue: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  summaryStatLabel: {
+    marginTop: 4,
+    fontSize: 13,
   },
   listContainer: {
     flexGrow: 1,

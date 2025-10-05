@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "搜索",
-      "notifications": "通知",
+      "notifications": "动态",
       "post": "帖子",
       "settings": "设置"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "回复了您的帖子",
       "mentionedYou": "提到了您",
       "quotedYourPost": "引用了您的帖子",
+      "activitySummaryTitle": "动态概览",
+      "activityLastNDays": "最近{{count}}天",
+      "activityNotes": "笔记",
+      "activityNewFollowers": "新增关注者",
+      "activityTotalFollowers": "关注者总数",
       "andOneOther": "和另外 1 人{{action}}",
       "andOthers": "和另外 {{count}} 人{{action}}",
       "noNotificationsYet": "还没有通知",

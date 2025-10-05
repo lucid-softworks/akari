@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Iskanje",
-      "notifications": "Obvestila",
+      "notifications": "Dejavnost",
       "post": "Objavo",
       "settings": "Nastavitve"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "je odgovoril na vašo objavo",
       "mentionedYou": "te je omenil",
       "quotedYourPost": "citiral vašo objavo",
+      "activitySummaryTitle": "Povzetek dejavnosti",
+      "activityLastNDays": "Zadnjih {{count}} dni",
+      "activityNotes": "Opombe",
+      "activityNewFollowers": "Novi sledilci",
+      "activityTotalFollowers": "Skupno število sledilcev",
       "andOneOther": "in 1 drugi {{action}}",
       "andOthers": "in {{count}} drugi {{action}}",
       "noNotificationsYet": "Še ni obvestil",

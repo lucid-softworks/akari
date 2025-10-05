@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Tìm kiếm",
-      "notifications": "Thông báo",
+      "notifications": "Hoạt động",
       "post": "Bài đăng",
       "settings": "Cài đặt"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "đã trả lời bài đăng của bạn",
       "mentionedYou": "đã nhắc đến bạn",
       "quotedYourPost": "đã trích dẫn bài đăng của bạn",
+      "activitySummaryTitle": "Tổng quan hoạt động",
+      "activityLastNDays": "{{count}} ngày gần đây",
+      "activityNotes": "Ghi chú",
+      "activityNewFollowers": "Người theo dõi mới",
+      "activityTotalFollowers": "Tổng người theo dõi",
       "andOneOther": "và 1 người khác {{action}}",
       "andOthers": "và {{count}} người khác {{action}}",
       "noNotificationsYet": "Chưa có thông báo",

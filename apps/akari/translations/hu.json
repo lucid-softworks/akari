@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Keresés",
-      "notifications": "Értesítések",
+      "notifications": "Aktivitás",
       "post": "Oszlop",
       "settings": "Beállítások"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "válaszolt a hozzászólásodra",
       "mentionedYou": "megemlített téged",
       "quotedYourPost": "idézte a bejegyzését",
+      "activitySummaryTitle": "Aktivitási összegzés",
+      "activityLastNDays": "Elmúlt {{count}} nap",
+      "activityNotes": "Jegyzetek",
+      "activityNewFollowers": "Új követők",
+      "activityTotalFollowers": "Követők összesen",
       "andOneOther": "és 1 másik {{action}}",
       "andOthers": "és {{count}} mások {{action}}",
       "noNotificationsYet": "Még nincs értesítés",

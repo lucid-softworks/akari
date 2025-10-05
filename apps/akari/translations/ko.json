@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "검색",
-      "notifications": "알림",
+      "notifications": "활동",
       "post": "게시물",
       "settings": "설정"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "게시물에 답장했습니다",
       "mentionedYou": "언급했습니다",
       "quotedYourPost": "게시물을 인용했습니다",
+      "activitySummaryTitle": "활동 요약",
+      "activityLastNDays": "지난 {{count}}일",
+      "activityNotes": "노트",
+      "activityNewFollowers": "새 팔로워",
+      "activityTotalFollowers": "총 팔로워",
       "andOneOther": "그리고 1명이 더 {{action}}",
       "andOthers": "그리고 {{count}}명이 더 {{action}}",
       "noNotificationsYet": "아직 알림이 없습니다",

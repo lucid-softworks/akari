@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "खोज",
-      "notifications": "सूचनाएं",
+      "notifications": "गतिविधि",
       "post": "पोस्ट",
       "settings": "सेटिंग्स"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "आपकी पोस्ट का जवाब दिया",
       "mentionedYou": "आपका उल्लेख किया",
       "quotedYourPost": "आपकी पोस्ट को क्वोट किया",
+      "activitySummaryTitle": "गतिविधि सारांश",
+      "activityLastNDays": "पिछले {{count}} दिन",
+      "activityNotes": "नोट्स",
+      "activityNewFollowers": "नए अनुयायी",
+      "activityTotalFollowers": "कुल अनुयायी",
       "andOneOther": "और 1 अन्य {{action}}",
       "andOthers": "और {{count}} अन्य {{action}}",
       "noNotificationsYet": "अभी तक कोई सूचना नहीं",

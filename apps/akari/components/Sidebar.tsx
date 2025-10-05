@@ -66,7 +66,7 @@ export function Sidebar() {
       { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
       {
         id: 'notifications',
-        label: 'Notifications',
+        label: 'Activity',
         icon: 'bell.fill',
         route: '/(tabs)/notifications',
         badge: unreadNotificationsCount,

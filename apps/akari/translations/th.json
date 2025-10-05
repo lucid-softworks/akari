@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "ค้นหา",
-      "notifications": "การแจ้งเตือน",
+      "notifications": "กิจกรรม",
       "post": "โพสต์",
       "settings": "การตั้งค่า"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "ตอบกลับโพสต์ของคุณ",
       "mentionedYou": "กล่าวถึงคุณ",
       "quotedYourPost": "อ้างอิงโพสต์ของคุณ",
+      "activitySummaryTitle": "สรุปกิจกรรม",
+      "activityLastNDays": "ช่วง {{count}} วันที่ผ่านมา",
+      "activityNotes": "โน้ต",
+      "activityNewFollowers": "ผู้ติดตามใหม่",
+      "activityTotalFollowers": "ผู้ติดตามทั้งหมด",
       "andOneOther": "และอีก 1 คน {{action}}",
       "andOthers": "และอีก {{count}} คน {{action}}",
       "noNotificationsYet": "ยังไม่มีการแจ้งเตือน",

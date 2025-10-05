@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Prehliadka",
-      "notifications": "Oznámenia",
+      "notifications": "Aktivita",
       "post": "Post",
       "settings": "Nastavenia"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "odpovedal na váš príspevok",
       "mentionedYou": "spomenúť ťa",
       "quotedYourPost": "citoval svoj príspevok",
+      "activitySummaryTitle": "Súhrn aktivity",
+      "activityLastNDays": "Posledných {{count}} dní",
+      "activityNotes": "Poznámky",
+      "activityNewFollowers": "Noví sledovatelia",
+      "activityTotalFollowers": "Celkový počet sledovateľov",
       "andOneOther": "a 1 ďalšie {{action}}",
       "andOthers": "a {{count}} Ostatné {{action}}",
       "noNotificationsYet": "Zatiaľ žiadne upozornenia",

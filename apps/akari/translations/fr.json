@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Recherche",
-      "notifications": "Notifications",
+      "notifications": "Activité",
       "post": "Publication",
       "settings": "Paramètres"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "a répondu à votre publication",
       "mentionedYou": "vous a mentionné",
       "quotedYourPost": "a cité votre publication",
+      "activitySummaryTitle": "Résumé d'activité",
+      "activityLastNDays": "Derniers {{count}} jours",
+      "activityNotes": "Notes",
+      "activityNewFollowers": "Nouveaux abonnés",
+      "activityTotalFollowers": "Total d'abonnés",
       "andOneOther": "et 1 autre {{action}}",
       "andOthers": "et {{count}} autres {{action}}",
       "noNotificationsYet": "Aucune notification pour le moment",

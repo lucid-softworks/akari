@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Söka",
-      "notifications": "Meddelanden",
+      "notifications": "Aktivitet",
       "post": "Posta",
       "settings": "Inställningar"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "svarade på ditt inlägg",
       "mentionedYou": "nämnde dig",
       "quotedYourPost": "citerade ditt inlägg",
+      "activitySummaryTitle": "Aktivitetsöversikt",
+      "activityLastNDays": "Senaste {{count}} dagarna",
+      "activityNotes": "Anteckningar",
+      "activityNewFollowers": "Nya följare",
+      "activityTotalFollowers": "Totalt antal följare",
       "andOneOther": "och 1 annan {{action}}",
       "andOthers": "och {{count}} andra {{action}}",
       "noNotificationsYet": "Inga aviseringar än",

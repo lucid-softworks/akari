@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "לְחַפֵּשׂ",
-      "notifications": "התראות",
+      "notifications": "פעילות",
       "post": "שֶׁלְאַחַר",
       "settings": "הגדרות"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "ענה לפוסט שלך",
       "mentionedYou": "הזכיר אותך",
       "quotedYourPost": "ציטט את ההודעה שלך",
+      "activitySummaryTitle": "סיכום פעילות",
+      "activityLastNDays": "‏{{count}} הימים האחרונים",
+      "activityNotes": "הערות",
+      "activityNewFollowers": "עוקבים חדשים",
+      "activityTotalFollowers": "סה\"כ עוקבים",
       "andOneOther": "ועוד {{action}} אחר",
       "andOthers": "ו- {{count}} אחרים {{action}}",
       "noNotificationsYet": "עדיין אין התראות",

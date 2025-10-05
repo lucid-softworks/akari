@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Cari",
-      "notifications": "Notifikasi",
+      "notifications": "Aktivitas",
       "post": "Posting",
       "settings": "Pengaturan"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "membalas post Anda",
       "mentionedYou": "menyebutkan Anda",
       "quotedYourPost": "mengutip post Anda",
+      "activitySummaryTitle": "Ringkasan aktivitas",
+      "activityLastNDays": "{{count}} hari terakhir",
+      "activityNotes": "Catatan",
+      "activityNewFollowers": "Pengikut baru",
+      "activityTotalFollowers": "Total pengikut",
       "andOneOther": "dan 1 lainnya {{action}}",
       "andOthers": "dan {{count}} lainnya {{action}}",
       "noNotificationsYet": "Belum ada notifikasi",

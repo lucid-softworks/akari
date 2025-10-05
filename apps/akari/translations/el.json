@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Ερευνα",
-      "notifications": "Ειδοποιήσεις",
+      "notifications": "Δραστηριότητα",
       "post": "Θέση",
       "settings": "Ρυθμίσεις"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "απάντησε στην ανάρτησή σας",
       "mentionedYou": "σε αναφέρθηκε",
       "quotedYourPost": "Αναφέρεται η ανάρτησή σας",
+      "activitySummaryTitle": "Σύνοψη δραστηριότητας",
+      "activityLastNDays": "Τελευταίες {{count}} ημέρες",
+      "activityNotes": "Σημειώσεις",
+      "activityNewFollowers": "Νέοι ακόλουθοι",
+      "activityTotalFollowers": "Σύνολο ακολούθων",
       "andOneOther": "και 1 άλλο {{action}}",
       "andOthers": "και {{count}} άλλοι {{action}}",
       "noNotificationsYet": "Δεν υπάρχουν ακόμη ειδοποιήσεις",

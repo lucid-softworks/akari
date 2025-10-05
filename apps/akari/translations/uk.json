@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Пошук",
-      "notifications": "Сповіщення",
+      "notifications": "Активність",
       "post": "Допис",
       "settings": "Налаштування"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "відповів на ваш пост",
       "mentionedYou": "Згадав вас",
       "quotedYourPost": "Цитується про свою публікацію",
+      "activitySummaryTitle": "Огляд активності",
+      "activityLastNDays": "Останні {{count}} днів",
+      "activityNotes": "Нотатки",
+      "activityNewFollowers": "Нові підписники",
+      "activityTotalFollowers": "Усього підписників",
       "andOneOther": "та 1 інший {{action}}",
       "andOthers": "та {{count}} інші {{action}}",
       "noNotificationsYet": "Ще немає сповіщень",

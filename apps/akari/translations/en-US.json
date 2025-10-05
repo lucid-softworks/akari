@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Search",
-      "notifications": "Notifications",
+      "notifications": "Activity",
       "post": "Post",
       "settings": "Settings"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "replied to your post",
       "mentionedYou": "mentioned you",
       "quotedYourPost": "quoted your post",
+      "activitySummaryTitle": "Activity summary",
+      "activityLastNDays": "Last {{count}} days",
+      "activityNotes": "Notes",
+      "activityNewFollowers": "New followers",
+      "activityTotalFollowers": "Total followers",
       "andOneOther": "and 1 other {{action}}",
       "andOthers": "and {{count}} others {{action}}",
       "noNotificationsYet": "No notifications yet",

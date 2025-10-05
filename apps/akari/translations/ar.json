@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "البحث",
-      "notifications": "الإشعارات",
+      "notifications": "النشاط",
       "post": "المنشور",
       "settings": "الإعدادات"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "رد على منشورك",
       "mentionedYou": "ذكرك",
       "quotedYourPost": "اقتبس منشورك",
+      "activitySummaryTitle": "ملخص النشاط",
+      "activityLastNDays": "آخر {{count}} أيام",
+      "activityNotes": "الملاحظات",
+      "activityNewFollowers": "متابعون جدد",
+      "activityTotalFollowers": "إجمالي المتابعين",
       "andOneOther": "وشخص آخر {{action}}",
       "andOthers": "و{{count}} آخرين {{action}}",
       "noNotificationsYet": "لا توجد إشعارات بعد",

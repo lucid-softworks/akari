@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Arama",
-      "notifications": "Bildirimler",
+      "notifications": "Aktivite",
       "post": "Gönderi",
       "settings": "Ayarlar"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "gönderinizi yanıtladı",
       "mentionedYou": "sizi etiketledi",
       "quotedYourPost": "gönderinizi alıntıladı",
+      "activitySummaryTitle": "Aktivite özeti",
+      "activityLastNDays": "Son {{count}} gün",
+      "activityNotes": "Notlar",
+      "activityNewFollowers": "Yeni takipçiler",
+      "activityTotalFollowers": "Toplam takipçi",
       "andOneOther": "ve 1 kişi daha {{action}}",
       "andOthers": "ve {{count}} kişi daha {{action}}",
       "noNotificationsYet": "Henüz bildirim yok",
