@@ -129,7 +129,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      pathname: '/notifications/post/[id]',
+      params: { id: 'post1' },
+    });
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
     expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');

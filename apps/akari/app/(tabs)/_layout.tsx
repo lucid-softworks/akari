@@ -267,7 +267,6 @@ export default function TabLayout() {
                 <Tabs.Screen name="messages" />
                 <Tabs.Screen name="notifications" />
                 <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="post" options={{ href: null }} />
                 <Tabs.Screen name="profile" />
                 <Tabs.Screen name="settings" />
               </Tabs>
@@ -330,12 +329,6 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
           options={{
             href: null,
           }}
