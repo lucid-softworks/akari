@@ -159,7 +159,8 @@ describe('TabLayout', () => {
       headerShown: false,
       tabBarStyle: { display: 'none' },
     });
-    const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
+    const screenCalls = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls;
+    const names = screenCalls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
       '(index)',
       '(search)',
@@ -168,6 +169,16 @@ describe('TabLayout', () => {
       '(bookmarks)',
       '(profile)',
       '(settings)',
+    ]);
+    const hrefs = screenCalls.map((c: any[]) => c[0].options?.href);
+    expect(hrefs).toEqual([
+      '/',
+      '/search',
+      '/messages',
+      '/notifications',
+      '/bookmarks',
+      '/profile',
+      '/settings',
     ]);
   });
 
@@ -210,7 +221,8 @@ describe('TabLayout', () => {
 
     expect(mockTabBadge.mock.calls[0][0].count).toBe(2);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
-    const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
+    const screenCalls = (TabsModule.Tabs.Screen as jest.Mock).mock.calls;
+    const names = screenCalls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
       '(index)',
       '(search)',
@@ -219,6 +231,16 @@ describe('TabLayout', () => {
       '(bookmarks)',
       '(profile)',
       '(settings)',
+    ]);
+    const hrefs = screenCalls.map((c: any[]) => c[0].options?.href);
+    expect(hrefs).toEqual([
+      '/',
+      '/search',
+      '/messages',
+      '/notifications',
+      '/bookmarks',
+      '/profile',
+      '/settings',
     ]);
   });
 

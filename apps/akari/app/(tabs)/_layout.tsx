@@ -17,7 +17,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useTabNavigation } from '@/hooks/useTabNavigation';
+import { TAB_PATHS, useTabNavigation } from '@/hooks/useTabNavigation';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -287,13 +287,16 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }}
               >
-                <Tabs.Screen name="(index)" />
-                <Tabs.Screen name="(search)" />
-                <Tabs.Screen name="(messages)" />
-                <Tabs.Screen name="(notifications)" />
-                <Tabs.Screen name="(bookmarks)" options={{ href: null }} />
-                <Tabs.Screen name="(profile)" />
-                <Tabs.Screen name="(settings)" />
+                <Tabs.Screen name="(index)" options={{ href: TAB_PATHS.index }} />
+                <Tabs.Screen name="(search)" options={{ href: TAB_PATHS.search }} />
+                <Tabs.Screen name="(messages)" options={{ href: TAB_PATHS.messages }} />
+                <Tabs.Screen
+                  name="(notifications)"
+                  options={{ href: TAB_PATHS.notifications }}
+                />
+                <Tabs.Screen name="(bookmarks)" options={{ href: TAB_PATHS.bookmarks }} />
+                <Tabs.Screen name="(profile)" options={{ href: TAB_PATHS.profile }} />
+                <Tabs.Screen name="(settings)" options={{ href: TAB_PATHS.settings }} />
               </Tabs>
             </View>
           </View>
@@ -322,18 +325,21 @@ export default function TabLayout() {
         <Tabs.Screen
           name="(index)"
           options={{
+            href: TAB_PATHS.index,
             tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
           }}
         />
         <Tabs.Screen
           name="(search)"
           options={{
+            href: TAB_PATHS.search,
             tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
           }}
         />
         <Tabs.Screen
           name="(messages)"
           options={{
+            href: TAB_PATHS.messages,
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
                 <TabBarIcon name="message.fill" color={color} />
@@ -345,6 +351,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="(notifications)"
           options={{
+            href: TAB_PATHS.notifications,
             tabBarIcon: ({ color }) => (
               <View style={{ position: 'relative' }}>
                 <TabBarIcon name="bell.fill" color={color} />
@@ -353,15 +360,11 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
-          name="(bookmarks)"
-          options={{
-            href: null,
-          }}
-        />
+        <Tabs.Screen name="(bookmarks)" options={{ href: TAB_PATHS.bookmarks }} />
         <Tabs.Screen
           name="(profile)"
           options={{
+            href: TAB_PATHS.profile,
             tabBarIcon: ({ color, focused }) => (
               <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
             ),
@@ -376,6 +379,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="(settings)"
           options={{
+            href: TAB_PATHS.settings,
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
