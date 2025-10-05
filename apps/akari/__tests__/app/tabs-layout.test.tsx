@@ -148,13 +148,11 @@ describe('TabLayout', () => {
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
+      '(home)',
+      '(search)',
+      '(messages)',
+      '(notifications)',
+      '(profile)',
       'settings',
     ]);
   });
@@ -177,13 +175,11 @@ describe('TabLayout', () => {
     const state = {
       index: 0,
       routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
-        { key: 'profile-tab', name: 'profile' },
+        { key: 'home-tab', name: '(home)' },
+        { key: 'search-tab', name: '(search)' },
+        { key: 'messages-tab', name: '(messages)' },
+        { key: 'notifications-tab', name: '(notifications)' },
+        { key: 'profile-tab', name: '(profile)' },
         { key: 'settings-tab', name: 'settings' },
       ],
     };
@@ -201,13 +197,11 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
+      '(home)',
+      '(search)',
+      '(messages)',
+      '(notifications)',
+      '(profile)',
       'settings',
     ]);
   });
@@ -226,13 +220,11 @@ describe('TabLayout', () => {
     const state = {
       index: 0,
       routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
-        { key: 'profile-tab', name: 'profile' },
+        { key: 'home-tab', name: '(home)' },
+        { key: 'search-tab', name: '(search)' },
+        { key: 'messages-tab', name: '(messages)' },
+        { key: 'notifications-tab', name: '(notifications)' },
+        { key: 'profile-tab', name: '(profile)' },
         { key: 'settings-tab', name: 'settings' },
       ],
     };
@@ -256,7 +248,7 @@ describe('TabLayout', () => {
 
     const TabsModule = require('expo-router');
     const screenCalls = (TabsModule.Tabs.Screen as jest.Mock).mock.calls;
-    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === 'profile');
+    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === '(profile)');
     expect(profileScreenCall).toBeTruthy();
 
     const listeners = profileScreenCall?.[0].listeners;
@@ -286,13 +278,11 @@ describe('HardcodedTabBar interactions', () => {
   const buildState = () => ({
     index: 0,
     routes: [
-      { key: 'index-tab', name: 'index' },
-      { key: 'search-tab', name: 'search' },
-      { key: 'messages-tab', name: 'messages' },
-      { key: 'notifications-tab', name: 'notifications' },
-      { key: 'bookmarks-tab', name: 'bookmarks' },
-      { key: 'post-tab', name: 'post' },
-      { key: 'profile-tab', name: 'profile' },
+      { key: 'home-tab', name: '(home)' },
+      { key: 'search-tab', name: '(search)' },
+      { key: 'messages-tab', name: '(messages)' },
+      { key: 'notifications-tab', name: '(notifications)' },
+      { key: 'profile-tab', name: '(profile)' },
       { key: 'settings-tab', name: 'settings' },
     ],
   });
@@ -327,7 +317,7 @@ describe('HardcodedTabBar interactions', () => {
     });
 
     expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
-    expect(mockHandleTabPress).toHaveBeenCalledWith('index');
+    expect(mockHandleTabPress).toHaveBeenCalledWith('home');
     expect(navigation.navigate).not.toHaveBeenCalled();
   });
 

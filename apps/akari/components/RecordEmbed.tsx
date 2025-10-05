@@ -65,7 +65,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const handleAuthorPress = () => {
     // Navigate to the quoted post's author profile
     if (embed.record.author?.handle) {
-      router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+      router.push(`/users/${encodeURIComponent(embed.record.author.handle)}`);
     }
   };
 

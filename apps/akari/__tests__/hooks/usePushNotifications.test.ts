@@ -410,8 +410,8 @@ describe('usePushNotifications', () => {
     });
 
     const scenarios = [
-      { type: 'post', id: 'abc def', expected: '/post/abc%20def' },
-      { type: 'profile', id: 'user', expected: '/profile/user' },
+      { type: 'post', id: 'abc def', expected: '/posts/abc%20def' },
+      { type: 'profile', id: 'user', expected: '/users/user' },
       { type: 'conversation', id: '42', expected: '/messages/42' },
       { type: 'notification', id: 'any', expected: '/notifications' },
       { type: 'unknown', id: '??', expected: '/notifications' },

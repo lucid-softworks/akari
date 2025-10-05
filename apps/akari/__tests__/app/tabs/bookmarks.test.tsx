@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
-import BookmarksScreen from '@/app/(tabs)/bookmarks';
+import BookmarksScreen from '@/app/(tabs)/(home)/bookmarks';
 import { router } from 'expo-router';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -157,7 +157,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/post/at%3A%2F%2Fexample.com%2Fpost%2F1');
+    expect(router.push).toHaveBeenCalledWith('/posts/at%3A%2F%2Fexample.com%2Fpost%2F1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

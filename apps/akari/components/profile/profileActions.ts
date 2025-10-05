@@ -7,7 +7,7 @@ type SearchProfilePostsOptions = {
 
 export function searchProfilePosts({ handle, onComplete }: SearchProfilePostsOptions) {
   if (handle) {
-    router.push(`/(tabs)/search?query=from:${handle}`);
+    router.push(`/(tabs)/(search)?query=from:${handle}`);
   }
 
   onComplete?.();
