@@ -1,1 +1,1 @@
-export { default, renderComment } from '../../post/[id]';
+export { default, renderComment } from '@/features/post/PostDetailScreen';
