@@ -16,6 +16,7 @@ import { RepliesTab } from '@/components/profile/RepliesTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { ReposTab } from '@/components/profile/ReposTab';
 import { VideosTab } from '@/components/profile/VideosTab';
+import { WhitewindTab } from '@/components/profile/WhitewindTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
@@ -144,6 +145,8 @@ export default function ProfileScreen() {
         return <MediaTab handle={handle} />;
       case 'videos':
         return <VideosTab handle={handle} />;
+      case 'whitewind':
+        return <WhitewindTab handle={handle} isOwnProfile={isOwnProfile} />;
       case 'feeds':
         return <FeedsTab handle={handle} />;
       case 'repos':

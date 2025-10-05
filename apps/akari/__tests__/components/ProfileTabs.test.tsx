@@ -25,6 +25,7 @@ describe('ProfileTabs', () => {
       t: (key: string) => {
         const map: Record<string, string> = {
           'common.posts': 'Posts',
+          'profile.whitewind': 'Whitewind',
           'common.replies': 'Replies',
           'profile.media': 'Media',
           'common.likes': 'Likes',
@@ -51,6 +52,7 @@ describe('ProfileTabs', () => {
 
     const labels = [
       'Posts',
+      'Whitewind',
       'Replies',
       'Media',
       'Likes',
@@ -76,7 +78,7 @@ describe('ProfileTabs', () => {
       />,
     );
 
-    const labels = ['Posts', 'Replies', 'Media', 'Videos', 'Feeds', 'Repos', 'Starterpacks'];
+    const labels = ['Posts', 'Whitewind', 'Replies', 'Media', 'Videos', 'Feeds', 'Repos', 'Starterpacks'];
 
     for (const label of labels) {
       expect(getByText(label)).toBeTruthy();

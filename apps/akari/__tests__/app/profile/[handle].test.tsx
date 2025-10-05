@@ -43,13 +43,15 @@ jest.mock('@/components/ProfileTabs', () => {
   return {
     ProfileTabs: ({ onTabChange }: any) => (
       <>
-        {['posts', 'replies', 'likes', 'media', 'videos', 'feeds', 'repos', 'starterpacks', 'unknown'].map(
-          (tab) => (
-            <Text key={tab} accessibilityRole="button" onPress={() => onTabChange(tab as any)}>
-              {tab}
-            </Text>
-          ),
-        )}
+        {
+          ['posts', 'whitewind', 'replies', 'likes', 'media', 'videos', 'feeds', 'repos', 'starterpacks', 'unknown'].map(
+            (tab) => (
+              <Text key={tab} accessibilityRole="button" onPress={() => onTabChange(tab as any)}>
+                {tab}
+              </Text>
+            ),
+          )
+        }
       </>
     ),
   };
@@ -135,6 +137,11 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
 jest.mock('@/components/profile/ReposTab', () => {
   const { Text } = require('react-native');
   return { ReposTab: ({ handle }: any) => <Text>{`repos ${handle}`}</Text> };
+});
+
+jest.mock('@/components/profile/WhitewindTab', () => {
+  const { Text } = require('react-native');
+  return { WhitewindTab: ({ handle }: any) => <Text>{`whitewind ${handle}`}</Text> };
 });
 
 const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');

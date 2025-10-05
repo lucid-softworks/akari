@@ -1,5 +1,5 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyTangledReposResponse } from './types';
+import type { BlueskyTangledReposResponse, BlueskyWhtwndEntriesResponse } from './types';
 
 /**
  * Bluesky API methods for interacting with Tangled repo records.
@@ -30,6 +30,36 @@ export class BlueskyRepos extends BlueskyApiClient {
     }
 
     return this.makeAuthenticatedRequest<BlueskyTangledReposResponse>('/com.atproto.repo.listRecords', accessJwt, {
+      params,
+    });
+  }
+
+  /**
+   * Lists Whtwnd blog entries created by the specified actor.
+   * @param accessJwt - Valid access JWT token for the authenticated user.
+   * @param repo - DID or handle identifying the actor whose blog entries should be loaded.
+   * @param limit - Number of entries to fetch per page (default: 25).
+   * @param cursor - Optional pagination cursor returned by previous calls.
+   * @returns Promise resolving to Whtwnd blog entries for the actor.
+   */
+  async getAuthorWhtwndPosts(
+    accessJwt: string,
+    repo: string,
+    limit: number = 25,
+    cursor?: string,
+  ): Promise<BlueskyWhtwndEntriesResponse> {
+    const params: Record<string, string> = {
+      repo,
+      collection: 'com.whtwnd.blog.entry',
+      limit: limit.toString(),
+      reverse: 'true',
+    };
+
+    if (cursor) {
+      params.cursor = cursor;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyWhtwndEntriesResponse>('/com.atproto.repo.listRecords', accessJwt, {
       params,
     });
   }
