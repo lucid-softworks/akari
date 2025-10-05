@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0](https://github.com/lucid-softworks/akari/compare/v1.3.0...v1.4.0) (2025-10-05)
+
+
+### Features
+
+* add microcosm links api client ([#333](https://github.com/lucid-softworks/akari/issues/333)) ([5ca88df](https://github.com/lucid-softworks/akari/commit/5ca88dfd78f3a7a172409f58334c195abd5f2ca9))
+* hardcode mobile tab bar ([#335](https://github.com/lucid-softworks/akari/issues/335)) ([98d93df](https://github.com/lucid-softworks/akari/commit/98d93df7ef3e12742473f1815668b8b762677ac0))
+* show account avatar in navigation ([#328](https://github.com/lucid-softworks/akari/issues/328)) ([a06c155](https://github.com/lucid-softworks/akari/commit/a06c1559a496fb73c0c042ee2833e748b068b655))
+
+
+### Bug Fixes
+
+* expo updates ([61df383](https://github.com/lucid-softworks/akari/commit/61df383ec64a0fdb06a9fe347a55b446edcb3f13))
+* stretch feed tab bar to full width ([#325](https://github.com/lucid-softworks/akari/issues/325)) ([cab19be](https://github.com/lucid-softworks/akari/commit/cab19be7f69368a43ddbea06069042a5ac1219d5))
+
 ## [1.3.0](https://github.com/ImLunaHey/akari/compare/v1.2.2...v1.3.0) (2025-10-03)
 
 
