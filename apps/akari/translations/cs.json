@@ -170,7 +170,13 @@
       "sending": "Odeslání ...",
       "scheduling": "Plánování ...",
       "all": "Vše",
-      "mentions": "Zmiňuje se"
+      "mentions": "Zmiňuje se",
+      "activityPeriodDay": "Poslední den",
+      "activityPeriodWeek": "Minulý týden",
+      "activityPeriodMonth": "Minulý měsíc",
+      "activityPeriodYear": "Minulý rok",
+      "activityPeriodForever": "Po celou dobu",
+      "activitySelectPeriod": "Vyberte období"
     },
     "profile": {
       "media": "Média",

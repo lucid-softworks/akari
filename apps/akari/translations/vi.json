@@ -170,7 +170,13 @@
       "sending": "Đang Gửi...",
       "scheduling": "Đang Lên Lịch...",
       "all": "Tất cả",
-      "mentions": "Lượt nhắc đến"
+      "mentions": "Lượt nhắc đến",
+      "activityPeriodDay": "Ngày cuối cùng",
+      "activityPeriodWeek": "Tuần trước",
+      "activityPeriodMonth": "Tháng trước",
+      "activityPeriodYear": "Năm ngoái",
+      "activityPeriodForever": "Mọi lúc",
+      "activitySelectPeriod": "Chọn khoảng thời gian"
     },
     "profile": {
       "media": "Phương tiện",

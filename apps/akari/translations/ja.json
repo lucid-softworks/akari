@@ -170,7 +170,13 @@
       "sending": "送信中...",
       "scheduling": "予約中...",
       "all": "すべて",
-      "mentions": "メンション"
+      "mentions": "メンション",
+      "activityPeriodDay": "最終日",
+      "activityPeriodWeek": "先週",
+      "activityPeriodMonth": "先月",
+      "activityPeriodYear": "去年",
+      "activityPeriodForever": "いつも",
+      "activitySelectPeriod": "期間を選択"
     },
     "profile": {
       "media": "メディア",

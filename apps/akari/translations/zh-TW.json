@@ -170,7 +170,13 @@
       "sending": "傳送中...",
       "scheduling": "安排中...",
       "all": "全部",
-      "mentions": "提及"
+      "mentions": "提及",
+      "activityPeriodDay": "最後一天",
+      "activityPeriodWeek": "上週",
+      "activityPeriodMonth": "上個月",
+      "activityPeriodYear": "去年",
+      "activityPeriodForever": "一直以來",
+      "activitySelectPeriod": "選擇期間"
     },
     "profile": {
       "media": "媒體",

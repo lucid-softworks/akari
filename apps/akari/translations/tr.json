@@ -170,7 +170,13 @@
       "sending": "Gönderiliyor...",
       "scheduling": "Planlanıyor...",
       "all": "Tümü",
-      "mentions": "Bahsetmeler"
+      "mentions": "Bahsetmeler",
+      "activityPeriodDay": "Son gün",
+      "activityPeriodWeek": "Geçen hafta",
+      "activityPeriodMonth": "Geçen ay",
+      "activityPeriodYear": "Geçen sene",
+      "activityPeriodForever": "Her zaman",
+      "activitySelectPeriod": "Dönemi seçin"
     },
     "profile": {
       "media": "Medya",

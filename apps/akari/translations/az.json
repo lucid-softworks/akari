@@ -170,7 +170,13 @@
       "sending": "Göndərmə ...",
       "scheduling": "Planlaşdırma ...",
       "all": "Hamar",
-      "mentions": "Mentlər"
+      "mentions": "Mentlər",
+      "activityPeriodDay": "Axırıncı gün",
+      "activityPeriodWeek": "Keçən həftə",
+      "activityPeriodMonth": "Keçən ay",
+      "activityPeriodYear": "Keçən il",
+      "activityPeriodForever": "Hər zaman",
+      "activitySelectPeriod": "Dövr seçin"
     },
     "profile": {
       "media": "Media",

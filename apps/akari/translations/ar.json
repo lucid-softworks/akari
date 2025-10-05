@@ -170,7 +170,13 @@
       "sending": "جاري الإرسال...",
       "scheduling": "جاري الجدولة...",
       "all": "الكل",
-      "mentions": "الإشارات"
+      "mentions": "الإشارات",
+      "activityPeriodDay": "اليوم الأخير",
+      "activityPeriodWeek": "الأسبوع الماضي",
+      "activityPeriodMonth": "الشهر الماضي",
+      "activityPeriodYear": "العام الماضي",
+      "activityPeriodForever": "طوال الوقت",
+      "activitySelectPeriod": "حدد الفترة"
     },
     "profile": {
       "media": "الوسائط",

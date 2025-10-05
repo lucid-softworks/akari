@@ -170,7 +170,13 @@
       "sending": "Sender ...",
       "scheduling": "Planlægning ...",
       "all": "Alle",
-      "mentions": "Nævner"
+      "mentions": "Nævner",
+      "activityPeriodDay": "Sidste dag",
+      "activityPeriodWeek": "Sidste uge",
+      "activityPeriodMonth": "Sidste måned",
+      "activityPeriodYear": "Sidste år",
+      "activityPeriodForever": "Hele tiden",
+      "activitySelectPeriod": "Vælg periode"
     },
     "profile": {
       "media": "Medier",

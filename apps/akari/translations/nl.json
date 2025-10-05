@@ -170,7 +170,13 @@
       "sending": "Verzenden...",
       "scheduling": "Plannen...",
       "all": "Alles",
-      "mentions": "Vermeldingen"
+      "mentions": "Vermeldingen",
+      "activityPeriodDay": "Laatste dag",
+      "activityPeriodWeek": "Vorige week",
+      "activityPeriodMonth": "Vorige maand",
+      "activityPeriodYear": "Vorig jaar",
+      "activityPeriodForever": "Altijd",
+      "activitySelectPeriod": "Selecteer de periode"
     },
     "profile": {
       "media": "Media",

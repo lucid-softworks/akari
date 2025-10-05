@@ -170,7 +170,13 @@
       "sending": "भेज रहा है...",
       "scheduling": "शेड्यूलिंग...",
       "all": "सभी",
-      "mentions": "उल्लेख"
+      "mentions": "उल्लेख",
+      "activityPeriodDay": "आखिरी दिन",
+      "activityPeriodWeek": "अंतिम सप्ताह",
+      "activityPeriodMonth": "पिछला महीना",
+      "activityPeriodYear": "पिछले साल",
+      "activityPeriodForever": "पूरे समय",
+      "activitySelectPeriod": "अवधि का चयन करें"
     },
     "profile": {
       "media": "मीडिया",

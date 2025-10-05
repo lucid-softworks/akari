@@ -170,7 +170,13 @@
       "sending": "Sändning...",
       "scheduling": "Schemaläggning ...",
       "all": "Alla",
-      "mentions": "Nämner"
+      "mentions": "Nämner",
+      "activityPeriodDay": "Sista dagen",
+      "activityPeriodWeek": "Förra veckan",
+      "activityPeriodMonth": "Förra månaden",
+      "activityPeriodYear": "Förra året",
+      "activityPeriodForever": "Hela tiden",
+      "activitySelectPeriod": "Välj period"
     },
     "profile": {
       "media": "Media",

@@ -170,7 +170,13 @@
       "sending": "Αποστολή ...",
       "scheduling": "Χρονοδρομολόγηση...",
       "all": "Ολοι",
-      "mentions": "Αναφέρει"
+      "mentions": "Αναφέρει",
+      "activityPeriodDay": "Τελευταία μέρα",
+      "activityPeriodWeek": "Περασμένη εβδομάδα",
+      "activityPeriodMonth": "Τον περασμένο μήνα",
+      "activityPeriodYear": "Πέρυσι",
+      "activityPeriodForever": "Όλο τον χρόνο",
+      "activitySelectPeriod": "Επιλέξτε περίοδο"
     },
     "profile": {
       "media": "Μέσα ενημέρωσης",

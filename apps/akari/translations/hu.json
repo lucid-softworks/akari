@@ -170,7 +170,13 @@
       "sending": "Küldés ...",
       "scheduling": "Ütemezés ...",
       "all": "Minden",
-      "mentions": "Megemlít"
+      "mentions": "Megemlít",
+      "activityPeriodDay": "Utolsó nap",
+      "activityPeriodWeek": "Múlt héten",
+      "activityPeriodMonth": "A múlt hónapban",
+      "activityPeriodYear": "Tavaly",
+      "activityPeriodForever": "Mindig",
+      "activitySelectPeriod": "Válassza ki az időszakot"
     },
     "profile": {
       "media": "Média",

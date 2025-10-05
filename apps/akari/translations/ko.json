@@ -170,7 +170,13 @@
       "sending": "보내는 중...",
       "scheduling": "예약 중...",
       "all": "전체",
-      "mentions": "멘션"
+      "mentions": "멘션",
+      "activityPeriodDay": "마지막 날",
+      "activityPeriodWeek": "지난주",
+      "activityPeriodMonth": "지난달",
+      "activityPeriodYear": "작년",
+      "activityPeriodForever": "항상",
+      "activitySelectPeriod": "기간 선택"
     },
     "profile": {
       "media": "미디어",

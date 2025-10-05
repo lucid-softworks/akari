@@ -170,7 +170,13 @@
       "sending": "Отправка...",
       "scheduling": "Планирование...",
       "all": "Все",
-      "mentions": "Упоминания"
+      "mentions": "Упоминания",
+      "activityPeriodDay": "Последний день",
+      "activityPeriodWeek": "На прошлой неделе",
+      "activityPeriodMonth": "В прошлом месяце",
+      "activityPeriodYear": "В прошлом году",
+      "activityPeriodForever": "Все время",
+      "activitySelectPeriod": "Выберите период"
     },
     "profile": {
       "media": "Медиа",

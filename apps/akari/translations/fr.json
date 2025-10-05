@@ -170,7 +170,13 @@
       "sending": "Envoi...",
       "scheduling": "Programmation...",
       "all": "Tout",
-      "mentions": "Mentions"
+      "mentions": "Mentions",
+      "activityPeriodDay": "Dernier jour",
+      "activityPeriodWeek": "La semaine dernière",
+      "activityPeriodMonth": "Le mois dernier",
+      "activityPeriodYear": "L'année dernière",
+      "activityPeriodForever": "Tout le temps",
+      "activitySelectPeriod": "Sélectionner la période"
     },
     "profile": {
       "media": "Médias",

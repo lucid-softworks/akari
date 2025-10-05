@@ -170,7 +170,13 @@
       "sending": "שְׁלִיחָה...",
       "scheduling": "תזמון ...",
       "all": "כֹּל",
-      "mentions": "מזכיר"
+      "mentions": "מזכיר",
+      "activityPeriodDay": "היום האחרון",
+      "activityPeriodWeek": "בשבוע שעבר",
+      "activityPeriodMonth": "בחודש שעבר",
+      "activityPeriodYear": "בשנה שעברה",
+      "activityPeriodForever": "כל הזמנים",
+      "activitySelectPeriod": "בחר תקופה"
     },
     "profile": {
       "media": "כְּלֵי תִקְשׁוֹרֶת",

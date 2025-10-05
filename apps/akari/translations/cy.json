@@ -170,7 +170,13 @@
       "sending": "Anfon...",
       "scheduling": "Amseru...",
       "all": "Pob un",
-      "mentions": "Crybwylliadau"
+      "mentions": "Crybwylliadau",
+      "activityPeriodDay": "Diwrnod Olaf",
+      "activityPeriodWeek": "Yr wythnos diwethaf",
+      "activityPeriodMonth": "Mis diwethaf",
+      "activityPeriodYear": "Y llynedd",
+      "activityPeriodForever": "Bob amser",
+      "activitySelectPeriod": "Dewiswch y cyfnod"
     },
     "profile": {
       "media": "Cyfryngau",

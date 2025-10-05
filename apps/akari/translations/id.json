@@ -170,7 +170,13 @@
       "sending": "Mengirim...",
       "scheduling": "Menjadwalkan...",
       "all": "Semua",
-      "mentions": "Sebutan"
+      "mentions": "Sebutan",
+      "activityPeriodDay": "Hari terakhir",
+      "activityPeriodWeek": "Minggu lalu",
+      "activityPeriodMonth": "Bulan lalu",
+      "activityPeriodYear": "Tahun lalu",
+      "activityPeriodForever": "Sepanjang waktu",
+      "activitySelectPeriod": "Pilih periode"
     },
     "profile": {
       "media": "Media",

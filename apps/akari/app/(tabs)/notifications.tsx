@@ -2,7 +2,17 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  type ImageStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -13,6 +23,7 @@ import { TabBar } from '@/components/TabBar';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useActivityInsights, type ActivityPeriod } from '@/hooks/queries/useActivityInsights';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -43,13 +54,6 @@ type GroupedNotification = {
 
 type NotificationsTab = 'all' | 'mentions';
 
-type ActivitySummaryPoint = {
-  dateKey: string;
-  label: string;
-  notes: number;
-  followers: number;
-};
-
 type ActivitySummaryProps = {
   points: ActivitySummaryPoint[];
   totalNotes: number;
@@ -57,11 +61,31 @@ type ActivitySummaryProps = {
   totalFollowers: number;
   locale: string;
   title: string;
-  subtitle: string;
   notesLabel: string;
   newFollowersLabel: string;
   totalFollowersLabel: string;
+  periodLabel: string;
+  periodOptions: { label: string; value: ActivityPeriod }[];
+  onSelectPeriod: (period: ActivityPeriod) => void;
+  activePeriod: ActivityPeriod;
+  activeMetric: 'notes' | 'followers';
+  onSelectMetric: (metric: 'notes' | 'followers') => void;
+  isLoading: boolean;
+  loadingLabel: string;
+  emptyLabel: string;
+  periodA11yLabel: string;
 };
+
+type ActivitySummaryPoint = {
+  dateKey: string;
+  label: string;
+  notes: number;
+  followers: number;
+};
+
+type NotificationsListItem =
+  | { kind: 'tabs' }
+  | { kind: 'notification'; notification: GroupedNotification };
 
 function formatNumber(value: number, locale: string) {
   return new Intl.NumberFormat(locale).format(value);
@@ -74,16 +98,30 @@ function ActivitySummary({
   totalFollowers,
   locale,
   title,
-  subtitle,
   notesLabel,
   newFollowersLabel,
   totalFollowersLabel,
+  periodLabel,
+  periodOptions,
+  onSelectPeriod,
+  activePeriod,
+  activeMetric,
+  onSelectMetric,
+  isLoading,
+  loadingLabel,
+  emptyLabel,
+  periodA11yLabel,
 }: ActivitySummaryProps) {
   const [graphWidth, setGraphWidth] = useState(0);
+  const [isPeriodPickerVisible, setIsPeriodPickerVisible] = useState(false);
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const followerAccent = useThemeColor({ light: '#34C759', dark: '#34C759' }, 'tint');
   const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
   const textSecondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const backgroundColor = useThemeColor({}, 'background');
   const graphHeight = 120;
+
+  const activeAccent = activeMetric === 'notes' ? accentColor : followerAccent;
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     setGraphWidth(event.nativeEvent.layout.width);
@@ -94,16 +132,21 @@ function ActivitySummary({
       return [] as { x: number; y: number; value: number }[];
     }
 
-    const maxNotes = Math.max(1, ...points.map((point) => point.notes));
+    const values = points.map((point) =>
+      activeMetric === 'notes' ? point.notes : point.followers,
+    );
+    const maxValue = Math.max(1, ...values);
     const horizontalStep = points.length > 1 ? graphWidth / (points.length - 1) : 0;
+
     return points.map((point, index) => {
-      const ratio = point.notes / maxNotes;
-      const paddedHeight = graphHeight - 24; // Keep some breathing room at the top and bottom
+      const pointValue = values[index];
+      const ratio = pointValue / maxValue;
+      const paddedHeight = graphHeight - 24;
       const y = graphHeight - 12 - ratio * paddedHeight;
       const x = points.length === 1 ? graphWidth / 2 : index * horizontalStep;
-      return { x, y, value: point.notes };
+      return { x, y, value: pointValue };
     });
-  }, [graphWidth, points]);
+  }, [activeMetric, graphWidth, points]);
 
   const segments = useMemo(() => {
     if (coordinates.length < 2) {
@@ -112,7 +155,7 @@ function ActivitySummary({
 
     const values: { x: number; y: number; length: number; angle: number }[] = [];
 
-    for (let index = 0; index < coordinates.length - 1; index++) {
+    for (let index = 0; index < coordinates.length - 1; index += 1) {
       const start = coordinates[index];
       const end = coordinates[index + 1];
       const dx = end.x - start.x;
@@ -125,11 +168,50 @@ function ActivitySummary({
     return values;
   }, [coordinates]);
 
+  const handlePeriodOpen = useCallback(() => {
+    setIsPeriodPickerVisible(true);
+  }, []);
+
+  const handlePeriodClose = useCallback(() => {
+    setIsPeriodPickerVisible(false);
+  }, []);
+
+  const handlePeriodSelect = useCallback(
+    (period: ActivityPeriod) => {
+      setIsPeriodPickerVisible(false);
+      if (period !== activePeriod) {
+        onSelectPeriod(period);
+      }
+    },
+    [activePeriod, onSelectPeriod],
+  );
+
+  const handleMetricSelect = useCallback(
+    (metric: 'notes' | 'followers') => {
+      if (metric !== activeMetric) {
+        onSelectMetric(metric);
+      }
+    },
+    [activeMetric, onSelectMetric],
+  );
+
+  const hasPoints = points.length > 0;
+
   return (
     <ThemedView style={[styles.summaryCard, { borderColor }]}>
       <View style={styles.summaryHeaderRow}>
         <ThemedText style={styles.summaryTitle}>{title}</ThemedText>
-        <ThemedText style={[styles.summarySubtitle, { color: textSecondary }]}>{subtitle}</ThemedText>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel={periodA11yLabel}
+          onPress={handlePeriodOpen}
+          style={styles.periodButton}
+        >
+          <ThemedText style={[styles.periodButtonText, { color: textSecondary }]}>
+            {periodLabel}
+          </ThemedText>
+          <IconSymbol name="chevron.down" size={16} color={textSecondary} />
+        </TouchableOpacity>
       </View>
       <View style={[styles.graphContainer, { borderColor }]} onLayout={handleLayout}>
         <View style={styles.graphGrid}>
@@ -140,54 +222,142 @@ function ActivitySummary({
             />
           ))}
         </View>
-        {segments.map((segment, index) => (
-          <View
-            key={`segment-${segment.x}-${index}`}
-            style={{
-              position: 'absolute',
-              left: segment.x,
-              top: segment.y,
-              width: segment.length,
-              borderTopWidth: 2,
-              borderTopColor: accentColor,
-              transform: [{ rotateZ: `${segment.angle}rad` }],
-            }}
-          />
-        ))}
-        {coordinates.map((point, index) => (
-          <React.Fragment key={`point-${index}`}>
+        {hasPoints &&
+          segments.map((segment, index) => (
             <View
+              key={`segment-${segment.x}-${index}`}
               style={{
                 position: 'absolute',
-                left: point.x - 6,
-                top: point.y - 6,
-                width: 12,
-                height: 12,
-                borderRadius: 6,
-                backgroundColor: accentColor,
+                left: segment.x,
+                top: segment.y,
+                width: segment.length,
+                borderTopWidth: 2,
+                borderTopColor: activeAccent,
+                transform: [{ rotateZ: `${segment.angle}rad` }],
               }}
             />
-            <ThemedText style={[styles.graphValueLabel, { left: point.x - 12, top: point.y - 28 }]}>
-              {point.value}
+          ))}
+        {hasPoints &&
+          coordinates.map((point, index) => (
+            <React.Fragment key={`point-${index}`}>
+              <View
+                style={{
+                  position: 'absolute',
+                  left: point.x - 6,
+                  top: point.y - 6,
+                  width: 12,
+                  height: 12,
+                  borderRadius: 6,
+                  backgroundColor: activeAccent,
+                }}
+              />
+              <ThemedText
+                style={[styles.graphValueLabel, { left: point.x - 12, top: point.y - 28 }]}
+              >
+                {formatNumber(point.value, locale)}
+              </ThemedText>
+              <ThemedText style={[styles.graphDateLabel, { left: point.x - 18 }]}>
+                {points[index]?.label}
+              </ThemedText>
+            </React.Fragment>
+          ))}
+        {!hasPoints && (
+          <View style={styles.graphEmptyState}>
+            <ThemedText style={[styles.graphEmptyStateText, { color: textSecondary }]}> 
+              {isLoading ? loadingLabel : emptyLabel}
             </ThemedText>
-            <ThemedText style={[styles.graphDateLabel, { left: point.x - 18 }]}>{points[index]?.label}</ThemedText>
-          </React.Fragment>
-        ))}
+          </View>
+        )}
       </View>
       <View style={styles.summaryStatsRow}>
-        <View style={styles.summaryStat}>
-          <ThemedText style={styles.summaryStatValue}>{formatNumber(totalNotes, locale)}</ThemedText>
-          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{notesLabel}</ThemedText>
-        </View>
-        <View style={styles.summaryStat}>
-          <ThemedText style={styles.summaryStatValue}>{formatNumber(newFollowers, locale)}</ThemedText>
-          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{newFollowersLabel}</ThemedText>
-        </View>
+        <TouchableOpacity
+          accessibilityRole="button"
+          style={[
+            styles.summaryStat,
+            styles.summaryStatButton,
+            { borderColor },
+            activeMetric === 'notes' && [styles.summaryStatActive, { borderColor: activeAccent }],
+          ]}
+          onPress={() => handleMetricSelect('notes')}
+        >
+          <ThemedText
+            style={[
+              styles.summaryStatValue,
+              activeMetric === 'notes' && { color: activeAccent },
+            ]}
+          >
+            {formatNumber(totalNotes, locale)}
+          </ThemedText>
+          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>
+            {notesLabel}
+          </ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          accessibilityRole="button"
+          style={[
+            styles.summaryStat,
+            styles.summaryStatButton,
+            { borderColor },
+            activeMetric === 'followers' && [styles.summaryStatActive, { borderColor: activeAccent }],
+          ]}
+          onPress={() => handleMetricSelect('followers')}
+        >
+          <ThemedText
+            style={[
+              styles.summaryStatValue,
+              activeMetric === 'followers' && { color: activeAccent },
+            ]}
+          >
+            {formatNumber(newFollowers, locale)}
+          </ThemedText>
+          <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>
+            {newFollowersLabel}
+          </ThemedText>
+        </TouchableOpacity>
         <View style={styles.summaryStat}>
           <ThemedText style={styles.summaryStatValue}>{formatNumber(totalFollowers, locale)}</ThemedText>
           <ThemedText style={[styles.summaryStatLabel, { color: textSecondary }]}>{totalFollowersLabel}</ThemedText>
         </View>
       </View>
+
+      <Modal
+        visible={isPeriodPickerVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={handlePeriodClose}
+      >
+        <TouchableWithoutFeedback onPress={handlePeriodClose}>
+          <View style={styles.periodModalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.periodModal, { backgroundColor }]}> 
+                {periodOptions.map((option) => {
+                  const isActive = option.value === activePeriod;
+                  return (
+                    <TouchableOpacity
+                      key={option.value}
+                      accessibilityRole="button"
+                      style={[
+                        styles.periodOption,
+                        isActive && [styles.periodOptionActive, { borderColor: activeAccent }],
+                      ]}
+                      onPress={() => handlePeriodSelect(option.value)}
+                    >
+                      <ThemedText
+                        style={[
+                          styles.periodOptionText,
+                          isActive && { color: activeAccent },
+                        ]}
+                      >
+                        {option.label}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ThemedView>
   );
 }
@@ -505,16 +675,21 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 /**
  * Notifications screen component
  */
+
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const tabBackground = useThemeColor({}, 'background');
   const { t, currentLocale } = useTranslation();
   const { isLargeScreen } = useResponsive();
-  const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
+  const listRef = useRef<VirtualizedListHandle<NotificationsListItem>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedMetric, setSelectedMetric] = useState<'notes' | 'followers'>('notes');
+  const [selectedPeriod, setSelectedPeriod] = useState<ActivityPeriod>('week');
   const { data: currentAccount } = useCurrentAccount();
   const { data: profile } = useProfile(currentAccount?.handle);
+
   const tabs = useMemo(
     () => [
       { key: 'all' as const, label: t('notifications.all') },
@@ -554,7 +729,9 @@ export default function NotificationsScreen() {
     () => notificationsData?.pages.flatMap((page) => page.notifications) ?? [],
     [notificationsData],
   );
+
   const groupedNotifications = useMemo(() => groupNotifications(notifications), [notifications]);
+
   const filteredNotifications = useMemo(() => {
     if (activeTab === 'mentions') {
       return groupedNotifications.filter(
@@ -567,13 +744,10 @@ export default function NotificationsScreen() {
 
   const handleNotificationPress = useCallback((notification: GroupedNotification) => {
     if (notification.type === 'follow') {
-      // Navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     } else if (notification.subject) {
-      // Navigate to the post
       router.push(`/post/${encodeURIComponent(notification.subject)}`);
     } else {
-      // For notifications without a subject, navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     }
   }, []);
@@ -589,7 +763,63 @@ export default function NotificationsScreen() {
     [borderColor, handleNotificationPress],
   );
 
-  const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
+  const periodOptions = useMemo(
+    () => [
+      { value: 'day' as ActivityPeriod, label: t('notifications.activityPeriodDay') },
+      { value: 'week' as ActivityPeriod, label: t('notifications.activityPeriodWeek') },
+      { value: 'month' as ActivityPeriod, label: t('notifications.activityPeriodMonth') },
+      { value: 'year' as ActivityPeriod, label: t('notifications.activityPeriodYear') },
+      { value: 'forever' as ActivityPeriod, label: t('notifications.activityPeriodForever') },
+    ],
+    [t],
+  );
+
+  const periodLabel = useMemo(() => {
+    const match = periodOptions.find((option) => option.value === selectedPeriod);
+    return match?.label ?? periodOptions[0]?.label ?? '';
+  }, [periodOptions, selectedPeriod]);
+
+  const {
+    data: activityData,
+    isLoading: isActivityLoading,
+    refetch: refetchActivity,
+  } = useActivityInsights(selectedPeriod);
+
+  const activityPoints = useMemo(() => {
+    if (!activityData?.points) {
+      return [] as ActivitySummaryPoint[];
+    }
+
+    const formatter = new Intl.DateTimeFormat(currentLocale, {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    return activityData.points.map((point) => ({
+      ...point,
+      label: formatter.format(new Date(point.dateKey)),
+    }));
+  }, [activityData?.points, currentLocale]);
+
+  const totalFollowersCount = profile?.followersCount ?? activityData?.totalFollowers ?? 0;
+
+  const activitySummary = useMemo(
+    () => ({
+      points: activityPoints,
+      totalNotes: activityData?.totalNotes ?? 0,
+      newFollowers: activityData?.newFollowers ?? 0,
+      totalFollowers: totalFollowersCount,
+    }),
+    [activityData?.newFollowers, activityData?.totalNotes, activityPoints, totalFollowersCount],
+  );
+
+  const listData = useMemo<NotificationsListItem[]>(
+    () => [
+      { kind: 'tabs' } as NotificationsListItem,
+      ...filteredNotifications.map((notification) => ({ kind: 'notification', notification })),
+    ],
+    [filteredNotifications],
+  );
 
   const renderEmptyState = useCallback(() => (
     <View style={styles.emptyState}>
@@ -605,7 +835,7 @@ export default function NotificationsScreen() {
     </View>
   ), [error?.message, t]);
 
-  const listEmptyComponent = useMemo(() => {
+  const emptyContent = useMemo(() => {
     if (isLoading) {
       return (
         <ThemedView style={styles.skeletonContainer}>
@@ -620,7 +850,7 @@ export default function NotificationsScreen() {
   }, [isLoading, renderEmptyState]);
 
   const listFooterComponent = useMemo(() => {
-    if (!isFetchingNextPage) {
+    if (!isFetchingNextPage || filteredNotifications.length === 0) {
       return null;
     }
 
@@ -629,87 +859,24 @@ export default function NotificationsScreen() {
         <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
       </ThemedView>
     );
-  }, [isFetchingNextPage, t]);
+  }, [filteredNotifications.length, isFetchingNextPage, t]);
 
   const handleEndReached = useCallback(() => {
-    if (!hasNextPage || isFetchingNextPage) {
+    if (!hasNextPage || isFetchingNextPage || filteredNotifications.length === 0) {
       return;
     }
 
     fetchNextPage();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, filteredNotifications.length, hasNextPage, isFetchingNextPage]);
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await refetch();
+      await Promise.all([refetch(), refetchActivity()]);
     } finally {
       setRefreshing(false);
     }
-  }, [refetch]);
-
-  const activitySummary = useMemo(() => {
-    const DAYS_TO_SHOW = 7;
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const days: { key: string; date: Date; notes: number; followers: number }[] = [];
-    for (let index = DAYS_TO_SHOW - 1; index >= 0; index--) {
-      const day = new Date(now);
-      day.setDate(day.getDate() - index);
-      const key = day.toISOString().split('T')[0];
-      days.push({ key, date: day, notes: 0, followers: 0 });
-    }
-
-    const daysByKey = new Map(days.map((day) => [day.key, day] as const));
-    const noteReasons = new Set(['like', 'repost', 'quote']);
-
-    for (const notification of notifications) {
-      if (!notification.indexedAt) {
-        continue;
-      }
-
-      const indexedDate = new Date(notification.indexedAt);
-      indexedDate.setHours(0, 0, 0, 0);
-      const key = indexedDate.toISOString().split('T')[0];
-      const targetDay = daysByKey.get(key);
-
-      if (!targetDay) {
-        continue;
-      }
-
-      if (noteReasons.has(notification.reason)) {
-        targetDay.notes += 1;
-      }
-
-      if (notification.reason === 'follow') {
-        targetDay.followers += 1;
-      }
-    }
-
-    const dateFormatter = new Intl.DateTimeFormat(currentLocale, {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const points: ActivitySummaryPoint[] = days.map((day) => ({
-      dateKey: day.key,
-      label: dateFormatter.format(day.date),
-      notes: day.notes,
-      followers: day.followers,
-    }));
-
-    const totalNotes = points.reduce((sum, point) => sum + point.notes, 0);
-    const newFollowers = points.reduce((sum, point) => sum + point.followers, 0);
-    const totalFollowers = profile?.followersCount ?? 0;
-
-    return {
-      points,
-      totalNotes,
-      newFollowers,
-      totalFollowers,
-    };
-  }, [currentLocale, notifications, profile?.followersCount]);
+  }, [refetch, refetchActivity]);
 
   const listHeaderComponent = useCallback(
     () => (
@@ -719,7 +886,7 @@ export default function NotificationsScreen() {
           { paddingTop: isLargeScreen ? 0 : insets.top },
         ]}
       >
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
+        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
         </ThemedView>
         <ActivitySummary
@@ -729,23 +896,71 @@ export default function NotificationsScreen() {
           totalFollowers={activitySummary.totalFollowers}
           locale={currentLocale}
           title={t('notifications.activitySummaryTitle')}
-          subtitle={t('notifications.activityLastNDays', { count: activitySummary.points.length })}
           notesLabel={t('notifications.activityNotes')}
           newFollowersLabel={t('notifications.activityNewFollowers')}
           totalFollowersLabel={t('notifications.activityTotalFollowers')}
+          periodLabel={periodLabel}
+          periodOptions={periodOptions}
+          onSelectPeriod={setSelectedPeriod}
+          activePeriod={selectedPeriod}
+          activeMetric={selectedMetric}
+          onSelectMetric={setSelectedMetric}
+          isLoading={isActivityLoading}
+          loadingLabel={t('common.loading')}
+          emptyLabel={t('notifications.noNotificationsYet')}
+          periodA11yLabel={t('notifications.activitySelectPeriod')}
         />
-        <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
     ),
     [
       activitySummary,
-      activeTab,
       borderColor,
       currentLocale,
-      handleTabChange,
       insets.top,
+      isActivityLoading,
       isLargeScreen,
+      periodLabel,
+      periodOptions,
+      selectedMetric,
+      selectedPeriod,
       t,
+    ],
+  );
+
+  const keyExtractor = useCallback((item: NotificationsListItem) => {
+    if (item.kind === 'tabs') {
+      return 'tabs';
+    }
+
+    return item.notification.id;
+  }, []);
+
+  const renderListItem = useCallback(
+    ({ item }: { item: NotificationsListItem }) => {
+      if (item.kind === 'tabs') {
+        return (
+          <ThemedView
+            style={[
+              styles.tabBarContainer,
+              { borderBottomColor: borderColor, backgroundColor: tabBackground },
+            ]}
+          >
+            <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+            {filteredNotifications.length === 0 ? emptyContent : null}
+          </ThemedView>
+        );
+      }
+
+      return renderNotificationItem(item.notification);
+    },
+    [
+      activeTab,
+      borderColor,
+      emptyContent,
+      filteredNotifications.length,
+      handleTabChange,
+      renderNotificationItem,
+      tabBackground,
       tabs,
     ],
   );
@@ -758,13 +973,12 @@ export default function NotificationsScreen() {
     <ThemedView style={styles.container}>
       <VirtualizedList
         ref={listRef}
-        data={filteredNotifications}
-        renderItem={({ item }) => renderNotificationItem(item)}
+        data={listData}
+        renderItem={renderListItem}
         keyExtractor={keyExtractor}
         estimatedItemSize={160}
         overscan={2}
         ListFooterComponent={listFooterComponent ?? undefined}
-        ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={styles.listContent}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
@@ -773,6 +987,7 @@ export default function NotificationsScreen() {
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
         ListHeaderComponent={listHeaderComponent}
+        stickyHeaderIndices={[1]}
       />
     </ThemedView>
   );
@@ -816,8 +1031,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
-  summarySubtitle: {
+  periodButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  periodButtonText: {
     fontSize: 14,
+    fontWeight: '500',
   },
   graphContainer: {
     position: 'relative',
@@ -852,6 +1076,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.7,
   },
+  graphEmptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  graphEmptyStateText: {
+    fontSize: 13,
+    textAlign: 'center',
+  },
   summaryStatsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -859,6 +1092,15 @@ const styles = StyleSheet.create({
   },
   summaryStat: {
     flex: 1,
+  },
+  summaryStatButton: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  summaryStatActive: {
+    borderWidth: 2,
   },
   summaryStatValue: {
     fontSize: 20,
@@ -980,6 +1222,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
   },
+  tabBarContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
   skeletonContainer: {
     flex: 1,
     paddingBottom: 100, // Account for tab bar
@@ -1041,6 +1288,34 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 16,
     opacity: 0.7,
+  },
+  periodModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  periodModal: {
+    width: '100%',
+    maxWidth: 320,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  periodOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    marginBottom: 8,
+  },
+  periodOptionActive: {
+    borderWidth: 2,
+  },
+  periodOptionText: {
+    fontSize: 15,
+    fontWeight: '500',
   },
   avatarContainer: {
     marginRight: 12,

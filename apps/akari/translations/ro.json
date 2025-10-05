@@ -170,7 +170,13 @@
       "sending": "Trimiterea ...",
       "scheduling": "Programare ...",
       "all": "Toate",
-      "mentions": "Mențiuni"
+      "mentions": "Mențiuni",
+      "activityPeriodDay": "Ultima zi",
+      "activityPeriodWeek": "Săptămâna trecută",
+      "activityPeriodMonth": "Luna trecută",
+      "activityPeriodYear": "Anul trecut",
+      "activityPeriodForever": "Tot timpul",
+      "activitySelectPeriod": "Selectați perioada"
     },
     "profile": {
       "media": "Media",

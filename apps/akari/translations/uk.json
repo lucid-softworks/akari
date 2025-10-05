@@ -170,7 +170,13 @@
       "sending": "Відправлення ...",
       "scheduling": "Планування ...",
       "all": "Все",
-      "mentions": "Згадування"
+      "mentions": "Згадування",
+      "activityPeriodDay": "Останній день",
+      "activityPeriodWeek": "Минулого тижня",
+      "activityPeriodMonth": "Минулого місяця",
+      "activityPeriodYear": "Минулого року",
+      "activityPeriodForever": "Весь час",
+      "activitySelectPeriod": "Вибір періоду"
     },
     "profile": {
       "media": "ЗМІ",

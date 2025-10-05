@@ -170,7 +170,13 @@
       "sending": "Lähetetään ...",
       "scheduling": "Aikataulu ...",
       "all": "Kaikki",
-      "mentions": "Mainita"
+      "mentions": "Mainita",
+      "activityPeriodDay": "Viimeinen päivä",
+      "activityPeriodWeek": "Viime viikolla",
+      "activityPeriodMonth": "Viime kuussa",
+      "activityPeriodYear": "Viime vuonna",
+      "activityPeriodForever": "Koko ajan",
+      "activitySelectPeriod": "Valitse ajanjakso"
     },
     "profile": {
       "media": "Media",

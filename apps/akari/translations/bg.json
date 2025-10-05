@@ -170,7 +170,13 @@
       "sending": "Изпращане ...",
       "scheduling": "Планиране ...",
       "all": "Всички",
-      "mentions": "Споменавания"
+      "mentions": "Споменавания",
+      "activityPeriodDay": "Последен ден",
+      "activityPeriodWeek": "Миналата седмица",
+      "activityPeriodMonth": "Миналия месец",
+      "activityPeriodYear": "Миналата година",
+      "activityPeriodForever": "През цялото време",
+      "activitySelectPeriod": "Изберете период"
     },
     "profile": {
       "media": "Медия",

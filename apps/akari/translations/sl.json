@@ -170,7 +170,13 @@
       "sending": "Pošiljanje ...",
       "scheduling": "Načrtovanje ...",
       "all": "Vse",
-      "mentions": "Omenja"
+      "mentions": "Omenja",
+      "activityPeriodDay": "Zadnji dan",
+      "activityPeriodWeek": "Prejšnji teden",
+      "activityPeriodMonth": "Prejšnji mesec",
+      "activityPeriodYear": "Lani",
+      "activityPeriodForever": "Ves čas",
+      "activitySelectPeriod": "Izberite obdobje"
     },
     "profile": {
       "media": "Mediji",

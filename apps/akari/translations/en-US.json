@@ -170,7 +170,13 @@
       "sending": "Sending...",
       "scheduling": "Scheduling...",
       "all": "All",
-      "mentions": "Mentions"
+      "mentions": "Mentions",
+      "activityPeriodDay": "Last day",
+      "activityPeriodWeek": "Last week",
+      "activityPeriodMonth": "Last month",
+      "activityPeriodYear": "Last year",
+      "activityPeriodForever": "All time",
+      "activitySelectPeriod": "Select period"
     },
     "profile": {
       "media": "Media",

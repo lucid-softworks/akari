@@ -170,7 +170,13 @@
       "sending": "ارسال ...",
       "scheduling": "برنامه ریزی ...",
       "all": "همه",
-      "mentions": "ذکر کردن"
+      "mentions": "ذکر کردن",
+      "activityPeriodDay": "روز گذشته",
+      "activityPeriodWeek": "هفته گذشته",
+      "activityPeriodMonth": "ماه گذشته",
+      "activityPeriodYear": "سال گذشته",
+      "activityPeriodForever": "تمام دوران",
+      "activitySelectPeriod": "دوره را انتخاب کنید"
     },
     "profile": {
       "media": "رسانه ها",

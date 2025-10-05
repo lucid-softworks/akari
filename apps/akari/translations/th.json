@@ -170,7 +170,13 @@
       "sending": "กำลังส่ง...",
       "scheduling": "กำลังกำหนดเวลา...",
       "all": "ทั้งหมด",
-      "mentions": "การกล่าวถึง"
+      "mentions": "การกล่าวถึง",
+      "activityPeriodDay": "วันสุดท้าย",
+      "activityPeriodWeek": "สัปดาห์ที่แล้ว",
+      "activityPeriodMonth": "เดือนที่แล้ว",
+      "activityPeriodYear": "ปีที่แล้ว",
+      "activityPeriodForever": "ตลอดเวลา",
+      "activitySelectPeriod": "เลือกระยะเวลา"
     },
     "profile": {
       "media": "สื่อ",
