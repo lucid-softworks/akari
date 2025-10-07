@@ -128,7 +128,7 @@ function ActivitySummary({
   }, []);
 
   const coordinates = useMemo(() => {
-    if (points.length === 0) {
+    if (points.length === 0 || graphWidth === 0) {
       return [] as { x: number; y: number; value: number }[];
     }
 
@@ -150,10 +150,20 @@ function ActivitySummary({
 
   const segments = useMemo(() => {
     if (coordinates.length < 2) {
-      return [] as { x: number; y: number; length: number; angle: number }[];
+      return [] as {
+        x: number;
+        y: number;
+        length: number;
+        angle: number;
+      }[];
     }
 
-    const values: { x: number; y: number; length: number; angle: number }[] = [];
+    const values: {
+      x: number;
+      y: number;
+      length: number;
+      angle: number;
+    }[] = [];
 
     for (let index = 0; index < coordinates.length - 1; index += 1) {
       const start = coordinates[index];
@@ -162,7 +172,9 @@ function ActivitySummary({
       const dy = end.y - start.y;
       const length = Math.sqrt(dx * dx + dy * dy);
       const angle = Math.atan2(dy, dx);
-      values.push({ x: start.x, y: start.y, length, angle });
+      const midpointX = (start.x + end.x) / 2;
+      const midpointY = (start.y + end.y) / 2;
+      values.push({ x: midpointX, y: midpointY, length, angle });
     }
 
     return values;
@@ -225,14 +237,14 @@ function ActivitySummary({
         {hasPoints &&
           segments.map((segment, index) => (
             <View
-              key={`segment-${segment.x}-${index}`}
+              key={`segment-${segment.x}-${segment.y}-${index}`}
               style={{
                 position: 'absolute',
-                left: segment.x,
-                top: segment.y,
+                left: segment.x - segment.length / 2,
+                top: segment.y - 1,
                 width: segment.length,
-                borderTopWidth: 2,
-                borderTopColor: activeAccent,
+                height: 2,
+                backgroundColor: activeAccent,
                 transform: [{ rotateZ: `${segment.angle}rad` }],
               }}
             />
@@ -987,7 +999,7 @@ export default function NotificationsScreen() {
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
         ListHeaderComponent={listHeaderComponent}
-        stickyHeaderIndices={[1]}
+        stickyHeaderIndices={[0]}
       />
     </ThemedView>
   );
