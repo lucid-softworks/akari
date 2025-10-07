@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "搜索",
-      "notifications": "通知",
+      "notifications": "动态",
       "post": "邮政",
       "settings": "设置"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "回复了您的帖子",
       "mentionedYou": "提到你",
       "quotedYourPost": "引用您的帖子",
+      "activitySummaryTitle": "动态概览",
+      "activityLastNDays": "最近{{count}}天",
+      "activityNotes": "笔记",
+      "activityNewFollowers": "新增关注者",
+      "activityTotalFollowers": "关注者总数",
       "andOneOther": "和其他1个{{action}}",
       "andOthers": "和{{count}}其他",
       "noNotificationsYet": "尚未通知",
@@ -165,7 +170,13 @@
       "sending": "发送...",
       "scheduling": "调度...",
       "all": "全部",
-      "mentions": "提及"
+      "mentions": "提及",
+      "activityPeriodDay": "最后一天",
+      "activityPeriodWeek": "上周",
+      "activityPeriodMonth": "上个月",
+      "activityPeriodYear": "去年",
+      "activityPeriodForever": "一直以来",
+      "activitySelectPeriod": "选择时间段"
     },
     "profile": {
       "media": "媒体",

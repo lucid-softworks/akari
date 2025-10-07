@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Szukaj",
-      "notifications": "Powiadomienia",
+      "notifications": "Aktywność",
       "post": "Post",
       "settings": "Ustawienia"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "odpowiedział na Twój post",
       "mentionedYou": "wspomniał o Tobie",
       "quotedYourPost": "zacytował Twój post",
+      "activitySummaryTitle": "Podsumowanie aktywności",
+      "activityLastNDays": "Ostatnie {{count}} dni",
+      "activityNotes": "Notatki",
+      "activityNewFollowers": "Nowi obserwujący",
+      "activityTotalFollowers": "Łącznie obserwujących",
       "andOneOther": "i 1 inny {{action}}",
       "andOthers": "i {{count}} innych {{action}}",
       "noNotificationsYet": "Brak powiadomień",
@@ -165,7 +170,13 @@
       "sending": "Wysyłanie...",
       "scheduling": "Planowanie...",
       "all": "Wszystko",
-      "mentions": "Wzmianki"
+      "mentions": "Wzmianki",
+      "activityPeriodDay": "Ostatni dzień",
+      "activityPeriodWeek": "W zeszłym tygodniu",
+      "activityPeriodMonth": "W zeszłym miesiącu",
+      "activityPeriodYear": "W ubiegłym roku",
+      "activityPeriodForever": "Przez cały czas",
+      "activitySelectPeriod": "Wybierz okres"
     },
     "profile": {
       "media": "Media",

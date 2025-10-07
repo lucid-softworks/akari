@@ -99,7 +99,7 @@
     },
     "navigation": {
       "search": "Търсене",
-      "notifications": "Известия",
+      "notifications": "Активност",
       "post": "Публикуване",
       "settings": "Настройки"
     },
@@ -123,6 +123,11 @@
       "repliedToYourPost": "отговори на публикацията ви",
       "mentionedYou": "ви спомена",
       "quotedYourPost": "цитиран публикацията ви",
+      "activitySummaryTitle": "Обобщение на активността",
+      "activityLastNDays": "Последните {{count}} дни",
+      "activityNotes": "Бележки",
+      "activityNewFollowers": "Нови последователи",
+      "activityTotalFollowers": "Общ брой последователи",
       "andOneOther": "и 1 други {{action}}",
       "andOthers": "и {{count}} други {{action}}",
       "noNotificationsYet": "Все още няма известия",
@@ -165,7 +170,13 @@
       "sending": "Изпращане ...",
       "scheduling": "Планиране ...",
       "all": "Всички",
-      "mentions": "Споменавания"
+      "mentions": "Споменавания",
+      "activityPeriodDay": "Последен ден",
+      "activityPeriodWeek": "Миналата седмица",
+      "activityPeriodMonth": "Миналия месец",
+      "activityPeriodYear": "Миналата година",
+      "activityPeriodForever": "През цялото време",
+      "activitySelectPeriod": "Изберете период"
     },
     "profile": {
       "media": "Медия",
