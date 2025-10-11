@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Inserisci il tuo nome visualizzato",
       "descriptionPlaceholder": "Parlaci di te",
       "noBanner": "Nessun banner",
+      "nowPlaying": "In riproduzione",
       "profileUpdated": "Profilo aggiornato con successo",
       "profileUpdateError": "Errore nell'aggiornamento del profilo",
       "handleHistory": "Cronologia dell'handle",

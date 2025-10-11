@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Wprowadź nazwę wyświetlaną",
       "descriptionPlaceholder": "Opowiedz nam o sobie",
       "noBanner": "Brak banera",
+      "nowPlaying": "Teraz odtwarzane",
       "profileUpdated": "Profil zaktualizowany pomyślnie",
       "profileUpdateError": "Nie udało się zaktualizować profilu",
       "handleHistory": "Historia handle'u",

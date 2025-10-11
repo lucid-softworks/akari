@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Digite seu nome de exibição",
       "descriptionPlaceholder": "Conte-nos sobre você",
       "noBanner": "Sem banner",
+      "nowPlaying": "Reproduzindo agora",
       "profileUpdated": "Perfil atualizado com sucesso",
       "profileUpdateError": "Erro ao atualizar perfil",
       "handleHistory": "Histórico do identificador",

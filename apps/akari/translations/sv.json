@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Ange ditt visningsnamn",
       "descriptionPlaceholder": "Berätta om dig själv",
       "noBanner": "Ingen banner",
+      "nowPlaying": "Spelas nu",
       "profileUpdated": "Profil uppdateras framgångsrikt",
       "profileUpdateError": "Det gick inte att uppdatera profilen. Försök igen.",
       "handleHistory": "Hantera historia",

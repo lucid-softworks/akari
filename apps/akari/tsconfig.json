@@ -9,6 +9,7 @@
       "@/bluesky-api": ["../../packages/bluesky-api"],
       "@/clearsky-api": ["../../packages/clearsky-api"],
       "@/libretranslate-api": ["../../packages/libretranslate-api"],
+      "@/teal-api": ["../../packages/teal-api"],
       "@/tenor-api": ["../../packages/tenor-api"]
     }
   },

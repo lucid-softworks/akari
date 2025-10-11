@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Enter your display name",
       "descriptionPlaceholder": "Tell us about yourself",
       "noBanner": "No Banner",
+      "nowPlaying": "Now playing",
       "profileUpdated": "Profile updated successfully",
       "profileUpdateError": "Failed to update profile",
       "handleHistory": "Handle History",
