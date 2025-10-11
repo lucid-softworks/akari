@@ -92,6 +92,7 @@
     "react-native-video": "^6.16.1",
     "react-native-web": "^0.21.0",
     "react-native-webview": "13.15.0",
+    "teal-api": "*",
     "tenor-api": "*"
   },
   "devDependencies": {

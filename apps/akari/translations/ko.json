@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "표시 이름을 입력하세요",
       "descriptionPlaceholder": "자신에 대해 알려주세요",
       "noBanner": "배너 없음",
+      "nowPlaying": "지금 재생 중",
       "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
       "profileUpdateError": "프로필 업데이트에 실패했습니다",
       "handleHistory": "핸들 변경 기록",

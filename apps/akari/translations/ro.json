@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Introduceți numele afișajului",
       "descriptionPlaceholder": "Spune -ne despre tine",
       "noBanner": "Fără banner",
+      "nowPlaying": "Se redă acum",
       "profileUpdated": "Profilul actualizat cu succes",
       "profileUpdateError": "Nu a reușit să actualizeze profilul. Vă rugăm să încercați din nou.",
       "handleHistory": "Gestionează istoria",

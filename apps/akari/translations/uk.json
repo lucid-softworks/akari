@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Введіть своє відображення",
       "descriptionPlaceholder": "Розкажіть про себе",
       "noBanner": "Немає банера",
+      "nowPlaying": "Зараз відтворюється",
       "profileUpdated": "Профіль успішно оновлений",
       "profileUpdateError": "Не вдалося оновити профіль. Будь ласка, спробуйте ще раз.",
       "handleHistory": "Обробляти історію",

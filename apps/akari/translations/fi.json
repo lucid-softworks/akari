@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Kirjoita näytönimesi",
       "descriptionPlaceholder": "Kerro meille itsestäsi",
       "noBanner": "Ei banderolia",
+      "nowPlaying": "Toistetaan nyt",
       "profileUpdated": "Profiili päivitettiin onnistuneesti",
       "profileUpdateError": "Profiilin päivittäminen epäonnistui. Yritä uudelleen.",
       "handleHistory": "Käsityshistoria",

@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Vnesite ime zaslona",
       "descriptionPlaceholder": "Povej nam o sebi",
       "noBanner": "Brez pasice",
+      "nowPlaying": "Zdaj se predvaja",
       "profileUpdated": "Profil uspešno posodobljen",
       "profileUpdateError": "Ni uspelo posodobiti profila. Poskusite znova.",
       "handleHistory": "Zgodovina",

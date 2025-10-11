@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Entrez votre nom d'affichage",
       "descriptionPlaceholder": "Parlez-nous de vous",
       "noBanner": "Pas de bannière",
+      "nowPlaying": "Lecture en cours",
       "profileUpdated": "Profil mis à jour avec succès",
       "profileUpdateError": "Échec de la mise à jour du profil",
       "handleHistory": "Historique du handle",

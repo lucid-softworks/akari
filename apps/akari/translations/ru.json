@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Введите отображаемое имя",
       "descriptionPlaceholder": "Расскажите о себе",
       "noBanner": "Без баннера",
+      "nowPlaying": "Сейчас играет",
       "profileUpdated": "Профиль успешно обновлен",
       "profileUpdateError": "Не удалось обновить профиль",
       "handleHistory": "История хэндла",

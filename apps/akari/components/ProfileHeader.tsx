@@ -18,6 +18,8 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { searchProfilePosts } from '@/components/profile/profileActions';
+import { useProfileNowPlaying } from '@/hooks/queries/useProfileNowPlaying';
+import { formatRelativeTime } from '@/utils/timeUtils';
 
 type ProfileHeaderProps = {
   profile: {
@@ -74,10 +76,47 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
+  const { data: nowPlaying } = useProfileNowPlaying(profile.did);
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
+
+  const formatPlayedTimestamp = (timestamp: string | undefined) => {
+    if (!timestamp) {
+      return null;
+    }
+
+    const playedAt = new Date(timestamp);
+
+    if (Number.isNaN(playedAt.getTime())) {
+      return null;
+    }
+
+    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+
+    if (Date.now() - playedAt.getTime() > thirtyDaysInMs) {
+      const formatter = new Intl.DateTimeFormat(currentLocale, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+      return formatter.format(playedAt);
+    }
+
+    return formatRelativeTime(playedAt, currentLocale);
+  };
+
+  const artistNames = nowPlaying?.artists
+    ?.map((artist) => artist.artistName)
+    .filter((name): name is string => Boolean(name && name.trim()))
+    .join(', ');
+  const playedTimestamp = formatPlayedTimestamp(nowPlaying?.playedTime);
+  const nowPlayingMetaParts = [artistNames, playedTimestamp].filter((value): value is string => Boolean(value));
+  const nowPlayingAccessibleDescription = [nowPlaying?.trackName, ...nowPlayingMetaParts]
+    .filter((value): value is string => Boolean(value))
+    .join(' • ');
 
   const handleFollow = async () => {
     if (!profile.did) return;
@@ -364,6 +403,28 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           </ThemedText>
         </View>
 
+        {nowPlaying?.trackName && (
+          <View
+            style={styles.nowPlayingContainer}
+            accessible
+            accessibilityRole="text"
+            accessibilityLabel={`${t('profile.nowPlaying')}: ${nowPlayingAccessibleDescription}`}
+          >
+            <IconSymbol name="play.circle.fill" size={20} color="#007AFF" style={styles.nowPlayingIcon} />
+            <View style={styles.nowPlayingTextContainer}>
+              <ThemedText style={styles.nowPlayingLabel}>{t('profile.nowPlaying')}</ThemedText>
+              <ThemedText style={styles.nowPlayingTrack} numberOfLines={1}>
+                {nowPlaying.trackName}
+              </ThemedText>
+              {nowPlayingMetaParts.length > 0 && (
+                <ThemedText style={styles.nowPlayingMeta} numberOfLines={1}>
+                  {nowPlayingMetaParts.join(' • ')}
+                </ThemedText>
+              )}
+            </View>
+          </View>
+        )}
+
         {/* Description */}
         {profile.description && (
           <View style={styles.descriptionContainer}>
@@ -543,6 +604,35 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontWeight: 'bold',
+  },
+  nowPlayingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    marginBottom: 12,
+  },
+  nowPlayingIcon: {
+    marginRight: 12,
+  },
+  nowPlayingTextContainer: {
+    flex: 1,
+  },
+  nowPlayingLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    opacity: 0.7,
+    marginBottom: 2,
+  },
+  nowPlayingTrack: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  nowPlayingMeta: {
+    fontSize: 13,
+    opacity: 0.7,
   },
   description: {
     fontSize: 14,

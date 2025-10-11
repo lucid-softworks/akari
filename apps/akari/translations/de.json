@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "Geben Sie Ihren Anzeigenamen ein",
       "descriptionPlaceholder": "Erzählen Sie uns von sich",
       "noBanner": "Kein Banner",
+      "nowPlaying": "Wird gerade abgespielt",
       "profileUpdated": "Profil erfolgreich aktualisiert",
       "profileUpdateError": "Profil konnte nicht aktualisiert werden",
       "handleHistory": "Handle-Verlauf",

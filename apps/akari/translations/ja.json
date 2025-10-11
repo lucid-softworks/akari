@@ -208,6 +208,7 @@
       "displayNamePlaceholder": "表示名を入力",
       "descriptionPlaceholder": "あなたについて教えてください",
       "noBanner": "バナーなし",
+      "nowPlaying": "再生中",
       "profileUpdated": "プロフィールが正常に更新されました",
       "profileUpdateError": "プロフィールの更新に失敗しました",
       "handleHistory": "ハンドルの履歴",
