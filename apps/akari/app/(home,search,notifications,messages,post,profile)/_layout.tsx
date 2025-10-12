@@ -22,6 +22,16 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
+export const unstable_settings = {
+  initialRouteName: 'index',
+  home: { initialRouteName: 'index' },
+  search: { initialRouteName: 'search' },
+  notifications: { initialRouteName: 'notifications' },
+  messages: { initialRouteName: 'index' },
+  post: { initialRouteName: '[id]' },
+  profile: { initialRouteName: 'index' },
+};
+
 function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
   return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
 }
