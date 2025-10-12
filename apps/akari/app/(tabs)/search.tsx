@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -25,6 +25,86 @@ type SearchResult = {
 
 type SearchTabType = 'all' | 'users' | 'posts';
 
+type SearchListHeaderProps = {
+  query: string;
+  onQueryChange: (value: string) => void;
+  onSearch: () => void;
+  isLoading: boolean;
+  activeTab: SearchTabType;
+  onTabChange: (tab: SearchTabType) => void;
+  showTabs: boolean;
+  topInset: number;
+  backgroundColor: string;
+  borderColor: string;
+  textColor: string;
+  title: string;
+  inputPlaceholder: string;
+  searchLabel: string;
+  searchingLabel: string;
+};
+
+const SearchListHeader = React.memo(
+  ({
+    query,
+    onQueryChange,
+    onSearch,
+    isLoading,
+    activeTab,
+    onTabChange,
+    showTabs,
+    topInset,
+    backgroundColor,
+    borderColor,
+    textColor,
+    title,
+    inputPlaceholder,
+    searchLabel,
+    searchingLabel,
+  }: SearchListHeaderProps) => {
+    return (
+      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}> 
+        <ThemedView style={styles.header}>
+          <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>
+        </ThemedView>
+
+        <ThemedView style={styles.searchContainer}>
+          <TextInput
+            style={[
+              styles.searchInput,
+              {
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                color: textColor,
+              },
+            ]}
+            placeholder={inputPlaceholder}
+            placeholderTextColor="#999999"
+            value={query}
+            onChangeText={onQueryChange}
+            onSubmitEditing={onSearch}
+            returnKeyType="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TouchableOpacity
+            style={[styles.searchButton, { backgroundColor: borderColor }]}
+            onPress={onSearch}
+            disabled={isLoading}
+          >
+            <ThemedText style={styles.searchButtonText}>
+              {isLoading ? searchingLabel : searchLabel}
+            </ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+
+        {showTabs ? <SearchTabs activeTab={activeTab} onTabChange={onTabChange} /> : null}
+      </ThemedView>
+    );
+  },
+);
+
+SearchListHeader.displayName = 'SearchListHeader';
+
 const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
 
 export default function SearchScreen() {
@@ -37,12 +117,12 @@ export default function SearchScreen() {
   const { t } = useTranslation();
 
   // Create scroll to top function
-  const scrollToTop = React.useCallback(() => {
+  const scrollToTop = useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   // Register with the tab scroll registry
-  React.useEffect(() => {
+  useEffect(() => {
     tabScrollRegistry.register('search', scrollToTop);
   }, [scrollToTop]);
 
@@ -107,12 +187,12 @@ export default function SearchScreen() {
     }
   }, [initialQuery]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (query.trim()) {
       setSearchQuery(query.trim());
       Keyboard.dismiss();
     }
-  };
+  }, [query]);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -252,60 +332,39 @@ export default function SearchScreen() {
     }
   };
 
-  const listHeaderComponent = React.useCallback(
+  const shouldShowTabs = searchQuery.length > 0 && allResults.length > 0;
+
+  const listHeaderComponent = useMemo(
     () => (
-      <ThemedView style={[styles.listHeaderContainer, { paddingTop: insets.top }]}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={[styles.title, { color: textColor }]}>{t('navigation.search')}</ThemedText>
-        </ThemedView>
-
-        <ThemedView style={styles.searchContainer}>
-          <TextInput
-            style={[
-              styles.searchInput,
-              {
-                backgroundColor: backgroundColor,
-                borderColor: borderColor,
-                color: textColor,
-              },
-            ]}
-            placeholder={t('search.searchInputPlaceholder')}
-            placeholderTextColor="#999999"
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={handleSearch}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          <TouchableOpacity
-            style={[styles.searchButton, { backgroundColor: borderColor }]}
-            onPress={handleSearch}
-            disabled={isLoading}
-          >
-            <ThemedText style={styles.searchButtonText}>
-              {isLoading ? t('search.searching') : t('common.search')}
-            </ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-
-        {searchQuery && allResults.length > 0 ? (
-          <SearchTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        ) : null}
-      </ThemedView>
+      <SearchListHeader
+        query={query}
+        onQueryChange={setQuery}
+        onSearch={handleSearch}
+        isLoading={isLoading}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        showTabs={shouldShowTabs}
+        topInset={insets.top}
+        backgroundColor={backgroundColor}
+        borderColor={borderColor}
+        textColor={textColor}
+        title={t('navigation.search')}
+        inputPlaceholder={t('search.searchInputPlaceholder')}
+        searchLabel={t('common.search')}
+        searchingLabel={t('search.searching')}
+      />
     ),
     [
       activeTab,
-      allResults.length,
       backgroundColor,
       borderColor,
       handleSearch,
       insets.top,
       isLoading,
       query,
-      searchQuery,
       setActiveTab,
       setQuery,
+      shouldShowTabs,
       t,
       textColor,
     ],
@@ -339,6 +398,7 @@ export default function SearchScreen() {
         }
         estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
         ListHeaderComponent={listHeaderComponent}
+        keyboardShouldPersistTaps="handled"
       />
     </ThemedView>
   );
