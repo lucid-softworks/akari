@@ -28,7 +28,7 @@ export const unstable_settings = {
   search: { initialRouteName: 'index' },
   notifications: { initialRouteName: 'index' },
   messages: { initialRouteName: 'index' },
-  post: { initialRouteName: '[id]' },
+  post: { initialRouteName: 'post' },
   profile: { initialRouteName: 'index' },
 };
 
