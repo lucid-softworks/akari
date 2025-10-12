@@ -25,8 +25,8 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 export const unstable_settings = {
   initialRouteName: 'index',
   home: { initialRouteName: 'index' },
-  search: { initialRouteName: 'search' },
-  notifications: { initialRouteName: 'notifications' },
+  search: { initialRouteName: 'index' },
+  notifications: { initialRouteName: 'index' },
   messages: { initialRouteName: 'index' },
   post: { initialRouteName: '[id]' },
   profile: { initialRouteName: 'index' },
