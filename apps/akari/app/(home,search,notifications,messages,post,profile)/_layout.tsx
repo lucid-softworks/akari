@@ -246,14 +246,15 @@ export default function TabLayout() {
 
   const sharedScreens = (
     <>
-      <Tabs.Screen name="(home)" />
-      <Tabs.Screen name="(search)" />
-      <Tabs.Screen name="(messages)" />
-      <Tabs.Screen name="(notifications)" />
+      <Tabs.Screen name="(home)" options={{ href: '/(home)' }} />
+      <Tabs.Screen name="(search)" options={{ href: '/(search)' }} />
+      <Tabs.Screen name="(messages)" options={{ href: '/(messages)' }} />
+      <Tabs.Screen name="(notifications)" options={{ href: '/(notifications)' }} />
       <Tabs.Screen name="bookmarks" options={{ href: null }} />
       <Tabs.Screen name="post" options={{ href: null }} />
       <Tabs.Screen
         name="(profile)"
+        options={{ href: '/(profile)' }}
         listeners={() => ({
           tabLongPress: (event) => {
             event.preventDefault?.();
