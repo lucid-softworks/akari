@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
-import ConversationScreen from '@/app/(tabs)/messages/[handle]';
+import ConversationScreen from '@/app/(messages)/[handle]';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';

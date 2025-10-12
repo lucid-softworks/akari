@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
-import ProfileScreen from '@/app/(tabs)/profile';
+import ProfileScreen from '@/app/(profile)/index';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -328,7 +328,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('open dropdown'));
     fireEvent.press(getByText('common.search'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(search)?query=from:alice');
     expect(queryByTestId('profile-dropdown')).toBeNull();
 
     const remainingActions = [

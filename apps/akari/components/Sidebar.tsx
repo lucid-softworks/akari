@@ -63,25 +63,35 @@ export function Sidebar() {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(home)' },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: '/(tabs)/notifications',
+        route: '/(notifications)',
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: '/(tabs)/messages',
+        route: '/(messages)',
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(search)' },
+      {
+        id: 'bookmarks',
+        label: 'Bookmarks',
+        icon: 'bookmark.fill',
+        route: '/(home,search,notifications,messages,post,profile)/bookmarks',
+      },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(profile)' },
+      {
+        id: 'settings',
+        label: 'Settings',
+        icon: 'gearshape.fill',
+        route: '/(home,search,notifications,messages,post,profile)/settings',
+      },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -102,8 +112,8 @@ export function Sidebar() {
   };
 
   const isActiveRoute = (item: NavigationItem) => {
-    if (item.route === '/(tabs)') {
-      return pathname === '/(tabs)' || pathname === '/(tabs)/index';
+    if (item.route === '/(home)') {
+      return pathname === '/' || pathname === '/(home)' || pathname === '/(home)/index';
     }
 
     return pathname === item.route;

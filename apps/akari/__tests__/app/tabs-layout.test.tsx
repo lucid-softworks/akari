@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
-import TabLayout from '@/app/(tabs)/_layout';
+import TabLayout from '@/app/(home,search,notifications,messages,post,profile)/_layout';
 import { ActivityIndicator } from 'react-native';
 
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
@@ -22,7 +22,7 @@ jest.mock('expo-router', () => {
   // @ts-ignore
   Tabs.Screen = Screen;
   const Redirect = ({ href }: { href: string }) => <Text>redirect:{href}</Text>;
-  return { Tabs, Redirect };
+  return { Tabs, Redirect, useSegments: jest.fn(() => []) };
 });
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -94,6 +94,18 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
+const mockUseSegments = (require('expo-router').useSegments as jest.Mock);
+
+const TAB_ROUTE_ORDER = [
+  '(home)',
+  '(search)',
+  '(messages)',
+  '(notifications)',
+  'bookmarks',
+  'post',
+  '(profile)',
+  'settings',
+];
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
@@ -147,16 +159,7 @@ describe('TabLayout', () => {
       tabBarStyle: { display: 'none' },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(TAB_ROUTE_ORDER);
   });
 
   it('renders mobile tabs with badges', () => {
@@ -176,16 +179,7 @@ describe('TabLayout', () => {
 
     const state = {
       index: 0,
-      routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
-        { key: 'profile-tab', name: 'profile' },
-        { key: 'settings-tab', name: 'settings' },
-      ],
+      routes: TAB_ROUTE_ORDER.map((name) => ({ key: `${name}-tab`, name })),
     };
 
     render(
@@ -200,16 +194,7 @@ describe('TabLayout', () => {
     expect(mockTabBadge.mock.calls[0][0].count).toBe(2);
     expect(mockTabBadge.mock.calls[1][0].count).toBe(3);
     const names = (TabsModule.Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
-    expect(names).toEqual([
-      'index',
-      'search',
-      'messages',
-      'notifications',
-      'bookmarks',
-      'post',
-      'profile',
-      'settings',
-    ]);
+    expect(names).toEqual(TAB_ROUTE_ORDER);
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
@@ -225,16 +210,7 @@ describe('TabLayout', () => {
     };
     const state = {
       index: 0,
-      routes: [
-        { key: 'index-tab', name: 'index' },
-        { key: 'search-tab', name: 'search' },
-        { key: 'messages-tab', name: 'messages' },
-        { key: 'notifications-tab', name: 'notifications' },
-        { key: 'bookmarks-tab', name: 'bookmarks' },
-        { key: 'post-tab', name: 'post' },
-        { key: 'profile-tab', name: 'profile' },
-        { key: 'settings-tab', name: 'settings' },
-      ],
+      routes: TAB_ROUTE_ORDER.map((name) => ({ key: `${name}-tab`, name })),
     };
 
     render(
@@ -256,7 +232,7 @@ describe('TabLayout', () => {
 
     const TabsModule = require('expo-router');
     const screenCalls = (TabsModule.Tabs.Screen as jest.Mock).mock.calls;
-    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === 'profile');
+    const profileScreenCall = screenCalls.find((call: any[]) => call[0].name === '(profile)');
     expect(profileScreenCall).toBeTruthy();
 
     const listeners = profileScreenCall?.[0].listeners;
@@ -285,16 +261,7 @@ describe('TabLayout', () => {
 describe('HardcodedTabBar interactions', () => {
   const buildState = () => ({
     index: 0,
-    routes: [
-      { key: 'index-tab', name: 'index' },
-      { key: 'search-tab', name: 'search' },
-      { key: 'messages-tab', name: 'messages' },
-      { key: 'notifications-tab', name: 'notifications' },
-      { key: 'bookmarks-tab', name: 'bookmarks' },
-      { key: 'post-tab', name: 'post' },
-      { key: 'profile-tab', name: 'profile' },
-      { key: 'settings-tab', name: 'settings' },
-    ],
+    routes: TAB_ROUTE_ORDER.map((name) => ({ key: `${name}-tab`, name })),
   });
 
   const renderTabBar = () => {
@@ -327,7 +294,7 @@ describe('HardcodedTabBar interactions', () => {
     });
 
     expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
-    expect(mockHandleTabPress).toHaveBeenCalledWith('index');
+    expect(mockHandleTabPress).toHaveBeenCalledWith('home');
     expect(navigation.navigate).not.toHaveBeenCalled();
   });
 
@@ -341,10 +308,10 @@ describe('HardcodedTabBar interactions', () => {
 
     expect(navigation.emit).toHaveBeenCalledWith({
       type: 'tabPress',
-      target: 'search-tab',
+      target: '(search)-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('search');
+    expect(navigation.navigate).toHaveBeenCalledWith('(search)');
     expect(mockHandleTabPress).not.toHaveBeenCalled();
   });
 
@@ -358,7 +325,7 @@ describe('HardcodedTabBar interactions', () => {
 
     expect(navigation.emit).toHaveBeenCalledWith({
       type: 'tabLongPress',
-      target: 'profile-tab',
+      target: '(profile)-tab',
     });
   });
 });

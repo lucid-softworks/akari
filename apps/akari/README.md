@@ -148,7 +148,7 @@ akari-v2/
 │   ├── (auth)/            # Authentication pages
 │   │   ├── signin.tsx     # Sign in page
 │   │   └── signup.tsx     # Sign up page
-│   └── (tabs)/            # Main app tabs
+│   └── (home,search,notifications,messages,post,profile)/   # Main app tabs
 ├── components/             # Reusable components
 ├── utils/                  # Utilities
 │   └── secureStorage.ts   # Secure storage configuration

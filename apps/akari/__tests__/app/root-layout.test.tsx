@@ -103,7 +103,7 @@ describe('RootLayout', () => {
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
-    expect(names).toEqual(['(auth)', '(tabs)', 'debug', '+not-found']);
+    expect(names).toEqual(['(auth)', '(home,search,notifications,messages,post,profile)', 'debug', '+not-found']);
     const themeProps = mockThemeProvider.mock.calls[0][0];
     expect(themeProps.value).toBe(DefaultTheme);
   });

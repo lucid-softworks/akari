@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import { Redirect, Tabs, useSegments } from 'expo-router';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,9 +22,6 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
 function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
   return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
 }
@@ -63,12 +60,21 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
   );
 }
 
-type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
+type HardcodedTabKey = 'home' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
 
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
   avatarUri?: string;
+};
+
+const TAB_ROUTE_NAMES: Record<HardcodedTabKey, string> = {
+  home: '(home)',
+  search: '(search)',
+  messages: '(messages)',
+  notifications: '(notifications)',
+  profile: '(profile)',
+  settings: 'settings',
 };
 
 function HardcodedTabBar({
@@ -86,7 +92,7 @@ function HardcodedTabBar({
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
-  const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
+  const hardcodedTabs: HardcodedTabKey[] = ['home', 'search', 'messages', 'notifications', 'profile', 'settings'];
 
   return (
     <View
@@ -106,7 +112,8 @@ function HardcodedTabBar({
       ) : null}
       <View style={hardcodedTabStyles.content}>
         {hardcodedTabs.map((tabKey) => {
-          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+          const routeName = TAB_ROUTE_NAMES[tabKey];
+          const routeIndex = state.routes.findIndex((route) => route.name === routeName);
           if (routeIndex === -1) {
             return null;
           }
@@ -167,7 +174,7 @@ function HardcodedTabBar({
                 ) : (
                   <TabBarIcon
                     name={
-                      tabKey === 'index'
+                      tabKey === 'home'
                         ? 'house.fill'
                         : tabKey === 'search'
                         ? 'magnifyingglass'
@@ -193,6 +200,9 @@ export default function TabLayout() {
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const segments = useSegments();
+
+  const currentGroup = useMemo(() => segments[0], [segments]);
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -206,7 +216,6 @@ export default function TabLayout() {
     setAccountSwitcherVisible(false);
   }, []);
 
-  // Initialize push notifications
   usePushNotifications();
 
   if (isLoading) {
@@ -223,12 +232,31 @@ export default function TabLayout() {
     );
   }
 
-  // Don't render tabs if not authenticated or still loading
   if (!authStatus?.isAuthenticated) {
     return <Redirect href="/(auth)/signin" />;
   }
 
-  // For large screens, show tabs without the tab bar
+  const sharedScreens = (
+    <>
+      <Tabs.Screen name="(home)" />
+      <Tabs.Screen name="(search)" />
+      <Tabs.Screen name="(messages)" />
+      <Tabs.Screen name="(notifications)" />
+      <Tabs.Screen name="bookmarks" options={{ href: null }} />
+      <Tabs.Screen name="post" options={{ href: null }} />
+      <Tabs.Screen
+        name="(profile)"
+        listeners={() => ({
+          tabLongPress: (event) => {
+            event.preventDefault?.();
+            handleOpenAccountSwitcher();
+          },
+        })}
+      />
+      <Tabs.Screen name="settings" />
+    </>
+  );
+
   if (isLargeScreen) {
     return (
       <ThemedView style={{ flex: 1 }}>
@@ -262,14 +290,7 @@ export default function TabLayout() {
                   tabBarStyle: { display: 'none' },
                 }}
               >
-                <Tabs.Screen name="index" />
-                <Tabs.Screen name="search" />
-                <Tabs.Screen name="messages" />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen name="bookmarks" options={{ href: null }} />
-                <Tabs.Screen name="post" options={{ href: null }} />
-                <Tabs.Screen name="profile" />
-                <Tabs.Screen name="settings" />
+                {sharedScreens}
               </Tabs>
             </View>
           </View>
@@ -278,7 +299,6 @@ export default function TabLayout() {
     );
   }
 
-  // For mobile screens, show the traditional tab bar
   return (
     <>
       <Tabs
@@ -293,73 +313,9 @@ export default function TabLayout() {
             avatarUri={currentAccount?.avatar}
           />
         )}
+        initialRouteName={currentGroup ?? '(home)'}
       >
-        <Tabs.Screen
-          name="index"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="messages"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="message.fill" color={color} />
-                <TabBadge count={unreadMessagesCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="bell.fill" color={color} />
-                <TabBadge count={unreadNotificationsCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            tabBarIcon: ({ color, focused }) => (
-              <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
-            ),
-          }}
-          listeners={() => ({
-            tabLongPress: (event) => {
-              event.preventDefault();
-              handleOpenAccountSwitcher();
-            },
-          })}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-          }}
-        />
+        {sharedScreens}
       </Tabs>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
@@ -398,13 +354,10 @@ const hardcodedTabStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-between',
-    alignSelf: 'stretch',
-    width: '100%',
   },
   tabButton: {
-    marginHorizontal: 4,
-    marginVertical: 0,
-    paddingVertical: 0,
+    flex: 1,
+    alignItems: 'center',
   },
   iconContainer: {
     alignItems: 'center',

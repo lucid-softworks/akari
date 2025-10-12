@@ -9,7 +9,7 @@ This checklist aggregates the TODO comments currently in the Akari app so we can
 - [ ] Integrate the report account alert with the real reporting API.
 - [ ] Export dropdown action handlers here so profile screens reuse them without duplicating stubs.
 
-## Profile screens (`apps/akari/app/(tabs)/profile/[handle].tsx` and `apps/akari/app/(tabs)/profile/index.tsx`)
+## Profile screens (`apps/akari/app/(profile)/[handle].tsx` and `apps/akari/app/(profile)/index.tsx`)
 
 - [ ] Implement the "Search posts" action exposed in the profile dropdown.
 - [ ] Implement the "Add to lists" action exposed in the profile dropdown.

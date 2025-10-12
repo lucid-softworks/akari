@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react-native';
 import React from 'react';
-import MessagesLayout from '@/app/(tabs)/messages/_layout';
+import MessagesLayout from '@/app/(messages)/_layout';
 
 jest.mock('expo-router', () => {
   const React = require('react');

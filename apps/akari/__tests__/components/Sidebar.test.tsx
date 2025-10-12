@@ -114,7 +114,7 @@ describe('Sidebar', () => {
     signInMutateAsync = jest.fn();
 
     mockUseRouter.mockReturnValue({ push, replace });
-    mockUsePathname.mockReturnValue('/(tabs)');
+    mockUsePathname.mockReturnValue('/');
     mockUseUnreadMessagesCount.mockReturnValue({ data: 1 });
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 2 });
     mockUseAccounts.mockReturnValue({ data: accounts });
@@ -156,7 +156,7 @@ describe('Sidebar', () => {
     );
 
     fireEvent.press(getByText('Bookmarks'));
-    expect(push).toHaveBeenCalledWith('/(tabs)/bookmarks');
+    expect(push).toHaveBeenCalledWith('/(home,search,notifications,messages,post,profile)/bookmarks');
   });
 
   it('toggles the collapsed state of the sidebar', () => {
@@ -194,7 +194,7 @@ describe('Sidebar', () => {
   });
 
   it('marks the active navigation item based on the current path', () => {
-    mockUsePathname.mockReturnValue('/(tabs)/notifications');
+    mockUsePathname.mockReturnValue('/(notifications)');
 
     const { getByLabelText } = render(
       <DialogProvider>

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
-import ProfileScreen from '@/app/(tabs)/profile/[handle]';
+import ProfileScreen from '@/app/(profile)/[handle]';
 import { useLocalSearchParams } from 'expo-router';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -239,7 +239,7 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('search posts'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(search)?query=from:alice');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));

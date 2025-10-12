@@ -23,7 +23,7 @@ export function SettingsHeader({ title }: SettingsHeaderProps) {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(tabs)/settings');
+      router.replace('/(home,search,notifications,messages,post,profile)/settings');
     }
   }, []);
 

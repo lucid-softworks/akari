@@ -102,7 +102,12 @@ export default function AuthScreen() {
         buttons: [
           {
             text: t('common.ok'),
-            onPress: () => router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)'),
+            onPress: () =>
+              router.replace(
+                currentAccount
+                  ? '/(home,search,notifications,messages,post,profile)/settings'
+                  : '/(home)'
+              ),
           },
         ],
       });
@@ -168,7 +173,7 @@ export default function AuthScreen() {
         buttons: [
           {
             text: t('common.ok'),
-            onPress: () => router.replace('/(tabs)'),
+            onPress: () => router.replace('/(home)'),
           },
         ],
       });

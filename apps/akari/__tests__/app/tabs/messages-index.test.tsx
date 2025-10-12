@@ -2,7 +2,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
-import MessagesScreen from '@/app/(tabs)/messages';
+import MessagesScreen from '@/app/(messages)/index';
 import { router } from 'expo-router';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -125,10 +125,10 @@ describe('MessagesScreen', () => {
     expect(getByText('common.viewPendingChats')).toBeTruthy();
 
     fireEvent.press(getByText('common.viewPendingChats'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(messages)/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(messages)/alice');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
     expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/profile/alice');

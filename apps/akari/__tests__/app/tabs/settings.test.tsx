@@ -1,8 +1,8 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
-import SettingsScreen from '@/app/(tabs)/settings/index';
-import AccountSettingsScreen from '@/app/(tabs)/settings/account';
+import SettingsScreen from '@/app/settings/index';
+import AccountSettingsScreen from '@/app/settings/account';
 import { DialogProvider } from '@/contexts/DialogContext';
 import { Account } from '@/types/account';
 import { router, usePathname } from 'expo-router';
@@ -37,7 +37,9 @@ jest.mock('expo-image', () => {
 jest.mock('expo-router', () => {
   const push = jest.fn();
   const replace = jest.fn();
-  const usePathname = jest.fn(() => '/(tabs)/settings/account');
+  const usePathname = jest.fn(
+    () => '/(home,search,notifications,messages,post,profile)/settings/account',
+  );
 
   return {
     router: { push, replace },
@@ -132,7 +134,9 @@ beforeEach(() => {
   mockUseAccountProfiles.mockReturnValue({ data: {} });
   mockUseAccounts.mockReturnValue({ data: [] });
   mockUseCurrentAccount.mockReturnValue({ data: null });
-  mockUsePathname.mockReturnValue('/(tabs)/settings/account');
+    mockUsePathname.mockReturnValue(
+      '/(home,search,notifications,messages,post,profile)/settings/account',
+    );
   mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseRemoveAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseWipeAllData.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue(undefined) });
@@ -159,10 +163,14 @@ describe('Settings index screen', () => {
     expect(getByText('@user1')).toBeTruthy();
 
     fireEvent.press(getByText('common.switchAccount'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
+    expect(mockRouterPush).toHaveBeenCalledWith(
+      '/(home,search,notifications,messages,post,profile)/settings/account',
+    );
 
     fireEvent.press(getByText('settings.account'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/settings/account');
+    expect(mockRouterPush).toHaveBeenLastCalledWith(
+      '/(home,search,notifications,messages,post,profile)/settings/account',
+    );
   });
 
   it('opens the add account panel', () => {
@@ -236,7 +244,7 @@ describe('AccountSettingsScreen', () => {
     removeButton?.onPress?.();
 
     expect(mutate).toHaveBeenCalledWith(account.did);
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/(home)');
   });
 
   it('shows error alert when logout fails', async () => {

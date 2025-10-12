@@ -88,7 +88,10 @@ function AppProviders({ colorScheme }: ProvidersProps) {
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack>
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(home,search,notifications,messages,post,profile)"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="debug" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>

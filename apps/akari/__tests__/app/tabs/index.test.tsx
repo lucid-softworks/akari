@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import HomeScreen from '@/app/(tabs)/index';
+import HomeScreen from '@/app/(home)/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
@@ -155,7 +155,7 @@ describe('HomeScreen', () => {
     fireEvent.press(getByText('Feed Two'));
     expect(mutate).toHaveBeenCalledWith('feed2');
 
-    expect(tabScrollRegistry.register).toHaveBeenCalledWith('index', expect.any(Function));
+    expect(tabScrollRegistry.register).toHaveBeenCalledWith('home', expect.any(Function));
   });
 
   it('prompts to select a feed when none is chosen', () => {
