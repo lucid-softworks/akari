@@ -78,13 +78,13 @@ type HardcodedTabBarProps = BottomTabBarProps & {
   avatarUri?: string;
 };
 
-const TAB_ROUTE_NAMES: Record<HardcodedTabKey, string> = {
-  home: '(home)',
-  search: '(search)',
-  messages: '(messages)',
-  notifications: '(notifications)',
-  profile: '(profile)',
-  settings: 'settings',
+const TAB_ROUTE_NAMES: Record<HardcodedTabKey, string[]> = {
+  home: ['(home)', 'index'],
+  search: ['(search)', 'search'],
+  messages: ['(messages)', 'messages'],
+  notifications: ['(notifications)', 'notifications'],
+  profile: ['(profile)', 'profile'],
+  settings: ['settings'],
 };
 
 function HardcodedTabBar({
@@ -122,8 +122,10 @@ function HardcodedTabBar({
       ) : null}
       <View style={hardcodedTabStyles.content}>
         {hardcodedTabs.map((tabKey) => {
-          const routeName = TAB_ROUTE_NAMES[tabKey];
-          const routeIndex = state.routes.findIndex((route) => route.name === routeName);
+          const routeNameCandidates = TAB_ROUTE_NAMES[tabKey];
+          const routeIndex = state.routes.findIndex((route) =>
+            routeNameCandidates.includes(route.name),
+          );
           if (routeIndex === -1) {
             return null;
           }
@@ -212,7 +214,41 @@ export default function TabLayout() {
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const segments = useSegments();
 
-  const currentGroup = useMemo(() => segments[0], [segments]);
+  const currentGroup = useMemo(() => {
+    if (segments.length > 1) {
+      return segments[1];
+    }
+
+    return segments[0];
+  }, [segments]);
+
+  const initialRouteName = useMemo(() => {
+    switch (currentGroup) {
+      case '(post)':
+      case 'post':
+        return 'post';
+      case '(home)':
+      case '(search)':
+      case '(notifications)':
+      case '(messages)':
+      case '(profile)':
+      case 'bookmarks':
+      case 'settings':
+        return currentGroup;
+      case 'index':
+        return '(home)';
+      case 'search':
+        return '(search)';
+      case 'notifications':
+        return '(notifications)';
+      case 'messages':
+        return '(messages)';
+      case 'profile':
+        return '(profile)';
+      default:
+        return undefined;
+    }
+  }, [currentGroup]);
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -323,7 +359,7 @@ export default function TabLayout() {
             avatarUri={currentAccount?.avatar}
           />
         )}
-        initialRouteName={currentGroup ?? '(home)'}
+        initialRouteName={initialRouteName}
       >
         {sharedScreens}
       </Tabs>
