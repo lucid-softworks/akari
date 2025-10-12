@@ -1,5 +1,5 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Redirect, Tabs } from 'expo-router';
+import { Redirect, Tabs, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
@@ -72,6 +72,15 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
 
 type HardcodedTabKey = 'home' | 'search' | 'messages' | 'notifications' | 'profile' | 'settings';
 
+const HARDCODED_TAB_KEYS: HardcodedTabKey[] = [
+  'home',
+  'search',
+  'messages',
+  'notifications',
+  'profile',
+  'settings',
+];
+
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
@@ -87,6 +96,29 @@ const TAB_ROUTE_NAMES: Record<HardcodedTabKey, string[]> = {
   settings: ['settings'],
 };
 
+const TAB_PATHS: Record<HardcodedTabKey, string> = {
+  home: '/',
+  search: '/search',
+  messages: '/messages',
+  notifications: '/notifications',
+  profile: '/profile',
+  settings: '/settings',
+};
+
+const resolveTabKeyForRoute = (routeName?: string): HardcodedTabKey | null => {
+  if (!routeName) {
+    return null;
+  }
+
+  for (const tabKey of HARDCODED_TAB_KEYS) {
+    if (TAB_ROUTE_NAMES[tabKey].includes(routeName)) {
+      return tabKey;
+    }
+  }
+
+  return null;
+};
+
 function HardcodedTabBar({
   state,
   navigation,
@@ -94,6 +126,7 @@ function HardcodedTabBar({
   unreadNotificationsCount,
   avatarUri,
 }: HardcodedTabBarProps) {
+  const router = useRouter();
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
@@ -102,7 +135,23 @@ function HardcodedTabBar({
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
-  const hardcodedTabs: HardcodedTabKey[] = ['home', 'search', 'messages', 'notifications', 'profile', 'settings'];
+  const [fallbackTabKey, setFallbackTabKey] = React.useState<HardcodedTabKey>(() => {
+    const initialRoute = state.routes[state.index];
+    return resolveTabKeyForRoute(initialRoute?.name) ?? 'home';
+  });
+
+  React.useEffect(() => {
+    const focusedRoute = state.routes[state.index];
+    const resolvedTabKey = resolveTabKeyForRoute(focusedRoute?.name);
+
+    if (resolvedTabKey) {
+      setFallbackTabKey(resolvedTabKey);
+    }
+  }, [state]);
+
+  const currentRoute = state.routes[state.index];
+  const currentRouteTabKey = resolveTabKeyForRoute(currentRoute?.name);
+  const activeTabKey = currentRouteTabKey ?? fallbackTabKey;
 
   return (
     <View
@@ -121,7 +170,7 @@ function HardcodedTabBar({
         </View>
       ) : null}
       <View style={hardcodedTabStyles.content}>
-        {hardcodedTabs.map((tabKey) => {
+        {HARDCODED_TAB_KEYS.map((tabKey) => {
           const routeNameCandidates = TAB_ROUTE_NAMES[tabKey];
           const routeIndex = state.routes.findIndex((route) =>
             routeNameCandidates.includes(route.name),
@@ -131,8 +180,9 @@ function HardcodedTabBar({
           }
 
           const route = state.routes[routeIndex];
-          const isFocused = state.index === routeIndex;
-          const color = isFocused ? accentColor : inactiveTint;
+          const isCurrentRoute = state.index === routeIndex;
+          const isVisuallyFocused = activeTabKey === tabKey;
+          const color = isVisuallyFocused ? accentColor : inactiveTint;
           const badgeCount =
             tabKey === 'messages'
               ? unreadMessagesCount
@@ -147,16 +197,21 @@ function HardcodedTabBar({
               canPreventDefault: true,
             });
 
-            if (isFocused) {
+            if (isCurrentRoute) {
               tabScrollRegistry.handleTabPress(tabKey);
             }
 
-            if (!isFocused && !event.defaultPrevented) {
+            if (!isCurrentRoute && !event.defaultPrevented) {
               navigation.navigate({
                 name: route.name,
                 params: route.params,
                 merge: true,
               } as never);
+
+              const targetPath = TAB_PATHS[tabKey];
+              if (Platform.OS === 'web' && targetPath) {
+                router.replace(targetPath);
+              }
             }
           };
 
@@ -171,7 +226,7 @@ function HardcodedTabBar({
             <HapticTab
               key={tabKey}
               accessibilityRole="button"
-              accessibilityState={{ selected: isFocused }}
+              accessibilityState={{ selected: isVisuallyFocused }}
               onPress={handlePress}
               onLongPress={handleLongPress}
               style={hardcodedTabStyles.tabButton}
@@ -186,7 +241,7 @@ function HardcodedTabBar({
                     <TabBadge count={badgeCount} size="small" />
                   </View>
                 ) : tabKey === 'profile' ? (
-                  <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
+                  <ProfileTabIcon color={color} focused={isVisuallyFocused} avatarUri={avatarUri} />
                 ) : (
                   <TabBarIcon
                     name={

@@ -14,6 +14,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
+const mockRouter = { replace: jest.fn(), push: jest.fn() };
+
 jest.mock('expo-router', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -22,7 +24,9 @@ jest.mock('expo-router', () => {
   // @ts-ignore
   Tabs.Screen = Screen;
   const Redirect = ({ href }: { href: string }) => <Text>redirect:{href}</Text>;
-  return { Tabs, Redirect, useSegments: jest.fn(() => []) };
+  const useSegments = jest.fn(() => []);
+  const useRouter = jest.fn(() => mockRouter);
+  return { Tabs, Redirect, useSegments, useRouter };
 });
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -114,6 +118,8 @@ const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockRouter.replace.mockClear();
+  mockRouter.push.mockClear();
   mockUseCurrentAccount.mockReturnValue({
     data: {
       did: 'did:plc:test',
@@ -264,7 +270,12 @@ describe('HardcodedTabBar interactions', () => {
     routes: TAB_ROUTE_ORDER.map((name) => ({ key: `${name}-tab`, name })),
   });
 
-  const renderTabBar = () => {
+  const renderTabBar = (
+    stateOverride?: {
+      index: number;
+      routes: { key: string; name: string; params?: Record<string, unknown> }[];
+    },
+  ) => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
@@ -273,7 +284,7 @@ describe('HardcodedTabBar interactions', () => {
       emit: jest.fn(() => ({ defaultPrevented: false })),
       navigate: jest.fn(),
     };
-    const state = buildState();
+    const state = stateOverride ?? buildState();
     render(
       tabBar({
         state,
@@ -296,23 +307,34 @@ describe('HardcodedTabBar interactions', () => {
     expect(mockHandleTabPress).toHaveBeenCalledTimes(1);
     expect(mockHandleTabPress).toHaveBeenCalledWith('home');
     expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(mockRouter.replace).not.toHaveBeenCalled();
   });
 
   it('navigates to a different tab when pressed', () => {
     const { navigation } = renderTabBar();
     const onPress = mockHapticTab.mock.calls[1][0].onPress as () => void;
+    const { Platform } = require('react-native');
+    const originalPlatform = Platform.OS;
+    Platform.OS = 'web';
 
     act(() => {
       onPress();
     });
+
+    Platform.OS = originalPlatform;
 
     expect(navigation.emit).toHaveBeenCalledWith({
       type: 'tabPress',
       target: '(search)-tab',
       canPreventDefault: true,
     });
-    expect(navigation.navigate).toHaveBeenCalledWith('(search)');
+    expect(navigation.navigate).toHaveBeenCalledWith({
+      name: '(search)',
+      params: undefined,
+      merge: true,
+    });
     expect(mockHandleTabPress).not.toHaveBeenCalled();
+    expect(mockRouter.replace).toHaveBeenCalledWith('/search');
   });
 
   it('emits tabLongPress events', () => {
@@ -327,6 +349,21 @@ describe('HardcodedTabBar interactions', () => {
       type: 'tabLongPress',
       target: '(profile)-tab',
     });
+  });
+
+  it('keeps the previous tab highlighted when viewing shared post routes', () => {
+    mockHapticTab.mockClear();
+    const state = {
+      index: TAB_ROUTE_ORDER.indexOf('post'),
+      routes: TAB_ROUTE_ORDER.map((name) => ({ key: `${name}-tab`, name })),
+    };
+    renderTabBar(state);
+
+    const homeTabCall = mockHapticTab.mock.calls[0]?.[0];
+    const searchTabCall = mockHapticTab.mock.calls[1]?.[0];
+
+    expect(homeTabCall?.accessibilityState?.selected).toBe(true);
+    expect(searchTabCall?.accessibilityState?.selected).toBe(false);
   });
 });
 
