@@ -152,7 +152,11 @@ function HardcodedTabBar({
             }
 
             if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
+              navigation.navigate({
+                name: route.name,
+                params: route.params,
+                merge: true,
+              } as never);
             }
           };
 
