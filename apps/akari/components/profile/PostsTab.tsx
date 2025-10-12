@@ -1,11 +1,11 @@
-import { router } from 'expo-router';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -18,6 +18,7 @@ const ESTIMATED_POST_CARD_HEIGHT = 320;
 
 export function PostsTab({ handle }: PostsTabProps) {
   const { t } = useTranslation();
+  const { navigateToPost } = useTabNavigation();
   const { data: posts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorPosts(handle);
 
   const handleLoadMore = () => {
@@ -62,7 +63,7 @@ export function PostsTab({ handle }: PostsTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          navigateToPost(item.uri, item.author.handle);
         }}
       />
     );

@@ -1,13 +1,13 @@
+import { Image } from 'expo-image';
 import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { DialogModal } from '@/components/ui/DialogModal';
-import { useDialogManager } from '@/contexts/DialogContext';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -33,12 +33,7 @@ const palette = {
   trendingAccent: '#38BDF8',
 } as const;
 
-const TRENDING_TAGS = [
-  '#BlueskyMigration',
-  '#DecentralizedSocial',
-  '#ATProtocol',
-  '#OpenSource',
-] as const;
+const TRENDING_TAGS = ['#BlueskyMigration', '#DecentralizedSocial', '#ATProtocol', '#OpenSource'] as const;
 
 type NavigationItem = {
   id: 'timeline' | 'notifications' | 'messages' | 'discover' | 'bookmarks' | 'profile' | 'settings';
@@ -63,25 +58,25 @@ export function Sidebar() {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
+      { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/' },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell.fill',
-        route: '/(tabs)/notifications',
+        route: '/notifications',
         badge: unreadNotificationsCount,
       },
       {
         id: 'messages',
         label: 'Messages',
         icon: 'message.fill',
-        route: '/(tabs)/messages',
+        route: '/messages',
         badge: unreadMessagesCount,
       },
-      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/(tabs)/search' },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
-      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/(tabs)/settings' },
+      { id: 'discover', label: 'Discover', icon: 'magnifyingglass', route: '/search' },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/bookmarks' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/profile' },
+      { id: 'settings', label: 'Settings', icon: 'gearshape.fill', route: '/settings' },
     ],
     [unreadMessagesCount, unreadNotificationsCount],
   );
@@ -102,8 +97,8 @@ export function Sidebar() {
   };
 
   const isActiveRoute = (item: NavigationItem) => {
-    if (item.route === '/(tabs)') {
-      return pathname === '/(tabs)' || pathname === '/(tabs)/index';
+    if (item.route === '/') {
+      return pathname === '/' || pathname === '/index';
     }
 
     return pathname === item.route;
@@ -151,7 +146,10 @@ export function Sidebar() {
     }
 
     return (
-      <View style={[styles.badge, { backgroundColor: isActive ? palette.activeCount : palette.countAccent }]} pointerEvents="none">
+      <View
+        style={[styles.badge, { backgroundColor: isActive ? palette.activeCount : palette.countAccent }]}
+        pointerEvents="none"
+      >
         <Text style={styles.badgeText}>{count}</Text>
       </View>
     );
@@ -159,13 +157,7 @@ export function Sidebar() {
 
   const renderNavigationIcon = (item: NavigationItem, isActive: boolean) => {
     if (item.id !== 'profile') {
-      return (
-        <IconSymbol
-          name={item.icon}
-          size={18}
-          color={isActive ? palette.highlight : palette.textSecondary}
-        />
-      );
+      return <IconSymbol name={item.icon} size={18} color={isActive ? palette.highlight : palette.textSecondary} />;
     }
 
     const avatarUri = activeAccount?.avatar;
@@ -213,14 +205,10 @@ export function Sidebar() {
               <Text style={styles.accountName} numberOfLines={1}>
                 {activeAccount?.displayName ?? activeAccount?.handle ?? 'Add account'}
               </Text>
-              {activeAccount?.handle ? (
-                <Text style={styles.accountHandle}>@{activeAccount.handle}</Text>
-              ) : null}
+              {activeAccount?.handle ? <Text style={styles.accountHandle}>@{activeAccount.handle}</Text> : null}
             </View>
           ) : null}
-          {!collapsed ? (
-            <IconSymbol name="chevron.down" size={16} color={palette.textSecondary} />
-          ) : null}
+          {!collapsed ? <IconSymbol name="chevron.down" size={16} color={palette.textSecondary} /> : null}
         </Pressable>
       </View>
 
@@ -239,11 +227,7 @@ export function Sidebar() {
                   styles.navItem,
                   collapsed && styles.navItemCollapsed,
                   {
-                    backgroundColor: active
-                      ? palette.activeBackground
-                      : pressed
-                      ? palette.hover
-                      : 'transparent',
+                    backgroundColor: active ? palette.activeBackground : pressed ? palette.hover : 'transparent',
                   },
                 ]}
               >
@@ -285,10 +269,7 @@ export function Sidebar() {
                   key={tag}
                   accessibilityRole="button"
                   accessibilityLabel={tag}
-                  style={({ pressed }) => [
-                    styles.trendingItem,
-                    pressed && { backgroundColor: palette.hover },
-                  ]}
+                  style={({ pressed }) => [styles.trendingItem, pressed && { backgroundColor: palette.hover }]}
                 >
                   <Text style={styles.trendingText}>{tag}</Text>
                 </Pressable>
@@ -303,10 +284,7 @@ export function Sidebar() {
           accessibilityRole="button"
           accessibilityLabel={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           onPress={() => setCollapsed((value) => !value)}
-          style={({ pressed }) => [
-            styles.collapseButton,
-            pressed && { backgroundColor: palette.hover },
-          ]}
+          style={({ pressed }) => [styles.collapseButton, pressed && { backgroundColor: palette.hover }]}
         >
           {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
           <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
@@ -314,15 +292,10 @@ export function Sidebar() {
       </View>
 
       {showAccountSelector ? (
-        <View
-          style={[
-            styles.accountSelector,
-            collapsed && styles.accountSelectorCollapsed,
-          ]}
-        >
+        <View style={[styles.accountSelector, collapsed && styles.accountSelectorCollapsed]}>
           <View style={styles.accountSelectorList}>
-              {accounts.map((account) => {
-                const selected = account.did === activeAccount?.did;
+            {accounts.map((account) => {
+              const selected = account.did === activeAccount?.did;
               return (
                 <Pressable
                   key={account.did}
@@ -346,9 +319,7 @@ export function Sidebar() {
                       <Text style={styles.accountDisplay} numberOfLines={1}>
                         {account.displayName ?? account.handle}
                       </Text>
-                      {account.handle ? (
-                        <Text style={styles.accountUsername}>@{account.handle}</Text>
-                      ) : null}
+                      {account.handle ? <Text style={styles.accountUsername}>@{account.handle}</Text> : null}
                     </View>
                   ) : null}
                   {selected ? <View style={styles.accountActiveDot} /> : null}
@@ -361,17 +332,13 @@ export function Sidebar() {
               accessibilityRole="button"
               accessibilityLabel="Add account"
               onPress={handleAddAccount}
-              style={({ pressed }) => [
-                styles.addAccountButton,
-                pressed && { backgroundColor: palette.hover },
-              ]}
+              style={({ pressed }) => [styles.addAccountButton, pressed && { backgroundColor: palette.hover }]}
             >
               <Text style={styles.addAccountText}>+ Add account</Text>
             </Pressable>
           </View>
         </View>
       ) : null}
-
     </View>
   );
 }

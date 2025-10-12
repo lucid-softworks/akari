@@ -1,77 +1,59 @@
-import '@/utils/intl-polyfills'; // Initialize Intl polyfills
+import '@/utils/intl-polyfills';
 
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { QueryClient, useIsRestoring } from '@tanstack/react-query';
-import {
-  PersistQueryClientProvider,
-  type PersistQueryClientProviderProps,
-  type Persister,
-} from '@tanstack/react-query-persist-client';
+import { QueryClient, QueryClientProvider, useIsRestoring } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
-import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { Platform, View } from 'react-native';
 
+import { AppTabBar } from '@/components/AppTabBar';
+import { Sidebar } from '@/components/Sidebar';
 import { DialogProvider } from '@/contexts/DialogContext';
-import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
-import { REACT_QUERY_CACHE_STORAGE_KEY, storage } from '@/utils/secureStorage';
-import '@/utils/i18n';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Platform } from 'react-native';
-import type { Query } from '@tanstack/query-core';
+import { TabProvider } from '@/contexts/TabContext';
+import { ToastProvider } from '@/contexts/ToastContext';
+import { useResponsive } from '@/hooks/useResponsive';
+import { useTabRouteTracker } from '@/hooks/useTabRouteTracker';
 
-const REACT_QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
-const REACT_QUERY_CACHE_BUSTER = 'akari@1';
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
+// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: REACT_QUERY_CACHE_MAX_AGE,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
     },
   },
 });
 
-const queryCachePersister: Persister = {
-  persistClient: async (client) => {
-    try {
-      storage.setItem(REACT_QUERY_CACHE_STORAGE_KEY, client);
-    } catch (error) {
-      console.error('Failed to persist React Query cache', error);
-    }
-  },
-  restoreClient: async () => {
-    try {
-      const cache = storage.getItem(REACT_QUERY_CACHE_STORAGE_KEY);
-      return cache ?? undefined;
-    } catch (error) {
-      console.error('Failed to restore React Query cache', error);
-      storage.removeItem(REACT_QUERY_CACHE_STORAGE_KEY);
-      return undefined;
-    }
-  },
-  removeClient: async () => {
-    storage.removeItem(REACT_QUERY_CACHE_STORAGE_KEY);
-  },
-};
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
 
-const persistOptions = {
-  persister: queryCachePersister,
-  maxAge: REACT_QUERY_CACHE_MAX_AGE,
-  buster: REACT_QUERY_CACHE_BUSTER,
-  dehydrateOptions: {
-    shouldDehydrateMutation: () => false,
-    shouldDehydrateQuery: (query: Query) => query.meta?.persist !== false,
-  },
-} satisfies PersistQueryClientProviderProps['persistOptions'];
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return <RootLayoutNav colorScheme={colorScheme || 'light'} />;
+}
 
 type ProvidersProps = {
-  colorScheme: ReturnType<typeof useColorScheme>;
+  colorScheme: 'light' | 'dark';
 };
 
 function AppProviders({ colorScheme }: ProvidersProps) {
@@ -82,51 +64,83 @@ function AppProviders({ colorScheme }: ProvidersProps) {
   }
 
   return (
-    <LanguageProvider>
-      <ToastProvider>
-        <DialogProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="debug" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </DialogProvider>
-      </ToastProvider>
-    </LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <ToastProvider>
+          <DialogProvider>
+            <TabProvider>
+              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <AppWithTabBar />
+                <StatusBar style="auto" />
+              </ThemeProvider>
+            </TabProvider>
+          </DialogProvider>
+        </ToastProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
   );
 }
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+function AppWithTabBar() {
+  const { isLargeScreen } = useResponsive();
 
-  useEffect(() => {
-    setupBackgroundUpdates().catch((error) => {
-      console.error('Failed to configure background updates:', error);
-    });
-  }, []);
+  // Track route changes to update tab state
+  useTabRouteTracker();
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+  if (isLargeScreen) {
+    return (
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <Sidebar />
+        <View style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="search" options={{ headerShown: false }} />
+            <Stack.Screen name="messages" options={{ headerShown: false }} />
+            <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen name="profile" options={{ headerShown: false }} />
+            <Stack.Screen name="post" options={{ headerShown: false }} />
+            <Stack.Screen name="bookmarks" options={{ headerShown: false }} />
+            <Stack.Screen name="settings" options={{ headerShown: false }} />
+            <Stack.Screen name="debug" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </View>
+      </View>
+    );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-          <AppProviders colorScheme={colorScheme} />
-          {Platform.OS === 'web' ? (
-            <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
-          ) : null}
-        </PersistQueryClientProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <>
+      <Stack
+        screenOptions={{
+          // Disable animations globally on mobile to prevent between-tab animations
+          animation: Platform.OS === 'web' ? 'default' : 'none',
+          // Set animation duration to 0 on mobile
+          animationDuration: Platform.OS === 'web' ? undefined : 0,
+          // Enable gesture navigation for swipe-back
+          gestureEnabled: true,
+          // Use card presentation for proper navigation stack
+          presentation: 'card',
+        }}
+      >
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="search" options={{ headerShown: false }} />
+        <Stack.Screen name="messages" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
+        <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="post" options={{ headerShown: false }} />
+        <Stack.Screen name="bookmarks" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="debug" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <AppTabBar />
+    </>
   );
+}
+
+function RootLayoutNav({ colorScheme }: ProvidersProps) {
+  return <AppProviders colorScheme={colorScheme} />;
 }

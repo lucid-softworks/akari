@@ -1,7 +1,8 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -10,7 +11,6 @@ import { useParentPost, usePost, useRootPost } from '@/hooks/queries/usePost';
 import { usePostThread } from '@/hooks/queries/usePostThread';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 export const renderComment = (
@@ -40,9 +40,7 @@ export const renderComment = (
             displayName: post.reply.parent.author?.displayName,
           },
           text:
-            typeof post.reply.parent.record === 'object' &&
-            post.reply.parent.record &&
-            'text' in post.reply.parent.record
+            typeof post.reply.parent.record === 'object' && post.reply.parent.record && 'text' in post.reply.parent.record
               ? (post.reply.parent.record as { text: string }).text
               : undefined,
         }
@@ -54,9 +52,7 @@ export const renderComment = (
         post={{
           id: post.uri,
           text:
-            typeof post.record === 'object' &&
-            post.record &&
-            'text' in post.record
+            typeof post.record === 'object' && post.record && 'text' in post.record
               ? (post.record as { text: string }).text
               : undefined,
           author: {
@@ -92,9 +88,7 @@ export const renderComment = (
       post={{
         id: postItem.uri,
         text:
-          typeof postItem.record === 'object' &&
-          postItem.record &&
-          'text' in postItem.record
+          typeof postItem.record === 'object' && postItem.record && 'text' in postItem.record
             ? (postItem.record as { text: string }).text
             : undefined,
         author: {
@@ -119,15 +113,18 @@ export const renderComment = (
   );
 };
 
-export default function PostDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+type PostDetailScreenProps = {
+  postId: string;
+};
+
+export default function PostDetailScreen({ postId }: PostDetailScreenProps) {
   const scrollViewRef = useRef<ScrollView>(null);
   const mainPostRef = useRef<View>(null);
   const { t } = useTranslation();
 
-  const { data: post, isLoading: postLoading, error: postError } = usePost(id);
+  const { data: post, isLoading: postLoading, error: postError } = usePost(postId);
 
-  const { data: threadData, isLoading: threadLoading } = usePostThread(id);
+  const { data: threadData, isLoading: threadLoading } = usePostThread(postId);
 
   const comments = threadData?.thread?.replies || [];
 
@@ -267,116 +264,92 @@ export default function PostDetailScreen() {
 
   if (postLoading || threadLoading || parentLoading || rootLoading) {
     return (
-      <>
-        <Stack.Screen
-          options={{
-            title: t('navigation.post'),
-            headerBackButtonDisplayMode: 'minimal',
-          }}
-        />
-        <ThemedView style={styles.container}>
-          <PostDetailSkeleton />
-        </ThemedView>
-      </>
+      <ThemedView style={styles.container}>
+        <PostDetailSkeleton />
+      </ThemedView>
     );
   }
 
   if (postError || !post) {
     return (
-      <>
-        <Stack.Screen
-          options={{
-            title: t('navigation.post'),
-            headerBackButtonDisplayMode: 'minimal',
-          }}
-        />
-        <ThemedView style={styles.container}>
-          <ThemedText style={styles.errorText}>{t('post.postNotFound')}</ThemedText>
-        </ThemedView>
-      </>
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.errorText}>{t('post.postNotFound')}</ThemedText>
+      </ThemedView>
     );
   }
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: t('navigation.post'),
-          headerBackButtonDisplayMode: 'minimal',
-        }}
-      />
-      <ThemedView style={styles.container}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Thread Context - Root Post (if this is a reply to a reply) */}
-          {renderGrandparentPost()}
+    <ThemedView style={styles.container}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Thread Context - Root Post (if this is a reply to a reply) */}
+        {renderGrandparentPost()}
 
-          {/* Thread Context - Parent Post */}
-          {renderParentPost()}
+        {/* Thread Context - Parent Post */}
+        {renderParentPost()}
 
-          {/* Main Post (the reply you're viewing) */}
-          <View ref={mainPostRef}>
-            <PostCard
-              post={{
-                id: mainPost?.uri || '',
-                text:
-                  typeof mainPost?.record === 'object' && mainPost?.record && 'text' in mainPost.record
-                    ? (mainPost.record as { text: string }).text
-                    : undefined,
-                author: {
-                  did: mainPost?.author?.did || '',
-                  handle: mainPost?.author?.handle || '',
-                  displayName: mainPost?.author?.displayName,
-                  avatar: mainPost?.author?.avatar,
-                },
-                createdAt: formatRelativeTime(mainPost?.indexedAt || new Date()),
-                likeCount: mainPost?.likeCount || 0,
-                commentCount: mainPost?.replyCount || 0,
-                repostCount: mainPost?.repostCount || 0,
-                embed: mainPost?.embed,
-                embeds: mainPost?.embeds,
-                labels: mainPost?.labels,
-                viewer: mainPost?.viewer,
-                facets: (mainPost?.record as any)?.facets,
-                uri: mainPost?.uri,
-                cid: mainPost?.cid,
-              }}
-            />
-          </View>
+        {/* Main Post (the reply you're viewing) */}
+        <View ref={mainPostRef}>
+          <PostCard
+            post={{
+              id: mainPost?.uri || '',
+              text:
+                typeof mainPost?.record === 'object' && mainPost?.record && 'text' in mainPost.record
+                  ? (mainPost.record as { text: string }).text
+                  : undefined,
+              author: {
+                did: mainPost?.author?.did || '',
+                handle: mainPost?.author?.handle || '',
+                displayName: mainPost?.author?.displayName,
+                avatar: mainPost?.author?.avatar,
+              },
+              createdAt: formatRelativeTime(mainPost?.indexedAt || new Date()),
+              likeCount: mainPost?.likeCount || 0,
+              commentCount: mainPost?.replyCount || 0,
+              repostCount: mainPost?.repostCount || 0,
+              embed: mainPost?.embed,
+              embeds: mainPost?.embeds,
+              labels: mainPost?.labels,
+              viewer: mainPost?.viewer,
+              facets: (mainPost?.record as any)?.facets,
+              uri: mainPost?.uri,
+              cid: mainPost?.cid,
+            }}
+          />
+        </View>
 
-          {/* Comments Section */}
-          <ThemedView style={[styles.commentsSection, { borderBottomColor: borderColor }]}>
-            <ThemedText style={styles.commentsTitle}>{t('post.comments', { count: comments?.length || 0 })}</ThemedText>
+        {/* Comments Section */}
+        <ThemedView style={[styles.commentsSection, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.commentsTitle}>{t('post.comments', { count: comments?.length || 0 })}</ThemedText>
+        </ThemedView>
+
+        {/* Comments List */}
+        {comments.length > 0 ? (
+          comments
+            .filter(
+              (
+                item,
+              ): item is
+                | BlueskyFeedItem
+                | {
+                    uri: string;
+                    notFound?: boolean;
+                    blocked?: boolean;
+                    author?: BlueskyPostView['author'];
+                  } => item !== null && !('notFound' in item) && !('blocked' in item),
+            )
+            .map(renderComment)
+        ) : (
+          <ThemedView style={styles.emptyComments}>
+            <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
           </ThemedView>
-
-          {/* Comments List */}
-          {comments.length > 0 ? (
-            comments
-              .filter(
-                (
-                  item,
-                ): item is
-                  | BlueskyFeedItem
-                  | {
-                      uri: string;
-                      notFound?: boolean;
-                      blocked?: boolean;
-                      author?: BlueskyPostView['author'];
-                    } => item !== null && !('notFound' in item) && !('blocked' in item),
-              )
-              .map(renderComment)
-          ) : (
-            <ThemedView style={styles.emptyComments}>
-              <ThemedText style={styles.emptyCommentsText}>{t('post.noCommentsYet')}</ThemedText>
-            </ThemedView>
-          )}
-        </ScrollView>
-      </ThemedView>
-    </>
+        )}
+      </ScrollView>
+    </ThemedView>
   );
 }
 

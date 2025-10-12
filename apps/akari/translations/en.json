@@ -98,6 +98,7 @@
       "appPasswordInstructions": "1. Go to Bluesky web app\n2. Navigate to Settings → App Passwords\n3. Create a new app password\n4. Use that password here"
     },
     "navigation": {
+      "home": "Home",
       "search": "Search",
       "notifications": "Notifications",
       "post": "Post",

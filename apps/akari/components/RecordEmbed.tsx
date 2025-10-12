@@ -1,3 +1,4 @@
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -33,6 +34,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     [key: string]: { width: number; height: number };
   }>({});
   const { t } = useTranslation();
+  const { navigateToPost } = useTabNavigation();
   const textColor = useThemeColor(
     {
       light: '#000000',
@@ -59,7 +61,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const handlePress = () => {
     // Navigate to the quoted post
-    router.push(`/post/${encodeURIComponent(embed.record.uri)}`);
+    navigateToPost(embed.record.uri, embed.record.author?.handle);
   };
 
   const handleAuthorPress = () => {

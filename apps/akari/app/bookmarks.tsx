@@ -5,10 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
-import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -29,16 +29,7 @@ export default function BookmarksScreen() {
     tabScrollRegistry.register('bookmarks', scrollToTop);
   }, []);
 
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-    isRefetching,
-  } = useBookmarks(20);
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(20);
 
   const bookmarks = data?.pages.flatMap((page) => page.bookmarks) ?? [];
 
@@ -106,10 +97,7 @@ export default function BookmarksScreen() {
         keyExtractor={(item) => `${item.subject.uri}-${item.createdAt}`}
         renderItem={renderBookmark}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.listContent,
-          bookmarks.length === 0 ? styles.emptyListContent : null,
-        ]}
+        contentContainerStyle={[styles.listContent, bookmarks.length === 0 ? styles.emptyListContent : null]}
         refreshing={isRefetching}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}

@@ -3,14 +3,14 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
+import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import {
   createNotificationChannels,
   DEFAULT_NOTIFICATION_CHANNELS,
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
-import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 export type PushNotificationState = {
   expoPushToken: string | null;

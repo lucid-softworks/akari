@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,11 +8,12 @@ import { Labels } from '@/components/Labels';
 
 import { PostCard } from '@/components/PostCard';
 import { SearchTabs } from '@/components/SearchTabs';
+import { SearchResultSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
-import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
+import { useTabNavigation } from '@/hooks/useTabNavigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -62,7 +63,7 @@ const SearchListHeader = React.memo(
     searchingLabel,
   }: SearchListHeaderProps) => {
     return (
-      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}> 
+      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}>
         <ThemedView style={styles.header}>
           <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>
         </ThemedView>
@@ -91,9 +92,7 @@ const SearchListHeader = React.memo(
             onPress={onSearch}
             disabled={isLoading}
           >
-            <ThemedText style={styles.searchButtonText}>
-              {isLoading ? searchingLabel : searchLabel}
-            </ThemedText>
+            <ThemedText style={styles.searchButtonText}>{isLoading ? searchingLabel : searchLabel}</ThemedText>
           </TouchableOpacity>
         </ThemedView>
 
@@ -113,6 +112,7 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState(initialQuery || '');
   const [activeTab, setActiveTab] = useState<SearchTabType>('all');
   const insets = useSafeAreaInsets();
+  const { navigateToPost } = useTabNavigation();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
 
@@ -283,7 +283,7 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          navigateToPost(post.uri, post.author.handle);
         }}
       />
     );
