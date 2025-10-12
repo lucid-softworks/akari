@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Redirect, Tabs, useSegments } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
+import { Redirect, Tabs } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -212,44 +212,6 @@ export default function TabLayout() {
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const segments = useSegments();
-
-  const currentGroup = useMemo(() => {
-    if (segments.length > 1) {
-      return segments[1];
-    }
-
-    return segments[0];
-  }, [segments]);
-
-  const initialRouteName = useMemo(() => {
-    switch (currentGroup) {
-      case '(post)':
-      case 'post':
-        return 'post';
-      case '(home)':
-      case '(search)':
-      case '(notifications)':
-      case '(messages)':
-      case '(profile)':
-      case 'bookmarks':
-      case 'settings':
-        return currentGroup;
-      case 'index':
-        return '(home)';
-      case 'search':
-        return '(search)';
-      case 'notifications':
-        return '(notifications)';
-      case 'messages':
-        return '(messages)';
-      case 'profile':
-        return '(profile)';
-      default:
-        return undefined;
-    }
-  }, [currentGroup]);
-
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
       return;
@@ -359,7 +321,6 @@ export default function TabLayout() {
             avatarUri={currentAccount?.avatar}
           />
         )}
-        initialRouteName={initialRouteName}
       >
         {sharedScreens}
       </Tabs>
