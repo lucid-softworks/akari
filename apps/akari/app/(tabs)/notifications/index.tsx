@@ -1,21 +1,23 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BlueskyEmbed } from '@/bluesky-api';
+import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { TabBar } from '@/components/TabBar';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { BlueskyEmbed } from '@/bluesky-api';
+import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -362,6 +364,9 @@ export default function NotificationsScreen() {
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const { data: currentAccount } = useCurrentAccount();
+  const navigateToPost = useNavigateToPost();
+
   const tabs = useMemo(
     () => [
       { key: 'all' as const, label: t('notifications.all') },
@@ -374,11 +379,11 @@ export default function NotificationsScreen() {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     tabScrollRegistry.register('notifications', scrollToTop);
   }, [scrollToTop]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     scrollToTop();
   }, [activeTab, scrollToTop]);
 
@@ -404,9 +409,7 @@ export default function NotificationsScreen() {
   const groupedNotifications = useMemo(() => groupNotifications(notifications), [notifications]);
   const filteredNotifications = useMemo(() => {
     if (activeTab === 'mentions') {
-      return groupedNotifications.filter(
-        (notification) => notification.type === 'reply' || notification.type === 'quote',
-      );
+      return groupedNotifications.filter((notification) => notification.type === 'reply' || notification.type === 'quote');
     }
 
     return groupedNotifications;
@@ -417,8 +420,12 @@ export default function NotificationsScreen() {
       // Navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
     } else if (notification.subject) {
-      // Navigate to the post
-      router.push(`/post/${encodeURIComponent(notification.subject)}`);
+      // Navigate to the post in current tab context
+      const postUri = notification.subject;
+      const uriParts = postUri.split('/');
+      const rKey = uriParts[uriParts.length - 1];
+      const actor = uriParts[2]; // Extract actor from AT URI (at://actor/collection/rkey)
+      navigateToPost({ actor, rKey });
     } else {
       // For notifications without a subject, navigate to the first author's profile
       router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
@@ -438,19 +445,25 @@ export default function NotificationsScreen() {
 
   const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
 
-  const renderEmptyState = useCallback(() => (
-    <View style={styles.emptyState}>
-      <ThemedText style={styles.emptyStateTitle}>{t('notifications.noNotificationsYet')}</ThemedText>
-      <ThemedText style={styles.emptyStateSubtitle}>{t('notifications.notificationsWillAppearHere')}</ThemedText>
-    </View>
-  ), [t]);
+  const renderEmptyState = useCallback(
+    () => (
+      <View style={styles.emptyState}>
+        <ThemedText style={styles.emptyStateTitle}>{t('notifications.noNotificationsYet')}</ThemedText>
+        <ThemedText style={styles.emptyStateSubtitle}>{t('notifications.notificationsWillAppearHere')}</ThemedText>
+      </View>
+    ),
+    [t],
+  );
 
-  const renderErrorState = useCallback(() => (
-    <View style={styles.emptyState}>
-      <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
-      <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
-    </View>
-  ), [error?.message, t]);
+  const renderErrorState = useCallback(
+    () => (
+      <View style={styles.emptyState}>
+        <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
+        <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
+      </View>
+    ),
+    [error?.message, t],
+  );
 
   const listEmptyComponent = useMemo(() => {
     if (isLoading) {
@@ -490,6 +503,8 @@ export default function NotificationsScreen() {
     setRefreshing(true);
     try {
       await refetch();
+    } catch (error) {
+      console.error('[NotificationsScreen] Refresh failed', error);
     } finally {
       setRefreshing(false);
     }
@@ -497,12 +512,7 @@ export default function NotificationsScreen() {
 
   const listHeaderComponent = useCallback(
     () => (
-      <ThemedView
-        style={[
-          styles.headerContainer,
-          { paddingTop: isLargeScreen ? 0 : insets.top },
-        ]}
-      >
+      <ThemedView style={[styles.headerContainer, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
         <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
         </ThemedView>

@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,13 +8,14 @@ import { Labels } from '@/components/Labels';
 
 import { PostCard } from '@/components/PostCard';
 import { SearchTabs } from '@/components/SearchTabs';
+import { SearchResultSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
-import { SearchResultSkeleton } from '@/components/skeletons';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -62,7 +63,7 @@ const SearchListHeader = React.memo(
     searchingLabel,
   }: SearchListHeaderProps) => {
     return (
-      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}> 
+      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}>
         <ThemedView style={styles.header}>
           <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>
         </ThemedView>
@@ -91,9 +92,7 @@ const SearchListHeader = React.memo(
             onPress={onSearch}
             disabled={isLoading}
           >
-            <ThemedText style={styles.searchButtonText}>
-              {isLoading ? searchingLabel : searchLabel}
-            </ThemedText>
+            <ThemedText style={styles.searchButtonText}>{isLoading ? searchingLabel : searchLabel}</ThemedText>
           </TouchableOpacity>
         </ThemedView>
 
@@ -115,6 +114,7 @@ export default function SearchScreen() {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
+  const navigateToPost = useNavigateToPost();
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
@@ -213,7 +213,7 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push('/profile/' + encodeURIComponent(profile.handle))}
+        onPress={() => router.push(`/profile/${encodeURIComponent(profile.handle)}`)}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>
@@ -283,7 +283,10 @@ export default function SearchScreen() {
           cid: post.cid,
         }}
         onPress={() => {
-          router.push('/post/' + encodeURIComponent(post.uri));
+          // Navigate to post in current tab context
+          const uriParts = post.uri.split('/');
+          const rKey = uriParts[uriParts.length - 1];
+          navigateToPost({ actor: post.author.handle, rKey });
         }}
       />
     );

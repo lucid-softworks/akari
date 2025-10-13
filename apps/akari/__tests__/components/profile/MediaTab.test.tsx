@@ -11,7 +11,10 @@ jest.mock('@/hooks/queries/useAuthorMedia');
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/profile'),
+}));
 jest.mock('@/components/PostCard', () => ({ PostCard: jest.fn(() => null) }));
 jest.mock('@/components/skeletons', () => ({ FeedSkeleton: jest.fn(() => null) }));
 jest.mock('@/hooks/useThemeColor', () => ({ useThemeColor: () => '#000' }));
@@ -115,7 +118,7 @@ describe('MediaTab', () => {
     expect(PostCardMock).toHaveBeenCalledTimes(1);
     const press = PostCardMock.mock.calls[0][0].onPress;
     press();
-    expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://post1'));
+    expect(router.push).toHaveBeenCalledWith('/profile/user1/post/post1');
   });
 
   it('formats reply data and uses unknown handle when missing', () => {

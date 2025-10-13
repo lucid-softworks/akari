@@ -1,6 +1,6 @@
+import * as Clipboard from 'expo-clipboard';
 import React, { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -12,22 +12,23 @@ import { LikesTab } from '@/components/profile/LikesTab';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
-import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { ReposTab } from '@/components/profile/ReposTab';
+import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
 import { VideosTab } from '@/components/profile/VideosTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
+import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { showAlert } from '@/utils/alert';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProfileTabType } from '@/types/profile';
 
 export default function ProfileScreen() {
-  const { data: currentAccount } = useCurrentAccount();
+  const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -46,9 +47,18 @@ export default function ProfileScreen() {
     tabScrollRegistry.register('profile', scrollToTop);
   }, []);
 
-  const { data: profile } = useProfile(currentAccount?.handle);
+  const { data: profile, isLoading: isProfileLoading } = useProfile(currentAccount?.handle);
 
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+
+  // Show skeleton while loading current account or profile data
+  if (isCurrentAccountLoading || isProfileLoading) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        <ProfileHeaderSkeleton />
+      </ThemedView>
+    );
+  }
 
   const handleDropdownToggle = (isOpen: boolean) => {
     if (isOpen && dropdownRef.current) {

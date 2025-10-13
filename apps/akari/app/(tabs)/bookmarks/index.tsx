@@ -1,16 +1,16 @@
-import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
-import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -19,6 +19,7 @@ const ESTIMATED_POST_CARD_HEIGHT = 320;
 export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const navigateToPost = useNavigateToPost();
   const flatListRef = useRef<VirtualizedListHandle<BlueskyBookmark>>(null);
 
   const scrollToTop = () => {
@@ -29,16 +30,7 @@ export default function BookmarksScreen() {
     tabScrollRegistry.register('bookmarks', scrollToTop);
   }, []);
 
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-    isRefetching,
-  } = useBookmarks(20);
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(20);
 
   const bookmarks = data?.pages.flatMap((page) => page.bookmarks) ?? [];
 
@@ -91,7 +83,10 @@ export default function BookmarksScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            // Navigate to post in current tab context
+            const uriParts = post.uri.split('/');
+            const rKey = uriParts[uriParts.length - 1];
+            navigateToPost({ actor: post.author.handle, rKey });
           }}
         />
       </View>
@@ -106,10 +101,7 @@ export default function BookmarksScreen() {
         keyExtractor={(item) => `${item.subject.uri}-${item.createdAt}`}
         renderItem={renderBookmark}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.listContent,
-          bookmarks.length === 0 ? styles.emptyListContent : null,
-        ]}
+        contentContainerStyle={[styles.listContent, bookmarks.length === 0 ? styles.emptyListContent : null]}
         refreshing={isRefetching}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}

@@ -1,6 +1,6 @@
+import { BlueskyApi } from '@/bluesky-api';
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
-import { BlueskyApi } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from './useCurrentAccount';
 import { useJwtToken } from './useJwtToken';
@@ -59,7 +59,8 @@ export function useAuthStatus() {
         return { isAuthenticated: false };
       }
     },
-    staleTime: 0, // Always check auth status
+    staleTime: 2 * 60 * 1000, // 2 minutes - don't check too frequently
+    gcTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
   });
 }

@@ -12,7 +12,10 @@ import { formatRelativeTime } from '@/utils/timeUtils';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ 
+  router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/bookmarks'),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -157,7 +160,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/post/at%3A%2F%2Fexample.com%2Fpost%2F1');
+    expect(router.push).toHaveBeenCalledWith('/bookmarks/user-profile/alice/post/1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

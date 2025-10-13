@@ -1,7 +1,7 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { Image } from 'expo-image';
 import { Redirect, Tabs } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Image } from 'expo-image';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -115,11 +115,7 @@ function HardcodedTabBar({
           const isFocused = state.index === routeIndex;
           const color = isFocused ? accentColor : inactiveTint;
           const badgeCount =
-            tabKey === 'messages'
-              ? unreadMessagesCount
-              : tabKey === 'notifications'
-              ? unreadNotificationsCount
-              : 0;
+            tabKey === 'messages' ? unreadMessagesCount : tabKey === 'notifications' ? unreadNotificationsCount : 0;
 
           const handlePress = () => {
             const event = navigation.emit({
@@ -156,23 +152,14 @@ function HardcodedTabBar({
               <View style={hardcodedTabStyles.iconContainer}>
                 {tabKey === 'messages' || tabKey === 'notifications' ? (
                   <View style={hardcodedTabStyles.badgeWrapper}>
-                    <TabBarIcon
-                      name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'}
-                      color={color}
-                    />
+                    <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
                     <TabBadge count={badgeCount} size="small" />
                   </View>
                 ) : tabKey === 'profile' ? (
                   <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
                 ) : (
                   <TabBarIcon
-                    name={
-                      tabKey === 'index'
-                        ? 'house.fill'
-                        : tabKey === 'search'
-                        ? 'magnifyingglass'
-                        : 'gearshape.fill'
-                    }
+                    name={tabKey === 'index' ? 'house.fill' : tabKey === 'search' ? 'magnifyingglass' : 'gearshape.fill'}
                     color={color}
                   />
                 )}

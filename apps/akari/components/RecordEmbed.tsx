@@ -14,6 +14,7 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type RecordEmbedProps = {
@@ -57,9 +58,17 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     'background',
   );
 
+  const navigateToPost = useNavigateToPost();
+
   const handlePress = () => {
-    // Navigate to the quoted post
-    router.push(`/post/${encodeURIComponent(embed.record.uri)}`);
+    // Navigate to the quoted post in the current tab
+    const actor = embed.record.author?.handle;
+
+    if (actor) {
+      const uriParts = embed.record.uri.split('/');
+      const rKey = uriParts[uriParts.length - 1];
+      navigateToPost({ actor, rKey });
+    }
   };
 
   const handleAuthorPress = () => {

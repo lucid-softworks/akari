@@ -1,5 +1,4 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import { router } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,20 +20,28 @@ import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
-type FeedListItem =
-  | { type: 'empty'; state: 'select' | 'loading' | 'empty' }
-  | { type: 'post'; item: BlueskyFeedItem };
+type FeedListItem = { type: 'empty'; state: 'select' | 'loading' | 'empty' } | { type: 'post'; item: BlueskyFeedItem };
 
 export default function HomeScreen() {
   const { t } = useTranslation();
+  const navigateToPost = useNavigateToPost();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
+
+  // Console logging for debugging
+  console.log('[HomeScreen] Component rendered', {
+    refreshing,
+    showPostComposer,
+    isLargeScreen,
+    timestamp: new Date().toISOString(),
+  });
 
   const { data: currentAccount } = useCurrentAccount();
 
@@ -115,6 +122,10 @@ export default function HomeScreen() {
   // Handle feed selection with scroll to top
   const handleFeedSelection = useCallback(
     (feedUri: string) => {
+      console.log('[HomeScreen] Feed selection changed', {
+        feedUri,
+        timestamp: new Date().toISOString(),
+      });
       setSelectedFeedMutation.mutate(feedUri);
       scrollToTop();
     },
@@ -162,6 +173,17 @@ export default function HomeScreen() {
     return feedData?.pages.flatMap((page) => page.feed) ?? [];
   }, [feedData, selectedFeed, timelineData]);
 
+  // Log feed data
+  console.log('[HomeScreen] Feed data', {
+    selectedFeed,
+    allPostsCount: allPosts.length,
+    feedLoading,
+    timelineLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    timestamp: new Date().toISOString(),
+  });
+
   const feedItems = useMemo<FeedListItem[]>(() => {
     if (!selectedFeed) {
       return [{ type: 'empty', state: 'select' }];
@@ -183,12 +205,7 @@ export default function HomeScreen() {
   );
   const listHeaderComponent = useCallback(
     () => (
-      <ThemedView
-        style={[
-          styles.listHeaderContainer,
-          { paddingTop: isLargeScreen ? 0 : insets.top },
-        ]}
-      >
+      <ThemedView style={[styles.listHeaderContainer, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
         <ThemedView style={styles.listHeaderContent}>
           <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
         </ThemedView>
@@ -254,7 +271,10 @@ export default function HomeScreen() {
             cid: post.cid,
           }}
           onPress={() => {
-            router.push(`/post/${encodeURIComponent(post.uri)}`);
+            // Navigate to the post in current tab context
+            const uriParts = post.uri.split('/');
+            const rKey = uriParts[uriParts.length - 1];
+            navigateToPost({ actor: post.author.handle, rKey });
           }}
         />
       );

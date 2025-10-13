@@ -1,13 +1,13 @@
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type VideosTabProps = {
@@ -19,6 +19,7 @@ const ESTIMATED_VIDEO_POST_CARD_HEIGHT = 360;
 export function VideosTab({ handle }: VideosTabProps) {
   const { t } = useTranslation();
   const { data: videos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorVideos(handle);
+  const navigateToPost = useNavigateToPost();
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -62,7 +63,10 @@ export function VideosTab({ handle }: VideosTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          // Navigate to post in current tab context
+          const uriParts = item.uri.split('/');
+          const rKey = uriParts[uriParts.length - 1];
+          navigateToPost({ actor: item.author.handle, rKey });
         }}
       />
     );
