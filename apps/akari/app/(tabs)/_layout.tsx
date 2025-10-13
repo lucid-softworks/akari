@@ -248,6 +248,7 @@ export default function TabLayout() {
                   headerShown: false,
                   tabBarStyle: { display: 'none' },
                 }}
+                backBehavior={Platform.OS === 'web' ? 'history' : undefined}
               >
                 <Tabs.Screen name="index" />
                 <Tabs.Screen name="search" />
