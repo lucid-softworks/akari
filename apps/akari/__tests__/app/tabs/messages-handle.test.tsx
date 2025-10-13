@@ -255,7 +255,7 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
 
     fireEvent.press(getByText('@alice'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/alice');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
 
     fireEvent.press(getByText('chevron.left'));
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

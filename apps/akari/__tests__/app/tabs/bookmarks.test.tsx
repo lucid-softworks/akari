@@ -160,7 +160,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/bookmarks/user-profile/alice/post/1');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice/post/1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

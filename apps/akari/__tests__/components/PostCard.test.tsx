@@ -1,3 +1,14 @@
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import { TouchableOpacity } from 'react-native';
+
+import { PostCard } from '@/components/PostCard';
+import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
+import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
+import { useLiveNow } from '@/hooks/queries/useLiveNow';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { router } from 'expo-router';
 
 const actualReact = jest.requireActual('react');
 
@@ -10,18 +21,6 @@ jest.mock('react', () => {
     useState,
   };
 });
-
-import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
-
-import { PostCard } from '@/components/PostCard';
-import { useLikePost } from '@/hooks/mutations/useLikePost';
-import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
-import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
-import { useLiveNow } from '@/hooks/queries/useLiveNow';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
 
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/usePostTranslation');
@@ -113,11 +112,9 @@ describe('PostCard', () => {
       availableLocales: ['en'],
     });
     mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
-    mutateAsyncMock = jest
-      .fn()
-      .mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
-        translatedText: `translated-${targetLanguage}`,
-      }));
+    mutateAsyncMock = jest.fn().mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
+      translatedText: `translated-${targetLanguage}`,
+    }));
     mockUsePostTranslation.mockReturnValue({
       mutateAsync: mutateAsyncMock,
       isPending: false,
@@ -140,7 +137,8 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
   });
 
   it('navigates to profile when avatar pressed', () => {
@@ -148,7 +146,8 @@ describe('PostCard', () => {
     const { getByRole } = render(<PostCard post={basePost} />);
     const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
     fireEvent.press(avatarButton);
-    expect(router.push).toHaveBeenCalledWith('/profile/alice');
+    // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
   });
 
   it('likes a post when not previously liked', () => {
@@ -215,9 +214,7 @@ describe('PostCard', () => {
         mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
         const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-        const translateOption = await waitFor(() =>
-          getByRole('menuitem', { name: 'post.actions.translate' }),
-        );
+        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
         expect(translateOption.props.accessibilityState?.disabled).toBe(false);
 
         fireEvent.press(translateOption);
@@ -242,9 +239,7 @@ describe('PostCard', () => {
         mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
         const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-        const translateOption = await waitFor(() =>
-          getByRole('menuitem', { name: 'post.actions.translate' }),
-        );
+        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
         fireEvent.press(translateOption);
 
         await waitFor(() => {
@@ -278,9 +273,7 @@ describe('PostCard', () => {
 
         const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-        const translateOption = await waitFor(() =>
-          getByRole('menuitem', { name: 'post.actions.translate' }),
-        );
+        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
         fireEvent.press(translateOption);
 
         await waitFor(() => {
@@ -300,16 +293,13 @@ describe('PostCard', () => {
 
         const { getByRole } = render(<PostCard post={postWithoutText} />);
 
-        const translateOption = await waitFor(() =>
-          getByRole('menuitem', { name: 'post.actions.translate' }),
-        );
+        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
         expect(translateOption.props.accessibilityState?.disabled).toBe(true);
       } finally {
         restoreUseState();
       }
     });
   });
-
 
   it('shows and hides reply composer', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
@@ -672,4 +662,3 @@ describe('PostCard', () => {
     expect(ImageMock.mock.calls.length).toBe(1);
   });
 });
-

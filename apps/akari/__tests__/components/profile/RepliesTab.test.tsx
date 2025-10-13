@@ -89,7 +89,7 @@ describe('RepliesTab', () => {
 
     const { getByText } = render(<RepliesTab handle="alice" />);
     fireEvent.press(getByText('Hello world'));
-    expect(mockPush).toHaveBeenCalledWith(`/profile/user/post/1`);
+    expect(mockPush).toHaveBeenCalledWith(`/(tabs)/index/user-profile/user/post/1`);
   });
 
   it('fetches more replies on end reached', () => {

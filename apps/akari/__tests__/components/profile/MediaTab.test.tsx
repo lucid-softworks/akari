@@ -118,7 +118,7 @@ describe('MediaTab', () => {
     expect(PostCardMock).toHaveBeenCalledTimes(1);
     const press = PostCardMock.mock.calls[0][0].onPress;
     press();
-    expect(router.push).toHaveBeenCalledWith('/profile/user1/post/post1');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/user1/post/post1');
   });
 
   it('formats reply data and uses unknown handle when missing', () => {
