@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -35,6 +34,7 @@ import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
+import { useNavigateToProfile } from '@/utils/navigation';
 
 type PostCardProps = {
   post: {
@@ -172,6 +172,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
   const { t, currentLocale } = useTranslation();
   const likeMutation = useLikePost();
   const translationMutation = usePostTranslation();
+  const navigateToProfile = useNavigateToProfile();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const menuButtonRef = useRef<TouchableOpacity | null>(null);
@@ -332,10 +333,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
     }
   }, [currentLocale, hasUserSelectedLanguage, languages, selectedLanguage]);
 
-  const languageNameMap = useMemo(
-    () => new Map(languages.map((language) => [language.code, language.name])),
-    [languages],
-  );
+  const languageNameMap = useMemo(() => new Map(languages.map((language) => [language.code, language.name])), [languages]);
 
   const selectedLanguageName = languageNameMap.get(selectedLanguage) ?? selectedLanguage.toUpperCase();
 
@@ -470,9 +468,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           console.warn('Failed to translate post', error);
         }
 
-        setTranslationError(
-          errorMessage ? `${t('post.translation.error')} (${errorMessage})` : t('post.translation.error'),
-        );
+        setTranslationError(errorMessage ? `${t('post.translation.error')} (${errorMessage})` : t('post.translation.error'));
       }
     },
     [post.text, t, translationMutation],
@@ -589,67 +585,66 @@ export function PostCard({ post, onPress }: PostCardProps) {
   );
 
   const handleProfilePress = () => {
-    router.push(`/profile/${encodeURIComponent(post.author.handle)}`);
+    navigateToProfile({ actor: post.author.handle });
   };
 
-  const livePreview = showLivePreview && liveStreamInfo
-    ? (
-        <View
-          style={styles.livePreviewContainer}
-          onPointerEnter={handleAvatarPointerEnter}
-          onPointerLeave={handleAvatarPointerLeave}
+  const livePreview =
+    showLivePreview && liveStreamInfo ? (
+      <View
+        style={styles.livePreviewContainer}
+        onPointerEnter={handleAvatarPointerEnter}
+        onPointerLeave={handleAvatarPointerLeave}
+      >
+        <ThemedView
+          style={[styles.livePreviewCard, { backgroundColor: menuBackgroundColor, borderColor }]}
+          accessibilityRole="menu"
         >
-          <ThemedView
-            style={[styles.livePreviewCard, { backgroundColor: menuBackgroundColor, borderColor }]}
-            accessibilityRole="menu"
-          >
-            <View style={styles.livePreviewHeader}>
-              <View style={styles.livePreviewIndicator} />
-              <ThemedText style={styles.livePreviewIndicatorLabel}>{t('common.live')}</ThemedText>
-            </View>
-            {liveStreamInfo.thumbnail && (
-              <Image
-                source={{ uri: liveStreamInfo.thumbnail }}
-                style={styles.livePreviewThumbnail}
-                contentFit="cover"
-                placeholder={require('@/assets/images/partial-react-logo.png')}
-              />
-            )}
-            {liveStreamInfo.title && (
-              <ThemedText style={styles.livePreviewTitle} numberOfLines={2}>
-                {liveStreamInfo.title}
-              </ThemedText>
-            )}
-            {liveStreamInfo.description && (
-              <ThemedText style={styles.livePreviewDescription} numberOfLines={2}>
-                {liveStreamInfo.description}
-              </ThemedText>
-            )}
-            <ThemedText style={styles.livePreviewDomain}>{liveStreamInfo.domain}</ThemedText>
-            <View style={styles.livePreviewActions}>
-              <TouchableOpacity
-                style={styles.livePreviewPrimaryButton}
-                onPress={handleWatchLive}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                accessibilityLabel={t('common.watchNow')}
-              >
-                <ThemedText style={styles.livePreviewPrimaryButtonText}>{t('common.watchNow')}</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.livePreviewSecondaryButton, { borderColor }]}
-                onPress={handleProfilePress}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                accessibilityLabel={t('common.openProfile')}
-              >
-                <ThemedText style={styles.livePreviewSecondaryButtonText}>{t('common.openProfile')}</ThemedText>
-              </TouchableOpacity>
-            </View>
-          </ThemedView>
-        </View>
-      )
-    : null;
+          <View style={styles.livePreviewHeader}>
+            <View style={styles.livePreviewIndicator} />
+            <ThemedText style={styles.livePreviewIndicatorLabel}>{t('common.live')}</ThemedText>
+          </View>
+          {liveStreamInfo.thumbnail && (
+            <Image
+              source={{ uri: liveStreamInfo.thumbnail }}
+              style={styles.livePreviewThumbnail}
+              contentFit="cover"
+              placeholder={require('@/assets/images/partial-react-logo.png')}
+            />
+          )}
+          {liveStreamInfo.title && (
+            <ThemedText style={styles.livePreviewTitle} numberOfLines={2}>
+              {liveStreamInfo.title}
+            </ThemedText>
+          )}
+          {liveStreamInfo.description && (
+            <ThemedText style={styles.livePreviewDescription} numberOfLines={2}>
+              {liveStreamInfo.description}
+            </ThemedText>
+          )}
+          <ThemedText style={styles.livePreviewDomain}>{liveStreamInfo.domain}</ThemedText>
+          <View style={styles.livePreviewActions}>
+            <TouchableOpacity
+              style={styles.livePreviewPrimaryButton}
+              onPress={handleWatchLive}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.watchNow')}
+            >
+              <ThemedText style={styles.livePreviewPrimaryButtonText}>{t('common.watchNow')}</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.livePreviewSecondaryButton, { borderColor }]}
+              onPress={handleProfilePress}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.openProfile')}
+            >
+              <ThemedText style={styles.livePreviewSecondaryButtonText}>{t('common.openProfile')}</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </ThemedView>
+      </View>
+    ) : null;
 
   const handleLikePress = () => {
     if (!post.uri || !post.cid) return;
@@ -1101,9 +1096,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
         <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
 
         {isTranslationVisible && (
-          <ThemedView
-            style={[styles.translationContainer, { backgroundColor: translationBackgroundColor, borderColor }]}
-          >
+          <ThemedView style={[styles.translationContainer, { backgroundColor: translationBackgroundColor, borderColor }]}>
             <View style={styles.translationHeader}>
               <ThemedText style={styles.translationTitle}>{t('post.translation.title')}</ThemedText>
               <TouchableOpacity
@@ -1112,9 +1105,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
                 accessibilityLabel={t('post.translation.hide')}
                 activeOpacity={0.6}
               >
-                <ThemedText style={[styles.translationHide, { color: iconColor }]}>
-                  {t('post.translation.hide')}
-                </ThemedText>
+                <ThemedText style={[styles.translationHide, { color: iconColor }]}>{t('post.translation.hide')}</ThemedText>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -1232,11 +1223,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
           onPress={handleLikePress}
           activeOpacity={0.7}
           accessibilityRole="button"
-          accessibilityLabel={
-            post.viewer?.like
-              ? `Unlike post by ${authorName}`
-              : `Like post by ${authorName}`
-          }
+          accessibilityLabel={post.viewer?.like ? `Unlike post by ${authorName}` : `Like post by ${authorName}`}
         >
           <IconSymbol
             name={post.viewer?.like ? 'heart.fill' : 'heart'}
@@ -1346,12 +1333,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
                           accessibilityState={{ selected: isSelected }}
                           activeOpacity={0.7}
                         >
-                          <ThemedText
-                            style={[
-                              styles.languageOptionText,
-                              isSelected && styles.languageOptionSelectedText,
-                            ]}
-                          >
+                          <ThemedText style={[styles.languageOptionText, isSelected && styles.languageOptionSelectedText]}>
                             {language.name}
                           </ThemedText>
                         </TouchableOpacity>

@@ -5,11 +5,11 @@ import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, Toucha
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { RecordEmbed } from '@/components/RecordEmbed';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -21,6 +21,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { useNavigateToProfile } from '@/utils/navigation';
 
 const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
 
@@ -71,11 +72,7 @@ const isGifUrl = (uri: string | undefined): boolean => {
   }
 
   const normalized = uri.toLowerCase();
-  return (
-    normalized.includes('tenor.com') ||
-    normalized.includes('media.tenor.com') ||
-    normalized.endsWith('.gif')
-  );
+  return normalized.includes('tenor.com') || normalized.includes('media.tenor.com') || normalized.endsWith('.gif');
 };
 
 const isVideoUrl = (uri: string | undefined): boolean => {
@@ -243,15 +240,13 @@ export default function ConversationScreen() {
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const navigateToProfile = useNavigateToProfile();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
-  const incomingMessageBackground = useThemeColor(
-    { light: '#F3F4F6', dark: '#1E2537' },
-    'background',
-  );
+  const incomingMessageBackground = useThemeColor({ light: '#F3F4F6', dark: '#1E2537' }, 'background');
 
   // Keyboard state
   useEffect(() => {
@@ -397,17 +392,11 @@ export default function ConversationScreen() {
         {item.embed && (
           <ThemedView style={[styles.embedContainer, item.isFromMe ? styles.myEmbed : styles.theirEmbed]}>
             {embedContent ?? (
-              <ThemedText style={[styles.unsupportedEmbedText, { color: iconColor }]}>
-                {t('common.unknown')}
-              </ThemedText>
+              <ThemedText style={[styles.unsupportedEmbedText, { color: iconColor }]}>{t('common.unknown')}</ThemedText>
             )}
             {!hasText && (
               <ThemedText
-                style={[
-                  styles.messageTimestamp,
-                  !item.isFromMe ? styles.timestampIncoming : null,
-                  { color: iconColor },
-                ]}
+                style={[styles.messageTimestamp, !item.isFromMe ? styles.timestampIncoming : null, { color: iconColor }]}
               >
                 {item.timestamp}
               </ThemedText>
@@ -501,7 +490,7 @@ export default function ConversationScreen() {
               style={styles.headerInfo}
               onPress={() => {
                 // Navigate to profile when header is clicked
-                router.push(`/profile/${encodeURIComponent(handle)}`);
+                navigateToProfile({ actor: handle });
               }}
               activeOpacity={0.7}
             >

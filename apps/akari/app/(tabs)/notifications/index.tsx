@@ -1,6 +1,5 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +16,7 @@ import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useNavigateToPost } from '@/utils/navigation';
+import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -366,6 +365,7 @@ export default function NotificationsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { data: currentAccount } = useCurrentAccount();
   const navigateToPost = useNavigateToPost();
+  const navigateToProfile = useNavigateToProfile();
 
   const tabs = useMemo(
     () => [
@@ -415,22 +415,25 @@ export default function NotificationsScreen() {
     return groupedNotifications;
   }, [activeTab, groupedNotifications]);
 
-  const handleNotificationPress = useCallback((notification: GroupedNotification) => {
-    if (notification.type === 'follow') {
-      // Navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
-    } else if (notification.subject) {
-      // Navigate to the post in current tab context
-      const postUri = notification.subject;
-      const uriParts = postUri.split('/');
-      const rKey = uriParts[uriParts.length - 1];
-      const actor = uriParts[2]; // Extract actor from AT URI (at://actor/collection/rkey)
-      navigateToPost({ actor, rKey });
-    } else {
-      // For notifications without a subject, navigate to the first author's profile
-      router.push(`/profile/${encodeURIComponent(notification.authors[0].handle)}`);
-    }
-  }, []);
+  const handleNotificationPress = useCallback(
+    (notification: GroupedNotification) => {
+      if (notification.type === 'follow') {
+        // Navigate to the first author's profile
+        navigateToProfile({ actor: notification.authors[0].handle });
+      } else if (notification.subject) {
+        // Navigate to the post in current tab context
+        const postUri = notification.subject;
+        const uriParts = postUri.split('/');
+        const rKey = uriParts[uriParts.length - 1];
+        const actor = uriParts[2]; // Extract actor from AT URI (at://actor/collection/rkey)
+        navigateToPost({ actor, rKey });
+      } else {
+        // For notifications without a subject, navigate to the first author's profile
+        navigateToProfile({ actor: notification.authors[0].handle });
+      }
+    },
+    [navigateToProfile, navigateToPost],
+  );
 
   const renderNotificationItem = useCallback(
     (notification: GroupedNotification) => (

@@ -15,8 +15,11 @@ export default function NotFoundScreen() {
         <ThemedText style={styles.pathname}>
           Path: <ThemedText style={styles.pathnameValue}>{pathname}</ThemedText>
         </ThemedText>
-        <Link href="/" style={styles.link}>
+        <Link href="/index" style={styles.link}>
           <ThemedText type="link">Go to home screen!</ThemedText>
+        </Link>
+        <Link href="/_sitemap" style={styles.link}>
+          <ThemedText type="link">Go to sitemap!</ThemedText>
         </Link>
       </ThemedView>
     </>

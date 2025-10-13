@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 
 import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { useNavigateToPost } from '@/utils/navigation';
+import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import {
   createNotificationChannels,
   DEFAULT_NOTIFICATION_CHANNELS,
@@ -25,6 +25,7 @@ export function usePushNotifications() {
   const router = useRouter();
   const { data: currentAccount } = useCurrentAccount();
   const navigateToPost = useNavigateToPost();
+  const navigateToProfile = useNavigateToProfile();
   const registerPushSubscriptionMutation = useRegisterPushSubscription();
   const [state, setState] = useState<PushNotificationState>({
     expoPushToken: null,
@@ -59,7 +60,7 @@ export function usePushNotifications() {
           navigateToPost({ actor, rKey });
           break;
         case 'profile':
-          router.push(`/profile/${encodeURIComponent(id)}`);
+          navigateToProfile({ actor: id });
           break;
         case 'conversation':
           router.push(`/messages/${encodeURIComponent(id)}`);
@@ -99,7 +100,7 @@ export function usePushNotifications() {
         responseListener.current.remove();
       }
     };
-  }, [navigateToPost, router]);
+  }, [navigateToPost, navigateToProfile, router]);
 
   // Request notification permissions
   const requestPermissions = async (): Promise<boolean> => {

@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -14,7 +13,7 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useNavigateToPost } from '@/utils/navigation';
+import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type RecordEmbedProps = {
@@ -59,6 +58,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   );
 
   const navigateToPost = useNavigateToPost();
+  const navigateToProfile = useNavigateToProfile();
 
   const handlePress = () => {
     // Navigate to the quoted post in the current tab
@@ -74,7 +74,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const handleAuthorPress = () => {
     // Navigate to the quoted post's author profile
     if (embed.record.author?.handle) {
-      router.push(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+      navigateToProfile({ actor: embed.record.author.handle });
     }
   };
 

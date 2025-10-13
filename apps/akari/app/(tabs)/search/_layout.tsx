@@ -11,6 +11,12 @@ export default function SearchLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
+        name="user-profile/[handle]"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="user-profile/[handle]/post/[rkey]"
         options={{
           title: 'Post',
