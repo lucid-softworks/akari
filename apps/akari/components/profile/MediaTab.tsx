@@ -1,14 +1,14 @@
 import { useCallback, useMemo } from 'react';
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
+import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type MediaTabProps = {
@@ -20,6 +20,7 @@ const ESTIMATED_MEDIA_POST_CARD_HEIGHT = 360;
 export function MediaTab({ handle }: MediaTabProps) {
   const { t } = useTranslation();
   const { data: media, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorMedia(handle);
+  const navigateToPost = useNavigateToPost();
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -27,10 +28,7 @@ export function MediaTab({ handle }: MediaTabProps) {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const filteredMedia = useMemo(
-    () => (media ?? []).filter((item) => item && item.uri),
-    [media],
-  );
+  const filteredMedia = useMemo(() => (media ?? []).filter((item) => item && item.uri), [media]);
 
   const renderItem = ({ item }: { item: any }) => {
     const replyTo = item.reply?.parent
@@ -68,7 +66,10 @@ export function MediaTab({ handle }: MediaTabProps) {
           cid: item.cid,
         }}
         onPress={() => {
-          router.push(`/post/${encodeURIComponent(item.uri)}`);
+          // Navigate to post in current tab context
+          const uriParts = item.uri.split('/');
+          const rKey = uriParts[uriParts.length - 1];
+          navigateToPost({ actor: item.author.handle, rKey });
         }}
       />
     );

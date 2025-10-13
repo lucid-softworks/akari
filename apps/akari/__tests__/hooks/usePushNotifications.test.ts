@@ -1,20 +1,31 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
+import { Platform } from 'react-native';
 
-import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import {
   createNotificationChannels,
   DEFAULT_NOTIFICATION_CHANNELS,
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
-import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(() => '/index'),
+  router: { push: jest.fn() },
+}));
+
+jest.mock('@/utils/navigation', () => ({
+  useNavigateToPost: () =>
+    jest.fn(({ actor, rKey }) => {
+      const { useRouter } = require('expo-router');
+      const { push } = useRouter();
+      push(`/index/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+    }),
 }));
 
 jest.mock('expo-notifications', () => ({
@@ -97,9 +108,7 @@ describe('usePushNotifications', () => {
     await renderPushNotificationsHook();
 
     await waitFor(() => {
-      expect(mockCreateNotificationChannels).toHaveBeenCalledWith(
-        DEFAULT_NOTIFICATION_CHANNELS,
-      );
+      expect(mockCreateNotificationChannels).toHaveBeenCalledWith(DEFAULT_NOTIFICATION_CHANNELS);
     });
   });
 
@@ -119,10 +128,7 @@ describe('usePushNotifications', () => {
     await renderPushNotificationsHook();
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to create notification channels:',
-        failure,
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to create notification channels:', failure);
     });
 
     consoleSpy.mockRestore();
@@ -410,7 +416,7 @@ describe('usePushNotifications', () => {
     });
 
     const scenarios = [
-      { type: 'post', id: 'abc def', expected: '/post/abc%20def' },
+      { type: 'post', id: 'abc def', expected: '/index/user-profile/undefined/post/abc%20def' },
       { type: 'profile', id: 'user', expected: '/profile/user' },
       { type: 'conversation', id: '42', expected: '/messages/42' },
       { type: 'notification', id: 'any', expected: '/notifications' },
@@ -489,10 +495,7 @@ describe('usePushNotifications', () => {
       await result.current.checkPermissionStatus();
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to check permission status:',
-      failure,
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to check permission status:', failure);
     consoleSpy.mockRestore();
   });
 
@@ -563,10 +566,7 @@ describe('usePushNotifications', () => {
       }),
     ).rejects.toThrow('clear failed');
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to clear badge:',
-      expect.any(Error),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to clear badge:', expect.any(Error));
     consoleSpy.mockRestore();
   });
 

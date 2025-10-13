@@ -19,6 +19,7 @@ jest.mock('expo-image', () => {
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
   router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/search'),
 }));
 
 jest.mock('react-native-safe-area-context', () => {

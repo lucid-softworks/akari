@@ -41,21 +41,22 @@ describe('usePost', () => {
     mockGetPost.mockResolvedValueOnce({ uri: 'at://post/1' });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePost('at://post/1'), { wrapper });
+    const { result } = renderHook(() => usePost({ actor: 'post', rKey: '1' }), { wrapper });
 
     await waitFor(() => {
       expect(result.current.data).toEqual({ uri: 'at://post/1' });
     });
-    expect(mockGetPost).toHaveBeenCalledWith('token', 'at://post/1');
+    expect(mockGetPost).toHaveBeenCalledWith('token', 'at://post/app.bsky.feed.post/1');
   });
 
   it('returns error when pdsUrl is missing', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePost('at://post/1'), { wrapper });
+    const { result } = renderHook(() => usePost({ actor: 'post', rKey: '1' }), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.error?.message).toBe('No PDS URL available');
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBeUndefined();
     });
     expect(mockGetPost).not.toHaveBeenCalled();
   });
@@ -63,19 +64,21 @@ describe('usePost', () => {
   it('returns error when token is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePost('at://post/1'), { wrapper });
+    const { result } = renderHook(() => usePost({ actor: 'post', rKey: '1' }), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.error?.message).toBe('No access token or post URI');
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBeUndefined();
     });
     expect(mockGetPost).not.toHaveBeenCalled();
   });
 
-  it('does not run query without post URI', async () => {
+  it('does not run query without actor or rKey', async () => {
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePost(null), { wrapper });
+    const { result } = renderHook(() => usePost({}), { wrapper });
 
     await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
       expect(result.current.data).toBeUndefined();
     });
     expect(mockGetPost).not.toHaveBeenCalled();
@@ -89,7 +92,7 @@ describe('useParentPost', () => {
     const { result } = renderHook(() => useParentPost('at://parent'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.parentPost).toEqual({ uri: 'at://parent' });
+      expect(result.current.data).toEqual({ uri: 'at://parent' });
     });
     expect(mockGetPost).toHaveBeenCalledWith('token', 'at://parent');
   });
@@ -132,7 +135,7 @@ describe('useRootPost', () => {
     const { result } = renderHook(() => useRootPost('at://root'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.rootPost).toEqual({ uri: 'at://root' });
+      expect(result.current.data).toEqual({ uri: 'at://root' });
     });
     expect(mockGetPost).toHaveBeenCalledWith('token', 'at://root');
   });

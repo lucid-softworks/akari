@@ -3,14 +3,15 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
+import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useNavigateToPost } from '@/utils/navigation';
 import {
   createNotificationChannels,
   DEFAULT_NOTIFICATION_CHANNELS,
   registerForPushNotifications,
   requestNotificationPermissions,
 } from '@/utils/notifications';
-import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
 export type PushNotificationState = {
   expoPushToken: string | null;
@@ -23,6 +24,7 @@ export type PushNotificationState = {
 export function usePushNotifications() {
   const router = useRouter();
   const { data: currentAccount } = useCurrentAccount();
+  const navigateToPost = useNavigateToPost();
   const registerPushSubscriptionMutation = useRegisterPushSubscription();
   const [state, setState] = useState<PushNotificationState>({
     expoPushToken: null,
@@ -50,7 +52,11 @@ export function usePushNotifications() {
     const handleNotificationNavigation = (type: string, id: string) => {
       switch (type) {
         case 'post':
-          router.push(`/post/${encodeURIComponent(id)}`);
+          // Navigate to post in index tab (default for push notifications)
+          const uriParts = id.split('/');
+          const rKey = uriParts[uriParts.length - 1];
+          const actor = uriParts[2]; // Extract actor from AT URI
+          navigateToPost({ actor, rKey });
           break;
         case 'profile':
           router.push(`/profile/${encodeURIComponent(id)}`);
@@ -93,7 +99,7 @@ export function usePushNotifications() {
         responseListener.current.remove();
       }
     };
-  }, [router]);
+  }, [navigateToPost, router]);
 
   // Request notification permissions
   const requestPermissions = async (): Promise<boolean> => {

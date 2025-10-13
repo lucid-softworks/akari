@@ -6,6 +6,17 @@ jest.mock('react-native-reanimated', () => {
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
 
+// Global mock for expo-router usePathname
+jest.mock('expo-router', () => ({
+  ...jest.requireActual('expo-router'),
+  usePathname: jest.fn(() => '/index'),
+  router: {
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+  },
+}));
+
 jest.mock(
   '@shopify/flash-list',
   () => {

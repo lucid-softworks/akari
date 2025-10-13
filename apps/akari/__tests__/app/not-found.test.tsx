@@ -15,6 +15,7 @@ jest.mock('expo-router', () => {
     Stack: {
       Screen: jest.fn(() => null),
     },
+    usePathname: jest.fn(() => '/unknown'),
   };
 });
 

@@ -1,20 +1,23 @@
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import React from 'react';
 
-import HomeScreen from '@/app/(tabs)/index';
+import HomeScreen from '@/app/(tabs)/index/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeeds } from '@/hooks/queries/useFeeds';
 import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
-import { useFeed } from '@/hooks/queries/useFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ 
+  router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/index'),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -375,4 +378,3 @@ describe('HomeScreen', () => {
     expect(getByText('composer')).toBeTruthy();
   });
 });
-

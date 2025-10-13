@@ -1,22 +1,26 @@
-import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render } from '@testing-library/react-native';
+import React from 'react';
 import { Image, ScrollView } from 'react-native';
 
 import NotificationsScreen from '@/app/(tabs)/notifications';
-import { router } from 'expo-router';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useResponsive } from '@/hooks/useResponsive';
+import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { router } from 'expo-router';
 
 jest.mock('expo-image', () => {
   const { Image } = require('react-native');
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/notifications'),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -52,6 +56,16 @@ jest.mock('@/hooks/useResponsive');
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  return { wrapper };
+};
 
 const mockUseNotifications = useNotifications as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
@@ -120,7 +134,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText } = render(<NotificationsScreen />);
+    const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(mockRegister).toHaveBeenCalledWith('notifications', expect.any(Function));
     expect(getByText('alice and bob')).toBeTruthy();
@@ -129,7 +143,7 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith('/notifications/user-profile/undefined/post/post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
     expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
@@ -252,7 +266,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText, UNSAFE_getAllByType } = render(<NotificationsScreen />);
+    const { getByText, UNSAFE_getAllByType } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getByText('alice and 4 others')).toBeTruthy();
     expect(getByText('notifications.andOthers')).toBeTruthy();
@@ -296,7 +310,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText } = render(<NotificationsScreen />);
+    const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getByText('notifications.noNotificationsYet')).toBeTruthy();
     expect(getByText('notifications.notificationsWillAppearHere')).toBeTruthy();
@@ -315,7 +329,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText } = render(<NotificationsScreen />);
+    const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getByText('notifications.errorLoadingNotifications')).toBeTruthy();
     expect(getByText('oops')).toBeTruthy();
@@ -334,7 +348,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText } = render(<NotificationsScreen />);
+    const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getByText('notifications.errorLoadingNotifications')).toBeTruthy();
     expect(getByText('notifications.somethingWentWrong')).toBeTruthy();
@@ -353,7 +367,7 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getAllByText } = render(<NotificationsScreen />);
+    const { getAllByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getAllByText('Skeleton')).toHaveLength(12);
   });
@@ -386,10 +400,9 @@ describe('NotificationsScreen', () => {
       isRefetching: false,
     });
 
-    const { getByText } = render(<NotificationsScreen />);
+    const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     fireEvent.press(getByText('notifications.mentionedYou'));
     expect(mockRouterPush).toHaveBeenLastCalledWith('/profile/no-subject');
   });
 });
-

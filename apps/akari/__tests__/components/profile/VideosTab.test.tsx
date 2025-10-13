@@ -11,7 +11,10 @@ import { VirtualizedList } from '@/components/ui/VirtualizedList';
 jest.mock('@/hooks/queries/useAuthorVideos');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ 
+  router: { push: jest.fn() },
+  usePathname: jest.fn(() => '/profile'),
+}));
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
 let mockPostCard: jest.Mock;
@@ -101,7 +104,7 @@ describe('VideosTab', () => {
 
     const { getByText } = render(<VideosTab handle="alice" />);
     fireEvent.press(getByText('at://video/1'));
-    expect(router.push).toHaveBeenCalledWith('/post/' + encodeURIComponent('at://video/1'));
+    expect(router.push).toHaveBeenCalledWith('/profile/alice/post/1');
   });
 
   it('fetches next page on end reached', () => {
