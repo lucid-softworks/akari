@@ -16,6 +16,7 @@ Thank you for your interest in contributing to Akari.
 
 - Provide a clear description of your changes.
 - Ensure tests and lint checks pass before submitting.
+- Title pull requests using Conventional Commit prefixes (for example `feat:`, `fix:`, or `chore:`).
 - Follow the guidelines in `agents.md`, such as preferring `type` over `interface` in TypeScript code.
 
 We appreciate your contributions!
