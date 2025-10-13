@@ -3,15 +3,16 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ConversationSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
-import { ConversationSkeleton } from '@/components/skeletons';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import en from '@/translations/en.json';
+import { useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
 
@@ -56,6 +57,7 @@ export function MessagesListScreen({
   const borderColor = useBorderColor();
   const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
+  const navigateToProfile = useNavigateToProfile();
 
   const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -98,7 +100,7 @@ export function MessagesListScreen({
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              router.push(`/profile/${encodeURIComponent(item.handle)}`);
+              navigateToProfile({ actor: item.handle });
             }}
             activeOpacity={0.7}
           >
@@ -171,11 +173,7 @@ export function MessagesListScreen({
             <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
           </ThemedView>
           {pendingButtonConfig ? (
-            <TouchableOpacity
-              style={styles.pendingButton}
-              onPress={pendingButtonConfig.onPress}
-              activeOpacity={0.7}
-            >
+            <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={0.7}>
               <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
             </TouchableOpacity>
           ) : null}

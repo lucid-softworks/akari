@@ -13,6 +13,12 @@ export default function MessagesLayout() {
       <Stack.Screen name="pending" />
       <Stack.Screen name="[handle]" />
       <Stack.Screen
+        name="user-profile/[handle]"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="user-profile/[handle]/post/[rkey]"
         options={{
           title: 'Post',

@@ -143,10 +143,10 @@ describe('NotificationsScreen', () => {
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/notifications/user-profile/undefined/post/post1');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/undefined/post/post1');
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/profile/carol');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/carol');
   });
 
   it('renders grouped notifications with embed images and overflow avatars', () => {
@@ -403,6 +403,6 @@ describe('NotificationsScreen', () => {
     const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     fireEvent.press(getByText('notifications.mentionedYou'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/profile/no-subject');
+    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/index/user-profile/no-subject');
   });
 });

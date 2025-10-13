@@ -24,7 +24,13 @@ jest.mock('@/utils/navigation', () => ({
     jest.fn(({ actor, rKey }) => {
       const { useRouter } = require('expo-router');
       const { push } = useRouter();
-      push(`/index/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+      push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+    }),
+  useNavigateToProfile: () =>
+    jest.fn(({ actor }) => {
+      const { useRouter } = require('expo-router');
+      const { push } = useRouter();
+      push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}`);
     }),
 }));
 
@@ -416,8 +422,8 @@ describe('usePushNotifications', () => {
     });
 
     const scenarios = [
-      { type: 'post', id: 'abc def', expected: '/index/user-profile/undefined/post/abc%20def' },
-      { type: 'profile', id: 'user', expected: '/profile/user' },
+      { type: 'post', id: 'abc def', expected: '/(tabs)/index/user-profile/undefined/post/abc%20def' },
+      { type: 'profile', id: 'user', expected: '/(tabs)/index/user-profile/user' },
       { type: 'conversation', id: '42', expected: '/messages/42' },
       { type: 'notification', id: 'any', expected: '/notifications' },
       { type: 'unknown', id: '??', expected: '/notifications' },

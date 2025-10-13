@@ -43,11 +43,42 @@ export function useNavigateToPost() {
       const targetTabRoute = getTabRouteFromPathname(pathname);
 
       if (targetTabRoute === 'index') {
-        router.push(`./user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}` as const);
+        // @ts-expect-error special case for index tab
+        router.push(`/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
       } else if (targetTabRoute === 'profile') {
         router.push(`/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
       } else {
         router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+      }
+    }
+  };
+}
+
+type ProfileNavigationArgs = {
+  actor: string;
+};
+
+/**
+ * Navigate to a profile in the appropriate context
+ * - Mobile: Uses tab-specific routes to maintain tab context
+ * - Web: Uses top-level profile route
+ */
+export function useNavigateToProfile() {
+  const pathname = usePathname() as string;
+
+  return ({ actor }: ProfileNavigationArgs) => {
+    if (Platform.OS === 'web') {
+      router.push(`/profile/${encodeURIComponent(actor)}`);
+    } else {
+      const targetTabRoute = getTabRouteFromPathname(pathname);
+
+      if (targetTabRoute === 'index') {
+        // @ts-expect-error special case for index tab
+        router.push(`/user-profile/${encodeURIComponent(actor)}`);
+      } else if (targetTabRoute === 'profile') {
+        router.push(`/profile/${encodeURIComponent(actor)}`);
+      } else {
+        router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`);
       }
     }
   };

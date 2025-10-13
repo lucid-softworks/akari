@@ -8,14 +8,16 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
 
 // Global mock for expo-router usePathname
 jest.mock('expo-router', () => ({
-  ...jest.requireActual('expo-router'),
   usePathname: jest.fn(() => '/index'),
   router: {
     push: jest.fn(),
     replace: jest.fn(),
     back: jest.fn(),
+    canGoBack: jest.fn(() => true),
   },
 }));
+
+// Navigation utilities are mocked in jest.setup.early.js
 
 jest.mock(
   '@shopify/flash-list',
@@ -49,6 +51,9 @@ beforeEach(() => {
   mockToastContext.showToast = jest.fn();
   mockToastContext.hideToast = jest.fn();
   useToast.mockReturnValue(mockToastContext);
+
+  // Navigation mocks are set up in jest.setup.early.js
+
   jest.useFakeTimers();
 });
 

@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,7 +15,7 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useNavigateToPost } from '@/utils/navigation';
+import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -115,6 +115,7 @@ export default function SearchScreen() {
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
+  const navigateToProfile = useNavigateToProfile();
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
@@ -213,7 +214,7 @@ export default function SearchScreen() {
     return (
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
-        onPress={() => router.push(`/profile/${encodeURIComponent(profile.handle)}`)}
+        onPress={() => navigateToProfile({ actor: profile.handle })}
         activeOpacity={0.7}
       >
         <ThemedView style={styles.profileContainer}>

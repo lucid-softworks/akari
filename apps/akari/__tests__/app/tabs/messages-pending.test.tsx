@@ -105,7 +105,7 @@ describe('PendingMessagesScreen', () => {
     expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/profile/pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/index/user-profile/pending-pal');
 
     fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[0]);
     expect(mockRouterBack).toHaveBeenCalledTimes(1);

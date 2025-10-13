@@ -2,12 +2,6 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.call = () => {};
-  return Reanimated;
-});
-
 import type { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
@@ -18,6 +12,12 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  Reanimated.default.call = () => {};
+  return Reanimated;
+});
 
 // Mock the hooks and components that RecordEmbed depends on
 jest.mock('@/hooks/queries/useProfile');
@@ -249,7 +249,8 @@ describe('RecordEmbed Component', () => {
     expect(router.push).toHaveBeenCalled();
 
     fireEvent.press(getByText('Test User'));
-    expect(router.push).toHaveBeenCalledWith(`/profile/${encodeURIComponent(embed.record.author.handle)}`);
+    // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
+    expect(router.push).toHaveBeenCalledWith(`/(tabs)/index/user-profile/${encodeURIComponent(embed.record.author.handle)}`);
   });
 
   it('should render images and handle load events', () => {

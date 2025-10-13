@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 import ProfileView from '@/components/ProfileView';
 
-export default function ProfileScreen() {
+export default function UserProfileScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
 
   if (!handle) {
@@ -11,4 +11,3 @@ export default function ProfileScreen() {
 
   return <ProfileView handle={handle} />;
 }
-

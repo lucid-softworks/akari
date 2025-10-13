@@ -2,6 +2,7 @@ const isGithubActions = Boolean(process.env.GITHUB_ACTIONS);
 
 module.exports = {
   preset: 'jest-expo',
+  setupFiles: [require.resolve('jest-expo/src/preset/setup.js'), '<rootDir>/jest.setup.early.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverage: true,
   collectCoverageFrom: [

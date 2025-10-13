@@ -4,12 +4,18 @@ export default function IndexLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="user-profile/[handle]"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="user-profile/[handle]/post/[rkey]"
         options={{
