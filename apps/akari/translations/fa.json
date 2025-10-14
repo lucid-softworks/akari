@@ -329,6 +329,8 @@
       "colorMode": "حالت رنگ",
       "theme": "موضوع",
       "fontSize": "اندازه قلم",
+      "nativeTabBar": "از نوار زبانه بومی استفاده کنید",
+      "nativeTabBarDescription": "بین نوار زبانه بومی آزمایشی و زبانه های سفارشی آکاری تغییر دهید.",
       "requireAltText": "قبل از ارسال به متن alt نیاز دارید",
       "displayLargerTextBadges": "نشان های متن بزرگتر را نمایش دهید",
       "notificationCategories": "مقوله های اعلان",

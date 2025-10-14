@@ -329,6 +329,8 @@
       "colorMode": "Farebný režim",
       "theme": "Téma",
       "fontSize": "Veľkosť písma",
+      "nativeTabBar": "Používajte natívnu tyč Tab",
+      "nativeTabBarDescription": "Prepínajte medzi experimentálnou panelou natívnej karty a vlastnými kartami Akari.",
       "requireAltText": "Pred uverejnením uverejnenia požadujte alt text",
       "displayLargerTextBadges": "Zobraziť väčšie textové odznaky",
       "notificationCategories": "Oznamovacie kategórie",

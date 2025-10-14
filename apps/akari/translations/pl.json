@@ -319,6 +319,8 @@
       "colorMode": "Tryb koloru",
       "theme": "Motyw",
       "fontSize": "Rozmiar czcionki",
+      "nativeTabBar": "Użyj natywnego paska kart",
+      "nativeTabBarDescription": "Przełączaj między eksperymentalnym natywnym paskiem kart a niestandardowymi kartami Akari.",
       "requireAltText": "Wymagaj tekstu alternatywnego przed publikacją",
       "displayLargerTextBadges": "Wyświetlaj większe odznaki tekstowe",
       "notificationCategories": "Kategorie powiadomień",

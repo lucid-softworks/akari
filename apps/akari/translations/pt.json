@@ -319,6 +319,8 @@
       "colorMode": "Modo de cor",
       "theme": "Tema",
       "fontSize": "Tamanho da fonte",
+      "nativeTabBar": "Use a barra de guias nativa",
+      "nativeTabBarDescription": "Alterne entre a barra de guias nativa experimental e as guias personalizadas do Akari.",
       "requireAltText": "Exigir texto alternativo antes de publicar",
       "displayLargerTextBadges": "Exibir badges de texto maiores",
       "notificationCategories": "Categorias de notificação",

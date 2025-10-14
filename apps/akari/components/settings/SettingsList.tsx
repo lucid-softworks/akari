@@ -14,6 +14,7 @@ export type SettingsRowDescriptor = {
   value?: string;
   onPress?: () => void;
   destructive?: boolean;
+  accessory?: React.ReactNode;
 };
 
 type SettingsSectionProps = {
@@ -43,6 +44,7 @@ export function SettingsRow({
   icon,
   label,
   onPress,
+  accessory,
   showDivider = true,
   value,
 }: SettingsRowProps) {
@@ -77,6 +79,7 @@ export function SettingsRow({
           {value}
         </ThemedText>
       ) : null}
+      {accessory ? <ThemedView style={styles.accessory}>{accessory}</ThemedView> : null}
       {onPress ? <IconSymbol color={chevronColor} name="chevron.right" size={18} /> : null}
     </>
   );
@@ -143,6 +146,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 12,
     maxWidth: 140,
+  },
+  accessory: {
+    marginLeft: 12,
   },
 });
 

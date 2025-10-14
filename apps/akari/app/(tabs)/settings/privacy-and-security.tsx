@@ -67,6 +67,7 @@ export default function PrivacyAndSecurityScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < privacyRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

@@ -329,6 +329,8 @@
       "colorMode": "Цветен режим",
       "theme": "Тема",
       "fontSize": "Размер на шрифта",
+      "nativeTabBar": "Използвайте Native Tab Bar",
+      "nativeTabBarDescription": "Превключете между експерименталната родна лента на раздела и персонализираните раздели на Akari.",
       "requireAltText": "Изисквайте ALT текст преди публикуване",
       "displayLargerTextBadges": "Показване на по -големи текстови значки",
       "notificationCategories": "Категории за уведомяване",

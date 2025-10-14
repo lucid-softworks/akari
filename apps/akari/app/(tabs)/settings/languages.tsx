@@ -55,6 +55,7 @@ export default function LanguagesSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < languageRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

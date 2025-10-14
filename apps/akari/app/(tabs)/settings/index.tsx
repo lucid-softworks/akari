@@ -204,6 +204,7 @@ export default function SettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < navigationRows.length - 1}
+                accessory={item.accessory}
                 value={item.value}
               />
             ))}
@@ -221,6 +222,7 @@ export default function SettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < supportRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>
@@ -237,6 +239,7 @@ export default function SettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < legalRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

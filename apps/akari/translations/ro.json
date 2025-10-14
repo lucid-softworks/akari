@@ -329,6 +329,8 @@
       "colorMode": "Mod de culoare",
       "theme": "Temă",
       "fontSize": "Dimensiunea fontului",
+      "nativeTabBar": "Utilizați bara de filă nativă",
+      "nativeTabBarDescription": "Comutați între bara de filă autohtonă experimentală și filele personalizate ale lui Akari.",
       "requireAltText": "Necesită text ALT înainte de a posta",
       "displayLargerTextBadges": "Afișați ecusoane de text mai mari",
       "notificationCategories": "Categorii de notificări",

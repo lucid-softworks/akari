@@ -329,6 +329,8 @@
       "colorMode": "Rəngli rejimi",
       "theme": "Mövzu",
       "fontSize": "Şrift ölçüsü",
+      "nativeTabBar": "Doğma nişan çubuğundan istifadə edin",
+      "nativeTabBarDescription": "Təcrübəli doğma nişan çubuğu və akari'nin xüsusi nişanları arasında keçid.",
       "requireAltText": "Göndərmədən əvvəl Alt Mətn tələb edir",
       "displayLargerTextBadges": "Daha böyük mətn nişanlarını göstərin",
       "notificationCategories": "Bildiriş kateqoriyası",

@@ -19,6 +19,7 @@ type Data = {
   refreshToken: string;
   selectedFeed: string;
   reactQueryCache: PersistedClient;
+  tabBarPreference: 'custom' | 'native';
 };
 
 export const REACT_QUERY_CACHE_STORAGE_KEY: keyof Data = 'reactQueryCache';

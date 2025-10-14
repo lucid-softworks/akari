@@ -329,6 +329,8 @@
       "colorMode": "Färgläge",
       "theme": "Tema",
       "fontSize": "Fontstorlek",
+      "nativeTabBar": "Använd Native Tab Bar",
+      "nativeTabBarDescription": "Växla mellan den experimentella infödda flikstången och Akaris anpassade flikar.",
       "requireAltText": "Kräva alt -text innan du publicerar",
       "displayLargerTextBadges": "Visa större textmärken",
       "notificationCategories": "Meddelande kategorier",

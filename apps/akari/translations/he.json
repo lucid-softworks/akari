@@ -329,6 +329,8 @@
       "colorMode": "מצב צבע",
       "theme": "נוֹשֵׂא",
       "fontSize": "גודל גופן",
+      "nativeTabBar": "השתמש בסרגל הכרטיסיות המקורי",
+      "nativeTabBarDescription": "התחבר בין סרגל הכרטיסיות הניסיוני לכרטיסיות המותאמות אישית של אקארי.",
       "requireAltText": "דרוש טקסט ALT לפני פרסום",
       "displayLargerTextBadges": "להציג תגי טקסט גדולים יותר",
       "notificationCategories": "קטגוריות הודעה",

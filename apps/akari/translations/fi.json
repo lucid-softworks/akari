@@ -329,6 +329,8 @@
       "colorMode": "Väritila",
       "theme": "Teema",
       "fontSize": "Fontin koko",
+      "nativeTabBar": "Käytä Native -välilehden palkkia",
+      "nativeTabBarDescription": "Vaihda kokeellisen Native -välilehden ja Akarin mukautettujen välilehtien välillä.",
       "requireAltText": "Vaadi Alt -teksti ennen lähettämistä",
       "displayLargerTextBadges": "Näytä suuret tekstimerkit",
       "notificationCategories": "Ilmoitusluokat",

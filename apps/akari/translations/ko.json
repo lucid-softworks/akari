@@ -319,6 +319,8 @@
       "colorMode": "색상 모드",
       "theme": "테마",
       "fontSize": "글꼴 크기",
+      "nativeTabBar": "기본 탭 표시줄 사용",
+      "nativeTabBarDescription": "실험적인 기본 탭 표시줄과 Akari의 사용자 정의 탭 사이를 전환합니다.",
       "requireAltText": "게시 전에 대체 텍스트 요구",
       "displayLargerTextBadges": "더 큰 텍스트 배지 표시",
       "notificationCategories": "알림 범주",

@@ -329,6 +329,8 @@
       "colorMode": "Mode couleur",
       "theme": "Thème",
       "fontSize": "Taille de police",
+      "nativeTabBar": "Utiliser la barre d'onglets native",
+      "nativeTabBarDescription": "Basculez entre la barre d'onglets native expérimentale et les onglets personnalisés d'Akari.",
       "requireAltText": "Exiger un texte alternatif avant de publier",
       "displayLargerTextBadges": "Afficher des badges de texte plus grands",
       "notificationCategories": "Catégories de notification",

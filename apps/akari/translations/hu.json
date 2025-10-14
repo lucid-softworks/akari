@@ -329,6 +329,8 @@
       "colorMode": "Színmód",
       "theme": "Téma",
       "fontSize": "Betűkészlet",
+      "nativeTabBar": "Használja a natív fülsávot",
+      "nativeTabBarDescription": "Váltás a kísérleti natív fülsáv és az Akari egyedi lapjai között.",
       "requireAltText": "Megköveteli az alt szöveget a kiküldetés előtt",
       "displayLargerTextBadges": "Nagyobb szövegjelvények megjelenítése",
       "notificationCategories": "Értesítési kategóriák",

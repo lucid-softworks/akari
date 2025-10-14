@@ -319,6 +319,8 @@
       "colorMode": "Kleurmodus",
       "theme": "Thema",
       "fontSize": "Lettergrootte",
+      "nativeTabBar": "Gebruik de native tabbladbalk",
+      "nativeTabBarDescription": "Schakel tussen de experimentele native tabbladbalk en de aangepaste tabbladen van Akari.",
       "requireAltText": "Alt-tekst vereisen voordat je plaatst",
       "displayLargerTextBadges": "Grotere tekstbadges weergeven",
       "notificationCategories": "Meldingscategorieën",

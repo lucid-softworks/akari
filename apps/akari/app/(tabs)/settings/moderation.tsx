@@ -78,6 +78,7 @@ export default function ModerationSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < moderationRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

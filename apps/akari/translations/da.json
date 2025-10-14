@@ -329,6 +329,8 @@
       "colorMode": "Farvetilstand",
       "theme": "Tema",
       "fontSize": "Skriftstørrelse",
+      "nativeTabBar": "Brug Native Tab Bar",
+      "nativeTabBarDescription": "Skift mellem den eksperimentelle indfødte fanebjælke og Akari's brugerdefinerede faner.",
       "requireAltText": "Kræver alt -tekst, før du sender",
       "displayLargerTextBadges": "Vis større tekstemblemer",
       "notificationCategories": "Underretningskategorier",

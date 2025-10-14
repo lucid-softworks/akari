@@ -329,6 +329,8 @@
       "colorMode": "Кольоровий режим",
       "theme": "Тема",
       "fontSize": "Розмір шрифту",
+      "nativeTabBar": "Використовуйте нативну смугу вкладки",
+      "nativeTabBarDescription": "Перемикайте між експериментальною рідною смугою вкладок та власними вкладками Akari.",
       "requireAltText": "Вимагати тексту Alt перед розміщенням",
       "displayLargerTextBadges": "Відображати більші текстові значки",
       "notificationCategories": "Категорії сповіщень",

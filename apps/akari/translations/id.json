@@ -319,6 +319,8 @@
       "colorMode": "Mode warna",
       "theme": "Tema",
       "fontSize": "Ukuran font",
+      "nativeTabBar": "Gunakan bilah tab asli",
+      "nativeTabBarDescription": "Beralih antara bilah tab asli eksperimental dan tab khusus Akari.",
       "requireAltText": "Wajibkan teks alt sebelum memposting",
       "displayLargerTextBadges": "Tampilkan lencana teks yang lebih besar",
       "notificationCategories": "Kategori notifikasi",

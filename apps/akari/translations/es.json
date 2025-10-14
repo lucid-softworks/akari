@@ -329,6 +329,8 @@
       "colorMode": "Modo de color",
       "theme": "Tema",
       "fontSize": "Tamaño de fuente",
+      "nativeTabBar": "Usar barra de pestañas nativa",
+      "nativeTabBarDescription": "Alterna entre la barra de pestañas nativa experimental y las pestañas personalizadas de Akari.",
       "requireAltText": "Requerir texto alternativo antes de publicar",
       "displayLargerTextBadges": "Mostrar insignias de texto más grandes",
       "notificationCategories": "Categorías de notificaciones",

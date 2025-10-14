@@ -329,6 +329,8 @@
       "colorMode": "Barvni način",
       "theme": "Tema",
       "fontSize": "Velikost pisave",
+      "nativeTabBar": "Uporabite Native Tab Bar",
+      "nativeTabBarDescription": "Preklopite med eksperimentalno naravno vrstico in Akarijevimi zavihki po meri.",
       "requireAltText": "Pred objavo zahtevajte alt besedilo",
       "displayLargerTextBadges": "Prikaz večjih besedilnih značk",
       "notificationCategories": "Kategorije obvestila",

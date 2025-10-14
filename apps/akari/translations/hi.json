@@ -319,6 +319,8 @@
       "colorMode": "रंग मोड",
       "theme": "थीम",
       "fontSize": "फ़ॉन्ट आकार",
+      "nativeTabBar": "देशी टैब बार का उपयोग करें",
+      "nativeTabBarDescription": "प्रायोगिक देशी टैब बार और अकारी के कस्टम टैब के बीच टॉगल करें।",
       "requireAltText": "पोस्ट करने से पहले वैकल्पिक पाठ आवश्यक करें",
       "displayLargerTextBadges": "बड़े पाठ बैज दिखाएं",
       "notificationCategories": "सूचना श्रेणियां",

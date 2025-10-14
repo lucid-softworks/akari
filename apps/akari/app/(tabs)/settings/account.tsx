@@ -264,6 +264,7 @@ export default function AccountSettingsScreen() {
                 onPress={item.onPress}
                 destructive={item.destructive}
                 showDivider={index < actionRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>
@@ -279,6 +280,7 @@ export default function AccountSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < accountManagementRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>
@@ -295,6 +297,7 @@ export default function AccountSettingsScreen() {
                 onPress={item.onPress}
                 destructive={item.destructive}
                 showDivider={index < dangerRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

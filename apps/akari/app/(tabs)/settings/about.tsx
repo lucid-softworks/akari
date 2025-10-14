@@ -141,6 +141,7 @@ export default function AboutSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < aboutRows.length - 1}
+                accessory={item.accessory}
                 value={item.value}
               />
             ))}

@@ -319,6 +319,8 @@
       "colorMode": "Color mode",
       "theme": "Theme",
       "fontSize": "Font size",
+      "nativeTabBar": "Use native tab bar",
+      "nativeTabBarDescription": "Toggle between the experimental native tab bar and Akari's custom tabs.",
       "requireAltText": "Require alt text before posting",
       "displayLargerTextBadges": "Display larger text badges",
       "notificationCategories": "Notification categories",

@@ -319,6 +319,8 @@
       "colorMode": "カラーモード",
       "theme": "テーマ",
       "fontSize": "フォントサイズ",
+      "nativeTabBar": "ネイティブタブバーを使用する",
+      "nativeTabBarDescription": "実験的なネイティブタブバーとAkariのカスタムタブを切り替えます。",
       "requireAltText": "投稿前に代替テキストを必須にする",
       "displayLargerTextBadges": "大きなテキストバッジを表示",
       "notificationCategories": "通知のカテゴリ",

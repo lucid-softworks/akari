@@ -319,6 +319,8 @@
       "colorMode": "Modd lliw",
       "theme": "Thema",
       "fontSize": "Maint y ffont",
+      "nativeTabBar": "Defnyddio bar tab brodorol",
+      "nativeTabBarDescription": "Toggle rhwng y bar tab brodorol arbrofol a thabiau arfer Akari.",
       "requireAltText": "Gofyn am destun amgen cyn postio",
       "displayLargerTextBadges": "Arddangos bathodynnau testun mwy",
       "notificationCategories": "Categorïau hysbysiadau",

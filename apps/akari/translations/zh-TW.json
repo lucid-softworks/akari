@@ -319,6 +319,8 @@
       "colorMode": "顏色模式",
       "theme": "主題",
       "fontSize": "字型大小",
+      "nativeTabBar": "使用原生標籤欄",
+      "nativeTabBarDescription": "在實驗性本機選項卡欄和 Akari 的自定義選項卡之間切換。",
       "requireAltText": "發布前必須提供替代文字",
       "displayLargerTextBadges": "顯示較大的文字徽章",
       "notificationCategories": "通知分類",

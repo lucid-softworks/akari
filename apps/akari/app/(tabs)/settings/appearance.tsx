@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { ScrollView, StyleSheet, Switch } from 'react-native';
 
 import {
   SettingsRow,
@@ -10,15 +10,42 @@ import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayo
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
+import { useSetTabBarPreference } from '@/hooks/mutations/useSetTabBarPreference';
+import { useTabBarPreference } from '@/hooks/queries/useTabBarPreference';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
   const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
+  const { data: tabBarPreference = 'custom' } = useTabBarPreference();
+  const { mutate: setTabBarPreference, isPending } = useSetTabBarPreference();
+
+  const nativeTabsEnabled = tabBarPreference === 'native';
+
+  const handleToggleNativeTabs = useCallback(
+    (enabled: boolean) => {
+      setTabBarPreference(enabled ? 'native' : 'custom');
+    },
+    [setTabBarPreference],
+  );
 
   const appearanceRows = useMemo<SettingsRowDescriptor[]>(
     () => [
+      {
+        key: 'native-tabs',
+        icon: 'square.grid.2x2',
+        label: t('settings.nativeTabBar'),
+        description: t('settings.nativeTabBarDescription'),
+        accessory: (
+          <Switch
+            accessibilityLabel={t('settings.nativeTabBar')}
+            onValueChange={handleToggleNativeTabs}
+            value={nativeTabsEnabled}
+            disabled={isPending}
+          />
+        ),
+      },
       {
         key: 'color-mode',
         icon: 'circle.lefthalf.filled',
@@ -38,7 +65,7 @@ export default function AppearanceSettingsScreen() {
         onPress: showNotImplemented,
       },
     ],
-    [showNotImplemented, t],
+    [handleToggleNativeTabs, isPending, nativeTabsEnabled, showNotImplemented, t],
   );
 
   return (
@@ -58,6 +85,7 @@ export default function AppearanceSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < appearanceRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

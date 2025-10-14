@@ -319,6 +319,8 @@
       "colorMode": "Renk modu",
       "theme": "Tema",
       "fontSize": "Yazı tipi boyutu",
+      "nativeTabBar": "Yerel sekme çubuğunu kullan",
+      "nativeTabBarDescription": "Deneysel yerel sekme çubuğu ile Akari'nin özel sekmeleri arasında geçiş yapın.",
       "requireAltText": "Göndermeden önce alternatif metin zorunlu kıl",
       "displayLargerTextBadges": "Daha büyük metin rozetleri göster",
       "notificationCategories": "Bildirim kategorileri",

@@ -52,6 +52,7 @@ export default function AccessibilitySettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < accessibilityRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

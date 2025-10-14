@@ -319,6 +319,8 @@
       "colorMode": "Chế độ màu",
       "theme": "Chủ đề",
       "fontSize": "Kích thước phông chữ",
+      "nativeTabBar": "Sử dụng thanh tab gốc",
+      "nativeTabBarDescription": "Chuyển đổi giữa thanh tab gốc thử nghiệm và tab tùy chỉnh của Akari.",
       "requireAltText": "Bắt buộc văn bản thay thế trước khi đăng",
       "displayLargerTextBadges": "Hiển thị huy hiệu văn bản lớn hơn",
       "notificationCategories": "Danh mục thông báo",

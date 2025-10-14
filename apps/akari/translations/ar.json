@@ -319,6 +319,8 @@
       "colorMode": "وضع اللون",
       "theme": "السمة",
       "fontSize": "حجم الخط",
+      "nativeTabBar": "استخدم شريط علامات التبويب الأصلي",
+      "nativeTabBarDescription": "قم بالتبديل بين شريط علامات التبويب الأصلي التجريبي وعلامات التبويب المخصصة في Akari.",
       "requireAltText": "إلزام بإضافة نص بديل قبل النشر",
       "displayLargerTextBadges": "عرض شارات نص أكبر",
       "notificationCategories": "فئات الإشعارات",

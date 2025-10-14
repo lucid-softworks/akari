@@ -319,6 +319,8 @@
       "colorMode": "Modalità colore",
       "theme": "Tema",
       "fontSize": "Dimensione del carattere",
+      "nativeTabBar": "Utilizza la barra delle schede nativa",
+      "nativeTabBarDescription": "Passa dalla barra delle schede native sperimentali alle schede personalizzate di Akari.",
       "requireAltText": "Richiedi testo alternativo prima di pubblicare",
       "displayLargerTextBadges": "Mostra badge di testo più grandi",
       "notificationCategories": "Categorie di notifiche",

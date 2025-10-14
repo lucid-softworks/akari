@@ -319,6 +319,8 @@
       "colorMode": "Farbmodus",
       "theme": "Thema",
       "fontSize": "Schriftgröße",
+      "nativeTabBar": "Verwenden Sie die native Tab-Leiste",
+      "nativeTabBarDescription": "Wechseln Sie zwischen der experimentellen nativen Tab-Leiste und den benutzerdefinierten Tabs von Akari.",
       "requireAltText": "Alt-Text vor dem Posten erforderlich machen",
       "displayLargerTextBadges": "Größere Textabzeichen anzeigen",
       "notificationCategories": "Benachrichtigungskategorien",

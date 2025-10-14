@@ -107,6 +107,7 @@ export default function DevelopmentSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < developmentRows.length - 1}
+                accessory={item.accessory}
                 value={item.value}
               />
             ))}

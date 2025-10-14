@@ -55,6 +55,7 @@ export default function NotificationSettingsScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < stubRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

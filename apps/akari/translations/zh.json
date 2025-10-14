@@ -329,6 +329,8 @@
       "colorMode": "颜色模式",
       "theme": "主题",
       "fontSize": "字体大小",
+      "nativeTabBar": "使用原生标签栏",
+      "nativeTabBarDescription": "在实验性本机选项卡栏和 Akari 的自定义选项卡之间切换。",
       "requireAltText": "在发布之前需要Alt文本",
       "displayLargerTextBadges": "显示较大的文字徽章",
       "notificationCategories": "通知类别",

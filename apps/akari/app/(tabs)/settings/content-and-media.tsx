@@ -64,6 +64,7 @@ export default function ContentAndMediaScreen() {
                 label={item.label}
                 onPress={item.onPress}
                 showDivider={index < contentRows.length - 1}
+                accessory={item.accessory}
               />
             ))}
           </ThemedView>

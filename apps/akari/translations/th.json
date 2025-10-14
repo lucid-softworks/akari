@@ -319,6 +319,8 @@
       "colorMode": "โหมดสี",
       "theme": "ธีม",
       "fontSize": "ขนาดตัวอักษร",
+      "nativeTabBar": "ใช้แถบแท็บดั้งเดิม",
+      "nativeTabBarDescription": "สลับระหว่างแถบแท็บเนทิฟทดลองกับแท็บที่กำหนดเองของอาคาริ",
       "requireAltText": "ต้องมีข้อความแสดงแทนก่อนโพสต์",
       "displayLargerTextBadges": "แสดงป้ายข้อความขนาดใหญ่ขึ้น",
       "notificationCategories": "หมวดหมู่การแจ้งเตือน",
