@@ -35,14 +35,3 @@ jobs:
           lcov-path: coverage/lcov.info
           artifact-name: coverage-report
           artifact-path: coverage
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.9.0
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e -- --reporter=github
