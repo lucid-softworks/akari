@@ -27,12 +27,14 @@ export function usePushNotifications() {
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
   const registerPushSubscriptionMutation = useRegisterPushSubscription();
+  const isWeb = Platform.OS === 'web';
+  const unsupportedMessage = 'Push notifications are not supported on web';
   const [state, setState] = useState<PushNotificationState>({
     expoPushToken: null,
     devicePushToken: null,
     permissionStatus: null,
     isLoading: false,
-    error: null,
+    error: isWeb ? unsupportedMessage : null,
   });
 
   const notificationListener = useRef<Notifications.Subscription>(null);
@@ -49,6 +51,10 @@ export function usePushNotifications() {
 
   // Set up notification listeners
   useEffect(() => {
+    if (isWeb) {
+      return;
+    }
+
     // Handle navigation based on notification type
     const handleNotificationNavigation = (type: string, id: string) => {
       switch (type) {
@@ -100,10 +106,15 @@ export function usePushNotifications() {
         responseListener.current.remove();
       }
     };
-  }, [navigateToPost, navigateToProfile, router]);
+  }, [isWeb, navigateToPost, navigateToProfile, router]);
 
   // Request notification permissions
   const requestPermissions = async (): Promise<boolean> => {
+    if (isWeb) {
+      setState((prev) => ({ ...prev, error: unsupportedMessage, isLoading: false }));
+      return false;
+    }
+
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -119,6 +130,11 @@ export function usePushNotifications() {
 
   // Register for push notifications
   const register = async (): Promise<boolean> => {
+    if (isWeb) {
+      setState((prev) => ({ ...prev, error: unsupportedMessage, isLoading: false }));
+      return false;
+    }
+
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -156,6 +172,11 @@ export function usePushNotifications() {
 
   // Initialize push notifications (request permissions and register)
   const initialize = async (): Promise<boolean> => {
+    if (isWeb) {
+      setState((prev) => ({ ...prev, error: unsupportedMessage }));
+      return false;
+    }
+
     const hasPermission = await requestPermissions();
     if (hasPermission) {
       return await register();
@@ -165,6 +186,11 @@ export function usePushNotifications() {
 
   // Check current permission status
   const checkPermissionStatus = async (): Promise<void> => {
+    if (isWeb) {
+      setState((prev) => ({ ...prev, permissionStatus: null }));
+      return;
+    }
+
     try {
       const { status } = await Notifications.getPermissionsAsync();
       setState((prev) => ({ ...prev, permissionStatus: status }));
@@ -175,6 +201,10 @@ export function usePushNotifications() {
 
   // Get current badge count
   const getBadgeCount = async (): Promise<number> => {
+    if (isWeb) {
+      return 0;
+    }
+
     try {
       return await Notifications.getBadgeCountAsync();
     } catch (error) {
@@ -185,6 +215,10 @@ export function usePushNotifications() {
 
   // Set badge count
   const setBadgeCount = async (count: number): Promise<void> => {
+    if (isWeb) {
+      return;
+    }
+
     try {
       await Notifications.setBadgeCountAsync(count);
     } catch (error) {
@@ -194,6 +228,10 @@ export function usePushNotifications() {
 
   // Clear badge
   const clearBadge = async (): Promise<void> => {
+    if (isWeb) {
+      return;
+    }
+
     try {
       await Notifications.setBadgeCountAsync(0);
     } catch (error) {
@@ -204,8 +242,12 @@ export function usePushNotifications() {
 
   // Check permission status on mount
   useEffect(() => {
+    if (isWeb) {
+      return;
+    }
+
     checkPermissionStatus();
-  }, []);
+  }, [isWeb]);
 
   return {
     ...state,

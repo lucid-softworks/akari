@@ -587,4 +587,64 @@ describe('usePushNotifications', () => {
 
     expect(mockSetBadgeCountAsync).toHaveBeenCalledWith(0);
   });
+
+  it('disables push notification features on web', async () => {
+    Object.defineProperty(Platform, 'OS', { value: 'web' });
+
+    const { result } = await renderPushNotificationsHook();
+
+    expect(result.current.error).toBe('Push notifications are not supported on web');
+    expect(mockAddNotificationReceivedListener).not.toHaveBeenCalled();
+    expect(mockAddNotificationResponseReceivedListener).not.toHaveBeenCalled();
+    expect(mockGetPermissionsAsync).not.toHaveBeenCalled();
+
+    let permissionGranted = true;
+    await act(async () => {
+      permissionGranted = await result.current.requestPermissions();
+    });
+
+    expect(permissionGranted).toBe(false);
+    expect(mockRequestNotificationPermissions).not.toHaveBeenCalled();
+
+    let registrationResult = true;
+    await act(async () => {
+      registrationResult = await result.current.register();
+    });
+
+    expect(registrationResult).toBe(false);
+    expect(mockRegisterForPushNotifications).not.toHaveBeenCalled();
+
+    let initialized = true;
+    await act(async () => {
+      initialized = await result.current.initialize();
+    });
+
+    expect(initialized).toBe(false);
+
+    await act(async () => {
+      await result.current.checkPermissionStatus();
+    });
+
+    expect(mockGetPermissionsAsync).not.toHaveBeenCalled();
+
+    let badgeCount = -1;
+    await act(async () => {
+      badgeCount = await result.current.getBadgeCount();
+    });
+
+    expect(badgeCount).toBe(0);
+    expect(mockGetBadgeCountAsync).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await result.current.setBadgeCount(5);
+    });
+
+    expect(mockSetBadgeCountAsync).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await result.current.clearBadge();
+    });
+
+    expect(mockSetBadgeCountAsync).not.toHaveBeenCalled();
+  });
 });
