@@ -48,7 +48,11 @@ type NavigationItem = {
   badge?: number | null;
 };
 
-export function Sidebar() {
+type SidebarProps = {
+  onNavigate?: () => void;
+};
+
+export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -112,6 +116,7 @@ export function Sidebar() {
   const handleNavigate = (item: NavigationItem) => {
     setShowAccountSelector(false);
     router.push(item.route as any);
+    onNavigate?.();
   };
 
   const handleAccountSelect = (account: Account) => {
