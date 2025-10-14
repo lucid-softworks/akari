@@ -26,7 +26,7 @@ export function useSettingsNavigationItems() {
         key: 'account',
         icon: 'person.crop.circle',
         label: t('settings.account'),
-        route: '/(tabs)/settings/account',
+        route: '/(tabs)/settings',
       },
       {
         key: 'privacy-security',

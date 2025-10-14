@@ -37,7 +37,7 @@ jest.mock('expo-image', () => {
 jest.mock('expo-router', () => {
   const push = jest.fn();
   const replace = jest.fn();
-  const usePathname = jest.fn(() => '/(tabs)/settings/account');
+  const usePathname = jest.fn(() => '/(tabs)/settings');
 
   return {
     router: { push, replace },
@@ -132,7 +132,7 @@ beforeEach(() => {
   mockUseAccountProfiles.mockReturnValue({ data: {} });
   mockUseAccounts.mockReturnValue({ data: [] });
   mockUseCurrentAccount.mockReturnValue({ data: null });
-  mockUsePathname.mockReturnValue('/(tabs)/settings/account');
+  mockUsePathname.mockReturnValue('/(tabs)/settings');
   mockUseSwitchAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseRemoveAccount.mockReturnValue({ mutate: jest.fn() });
   mockUseWipeAllData.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue(undefined) });
@@ -162,7 +162,7 @@ describe('Settings index screen', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
 
     fireEvent.press(getByText('settings.account'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/settings/account');
+    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/settings');
   });
 
   it('opens the add account panel', () => {
@@ -175,6 +175,10 @@ describe('Settings index screen', () => {
 });
 
 describe('AccountSettingsScreen', () => {
+  beforeEach(() => {
+    mockUsePathname.mockReturnValue('/(tabs)/settings/account');
+  });
+
   it('shows message when no accounts exist', () => {
     const { getByText } = renderAccountSettings();
 
