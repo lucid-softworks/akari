@@ -300,6 +300,7 @@ describe('HardcodedTabBar interactions', () => {
   const renderTabBar = () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     render(<TabLayout />);
+    mockHapticTab.mockClear();
     const TabsModule = require('expo-router');
     const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
     const navigation = {

@@ -2,7 +2,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Image } from 'expo-image';
 import { Redirect, Tabs } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Animated, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
@@ -70,7 +70,6 @@ type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
   avatarUri?: string;
-  onOpenDrawer?: () => void;
 };
 
 function HardcodedTabBar({
@@ -79,7 +78,6 @@ function HardcodedTabBar({
   unreadMessagesCount,
   unreadNotificationsCount,
   avatarUri,
-  onOpenDrawer,
 }: HardcodedTabBarProps) {
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
@@ -90,8 +88,6 @@ function HardcodedTabBar({
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
   const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
-  const showMenuButton = typeof onOpenDrawer === 'function';
-
   return (
     <View
       style={[
@@ -109,19 +105,7 @@ function HardcodedTabBar({
         </View>
       ) : null}
       <View style={hardcodedTabStyles.content}>
-        {showMenuButton ? (
-          <HapticTab
-            accessibilityRole="button"
-            accessibilityLabel="Open navigation drawer"
-            onPress={onOpenDrawer}
-            style={[hardcodedTabStyles.tabButton, hardcodedTabStyles.menuButton]}
-          >
-            <View style={hardcodedTabStyles.iconContainer}>
-              <IconSymbol name="line.3.horizontal" color={inactiveTint} size={22} />
-            </View>
-          </HapticTab>
-        ) : null}
-        <View style={[hardcodedTabStyles.tabList, showMenuButton ? hardcodedTabStyles.tabListWithMenu : null]}>
+        <View style={hardcodedTabStyles.tabList}>
           {hardcodedTabs.map((tabKey) => {
           const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
           if (routeIndex === -1) {
@@ -185,7 +169,6 @@ function HardcodedTabBar({
           );
           })}
         </View>
-        {showMenuButton ? <View style={hardcodedTabStyles.menuSpacer} /> : null}
       </View>
     </View>
   );
@@ -202,6 +185,9 @@ export default function TabLayout() {
   const safeAreaInsets = useSafeAreaInsets();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const drawerOverlayColor = useThemeColor({ light: 'rgba(15, 17, 21, 0.36)', dark: 'rgba(7, 10, 18, 0.6)' }, 'background');
+  const headerBackground = useThemeColor({ light: '#FFFFFF', dark: '#0B0F19' }, 'background');
+  const headerIconColor = useThemeColor({ light: '#111827', dark: '#F9FAFB' }, 'text');
+  const headerBorderColor = useBorderColor();
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -308,7 +294,7 @@ export default function TabLayout() {
         overlayColor={drawerOverlayColor}
         drawerBackgroundColor="transparent"
         style={mobileDrawerStyles.drawerContainer}
-        renderNavigationView={() => (
+        renderNavigationView={(_progress) => (
           <View
             style={[
               mobileDrawerStyles.drawerContent,
@@ -322,20 +308,53 @@ export default function TabLayout() {
           </View>
         )}
       >
-        <Tabs
-          screenOptions={{
-            headerShown: false,
-          }}
-          tabBar={(props) => (
-            <HardcodedTabBar
-              {...props}
-              unreadMessagesCount={unreadMessagesCount}
-              unreadNotificationsCount={unreadNotificationsCount}
-              avatarUri={currentAccount?.avatar}
-              onOpenDrawer={handleOpenDrawer}
-            />
-          )}
-        >
+        {(drawerProgress) => {
+          const translateX =
+            drawerProgress?.interpolate({ inputRange: [0, 1], outputRange: [0, 304] }) ?? 0;
+
+          return (
+            <Animated.View
+              style={[
+                mobileDrawerStyles.contentContainer,
+                drawerProgress
+                  ? {
+                      transform: [{ translateX }],
+                    }
+                  : null,
+              ]}
+            >
+              <View
+                style={[
+                  mobileDrawerStyles.header,
+                  {
+                    paddingTop: safeAreaInsets.top + 10,
+                    backgroundColor: headerBackground,
+                    borderBottomColor: headerBorderColor,
+                  },
+                ]}
+              >
+                <HapticTab
+                  accessibilityRole="button"
+                  accessibilityLabel="Open navigation drawer"
+                  onPress={handleOpenDrawer}
+                  style={mobileDrawerStyles.headerButton}
+                >
+                  <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
+                </HapticTab>
+              </View>
+              <Tabs
+                screenOptions={{
+                  headerShown: false,
+                }}
+                tabBar={(props) => (
+                  <HardcodedTabBar
+                    {...props}
+                    unreadMessagesCount={unreadMessagesCount}
+                    unreadNotificationsCount={unreadNotificationsCount}
+                    avatarUri={currentAccount?.avatar}
+                  />
+                )}
+              >
         <Tabs.Screen
           name="index"
           options={{
@@ -402,7 +421,10 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
           }}
         />
-        </Tabs>
+              </Tabs>
+            </Animated.View>
+          );
+        }}
       </DrawerLayout>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
@@ -449,24 +471,15 @@ const hardcodedTabStyles = StyleSheet.create({
     marginVertical: 0,
     paddingVertical: 0,
   },
-  menuButton: {
-    width: 44,
-  },
   tabList: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-between',
   },
-  tabListWithMenu: {
-    marginHorizontal: 4,
-  },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  menuSpacer: {
-    width: 44,
   },
   badgeWrapper: {
     position: 'relative',
@@ -482,5 +495,23 @@ const mobileDrawerStyles = StyleSheet.create({
   drawerContent: {
     flex: 1,
     paddingHorizontal: 12,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  headerButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
