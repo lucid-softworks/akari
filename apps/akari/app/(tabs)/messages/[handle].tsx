@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -278,6 +278,17 @@ export default function ConversationScreen() {
     isFetchingNextPage,
   } = useMessages(conversation?.convoId, 50);
 
+  const messages = useMemo(() => {
+    const flattenedMessages = messagesData?.pages.flatMap((page) => page.messages) ?? [];
+
+    return flattenedMessages.slice().sort((firstMessage, secondMessage) => {
+      const firstSentAt = new Date(firstMessage.sentAt).getTime();
+      const secondSentAt = new Date(secondMessage.sentAt).getTime();
+
+      return secondSentAt - firstSentAt;
+    });
+  }, [messagesData]);
+
   // Send message mutation
   const sendMessageMutation = useSendMessage();
 
@@ -467,9 +478,6 @@ export default function ConversationScreen() {
       </SafeAreaView>
     );
   }
-
-  // Flatten all pages of messages into a single array
-  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
 
   return (
     <SafeAreaView style={styles.container}>
