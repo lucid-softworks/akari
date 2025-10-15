@@ -22,12 +22,29 @@ jest.mock('expo-router', () => {
   // @ts-ignore
   Tabs.Screen = Screen;
   const Redirect = ({ href }: { href: string }) => <Text>redirect:{href}</Text>;
-  return { Tabs, Redirect };
+  const useRouter = jest.fn(() => ({ back: jest.fn() }));
+  return { Tabs, Redirect, usePathname: jest.fn(() => '/(tabs)'), useRouter };
 });
 
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(),
-}));
+const safeAreaProviderValues: Array<{ top: number; right: number; bottom: number; left: number }> = [];
+
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  return {
+    useSafeAreaInsets: jest.fn(),
+    SafeAreaInsetsContext: {
+      Provider: ({ value, children }: { value: any; children: React.ReactNode }) => {
+        safeAreaProviderValues.push(value);
+        return <>{children}</>;
+      },
+      Consumer: ({ children }: { children: (value: any) => React.ReactNode }) => {
+        const latestValue =
+          safeAreaProviderValues[safeAreaProviderValues.length - 1] ?? { top: 0, right: 0, bottom: 0, left: 0 };
+        return <>{children(latestValue)}</>;
+      },
+    },
+  };
+});
 
 jest.mock('@/hooks/queries/useAuthStatus');
 jest.mock('@/hooks/queries/useCurrentAccount');
@@ -52,7 +69,7 @@ jest.mock('@/components/AccountSwitcherSheet', () => {
 jest.mock('@/components/Sidebar', () => {
   const React = require('react');
   const { Text } = require('react-native');
-  return { Sidebar: () => <Text>Sidebar</Text> };
+  return { Sidebar: () => <Text>Sidebar</Text>, SIDEBAR_WIDTH: 264 };
 });
 
 jest.mock('@/components/TabBadge', () => {
@@ -94,6 +111,8 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
+const mockUsePathname = (require('expo-router').usePathname as jest.Mock);
+const mockUseRouter = require('expo-router').useRouter as jest.Mock;
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
@@ -102,6 +121,8 @@ const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockUsePathname.mockReturnValue('/(tabs)');
+  mockUseRouter.mockReturnValue({ back: jest.fn() });
   mockUseCurrentAccount.mockReturnValue({
     data: {
       did: 'did:plc:test',
@@ -119,6 +140,7 @@ beforeEach(() => {
   );
   mockUseSafeAreaInsets.mockReturnValue({ top: 0, right: 0, bottom: 0, left: 0 });
   mockAccountSwitcherSheet.mockClear();
+  safeAreaProviderValues.length = 0;
 });
 
 describe('TabLayout', () => {
@@ -145,6 +167,7 @@ describe('TabLayout', () => {
     expect(Tabs.mock.calls[0][0].screenOptions).toEqual({
       headerShown: false,
       tabBarStyle: { display: 'none' },
+      sceneContainerStyle: { paddingTop: 0 },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
@@ -166,6 +189,10 @@ describe('TabLayout', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 3 });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
+    expect(TabsModule.Tabs.mock.calls[0][0].screenOptions).toEqual({
+      headerShown: false,
+      sceneContainerStyle: { paddingTop: 0 },
+    });
     const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
     expect(typeof tabBar).toBe('function');
 
@@ -210,6 +237,19 @@ describe('TabLayout', () => {
       'profile',
       'settings',
     ]);
+  });
+
+  it('shows hamburger on root mobile route and back button on nested route', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+
+    const { getByText, queryByText, rerender } = render(<TabLayout />);
+    expect(getByText('line.3.horizontal')).toBeTruthy();
+    expect(queryByText('chevron.left')).toBeNull();
+
+    mockUsePathname.mockReturnValue('/(tabs)/messages/pending');
+    rerender(<TabLayout />);
+    expect(getByText('chevron.left')).toBeTruthy();
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
@@ -280,6 +320,45 @@ describe('TabLayout', () => {
     const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(closeCall?.[0].visible).toBe(false);
   });
+
+  it('hides the mobile header on the profile tab', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUsePathname.mockReturnValue('/(tabs)/profile');
+    render(<TabLayout />);
+    expect(mockHapticTab).not.toHaveBeenCalled();
+  });
+
+  it('shows the correct mobile header title for active tabs', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUsePathname.mockReturnValue('/notifications');
+    const { getByText } = render(<TabLayout />);
+    expect(getByText('Notifications')).toBeTruthy();
+  });
+
+  it('removes the top safe area inset when the mobile header is visible', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseSafeAreaInsets.mockReturnValue({ top: 24, right: 4, bottom: 8, left: 2 });
+    render(<TabLayout />);
+    expect(safeAreaProviderValues[safeAreaProviderValues.length - 1]).toEqual({
+      top: 0,
+      right: 4,
+      bottom: 8,
+      left: 2,
+    });
+  });
+
+  it('preserves the top safe area inset when the mobile header is hidden', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseSafeAreaInsets.mockReturnValue({ top: 24, right: 4, bottom: 8, left: 2 });
+    mockUsePathname.mockReturnValue('/(tabs)/profile');
+    render(<TabLayout />);
+    expect(safeAreaProviderValues[safeAreaProviderValues.length - 1]).toEqual({
+      top: 24,
+      right: 4,
+      bottom: 8,
+      left: 2,
+    });
+  });
 });
 
 describe('HardcodedTabBar interactions', () => {
@@ -300,6 +379,7 @@ describe('HardcodedTabBar interactions', () => {
   const renderTabBar = () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     render(<TabLayout />);
+    mockHapticTab.mockClear();
     const TabsModule = require('expo-router');
     const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
     const navigation = {

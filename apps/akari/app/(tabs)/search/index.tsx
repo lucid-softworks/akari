@@ -18,6 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import { useResponsive } from '@/hooks/useResponsive';
 
 type SearchResult = {
   type: 'profile' | 'post';
@@ -42,6 +43,7 @@ type SearchListHeaderProps = {
   inputPlaceholder: string;
   searchLabel: string;
   searchingLabel: string;
+  showTitle: boolean;
 };
 
 const SearchListHeader = React.memo(
@@ -61,12 +63,23 @@ const SearchListHeader = React.memo(
     inputPlaceholder,
     searchLabel,
     searchingLabel,
+    showTitle,
   }: SearchListHeaderProps) => {
     return (
-      <ThemedView style={[styles.listHeaderContainer, { paddingTop: topInset }]}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>
-        </ThemedView>
+      <ThemedView
+        style={[
+          styles.listHeaderContainer,
+          {
+            paddingTop: topInset,
+            paddingBottom: showTitle ? 12 : 0,
+          },
+        ]}
+      >
+        {showTitle ? (
+          <ThemedView style={styles.header}>
+            <ThemedText style={[styles.title, { color: textColor }]}>{title}</ThemedText>
+          </ThemedView>
+        ) : null}
 
         <ThemedView style={styles.searchContainer}>
           <TextInput
@@ -116,6 +129,7 @@ export default function SearchScreen() {
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
+  const { isLargeScreen } = useResponsive();
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
@@ -348,7 +362,7 @@ export default function SearchScreen() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         showTabs={shouldShowTabs}
-        topInset={insets.top}
+        topInset={isLargeScreen ? insets.top : 0}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         textColor={textColor}
@@ -356,6 +370,7 @@ export default function SearchScreen() {
         inputPlaceholder={t('search.searchInputPlaceholder')}
         searchLabel={t('common.search')}
         searchingLabel={t('search.searching')}
+        showTitle={isLargeScreen}
       />
     ),
     [
@@ -364,6 +379,7 @@ export default function SearchScreen() {
       borderColor,
       handleSearch,
       insets.top,
+      isLargeScreen,
       isLoading,
       query,
       setActiveTab,
@@ -412,9 +428,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  listHeaderContainer: {
-    paddingBottom: 12,
-  },
+  listHeaderContainer: {},
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,

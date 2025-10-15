@@ -65,7 +65,6 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
-const mockRouterBack = router.back as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
@@ -122,8 +121,6 @@ describe('ConversationScreen', () => {
 
     const { getByText } = render(<ConversationScreen />);
     expect(getByText('common.loading common.conversations...')).toBeTruthy();
-    fireEvent.press(getByText('chevron.left'));
-    expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 
   it('renders error state when messages query fails', () => {
@@ -142,8 +139,6 @@ describe('ConversationScreen', () => {
     const { getByText } = render(<ConversationScreen />);
     expect(getByText('no access')).toBeTruthy();
     expect(getByText('common.errorLoadingMessages')).toBeTruthy();
-    fireEvent.press(getByText('chevron.left'));
-    expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 
   it('sends a message and clears input', async () => {
@@ -239,7 +234,7 @@ describe('ConversationScreen', () => {
     expect(fetchNextPage).toHaveBeenCalled();
   });
 
-  it('navigates to the profile and back from the header', () => {
+  it('navigates to the profile from the header', () => {
     const conversation = { handle: 'alice', convoId: '1', avatar: 'a.png', displayName: 'Alice' };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
@@ -257,8 +252,6 @@ describe('ConversationScreen', () => {
     fireEvent.press(getByText('@alice'));
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
 
-    fireEvent.press(getByText('chevron.left'));
-    expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 
   it('returns early when message text is empty', () => {

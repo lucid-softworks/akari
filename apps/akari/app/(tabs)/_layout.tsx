@@ -1,13 +1,14 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Image } from 'expo-image';
-import { Redirect, Tabs } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
+import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { HapticTab } from '@/components/HapticTab';
-import { Sidebar } from '@/components/Sidebar';
+import { Sidebar, SIDEBAR_WIDTH } from '@/components/Sidebar';
 import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -21,6 +22,23 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+
+const mobileHeaderLogo = require('@/assets/images/icon.png');
+
+const headerTitles: Record<string, string> = {
+  index: 'Home',
+  search: 'Search',
+  messages: 'Messages',
+  notifications: 'Notifications',
+  profile: 'Profile',
+  settings: 'Settings',
+  bookmarks: 'Bookmarks',
+  post: 'Post',
+};
+
+const fullDrawerSwipeEdgeWidth = Dimensions.get('window').width;
+const nestedDrawerSwipeEdgeWidth = 32;
+const zeroTopSceneContainerStyle = { paddingTop: 0 } as const;
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -87,7 +105,6 @@ function HardcodedTabBar({
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
   const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'profile', 'settings'];
-
   return (
     <View
       style={[
@@ -105,68 +122,70 @@ function HardcodedTabBar({
         </View>
       ) : null}
       <View style={hardcodedTabStyles.content}>
-        {hardcodedTabs.map((tabKey) => {
-          const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
-          if (routeIndex === -1) {
-            return null;
-          }
-
-          const route = state.routes[routeIndex];
-          const isFocused = state.index === routeIndex;
-          const color = isFocused ? accentColor : inactiveTint;
-          const badgeCount =
-            tabKey === 'messages' ? unreadMessagesCount : tabKey === 'notifications' ? unreadNotificationsCount : 0;
-
-          const handlePress = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (isFocused) {
-              tabScrollRegistry.handleTabPress(tabKey);
+        <View style={hardcodedTabStyles.tabList}>
+          {hardcodedTabs.map((tabKey) => {
+            const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
+            if (routeIndex === -1) {
+              return null;
             }
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
+            const route = state.routes[routeIndex];
+            const isFocused = state.index === routeIndex;
+            const color = isFocused ? accentColor : inactiveTint;
+            const badgeCount =
+              tabKey === 'messages' ? unreadMessagesCount : tabKey === 'notifications' ? unreadNotificationsCount : 0;
 
-          const handleLongPress = () => {
-            navigation.emit({
-              type: 'tabLongPress',
-              target: route.key,
-            });
-          };
+            const handlePress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
 
-          return (
-            <HapticTab
-              key={tabKey}
-              accessibilityRole="button"
-              accessibilityState={{ selected: isFocused }}
-              onPress={handlePress}
-              onLongPress={handleLongPress}
-              style={hardcodedTabStyles.tabButton}
-            >
-              <View style={hardcodedTabStyles.iconContainer}>
-                {tabKey === 'messages' || tabKey === 'notifications' ? (
-                  <View style={hardcodedTabStyles.badgeWrapper}>
-                    <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
-                    <TabBadge count={badgeCount} size="small" />
-                  </View>
-                ) : tabKey === 'profile' ? (
-                  <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
-                ) : (
-                  <TabBarIcon
-                    name={tabKey === 'index' ? 'house.fill' : tabKey === 'search' ? 'magnifyingglass' : 'gearshape.fill'}
-                    color={color}
-                  />
-                )}
-              </View>
-            </HapticTab>
-          );
-        })}
+              if (isFocused) {
+                tabScrollRegistry.handleTabPress(tabKey);
+              }
+
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            };
+
+            const handleLongPress = () => {
+              navigation.emit({
+                type: 'tabLongPress',
+                target: route.key,
+              });
+            };
+
+            return (
+              <HapticTab
+                key={tabKey}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isFocused }}
+                onPress={handlePress}
+                onLongPress={handleLongPress}
+                style={hardcodedTabStyles.tabButton}
+              >
+                <View style={hardcodedTabStyles.iconContainer}>
+                  {tabKey === 'messages' || tabKey === 'notifications' ? (
+                    <View style={hardcodedTabStyles.badgeWrapper}>
+                      <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
+                      <TabBadge count={badgeCount} size="small" />
+                    </View>
+                  ) : tabKey === 'profile' ? (
+                    <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
+                  ) : (
+                    <TabBarIcon
+                      name={tabKey === 'index' ? 'house.fill' : tabKey === 'search' ? 'magnifyingglass' : 'gearshape.fill'}
+                      color={color}
+                    />
+                  )}
+                </View>
+              </HapticTab>
+            );
+          })}
+        </View>
       </View>
     </View>
   );
@@ -179,7 +198,38 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
+  const drawerRef = useRef<React.ComponentRef<typeof DrawerLayout>>(null);
+  const safeAreaInsets = useSafeAreaInsets();
+  const pathname = usePathname();
+  const router = useRouter();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const drawerOverlayColor = useThemeColor({ light: 'rgba(15, 17, 21, 0.36)', dark: 'rgba(7, 10, 18, 0.6)' }, 'background');
+  const headerBackground = useThemeColor({ light: '#FFFFFF', dark: '#0B0F19' }, 'background');
+  const headerIconColor = useThemeColor({ light: '#111827', dark: '#F9FAFB' }, 'text');
+  const headerBorderColor = useBorderColor();
+  const headerTextColor = headerIconColor;
+
+  const { currentTabKey, isNestedRoute } = useMemo(() => {
+    if (!pathname) {
+      return { currentTabKey: 'index', isNestedRoute: false };
+    }
+
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length === 0) {
+      return { currentTabKey: 'index', isNestedRoute: false };
+    }
+
+    const nonGroupSegments = segments.filter((segment) => !segment.startsWith('('));
+    const firstNonGroupSegment = nonGroupSegments[0] ?? 'index';
+    return {
+      currentTabKey: firstNonGroupSegment,
+      isNestedRoute: nonGroupSegments.length > 1,
+    };
+  }, [pathname]);
+
+  const headerTitle = headerTitles[currentTabKey] ?? 'Akari';
+  const shouldShowMobileHeader = currentTabKey !== 'profile';
+  const drawerSwipeEdgeWidth = isNestedRoute ? nestedDrawerSwipeEdgeWidth : fullDrawerSwipeEdgeWidth;
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -193,8 +243,35 @@ export default function TabLayout() {
     setAccountSwitcherVisible(false);
   }, []);
 
+  const handleOpenDrawer = useCallback(() => {
+    drawerRef.current?.openDrawer();
+  }, []);
+
+  const handleCloseDrawer = useCallback(() => {
+    drawerRef.current?.closeDrawer();
+  }, []);
+
+  const handleHeaderLeftPress = useCallback(() => {
+    if (isNestedRoute) {
+      router.back();
+      return;
+    }
+
+    handleOpenDrawer();
+  }, [handleOpenDrawer, isNestedRoute, router]);
+
   // Initialize push notifications
   usePushNotifications();
+
+  const contentSafeAreaInsets = useMemo(
+    () => ({
+      top: shouldShowMobileHeader ? 0 : safeAreaInsets.top,
+      right: safeAreaInsets.right,
+      bottom: safeAreaInsets.bottom,
+      left: safeAreaInsets.left,
+    }),
+    [safeAreaInsets.bottom, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top, shouldShowMobileHeader],
+  );
 
   if (isLoading) {
     return (
@@ -247,6 +324,7 @@ export default function TabLayout() {
                 screenOptions={{
                   headerShown: false,
                   tabBarStyle: { display: 'none' },
+                  sceneContainerStyle: zeroTopSceneContainerStyle,
                 }}
                 backBehavior={Platform.OS === 'web' ? 'history' : undefined}
               >
@@ -269,86 +347,170 @@ export default function TabLayout() {
   // For mobile screens, show the traditional tab bar
   return (
     <>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-        }}
-        tabBar={(props) => (
-          <HardcodedTabBar
-            {...props}
-            unreadMessagesCount={unreadMessagesCount}
-            unreadNotificationsCount={unreadNotificationsCount}
-            avatarUri={currentAccount?.avatar}
-          />
+      <DrawerLayout
+        ref={drawerRef}
+        drawerWidth={SIDEBAR_WIDTH}
+        drawerPosition="left"
+        drawerType="front"
+        edgeWidth={drawerSwipeEdgeWidth}
+        overlayColor={drawerOverlayColor}
+        drawerBackgroundColor="transparent"
+        style={mobileDrawerStyles.drawerContainer}
+        renderNavigationView={(_progress) => (
+          <View
+            style={[
+              mobileDrawerStyles.drawerContent,
+              {
+                paddingTop: safeAreaInsets.top,
+                paddingBottom: safeAreaInsets.bottom,
+              },
+            ]}
+          >
+            <Sidebar onNavigate={handleCloseDrawer} showCollapseToggle={false} />
+          </View>
         )}
       >
-        <Tabs.Screen
-          name="index"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="messages"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="message.fill" color={color} />
-                <TabBadge count={unreadMessagesCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <View style={{ position: 'relative' }}>
-                <TabBarIcon name="bell.fill" color={color} />
-                <TabBadge count={unreadNotificationsCount} size="small" />
-              </View>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="bookmarks"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="post"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            tabBarIcon: ({ color, focused }) => (
-              <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
-            ),
-          }}
-          listeners={() => ({
-            tabLongPress: (event) => {
-              event.preventDefault();
-              handleOpenAccountSwitcher();
-            },
-          })}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-          }}
-        />
-      </Tabs>
+        {(drawerProgress) => {
+          const translateX =
+            drawerProgress?.interpolate({ inputRange: [0, 1], outputRange: [0, SIDEBAR_WIDTH] }) ?? 0;
+
+          return (
+            <SafeAreaInsetsContext.Provider value={contentSafeAreaInsets}>
+              <Animated.View
+                style={[
+                  mobileDrawerStyles.contentContainer,
+                  drawerProgress
+                    ? {
+                        transform: [{ translateX }],
+                      }
+                    : null,
+                  shouldShowMobileHeader
+                    ? null
+                    : {
+                        paddingTop: safeAreaInsets.top,
+                      },
+                ]}
+              >
+                {shouldShowMobileHeader ? (
+                  <View
+                    style={[
+                      mobileDrawerStyles.header,
+                      {
+                        paddingTop: safeAreaInsets.top + 6,
+                        backgroundColor: headerBackground,
+                        borderBottomColor: headerBorderColor,
+                      },
+                    ]}
+                  >
+                    <HapticTab
+                      accessibilityRole="button"
+                      accessibilityLabel={isNestedRoute ? 'Go back' : 'Open navigation drawer'}
+                      onPress={handleHeaderLeftPress}
+                      style={mobileDrawerStyles.headerButton}
+                    >
+                      <IconSymbol
+                        name={isNestedRoute ? 'chevron.left' : 'line.3.horizontal'}
+                        color={headerIconColor}
+                        size={22}
+                      />
+                    </HapticTab>
+                    <View style={mobileDrawerStyles.headerContent}>
+                      <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                      {headerTitle ? (
+                        <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
+                          {headerTitle}
+                        </Text>
+                      ) : null}
+                    </View>
+                    <View style={mobileDrawerStyles.headerSpacer} />
+                  </View>
+                ) : null}
+                <Tabs
+                  screenOptions={{
+                    headerShown: false,
+                    sceneContainerStyle: zeroTopSceneContainerStyle,
+                  }}
+                  tabBar={(props) => (
+                    <HardcodedTabBar
+                      {...props}
+                      unreadMessagesCount={unreadMessagesCount}
+                      unreadNotificationsCount={unreadNotificationsCount}
+                      avatarUri={currentAccount?.avatar}
+                    />
+                  )}
+                >
+                  <Tabs.Screen
+                    name="index"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="search"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="messages"
+                    options={{
+                      tabBarIcon: ({ color }) => (
+                        <View style={{ position: 'relative' }}>
+                          <TabBarIcon name="message.fill" color={color} />
+                          <TabBadge count={unreadMessagesCount} size="small" />
+                        </View>
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="notifications"
+                    options={{
+                      tabBarIcon: ({ color }) => (
+                        <View style={{ position: 'relative' }}>
+                          <TabBarIcon name="bell.fill" color={color} />
+                          <TabBadge count={unreadNotificationsCount} size="small" />
+                        </View>
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="bookmarks"
+                    options={{
+                      href: null,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="post"
+                    options={{
+                      href: null,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="profile"
+                    options={{
+                      tabBarIcon: ({ color, focused }) => (
+                        <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
+                      ),
+                    }}
+                    listeners={() => ({
+                      tabLongPress: (event) => {
+                        event.preventDefault();
+                        handleOpenAccountSwitcher();
+                      },
+                    })}
+                  />
+                  <Tabs.Screen
+                    name="settings"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
+                    }}
+                  />
+                </Tabs>
+              </Animated.View>
+            </SafeAreaInsetsContext.Provider>
+          );
+        }}
+      </DrawerLayout>
       <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
   );
@@ -384,7 +546,7 @@ const hardcodedTabStyles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'stretch',
     width: '100%',
@@ -394,6 +556,12 @@ const hardcodedTabStyles = StyleSheet.create({
     marginVertical: 0,
     paddingVertical: 0,
   },
+  tabList: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+  },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -402,5 +570,53 @@ const hardcodedTabStyles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+});
+
+const mobileDrawerStyles = StyleSheet.create({
+  drawerContainer: {
+    flex: 1,
+  },
+  drawerContent: {
+    flex: 1,
+    paddingHorizontal: 0,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingBottom: 0,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerLogo: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  headerSpacer: {
+    width: 44,
+    height: 44,
   },
 });

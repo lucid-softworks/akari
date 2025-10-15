@@ -24,6 +24,7 @@ import { useSettingsNavigationItems } from '@/hooks/useSettingsNavigationItems';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { useResponsive } from '@/hooks/useResponsive';
 
 const EXTERNAL_LINKS = {
   helpCenter: 'https://blueskyweb.zendesk.com/hc/en-us',
@@ -41,6 +42,7 @@ export default function SettingsScreen() {
   const { data: currentAccount } = useCurrentAccount();
   const { data: accountProfiles } = useAccountProfiles();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { isLargeScreen } = useResponsive();
 
   const handleScrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -143,16 +145,18 @@ export default function SettingsScreen() {
   const contentPaddingBottom = Math.max(insets.bottom, 24) + 24;
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }] }>
+    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={[styles.scrollViewContent, { paddingBottom: contentPaddingBottom }]}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
-          <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
-        </ThemedView>
+        {isLargeScreen ? (
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
+            <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
+          </ThemedView>
+        ) : null}
 
         <ThemedView style={[styles.profileCard, { borderColor }]}> 
           <ThemedView style={styles.profileInfo}>

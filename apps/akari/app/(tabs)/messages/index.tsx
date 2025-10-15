@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ConversationSkeleton } from '@/components/skeletons';
@@ -15,6 +15,7 @@ import en from '@/translations/en.json';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
+import { useResponsive } from '@/hooks/useResponsive';
 
 type Conversation = {
   id: string;
@@ -58,6 +59,7 @@ export function MessagesListScreen({
   const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
+  const { isLargeScreen } = useResponsive();
 
   const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -83,6 +85,30 @@ export function MessagesListScreen({
 
     return flattened.filter((conversation) => conversation.status === status);
   }, [conversationsData, status]);
+
+  const previewAvatars = React.useMemo(
+    () => {
+      const unique = new Set<string>();
+      const avatars: { key: string; uri?: string; fallback: string }[] = [];
+
+      for (const conversation of conversations) {
+        if (unique.has(conversation.id)) {
+          continue;
+        }
+
+        unique.add(conversation.id);
+        const fallback = (conversation.displayName || conversation.handle || 'U').charAt(0).toUpperCase();
+        avatars.push({ key: conversation.id, uri: conversation.avatar, fallback });
+
+        if (avatars.length === 5) {
+          break;
+        }
+      }
+
+      return avatars;
+    },
+    [conversations],
+  );
 
   const handleRefresh = React.useCallback(async () => {
     await refetch({ throwOnError: false });
@@ -139,7 +165,7 @@ export function MessagesListScreen({
         </ThemedView>
       </TouchableOpacity>
     ),
-    [borderColor, t],
+    [borderColor, navigateToProfile, t],
   );
 
   const renderFooter = React.useCallback(() => {
@@ -162,25 +188,67 @@ export function MessagesListScreen({
 
   const listHeaderComponent = React.useCallback(
     () => (
-      <ThemedView style={[styles.headerContainer, { paddingTop: insets.top }]}>
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedView style={styles.headerTitleContainer}>
-            {onBackPress ? (
-              <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}>
-                <IconSymbol name="chevron.left" size={24} color="#007AFF" />
+      <ThemedView
+        style={[
+          styles.headerContainer,
+          {
+            paddingTop: isLargeScreen ? insets.top : 0,
+            paddingBottom: isLargeScreen ? 12 : 0,
+          },
+        ]}
+      >
+        {isLargeScreen ? (
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
+            <ThemedView style={styles.headerTitleContainer}> 
+              {onBackPress ? ( 
+                <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}> 
+                  <IconSymbol name="chevron.left" size={24} color="#007AFF" /> 
+                </TouchableOpacity> 
+              ) : null} 
+              <ThemedText style={styles.title}>{t(titleKey)}</ThemedText> 
+            </ThemedView> 
+            {pendingButtonConfig ? ( 
+              <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={0.7}> 
+                <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText> 
+              </TouchableOpacity> 
+            ) : null} 
+          </ThemedView> 
+        ) : ( 
+          <ThemedView style={[styles.mobileToolbar, { borderBottomColor: borderColor }]}> 
+            <View style={styles.mobileToolbarAvatars}> 
+              {previewAvatars.map((avatar) => ( 
+                <ThemedView key={avatar.key} style={styles.mobileAvatar}> 
+                  {avatar.uri ? ( 
+                    <Image source={{ uri: avatar.uri }} style={styles.mobileAvatarImage} contentFit="cover" /> 
+                  ) : ( 
+                    <ThemedText style={styles.mobileAvatarFallback}>{avatar.fallback}</ThemedText> 
+                  )} 
+                </ThemedView> 
+              ))} 
+            </View> 
+            {pendingButtonConfig ? ( 
+              <TouchableOpacity
+                style={styles.mobilePendingButton}
+                onPress={pendingButtonConfig.onPress}
+                activeOpacity={0.7}
+              >
+                <ThemedText style={styles.mobilePendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
               </TouchableOpacity>
             ) : null}
-            <ThemedText style={styles.title}>{t(titleKey)}</ThemedText>
           </ThemedView>
-          {pendingButtonConfig ? (
-            <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={0.7}>
-              <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
-            </TouchableOpacity>
-          ) : null}
-        </ThemedView>
+        )}
       </ThemedView>
     ),
-    [borderColor, insets.top, onBackPress, pendingButtonConfig, t, titleKey],
+    [
+      borderColor,
+      insets.top,
+      isLargeScreen,
+      onBackPress,
+      pendingButtonConfig,
+      previewAvatars,
+      t,
+      titleKey,
+    ],
   );
 
   return (
@@ -243,15 +311,46 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    paddingBottom: 12,
+    paddingHorizontal: 16,
   },
   header: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  mobileToolbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
+  },
+  mobileToolbarAvatars: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 8,
+  },
+  mobileAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007AFF',
+  },
+  mobileAvatarImage: {
+    width: 32,
+    height: 32,
+  },
+  mobileAvatarFallback: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   headerTitleContainer: {
     flexDirection: 'row',
@@ -273,6 +372,17 @@ const styles = StyleSheet.create({
   },
   pendingButtonText: {
     color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  mobilePendingButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  mobilePendingButtonText: {
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
   },

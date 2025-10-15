@@ -515,10 +515,20 @@ export default function NotificationsScreen() {
 
   const listHeaderComponent = useCallback(
     () => (
-      <ThemedView style={[styles.headerContainer, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
-        <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-        </ThemedView>
+      <ThemedView
+        style={[
+          styles.headerContainer,
+          {
+            paddingTop: isLargeScreen ? insets.top : 0,
+            paddingBottom: isLargeScreen ? 12 : 0,
+          },
+        ]}
+      >
+        {isLargeScreen ? (
+          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
+            <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
+          </ThemedView>
+        ) : null}
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
     ),
@@ -526,7 +536,11 @@ export default function NotificationsScreen() {
   );
 
   if (isError) {
-    return <ThemedView style={[styles.container, { paddingTop: insets.top }]}>{renderErrorState()}</ThemedView>;
+    return (
+      <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
+        {renderErrorState()}
+      </ThemedView>
+    );
   }
 
   return (
@@ -557,9 +571,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerContainer: {
-    paddingBottom: 12,
-  },
+  headerContainer: {},
   listContent: {
     paddingBottom: 100,
   },

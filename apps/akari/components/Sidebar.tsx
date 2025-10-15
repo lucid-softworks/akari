@@ -16,7 +16,7 @@ import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificati
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
-const EXPANDED_WIDTH = 264;
+export const SIDEBAR_WIDTH = 264;
 
 const palette = {
   background: '#0F1115',
@@ -48,7 +48,12 @@ type NavigationItem = {
   badge?: number | null;
 };
 
-export function Sidebar() {
+type SidebarProps = {
+  onNavigate?: () => void;
+  showCollapseToggle?: boolean;
+};
+
+export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -112,6 +117,7 @@ export function Sidebar() {
   const handleNavigate = (item: NavigationItem) => {
     setShowAccountSelector(false);
     router.push(item.route as any);
+    onNavigate?.();
   };
 
   const handleAccountSelect = (account: Account) => {
@@ -189,7 +195,7 @@ export function Sidebar() {
   };
 
   return (
-    <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
+    <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : SIDEBAR_WIDTH }]}>
       <View style={styles.header}>
         <Pressable
           accessibilityRole="button"
@@ -298,20 +304,22 @@ export function Sidebar() {
         ) : null}
       </View>
 
-      <View style={styles.footer}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          onPress={() => setCollapsed((value) => !value)}
-          style={({ pressed }) => [
-            styles.collapseButton,
-            pressed && { backgroundColor: palette.hover },
-          ]}
-        >
-          {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
-          <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
-        </Pressable>
-      </View>
+      {showCollapseToggle ? (
+        <View style={styles.footer}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            onPress={() => setCollapsed((value) => !value)}
+            style={({ pressed }) => [
+              styles.collapseButton,
+              pressed && { backgroundColor: palette.hover },
+            ]}
+          >
+            {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
+            <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
+          </Pressable>
+        </View>
+      ) : null}
 
       {showAccountSelector ? (
         <View

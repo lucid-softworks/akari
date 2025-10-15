@@ -1,10 +1,14 @@
 import { Stack } from 'expo-router';
 
+import { useResponsive } from '@/hooks/useResponsive';
+
 export default function MessagesLayout() {
+  const { isLargeScreen } = useResponsive();
+
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: isLargeScreen,
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
       }}
@@ -22,7 +26,7 @@ export default function MessagesLayout() {
         name="user-profile/[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: true,
+          headerShown: isLargeScreen,
           headerBackVisible: true,
         }}
       />
