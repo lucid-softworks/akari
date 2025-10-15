@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -431,9 +431,6 @@ export default function ConversationScreen() {
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
-            </TouchableOpacity>
             <ThemedView style={styles.headerInfo}>
               <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
             </ThemedView>
@@ -456,9 +453,6 @@ export default function ConversationScreen() {
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
-            </TouchableOpacity>
             <ThemedView style={styles.headerInfo}>
               <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
             </ThemedView>
@@ -483,9 +477,6 @@ export default function ConversationScreen() {
         <ThemedView style={styles.container}>
           {/* Header */}
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-              <IconSymbol name="chevron.left" size={24} color="#007AFF" />
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerInfo}
               onPress={() => {
@@ -582,12 +573,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 0.5,
   },
-  backButton: {
-    marginRight: 12,
-  },
   headerInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   headerAvatar: {
     width: 40,
