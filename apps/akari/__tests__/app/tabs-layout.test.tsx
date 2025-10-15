@@ -25,9 +25,25 @@ jest.mock('expo-router', () => {
   return { Tabs, Redirect, usePathname: jest.fn(() => '/(tabs)') };
 });
 
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(),
-}));
+const safeAreaProviderValues: Array<{ top: number; right: number; bottom: number; left: number }> = [];
+
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  return {
+    useSafeAreaInsets: jest.fn(),
+    SafeAreaInsetsContext: {
+      Provider: ({ value, children }: { value: any; children: React.ReactNode }) => {
+        safeAreaProviderValues.push(value);
+        return <>{children}</>;
+      },
+      Consumer: ({ children }: { children: (value: any) => React.ReactNode }) => {
+        const latestValue =
+          safeAreaProviderValues[safeAreaProviderValues.length - 1] ?? { top: 0, right: 0, bottom: 0, left: 0 };
+        return <>{children(latestValue)}</>;
+      },
+    },
+  };
+});
 
 jest.mock('@/hooks/queries/useAuthStatus');
 jest.mock('@/hooks/queries/useCurrentAccount');
@@ -121,6 +137,7 @@ beforeEach(() => {
   );
   mockUseSafeAreaInsets.mockReturnValue({ top: 0, right: 0, bottom: 0, left: 0 });
   mockAccountSwitcherSheet.mockClear();
+  safeAreaProviderValues.length = 0;
 });
 
 describe('TabLayout', () => {
@@ -300,6 +317,31 @@ describe('TabLayout', () => {
     mockUsePathname.mockReturnValue('/notifications');
     const { getByText } = render(<TabLayout />);
     expect(getByText('Notifications')).toBeTruthy();
+  });
+
+  it('removes the top safe area inset when the mobile header is visible', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseSafeAreaInsets.mockReturnValue({ top: 24, right: 4, bottom: 8, left: 2 });
+    render(<TabLayout />);
+    expect(safeAreaProviderValues[safeAreaProviderValues.length - 1]).toEqual({
+      top: 0,
+      right: 4,
+      bottom: 8,
+      left: 2,
+    });
+  });
+
+  it('preserves the top safe area inset when the mobile header is hidden', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseSafeAreaInsets.mockReturnValue({ top: 24, right: 4, bottom: 8, left: 2 });
+    mockUsePathname.mockReturnValue('/(tabs)/profile');
+    render(<TabLayout />);
+    expect(safeAreaProviderValues[safeAreaProviderValues.length - 1]).toEqual({
+      top: 24,
+      right: 4,
+      bottom: 8,
+      left: 2,
+    });
   });
 });
 

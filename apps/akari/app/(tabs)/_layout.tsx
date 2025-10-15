@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { Redirect, Tabs, usePathname } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
@@ -247,6 +247,16 @@ export default function TabLayout() {
   // Initialize push notifications
   usePushNotifications();
 
+  const contentSafeAreaInsets = useMemo(
+    () => ({
+      top: shouldShowMobileHeader ? 0 : safeAreaInsets.top,
+      right: safeAreaInsets.right,
+      bottom: safeAreaInsets.bottom,
+      left: safeAreaInsets.left,
+    }),
+    [safeAreaInsets.bottom, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top, shouldShowMobileHeader],
+  );
+
   if (isLoading) {
     return (
       <ThemedView
@@ -349,133 +359,135 @@ export default function TabLayout() {
             drawerProgress?.interpolate({ inputRange: [0, 1], outputRange: [0, SIDEBAR_WIDTH] }) ?? 0;
 
           return (
-            <Animated.View
-              style={[
-                mobileDrawerStyles.contentContainer,
-                drawerProgress
-                  ? {
-                      transform: [{ translateX }],
-                    }
-                  : null,
-                shouldShowMobileHeader
-                  ? null
-                  : {
-                      paddingTop: safeAreaInsets.top,
-                    },
-              ]}
-            >
-              {shouldShowMobileHeader ? (
-                <View
-                  style={[
-                    mobileDrawerStyles.header,
-                    {
-                      paddingTop: safeAreaInsets.top + 6,
-                      backgroundColor: headerBackground,
-                      borderBottomColor: headerBorderColor,
-                    },
-                  ]}
-                >
-                  <HapticTab
-                    accessibilityRole="button"
-                    accessibilityLabel="Open navigation drawer"
-                    onPress={handleOpenDrawer}
-                    style={mobileDrawerStyles.headerButton}
-                  >
-                    <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
-                  </HapticTab>
-                  <View style={mobileDrawerStyles.headerContent}>
-                    <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
-                    {headerTitle ? (
-                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                        {headerTitle}
-                      </Text>
-                    ) : null}
-                  </View>
-                  <View style={mobileDrawerStyles.headerSpacer} />
-                </View>
-              ) : null}
-              <Tabs
-                screenOptions={{
-                  headerShown: false,
-                  sceneContainerStyle: zeroTopSceneContainerStyle,
-                }}
-                tabBar={(props) => (
-                  <HardcodedTabBar
-                    {...props}
-                    unreadMessagesCount={unreadMessagesCount}
-                    unreadNotificationsCount={unreadNotificationsCount}
-                    avatarUri={currentAccount?.avatar}
-                  />
-                )}
+            <SafeAreaInsetsContext.Provider value={contentSafeAreaInsets}>
+              <Animated.View
+                style={[
+                  mobileDrawerStyles.contentContainer,
+                  drawerProgress
+                    ? {
+                        transform: [{ translateX }],
+                      }
+                    : null,
+                  shouldShowMobileHeader
+                    ? null
+                    : {
+                        paddingTop: safeAreaInsets.top,
+                      },
+                ]}
               >
-                <Tabs.Screen
-                  name="index"
-                  options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
+                {shouldShowMobileHeader ? (
+                  <View
+                    style={[
+                      mobileDrawerStyles.header,
+                      {
+                        paddingTop: safeAreaInsets.top + 6,
+                        backgroundColor: headerBackground,
+                        borderBottomColor: headerBorderColor,
+                      },
+                    ]}
+                  >
+                    <HapticTab
+                      accessibilityRole="button"
+                      accessibilityLabel="Open navigation drawer"
+                      onPress={handleOpenDrawer}
+                      style={mobileDrawerStyles.headerButton}
+                    >
+                      <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
+                    </HapticTab>
+                    <View style={mobileDrawerStyles.headerContent}>
+                      <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                      {headerTitle ? (
+                        <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
+                          {headerTitle}
+                        </Text>
+                      ) : null}
+                    </View>
+                    <View style={mobileDrawerStyles.headerSpacer} />
+                  </View>
+                ) : null}
+                <Tabs
+                  screenOptions={{
+                    headerShown: false,
+                    sceneContainerStyle: zeroTopSceneContainerStyle,
                   }}
-                />
-                <Tabs.Screen
-                  name="search"
-                  options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
-                  }}
-                />
-                <Tabs.Screen
-                  name="messages"
-                  options={{
-                    tabBarIcon: ({ color }) => (
-                      <View style={{ position: 'relative' }}>
-                        <TabBarIcon name="message.fill" color={color} />
-                        <TabBadge count={unreadMessagesCount} size="small" />
-                      </View>
-                    ),
-                  }}
-                />
-                <Tabs.Screen
-                  name="notifications"
-                  options={{
-                    tabBarIcon: ({ color }) => (
-                      <View style={{ position: 'relative' }}>
-                        <TabBarIcon name="bell.fill" color={color} />
-                        <TabBadge count={unreadNotificationsCount} size="small" />
-                      </View>
-                    ),
-                  }}
-                />
-                <Tabs.Screen
-                  name="bookmarks"
-                  options={{
-                    href: null,
-                  }}
-                />
-                <Tabs.Screen
-                  name="post"
-                  options={{
-                    href: null,
-                  }}
-                />
-                <Tabs.Screen
-                  name="profile"
-                  options={{
-                    tabBarIcon: ({ color, focused }) => (
-                      <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
-                    ),
-                  }}
-                  listeners={() => ({
-                    tabLongPress: (event) => {
-                      event.preventDefault();
-                      handleOpenAccountSwitcher();
-                    },
-                  })}
-                />
-                <Tabs.Screen
-                  name="settings"
-                  options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
-                  }}
-                />
-              </Tabs>
-            </Animated.View>
+                  tabBar={(props) => (
+                    <HardcodedTabBar
+                      {...props}
+                      unreadMessagesCount={unreadMessagesCount}
+                      unreadNotificationsCount={unreadNotificationsCount}
+                      avatarUri={currentAccount?.avatar}
+                    />
+                  )}
+                >
+                  <Tabs.Screen
+                    name="index"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="house.fill" color={color} />,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="search"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="magnifyingglass" color={color} />,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="messages"
+                    options={{
+                      tabBarIcon: ({ color }) => (
+                        <View style={{ position: 'relative' }}>
+                          <TabBarIcon name="message.fill" color={color} />
+                          <TabBadge count={unreadMessagesCount} size="small" />
+                        </View>
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="notifications"
+                    options={{
+                      tabBarIcon: ({ color }) => (
+                        <View style={{ position: 'relative' }}>
+                          <TabBarIcon name="bell.fill" color={color} />
+                          <TabBadge count={unreadNotificationsCount} size="small" />
+                        </View>
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="bookmarks"
+                    options={{
+                      href: null,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="post"
+                    options={{
+                      href: null,
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="profile"
+                    options={{
+                      tabBarIcon: ({ color, focused }) => (
+                        <ProfileTabIcon color={color} focused={focused} avatarUri={currentAccount?.avatar} />
+                      ),
+                    }}
+                    listeners={() => ({
+                      tabLongPress: (event) => {
+                        event.preventDefault();
+                        handleOpenAccountSwitcher();
+                      },
+                    })}
+                  />
+                  <Tabs.Screen
+                    name="settings"
+                    options={{
+                      tabBarIcon: ({ color }) => <TabBarIcon name="gearshape.fill" color={color} />,
+                    }}
+                  />
+                </Tabs>
+              </Animated.View>
+            </SafeAreaInsetsContext.Provider>
           );
         }}
       </DrawerLayout>
