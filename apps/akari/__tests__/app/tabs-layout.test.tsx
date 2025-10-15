@@ -22,7 +22,8 @@ jest.mock('expo-router', () => {
   // @ts-ignore
   Tabs.Screen = Screen;
   const Redirect = ({ href }: { href: string }) => <Text>redirect:{href}</Text>;
-  return { Tabs, Redirect, usePathname: jest.fn(() => '/(tabs)') };
+  const useRouter = jest.fn(() => ({ back: jest.fn() }));
+  return { Tabs, Redirect, usePathname: jest.fn(() => '/(tabs)'), useRouter };
 });
 
 const safeAreaProviderValues: Array<{ top: number; right: number; bottom: number; left: number }> = [];
@@ -111,6 +112,7 @@ const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
 const mockUsePathname = (require('expo-router').usePathname as jest.Mock);
+const mockUseRouter = require('expo-router').useRouter as jest.Mock;
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
@@ -120,6 +122,7 @@ const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 beforeEach(() => {
   jest.clearAllMocks();
   mockUsePathname.mockReturnValue('/(tabs)');
+  mockUseRouter.mockReturnValue({ back: jest.fn() });
   mockUseCurrentAccount.mockReturnValue({
     data: {
       did: 'did:plc:test',
@@ -234,6 +237,19 @@ describe('TabLayout', () => {
       'profile',
       'settings',
     ]);
+  });
+
+  it('shows hamburger on root mobile route and back button on nested route', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUseResponsive.mockReturnValue({ isLargeScreen: false });
+
+    const { getByText, queryByText, rerender } = render(<TabLayout />);
+    expect(getByText('line.3.horizontal')).toBeTruthy();
+    expect(queryByText('chevron.left')).toBeNull();
+
+    mockUsePathname.mockReturnValue('/(tabs)/messages/pending');
+    rerender(<TabLayout />);
+    expect(getByText('chevron.left')).toBeTruthy();
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {

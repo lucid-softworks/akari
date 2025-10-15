@@ -205,7 +205,15 @@ export default function HomeScreen() {
   );
   const listHeaderComponent = useCallback(
     () => (
-      <ThemedView style={[styles.listHeaderContainer, { paddingTop: isLargeScreen ? 0 : insets.top }]}>
+      <ThemedView
+        style={[
+          styles.listHeaderContainer,
+          {
+            paddingTop: isLargeScreen ? insets.top : 0,
+            paddingBottom: isLargeScreen ? 12 : 0,
+          },
+        ]}
+      >
         <ThemedView style={styles.listHeaderContent}>
           <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
         </ThemedView>
@@ -353,9 +361,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100, // Account for tab bar
   },
-  listHeaderContainer: {
-    paddingBottom: 12,
-  },
+  listHeaderContainer: {},
   listHeaderContent: {
     width: '100%',
     alignSelf: 'stretch',

@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Image } from 'expo-image';
-import { Redirect, Tabs, usePathname } from 'expo-router';
+import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -200,6 +200,7 @@ export default function TabLayout() {
   const drawerRef = useRef<React.ComponentRef<typeof DrawerLayout>>(null);
   const safeAreaInsets = useSafeAreaInsets();
   const pathname = usePathname();
+  const router = useRouter();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const drawerOverlayColor = useThemeColor({ light: 'rgba(15, 17, 21, 0.36)', dark: 'rgba(7, 10, 18, 0.6)' }, 'background');
   const headerBackground = useThemeColor({ light: '#FFFFFF', dark: '#0B0F19' }, 'background');
@@ -207,18 +208,22 @@ export default function TabLayout() {
   const headerBorderColor = useBorderColor();
   const headerTextColor = headerIconColor;
 
-  const currentTabKey = useMemo(() => {
+  const { currentTabKey, isNestedRoute } = useMemo(() => {
     if (!pathname) {
-      return 'index';
+      return { currentTabKey: 'index', isNestedRoute: false };
     }
 
     const segments = pathname.split('/').filter(Boolean);
     if (segments.length === 0) {
-      return 'index';
+      return { currentTabKey: 'index', isNestedRoute: false };
     }
 
-    const firstNonGroupSegment = segments.find((segment) => !segment.startsWith('('));
-    return firstNonGroupSegment ?? 'index';
+    const nonGroupSegments = segments.filter((segment) => !segment.startsWith('('));
+    const firstNonGroupSegment = nonGroupSegments[0] ?? 'index';
+    return {
+      currentTabKey: firstNonGroupSegment,
+      isNestedRoute: nonGroupSegments.length > 1,
+    };
   }, [pathname]);
 
   const headerTitle = headerTitles[currentTabKey] ?? 'Akari';
@@ -243,6 +248,15 @@ export default function TabLayout() {
   const handleCloseDrawer = useCallback(() => {
     drawerRef.current?.closeDrawer();
   }, []);
+
+  const handleHeaderLeftPress = useCallback(() => {
+    if (isNestedRoute) {
+      router.back();
+      return;
+    }
+
+    handleOpenDrawer();
+  }, [handleOpenDrawer, isNestedRoute, router]);
 
   // Initialize push notifications
   usePushNotifications();
@@ -388,11 +402,15 @@ export default function TabLayout() {
                   >
                     <HapticTab
                       accessibilityRole="button"
-                      accessibilityLabel="Open navigation drawer"
-                      onPress={handleOpenDrawer}
+                      accessibilityLabel={isNestedRoute ? 'Go back' : 'Open navigation drawer'}
+                      onPress={handleHeaderLeftPress}
                       style={mobileDrawerStyles.headerButton}
                     >
-                      <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
+                      <IconSymbol
+                        name={isNestedRoute ? 'chevron.left' : 'line.3.horizontal'}
+                        color={headerIconColor}
+                        size={22}
+                      />
                     </HapticTab>
                     <View style={mobileDrawerStyles.headerContent}>
                       <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
