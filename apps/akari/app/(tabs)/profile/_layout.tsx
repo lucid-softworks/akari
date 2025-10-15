@@ -1,15 +1,19 @@
 import { Stack } from 'expo-router';
 
+import { useResponsive } from '@/hooks/useResponsive';
+
 export default function ProfileLayout() {
+  const { isLargeScreen } = useResponsive();
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="[handle]" />
+    <Stack screenOptions={{ headerShown: isLargeScreen }}>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="[handle]" options={{ headerShown: false }} />
       <Stack.Screen
         name="[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: true,
+          headerShown: isLargeScreen,
           headerBackVisible: true,
           headerBackButtonDisplayMode: 'minimal',
         }}

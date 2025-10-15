@@ -1,10 +1,14 @@
 import { Stack } from 'expo-router';
 
+import { useResponsive } from '@/hooks/useResponsive';
+
 export default function BookmarksLayout() {
+  const { isLargeScreen } = useResponsive();
+
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: isLargeScreen,
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
       }}
@@ -20,7 +24,7 @@ export default function BookmarksLayout() {
         name="user-profile/[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: true,
+          headerShown: isLargeScreen,
           headerBackVisible: true,
         }}
       />

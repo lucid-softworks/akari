@@ -36,7 +36,8 @@ const headerTitles: Record<string, string> = {
   post: 'Post',
 };
 
-const drawerSwipeEdgeWidth = Dimensions.get('window').width;
+const fullDrawerSwipeEdgeWidth = Dimensions.get('window').width;
+const nestedDrawerSwipeEdgeWidth = 32;
 const zeroTopSceneContainerStyle = { paddingTop: 0 } as const;
 
 /**
@@ -228,6 +229,7 @@ export default function TabLayout() {
 
   const headerTitle = headerTitles[currentTabKey] ?? 'Akari';
   const shouldShowMobileHeader = currentTabKey !== 'profile';
+  const drawerSwipeEdgeWidth = isNestedRoute ? nestedDrawerSwipeEdgeWidth : fullDrawerSwipeEdgeWidth;
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
