@@ -208,13 +208,17 @@ export default function TabLayout() {
   const headerTextColor = headerIconColor;
 
   const currentTabKey = useMemo(() => {
-    const segments = pathname?.split('/').filter(Boolean) ?? [];
-    const tabsIndex = segments.indexOf('(tabs)');
-    if (tabsIndex === -1) {
+    if (!pathname) {
       return 'index';
     }
 
-    return segments[tabsIndex + 1] ?? 'index';
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length === 0) {
+      return 'index';
+    }
+
+    const firstNonGroupSegment = segments.find((segment) => !segment.startsWith('('));
+    return firstNonGroupSegment ?? 'index';
   }, [pathname]);
 
   const headerTitle = headerTitles[currentTabKey] ?? 'Akari';

@@ -294,6 +294,13 @@ describe('TabLayout', () => {
     render(<TabLayout />);
     expect(mockHapticTab).not.toHaveBeenCalled();
   });
+
+  it('shows the correct mobile header title for active tabs', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUsePathname.mockReturnValue('/notifications');
+    const { getByText } = render(<TabLayout />);
+    expect(getByText('Notifications')).toBeTruthy();
+  });
 });
 
 describe('HardcodedTabBar interactions', () => {
