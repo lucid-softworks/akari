@@ -285,7 +285,7 @@ export default function ConversationScreen() {
       const firstSentAt = new Date(firstMessage.sentAt).getTime();
       const secondSentAt = new Date(secondMessage.sentAt).getTime();
 
-      return secondSentAt - firstSentAt;
+      return firstSentAt - secondSentAt;
     });
   }, [messagesData]);
 
@@ -604,10 +604,10 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   messagesContent: {
-    paddingVertical: 16,
+    paddingVertical: 8,
   },
   messageContainer: {
-    marginHorizontal: 16,
+    marginHorizontal: 12,
     marginVertical: 4,
   },
   myMessage: {
