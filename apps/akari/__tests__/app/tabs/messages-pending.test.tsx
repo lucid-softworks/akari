@@ -8,6 +8,7 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useResponsive } from '@/hooks/useResponsive';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
@@ -45,6 +46,9 @@ jest.mock('@/components/ui/IconSymbol', () => ({
 jest.mock('@/hooks/queries/useConversations');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useResponsive', () => ({
+  useResponsive: jest.fn(),
+}));
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));
@@ -52,6 +56,7 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 const mockUseConversations = useConversations as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseResponsive = useResponsive as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRouterBack = router.back as jest.Mock;
 const mockRegister = tabScrollRegistry.register as jest.Mock;
@@ -61,6 +66,7 @@ describe('PendingMessagesScreen', () => {
     jest.clearAllMocks();
     mockUseBorderColor.mockReturnValue('#ccc');
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockUseResponsive.mockReturnValue({ isLargeScreen: true });
   });
 
   it('renders pending conversations and supports navigation', () => {
