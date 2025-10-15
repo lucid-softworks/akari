@@ -112,6 +112,8 @@ function HardcodedTabBar({
         {
           borderColor,
           backgroundColor: Platform.OS === 'ios' ? 'transparent' : tabBarSurface,
+          paddingLeft: Math.max(20, insets.left + 12),
+          paddingRight: Math.max(20, insets.right + 12),
           paddingBottom: 18 + insets.bottom,
         },
       ]}
@@ -536,7 +538,6 @@ const profileTabIconStyles = StyleSheet.create({
 const hardcodedTabStyles = StyleSheet.create({
   container: {
     borderTopWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 12,
     paddingTop: 8,
     shadowColor: 'rgba(12, 14, 24, 0.28)',
     shadowOffset: { width: 0, height: -8 },
