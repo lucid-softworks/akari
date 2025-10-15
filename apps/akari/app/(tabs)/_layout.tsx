@@ -566,7 +566,7 @@ const mobileDrawerStyles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
-    paddingBottom: 6,
+    paddingBottom: 0,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
