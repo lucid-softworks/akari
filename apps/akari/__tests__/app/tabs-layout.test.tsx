@@ -22,7 +22,7 @@ jest.mock('expo-router', () => {
   // @ts-ignore
   Tabs.Screen = Screen;
   const Redirect = ({ href }: { href: string }) => <Text>redirect:{href}</Text>;
-  return { Tabs, Redirect };
+  return { Tabs, Redirect, usePathname: jest.fn(() => '/(tabs)') };
 });
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -52,7 +52,7 @@ jest.mock('@/components/AccountSwitcherSheet', () => {
 jest.mock('@/components/Sidebar', () => {
   const React = require('react');
   const { Text } = require('react-native');
-  return { Sidebar: () => <Text>Sidebar</Text> };
+  return { Sidebar: () => <Text>Sidebar</Text>, SIDEBAR_WIDTH: 264 };
 });
 
 jest.mock('@/components/TabBadge', () => {
