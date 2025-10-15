@@ -21,6 +21,7 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
   moduleNameMapper: {
+    '^@/axiom-crash-reporter$': '<rootDir>/../../packages/axiom-crash-reporter/src',
     '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',
     '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',

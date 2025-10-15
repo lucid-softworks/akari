@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
+import { CrashProvider } from '@/axiom-crash-reporter';
 import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -25,6 +26,7 @@ import '@/utils/i18n';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
 import type { Query } from '@tanstack/query-core';
+import type { CrashProviderProps } from '@/axiom-crash-reporter';
 
 const REACT_QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
 const REACT_QUERY_CACHE_BUSTER = 'akari@1';
@@ -74,6 +76,22 @@ type ProvidersProps = {
   colorScheme: ReturnType<typeof useColorScheme>;
 };
 
+type CrashReporterConfig = CrashProviderProps['axiomConfig'];
+
+const rawAxiomToken = process.env.EXPO_PUBLIC_AXIOM_TOKEN?.trim();
+const rawAxiomOrgId = process.env.EXPO_PUBLIC_AXIOM_ORG_ID?.trim();
+const rawAxiomDataset = process.env.EXPO_PUBLIC_AXIOM_DATASET?.trim();
+
+const crashReporterConfig: CrashReporterConfig | null = rawAxiomToken
+  ? {
+      token: rawAxiomToken,
+      ...(rawAxiomOrgId ? { orgId: rawAxiomOrgId } : {}),
+      ...(rawAxiomDataset ? { dataset: rawAxiomDataset } : {}),
+    }
+  : null;
+
+let hasLoggedMissingCrashReporterConfig = false;
+
 function AppProviders({ colorScheme }: ProvidersProps) {
   const isRestoring = useIsRestoring();
 
@@ -117,7 +135,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return (
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+
+  const appTree = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
@@ -128,5 +148,22 @@ export default function RootLayout() {
         </PersistQueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
+  );
+
+  if (!crashReporterConfig) {
+    if (isDevelopment && !hasLoggedMissingCrashReporterConfig) {
+      console.warn(
+        'Axiom crash reporting is disabled because EXPO_PUBLIC_AXIOM_TOKEN is not configured.',
+      );
+      hasLoggedMissingCrashReporterConfig = true;
+    }
+
+    return appTree;
+  }
+
+  return (
+    <CrashProvider axiomConfig={crashReporterConfig} enableConsoleLogging={isDevelopment}>
+      {appTree}
+    </CrashProvider>
   );
 }

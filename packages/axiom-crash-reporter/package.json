@@ -1,0 +1,36 @@
+{
+  "name": "@akari/axiom-crash-reporter",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cross-platform crash reporter that sends crash data to Axiom",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --passWithNoTests"
+  },
+  "keywords": [
+    "react-native",
+    "crash-reporter",
+    "axiom",
+    "error-boundary",
+    "crash-reporting",
+    "error-tracking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  },
+  "dependencies": {
+    "@axiomhq/js": "^1.0.0",
+    "react-native-error-boundary": "^1.2.4",
+    "react-native-exception-handler": "^2.10.10"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.0.0"
+  }
+}
