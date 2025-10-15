@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "paths": {
       "@/*": ["./*"],
+      "@/axiom-crash-reporter": ["../../packages/axiom-crash-reporter"],
       "@/bluesky-api": ["../../packages/bluesky-api"],
       "@/clearsky-api": ["../../packages/clearsky-api"],
       "@/libretranslate-api": ["../../packages/libretranslate-api"],

@@ -4,9 +4,49 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { showAlert } from '@/utils/alert';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+type ThemeName = keyof typeof Colors;
+
+function CrashReporterTestSection(): React.JSX.Element {
+  const colorScheme = useColorScheme();
+  const [shouldCrash, setShouldCrash] = useState(false);
+  const palette = Colors[(colorScheme ?? 'light') as ThemeName];
+
+  if (shouldCrash) {
+    throw new Error('Manual crash triggered from the Akari debug screen.');
+  }
+
+  const triggerCrash = () => {
+    setShouldCrash(true);
+  };
+
+  return (
+    <View
+      style={[
+        styles.crashSection,
+        {
+          backgroundColor: palette.background,
+          borderColor: palette.icon,
+        },
+      ]}
+    >
+      <ThemedText style={styles.crashTitle}>Crash Reporter</ThemedText>
+      <ThemedText style={styles.crashDescription}>
+        Use this button to throw a test error and confirm crash reporting is wired up correctly. Make
+        sure your Axiom credentials are configured so the report is delivered.
+      </ThemedText>
+      <TouchableOpacity style={[styles.button, styles.crashButton]} onPress={triggerCrash}>
+        <ThemedText style={styles.buttonText}>Trigger Crash</ThemedText>
+      </TouchableOpacity>
+      <ThemedText style={[styles.crashHint, { color: palette.icon }]}>
+        Tip: reload the app after testing so the debug screen renders again.
+      </ThemedText>
+    </View>
+  );
+}
 
 export default function DebugScreen() {
   const queryClient = useQueryClient();
@@ -14,6 +54,8 @@ export default function DebugScreen() {
   const [expandedQueries, setExpandedQueries] = useState<Set<string>>(new Set());
 
   const queries = queryClient.getQueryCache().getAll();
+
+  const theme: ThemeName = useMemo(() => (colorScheme ?? 'light') as ThemeName, [colorScheme]);
 
   const toggleQueryExpansion = (queryKey: string) => {
     const newExpanded = new Set(expandedQueries);
@@ -92,7 +134,7 @@ export default function DebugScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ThemedView style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: Colors[colorScheme ?? 'light'].icon }]}>
+        <View style={[styles.header, { borderBottomColor: Colors[theme].icon }]}>
           <ThemedText style={styles.title}>Query Cache Debug</ThemedText>
           <View style={styles.headerButtons}>
             <TouchableOpacity style={[styles.button, styles.invalidateButton]} onPress={invalidateAllQueries}>
@@ -104,7 +146,9 @@ export default function DebugScreen() {
           </View>
         </View>
 
-        <View style={[styles.statsContainer, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
+        <CrashReporterTestSection />
+
+        <View style={[styles.statsContainer, { backgroundColor: Colors[theme].background }]}>
           <ThemedText style={styles.statsText}>Total Queries: {queries.length}</ThemedText>
           <ThemedText style={styles.statsText}>
             Active Queries: {queries.filter((q) => q.state.status === 'pending').length}
@@ -130,12 +174,12 @@ export default function DebugScreen() {
               const statusText = getQueryStatusText(query);
 
               return (
-                <View key={index} style={[styles.queryContainer, { borderColor: Colors[colorScheme ?? 'light'].icon }]}>
+                <View key={index} style={[styles.queryContainer, { borderColor: Colors[theme].icon }]}>
                   <TouchableOpacity
                     style={[
                       styles.queryHeader,
                       {
-                        backgroundColor: Colors[colorScheme ?? 'light'].background,
+                        backgroundColor: Colors[theme].background,
                       },
                     ]}
                     onPress={() => toggleQueryExpansion(queryKeyString)}
@@ -157,7 +201,7 @@ export default function DebugScreen() {
                       style={[
                         styles.queryDetails,
                         {
-                          backgroundColor: Colors[colorScheme ?? 'light'].background,
+                          backgroundColor: Colors[theme].background,
                         },
                       ]}
                     >
@@ -167,8 +211,8 @@ export default function DebugScreen() {
                           style={[
                             styles.detailValue,
                             {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
+                              backgroundColor: Colors[theme].icon + '20',
+                              color: Colors[theme].text,
                             },
                           ]}
                         >
@@ -182,8 +226,8 @@ export default function DebugScreen() {
                           style={[
                             styles.detailValue,
                             {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
+                              backgroundColor: Colors[theme].icon + '20',
+                              color: Colors[theme].text,
                             },
                           ]}
                         >
@@ -197,8 +241,8 @@ export default function DebugScreen() {
                           style={[
                             styles.detailValue,
                             {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
+                              backgroundColor: Colors[theme].icon + '20',
+                              color: Colors[theme].text,
                             },
                           ]}
                         >
@@ -212,12 +256,14 @@ export default function DebugScreen() {
                           style={[
                             styles.detailValue,
                             {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
+                              backgroundColor: Colors[theme].icon + '20',
+                              color: Colors[theme].text,
                             },
                           ]}
                         >
-                          {query.state.errorUpdatedAt ? new Date(query.state.errorUpdatedAt).toLocaleString() : 'Never'}
+                          {query.state.errorUpdatedAt
+                            ? new Date(query.state.errorUpdatedAt).toLocaleString()
+                            : 'Never'}
                         </ThemedText>
                       </View>
 
@@ -227,8 +273,8 @@ export default function DebugScreen() {
                           style={[
                             styles.detailValue,
                             {
-                              backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                              color: Colors[colorScheme ?? 'light'].text,
+                              backgroundColor: Colors[theme].icon + '20',
+                              color: Colors[theme].text,
                             },
                           ]}
                         >
@@ -244,7 +290,7 @@ export default function DebugScreen() {
                               styles.detailValue,
                               styles.errorText,
                               {
-                                backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
+                                backgroundColor: Colors[theme].icon + '20',
                               },
                             ]}
                           >
@@ -260,8 +306,8 @@ export default function DebugScreen() {
                             style={[
                               styles.detailValue,
                               {
-                                backgroundColor: Colors[colorScheme ?? 'light'].icon + '20',
-                                color: Colors[colorScheme ?? 'light'].text,
+                                backgroundColor: Colors[theme].icon + '20',
+                                color: Colors[theme].text,
                               },
                             ]}
                           >
@@ -307,6 +353,31 @@ export default function DebugScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  crashSection: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 12,
+  },
+  crashTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  crashDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  crashButton: {
+    backgroundColor: '#EF4444',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  crashHint: {
+    fontSize: 12,
   },
   header: {
     flexDirection: 'row',
