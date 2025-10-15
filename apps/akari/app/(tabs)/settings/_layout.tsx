@@ -13,6 +13,8 @@ export default function SettingsLayout() {
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: headerBackground },
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
       }}
     >
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
