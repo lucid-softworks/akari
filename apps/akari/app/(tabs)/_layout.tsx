@@ -37,6 +37,7 @@ const headerTitles: Record<string, string> = {
 };
 
 const drawerSwipeEdgeWidth = Dimensions.get('window').width;
+const zeroTopSceneContainerStyle = { paddingTop: 0 } as const;
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -217,6 +218,7 @@ export default function TabLayout() {
   }, [pathname]);
 
   const headerTitle = headerTitles[currentTabKey] ?? 'Akari';
+  const shouldShowMobileHeader = currentTabKey !== 'profile';
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
@@ -292,6 +294,7 @@ export default function TabLayout() {
                 screenOptions={{
                   headerShown: false,
                   tabBarStyle: { display: 'none' },
+                  sceneContainerStyle: zeroTopSceneContainerStyle,
                 }}
                 backBehavior={Platform.OS === 'web' ? 'history' : undefined}
               >
@@ -328,8 +331,8 @@ export default function TabLayout() {
             style={[
               mobileDrawerStyles.drawerContent,
               {
-                paddingTop: safeAreaInsets.top + 12,
-                paddingBottom: safeAreaInsets.bottom + 16,
+                paddingTop: safeAreaInsets.top,
+                paddingBottom: safeAreaInsets.bottom,
               },
             ]}
           >
@@ -350,39 +353,47 @@ export default function TabLayout() {
                       transform: [{ translateX }],
                     }
                   : null,
+                shouldShowMobileHeader
+                  ? null
+                  : {
+                      paddingTop: safeAreaInsets.top,
+                    },
               ]}
             >
-              <View
-                style={[
-                  mobileDrawerStyles.header,
-                  {
-                    paddingTop: safeAreaInsets.top + 6,
-                    backgroundColor: headerBackground,
-                    borderBottomColor: headerBorderColor,
-                  },
-                ]}
-              >
-                <HapticTab
-                  accessibilityRole="button"
-                  accessibilityLabel="Open navigation drawer"
-                  onPress={handleOpenDrawer}
-                  style={mobileDrawerStyles.headerButton}
+              {shouldShowMobileHeader ? (
+                <View
+                  style={[
+                    mobileDrawerStyles.header,
+                    {
+                      paddingTop: safeAreaInsets.top + 6,
+                      backgroundColor: headerBackground,
+                      borderBottomColor: headerBorderColor,
+                    },
+                  ]}
                 >
-                  <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
-                </HapticTab>
-                <View style={mobileDrawerStyles.headerContent}>
-                  <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
-                  {headerTitle ? (
-                    <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                      {headerTitle}
-                    </Text>
-                  ) : null}
+                  <HapticTab
+                    accessibilityRole="button"
+                    accessibilityLabel="Open navigation drawer"
+                    onPress={handleOpenDrawer}
+                    style={mobileDrawerStyles.headerButton}
+                  >
+                    <IconSymbol name="line.3.horizontal" color={headerIconColor} size={22} />
+                  </HapticTab>
+                  <View style={mobileDrawerStyles.headerContent}>
+                    <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                    {headerTitle ? (
+                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
+                        {headerTitle}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <View style={mobileDrawerStyles.headerSpacer} />
                 </View>
-                <View style={mobileDrawerStyles.headerSpacer} />
-              </View>
+              ) : null}
               <Tabs
                 screenOptions={{
                   headerShown: false,
+                  sceneContainerStyle: zeroTopSceneContainerStyle,
                 }}
                 tabBar={(props) => (
                   <HardcodedTabBar

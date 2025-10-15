@@ -94,6 +94,7 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockTabBadge = TabBadge as unknown as jest.Mock;
 const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
 const mockHandleTabPress = tabScrollRegistry.handleTabPress as jest.Mock;
+const mockUsePathname = (require('expo-router').usePathname as jest.Mock);
 
 const { HapticTab } = require('@/components/HapticTab');
 const mockHapticTab = HapticTab as jest.Mock;
@@ -102,6 +103,7 @@ const mockAccountSwitcherSheet = AccountSwitcherSheet as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockUsePathname.mockReturnValue('/(tabs)');
   mockUseCurrentAccount.mockReturnValue({
     data: {
       did: 'did:plc:test',
@@ -145,6 +147,7 @@ describe('TabLayout', () => {
     expect(Tabs.mock.calls[0][0].screenOptions).toEqual({
       headerShown: false,
       tabBarStyle: { display: 'none' },
+      sceneContainerStyle: { paddingTop: 0 },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
@@ -166,6 +169,10 @@ describe('TabLayout', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({ data: 3 });
     render(<TabLayout />);
     const TabsModule = require('expo-router');
+    expect(TabsModule.Tabs.mock.calls[0][0].screenOptions).toEqual({
+      headerShown: false,
+      sceneContainerStyle: { paddingTop: 0 },
+    });
     const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
     expect(typeof tabBar).toBe('function');
 
@@ -279,6 +286,13 @@ describe('TabLayout', () => {
 
     const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(closeCall?.[0].visible).toBe(false);
+  });
+
+  it('hides the mobile header on the profile tab', () => {
+    mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
+    mockUsePathname.mockReturnValue('/(tabs)/profile');
+    render(<TabLayout />);
+    expect(mockHapticTab).not.toHaveBeenCalled();
   });
 });
 
