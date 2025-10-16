@@ -239,6 +239,7 @@ export default function ConversationScreen() {
   const listRef = useRef<VirtualizedListHandle<Message>>(null);
   const previousMessageCountRef = useRef(0);
   const previousFirstMessageIdRef = useRef<string | null>(null);
+  const hasPerformedInitialScrollRef = useRef(false);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -303,13 +304,13 @@ export default function ConversationScreen() {
     if (messages.length === 0) {
       previousMessageCountRef.current = 0;
       previousFirstMessageIdRef.current = null;
+      hasPerformedInitialScrollRef.current = false;
       return;
     }
 
-    if (messages.length <= previousCount && currentFirstMessageId === previousFirstMessageIdRef.current) {
-      previousMessageCountRef.current = messages.length;
-      previousFirstMessageIdRef.current = currentFirstMessageId;
-      return;
+    if (!hasPerformedInitialScrollRef.current) {
+      listRef.current?.scrollToEnd({ animated: false });
+      hasPerformedInitialScrollRef.current = true;
     }
 
     const isPrepending =
@@ -319,12 +320,20 @@ export default function ConversationScreen() {
       messages.length > previousCount;
 
     if (!isPrepending) {
-      listRef.current?.scrollToEnd({ animated: previousCount > 0 });
+      previousMessageCountRef.current = messages.length;
+      previousFirstMessageIdRef.current = currentFirstMessageId;
+      return;
     }
 
     previousMessageCountRef.current = messages.length;
     previousFirstMessageIdRef.current = currentFirstMessageId;
   }, [messages, messagesLoading]);
+
+  useEffect(() => {
+    previousMessageCountRef.current = 0;
+    previousFirstMessageIdRef.current = null;
+    hasPerformedInitialScrollRef.current = false;
+  }, [conversation?.convoId]);
 
   // Send message mutation
   const sendMessageMutation = useSendMessage();
@@ -649,9 +658,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   messagesContent: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-    paddingVertical: 12,
+    paddingTop: 8,
+    paddingBottom: 16,
   },
   messageContainer: {
     marginHorizontal: 12,
