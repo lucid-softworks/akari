@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -11,6 +11,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useWindowDimensions,
+  PanResponder,
+  type PanResponderInstance,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -50,6 +53,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const { showToast } = useToast();
   const { bottom } = useSafeAreaInsets();
   const { isMobile } = useResponsive();
+  const { height: windowHeight } = useWindowDimensions();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -58,6 +62,97 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const iconColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
   const drawerHandleColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
+
+  const baseMinHeight = Math.max(windowHeight * 0.45, 280);
+  const baseMaxHeight = Math.max(windowHeight - 32, 320);
+  const minDrawerHeight = Math.min(baseMinHeight, baseMaxHeight);
+  const maxDrawerHeight = Math.max(baseMaxHeight, minDrawerHeight);
+
+  const clampDrawerHeight = useCallback(
+    (value: number) => Math.min(maxDrawerHeight, Math.max(minDrawerHeight, value)),
+    [maxDrawerHeight, minDrawerHeight],
+  );
+
+  const initialDrawerHeight = useMemo(
+    () => (isMobile ? clampDrawerHeight(windowHeight * 0.7) : undefined),
+    [clampDrawerHeight, isMobile, windowHeight],
+  );
+
+  const [drawerHeight, setDrawerHeight] = useState<number | undefined>(initialDrawerHeight);
+  const drawerHeightRef = useRef<number | undefined>(initialDrawerHeight);
+  const panStartHeightRef = useRef<number>(initialDrawerHeight ?? minDrawerHeight);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setDrawerHeight(undefined);
+      drawerHeightRef.current = undefined;
+      return;
+    }
+
+    if (!visible) {
+      return;
+    }
+
+    const nextHeight = clampDrawerHeight(windowHeight * 0.7);
+    setDrawerHeight(nextHeight);
+    drawerHeightRef.current = nextHeight;
+  }, [clampDrawerHeight, isMobile, visible, windowHeight]);
+
+  const applyDrawerHeight = useCallback(
+    (value: number) => {
+      if (!isMobile) {
+        return;
+      }
+
+      const clampedHeight = clampDrawerHeight(value);
+      drawerHeightRef.current = clampedHeight;
+      setDrawerHeight(clampedHeight);
+    },
+    [clampDrawerHeight, isMobile],
+  );
+
+  const handlePanResponder: PanResponderInstance = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => isMobile,
+        onMoveShouldSetPanResponder: () => isMobile,
+        onPanResponderGrant: () => {
+          if (!isMobile) {
+            return;
+          }
+
+          panStartHeightRef.current = drawerHeightRef.current ?? clampDrawerHeight(windowHeight * 0.7);
+        },
+        onPanResponderMove: (_, gestureState) => {
+          if (!isMobile) {
+            return;
+          }
+
+          applyDrawerHeight(panStartHeightRef.current - gestureState.dy);
+        },
+        onPanResponderRelease: (_, gestureState) => {
+          if (!isMobile) {
+            return;
+          }
+
+          applyDrawerHeight(panStartHeightRef.current - gestureState.dy);
+        },
+        onPanResponderTerminate: (_, gestureState) => {
+          if (!isMobile) {
+            return;
+          }
+
+          applyDrawerHeight(panStartHeightRef.current - gestureState.dy);
+        },
+      }),
+    [applyDrawerHeight, clampDrawerHeight, isMobile, windowHeight],
+  );
+
+  const drawerPaddingHorizontal = isMobile ? 16 : 20;
+  const drawerHeaderVerticalPadding = isMobile ? 12 : 16;
+  const drawerInputVerticalPadding = isMobile ? 16 : 20;
+  const drawerFooterVerticalPadding = isMobile ? 10 : 12;
+  const drawerTextMinHeight = isMobile ? 120 : 140;
 
   const handlePost = async () => {
     if (!text.trim() && attachedImages.length === 0) return;
@@ -173,22 +268,42 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
             accessibilityLabel={t('common.cancel')}
           />
           <ThemedView
+            testID="post-composer-container"
             style={[
               styles.container,
               { backgroundColor },
               isMobile && [
                 styles.mobileContainer,
-                { paddingBottom: bottom + 16, borderTopColor: borderColor },
+                {
+                  paddingBottom: bottom + 12,
+                  borderTopColor: borderColor,
+                  ...(drawerHeight !== undefined ? { height: drawerHeight } : null),
+                },
               ],
             ]}
           >
             {isMobile ? (
-              <View style={styles.mobileHandleContainer}>
+              <View
+                style={styles.mobileHandleContainer}
+                testID="post-composer-handle"
+                accessibilityRole="adjustable"
+                accessibilityLabel={t('common.handle')}
+                {...handlePanResponder.panHandlers}
+              >
                 <View style={[styles.mobileHandle, { backgroundColor: drawerHandleColor }]} />
               </View>
             ) : null}
             {/* Header */}
-            <View style={[styles.header, { borderBottomColor: borderColor }]}> 
+            <View
+              style={[
+                styles.header,
+                {
+                  borderBottomColor: borderColor,
+                  paddingHorizontal: drawerPaddingHorizontal,
+                  paddingVertical: drawerHeaderVerticalPadding,
+                },
+              ]}
+            >
               <TouchableOpacity onPress={handleClose} style={styles.headerButton}>
                 <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
               </TouchableOpacity>
@@ -214,7 +329,16 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
 
             {/* Reply Context */}
             {replyTo && (
-              <ThemedView style={[styles.replyContext, { borderBottomColor: borderColor }]}>
+              <ThemedView
+                style={[
+                  styles.replyContext,
+                  {
+                    borderBottomColor: borderColor,
+                    paddingHorizontal: drawerPaddingHorizontal,
+                    paddingVertical: drawerHeaderVerticalPadding,
+                  },
+                ]}
+              >
                 <View style={[styles.replyIconContainer, { backgroundColor: borderColor }]}>
                   <IconSymbol name="arrowshape.turn.up.left" size={14} color={iconColor} />
                 </View>
@@ -228,9 +352,24 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
             {/* Content Area */}
             <ScrollView style={styles.contentArea} showsVerticalScrollIndicator={false}>
               {/* Text Input */}
-              <View style={styles.inputContainer}>
+              <View
+                style={[
+                  styles.inputContainer,
+                  {
+                    paddingHorizontal: drawerPaddingHorizontal,
+                    paddingVertical: drawerInputVerticalPadding,
+                  },
+                ]}
+              >
                 <TextInput
-                  style={[styles.textInput, { color: textColor }, Platform.OS === 'web' && { outline: 'none' }]}
+                  style={[
+                    styles.textInput,
+                    {
+                      color: textColor,
+                      minHeight: drawerTextMinHeight,
+                    },
+                    Platform.OS === 'web' && { outline: 'none' },
+                  ]}
                   value={text}
                   onChangeText={setText}
                   placeholder={replyTo ? t('post.replyPlaceholder') : t('post.postPlaceholder')}
@@ -239,14 +378,21 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                   autoFocus
                   maxLength={maxCharacters}
                   textAlignVertical="top"
-                  selectionColor="transparent"
-                  cursorColor={textColor}
+                  selectionColor={tintColor}
+                  cursorColor={tintColor}
                 />
               </View>
 
               {/* Attached Images */}
               {attachedImages.length > 0 && (
-                <View style={styles.imagesContainer}>
+                <View
+                  style={[
+                    styles.imagesContainer,
+                    {
+                      paddingHorizontal: drawerPaddingHorizontal,
+                    },
+                  ]}
+                >
                   {attachedImages.map((image, index) => (
                     <View key={index} style={styles.imageItem}>
                       <View style={styles.imageContainer}>
@@ -270,7 +416,16 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
             </ScrollView>
 
             {/* Footer with Character Count and Actions */}
-            <View style={[styles.footer, { borderTopColor: borderColor }]}>
+            <View
+              style={[
+                styles.footer,
+                {
+                  borderTopColor: borderColor,
+                  paddingHorizontal: drawerPaddingHorizontal,
+                  paddingVertical: drawerFooterVerticalPadding,
+                },
+              ]}
+            >
               <View style={styles.footerLeft}>
                 <TouchableOpacity
                   style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
@@ -363,8 +518,8 @@ const styles = StyleSheet.create({
   },
   mobileHandleContainer: {
     alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 4,
+    paddingTop: 10,
+    paddingBottom: 2,
   },
   mobileHandle: {
     width: 40,
@@ -375,8 +530,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
     borderBottomWidth: 0.5,
   },
   headerButton: {
@@ -418,8 +571,6 @@ const styles = StyleSheet.create({
   replyContext: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
     borderBottomWidth: 0.5,
   },
   replyIconContainer: {
@@ -441,17 +592,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
   },
   textInput: {
     fontSize: 18,
     lineHeight: 26,
-    minHeight: 140,
     textAlignVertical: 'top',
   },
   imagesContainer: {
-    paddingHorizontal: 20,
     paddingBottom: 20,
   },
   imageItem: {
@@ -493,8 +640,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
     borderTopWidth: 0.5,
   },
   footerLeft: {
