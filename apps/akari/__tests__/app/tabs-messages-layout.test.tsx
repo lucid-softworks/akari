@@ -26,10 +26,12 @@ describe('MessagesLayout', () => {
   it('hides the stack header on mobile to defer to the shared drawer header', () => {
     const { Stack } = require('expo-router');
     render(<MessagesLayout />);
-    expect(Stack.mock.calls[0][0].screenOptions).toEqual({
+    expect(Stack.mock.calls[0][0].screenOptions).toMatchObject({
       headerShown: false,
       headerBackVisible: true,
       headerBackButtonDisplayMode: 'minimal',
+      gestureEnabled: true,
+      fullScreenGestureEnabled: true,
     });
     expect(Stack.Screen).toHaveBeenCalledTimes(5);
     const names: string[] = [];
@@ -43,10 +45,12 @@ describe('MessagesLayout', () => {
     mockUseResponsive.mockReturnValue({ isLargeScreen: true });
     const { Stack } = require('expo-router');
     render(<MessagesLayout />);
-    expect(Stack.mock.calls[0][0].screenOptions).toEqual({
+    expect(Stack.mock.calls[0][0].screenOptions).toMatchObject({
       headerShown: true,
       headerBackVisible: true,
       headerBackButtonDisplayMode: 'minimal',
+      gestureEnabled: true,
+      fullScreenGestureEnabled: true,
     });
   });
 });
