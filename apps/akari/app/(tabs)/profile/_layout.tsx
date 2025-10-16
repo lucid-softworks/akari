@@ -6,7 +6,13 @@ export default function ProfileLayout() {
   const { isLargeScreen } = useResponsive();
 
   return (
-    <Stack screenOptions={{ headerShown: isLargeScreen }}>
+    <Stack
+      screenOptions={{
+        headerShown: isLargeScreen,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+      }}
+    >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="[handle]" options={{ headerShown: false }} />
       <Stack.Screen

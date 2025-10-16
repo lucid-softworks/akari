@@ -11,6 +11,8 @@ export default function MessagesLayout() {
         headerShown: isLargeScreen,
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
