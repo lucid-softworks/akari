@@ -8,7 +8,7 @@ import {
   type Persister,
 } from '@tanstack/react-query-persist-client';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -25,6 +25,7 @@ import { REACT_QUERY_CACHE_STORAGE_KEY, storage } from '@/utils/secureStorage';
 import '@/utils/i18n';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
+import { useCurrentRouteDevToolsPlugin } from '@akari/devtools-current-route';
 import type { Query } from '@tanstack/query-core';
 import type { CrashProviderProps } from '@/axiom-crash-reporter';
 
@@ -111,11 +112,20 @@ function AppProviders({ colorScheme }: ProvidersProps) {
               <Stack.Screen name="+not-found" />
             </Stack>
             <StatusBar style="auto" />
+            <CurrentRouteDevtoolsBridge />
           </ThemeProvider>
         </DialogProvider>
       </ToastProvider>
     </LanguageProvider>
   );
+}
+
+function CurrentRouteDevtoolsBridge() {
+  const pathname = usePathname();
+
+  useCurrentRouteDevToolsPlugin(pathname ?? null);
+
+  return null;
 }
 
 export default function RootLayout() {

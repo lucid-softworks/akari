@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "akari Current Route DevTools",
+    "slug": "akari-current-route-devtools",
+    "platforms": ["web"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "sdkVersion": "54.0.0",
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

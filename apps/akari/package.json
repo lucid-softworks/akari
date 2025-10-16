@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@akari/axiom-crash-reporter": "*",
+    "@akari/devtools-current-route": "*",
     "@atcute/bluesky-richtext-parser": "^1.0.7",
     "@expo/vector-icons": "^15.0.2",
     "@formatjs/intl-displaynames": "^6.8.11",

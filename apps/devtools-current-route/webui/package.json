@@ -1,0 +1,20 @@
+{
+  "name": "@akari/devtools-current-route-webui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "App.tsx",
+  "scripts": {
+    "start": "expo start --web",
+    "export": "expo export -p web --output-dir dist"
+  },
+  "dependencies": {
+    "expo": "^54.0.10",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.4"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "typescript": "~5.9.2"
+  }
+}
