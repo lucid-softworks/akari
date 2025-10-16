@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
+  Pressable,
   Platform,
   ScrollView,
   StyleSheet,
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GifPicker } from '@/components/GifPicker';
 import { ThemedText } from '@/components/ThemedText';
@@ -20,6 +22,7 @@ import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useToast } from '@/contexts/ToastContext';
+import { useResponsive } from '@/hooks/useResponsive';
 
 type PostComposerProps = {
   visible: boolean;
@@ -45,6 +48,8 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const createPostMutation = useCreatePost();
   const { showToast } = useToast();
+  const { bottom } = useSafeAreaInsets();
+  const { isMobile } = useResponsive();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -52,6 +57,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
+  const drawerHandleColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
 
   const handlePost = async () => {
     if (!text.trim() && attachedImages.length === 0) return;
@@ -151,14 +157,38 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const maxCharacters = 300;
   const isNearLimit = characterCount > maxCharacters * 0.8;
   const isOverLimit = characterCount > maxCharacters;
+  const animationType = isMobile && Platform.OS !== 'web' ? 'slide' : 'fade';
 
   return (
-    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={handleClose}>
-      <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ThemedView style={styles.overlay}>
-          <ThemedView style={[styles.container, { backgroundColor }]}>
+    <Modal visible={visible} transparent animationType={animationType} onRequestClose={handleClose}>
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ThemedView style={[styles.overlay, isMobile && styles.mobileOverlay]}>
+          <Pressable
+            style={[StyleSheet.absoluteFill, styles.backdropPressable]}
+            onPress={handleClose}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.cancel')}
+          />
+          <ThemedView
+            style={[
+              styles.container,
+              { backgroundColor },
+              isMobile && [
+                styles.mobileContainer,
+                { paddingBottom: bottom + 16, borderTopColor: borderColor },
+              ],
+            ]}
+          >
+            {isMobile ? (
+              <View style={styles.mobileHandleContainer}>
+                <View style={[styles.mobileHandle, { backgroundColor: drawerHandleColor }]} />
+              </View>
+            ) : null}
             {/* Header */}
-            <View style={[styles.header, { borderBottomColor: borderColor }]}>
+            <View style={[styles.header, { borderBottomColor: borderColor }]}> 
               <TouchableOpacity onPress={handleClose} style={styles.headerButton}>
                 <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
               </TouchableOpacity>
@@ -296,6 +326,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
+    position: 'relative',
+  },
+  mobileOverlay: {
+    justifyContent: 'flex-end',
+  },
+  backdropPressable: {
+    zIndex: 1,
   },
   container: {
     margin: 20,
@@ -312,6 +349,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 8,
+    zIndex: 2,
+  },
+  mobileContainer: {
+    margin: 0,
+    maxWidth: '100%',
+    width: '100%',
+    alignSelf: 'stretch',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    maxHeight: '90%',
+  },
+  mobileHandleContainer: {
+    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+  mobileHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
   },
   header: {
     flexDirection: 'row',

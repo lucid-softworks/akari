@@ -7,10 +7,12 @@ import { PostComposer } from '@/components/PostComposer';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useResponsive } from '@/hooks/useResponsive';
 
 jest.mock('@/hooks/mutations/useCreatePost');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useResponsive');
 jest.mock('@/components/GifPicker', () => ({ GifPicker: jest.fn(() => null) }));
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: jest.fn(() => null) }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
@@ -19,10 +21,19 @@ jest.mock('expo-image-picker', () => ({
   launchImageLibraryAsync: jest.fn(),
   MediaTypeOptions: { Images: 'Images' },
 }));
+jest.mock('react-native-safe-area-context', () => {
+  const actual = jest.requireActual('react-native-safe-area-context');
+
+  return {
+    ...actual,
+    useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+  };
+});
 
 const mockUseCreatePost = useCreatePost as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseResponsive = useResponsive as jest.Mock;
 const gifPickerMock = require('@/components/GifPicker').GifPicker as jest.Mock;
 const requestPermissionsMock = ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock;
 const launchImageLibraryMock = ImagePicker.launchImageLibraryAsync as jest.Mock;
@@ -91,6 +102,15 @@ beforeEach(() => {
     }
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+  mockUseResponsive.mockReturnValue({
+    width: 1024,
+    height: 768,
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    isLargeScreen: true,
+    breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+  });
   requestPermissionsMock.mockReset();
   launchImageLibraryMock.mockReset();
 });
@@ -131,6 +151,27 @@ describe('PostComposer', () => {
     },
     30000,
   );
+
+  it('presents as a drawer on mobile and closes when tapping the backdrop', async () => {
+    mockUseResponsive.mockReturnValueOnce({
+      width: 360,
+      height: 780,
+      isMobile: true,
+      isTablet: false,
+      isDesktop: false,
+      isLargeScreen: false,
+      breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+    });
+
+    const onClose = jest.fn();
+    const { getByLabelText } = render(<PostComposer visible onClose={onClose} />);
+
+    await act(async () => {
+      fireEvent.press(getByLabelText('common.cancel'));
+    });
+
+    expect(onClose).toHaveBeenCalled();
+  });
 
   it('renders reply context and posts a reply', async () => {
     const mutateAsync = jest.fn().mockResolvedValue(undefined);
