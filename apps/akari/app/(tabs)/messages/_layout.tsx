@@ -15,7 +15,12 @@ export default function MessagesLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="pending" />
-      <Stack.Screen name="[handle]" />
+      <Stack.Screen
+        name="[handle]"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="user-profile/[handle]"
         options={{

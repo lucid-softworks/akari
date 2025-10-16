@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,7 +13,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { VirtualizedList, VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -236,6 +236,9 @@ export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const listRef = useRef<VirtualizedListHandle<Message>>(null);
+  const previousMessageCountRef = useRef(0);
+  const isPrependingMessagesRef = useRef(false);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -288,6 +291,32 @@ export default function ConversationScreen() {
       return firstSentAt - secondSentAt;
     });
   }, [messagesData]);
+
+  useEffect(() => {
+    if (messagesLoading) {
+      return;
+    }
+
+    const previousCount = previousMessageCountRef.current;
+
+    if (messages.length === 0) {
+      previousMessageCountRef.current = 0;
+      return;
+    }
+
+    if (messages.length <= previousCount) {
+      previousMessageCountRef.current = messages.length;
+      return;
+    }
+
+    if (isPrependingMessagesRef.current) {
+      previousMessageCountRef.current = messages.length;
+      return;
+    }
+
+    listRef.current?.scrollToEnd({ animated: previousCount > 0 });
+    previousMessageCountRef.current = messages.length;
+  }, [messages, messagesLoading]);
 
   // Send message mutation
   const sendMessageMutation = useSendMessage();
@@ -432,7 +461,10 @@ export default function ConversationScreen() {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      isPrependingMessagesRef.current = true;
+      fetchNextPage().finally(() => {
+        isPrependingMessagesRef.current = false;
+      });
     }
   };
 
@@ -510,15 +542,20 @@ export default function ConversationScreen() {
             </ThemedView>
           ) : (
             <VirtualizedList
+              ref={listRef}
               data={messages}
               renderItem={renderMessage}
               keyExtractor={(item) => item.id}
+              style={styles.list}
               contentContainerStyle={styles.messagesContent}
               showsVerticalScrollIndicator={false}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.2}
+              onStartReached={handleLoadMore}
+              onStartReachedThreshold={0.2}
               ListFooterComponent={renderFooter}
-              inverted={true} // Show newest messages at the bottom
+              maintainVisibleContentPosition={{
+                autoscrollToBottomThreshold: 120,
+                startRenderingFromBottom: true,
+              }}
               estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
             />
           )}
@@ -574,6 +611,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  list: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -604,7 +644,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   messagesContent: {
-    paddingVertical: 8,
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    paddingVertical: 12,
   },
   messageContainer: {
     marginHorizontal: 12,
