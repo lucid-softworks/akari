@@ -609,7 +609,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: isKeyboardOpen ? 12 : 0,
+                paddingBottom: isKeyboardOpen ? 12 : 8,
               },
             ]}
           >
