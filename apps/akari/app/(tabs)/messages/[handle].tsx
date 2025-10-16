@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -245,7 +245,6 @@ export default function ConversationScreen() {
   const contentHeightRef = useRef(0);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
 
@@ -442,7 +441,7 @@ export default function ConversationScreen() {
         text: messageText.trim(),
       });
       setMessageText('');
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('messages.errorSendingMessage'),
@@ -516,7 +515,7 @@ export default function ConversationScreen() {
   // Show loading state while finding conversation
   if (!conversation) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <ThemedView style={styles.container}>
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
             <ThemedView style={styles.headerInfo}>
@@ -538,7 +537,7 @@ export default function ConversationScreen() {
     const messageError = messagesError as MessageError;
 
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <ThemedView style={styles.container}>
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
             <ThemedView style={styles.headerInfo}>
@@ -557,7 +556,7 @@ export default function ConversationScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ThemedView style={styles.container}>
           {/* Header */}
@@ -610,7 +609,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom + 35 : 12,
+                paddingBottom: isKeyboardOpen ? 12 : 0,
               },
             ]}
           >
@@ -751,7 +750,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 12,
     borderTopWidth: 0.5,
   },
   textInput: {
