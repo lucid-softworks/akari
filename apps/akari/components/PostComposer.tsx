@@ -263,6 +263,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
         <ThemedView style={[styles.overlay, isMobile && styles.mobileOverlay]}>
           <Pressable
             style={[StyleSheet.absoluteFill, styles.backdropPressable]}
+            pointerEvents="box-only"
             onPress={handleClose}
             accessibilityRole="button"
             accessibilityLabel={t('common.cancel')}
@@ -288,6 +289,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                 testID="post-composer-handle"
                 accessibilityRole="adjustable"
                 accessibilityLabel={t('common.handle')}
+                hitSlop={{ top: 12, bottom: 12, left: 24, right: 24 }}
                 {...handlePanResponder.panHandlers}
               >
                 <View style={[styles.mobileHandle, { backgroundColor: drawerHandleColor }]} />
@@ -505,6 +507,7 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
     zIndex: 2,
+    position: 'relative',
   },
   mobileContainer: {
     margin: 0,
@@ -515,6 +518,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     borderTopWidth: StyleSheet.hairlineWidth,
     maxHeight: '90%',
+    position: 'relative',
   },
   mobileHandleContainer: {
     alignItems: 'center',
