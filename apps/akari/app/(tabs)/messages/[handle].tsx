@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -240,6 +240,9 @@ export default function ConversationScreen() {
   const previousMessageCountRef = useRef(0);
   const previousFirstMessageIdRef = useRef<string | null>(null);
   const hasPerformedInitialScrollRef = useRef(false);
+  const isPrependingRef = useRef(false);
+  const scrollOffsetRef = useRef(0);
+  const contentHeightRef = useRef(0);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -305,6 +308,9 @@ export default function ConversationScreen() {
       previousMessageCountRef.current = 0;
       previousFirstMessageIdRef.current = null;
       hasPerformedInitialScrollRef.current = false;
+      isPrependingRef.current = false;
+      scrollOffsetRef.current = 0;
+      contentHeightRef.current = 0;
       return;
     }
 
@@ -327,13 +333,38 @@ export default function ConversationScreen() {
 
     previousMessageCountRef.current = messages.length;
     previousFirstMessageIdRef.current = currentFirstMessageId;
+    isPrependingRef.current = true;
   }, [messages, messagesLoading]);
 
   useEffect(() => {
     previousMessageCountRef.current = 0;
     previousFirstMessageIdRef.current = null;
     hasPerformedInitialScrollRef.current = false;
+    isPrependingRef.current = false;
+    scrollOffsetRef.current = 0;
+    contentHeightRef.current = 0;
   }, [conversation?.convoId]);
+
+  const handleScroll = useCallback((event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+  }, []);
+
+  const handleContentSizeChange = useCallback((_: number, height: number) => {
+    if (isPrependingRef.current) {
+      const heightDelta = height - contentHeightRef.current;
+
+      if (heightDelta > 0) {
+        listRef.current?.scrollToOffset({
+          offset: scrollOffsetRef.current + heightDelta,
+          animated: false,
+        });
+      }
+
+      isPrependingRef.current = false;
+    }
+
+    contentHeightRef.current = height;
+  }, []);
 
   // Send message mutation
   const sendMessageMutation = useSendMessage();
@@ -566,10 +597,9 @@ export default function ConversationScreen() {
               onStartReached={handleLoadMore}
               onStartReachedThreshold={0.2}
               ListFooterComponent={renderFooter}
-              maintainVisibleContentPosition={{
-                autoscrollToBottomThreshold: 120,
-                startRenderingFromBottom: true,
-              }}
+              onScroll={handleScroll}
+              onContentSizeChange={handleContentSizeChange}
+              scrollEventThrottle={16}
               estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
             />
           )}
@@ -658,8 +688,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   messagesContent: {
-    paddingTop: 8,
-    paddingBottom: 16,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   messageContainer: {
     marginHorizontal: 12,
