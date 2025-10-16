@@ -238,7 +238,7 @@ export default function ConversationScreen() {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const listRef = useRef<VirtualizedListHandle<Message>>(null);
   const previousMessageCountRef = useRef(0);
-  const isPrependingMessagesRef = useRef(false);
+  const previousFirstMessageIdRef = useRef<string | null>(null);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -298,24 +298,32 @@ export default function ConversationScreen() {
     }
 
     const previousCount = previousMessageCountRef.current;
+    const currentFirstMessageId = messages[0]?.id ?? null;
 
     if (messages.length === 0) {
       previousMessageCountRef.current = 0;
+      previousFirstMessageIdRef.current = null;
       return;
     }
 
-    if (messages.length <= previousCount) {
+    if (messages.length <= previousCount && currentFirstMessageId === previousFirstMessageIdRef.current) {
       previousMessageCountRef.current = messages.length;
+      previousFirstMessageIdRef.current = currentFirstMessageId;
       return;
     }
 
-    if (isPrependingMessagesRef.current) {
-      previousMessageCountRef.current = messages.length;
-      return;
+    const isPrepending =
+      previousFirstMessageIdRef.current !== null &&
+      currentFirstMessageId !== null &&
+      currentFirstMessageId !== previousFirstMessageIdRef.current &&
+      messages.length > previousCount;
+
+    if (!isPrepending) {
+      listRef.current?.scrollToEnd({ animated: previousCount > 0 });
     }
 
-    listRef.current?.scrollToEnd({ animated: previousCount > 0 });
     previousMessageCountRef.current = messages.length;
+    previousFirstMessageIdRef.current = currentFirstMessageId;
   }, [messages, messagesLoading]);
 
   // Send message mutation
@@ -461,10 +469,7 @@ export default function ConversationScreen() {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      isPrependingMessagesRef.current = true;
-      fetchNextPage().finally(() => {
-        isPrependingMessagesRef.current = false;
-      });
+      fetchNextPage();
     }
   };
 
