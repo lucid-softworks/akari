@@ -1,5 +1,6 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
+import * as ReactNative from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -7,10 +8,12 @@ import { PostComposer } from '@/components/PostComposer';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useResponsive } from '@/hooks/useResponsive';
 
 jest.mock('@/hooks/mutations/useCreatePost');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useResponsive');
 jest.mock('@/components/GifPicker', () => ({ GifPicker: jest.fn(() => null) }));
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: jest.fn(() => null) }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
@@ -19,13 +22,25 @@ jest.mock('expo-image-picker', () => ({
   launchImageLibraryAsync: jest.fn(),
   MediaTypeOptions: { Images: 'Images' },
 }));
+jest.mock('react-native-safe-area-context', () => {
+  const actual = jest.requireActual('react-native-safe-area-context');
+
+  return {
+    ...actual,
+    useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+  };
+});
 
 const mockUseCreatePost = useCreatePost as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseResponsive = useResponsive as jest.Mock;
 const gifPickerMock = require('@/components/GifPicker').GifPicker as jest.Mock;
 const requestPermissionsMock = ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock;
 const launchImageLibraryMock = ImagePicker.launchImageLibraryAsync as jest.Mock;
+const useWindowDimensionsSpy = jest.spyOn(ReactNative, 'useWindowDimensions');
+
+const defaultWindowDimensions = { width: 1024, height: 768, scale: 2, fontScale: 2 };
 
 const extractColor = (style: unknown): string | undefined => {
   if (Array.isArray(style)) {
@@ -54,6 +69,33 @@ const hasOutlineNone = (style: unknown): boolean => {
   }
 
   return Boolean(style && typeof style === 'object' && (style as { outline?: string }).outline === 'none');
+};
+
+const extractNumericValue = (style: unknown, property: string): number | undefined => {
+  if (Array.isArray(style)) {
+    let value: number | undefined;
+
+    for (const entry of style) {
+      const entryValue = extractNumericValue(entry, property);
+
+      if (entryValue !== undefined) {
+        value = entryValue;
+      }
+    }
+
+    return value;
+  }
+
+  if (
+    style &&
+    typeof style === 'object' &&
+    property in (style as Record<string, unknown>) &&
+    typeof (style as Record<string, unknown>)[property] === 'number'
+  ) {
+    return (style as Record<string, number>)[property];
+  }
+
+  return undefined;
 };
 
 const findAccessibilityState = (
@@ -91,8 +133,22 @@ beforeEach(() => {
     }
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+  mockUseResponsive.mockReturnValue({
+    width: 1024,
+    height: 768,
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    isLargeScreen: true,
+    breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+  });
   requestPermissionsMock.mockReset();
   launchImageLibraryMock.mockReset();
+  useWindowDimensionsSpy.mockReturnValue(defaultWindowDimensions);
+});
+
+afterAll(() => {
+  useWindowDimensionsSpy.mockRestore();
 });
 
 describe('PostComposer', () => {
@@ -131,6 +187,96 @@ describe('PostComposer', () => {
     },
     30000,
   );
+
+  it('presents as a drawer on mobile and closes when tapping the backdrop', async () => {
+    const mobileDimensions = { width: 360, height: 780, scale: 2, fontScale: 2 };
+    useWindowDimensionsSpy.mockReturnValue(mobileDimensions);
+    mockUseResponsive.mockReturnValue({
+      width: 360,
+      height: 780,
+      isMobile: true,
+      isTablet: false,
+      isDesktop: false,
+      isLargeScreen: false,
+      breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+    });
+
+    const onClose = jest.fn();
+    const { getByLabelText } = render(<PostComposer visible onClose={onClose} />);
+
+    await act(async () => {
+      fireEvent.press(getByLabelText('common.cancel'));
+    });
+
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('uses the tint color for the text selection cursor on mobile', () => {
+    const mobileDimensions = { width: 390, height: 780, scale: 2, fontScale: 2 };
+    useWindowDimensionsSpy.mockReturnValue(mobileDimensions);
+    mockUseResponsive.mockReturnValue({
+      width: 390,
+      height: 780,
+      isMobile: true,
+      isTablet: false,
+      isDesktop: false,
+      isLargeScreen: false,
+      breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+    });
+
+    const { getByPlaceholderText } = render(<PostComposer visible onClose={jest.fn()} />);
+    const input = getByPlaceholderText('post.postPlaceholder');
+
+    expect(input.props.selectionColor).toBe('#123456');
+    expect(input.props.cursorColor).toBe('#123456');
+  });
+
+  it('exposes pan handlers for resizing on mobile', () => {
+    const mobileDimensions = { width: 375, height: 780, scale: 2, fontScale: 2 };
+    useWindowDimensionsSpy.mockReturnValue(mobileDimensions);
+    mockUseResponsive.mockReturnValue({
+      width: 375,
+      height: 780,
+      isMobile: true,
+      isTablet: false,
+      isDesktop: false,
+      isLargeScreen: false,
+      breakpoints: { mobile: 768, tablet: 1024, desktop: 1280 },
+    });
+
+    const { getByTestId } = render(<PostComposer visible onClose={jest.fn()} />);
+    const handle = getByTestId('post-composer-handle');
+    const container = getByTestId('post-composer-container');
+
+    expect(typeof handle.props.onStartShouldSetResponder).toBe('function');
+
+    const gestureEvent = {
+      touchHistory: { touchBank: [] },
+      nativeEvent: { pageX: 0, pageY: 0, identifier: 1, touches: [] },
+    } as unknown as ReactNative.GestureResponderEvent;
+    expect(handle.props.onStartShouldSetResponder?.(gestureEvent)).toBe(true);
+
+    expect(typeof handle.props.onResponderRelease).toBe('function');
+
+    const gestureState = {
+      dx: 0,
+      dy: 120,
+      moveX: 0,
+      moveY: 0,
+      numberActiveTouches: 1,
+      stateID: 1,
+      vx: 0,
+      vy: 0,
+      x0: 0,
+      y0: 0,
+    } as ReactNative.PanResponderGestureState;
+
+    expect(() => handle.props.onResponderRelease?.(gestureEvent, gestureState)).not.toThrow();
+
+    const height = extractNumericValue(container.props.style, 'height') ?? 0;
+
+    expect(height).toBeGreaterThan(0);
+  });
 
   it('renders reply context and posts a reply', async () => {
     const mutateAsync = jest.fn().mockResolvedValue(undefined);
