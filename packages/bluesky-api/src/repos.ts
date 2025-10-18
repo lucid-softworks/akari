@@ -62,11 +62,8 @@ export class BlueskyRepos extends BlueskyApiClient {
       return await this.makeAuthenticatedRequest<BlueskyLinkatBoardResponse>('/com.atproto.repo.listRecords', accessJwt, {
         params,
       });
-    } catch (error) {
+    } catch {
       // If the collection doesn't exist or there's an error, return empty response
-      if (__DEV__) {
-        console.warn('Failed to fetch blue.linkat.board records:', error);
-      }
       return {
         records: [],
         cursor: undefined,
