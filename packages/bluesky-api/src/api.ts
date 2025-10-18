@@ -5,31 +5,32 @@ import { BlueskyConversations } from './conversations';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
 import { BlueskyNotifications } from './notifications';
-import { BlueskySearch } from './search';
 import { BlueskyRepos } from './repos';
+import { BlueskySearch } from './search';
 import type {
   BlueskyBookmarksResponse,
   BlueskyConvosResponse,
-  BlueskyFeedResponse,
-  BlueskyFeedsResponse,
-  BlueskyMessagesResponse,
   BlueskyCreatePostInput,
   BlueskyCreatePostResponse,
   BlueskyFeedGeneratorsResponse,
+  BlueskyFeedResponse,
+  BlueskyFeedsResponse,
+  BlueskyLinkatBoardResponse,
+  BlueskyMessagesResponse,
   BlueskyNotificationsResponse,
   BlueskyPostView,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
+  BlueskyProfileUpdateInput,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
-  BlueskySendMessageResponse,
   BlueskySendMessageInput,
+  BlueskySendMessageResponse,
   BlueskySession,
   BlueskyStarterPacksResponse,
   BlueskyTangledReposResponse,
   BlueskyThreadResponse,
   BlueskyTrendingTopicsResponse,
-  BlueskyProfileUpdateInput,
   BlueskyUnreadNotificationCount,
   BlueskyUploadBlobResponse,
 } from './types';
@@ -129,6 +130,23 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Fetches Blue.linkat.board records for the specified actor.
+   * @param accessJwt - Valid session token for the requesting user.
+   * @param actor - DID or handle identifying the actor whose link boards should be loaded.
+   * @param limit - Number of records to fetch per page, defaults to 50.
+   * @param cursor - Optional pagination cursor returned by previous calls.
+   * @returns Blue.linkat.board records for the actor.
+   */
+  async getActorLinkatBoards(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyLinkatBoardResponse> {
+    return this.repos.getActorLinkatBoards(accessJwt, actor, limit, cursor);
+  }
+
+  /**
    * Fetches the home timeline feed for the authenticated user.
    * @param accessJwt - Valid session token for the requesting user.
    * @param limit - Maximum number of feed items to return, defaults to 20.
@@ -188,11 +206,7 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param cursor - Pagination cursor from the previous response, if any.
    * @returns Paginated bookmark feed from the app.bsky.bookmark namespace.
    */
-  async getBookmarks(
-    accessJwt: string,
-    limit: number = 50,
-    cursor?: string,
-  ): Promise<BlueskyBookmarksResponse> {
+  async getBookmarks(accessJwt: string, limit: number = 50, cursor?: string): Promise<BlueskyBookmarksResponse> {
     return this.feeds.getBookmarks(accessJwt, limit, cursor);
   }
 

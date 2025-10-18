@@ -9,6 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
+import { LinksTab } from '@/components/profile/LinksTab';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
@@ -154,6 +155,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         return <ReposTab handle={handle} />;
       case 'starterpacks':
         return <StarterpacksTab handle={handle} />;
+      case 'links':
+        return <LinksTab handle={handle} />;
       default:
         return null;
     }

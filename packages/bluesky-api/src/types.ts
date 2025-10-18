@@ -884,6 +884,47 @@ export type BlueskyTangledReposResponse = {
 };
 
 /**
+ * Blue.linkat.board card record
+ */
+export type BlueskyLinkatCard = {
+  /** URL of the card */
+  url: string;
+  /** Text of the card */
+  text: string;
+  /** Emoji of the card */
+  emoji: string;
+};
+
+/**
+ * Blue.linkat.board record stored in the blue.linkat.board collection
+ */
+export type BlueskyLinkatBoard = {
+  /** AT URI of the board record */
+  uri: string;
+  /** CID of the board record */
+  cid: string;
+  /** Blue.linkat.board record value */
+  value: {
+    /** Lexicon type identifier */
+    $type: 'blue.linkat.board';
+    /** List of cards in the board */
+    cards: BlueskyLinkatCard[];
+  };
+  /** When the record was indexed */
+  indexedAt?: string;
+};
+
+/**
+ * Response from the com.atproto.repo.listRecords endpoint for Blue.linkat.board records
+ */
+export type BlueskyLinkatBoardResponse = {
+  /** Cursor for pagination */
+  cursor?: string;
+  /** Blue.linkat.board records */
+  records: BlueskyLinkatBoard[];
+};
+
+/**
  * Error response from Bluesky API endpoints
  */
 export type BlueskyError = {
