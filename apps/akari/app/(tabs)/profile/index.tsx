@@ -11,6 +11,7 @@ import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
+import { RecipesTab } from '@/components/profile/RecipesTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { ReposTab } from '@/components/profile/ReposTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
@@ -143,6 +144,8 @@ export default function ProfileScreen() {
         return <ReposTab handle={currentAccount.handle} />;
       case 'starterpacks':
         return <StarterpacksTab handle={currentAccount.handle} />;
+      case 'recipes':
+        return <RecipesTab handle={currentAccount.handle} />;
       default:
         return (
           <ThemedView style={styles.emptyState}>

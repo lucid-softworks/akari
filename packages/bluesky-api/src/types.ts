@@ -224,7 +224,7 @@ export type BlueskyRecord = {
       byteStart: number;
       byteEnd: number;
     };
-  features: {
+    features: {
       $type: string;
       uri?: string;
       tag?: string;
@@ -975,7 +975,7 @@ export type BlueskyAppStatePref = {
 /**
  * Union type for all preference types
  */
-export type BlueskyPreference = 
+export type BlueskyPreference =
   | BlueskySavedFeedsPref
   | BlueskyPersonalDetailsPref
   | BlueskyInterestsPref
@@ -989,4 +989,193 @@ export type BlueskyPreference =
 export type BlueskyPreferencesResponse = {
   /** Array of user preferences */
   preferences: BlueskyPreference[];
+};
+
+/**
+ * Recipe image from exchange.recipe.recipe#image
+ */
+export type BlueskyRecipeImage = {
+  image: {
+    $type: 'blob';
+    ref: {
+      $link: string;
+    };
+    mimeType: string;
+    size: number;
+  };
+  alt: string;
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+};
+
+/**
+ * Recipe image embed from exchange.recipe.recipe#imagesEmbed
+ */
+export type BlueskyRecipeImageEmbed = {
+  $type: 'exchange.recipe.recipe#imagesEmbed';
+  images: BlueskyRecipeImage[];
+};
+
+/**
+ * Recipe view image from exchange.recipe.recipe#viewImage
+ */
+export type BlueskyRecipeViewImage = {
+  thumb: string;
+  fullsize: string;
+  alt: string;
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+};
+
+/**
+ * Recipe view from exchange.recipe.recipe#view
+ */
+export type BlueskyRecipeView = {
+  $type: 'exchange.recipe.recipe#view';
+  images: BlueskyRecipeViewImage[];
+};
+
+/**
+ * Recipe nutrition information
+ */
+export type BlueskyRecipeNutrition = {
+  calories?: number;
+  fatContent?: number;
+  proteinContent?: number;
+  carbohydrateContent?: number;
+};
+
+/**
+ * Recipe attribution union types
+ */
+export type BlueskyRecipeOriginalAttribution = {
+  $type: 'exchange.recipe.defs#originalAttribution';
+  type: 'original';
+  license: string; // exchange.recipe.defs#license
+  url?: string;
+};
+
+export type BlueskyRecipePersonAttribution = {
+  $type: 'exchange.recipe.defs#personAttribution';
+  type: 'person';
+  name: string;
+  url?: string;
+  notes?: string;
+};
+
+export type BlueskyRecipePublicationAttribution = {
+  $type: 'exchange.recipe.defs#publicationAttribution';
+  type: 'publication';
+  publicationType: string; // exchange.recipe.defs#publicationType
+  title: string;
+  author: string;
+  publisher?: string;
+  isbn?: string;
+  page?: number;
+  url?: string;
+  notes?: string;
+};
+
+export type BlueskyRecipeWebsiteAttribution = {
+  $type: 'exchange.recipe.defs#websiteAttribution';
+  type: 'website';
+  name: string;
+  url: string;
+  notes?: string;
+};
+
+export type BlueskyRecipeShowAttribution = {
+  $type: 'exchange.recipe.defs#showAttribution';
+  type: 'show';
+  title: string;
+  episode?: string;
+  network: string;
+  airDate?: string;
+  url?: string;
+  notes?: string;
+};
+
+export type BlueskyRecipeProductAttribution = {
+  $type: 'exchange.recipe.defs#productAttribution';
+  type: 'product';
+  brand: string;
+  name: string;
+  upc?: string;
+  url?: string;
+  notes?: string;
+};
+
+export type BlueskyRecipeAttribution =
+  | BlueskyRecipeOriginalAttribution
+  | BlueskyRecipePersonAttribution
+  | BlueskyRecipePublicationAttribution
+  | BlueskyRecipeWebsiteAttribution
+  | BlueskyRecipeShowAttribution
+  | BlueskyRecipeProductAttribution;
+
+/**
+ * Recipe record stored in the exchange.recipe.recipe collection
+ */
+export type BlueskyRecipeRecord = {
+  /** AT URI of the recipe record */
+  uri: string;
+  /** CID of the recipe record */
+  cid: string;
+  /** Recipe record value */
+  value: {
+    /** Lexicon type identifier */
+    $type: 'exchange.recipe.recipe';
+    /** Recipe name */
+    name: string;
+    /** Recipe description */
+    text: string;
+    /** Recipe attribution */
+    attribution?: BlueskyRecipeAttribution;
+    /** List of ingredients */
+    ingredients: string[];
+    /** List of cooking instructions */
+    instructions: string[];
+    /** Recipe embed (images) */
+    embed?: BlueskyRecipeImageEmbed;
+    /** Time required for preparation */
+    prepTime?: string;
+    /** Time required for cooking */
+    cookTime?: string;
+    /** Total time required */
+    totalTime?: string;
+    /** Number of servings or yield */
+    recipeYield?: string;
+    /** Category of recipe (e.g., appetizer, main course) */
+    recipeCategory?: string;
+    /** Cuisine type (e.g., Italian, Mexican) */
+    recipeCuisine?: string;
+    /** Method of cooking (e.g., baking, grilling) */
+    cookingMethod?: string;
+    /** Nutritional information */
+    nutrition?: BlueskyRecipeNutrition;
+    /** Dietary restrictions this recipe is suitable for */
+    suitableForDiet?: string[];
+    /** Tags describing the recipe */
+    keywords?: string[];
+    /** Timestamp when this recipe was created */
+    createdAt: string;
+    /** Timestamp when this recipe was last updated */
+    updatedAt: string;
+  };
+  /** When the record was indexed */
+  indexedAt?: string;
+};
+
+/**
+ * Response from the com.atproto.repo.listRecords endpoint for recipe records
+ */
+export type BlueskyRecipeRecordsResponse = {
+  /** Array of recipe records */
+  records: BlueskyRecipeRecord[];
+  /** Pagination cursor for next page */
+  cursor?: string;
 };
