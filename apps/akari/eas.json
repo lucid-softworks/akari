@@ -36,6 +36,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "companyName": "Lucid Softworks"
+      }
+    }
   }
 }

@@ -13,20 +13,20 @@ const DEFAULT_VARIANT: AppVariant = 'development';
 
 const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
-    appName: 'akari Dev',
-    scheme: 'akaridev',
+    appName: 'akari.blue Dev',
+    scheme: 'akari.blue-dev',
     iosBundleIdentifier: 'works.lucidsoft.akari.dev',
     androidPackage: 'works.lucidsoft.akari.dev',
   },
   preview: {
-    appName: 'akari Preview',
-    scheme: 'akaripreview',
+    appName: 'akari.blue Preview',
+    scheme: 'akari.blue-preview',
     iosBundleIdentifier: 'works.lucidsoft.akari.preview',
     androidPackage: 'works.lucidsoft.akari.preview',
   },
   production: {
-    appName: 'akari',
-    scheme: 'akari',
+    appName: 'akari.blue',
+    scheme: 'akari.blue',
     iosBundleIdentifier: 'works.lucidsoft.akari',
     androidPackage: 'works.lucidsoft.akari',
   },
