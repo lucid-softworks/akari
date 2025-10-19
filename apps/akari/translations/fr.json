@@ -334,7 +334,7 @@
       "theme": "Thème",
       "fontSize": "Taille de police",
       "requireAltText": "Exiger un texte alternatif avant de publier",
-      "displayLargerTextBadges": "Afficher des badges de texte en plus grands",
+      "displayLargerTextBadges": "Afficher des badges de texte en plus grand",
       "notificationCategories": "Catégories de notification",
       "contentLanguages": "Langues du contenu",
       "systemLog": "Journal système"
