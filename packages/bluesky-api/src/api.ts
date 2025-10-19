@@ -22,6 +22,7 @@ import type {
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
   BlueskyProfileUpdateInput,
+  BlueskyRecipeRecordsResponse,
   BlueskySearchActorsResponse,
   BlueskySearchPostsResponse,
   BlueskySendMessageInput,
@@ -127,6 +128,23 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyTangledReposResponse> {
     return this.repos.getActorRepos(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists recipe records created by the requested actor.
+   * @param accessJwt - Valid session token authorised to query the actor's records.
+   * @param actor - DID or handle identifying the actor whose recipes should be loaded.
+   * @param limit - Maximum number of recipes to fetch per page, defaults to 50.
+   * @param cursor - Pagination cursor from previous responses, if any.
+   * @returns Recipe records created by the actor.
+   */
+  async getActorRecipes(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyRecipeRecordsResponse> {
+    return this.repos.getActorRecipes(accessJwt, actor, limit, cursor);
   }
 
   /**

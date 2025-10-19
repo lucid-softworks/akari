@@ -1,1 +1,11 @@
-export type ProfileTabType = 'posts' | 'replies' | 'likes' | 'media' | 'videos' | 'feeds' | 'repos' | 'starterpacks' | 'links';
+export type ProfileTabType =
+  | 'posts'
+  | 'replies'
+  | 'likes'
+  | 'media'
+  | 'videos'
+  | 'feeds'
+  | 'repos'
+  | 'starterpacks'
+  | 'links'
+  | 'recipes';
