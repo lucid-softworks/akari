@@ -59,7 +59,7 @@ describe('YouTubeEmbed', () => {
 
     expect(getByText('Video title')).toBeTruthy();
     expect(getByText('Video description')).toBeTruthy();
-    expect(getByText('YouTube')).toBeTruthy();
+    expect(getByText('ui.youtube')).toBeTruthy();
 
     fireEvent.press(getByText('Video title'));
 

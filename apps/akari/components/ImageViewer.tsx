@@ -138,11 +138,11 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
       <View style={[styles.container, { backgroundColor }]}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton} testID="close-button">
             <IconSymbol name="xmark" size={24} color={textColor} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton}>
+          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton} testID="download-button">
             <IconSymbol name="square.and.arrow.up" size={20} color={textColor} />
           </TouchableOpacity>
         </View>

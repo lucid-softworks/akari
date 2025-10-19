@@ -76,7 +76,7 @@ describe('VideoPlayer.web', () => {
     const { getByText } = render(<VideoPlayer videoUrl="https://example.com/video.mp4" />);
     expect(getByText('Test failure')).toBeTruthy();
 
-    fireEvent.press(getByText('Tap to retry'));
+    fireEvent.press(getByText('ui.tapToRetry'));
     expect(setStatus).toHaveBeenCalledWith('idle');
     expect(setError).toHaveBeenCalledWith(null);
 

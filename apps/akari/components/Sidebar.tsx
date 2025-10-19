@@ -13,6 +13,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -62,6 +63,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
+  const { t } = useTranslation();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();

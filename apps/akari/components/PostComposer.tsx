@@ -396,7 +396,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                     <View key={index} style={styles.imageItem}>
                       <View style={styles.imageContainer}>
                         <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
-                        <TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(index)}>
+                        <TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(index)} testID={`remove-image-${index}`}>
                           <IconSymbol name="xmark" size={16} color="#ffffff" />
                         </TouchableOpacity>
                       </View>

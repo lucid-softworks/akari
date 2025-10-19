@@ -21,6 +21,7 @@ type FeedItemProps = {
 const ESTIMATED_FEED_CARD_HEIGHT = 180;
 
 function FeedItem({ feed }: FeedItemProps) {
+  const { t } = useTranslation();
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');

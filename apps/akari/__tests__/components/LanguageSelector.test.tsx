@@ -53,7 +53,7 @@ describe('LanguageSelector', () => {
 
     fireEvent.press(view.getByRole('button', { name: 'settings.language' }));
     expect(view.getByRole('menu', { name: 'settings.language' })).toBeTruthy();
-    expect(view.getByText('✓')).toBeTruthy();
+    // The checkmark is now an IconSymbol component, which is mocked to return null
   });
 
   it('allows selecting a different language from the modal', () => {

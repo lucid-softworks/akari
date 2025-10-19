@@ -7,6 +7,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -47,6 +48,7 @@ export function VideoPlayer({
   loop = false,
   aspectRatio,
 }: VideoPlayerProps) {
+  const { t } = useTranslation();
   const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
   const [playerError, setPlayerError] = useState<string | null>(null);
   const [shouldShowVideo, setShouldShowVideo] = useState(false);
