@@ -1,6 +1,6 @@
+import * as Clipboard from 'expo-clipboard';
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -12,6 +12,7 @@ import { LikesTab } from '@/components/profile/LikesTab';
 import { LinksTab } from '@/components/profile/LinksTab';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
+import { RecipesTab } from '@/components/profile/RecipesTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { ReposTab } from '@/components/profile/ReposTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
@@ -155,6 +156,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         return <ReposTab handle={handle} />;
       case 'starterpacks':
         return <StarterpacksTab handle={handle} />;
+      case 'recipes':
+        return <RecipesTab handle={handle} />;
       case 'links':
         return <LinksTab handle={handle} />;
       default:
