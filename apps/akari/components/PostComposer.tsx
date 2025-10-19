@@ -4,15 +4,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   KeyboardAvoidingView,
   Modal,
-  Pressable,
+  PanResponder,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
   useWindowDimensions,
-  PanResponder,
   type PanResponderInstance,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,11 +21,11 @@ import { GifPicker } from '@/components/GifPicker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useToast } from '@/contexts/ToastContext';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useToast } from '@/contexts/ToastContext';
-import { useResponsive } from '@/hooks/useResponsive';
 
 type PostComposerProps = {
   visible: boolean;
@@ -179,7 +179,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
       showToast({
         type: 'error',
         title: t('post.post'),
-        message: t('common.somethingWentWrong'),
+        message: t('common.error'),
       });
     }
   };
@@ -256,10 +256,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
 
   return (
     <Modal visible={visible} transparent animationType={animationType} onRequestClose={handleClose}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+      <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ThemedView style={[styles.overlay, isMobile && styles.mobileOverlay]}>
           <Pressable
             style={[StyleSheet.absoluteFill, styles.backdropPressable]}
@@ -399,8 +396,8 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                     <View key={index} style={styles.imageItem}>
                       <View style={styles.imageContainer}>
                         <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
-                        <TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(index)}>
-                          <ThemedText style={styles.removeImageText}>✕</ThemedText>
+                        <TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(index)} testID={`remove-image-${index}`}>
+                          <IconSymbol name="xmark" size={16} color="#ffffff" />
                         </TouchableOpacity>
                       </View>
                       <TextInput
@@ -595,8 +592,7 @@ const styles = StyleSheet.create({
   contentArea: {
     flex: 1,
   },
-  inputContainer: {
-  },
+  inputContainer: {},
   textInput: {
     fontSize: 18,
     lineHeight: 26,

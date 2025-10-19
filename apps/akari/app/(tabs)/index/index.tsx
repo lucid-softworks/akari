@@ -287,7 +287,7 @@ export default function HomeScreen() {
         />
       );
     },
-    [t],
+    [t, navigateToPost],
   );
 
   const keyExtractor = useCallback((item: FeedListItem) => {

@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react-native';
 
-import useTranslation from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import i18n from '@/utils/i18n';
 
@@ -9,6 +8,14 @@ jest.mock('@/utils/i18n', () => ({
   __esModule: true,
   default: { t: jest.fn() },
 }));
+
+// Override the global mock for this test
+jest.doMock('@/hooks/useTranslation', () => {
+  const actual = jest.requireActual('@/hooks/useTranslation');
+  return actual;
+});
+
+const useTranslation = require('@/hooks/useTranslation').default;
 
 const mockUseLanguage = useLanguage as jest.Mock;
 const mockI18n = i18n as { t: jest.Mock };

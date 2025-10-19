@@ -21,6 +21,7 @@ type FeedItemProps = {
 const ESTIMATED_FEED_CARD_HEIGHT = 180;
 
 function FeedItem({ feed }: FeedItemProps) {
+  const { t } = useTranslation();
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
@@ -40,7 +41,7 @@ function FeedItem({ feed }: FeedItemProps) {
             <ThemedText style={[styles.feedName, { color: textColor }]} numberOfLines={1}>
               {feed.displayName}
             </ThemedText>
-            <ThemedText style={[styles.feedCreator, { color: secondaryTextColor }]}>by @{feed.creator.handle}</ThemedText>
+            <ThemedText style={[styles.feedCreator, { color: secondaryTextColor }]}>{t('ui.byCreator', { handle: feed.creator.handle })}</ThemedText>
           </ThemedView>
 
           <TouchableOpacity style={styles.pinButton} onPress={handlePinPress} activeOpacity={0.6}>
@@ -55,11 +56,11 @@ function FeedItem({ feed }: FeedItemProps) {
         )}
 
         <ThemedView style={styles.feedFooter}>
-          <ThemedText style={[styles.likeCount, { color: secondaryTextColor }]}>{feed.likeCount} likes</ThemedText>
+          <ThemedText style={[styles.likeCount, { color: secondaryTextColor }]}>{t('ui.likes', { count: feed.likeCount })}</ThemedText>
 
           {feed.acceptsInteractions && (
             <ThemedView style={styles.interactionIndicator}>
-              <ThemedText style={styles.interactionText}>Interactive</ThemedText>
+              <ThemedText style={styles.interactionText}>{t('ui.interactive')}</ThemedText>
             </ThemedView>
           )}
         </ThemedView>

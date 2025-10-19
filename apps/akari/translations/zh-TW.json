@@ -343,6 +343,67 @@
       "subtitle": "已儲存的貼文和討論串會顯示在這裡。",
       "emptyState": "你還沒有儲存任何貼文。",
       "error": "我們無法載入你儲存的貼文。"
+    },
+    "debug": {
+      "crashReporter": "當機回報器",
+      "crashDescription": "使用此按鈕觸發測試錯誤並確認當機回報已正確設定。確保您的Axiom憑證已設定，以便回報能夠送達。",
+      "triggerCrash": "觸發當機",
+      "crashHint": "提示：測試後重新載入應用程式，以便除錯畫面再次渲染。",
+      "queryCacheDebug": "查詢快取除錯",
+      "invalidateAll": "全部失效",
+      "clearAll": "全部清除",
+      "totalQueries": "總查詢數：{{count}}",
+      "activeQueries": "活躍查詢數：{{count}}",
+      "successfulQueries": "成功查詢數：{{count}}",
+      "failedQueries": "失敗查詢數：{{count}}",
+      "noQueriesInCache": "快取中無查詢",
+      "queryKey": "查詢鍵：",
+      "status": "狀態：",
+      "dataUpdatedAt": "資料更新時間：",
+      "errorUpdatedAt": "錯誤更新時間：",
+      "fetchCount": "取得次數：",
+      "error": "錯誤：",
+      "data": "資料：",
+      "refetch": "重新取得",
+      "remove": "刪除"
+    },
+    "errors": {
+      "screenNotFound": "此畫面不存在。",
+      "pathname": "路徑：{{pathname}}",
+      "goToHome": "前往主畫面！",
+      "goToSitemap": "前往網站地圖！"
+    },
+    "ui": {
+      "externalVideo": "外部影片",
+      "videoContent": "影片內容",
+      "tapToRetry": "點擊重試",
+      "youtube": "YouTube",
+      "noBanner": "無橫幅",
+      "replyToYou": "回覆你",
+      "replyingTo": "回覆@{{handle}}",
+      "expoPushToken": "Expo推播權杖",
+      "trending": "熱門",
+      "collapse": "摺疊",
+      "addAccount": "+ 新增帳戶",
+      "byCreator": "由@{{handle}}",
+      "likes": "{{count}}個讚",
+      "interactive": "互動式",
+      "joined": "加入",
+      "thisWeek": "本週"
+    },
+    "recipe": {
+      "title": "食譜",
+      "time": "時間",
+      "servings": "份數",
+      "category": "類別",
+      "ingredients": "食材",
+      "cuisine": "菜系",
+      "method": "方法",
+      "calories": "卡路里",
+      "dietaryRestrictions": "飲食限制",
+      "instructions": "說明",
+      "tags": "標籤",
+      "source": "來源"
     }
   }
 }

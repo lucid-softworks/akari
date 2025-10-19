@@ -1032,7 +1032,7 @@ export function PostCard({ post, onPress }: PostCardProps) {
       {post.replyTo && (
         <ThemedView style={styles.replyContext}>
           <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
-          <ThemedText style={styles.replyText}>Replying to @{post.replyTo.author.handle}</ThemedText>
+          <ThemedText style={styles.replyText}>{t('ui.replyingTo', { handle: post.replyTo.author.handle })}</ThemedText>
           <ThemedText style={styles.replyPreview} numberOfLines={1}>
             {post.replyTo.text}
           </ThemedText>

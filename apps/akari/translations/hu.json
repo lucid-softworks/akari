@@ -343,6 +343,67 @@
       "subtitle": "A mentett hozzászólások és szálak itt jelennek meg.",
       "emptyState": "Még nem mentettél be hozzászólásokat.",
       "error": "Nem tudtuk betölteni a mentett hozzászólásait."
+    },
+    "debug": {
+      "crashReporter": "Összeomlás Jelentő",
+      "crashDescription": "Használd ezt a gombot egy teszt hiba generálásához és az összeomlás jelentés megfelelő konfigurálásának megerősítéséhez. Győződj meg róla, hogy az Axiom hitelesítő adataid konfigurálva vannak a jelentés kézbesítéséhez.",
+      "triggerCrash": "Összeomlás Kiváltása",
+      "crashHint": "Tipp: töltse újra az alkalmazást a teszt után, hogy a hibakeresési képernyő újra renderelődjön.",
+      "queryCacheDebug": "Lekérdezés Cache Hibakeresés",
+      "invalidateAll": "Minden Érvénytelenítése",
+      "clearAll": "Minden Törlése",
+      "totalQueries": "Összes Lekérdezés: {{count}}",
+      "activeQueries": "Aktív Lekérdezések: {{count}}",
+      "successfulQueries": "Sikeres Lekérdezések: {{count}}",
+      "failedQueries": "Sikertelen Lekérdezések: {{count}}",
+      "noQueriesInCache": "Nincsenek lekérdezések a cache-ben",
+      "queryKey": "Lekérdezés Kulcs:",
+      "status": "Állapot:",
+      "dataUpdatedAt": "Adatok Frissítve:",
+      "errorUpdatedAt": "Hiba Frissítve:",
+      "fetchCount": "Lekérések Száma:",
+      "error": "Hiba:",
+      "data": "Adatok:",
+      "refetch": "Újra Lekérés",
+      "remove": "Eltávolítás"
+    },
+    "errors": {
+      "screenNotFound": "Ez a képernyő nem létezik.",
+      "pathname": "Útvonal: {{pathname}}",
+      "goToHome": "Menj a főképernyőre!",
+      "goToSitemap": "Menj az oldaltérképhez!"
+    },
+    "ui": {
+      "externalVideo": "Külső Videó",
+      "videoContent": "Videó tartalom",
+      "tapToRetry": "Érints a újrapróbálkozáshoz",
+      "youtube": "YouTube",
+      "noBanner": "Nincs banner",
+      "replyToYou": "Válasz neked",
+      "replyingTo": "Válasz @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trendek",
+      "collapse": "Összezárás",
+      "addAccount": "+ Fiók hozzáadása",
+      "byCreator": "@{{handle}} által",
+      "likes": "{{count}} lájk",
+      "interactive": "Interaktív",
+      "joined": "csatlakozott",
+      "thisWeek": "ezen a héten"
+    },
+    "recipe": {
+      "title": "Recept",
+      "time": "Idő",
+      "servings": "Adagok",
+      "category": "Kategória",
+      "ingredients": "Hozzávalók",
+      "cuisine": "Konyha",
+      "method": "Módszer",
+      "calories": "Kalóriák",
+      "dietaryRestrictions": "Étrendi Korlátozások",
+      "instructions": "Utasítások",
+      "tags": "Címkék",
+      "source": "Forrás"
     }
   }
 }

@@ -13,6 +13,7 @@ import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 
 const COLLAPSED_WIDTH = 68;
@@ -62,6 +63,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
+  const { t } = useTranslation();
 
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
@@ -283,7 +285,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
           <View style={styles.trendingSection}>
             <View style={styles.trendingHeader}>
               <IconSymbol name="sparkles" size={14} color={palette.trendingAccent} />
-              <Text style={styles.trendingLabel}>Trending</Text>
+              <Text style={styles.trendingLabel}>{t('ui.trending')}</Text>
             </View>
             <View>
               {TRENDING_TAGS.map((tag) => (
@@ -315,7 +317,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
               pressed && { backgroundColor: palette.hover },
             ]}
           >
-            {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
+            {!collapsed ? <Text style={styles.collapseText}>{t('ui.collapse')}</Text> : null}
             <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
           </Pressable>
         </View>
@@ -374,7 +376,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
                 pressed && { backgroundColor: palette.hover },
               ]}
             >
-              <Text style={styles.addAccountText}>+ Add account</Text>
+              <Text style={styles.addAccountText}>{t('ui.addAccount')}</Text>
             </Pressable>
           </View>
         </View>

@@ -3,7 +3,9 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type YouTubeEmbedProps = {
   /** YouTube embed data from Bluesky */
@@ -30,6 +32,7 @@ type YouTubeEmbedProps = {
  * Shows thumbnail, title, description, and opens YouTube when tapped
  */
 export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
+  const { t } = useTranslation();
   const textColor = useThemeColor(
     {
       light: '#000000',
@@ -91,7 +94,7 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
             />
           )}
           <ThemedView style={styles.playButton}>
-            <ThemedText style={styles.playIcon}>▶️</ThemedText>
+            <IconSymbol name="play.circle.fill" size={48} color="#ffffff" />
           </ThemedView>
         </ThemedView>
 
@@ -102,7 +105,7 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
           <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
             {embed.external.description}
           </ThemedText>
-          <ThemedText style={[styles.source, { color: secondaryTextColor }]}>YouTube</ThemedText>
+          <ThemedText style={[styles.source, { color: secondaryTextColor }]}>{t('ui.youtube')}</ThemedText>
         </ThemedView>
       </View>
     </TouchableOpacity>

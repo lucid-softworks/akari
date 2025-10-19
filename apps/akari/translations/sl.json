@@ -343,6 +343,67 @@
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",
       "emptyState": "Nisi še shranil nobenih objav.",
       "error": "Nismo mogli naložiti vaših shranjenih objav."
+    },
+    "debug": {
+      "crashReporter": "Poročevalec Napak",
+      "crashDescription": "Uporabite ta gumb za ustvarjanje testne napake in potrditev, da je poročanje napak pravilno konfigurirano. Prepričajte se, da so vaši Axiom poverilnice konfigurirane za dostavo poročila.",
+      "triggerCrash": "Sproži Napako",
+      "crashHint": "Namig: po testiranju ponovno naložite aplikacijo, da se debug zaslon ponovno prikaže.",
+      "queryCacheDebug": "Debug Predpomnilnika Poizvedb",
+      "invalidateAll": "Razveljavi Vse",
+      "clearAll": "Počisti Vse",
+      "totalQueries": "Skupaj Poizvedb: {{count}}",
+      "activeQueries": "Aktivne Poizvedbe: {{count}}",
+      "successfulQueries": "Uspešne Poizvedbe: {{count}}",
+      "failedQueries": "Neuspešne Poizvedbe: {{count}}",
+      "noQueriesInCache": "Ni poizvedb v predpomnilniku",
+      "queryKey": "Ključ Poizvedbe:",
+      "status": "Status:",
+      "dataUpdatedAt": "Podatki Posodobljeni:",
+      "errorUpdatedAt": "Napaka Posodobljena:",
+      "fetchCount": "Število Pridobitev:",
+      "error": "Napaka:",
+      "data": "Podatki:",
+      "refetch": "Ponovno Pridobi",
+      "remove": "Odstrani"
+    },
+    "errors": {
+      "screenNotFound": "Ta zaslon ne obstaja.",
+      "pathname": "Pot: {{pathname}}",
+      "goToHome": "Pojdi na domači zaslon!",
+      "goToSitemap": "Pojdi na zemljevid strani!"
+    },
+    "ui": {
+      "externalVideo": "Zunanji Video",
+      "videoContent": "Vsebina videa",
+      "tapToRetry": "Dotakni se za ponovni poskus",
+      "youtube": "YouTube",
+      "noBanner": "Brez bannera",
+      "replyToYou": "Odgovori tebi",
+      "replyingTo": "Odgovarjanje @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trendi",
+      "collapse": "Zloži",
+      "addAccount": "+ Dodaj račun",
+      "byCreator": "od @{{handle}}",
+      "likes": "{{count}} všečkov",
+      "interactive": "Interaktivno",
+      "joined": "se je pridružil",
+      "thisWeek": "ta teden"
+    },
+    "recipe": {
+      "title": "Recept",
+      "time": "Čas",
+      "servings": "Porcije",
+      "category": "Kategorija",
+      "ingredients": "Sestavine",
+      "cuisine": "Kuhinja",
+      "method": "Metoda",
+      "calories": "Kalorije",
+      "dietaryRestrictions": "Dietne Omejitve",
+      "instructions": "Navodila",
+      "tags": "Oznake",
+      "source": "Vir"
     }
   }
 }

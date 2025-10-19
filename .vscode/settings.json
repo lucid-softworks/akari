@@ -12,7 +12,9 @@
     "convo",
     "Convos",
     "Dids",
+    "Gifs",
     "linkat",
+    "Pressable",
     "refetches",
     "repost",
     "reposted",
@@ -21,6 +23,7 @@
     "Starterpack",
     "Starterpacks",
     "Unlikes",
-    "unliking"
+    "unliking",
+    "xrpc"
   ]
 }

@@ -343,6 +343,67 @@
       "subtitle": "I post e i thread salvati verranno mostrati qui.",
       "emptyState": "Non hai ancora salvato alcun post.",
       "error": "Non siamo riusciti a caricare i tuoi post salvati."
+    },
+    "debug": {
+      "crashReporter": "Segnalatore di Errori",
+      "crashDescription": "Usa questo pulsante per generare un errore di test e confermare che la segnalazione degli errori è configurata correttamente. Assicurati che le tue credenziali Axiom siano configurate in modo che il rapporto venga consegnato.",
+      "triggerCrash": "Genera Errore",
+      "crashHint": "Suggerimento: ricarica l'app dopo il test in modo che la schermata di debug venga renderizzata di nuovo.",
+      "queryCacheDebug": "Debug Cache Query",
+      "invalidateAll": "Invalida Tutto",
+      "clearAll": "Cancella Tutto",
+      "totalQueries": "Query Totali: {{count}}",
+      "activeQueries": "Query Attive: {{count}}",
+      "successfulQueries": "Query Riuscite: {{count}}",
+      "failedQueries": "Query Fallite: {{count}}",
+      "noQueriesInCache": "Nessuna query nella cache",
+      "queryKey": "Chiave Query:",
+      "status": "Stato:",
+      "dataUpdatedAt": "Dati Aggiornati Il:",
+      "errorUpdatedAt": "Errore Aggiornato Il:",
+      "fetchCount": "Conteggio Recuperi:",
+      "error": "Errore:",
+      "data": "Dati:",
+      "refetch": "Recupera di Nuovo",
+      "remove": "Rimuovi"
+    },
+    "errors": {
+      "screenNotFound": "Questa schermata non esiste.",
+      "pathname": "Percorso: {{pathname}}",
+      "goToHome": "Vai alla schermata principale!",
+      "goToSitemap": "Vai alla mappa del sito!"
+    },
+    "ui": {
+      "externalVideo": "Video Esterno",
+      "videoContent": "Contenuto video",
+      "tapToRetry": "Tocca per riprovare",
+      "youtube": "YouTube",
+      "noBanner": "Nessun banner",
+      "replyToYou": "Rispondi a te",
+      "replyingTo": "Rispondendo a @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Tendenze",
+      "collapse": "Comprimi",
+      "addAccount": "+ Aggiungi account",
+      "byCreator": "di @{{handle}}",
+      "likes": "{{count}} mi piace",
+      "interactive": "Interattivo",
+      "joined": "entrato",
+      "thisWeek": "questa settimana"
+    },
+    "recipe": {
+      "title": "Ricetta",
+      "time": "Tempo",
+      "servings": "Porzioni",
+      "category": "Categoria",
+      "ingredients": "Ingredienti",
+      "cuisine": "Cucina",
+      "method": "Metodo",
+      "calories": "Calorie",
+      "dietaryRestrictions": "Restrizioni Alimentari",
+      "instructions": "Istruzioni",
+      "tags": "Tag",
+      "source": "Fonte"
     }
   }
 }

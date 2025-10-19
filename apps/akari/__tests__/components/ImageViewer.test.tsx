@@ -111,9 +111,11 @@ type GestureHandlerStore = {
 };
 
 const getGestureStore = () =>
-  (require('react-native-gesture-handler') as typeof import('react-native-gesture-handler') & {
-    __handlerStore: GestureHandlerStore;
-  }).__handlerStore;
+  (
+    require('react-native-gesture-handler') as typeof import('react-native-gesture-handler') & {
+      __handlerStore: GestureHandlerStore;
+    }
+  ).__handlerStore;
 
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
@@ -154,19 +156,15 @@ describe('ImageViewer', () => {
 
   it('renders alt text and handles close action', () => {
     const onClose = jest.fn();
-    const { getByText } = render(
-      <ImageViewer visible onClose={onClose} imageUrl="url" altText="Alt" />,
-    );
+    const { getByText, getByTestId } = render(<ImageViewer visible onClose={onClose} imageUrl="url" altText="Alt" />);
 
     expect(getByText('Alt')).toBeTruthy();
-    fireEvent.press(getByText('✕'));
+    fireEvent.press(getByTestId('close-button'));
     expect(onClose).toHaveBeenCalled();
   });
 
   it('shows loading text until image loads', () => {
-    const { getByText, queryByText } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { getByText, queryByText } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     expect(getByText('Loading')).toBeTruthy();
 
@@ -179,9 +177,7 @@ describe('ImageViewer', () => {
   });
 
   it('displays error text when image fails to load', () => {
-    const { getByText } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     const Image = require('expo-image').Image as jest.Mock;
     act(() => {
@@ -196,12 +192,10 @@ describe('ImageViewer', () => {
     Platform.OS = 'ios';
     const shareMock = jest.spyOn(Share, 'share').mockResolvedValue({} as any);
 
-    const { getByText } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     await act(async () => {
-      fireEvent.press(getByText('⬇️'));
+      fireEvent.press(getByTestId('download-button'));
     });
 
     expect(shareMock).toHaveBeenCalledWith({
@@ -226,11 +220,9 @@ describe('ImageViewer', () => {
       body: { appendChild, removeChild },
     } as unknown as Document;
 
-    const { getByText } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
-    fireEvent.press(getByText('⬇️'));
+    fireEvent.press(getByTestId('download-button'));
 
     expect((global as any).document.createElement).toHaveBeenCalledWith('a');
     expect(link.href).toBe('url');
@@ -248,12 +240,10 @@ describe('ImageViewer', () => {
     Platform.OS = 'ios';
     jest.spyOn(Share, 'share').mockRejectedValue(new Error('fail'));
 
-    const { getByText } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     await act(async () => {
-      fireEvent.press(getByText('⬇️'));
+      fireEvent.press(getByTestId('download-button'));
     });
 
     expect(mockShowAlert).toHaveBeenCalledWith({
@@ -328,9 +318,7 @@ describe('ImageViewer', () => {
   });
 
   it('toggles zoom with double taps and recenters the image', () => {
-    const { UNSAFE_getAllByType } = render(
-      <ImageViewer visible onClose={() => {}} imageUrl="url" />,
-    );
+    const { UNSAFE_getAllByType } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     const gestureStore = getGestureStore();
     const pan = gestureStore?.pan;

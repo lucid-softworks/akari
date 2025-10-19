@@ -343,6 +343,67 @@
       "subtitle": "Zde se zobrazí uložená příspěvky a vlákna.",
       "emptyState": "Ještě jste neukládali žádné příspěvky.",
       "error": "Nemohli jsme načíst vaše uložené příspěvky."
+    },
+    "debug": {
+      "crashReporter": "Hlášení o pádech",
+      "crashDescription": "Použijte toto tlačítko k vygenerování testovací chyby a potvrzení, že hlášení o pádech je správně nakonfigurováno. Ujistěte se, že vaše Axiom přihlašovací údaje jsou nakonfigurovány pro doručení hlášení.",
+      "triggerCrash": "Spustit pád",
+      "crashHint": "Tip: po testování znovu načtěte aplikaci, aby se obrazovka ladění znovu vykreslila.",
+      "queryCacheDebug": "Ladění mezipaměti dotazů",
+      "invalidateAll": "Zneplatnit vše",
+      "clearAll": "Vymazat vše",
+      "totalQueries": "Celkem dotazů: {{count}}",
+      "activeQueries": "Aktivní dotazy: {{count}}",
+      "successfulQueries": "Úspěšné dotazy: {{count}}",
+      "failedQueries": "Neúspěšné dotazy: {{count}}",
+      "noQueriesInCache": "Žádné dotazy v mezipaměti",
+      "queryKey": "Klíč dotazu:",
+      "status": "Stav:",
+      "dataUpdatedAt": "Data aktualizována:",
+      "errorUpdatedAt": "Chyba aktualizována:",
+      "fetchCount": "Počet načtení:",
+      "error": "Chyba:",
+      "data": "Data:",
+      "refetch": "Znovu načíst",
+      "remove": "Odebrat"
+    },
+    "errors": {
+      "screenNotFound": "Tato obrazovka neexistuje.",
+      "pathname": "Cesta: {{pathname}}",
+      "goToHome": "Přejít na domovskou obrazovku!",
+      "goToSitemap": "Přejít na mapu stránek!"
+    },
+    "ui": {
+      "externalVideo": "Externí video",
+      "videoContent": "Obsah videa",
+      "tapToRetry": "Klepněte pro opakování",
+      "youtube": "YouTube",
+      "noBanner": "Žádný banner",
+      "replyToYou": "Odpovědět vám",
+      "replyingTo": "Odpovídá @{{handle}}",
+      "expoPushToken": "Expo Push token",
+      "trending": "Trendy",
+      "collapse": "Sbalit",
+      "addAccount": "+ Přidat účet",
+      "byCreator": "od @{{handle}}",
+      "likes": "{{count}} lajků",
+      "interactive": "Interaktivní",
+      "joined": "připojil se",
+      "thisWeek": "tento týden"
+    },
+    "recipe": {
+      "title": "Recept",
+      "time": "Čas",
+      "servings": "Porce",
+      "category": "Kategorie",
+      "ingredients": "Ingredience",
+      "cuisine": "Kuchyně",
+      "method": "Metoda",
+      "calories": "Kalorie",
+      "dietaryRestrictions": "Dietní omezení",
+      "instructions": "Pokyny",
+      "tags": "Štítky",
+      "source": "Zdroj"
     }
   }
 }
