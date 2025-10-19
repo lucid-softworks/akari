@@ -12,6 +12,8 @@ jobs:
   update:
     name: EAS Update
     runs-on: ubuntu-latest
+    # Skip workflow for PRs from forks (external contributors)
+    if: github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       contents: read
       pull-requests: write
