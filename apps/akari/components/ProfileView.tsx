@@ -25,7 +25,6 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
 import { showAlert } from '@/utils/alert';
-import { useNavigateToProfile } from '@/utils/navigation';
 
 type ProfileViewProps = {
   handle: string;
@@ -39,7 +38,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
-  const navigateToProfile = useNavigateToProfile();
 
   const { data: profile, isLoading, error } = useProfile(handle);
 

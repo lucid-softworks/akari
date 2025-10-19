@@ -47,13 +47,6 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
     });
   }, [showToast, t]);
 
-  // Load trending GIFs on mount
-  useEffect(() => {
-    if (visible) {
-      loadTrendingGifs();
-    }
-  }, [visible]);
-
   const loadTrendingGifs = useCallback(async () => {
     if (loading) return;
 
@@ -73,6 +66,13 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       setLoading(false);
     }
   }, [loading, showGifErrorToast]);
+
+  // Load trending GIFs on mount
+  useEffect(() => {
+    if (visible) {
+      loadTrendingGifs();
+    }
+  }, [visible, loadTrendingGifs]);
 
   const searchGifs = useCallback(
     async (query: string, isNewSearch = false) => {

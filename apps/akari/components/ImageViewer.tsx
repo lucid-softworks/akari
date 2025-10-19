@@ -5,6 +5,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
@@ -137,12 +138,12 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
       <View style={[styles.container, { backgroundColor }]}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <ThemedText style={[styles.closeText, { color: textColor }]}>✕</ThemedText>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton} testID="close-button">
+            <IconSymbol name="xmark" size={24} color={textColor} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton}>
-            <ThemedText style={[styles.downloadText, { color: textColor }]}>⬇️</ThemedText>
+          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton} testID="download-button">
+            <IconSymbol name="square.and.arrow.up" size={20} color={textColor} />
           </TouchableOpacity>
         </View>
 

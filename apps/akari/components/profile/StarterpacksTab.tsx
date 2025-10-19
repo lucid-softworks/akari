@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+import type { BlueskyStarterPack } from '@/bluesky-api';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,7 +8,6 @@ import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { BlueskyStarterPack } from '@/bluesky-api';
 
 type StarterpacksTabProps = {
   handle: string;
@@ -20,6 +20,7 @@ type StarterpackItemProps = {
 const ESTIMATED_STARTERPACK_CARD_HEIGHT = 180;
 
 function StarterpackItem({ starterpack }: StarterpackItemProps) {
+  const { t } = useTranslation();
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
@@ -34,7 +35,7 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
               {starterpack.record.name}
             </ThemedText>
             <ThemedText style={[styles.starterpackCreator, { color: secondaryTextColor }]}>
-              by @{starterpack.creator.handle}
+              {t('ui.byCreator', { handle: starterpack.creator.handle })}
             </ThemedText>
           </ThemedView>
         </ThemedView>
@@ -49,13 +50,13 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
           <ThemedView style={styles.statsRow}>
             <ThemedView style={styles.statItem}>
               <ThemedText style={[styles.statValue, { color: textColor }]}>{starterpack.joinedAllTimeCount}</ThemedText>
-              <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>joined</ThemedText>
+              <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>{t('ui.joined')}</ThemedText>
             </ThemedView>
 
             {starterpack.joinedWeekCount > 0 && (
               <ThemedView style={styles.statItem}>
                 <ThemedText style={[styles.statValue, { color: textColor }]}>{starterpack.joinedWeekCount}</ThemedText>
-                <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>this week</ThemedText>
+                <ThemedText style={[styles.statLabel, { color: secondaryTextColor }]}>{t('ui.thisWeek')}</ThemedText>
               </ThemedView>
             )}
           </ThemedView>

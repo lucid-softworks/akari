@@ -343,6 +343,67 @@
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",
       "emptyState": "شما هنوز هیچ پست ذخیره نکرده اید.",
       "error": "ما نمی توانیم پست های ذخیره شده شما را بارگذاری کنیم."
+    },
+    "debug": {
+      "crashReporter": "گزارشگر خرابی",
+      "crashDescription": "از این دکمه برای ایجاد خطای آزمایشی و تأیید اینکه گزارش خرابی به درستی پیکربندی شده است استفاده کنید. اطمینان حاصل کنید که اعتبارنامه‌های Axiom شما برای تحویل گزارش پیکربندی شده‌اند.",
+      "triggerCrash": "خرابی را فعال کنید",
+      "crashHint": "نکته: پس از آزمایش، برنامه را دوباره بارگذاری کنید تا صفحه دیباگ دوباره رندر شود.",
+      "queryCacheDebug": "دیباگ کش پرس‌وجو",
+      "invalidateAll": "همه را نامعتبر کنید",
+      "clearAll": "همه را پاک کنید",
+      "totalQueries": "کل پرس‌وجوها: {{count}}",
+      "activeQueries": "پرس‌وجوهای فعال: {{count}}",
+      "successfulQueries": "پرس‌وجوهای موفق: {{count}}",
+      "failedQueries": "پرس‌وجوهای ناموفق: {{count}}",
+      "noQueriesInCache": "هیچ پرس‌وجویی در کش وجود ندارد",
+      "queryKey": "کلید پرس‌وجو:",
+      "status": "وضعیت:",
+      "dataUpdatedAt": "داده به‌روزرسانی شد:",
+      "errorUpdatedAt": "خطا به‌روزرسانی شد:",
+      "fetchCount": "تعداد واکشی:",
+      "error": "خطا:",
+      "data": "داده:",
+      "refetch": "دوباره واکشی کنید",
+      "remove": "حذف کنید"
+    },
+    "errors": {
+      "screenNotFound": "این صفحه وجود ندارد.",
+      "pathname": "مسیر: {{pathname}}",
+      "goToHome": "به صفحه اصلی بروید!",
+      "goToSitemap": "به نقشه سایت بروید!"
+    },
+    "ui": {
+      "externalVideo": "ویدیوی خارجی",
+      "videoContent": "محتوای ویدیو",
+      "tapToRetry": "برای تلاش مجدد ضربه بزنید",
+      "youtube": "یوتیوب",
+      "noBanner": "بدون بنر",
+      "replyToYou": "پاسخ به شما",
+      "replyingTo": "پاسخ به @{{handle}}",
+      "expoPushToken": "توکن پوش اکسپو",
+      "trending": "ترند",
+      "collapse": "جمع کردن",
+      "addAccount": "+ افزودن حساب",
+      "byCreator": "توسط @{{handle}}",
+      "likes": "{{count}} لایک",
+      "interactive": "تعاملی",
+      "joined": "عضویت",
+      "thisWeek": "این هفته"
+    },
+    "recipe": {
+      "title": "دستور پخت",
+      "time": "زمان",
+      "servings": "پرس",
+      "category": "دسته‌بندی",
+      "ingredients": "مواد اولیه",
+      "cuisine": "آشپزی",
+      "method": "روش",
+      "calories": "کالری",
+      "dietaryRestrictions": "محدودیت‌های غذایی",
+      "instructions": "دستورالعمل‌ها",
+      "tags": "برچسب‌ها",
+      "source": "منبع"
     }
   }
 }

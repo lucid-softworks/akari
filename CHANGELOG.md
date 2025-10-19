@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/lucid-softworks/akari/compare/v1.4.0...v1.4.1) (2025-10-19)
+
+
+### Bug Fixes
+
+* isolate component errors ([#365](https://github.com/lucid-softworks/akari/issues/365)) ([d5c4214](https://github.com/lucid-softworks/akari/commit/d5c421423b734cbc017b8fa52a14d4b7ad766396))
+* missing translations ([#371](https://github.com/lucid-softworks/akari/issues/371)) ([ffe51e7](https://github.com/lucid-softworks/akari/commit/ffe51e7cc5f4c5d9dd394b4c2c25bc9477a2c789))
+
 ## [1.4.0](https://github.com/lucid-softworks/akari/compare/v1.3.0...v1.4.0) (2025-10-19)
 
 

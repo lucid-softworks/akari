@@ -343,6 +343,67 @@
       "subtitle": "ستظهر المنشورات وسلاسل المحادثات المحفوظة هنا.",
       "emptyState": "لم تحفظ أي منشورات بعد.",
       "error": "لم نتمكن من تحميل منشوراتك المحفوظة."
+    },
+    "debug": {
+      "crashReporter": "مُبلّغ الأعطال",
+      "crashDescription": "استخدم هذا الزر لتوليد خطأ تجريبي والتأكد من أن الإبلاغ عن الأعطال مُكوّن بشكل صحيح. تأكد من أن بيانات اعتماد Axiom مُكوّنة لتسليم التقرير.",
+      "triggerCrash": "توليد عطل",
+      "crashHint": "نصيحة: أعد تحميل التطبيق بعد الاختبار حتى تظهر شاشة التصحيح مرة أخرى.",
+      "queryCacheDebug": "تصحيح ذاكرة التخزين المؤقت للاستعلامات",
+      "invalidateAll": "إبطال الكل",
+      "clearAll": "مسح الكل",
+      "totalQueries": "إجمالي الاستعلامات: {{count}}",
+      "activeQueries": "الاستعلامات النشطة: {{count}}",
+      "successfulQueries": "الاستعلامات الناجحة: {{count}}",
+      "failedQueries": "الاستعلامات الفاشلة: {{count}}",
+      "noQueriesInCache": "لا توجد استعلامات في ذاكرة التخزين المؤقت",
+      "queryKey": "مفتاح الاستعلام:",
+      "status": "الحالة:",
+      "dataUpdatedAt": "تم تحديث البيانات في:",
+      "errorUpdatedAt": "تم تحديث الخطأ في:",
+      "fetchCount": "عدد عمليات الجلب:",
+      "error": "خطأ:",
+      "data": "البيانات:",
+      "refetch": "إعادة الجلب",
+      "remove": "إزالة"
+    },
+    "errors": {
+      "screenNotFound": "هذه الشاشة غير موجودة.",
+      "pathname": "المسار: {{pathname}}",
+      "goToHome": "انتقل إلى الشاشة الرئيسية!",
+      "goToSitemap": "انتقل إلى خريطة الموقع!"
+    },
+    "ui": {
+      "externalVideo": "فيديو خارجي",
+      "videoContent": "محتوى فيديو",
+      "tapToRetry": "اضغط للمحاولة مرة أخرى",
+      "youtube": "يوتيوب",
+      "noBanner": "لا يوجد لافتة",
+      "replyToYou": "الرد عليك",
+      "replyingTo": "الرد على @{{handle}}",
+      "expoPushToken": "رمز دفع Expo",
+      "trending": "رائج",
+      "collapse": "طي",
+      "addAccount": "+ إضافة حساب",
+      "byCreator": "بواسطة @{{handle}}",
+      "likes": "{{count}} إعجاب",
+      "interactive": "تفاعلي",
+      "joined": "انضم",
+      "thisWeek": "هذا الأسبوع"
+    },
+    "recipe": {
+      "title": "وصفة",
+      "time": "الوقت",
+      "servings": "الحصص",
+      "category": "الفئة",
+      "ingredients": "المكونات",
+      "cuisine": "المطبخ",
+      "method": "الطريقة",
+      "calories": "السعرات الحرارية",
+      "dietaryRestrictions": "القيود الغذائية",
+      "instructions": "التعليمات",
+      "tags": "العلامات",
+      "source": "المصدر"
     }
   }
 }

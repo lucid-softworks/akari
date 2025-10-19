@@ -354,7 +354,7 @@ export default function ConversationScreen() {
         text: messageText.trim(),
       });
       setMessageText('');
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('messages.errorSendingMessage'),

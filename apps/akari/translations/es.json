@@ -343,6 +343,67 @@
       "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",
       "emptyState": "Aún no has guardado ninguna publicación.",
       "error": "No pudimos cargar tus publicaciones guardadas."
+    },
+    "debug": {
+      "crashReporter": "Informe de Errores",
+      "crashDescription": "Usa este botón para generar un error de prueba y confirmar que el informe de errores está configurado correctamente. Asegúrate de que tus credenciales de Axiom estén configuradas para que el informe se entregue.",
+      "triggerCrash": "Generar Error",
+      "crashHint": "Consejo: recarga la aplicación después de probar para que la pantalla de depuración se renderice nuevamente.",
+      "queryCacheDebug": "Depuración de Caché de Consultas",
+      "invalidateAll": "Invalidar Todo",
+      "clearAll": "Limpiar Todo",
+      "totalQueries": "Consultas Totales: {{count}}",
+      "activeQueries": "Consultas Activas: {{count}}",
+      "successfulQueries": "Consultas Exitosas: {{count}}",
+      "failedQueries": "Consultas Fallidas: {{count}}",
+      "noQueriesInCache": "No hay consultas en caché",
+      "queryKey": "Clave de Consulta:",
+      "status": "Estado:",
+      "dataUpdatedAt": "Datos Actualizados En:",
+      "errorUpdatedAt": "Error Actualizado En:",
+      "fetchCount": "Recuento de Obtención:",
+      "error": "Error:",
+      "data": "Datos:",
+      "refetch": "Volver a Obtener",
+      "remove": "Eliminar"
+    },
+    "errors": {
+      "screenNotFound": "Esta pantalla no existe.",
+      "pathname": "Ruta: {{pathname}}",
+      "goToHome": "¡Ir a la pantalla de inicio!",
+      "goToSitemap": "¡Ir al mapa del sitio!"
+    },
+    "ui": {
+      "externalVideo": "Video Externo",
+      "videoContent": "Contenido de video",
+      "tapToRetry": "Toca para reintentar",
+      "youtube": "YouTube",
+      "noBanner": "Sin banner",
+      "replyToYou": "Responder a ti",
+      "replyingTo": "Respondiendo a @{{handle}}",
+      "expoPushToken": "Token de Push de Expo",
+      "trending": "Tendencia",
+      "collapse": "Contraer",
+      "addAccount": "+ Agregar cuenta",
+      "byCreator": "por @{{handle}}",
+      "likes": "{{count}} me gusta",
+      "interactive": "Interactivo",
+      "joined": "se unió",
+      "thisWeek": "esta semana"
+    },
+    "recipe": {
+      "title": "Receta",
+      "time": "Tiempo",
+      "servings": "Porciones",
+      "category": "Categoría",
+      "ingredients": "Ingredientes",
+      "cuisine": "Cocina",
+      "method": "Método",
+      "calories": "Calorías",
+      "dietaryRestrictions": "Restricciones Dietéticas",
+      "instructions": "Instrucciones",
+      "tags": "Etiquetas",
+      "source": "Fuente"
     }
   }
 }
