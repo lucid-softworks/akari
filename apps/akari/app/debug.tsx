@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useMemo, useState } from 'react';
@@ -12,6 +13,7 @@ type ThemeName = keyof typeof Colors;
 
 function CrashReporterTestSection(): React.JSX.Element {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
   const [shouldCrash, setShouldCrash] = useState(false);
   const palette = Colors[(colorScheme ?? 'light') as ThemeName];
 
@@ -33,16 +35,15 @@ function CrashReporterTestSection(): React.JSX.Element {
         },
       ]}
     >
-      <ThemedText style={styles.crashTitle}>Crash Reporter</ThemedText>
+      <ThemedText style={styles.crashTitle}>{t('debug.crashReporter')}</ThemedText>
       <ThemedText style={styles.crashDescription}>
-        Use this button to throw a test error and confirm crash reporting is wired up correctly. Make
-        sure your Axiom credentials are configured so the report is delivered.
+        {t('debug.crashDescription')}
       </ThemedText>
       <TouchableOpacity style={[styles.button, styles.crashButton]} onPress={triggerCrash}>
-        <ThemedText style={styles.buttonText}>Trigger Crash</ThemedText>
+        <ThemedText style={styles.buttonText}>{t('debug.triggerCrash')}</ThemedText>
       </TouchableOpacity>
       <ThemedText style={[styles.crashHint, { color: palette.icon }]}>
-        Tip: reload the app after testing so the debug screen renders again.
+        {t('debug.crashHint')}
       </ThemedText>
     </View>
   );
@@ -51,6 +52,7 @@ function CrashReporterTestSection(): React.JSX.Element {
 export default function DebugScreen() {
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
   const [expandedQueries, setExpandedQueries] = useState<Set<string>>(new Set());
 
   const queries = queryClient.getQueryCache().getAll();
@@ -135,13 +137,13 @@ export default function DebugScreen() {
     <SafeAreaView style={{ flex: 1 }}>
       <ThemedView style={styles.container}>
         <View style={[styles.header, { borderBottomColor: Colors[theme].icon }]}>
-          <ThemedText style={styles.title}>Query Cache Debug</ThemedText>
+          <ThemedText style={styles.title}>{t('debug.queryCacheDebug')}</ThemedText>
           <View style={styles.headerButtons}>
             <TouchableOpacity style={[styles.button, styles.invalidateButton]} onPress={invalidateAllQueries}>
-              <ThemedText style={styles.buttonText}>Invalidate All</ThemedText>
+              <ThemedText style={styles.buttonText}>{t('debug.invalidateAll')}</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.clearButton]} onPress={clearAllQueries}>
-              <ThemedText style={styles.buttonText}>Clear All</ThemedText>
+              <ThemedText style={styles.buttonText}>{t('debug.clearAll')}</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -149,22 +151,22 @@ export default function DebugScreen() {
         <CrashReporterTestSection />
 
         <View style={[styles.statsContainer, { backgroundColor: Colors[theme].background }]}>
-          <ThemedText style={styles.statsText}>Total Queries: {queries.length}</ThemedText>
+          <ThemedText style={styles.statsText}>{t('debug.totalQueries', { count: queries.length })}</ThemedText>
           <ThemedText style={styles.statsText}>
-            Active Queries: {queries.filter((q) => q.state.status === 'pending').length}
+            {t('debug.activeQueries', { count: queries.filter((q) => q.state.status === 'pending').length })}
           </ThemedText>
           <ThemedText style={styles.statsText}>
-            Successful Queries: {queries.filter((q) => q.state.status === 'success').length}
+            {t('debug.successfulQueries', { count: queries.filter((q) => q.state.status === 'success').length })}
           </ThemedText>
           <ThemedText style={styles.statsText}>
-            Failed Queries: {queries.filter((q) => q.state.status === 'error').length}
+            {t('debug.failedQueries', { count: queries.filter((q) => q.state.status === 'error').length })}
           </ThemedText>
         </View>
 
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           {queries.length === 0 ? (
             <View style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>No queries in cache</ThemedText>
+              <ThemedText style={styles.emptyStateText}>{t('debug.noQueriesInCache')}</ThemedText>
             </View>
           ) : (
             queries.map((query, index) => {
@@ -206,7 +208,7 @@ export default function DebugScreen() {
                       ]}
                     >
                       <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Query Key:</ThemedText>
+                        <ThemedText style={styles.detailLabel}>{t('debug.queryKey')}</ThemedText>
                         <Text
                           style={[
                             styles.detailValue,
@@ -221,7 +223,7 @@ export default function DebugScreen() {
                       </View>
 
                       <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Status:</ThemedText>
+                        <ThemedText style={styles.detailLabel}>{t('debug.status')}</ThemedText>
                         <ThemedText
                           style={[
                             styles.detailValue,
@@ -236,7 +238,7 @@ export default function DebugScreen() {
                       </View>
 
                       <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Data Updated At:</ThemedText>
+                        <ThemedText style={styles.detailLabel}>{t('debug.dataUpdatedAt')}</ThemedText>
                         <ThemedText
                           style={[
                             styles.detailValue,
@@ -251,7 +253,7 @@ export default function DebugScreen() {
                       </View>
 
                       <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Error Updated At:</ThemedText>
+                        <ThemedText style={styles.detailLabel}>{t('debug.errorUpdatedAt')}</ThemedText>
                         <ThemedText
                           style={[
                             styles.detailValue,
@@ -268,7 +270,7 @@ export default function DebugScreen() {
                       </View>
 
                       <View style={styles.detailSection}>
-                        <ThemedText style={styles.detailLabel}>Fetch Count:</ThemedText>
+                        <ThemedText style={styles.detailLabel}>{t('debug.fetchCount')}</ThemedText>
                         <ThemedText
                           style={[
                             styles.detailValue,
@@ -284,7 +286,7 @@ export default function DebugScreen() {
 
                       {query.state.error && (
                         <View style={styles.detailSection}>
-                          <ThemedText style={styles.detailLabel}>Error:</ThemedText>
+                          <ThemedText style={styles.detailLabel}>{t('debug.error')}</ThemedText>
                           <Text
                             style={[
                               styles.detailValue,
@@ -301,7 +303,7 @@ export default function DebugScreen() {
 
                       {(query.state.data as any) && (
                         <View style={styles.detailSection}>
-                          <ThemedText style={styles.detailLabel}>Data:</ThemedText>
+                          <ThemedText style={styles.detailLabel}>{t('debug.data')}</ThemedText>
                           <Text
                             style={[
                               styles.detailValue,
@@ -325,7 +327,7 @@ export default function DebugScreen() {
                             })
                           }
                         >
-                          <ThemedText style={styles.actionButtonText}>Refetch</ThemedText>
+                          <ThemedText style={styles.actionButtonText}>{t('debug.refetch')}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={[styles.actionButton, styles.removeButton]}
@@ -335,7 +337,7 @@ export default function DebugScreen() {
                             })
                           }
                         >
-                          <ThemedText style={styles.actionButtonText}>Remove</ThemedText>
+                          <ThemedText style={styles.actionButtonText}>{t('debug.remove')}</ThemedText>
                         </TouchableOpacity>
                       </View>
                     </View>

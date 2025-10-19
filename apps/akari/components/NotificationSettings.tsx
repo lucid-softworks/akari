@@ -211,7 +211,7 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
         <View style={[styles.section, { borderBottomColor: borderColor }]}>
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <ThemedText style={styles.settingTitle}>Expo Push Token</ThemedText>
+              <ThemedText style={styles.settingTitle}>{t('ui.expoPushToken')}</ThemedText>
               <ThemedText style={styles.settingDescription} numberOfLines={2}>
                 {expoPushToken}
               </ThemedText>

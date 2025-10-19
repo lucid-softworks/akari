@@ -343,6 +343,67 @@
       "subtitle": "Gemte indlæg og tråde vises her.",
       "emptyState": "Du har ikke gemt nogen indlæg endnu.",
       "error": "Vi kunne ikke indlæse dine gemte indlæg."
+    },
+    "debug": {
+      "crashReporter": "Crash Reporter",
+      "crashDescription": "Brug denne knap til at generere en testfejl og bekræfte, at crash-rapportering er konfigureret korrekt. Sørg for, at dine Axiom-legitimationsoplysninger er konfigureret til at levere rapporten.",
+      "triggerCrash": "Udløs Crash",
+      "crashHint": "Tip: genindlæs appen efter testen, så debug-skærmen renderes igen.",
+      "queryCacheDebug": "Forespørgselscache Debug",
+      "invalidateAll": "Ugyldiggør Alt",
+      "clearAll": "Ryd Alt",
+      "totalQueries": "Samlede Forespørgsler: {{count}}",
+      "activeQueries": "Aktive Forespørgsler: {{count}}",
+      "successfulQueries": "Vellykkede Forespørgsler: {{count}}",
+      "failedQueries": "Mislykkede Forespørgsler: {{count}}",
+      "noQueriesInCache": "Ingen forespørgsler i cache",
+      "queryKey": "Forespørgselsnøgle:",
+      "status": "Status:",
+      "dataUpdatedAt": "Data Opdateret:",
+      "errorUpdatedAt": "Fejl Opdateret:",
+      "fetchCount": "Hent Antal:",
+      "error": "Fejl:",
+      "data": "Data:",
+      "refetch": "Hent Igen",
+      "remove": "Fjern"
+    },
+    "errors": {
+      "screenNotFound": "Denne skærm findes ikke.",
+      "pathname": "Sti: {{pathname}}",
+      "goToHome": "Gå til hjemmeskærm!",
+      "goToSitemap": "Gå til sitemap!"
+    },
+    "ui": {
+      "externalVideo": "Eksternt Video",
+      "videoContent": "Videoindhold",
+      "tapToRetry": "Tryk for at prøve igen",
+      "youtube": "YouTube",
+      "noBanner": "Intet banner",
+      "replyToYou": "Svar til dig",
+      "replyingTo": "Svarer til @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trending",
+      "collapse": "Skjul",
+      "addAccount": "+ Tilføj konto",
+      "byCreator": "af @{{handle}}",
+      "likes": "{{count}} synes godt om",
+      "interactive": "Interaktiv",
+      "joined": "tilmeldte sig",
+      "thisWeek": "denne uge"
+    },
+    "recipe": {
+      "title": "Opskrift",
+      "time": "Tid",
+      "servings": "Portioner",
+      "category": "Kategori",
+      "ingredients": "Ingredienser",
+      "cuisine": "Køkken",
+      "method": "Metode",
+      "calories": "Kalorier",
+      "dietaryRestrictions": "Diætrestriktioner",
+      "instructions": "Instruktioner",
+      "tags": "Tags",
+      "source": "Kilde"
     }
   }
 }

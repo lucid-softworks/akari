@@ -271,7 +271,7 @@ describe('NotificationsScreen', () => {
     expect(getByText('alice and 4 others')).toBeTruthy();
     expect(getByText('notifications.andOthers')).toBeTruthy();
     expect(getByText('+1')).toBeTruthy();
-    expect(getByText('Reply to you')).toBeTruthy();
+    expect(getByText('ui.replyToYou')).toBeTruthy();
     expect(getByText('unknown')).toBeTruthy();
     expect(getByText('notifications.repostedYourPost')).toBeTruthy();
     expect(getByText('notifications.quotedYourPost')).toBeTruthy();

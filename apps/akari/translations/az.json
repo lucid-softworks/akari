@@ -343,6 +343,67 @@
       "subtitle": "Burada xilas edilmiş yazılar və mövzular görünəcək.",
       "emptyState": "Hələ heç bir mesajı xilas etməmisiniz.",
       "error": "Saxlanılan yazılarınızı yükləyə bilmədik."
+    },
+    "debug": {
+      "crashReporter": "Qəza Hesabatçısı",
+      "crashDescription": "Test xətası yaratmaq və qəza hesabatının düzgün konfiqurasiya edildiyini təsdiqləmək üçün bu düyməni istifadə edin. Hesabatın çatdırılması üçün Axiom kimlik məlumatlarınızın konfiqurasiya edildiyindən əmin olun.",
+      "triggerCrash": "Qəza Tetiklə",
+      "crashHint": "Məsləhət: testdən sonra tətbiqi yenidən yükləyin ki, debug ekranı yenidən render edilsin.",
+      "queryCacheDebug": "Sorğu Cache Debug",
+      "invalidateAll": "Hamısını Etibarsız Et",
+      "clearAll": "Hamısını Təmizlə",
+      "totalQueries": "Ümumi Sorğular: {{count}}",
+      "activeQueries": "Aktiv Sorğular: {{count}}",
+      "successfulQueries": "Uğurlu Sorğular: {{count}}",
+      "failedQueries": "Uğursuz Sorğular: {{count}}",
+      "noQueriesInCache": "Cache-də sorğu yoxdur",
+      "queryKey": "Sorğu Açarı:",
+      "status": "Status:",
+      "dataUpdatedAt": "Məlumat Yeniləndi:",
+      "errorUpdatedAt": "Xəta Yeniləndi:",
+      "fetchCount": "Çəkmə Sayı:",
+      "error": "Xəta:",
+      "data": "Məlumat:",
+      "refetch": "Yenidən Çək",
+      "remove": "Sil"
+    },
+    "errors": {
+      "screenNotFound": "Bu ekran mövcud deyil.",
+      "pathname": "Yol: {{pathname}}",
+      "goToHome": "Ana ekrana get!",
+      "goToSitemap": "Sayt xəritəsinə get!"
+    },
+    "ui": {
+      "externalVideo": "Xarici Video",
+      "videoContent": "Video məzmunu",
+      "tapToRetry": "Yenidən cəhd etmək üçün toxunun",
+      "youtube": "YouTube",
+      "noBanner": "Banner yoxdur",
+      "replyToYou": "Sizə cavab verin",
+      "replyingTo": "@{{handle}} cavab verin",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trend",
+      "collapse": "Yığ",
+      "addAccount": "+ Hesab əlavə et",
+      "byCreator": "@{{handle}} tərəfindən",
+      "likes": "{{count}} bəyəni",
+      "interactive": "İnteraktiv",
+      "joined": "qoşuldu",
+      "thisWeek": "bu həftə"
+    },
+    "recipe": {
+      "title": "Resept",
+      "time": "Vaxt",
+      "servings": "Porsiya",
+      "category": "Kateqoriya",
+      "ingredients": "İngredientlər",
+      "cuisine": "Mətbəx",
+      "method": "Metod",
+      "calories": "Kalori",
+      "dietaryRestrictions": "Pəhriz Məhdudiyyətləri",
+      "instructions": "Təlimatlar",
+      "tags": "Teqlər",
+      "source": "Mənbə"
     }
   }
 }

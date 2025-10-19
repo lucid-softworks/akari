@@ -31,9 +31,9 @@ describe('NotFoundScreen', () => {
   it('renders error message and link to home screen', () => {
     const { getByText, getByRole } = render(<NotFoundScreen />);
 
-    expect(getByText('This screen does not exist.')).toBeTruthy();
+    expect(getByText('errors.screenNotFound')).toBeTruthy();
 
-    const link = getByRole('link', { name: 'Go to home screen!' });
+    const link = getByRole('link', { name: 'errors.goToHome' });
     expect(link.props.href).toBe('/index');
   });
 
@@ -42,8 +42,6 @@ describe('NotFoundScreen', () => {
 
     const { Screen } = require('expo-router').Stack;
     expect(Screen).toHaveBeenCalled();
-    expect(Screen.mock.calls[0][0]).toEqual(
-      expect.objectContaining({ options: { title: 'Oops!' } }),
-    );
+    expect(Screen.mock.calls[0][0]).toEqual(expect.objectContaining({ options: { title: 'Oops!' } }));
   });
 });

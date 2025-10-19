@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { Labels } from '@/components/Labels';
+import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
@@ -17,7 +18,6 @@ import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { searchProfilePosts } from '@/components/profile/profileActions';
 
 type ProfileHeaderProps = {
   profile: {
@@ -265,7 +265,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         message: t('profile.profileUpdated'),
         buttons: [{ text: t('common.ok') }],
       });
-    } catch (error) {
+    } catch {
       showAlert({
         title: t('common.error'),
         message: t('profile.profileUpdateError'),
@@ -282,7 +282,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           <Image source={{ uri: profile.banner }} style={styles.bannerImage} contentFit="cover" />
         ) : (
           <View style={styles.bannerPlaceholder}>
-            <ThemedText style={styles.bannerPlaceholderText}>No banner</ThemedText>
+            <ThemedText style={styles.bannerPlaceholderText}>{t('ui.noBanner')}</ThemedText>
           </View>
         )}
       </ThemedView>

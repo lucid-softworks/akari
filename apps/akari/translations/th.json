@@ -343,6 +343,67 @@
       "subtitle": "โพสต์และกระทู้ที่บันทึกไว้จะแสดงที่นี่",
       "emptyState": "คุณยังไม่ได้บันทึกโพสต์ใดเลย",
       "error": "เราไม่สามารถโหลดโพสต์ที่คุณบันทึกไว้ได้"
+    },
+    "debug": {
+      "crashReporter": "รายงานข้อผิดพลาด",
+      "crashDescription": "ใช้ปุ่มนี้เพื่อสร้างข้อผิดพลาดทดสอบและยืนยันว่ารายงานข้อผิดพลาดถูกตั้งค่าอย่างถูกต้อง ตรวจสอบให้แน่ใจว่าข้อมูลประจำตัว Axiom ของคุณถูกตั้งค่าเพื่อให้รายงานถูกส่ง",
+      "triggerCrash": "กระตุ้นข้อผิดพลาด",
+      "crashHint": "เคล็ดลับ: โหลดแอปใหม่หลังจากทดสอบเพื่อให้หน้าจอดีบักแสดงผลอีกครั้ง",
+      "queryCacheDebug": "ดีบักแคชคำสั่ง",
+      "invalidateAll": "ทำให้ทั้งหมดไม่ถูกต้อง",
+      "clearAll": "ล้างทั้งหมด",
+      "totalQueries": "คำสั่งทั้งหมด: {{count}}",
+      "activeQueries": "คำสั่งที่ใช้งานอยู่: {{count}}",
+      "successfulQueries": "คำสั่งที่สำเร็จ: {{count}}",
+      "failedQueries": "คำสั่งที่ล้มเหลว: {{count}}",
+      "noQueriesInCache": "ไม่มีคำสั่งในแคช",
+      "queryKey": "คีย์คำสั่ง:",
+      "status": "สถานะ:",
+      "dataUpdatedAt": "ข้อมูลอัปเดตเมื่อ:",
+      "errorUpdatedAt": "ข้อผิดพลาดอัปเดตเมื่อ:",
+      "fetchCount": "จำนวนการดึง:",
+      "error": "ข้อผิดพลาด:",
+      "data": "ข้อมูล:",
+      "refetch": "ดึงใหม่",
+      "remove": "ลบ"
+    },
+    "errors": {
+      "screenNotFound": "หน้าจอนี้ไม่มีอยู่",
+      "pathname": "เส้นทาง: {{pathname}}",
+      "goToHome": "ไปที่หน้าจอหลัก!",
+      "goToSitemap": "ไปที่แผนผังเว็บไซต์!"
+    },
+    "ui": {
+      "externalVideo": "วิดีโอภายนอก",
+      "videoContent": "เนื้อหาวิดีโอ",
+      "tapToRetry": "แตะเพื่อลองใหม่",
+      "youtube": "YouTube",
+      "noBanner": "ไม่มีแบนเนอร์",
+      "replyToYou": "ตอบกลับคุณ",
+      "replyingTo": "ตอบกลับ @{{handle}}",
+      "expoPushToken": "โทเค็น Push ของ Expo",
+      "trending": "เทรนด์",
+      "collapse": "ยุบ",
+      "addAccount": "+ เพิ่มบัญชี",
+      "byCreator": "โดย @{{handle}}",
+      "likes": "{{count}} ไลค์",
+      "interactive": "โต้ตอบ",
+      "joined": "เข้าร่วม",
+      "thisWeek": "สัปดาห์นี้"
+    },
+    "recipe": {
+      "title": "สูตรอาหาร",
+      "time": "เวลา",
+      "servings": "จำนวนเสิร์ฟ",
+      "category": "หมวดหมู่",
+      "ingredients": "ส่วนผสม",
+      "cuisine": "อาหาร",
+      "method": "วิธี",
+      "calories": "แคลอรี่",
+      "dietaryRestrictions": "ข้อจำกัดด้านอาหาร",
+      "instructions": "คำแนะนำ",
+      "tags": "แท็ก",
+      "source": "แหล่งที่มา"
     }
   }
 }

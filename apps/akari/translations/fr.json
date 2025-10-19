@@ -343,6 +343,67 @@
       "subtitle": "Les publications et fils enregistrés apparaîtront ici.",
       "emptyState": "Vous n'avez pas encore enregistré de publication.",
       "error": "Nous n'avons pas pu charger vos publications enregistrées."
+    },
+    "debug": {
+      "crashReporter": "Rapporteur de Plantage",
+      "crashDescription": "Utilisez ce bouton pour générer une erreur de test et confirmer que le rapport de plantage est configuré correctement. Assurez-vous que vos identifiants Axiom sont configurés pour que le rapport soit livré.",
+      "triggerCrash": "Déclencher Plantage",
+      "crashHint": "Conseil : rechargez l'application après le test pour que l'écran de débogage se rende à nouveau.",
+      "queryCacheDebug": "Débogage du Cache de Requêtes",
+      "invalidateAll": "Invalider Tout",
+      "clearAll": "Effacer Tout",
+      "totalQueries": "Requêtes Totales : {{count}}",
+      "activeQueries": "Requêtes Actives : {{count}}",
+      "successfulQueries": "Requêtes Réussies : {{count}}",
+      "failedQueries": "Requêtes Échouées : {{count}}",
+      "noQueriesInCache": "Aucune requête en cache",
+      "queryKey": "Clé de Requête :",
+      "status": "Statut :",
+      "dataUpdatedAt": "Données Mises à Jour Le :",
+      "errorUpdatedAt": "Erreur Mise à Jour Le :",
+      "fetchCount": "Nombre de Récupérations :",
+      "error": "Erreur :",
+      "data": "Données :",
+      "refetch": "Récupérer à Nouveau",
+      "remove": "Supprimer"
+    },
+    "errors": {
+      "screenNotFound": "Cet écran n'existe pas.",
+      "pathname": "Chemin : {{pathname}}",
+      "goToHome": "Aller à l'écran d'accueil !",
+      "goToSitemap": "Aller au plan du site !"
+    },
+    "ui": {
+      "externalVideo": "Vidéo Externe",
+      "videoContent": "Contenu vidéo",
+      "tapToRetry": "Appuyez pour réessayer",
+      "youtube": "YouTube",
+      "noBanner": "Pas de bannière",
+      "replyToYou": "Répondre à vous",
+      "replyingTo": "Répondre à @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Tendances",
+      "collapse": "Réduire",
+      "addAccount": "+ Ajouter un compte",
+      "byCreator": "par @{{handle}}",
+      "likes": "{{count}} j'aime",
+      "interactive": "Interactif",
+      "joined": "rejoint",
+      "thisWeek": "cette semaine"
+    },
+    "recipe": {
+      "title": "Recette",
+      "time": "Temps",
+      "servings": "Portions",
+      "category": "Catégorie",
+      "ingredients": "Ingrédients",
+      "cuisine": "Cuisine",
+      "method": "Méthode",
+      "calories": "Calories",
+      "dietaryRestrictions": "Restrictions Alimentaires",
+      "instructions": "Instructions",
+      "tags": "Étiquettes",
+      "source": "Source"
     }
   }
 }

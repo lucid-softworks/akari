@@ -343,6 +343,67 @@
       "subtitle": "Postingan dan utas yang disimpan akan muncul di sini.",
       "emptyState": "Anda belum menyimpan postingan apa pun.",
       "error": "Kami tidak dapat memuat postingan tersimpan Anda."
+    },
+    "debug": {
+      "crashReporter": "Pelapor Crash",
+      "crashDescription": "Gunakan tombol ini untuk menghasilkan error pengujian dan mengonfirmasi bahwa pelaporan crash dikonfigurasi dengan benar. Pastikan kredensial Axiom Anda dikonfigurasi untuk mengirimkan laporan.",
+      "triggerCrash": "Picu Crash",
+      "crashHint": "Tip: muat ulang aplikasi setelah pengujian agar layar debug di-render lagi.",
+      "queryCacheDebug": "Debug Cache Kueri",
+      "invalidateAll": "Batalkan Semua",
+      "clearAll": "Hapus Semua",
+      "totalQueries": "Total Kueri: {{count}}",
+      "activeQueries": "Kueri Aktif: {{count}}",
+      "successfulQueries": "Kueri Berhasil: {{count}}",
+      "failedQueries": "Kueri Gagal: {{count}}",
+      "noQueriesInCache": "Tidak ada kueri dalam cache",
+      "queryKey": "Kunci Kueri:",
+      "status": "Status:",
+      "dataUpdatedAt": "Data Diperbarui:",
+      "errorUpdatedAt": "Error Diperbarui:",
+      "fetchCount": "Jumlah Ambil:",
+      "error": "Error:",
+      "data": "Data:",
+      "refetch": "Ambil Ulang",
+      "remove": "Hapus"
+    },
+    "errors": {
+      "screenNotFound": "Layar ini tidak ada.",
+      "pathname": "Jalur: {{pathname}}",
+      "goToHome": "Pergi ke layar beranda!",
+      "goToSitemap": "Pergi ke peta situs!"
+    },
+    "ui": {
+      "externalVideo": "Video Eksternal",
+      "videoContent": "Konten video",
+      "tapToRetry": "Ketuk untuk mencoba lagi",
+      "youtube": "YouTube",
+      "noBanner": "Tidak ada banner",
+      "replyToYou": "Balas untuk Anda",
+      "replyingTo": "Membalas @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Trending",
+      "collapse": "Tutup",
+      "addAccount": "+ Tambah akun",
+      "byCreator": "oleh @{{handle}}",
+      "likes": "{{count}} suka",
+      "interactive": "Interaktif",
+      "joined": "bergabung",
+      "thisWeek": "minggu ini"
+    },
+    "recipe": {
+      "title": "Resep",
+      "time": "Waktu",
+      "servings": "Porsi",
+      "category": "Kategori",
+      "ingredients": "Bahan",
+      "cuisine": "Masakan",
+      "method": "Metode",
+      "calories": "Kalori",
+      "dietaryRestrictions": "Pembatasan Diet",
+      "instructions": "Instruksi",
+      "tags": "Tag",
+      "source": "Sumber"
     }
   }
 }

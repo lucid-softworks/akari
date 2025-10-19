@@ -343,6 +343,67 @@
       "subtitle": "Zapisane posty i wątki pojawią się tutaj.",
       "emptyState": "Nie zapisałeś jeszcze żadnych postów.",
       "error": "Nie udało nam się wczytać zapisanych postów."
+    },
+    "debug": {
+      "crashReporter": "Raportowanie Awarii",
+      "crashDescription": "Użyj tego przycisku, aby wygenerować błąd testowy i potwierdzić, że raportowanie awarii jest skonfigurowane poprawnie. Upewnij się, że Twoje dane uwierzytelniające Axiom są skonfigurowane do dostarczania raportu.",
+      "triggerCrash": "Wywołaj Awarię",
+      "crashHint": "Wskazówka: przeładuj aplikację po teście, aby ekran debugowania został ponownie wyrenderowany.",
+      "queryCacheDebug": "Debug Cache Zapytań",
+      "invalidateAll": "Unieważnij Wszystkie",
+      "clearAll": "Wyczyść Wszystkie",
+      "totalQueries": "Łączne Zapytania: {{count}}",
+      "activeQueries": "Aktywne Zapytania: {{count}}",
+      "successfulQueries": "Udane Zapytania: {{count}}",
+      "failedQueries": "Nieudane Zapytania: {{count}}",
+      "noQueriesInCache": "Brak zapytań w cache",
+      "queryKey": "Klucz Zapytania:",
+      "status": "Status:",
+      "dataUpdatedAt": "Dane Zaktualizowane:",
+      "errorUpdatedAt": "Błąd Zaktualizowany:",
+      "fetchCount": "Liczba Pobrań:",
+      "error": "Błąd:",
+      "data": "Dane:",
+      "refetch": "Pobierz Ponownie",
+      "remove": "Usuń"
+    },
+    "errors": {
+      "screenNotFound": "Ten ekran nie istnieje.",
+      "pathname": "Ścieżka: {{pathname}}",
+      "goToHome": "Przejdź do ekranu głównego!",
+      "goToSitemap": "Przejdź do mapy witryny!"
+    },
+    "ui": {
+      "externalVideo": "Wideo Zewnętrzne",
+      "videoContent": "Treść wideo",
+      "tapToRetry": "Dotknij, aby spróbować ponownie",
+      "youtube": "YouTube",
+      "noBanner": "Brak banera",
+      "replyToYou": "Odpowiedz Tobie",
+      "replyingTo": "Odpowiadanie @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Trendy",
+      "collapse": "Zwiń",
+      "addAccount": "+ Dodaj konto",
+      "byCreator": "przez @{{handle}}",
+      "likes": "{{count}} polubień",
+      "interactive": "Interaktywny",
+      "joined": "dołączył",
+      "thisWeek": "w tym tygodniu"
+    },
+    "recipe": {
+      "title": "Przepis",
+      "time": "Czas",
+      "servings": "Porcje",
+      "category": "Kategoria",
+      "ingredients": "Składniki",
+      "cuisine": "Kuchnia",
+      "method": "Metoda",
+      "calories": "Kalorie",
+      "dietaryRestrictions": "Ograniczenia Dietetyczne",
+      "instructions": "Instrukcje",
+      "tags": "Tagi",
+      "source": "Źródło"
     }
   }
 }

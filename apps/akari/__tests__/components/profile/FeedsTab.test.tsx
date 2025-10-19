@@ -97,7 +97,7 @@ describe('FeedsTab', () => {
     );
 
     expect(getByText('desc')).toBeTruthy();
-    expect(getByText('Interactive')).toBeTruthy();
+    expect(getByText('ui.interactive')).toBeTruthy();
 
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     fireEvent.press(getAllByText('pin')[0]);

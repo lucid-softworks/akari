@@ -343,6 +343,67 @@
       "subtitle": "Сохранённые посты и темы будут показаны здесь.",
       "emptyState": "Вы ещё не сохранили ни одного поста.",
       "error": "Не удалось загрузить ваши сохранённые посты."
+    },
+    "debug": {
+      "crashReporter": "Отчёт о Сбоях",
+      "crashDescription": "Используйте эту кнопку для создания тестовой ошибки и подтверждения правильной настройки отчётов о сбоях. Убедитесь, что ваши учётные данные Axiom настроены для доставки отчёта.",
+      "triggerCrash": "Вызвать Сбой",
+      "crashHint": "Совет: перезагрузите приложение после тестирования, чтобы экран отладки снова отобразился.",
+      "queryCacheDebug": "Отладка Кэша Запросов",
+      "invalidateAll": "Обесценить Всё",
+      "clearAll": "Очистить Всё",
+      "totalQueries": "Всего Запросов: {{count}}",
+      "activeQueries": "Активных Запросов: {{count}}",
+      "successfulQueries": "Успешных Запросов: {{count}}",
+      "failedQueries": "Неудачных Запросов: {{count}}",
+      "noQueriesInCache": "Нет запросов в кэше",
+      "queryKey": "Ключ Запроса:",
+      "status": "Статус:",
+      "dataUpdatedAt": "Данные Обновлены:",
+      "errorUpdatedAt": "Ошибка Обновлена:",
+      "fetchCount": "Количество Получений:",
+      "error": "Ошибка:",
+      "data": "Данные:",
+      "refetch": "Повторно Получить",
+      "remove": "Удалить"
+    },
+    "errors": {
+      "screenNotFound": "Этот экран не существует.",
+      "pathname": "Путь: {{pathname}}",
+      "goToHome": "Перейти на главный экран!",
+      "goToSitemap": "Перейти к карте сайта!"
+    },
+    "ui": {
+      "externalVideo": "Внешнее Видео",
+      "videoContent": "Видео Контент",
+      "tapToRetry": "Нажмите для повтора",
+      "youtube": "YouTube",
+      "noBanner": "Нет баннера",
+      "replyToYou": "Ответить вам",
+      "replyingTo": "Ответ @{{handle}}",
+      "expoPushToken": "Expo Push Токен",
+      "trending": "Тренды",
+      "collapse": "Свернуть",
+      "addAccount": "+ Добавить аккаунт",
+      "byCreator": "от @{{handle}}",
+      "likes": "{{count}} лайков",
+      "interactive": "Интерактивный",
+      "joined": "присоединился",
+      "thisWeek": "на этой неделе"
+    },
+    "recipe": {
+      "title": "Рецепт",
+      "time": "Время",
+      "servings": "Порции",
+      "category": "Категория",
+      "ingredients": "Ингредиенты",
+      "cuisine": "Кухня",
+      "method": "Способ",
+      "calories": "Калории",
+      "dietaryRestrictions": "Диетические Ограничения",
+      "instructions": "Инструкции",
+      "tags": "Теги",
+      "source": "Источник"
     }
   }
 }
