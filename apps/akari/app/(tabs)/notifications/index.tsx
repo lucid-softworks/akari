@@ -11,7 +11,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -235,7 +234,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
           <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
-          {notification.type === 'reply' ? <ThemedText style={styles.replyIndicator}>Reply to you</ThemedText> : null}
+          {notification.type === 'reply' ? <ThemedText style={styles.replyIndicator}>{t('ui.replyToYou')}</ThemedText> : null}
         </View>
         {!notification.isRead ? <View style={styles.unreadIndicator} /> : null}
       </View>
@@ -363,7 +362,6 @@ export default function NotificationsScreen() {
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
-  const { data: currentAccount } = useCurrentAccount();
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
 

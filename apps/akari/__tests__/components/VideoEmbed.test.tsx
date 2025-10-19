@@ -81,7 +81,7 @@ describe('VideoEmbed', () => {
 
   it('renders placeholder when no video data', () => {
     const { getByText } = render(<VideoEmbed embed={{} as any} />);
-    expect(getByText('Video content')).toBeTruthy();
+    expect(getByText('ui.videoContent')).toBeTruthy();
   });
 });
 

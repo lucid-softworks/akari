@@ -343,6 +343,67 @@
       "subtitle": "Saved posts and threads will appear here.",
       "emptyState": "You haven't saved any posts yet.",
       "error": "We couldn't load your saved posts."
+    },
+    "debug": {
+      "crashReporter": "Crash Reporter",
+      "crashDescription": "Use this button to generate a test error and confirm that crash reporting is configured correctly. Make sure your Axiom credentials are configured to deliver the report.",
+      "triggerCrash": "Trigger Crash",
+      "crashHint": "Tip: reload the app after testing so the debug screen renders again.",
+      "queryCacheDebug": "Query Cache Debug",
+      "invalidateAll": "Invalidate All",
+      "clearAll": "Clear All",
+      "totalQueries": "Total Queries: {{count}}",
+      "activeQueries": "Active Queries: {{count}}",
+      "successfulQueries": "Successful Queries: {{count}}",
+      "failedQueries": "Failed Queries: {{count}}",
+      "noQueriesInCache": "No queries in cache",
+      "queryKey": "Query Key:",
+      "status": "Status:",
+      "dataUpdatedAt": "Data Updated:",
+      "errorUpdatedAt": "Error Updated:",
+      "fetchCount": "Fetch Count:",
+      "error": "Error:",
+      "data": "Data:",
+      "refetch": "Refetch",
+      "remove": "Remove"
+    },
+    "errors": {
+      "screenNotFound": "This screen does not exist.",
+      "pathname": "Path: {{pathname}}",
+      "goToHome": "Go to home screen!",
+      "goToSitemap": "Go to sitemap!"
+    },
+    "ui": {
+      "externalVideo": "External Video",
+      "videoContent": "Video content",
+      "tapToRetry": "Tap to retry",
+      "youtube": "YouTube",
+      "noBanner": "No banner",
+      "replyToYou": "Reply to you",
+      "replyingTo": "Replying to @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trending",
+      "collapse": "Collapse",
+      "addAccount": "+ Add account",
+      "byCreator": "by @{{handle}}",
+      "likes": "{{count}} likes",
+      "interactive": "Interactive",
+      "joined": "joined",
+      "thisWeek": "this week"
+    },
+    "recipe": {
+      "title": "Recipe",
+      "time": "Time",
+      "servings": "Servings",
+      "category": "Category",
+      "ingredients": "Ingredients",
+      "cuisine": "Cuisine",
+      "method": "Method",
+      "calories": "Calories",
+      "dietaryRestrictions": "Dietary Restrictions",
+      "instructions": "Instructions",
+      "tags": "Tags",
+      "source": "Source"
     }
   }
 }

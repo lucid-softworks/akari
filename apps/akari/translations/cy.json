@@ -343,6 +343,67 @@
       "subtitle": "Bydd postiadau a llinynnau a gadwyd yn ymddangos yma.",
       "emptyState": "Nid ydych wedi cadw unrhyw bostiadau eto.",
       "error": "Doedden ni ddim yn gallu llwytho'ch postiadau a gadwyd."
+    },
+    "debug": {
+      "crashReporter": "Adroddwr Cwymp",
+      "crashDescription": "Defnyddiwch y botwm hwn i gynhyrchu gwall prawf a chadarnhau bod adroddiadau cwymp wedi'u ffurfweddu'n gywir. Sicrhewch fod eich manylion Axiom wedi'u ffurfweddu i gyflwyno'r adroddiad.",
+      "triggerCrash": "Cychwyn Cwymp",
+      "crashHint": "Awgrym: ail-lwythwch yr app ar ôl y prawf i'r sgrin debug ail-renderio.",
+      "queryCacheDebug": "Debug Cache Ymholiadau",
+      "invalidateAll": "Anghyfreithlon Popeth",
+      "clearAll": "Clirio Popeth",
+      "totalQueries": "Cyfanswm Ymholiadau: {{count}}",
+      "activeQueries": "Ymholiadau Gweithredol: {{count}}",
+      "successfulQueries": "Ymholiadau Llwyddiannus: {{count}}",
+      "failedQueries": "Ymholiadau Wedi Methu: {{count}}",
+      "noQueriesInCache": "Dim ymholiadau yn y cache",
+      "queryKey": "Allwedd Ymholiad:",
+      "status": "Statws:",
+      "dataUpdatedAt": "Data Wedi'i Ddiweddaru:",
+      "errorUpdatedAt": "Gwall Wedi'i Ddiweddaru:",
+      "fetchCount": "Cyfrif Nôl:",
+      "error": "Gwall:",
+      "data": "Data:",
+      "refetch": "Nôl Eto",
+      "remove": "Tynnu"
+    },
+    "errors": {
+      "screenNotFound": "Nid yw'r sgrin hon yn bodoli.",
+      "pathname": "Llwybr: {{pathname}}",
+      "goToHome": "Ewch i'r sgrin gartref!",
+      "goToSitemap": "Ewch i fap y wefan!"
+    },
+    "ui": {
+      "externalVideo": "Fideo Allanol",
+      "videoContent": "Cynnwys fideo",
+      "tapToRetry": "Tapiwch i geisio eto",
+      "youtube": "YouTube",
+      "noBanner": "Dim baner",
+      "replyToYou": "Ateb i chi",
+      "replyingTo": "Ateb i @{{handle}}",
+      "expoPushToken": "Tocyn Gwthio Expo",
+      "trending": "Tueddiadau",
+      "collapse": "Crebachu",
+      "addAccount": "+ Ychwanegu cyfrif",
+      "byCreator": "gan @{{handle}}",
+      "likes": "{{count}} hoffter",
+      "interactive": "Rhyngweithiol",
+      "joined": "ymunodd",
+      "thisWeek": "yr wythnos hon"
+    },
+    "recipe": {
+      "title": "Rysáit",
+      "time": "Amser",
+      "servings": "Porthiannau",
+      "category": "Categori",
+      "ingredients": "Cynhwysion",
+      "cuisine": "Cegin",
+      "method": "Dull",
+      "calories": "Calorïau",
+      "dietaryRestrictions": "Cyfyngiadau Deiet",
+      "instructions": "Cyfarwyddiadau",
+      "tags": "Tagiau",
+      "source": "Ffynhonnell"
     }
   }
 }

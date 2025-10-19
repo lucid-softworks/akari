@@ -35,8 +35,8 @@ describe('DebugScreen', () => {
     const client = new QueryClient();
     const { getByText } = renderScreen(client);
 
-    expect(getByText('Query Cache Debug')).toBeTruthy();
-    expect(getByText('No queries in cache')).toBeTruthy();
+    expect(getByText('debug.queryCacheDebug')).toBeTruthy();
+    expect(getByText('debug.noQueriesInCache')).toBeTruthy();
   });
 
   it('shows query info and handles actions', () => {
@@ -48,17 +48,17 @@ describe('DebugScreen', () => {
 
     const { getByText, queryByText } = renderScreen(client);
 
-    expect(getByText('Total Queries: 1')).toBeTruthy();
-    expect(getByText('Successful Queries: 1')).toBeTruthy();
+    expect(getByText('debug.totalQueries')).toBeTruthy();
+    expect(getByText('debug.successfulQueries')).toBeTruthy();
 
-    expect(queryByText('Query Key:')).toBeNull();
+    expect(queryByText('debug.queryKey')).toBeNull();
     fireEvent.press(getByText('Success'));
-    expect(getByText('Query Key:')).toBeTruthy();
+    expect(getByText('debug.queryKey')).toBeTruthy();
 
-    fireEvent.press(getByText('Refetch'));
+    fireEvent.press(getByText('debug.refetch'));
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['test'] });
 
-    fireEvent.press(getByText('Remove'));
+    fireEvent.press(getByText('debug.remove'));
     expect(removeSpy).toHaveBeenCalledWith({ queryKey: ['test'] });
   });
 
@@ -112,7 +112,7 @@ describe('DebugScreen', () => {
 
     fireEvent.press(statusToggle());
 
-    expect(getByText('Query Key:')).toBeTruthy();
+    expect(getByText('debug.queryKey')).toBeTruthy();
     expect(getByText('Unable to stringify data')).toBeTruthy();
     expect(getByText('null')).toBeTruthy();
     expect(getByText('Loading')).toBeTruthy();
@@ -121,7 +121,7 @@ describe('DebugScreen', () => {
     fireEvent.press(statusToggle());
 
     await waitFor(() => {
-      expect(queryByText('Query Key:')).toBeNull();
+      expect(queryByText('debug.queryKey')).toBeNull();
     });
 
     getAllSpy.mockRestore();
@@ -169,7 +169,7 @@ describe('DebugScreen', () => {
 
     const { getByText } = renderScreen(client);
 
-    fireEvent.press(getByText('Invalidate All'));
+    fireEvent.press(getByText('debug.invalidateAll'));
     const invalidateArgs = mockShowAlert.mock.calls[0][0];
     for (const button of invalidateArgs.buttons ?? []) {
       if (button.text === 'Invalidate') {
@@ -178,7 +178,7 @@ describe('DebugScreen', () => {
     }
     expect(invalidateSpy).toHaveBeenCalled();
 
-    fireEvent.press(getByText('Clear All'));
+    fireEvent.press(getByText('debug.clearAll'));
     const clearArgs = mockShowAlert.mock.calls[1][0];
     for (const button of clearArgs.buttons ?? []) {
       if (button.text === 'Clear') {

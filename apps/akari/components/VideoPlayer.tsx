@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
 
+import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { resolveBlueskyVideoUrl } from '@/bluesky-api';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { VideoPlayer as WebVideoPlayer } from './VideoPlayer.web';
 
@@ -51,6 +52,7 @@ export function VideoPlayer({
   loop = false,
   aspectRatio,
 }: VideoPlayerProps) {
+  const { t } = useTranslation();
   const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
   const [playerError, setPlayerError] = useState<string | null>(null);
   const [shouldShowVideo, setShouldShowVideo] = useState(false);
@@ -154,8 +156,7 @@ export function VideoPlayer({
       return;
     }
 
-    const needsResolution =
-      videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
+    const needsResolution = videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
 
     if (!needsResolution) {
       setPlaybackUrl(videoUrl);
@@ -264,10 +265,7 @@ export function VideoPlayer({
           style={[
             styles.videoContainer,
             {
-              aspectRatio:
-                aspectRatio
-                  ? aspectRatio.width / aspectRatio.height
-                  : 16 / 9,
+              aspectRatio: aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9,
             },
           ]}
         >
@@ -283,7 +281,7 @@ export function VideoPlayer({
               <ThemedText style={[styles.errorText, { color: textColor }]}>
                 {playerError && playerError.trim() ? playerError : 'Failed to load video'}
               </ThemedText>
-              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>Tap to retry</ThemedText>
+              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </ThemedView>

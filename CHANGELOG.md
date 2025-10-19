@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.4.1](https://github.com/lucid-softworks/akari/compare/v1.4.0...v1.4.1) (2025-10-19)
+
+
+### Bug Fixes
+
+* isolate component errors ([#365](https://github.com/lucid-softworks/akari/issues/365)) ([d5c4214](https://github.com/lucid-softworks/akari/commit/d5c421423b734cbc017b8fa52a14d4b7ad766396))
+* missing translations ([#371](https://github.com/lucid-softworks/akari/issues/371)) ([ffe51e7](https://github.com/lucid-softworks/akari/commit/ffe51e7cc5f4c5d9dd394b4c2c25bc9477a2c789))
+
+## [1.4.0](https://github.com/lucid-softworks/akari/compare/v1.3.0...v1.4.0) (2025-10-19)
+
+
+### Features
+
+* add linkat.board support ([#366](https://github.com/lucid-softworks/akari/issues/366)) ([dc03e8f](https://github.com/lucid-softworks/akari/commit/dc03e8f765a01b541bd00ba8710f3923b20d9341))
+* add microcosm links api client ([#333](https://github.com/lucid-softworks/akari/issues/333)) ([5ca88df](https://github.com/lucid-softworks/akari/commit/5ca88dfd78f3a7a172409f58334c195abd5f2ca9))
+* add mobile drawer sidebar ([#353](https://github.com/lucid-softworks/akari/issues/353)) ([4e82426](https://github.com/lucid-softworks/akari/commit/4e8242667f17785edb39eae98c001f044d2f1be4))
+* add recipe.exchange support ([#367](https://github.com/lucid-softworks/akari/issues/367)) ([a937a26](https://github.com/lucid-softworks/akari/commit/a937a264d314850664454f56c1e4210affd00b1f))
+* add standalone activity service app ([#350](https://github.com/lucid-softworks/akari/issues/350)) ([7d6ffa4](https://github.com/lucid-softworks/akari/commit/7d6ffa458bdd504cb7c848fe2fdb64507ba4aa2b))
+* crash reporting package ([#358](https://github.com/lucid-softworks/akari/issues/358)) ([64a8973](https://github.com/lucid-softworks/akari/commit/64a8973baa7504baa0f09a095e88dc9964016c35))
+* hardcode mobile tab bar ([#335](https://github.com/lucid-softworks/akari/issues/335)) ([98d93df](https://github.com/lucid-softworks/akari/commit/98d93df7ef3e12742473f1815668b8b762677ac0))
+* render post composer as mobile drawer ([#362](https://github.com/lucid-softworks/akari/issues/362)) ([948112b](https://github.com/lucid-softworks/akari/commit/948112bfeca9869cc97ec456b7fc3ad58bdbf3d6))
+* show account avatar in navigation ([#328](https://github.com/lucid-softworks/akari/issues/328)) ([a06c155](https://github.com/lucid-softworks/akari/commit/a06c1559a496fb73c0c042ee2833e748b068b655))
+
+
+### Bug Fixes
+
+* add horizontal padding to mobile tab bar ([#360](https://github.com/lucid-softworks/akari/issues/360)) ([83d64b3](https://github.com/lucid-softworks/akari/commit/83d64b389a96e29749fdd36aad8d4c047c0b642b))
+* back navigation on web ([#351](https://github.com/lucid-softworks/akari/issues/351)) ([cbeb2e0](https://github.com/lucid-softworks/akari/commit/cbeb2e080691df4934363f3e8c6b446d5246ab96))
+* building for production on android ([#369](https://github.com/lucid-softworks/akari/issues/369)) ([8ef5d26](https://github.com/lucid-softworks/akari/commit/8ef5d261ada399f48cba365e6b9c03af553268bc))
+* disable push notifications on web ([#355](https://github.com/lucid-softworks/akari/issues/355)) ([ff722da](https://github.com/lucid-softworks/akari/commit/ff722dad7d56bcb67d8a30981f0b35bf8752d18e))
+* expo updates ([61df383](https://github.com/lucid-softworks/akari/commit/61df383ec64a0fdb06a9fe347a55b446edcb3f13))
+* keep drawer gesture unchanged for nested tabs ([#361](https://github.com/lucid-softworks/akari/issues/361)) ([129628e](https://github.com/lucid-softworks/akari/commit/129628edb2222a824cc95a5280a01e407522b40a))
+* keep search input focused while typing ([#344](https://github.com/lucid-softworks/akari/issues/344)) ([160bed3](https://github.com/lucid-softworks/akari/commit/160bed3baef57fa582d79ea411fcd4147fbcd717))
+* post navigation stack ([#347](https://github.com/lucid-softworks/akari/issues/347)) ([934713e](https://github.com/lucid-softworks/akari/commit/934713e6c7bac68390f3f0f430ec0572661b0a99))
+* stretch feed tab bar to full width ([#325](https://github.com/lucid-softworks/akari/issues/325)) ([cab19be](https://github.com/lucid-softworks/akari/commit/cab19be7f69368a43ddbea06069042a5ac1219d5))
+* **translations:** localize stray english strings ([#368](https://github.com/lucid-softworks/akari/issues/368)) ([a13df06](https://github.com/lucid-softworks/akari/commit/a13df06b4e93f7d05bb5ea603d3a7abdd5919cf5))
+
 ## [1.3.0](https://github.com/ImLunaHey/akari/compare/v1.2.2...v1.3.0) (2025-10-03)
 
 

@@ -340,9 +340,70 @@
       "systemLog": "Системний журнал"
     },
     "bookmarks": {
-      "subtitle": "Збережені повідомлення та теми з’являться тут.",
+      "subtitle": "Збережені повідомлення та теми з'являться тут.",
       "emptyState": "Ви ще не зберегли жодних публікацій.",
       "error": "Ми не могли завантажити ваші збережених публікацій."
+    },
+    "debug": {
+      "crashReporter": "Звітник Збоїв",
+      "crashDescription": "Використовуйте цю кнопку для створення тестової помилки та підтвердження того, що звітування про збої налаштовано правильно. Переконайтеся, що ваші облікові дані Axiom налаштовані для доставки звіту.",
+      "triggerCrash": "Спровокувати Збій",
+      "crashHint": "Порада: перезавантажте додаток після тестування, щоб екран налагодження знову відрендерився.",
+      "queryCacheDebug": "Налагодження Кешу Запитів",
+      "invalidateAll": "Анулювати Всі",
+      "clearAll": "Очистити Всі",
+      "totalQueries": "Всього Запитів: {{count}}",
+      "activeQueries": "Активні Запити: {{count}}",
+      "successfulQueries": "Успішні Запити: {{count}}",
+      "failedQueries": "Невдалі Запити: {{count}}",
+      "noQueriesInCache": "Немає запитів у кеші",
+      "queryKey": "Ключ Запиту:",
+      "status": "Статус:",
+      "dataUpdatedAt": "Дані Оновлено:",
+      "errorUpdatedAt": "Помилка Оновлена:",
+      "fetchCount": "Кількість Отримань:",
+      "error": "Помилка:",
+      "data": "Дані:",
+      "refetch": "Отримати Знову",
+      "remove": "Видалити"
+    },
+    "errors": {
+      "screenNotFound": "Цей екран не існує.",
+      "pathname": "Шлях: {{pathname}}",
+      "goToHome": "Перейти на головний екран!",
+      "goToSitemap": "Перейти до карти сайту!"
+    },
+    "ui": {
+      "externalVideo": "Зовнішнє Відео",
+      "videoContent": "Відео контент",
+      "tapToRetry": "Натисніть для повторної спроби",
+      "youtube": "YouTube",
+      "noBanner": "Немає банера",
+      "replyToYou": "Відповісти вам",
+      "replyingTo": "Відповідь @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Тренди",
+      "collapse": "Згорнути",
+      "addAccount": "+ Додати акаунт",
+      "byCreator": "від @{{handle}}",
+      "likes": "{{count}} лайків",
+      "interactive": "Інтерактивний",
+      "joined": "приєднався",
+      "thisWeek": "цього тижня"
+    },
+    "recipe": {
+      "title": "Рецепт",
+      "time": "Час",
+      "servings": "Порції",
+      "category": "Категорія",
+      "ingredients": "Інгредієнти",
+      "cuisine": "Кухня",
+      "method": "Метод",
+      "calories": "Калорії",
+      "dietaryRestrictions": "Дієтичні Обмеження",
+      "instructions": "Інструкції",
+      "tags": "Теги",
+      "source": "Джерело"
     }
   }
 }

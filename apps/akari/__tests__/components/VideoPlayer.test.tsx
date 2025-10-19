@@ -108,7 +108,7 @@ describe('VideoPlayer', () => {
 
     expect(getByText('Video loading timeout')).toBeTruthy();
 
-    fireEvent.press(getByText('Tap to retry'));
+    fireEvent.press(getByText('ui.tapToRetry'));
     expect(queryByText('Video loading timeout')).toBeNull();
   });
 

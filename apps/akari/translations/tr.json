@@ -343,6 +343,67 @@
       "subtitle": "Kaydettiğiniz gönderiler ve konular burada görünecek.",
       "emptyState": "Henüz herhangi bir gönderi kaydetmediniz.",
       "error": "Kaydedilmiş gönderilerinizi yükleyemedik."
+    },
+    "debug": {
+      "crashReporter": "Çökme Raporlayıcısı",
+      "crashDescription": "Test hatası oluşturmak ve çökme raporlamanın doğru yapılandırıldığını doğrulamak için bu düğmeyi kullanın. Raporun teslim edilmesi için Axiom kimlik bilgilerinizin yapılandırıldığından emin olun.",
+      "triggerCrash": "Çökmeyi Tetikle",
+      "crashHint": "İpucu: Test sonrası uygulamayı yeniden yükleyin ki hata ayıklama ekranı tekrar render edilsin.",
+      "queryCacheDebug": "Sorgu Önbellek Hata Ayıklama",
+      "invalidateAll": "Hepsini Geçersiz Kıl",
+      "clearAll": "Hepsini Temizle",
+      "totalQueries": "Toplam Sorgu: {{count}}",
+      "activeQueries": "Aktif Sorgu: {{count}}",
+      "successfulQueries": "Başarılı Sorgu: {{count}}",
+      "failedQueries": "Başarısız Sorgu: {{count}}",
+      "noQueriesInCache": "Önbellekte sorgu yok",
+      "queryKey": "Sorgu Anahtarı:",
+      "status": "Durum:",
+      "dataUpdatedAt": "Veri Güncellendi:",
+      "errorUpdatedAt": "Hata Güncellendi:",
+      "fetchCount": "Getirme Sayısı:",
+      "error": "Hata:",
+      "data": "Veri:",
+      "refetch": "Yeniden Getir",
+      "remove": "Kaldır"
+    },
+    "errors": {
+      "screenNotFound": "Bu ekran mevcut değil.",
+      "pathname": "Yol: {{pathname}}",
+      "goToHome": "Ana ekrana git!",
+      "goToSitemap": "Site haritasına git!"
+    },
+    "ui": {
+      "externalVideo": "Harici Video",
+      "videoContent": "Video içeriği",
+      "tapToRetry": "Yeniden denemek için dokunun",
+      "youtube": "YouTube",
+      "noBanner": "Banner yok",
+      "replyToYou": "Sana yanıt ver",
+      "replyingTo": "@{{handle}}'a yanıt ver",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trend",
+      "collapse": "Daralt",
+      "addAccount": "+ Hesap ekle",
+      "byCreator": "@{{handle}} tarafından",
+      "likes": "{{count}} beğeni",
+      "interactive": "Etkileşimli",
+      "joined": "katıldı",
+      "thisWeek": "bu hafta"
+    },
+    "recipe": {
+      "title": "Tarif",
+      "time": "Zaman",
+      "servings": "Porsiyon",
+      "category": "Kategori",
+      "ingredients": "Malzemeler",
+      "cuisine": "Mutfak",
+      "method": "Yöntem",
+      "calories": "Kalori",
+      "dietaryRestrictions": "Diyet Kısıtlamaları",
+      "instructions": "Talimatlar",
+      "tags": "Etiketler",
+      "source": "Kaynak"
     }
   }
 }

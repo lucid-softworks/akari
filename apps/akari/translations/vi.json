@@ -343,6 +343,67 @@
       "subtitle": "Bài đăng và chuỗi đã lưu sẽ xuất hiện ở đây.",
       "emptyState": "Bạn chưa lưu bài đăng nào.",
       "error": "Chúng tôi không thể tải các bài đăng đã lưu của bạn."
+    },
+    "debug": {
+      "crashReporter": "Báo Cáo Sự Cố",
+      "crashDescription": "Sử dụng nút này để tạo lỗi thử nghiệm và xác nhận rằng báo cáo sự cố được cấu hình đúng. Đảm bảo rằng thông tin xác thực Axiom của bạn được cấu hình để báo cáo được gửi.",
+      "triggerCrash": "Kích Hoạt Sự Cố",
+      "crashHint": "Mẹo: tải lại ứng dụng sau khi thử nghiệm để màn hình gỡ lỗi được hiển thị lại.",
+      "queryCacheDebug": "Gỡ Lỗi Bộ Nhớ Đệm Truy Vấn",
+      "invalidateAll": "Vô Hiệu Hóa Tất Cả",
+      "clearAll": "Xóa Tất Cả",
+      "totalQueries": "Tổng Truy Vấn: {{count}}",
+      "activeQueries": "Truy Vấn Hoạt Động: {{count}}",
+      "successfulQueries": "Truy Vấn Thành Công: {{count}}",
+      "failedQueries": "Truy Vấn Thất Bại: {{count}}",
+      "noQueriesInCache": "Không có truy vấn trong bộ nhớ đệm",
+      "queryKey": "Khóa Truy Vấn:",
+      "status": "Trạng Thái:",
+      "dataUpdatedAt": "Dữ Liệu Được Cập Nhật:",
+      "errorUpdatedAt": "Lỗi Được Cập Nhật:",
+      "fetchCount": "Số Lần Tải:",
+      "error": "Lỗi:",
+      "data": "Dữ Liệu:",
+      "refetch": "Tải Lại",
+      "remove": "Xóa"
+    },
+    "errors": {
+      "screenNotFound": "Màn hình này không tồn tại.",
+      "pathname": "Đường Dẫn: {{pathname}}",
+      "goToHome": "Đi đến màn hình chính!",
+      "goToSitemap": "Đi đến sơ đồ trang web!"
+    },
+    "ui": {
+      "externalVideo": "Video Ngoài",
+      "videoContent": "Nội dung video",
+      "tapToRetry": "Chạm để thử lại",
+      "youtube": "YouTube",
+      "noBanner": "Không có banner",
+      "replyToYou": "Trả lời bạn",
+      "replyingTo": "Trả lời @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Xu Hướng",
+      "collapse": "Thu Gọn",
+      "addAccount": "+ Thêm tài khoản",
+      "byCreator": "bởi @{{handle}}",
+      "likes": "{{count}} lượt thích",
+      "interactive": "Tương Tác",
+      "joined": "đã tham gia",
+      "thisWeek": "tuần này"
+    },
+    "recipe": {
+      "title": "Công Thức",
+      "time": "Thời Gian",
+      "servings": "Khẩu Phần",
+      "category": "Danh Mục",
+      "ingredients": "Nguyên Liệu",
+      "cuisine": "Ẩm Thực",
+      "method": "Phương Pháp",
+      "calories": "Calo",
+      "dietaryRestrictions": "Hạn Chế Ăn Uống",
+      "instructions": "Hướng Dẫn",
+      "tags": "Thẻ",
+      "source": "Nguồn"
     }
   }
 }

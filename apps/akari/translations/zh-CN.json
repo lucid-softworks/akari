@@ -343,6 +343,67 @@
       "subtitle": "已保存的帖子和话题会显示在这里。",
       "emptyState": "你还没有保存任何帖子。",
       "error": "我们无法加载你保存的帖子。"
+    },
+    "debug": {
+      "crashReporter": "崩溃报告器",
+      "crashDescription": "使用此按钮触发测试错误并确认崩溃报告已正确配置。确保您的Axiom凭据已配置，以便报告能够送达。",
+      "triggerCrash": "触发崩溃",
+      "crashHint": "提示：测试后重新加载应用程序，以便调试屏幕再次渲染。",
+      "queryCacheDebug": "查询缓存调试",
+      "invalidateAll": "全部失效",
+      "clearAll": "全部清除",
+      "totalQueries": "总查询数：{{count}}",
+      "activeQueries": "活跃查询数：{{count}}",
+      "successfulQueries": "成功查询数：{{count}}",
+      "failedQueries": "失败查询数：{{count}}",
+      "noQueriesInCache": "缓存中无查询",
+      "queryKey": "查询键：",
+      "status": "状态：",
+      "dataUpdatedAt": "数据更新时间：",
+      "errorUpdatedAt": "错误更新时间：",
+      "fetchCount": "获取次数：",
+      "error": "错误：",
+      "data": "数据：",
+      "refetch": "重新获取",
+      "remove": "删除"
+    },
+    "errors": {
+      "screenNotFound": "此屏幕不存在。",
+      "pathname": "路径：{{pathname}}",
+      "goToHome": "转到主屏幕！",
+      "goToSitemap": "转到站点地图！"
+    },
+    "ui": {
+      "externalVideo": "外部视频",
+      "videoContent": "视频内容",
+      "tapToRetry": "点击重试",
+      "youtube": "YouTube",
+      "noBanner": "无横幅",
+      "replyToYou": "回复你",
+      "replyingTo": "回复@{{handle}}",
+      "expoPushToken": "Expo推送令牌",
+      "trending": "热门",
+      "collapse": "折叠",
+      "addAccount": "+ 添加账户",
+      "byCreator": "由@{{handle}}",
+      "likes": "{{count}}个赞",
+      "interactive": "交互式",
+      "joined": "加入",
+      "thisWeek": "本周"
+    },
+    "recipe": {
+      "title": "食谱",
+      "time": "时间",
+      "servings": "份数",
+      "category": "类别",
+      "ingredients": "食材",
+      "cuisine": "菜系",
+      "method": "方法",
+      "calories": "卡路里",
+      "dietaryRestrictions": "饮食限制",
+      "instructions": "说明",
+      "tags": "标签",
+      "source": "来源"
     }
   }
 }

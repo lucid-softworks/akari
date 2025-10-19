@@ -343,6 +343,67 @@
       "subtitle": "저장한 게시물과 스레드가 여기에 표시됩니다.",
       "emptyState": "아직 저장한 게시물이 없습니다.",
       "error": "저장한 게시물을 불러오지 못했습니다."
+    },
+    "debug": {
+      "crashReporter": "크래시 리포터",
+      "crashDescription": "이 버튼을 사용하여 테스트 오류를 발생시키고 크래시 리포팅이 올바르게 설정되었는지 확인하세요. 보고서가 전달되도록 Axiom 자격 증명이 구성되어 있는지 확인하세요.",
+      "triggerCrash": "크래시 발생",
+      "crashHint": "팁: 테스트 후 앱을 다시 로드하여 디버그 화면이 다시 렌더링되도록 하세요.",
+      "queryCacheDebug": "쿼리 캐시 디버그",
+      "invalidateAll": "모두 무효화",
+      "clearAll": "모두 지우기",
+      "totalQueries": "총 쿼리: {{count}}",
+      "activeQueries": "활성 쿼리: {{count}}",
+      "successfulQueries": "성공한 쿼리: {{count}}",
+      "failedQueries": "실패한 쿼리: {{count}}",
+      "noQueriesInCache": "캐시에 쿼리가 없습니다",
+      "queryKey": "쿼리 키:",
+      "status": "상태:",
+      "dataUpdatedAt": "데이터 업데이트 시간:",
+      "errorUpdatedAt": "오류 업데이트 시간:",
+      "fetchCount": "가져오기 횟수:",
+      "error": "오류:",
+      "data": "데이터:",
+      "refetch": "다시 가져오기",
+      "remove": "제거"
+    },
+    "errors": {
+      "screenNotFound": "이 화면은 존재하지 않습니다.",
+      "pathname": "경로: {{pathname}}",
+      "goToHome": "홈 화면으로 이동!",
+      "goToSitemap": "사이트맵으로 이동!"
+    },
+    "ui": {
+      "externalVideo": "외부 비디오",
+      "videoContent": "비디오 콘텐츠",
+      "tapToRetry": "탭하여 재시도",
+      "youtube": "YouTube",
+      "noBanner": "배너 없음",
+      "replyToYou": "당신에게 답장",
+      "replyingTo": "@{{handle}}에게 답장",
+      "expoPushToken": "Expo 푸시 토큰",
+      "trending": "트렌딩",
+      "collapse": "접기",
+      "addAccount": "+ 계정 추가",
+      "byCreator": "@{{handle}} 작성",
+      "likes": "{{count}} 좋아요",
+      "interactive": "대화형",
+      "joined": "가입",
+      "thisWeek": "이번 주"
+    },
+    "recipe": {
+      "title": "레시피",
+      "time": "시간",
+      "servings": "인분",
+      "category": "카테고리",
+      "ingredients": "재료",
+      "cuisine": "요리",
+      "method": "방법",
+      "calories": "칼로리",
+      "dietaryRestrictions": "식이 제한",
+      "instructions": "지침",
+      "tags": "태그",
+      "source": "출처"
     }
   }
 }

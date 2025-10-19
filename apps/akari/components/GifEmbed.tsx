@@ -4,7 +4,6 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useTranslation } from '@/hooks/useTranslation';
 
 type GifEmbedProps = {
   /** GIF embed data from Bluesky */
@@ -31,7 +30,6 @@ type GifEmbedProps = {
  * Shows the GIF thumbnail and opens the GIF when tapped
  */
 export function GifEmbed({ embed }: GifEmbedProps) {
-  const { t } = useTranslation();
   const textColor = useThemeColor(
     {
       light: '#000000',

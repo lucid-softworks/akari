@@ -343,6 +343,67 @@
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",
       "emptyState": "עוד לא שמרת פוסטים.",
       "error": "לא יכולנו לטעון את הפוסטים השמורים שלך."
+    },
+    "debug": {
+      "crashReporter": "מדווח קריסות",
+      "crashDescription": "השתמש בכפתור זה כדי ליצור שגיאת בדיקה ולאשר שדיווח על קריסות מוגדר נכון. ודא שהפרטים שלך ב-Axiom מוגדרים למסירת הדוח.",
+      "triggerCrash": "הפעל קריסה",
+      "crashHint": "טיפ: טען מחדש את האפליקציה לאחר הבדיקה כדי שמסך הדיבוג ירנדר שוב.",
+      "queryCacheDebug": "דיבוג מטמון שאילתות",
+      "invalidateAll": "הפוך הכל ללא תקף",
+      "clearAll": "נקה הכל",
+      "totalQueries": "סה\"כ שאילתות: {{count}}",
+      "activeQueries": "שאילתות פעילות: {{count}}",
+      "successfulQueries": "שאילתות מוצלחות: {{count}}",
+      "failedQueries": "שאילתות כושלות: {{count}}",
+      "noQueriesInCache": "אין שאילתות במטמון",
+      "queryKey": "מפתח שאילתה:",
+      "status": "סטטוס:",
+      "dataUpdatedAt": "נתונים עודכנו:",
+      "errorUpdatedAt": "שגיאה עודכנה:",
+      "fetchCount": "מספר אחזורים:",
+      "error": "שגיאה:",
+      "data": "נתונים:",
+      "refetch": "אחזר שוב",
+      "remove": "הסר"
+    },
+    "errors": {
+      "screenNotFound": "המסך הזה לא קיים.",
+      "pathname": "נתיב: {{pathname}}",
+      "goToHome": "עבור למסך הבית!",
+      "goToSitemap": "עבור למפת האתר!"
+    },
+    "ui": {
+      "externalVideo": "וידאו חיצוני",
+      "videoContent": "תוכן וידאו",
+      "tapToRetry": "הקש לנסות שוב",
+      "youtube": "יוטיוב",
+      "noBanner": "אין באנר",
+      "replyToYou": "השב לך",
+      "replyingTo": "עונה ל-@{{handle}}",
+      "expoPushToken": "אסימון דחיפה של אקספו",
+      "trending": "טרנדים",
+      "collapse": "כווץ",
+      "addAccount": "+ הוסף חשבון",
+      "byCreator": "על ידי @{{handle}}",
+      "likes": "{{count}} לייקים",
+      "interactive": "אינטראקטיבי",
+      "joined": "הצטרף",
+      "thisWeek": "השבוע"
+    },
+    "recipe": {
+      "title": "מתכון",
+      "time": "זמן",
+      "servings": "מנות",
+      "category": "קטגוריה",
+      "ingredients": "מרכיבים",
+      "cuisine": "מטבח",
+      "method": "שיטה",
+      "calories": "קלוריות",
+      "dietaryRestrictions": "הגבלות תזונתיות",
+      "instructions": "הוראות",
+      "tags": "תגיות",
+      "source": "מקור"
     }
   }
 }

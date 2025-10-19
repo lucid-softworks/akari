@@ -44,6 +44,40 @@ jest.mock('@/contexts/ToastContext', () => ({
   useToast: jest.fn(() => mockToastContext),
 }));
 
+// Mock LanguageProvider for tests
+jest.mock('@/contexts/LanguageContext', () => ({
+  __esModule: true,
+  LanguageProvider: ({ children }) => children,
+  useLanguage: jest.fn(() => ({
+    currentLocale: 'en',
+    changeLanguage: jest.fn(),
+    availableLocales: ['en', 'es', 'fr'],
+  })),
+}));
+
+// Mock useTranslation hook for tests
+jest.mock('@/hooks/useTranslation', () => ({
+  __esModule: true,
+  useTranslation: jest.fn(() => ({
+    t: jest.fn((key, options) => {
+      // Handle specific translation keys for testing
+      if (key === 'ui.likes' && options && options.count) {
+        return `${options.count} likes`;
+      }
+      if (key === 'ui.byCreator' && options && options.handle) {
+        return `by @${options.handle}`;
+      }
+      // Return the key as the translation for testing
+      if (options && typeof options === 'object') {
+        return key.replace(/\{\{(\w+)\}\}/g, (match, placeholder) => {
+          return options[placeholder] || match;
+        });
+      }
+      return key;
+    }),
+  })),
+}));
+
 const { act } = require('@testing-library/react-native');
 const { useToast } = require('@/contexts/ToastContext');
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { FlashList } from '@shopify/flash-list';
 import type { FlashListProps } from '@shopify/flash-list';
 
+import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary';
+
 const DEFAULT_ESTIMATED_ITEM_SIZE = 240;
 const DEFAULT_OVERSCAN = 2;
 
@@ -61,17 +63,19 @@ function VirtualizedListInner<T>(
   );
 
   return (
-    <FlashList
-      {...(flashListProps as FlashListProps<T>)}
-      ref={ref as React.Ref<FlashList<T>>}
-      data={typedData}
-      renderItem={renderItemWithStickyHeader}
-      estimatedItemSize={estimatedItemSize}
-      drawDistance={drawDistance ?? overscan * estimatedItemSize}
-      ListHeaderComponent={ListHeaderComponent}
-      ListHeaderComponentStyle={ListHeaderComponentStyle}
-      stickyHeaderIndices={computedStickyHeaderIndices}
-    />
+    <ComponentErrorBoundary>
+      <FlashList
+        {...(flashListProps as FlashListProps<T>)}
+        ref={ref as React.Ref<FlashList<T>>}
+        data={typedData}
+        renderItem={renderItemWithStickyHeader}
+        estimatedItemSize={estimatedItemSize}
+        drawDistance={drawDistance ?? overscan * estimatedItemSize}
+        ListHeaderComponent={ListHeaderComponent}
+        ListHeaderComponentStyle={ListHeaderComponentStyle}
+        stickyHeaderIndices={computedStickyHeaderIndices}
+      />
+    </ComponentErrorBoundary>
   );
 }
 

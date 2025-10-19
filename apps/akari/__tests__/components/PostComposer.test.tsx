@@ -336,7 +336,7 @@ describe('PostComposer', () => {
         ],
       });
 
-    const { getByLabelText, getAllByPlaceholderText, getAllByText } = render(
+    const { getByLabelText, getAllByPlaceholderText, getAllByText, getByTestId } = render(
       <PostComposer visible onClose={jest.fn()} />,
     );
 
@@ -375,8 +375,8 @@ describe('PostComposer', () => {
     altInputs = getAllByPlaceholderText('post.imageAltTextPlaceholder');
     expect(altInputs).toHaveLength(4);
 
-    const removeButtons = getAllByText('✕');
-    fireEvent.press(removeButtons[0]);
+    const removeButton = getByTestId('remove-image-0');
+    fireEvent.press(removeButton);
     altInputs = getAllByPlaceholderText('post.imageAltTextPlaceholder');
     expect(altInputs).toHaveLength(3);
   });

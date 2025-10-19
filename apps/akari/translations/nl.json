@@ -343,6 +343,67 @@
       "subtitle": "Opgeslagen berichten en threads verschijnen hier.",
       "emptyState": "Je hebt nog geen berichten opgeslagen.",
       "error": "We konden je opgeslagen berichten niet laden."
+    },
+    "debug": {
+      "crashReporter": "Crash Reporter",
+      "crashDescription": "Gebruik deze knop om een testfout te genereren en te bevestigen dat crash reporting correct is ingesteld. Zorg ervoor dat je Axiom-referenties zijn geconfigureerd zodat het rapport wordt afgeleverd.",
+      "triggerCrash": "Crash Triggeren",
+      "crashHint": "Tip: herlaad de app na het testen zodat het debug-scherm opnieuw wordt weergegeven.",
+      "queryCacheDebug": "Query Cache Debug",
+      "invalidateAll": "Alles Ongeldig Maken",
+      "clearAll": "Alles Wissen",
+      "totalQueries": "Totale Queries: {{count}}",
+      "activeQueries": "Actieve Queries: {{count}}",
+      "successfulQueries": "Succesvolle Queries: {{count}}",
+      "failedQueries": "Mislukte Queries: {{count}}",
+      "noQueriesInCache": "Geen queries in cache",
+      "queryKey": "Query Sleutel:",
+      "status": "Status:",
+      "dataUpdatedAt": "Gegevens Bijgewerkt Op:",
+      "errorUpdatedAt": "Fout Bijgewerkt Op:",
+      "fetchCount": "Ophaal Aantal:",
+      "error": "Fout:",
+      "data": "Gegevens:",
+      "refetch": "Opnieuw Ophalen",
+      "remove": "Verwijderen"
+    },
+    "errors": {
+      "screenNotFound": "Dit scherm bestaat niet.",
+      "pathname": "Pad: {{pathname}}",
+      "goToHome": "Ga naar het startscherm!",
+      "goToSitemap": "Ga naar de sitemap!"
+    },
+    "ui": {
+      "externalVideo": "Externe Video",
+      "videoContent": "Video-inhoud",
+      "tapToRetry": "Tik om opnieuw te proberen",
+      "youtube": "YouTube",
+      "noBanner": "Geen banner",
+      "replyToYou": "Antwoord aan jou",
+      "replyingTo": "Antwoord aan @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trending",
+      "collapse": "Inklappen",
+      "addAccount": "+ Account toevoegen",
+      "byCreator": "door @{{handle}}",
+      "likes": "{{count}} likes",
+      "interactive": "Interactief",
+      "joined": "toegetreden",
+      "thisWeek": "deze week"
+    },
+    "recipe": {
+      "title": "Recept",
+      "time": "Tijd",
+      "servings": "Porties",
+      "category": "Categorie",
+      "ingredients": "Ingrediënten",
+      "cuisine": "Keuken",
+      "method": "Methode",
+      "calories": "Calorieën",
+      "dietaryRestrictions": "Dieetbeperkingen",
+      "instructions": "Instructies",
+      "tags": "Tags",
+      "source": "Bron"
     }
   }
 }

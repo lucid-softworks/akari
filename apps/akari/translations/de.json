@@ -343,6 +343,67 @@
       "subtitle": "Gespeicherte Beiträge und Threads erscheinen hier.",
       "emptyState": "Du hast noch keine Beiträge gespeichert.",
       "error": "Wir konnten deine gespeicherten Beiträge nicht laden."
+    },
+    "debug": {
+      "crashReporter": "Absturz-Reporter",
+      "crashDescription": "Verwende diese Schaltfläche, um einen Testfehler auszulösen und zu bestätigen, dass die Absturzberichterstattung korrekt eingerichtet ist. Stelle sicher, dass deine Axiom-Anmeldedaten konfiguriert sind, damit der Bericht geliefert wird.",
+      "triggerCrash": "Absturz Auslösen",
+      "crashHint": "Tipp: Lade die App nach dem Test neu, damit der Debug-Bildschirm wieder gerendert wird.",
+      "queryCacheDebug": "Abfrage-Cache-Debug",
+      "invalidateAll": "Alles Ungültig Machen",
+      "clearAll": "Alles Löschen",
+      "totalQueries": "Gesamte Abfragen: {{count}}",
+      "activeQueries": "Aktive Abfragen: {{count}}",
+      "successfulQueries": "Erfolgreiche Abfragen: {{count}}",
+      "failedQueries": "Fehlgeschlagene Abfragen: {{count}}",
+      "noQueriesInCache": "Keine Abfragen im Cache",
+      "queryKey": "Abfrage-Schlüssel:",
+      "status": "Status:",
+      "dataUpdatedAt": "Daten Aktualisiert Am:",
+      "errorUpdatedAt": "Fehler Aktualisiert Am:",
+      "fetchCount": "Abruf-Anzahl:",
+      "error": "Fehler:",
+      "data": "Daten:",
+      "refetch": "Neu Abrufen",
+      "remove": "Entfernen"
+    },
+    "errors": {
+      "screenNotFound": "Dieser Bildschirm existiert nicht.",
+      "pathname": "Pfad: {{pathname}}",
+      "goToHome": "Zum Startbildschirm gehen!",
+      "goToSitemap": "Zur Sitemap gehen!"
+    },
+    "ui": {
+      "externalVideo": "Externes Video",
+      "videoContent": "Videoinhalt",
+      "tapToRetry": "Zum Wiederholen tippen",
+      "youtube": "YouTube",
+      "noBanner": "Kein Banner",
+      "replyToYou": "Antwort an dich",
+      "replyingTo": "Antwort an @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trending",
+      "collapse": "Einklappen",
+      "addAccount": "+ Konto hinzufügen",
+      "byCreator": "von @{{handle}}",
+      "likes": "{{count}} Likes",
+      "interactive": "Interaktiv",
+      "joined": "beigetreten",
+      "thisWeek": "diese Woche"
+    },
+    "recipe": {
+      "title": "Rezept",
+      "time": "Zeit",
+      "servings": "Portionen",
+      "category": "Kategorie",
+      "ingredients": "Zutaten",
+      "cuisine": "Küche",
+      "method": "Methode",
+      "calories": "Kalorien",
+      "dietaryRestrictions": "Diätbeschränkungen",
+      "instructions": "Anweisungen",
+      "tags": "Tags",
+      "source": "Quelle"
     }
   }
 }
