@@ -25,6 +25,7 @@ export function ProfileTabs({ activeTab, onTabChange, profileHandle }: ProfileTa
     { key: 'repos' as const, label: t('profile.repos') },
     { key: 'starterpacks' as const, label: t('profile.starterpacks') },
     { key: 'recipes' as const, label: t('profile.recipes') },
+    { key: 'links' as const, label: t('profile.links') },
   ];
 
   return <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />;

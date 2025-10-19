@@ -9,6 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
+import { LinksTab } from '@/components/profile/LinksTab';
 import { MediaTab } from '@/components/profile/MediaTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RecipesTab } from '@/components/profile/RecipesTab';
@@ -146,6 +147,8 @@ export default function ProfileScreen() {
         return <StarterpacksTab handle={currentAccount.handle} />;
       case 'recipes':
         return <RecipesTab handle={currentAccount.handle} />;
+      case 'links':
+        return <LinksTab handle={currentAccount.handle} />;
       default:
         return (
           <ThemedView style={styles.emptyState}>

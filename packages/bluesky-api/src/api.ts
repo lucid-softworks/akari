@@ -15,6 +15,7 @@ import type {
   BlueskyFeedGeneratorsResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
+  BlueskyLinkatBoardResponse,
   BlueskyMessagesResponse,
   BlueskyNotificationsResponse,
   BlueskyPostView,
@@ -144,6 +145,23 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyRecipeRecordsResponse> {
     return this.repos.getActorRecipes(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Fetches Blue.linkat.board records for the specified actor.
+   * @param accessJwt - Valid session token for the requesting user.
+   * @param actor - DID or handle identifying the actor whose link boards should be loaded.
+   * @param limit - Number of records to fetch per page, defaults to 50.
+   * @param cursor - Optional pagination cursor returned by previous calls.
+   * @returns Blue.linkat.board records for the actor.
+   */
+  async getActorLinkatBoards(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<BlueskyLinkatBoardResponse> {
+    return this.repos.getActorLinkatBoards(accessJwt, actor, limit, cursor);
   }
 
   /**
