@@ -15,7 +15,7 @@ jobs:
     # Only run for org members OR if external PR is labeled as safe
     if: |
       github.event.pull_request.head.repo.full_name == github.repository ||
-      contains(github.event.pull_request.labels.*.name, 'safe-to-preview')
+      contains(github.event.pull_request.labels.*.name, 'safe-to-run-ci')
     permissions:
       contents: read
       pull-requests: write
