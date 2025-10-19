@@ -283,7 +283,7 @@ export function VideoPlayer({
               <ThemedText style={[styles.errorText, { color: textColor }]}>
                 {playerError && playerError.trim() ? playerError : 'Failed to load video'}
               </ThemedText>
-              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>Tap to retry</ThemedText>
+              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </ThemedView>

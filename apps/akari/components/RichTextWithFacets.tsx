@@ -3,7 +3,6 @@ import { ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useNavigateToProfile } from '@/utils/navigation';
 
 type Facet = {
   index: {

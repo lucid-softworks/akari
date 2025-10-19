@@ -343,6 +343,67 @@
       "subtitle": "सहेजी गई पोस्ट और थ्रेड्स यहाँ दिखाई देंगी।",
       "emptyState": "आपने अभी तक कोई पोस्ट सहेजी नहीं है।",
       "error": "हम आपकी सहेजी गई पोस्ट लोड नहीं कर पाए।"
+    },
+    "debug": {
+      "crashReporter": "क्रैश रिपोर्टर",
+      "crashDescription": "टेस्ट त्रुटि उत्पन्न करने और क्रैश रिपोर्टिंग सही तरीके से कॉन्फ़िगर है यह पुष्टि करने के लिए इस बटन का उपयोग करें। सुनिश्चित करें कि आपके Axiom क्रेडेंशियल कॉन्फ़िगर हैं ताकि रिपोर्ट डिलीवर हो सके।",
+      "triggerCrash": "क्रैश ट्रिगर करें",
+      "crashHint": "सुझाव: टेस्ट के बाद ऐप को रीलोड करें ताकि डिबग स्क्रीन फिर से रेंडर हो।",
+      "queryCacheDebug": "क्वेरी कैश डिबग",
+      "invalidateAll": "सभी को अमान्य करें",
+      "clearAll": "सभी साफ़ करें",
+      "totalQueries": "कुल क्वेरी: {{count}}",
+      "activeQueries": "सक्रिय क्वेरी: {{count}}",
+      "successfulQueries": "सफल क्वेरी: {{count}}",
+      "failedQueries": "असफल क्वेरी: {{count}}",
+      "noQueriesInCache": "कैश में कोई क्वेरी नहीं",
+      "queryKey": "क्वेरी कुंजी:",
+      "status": "स्थिति:",
+      "dataUpdatedAt": "डेटा अपडेट किया गया:",
+      "errorUpdatedAt": "त्रुटि अपडेट की गई:",
+      "fetchCount": "फ़ेच गिनती:",
+      "error": "त्रुटि:",
+      "data": "डेटा:",
+      "refetch": "फिर से फ़ेच करें",
+      "remove": "हटाएं"
+    },
+    "errors": {
+      "screenNotFound": "यह स्क्रीन मौजूद नहीं है।",
+      "pathname": "पथ: {{pathname}}",
+      "goToHome": "होम स्क्रीन पर जाएं!",
+      "goToSitemap": "साइटमैप पर जाएं!"
+    },
+    "ui": {
+      "externalVideo": "बाहरी वीडियो",
+      "videoContent": "वीडियो सामग्री",
+      "tapToRetry": "पुनः प्रयास के लिए टैप करें",
+      "youtube": "YouTube",
+      "noBanner": "कोई बैनर नहीं",
+      "replyToYou": "आपको जवाब दें",
+      "replyingTo": "@{{handle}} को जवाब दें",
+      "expoPushToken": "Expo पुश टोकन",
+      "trending": "ट्रेंडिंग",
+      "collapse": "सिकोड़ें",
+      "addAccount": "+ खाता जोड़ें",
+      "byCreator": "@{{handle}} द्वारा",
+      "likes": "{{count}} लाइक",
+      "interactive": "इंटरैक्टिव",
+      "joined": "शामिल हुए",
+      "thisWeek": "इस सप्ताह"
+    },
+    "recipe": {
+      "title": "रेसिपी",
+      "time": "समय",
+      "servings": "सर्विंग्स",
+      "category": "श्रेणी",
+      "ingredients": "सामग्री",
+      "cuisine": "रसोई",
+      "method": "विधि",
+      "calories": "कैलोरी",
+      "dietaryRestrictions": "आहार प्रतिबंध",
+      "instructions": "निर्देश",
+      "tags": "टैग",
+      "source": "स्रोत"
     }
   }
 }

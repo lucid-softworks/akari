@@ -283,7 +283,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
           <View style={styles.trendingSection}>
             <View style={styles.trendingHeader}>
               <IconSymbol name="sparkles" size={14} color={palette.trendingAccent} />
-              <Text style={styles.trendingLabel}>Trending</Text>
+              <Text style={styles.trendingLabel}>{t('ui.trending')}</Text>
             </View>
             <View>
               {TRENDING_TAGS.map((tag) => (
@@ -315,7 +315,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
               pressed && { backgroundColor: palette.hover },
             ]}
           >
-            {!collapsed ? <Text style={styles.collapseText}>Collapse</Text> : null}
+            {!collapsed ? <Text style={styles.collapseText}>{t('ui.collapse')}</Text> : null}
             <IconSymbol name="ellipsis" size={18} color={palette.textSecondary} />
           </Pressable>
         </View>
@@ -374,7 +374,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
                 pressed && { backgroundColor: palette.hover },
               ]}
             >
-              <Text style={styles.addAccountText}>+ Add account</Text>
+              <Text style={styles.addAccountText}>{t('ui.addAccount')}</Text>
             </Pressable>
           </View>
         </View>

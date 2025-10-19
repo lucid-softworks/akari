@@ -3,6 +3,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -80,7 +81,6 @@ type VideoEmbedProps = {
  * Supports both native Bluesky videos and external video links
  */
 export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
-
   const textColor = useThemeColor(
     {
       light: '#000000',
@@ -215,7 +215,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
               </ThemedView>
             )}
             <ThemedView style={styles.playButton}>
-              <ThemedText style={styles.playIcon}>▶️</ThemedText>
+              <IconSymbol name="play.circle.fill" size={48} color="#ffffff" />
             </ThemedView>
           </ThemedView>
 
@@ -228,7 +228,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
                 {videoDescription}
               </ThemedText>
             )}
-            <ThemedText style={[styles.source, { color: secondaryTextColor }]}>External Video</ThemedText>
+            <ThemedText style={[styles.source, { color: secondaryTextColor }]}>{t('ui.externalVideo')}</ThemedText>
           </ThemedView>
         </View>
       </TouchableOpacity>
@@ -242,7 +242,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
     <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
       <ThemedView style={[styles.placeholderContainer, { aspectRatio: placeholderAspectRatio }]}>
         <ThemedText style={styles.placeholderIcon}>🎥</ThemedText>
-        <ThemedText style={[styles.placeholderText, { color: textColor }]}>Video content</ThemedText>
+        <ThemedText style={[styles.placeholderText, { color: textColor }]}>{t('ui.videoContent')}</ThemedText>
       </ThemedView>
     </View>
   );

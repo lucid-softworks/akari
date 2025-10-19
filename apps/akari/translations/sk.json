@@ -343,6 +343,67 @@
       "subtitle": "Tu sa zobrazia uložené príspevky a vlákna.",
       "emptyState": "Zatiaľ ste neuložili žiadne príspevky.",
       "error": "Nemohli sme načítať vaše uložené príspevky."
+    },
+    "debug": {
+      "crashReporter": "Hlásenie Chýb",
+      "crashDescription": "Použite toto tlačidlo na vygenerovanie testovacej chyby a potvrdenie, že hlásenie chýb je správne nakonfigurované. Uistite sa, že vaše Axiom poverenia sú nakonfigurované na doručenie hlásenia.",
+      "triggerCrash": "Spustiť Chybu",
+      "crashHint": "Tip: po testovaní znovu načítajte aplikáciu, aby sa debug obrazovka znovu vykreslila.",
+      "queryCacheDebug": "Debug Cache Dotazov",
+      "invalidateAll": "Zneplatniť Všetky",
+      "clearAll": "Vymazať Všetky",
+      "totalQueries": "Celkové Dotazy: {{count}}",
+      "activeQueries": "Aktívne Dotazy: {{count}}",
+      "successfulQueries": "Úspešné Dotazy: {{count}}",
+      "failedQueries": "Neúspešné Dotazy: {{count}}",
+      "noQueriesInCache": "Žiadne dotazy v cache",
+      "queryKey": "Kľúč Dotazu:",
+      "status": "Stav:",
+      "dataUpdatedAt": "Dáta Aktualizované:",
+      "errorUpdatedAt": "Chyba Aktualizovaná:",
+      "fetchCount": "Počet Načítaní:",
+      "error": "Chyba:",
+      "data": "Dáta:",
+      "refetch": "Znovu Načítať",
+      "remove": "Odstrániť"
+    },
+    "errors": {
+      "screenNotFound": "Táto obrazovka neexistuje.",
+      "pathname": "Cesta: {{pathname}}",
+      "goToHome": "Prejsť na domovskú obrazovku!",
+      "goToSitemap": "Prejsť na mapu stránky!"
+    },
+    "ui": {
+      "externalVideo": "Externé Video",
+      "videoContent": "Obsah videa",
+      "tapToRetry": "Kliknite pre opakovanie",
+      "youtube": "YouTube",
+      "noBanner": "Žiadny banner",
+      "replyToYou": "Odpovedať vám",
+      "replyingTo": "Odpovedanie @{{handle}}",
+      "expoPushToken": "Expo Push Token",
+      "trending": "Trendy",
+      "collapse": "Zbaliť",
+      "addAccount": "+ Pridať účet",
+      "byCreator": "od @{{handle}}",
+      "likes": "{{count}} páčok",
+      "interactive": "Interaktívne",
+      "joined": "pripojil sa",
+      "thisWeek": "tento týždeň"
+    },
+    "recipe": {
+      "title": "Recept",
+      "time": "Čas",
+      "servings": "Porcie",
+      "category": "Kategória",
+      "ingredients": "Ingrediencie",
+      "cuisine": "Kuchyňa",
+      "method": "Metóda",
+      "calories": "Kalórie",
+      "dietaryRestrictions": "Diétne Obmedzenia",
+      "instructions": "Inštrukcie",
+      "tags": "Značky",
+      "source": "Zdroj"
     }
   }
 }

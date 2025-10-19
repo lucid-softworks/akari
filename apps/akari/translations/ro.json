@@ -343,6 +343,67 @@
       "subtitle": "Aici vor apărea postări și fire salvate.",
       "emptyState": "Încă nu ați salvat nicio postare.",
       "error": "Nu am putut încărca postările dvs. salvate."
+    },
+    "debug": {
+      "crashReporter": "Raportor de Erori",
+      "crashDescription": "Folosiți acest buton pentru a genera o eroare de test și a confirma că raportarea erorilor este configurată corect. Asigurați-vă că credențialele Axiom sunt configurate pentru livrarea raportului.",
+      "triggerCrash": "Declanșează Eroarea",
+      "crashHint": "Sfat: reîncărcați aplicația după testare pentru ca ecranul de debug să se randeze din nou.",
+      "queryCacheDebug": "Debug Cache Interogări",
+      "invalidateAll": "Invalidează Totul",
+      "clearAll": "Șterge Totul",
+      "totalQueries": "Interogări Totale: {{count}}",
+      "activeQueries": "Interogări Active: {{count}}",
+      "successfulQueries": "Interogări Reușite: {{count}}",
+      "failedQueries": "Interogări Eșuate: {{count}}",
+      "noQueriesInCache": "Nu există interogări în cache",
+      "queryKey": "Cheia Interogării:",
+      "status": "Status:",
+      "dataUpdatedAt": "Date Actualizate:",
+      "errorUpdatedAt": "Eroare Actualizată:",
+      "fetchCount": "Numărul de Preluări:",
+      "error": "Eroare:",
+      "data": "Date:",
+      "refetch": "Preluare Din Nou",
+      "remove": "Elimină"
+    },
+    "errors": {
+      "screenNotFound": "Acest ecran nu există.",
+      "pathname": "Cale: {{pathname}}",
+      "goToHome": "Mergi la ecranul principal!",
+      "goToSitemap": "Mergi la harta site-ului!"
+    },
+    "ui": {
+      "externalVideo": "Video Extern",
+      "videoContent": "Conținut video",
+      "tapToRetry": "Atinge pentru a încerca din nou",
+      "youtube": "YouTube",
+      "noBanner": "Fără banner",
+      "replyToYou": "Răspunde ție",
+      "replyingTo": "Răspunde la @{{handle}}",
+      "expoPushToken": "Token Push Expo",
+      "trending": "Tendințe",
+      "collapse": "Restrânge",
+      "addAccount": "+ Adaugă cont",
+      "byCreator": "de @{{handle}}",
+      "likes": "{{count}} aprecieri",
+      "interactive": "Interactiv",
+      "joined": "s-a alăturat",
+      "thisWeek": "săptămâna aceasta"
+    },
+    "recipe": {
+      "title": "Rețetă",
+      "time": "Timp",
+      "servings": "Porții",
+      "category": "Categorie",
+      "ingredients": "Ingrediente",
+      "cuisine": "Bucătărie",
+      "method": "Metodă",
+      "calories": "Calorii",
+      "dietaryRestrictions": "Restricții Dietetice",
+      "instructions": "Instrucțiuni",
+      "tags": "Etichete",
+      "source": "Sursă"
     }
   }
 }

@@ -343,6 +343,67 @@
       "subtitle": "保存した投稿とスレッドがここに表示されます。",
       "emptyState": "まだ投稿を保存していません。",
       "error": "保存した投稿を読み込めませんでした。"
+    },
+    "debug": {
+      "crashReporter": "クラッシュレポーター",
+      "crashDescription": "このボタンを使用してテストエラーを発生させ、クラッシュレポートが正しく設定されていることを確認してください。レポートが配信されるようにAxiomの認証情報が設定されていることを確認してください。",
+      "triggerCrash": "クラッシュを発生",
+      "crashHint": "ヒント：テスト後はアプリを再読み込みして、デバッグ画面が再表示されるようにしてください。",
+      "queryCacheDebug": "クエリキャッシュデバッグ",
+      "invalidateAll": "すべて無効化",
+      "clearAll": "すべてクリア",
+      "totalQueries": "総クエリ数：{{count}}",
+      "activeQueries": "アクティブクエリ数：{{count}}",
+      "successfulQueries": "成功クエリ数：{{count}}",
+      "failedQueries": "失敗クエリ数：{{count}}",
+      "noQueriesInCache": "キャッシュにクエリがありません",
+      "queryKey": "クエリキー：",
+      "status": "ステータス：",
+      "dataUpdatedAt": "データ更新日時：",
+      "errorUpdatedAt": "エラー更新日時：",
+      "fetchCount": "取得回数：",
+      "error": "エラー：",
+      "data": "データ：",
+      "refetch": "再取得",
+      "remove": "削除"
+    },
+    "errors": {
+      "screenNotFound": "この画面は存在しません。",
+      "pathname": "パス：{{pathname}}",
+      "goToHome": "ホーム画面に移動！",
+      "goToSitemap": "サイトマップに移動！"
+    },
+    "ui": {
+      "externalVideo": "外部動画",
+      "videoContent": "動画コンテンツ",
+      "tapToRetry": "タップして再試行",
+      "youtube": "YouTube",
+      "noBanner": "バナーなし",
+      "replyToYou": "あなたへの返信",
+      "replyingTo": "@{{handle}}への返信",
+      "expoPushToken": "Expoプッシュトークン",
+      "trending": "トレンド",
+      "collapse": "折りたたむ",
+      "addAccount": "+ アカウント追加",
+      "byCreator": "@{{handle}}による",
+      "likes": "{{count}}いいね",
+      "interactive": "インタラクティブ",
+      "joined": "参加",
+      "thisWeek": "今週"
+    },
+    "recipe": {
+      "title": "レシピ",
+      "time": "時間",
+      "servings": "人数分",
+      "category": "カテゴリ",
+      "ingredients": "材料",
+      "cuisine": "料理",
+      "method": "方法",
+      "calories": "カロリー",
+      "dietaryRestrictions": "食事制限",
+      "instructions": "手順",
+      "tags": "タグ",
+      "source": "出典"
     }
   }
 }

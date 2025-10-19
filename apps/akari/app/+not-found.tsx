@@ -3,23 +3,25 @@ import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NotFoundScreen() {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
       <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen does not exist.</ThemedText>
+        <ThemedText type="title">{t('errors.screenNotFound')}</ThemedText>
         <ThemedText style={styles.pathname}>
-          Path: <ThemedText style={styles.pathnameValue}>{pathname}</ThemedText>
+          {t('errors.pathname', { pathname })}
         </ThemedText>
         <Link href="/index" style={styles.link}>
-          <ThemedText type="link">Go to home screen!</ThemedText>
+          <ThemedText type="link">{t('errors.goToHome')}</ThemedText>
         </Link>
         <Link href="/_sitemap" style={styles.link}>
-          <ThemedText type="link">Go to sitemap!</ThemedText>
+          <ThemedText type="link">{t('errors.goToSitemap')}</ThemedText>
         </Link>
       </ThemedView>
     </>

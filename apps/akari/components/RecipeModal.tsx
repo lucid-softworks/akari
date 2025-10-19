@@ -108,7 +108,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             >
               <IconSymbol name="xmark" size={24} color={textColor} />
             </Pressable>
-            <ThemedText style={styles.headerTitle}>Recipe</ThemedText>
+            <ThemedText style={styles.headerTitle}>{t('recipe.title')}</ThemedText>
             <View style={styles.headerSpacer} />
           </View>
 
@@ -145,14 +145,14 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <View style={styles.metaRow}>
                 <View style={styles.metaItem}>
                   <IconSymbol name="clock" size={16} color={accentColor} />
-                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Time</ThemedText>
+                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.time')}</ThemedText>
                   <ThemedText style={styles.metaValue}>{formatTime(recipe.value.totalTime || '')}</ThemedText>
                 </View>
 
                 {recipe.value.recipeYield && (
                   <View style={styles.metaItem}>
                     <IconSymbol name="person.2" size={16} color={accentColor} />
-                    <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Servings</ThemedText>
+                    <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.servings')}</ThemedText>
                     <ThemedText style={styles.metaValue}>{recipe.value.recipeYield}</ThemedText>
                   </View>
                 )}
@@ -161,7 +161,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <View style={styles.metaRow}>
                 <View style={styles.metaItem}>
                   <IconSymbol name="tag" size={16} color={accentColor} />
-                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Category</ThemedText>
+                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.category')}</ThemedText>
                   <ThemedText style={styles.metaValue}>
                     {resolveRecipeDefinition(recipe.value.recipeCategory, 'category')}
                   </ThemedText>
@@ -169,7 +169,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
 
                 <View style={styles.metaItem}>
                   <IconSymbol name="list.bullet" size={16} color={accentColor} />
-                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Ingredients</ThemedText>
+                  <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.ingredients')}</ThemedText>
                   <ThemedText style={styles.metaValue}>{recipe.value.ingredients.length}</ThemedText>
                 </View>
               </View>
@@ -179,7 +179,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   {recipe.value.recipeCuisine && (
                     <View style={styles.metaItem}>
                       <IconSymbol name="globe" size={16} color={accentColor} />
-                      <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Cuisine</ThemedText>
+                      <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.cuisine')}</ThemedText>
                       <ThemedText style={styles.metaValue}>
                         {resolveRecipeDefinition(recipe.value.recipeCuisine, 'cuisine')}
                       </ThemedText>
@@ -189,7 +189,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   {recipe.value.cookingMethod && (
                     <View style={styles.metaItem}>
                       <IconSymbol name="flame" size={16} color={accentColor} />
-                      <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Method</ThemedText>
+                      <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.method')}</ThemedText>
                       <ThemedText style={styles.metaValue}>
                         {resolveRecipeDefinition(recipe.value.cookingMethod, 'cookingMethod')}
                       </ThemedText>
@@ -202,7 +202,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                 <View style={styles.metaRow}>
                   <View style={styles.metaItem}>
                     <IconSymbol name="heart" size={16} color={accentColor} />
-                    <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>Calories</ThemedText>
+                    <ThemedText style={[styles.metaLabel, { color: metaTextColor }]}>{t('recipe.calories')}</ThemedText>
                     <ThemedText style={styles.metaValue}>{recipe.value.nutrition.calories || 'N/A'}</ThemedText>
                   </View>
                 </View>
@@ -210,7 +210,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
 
               {recipe.value.suitableForDiet && recipe.value.suitableForDiet.length > 0 && (
                 <View style={styles.section}>
-                  <ThemedText style={styles.sectionTitle}>Dietary Restrictions</ThemedText>
+                  <ThemedText style={styles.sectionTitle}>{t('recipe.dietaryRestrictions')}</ThemedText>
                   <View style={styles.keywordsContainer}>
                     {resolveDietaryRestrictions(recipe.value.suitableForDiet).map((diet, index) => (
                       <View key={index} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
@@ -224,7 +224,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
 
             {/* Ingredients */}
             <View style={styles.section}>
-              <ThemedText style={styles.sectionTitle}>Ingredients</ThemedText>
+              <ThemedText style={styles.sectionTitle}>{t('recipe.ingredients')}</ThemedText>
               <View style={styles.ingredientsList}>
                 {recipe.value.ingredients.map((ingredient, index) => (
                   <View key={index} style={styles.ingredientItem}>
@@ -237,7 +237,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
 
             {/* Instructions */}
             <View style={styles.section}>
-              <ThemedText style={styles.sectionTitle}>Instructions</ThemedText>
+              <ThemedText style={styles.sectionTitle}>{t('recipe.instructions')}</ThemedText>
               <View style={styles.instructionsList}>
                 {recipe.value.instructions.map((instruction, index) => (
                   <View key={`instruction-${index}`} style={styles.instructionItem}>
@@ -251,7 +251,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             {/* Keywords */}
             {recipe.value.keywords && recipe.value.keywords.length > 0 && (
               <View style={styles.section}>
-                <ThemedText style={styles.sectionTitle}>Tags</ThemedText>
+                <ThemedText style={styles.sectionTitle}>{t('recipe.tags')}</ThemedText>
                 <View style={styles.keywordsContainer}>
                   {recipe.value.keywords.map((keyword, index) => (
                     <View key={index} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
@@ -265,7 +265,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             {/* Attribution */}
             {recipe.value.attribution && (
               <View style={styles.section}>
-                <ThemedText style={styles.sectionTitle}>Source</ThemedText>
+                <ThemedText style={styles.sectionTitle}>{t('recipe.source')}</ThemedText>
                 <Pressable
                   style={styles.attributionContainer}
                   onPress={() => {
