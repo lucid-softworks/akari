@@ -16,7 +16,7 @@
         "CFBundleAllowMixedLocalizations": true,
         "ExpoLocalization_supportsRTL": true,
         "UIBackgroundModes": ["processing"],
-        "CFBundleLocalizations": ["en", "en-US", "ja", "ar", "fr"]
+        "CFBundleLocalizations": ["en", "ja", "ar", "fr"]
       },
       "entitlements": {
         "aps-environment": "development",
@@ -64,8 +64,8 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "ios": ["en", "en-US", "ja", "ar", "fr"],
-            "android": ["en", "en-US", "ja", "ar", "fr"]
+            "ios": ["en", "ja", "ar", "fr"],
+            "android": ["en", "ja", "ar", "fr"]
           }
         }
       ],
