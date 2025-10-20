@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Prehliadka",
       "notifications": "Oznámenia",
+      "activity": "Aktivita",
       "post": "Post",
       "settings": "Nastavenia"
+    },
+    "activity": {
+      "title": "Aktivita",
+      "lastDay": "Posledný deň",
+      "loadingChart": "Načítanie grafu...",
+      "notes": "Poznámky",
+      "newFollowers": "Noví sledujúci",
+      "totalFollowers": "Celkom sledujúcich",
+      "now": "Teraz",
+      "hoursAgo": "pred {{count}}h",
+      "time": "Čas",
+      "noData": "Zatiaľ žiadne údaje"
+    },
+    "chartTooltip": {
+      "topPosts": "Najlepšie Príspevky",
+      "notes": "poznámky",
+      "newFollowers": "Noví Sledujúci",
+      "biggestFollowers": "Najväčší Sledujúci",
+      "followers": "sledujúci",
+      "followersDescription": "Ľudia, ktorí vás začali sledovať počas tohto obdobia."
     },
     "search": {
       "searchPlaceholder": "Vyhľadajte profily a príspevky na Bluessky",

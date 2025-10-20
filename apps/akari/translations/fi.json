@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Haku",
       "notifications": "Ilmoitukset",
+      "activity": "Toiminta",
       "post": "Lähettää",
       "settings": "Asetukset"
+    },
+    "activity": {
+      "title": "Toiminta",
+      "lastDay": "Viimeinen päivä",
+      "loadingChart": "Ladataan kaaviota...",
+      "notes": "Muistiinpanot",
+      "newFollowers": "Uudet seuraajat",
+      "totalFollowers": "Yhteensä seuraajia",
+      "now": "Nyt",
+      "hoursAgo": "{{count}}t sitten",
+      "time": "Aika",
+      "noData": "Ei vielä tietoja"
+    },
+    "chartTooltip": {
+      "topPosts": "Parhaat viestit",
+      "notes": "muistiinpanot",
+      "newFollowers": "Uudet Seuraajat",
+      "biggestFollowers": "Suurimmat Seuraajat",
+      "followers": "seuraajat",
+      "followersDescription": "Ihmiset, jotka alkoivat seurata sinua tänä aikana."
     },
     "search": {
       "searchPlaceholder": "Etsi profiileja ja viestejä Blueskylle",

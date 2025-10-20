@@ -100,8 +100,29 @@
     "navigation": {
       "search": "検索",
       "notifications": "通知",
+      "activity": "アクティビティ",
       "post": "投稿",
       "settings": "設定"
+    },
+    "activity": {
+      "title": "アクティビティ",
+      "lastDay": "昨日",
+      "loadingChart": "チャートを読み込み中...",
+      "notes": "ノート",
+      "newFollowers": "新しいフォロワー",
+      "totalFollowers": "総フォロワー数",
+      "now": "今",
+      "hoursAgo": "{{count}}時間前",
+      "time": "時間",
+      "noData": "まだデータがありません"
+    },
+    "chartTooltip": {
+      "topPosts": "トップ投稿",
+      "notes": "ノート",
+      "newFollowers": "新しいフォロワー",
+      "biggestFollowers": "最大フォロワー",
+      "followers": "フォロワー",
+      "followersDescription": "この期間中にあなたをフォローし始めた人々。"
     },
     "search": {
       "searchPlaceholder": "Blueskyでプロフィールと投稿を検索",

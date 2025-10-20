@@ -100,8 +100,29 @@
     "navigation": {
       "search": "جستجو",
       "notifications": "اعلان ها",
+      "activity": "فعالیت",
       "post": "پست",
       "settings": "تنظیمات"
+    },
+    "activity": {
+      "title": "فعالیت",
+      "lastDay": "آخرین روز",
+      "loadingChart": "در حال بارگذاری نمودار...",
+      "notes": "یادداشت ها",
+      "newFollowers": "دنبال کنندگان جدید",
+      "totalFollowers": "کل دنبال کنندگان",
+      "now": "اکنون",
+      "hoursAgo": "{{count}} ساعت پیش",
+      "time": "زمان",
+      "noData": "هنوز داده ای وجود ندارد"
+    },
+    "chartTooltip": {
+      "topPosts": "بهترین پست ها",
+      "notes": "یادداشت ها",
+      "newFollowers": "دنبال کنندگان جدید",
+      "biggestFollowers": "بزرگترین دنبال کنندگان",
+      "followers": "دنبال کنندگان",
+      "followersDescription": "افرادی که در این دوره زمانی شروع به دنبال کردن شما کردند."
     },
     "search": {
       "searchPlaceholder": "در Bluesky پروفایل و پست ها را جستجو کنید",

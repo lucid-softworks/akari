@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Söka",
       "notifications": "Meddelanden",
+      "activity": "Aktivitet",
       "post": "Posta",
       "settings": "Inställningar"
+    },
+    "activity": {
+      "title": "Aktivitet",
+      "lastDay": "Senaste dagen",
+      "loadingChart": "Laddar diagram...",
+      "notes": "Anteckningar",
+      "newFollowers": "Nya följare",
+      "totalFollowers": "Totalt följare",
+      "now": "Nu",
+      "hoursAgo": "{{count}}t sedan",
+      "time": "Tid",
+      "noData": "Ingen data än"
+    },
+    "chartTooltip": {
+      "topPosts": "Topp Inlägg",
+      "notes": "anteckningar",
+      "newFollowers": "Nya Följare",
+      "biggestFollowers": "Största Följare",
+      "followers": "följare",
+      "followersDescription": "Människor som började följa dig under denna tidsperiod."
     },
     "search": {
       "searchPlaceholder": "Sök efter profiler och inlägg på bluessky",

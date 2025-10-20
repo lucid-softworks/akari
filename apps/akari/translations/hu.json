@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Keresés",
       "notifications": "Értesítések",
+      "activity": "Tevékenység",
       "post": "Oszlop",
       "settings": "Beállítások"
+    },
+    "activity": {
+      "title": "Tevékenység",
+      "lastDay": "Utolsó nap",
+      "loadingChart": "Diagram betöltése...",
+      "notes": "Jegyzetek",
+      "newFollowers": "Új követők",
+      "totalFollowers": "Összes követő",
+      "now": "Most",
+      "hoursAgo": "{{count}} órája",
+      "time": "Idő",
+      "noData": "Még nincs adat"
+    },
+    "chartTooltip": {
+      "topPosts": "Legjobb posztok",
+      "notes": "jegyzetek",
+      "newFollowers": "Új Követők",
+      "biggestFollowers": "Legnagyobb Követők",
+      "followers": "követők",
+      "followersDescription": "Emberek, akik ebben az időszakban kezdték el követni Önt."
     },
     "search": {
       "searchPlaceholder": "Keressen profilokat és hozzászólásokat a Bluesky -n",

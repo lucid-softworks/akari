@@ -29,7 +29,7 @@ const headerTitles: Record<string, string> = {
   index: 'Home',
   search: 'Search',
   messages: 'Messages',
-  notifications: 'Notifications',
+  activity: 'Activity',
   profile: 'Profile',
   settings: 'Settings',
   bookmarks: 'Bookmarks',
@@ -465,7 +465,7 @@ export default function TabLayout() {
                     }}
                   />
                   <Tabs.Screen
-                    name="notifications"
+                    name="activity"
                     options={{
                       tabBarIcon: ({ color }) => (
                         <View style={{ position: 'relative' }}>

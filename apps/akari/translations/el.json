@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Ερευνα",
       "notifications": "Ειδοποιήσεις",
+      "activity": "Δραστηριότητα",
       "post": "Θέση",
       "settings": "Ρυθμίσεις"
+    },
+    "activity": {
+      "title": "Δραστηριότητα",
+      "lastDay": "Τελευταία ημέρα",
+      "loadingChart": "Φόρτωση γραφήματος...",
+      "notes": "Σημειώσεις",
+      "newFollowers": "Νέοι ακόλουθοι",
+      "totalFollowers": "Συνολικοί ακόλουθοι",
+      "now": "Τώρα",
+      "hoursAgo": "πριν από {{count}}ώ",
+      "time": "Χρόνος",
+      "noData": "Δεν υπάρχουν δεδομένα ακόμα"
+    },
+    "chartTooltip": {
+      "topPosts": "Κορυφαίες Δημοσιεύσεις",
+      "notes": "σημειώσεις",
+      "newFollowers": "Νέοι Ακόλουθοι",
+      "biggestFollowers": "Μεγαλύτεροι Ακόλουθοι",
+      "followers": "ακόλουθοι",
+      "followersDescription": "Άνθρωποι που άρχισαν να σας ακολουθούν κατά τη διάρκεια αυτής της περιόδου."
     },
     "search": {
       "searchPlaceholder": "Αναζητήστε προφίλ και δημοσιεύσεις στο Bluesky",

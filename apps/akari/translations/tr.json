@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Arama",
       "notifications": "Bildirimler",
+      "activity": "Aktivite",
       "post": "Gönderi",
       "settings": "Ayarlar"
+    },
+    "activity": {
+      "title": "Aktivite",
+      "lastDay": "Son gün",
+      "loadingChart": "Grafik yükleniyor...",
+      "notes": "Notlar",
+      "newFollowers": "Yeni takipçiler",
+      "totalFollowers": "Toplam takipçi",
+      "now": "Şimdi",
+      "hoursAgo": "{{count}} saat önce",
+      "time": "Zaman",
+      "noData": "Henüz veri yok"
+    },
+    "chartTooltip": {
+      "topPosts": "En İyi Gönderiler",
+      "notes": "notlar",
+      "newFollowers": "Yeni Takipçiler",
+      "biggestFollowers": "En Büyük Takipçiler",
+      "followers": "takipçiler",
+      "followersDescription": "Bu dönemde sizi takip etmeye başlayan insanlar."
     },
     "search": {
       "searchPlaceholder": "Bluesky'de profiller ve gönderiler ara",

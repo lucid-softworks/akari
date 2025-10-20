@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Chwilio",
       "notifications": "Hysbysiadau",
+      "activity": "Gweithgaredd",
       "post": "Post",
       "settings": "Gosodiadau"
+    },
+    "activity": {
+      "title": "Gweithgaredd",
+      "lastDay": "Diwrnod olaf",
+      "loadingChart": "Llwytho siart...",
+      "notes": "Nodiadau",
+      "newFollowers": "Dilynwyr newydd",
+      "totalFollowers": "Cyfanswm dilynwyr",
+      "now": "Nawr",
+      "hoursAgo": "{{count}} awr yn ôl",
+      "time": "Amser",
+      "noData": "Dim data eto"
+    },
+    "chartTooltip": {
+      "topPosts": "Swyddi Gorau",
+      "notes": "nodiadau",
+      "newFollowers": "Dilynwyr Newydd",
+      "biggestFollowers": "Dilynwyr Mwyaf",
+      "followers": "dilynwyr",
+      "followersDescription": "Pobl a ddechreuodd eich dilyn yn ystod y cyfnod hwn."
     },
     "search": {
       "searchPlaceholder": "Chwilio am broffiliau a swyddi ar Bluesky",

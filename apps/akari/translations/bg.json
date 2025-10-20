@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Търсене",
       "notifications": "Известия",
+      "activity": "Дейност",
       "post": "Публикуване",
       "settings": "Настройки"
+    },
+    "activity": {
+      "title": "Дейност",
+      "lastDay": "Последен ден",
+      "loadingChart": "Зареждане на графика...",
+      "notes": "Бележки",
+      "newFollowers": "Нови последователи",
+      "totalFollowers": "Общо последователи",
+      "now": "Сега",
+      "hoursAgo": "преди {{count}}ч",
+      "time": "Време",
+      "noData": "Все още няма данни"
+    },
+    "chartTooltip": {
+      "topPosts": "Най-добри публикации",
+      "notes": "бележки",
+      "newFollowers": "Нови последователи",
+      "biggestFollowers": "Най-големи последователи",
+      "followers": "последователи",
+      "followersDescription": "Хора, които започнаха да ви следват през този период."
     },
     "search": {
       "searchPlaceholder": "Потърсете профили и публикации на Bluesky",

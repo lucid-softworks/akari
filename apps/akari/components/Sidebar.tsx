@@ -72,10 +72,10 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
     () => [
       { id: 'timeline', label: 'Timeline', icon: 'house.fill', route: '/(tabs)' },
       {
-        id: 'notifications',
-        label: 'Notifications',
+        id: 'activity',
+        label: 'Activity',
         icon: 'bell.fill',
-        route: '/(tabs)/notifications',
+        route: '/(tabs)/activity',
         badge: unreadNotificationsCount,
       },
       {

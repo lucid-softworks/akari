@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Пошук",
       "notifications": "Сповіщення",
+      "activity": "Активність",
       "post": "Допис",
       "settings": "Налаштування"
+    },
+    "activity": {
+      "title": "Активність",
+      "lastDay": "Останній день",
+      "loadingChart": "Завантаження графіка...",
+      "notes": "Нотатки",
+      "newFollowers": "Нові підписники",
+      "totalFollowers": "Всього підписників",
+      "now": "Зараз",
+      "hoursAgo": "{{count}} год тому",
+      "time": "Час",
+      "noData": "Поки немає даних"
+    },
+    "chartTooltip": {
+      "topPosts": "Найкращі Дописи",
+      "notes": "нотатки",
+      "newFollowers": "Нові Підписники",
+      "biggestFollowers": "Найбільші Підписники",
+      "followers": "підписники",
+      "followersDescription": "Люди, які почали слідкувати за вами в цей період."
     },
     "search": {
       "searchPlaceholder": "Шукайте профілі та публікації на Bluesky",

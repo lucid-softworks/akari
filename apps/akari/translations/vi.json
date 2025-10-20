@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Tìm kiếm",
       "notifications": "Thông báo",
+      "activity": "Hoạt động",
       "post": "Bài đăng",
       "settings": "Cài đặt"
+    },
+    "activity": {
+      "title": "Hoạt động",
+      "lastDay": "Ngày cuối",
+      "loadingChart": "Đang tải biểu đồ...",
+      "notes": "Ghi chú",
+      "newFollowers": "Người theo dõi mới",
+      "totalFollowers": "Tổng người theo dõi",
+      "now": "Bây giờ",
+      "hoursAgo": "{{count}} giờ trước",
+      "time": "Thời gian",
+      "noData": "Chưa có dữ liệu"
+    },
+    "chartTooltip": {
+      "topPosts": "Bài Đăng Hàng Đầu",
+      "notes": "ghi chú",
+      "newFollowers": "Người Theo Dõi Mới",
+      "biggestFollowers": "Người Theo Dõi Lớn Nhất",
+      "followers": "người theo dõi",
+      "followersDescription": "Những người bắt đầu theo dõi bạn trong khoảng thời gian này."
     },
     "search": {
       "searchPlaceholder": "Tìm kiếm hồ sơ và bài đăng trên Bluesky",

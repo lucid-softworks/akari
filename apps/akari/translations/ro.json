@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Căutare",
       "notifications": "Notificări",
+      "activity": "Activitate",
       "post": "Post",
       "settings": "Setări"
+    },
+    "activity": {
+      "title": "Activitate",
+      "lastDay": "Ultima zi",
+      "loadingChart": "Se încarcă graficul...",
+      "notes": "Note",
+      "newFollowers": "Urmăritori noi",
+      "totalFollowers": "Total urmăritori",
+      "now": "Acum",
+      "hoursAgo": "cu {{count}}h în urmă",
+      "time": "Timp",
+      "noData": "Nu există date încă"
+    },
+    "chartTooltip": {
+      "topPosts": "Postări Top",
+      "notes": "note",
+      "newFollowers": "Urmăritori Noi",
+      "biggestFollowers": "Cei Mai Mari Urmăritori",
+      "followers": "urmăritori",
+      "followersDescription": "Oameni care au început să te urmărească în această perioadă."
     },
     "search": {
       "searchPlaceholder": "Căutați profiluri și postări pe Bluesky",

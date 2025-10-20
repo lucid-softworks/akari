@@ -100,8 +100,29 @@
     "navigation": {
       "search": "खोज",
       "notifications": "सूचनाएं",
+      "activity": "गतिविधि",
       "post": "पोस्ट",
       "settings": "सेटिंग्स"
+    },
+    "activity": {
+      "title": "गतिविधि",
+      "lastDay": "अंतिम दिन",
+      "loadingChart": "चार्ट लोड हो रहा है...",
+      "notes": "नोट्स",
+      "newFollowers": "नए अनुयायी",
+      "totalFollowers": "कुल अनुयायी",
+      "now": "अभी",
+      "hoursAgo": "{{count}} घंटे पहले",
+      "time": "समय",
+      "noData": "अभी तक कोई डेटा नहीं"
+    },
+    "chartTooltip": {
+      "topPosts": "शीर्ष पोस्ट",
+      "notes": "नोट्स",
+      "newFollowers": "नए अनुयायी",
+      "biggestFollowers": "सबसे बड़े अनुयायी",
+      "followers": "अनुयायी",
+      "followersDescription": "वे लोग जिन्होंने इस समय अवधि के दौरान आपका अनुसरण करना शुरू किया।"
     },
     "search": {
       "searchPlaceholder": "Bluesky पर प्रोफ़ाइल और पोस्ट खोजें",
