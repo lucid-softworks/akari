@@ -5,12 +5,17 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle }
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
+import { ActivityChart } from '@/components/ActivityChart';
+import { BiggestFans } from '@/components/BiggestFans';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { TopPost } from '@/components/TopPost';
 import { NotificationSkeleton } from '@/components/skeletons';
+import { ActivityChartSkeleton, BiggestFansSkeleton, TopPostSkeleton } from '@/components/skeletons/ActivitySkeleton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { useActivityChart, type Timeframe } from '@/hooks/queries/useActivityChart';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -234,7 +239,9 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
             <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
           <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
-          {notification.type === 'reply' ? <ThemedText style={styles.replyIndicator}>{t('ui.replyToYou')}</ThemedText> : null}
+          {notification.type === 'reply' ? (
+            <ThemedText style={styles.replyIndicator}>{t('ui.replyToYou')}</ThemedText>
+          ) : null}
         </View>
         {!notification.isRead ? <View style={styles.unreadIndicator} /> : null}
       </View>
@@ -253,7 +260,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
 /**
  * Group notifications by type and subject
  */
-type NotificationData = {
+export type NotificationData = {
   id: string;
   author: {
     did: string;
@@ -362,8 +369,12 @@ export default function NotificationsScreen() {
   const listRef = useRef<VirtualizedListHandle<GroupedNotification>>(null);
   const [activeTab, setActiveTab] = useState<NotificationsTab>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const [timeframe, setTimeframe] = useState<Timeframe>('3d');
+  const [activeMetric, setActiveMetric] = useState<'notes' | 'followers'>('notes');
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
+
+  const { data: activityChartData, isLoading: isActivityChartLoading } = useActivityChart(timeframe, activeMetric);
 
   const tabs = useMemo(
     () => [
@@ -378,7 +389,7 @@ export default function NotificationsScreen() {
   }, []);
 
   useEffect(() => {
-    tabScrollRegistry.register('notifications', scrollToTop);
+    tabScrollRegistry.register('activity', scrollToTop);
   }, [scrollToTop]);
 
   useEffect(() => {
@@ -522,15 +533,79 @@ export default function NotificationsScreen() {
           },
         ]}
       >
-        {isLargeScreen ? (
-          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <ThemedText style={styles.title}>{t('navigation.notifications')}</ThemedText>
-          </ThemedView>
+        {/* Activity Chart */}
+        {isActivityChartLoading ? (
+          <ActivityChartSkeleton />
+        ) : activityChartData ? (
+          <ActivityChart
+            chartData={activityChartData.chartData}
+            stats={activityChartData.stats}
+            isLoading={isActivityChartLoading}
+            timeframe={timeframe}
+            onTimeframeChange={setTimeframe}
+            activeMetric={activeMetric}
+            onMetricChange={setActiveMetric}
+            onPostPress={(uri) => {
+              // Extract actor and rkey from URI
+              const parts = uri.split('/');
+              const rkey = parts[parts.length - 1];
+              const actor = parts[2];
+              navigateToPost({ actor, rKey: rkey });
+            }}
+          />
         ) : null}
+
+        {/* Biggest Fans and Top Post */}
+        {isActivityChartLoading ? (
+          <View style={styles.bottomSections}>
+            <View style={styles.bottomSection}>
+              <BiggestFansSkeleton />
+            </View>
+            <View style={styles.bottomSection}>
+              <TopPostSkeleton />
+            </View>
+          </View>
+        ) : activityChartData ? (
+          <View style={styles.bottomSections}>
+            <View style={styles.bottomSection}>
+              <BiggestFans
+                fans={activityChartData.biggestFans}
+                onFanPress={(handle) => navigateToProfile({ actor: handle })}
+              />
+            </View>
+            <View style={styles.bottomSection}>
+              <TopPost
+                post={activityChartData.topPost}
+                onPostPress={(uri) => {
+                  // Extract actor and rkey from URI
+                  const parts = uri.split('/');
+                  const rkey = parts[parts.length - 1];
+                  const actor = parts[2];
+                  navigateToPost({ actor, rKey: rkey });
+                }}
+              />
+            </View>
+          </View>
+        ) : null}
+
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
       </ThemedView>
     ),
-    [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, t, tabs],
+    [
+      activeTab,
+      activeMetric,
+      activityChartData,
+      handleTabChange,
+      insets.top,
+      isActivityChartLoading,
+      isLargeScreen,
+      navigateToPost,
+      navigateToProfile,
+      setActiveMetric,
+      setTimeframe,
+      tabs,
+      timeframe,
+    ],
   );
 
   if (isError) {
@@ -560,6 +635,7 @@ export default function NotificationsScreen() {
         showsVerticalScrollIndicator={false}
         keyboardDismissMode="on-drag"
         ListHeaderComponent={listHeaderComponent}
+        stickyHeaderIndices={[]}
       />
     </ThemedView>
   );
@@ -786,5 +862,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
     width: 18,
     alignItems: 'center',
+  },
+  bottomSections: {
+    flexDirection: 'row',
+    paddingHorizontal: 0,
+  },
+  bottomSection: {
+    flex: 1,
   },
 });

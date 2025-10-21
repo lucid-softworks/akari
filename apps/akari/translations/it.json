@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Cerca",
       "notifications": "Notifiche",
+      "activity": "Attività",
       "post": "Pubblica",
       "settings": "Impostazioni"
+    },
+    "activity": {
+      "title": "Attività",
+      "lastDay": "Ultimo giorno",
+      "loadingChart": "Caricamento grafico...",
+      "notes": "Note",
+      "newFollowers": "Nuovi follower",
+      "totalFollowers": "Follower totali",
+      "now": "Ora",
+      "hoursAgo": "{{count}}h fa",
+      "time": "Tempo",
+      "noData": "Nessun dato ancora"
+    },
+    "chartTooltip": {
+      "topPosts": "Post Migliori",
+      "notes": "note",
+      "newFollowers": "Nuovi Follower",
+      "biggestFollowers": "Follower Più Grandi",
+      "followers": "follower",
+      "followersDescription": "Persone che hanno iniziato a seguirti durante questo periodo."
     },
     "search": {
       "searchPlaceholder": "Cerca profili e post su Bluesky",

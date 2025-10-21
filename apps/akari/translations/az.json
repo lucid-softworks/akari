@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Axtarış",
       "notifications": "Bildirişlər",
+      "activity": "Fəaliyyət",
       "post": "Post",
       "settings": "Parametrlər"
+    },
+    "activity": {
+      "title": "Fəaliyyət",
+      "lastDay": "Son gün",
+      "loadingChart": "Qrafik yüklənir...",
+      "notes": "Qeydlər",
+      "newFollowers": "Yeni izləyicilər",
+      "totalFollowers": "Ümumi izləyicilər",
+      "now": "İndi",
+      "hoursAgo": "{{count}} saat əvvəl",
+      "time": "Vaxt",
+      "noData": "Hələ məlumat yoxdur"
+    },
+    "chartTooltip": {
+      "topPosts": "Ən Yaxşı Paylaşımlar",
+      "notes": "qeydlər",
+      "newFollowers": "Yeni İzləyicilər",
+      "biggestFollowers": "Ən Böyük İzləyicilər",
+      "followers": "izləyicilər",
+      "followersDescription": "Bu müddət ərzində sizi izləməyə başlayan insanlar."
     },
     "search": {
       "searchPlaceholder": "Bluesky-də profillər və yazıları axtarın",

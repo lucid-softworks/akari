@@ -100,8 +100,29 @@
     "navigation": {
       "search": "검색",
       "notifications": "알림",
+      "activity": "활동",
       "post": "게시물",
       "settings": "설정"
+    },
+    "activity": {
+      "title": "활동",
+      "lastDay": "어제",
+      "loadingChart": "차트 로딩 중...",
+      "notes": "노트",
+      "newFollowers": "새로운 팔로워",
+      "totalFollowers": "총 팔로워",
+      "now": "지금",
+      "hoursAgo": "{{count}}시간 전",
+      "time": "시간",
+      "noData": "아직 데이터가 없습니다"
+    },
+    "chartTooltip": {
+      "topPosts": "인기 게시물",
+      "notes": "노트",
+      "newFollowers": "새로운 팔로워",
+      "biggestFollowers": "최대 팔로워",
+      "followers": "팔로워",
+      "followersDescription": "이 기간 동안 당신을 팔로우하기 시작한 사람들."
     },
     "search": {
       "searchPlaceholder": "Bluesky에서 프로필과 게시물 검색",

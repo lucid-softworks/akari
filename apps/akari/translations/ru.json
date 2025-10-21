@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Поиск",
       "notifications": "Уведомления",
+      "activity": "Активность",
       "post": "Пост",
       "settings": "Настройки"
+    },
+    "activity": {
+      "title": "Активность",
+      "lastDay": "Последний день",
+      "loadingChart": "Загрузка графика...",
+      "notes": "Заметки",
+      "newFollowers": "Новые подписчики",
+      "totalFollowers": "Всего подписчиков",
+      "now": "Сейчас",
+      "hoursAgo": "{{count}}ч назад",
+      "time": "Время",
+      "noData": "Пока нет данных"
+    },
+    "chartTooltip": {
+      "topPosts": "Лучшие Посты",
+      "notes": "заметки",
+      "newFollowers": "Новые Подписчики",
+      "biggestFollowers": "Самые Большие Подписчики",
+      "followers": "подписчики",
+      "followersDescription": "Люди, которые начали подписываться на вас в этот период."
     },
     "search": {
       "searchPlaceholder": "Поиск профилей и постов в Bluesky",

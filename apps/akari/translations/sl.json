@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Iskanje",
       "notifications": "Obvestila",
+      "activity": "Dejavnost",
       "post": "Objavo",
       "settings": "Nastavitve"
+    },
+    "activity": {
+      "title": "Dejavnost",
+      "lastDay": "Zadnji dan",
+      "loadingChart": "Nalaganje grafikona...",
+      "notes": "Opombe",
+      "newFollowers": "Novi sledilci",
+      "totalFollowers": "Skupaj sledilcev",
+      "now": "Zdaj",
+      "hoursAgo": "pred {{count}}h",
+      "time": "Čas",
+      "noData": "Še ni podatkov"
+    },
+    "chartTooltip": {
+      "topPosts": "Najboljše Objave",
+      "notes": "opombe",
+      "newFollowers": "Novi Sledilci",
+      "biggestFollowers": "Največji Sledilci",
+      "followers": "sledilci",
+      "followersDescription": "Ljudje, ki so vas začeli slediti v tem obdobju."
     },
     "search": {
       "searchPlaceholder": "Poiščite profile in objave na Bluesskyju",

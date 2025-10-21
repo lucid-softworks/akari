@@ -100,8 +100,29 @@
     "navigation": {
       "search": "搜索",
       "notifications": "通知",
+      "activity": "活动",
       "post": "邮政",
       "settings": "设置"
+    },
+    "activity": {
+      "title": "活动",
+      "lastDay": "昨天",
+      "loadingChart": "正在加载图表...",
+      "notes": "笔记",
+      "newFollowers": "新关注者",
+      "totalFollowers": "总关注者",
+      "now": "现在",
+      "hoursAgo": "{{count}}小时前",
+      "time": "时间",
+      "noData": "暂无数据"
+    },
+    "chartTooltip": {
+      "topPosts": "热门帖子",
+      "notes": "笔记",
+      "newFollowers": "新关注者",
+      "biggestFollowers": "最大关注者",
+      "followers": "关注者",
+      "followersDescription": "在此时间段内开始关注您的人。"
     },
     "search": {
       "searchPlaceholder": "搜索布鲁斯基上的个人资料和帖子",

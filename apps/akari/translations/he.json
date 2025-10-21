@@ -100,8 +100,29 @@
     "navigation": {
       "search": "לְחַפֵּשׂ",
       "notifications": "התראות",
+      "activity": "פעילות",
       "post": "שֶׁלְאַחַר",
       "settings": "הגדרות"
+    },
+    "activity": {
+      "title": "פעילות",
+      "lastDay": "יום אחרון",
+      "loadingChart": "טוען תרשים...",
+      "notes": "הערות",
+      "newFollowers": "עוקבים חדשים",
+      "totalFollowers": "סה\"כ עוקבים",
+      "now": "עכשיו",
+      "hoursAgo": "לפני {{count}} שעות",
+      "time": "זמן",
+      "noData": "אין נתונים עדיין"
+    },
+    "chartTooltip": {
+      "topPosts": "הפוסטים הטובים ביותר",
+      "notes": "הערות",
+      "newFollowers": "עוקבים חדשים",
+      "biggestFollowers": "העוקבים הגדולים ביותר",
+      "followers": "עוקבים",
+      "followersDescription": "אנשים שהתחילו לעקוב אחריך בתקופה זו."
     },
     "search": {
       "searchPlaceholder": "חפש פרופילים ופוסטים בבלוזקי",

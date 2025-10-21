@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Cari",
       "notifications": "Notifikasi",
+      "activity": "Aktivitas",
       "post": "Posting",
       "settings": "Pengaturan"
+    },
+    "activity": {
+      "title": "Aktivitas",
+      "lastDay": "Hari terakhir",
+      "loadingChart": "Memuat grafik...",
+      "notes": "Catatan",
+      "newFollowers": "Pengikut baru",
+      "totalFollowers": "Total pengikut",
+      "now": "Sekarang",
+      "hoursAgo": "{{count}} jam yang lalu",
+      "time": "Waktu",
+      "noData": "Belum ada data"
+    },
+    "chartTooltip": {
+      "topPosts": "Post Teratas",
+      "notes": "catatan",
+      "newFollowers": "Pengikut Baru",
+      "biggestFollowers": "Pengikut Terbesar",
+      "followers": "pengikut",
+      "followersDescription": "Orang yang mulai mengikuti Anda selama periode waktu ini."
     },
     "search": {
       "searchPlaceholder": "Cari profil dan post di Bluesky",

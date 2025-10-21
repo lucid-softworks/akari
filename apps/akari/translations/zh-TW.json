@@ -100,8 +100,29 @@
     "navigation": {
       "search": "搜尋",
       "notifications": "通知",
+      "activity": "活動",
       "post": "貼文",
       "settings": "設定"
+    },
+    "activity": {
+      "title": "活動",
+      "lastDay": "昨天",
+      "loadingChart": "正在載入圖表...",
+      "notes": "筆記",
+      "newFollowers": "新追蹤者",
+      "totalFollowers": "總追蹤者",
+      "now": "現在",
+      "hoursAgo": "{{count}}小時前",
+      "time": "時間",
+      "noData": "暫無資料"
+    },
+    "chartTooltip": {
+      "topPosts": "熱門貼文",
+      "notes": "筆記",
+      "newFollowers": "新追蹤者",
+      "biggestFollowers": "最大追蹤者",
+      "followers": "追蹤者",
+      "followersDescription": "在此時間段內開始追蹤您的人。"
     },
     "search": {
       "searchPlaceholder": "在 Bluesky 上搜尋個人資料和貼文",

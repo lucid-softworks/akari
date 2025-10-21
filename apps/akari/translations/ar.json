@@ -100,8 +100,29 @@
     "navigation": {
       "search": "البحث",
       "notifications": "الإشعارات",
+      "activity": "النشاط",
       "post": "المنشور",
       "settings": "الإعدادات"
+    },
+    "activity": {
+      "title": "النشاط",
+      "lastDay": "آخر يوم",
+      "loadingChart": "جاري تحميل الرسم البياني...",
+      "notes": "الملاحظات",
+      "newFollowers": "متابعون جدد",
+      "totalFollowers": "إجمالي المتابعين",
+      "now": "الآن",
+      "hoursAgo": "منذ {{count}} ساعة",
+      "time": "الوقت",
+      "noData": "لا توجد بيانات بعد"
+    },
+    "chartTooltip": {
+      "topPosts": "أفضل المنشورات",
+      "notes": "ملاحظات",
+      "newFollowers": "متابعون جدد",
+      "biggestFollowers": "أكبر المتابعين",
+      "followers": "متابعون",
+      "followersDescription": "الأشخاص الذين بدأوا في متابعتك خلال هذه الفترة الزمنية."
     },
     "search": {
       "searchPlaceholder": "البحث عن الملفات الشخصية والمنشورات على Bluesky",

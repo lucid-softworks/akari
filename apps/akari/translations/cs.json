@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Vyhledávání",
       "notifications": "Oznámení",
+      "activity": "Aktivita",
       "post": "Zveřejnit",
       "settings": "Nastavení"
+    },
+    "activity": {
+      "title": "Aktivita",
+      "lastDay": "Poslední den",
+      "loadingChart": "Načítání grafu...",
+      "notes": "Poznámky",
+      "newFollowers": "Noví sledující",
+      "totalFollowers": "Celkem sledujících",
+      "now": "Nyní",
+      "hoursAgo": "před {{count}}h",
+      "time": "Čas",
+      "noData": "Zatím žádná data"
+    },
+    "chartTooltip": {
+      "topPosts": "Nejlepší příspěvky",
+      "notes": "poznámky",
+      "newFollowers": "Noví sledující",
+      "biggestFollowers": "Největší sledující",
+      "followers": "sledující",
+      "followersDescription": "Lidé, kteří vás začali sledovat během tohoto období."
     },
     "search": {
       "searchPlaceholder": "Hledejte profily a příspěvky na Bluesky",

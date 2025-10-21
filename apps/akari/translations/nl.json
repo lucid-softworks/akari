@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Zoeken",
       "notifications": "Meldingen",
+      "activity": "Activiteit",
       "post": "Bericht",
       "settings": "Instellingen"
+    },
+    "activity": {
+      "title": "Activiteit",
+      "lastDay": "Laatste dag",
+      "loadingChart": "Grafiek laden...",
+      "notes": "Notities",
+      "newFollowers": "Nieuwe volgers",
+      "totalFollowers": "Totaal volgers",
+      "now": "Nu",
+      "hoursAgo": "{{count}}u geleden",
+      "time": "Tijd",
+      "noData": "Nog geen gegevens"
+    },
+    "chartTooltip": {
+      "topPosts": "Top Berichten",
+      "notes": "notities",
+      "newFollowers": "Nieuwe Volgers",
+      "biggestFollowers": "Grootste Volgers",
+      "followers": "volgers",
+      "followersDescription": "Mensen die je tijdens deze periode begonnen te volgen."
     },
     "search": {
       "searchPlaceholder": "Zoek naar profielen en berichten op Bluesky",

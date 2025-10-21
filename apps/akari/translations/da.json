@@ -100,8 +100,29 @@
     "navigation": {
       "search": "Søg",
       "notifications": "Notifikationer",
+      "activity": "Aktivitet",
       "post": "Post",
       "settings": "Indstillinger"
+    },
+    "activity": {
+      "title": "Aktivitet",
+      "lastDay": "Sidste dag",
+      "loadingChart": "Indlæser diagram...",
+      "notes": "Noter",
+      "newFollowers": "Nye følgere",
+      "totalFollowers": "Samlede følgere",
+      "now": "Nu",
+      "hoursAgo": "{{count}}t siden",
+      "time": "Tid",
+      "noData": "Ingen data endnu"
+    },
+    "chartTooltip": {
+      "topPosts": "Top Posts",
+      "notes": "noter",
+      "newFollowers": "Nye Følgere",
+      "biggestFollowers": "Største Følgere",
+      "followers": "følgere",
+      "followersDescription": "Folk der begyndte at følge dig i denne periode."
     },
     "search": {
       "searchPlaceholder": "Søg efter profiler og posts på Bluesky",

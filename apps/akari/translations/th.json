@@ -100,8 +100,29 @@
     "navigation": {
       "search": "ค้นหา",
       "notifications": "การแจ้งเตือน",
+      "activity": "กิจกรรม",
       "post": "โพสต์",
       "settings": "การตั้งค่า"
+    },
+    "activity": {
+      "title": "กิจกรรม",
+      "lastDay": "วันสุดท้าย",
+      "loadingChart": "กำลังโหลดกราฟ...",
+      "notes": "หมายเหตุ",
+      "newFollowers": "ผู้ติดตามใหม่",
+      "totalFollowers": "ผู้ติดตามทั้งหมด",
+      "now": "ตอนนี้",
+      "hoursAgo": "{{count}} ชั่วโมงที่แล้ว",
+      "time": "เวลา",
+      "noData": "ยังไม่มีข้อมูล"
+    },
+    "chartTooltip": {
+      "topPosts": "โพสต์ยอดนิยม",
+      "notes": "หมายเหตุ",
+      "newFollowers": "ผู้ติดตามใหม่",
+      "biggestFollowers": "ผู้ติดตามที่ใหญ่ที่สุด",
+      "followers": "ผู้ติดตาม",
+      "followersDescription": "ผู้คนที่เริ่มติดตามคุณในช่วงเวลานี้"
     },
     "search": {
       "searchPlaceholder": "ค้นหาโปรไฟล์และโพสต์บน Bluesky",
