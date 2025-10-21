@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.2](https://github.com/lucid-softworks/akari/compare/v1.4.1...v1.4.2) (2025-10-21)
+
+
+### Bug Fixes
+
+* ci for forks ([#377](https://github.com/lucid-softworks/akari/issues/377)) ([8dd0954](https://github.com/lucid-softworks/akari/commit/8dd09542ddc923558e4976f261eb2812f69587d4))
+* ci for forks ([#378](https://github.com/lucid-softworks/akari/issues/378)) ([3eef619](https://github.com/lucid-softworks/akari/commit/3eef619cb5219cac16985886a294d26186bc490d))
+* danish translations ([#373](https://github.com/lucid-softworks/akari/issues/373)) ([e4b3974](https://github.com/lucid-softworks/akari/commit/e4b3974554a6e222f7d37ba5e50c9a3f4c7da551))
+* french translations ([#372](https://github.com/lucid-softworks/akari/issues/372)) ([97fe7f1](https://github.com/lucid-softworks/akari/commit/97fe7f19253e39e5dfad4d4235a12f10cda5263f))
+* german translations ([#370](https://github.com/lucid-softworks/akari/issues/370)) ([507d09f](https://github.com/lucid-softworks/akari/commit/507d09f47a099c75722b99bde59515c66b2d147a))
+* it translations ([#379](https://github.com/lucid-softworks/akari/issues/379)) ([67f2865](https://github.com/lucid-softworks/akari/commit/67f2865d2ca2e523c9dade235c4143760e64be0c))
+* preview ci task for forks ([#375](https://github.com/lucid-softworks/akari/issues/375)) ([b392b13](https://github.com/lucid-softworks/akari/commit/b392b1368f977d86529e9b857fbf7841b9d0416f))
+
 ## [1.4.1](https://github.com/lucid-softworks/akari/compare/v1.4.0...v1.4.1) (2025-10-19)
 
 
