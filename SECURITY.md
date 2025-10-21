@@ -8,7 +8,7 @@ published so that it always reflects the currently supported release line.
 
 | Version | Status |
 | ------- | ------ |
-| <!-- x-release-please-version -->v1.4.1 | ✅ Active |
+| <!-- x-release-please-version -->v1.4.2 | ✅ Active |
 
 All earlier releases are considered end-of-life and do not receive security
 fixes. Upgrade to the latest version to remain supported.
