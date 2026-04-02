@@ -23,7 +23,7 @@ export function PostsTab({ handle }: PostsTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

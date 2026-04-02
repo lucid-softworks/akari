@@ -23,7 +23,7 @@ export function VideosTab({ handle }: VideosTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

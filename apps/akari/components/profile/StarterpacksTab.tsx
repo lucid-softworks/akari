@@ -72,7 +72,7 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

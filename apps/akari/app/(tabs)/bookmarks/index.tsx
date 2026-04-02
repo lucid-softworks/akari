@@ -36,7 +36,7 @@ export default function BookmarksScreen() {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

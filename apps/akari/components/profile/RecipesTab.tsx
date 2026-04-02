@@ -152,7 +152,7 @@ export function RecipesTab({ handle }: RecipesTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

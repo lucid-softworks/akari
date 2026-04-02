@@ -88,7 +88,7 @@ export function LinksTab({ handle }: LinksTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

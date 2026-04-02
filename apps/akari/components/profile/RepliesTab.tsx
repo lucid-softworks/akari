@@ -23,7 +23,7 @@ export function RepliesTab({ handle }: RepliesTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

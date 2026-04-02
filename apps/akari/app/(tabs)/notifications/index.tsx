@@ -497,7 +497,7 @@ export default function NotificationsScreen() {
       return;
     }
 
-    fetchNextPage();
+    void fetchNextPage();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleRefresh = useCallback(async () => {

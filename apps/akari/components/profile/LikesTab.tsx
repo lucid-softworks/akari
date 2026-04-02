@@ -23,7 +23,7 @@ export function LikesTab({ handle }: LikesTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

@@ -75,7 +75,7 @@ export function FeedsTab({ handle }: FeedsTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

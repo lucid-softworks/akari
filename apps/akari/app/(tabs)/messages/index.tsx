@@ -182,7 +182,7 @@ export function MessagesListScreen({
 
   const handleLoadMore = React.useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 

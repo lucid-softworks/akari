@@ -101,7 +101,7 @@ export function ReposTab({ handle }: ReposTabProps) {
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 

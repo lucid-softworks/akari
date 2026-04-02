@@ -149,7 +149,7 @@ export default function HomeScreen() {
 
   const loadMorePosts = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      void fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
