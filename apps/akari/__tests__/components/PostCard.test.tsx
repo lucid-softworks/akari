@@ -185,119 +185,98 @@ describe('PostCard', () => {
   });
 
   describe('translation actions', () => {
-    const openMenuByDefault = () => {
-      const reactModule = jest.requireMock('react') as typeof actualReact & { useState: jest.Mock };
-      const useStateMock = reactModule.useState as jest.Mock;
-      const actualUseState = actualReact.useState;
-      let callCount = 0;
-
-      useStateMock.mockImplementation(<T,>(initialState: T) => {
-        callCount += 1;
-
-        if (callCount === 4) {
-          return actualUseState(true as unknown as T);
-        }
-
-        return actualUseState(initialState);
+    const openMenu = async (getByRole: any) => {
+      const menuButton = getByRole('button', { name: /actions/i });
+      await act(async () => {
+        fireEvent.press(menuButton);
       });
-
-      return () => {
-        useStateMock.mockImplementation(actualUseState);
-        useStateMock.mockClear();
-      };
     };
 
     it('shows translation panel and loads translation when translate action selected', async () => {
-      const restoreUseState = openMenuByDefault();
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-      try {
-        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+      await openMenu(getByRole);
 
-        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
-        expect(translateOption.props.accessibilityState?.disabled).toBe(false);
+      const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      expect(translateOption.props.accessibilityState?.disabled).toBe(false);
 
+      await act(async () => {
         fireEvent.press(translateOption);
+      });
 
-        await waitFor(() => {
-          expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'en' });
-        });
+      await waitFor(() => {
+        expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'en' });
+      });
 
-        await waitFor(() => {
-          expect(getByText('translated-en')).toBeTruthy();
-        });
-        expect(getByText('post.translation.title')).toBeTruthy();
-      } finally {
-        restoreUseState();
-      }
+      await waitFor(() => {
+        expect(getByText('translated-en')).toBeTruthy();
+      });
+      expect(getByText('post.translation.title')).toBeTruthy();
     });
 
     it('allows selecting a different language for translation', async () => {
-      const restoreUseState = openMenuByDefault();
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-      try {
-        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+      await openMenu(getByRole);
 
-        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      await act(async () => {
         fireEvent.press(translateOption);
+      });
 
-        await waitFor(() => {
-          expect(getByText('translated-en')).toBeTruthy();
-        });
+      await waitFor(() => {
+        expect(getByText('translated-en')).toBeTruthy();
+      });
 
-        const languageSelector = getByRole('button', { name: 'post.translation.selectLanguage' });
+      const languageSelector = getByRole('button', { name: 'post.translation.selectLanguage' });
+      await act(async () => {
         fireEvent.press(languageSelector);
+      });
 
-        const spanishOption = getByText('Spanish');
+      const spanishOption = getByText('Spanish');
+      await act(async () => {
         fireEvent.press(spanishOption);
+      });
 
-        await waitFor(() => {
-          expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'es' });
-        });
+      await waitFor(() => {
+        expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'es' });
+      });
 
-        await waitFor(() => {
-          expect(getByText('translated-es')).toBeTruthy();
-        });
-      } finally {
-        restoreUseState();
-      }
+      await waitFor(() => {
+        expect(getByText('translated-es')).toBeTruthy();
+      });
     });
 
     it('shows an error message when translation fails', async () => {
-      const restoreUseState = openMenuByDefault();
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      mutateAsyncMock.mockRejectedValueOnce(new Error('Boom'));
 
-      try {
-        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-        mutateAsyncMock.mockRejectedValueOnce(new Error('Boom'));
+      const { getByRole, getByText } = render(<PostCard post={basePost} />);
 
-        const { getByRole, getByText } = render(<PostCard post={basePost} />);
+      await openMenu(getByRole);
 
-        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      await act(async () => {
         fireEvent.press(translateOption);
+      });
 
-        await waitFor(() => {
-          expect(getByText('post.translation.error (Boom)')).toBeTruthy();
-        });
-      } finally {
-        restoreUseState();
-      }
+      await waitFor(() => {
+        expect(getByText('post.translation.error (Boom)')).toBeTruthy();
+      });
     });
 
     it('disables translate option when no post text is available', async () => {
-      const restoreUseState = openMenuByDefault();
+      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
+      const postWithoutText: Post = { ...basePost, text: '' };
 
-      try {
-        mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-        const postWithoutText: Post = { ...basePost, text: '' };
+      const { getByRole } = render(<PostCard post={postWithoutText} />);
 
-        const { getByRole } = render(<PostCard post={postWithoutText} />);
+      await openMenu(getByRole);
 
-        const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
-        expect(translateOption.props.accessibilityState?.disabled).toBe(true);
-      } finally {
-        restoreUseState();
-      }
+      const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
+      expect(translateOption.props.accessibilityState?.disabled).toBe(true);
     });
   });
 
