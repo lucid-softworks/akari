@@ -89,6 +89,73 @@ type HardcodedTabBarProps = BottomTabBarProps & {
   avatarUri?: string;
 };
 
+const TabButton = React.memo(function TabButton({
+  tabKey,
+  route,
+  isFocused,
+  color,
+  badgeCount,
+  avatarUri,
+  navigation,
+}: {
+  tabKey: HardcodedTabKey;
+  route: { key: string; name: string };
+  isFocused: boolean;
+  color: string;
+  badgeCount: number;
+  avatarUri?: string;
+  navigation: HardcodedTabBarProps['navigation'];
+}) {
+  const handlePress = useCallback(() => {
+    const event = navigation.emit({
+      type: 'tabPress',
+      target: route.key,
+      canPreventDefault: true,
+    });
+
+    if (isFocused) {
+      tabScrollRegistry.handleTabPress(tabKey);
+    }
+
+    if (!isFocused && !event.defaultPrevented) {
+      navigation.navigate(route.name);
+    }
+  }, [navigation, route.key, route.name, isFocused, tabKey]);
+
+  const handleLongPress = useCallback(() => {
+    navigation.emit({
+      type: 'tabLongPress',
+      target: route.key,
+    });
+  }, [navigation, route.key]);
+
+  return (
+    <HapticTab
+      accessibilityRole="button"
+      accessibilityState={{ selected: isFocused }}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+      style={hardcodedTabStyles.tabButton}
+    >
+      <View style={hardcodedTabStyles.iconContainer}>
+        {tabKey === 'messages' || tabKey === 'notifications' ? (
+          <View style={hardcodedTabStyles.badgeWrapper}>
+            <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
+            <TabBadge count={badgeCount} size="small" />
+          </View>
+        ) : tabKey === 'profile' ? (
+          <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
+        ) : (
+          <TabBarIcon
+            name={tabKey === 'index' ? 'house.fill' : tabKey === 'search' ? 'magnifyingglass' : 'gearshape.fill'}
+            color={color}
+          />
+        )}
+      </View>
+    </HapticTab>
+  );
+});
+
 function HardcodedTabBar({
   state,
   navigation,
@@ -137,54 +204,17 @@ function HardcodedTabBar({
             const badgeCount =
               tabKey === 'messages' ? unreadMessagesCount : tabKey === 'notifications' ? unreadNotificationsCount : 0;
 
-            const handlePress = () => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
-
-              if (isFocused) {
-                tabScrollRegistry.handleTabPress(tabKey);
-              }
-
-              if (!isFocused && !event.defaultPrevented) {
-                navigation.navigate(route.name);
-              }
-            };
-
-            const handleLongPress = () => {
-              navigation.emit({
-                type: 'tabLongPress',
-                target: route.key,
-              });
-            };
-
             return (
-              <HapticTab
+              <TabButton
                 key={tabKey}
-                accessibilityRole="button"
-                accessibilityState={{ selected: isFocused }}
-                onPress={handlePress}
-                onLongPress={handleLongPress}
-                style={hardcodedTabStyles.tabButton}
-              >
-                <View style={hardcodedTabStyles.iconContainer}>
-                  {tabKey === 'messages' || tabKey === 'notifications' ? (
-                    <View style={hardcodedTabStyles.badgeWrapper}>
-                      <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
-                      <TabBadge count={badgeCount} size="small" />
-                    </View>
-                  ) : tabKey === 'profile' ? (
-                    <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
-                  ) : (
-                    <TabBarIcon
-                      name={tabKey === 'index' ? 'house.fill' : tabKey === 'search' ? 'magnifyingglass' : 'gearshape.fill'}
-                      color={color}
-                    />
-                  )}
-                </View>
-              </HapticTab>
+                tabKey={tabKey}
+                route={route}
+                isFocused={isFocused}
+                color={color}
+                badgeCount={badgeCount}
+                avatarUri={avatarUri}
+                navigation={navigation}
+              />
             );
           })}
         </View>
