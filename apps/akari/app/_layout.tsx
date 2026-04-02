@@ -35,6 +35,15 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: REACT_QUERY_CACHE_MAX_AGE,
+      retry: 2,
+    },
+    dehydrate: {
+      shouldDehydrateQuery: (query) => {
+        // Never persist pending queries -- they cause hundreds of
+        // "Uncaught (in promise) Error: redacted" on next hydration
+        // because the original fetch promise is gone.
+        return query.state.status === 'success';
+      },
     },
   },
 });
@@ -44,7 +53,7 @@ const queryCachePersister: Persister = {
     try {
       storage.setItem(REACT_QUERY_CACHE_STORAGE_KEY, client);
     } catch (error) {
-      console.error('Failed to persist React Query cache', error);
+      if (__DEV__) console.error('Failed to persist React Query cache', error);
     }
   },
   restoreClient: async () => {
@@ -52,7 +61,7 @@ const queryCachePersister: Persister = {
       const cache = storage.getItem(REACT_QUERY_CACHE_STORAGE_KEY);
       return cache ?? undefined;
     } catch (error) {
-      console.error('Failed to restore React Query cache', error);
+      if (__DEV__) console.error('Failed to restore React Query cache', error);
       storage.removeItem(REACT_QUERY_CACHE_STORAGE_KEY);
       return undefined;
     }
@@ -68,7 +77,8 @@ const persistOptions = {
   buster: REACT_QUERY_CACHE_BUSTER,
   dehydrateOptions: {
     shouldDehydrateMutation: () => false,
-    shouldDehydrateQuery: (query: Query) => query.meta?.persist !== false,
+    shouldDehydrateQuery: (query: Query) =>
+      query.state.status === 'success' && query.meta?.persist !== false,
   },
 } satisfies PersistQueryClientProviderProps['persistOptions'];
 
