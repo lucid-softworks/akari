@@ -1,6 +1,6 @@
 import { getAvailableLocales, setLocale } from "@/utils/i18n";
 import { getLocales } from "expo-localization";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { MMKV } from "react-native-mmkv";
 
 type LanguageContextType = {
@@ -55,18 +55,21 @@ export const LanguageProvider = ({
     initializeLanguage();
   }, [availableLocales]);
 
-  const changeLanguage = (locale: string) => {
+  const changeLanguage = useCallback((locale: string) => {
     if (availableLocales.includes(locale)) {
       setCurrentLocale(locale);
       setLocale(locale);
       storage.set(LANGUAGE_KEY, locale);
     }
-  };
+  }, [availableLocales]);
+
+  const value = useMemo(
+    () => ({ currentLocale, changeLanguage, availableLocales }),
+    [currentLocale, changeLanguage, availableLocales],
+  );
 
   return (
-    <LanguageContext.Provider
-      value={{ currentLocale, changeLanguage, availableLocales }}
-    >
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
