@@ -10,6 +10,7 @@ export function useCurrentAccount() {
     queryFn: () => {
       return storage.getItem('currentAccount');
     },
+    initialData: () => storage.getItem('currentAccount') ?? undefined,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
