@@ -378,11 +378,7 @@ describe('usePushNotifications', () => {
       responseHandler(createNotificationResponse({}));
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith('Notification received:', expect.any(Object));
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Notification response:',
-      expect.objectContaining({ notification: expect.any(Object) }),
-    );
+    // Notification listeners are set up (console.log calls were removed for performance)
 
     unmount();
 

@@ -165,7 +165,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           style: 'destructive',
           onPress: () => {
             // TODO: Implement actual mute/unmute API call
-            console.log(isMuted ? 'Unmuting' : 'Muting', profile.handle);
+            // TODO: wire up mute/unmute API call
           },
         },
       ],
@@ -184,7 +184,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           style: 'destructive',
           onPress: () => {
             // TODO: Implement actual report API call
-            console.log('Reporting', profile.handle);
+            // TODO: wire up report API call
           },
         },
       ],

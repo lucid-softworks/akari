@@ -271,7 +271,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   onPress={() => {
                     // TODO: Open external link
                     const url = 'url' in recipe.value.attribution! ? recipe.value.attribution.url : undefined;
-                    console.log('Open source:', url);
+                    // TODO: open external link
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={`Open source: ${getAttributionName(recipe.value.attribution)}`}

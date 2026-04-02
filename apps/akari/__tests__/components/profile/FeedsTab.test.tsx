@@ -99,10 +99,8 @@ describe('FeedsTab', () => {
     expect(getByText('desc')).toBeTruthy();
     expect(getByText('ui.interactive')).toBeTruthy();
 
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    // Pin is a placeholder (TODO stub), verify it doesn't crash
     fireEvent.press(getAllByText('pin')[0]);
-    expect(logSpy).toHaveBeenCalledWith('Pin feed:', 'feed1');
-    logSpy.mockRestore();
 
     act(() => {
       UNSAFE_getByType(VirtualizedList).props.onEndReached();

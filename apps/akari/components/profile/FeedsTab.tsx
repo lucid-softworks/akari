@@ -30,7 +30,7 @@ function FeedItem({ feed }: FeedItemProps) {
 
   const handlePinPress = () => {
     // TODO: Implement pin functionality
-    console.log('Pin feed:', feed.uri);
+    // TODO: implement pin functionality
   };
 
   return (

@@ -82,14 +82,12 @@ export function usePushNotifications() {
 
     // Listen for incoming notifications when app is in foreground
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('Notification received:', notification);
       // You can handle foreground notifications here
       // For example, update badge count, show in-app notification, etc.
     });
 
     // Listen for user interaction with notifications
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log('Notification response:', response);
 
       // Handle deep linking based on notification data
       const data = response.notification.request.content.data;

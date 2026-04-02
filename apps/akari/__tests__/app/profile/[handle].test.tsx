@@ -241,21 +241,18 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByText('search posts'));
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
 
+    // These actions are placeholders (TODO stubs), verify they don't crash
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('add to lists'));
-    expect(logSpy).toHaveBeenCalledWith('Add to lists');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('mute account'));
-    expect(logSpy).toHaveBeenCalledWith('Mute account');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('block account'));
-    expect(logSpy).toHaveBeenCalledWith('Block account');
 
     fireEvent.press(getByText('header'));
     fireEvent.press(getByText('report account'));
-    expect(logSpy).toHaveBeenCalledWith('Report account');
 
     logSpy.mockRestore();
   });

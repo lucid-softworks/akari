@@ -161,7 +161,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   // Get root post if this is a reply to a reply
   const { data: rootPost } = useRootPost(post?.uri || null);
 
-  console.log('PostDetailView', { actor, rKey, post, parentPost, rootPost });
 
   // Get the full thread
   // const { data: threadData, isLoading: threadLoading } = usePostThread(post?.uri || null);

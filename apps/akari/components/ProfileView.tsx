@@ -112,25 +112,21 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   const handleAddToLists = () => {
     // TODO: Implement add to lists functionality
-    console.log('Add to lists');
     setShowDropdown(false);
   };
 
   const handleMuteAccount = () => {
     // TODO: Implement mute functionality
-    console.log('Mute account');
     setShowDropdown(false);
   };
 
   const handleBlockPress = () => {
     // TODO: Implement block functionality
-    console.log('Block account');
     setShowDropdown(false);
   };
 
   const handleReportAccount = () => {
     // TODO: Implement report functionality
-    console.log('Report account');
     setShowDropdown(false);
   };
 
