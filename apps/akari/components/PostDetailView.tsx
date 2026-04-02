@@ -312,12 +312,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             uri: post.uri,
             cid: post.cid,
           }}
-          onPress={() => {
-            // Navigate to this post in current tab
-            const uriParts = post.uri.split('/');
-            const rKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: post.author.handle, rKey });
-          }}
         />
 
         {/* Replies */}
