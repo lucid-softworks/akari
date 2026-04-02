@@ -25,13 +25,11 @@ import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProfileTabType } from '@/types/profile';
 
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
-  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
@@ -56,7 +54,7 @@ export default function ProfileScreen() {
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <ThemedView style={styles.container}>
         <ProfileHeaderSkeleton />
       </ThemedView>
     );
@@ -159,7 +157,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+    <ThemedView style={styles.container}>
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
