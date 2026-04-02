@@ -5,15 +5,13 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorRepos } from '@/hooks/queries/useAuthorRepos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyTangledRepo } from '@/bluesky-api';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
-const ESTIMATED_REPO_CARD_HEIGHT = 168;
-
-type ReposTabProps = {
+type ReposTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
@@ -95,26 +93,9 @@ function RepoItem({ repo }: RepoItemProps) {
   );
 }
 
-export function ReposTab({ handle }: ReposTabProps) {
+export function ReposTab({ handle, visibleCount = 10 }: ReposTabProps) {
   const { t } = useTranslation();
-  const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRepos(handle);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
-
-  const renderItem = ({ item }: { item: BlueskyTangledRepo }) => <RepoItem repo={item} />;
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
-  };
+  const { data: repos, isLoading } = useAuthorRepos(handle);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
@@ -128,18 +109,14 @@ export function ReposTab({ handle }: ReposTabProps) {
     );
   }
 
+  const visibleRepos = repos.slice(0, visibleCount);
+
   return (
-    <VirtualizedList
-      data={repos}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.uri}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      estimatedItemSize={ESTIMATED_REPO_CARD_HEIGHT}
-    />
+    <View>
+      {visibleRepos.map((item) => (
+        <RepoItem key={item.uri} repo={item} />
+      ))}
+    </View>
   );
 }
 
@@ -150,14 +127,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
     opacity: 0.6,
   },
   repoCard: {

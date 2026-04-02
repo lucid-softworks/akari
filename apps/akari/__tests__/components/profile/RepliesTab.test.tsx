@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 
 jest.mock('@/hooks/queries/useAuthorReplies');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ 
+jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   usePathname: jest.fn(() => '/profile'),
 }));
@@ -47,9 +47,6 @@ describe('RepliesTab', () => {
     mockUseAuthorReplies.mockReturnValue({
       data: [],
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<RepliesTab handle="alice" />);
@@ -60,9 +57,6 @@ describe('RepliesTab', () => {
     mockUseAuthorReplies.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<RepliesTab handle="alice" />);
@@ -82,65 +76,11 @@ describe('RepliesTab', () => {
     mockUseAuthorReplies.mockReturnValue({
       data: [reply],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<RepliesTab handle="alice" />);
     fireEvent.press(getByText('Hello world'));
     expect(mockPush).toHaveBeenCalledWith(`/(tabs)/index/user-profile/user/post/1`);
-  });
-
-  it('fetches more replies on end reached', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorReplies.mockReturnValue({
-      data: [
-        {
-          uri: 'at://did:plc:test/app.bsky.feed.post/1',
-          record: { text: 'Hello world' },
-          author: { handle: 'user', displayName: 'User', avatar: '' },
-          indexedAt: '2024-01-01T00:00:00.000Z',
-          likeCount: 0,
-          replyCount: 0,
-          repostCount: 0,
-        },
-      ],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    });
-
-    const { getByRole } = render(<RepliesTab handle="alice" />);
-    fireEvent(getByRole('list'), 'onEndReached');
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('shows loading footer while fetching next page', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorReplies.mockReturnValue({
-      data: [
-        {
-          uri: 'at://did:plc:test/app.bsky.feed.post/1',
-          record: { text: 'Hello world' },
-          author: { handle: 'user', displayName: 'User', avatar: '' },
-          indexedAt: '2024-01-01T00:00:00.000Z',
-          likeCount: 0,
-          replyCount: 0,
-          repostCount: 0,
-        },
-      ],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { getByRole, getByText } = render(<RepliesTab handle="alice" />);
-    expect(getByText('common.loading')).toBeTruthy();
-    fireEvent(getByRole('list'), 'onEndReached');
-    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 
   it('formats reply data and handles missing parent handle', () => {
@@ -180,9 +120,6 @@ describe('RepliesTab', () => {
     mockUseAuthorReplies.mockReturnValue({
       data: replies,
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<RepliesTab handle="alice" />);
@@ -199,4 +136,3 @@ describe('RepliesTab', () => {
     });
   });
 });
-

@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import React, { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -31,6 +31,7 @@ import type { ProfileTabType } from '@/types/profile';
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
+  const [visibleCount, setVisibleCount] = useState(5);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -113,9 +114,17 @@ export default function ProfileScreen() {
 
   const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
-    // Scroll to top when switching tabs
+    setVisibleCount(5); // Reset batch size on tab switch
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
+
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const scrollProgress = (contentOffset.y + layoutMeasurement.height) / contentSize.height;
+    if (scrollProgress > 0.7) {
+      setVisibleCount((prev) => prev + 10);
+    }
+  }, []);
 
   const renderTabContent = () => {
     if (!currentAccount?.handle) {
@@ -126,27 +135,28 @@ export default function ProfileScreen() {
       );
     }
 
+    const vc = visibleCount;
     switch (activeTab) {
       case 'posts':
-        return <PostsTab handle={currentAccount.handle} />;
+        return <PostsTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'replies':
-        return <RepliesTab handle={currentAccount.handle} />;
+        return <RepliesTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'likes':
-        return <LikesTab handle={currentAccount.handle} />;
+        return <LikesTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'media':
-        return <MediaTab handle={currentAccount.handle} />;
+        return <MediaTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'videos':
-        return <VideosTab handle={currentAccount.handle} />;
+        return <VideosTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'feeds':
-        return <FeedsTab handle={currentAccount.handle} />;
+        return <FeedsTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'repos':
-        return <ReposTab handle={currentAccount.handle} />;
+        return <ReposTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'starterpacks':
-        return <StarterpacksTab handle={currentAccount.handle} />;
+        return <StarterpacksTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'recipes':
-        return <RecipesTab handle={currentAccount.handle} />;
+        return <RecipesTab handle={currentAccount.handle} visibleCount={vc} />;
       case 'links':
-        return <LinksTab handle={currentAccount.handle} />;
+        return <LinksTab handle={currentAccount.handle} visibleCount={vc} />;
       default:
         return (
           <ThemedView style={styles.emptyState}>
@@ -163,6 +173,8 @@ export default function ProfileScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={200}
       >
         <ProfileHeader
           profile={{
@@ -183,29 +195,23 @@ export default function ProfileScreen() {
           dropdownRef={dropdownRef}
         />
         <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
-
         {renderTabContent()}
       </ScrollView>
 
-      {/* Dropdown rendered at root level */}
       <ProfileDropdown
         isVisible={showDropdown}
         onCopyLink={handleCopyLink}
         onSearchPosts={handleSearchPosts}
         onAddToLists={() => {
-          // TODO: Implement add to lists functionality
           setShowDropdown(false);
         }}
         onMuteAccount={() => {
-          // TODO: Implement mute account functionality
           setShowDropdown(false);
         }}
         onBlockPress={() => {
-          // TODO: Implement block account functionality
           setShowDropdown(false);
         }}
         onReportAccount={() => {
-          // TODO: Implement report account functionality
           setShowDropdown(false);
         }}
         isFollowing={false}

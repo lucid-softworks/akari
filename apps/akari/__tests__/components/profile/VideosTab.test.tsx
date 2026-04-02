@@ -1,17 +1,15 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
-import { Text } from 'react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 
 import { VideosTab } from '@/components/profile/VideosTab';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorVideos');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ 
+jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   usePathname: jest.fn(() => '/profile'),
 }));
@@ -61,9 +59,6 @@ describe('VideosTab', () => {
     mockUseAuthorVideos.mockReturnValue({
       data: undefined,
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<VideosTab handle="alice" />);
@@ -76,9 +71,6 @@ describe('VideosTab', () => {
     mockUseAuthorVideos.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<VideosTab handle="alice" />);
@@ -97,83 +89,11 @@ describe('VideosTab', () => {
     mockUseAuthorVideos.mockReturnValue({
       data: [video],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<VideosTab handle="alice" />);
     fireEvent.press(getByText('at://video/1'));
     expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice/post/1');
-  });
-
-  it('fetches next page on end reached', () => {
-    const video: Video = {
-      uri: 'at://video/1',
-      author: { handle: 'alice' },
-      indexedAt: '2024-01-01',
-      cid: 'cid1',
-    };
-
-    const fetchNextPage = jest.fn();
-    mockUseAuthorVideos.mockReturnValue({
-      data: [video],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    });
-
-    const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(VirtualizedList);
-    act(() => {
-      list.props.onEndReached();
-    });
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('shows loading footer when fetching next page', () => {
-    const video: Video = {
-      uri: 'at://video/1',
-      author: { handle: 'alice' },
-      indexedAt: '2024-01-01',
-      cid: 'cid1',
-    };
-
-    mockUseAuthorVideos.mockReturnValue({
-      data: [video],
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { getByText } = render(<VideosTab handle="alice" />);
-    expect(getByText('common.loading')).toBeTruthy();
-  });
-
-  it('does not fetch when no more videos', () => {
-    const video: Video = {
-      uri: 'at://video/1',
-      author: { handle: 'alice' },
-      indexedAt: '2024-01-01',
-      cid: 'cid1',
-    };
-    const fetchNextPage = jest.fn();
-    mockUseAuthorVideos.mockReturnValue({
-      data: [video],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    const { UNSAFE_getByType } = render(<VideosTab handle="alice" />);
-    const list = UNSAFE_getByType(VirtualizedList);
-    act(() => {
-      list.props.onEndReached();
-    });
-    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 
   it('formats reply data and handles missing parent handle', () => {
@@ -209,9 +129,6 @@ describe('VideosTab', () => {
     mockUseAuthorVideos.mockReturnValue({
       data: videos,
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<VideosTab handle="alice" />);
@@ -228,4 +145,3 @@ describe('VideosTab', () => {
     });
   });
 });
-

@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 
 let mockPostCard: jest.Mock;
 
@@ -27,7 +27,7 @@ jest.mock('@/components/PostCard', () => {
 jest.mock('@/hooks/queries/useAuthorPosts');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useThemeColor');
-jest.mock('expo-router', () => ({ 
+jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   usePathname: jest.fn(() => '/profile'),
 }));
@@ -38,7 +38,6 @@ import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 describe('PostsTab', () => {
   const mockUseAuthorPosts = useAuthorPosts as jest.Mock;
@@ -55,9 +54,6 @@ describe('PostsTab', () => {
     mockUseAuthorPosts.mockReturnValue({
       data: undefined,
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<PostsTab handle="alice" />);
@@ -68,9 +64,6 @@ describe('PostsTab', () => {
     mockUseAuthorPosts.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<PostsTab handle="alice" />);
@@ -100,9 +93,6 @@ describe('PostsTab', () => {
     mockUseAuthorPosts.mockReturnValue({
       data: [post, invalid],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: false,
     });
 
     const { getByRole } = render(<PostsTab handle="alice" />);
@@ -116,41 +106,6 @@ describe('PostsTab', () => {
       author: { handle: 'bob', displayName: 'Bob' },
       text: 'parent',
     });
-  });
-
-  it('fetches next page when end of list is reached', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorPosts.mockReturnValue({
-      data: [{ uri: 'at://p', indexedAt: '1', record: {}, author: { handle: 'a' } }],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    });
-
-    const { UNSAFE_getByType } = render(<PostsTab handle="alice" />);
-    act(() => {
-      UNSAFE_getByType(VirtualizedList).props.onEndReached();
-    });
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('does not fetch next page when already fetching and shows footer', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorPosts.mockReturnValue({
-      data: [{ uri: 'at://p', indexedAt: '1', record: {}, author: { handle: 'a' } }],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { getByText, UNSAFE_getByType } = render(<PostsTab handle="alice" />);
-    expect(getByText('common.loading')).toBeTruthy();
-    act(() => {
-      UNSAFE_getByType(VirtualizedList).props.onEndReached();
-    });
-    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 
   it('falls back to unknown when parent handle missing', () => {
@@ -174,9 +129,6 @@ describe('PostsTab', () => {
     mockUseAuthorPosts.mockReturnValue({
       data: [post],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<PostsTab handle="alice" />);
@@ -187,4 +139,3 @@ describe('PostsTab', () => {
     });
   });
 });
-

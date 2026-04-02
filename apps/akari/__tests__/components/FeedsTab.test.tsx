@@ -1,11 +1,10 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyFeed } from '@/bluesky-api';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorFeeds');
 jest.mock('@/hooks/useThemeColor');
@@ -26,7 +25,7 @@ describe('FeedsTab', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockReturnValue('#000');
-    mockUseTranslation.mockReturnValue({ 
+    mockUseTranslation.mockReturnValue({
       t: (key: string, options?: any) => {
         // Handle specific translation keys for testing
         if (key === 'ui.likes' && options && options.count) {
@@ -50,9 +49,6 @@ describe('FeedsTab', () => {
     mockUseAuthorFeeds.mockReturnValue({
       data: undefined,
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByTestId } = render(<FeedsTab handle="user.test" />);
@@ -63,17 +59,13 @@ describe('FeedsTab', () => {
     mockUseAuthorFeeds.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<FeedsTab handle="user.test" />);
     expect(getByText('profile.noFeeds')).toBeTruthy();
   });
 
-  it('renders feeds and loads more when scrolled to end', () => {
-    const fetchNextPage = jest.fn();
+  it('renders feeds with correct content', () => {
     const feeds = [
       {
         uri: 'at://example/feed',
@@ -88,45 +80,13 @@ describe('FeedsTab', () => {
     mockUseAuthorFeeds.mockReturnValue({
       data: feeds,
       isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
     });
 
-    const { getByText, UNSAFE_getByType } = render(<FeedsTab handle="user.test" />);
+    const { getByText } = render(<FeedsTab handle="user.test" />);
 
     expect(getByText('Test Feed')).toBeTruthy();
     expect(getByText('by @alice')).toBeTruthy();
     expect(getByText('5 likes')).toBeTruthy();
     expect(getByText('ui.interactive')).toBeTruthy();
-
-    const list = UNSAFE_getByType(VirtualizedList);
-    fireEvent(list, 'onEndReached');
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('shows loading footer while fetching next page', () => {
-    const feeds = [
-      {
-        uri: 'at://example/feed',
-        displayName: 'Test Feed',
-        description: 'Feed description',
-        creator: { handle: 'alice' },
-        likeCount: 5,
-        acceptsInteractions: true,
-      },
-    ] as unknown as BlueskyFeed[];
-
-    mockUseAuthorFeeds.mockReturnValue({
-      data: feeds,
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { getByText } = render(<FeedsTab handle="user.test" />);
-    expect(getByText('common.loading')).toBeTruthy();
   });
 });
-

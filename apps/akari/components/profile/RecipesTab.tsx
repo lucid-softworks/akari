@@ -9,12 +9,12 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorRecipes } from '@/hooks/queries/useAuthorRecipes';
 import { usePdsUrlFromDid } from '@/hooks/queries/usePdsUrl';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { resolveRecipeDefinition } from '@/utils/recipeDefinitions';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
 function formatTime(timeString: string) {
   if (!timeString || timeString === 'PT0S') return 'N/A';
@@ -34,9 +34,7 @@ function formatTime(timeString: string) {
   return parts.join(' ') || 'N/A';
 }
 
-const ESTIMATED_RECIPE_CARD_HEIGHT = 200;
-
-type RecipesTabProps = {
+type RecipesTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
@@ -144,17 +142,11 @@ function RecipeItem({ recipe, onPress }: RecipeItemProps) {
   );
 }
 
-export function RecipesTab({ handle }: RecipesTabProps) {
+export function RecipesTab({ handle, visibleCount = 10 }: RecipesTabProps) {
   const { t } = useTranslation();
-  const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRecipes(handle);
+  const { data: recipes, isLoading } = useAuthorRecipes(handle);
   const [selectedRecipe, setSelectedRecipe] = useState<BlueskyRecipeRecord | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
 
   const handleRecipePress = (recipe: BlueskyRecipeRecord) => {
     setSelectedRecipe(recipe);
@@ -164,19 +156,6 @@ export function RecipesTab({ handle }: RecipesTabProps) {
   const handleCloseModal = () => {
     setModalVisible(false);
     setSelectedRecipe(null);
-  };
-
-  const renderItem = ({ item }: { item: BlueskyRecipeRecord }) => (
-    <RecipeItem recipe={item} onPress={() => handleRecipePress(item)} />
-  );
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
   };
 
   if (isLoading) {
@@ -191,19 +170,15 @@ export function RecipesTab({ handle }: RecipesTabProps) {
     );
   }
 
+  const visibleRecipes = recipes.slice(0, visibleCount);
+
   return (
     <>
-      <VirtualizedList
-        data={recipes}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.uri}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
-        estimatedItemSize={ESTIMATED_RECIPE_CARD_HEIGHT}
-      />
+      <View>
+        {visibleRecipes.map((item) => (
+          <RecipeItem key={item.uri} recipe={item} onPress={() => handleRecipePress(item)} />
+        ))}
+      </View>
 
       <RecipeModal visible={modalVisible} onClose={handleCloseModal} recipe={selectedRecipe} />
     </>
@@ -217,14 +192,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
     opacity: 0.6,
   },
   recipeCard: {

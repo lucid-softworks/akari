@@ -1,11 +1,9 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
-import { Text } from 'react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import { router } from 'expo-router';
 
 import { LikesTab } from '@/components/profile/LikesTab';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useTranslation } from '@/hooks/useTranslation';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@/hooks/queries/useAuthorLikes');
 jest.mock('@/hooks/useTranslation');
@@ -79,9 +77,6 @@ describe('LikesTab', () => {
     mockUseAuthorLikes.mockReturnValue({
       data: undefined,
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<LikesTab handle="tester" />);
@@ -92,9 +87,6 @@ describe('LikesTab', () => {
     mockUseAuthorLikes.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<LikesTab handle="tester" />);
@@ -102,45 +94,15 @@ describe('LikesTab', () => {
   });
 
   it('renders likes and navigates to post on press', () => {
-    const fetchNextPage = jest.fn();
     const like = createLike();
     mockUseAuthorLikes.mockReturnValue({
       data: [like],
       isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
     });
 
-    const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
+    const { getByText } = render(<LikesTab handle="tester" />);
     fireEvent.press(getByText('liked post'));
     expect(router.push).toHaveBeenCalledWith(`/(tabs)/index/user-profile/tester/post/1`);
-
-    const list = UNSAFE_getByType(VirtualizedList);
-    act(() => {
-      list.props.onEndReached();
-    });
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('shows loading footer and avoids fetching while already loading', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorLikes.mockReturnValue({
-      data: [createLike()],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { getByText, UNSAFE_getByType } = render(<LikesTab handle="tester" />);
-    expect(getByText('common.loading')).toBeTruthy();
-
-    const list = UNSAFE_getByType(VirtualizedList);
-    act(() => {
-      list.props.onEndReached();
-    });
-    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 
   it('formats reply information and falls back to unknown handle', () => {
@@ -167,9 +129,6 @@ describe('LikesTab', () => {
     mockUseAuthorLikes.mockReturnValue({
       data: [likeWithHandle, likeWithoutHandle],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<LikesTab handle="tester" />);
@@ -186,4 +145,3 @@ describe('LikesTab', () => {
     });
   });
 });
-

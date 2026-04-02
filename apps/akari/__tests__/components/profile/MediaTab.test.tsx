@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react-native';
 
 import { MediaTab } from '@/components/profile/MediaTab';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { router } from 'expo-router';
 
@@ -47,9 +46,6 @@ describe('MediaTab', () => {
     mockUseAuthorMedia.mockReturnValue({
       data: undefined,
       isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<MediaTab handle="alice" />);
@@ -61,9 +57,6 @@ describe('MediaTab', () => {
     mockUseAuthorMedia.mockReturnValue({
       data: [],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<MediaTab handle="alice" />);
@@ -80,9 +73,6 @@ describe('MediaTab', () => {
         },
       ],
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     const { getByText } = render(<MediaTab handle="alice" />);
@@ -108,9 +98,6 @@ describe('MediaTab', () => {
     mockUseAuthorMedia.mockReturnValue({
       data: media,
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<MediaTab handle="alice" />);
@@ -152,9 +139,6 @@ describe('MediaTab', () => {
     mockUseAuthorMedia.mockReturnValue({
       data: media,
       isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
     });
 
     render(<MediaTab handle="alice" />);
@@ -169,72 +153,5 @@ describe('MediaTab', () => {
       author: { handle: 'unknown', displayName: 'Anon' },
       text: 'mystery',
     });
-  });
-
-  it('fetches next page when end is reached', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorMedia.mockReturnValue({
-      data: [
-        {
-          uri: 'at://post1',
-          indexedAt: '2024-01-01T00:00:00Z',
-          author: { handle: 'user1' },
-        },
-      ],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    });
-
-    const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(VirtualizedList);
-    list.props.onEndReached();
-    expect(fetchNextPage).toHaveBeenCalled();
-  });
-
-  it('does not fetch next page while already fetching and shows footer', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorMedia.mockReturnValue({
-      data: [
-        {
-          uri: 'at://post1',
-          indexedAt: '2024-01-01T00:00:00Z',
-          author: { handle: 'user1' },
-        },
-      ],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    const { UNSAFE_getByType, getByText } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(VirtualizedList);
-    list.props.onEndReached();
-    expect(fetchNextPage).not.toHaveBeenCalled();
-    expect(getByText('common.loading')).toBeTruthy();
-  });
-
-  it('does not fetch when no further media', () => {
-    const fetchNextPage = jest.fn();
-    mockUseAuthorMedia.mockReturnValue({
-      data: [
-        {
-          uri: 'at://post1',
-          indexedAt: '2024-01-01T00:00:00Z',
-          author: { handle: 'user1' },
-        },
-      ],
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    const { UNSAFE_getByType } = render(<MediaTab handle="alice" />);
-    const list = UNSAFE_getByType(VirtualizedList);
-    list.props.onEndReached();
-    expect(fetchNextPage).not.toHaveBeenCalled();
   });
 });

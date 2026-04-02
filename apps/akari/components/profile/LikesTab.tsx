@@ -1,91 +1,35 @@
-import { StyleSheet } from 'react-native';
+import { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
-type LikesTabProps = {
+type LikesTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
-const ESTIMATED_POST_CARD_HEIGHT = 320;
-
-export function LikesTab({ handle }: LikesTabProps) {
+export function LikesTab({ handle, visibleCount = 10 }: LikesTabProps) {
   const { t } = useTranslation();
-  const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorLikes(handle);
+  const { data: likes, isLoading } = useAuthorLikes(handle);
   const navigateToPost = useNavigateToPost();
 
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
-
-  const renderItem = ({ item }: { item: any }) => {
-    const replyTo = item.reply?.parent
-      ? {
-          author: {
-            handle: item.reply.parent.author?.handle || 'unknown',
-            displayName: item.reply.parent.author?.displayName,
-          },
-          text: item.reply.parent.record?.text as string | undefined,
-        }
-      : undefined;
-
-    return (
-      <PostCard
-        post={{
-          id: item.uri,
-          text: item.record?.text as string | undefined,
-          author: {
-            did: item.author.did,
-            handle: item.author.handle,
-            displayName: item.author.displayName,
-            avatar: item.author.avatar,
-          },
-          createdAt: formatRelativeTime(item.indexedAt),
-          likeCount: item.likeCount || 0,
-          commentCount: item.replyCount || 0,
-          repostCount: item.repostCount || 0,
-          embed: item.embed,
-          embeds: item.embeds,
-          labels: item.labels,
-          viewer: item.viewer,
-          facets: (item.record as any)?.facets,
-          replyTo,
-          uri: item.uri,
-          cid: item.cid,
-        }}
-        onPress={() => {
-          // Navigate to post in current tab context
-          const uriParts = item.uri.split('/');
-          const rKey = uriParts[uriParts.length - 1];
-          navigateToPost({ actor: item.author.handle, rKey });
-        }}
-      />
-    );
-  };
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
-  };
+  const filteredLikes = useMemo(
+    () => (likes ?? []).filter((item) => item && item.uri),
+    [likes],
+  );
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
   }
 
-  if (!likes || likes.length === 0) {
+  if (filteredLikes.length === 0) {
     return (
       <ThemedView style={styles.emptyContainer}>
         <ThemedText style={styles.emptyText}>{t('profile.noLikes')}</ThemedText>
@@ -93,20 +37,55 @@ export function LikesTab({ handle }: LikesTabProps) {
     );
   }
 
-  const filteredLikes = likes.filter((item) => item && item.uri);
+  const visibleLikes = filteredLikes.slice(0, visibleCount);
 
   return (
-    <VirtualizedList
-      data={filteredLikes}
-      renderItem={renderItem}
-      keyExtractor={(item) => `${item.uri}-${item.indexedAt}`}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
-    />
+    <View>
+      {visibleLikes.map((item) => {
+        const replyTo = item.reply?.parent
+          ? {
+              author: {
+                handle: item.reply.parent.author?.handle || 'unknown',
+                displayName: item.reply.parent.author?.displayName,
+              },
+              text: item.reply.parent.record?.text as string | undefined,
+            }
+          : undefined;
+
+        return (
+          <PostCard
+            key={`${item.uri}-${item.indexedAt}`}
+            post={{
+              id: item.uri,
+              text: item.record?.text as string | undefined,
+              author: {
+                did: item.author.did,
+                handle: item.author.handle,
+                displayName: item.author.displayName,
+                avatar: item.author.avatar,
+              },
+              createdAt: formatRelativeTime(item.indexedAt),
+              likeCount: item.likeCount || 0,
+              commentCount: item.replyCount || 0,
+              repostCount: item.repostCount || 0,
+              embed: item.embed,
+              embeds: item.embeds,
+              labels: item.labels,
+              viewer: item.viewer,
+              facets: (item.record as any)?.facets,
+              replyTo,
+              uri: item.uri,
+              cid: item.cid,
+            }}
+            onPress={() => {
+              const uriParts = item.uri.split('/');
+              const rKey = uriParts[uriParts.length - 1];
+              navigateToPost({ actor: item.author.handle, rKey });
+            }}
+          />
+        );
+      })}
+    </View>
   );
 }
 
@@ -118,13 +97,5 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    textAlign: 'center',
   },
 });

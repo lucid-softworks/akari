@@ -1,23 +1,21 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { BlueskyStarterPack } from '@/bluesky-api';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
-type StarterpacksTabProps = {
+type StarterpacksTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
 type StarterpackItemProps = {
   starterpack: BlueskyStarterPack;
 };
-
-const ESTIMATED_STARTERPACK_CARD_HEIGHT = 180;
 
 function StarterpackItem({ starterpack }: StarterpackItemProps) {
   const { t } = useTranslation();
@@ -66,26 +64,9 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
   );
 }
 
-export function StarterpacksTab({ handle }: StarterpacksTabProps) {
+export function StarterpacksTab({ handle, visibleCount = 10 }: StarterpacksTabProps) {
   const { t } = useTranslation();
-  const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorStarterpacks(handle);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
-
-  const renderItem = ({ item }: { item: BlueskyStarterPack }) => <StarterpackItem starterpack={item} />;
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
-  };
+  const { data: starterpacks, isLoading } = useAuthorStarterpacks(handle);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
@@ -99,18 +80,14 @@ export function StarterpacksTab({ handle }: StarterpacksTabProps) {
     );
   }
 
+  const visibleStarterpacks = starterpacks.slice(0, visibleCount);
+
   return (
-    <VirtualizedList
-      data={starterpacks}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.uri}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      estimatedItemSize={ESTIMATED_STARTERPACK_CARD_HEIGHT}
-    />
+    <View>
+      {visibleStarterpacks.map((item) => (
+        <StarterpackItem key={item.uri} starterpack={item} />
+      ))}
+    </View>
   );
 }
 
@@ -121,14 +98,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
     opacity: 0.6,
   },
   starterpackContainer: {

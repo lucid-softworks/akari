@@ -3,16 +3,14 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useLinks } from '@/hooks/queries/useLinks';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Image, Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
-const ESTIMATED_LINK_ITEM_HEIGHT = 80;
-
-type LinksTabProps = {
+type LinksTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
@@ -82,15 +80,9 @@ function LinkItem({ card }: LinkItemProps) {
   return <Pressable onPress={handleLinkPress}>{linkContent}</Pressable>;
 }
 
-export function LinksTab({ handle }: LinksTabProps) {
+export function LinksTab({ handle, visibleCount = 10 }: LinksTabProps) {
   const { t } = useTranslation();
-  const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks(handle);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
+  const { data: links, isLoading } = useLinks(handle);
 
   // Flatten all cards from all boards into individual link items
   const allLinks =
@@ -100,17 +92,6 @@ export function LinksTab({ handle }: LinksTabProps) {
         id: `${board.uri}-${index}`, // Unique key for each link
       })),
     ) || [];
-
-  const renderItem = ({ item }: { item: (typeof allLinks)[0] }) => <LinkItem card={item} />;
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
-  };
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
@@ -124,18 +105,14 @@ export function LinksTab({ handle }: LinksTabProps) {
     );
   }
 
+  const visibleLinks = allLinks.slice(0, visibleCount);
+
   return (
-    <VirtualizedList
-      data={allLinks}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      estimatedItemSize={ESTIMATED_LINK_ITEM_HEIGHT}
-    />
+    <View>
+      {visibleLinks.map((item) => (
+        <LinkItem key={item.id} card={item} />
+      ))}
+    </View>
   );
 }
 
@@ -146,14 +123,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
     opacity: 0.6,
   },
   linkCard: {

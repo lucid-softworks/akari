@@ -1,24 +1,22 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BlueskyFeed } from '@/bluesky-api';
+import type { ProfileTabContentProps } from '@/components/profile/types';
 
-type FeedsTabProps = {
+type FeedsTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
 type FeedItemProps = {
   feed: BlueskyFeed;
 };
-
-const ESTIMATED_FEED_CARD_HEIGHT = 180;
 
 function FeedItem({ feed }: FeedItemProps) {
   const { t } = useTranslation();
@@ -69,26 +67,9 @@ function FeedItem({ feed }: FeedItemProps) {
   );
 }
 
-export function FeedsTab({ handle }: FeedsTabProps) {
+export function FeedsTab({ handle, visibleCount = 10 }: FeedsTabProps) {
   const { t } = useTranslation();
-  const { data: feeds, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeeds(handle);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  };
-
-  const renderItem = ({ item }: { item: BlueskyFeed }) => <FeedItem feed={item} />;
-
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <ThemedView style={styles.loadingFooter}>
-        <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-      </ThemedView>
-    );
-  };
+  const { data: feeds, isLoading } = useAuthorFeeds(handle);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
@@ -102,18 +83,14 @@ export function FeedsTab({ handle }: FeedsTabProps) {
     );
   }
 
+  const visibleFeeds = feeds.slice(0, visibleCount);
+
   return (
-    <VirtualizedList
-      data={feeds}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.uri}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      estimatedItemSize={ESTIMATED_FEED_CARD_HEIGHT}
-    />
+    <View>
+      {visibleFeeds.map((item) => (
+        <FeedItem key={item.uri} feed={item} />
+      ))}
+    </View>
   );
 }
 
@@ -124,14 +101,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    opacity: 0.6,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
     opacity: 0.6,
   },
   feedContainer: {
