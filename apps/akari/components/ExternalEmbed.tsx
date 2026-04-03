@@ -3,6 +3,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { spacing, radius, fontSize, fontWeight, lineHeight, activeOpacity, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -73,7 +74,7 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
   );
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
           {embed.external.thumb && embed.external.thumb.ref?.$link && (
@@ -102,36 +103,36 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
-    borderRadius: 12,
+    marginTop: spacing.sm,
+    borderRadius: radius.md,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: layout.border,
   },
   content: {
     flexDirection: 'row',
-    padding: 12,
-    gap: 12,
+    padding: spacing.md,
+    gap: spacing.md,
   },
   thumbnail: {
     width: 80,
     height: 80,
-    borderRadius: 8,
+    borderRadius: radius.sm,
   },
   textContent: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 20,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.normal,
   },
   description: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 18,
   },
   domain: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: fontSize.sm,
+    marginTop: spacing.xs,
   },
 });

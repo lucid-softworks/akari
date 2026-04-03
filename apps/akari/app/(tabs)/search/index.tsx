@@ -19,6 +19,7 @@ import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { useResponsive } from '@/hooks/useResponsive';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
 type SearchResult = {
   type: 'profile' | 'post';
@@ -71,7 +72,7 @@ const SearchListHeader = React.memo(
           styles.listHeaderContainer,
           {
             paddingTop: topInset,
-            paddingBottom: showTitle ? 12 : 0,
+            paddingBottom: showTitle ? spacing.md : 0,
           },
         ]}
       >
@@ -229,7 +230,7 @@ export default function SearchScreen() {
       <TouchableOpacity
         style={[styles.resultItem, { borderBottomColor: borderColor }]}
         onPress={() => navigateToProfile({ actor: profile.handle })}
-        activeOpacity={0.7}
+        activeOpacity={activeOpacity.default}
       >
         <ThemedView style={styles.profileContainer}>
           {profile.avatar ? (
@@ -430,51 +431,51 @@ const styles = StyleSheet.create({
   },
   listHeaderContainer: {},
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
   },
   searchContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    gap: spacing.sm,
   },
   searchInput: {
     flex: 1,
     height: 44,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    fontSize: 16,
+    borderWidth: layout.border,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    fontSize: fontSize.lg,
   },
   searchButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderRadius: radius.sm,
     justifyContent: 'center',
     alignItems: 'center',
   },
   searchButtonText: {
     color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   resultsListContent: {
-    paddingBottom: 100,
+    paddingBottom: layout.tabBarPadding,
   },
   resultItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
   },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: spacing.md,
   },
   profileAvatar: {
     width: 48,
@@ -483,35 +484,35 @@ const styles = StyleSheet.create({
   },
   profileInfo: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   displayName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   handle: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
   },
   description: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 18,
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   emptyState: {
-    paddingVertical: 40,
+    paddingVertical: spacing.xxxxl,
     alignItems: 'center',
   },
   emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
   },
   loadingFooter: {
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: 14,
-    opacity: 0.6,
+    fontSize: fontSize.base,
+    opacity: opacity.tertiary,
   },
 });

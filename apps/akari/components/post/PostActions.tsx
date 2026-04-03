@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, fontSize, opacity, activeOpacity, semanticColors } from '@/constants/tokens';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -59,7 +60,7 @@ export const PostActions = React.memo(function PostActions({
       <TouchableOpacity
         style={styles.interactionItem}
         onPress={onReplyPress}
-        activeOpacity={0.7}
+        activeOpacity={activeOpacity.default}
         accessibilityRole="button"
         accessibilityLabel={`Reply to post by ${authorName}`}
       >
@@ -73,14 +74,14 @@ export const PostActions = React.memo(function PostActions({
       <TouchableOpacity
         style={styles.interactionItem}
         onPress={handleLikePress}
-        activeOpacity={0.7}
+        activeOpacity={activeOpacity.default}
         accessibilityRole="button"
         accessibilityLabel={isLiked ? `Unlike post by ${authorName}` : `Like post by ${authorName}`}
       >
         <IconSymbol
           name={isLiked ? 'heart.fill' : 'heart'}
           size={16}
-          color={isLiked ? '#ff3b30' : iconColor}
+          color={isLiked ? semanticColors.like : iconColor}
           style={styles.interactionIcon}
         />
         <ThemedText style={styles.interactionCount}>{likeCount}</ThemedText>
@@ -94,16 +95,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: spacing.sm,
   },
   interactionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: spacing.xs,
   },
   interactionIcon: {},
   interactionCount: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
   },
 });

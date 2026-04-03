@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { spacing, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { FeedSkeleton, PostDetailSkeleton } from '@/components/skeletons';
@@ -341,33 +342,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 20,
+    paddingBottom: spacing.xl,
   },
   threadContext: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: layout.border,
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   threadContextLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 8,
-    opacity: 0.7,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
+    opacity: opacity.secondary,
   },
   repliesContainer: {
-    marginTop: 16,
+    marginTop: spacing.lg,
   },
   repliesLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    paddingHorizontal: 16,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     textAlign: 'center',
     marginTop: 50,
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
 });

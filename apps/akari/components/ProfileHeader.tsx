@@ -10,12 +10,14 @@ import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
@@ -70,6 +72,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const borderColor = useBorderColor();
+  const avatarBorderColor = useThemeColor({}, 'background');
+  const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const updateProfileMutation = useUpdateProfile();
@@ -281,7 +285,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         {profile.banner ? (
           <Image source={{ uri: profile.banner }} style={styles.bannerImage} contentFit="cover" />
         ) : (
-          <View style={styles.bannerPlaceholder}>
+          <View style={[styles.bannerPlaceholder, { backgroundColor: bannerPlaceholderColor }]}>
             <ThemedText style={styles.bannerPlaceholderText}>{t('ui.noBanner')}</ThemedText>
           </View>
         )}
@@ -292,11 +296,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
         {/* Avatar */}
         <View style={styles.avatarContainer}>
           {profile.avatar ? (
-            <View style={styles.avatar}>
+            <View style={[styles.avatar, { borderColor: avatarBorderColor }]}>
               <Image source={{ uri: profile.avatar }} style={styles.avatarImage} contentFit="cover" />
             </View>
           ) : (
-            <View style={styles.avatar}>
+            <View style={[styles.avatar, { borderColor: avatarBorderColor }]}>
               <View style={styles.avatarFallbackContainer}>
                 <ThemedText style={styles.avatarFallback}>
                   {(profile.displayName || profile.handle || 'U')[0].toUpperCase()}
@@ -311,9 +315,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
           {/* Name and Handle */}
           <View style={styles.nameHandleSection}>
             <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
-            <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={0.7}>
+            <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
               <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
-              <IconSymbol name="clock" size={14} color="#666" style={styles.handleHistoryIcon} />
+              <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
             </TouchableOpacity>
           </View>
 
@@ -325,20 +329,20 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
                   <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
                 </TouchableOpacity>
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                  <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle}>
-                    <IconSymbol name="ellipsis" size={20} color="#ffffff" />
+                  <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                    <IconSymbol name="ellipsis" size={fontSize.xxl} color="#ffffff" />
                   </TouchableOpacity>
                 </View>
               </>
             ) : (
               <>
-                <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts}>
-                  <IconSymbol name="magnifyingglass" size={20} color="#007AFF" />
+                <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                  <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
                 </TouchableOpacity>
                 {!isBlockedBy && (
                   <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                    <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle}>
-                      <IconSymbol name="ellipsis" size={20} color="#007AFF" />
+                    <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                      <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -408,6 +412,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
   );
 }
 
+const AVATAR_INNER = layout.avatarLarge - 6; // 74px (80 - 2*3 border)
+
 const styles = StyleSheet.create({
   banner: {
     height: 150,
@@ -420,147 +426,147 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e0e0e0',
+    // backgroundColor applied dynamically via useThemeColor
   },
   bannerPlaceholderText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary + 0.1,
   },
   profileHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xl,
+    borderBottomWidth: layout.hairline,
     position: 'relative',
   },
   avatarContainer: {
     marginTop: -50,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: layout.avatarLarge,
+    height: layout.avatarLarge,
+    borderRadius: layout.avatarLarge / 2,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 3,
-    borderColor: 'white',
+    // borderColor applied dynamically via useThemeColor
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   avatarImage: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
+    width: AVATAR_INNER,
+    height: AVATAR_INNER,
+    borderRadius: AVATAR_INNER / 2,
   },
   avatarFallbackContainer: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
-    backgroundColor: '#007AFF',
+    width: AVATAR_INNER,
+    height: AVATAR_INNER,
+    borderRadius: AVATAR_INNER / 2,
+    backgroundColor: semanticColors.systemBlue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarFallback: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
+    color: '#fff',
   },
   profileInfoSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   nameHandleSection: {
     flex: 1,
-    marginRight: 10,
+    marginRight: spacing.sm + spacing.xxs,
   },
   displayName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 2,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
+    marginBottom: spacing.xxs,
   },
   handle: {
     fontSize: 15,
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
   handleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   handleHistoryIcon: {
-    marginLeft: 6,
-    opacity: 0.5,
+    marginLeft: spacing.sm - spacing.xxs,
+    opacity: opacity.tertiary,
   },
   actionButtons: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
+    width: layout.avatarMedium,
+    height: layout.avatarMedium,
+    borderRadius: layout.avatarMedium / 2,
+    borderWidth: layout.border,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 122, 255, 0.1)',
   },
   editButton: {
-    height: 32,
-    paddingHorizontal: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#007AFF',
-    backgroundColor: '#007AFF',
+    height: layout.avatarSmall,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.lg,
+    borderWidth: layout.border,
+    borderColor: semanticColors.systemBlue,
+    backgroundColor: semanticColors.systemBlue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   editButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
+    color: '#fff',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   moreButtonContainer: {
     position: 'relative',
     zIndex: 999999,
   },
   moreButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
+    width: layout.avatarSmall,
+    height: layout.avatarSmall,
+    borderRadius: radius.lg,
+    borderWidth: layout.border,
     borderColor: 'rgba(255, 255, 255, 0.3)',
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   statsContainer: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   statText: {
     fontSize: 15,
     lineHeight: 20,
   },
   statNumber: {
-    fontWeight: 'bold',
+    fontWeight: fontWeight.bold,
   },
   description: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 18,
   },
   descriptionContainer: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
 
   blockedMessage: {
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    marginTop: spacing.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
     backgroundColor: '#ffebee',
-    borderRadius: 8,
+    borderRadius: radius.sm,
   },
   blockedText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     color: '#c62828',
     textAlign: 'center',
   },

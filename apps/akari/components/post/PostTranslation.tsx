@@ -13,6 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
+import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_LIBRETRANSLATE_LANGUAGES, type LibreTranslateLanguage } from '@/utils/libretranslate';
@@ -152,7 +153,7 @@ export const PostTranslation = React.memo(function PostTranslation({ text, visib
       <ThemedView style={[styles.translationContainer, { backgroundColor: translationBg, borderColor }]}>
         <View style={styles.translationHeader}>
           <ThemedText style={styles.translationTitle}>{t('post.translation.title')}</ThemedText>
-          <TouchableOpacity onPress={handleHide} accessibilityRole="button" accessibilityLabel={t('post.translation.hide')} activeOpacity={0.6}>
+          <TouchableOpacity onPress={handleHide} accessibilityRole="button" accessibilityLabel={t('post.translation.hide')} activeOpacity={activeOpacity.strong}>
             <ThemedText style={[styles.translationHide, { color: iconColor }]}>{t('post.translation.hide')}</ThemedText>
           </TouchableOpacity>
         </View>
@@ -161,7 +162,7 @@ export const PostTranslation = React.memo(function PostTranslation({ text, visib
           onPress={() => setIsLanguagePickerVisible(true)}
           accessibilityRole="button"
           accessibilityLabel={t('post.translation.selectLanguage')}
-          activeOpacity={0.7}
+          activeOpacity={activeOpacity.default}
         >
           <ThemedText style={styles.translationLabel}>{t('post.translation.to')}</ThemedText>
           <ThemedText style={styles.translationLanguageValue}>{selectedLanguageName}</ThemedText>
@@ -198,7 +199,7 @@ export const PostTranslation = React.memo(function PostTranslation({ text, visib
                           onPress={() => handleLanguageSelect(language.code)}
                           accessibilityRole="menuitem"
                           accessibilityState={{ selected: isSelected }}
-                          activeOpacity={0.7}
+                          activeOpacity={activeOpacity.default}
                         >
                           <ThemedText style={[styles.languageOptionText, isSelected && styles.languageOptionSelectedText]}>
                             {language.name}
@@ -219,52 +220,52 @@ export const PostTranslation = React.memo(function PostTranslation({ text, visib
 
 const styles = StyleSheet.create({
   translationContainer: {
-    borderWidth: 1,
-    marginTop: 12,
-    marginBottom: 12,
-    padding: 12,
+    borderWidth: layout.border,
+    marginTop: spacing.md,
+    marginBottom: spacing.md,
+    padding: spacing.md,
   },
   translationHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   translationTitle: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   translationHide: {
-    fontSize: 13,
-    fontWeight: '500',
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.medium,
   },
   translationLanguageSelector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    paddingVertical: spacing.sm,
+    borderTopWidth: layout.border,
+    borderBottomWidth: layout.border,
   },
   translationLabel: {
-    fontSize: 13,
-    opacity: 0.7,
+    fontSize: fontSize.md,
+    opacity: opacity.secondary,
   },
   translationLanguageValue: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
   },
   translationContent: {
-    marginTop: 8,
+    marginTop: spacing.sm,
   },
   translationText: {
     fontSize: 15,
     lineHeight: 22,
   },
   translationError: {
-    fontSize: 13,
+    fontSize: fontSize.md,
     lineHeight: 20,
-    color: '#d13232',
+    color: semanticColors.danger,
   },
   menuOverlay: {
     flex: 1,
@@ -273,36 +274,36 @@ const styles = StyleSheet.create({
   languageModal: {
     alignSelf: 'center',
     marginTop: 120,
-    borderWidth: 1,
+    borderWidth: layout.border,
     width: '80%',
     maxHeight: '70%',
-    padding: 16,
+    padding: spacing.lg,
   },
   languageModalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.md,
   },
   languageList: {
     maxHeight: 300,
   },
   languageOption: {
     paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    marginBottom: 8,
+    paddingHorizontal: spacing.md,
+    borderWidth: layout.border,
+    marginBottom: spacing.sm,
   },
   languageOptionSelected: {
     borderColor: '#0a84ff',
   },
   languageOptionText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   languageOptionSelectedText: {
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
   },
   languageModalIndicator: {
-    paddingVertical: 24,
+    paddingVertical: spacing.xxl,
     alignItems: 'center',
   },
 });

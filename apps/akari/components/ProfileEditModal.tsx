@@ -2,6 +2,7 @@ import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Modal, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -180,31 +181,31 @@ const styles = StyleSheet.create({
   container: {
     width: '95%',
     maxWidth: 500,
-    borderRadius: 12,
+    borderRadius: radius.md,
     padding: 0,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: layout.hairline,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
   },
   headerButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
   },
   headerButtonDisabled: {
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
   headerButtonText: {
-    fontSize: 17,
-    fontWeight: '400',
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.regular,
   },
   bannerSection: {
     height: 150,
@@ -223,18 +224,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bannerPlaceholderText: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     opacity: 0.6,
   },
   avatarSection: {
-    paddingHorizontal: 20,
-    marginTop: -40,
-    marginBottom: 20,
+    paddingHorizontal: spacing.xl,
+    marginTop: -spacing.xxxxl,
+    marginBottom: spacing.xl,
   },
   avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: layout.avatarLarge,
+    height: layout.avatarLarge,
+    borderRadius: layout.avatarLarge / 2,
     position: 'relative',
     borderWidth: 3,
     borderColor: 'white',
@@ -253,47 +254,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarFallbackText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
     color: 'white',
   },
   cameraButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: spacing.xxl,
+    height: spacing.xxl,
+    borderRadius: spacing.md,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   formSection: {
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
   },
   fieldContainer: {
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
   fieldLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   textInput: {
     height: 44,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    fontSize: 16,
+    borderWidth: layout.border,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    fontSize: fontSize.lg,
     width: '100%',
   },
   textArea: {
     minHeight: 100,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 16,
+    borderWidth: layout.border,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    fontSize: fontSize.lg,
     width: '100%',
   },
 });

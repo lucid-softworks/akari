@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, View, type DimensionValue, type ViewProps } from 'react-native';
 
+import { radius } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SkeletonProps = ViewProps & {
@@ -15,7 +16,7 @@ export function Skeleton({
   style,
   width = '100%',
   height = 20,
-  borderRadius = 4,
+  borderRadius = radius.xs,
   lightColor,
   darkColor,
   ...otherProps

@@ -3,6 +3,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type GifEmbedProps = {
@@ -59,7 +60,7 @@ export function GifEmbed({ embed }: GifEmbedProps) {
   );
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
           <Image
@@ -88,9 +89,9 @@ export function GifEmbed({ embed }: GifEmbedProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderRadius: 12,
-    marginTop: 8,
+    borderWidth: layout.border,
+    borderRadius: radius.md,
+    marginTop: spacing.sm,
     overflow: 'hidden',
     maxWidth: '100%',
   },
@@ -102,27 +103,27 @@ const styles = StyleSheet.create({
   gifImage: {
     width: 200,
     height: 200,
-    borderRadius: 8,
-    margin: 12,
+    borderRadius: radius.sm,
+    margin: spacing.md,
     minWidth: 200,
     maxWidth: 300,
   },
   textContent: {
     flex: 1,
-    padding: 12,
+    padding: spacing.md,
     paddingLeft: 0,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.xs,
   },
   description: {
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: fontSize.base,
+    marginBottom: spacing.sm,
   },
   source: {
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
   },
 });

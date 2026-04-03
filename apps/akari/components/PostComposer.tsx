@@ -21,6 +21,7 @@ import { GifPicker } from '@/components/GifPicker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, shadows } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -148,10 +149,10 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
     [applyDrawerHeight, clampDrawerHeight, isMobile, windowHeight],
   );
 
-  const drawerPaddingHorizontal = isMobile ? 16 : 20;
-  const drawerHeaderVerticalPadding = isMobile ? 12 : 16;
-  const drawerInputVerticalPadding = isMobile ? 16 : 20;
-  const drawerFooterVerticalPadding = isMobile ? 10 : 12;
+  const drawerPaddingHorizontal = isMobile ? spacing.lg : spacing.xl;
+  const drawerHeaderVerticalPadding = isMobile ? spacing.md : spacing.lg;
+  const drawerInputVerticalPadding = isMobile ? spacing.lg : spacing.xl;
+  const drawerFooterVerticalPadding = isMobile ? 10 : spacing.md;
   const drawerTextMinHeight = isMobile ? 120 : 140;
 
   const handlePost = async () => {
@@ -273,7 +274,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
               isMobile && [
                 styles.mobileContainer,
                 {
-                  paddingBottom: bottom + 12,
+                  paddingBottom: bottom + spacing.md,
                   borderTopColor: borderColor,
                   ...(drawerHeight !== undefined ? { height: drawerHeight } : null),
                 },
@@ -489,20 +490,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   container: {
-    margin: 20,
+    margin: spacing.xl,
     minHeight: 300,
     maxHeight: '80%',
     maxWidth: 600,
     alignSelf: 'center',
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    ...shadows.lg,
     zIndex: 2,
     position: 'relative',
   },
@@ -511,8 +505,8 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
     width: '100%',
     alignSelf: 'stretch',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: spacing.xxl,
+    borderTopRightRadius: spacing.xxl,
     borderTopWidth: StyleSheet.hairlineWidth,
     maxHeight: '90%',
     position: 'relative',
@@ -520,74 +514,67 @@ const styles = StyleSheet.create({
   mobileHandleContainer: {
     alignItems: 'center',
     paddingTop: 10,
-    paddingBottom: 2,
+    paddingBottom: spacing.xxs,
   },
   mobileHandle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
+    width: spacing.xxxxl,
+    height: spacing.xs,
+    borderRadius: spacing.xxs,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottomWidth: 0.5,
+    borderBottomWidth: layout.hairline,
   },
   headerButton: {
-    padding: 8,
-    borderRadius: 8,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
   },
   headerButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
   },
   postButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.xl,
     minWidth: 60,
     alignItems: 'center',
   },
   postButtonEnabled: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
+    ...shadows.sm,
   },
   postButtonDisabled: {
-    opacity: 0.6,
+    opacity: opacity.disabled,
   },
   postButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   replyContext: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 0.5,
+    borderBottomWidth: layout.hairline,
   },
   replyIconContainer: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: spacing.xxl,
+    height: spacing.xxl,
+    borderRadius: spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   replyText: {
     fontSize: 15,
     opacity: 0.8,
   },
   replyAuthor: {
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
   },
   contentArea: {
     flex: 1,
@@ -599,10 +586,10 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   imagesContainer: {
-    paddingBottom: 20,
+    paddingBottom: spacing.xl,
   },
   imageItem: {
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   imageContainer: {
     position: 'relative',
@@ -614,38 +601,37 @@ const styles = StyleSheet.create({
   },
   removeImageButton: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: spacing.sm,
+    right: spacing.sm,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderRadius: 12,
+    borderRadius: spacing.md,
     padding: 6,
-    width: 24,
-    height: 24,
+    width: spacing.xxl,
+    height: spacing.xxl,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1,
   },
   removeImageText: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   altTextInput: {
-    padding: 12,
-    fontSize: 14,
-    borderTopWidth: 1,
-    borderTopColor: '#e1e5e9',
+    padding: spacing.md,
+    fontSize: fontSize.base,
+    borderTopWidth: layout.border,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderTopWidth: 0.5,
+    borderTopWidth: layout.hairline,
   },
   footerLeft: {
     flex: 1,
     flexDirection: 'row',
-    gap: 4,
+    gap: spacing.xs,
   },
   footerRight: {
     alignItems: 'flex-end',
@@ -655,15 +641,15 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   actionButtonDisabled: {
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
   characterCountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: spacing.xxs,
   },
   characterCount: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: fontWeight.medium,
   },
 });

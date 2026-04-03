@@ -11,6 +11,7 @@ import {
 
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
+import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout } from '@/constants/tokens';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Panel } from '@/components/ui/Panel';
 import { useDialogManager } from '@/contexts/DialogContext';
@@ -223,62 +224,62 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   content: {
-    gap: 20,
+    gap: spacing.xl,
   },
   description: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 20,
   },
   fieldGroup: {
-    gap: 8,
+    gap: spacing.sm,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   helperText: {
-    fontSize: 12,
+    fontSize: fontSize.sm,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: layout.border,
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
     paddingHorizontal: 14,
-    fontSize: 16,
+    fontSize: fontSize.lg,
   },
   footerActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 12,
+    gap: spacing.md,
   },
   secondaryButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     backgroundColor: 'transparent',
   },
   secondaryButtonText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   primaryButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#2563EB',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: radius.sm,
+    backgroundColor: semanticColors.systemBlue,
   },
   primaryButtonText: {
     color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   disabledPrimary: {
-    opacity: 0.6,
+    opacity: opacity.disabled,
   },
   iconButton: {
     padding: 6,
-    borderRadius: 999,
+    borderRadius: radius.full,
   },
   disabledButton: {
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
 });

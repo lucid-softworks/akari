@@ -18,6 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
 /**
  * Grouped notification type
@@ -59,7 +60,7 @@ const AVATAR_IMAGE_STYLE: ImageStyle = {
 
 const EMBED_IMAGE_STYLE: ImageStyle = {
   // Keep embed previews compatible with expo-image on web.
-  borderRadius: 8,
+  borderRadius: radius.sm,
 };
 
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
@@ -219,7 +220,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     <TouchableOpacity
       style={[styles.notificationItem, { borderBottomColor: borderColor }]}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={activeOpacity.default}
     >
       <View style={styles.mainContent}>
         <View style={styles.iconContainer}>
@@ -518,7 +519,7 @@ export default function NotificationsScreen() {
           styles.headerContainer,
           {
             paddingTop: isLargeScreen ? insets.top : 0,
-            paddingBottom: isLargeScreen ? 12 : 0,
+            paddingBottom: isLargeScreen ? spacing.md : 0,
           },
         ]}
       >
@@ -571,23 +572,23 @@ const styles = StyleSheet.create({
   },
   headerContainer: {},
   listContent: {
-    paddingBottom: 100,
+    paddingBottom: layout.tabBarPadding,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    paddingTop: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   title: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: fontWeight.bold,
   },
   listContainer: {
     flexGrow: 1,
   },
   notificationItem: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     minHeight: 72,
@@ -615,24 +616,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: layout.border,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   avatarFallbackText: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
     color: 'white',
   },
   avatarOverflow: {
     backgroundColor: '#666',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: layout.border,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   avatarOverflowText: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: fontWeight.bold,
     color: 'white',
   },
   notificationText: {
@@ -641,51 +642,51 @@ const styles = StyleSheet.create({
   authorInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   authorName: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginRight: 8,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    marginRight: spacing.sm,
   },
   authorHandle: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   reasonText: {
-    fontSize: 13,
+    fontSize: fontSize.md,
     marginBottom: 6,
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
   replyIndicator: {
-    fontSize: 12,
-    marginBottom: 4,
-    opacity: 0.6,
+    fontSize: fontSize.sm,
+    marginBottom: spacing.xs,
+    opacity: opacity.tertiary,
   },
   postContent: {
-    fontSize: 13,
-    marginBottom: 4,
+    fontSize: fontSize.md,
+    marginBottom: spacing.xs,
     opacity: 0.8,
     lineHeight: 16,
   },
   postContentContainer: {
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   embedImagesContainer: {
     flexDirection: 'row',
-    marginTop: 4,
-    gap: 4,
+    marginTop: spacing.xs,
+    gap: spacing.xs,
   },
   embedImage: {
     ...EMBED_IMAGE_STYLE,
   },
   timeText: {
-    fontSize: 12,
+    fontSize: fontSize.sm,
   },
   unreadIndicator: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    marginLeft: 8,
+    marginLeft: spacing.sm,
     alignSelf: 'center',
     backgroundColor: '#007AFF',
   },
@@ -693,97 +694,97 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xxxl,
   },
   skeletonContainer: {
     flex: 1,
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: layout.tabBarPadding,
   },
   emptyStateTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
     textAlign: 'center',
   },
   emptyStateSubtitle: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     textAlign: 'center',
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
   errorState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xxxl,
   },
   errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
     textAlign: 'center',
   },
   errorMessage: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     textAlign: 'center',
-    marginBottom: 16,
-    opacity: 0.7,
+    marginBottom: spacing.lg,
+    opacity: opacity.secondary,
   },
   retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingHorizontal: spacing.xxl,
+    paddingVertical: spacing.md,
+    borderRadius: radius.sm,
   },
   retryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   loadingFooter: {
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
   },
   loadingMore: {
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
   },
   emptyStateText: {
-    fontSize: 16,
-    opacity: 0.7,
+    fontSize: fontSize.lg,
+    opacity: opacity.secondary,
   },
   avatarContainer: {
-    marginRight: 12,
-    marginTop: 2,
+    marginRight: spacing.md,
+    marginTop: spacing.xxs,
   },
   contentContainer: {
     flex: 1,
-    paddingRight: 4,
+    paddingRight: spacing.xs,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   authorNames: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
     flex: 1,
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
   timestamp: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
   },
   iconContainer: {
     marginRight: 10,
-    marginTop: 4,
+    marginTop: spacing.xs,
     width: 18,
     alignItems: 'center',
   },

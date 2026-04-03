@@ -13,6 +13,7 @@ import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
+import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -246,7 +247,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
         <TouchableOpacity
           style={[styles.container, { borderBottomColor: borderColor }]}
           onPress={onPress}
-          activeOpacity={0.7}
+          activeOpacity={activeOpacity.default}
         >
           {postContent}
         </TouchableOpacity>
@@ -318,10 +319,10 @@ const LivePreview = React.memo(function LivePreview({
         )}
         <ThemedText style={styles.livePreviewDomain}>{liveStreamInfo.domain}</ThemedText>
         <View style={styles.livePreviewActions}>
-          <TouchableOpacity style={styles.livePreviewPrimaryButton} onPress={onWatchLive} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.livePreviewPrimaryButton} onPress={onWatchLive} activeOpacity={activeOpacity.subtle}>
             <ThemedText style={styles.livePreviewPrimaryButtonText}>{t('common.watchNow')}</ThemedText>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.livePreviewSecondaryButton, { borderColor }]} onPress={() => navigateToProfile({})} activeOpacity={0.8}>
+          <TouchableOpacity style={[styles.livePreviewSecondaryButton, { borderColor }]} onPress={() => navigateToProfile({})} activeOpacity={activeOpacity.subtle}>
             <ThemedText style={styles.livePreviewSecondaryButtonText}>{t('common.openProfile')}</ThemedText>
           </TouchableOpacity>
         </View>
@@ -330,56 +331,54 @@ const LivePreview = React.memo(function LivePreview({
   );
 });
 
-const LIVE_ACCENT_COLOR = '#ff274c';
-
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 0.5,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    borderBottomWidth: layout.hairline,
     position: 'relative',
   },
   replyContext: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    paddingHorizontal: 4,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.xs,
   },
   replyIcon: {
-    fontSize: 12,
-    marginRight: 4,
+    fontSize: fontSize.sm,
+    marginRight: spacing.xs,
   },
   replyText: {
-    fontSize: 12,
-    opacity: 0.7,
+    fontSize: fontSize.sm,
+    opacity: opacity.secondary,
     flex: 1,
   },
   replyPreview: {
-    fontSize: 11,
-    opacity: 0.5,
+    fontSize: fontSize.xs,
+    opacity: opacity.tertiary,
     fontStyle: 'italic',
     flex: 1,
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
   content: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   text: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     lineHeight: 24,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   livePreviewContainer: {
     position: 'absolute',
-    top: -16,
-    left: 16,
+    top: -spacing.lg,
+    left: spacing.lg,
     zIndex: 50,
     width: 260,
   },
   livePreviewCard: {
-    borderWidth: 1,
-    padding: 12,
-    gap: 8,
+    borderWidth: layout.border,
+    padding: spacing.md,
+    gap: spacing.sm,
   },
   livePreviewHeader: {
     flexDirection: 'row',
@@ -387,15 +386,15 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   livePreviewIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: LIVE_ACCENT_COLOR,
+    width: spacing.sm,
+    height: spacing.sm,
+    borderRadius: spacing.xs,
+    backgroundColor: semanticColors.live,
   },
   livePreviewIndicatorLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: LIVE_ACCENT_COLOR,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.bold,
+    color: semanticColors.live,
     letterSpacing: 0.6,
   },
   livePreviewThumbnail: {
@@ -404,41 +403,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
   livePreviewTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   livePreviewDescription: {
-    fontSize: 13,
-    opacity: 0.7,
+    fontSize: fontSize.md,
+    opacity: opacity.secondary,
     lineHeight: 18,
   },
   livePreviewDomain: {
-    fontSize: 12,
+    fontSize: fontSize.sm,
     opacity: 0.6,
   },
   livePreviewActions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   livePreviewPrimaryButton: {
     flex: 1,
-    backgroundColor: LIVE_ACCENT_COLOR,
-    paddingVertical: 8,
+    backgroundColor: semanticColors.live,
+    paddingVertical: spacing.sm,
     alignItems: 'center',
   },
   livePreviewPrimaryButtonText: {
     color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   livePreviewSecondaryButton: {
     flex: 1,
-    borderWidth: 1,
+    borderWidth: layout.border,
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: spacing.sm,
   },
   livePreviewSecondaryButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
 });

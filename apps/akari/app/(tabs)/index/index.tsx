@@ -1,3 +1,4 @@
+import { spacing, radius, fontSize, fontWeight, opacity, shadows, layout, semanticColors } from '@/constants/tokens';
 import { useResponsive } from '@/hooks/useResponsive';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -188,7 +189,7 @@ export default function HomeScreen() {
           styles.listHeaderContainer,
           {
             paddingTop: isLargeScreen ? insets.top : 0,
-            paddingBottom: isLargeScreen ? 12 : 0,
+            paddingBottom: isLargeScreen ? spacing.md : 0,
           },
         ]}
       >
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: layout.tabBarPadding, // Account for tab bar
   },
   listHeaderContainer: {},
   listHeaderContent: {
@@ -346,66 +347,59 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    gap: 4,
+    marginTop: spacing.xl,
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.lg,
+    gap: spacing.xs,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: fontSize.display,
+    fontWeight: fontWeight.bold,
   },
   subtitle: {
-    fontSize: 14,
-    opacity: 0.8,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
     textAlign: 'center',
   },
   loadingMore: {
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
   },
   loadingMoreText: {
-    fontSize: 14,
-    opacity: 0.6,
+    fontSize: fontSize.base,
+    opacity: opacity.tertiary,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: spacing.xxxxl,
   },
   emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
     textAlign: 'center',
   },
   selectFeedPrompt: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: spacing.xxxxl,
   },
   selectFeedText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
     textAlign: 'center',
   },
   fab: {
     position: 'absolute',
-    right: 20,
+    right: spacing.xl,
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: '#007AFF',
+    borderRadius: radius.full,
+    backgroundColor: semanticColors.systemBlue,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    ...shadows.lg,
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { spacing, radius, fontSize, fontWeight, lineHeight } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -138,22 +139,22 @@ export function ComponentErrorBoundary({
 const styles = StyleSheet.create({
   container: {
     borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    gap: 8,
+    borderRadius: radius.md,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    gap: spacing.sm,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   message: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: fontSize.base,
+    lineHeight: lineHeight.normal,
   },
   details: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.tight,
     opacity: 0.8,
   },
 });

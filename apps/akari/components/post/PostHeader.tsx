@@ -5,6 +5,7 @@ import { Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-n
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNavigateToProfile } from '@/utils/navigation';
 
@@ -86,7 +87,7 @@ export const PostHeader = React.memo(function PostHeader({
           <ThemedText style={styles.displayName}>{authorName}</ThemedText>
           <TouchableOpacity
             onPress={handleProfilePress}
-            activeOpacity={0.7}
+            activeOpacity={activeOpacity.default}
             accessibilityRole="button"
             accessibilityLabel={`View profile of ${authorName}`}
           >
@@ -100,7 +101,8 @@ export const PostHeader = React.memo(function PostHeader({
           ref={menuButtonRef}
           onPress={onMenuToggle}
           style={styles.menuButton}
-          activeOpacity={0.6}
+          activeOpacity={activeOpacity.strong}
+          hitSlop={hitSlop}
           accessibilityRole="button"
           accessibilityLabel={`Actions - ${authorName}`}
         >
@@ -110,8 +112,6 @@ export const PostHeader = React.memo(function PostHeader({
     </ThemedView>
   );
 });
-
-const LIVE_ACCENT_COLOR = '#ff274c';
 
 const styles = StyleSheet.create({
   header: {
@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
   authorSection: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
+    gap: spacing.sm,
     flex: 1,
   },
   avatarPressable: {
-    borderRadius: 24,
+    borderRadius: spacing.xxl,
   },
   avatarPressablePressed: {
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
   avatarWrapper: {
     position: 'relative',
@@ -138,29 +138,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   liveAvatarWrapper: {
-    padding: 2,
+    padding: spacing.xxs,
     borderWidth: 2,
-    borderColor: LIVE_ACCENT_COLOR,
-    borderRadius: 24,
+    borderColor: semanticColors.live,
+    borderRadius: spacing.xxl,
   },
   liveBadge: {
     position: 'absolute',
     bottom: -10,
     alignSelf: 'center',
-    backgroundColor: LIVE_ACCENT_COLOR,
+    backgroundColor: semanticColors.live,
     paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingVertical: spacing.xxs,
   },
   liveBadgeText: {
     color: '#ffffff',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: fontWeight.bold,
     letterSpacing: 0.5,
   },
   authorAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: layout.avatarMedium,
+    height: layout.avatarMedium,
+    borderRadius: layout.avatarMedium / 2,
   },
   authorInfo: {
     flex: 1,
@@ -170,19 +170,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   menuButton: {
-    padding: 4,
-    marginLeft: 12,
+    padding: spacing.xs,
+    marginLeft: spacing.md,
   },
   displayName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   handle: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
   },
   timestamp: {
-    fontSize: 12,
+    fontSize: fontSize.sm,
     opacity: 0.6,
   },
 });

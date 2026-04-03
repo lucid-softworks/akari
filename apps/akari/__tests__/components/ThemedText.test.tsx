@@ -39,9 +39,9 @@ describe('ThemedText', () => {
 
   it.each([
     ['default', { fontSize: 16, lineHeight: 24 }],
-    ['title', { fontSize: 32, lineHeight: 32, fontWeight: 'bold' }],
+    ['title', { fontSize: 32, lineHeight: 32, fontWeight: '700' }],
     ['defaultSemiBold', { fontSize: 16, lineHeight: 24, fontWeight: '600' }],
-    ['subtitle', { fontSize: 20, fontWeight: 'bold' }],
+    ['subtitle', { fontSize: 20, fontWeight: '700' }],
     ['link', { fontSize: 16, lineHeight: 30, color: '#0a7ea4' }],
   ] as const)("applies '%s' type style", (type, expected) => {
     const { getByText } = render(<ThemedText type={type}>Sample</ThemedText>);

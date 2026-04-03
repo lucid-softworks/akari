@@ -3,6 +3,7 @@ import { Dimensions, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedba
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { spacing, fontSize, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -42,17 +43,17 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   );
 
   const menuStyle = useMemo(() => {
-    if (!menuPosition) return { top: 16, right: 16 };
+    if (!menuPosition) return { top: spacing.lg, right: spacing.lg };
 
     const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
     const estimatedHeight = 440;
 
-    let top = menuPosition.y + menuPosition.height + 4;
+    let top = menuPosition.y + menuPosition.height + spacing.xs;
     if (top + estimatedHeight > windowHeight) {
-      top = Math.max(16, menuPosition.y - estimatedHeight);
+      top = Math.max(spacing.lg, menuPosition.y - estimatedHeight);
     }
 
-    const right = Math.max(8, windowWidth - (menuPosition.x + menuPosition.width));
+    const right = Math.max(spacing.sm, windowWidth - (menuPosition.x + menuPosition.width));
     return { top, right };
   }, [menuPosition]);
 
@@ -100,7 +101,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
                       disabled={item.disabled}
                       accessibilityRole="menuitem"
                       accessibilityState={{ disabled: item.disabled }}
-                      activeOpacity={item.disabled ? 1 : 0.7}
+                      activeOpacity={item.disabled ? 1 : activeOpacity.default}
                     >
                       <ThemedText
                         style={[
@@ -130,24 +131,24 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: 'absolute',
-    borderWidth: 1,
+    borderWidth: layout.border,
     minWidth: 220,
   },
   menuItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
   menuItemText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   menuItemTextDestructive: {
-    color: '#d13232',
+    color: semanticColors.danger,
   },
   menuItemTextDisabled: {
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
   menuSeparator: {
-    borderTopWidth: 1,
-    marginVertical: 4,
+    borderTopWidth: layout.border,
+    marginVertical: spacing.xs,
   },
 });

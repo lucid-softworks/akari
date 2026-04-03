@@ -6,6 +6,7 @@ import { ActivityIndicator, Animated, Dimensions, Platform, StyleSheet, Text, Vi
 import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
+import { spacing, radius, fontSize, fontWeight, shadows, layout, touchTarget } from '@/constants/tokens';
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { HapticTab } from '@/components/HapticTab';
 import { Sidebar, SIDEBAR_WIDTH } from '@/components/Sidebar';
@@ -332,16 +333,16 @@ export default function TabLayout() {
           style={{
             flex: 1,
             alignItems: 'center',
-            paddingTop: 16,
-            paddingHorizontal: 16,
+            paddingTop: spacing.lg,
+            paddingHorizontal: spacing.lg,
           }}
         >
           <View
             style={{
               flexDirection: 'row',
-              gap: 24,
+              gap: spacing.xxl,
               width: '100%',
-              maxWidth: 1200,
+              maxWidth: layout.maxContentWidth,
               minHeight: '100%',
             }}
           >
@@ -552,7 +553,7 @@ const profileTabIconStyles = StyleSheet.create({
   container: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.full,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -568,12 +569,8 @@ const profileTabIconStyles = StyleSheet.create({
 const hardcodedTabStyles = StyleSheet.create({
   container: {
     borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: 8,
-    shadowColor: 'rgba(12, 14, 24, 0.28)',
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 20,
-    elevation: 10,
+    paddingTop: spacing.sm,
+    ...shadows.top,
   },
   content: {
     flexDirection: 'row',
@@ -583,7 +580,7 @@ const hardcodedTabStyles = StyleSheet.create({
     width: '100%',
   },
   tabButton: {
-    marginHorizontal: 4,
+    marginHorizontal: spacing.xs,
     marginVertical: 0,
     paddingVertical: 0,
   },
@@ -616,7 +613,7 @@ const mobileDrawerStyles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingBottom: 0,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
@@ -624,9 +621,9 @@ const mobileDrawerStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: touchTarget.min,
+    height: touchTarget.min,
+    borderRadius: radius.full,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -639,15 +636,15 @@ const mobileDrawerStyles = StyleSheet.create({
   headerLogo: {
     width: 28,
     height: 28,
-    borderRadius: 6,
-    marginRight: 8,
+    borderRadius: radius.xs,
+    marginRight: spacing.sm,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
   },
   headerSpacer: {
-    width: 44,
-    height: 44,
+    width: touchTarget.min,
+    height: touchTarget.min,
   },
 });

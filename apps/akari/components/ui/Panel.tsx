@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
+import { spacing, fontSize, fontWeight } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type PanelProps = {
@@ -84,13 +85,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   headerActions: {
     flexDirection: 'row',
@@ -98,13 +99,13 @@ const styles = StyleSheet.create({
   },
   body: {
     width: '100%',
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
     backgroundColor: 'transparent',
   },
   footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
     borderTopWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },

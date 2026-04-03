@@ -13,6 +13,7 @@ import {
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
+import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Panel } from '@/components/ui/Panel';
@@ -330,8 +331,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: spacing.xxl,
+    paddingVertical: spacing.xxxl,
   },
   scrollContentMobile: {
     justifyContent: 'flex-start',
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   panelContent: {
-    gap: 24,
+    gap: spacing.xxl,
   },
   panelFooter: {
     paddingTop: 0,
@@ -362,42 +363,42 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     lineHeight: 22,
   },
   form: {
-    gap: 20,
+    gap: spacing.xl,
   },
   inputContainer: {
-    gap: 8,
+    gap: spacing.sm,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: layout.border,
     borderRadius: 10,
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    paddingHorizontal: spacing.lg,
+    fontSize: fontSize.lg,
   },
   helperText: {
-    fontSize: 12,
+    fontSize: fontSize.sm,
   },
   primaryButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#2563EB',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: radius.sm,
+    backgroundColor: semanticColors.systemBlue,
   },
   primaryButtonText: {
     color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   buttonDisabled: {
-    opacity: 0.6,
+    opacity: opacity.disabled,
   },
   footerToggle: {
     flexDirection: 'row',
@@ -406,25 +407,25 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   footerText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   linkText: {
-    fontSize: 14,
-    color: '#2563EB',
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    color: semanticColors.systemBlue,
+    fontWeight: fontWeight.semibold,
   },
   infoSection: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 16,
-    gap: 8,
+    borderWidth: layout.border,
+    borderRadius: radius.sm,
+    padding: spacing.lg,
+    gap: spacing.sm,
   },
   infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 20,
   },
 });

@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ThemedView } from '@/components/ThemedView';
+import { spacing, radius, layout, opacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export function PostCardSkeleton() {
@@ -18,7 +19,7 @@ export function PostCardSkeleton() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.authorInfo}>
-          <Skeleton width={40} height={40} borderRadius={20} />
+          <Skeleton width={layout.avatarMedium} height={layout.avatarMedium} borderRadius={radius.full} />
           <View style={styles.authorText}>
             <Skeleton width={120} height={16} style={styles.displayName} />
             <Skeleton width={80} height={14} style={styles.handle} />
@@ -36,21 +37,21 @@ export function PostCardSkeleton() {
 
       {/* Media placeholder */}
       <View style={styles.mediaContainer}>
-        <Skeleton width="100%" height={200} borderRadius={8} />
+        <Skeleton width="100%" height={200} borderRadius={radius.sm} />
       </View>
 
       {/* Actions */}
       <View style={styles.actions}>
         <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={10} />
+          <Skeleton width={20} height={20} borderRadius={radius.full} />
           <Skeleton width={30} height={14} style={styles.actionText} />
         </View>
         <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={10} />
+          <Skeleton width={20} height={20} borderRadius={radius.full} />
           <Skeleton width={30} height={14} style={styles.actionText} />
         </View>
         <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={10} />
+          <Skeleton width={20} height={20} borderRadius={radius.full} />
           <Skeleton width={30} height={14} style={styles.actionText} />
         </View>
       </View>
@@ -60,14 +61,14 @@ export function PostCardSkeleton() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderBottomWidth: 1,
+    padding: spacing.lg,
+    borderBottomWidth: layout.border,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   authorInfo: {
     flexDirection: 'row',
@@ -75,34 +76,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   authorText: {
-    marginLeft: 12,
+    marginLeft: spacing.md,
     flex: 1,
   },
   displayName: {
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   handle: {
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
   content: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   textLine: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   mediaContainer: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 8,
+    paddingTop: spacing.sm,
   },
   actionItem: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   actionText: {
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
 }); 

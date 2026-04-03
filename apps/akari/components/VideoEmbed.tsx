@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VideoPlayer } from '@/components/VideoPlayer';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -201,7 +202,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
     const thumbnailAspectRatio = embed.aspectRatio ? embed.aspectRatio.width / embed.aspectRatio.height : 16 / 9;
 
     return (
-      <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+      <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
         <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
           <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
             {thumbnailUrl ? (
@@ -252,9 +253,9 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
+    borderRadius: radius.md,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: layout.border,
   },
   thumbnailContainer: {
     position: 'relative',
@@ -272,42 +273,42 @@ const styles = StyleSheet.create({
   },
   placeholderIcon: {
     fontSize: 48,
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
   placeholderText: {
-    fontSize: 14,
-    marginTop: 8,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    marginTop: spacing.sm,
+    opacity: opacity.secondary,
   },
   playButton: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: [{ translateX: -20 }, { translateY: -20 }],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: layout.avatarMedium,
+    height: layout.avatarMedium,
+    borderRadius: radius.xl,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   playIcon: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
   },
   content: {
-    gap: 4,
+    gap: spacing.xs,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
     lineHeight: 20,
   },
   description: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     lineHeight: 18,
   },
   source: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: fontSize.sm,
+    marginTop: spacing.xs,
   },
 });

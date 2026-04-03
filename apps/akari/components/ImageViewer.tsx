@@ -6,6 +6,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, fontSize, fontWeight, touchTarget } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
@@ -202,28 +203,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
     paddingTop: 60,
-    paddingBottom: 20,
+    paddingBottom: spacing.xl,
   },
   closeButton: {
-    width: 44,
-    height: 44,
+    width: touchTarget.min,
+    height: touchTarget.min,
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeText: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.semibold,
   },
   downloadButton: {
-    width: 44,
-    height: 44,
+    width: touchTarget.min,
+    height: touchTarget.min,
     justifyContent: 'center',
     alignItems: 'center',
   },
   downloadText: {
-    fontSize: 20,
+    fontSize: fontSize.xxl,
   },
   imageContainer: {
     flex: 1,
@@ -247,11 +248,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   altTextContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xxxxl,
   },
   altText: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     lineHeight: 24,
     textAlign: 'center',
   },
@@ -266,4 +267,5 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 18,
   },
+
 });

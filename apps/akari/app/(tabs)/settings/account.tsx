@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
+import { spacing } from '@/constants/tokens';
 import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
 import {
   SettingsRow,
@@ -309,11 +310,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: 32,
+    paddingBottom: spacing.xxxl,
   },
   sectionCard: {
-    marginHorizontal: 16,
-    marginTop: 12,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },

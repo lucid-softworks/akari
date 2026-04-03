@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Platform, StyleSheet, Switch, View } from 'react-native';
 
+import { spacing, radius, fontSize, fontWeight, opacity, semanticColors } from '@/constants/tokens';
 import { NotificationTest } from '@/components/NotificationTest';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -244,20 +245,20 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: spacing.lg,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xxl,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginLeft: 12,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginLeft: spacing.md,
   },
   section: {
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   settingRow: {
@@ -267,43 +268,43 @@ const styles = StyleSheet.create({
   },
   settingInfo: {
     flex: 1,
-    marginRight: 16,
+    marginRight: spacing.lg,
   },
   settingTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
+    marginBottom: spacing.xs,
   },
   settingDescription: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
     lineHeight: 18,
   },
   statusIndicator: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: spacing.md,
+    height: spacing.md,
+    borderRadius: spacing.md / 2,
   },
   errorContainer: {
     backgroundColor: '#FFE5E5',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 16,
+    padding: spacing.md,
+    borderRadius: radius.sm,
+    marginTop: spacing.lg,
   },
   errorText: {
-    color: '#FF3B30',
-    fontSize: 14,
+    color: semanticColors.like,
+    fontSize: fontSize.base,
     textAlign: 'center',
   },
   actionsContainer: {
-    marginTop: 24,
+    marginTop: spacing.xxl,
     alignItems: 'center',
   },
   actionButton: {
-    color: '#007AFF',
-    fontSize: 16,
-    fontWeight: '500',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    color: semanticColors.systemBlue,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
   },
 });

@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 import { Label } from "@/components/Label";
 import { ThemedView } from "@/components/ThemedView";
+import { spacing } from '@/constants/tokens';
 
 type LabelData = {
   /** The label text */
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    marginTop: 8,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
   },
 });

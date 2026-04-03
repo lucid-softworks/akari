@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { spacing, fontSize, fontWeight, activeOpacity, shadows } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -64,7 +65,7 @@ export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChang
               testID={`tab-${tab.key}`}
               accessibilityRole="button"
               accessibilityState={{ selected: isActive }}
-              activeOpacity={0.85}
+              activeOpacity={activeOpacity.subtle}
               onPress={() => onTabChange(tab.key)}
               style={[
                 styles.tab,
@@ -77,7 +78,7 @@ export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChang
                   styles.tabText,
                   {
                     color: isActive ? activeTextColor : inactiveTextColor,
-                    fontWeight: isActive ? '600' : '500',
+                    fontWeight: isActive ? fontWeight.semibold : fontWeight.medium,
                   },
                 ]}
               >
@@ -95,34 +96,30 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    paddingTop: 8,
-    paddingBottom: 4,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-    shadowColor: 'rgba(0, 0, 0, 0.1)',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 1,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    ...shadows.sm,
     zIndex: 10,
   },
   scrollContent: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingBottom: 4,
+    paddingBottom: spacing.xs,
   },
   tab: {
     paddingVertical: 10,
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.xs,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   tabSpacing: {
-    marginRight: 24,
+    marginRight: spacing.xxl,
   },
   tabText: {
-    fontSize: 15,
+    fontSize: fontSize.base + 1,
   },
 });

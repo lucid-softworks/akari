@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -168,7 +169,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
           accessibilityLabel={item.content_description || item.title || 'GIF'}
           style={styles.gifItem}
           onPress={() => handleSelectGif(item)}
-          activeOpacity={0.8}
+          activeOpacity={activeOpacity.subtle}
         >
           <Image
             source={{ uri: gifUrl }}
@@ -203,7 +204,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
           {searchQuery.trim() ? t('gif.noResults') : t('gif.noTrending')}
         </ThemedText>
         {gifs.length === 0 && !loading && !searchLoading && (
-          <ThemedText style={[styles.emptyText, { color: iconColor, fontSize: 14, marginTop: 8 }]}>
+          <ThemedText style={[styles.emptyText, { color: iconColor, fontSize: fontSize.base, marginTop: spacing.sm }]}>
             {t('gif.apiError')}
           </ThemedText>
         )}
@@ -275,8 +276,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     maxWidth: 800,
     alignSelf: 'center',
     width: '100%',
@@ -286,48 +287,48 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    borderBottomWidth: layout.hairline,
   },
   headerButton: {
-    padding: 8,
-    borderRadius: 8,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
   },
   headerButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
   },
   headerSpacer: {
     width: 60,
   },
   searchContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    borderBottomWidth: layout.hairline,
   },
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderRadius: radius.md,
+    borderWidth: layout.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
-    paddingVertical: 4,
+    fontSize: fontSize.lg,
+    paddingVertical: spacing.xs,
   },
   searchLoading: {
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
   gifList: {
     padding: 10,
@@ -335,7 +336,7 @@ const styles = StyleSheet.create({
   gifItem: {
     flex: 1,
     margin: 5,
-    borderRadius: 12,
+    borderRadius: radius.md,
     overflow: 'hidden',
     backgroundColor: '#f0f0f0',
     aspectRatio: 1,
@@ -348,11 +349,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
   },
   loadingText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: spacing.sm,
+    fontSize: fontSize.base,
   },
   emptyContainer: {
     flex: 1,
@@ -361,9 +362,9 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   emptyText: {
-    marginTop: 16,
-    fontSize: 16,
+    marginTop: spacing.lg,
+    fontSize: fontSize.lg,
     textAlign: 'center',
-    opacity: 0.7,
+    opacity: opacity.secondary,
   },
 });

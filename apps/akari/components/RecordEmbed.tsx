@@ -13,6 +13,7 @@ import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { spacing, radius, fontSize, fontWeight, activeOpacity, layout } from '@/constants/tokens';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -395,11 +396,11 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const authorInfo = getAuthorInfo();
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} testID="record-embed-touchable">
+    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle} testID="record-embed-touchable">
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
           {authorInfo ? (
-            <TouchableOpacity onPress={handleAuthorPress} activeOpacity={0.7} style={styles.authorSection}>
+            <TouchableOpacity onPress={handleAuthorPress} activeOpacity={activeOpacity.default} style={styles.authorSection}>
               <Image
                 source={{
                   uri: authorInfo.avatar || 'https://bsky.app/static/default-avatar.png',
@@ -509,8 +510,8 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderRadius: 8,
+    borderWidth: layout.border,
+    borderRadius: radius.sm,
     marginTop: 6,
     overflow: 'hidden',
   },
@@ -531,17 +532,17 @@ const styles = StyleSheet.create({
   authorAvatar: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.full,
   },
   authorInfo: {
     flex: 1,
   },
   displayName: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.semibold,
   },
   handle: {
-    fontSize: 11,
+    fontSize: fontSize.xs,
   },
   timestamp: {
     fontSize: 10,
@@ -551,7 +552,7 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   text: {
-    fontSize: 13,
+    fontSize: fontSize.md,
     lineHeight: 18,
     marginBottom: 6,
   },
@@ -559,12 +560,12 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   imagesContainer: {
-    gap: 4,
+    gap: spacing.xs,
   },
   image: {
     width: '100%',
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: radius.sm,
+    borderWidth: layout.border,
     borderColor: 'transparent', // Will be overridden by theme color
   },
   mediaThumbnail: {
@@ -581,16 +582,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   externalTitle: {
-    fontSize: 11,
-    fontWeight: '500',
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
   },
   externalDescription: {
     fontSize: 10,
   },
   footer: {
     paddingHorizontal: 10,
-    paddingBottom: 8,
-    paddingTop: 2,
+    paddingBottom: spacing.sm,
+    paddingTop: spacing.xxs,
   },
   quoteIndicator: {
     fontSize: 10,
@@ -599,6 +600,6 @@ const styles = StyleSheet.create({
   blockingMessage: {
     fontSize: 10,
     fontStyle: 'italic',
-    marginTop: 2,
+    marginTop: spacing.xxs,
   },
 });

@@ -16,6 +16,7 @@ import { useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { Image } from 'expo-image';
 import { useResponsive } from '@/hooks/useResponsive';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
 type Conversation = {
   id: string;
@@ -128,7 +129,7 @@ export function MessagesListScreen({
             onPress={() => {
               navigateToProfile({ actor: item.handle });
             }}
-            activeOpacity={0.7}
+            activeOpacity={activeOpacity.default}
           >
             {item.avatar ? (
               <ThemedView style={styles.avatar}>
@@ -193,7 +194,7 @@ export function MessagesListScreen({
           styles.headerContainer,
           {
             paddingTop: isLargeScreen ? insets.top : 0,
-            paddingBottom: isLargeScreen ? 12 : 0,
+            paddingBottom: isLargeScreen ? spacing.md : 0,
           },
         ]}
       >
@@ -201,14 +202,14 @@ export function MessagesListScreen({
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
             <ThemedView style={styles.headerTitleContainer}> 
               {onBackPress ? ( 
-                <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}> 
+                <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={activeOpacity.default}> 
                   <IconSymbol name="chevron.left" size={24} color="#007AFF" /> 
                 </TouchableOpacity> 
               ) : null} 
               <ThemedText style={styles.title}>{t(titleKey)}</ThemedText> 
             </ThemedView> 
             {pendingButtonConfig ? ( 
-              <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={0.7}> 
+              <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={activeOpacity.default}> 
                 <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText> 
               </TouchableOpacity> 
             ) : null} 
@@ -230,7 +231,7 @@ export function MessagesListScreen({
               <TouchableOpacity
                 style={styles.mobilePendingButton}
                 onPress={pendingButtonConfig.onPress}
-                activeOpacity={0.7}
+                activeOpacity={activeOpacity.default}
               >
                 <ThemedText style={styles.mobilePendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
               </TouchableOpacity>
@@ -311,12 +312,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
   },
   header: {
     paddingHorizontal: 0,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -325,31 +326,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
   },
   mobileToolbarAvatars: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 8,
+    gap: spacing.sm,
   },
   mobileAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: layout.avatarSmall,
+    height: layout.avatarSmall,
+    borderRadius: layout.avatarSmall / 2,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#007AFF',
   },
   mobileAvatarImage: {
-    width: 32,
-    height: 32,
+    width: layout.avatarSmall,
+    height: layout.avatarSmall,
   },
   mobileAvatarFallback: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
     color: '#FFFFFF',
   },
   headerTitleContainer: {
@@ -358,48 +359,48 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
   },
   pendingButton: {
     backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
+    paddingHorizontal: spacing.md,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: radius.lg,
   },
   pendingButtonText: {
     color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   mobilePendingButton: {
     backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
+    paddingHorizontal: spacing.md,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: radius.lg,
   },
   mobilePendingButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   conversationsContent: {
-    paddingBottom: 100, // Add extra padding to account for tab bar
+    paddingBottom: layout.tabBarPadding,
   },
   conversationItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
   },
   conversationContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   avatarContainer: {
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   avatar: {
     width: 50,
@@ -416,8 +417,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   avatarFallback: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
     color: 'white',
   },
   conversationInfo: {
@@ -427,15 +428,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   displayName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   timestamp: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
   },
   conversationFooter: {
     flexDirection: 'row',
@@ -443,10 +444,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lastMessage: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
     flex: 1,
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
   unreadBadge: {
     backgroundColor: '#007AFF',
@@ -458,21 +459,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   unreadCount: {
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.bold,
     color: 'white',
   },
   statusBadge: {
     backgroundColor: '#FF9500',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
     alignSelf: 'flex-start',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   statusText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
     color: 'white',
   },
   loadingState: {
@@ -481,33 +482,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingFooter: {
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
   },
   errorState: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xxxl,
   },
   errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   errorSubtitle: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   errorHelp: {
-    fontSize: 14,
-    opacity: 0.7,
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -515,35 +516,35 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xxxl,
   },
   skeletonContainer: {
     flex: 1,
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: layout.tabBarPadding,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   emptySubtitle: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
     textAlign: 'center',
   },
   emptyStateText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   errorLoadingConversations: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   noConversations: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
 });

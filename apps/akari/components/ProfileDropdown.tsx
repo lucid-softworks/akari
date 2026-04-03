@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { spacing, radius, fontSize, layout, semanticColors } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -94,8 +95,8 @@ export function ProfileDropdown({
 const styles = StyleSheet.create({
   dropdown: {
     position: 'absolute',
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: radius.sm,
+    borderWidth: layout.border,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -108,18 +109,18 @@ const styles = StyleSheet.create({
     zIndex: 9999999,
   },
   dropdownItem: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
   dropdownSeparator: {
-    height: 1,
-    borderTopWidth: 1,
-    marginVertical: 4,
+    height: layout.border,
+    borderTopWidth: layout.border,
+    marginVertical: spacing.xs,
   },
   dropdownText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
   },
   dropdownTextDestructive: {
-    color: '#c62828',
+    color: semanticColors.danger,
   },
 });

@@ -2,6 +2,7 @@ import * as Clipboard from 'expo-clipboard';
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { spacing, fontSize, layout } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
@@ -222,12 +223,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: layout.tabBarPadding, // Account for tab bar
   },
   errorText: {
-    fontSize: 16,
+    fontSize: fontSize.lg,
     textAlign: 'center',
-    marginTop: 40,
+    marginTop: spacing.xxxxl,
     color: 'red',
   },
 });

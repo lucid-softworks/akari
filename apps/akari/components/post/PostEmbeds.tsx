@@ -10,6 +10,7 @@ import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { spacing, radius, activeOpacity, layout } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type PostEmbedsProps = {
@@ -184,7 +185,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
               <TouchableOpacity
                 key={`${postId}-image-${index}`}
                 onPress={() => handleImagePress(index)}
-                activeOpacity={0.8}
+                activeOpacity={activeOpacity.subtle}
               >
                 <Image
                   source={{ uri: imageUrl }}
@@ -239,12 +240,12 @@ function extractVideo(embed: BlueskyEmbed, t: (key: any) => string) {
 
 const styles = StyleSheet.create({
   imagesContainer: {
-    gap: 4,
+    gap: spacing.xs,
   },
   image: {
     width: '100%',
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: radius.sm,
+    borderWidth: layout.border,
     borderColor: 'transparent',
   },
 });

@@ -22,6 +22,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { useNavigateToProfile } from '@/utils/navigation';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
 const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
 
@@ -483,7 +484,7 @@ export default function ConversationScreen() {
                 // Navigate to profile when header is clicked
                 navigateToProfile({ actor: handle });
               }}
-              activeOpacity={0.7}
+              activeOpacity={activeOpacity.default}
             >
               {conversation?.avatar && (
                 <Image source={{ uri: conversation.avatar }} style={styles.headerAvatar} contentFit="cover" />
@@ -521,7 +522,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom + 35 : 12,
+                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom + 35 : spacing.md,
               },
             ]}
           >
@@ -569,9 +570,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
   },
   headerInfo: {
     flexDirection: 'row',
@@ -579,28 +580,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
+    width: layout.avatarMedium,
+    height: layout.avatarMedium,
+    borderRadius: layout.avatarMedium / 2,
+    marginRight: spacing.md,
   },
   headerTextContainer: {
     flex: 1,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: fontWeight.semibold,
   },
   headerHandle: {
-    fontSize: 14,
-    opacity: 0.6,
+    fontSize: fontSize.base,
+    opacity: opacity.tertiary,
   },
   messagesContent: {
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
   },
   messageContainer: {
-    marginHorizontal: 16,
-    marginVertical: 4,
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.xs,
   },
   myMessage: {
     alignItems: 'flex-end',
@@ -610,9 +611,9 @@ const styles = StyleSheet.create({
   },
   messageBubble: {
     maxWidth: '80%',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 20,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderRadius: radius.xl,
   },
   myBubble: {
     // backgroundColor is set dynamically
@@ -621,12 +622,12 @@ const styles = StyleSheet.create({
     // backgroundColor is set dynamically
   },
   messageText: {
-    fontSize: 16,
-    marginBottom: 4,
+    fontSize: fontSize.lg,
+    marginBottom: spacing.xs,
   },
   messageTimestamp: {
-    fontSize: 12,
-    opacity: 0.6,
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
     alignSelf: 'flex-end',
   },
   timestampIncoming: {
@@ -634,8 +635,8 @@ const styles = StyleSheet.create({
   },
   embedContainer: {
     maxWidth: '80%',
-    marginTop: 8,
-    gap: 8,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
   },
   myEmbed: {
     alignSelf: 'flex-end',
@@ -644,38 +645,38 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   messageImagesContainer: {
-    gap: 8,
+    gap: spacing.sm,
   },
   messageImage: {
-    borderRadius: 12,
+    borderRadius: radius.md,
     overflow: 'hidden',
   },
   unsupportedEmbedText: {
-    fontSize: 14,
+    fontSize: fontSize.base,
     opacity: 0.8,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 0.5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderTopWidth: layout.hairline,
   },
   textInput: {
     flex: 1,
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginRight: 8,
+    borderWidth: layout.border,
+    borderRadius: radius.xl,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    marginRight: spacing.sm,
     maxHeight: 100,
-    fontSize: 16,
+    fontSize: fontSize.lg,
   },
   sendButton: {
-    padding: 4,
+    padding: spacing.xs,
   },
   sendButtonDisabled: {
-    opacity: 0.5,
+    opacity: opacity.tertiary,
   },
   loadingState: {
     flex: 1,
@@ -683,36 +684,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingFooter: {
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
   },
   errorState: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xxxl,
   },
   errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
   },
   errorSubtitle: {
-    fontSize: 16,
-    opacity: 0.6,
+    fontSize: fontSize.lg,
+    opacity: opacity.tertiary,
     textAlign: 'center',
   },
   errorText: {
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: fontSize.lg,
+    marginBottom: spacing.sm,
   },
   errorSubtext: {
-    fontSize: 14,
-    opacity: 0.6,
+    fontSize: fontSize.base,
+    opacity: opacity.tertiary,
     textAlign: 'center',
   },
 });
