@@ -98,16 +98,7 @@ export default function AuthScreen() {
 
       await switchAccountMutation.mutateAsync(newAccount);
 
-      showAlert({
-        title: t('common.success'),
-        message: currentAccount ? t('auth.accountAddedSuccessfully') : t('auth.signedInSuccessfully'),
-        buttons: [
-          {
-            text: t('common.ok'),
-            onPress: () => router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)'),
-          },
-        ],
-      });
+      router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
     } catch (error) {
       showAlert({
         title: t('common.error'),
@@ -164,16 +155,7 @@ export default function AuthScreen() {
 
       await switchAccountMutation.mutateAsync(newAccount);
 
-      showAlert({
-        title: t('common.success'),
-        message: t('auth.connectedSuccessfully'),
-        buttons: [
-          {
-            text: t('common.ok'),
-            onPress: () => router.replace('/(tabs)'),
-          },
-        ],
-      });
+      router.replace('/(tabs)');
     } catch (error) {
       showAlert({
         title: t('common.error'),

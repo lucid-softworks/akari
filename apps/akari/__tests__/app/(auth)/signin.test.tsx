@@ -212,17 +212,8 @@ describe('AuthScreen', () => {
     });
 
     await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.success',
-          message: 'auth.signedInSuccessfully',
-        }),
-      );
+      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
     });
-
-    const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
-    alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
   });
 
   it('submits sign in when pressing enter on the password input', async () => {
@@ -266,17 +257,8 @@ describe('AuthScreen', () => {
     fireEvent.press(addAccountButtons[addAccountButtons.length - 1]);
 
     await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.success',
-          message: 'auth.accountAddedSuccessfully',
-        }),
-      );
+      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/settings');
     });
-
-    const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
-    alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/settings');
   });
 
   it('shows error when trying to sign up with empty fields', () => {
@@ -372,21 +354,8 @@ describe('AuthScreen', () => {
     fireEvent.press(utils.getByText('auth.connectAccount'));
 
     await waitFor(() => {
-      expect(switchAccountMutate).toHaveBeenCalled();
+      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
     });
-
-    await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.success',
-          message: 'auth.connectedSuccessfully',
-        }),
-      );
-    });
-
-    const alertConfig = mockShowAlert.mock.calls[mockShowAlert.mock.calls.length - 1][0];
-    alertConfig.buttons[0].onPress();
-    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
   });
 
   it('toggles between modes and clears input values', () => {

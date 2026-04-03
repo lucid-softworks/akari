@@ -187,7 +187,7 @@ describe('AccountSettingsScreen', () => {
 
     const { getByText } = renderAccountSettings();
 
-    fireEvent.press(getByText('common.disconnectAllAccounts'));
+    fireEvent.press(getByText('common.signOutAllAccounts'));
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
   });
 
@@ -245,7 +245,7 @@ describe('AccountSettingsScreen', () => {
 
     const { getByText } = renderAccountSettings();
 
-    fireEvent.press(getByText('common.disconnectAllAccounts'));
+    fireEvent.press(getByText('common.signOutAllAccounts'));
 
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
     await waitFor(() =>
