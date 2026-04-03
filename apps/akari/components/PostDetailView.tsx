@@ -7,6 +7,7 @@ import { PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useParentPost, usePost, useRootPost } from '@/hooks/queries/usePost';
+import { usePostThread } from '@/hooks/queries/usePostThread';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -162,8 +163,8 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const { data: rootPost } = useRootPost(post?.uri || null);
 
 
-  // Get the full thread
-  // const { data: threadData, isLoading: threadLoading } = usePostThread(post?.uri || null);
+  // Get the full thread (replies)
+  const { data: threadData, isLoading: threadLoading } = usePostThread(post?.uri || null);
 
   // Scroll to top when post changes
   useEffect(() => {
@@ -193,7 +194,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
 
     return (
       <View style={styles.threadContext}>
-        <ThemedText style={styles.threadContextLabel}>{t('post.replies')}</ThemedText>
+        <ThemedText style={styles.threadContextLabel}>{t('common.replies')}</ThemedText>
         <PostCard
           post={{
             id: rootPost.uri,
@@ -315,18 +316,18 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
         />
 
         {/* Replies */}
-        {/* {threadLoading ? (
+        {threadLoading ? (
           <PostDetailSkeleton />
-        ) : (
+        ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
           <View style={styles.repliesContainer}>
-            <ThemedText style={styles.repliesLabel}>{t('post.replies')}</ThemedText>
-            {threadData?.replies?.map((reply) => (
-              <View key={reply.uri} style={styles.replyItem}>
+            <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
+            {threadData.thread.replies.map((reply, index) => (
+              <View key={'post' in reply ? reply.post.uri : `reply-${index}`} style={styles.replyItem}>
                 {renderComment(reply, navigateToPost)}
               </View>
             ))}
           </View>
-        )} */}
+        ) : null}
       </ScrollView>
     </ThemedView>
   );
