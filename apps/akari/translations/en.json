@@ -24,6 +24,8 @@
       "actions": "Actions",
       "disconnectAllAccounts": "Disconnect All Accounts",
       "removeAllConnections": "Remove all Bluesky connections",
+      "signOutAllAccounts": "Sign Out of All Accounts",
+      "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device",
       "noAccounts": "No accounts found",
       "noConversations": "No conversations",
       "noProfile": "Profile not found",

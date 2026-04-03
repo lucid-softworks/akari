@@ -183,9 +183,9 @@ export default function AccountSettingsScreen() {
       },
       {
         key: 'disconnect-all',
-        icon: 'xmark.circle.fill',
-        label: t('common.disconnectAllAccounts'),
-        description: t('common.removeAllConnections'),
+        icon: 'rectangle.portrait.and.arrow.right',
+        label: t('common.signOutAllAccounts'),
+        description: t('common.signOutAllAccountsDescription'),
         destructive: true,
         onPress: handleLogout,
       },
