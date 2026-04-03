@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyLabel } from '@/bluesky-api';
@@ -61,12 +61,9 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
   const { t } = useTranslation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
-  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
-
-  const menuButtonRef = useRef<any>(null);
 
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
@@ -133,21 +130,8 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
 
   // Handlers
   const handleMenuToggle = useCallback(() => {
-    if (showActionsMenu) {
-      setShowActionsMenu(false);
-      return;
-    }
-    // Always open the menu, and try to get position for proper placement
-    setShowActionsMenu(true);
-    const button = menuButtonRef.current;
-    if (button?.measureInWindow) {
-      button.measureInWindow((x: number, y: number, width: number, height: number) => {
-        setMenuPosition({ x, y, width, height });
-      });
-    } else {
-      setMenuPosition(null);
-    }
-  }, [showActionsMenu]);
+    setShowActionsMenu((prev) => !prev);
+  }, []);
 
   const handleMenuDismiss = useCallback(() => {
     setShowActionsMenu(false);
@@ -209,8 +193,6 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
         author={post.author}
         createdAt={post.createdAt}
         isLive={isLive}
-        onMenuToggle={handleMenuToggle}
-        menuButtonRef={menuButtonRef}
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
@@ -232,11 +214,13 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
         uri={post.uri}
         cid={post.cid}
         likeUri={post.viewer?.like}
+        authorHandle={post.author.handle}
         authorName={authorName}
         commentCount={post.commentCount || 0}
         repostCount={post.repostCount || 0}
         likeCount={post.likeCount || 0}
         onReplyPress={handleReplyPress}
+        onMorePress={handleMenuToggle}
       />
     </>
   );
@@ -259,7 +243,6 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
 
       <PostActionsMenu
         visible={showActionsMenu}
-        menuPosition={menuPosition}
         canTranslate={canTranslate}
         onDismiss={handleMenuDismiss}
         onTranslatePress={handleTranslatePress}

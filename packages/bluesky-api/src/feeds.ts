@@ -132,6 +132,32 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
+   * Adds a post to the authenticated user's bookmarks
+   * @param accessJwt - Valid access JWT token
+   * @param uri - The post's URI
+   * @param cid - The post's CID
+   */
+  async addBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
+    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.addBookmark', accessJwt, {
+      method: 'POST',
+      body: { subject: { uri, cid } },
+    });
+  }
+
+  /**
+   * Removes a post from the authenticated user's bookmarks
+   * @param accessJwt - Valid access JWT token
+   * @param uri - The post's URI
+   * @param cid - The post's CID
+   */
+  async removeBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
+    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.removeBookmark', accessJwt, {
+      method: 'POST',
+      body: { subject: { uri, cid } },
+    });
+  }
+
+  /**
    * Gets a specific post by its URI
    * @param accessJwt - Valid access JWT token
    * @param uri - The post's URI

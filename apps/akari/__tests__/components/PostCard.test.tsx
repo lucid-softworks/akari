@@ -2,6 +2,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
 import { useLibreTranslateLanguages } from '@/hooks/queries/useLibreTranslateLanguages';
@@ -23,6 +24,7 @@ jest.mock('react', () => {
 });
 
 jest.mock('@/hooks/mutations/useLikePost');
+jest.mock('@/hooks/mutations/useBookmarkPost');
 jest.mock('@/hooks/mutations/usePostTranslation');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/queries/useLiveNow');
@@ -54,6 +56,9 @@ jest.mock('@/components/RichTextWithFacets', () => ({ RichTextWithFacets: jest.f
 jest.mock('@/components/VideoEmbed', () => ({ VideoEmbed: jest.fn(() => null) }));
 jest.mock('@/components/YouTubeEmbed', () => ({ YouTubeEmbed: jest.fn(() => null) }));
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: jest.fn(() => null) }));
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+}));
 
 const ImageMock = require('expo-image').Image as jest.Mock;
 const ExternalEmbedMock = require('@/components/ExternalEmbed').ExternalEmbed as jest.Mock;
@@ -82,6 +87,7 @@ type Post = {
 };
 
 describe('PostCard', () => {
+  const mockUseBookmarkPost = useBookmarkPost as jest.Mock;
   const mockUseLikePost = useLikePost as jest.Mock;
   const mockUsePostTranslation = usePostTranslation as jest.Mock;
   const mockUseLibreTranslateLanguages = useLibreTranslateLanguages as jest.Mock;
@@ -112,6 +118,7 @@ describe('PostCard', () => {
       availableLocales: ['en'],
     });
     mockUseLiveNow.mockReturnValue({ data: [], isLoading: false });
+    mockUseBookmarkPost.mockReturnValue({ mutate: jest.fn() });
     mutateAsyncMock = jest.fn().mockImplementation(async ({ targetLanguage }: { targetLanguage: string }) => ({
       translatedText: `translated-${targetLanguage}`,
     }));

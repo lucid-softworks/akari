@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
+import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNavigateToProfile } from '@/utils/navigation';
 
@@ -18,8 +18,6 @@ type PostHeaderProps = {
   };
   createdAt: string;
   isLive: boolean;
-  onMenuToggle: () => void;
-  menuButtonRef: React.RefObject<any>;
   onAvatarHoverChange?: (hovered: boolean) => void;
 };
 
@@ -27,8 +25,6 @@ export const PostHeader = React.memo(function PostHeader({
   author,
   createdAt,
   isLive,
-  onMenuToggle,
-  menuButtonRef,
   onAvatarHoverChange,
 }: PostHeaderProps) {
   const navigateToProfile = useNavigateToProfile();
@@ -97,17 +93,6 @@ export const PostHeader = React.memo(function PostHeader({
       </ThemedView>
       <View style={styles.headerMeta}>
         <ThemedText style={styles.timestamp}>{createdAt}</ThemedText>
-        <TouchableOpacity
-          ref={menuButtonRef}
-          onPress={onMenuToggle}
-          style={styles.menuButton}
-          activeOpacity={activeOpacity.strong}
-          hitSlop={hitSlop}
-          accessibilityRole="button"
-          accessibilityLabel={`Actions - ${authorName}`}
-        >
-          <IconSymbol name="ellipsis" size={18} color={iconColor} />
-        </TouchableOpacity>
       </View>
     </ThemedView>
   );
@@ -168,10 +153,6 @@ const styles = StyleSheet.create({
   headerMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  menuButton: {
-    padding: spacing.xs,
-    marginLeft: spacing.md,
   },
   displayName: {
     fontSize: fontSize.lg,

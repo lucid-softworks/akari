@@ -229,6 +229,26 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Adds a post to the authenticated user's bookmarks.
+   * @param accessJwt - Valid session token for the requesting user.
+   * @param uri - AT URI of the post to bookmark.
+   * @param cid - CID of the post to bookmark.
+   */
+  async addBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
+    return this.feeds.addBookmark(accessJwt, uri, cid);
+  }
+
+  /**
+   * Removes a post from the authenticated user's bookmarks.
+   * @param accessJwt - Valid session token for the requesting user.
+   * @param uri - AT URI of the post to remove from bookmarks.
+   * @param cid - CID of the post to remove from bookmarks.
+   */
+  async removeBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
+    return this.feeds.removeBookmark(accessJwt, uri, cid);
+  }
+
+  /**
    * Loads a single post view by its AT URI, guaranteeing the post exists before returning it.
    * @param accessJwt - Valid session token used to look up the post.
    * @param uri - AT URI of the post to fetch.
