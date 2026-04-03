@@ -8,8 +8,10 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -234,14 +236,26 @@ export default function AuthScreen() {
     return isSignUp ? t('auth.connectAccount') : t('common.signIn');
   }, [currentAccount, isLoading, isSignUp, t]);
 
+  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const isNarrow = width < 500;
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-        <View style={styles.panelWrapper}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          isNarrow && styles.scrollContentMobile,
+          isNarrow && { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={[styles.panelWrapper, isNarrow && styles.panelWrapperMobile]}>
           <Panel
             title={panelTitle}
             contentStyle={styles.panelContent}
             footerStyle={styles.panelFooter}
+            style={isNarrow ? styles.panelMobile : undefined}
             footerActions={
               <View style={styles.footerActions}>
                 <TouchableOpacity
@@ -337,10 +351,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
+  scrollContentMobile: {
+    justifyContent: 'flex-start',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
   panelWrapper: {
     width: '100%',
     maxWidth: 420,
     alignSelf: 'center',
+  },
+  panelWrapperMobile: {
+    maxWidth: '100%',
+    flex: 1,
+  },
+  panelMobile: {
+    borderWidth: 0,
+    flex: 1,
   },
   panelContent: {
     gap: 24,
