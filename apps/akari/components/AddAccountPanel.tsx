@@ -126,22 +126,8 @@ export function AddAccountPanel({ panelId = ADD_ACCOUNT_PANEL_ID }: AddAccountPa
 
       setHandle('');
       setAppPassword('');
-
-      showAlert({
-        title: t('common.success'),
-        message: currentAccount
-          ? t('auth.accountAddedSuccessfully')
-          : t('auth.signedInSuccessfully'),
-        buttons: [
-          {
-            text: t('common.ok'),
-            onPress: () => {
-              dialogManager.close(panelId);
-              router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
-            },
-          },
-        ],
-      });
+      dialogManager.close(panelId);
+      router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
     } catch (error) {
       showAlert({
         title: t('common.error'),
