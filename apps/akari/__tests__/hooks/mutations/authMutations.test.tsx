@@ -204,11 +204,12 @@ describe('authentication and account mutation hooks', () => {
     result.current.mutate();
 
     await waitFor(() => {
-      expect(queryClient.getQueryData(['accounts'])).toEqual([]);
+      // queryClient.clear() removes all query data
+      expect(queryClient.getQueryData(['accounts'])).toBeUndefined();
     });
-    expect(queryClient.getQueryData(['currentAccount'])).toBeNull();
-    expect(queryClient.getQueryData(['jwtToken'])).toBeNull();
-    expect(queryClient.getQueryData(['refreshToken'])).toBeNull();
+    expect(queryClient.getQueryData(['currentAccount'])).toBeUndefined();
+    expect(queryClient.getQueryData(['jwtToken'])).toBeUndefined();
+    expect(queryClient.getQueryData(['refreshToken'])).toBeUndefined();
     expect(storage.removeItem).toHaveBeenCalledWith('accounts');
     expect(storage.removeItem).toHaveBeenCalledWith('currentAccount');
     expect(storage.removeItem).toHaveBeenCalledWith('jwtToken');
