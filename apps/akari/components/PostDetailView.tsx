@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
-import { PostDetailSkeleton } from '@/components/skeletons';
+import { FeedSkeleton, PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useParentPost, usePost, useRootPost } from '@/hooks/queries/usePost';
@@ -317,12 +317,12 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
 
         {/* Replies */}
         {threadLoading ? (
-          <PostDetailSkeleton />
+          <FeedSkeleton count={3} />
         ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
           <View style={styles.repliesContainer}>
             <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
             {threadData.thread.replies.map((reply, index) => (
-              <View key={'post' in reply ? reply.post.uri : `reply-${index}`} style={styles.replyItem}>
+              <View key={'post' in reply ? reply.post.uri : `reply-${index}`}>
                 {renderComment(reply, navigateToPost)}
               </View>
             ))}
@@ -357,15 +357,12 @@ const styles = StyleSheet.create({
   },
   repliesContainer: {
     marginTop: 16,
-    paddingHorizontal: 16,
   },
   repliesLabel: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 12,
-  },
-  replyItem: {
-    marginBottom: 8,
+    paddingHorizontal: 16,
   },
   errorText: {
     fontSize: 16,
