@@ -391,6 +391,29 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
+   * Reports an account or post to moderation
+   */
+  async createReport(
+    accessJwt: string,
+    subject: { did: string } | { uri: string; cid: string },
+    reasonType: string,
+    reason?: string,
+  ) {
+    const subjectPayload = 'did' in subject
+      ? { $type: 'com.atproto.admin.defs#repoRef', did: subject.did }
+      : { $type: 'com.atproto.repo.strongRef', uri: subject.uri, cid: subject.cid };
+
+    return this.makeAuthenticatedRequest('/com.atproto.moderation.createReport', accessJwt, {
+      method: 'POST',
+      body: {
+        reasonType: `com.atproto.moderation.defs#${reasonType}`,
+        reason,
+        subject: subjectPayload,
+      },
+    });
+  }
+
+  /**
    * Uploads an image or GIF and returns the blob reference
    * @param accessJwt - Valid access JWT token
    * @param imageUri - The local URI of the image or GIF

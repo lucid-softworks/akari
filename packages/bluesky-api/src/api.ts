@@ -403,6 +403,15 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.unrepostPost(accessJwt, repostUri, userDid);
   }
 
+  async createReport(
+    accessJwt: string,
+    subject: { did: string } | { uri: string; cid: string },
+    reasonType: string,
+    reason?: string,
+  ) {
+    return this.feeds.createReport(accessJwt, subject, reasonType, reason);
+  }
+
   /**
    * Lists the user's conversations including the most recent message and participant metadata.
    * @param accessJwt - Valid session token authorised to read conversation state.

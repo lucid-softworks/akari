@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
+import { ReportSheet } from '@/components/ReportSheet';
 import { Labels } from '@/components/Labels';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
@@ -74,6 +75,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
+  const [showReportSheet, setShowReportSheet] = useState(false);
   const borderColor = useBorderColor();
   const avatarBorderColor = useThemeColor({}, 'background');
   const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
@@ -184,22 +186,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   const handleReportAccount = () => {
-    showAlert({
-      title: t('profile.reportAccount'),
-      message: t('profile.reportConfirmation', { handle: profile.handle }),
-      buttons: [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('profile.reportAccount'),
-          style: 'destructive',
-          onPress: () => {
-            // TODO: Implement actual report API call
-            // TODO: wire up report API call
-          },
-        },
-      ],
-    });
     setShowDropdown(false);
+    setShowReportSheet(true);
   };
 
   const handleDropdownToggle = () => {
@@ -420,6 +408,15 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           onClose={() => setShowHandleHistory(false)}
           did={profile.did}
           currentHandle={profile.handle}
+        />
+      )}
+
+      {/* Report Sheet */}
+      {profile.did && (
+        <ReportSheet
+          visible={showReportSheet}
+          onDismiss={() => setShowReportSheet(false)}
+          subject={{ type: 'account', did: profile.did }}
         />
       )}
     </>
