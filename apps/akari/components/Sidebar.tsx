@@ -46,12 +46,12 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Home', icon: 'house.fill', route: '/(tabs)' },
+      { id: 'timeline', label: 'Home', icon: 'house', route: '/(tabs)' },
       { id: 'search', label: 'Search', icon: 'magnifyingglass', route: '/(tabs)/search' },
       {
         id: 'notifications',
         label: 'Notifications',
-        icon: 'bell.fill',
+        icon: 'bell',
         route: '/(tabs)/notifications',
         badge: unreadNotificationsCount,
       },

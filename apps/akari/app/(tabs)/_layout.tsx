@@ -103,10 +103,10 @@ type HardcodedTabBarProps = BottomTabBarProps & {
 };
 
 const TAB_ICONS: Record<TabKey, string> = {
-  index: 'house.fill',
+  index: 'house',
   search: 'magnifyingglass',
   messages: 'message.fill',
-  notifications: 'bell.fill',
+  notifications: 'bell',
   bookmarks: 'bookmark.fill',
   profile: 'person.fill',
   settings: 'gearshape.fill',
