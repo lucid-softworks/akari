@@ -212,8 +212,8 @@ export function MessagesListScreen({
               </TouchableOpacity> 
             ) : null} 
           </ThemedView> 
-        ) : ( 
-          <ThemedView style={[styles.mobileToolbar, { borderBottomColor: borderColor }]}> 
+        ) : pendingButtonConfig ? (
+          <ThemedView style={[styles.mobileToolbar, { borderBottomColor: borderColor }]}>
             <View style={styles.mobileToolbarAvatars}> 
               {previewAvatars.map((avatar) => ( 
                 <ThemedView key={avatar.key} style={styles.mobileAvatar}> 
@@ -235,7 +235,7 @@ export function MessagesListScreen({
               </TouchableOpacity>
             ) : null}
           </ThemedView>
-        )}
+        ) : null}
       </ThemedView>
     ),
     [
