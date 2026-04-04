@@ -239,17 +239,17 @@ describe('TabLayout', () => {
     ]);
   });
 
-  it('shows hamburger on root mobile route and back button on nested route', () => {
+  it('shows back button on nested route only', () => {
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: true }, isLoading: false });
     mockUseResponsive.mockReturnValue({ isLargeScreen: false });
 
-    const { getByText, queryByText, rerender } = render(<TabLayout />);
-    expect(getByText('line.3.horizontal')).toBeTruthy();
+    const { queryByText, rerender } = render(<TabLayout />);
+    // No hamburger on root routes (drawer removed)
     expect(queryByText('chevron.left')).toBeNull();
 
     mockUsePathname.mockReturnValue('/(tabs)/messages/pending');
     rerender(<TabLayout />);
-    expect(getByText('chevron.left')).toBeTruthy();
+    expect(queryByText('chevron.left')).toBeTruthy();
   });
 
   it('uses default tint and badge counts when data is unavailable', () => {
@@ -430,7 +430,8 @@ describe('HardcodedTabBar interactions', () => {
 
   it('emits tabLongPress events', () => {
     const { navigation } = renderTabBar();
-    const onLongPress = mockHapticTab.mock.calls[4][0].onLongPress as () => void;
+    // Profile is now the 6th tab (index 5) after bookmarks was added
+    const onLongPress = mockHapticTab.mock.calls[5][0].onLongPress as () => void;
 
     act(() => {
       onLongPress();

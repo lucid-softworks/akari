@@ -1,12 +1,15 @@
 import * as Clipboard from 'expo-clipboard';
+import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, activeOpacity } from '@/constants/tokens';
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
 import { LinksTab } from '@/components/profile/LinksTab';
@@ -22,6 +25,7 @@ import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -37,6 +41,7 @@ export default function ProfileScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const iconColor = useThemeColor({}, 'icon');
 
   // Create scroll to top function
   const scrollToTop = () => {
@@ -176,6 +181,19 @@ export default function ProfileScreen() {
         onScroll={handleScroll}
         scrollEventThrottle={200}
       >
+        {/* Settings gear */}
+        <View style={styles.settingsRow}>
+          <TouchableOpacity
+            onPress={() => router.push('/(tabs)/settings')}
+            activeOpacity={activeOpacity.default}
+            accessibilityRole="button"
+            accessibilityLabel="Settings"
+            style={styles.settingsButton}
+          >
+            <IconSymbol name="gearshape" size={22} color={iconColor} />
+          </TouchableOpacity>
+        </View>
+
         <ProfileHeader
           profile={{
             avatar: profile?.avatar,
@@ -235,7 +253,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 100, // Account for tab bar
+    paddingBottom: 100,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+  },
+  settingsButton: {
+    padding: spacing.sm,
   },
   emptyState: {
     paddingVertical: 40,
