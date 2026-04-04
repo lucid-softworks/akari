@@ -1,9 +1,14 @@
-import { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
+import { PostComposer } from '@/components/PostComposer';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { FeedSkeleton, PostDetailSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -153,6 +158,11 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
   const scrollViewRef = useRef<ScrollView>(null);
+  const [showReplyComposer, setShowReplyComposer] = useState(false);
+  const borderColor = useBorderColor();
+  const accentColor = useThemeColor({}, 'tint');
+  const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
+  const insets = useSafeAreaInsets();
 
   // Get the post data
   const { data: post, isLoading: postLoading, error: postError } = usePost({ actor, rKey });
@@ -330,6 +340,29 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           </View>
         ) : null}
       </ScrollView>
+
+      {/* Reply Bar */}
+      <TouchableOpacity
+        style={[styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom, spacing.md) }]}
+        onPress={() => setShowReplyComposer(true)}
+        activeOpacity={0.7}
+      >
+        <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
+        <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
+          {t('post.actions.reply') ?? 'Reply'}...
+        </ThemedText>
+      </TouchableOpacity>
+
+      {/* Reply Composer */}
+      <PostComposer
+        visible={showReplyComposer}
+        onClose={() => setShowReplyComposer(false)}
+        replyTo={{
+          root: post?.uri || '',
+          parent: post?.uri || '',
+          authorHandle: post?.author.handle || actor,
+        }}
+      />
     </ThemedView>
   );
 }
@@ -364,6 +397,17 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
     marginBottom: spacing.md,
     paddingHorizontal: spacing.lg,
+  },
+  replyBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  replyBarText: {
+    fontSize: fontSize.lg,
   },
   errorText: {
     fontSize: fontSize.lg,
