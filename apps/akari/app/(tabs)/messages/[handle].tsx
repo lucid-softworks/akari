@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -473,29 +473,8 @@ export default function ConversationScreen() {
   const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ThemedView style={styles.container}>
-          {/* Header */}
-          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity
-              style={styles.headerInfo}
-              onPress={() => {
-                // Navigate to profile when header is clicked
-                navigateToProfile({ actor: handle });
-              }}
-              activeOpacity={activeOpacity.default}
-            >
-              {conversation?.avatar && (
-                <Image source={{ uri: conversation.avatar }} style={styles.headerAvatar} contentFit="cover" />
-              )}
-              <ThemedView style={styles.headerTextContainer}>
-                <ThemedText style={styles.headerTitle}>{conversation?.displayName || decodeURIComponent(handle)}</ThemedText>
-                <ThemedText style={styles.headerHandle}>@{decodeURIComponent(handle)}</ThemedText>
-              </ThemedView>
-            </TouchableOpacity>
-          </ThemedView>
-
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ThemedView style={styles.container}>
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
@@ -522,7 +501,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom + 35 : spacing.md,
+                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom : spacing.md,
               },
             ]}
           >
@@ -557,44 +536,14 @@ export default function ConversationScreen() {
               />
             </TouchableOpacity>
           </ThemedView>
-        </ThemedView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </ThemedView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderBottomWidth: layout.hairline,
-  },
-  headerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  headerAvatar: {
-    width: layout.avatarMedium,
-    height: layout.avatarMedium,
-    borderRadius: layout.avatarMedium / 2,
-    marginRight: spacing.md,
-  },
-  headerTextContainer: {
-    flex: 1,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: fontWeight.semibold,
-  },
-  headerHandle: {
-    fontSize: fontSize.base,
-    opacity: opacity.tertiary,
   },
   messagesContent: {
     paddingVertical: spacing.lg,
