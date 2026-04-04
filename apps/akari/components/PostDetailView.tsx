@@ -349,7 +349,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
       >
         <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
         <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
-          {t('post.actions.reply') ?? 'Reply'}...
+          {t('post.reply')}...
         </ThemedText>
       </TouchableOpacity>
 
