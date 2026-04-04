@@ -537,7 +537,6 @@ export default function ConversationScreen() {
           </ThemedView>
       </KeyboardAvoidingView>
   );
-  );
 }
 
 const styles = StyleSheet.create({
