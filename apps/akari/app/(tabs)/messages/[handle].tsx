@@ -237,7 +237,7 @@ export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const [headerOffset, setHeaderOffset] = useState(insets.top + 50);
+  const [headerOffset, setHeaderOffset] = useState(100);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -479,9 +479,13 @@ export default function ConversationScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? headerOffset : 0}
       onLayout={(e) => {
         if (Platform.OS === 'ios') {
-          e.target.measureInWindow((_x, y) => {
-            if (y > 0) setHeaderOffset(y);
-          });
+          try {
+            e.target.measureInWindow((_x: number, y: number) => {
+              if (y > 0) setHeaderOffset(y);
+            });
+          } catch {
+            // measureInWindow not available in all environments
+          }
         }
       }}
     >
