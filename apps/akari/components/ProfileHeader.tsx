@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
+import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { Labels } from '@/components/Labels';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
@@ -380,6 +381,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             <RichText text={profile.description} style={styles.description} />
           </View>
         )}
+
+        {/* Verified Identities */}
+        <KeytraceClaims handle={profile.handle} />
 
         {/* Labels */}
         <Labels labels={profile.labels} />
