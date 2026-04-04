@@ -17,6 +17,7 @@ export default function SettingsLayout() {
         fullScreenGestureEnabled: true,
       }}
     >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
       <Stack.Screen
         name="privacy-and-security"
