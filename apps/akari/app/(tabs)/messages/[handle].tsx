@@ -470,7 +470,8 @@ export default function ConversationScreen() {
   }
 
   // Flatten all pages of messages into a single array
-  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
+  // API returns newest first; reverse so inverted list shows newest at bottom
+  const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
