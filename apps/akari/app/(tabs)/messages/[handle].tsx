@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
-import { FlatList, InputAccessoryView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -234,6 +235,7 @@ export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const listRef = useRef<FlatList<Message>>(null);
+  const insets = useSafeAreaInsets();
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const { t } = useTranslation();
@@ -457,8 +459,6 @@ export default function ConversationScreen() {
   // API returns newest first -- keep order for inverted FlatList
   const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
 
-  const inputAccessoryViewID = 'message-input';
-
   const inputBar = (
     <ThemedView style={[styles.inputContainer, { borderTopColor: borderColor }]}>
       <TextInput
@@ -469,7 +469,6 @@ export default function ConversationScreen() {
         placeholderTextColor={iconColor}
         multiline
         maxLength={500}
-        inputAccessoryViewID={Platform.OS === 'ios' ? inputAccessoryViewID : undefined}
       />
       <TouchableOpacity
         style={[styles.sendButton, !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null]}
@@ -486,7 +485,11 @@ export default function ConversationScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={insets.top + 56}
+    >
       {messagesLoading ? (
         <View style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
@@ -504,18 +507,10 @@ export default function ConversationScreen() {
           ListFooterComponent={renderFooter}
           inverted
           keyboardDismissMode="interactive"
-          automaticallyAdjustKeyboardInsets
         />
       )}
-
-      {Platform.OS === 'ios' ? (
-        <InputAccessoryView nativeID={inputAccessoryViewID}>
-          {inputBar}
-        </InputAccessoryView>
-      ) : (
-        inputBar
-      )}
-    </ThemedView>
+      {inputBar}
+    </KeyboardAvoidingView>
   );
 }
 
