@@ -31,10 +31,7 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
   const chipBg = useThemeColor({ light: '#f0fdf4', dark: 'rgba(74, 222, 128, 0.1)' }, 'background');
   const chipBorder = useThemeColor({ light: '#bbf7d0', dark: 'rgba(74, 222, 128, 0.2)' }, 'border');
 
-  // Handle both raw VerificationResult and pre-filtered array
-  const claims = Array.isArray(data) ? data : Array.isArray((data as any)?.claims) ? (data as any).claims.filter((c: any) => c.verified) : [];
-
-  if (claims.length === 0) return null;
+  if (!data || data.length === 0) return null;
 
   return (
     <View style={styles.container}>
@@ -45,7 +42,7 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
         </ThemedText>
       </View>
       <View style={styles.claims}>
-        {claims.map((claim) => (
+        {data.map((claim) => (
           <TouchableOpacity
             key={claim.rkey}
             style={[styles.chip, { backgroundColor: chipBg, borderColor: chipBorder }]}

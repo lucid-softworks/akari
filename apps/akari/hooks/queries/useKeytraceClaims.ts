@@ -6,12 +6,10 @@ export type { ClaimVerificationResult };
 export function useKeytraceClaims(handle?: string) {
   return useQuery({
     queryKey: ['keytrace', handle],
-    queryFn: async () => {
-      const result = await getClaimsForHandle(handle!);
-      return result.claims.filter((c) => c.verified);
-    },
+    queryFn: () => getClaimsForHandle(handle!),
     enabled: !!handle,
     staleTime: 30 * 60 * 1000,
     retry: 1,
+    select: (result) => result.claims.filter((c) => c.verified),
   });
 }
