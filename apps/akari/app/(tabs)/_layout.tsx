@@ -334,7 +334,7 @@ export default function TabLayout() {
     [safeAreaInsets.bottom, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top, shouldShowMobileHeader],
   );
 
-  if (isLoading) {
+  if (isLoading || !authStatus) {
     return (
       <ThemedView
         style={{
