@@ -247,7 +247,8 @@ export default function ConversationScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const iconColor = useThemeColor({}, 'icon');
-  const incomingMessageBackground = useThemeColor({ light: '#F3F4F6', dark: '#1E2537' }, 'background');
+  const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
+  const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
   // Keyboard state
   useEffect(() => {
@@ -375,18 +376,15 @@ export default function ConversationScreen() {
               styles.messageBubble,
               item.isFromMe ? styles.myBubble : styles.theirBubble,
               {
-                backgroundColor: item.isFromMe ? '#007AFF' : incomingMessageBackground,
+                backgroundColor: item.isFromMe ? outgoingMessageBackground : incomingMessageBackground,
               },
             ]}
           >
             {hasText && (
-              <ThemedText style={[styles.messageText, { color: item.isFromMe ? 'white' : textColor }]}>
+              <ThemedText style={[styles.messageText, { color: item.isFromMe ? '#fff' : textColor }]}>
                 {item.text}
               </ThemedText>
             )}
-            <ThemedText style={[styles.messageTimestamp, { color: item.isFromMe ? 'rgba(255,255,255,0.6)' : iconColor }]}>
-              {item.timestamp}
-            </ThemedText>
           </ThemedView>
         )}
 
@@ -395,15 +393,18 @@ export default function ConversationScreen() {
             {embedContent ?? (
               <ThemedText style={[styles.unsupportedEmbedText, { color: iconColor }]}>{t('common.unknown')}</ThemedText>
             )}
-            {!hasText && (
-              <ThemedText
-                style={[styles.messageTimestamp, !item.isFromMe ? styles.timestampIncoming : null, { color: iconColor }]}
-              >
-                {item.timestamp}
-              </ThemedText>
-            )}
           </ThemedView>
         )}
+
+        <ThemedText
+          style={[
+            styles.messageTimestamp,
+            item.isFromMe ? styles.timestampOutgoing : styles.timestampIncoming,
+            { color: iconColor },
+          ]}
+        >
+          {item.timestamp}
+        </ThemedText>
       </ThemedView>
     );
   };
@@ -477,7 +478,7 @@ export default function ConversationScreen() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 50 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 95 : 0}
     >
       <ThemedView style={styles.container}>
           {/* Messages */}
@@ -577,11 +578,13 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: fontSize.lg,
-    marginBottom: spacing.xs,
   },
   messageTimestamp: {
-    fontSize: fontSize.sm,
+    fontSize: fontSize.xs,
     opacity: opacity.tertiary,
+    marginTop: spacing.xxs,
+  },
+  timestampOutgoing: {
     alignSelf: 'flex-end',
   },
   timestampIncoming: {
