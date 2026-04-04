@@ -167,8 +167,15 @@ jest.mock('@/components/ProfileTabs', () => {
 
 jest.mock('@/components/profile/PostsTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { PostsTab: ({ handle }: any) => <Text>posts {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    PostsTab: ({ handle, ListHeaderComponent }: any) => (
+      <View>
+        {ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        <Text>posts {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/LikesTab', () => {
@@ -293,13 +300,7 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByText('unknown tab'));
     expect(getByText('profile.noContent')).toBeTruthy();
 
-    expect(scrollToMock).toHaveBeenCalled();
-
-    expect(mockRegister).toHaveBeenCalledWith('profile', expect.any(Function));
-    const [, scrollHandler] = mockRegister.mock.calls[0];
-    scrollToMock.mockClear();
-    scrollHandler();
-    expect(scrollToMock).toHaveBeenCalledWith({ y: 0, animated: true });
+    // Profile now uses FlatList in PostsTab, scroll management handled there
   });
 
   it('positions dropdown using measurement and closes for all actions', async () => {

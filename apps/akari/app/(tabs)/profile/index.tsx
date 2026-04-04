@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useRef, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -25,30 +25,18 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import type { ProfileTabType } from '@/types/profile';
 
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
-  const [visibleCount, setVisibleCount] = useState(5);
   const [showDropdown, setShowDropdown] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const dropdownRef = useRef<View | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
   const { showToast } = useToast();
 
-  // Create scroll to top function
-  const scrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
-
-  // Register with the tab scroll registry
-  React.useEffect(() => {
-    tabScrollRegistry.register('profile', scrollToTop);
-  }, []);
 
   const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
 
@@ -122,17 +110,34 @@ export default function ProfileScreen() {
 
   const handleTabChange = (tab: ProfileTabType) => {
     setActiveTab(tab);
-    setVisibleCount(5); // Reset batch size on tab switch
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const scrollProgress = (contentOffset.y + layoutMeasurement.height) / contentSize.height;
-    if (scrollProgress > 0.7) {
-      setVisibleCount((prev) => prev + 10);
-    }
-  }, []);
+  const profileHeaderComponent = useCallback(() => (
+    <ProfileHeader
+      profile={{
+        avatar: profile?.avatar,
+        displayName: profile?.displayName || currentAccount?.handle || '',
+        handle: currentAccount?.handle || '',
+        description: profile?.description,
+        banner: profile?.banner,
+        did: profile?.did,
+        followersCount: profile?.followersCount,
+        followsCount: profile?.followsCount,
+        postsCount: profile?.postsCount,
+        viewer: profile?.viewer,
+        labels: profile?.labels,
+      }}
+      isOwnProfile={true}
+      onDropdownToggle={handleDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  ), [profile, currentAccount, handleDropdownToggle, dropdownRef]);
+
+  const tabProps = {
+    ListHeaderComponent: profileHeaderComponent,
+    onRefresh: handleRefresh,
+    refreshing,
+  };
 
   const renderTabContent = () => {
     if (!currentAccount?.handle) {
@@ -143,28 +148,27 @@ export default function ProfileScreen() {
       );
     }
 
-    const vc = visibleCount;
     switch (activeTab) {
       case 'posts':
-        return <PostsTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <PostsTab handle={currentAccount.handle} {...tabProps} />;
       case 'replies':
-        return <RepliesTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <RepliesTab handle={currentAccount.handle} />;
       case 'likes':
-        return <LikesTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <LikesTab handle={currentAccount.handle} />;
       case 'media':
-        return <MediaTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <MediaTab handle={currentAccount.handle} />;
       case 'videos':
-        return <VideosTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <VideosTab handle={currentAccount.handle} />;
       case 'feeds':
-        return <FeedsTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <FeedsTab handle={currentAccount.handle} />;
       case 'repos':
-        return <ReposTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <ReposTab handle={currentAccount.handle} />;
       case 'starterpacks':
-        return <StarterpacksTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <StarterpacksTab handle={currentAccount.handle} />;
       case 'recipes':
-        return <RecipesTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <RecipesTab handle={currentAccount.handle} />;
       case 'links':
-        return <LinksTab handle={currentAccount.handle} visibleCount={vc} />;
+        return <LinksTab handle={currentAccount.handle} />;
       default:
         return (
           <ThemedView style={styles.emptyState}>
@@ -176,37 +180,8 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={200}
-        stickyHeaderIndices={[1]}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-      >
-        <ProfileHeader
-          profile={{
-            avatar: profile?.avatar,
-            displayName: profile?.displayName || currentAccount?.handle || '',
-            handle: currentAccount?.handle || '',
-            description: profile?.description,
-            banner: profile?.banner,
-            did: profile?.did,
-            followersCount: profile?.followersCount,
-            followsCount: profile?.followsCount,
-            postsCount: profile?.postsCount,
-            viewer: profile?.viewer,
-            labels: profile?.labels,
-          }}
-          isOwnProfile={true}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
-        />
-        <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
-        {renderTabContent()}
-      </ScrollView>
+      <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
+      {renderTabContent()}
 
       <ProfileDropdown
         isVisible={showDropdown}
@@ -240,12 +215,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 100,
   },
   emptyState: {
     paddingVertical: 40,
