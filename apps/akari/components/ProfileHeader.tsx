@@ -53,6 +53,7 @@ type ProfileHeaderProps = {
     }[];
   };
   isOwnProfile?: boolean;
+  onSettingsPress?: () => void;
   onDropdownToggle?: (isOpen: boolean) => void;
   dropdownRef?: React.RefObject<View | null>;
 };
@@ -65,7 +66,7 @@ const formatNumber = (num: number, locale: string): string => {
   return formatter.format(num);
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -328,6 +329,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onDropdownToggle,
                 <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
                   <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
                 </TouchableOpacity>
+                {onSettingsPress ? (
+                  <TouchableOpacity style={styles.iconButton} onPress={onSettingsPress} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                    <IconSymbol name="gearshape" size={fontSize.xxl} color={semanticColors.systemBlue} />
+                  </TouchableOpacity>
+                ) : null}
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
                   <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
                     <IconSymbol name="ellipsis" size={fontSize.xxl} color="#ffffff" />

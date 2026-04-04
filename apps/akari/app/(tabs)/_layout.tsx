@@ -192,9 +192,9 @@ function HardcodedTabBar({
         {
           borderColor,
           backgroundColor: Platform.OS === 'ios' ? 'transparent' : tabBarSurface,
-          paddingLeft: Math.max(20, insets.left + 12),
-          paddingRight: Math.max(20, insets.right + 12),
-          paddingBottom: 18 + insets.bottom,
+          paddingLeft: Math.max(spacing.lg, insets.left + spacing.sm),
+          paddingRight: Math.max(spacing.lg, insets.right + spacing.sm),
+          paddingBottom: spacing.sm + insets.bottom,
         },
       ]}
     >
