@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -237,6 +237,7 @@ export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [headerOffset, setHeaderOffset] = useState(insets.top + 50);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -475,7 +476,14 @@ export default function ConversationScreen() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 95 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? headerOffset : 0}
+      onLayout={(e) => {
+        if (Platform.OS === 'ios') {
+          e.target.measureInWindow((_x, y) => {
+            if (y > 0) setHeaderOffset(y);
+          });
+        }
+      }}
     >
       <ThemedView style={styles.container}>
           {/* Messages */}
