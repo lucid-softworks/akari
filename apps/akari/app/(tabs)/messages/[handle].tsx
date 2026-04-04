@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Animated, Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
@@ -236,7 +236,7 @@ const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] 
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
-  const keyboardOffset = useRef(new Animated.Value(0)).current;
+  const [headerY, setHeaderY] = useState(0);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -250,34 +250,6 @@ export default function ConversationScreen() {
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
-  // Animate content up/down with keyboard
-  useEffect(() => {
-    const showSub = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => {
-        Animated.timing(keyboardOffset, {
-          toValue: -e.endCoordinates.height,
-          duration: e.duration || 250,
-          useNativeDriver: true,
-        }).start();
-      },
-    );
-    const hideSub = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      (e) => {
-        Animated.timing(keyboardOffset, {
-          toValue: 0,
-          duration: e.duration || 250,
-          useNativeDriver: true,
-        }).start();
-      },
-    );
-
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, [keyboardOffset]);
 
   // Get the conversation ID from the conversations list
   const { data: conversationsData } = useConversations();
@@ -490,28 +462,39 @@ export default function ConversationScreen() {
   const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
-      <Animated.View style={[styles.container, { transform: [{ translateY: keyboardOffset }] }]}>
-          {/* Messages */}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        keyboardVerticalOffset={headerY}
+        onLayout={(e) => {
+          if (Platform.OS === 'ios') {
+            e.target.measureInWindow((_x: number, y: number) => {
+              if (y > 0) setHeaderY(y);
+            });
+          }
+        }}
+      >
           {messagesLoading ? (
-            <ThemedView style={styles.loadingState}>
+            <View style={styles.loadingState}>
               <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
-            </ThemedView>
+            </View>
           ) : (
-            <VirtualizedList
-              data={messages}
-              renderItem={renderMessage}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={styles.messagesContent}
-              showsVerticalScrollIndicator={false}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.2}
-              ListFooterComponent={renderFooter}
-              estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
-              initialScrollIndex={messages.length > 0 ? messages.length - 1 : undefined}
-            />
+            <View style={styles.listContainer}>
+              <VirtualizedList
+                data={messages}
+                renderItem={renderMessage}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.messagesContent}
+                showsVerticalScrollIndicator={false}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.2}
+                ListFooterComponent={renderFooter}
+                estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
+                initialScrollIndex={messages.length > 0 ? messages.length - 1 : undefined}
+              />
+            </View>
           )}
 
-          {/* Message Input */}
           <ThemedView
             style={[
               styles.inputContainer,
@@ -552,12 +535,16 @@ export default function ConversationScreen() {
               />
             </TouchableOpacity>
           </ThemedView>
-      </Animated.View>
+      </KeyboardAvoidingView>
+  );
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  listContainer: {
     flex: 1,
   },
   messagesContent: {
