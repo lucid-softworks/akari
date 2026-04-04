@@ -1,5 +1,6 @@
 import '@/utils/intl-polyfills'; // Initialize Intl polyfills
 
+import { DevPerformanceOverlay } from '@/components/DevPerformanceOverlay';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, useIsRestoring } from '@tanstack/react-query';
 import {
@@ -155,6 +156,7 @@ export default function RootLayout() {
           {Platform.OS === 'web' ? (
             <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
           ) : null}
+          {__DEV__ ? <DevPerformanceOverlay /> : null}
         </PersistQueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
