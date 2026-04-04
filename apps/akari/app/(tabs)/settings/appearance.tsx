@@ -428,8 +428,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
   modeSubtitle: {
-    fontSize: fontSize.sm,
-    opacity: 0.5,
+    fontSize: fontSize.base,
+    opacity: 0.6,
     paddingHorizontal: spacing.lg,
     marginTop: spacing.xs,
   },
