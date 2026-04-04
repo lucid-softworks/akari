@@ -273,10 +273,22 @@ export default function TabLayout() {
     const nonGroupSegments = segments.filter((segment) => !segment.startsWith('('));
     const firstNonGroupSegment = nonGroupSegments[0] ?? 'index';
     const nested = nonGroupSegments.length > 1;
+    // Find the last segment that matches a known route name in headerTitles
+    let resolvedNestedKey: string | undefined;
+    if (nested) {
+      for (let i = nonGroupSegments.length - 1; i >= 1; i--) {
+        if (headerTitles[nonGroupSegments[i]]) {
+          resolvedNestedKey = nonGroupSegments[i];
+          break;
+        }
+      }
+      // Fall back to last segment if no match found
+      resolvedNestedKey ??= nonGroupSegments[nonGroupSegments.length - 1];
+    }
     return {
       currentTabKey: firstNonGroupSegment,
       isNestedRoute: nested,
-      nestedRouteKey: nested ? nonGroupSegments[nonGroupSegments.length - 1] : undefined,
+      nestedRouteKey: resolvedNestedKey,
     };
   }, [pathname]);
 
