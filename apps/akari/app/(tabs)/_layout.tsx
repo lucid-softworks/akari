@@ -132,7 +132,15 @@ const TabButton = React.memo(function TabButton({
     });
 
     if (isFocused) {
-      tabScrollRegistry.handleTabPress(tabKey);
+      // If already on this tab, pop to the root screen of the tab
+      // (e.g., Settings > Account -> tap Settings again -> goes back to Settings index)
+      const state = navigation.getState();
+      const tabRoute = state.routes.find((r: any) => r.name === route.name);
+      if (tabRoute?.state && tabRoute.state.index > 0) {
+        navigation.navigate(route.name, { screen: 'index' });
+      } else {
+        tabScrollRegistry.handleTabPress(tabKey);
+      }
     }
 
     if (!isFocused && !event.defaultPrevented) {
