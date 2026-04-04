@@ -4,19 +4,18 @@ This checklist aggregates TODO items for the Akari app, organized by priority.
 
 ## High Priority — Missing Core Features
 
-### Repost & Quote Post
-The repost button in `PostActions.tsx` is display-only with no `onPress` handler.
-- [ ] Create `hooks/mutations/useRepostPost.ts` (create/delete repost records via `com.atproto.repo.createRecord`)
-- [ ] Create quote post flow — integrate quoting into `PostComposer`
-- [ ] Wire repost button to show a bottom sheet with "Repost" and "Quote Post" options
-- [ ] Optimistically update repost count and viewer state in feed/post caches
-- File: `apps/akari/components/post/PostActions.tsx` lines 97-100
+### ~~Repost~~ ✅
+Implemented — repost/unrepost with optimistic cache updates.
 
-### Mute Account
-Profile mute button shows a confirmation alert but the `onPress` callback is empty.
-- [ ] Create `hooks/mutations/useMuteUser.ts` using `app.bsky.graph.muteActor` / `unmuteActor`
-- [ ] Wire into `ProfileHeader.tsx` and `ProfileDropdown.tsx`
-- [ ] Update profile viewer state in cache after muting
+### Quote Post
+- [ ] Add quote post option to repost button (bottom sheet with "Repost" / "Quote Post")
+- [ ] Open `PostComposer` with the quoted post's URI/CID as an embed
+
+### ~~Mute Account~~ ✅
+Implemented — mute/unmute from profile header and post action menu.
+
+### ~~Copy Post Text~~ ✅
+Implemented — copies post text to clipboard from post action menu.
 
 ### Report Account / Post
 Report shows an alert but the callback is empty.
@@ -27,12 +26,10 @@ Report shows an alert but the callback is empty.
 ## Medium Priority — Incomplete Features
 
 ### Post Action Menu Stubs
-10+ items in `PostActionsMenu.tsx` call `handlePlaceholderAction` (console log only):
-- [ ] **Copy text** — use `expo-clipboard`
+Remaining stubs in `PostActionsMenu.tsx`:
 - [ ] **Mute thread** — `app.bsky.graph.muteThread`
 - [ ] **Hide post** — local-only, persist hidden URIs in MMKV
 - [ ] **Hide account** — local-only, persist hidden DIDs in MMKV
-- [ ] **Block account** — wire up existing `useBlockUser` mutation
 - [ ] **Show more/less like this** — local feed preference or no API equivalent
 - [ ] **Assign to lists** — depends on lists management
 - [ ] **Mute words/tags** — `app.bsky.actor.putPreferences` with muted words
