@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -44,6 +45,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const insets = useSafeAreaInsets();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const borderColor = useThemeColor({}, 'border');
@@ -198,7 +200,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <ThemedView style={[styles.container, { backgroundColor }]}>
+      <ThemedView style={[styles.container, { backgroundColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         {/* Header */}
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <TouchableOpacity onPress={onClose} style={styles.headerButton}>
