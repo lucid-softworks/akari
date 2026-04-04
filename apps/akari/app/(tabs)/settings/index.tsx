@@ -110,6 +110,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/customize-tabs'),
       },
       {
+        key: 'appearance',
+        icon: 'paintbrush.fill',
+        label: t('settings.appearance'),
+        onPress: () => router.push('/(tabs)/settings/appearance'),
+      },
+      {
         key: 'languages',
         icon: 'globe',
         label: t('settings.language'),
