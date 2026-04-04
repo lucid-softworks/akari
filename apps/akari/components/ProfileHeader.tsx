@@ -444,13 +444,13 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xl,
+    paddingVertical: spacing.md,
     borderBottomWidth: layout.hairline,
     position: 'relative',
   },
   avatarContainer: {
     marginTop: -50,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   avatar: {
     width: layout.avatarLarge,
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   nameHandleSection: {
     flex: 1,
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   statsContainer: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   statText: {
     fontSize: 15,
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   descriptionContainer: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
 
   blockedMessage: {
