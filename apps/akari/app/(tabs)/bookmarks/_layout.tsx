@@ -12,7 +12,6 @@ export default function BookmarksLayout() {
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />

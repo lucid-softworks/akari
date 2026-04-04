@@ -14,7 +14,6 @@ export default function SettingsLayout() {
         headerShown: false,
         contentStyle: { backgroundColor: headerBackground },
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />

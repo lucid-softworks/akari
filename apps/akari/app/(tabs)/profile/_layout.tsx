@@ -10,7 +10,6 @@ export default function ProfileLayout() {
       screenOptions={{
         headerShown: isLargeScreen,
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
