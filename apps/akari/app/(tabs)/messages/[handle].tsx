@@ -1,8 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRef, useState } from 'react';
+import { FlatList, InputAccessoryView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { BlueskyEmbed } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -13,7 +12,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -26,7 +24,6 @@ import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity }
 
 const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
 
-const ESTIMATED_MESSAGE_HEIGHT = 160; // balances standard bubbles and media embeds
 
 type RecordEmbedData = Parameters<typeof RecordEmbed>[0]['embed'];
 type ExternalEmbedData = Parameters<typeof ExternalEmbed>[0]['embed'];
@@ -236,10 +233,9 @@ const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] 
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
-  const [headerY, setHeaderY] = useState(0);
+  const listRef = useRef<FlatList<Message>>(null);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
 
@@ -458,92 +454,73 @@ export default function ConversationScreen() {
   }
 
   // Flatten all pages of messages into a single array
-  // API returns newest first; reverse to chronological order (oldest first)
-  const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
+  // API returns newest first -- keep order for inverted FlatList
+  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
+
+  const inputAccessoryViewID = 'message-input';
+
+  const inputBar = (
+    <ThemedView style={[styles.inputContainer, { borderTopColor: borderColor }]}>
+      <TextInput
+        style={[styles.textInput, { backgroundColor, borderColor, color: textColor }]}
+        value={messageText}
+        onChangeText={setMessageText}
+        placeholder={t('messages.typeMessage')}
+        placeholderTextColor={iconColor}
+        multiline
+        maxLength={500}
+        inputAccessoryViewID={Platform.OS === 'ios' ? inputAccessoryViewID : undefined}
+      />
+      <TouchableOpacity
+        style={[styles.sendButton, !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null]}
+        onPress={handleSendMessage}
+        disabled={!messageText.trim() || sendMessageMutation.isPending}
+      >
+        <IconSymbol
+          name={sendMessageMutation.isPending ? 'clock' : 'arrow.up.circle.fill'}
+          size={32}
+          color={messageText.trim() && !sendMessageMutation.isPending ? '#007AFF' : '#C7C7CC'}
+        />
+      </TouchableOpacity>
+    </ThemedView>
+  );
 
   return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        keyboardVerticalOffset={headerY}
-        onLayout={(e) => {
-          if (Platform.OS === 'ios') {
-            e.target.measureInWindow((_x: number, y: number) => {
-              if (y > 0) setHeaderY(y);
-            });
-          }
-        }}
-      >
-          {messagesLoading ? (
-            <View style={styles.loadingState}>
-              <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
-            </View>
-          ) : (
-            <View style={styles.listContainer}>
-              <VirtualizedList
-                data={messages}
-                renderItem={renderMessage}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.messagesContent}
-                showsVerticalScrollIndicator={false}
-                onEndReached={handleLoadMore}
-                onEndReachedThreshold={0.2}
-                ListFooterComponent={renderFooter}
-                estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
-                initialScrollIndex={messages.length > 0 ? messages.length - 1 : undefined}
-              />
-            </View>
-          )}
+    <ThemedView style={styles.container}>
+      {messagesLoading ? (
+        <View style={styles.loadingState}>
+          <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
+        </View>
+      ) : (
+        <FlatList
+          ref={listRef}
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.messagesContent}
+          showsVerticalScrollIndicator={false}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={renderFooter}
+          inverted
+          keyboardDismissMode="interactive"
+          automaticallyAdjustKeyboardInsets
+        />
+      )}
 
-          <ThemedView
-            style={[
-              styles.inputContainer,
-              {
-                borderTopColor: borderColor,
-                paddingBottom: insets.bottom || spacing.md,
-              },
-            ]}
-          >
-            <TextInput
-              style={[
-                styles.textInput,
-                {
-                  backgroundColor: backgroundColor,
-                  borderColor: borderColor,
-                  color: textColor,
-                },
-              ]}
-              value={messageText}
-              onChangeText={setMessageText}
-              placeholder={t('messages.typeMessage')}
-              placeholderTextColor={iconColor}
-              multiline
-              maxLength={500}
-            />
-            <TouchableOpacity
-              style={[
-                styles.sendButton,
-                !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null,
-              ]}
-              onPress={handleSendMessage}
-              disabled={!messageText.trim() || sendMessageMutation.isPending}
-            >
-              <IconSymbol
-                name={sendMessageMutation.isPending ? 'clock' : 'arrow.up.circle.fill'}
-                size={32}
-                color={messageText.trim() && !sendMessageMutation.isPending ? '#007AFF' : '#C7C7CC'}
-              />
-            </TouchableOpacity>
-          </ThemedView>
-      </KeyboardAvoidingView>
+      {Platform.OS === 'ios' ? (
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          {inputBar}
+        </InputAccessoryView>
+      ) : (
+        inputBar
+      )}
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  listContainer: {
     flex: 1,
   },
   messagesContent: {
