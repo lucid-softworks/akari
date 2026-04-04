@@ -275,9 +275,13 @@ export default function TabLayout() {
     };
   }, [pathname]);
 
-  const headerTitle = isNestedRoute
-    ? (headerTitles[nestedRouteKey ?? ''] ?? headerTitles[currentTabKey] ?? 'Akari')
-    : (headerTitles[currentTabKey] ?? 'Akari');
+  // Message threads show their own header content (avatar + name), so hide the title
+  const isMessageThread = currentTabKey === 'messages' && isNestedRoute && nestedRouteKey !== 'pending';
+  const headerTitle = isMessageThread
+    ? ''
+    : isNestedRoute
+      ? (headerTitles[nestedRouteKey ?? ''] ?? headerTitles[currentTabKey] ?? 'Akari')
+      : (headerTitles[currentTabKey] ?? 'Akari');
   const shouldShowMobileHeader = currentTabKey !== 'profile';
 
   const handleOpenAccountSwitcher = useCallback(() => {

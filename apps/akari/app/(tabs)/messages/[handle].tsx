@@ -470,15 +470,15 @@ export default function ConversationScreen() {
   }
 
   // Flatten all pages of messages into a single array
-  // API returns newest first; keep that order for the inverted list
-  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
+  // API returns newest first; reverse to chronological order (oldest first)
+  const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ThemedView style={styles.container}>
           {/* Conversation info bar */}
           <TouchableOpacity
-            style={[styles.infoBar, { borderBottomColor: borderColor }]}
+            style={styles.infoBar}
             onPress={() => navigateToProfile({ actor: handle })}
             activeOpacity={activeOpacity.default}
           >
@@ -508,8 +508,8 @@ export default function ConversationScreen() {
               onEndReached={handleLoadMore}
               onEndReachedThreshold={0.2}
               ListFooterComponent={renderFooter}
-              inverted={true} // Show newest messages at the bottom
               estimatedItemSize={ESTIMATED_MESSAGE_HEIGHT}
+              initialScrollIndex={messages.length > 0 ? messages.length - 1 : undefined}
             />
           )}
 
@@ -567,8 +567,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderBottomWidth: layout.hairline,
+    paddingBottom: spacing.sm,
     gap: spacing.sm,
   },
   infoAvatar: {
