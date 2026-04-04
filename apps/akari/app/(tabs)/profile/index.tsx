@@ -37,7 +37,6 @@ export default function ProfileScreen() {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
-
   const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
 
   const handleRefresh = useCallback(async () => {
@@ -45,8 +44,6 @@ export default function ProfileScreen() {
     await refetchProfile();
     setRefreshing(false);
   }, [refetchProfile]);
-
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
 
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {
@@ -58,15 +55,6 @@ export default function ProfileScreen() {
   }
 
   const handleDropdownToggle = (isOpen: boolean) => {
-    if (isOpen && dropdownRef.current) {
-      // Measure the position of the more button
-      dropdownRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setDropdownPosition({
-          top: pageY + height + 4, // Position below the button with 4px gap
-          right: 20, // 20px from right edge
-        });
-      });
-    }
     setShowDropdown(isOpen);
   };
 
@@ -112,29 +100,7 @@ export default function ProfileScreen() {
     setActiveTab(tab);
   };
 
-  const profileHeaderComponent = useCallback(() => (
-    <ProfileHeader
-      profile={{
-        avatar: profile?.avatar,
-        displayName: profile?.displayName || currentAccount?.handle || '',
-        handle: currentAccount?.handle || '',
-        description: profile?.description,
-        banner: profile?.banner,
-        did: profile?.did,
-        followersCount: profile?.followersCount,
-        followsCount: profile?.followsCount,
-        postsCount: profile?.postsCount,
-        viewer: profile?.viewer,
-        labels: profile?.labels,
-      }}
-      isOwnProfile={true}
-      onDropdownToggle={handleDropdownToggle}
-      dropdownRef={dropdownRef}
-    />
-  ), [profile, currentAccount, handleDropdownToggle, dropdownRef]);
-
   const tabProps = {
-    ListHeaderComponent: profileHeaderComponent,
     onRefresh: handleRefresh,
     refreshing,
   };
@@ -180,6 +146,24 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <ProfileHeader
+        profile={{
+          avatar: profile?.avatar,
+          displayName: profile?.displayName || currentAccount?.handle || '',
+          handle: currentAccount?.handle || '',
+          description: profile?.description,
+          banner: profile?.banner,
+          did: profile?.did,
+          followersCount: profile?.followersCount,
+          followsCount: profile?.followsCount,
+          postsCount: profile?.postsCount,
+          viewer: profile?.viewer,
+          labels: profile?.labels,
+        }}
+        isOwnProfile={true}
+        onDropdownToggle={handleDropdownToggle}
+        dropdownRef={dropdownRef}
+      />
       <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
       {renderTabContent()}
 
@@ -203,10 +187,6 @@ export default function ProfileScreen() {
         isBlocking={false}
         isMuted={false}
         isOwnProfile={true}
-        style={{
-          top: dropdownPosition.top,
-          right: dropdownPosition.right,
-        }}
       />
     </ThemedView>
   );

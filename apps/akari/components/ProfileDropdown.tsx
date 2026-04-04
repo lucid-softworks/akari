@@ -1,12 +1,8 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useCallback, useEffect } from 'react';
+import { ActionSheetIOS, Platform } from 'react-native';
 
-import { spacing, radius, fontSize, layout, semanticColors } from '@/constants/tokens';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
 
 type ProfileDropdownProps = {
   isVisible: boolean;
@@ -31,96 +27,99 @@ export function ProfileDropdown({
   onMuteAccount,
   onBlockPress,
   onReportAccount,
-  isFollowing,
   isBlocking,
   isMuted,
   isOwnProfile,
-  style,
 }: ProfileDropdownProps) {
   const { t } = useTranslation();
-  const borderColor = useBorderColor();
 
-  const dropdownBackgroundColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#1c1c1e',
-    },
-    'background',
-  );
+  const showSheet = useCallback(() => {
+    if (isOwnProfile) {
+      const options = [
+        t('common.search'),
+        t('profile.copyLink'),
+        t('common.cancel'),
+      ];
+      const cancelIndex = options.length - 1;
 
-  if (!isVisible) return null;
+      if (Platform.OS === 'ios') {
+        ActionSheetIOS.showActionSheetWithOptions(
+          { options, cancelButtonIndex: cancelIndex },
+          (index) => {
+            if (index === 0) onSearchPosts();
+            else if (index === 1) onCopyLink();
+          },
+        );
+      } else {
+        // Fallback for Android/web
+        showAlert({
+          title: '',
+          message: '',
+          buttons: [
+            { text: t('common.search'), onPress: onSearchPosts },
+            { text: t('profile.copyLink'), onPress: onCopyLink },
+            { text: t('common.cancel') },
+          ],
+        });
+      }
+    } else {
+      const muteLabel = isMuted ? t('common.unmute') : t('profile.muteAccount');
+      const blockLabel = isBlocking ? t('common.unblock') : t('common.block');
+      const options = [
+        t('profile.copyLink'),
+        t('common.search'),
+        t('profile.addToLists'),
+        muteLabel,
+        blockLabel,
+        t('profile.reportAccount'),
+        t('common.cancel'),
+      ];
+      const cancelIndex = options.length - 1;
+      const destructiveIndices = [4, 5]; // block, report
 
-  return (
-    <ThemedView style={[styles.dropdown, { backgroundColor: dropdownBackgroundColor, borderColor: borderColor }, style]}>
-      {isOwnProfile ? (
-        <>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onSearchPosts}>
-            <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onCopyLink}>
-            <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onCopyLink}>
-            <ThemedText style={styles.dropdownText}>{t('profile.copyLink')}</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onSearchPosts}>
-            <ThemedText style={styles.dropdownText}>{t('common.search')}</ThemedText>
-          </TouchableOpacity>
-          <View style={[styles.dropdownSeparator, { borderColor: borderColor }]} />
-          <TouchableOpacity style={styles.dropdownItem} onPress={onAddToLists}>
-            <ThemedText style={styles.dropdownText}>{t('profile.addToLists')}</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onMuteAccount}>
-            <ThemedText style={styles.dropdownText}>{isMuted ? t('common.unmute') : t('profile.muteAccount')}</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onBlockPress}>
-            <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
-              {isBlocking ? t('common.unblock') : t('common.block')}
-            </ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownItem} onPress={onReportAccount}>
-            <ThemedText style={[styles.dropdownText, styles.dropdownTextDestructive]}>
-              {t('profile.reportAccount')}
-            </ThemedText>
-          </TouchableOpacity>
-        </>
-      )}
-    </ThemedView>
-  );
+      if (Platform.OS === 'ios') {
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options,
+            cancelButtonIndex: cancelIndex,
+            destructiveButtonIndex: destructiveIndices[0],
+          },
+          (index) => {
+            if (index === 0) onCopyLink();
+            else if (index === 1) onSearchPosts();
+            else if (index === 2) onAddToLists();
+            else if (index === 3) onMuteAccount();
+            else if (index === 4) onBlockPress();
+            else if (index === 5) onReportAccount();
+          },
+        );
+      } else {
+        showAlert({
+          title: '',
+          message: '',
+          buttons: [
+            { text: t('profile.copyLink'), onPress: onCopyLink },
+            { text: t('common.search'), onPress: onSearchPosts },
+            { text: t('profile.addToLists'), onPress: onAddToLists },
+            { text: muteLabel, onPress: onMuteAccount },
+            { text: blockLabel, onPress: onBlockPress, style: 'destructive' },
+            { text: t('profile.reportAccount'), onPress: onReportAccount, style: 'destructive' },
+            { text: t('common.cancel') },
+          ],
+        });
+      }
+    }
+  }, [
+    isOwnProfile, isMuted, isBlocking, t,
+    onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount,
+  ]);
+
+  useEffect(() => {
+    if (isVisible) {
+      showSheet();
+    }
+  }, [isVisible, showSheet]);
+
+  // No UI to render — uses native action sheet
+  return null;
 }
-
-const styles = StyleSheet.create({
-  dropdown: {
-    position: 'absolute',
-    borderRadius: radius.sm,
-    borderWidth: layout.border,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    minWidth: 140,
-    zIndex: 9999999,
-  },
-  dropdownItem: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  dropdownSeparator: {
-    height: layout.border,
-    borderTopWidth: layout.border,
-    marginVertical: spacing.xs,
-  },
-  dropdownText: {
-    fontSize: fontSize.base,
-  },
-  dropdownTextDestructive: {
-    color: semanticColors.danger,
-  },
-});
