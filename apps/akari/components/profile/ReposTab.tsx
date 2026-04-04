@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
@@ -95,7 +96,14 @@ function RepoItem({ repo }: RepoItemProps) {
 
 export function ReposTab({ handle, visibleCount = 10 }: ReposTabProps) {
   const { t } = useTranslation();
-  const { data: repos, isLoading } = useAuthorRepos(handle);
+  const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRepos(handle);
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (repos && visibleCount >= repos.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, repos?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;

@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
@@ -144,8 +144,15 @@ function RecipeItem({ recipe, onPress }: RecipeItemProps) {
 
 export function RecipesTab({ handle, visibleCount = 10 }: RecipesTabProps) {
   const { t } = useTranslation();
-  const { data: recipes, isLoading } = useAuthorRecipes(handle);
+  const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRecipes(handle);
   const [selectedRecipe, setSelectedRecipe] = useState<BlueskyRecipeRecord | null>(null);
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (recipes && visibleCount >= recipes.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, recipes?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleRecipePress = (recipe: BlueskyRecipeRecord) => {

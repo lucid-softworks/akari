@@ -166,6 +166,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[1]}
       >
         <ProfileHeader
           profile={{

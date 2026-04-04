@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -34,6 +34,7 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visibleCount, setVisibleCount] = useState(5);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const { t } = useTranslation();
@@ -49,7 +50,13 @@ export default function ProfileScreen() {
     tabScrollRegistry.register('profile', scrollToTop);
   }, []);
 
-  const { data: profile, isLoading: isProfileLoading } = useProfile(currentAccount?.handle);
+  const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetchProfile();
+    setRefreshing(false);
+  }, [refetchProfile]);
 
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
 
@@ -176,6 +183,8 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={200}
+        stickyHeaderIndices={[1]}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       >
         <ProfileHeader
           profile={{

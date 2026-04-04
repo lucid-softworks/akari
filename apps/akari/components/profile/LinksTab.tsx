@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -82,7 +83,7 @@ function LinkItem({ card }: LinkItemProps) {
 
 export function LinksTab({ handle, visibleCount = 10 }: LinksTabProps) {
   const { t } = useTranslation();
-  const { data: links, isLoading } = useLinks(handle);
+  const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks(handle);
 
   // Flatten all cards from all boards into individual link items
   const allLinks =
@@ -92,6 +93,13 @@ export function LinksTab({ handle, visibleCount = 10 }: LinksTabProps) {
         id: `${board.uri}-${index}`, // Unique key for each link
       })),
     ) || [];
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (allLinks && visibleCount >= allLinks.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, allLinks?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;

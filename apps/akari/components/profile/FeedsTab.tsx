@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { FeedSkeleton } from '@/components/skeletons';
@@ -69,7 +70,14 @@ function FeedItem({ feed }: FeedItemProps) {
 
 export function FeedsTab({ handle, visibleCount = 10 }: FeedsTabProps) {
   const { t } = useTranslation();
-  const { data: feeds, isLoading } = useAuthorFeeds(handle);
+  const { data: feeds, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeeds(handle);
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (feeds && visibleCount >= feeds.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, feeds?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;

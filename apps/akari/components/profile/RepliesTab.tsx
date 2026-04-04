@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -17,8 +17,15 @@ type RepliesTabProps = ProfileTabContentProps & {
 
 export function RepliesTab({ handle, visibleCount = 10 }: RepliesTabProps) {
   const { t } = useTranslation();
-  const { data: replies, isLoading } = useAuthorReplies(handle);
+  const { data: replies, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorReplies(handle);
   const navigateToPost = useNavigateToPost();
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (replies && visibleCount >= replies.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, replies?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const filteredReplies = useMemo(
     () => (replies ?? []).filter((item) => item && item.uri),

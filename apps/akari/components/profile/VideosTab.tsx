@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -17,8 +17,15 @@ type VideosTabProps = ProfileTabContentProps & {
 
 export function VideosTab({ handle, visibleCount = 10 }: VideosTabProps) {
   const { t } = useTranslation();
-  const { data: videos, isLoading } = useAuthorVideos(handle);
+  const { data: videos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorVideos(handle);
   const navigateToPost = useNavigateToPost();
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (videos && visibleCount >= videos.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, videos?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const filteredVideos = useMemo(
     () => (videos ?? []).filter((item) => item && item.uri),

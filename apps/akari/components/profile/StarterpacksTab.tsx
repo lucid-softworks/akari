@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import type { BlueskyStarterPack } from '@/bluesky-api';
@@ -66,7 +67,14 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
 
 export function StarterpacksTab({ handle, visibleCount = 10 }: StarterpacksTabProps) {
   const { t } = useTranslation();
-  const { data: starterpacks, isLoading } = useAuthorStarterpacks(handle);
+  const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorStarterpacks(handle);
+
+  // Fetch more pages when visible count approaches data length
+  useEffect(() => {
+    if (starterpacks && visibleCount >= starterpacks.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [visibleCount, starterpacks?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return <FeedSkeleton count={3} />;
