@@ -1,8 +1,8 @@
 import * as Clipboard from 'expo-clipboard';
 import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { spacing, fontSize, layout } from '@/constants/tokens';
+import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
@@ -34,7 +34,6 @@ type ProfileViewProps = {
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
@@ -61,15 +60,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const isOwnProfile = currentUser?.handle === profile?.handle;
 
   const handleDropdownToggle = (isOpen: boolean) => {
-    if (isOpen && dropdownRef.current) {
-      // Measure the position of the more button
-      dropdownRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setDropdownPosition({
-          top: pageY + height - 62, // Position with final fine-tuned adjustment
-          right: 20, // 20px from right edge
-        });
-      });
-    }
     setShowDropdown(isOpen);
   };
 
@@ -162,39 +152,29 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[1]}
-      >
-        <ProfileHeader
-          profile={{
-            avatar: profile?.avatar,
-            displayName: profile?.displayName,
-            handle: profile?.handle,
-            description: profile?.description,
-            banner: profile?.banner,
-            did: profile?.did,
-            followersCount: profile?.followersCount,
-            followsCount: profile?.followsCount,
-            postsCount: profile?.postsCount,
-            viewer: profile?.viewer,
-            labels: profile?.labels,
-          }}
-          isOwnProfile={isOwnProfile}
-          onDropdownToggle={handleDropdownToggle}
-          dropdownRef={dropdownRef}
-        />
+      <ProfileHeader
+        profile={{
+          avatar: profile?.avatar,
+          displayName: profile?.displayName,
+          handle: profile?.handle,
+          description: profile?.description,
+          banner: profile?.banner,
+          did: profile?.did,
+          followersCount: profile?.followersCount,
+          followsCount: profile?.followsCount,
+          postsCount: profile?.postsCount,
+          viewer: profile?.viewer,
+          labels: profile?.labels,
+        }}
+        isOwnProfile={isOwnProfile}
+        onDropdownToggle={handleDropdownToggle}
+        dropdownRef={dropdownRef}
+      />
 
-        {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
+      <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
 
-        {/* Content */}
-        {renderTabContent()}
-      </ScrollView>
+      {renderTabContent()}
 
-      {/* Dropdown rendered at root level */}
       <ProfileDropdown
         isVisible={showDropdown}
         onDismiss={() => setShowDropdown(false)}
@@ -216,12 +196,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: layout.tabBarPadding, // Account for tab bar
   },
   errorText: {
     fontSize: fontSize.lg,
