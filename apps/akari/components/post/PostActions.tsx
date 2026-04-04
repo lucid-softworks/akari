@@ -90,12 +90,12 @@ export const PostActions = React.memo(function PostActions({
         accessibilityRole="button"
         accessibilityLabel={`Reply to post by ${authorName}`}
       >
-        <IconSymbol name="bubble.left" size={16} color={iconColor} />
+        <IconSymbol name="bubble.left" size={20} color={iconColor} />
         <ThemedText style={styles.interactionCount}>{commentCount}</ThemedText>
       </TouchableOpacity>
 
       <ThemedView style={styles.interactionItem}>
-        <IconSymbol name="arrow.2.squarepath" size={16} color={iconColor} />
+        <IconSymbol name="arrow.2.squarepath" size={20} color={iconColor} />
         <ThemedText style={styles.interactionCount}>{repostCount}</ThemedText>
       </ThemedView>
 
@@ -109,7 +109,7 @@ export const PostActions = React.memo(function PostActions({
       >
         <IconSymbol
           name={isLiked ? 'heart.fill' : 'heart'}
-          size={16}
+          size={20}
           color={isLiked ? semanticColors.like : iconColor}
         />
         <ThemedText style={styles.interactionCount}>{likeCount}</ThemedText>
@@ -123,7 +123,7 @@ export const PostActions = React.memo(function PostActions({
         accessibilityRole="button"
         accessibilityLabel="Save post"
       >
-        <IconSymbol name="bookmark" size={16} color={iconColor} />
+        <IconSymbol name="bookmark" size={20} color={iconColor} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -134,7 +134,7 @@ export const PostActions = React.memo(function PostActions({
         accessibilityRole="button"
         accessibilityLabel="Share post"
       >
-        <IconSymbol name="square.and.arrow.up" size={16} color={iconColor} />
+        <IconSymbol name="square.and.arrow.up" size={20} color={iconColor} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -145,7 +145,7 @@ export const PostActions = React.memo(function PostActions({
         accessibilityRole="button"
         accessibilityLabel={`More actions for post by ${authorName}`}
       >
-        <IconSymbol name="ellipsis" size={16} color={iconColor} />
+        <IconSymbol name="ellipsis" size={20} color={iconColor} />
       </TouchableOpacity>
     </ThemedView>
   );

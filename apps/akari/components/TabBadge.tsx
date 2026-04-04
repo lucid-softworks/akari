@@ -69,13 +69,14 @@ const smallStyles = StyleSheet.create({
     minWidth: spacing.lg,
     height: spacing.lg,
     paddingHorizontal: spacing.xs,
-    // Adjust positioning for small badges
     top: Platform.OS === 'ios' ? -6 : -spacing.xs,
     right: Platform.OS === 'ios' ? -6 : -spacing.xs,
   },
   text: {
     ...baseStyles.text,
     fontSize: 10,
+    lineHeight: 12,
+    includeFontPadding: false,
   },
 });
 
@@ -90,5 +91,7 @@ const mediumStyles = StyleSheet.create({
   text: {
     ...baseStyles.text,
     fontSize: fontSize.sm,
+    lineHeight: 14,
+    includeFontPadding: false,
   },
 });
