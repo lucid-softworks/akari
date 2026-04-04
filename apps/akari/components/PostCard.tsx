@@ -69,7 +69,9 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
   const authorName = post.author.displayName || post.author.handle;
-  const canTranslate = Boolean(post.text && post.text.trim());
+  const hasText = Boolean(post.text && post.text.trim());
+  const hasEmbed = Boolean(post.embed || (post.embeds && post.embeds.length > 0));
+  const canTranslate = hasText;
 
   // Live stream detection
   const { data: liveNowEntries = [] } = useLiveNow();
@@ -196,8 +198,10 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <ThemedView style={styles.content}>
-        <RichTextWithFacets text={post.text || ''} facets={post.facets} style={styles.text} />
+      <ThemedView style={hasText || hasEmbed ? styles.content : undefined}>
+        {hasText ? (
+          <RichTextWithFacets text={post.text!} facets={post.facets} style={[styles.text, !hasEmbed && styles.textOnly]} />
+        ) : null}
 
         <PostTranslation
           text={post.text || ''}
@@ -205,7 +209,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
           onHide={handleHideTranslation}
         />
 
-        <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} />
+        {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} /> : null}
       </ThemedView>
 
       <Labels labels={post.labels} maxLabels={3} />
@@ -316,7 +320,7 @@ const LivePreview = React.memo(function LivePreview({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: spacing.lg,
+    paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     borderBottomWidth: layout.hairline,
     position: 'relative',
@@ -344,12 +348,15 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
   content: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   text: {
     fontSize: fontSize.lg,
     lineHeight: 24,
     marginBottom: spacing.sm,
+  },
+  textOnly: {
+    marginBottom: 0,
   },
   livePreviewContainer: {
     position: 'absolute',
