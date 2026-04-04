@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { radius, spacing } from '@/constants/tokens';
+import { useDevSettings } from '@/hooks/useDevSettings';
 
 // Only render in dev mode
 if (!__DEV__) {
@@ -18,7 +19,8 @@ type PerfStats = {
 const SAMPLE_WINDOW = 60; // frames to average over
 
 export function DevPerformanceOverlay() {
-  const [visible, setVisible] = useState(false);
+  const { fpsOverlayEnabled } = useDevSettings();
+  const [visible, setVisible] = useState(true);
   const [stats, setStats] = useState<PerfStats>({ fps: 0, avgFrameTime: 0, jsHeap: null, droppedFrames: 0 });
   const frameTimesRef = useRef<number[]>([]);
   const lastFrameRef = useRef<number>(0);
@@ -77,7 +79,7 @@ export function DevPerformanceOverlay() {
     };
   }, [visible, measureFrame]);
 
-  if (!__DEV__) return null;
+  if (!__DEV__ || !fpsOverlayEnabled) return null;
 
   if (!visible) {
     return (

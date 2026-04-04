@@ -8,15 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
-
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Panel } from '@/components/ui/Panel';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -187,22 +183,6 @@ export default function AuthScreen() {
     void handleSignIn();
   };
 
-  const panelTitle = useMemo(() => {
-    if (currentAccount) {
-      return t('common.addAccount');
-    }
-
-    return isSignUp ? t('auth.connectBluesky') : t('auth.signInToBluesky');
-  }, [currentAccount, isSignUp, t]);
-
-  const panelDescription = useMemo(() => {
-    if (currentAccount) {
-      return t('auth.addAnotherAccount');
-    }
-
-    return isSignUp ? t('auth.connectAccountToGetStarted') : t('auth.signInWithHandleAndPassword');
-  }, [currentAccount, isSignUp, t]);
-
   const primaryButtonLabel = useMemo(() => {
     if (isLoading) {
       if (currentAccount) {
@@ -219,40 +199,13 @@ export default function AuthScreen() {
     return isSignUp ? t('auth.connectAccount') : t('common.signIn');
   }, [currentAccount, isLoading, isSignUp, t]);
 
-  const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-  const isNarrow = width < 500;
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          isNarrow && styles.scrollContentMobile,
-          isNarrow && { paddingTop: insets.top, paddingBottom: insets.bottom },
-        ]}
+        contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={[styles.panelWrapper, isNarrow && styles.panelWrapperMobile]}>
-          <Panel
-            title={panelTitle}
-            contentStyle={styles.panelContent}
-            footerStyle={styles.panelFooter}
-            style={isNarrow ? styles.panelMobile : undefined}
-            footerActions={
-              <View style={styles.footerActions}>
-                <TouchableOpacity
-                  style={[styles.primaryButton, isLoading ? styles.buttonDisabled : null]}
-                  onPress={isSignUp ? handleSignUp : handleSignIn}
-                  disabled={isLoading}
-                >
-                  <ThemedText style={styles.primaryButtonText}>{primaryButtonLabel}</ThemedText>
-                </TouchableOpacity>
-              </View>
-            }
-          >
-            <ThemedText style={[styles.subtitle, { color: helperColor }]}>{panelDescription}</ThemedText>
-
+        <View style={styles.content}>
             <View style={styles.form}>
               <View style={styles.inputContainer}>
                 <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
@@ -294,6 +247,14 @@ export default function AuthScreen() {
               </View>
             </View>
 
+            <TouchableOpacity
+              style={[styles.primaryButton, isLoading ? styles.buttonDisabled : null]}
+              onPress={isSignUp ? handleSignUp : handleSignIn}
+              disabled={isLoading}
+            >
+              <ThemedText style={styles.primaryButtonText}>{primaryButtonLabel}</ThemedText>
+            </TouchableOpacity>
+
             {!currentAccount && (
               <View style={styles.footerToggle}>
                 <ThemedText style={styles.footerText}>
@@ -317,7 +278,6 @@ export default function AuthScreen() {
                 {t('auth.appPasswordInstructions')}
               </ThemedText>
             </ThemedView>
-          </Panel>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -330,41 +290,11 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xxl,
-    paddingVertical: spacing.xxxl,
   },
-  scrollContentMobile: {
-    justifyContent: 'flex-start',
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-  },
-  panelWrapper: {
-    width: '100%',
-    maxWidth: 420,
-    alignSelf: 'center',
-  },
-  panelWrapperMobile: {
-    maxWidth: '100%',
-    flex: 1,
-  },
-  panelMobile: {
-    borderWidth: 0,
-    flex: 1,
-  },
-  panelContent: {
+  content: {
     gap: spacing.xxl,
-  },
-  panelFooter: {
-    paddingTop: 0,
-  },
-  footerActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  subtitle: {
-    fontSize: fontSize.lg,
-    lineHeight: 22,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
   },
   form: {
     gap: spacing.xl,
@@ -387,10 +317,10 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
   },
   primaryButton: {
-    paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: radius.sm,
     backgroundColor: semanticColors.systemBlue,
+    alignItems: 'center',
   },
   primaryButtonText: {
     color: '#ffffff',
