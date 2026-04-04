@@ -45,6 +45,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="add-account" options={{ title: t('common.addAccount') }} />
       <Stack.Screen name="customize-tabs" options={{ title: t('settings.customizeTabs') }} />
       <Stack.Screen name="development" options={{ title: t('settings.development') }} />
+      <Stack.Screen name="appearance-light" options={{ title: 'Light Mode Colors' }} />
+      <Stack.Screen name="appearance-dark" options={{ title: 'Dark Mode Colors' }} />
     </Stack>
   );
 }
