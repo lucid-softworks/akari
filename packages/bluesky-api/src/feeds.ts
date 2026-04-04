@@ -353,6 +353,44 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
+   * Reposts a post
+   */
+  async repostPost(accessJwt: string, postUri: string, postCid: string, userDid: string): Promise<BlueskyLikeResponse> {
+    return this.makeAuthenticatedRequest<BlueskyLikeResponse>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.feed.repost',
+        record: {
+          subject: {
+            uri: postUri,
+            cid: postCid,
+          },
+          createdAt: new Date().toISOString(),
+          $type: 'app.bsky.feed.repost',
+        },
+      },
+    });
+  }
+
+  /**
+   * Unreposts a post
+   */
+  async unrepostPost(accessJwt: string, repostUri: string, userDid: string): Promise<BlueskyUnlikeResponse> {
+    const rkey = repostUri.split('/').pop();
+    if (!rkey) throw new Error('Invalid repost URI: could not extract rkey');
+
+    return this.makeAuthenticatedRequest<BlueskyUnlikeResponse>('/com.atproto.repo.deleteRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        collection: 'app.bsky.feed.repost',
+        repo: userDid,
+        rkey,
+      },
+    });
+  }
+
+  /**
    * Uploads an image or GIF and returns the blob reference
    * @param accessJwt - Valid access JWT token
    * @param imageUri - The local URI of the image or GIF

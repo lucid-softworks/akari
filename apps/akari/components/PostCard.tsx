@@ -218,6 +218,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
         uri={post.uri}
         cid={post.cid}
         likeUri={post.viewer?.like}
+        repostUri={post.viewer?.repost}
         authorHandle={post.author.handle}
         authorName={authorName}
         commentCount={post.commentCount || 0}

@@ -7,12 +7,14 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, fontSize, opacity, activeOpacity, semanticColors, hitSlop } from '@/constants/tokens';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
+import { useRepostPost } from '@/hooks/mutations/useRepostPost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type PostActionsProps = {
   uri?: string;
   cid?: string;
   likeUri?: string;
+  repostUri?: string;
   authorHandle: string;
   authorName: string;
   commentCount: number;
@@ -26,6 +28,7 @@ export const PostActions = React.memo(function PostActions({
   uri,
   cid,
   likeUri,
+  repostUri,
   authorHandle,
   authorName,
   commentCount,
@@ -35,8 +38,10 @@ export const PostActions = React.memo(function PostActions({
   onMorePress,
 }: PostActionsProps) {
   const likeMutation = useLikePost();
+  const repostMutation = useRepostPost();
   const bookmarkMutation = useBookmarkPost();
   const isLiked = Boolean(likeUri);
+  const isReposted = Boolean(repostUri);
 
   const iconColor = useThemeColor(
     { light: '#687076', dark: '#9BA1A6' },
@@ -60,6 +65,24 @@ export const PostActions = React.memo(function PostActions({
       });
     }
   }, [uri, cid, likeUri, likeMutation]);
+
+  const handleRepostPress = useCallback(() => {
+    if (!uri || !cid) return;
+
+    if (repostUri) {
+      repostMutation.mutate({
+        postUri: uri,
+        repostUri,
+        action: 'unrepost',
+      });
+    } else {
+      repostMutation.mutate({
+        postUri: uri,
+        postCid: cid,
+        action: 'repost',
+      });
+    }
+  }, [uri, cid, repostUri, repostMutation]);
 
   const handleBookmarkPress = useCallback(() => {
     if (!uri || !cid) return;
@@ -94,10 +117,17 @@ export const PostActions = React.memo(function PostActions({
         <ThemedText style={styles.interactionCount}>{commentCount}</ThemedText>
       </TouchableOpacity>
 
-      <ThemedView style={styles.interactionItem}>
-        <IconSymbol name="arrow.2.squarepath" size={20} color={iconColor} />
+      <TouchableOpacity
+        style={styles.interactionItem}
+        onPress={handleRepostPress}
+        activeOpacity={activeOpacity.default}
+        hitSlop={hitSlop}
+        accessibilityRole="button"
+        accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost post by ${authorName}`}
+      >
+        <IconSymbol name="arrow.2.squarepath" size={20} color={isReposted ? '#34C759' : iconColor} />
         <ThemedText style={styles.interactionCount}>{repostCount}</ThemedText>
-      </ThemedView>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.interactionItem}
