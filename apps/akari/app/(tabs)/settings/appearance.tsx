@@ -54,6 +54,34 @@ const TEXT_PRESETS_DARK = [
   { label: 'Warm', color: '#FDE68A' },
 ];
 
+const ICON_PRESETS_LIGHT = [
+  { label: 'Gray', color: '#687076' },
+  { label: 'Dark', color: '#374151' },
+  { label: 'Soft', color: '#9CA3AF' },
+  { label: 'Blue', color: '#3B82F6' },
+];
+
+const ICON_PRESETS_DARK = [
+  { label: 'Gray', color: '#9BA1A6' },
+  { label: 'Light', color: '#D1D5DB' },
+  { label: 'Soft', color: '#6B7280' },
+  { label: 'Blue', color: '#60A5FA' },
+];
+
+const BORDER_PRESETS_LIGHT = [
+  { label: 'Light', color: '#E1E3E5' },
+  { label: 'Soft', color: '#F0F0F0' },
+  { label: 'Medium', color: '#D1D5DB' },
+  { label: 'Warm', color: '#E5E0DB' },
+];
+
+const BORDER_PRESETS_DARK = [
+  { label: 'Dark', color: '#2A2D2E' },
+  { label: 'Subtle', color: '#1F2937' },
+  { label: 'Medium', color: '#374151' },
+  { label: 'Navy', color: '#1E293B' },
+];
+
 const HEX_REGEX = /^#[0-9A-Fa-f]{6}$/;
 
 type ColorKeys = keyof typeof Colors.light;
@@ -212,6 +240,30 @@ export default function AppearanceSettingsScreen() {
               defaultColor={Colors[theme].text}
               currentColor={config[theme]?.text}
               onSelect={(c) => setModeColor(theme, 'text', c)}
+              borderColor={borderColor}
+            />
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection title="Icons">
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SwatchPicker
+              presets={isDark ? ICON_PRESETS_DARK : ICON_PRESETS_LIGHT}
+              defaultColor={Colors[theme].icon}
+              currentColor={config[theme]?.icon}
+              onSelect={(c) => setModeColor(theme, 'icon', c)}
+              borderColor={borderColor}
+            />
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection title="Borders">
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SwatchPicker
+              presets={isDark ? BORDER_PRESETS_DARK : BORDER_PRESETS_LIGHT}
+              defaultColor={Colors[theme].border}
+              currentColor={config[theme]?.border}
+              onSelect={(c) => setModeColor(theme, 'border', c)}
               borderColor={borderColor}
             />
           </ThemedView>
