@@ -20,6 +20,7 @@ import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificati
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTabConfig, type TabKey } from '@/hooks/useTabConfig';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -89,12 +90,21 @@ function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
   );
 }
 
-type HardcodedTabKey = 'index' | 'search' | 'messages' | 'notifications' | 'bookmarks' | 'profile';
-
 type HardcodedTabBarProps = BottomTabBarProps & {
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
   avatarUri?: string;
+  visibleTabs: TabKey[];
+};
+
+const TAB_ICONS: Record<TabKey, string> = {
+  index: 'house.fill',
+  search: 'magnifyingglass',
+  messages: 'message.fill',
+  notifications: 'bell.fill',
+  bookmarks: 'bookmark.fill',
+  profile: 'person.fill',
+  settings: 'gearshape.fill',
 };
 
 const TabButton = React.memo(function TabButton({
@@ -106,7 +116,7 @@ const TabButton = React.memo(function TabButton({
   avatarUri,
   navigation,
 }: {
-  tabKey: HardcodedTabKey;
+  tabKey: TabKey;
   route: { key: string; name: string };
   isFocused: boolean;
   color: string;
@@ -146,23 +156,15 @@ const TabButton = React.memo(function TabButton({
       style={hardcodedTabStyles.tabButton}
     >
       <View style={hardcodedTabStyles.iconContainer}>
-        {tabKey === 'messages' || tabKey === 'notifications' ? (
+        {tabKey === 'profile' ? (
+          <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
+        ) : badgeCount > 0 ? (
           <View style={hardcodedTabStyles.badgeWrapper}>
-            <TabBarIcon name={tabKey === 'messages' ? 'message.fill' : 'bell.fill'} color={color} />
+            <TabBarIcon name={TAB_ICONS[tabKey] as any} color={color} />
             <TabBadge count={badgeCount} size="small" />
           </View>
-        ) : tabKey === 'profile' ? (
-          <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
         ) : (
-          <TabBarIcon
-            name={
-              tabKey === 'index' ? 'house.fill'
-                : tabKey === 'search' ? 'magnifyingglass'
-                : tabKey === 'bookmarks' ? 'bookmark.fill'
-                : 'gearshape.fill'
-            }
-            color={color}
-          />
+          <TabBarIcon name={TAB_ICONS[tabKey] as any} color={color} />
         )}
       </View>
     </HapticTab>
@@ -175,6 +177,7 @@ function HardcodedTabBar({
   unreadMessagesCount,
   unreadNotificationsCount,
   avatarUri,
+  visibleTabs,
 }: HardcodedTabBarProps) {
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
@@ -184,7 +187,6 @@ function HardcodedTabBar({
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
-  const hardcodedTabs: HardcodedTabKey[] = ['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile'];
   return (
     <View
       style={[
@@ -205,7 +207,7 @@ function HardcodedTabBar({
       ) : null}
       <View style={hardcodedTabStyles.content}>
         <View style={hardcodedTabStyles.tabList}>
-          {hardcodedTabs.map((tabKey) => {
+          {visibleTabs.map((tabKey) => {
             const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
             if (routeIndex === -1) {
               return null;
@@ -238,6 +240,7 @@ function HardcodedTabBar({
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
+  const { visibleTabs } = useTabConfig();
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: currentAccount } = useCurrentAccount();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
@@ -433,6 +436,7 @@ export default function TabLayout() {
                 unreadMessagesCount={unreadMessagesCount}
                 unreadNotificationsCount={unreadNotificationsCount}
                 avatarUri={currentAccount?.avatar}
+                visibleTabs={visibleTabs}
               />
             )}
           >
@@ -451,7 +455,7 @@ export default function TabLayout() {
                 },
               })}
             />
-            <Tabs.Screen name="settings" options={{ href: null }} />
+            <Tabs.Screen name="settings" />
           </Tabs>
         </View>
       </SafeAreaInsetsContext.Provider>

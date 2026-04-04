@@ -54,6 +54,13 @@ jest.mock('@/hooks/useResponsive');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
+jest.mock('@/hooks/useTabConfig', () => ({
+  useTabConfig: () => ({
+    visibleTabs: ['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile'],
+    setVisibleTabs: jest.fn(),
+    resetToDefault: jest.fn(),
+  }),
+}));
 
 jest.mock('@/components/HapticTab', () => {
   const React = require('react');
@@ -286,8 +293,8 @@ describe('TabLayout', () => {
       } as any),
     );
 
-    expect(mockTabBadge.mock.calls[0][0].count).toBe(0);
-    expect(mockTabBadge.mock.calls[1][0].count).toBe(0);
+    // With zero badge counts, TabBadge is not rendered (badges only show when count > 0)
+    expect(mockTabBadge.mock.calls.length).toBe(0);
   });
 
   it('opens the account switcher when the profile tab is long pressed', () => {

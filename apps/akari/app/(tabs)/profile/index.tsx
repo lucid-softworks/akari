@@ -1,5 +1,4 @@
 import * as Clipboard from 'expo-clipboard';
-import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
@@ -193,7 +192,6 @@ export default function ProfileScreen() {
             labels: profile?.labels,
           }}
           isOwnProfile={true}
-          onSettingsPress={() => router.push('/(tabs)/settings')}
           onDropdownToggle={handleDropdownToggle}
           dropdownRef={dropdownRef}
         />

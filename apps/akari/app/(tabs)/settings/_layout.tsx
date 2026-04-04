@@ -41,6 +41,7 @@ export default function SettingsLayout() {
       />
       <Stack.Screen name="languages" options={{ title: t('settings.language') }} />
       <Stack.Screen name="about" options={{ title: t('settings.about') }} />
+      <Stack.Screen name="customize-tabs" options={{ title: t('settings.customizeTabs') }} />
       <Stack.Screen name="development" options={{ title: t('settings.development') }} />
     </Stack>
   );
