@@ -163,12 +163,11 @@ describe('Settings index screen', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
   });
 
-  it('opens the add account panel', () => {
-    const { getByText, getByPlaceholderText } = renderSettingsIndex();
+  it('navigates to add account page', () => {
+    const { getByText } = renderSettingsIndex();
 
     fireEvent.press(getByText('common.addAccount'));
-    expect(mockRouterPush).not.toHaveBeenCalled();
-    expect(getByPlaceholderText('auth.blueskyHandlePlaceholder')).toBeTruthy();
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/add-account');
   });
 });
 

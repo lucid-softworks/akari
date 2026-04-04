@@ -6,7 +6,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddAccountPanel } from '@/components/AddAccountPanel';
 import {
   SettingsRow,
   SettingsSection,
@@ -14,10 +13,7 @@ import {
 } from '@/components/settings/SettingsList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { DialogModal } from '@/components/ui/DialogModal';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useDialogManager } from '@/contexts/DialogContext';
-import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
@@ -47,7 +43,6 @@ export default function SettingsScreen() {
   const { data: accountProfiles } = useAccountProfiles();
   const scrollViewRef = useRef<ScrollView>(null);
   const { isLargeScreen } = useResponsive();
-  const dialogManager = useDialogManager();
 
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const cardBackground = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
@@ -77,16 +72,8 @@ export default function SettingsScreen() {
   );
 
   const handleAddAccount = useCallback(() => {
-    const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
-    dialogManager.open({
-      id: ADD_ACCOUNT_PANEL_ID,
-      component: (
-        <DialogModal onRequestClose={closePanel}>
-          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
-        </DialogModal>
-      ),
-    });
-  }, [dialogManager]);
+    router.push('/(tabs)/settings/add-account');
+  }, [router]);
 
   // Version info
   const version = Constants.expoConfig?.version ?? t('common.unknown');

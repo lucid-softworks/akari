@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
-import { AddAccountPanel } from '@/components/AddAccountPanel';
 import { spacing } from '@/constants/tokens';
 import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
 import {
@@ -12,9 +11,6 @@ import {
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedView } from '@/components/ThemedView';
-import { DialogModal } from '@/components/ui/DialogModal';
-import { useDialogManager } from '@/contexts/DialogContext';
-import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -37,7 +33,6 @@ export default function AccountSettingsScreen() {
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
   const wipeAllDataMutation = useWipeAllData();
-  const dialogManager = useDialogManager();
   const showNotImplemented = useNotImplementedToast();
 
   const handleSwitchAccount = useCallback(
@@ -94,17 +89,8 @@ export default function AccountSettingsScreen() {
   );
 
   const handleAddAccount = useCallback(() => {
-    const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
-
-    dialogManager.open({
-      id: ADD_ACCOUNT_PANEL_ID,
-      component: (
-        <DialogModal onRequestClose={closePanel}>
-          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
-        </DialogModal>
-      ),
-    });
-  }, [dialogManager]);
+    router.push('/(tabs)/settings/add-account');
+  }, []);
 
   const handleLogout = useCallback(async () => {
     try {
