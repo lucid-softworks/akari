@@ -199,7 +199,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
   }, [loading, searchQuery, iconColor, mediaType]);
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal visible={visible} animationType="slide" presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'} onRequestClose={onClose}>
       <ThemedView style={[styles.container, { backgroundColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         {/* Header */}
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
