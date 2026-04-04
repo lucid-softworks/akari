@@ -10,7 +10,7 @@ import { BlueskyApi } from '@/bluesky-api';
  * @param identifier - The user's handle or DID
  * @param limit - Number of posts to fetch per page (default: 20)
  */
-export function useAuthorPosts(identifier: string | undefined, limit: number = 20) {
+export function useAuthorPosts(identifier: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
