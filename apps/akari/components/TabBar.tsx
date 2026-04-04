@@ -97,16 +97,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
     paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
     paddingHorizontal: spacing.md,
-    marginBottom: spacing.md,
-    ...shadows.sm,
     zIndex: 10,
   },
   scrollContent: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingBottom: spacing.xs,
   },
   tab: {
     paddingVertical: 10,
