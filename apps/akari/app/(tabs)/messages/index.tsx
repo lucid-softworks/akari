@@ -81,18 +81,25 @@ export function MessagesListScreen({
     isRefetching,
   } = useConversations(50, undefined, status);
 
-  const conversations = React.useMemo(() => {
-    const flattened = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
+  const allConversations = React.useMemo(
+    () => conversationsData?.pages.flatMap((page) => page.conversations) ?? [],
+    [conversationsData],
+  );
 
-    return flattened.filter((conversation) => conversation.status === status);
-  }, [conversationsData, status]);
+  const conversations = React.useMemo(
+    () => allConversations.filter((conversation) => conversation.status === status),
+    [allConversations, status],
+  );
 
+  // Show avatars from the OTHER status (pending avatars on accepted list, and vice versa)
   const previewAvatars = React.useMemo(
     () => {
+      const otherStatus = status === 'accepted' ? 'request' : 'accepted';
+      const otherConversations = allConversations.filter((c) => c.status === otherStatus);
       const unique = new Set<string>();
       const avatars: { key: string; uri?: string; fallback: string }[] = [];
 
-      for (const conversation of conversations) {
+      for (const conversation of otherConversations) {
         if (unique.has(conversation.id)) {
           continue;
         }
@@ -108,7 +115,7 @@ export function MessagesListScreen({
 
       return avatars;
     },
-    [conversations],
+    [allConversations, status],
   );
 
   const handleRefresh = React.useCallback(async () => {
