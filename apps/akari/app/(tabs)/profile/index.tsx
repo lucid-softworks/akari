@@ -101,28 +101,29 @@ export default function ProfileScreen() {
   };
 
   const headerComponent = useMemo(() => (
-    <>
-      <ProfileHeader
-        profile={{
-          avatar: profile?.avatar,
-          displayName: profile?.displayName || currentAccount?.handle || '',
-          handle: currentAccount?.handle || '',
-          description: profile?.description,
-          banner: profile?.banner,
-          did: profile?.did,
-          followersCount: profile?.followersCount,
-          followsCount: profile?.followsCount,
-          postsCount: profile?.postsCount,
-          viewer: profile?.viewer,
-          labels: profile?.labels,
-        }}
-        isOwnProfile={true}
-        onDropdownToggle={handleDropdownToggle}
-        dropdownRef={dropdownRef}
-      />
-      <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
-    </>
-  ), [profile, currentAccount, handleDropdownToggle, dropdownRef, activeTab, handleTabChange]);
+    <ProfileHeader
+      profile={{
+        avatar: profile?.avatar,
+        displayName: profile?.displayName || currentAccount?.handle || '',
+        handle: currentAccount?.handle || '',
+        description: profile?.description,
+        banner: profile?.banner,
+        did: profile?.did,
+        followersCount: profile?.followersCount,
+        followsCount: profile?.followsCount,
+        postsCount: profile?.postsCount,
+        viewer: profile?.viewer,
+        labels: profile?.labels,
+      }}
+      isOwnProfile={true}
+      onDropdownToggle={handleDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  ), [profile, currentAccount, handleDropdownToggle, dropdownRef]);
+
+  const tabsComponent = useMemo(() => (
+    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
+  ), [activeTab, handleTabChange, currentAccount?.handle]);
 
   const renderTabContent = () => {
     if (!currentAccount?.handle) {
@@ -135,7 +136,7 @@ export default function ProfileScreen() {
 
     switch (activeTab) {
       case 'posts':
-        return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
+        return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
       case 'replies':
         return <RepliesTab handle={currentAccount.handle} />;
       case 'likes':

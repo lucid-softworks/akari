@@ -13,11 +13,13 @@ import { formatRelativeTime } from '@/utils/timeUtils';
 type PostsTabProps = {
   handle: string;
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
+  /** Rendered between header and posts, sticks to the top when scrolled */
+  StickyTabComponent?: React.ReactElement | null;
   onRefresh?: () => void;
   refreshing?: boolean;
 };
 
-export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }: PostsTabProps) {
+export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRefresh, refreshing }: PostsTabProps) {
   const { t } = useTranslation();
   const { data: posts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorPosts(handle);
   const navigateToPost = useNavigateToPost();
@@ -27,6 +29,22 @@ export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }:
     [posts],
   );
 
+  const hasHeader = !!ListHeaderComponent;
+  const hasStickyTab = !!StickyTabComponent;
+  const headerCount = (hasHeader ? 1 : 0) + (hasStickyTab ? 1 : 0);
+
+  const listData = useMemo(() => {
+    const prefix: any[] = [];
+    if (hasHeader) prefix.push({ __type: 'header' });
+    if (hasStickyTab) prefix.push({ __type: 'stickyTab' });
+    return [...prefix, ...filteredPosts];
+  }, [filteredPosts, hasHeader, hasStickyTab]);
+
+  const stickyIndices = useMemo(
+    () => (hasStickyTab ? [hasHeader ? 1 : 0] : undefined),
+    [hasHeader, hasStickyTab],
+  );
+
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       void fetchNextPage();
@@ -34,6 +52,17 @@ export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }:
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const renderItem = useCallback(({ item }: { item: any }) => {
+    if (item.__type === 'header') {
+      return ListHeaderComponent
+        ? typeof ListHeaderComponent === 'function'
+          ? <ListHeaderComponent />
+          : ListHeaderComponent
+        : null;
+    }
+    if (item.__type === 'stickyTab') {
+      return StickyTabComponent ?? null;
+    }
+
     const replyTo = item.reply?.parent
       ? {
           author: {
@@ -77,10 +106,15 @@ export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }:
     );
   }, [navigateToPost]);
 
+  const renderHeader = () => ListHeaderComponent
+    ? typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent
+    : null;
+
   if (isLoading && !filteredPosts.length) {
     return (
       <>
-        {ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {renderHeader()}
+        {StickyTabComponent}
         <FeedSkeleton count={3} />
       </>
     );
@@ -89,7 +123,8 @@ export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }:
   if (filteredPosts.length === 0) {
     return (
       <>
-        {ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {renderHeader()}
+        {StickyTabComponent}
         <ThemedView style={styles.emptyContainer}>
           <ThemedText style={styles.emptyText}>{t('profile.noPosts')}</ThemedText>
         </ThemedView>
@@ -99,17 +134,17 @@ export function PostsTab({ handle, ListHeaderComponent, onRefresh, refreshing }:
 
   return (
     <FlatList
-      data={filteredPosts}
+      data={listData}
       renderItem={renderItem}
-      keyExtractor={(item: any) => `${item.uri}-${item.indexedAt}`}
+      keyExtractor={(item: any) => item.__type ?? `${item.uri}-${item.indexedAt}`}
       onEndReached={handleEndReached}
       onEndReachedThreshold={0.3}
       showsVerticalScrollIndicator={false}
-      ListHeaderComponent={ListHeaderComponent}
+      stickyHeaderIndices={stickyIndices}
       onRefresh={onRefresh}
       refreshing={refreshing}
       contentContainerStyle={styles.listContent}
-      removeClippedSubviews
+      removeClippedSubviews={false}
     />
   );
 }

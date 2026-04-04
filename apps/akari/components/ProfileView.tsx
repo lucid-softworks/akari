@@ -122,35 +122,36 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   };
 
   const headerComponent = useMemo(() => (
-    <>
-      <ProfileHeader
-        profile={{
-          avatar: profile?.avatar,
-          displayName: profile?.displayName,
-          handle: profile?.handle,
-          description: profile?.description,
-          banner: profile?.banner,
-          did: profile?.did,
-          followersCount: profile?.followersCount,
-          followsCount: profile?.followsCount,
-          postsCount: profile?.postsCount,
-          viewer: profile?.viewer,
-          labels: profile?.labels,
-        }}
-        isOwnProfile={isOwnProfile}
-        onDropdownToggle={handleDropdownToggle}
-        dropdownRef={dropdownRef}
-      />
-      <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
-    </>
-  ), [profile, isOwnProfile, handleDropdownToggle, dropdownRef, activeTab, setActiveTab]);
+    <ProfileHeader
+      profile={{
+        avatar: profile?.avatar,
+        displayName: profile?.displayName,
+        handle: profile?.handle,
+        description: profile?.description,
+        banner: profile?.banner,
+        did: profile?.did,
+        followersCount: profile?.followersCount,
+        followsCount: profile?.followsCount,
+        postsCount: profile?.postsCount,
+        viewer: profile?.viewer,
+        labels: profile?.labels,
+      }}
+      isOwnProfile={isOwnProfile}
+      onDropdownToggle={handleDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  ), [profile, isOwnProfile, handleDropdownToggle, dropdownRef]);
+
+  const tabsComponent = useMemo(() => (
+    <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
+  ), [activeTab, setActiveTab, profile.handle]);
 
   const renderTabContent = () => {
     if (!handle) return null;
 
     switch (activeTab) {
       case 'posts':
-        return <PostsTab handle={handle} ListHeaderComponent={headerComponent} />;
+        return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} />;
       case 'replies':
         return <RepliesTab handle={handle} />;
       case 'likes':
