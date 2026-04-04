@@ -23,22 +23,29 @@ export const ALL_TABS: { key: TabKey; label: string; icon: string; alwaysVisible
 ];
 
 const DEFAULT_VISIBLE: TabKey[] = ['index', 'search', 'notifications', 'bookmarks', 'profile', 'settings'];
+const DEFAULT_CONFIG: TabConfig = { visibleTabs: DEFAULT_VISIBLE };
 
+// Cached snapshot -- useSyncExternalStore compares by reference,
+// so we must return the same object when nothing changed.
+let cachedConfig: TabConfig = readFromStorage();
 let listeners = new Set<() => void>();
 
-function getSnapshot(): TabConfig {
+function readFromStorage(): TabConfig {
   const raw = storage.getString(STORAGE_KEY);
-  if (!raw) return { visibleTabs: DEFAULT_VISIBLE };
+  if (!raw) return DEFAULT_CONFIG;
   try {
     const parsed = JSON.parse(raw) as TabConfig;
-    // Ensure profile is always included
     if (!parsed.visibleTabs.includes('profile')) {
       parsed.visibleTabs.push('profile');
     }
     return parsed;
   } catch {
-    return { visibleTabs: DEFAULT_VISIBLE };
+    return DEFAULT_CONFIG;
   }
+}
+
+function getSnapshot(): TabConfig {
+  return cachedConfig;
 }
 
 function subscribe(listener: () => void) {
@@ -49,6 +56,7 @@ function subscribe(listener: () => void) {
 }
 
 function notify() {
+  cachedConfig = readFromStorage();
   for (const listener of listeners) {
     listener();
   }
@@ -58,7 +66,6 @@ export function useTabConfig() {
   const config = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   const setVisibleTabs = useCallback((tabs: readonly TabKey[]) => {
-    // Ensure profile is always included
     const withProfile: TabKey[] = tabs.includes('profile') ? [...tabs] : [...tabs, 'profile'];
     const newConfig: TabConfig = { visibleTabs: withProfile };
     storage.set(STORAGE_KEY, JSON.stringify(newConfig));
