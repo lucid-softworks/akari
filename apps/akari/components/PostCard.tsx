@@ -249,6 +249,8 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
       <PostActionsMenu
         visible={showActionsMenu}
         canTranslate={canTranslate}
+        postText={post.text}
+        authorDid={post.author.did}
         onDismiss={handleMenuDismiss}
         onTranslatePress={handleTranslatePress}
       />

@@ -16,6 +16,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
+import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -78,6 +79,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
+  const muteMutation = useMuteUser();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
 
@@ -155,7 +157,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   const handleMuteAccount = () => {
-    // TODO: Implement mute functionality
+    if (!profile.did) return;
     const isMuted = profile.viewer?.muted;
     const message = isMuted
       ? t('profile.unmuteConfirmation', { handle: profile.handle })
@@ -170,8 +172,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           text: isMuted ? t('common.unmute') : t('common.mute'),
           style: 'destructive',
           onPress: () => {
-            // TODO: Implement actual mute/unmute API call
-            // TODO: wire up mute/unmute API call
+            muteMutation.mutate({
+              actor: profile.did!,
+              action: isMuted ? 'unmute' : 'mute',
+            });
           },
         },
       ],

@@ -1,3 +1,4 @@
+import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useMemo } from 'react';
 import { Modal, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
+import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -21,6 +23,8 @@ type PostMenuItem = {
 type PostActionsMenuProps = {
   visible: boolean;
   canTranslate: boolean;
+  postText?: string;
+  authorDid?: string;
   onDismiss: () => void;
   onTranslatePress: () => void;
 };
@@ -28,6 +32,8 @@ type PostActionsMenuProps = {
 export const PostActionsMenu = React.memo(function PostActionsMenu({
   visible,
   canTranslate,
+  postText,
+  authorDid,
   onDismiss,
   onTranslatePress,
 }: PostActionsMenuProps) {
@@ -38,32 +44,30 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
-  const handlePlaceholderAction = useCallback(
-    (actionKey: string) => {
-      onDismiss();
-      if (__DEV__) {
-        console.info(`[PostCard] Action "${actionKey}" is not implemented yet.`);
-      }
-    },
-    [onDismiss],
-  );
+  const muteMutation = useMuteUser();
+
+  const handleCopyText = useCallback(() => {
+    if (postText) {
+      void Clipboard.setStringAsync(postText);
+    }
+    onDismiss();
+  }, [postText, onDismiss]);
+
+  const handleMuteAccount = useCallback(() => {
+    if (authorDid) {
+      muteMutation.mutate({ actor: authorDid, action: 'mute' });
+    }
+    onDismiss();
+  }, [authorDid, muteMutation, onDismiss]);
 
   const menuActions = useMemo<PostMenuItem[]>(
     () => [
       { key: 'translate', icon: 'character.book.closed', label: t('post.actions.translate'), onPress: onTranslatePress, disabled: !canTranslate },
-      { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: () => handlePlaceholderAction('copyText') },
-      { key: 'showMoreLikeThis', icon: 'hand.thumbsup', label: t('post.actions.showMoreLikeThis'), onPress: () => handlePlaceholderAction('showMoreLikeThis') },
-      { key: 'showLessLikeThis', icon: 'hand.thumbsdown', label: t('post.actions.showLessLikeThis'), onPress: () => handlePlaceholderAction('showLessLikeThis') },
-      { key: 'assignToLists', icon: 'list.bullet', label: t('post.actions.assignToLists'), onPress: () => handlePlaceholderAction('assignToLists') },
-      { key: 'muteThread', icon: 'bell.slash', label: t('post.actions.muteThread'), onPress: () => handlePlaceholderAction('muteThread') },
-      { key: 'muteWordsAndTags', icon: 'tag.slash', label: t('post.actions.muteWordsAndTags'), onPress: () => handlePlaceholderAction('muteWordsAndTags') },
-      { key: 'hidePost', icon: 'eye.slash', label: t('post.actions.hidePost'), onPress: () => handlePlaceholderAction('hidePost') },
-      { key: 'hideAccount', icon: 'person.slash', label: t('post.actions.hideAccount'), onPress: () => handlePlaceholderAction('hideAccount') },
-      { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: () => handlePlaceholderAction('muteAccount') },
-      { key: 'blockAccount', icon: 'hand.raised.fill', label: t('common.block'), onPress: () => handlePlaceholderAction('blockAccount'), destructive: true },
-      { key: 'reportAccount', icon: 'exclamationmark.triangle', label: t('profile.reportAccount'), onPress: () => handlePlaceholderAction('reportAccount'), destructive: true },
+      { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: handleCopyText, disabled: !postText },
+      { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
+      { key: 'reportAccount', icon: 'exclamationmark.triangle', label: t('profile.reportAccount'), onPress: onDismiss, destructive: true, disabled: true },
     ],
-    [canTranslate, handlePlaceholderAction, onTranslatePress, t],
+    [canTranslate, postText, authorDid, handleCopyText, handleMuteAccount, onTranslatePress, onDismiss, t],
   );
 
   return (
