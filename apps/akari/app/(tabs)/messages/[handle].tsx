@@ -474,25 +474,12 @@ export default function ConversationScreen() {
   const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 50 : 0}
+    >
       <ThemedView style={styles.container}>
-          {/* Conversation info bar */}
-          <TouchableOpacity
-            style={styles.infoBar}
-            onPress={() => navigateToProfile({ actor: handle })}
-            activeOpacity={activeOpacity.default}
-          >
-            {conversation?.avatar ? (
-              <Image source={{ uri: conversation.avatar }} style={styles.infoAvatar} contentFit="cover" />
-            ) : null}
-            <ThemedView style={styles.infoText}>
-              <ThemedText style={styles.infoName} numberOfLines={1}>
-                {conversation?.displayName || decodeURIComponent(handle)}
-              </ThemedText>
-              <ThemedText style={styles.infoHandle} numberOfLines={1}>@{decodeURIComponent(handle)}</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
@@ -562,29 +549,6 @@ export default function ConversationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  infoBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.sm,
-    gap: spacing.sm,
-  },
-  infoAvatar: {
-    width: layout.avatarSmall,
-    height: layout.avatarSmall,
-    borderRadius: layout.avatarSmall / 2,
-  },
-  infoText: {
-    flex: 1,
-  },
-  infoName: {
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  infoHandle: {
-    fontSize: fontSize.sm,
-    opacity: opacity.tertiary,
   },
   messagesContent: {
     paddingVertical: spacing.lg,

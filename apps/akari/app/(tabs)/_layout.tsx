@@ -21,6 +21,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTabConfig, type TabKey } from '@/hooks/useTabConfig';
+import { useConversations } from '@/hooks/queries/useConversations';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -275,8 +276,15 @@ export default function TabLayout() {
     };
   }, [pathname]);
 
-  // Message threads show their own header content (avatar + name), so hide the title
+  // For message threads, show avatar + name in header
   const isMessageThread = currentTabKey === 'messages' && isNestedRoute && nestedRouteKey !== 'pending';
+  const { data: conversationsData } = useConversations();
+  const messageThreadConvo = isMessageThread && nestedRouteKey
+    ? conversationsData?.pages?.flatMap((p) => p.conversations).find(
+        (c) => c.handle === decodeURIComponent(nestedRouteKey)
+      )
+    : undefined;
+
   const headerTitle = isMessageThread
     ? ''
     : isNestedRoute
@@ -417,14 +425,32 @@ export default function TabLayout() {
                 <View style={mobileDrawerStyles.headerButton} />
               )}
               <View style={mobileDrawerStyles.headerContent}>
-                {!isNestedRoute ? (
-                  <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
-                ) : null}
-                {headerTitle ? (
-                  <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                    {headerTitle}
-                  </Text>
-                ) : null}
+                {isMessageThread && messageThreadConvo ? (
+                  <>
+                    {messageThreadConvo.avatar ? (
+                      <Image source={{ uri: messageThreadConvo.avatar }} style={mobileDrawerStyles.headerConvoAvatar} />
+                    ) : null}
+                    <View style={mobileDrawerStyles.headerConvoInfo}>
+                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
+                        {messageThreadConvo.displayName || decodeURIComponent(nestedRouteKey ?? '')}
+                      </Text>
+                      <Text style={[mobileDrawerStyles.headerConvoHandle, { color: headerTextColor }]} numberOfLines={1}>
+                        @{decodeURIComponent(nestedRouteKey ?? '')}
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    {!isNestedRoute ? (
+                      <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                    ) : null}
+                    {headerTitle ? (
+                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
+                        {headerTitle}
+                      </Text>
+                    ) : null}
+                  </>
+                )}
               </View>
               <View style={mobileDrawerStyles.headerSpacer} />
             </View>
@@ -550,6 +576,19 @@ const mobileDrawerStyles = StyleSheet.create({
     height: 28,
     borderRadius: radius.xs,
     marginRight: spacing.sm,
+  },
+  headerConvoAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: spacing.sm,
+  },
+  headerConvoInfo: {
+    flex: 1,
+  },
+  headerConvoHandle: {
+    fontSize: fontSize.sm,
+    opacity: 0.5,
   },
   headerTitle: {
     fontSize: fontSize.xl,
