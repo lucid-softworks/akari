@@ -252,15 +252,12 @@ export default function ConversationScreen() {
 
   // Keyboard state
   useEffect(() => {
-    const keyboardWillShow = () => setIsKeyboardOpen(true);
-    const keyboardWillHide = () => setIsKeyboardOpen(false);
-
-    Keyboard.addListener('keyboardWillShow', keyboardWillShow);
-    Keyboard.addListener('keyboardWillHide', keyboardWillHide);
+    const showSub = Keyboard.addListener('keyboardWillShow', () => setIsKeyboardOpen(true));
+    const hideSub = Keyboard.addListener('keyboardWillHide', () => setIsKeyboardOpen(false));
 
     return () => {
-      Keyboard.removeAllListeners('keyboardWillShow');
-      Keyboard.removeAllListeners('keyboardWillHide');
+      showSub.remove();
+      hideSub.remove();
     };
   }, []);
 
