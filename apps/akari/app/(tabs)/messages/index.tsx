@@ -81,41 +81,32 @@ export function MessagesListScreen({
     isRefetching,
   } = useConversations(50, undefined, status);
 
-  const allConversations = React.useMemo(
-    () => conversationsData?.pages.flatMap((page) => page.conversations) ?? [],
-    [conversationsData],
-  );
+  const conversations = React.useMemo(() => {
+    const flattened = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
+    return flattened.filter((conversation) => conversation.status === status);
+  }, [conversationsData, status]);
 
-  const conversations = React.useMemo(
-    () => allConversations.filter((conversation) => conversation.status === status),
-    [allConversations, status],
-  );
+  // Fetch pending conversations separately for preview avatars (only when showing accepted list)
+  const pendingStatus = status === 'accepted' ? 'request' : 'accepted';
+  const { data: pendingData } = useConversations(5, undefined, pendingStatus);
 
-  // Show avatars from the OTHER status (pending avatars on accepted list, and vice versa)
   const previewAvatars = React.useMemo(
     () => {
-      const otherStatus = status === 'accepted' ? 'request' : 'accepted';
-      const otherConversations = allConversations.filter((c) => c.status === otherStatus);
+      const pendingConvos = pendingData?.pages.flatMap((page) => page.conversations) ?? [];
       const unique = new Set<string>();
       const avatars: { key: string; uri?: string; fallback: string }[] = [];
 
-      for (const conversation of otherConversations) {
-        if (unique.has(conversation.id)) {
-          continue;
-        }
-
+      for (const conversation of pendingConvos) {
+        if (unique.has(conversation.id)) continue;
         unique.add(conversation.id);
         const fallback = (conversation.displayName || conversation.handle || 'U').charAt(0).toUpperCase();
         avatars.push({ key: conversation.id, uri: conversation.avatar, fallback });
-
-        if (avatars.length === 5) {
-          break;
-        }
+        if (avatars.length === 5) break;
       }
 
       return avatars;
     },
-    [allConversations, status],
+    [pendingData],
   );
 
   const handleRefresh = React.useCallback(async () => {
