@@ -15,18 +15,18 @@ export function useThemeColor(
     themeConfigStore.getSnapshot,
   );
 
-  // 1. Inline prop overrides (highest priority)
-  const colorFromProps = props[theme];
-  if (colorFromProps) return colorFromProps;
+  // 1. Accent color (highest priority for tint/tabIconSelected)
+  if (config.accentColor && (colorName === 'tint' || colorName === 'tabIconSelected')) {
+    return config.accentColor;
+  }
 
   // 2. User's per-mode override
   const modeOverride = config[theme]?.[colorName];
   if (modeOverride) return modeOverride;
 
-  // 3. Accent color (applies to tint + tabIconSelected)
-  if (config.accentColor && (colorName === 'tint' || colorName === 'tabIconSelected')) {
-    return config.accentColor;
-  }
+  // 3. Inline prop overrides
+  const colorFromProps = props[theme];
+  if (colorFromProps) return colorFromProps;
 
   // 4. Default
   return Colors[theme][colorName];
