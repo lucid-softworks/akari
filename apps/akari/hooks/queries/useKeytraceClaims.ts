@@ -8,7 +8,7 @@ export function useKeytraceClaims(handle?: string) {
     queryKey: ['keytrace', handle],
     queryFn: () => getClaimsForHandle(handle!),
     enabled: !!handle,
-    staleTime: 30 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
     retry: 1,
     select: (result) => result.claims,
   });
