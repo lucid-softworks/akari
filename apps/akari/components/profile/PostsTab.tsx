@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { ThemedText } from '@/components/ThemedText';
@@ -145,6 +145,7 @@ export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRe
       refreshing={refreshing}
       contentContainerStyle={styles.listContent}
       removeClippedSubviews={false}
+      ListFooterComponent={isFetchingNextPage ? <ActivityIndicator style={styles.loadingFooter} /> : null}
     />
   );
 }
@@ -160,5 +161,8 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 100,
+  },
+  loadingFooter: {
+    paddingVertical: 20,
   },
 });
