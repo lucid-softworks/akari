@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { spacing, radius, fontSize, fontWeight, shadows, layout } from '@/constants/tokens';
-import { AddAccountPanel } from '@/components/AddAccountPanel';
+import { AddAccountForm } from '@/components/AddAccountForm';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { DialogModal } from '@/components/ui/DialogModal';
 import { useDialogManager } from '@/contexts/DialogContext';
@@ -140,7 +140,7 @@ export function Sidebar({ onNavigate, showCollapseToggle = true }: SidebarProps 
       id: ADD_ACCOUNT_PANEL_ID,
       component: (
         <DialogModal onRequestClose={closePanel}>
-          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
+          <AddAccountForm />
         </DialogModal>
       ),
     });

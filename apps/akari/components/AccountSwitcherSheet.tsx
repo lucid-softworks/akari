@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddAccountPanel } from '@/components/AddAccountPanel';
+import { AddAccountForm } from '@/components/AddAccountForm';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -86,7 +86,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
       id: ADD_ACCOUNT_PANEL_ID,
       component: (
         <DialogModal onRequestClose={closePanel}>
-          <AddAccountPanel panelId={ADD_ACCOUNT_PANEL_ID} />
+          <AddAccountForm />
         </DialogModal>
       ),
     });

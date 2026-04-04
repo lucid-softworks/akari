@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import { AddAccountPanel } from '@/components/AddAccountPanel';
+import { AddAccountForm } from '@/components/AddAccountForm';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { spacing } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -16,7 +16,7 @@ export default function AddAccountScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <AddAccountPanel />
+        <AddAccountForm />
       </ScrollView>
     </SettingsSubpageLayout>
   );
