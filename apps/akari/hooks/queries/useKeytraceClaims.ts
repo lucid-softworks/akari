@@ -10,6 +10,6 @@ export function useKeytraceClaims(handle?: string) {
     enabled: !!handle,
     staleTime: 30 * 60 * 1000,
     retry: 1,
-    select: (result) => result.claims.filter((c) => c.verified),
+    select: (result) => result.claims,
   });
 }
