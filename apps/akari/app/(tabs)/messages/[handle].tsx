@@ -486,9 +486,9 @@ export default function ConversationScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={insets.top + 56}
+      keyboardVerticalOffset={insets.top + 56 + 60}
     >
       {messagesLoading ? (
         <View style={styles.loadingState}>
