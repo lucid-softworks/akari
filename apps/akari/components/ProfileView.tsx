@@ -40,6 +40,36 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const { showToast } = useToast();
 
   const { data: profile, isLoading, error } = useProfile(handle);
+  const isOwnProfile = currentUser?.handle === profile?.handle;
+
+  const headerComponent = useMemo(() => {
+    if (!profile) return null;
+    return (
+      <ProfileHeader
+        profile={{
+          avatar: profile.avatar,
+          displayName: profile.displayName,
+          handle: profile.handle,
+          description: profile.description,
+          banner: profile.banner,
+          did: profile.did,
+          followersCount: profile.followersCount,
+          followsCount: profile.followsCount,
+          postsCount: profile.postsCount,
+          viewer: profile.viewer,
+          labels: profile.labels,
+        }}
+        isOwnProfile={isOwnProfile}
+        onDropdownToggle={(isOpen: boolean) => setShowDropdown(isOpen)}
+        dropdownRef={dropdownRef}
+      />
+    );
+  }, [profile, isOwnProfile, dropdownRef]);
+
+  const tabsComponent = useMemo(() => {
+    if (!profile) return null;
+    return <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />;
+  }, [activeTab, setActiveTab, profile]);
 
   if (isLoading) {
     return (
@@ -56,8 +86,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       </ThemedView>
     );
   }
-
-  const isOwnProfile = currentUser?.handle === profile?.handle;
 
   const handleDropdownToggle = (isOpen: boolean) => {
     setShowDropdown(isOpen);
@@ -120,31 +148,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     // TODO: Implement report functionality
     setShowDropdown(false);
   };
-
-  const headerComponent = useMemo(() => (
-    <ProfileHeader
-      profile={{
-        avatar: profile?.avatar,
-        displayName: profile?.displayName,
-        handle: profile?.handle,
-        description: profile?.description,
-        banner: profile?.banner,
-        did: profile?.did,
-        followersCount: profile?.followersCount,
-        followsCount: profile?.followsCount,
-        postsCount: profile?.postsCount,
-        viewer: profile?.viewer,
-        labels: profile?.labels,
-      }}
-      isOwnProfile={isOwnProfile}
-      onDropdownToggle={handleDropdownToggle}
-      dropdownRef={dropdownRef}
-    />
-  ), [profile, isOwnProfile, handleDropdownToggle, dropdownRef]);
-
-  const tabsComponent = useMemo(() => (
-    <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />
-  ), [activeTab, setActiveTab, profile.handle]);
 
   const renderTabContent = () => {
     if (!handle) return null;
