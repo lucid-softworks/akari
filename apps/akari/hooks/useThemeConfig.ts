@@ -8,10 +8,13 @@ const STORAGE_KEY = 'theme_config';
 
 type ColorKeys = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+export type ColorMode = 'light' | 'dark' | 'auto';
+
 export type ThemeColorOverrides = {
   light?: Partial<Record<ColorKeys, string>>;
   dark?: Partial<Record<ColorKeys, string>>;
   accentColor?: string;
+  colorMode?: ColorMode;
 };
 
 const DEFAULT_CONFIG: ThemeColorOverrides = {};
@@ -78,10 +81,15 @@ export function useThemeConfig() {
     save({ ...current, [mode]: Object.keys(modeColors).length > 0 ? modeColors : undefined });
   }, []);
 
+  const setColorMode = useCallback((mode: ColorMode) => {
+    const current = getSnapshot();
+    save({ ...current, colorMode: mode === 'auto' ? undefined : mode });
+  }, []);
+
   const resetToDefaults = useCallback(() => {
     storage.delete(STORAGE_KEY);
     notify();
   }, []);
 
-  return { config, setAccentColor, setModeColor, resetToDefaults };
+  return { config, setAccentColor, setModeColor, setColorMode, resetToDefaults };
 }

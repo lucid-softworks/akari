@@ -10,7 +10,7 @@ import { Colors } from '@/constants/Colors';
 import { spacing, radius, fontSize, fontWeight, semanticColors, layout } from '@/constants/tokens';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeConfig } from '@/hooks/useThemeConfig';
+import { useThemeConfig, type ColorMode } from '@/hooks/useThemeConfig';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const ACCENT_PRESETS = [
@@ -231,9 +231,18 @@ export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
   const theme = useColorScheme() ?? 'light';
-  const { config, setAccentColor, setModeColor, resetToDefaults } = useThemeConfig();
+  const { config, setAccentColor, setModeColor, setColorMode, resetToDefaults } = useThemeConfig();
 
-  const hasCustomizations = !!(config.accentColor || config.light || config.dark);
+  const colorMode: ColorMode = config.colorMode ?? 'auto';
+  const hasCustomizations = !!(config.accentColor || config.light || config.dark || config.colorMode);
+  const showLight = colorMode === 'auto' || colorMode === 'light';
+  const showDark = colorMode === 'auto' || colorMode === 'dark';
+
+  const MODE_OPTIONS: { key: ColorMode; label: string; icon: React.ComponentProps<typeof IconSymbol>['name'] }[] = [
+    { key: 'light', label: 'Light', icon: 'sun.max.fill' },
+    { key: 'auto', label: 'Auto', icon: 'circle.lefthalf.filled' },
+    { key: 'dark', label: 'Dark', icon: 'moon.fill' },
+  ];
 
   return (
     <SettingsSubpageLayout title={t('settings.appearance')}>
@@ -243,7 +252,30 @@ export default function AppearanceSettingsScreen() {
         style={styles.scrollView}
         keyboardShouldPersistTaps="handled"
       >
-        <SettingsSection isFirst title="Accent Color">
+        {/* Color Mode */}
+        <SettingsSection isFirst title="Color Mode">
+          <ThemedView style={[styles.modeSelector, { borderColor }]}>
+            {MODE_OPTIONS.map((opt) => {
+              const active = colorMode === opt.key;
+              const accentColor = config.accentColor ?? Colors.light.tint;
+              return (
+                <TouchableOpacity
+                  key={opt.key}
+                  style={[styles.modeOption, active && { backgroundColor: accentColor }]}
+                  onPress={() => setColorMode(opt.key)}
+                >
+                  <IconSymbol name={opt.icon} size={16} color={active ? '#fff' : borderColor} />
+                  <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
+                    {opt.label}
+                  </ThemedText>
+                </TouchableOpacity>
+              );
+            })}
+          </ThemedView>
+        </SettingsSection>
+
+        {/* Accent Color */}
+        <SettingsSection title="Accent Color">
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <SwatchPicker
               presets={ACCENT_PRESETS}
@@ -255,15 +287,21 @@ export default function AppearanceSettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <SettingsSection title="Light Mode">
-          <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in light mode.</ThemedText>
-        </SettingsSection>
-        <ModeColorSections mode="light" config={config} setModeColor={setModeColor} borderColor={borderColor} />
+        {/* Light Mode Colors */}
+        {showLight ? (
+          <>
+            <SettingsSection title="Light Mode" />
+            <ModeColorSections mode="light" config={config} setModeColor={setModeColor} borderColor={borderColor} />
+          </>
+        ) : null}
 
-        <SettingsSection title="Dark Mode">
-          <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in dark mode.</ThemedText>
-        </SettingsSection>
-        <ModeColorSections mode="dark" config={config} setModeColor={setModeColor} borderColor={borderColor} />
+        {/* Dark Mode Colors */}
+        {showDark ? (
+          <>
+            <SettingsSection title="Dark Mode" />
+            <ModeColorSections mode="dark" config={config} setModeColor={setModeColor} borderColor={borderColor} />
+          </>
+        ) : null}
 
         {hasCustomizations ? (
           <SettingsSection>
@@ -286,6 +324,30 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 32,
+  },
+  modeSelector: {
+    flexDirection: 'row',
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.sm,
+    overflow: 'hidden',
+  },
+  modeOption: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+  modeOptionText: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+  },
+  modeOptionTextActive: {
+    color: '#fff',
+    fontWeight: fontWeight.semibold,
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
@@ -360,12 +422,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.sm,
-  },
-  modeSubtitle: {
-    fontSize: fontSize.sm,
-    opacity: 0.5,
-    paddingHorizontal: spacing.lg,
-    marginTop: spacing.xs,
   },
   resetText: {
     fontSize: fontSize.base,
