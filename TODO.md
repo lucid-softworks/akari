@@ -1,42 +1,83 @@
 # Outstanding App TODOs
 
-This checklist aggregates the TODO comments currently in the Akari app so we can track unfinished functionality.
+This checklist aggregates TODO items for the Akari app, organized by priority.
 
-## Profile header actions (`apps/akari/components/ProfileHeader.tsx`)
+## High Priority — Missing Core Features
 
-- [ ] Replace the placeholder "Add to lists" alert with real list management UI or navigation.
-- [ ] Implement full mute/unmute handling, including wiring the confirmation alert to an actual API call.
-- [ ] Integrate the report account alert with the real reporting API.
-- [ ] Export dropdown action handlers here so profile screens reuse them without duplicating stubs.
+### Repost & Quote Post
+The repost button in `PostActions.tsx` is display-only with no `onPress` handler.
+- [ ] Create `hooks/mutations/useRepostPost.ts` (create/delete repost records via `com.atproto.repo.createRecord`)
+- [ ] Create quote post flow — integrate quoting into `PostComposer`
+- [ ] Wire repost button to show a bottom sheet with "Repost" and "Quote Post" options
+- [ ] Optimistically update repost count and viewer state in feed/post caches
+- File: `apps/akari/components/post/PostActions.tsx` lines 97-100
 
-## Profile screens (`apps/akari/app/(tabs)/profile/[handle].tsx` and `apps/akari/app/(tabs)/profile/index.tsx`)
+### Mute Account
+Profile mute button shows a confirmation alert but the `onPress` callback is empty.
+- [ ] Create `hooks/mutations/useMuteUser.ts` using `app.bsky.graph.muteActor` / `unmuteActor`
+- [ ] Wire into `ProfileHeader.tsx` and `ProfileDropdown.tsx`
+- [ ] Update profile viewer state in cache after muting
 
-- [ ] Implement the "Search posts" action exposed in the profile dropdown.
-- [ ] Implement the "Add to lists" action exposed in the profile dropdown.
-- [ ] Implement the mute/unmute action exposed in the profile dropdown.
-- [ ] Implement the block/unblock action exposed in the profile dropdown.
-- [ ] Implement the report account action exposed in the profile dropdown.
-- [ ] Once the shared handlers exist, consume them here so the dropdown invokes the real mutations.
+### Report Account / Post
+Report shows an alert but the callback is empty.
+- [ ] Create `hooks/mutations/useReport.ts` using `com.atproto.moderation.createReport`
+- [ ] Support reporting both accounts and individual posts
+- [ ] Wire into `ProfileHeader.tsx`, `ProfileDropdown.tsx`, and `PostActionsMenu.tsx`
 
-## Feeds tab (`apps/akari/components/profile/FeedsTab.tsx`)
+## Medium Priority — Incomplete Features
 
-- [ ] Implement pinning functionality for authored feeds.
-- [ ] Reflect pinned state in the UI (and allow unpinning) while invalidating feed queries after pin changes.
+### Post Action Menu Stubs
+10+ items in `PostActionsMenu.tsx` call `handlePlaceholderAction` (console log only):
+- [ ] **Copy text** — use `expo-clipboard`
+- [ ] **Mute thread** — `app.bsky.graph.muteThread`
+- [ ] **Hide post** — local-only, persist hidden URIs in MMKV
+- [ ] **Hide account** — local-only, persist hidden DIDs in MMKV
+- [ ] **Block account** — wire up existing `useBlockUser` mutation
+- [ ] **Show more/less like this** — local feed preference or no API equivalent
+- [ ] **Assign to lists** — depends on lists management
+- [ ] **Mute words/tags** — `app.bsky.actor.putPreferences` with muted words
 
-## Supporting hooks for profile actions
+### Lists Management
+"Add to lists" is a stub everywhere.
+- [ ] Create `hooks/queries/useLists.ts` to fetch user's lists
+- [ ] Create `hooks/mutations/useListMembership.ts` to add/remove users from lists
+- [ ] Build a list picker bottom sheet component
+- [ ] Wire into profile and post action menus
 
-- [ ] Add shared React Query mutations for muting/unmuting, reporting, and list membership to back the dropdown actions.
-- [ ] Invalidate or update profile queries after each action so viewer state refreshes automatically.
-- [ ] Provide success and failure feedback (toasts, loading indicators) for each dropdown action.
+### Profile Tabs — Scrollable Header with Sticky Tabs
+Only PostsTab has scrollable header with sticky tabs. Other tabs (Replies, Media, Likes, Videos, Feeds, Repos, Starterpacks, Recipes, Links) render without the header.
+- [ ] Add `ListHeaderComponent` and `StickyTabComponent` support to all profile tab components
+- [ ] Convert tabs using `visibleCount` pattern to FlatList-based infinite scroll
+- Files: `apps/akari/components/profile/RepliesTab.tsx`, `MediaTab.tsx`, `LikesTab.tsx`, etc.
 
-## Profile dropdown UX improvements
+### Custom Feed Pins
+`FeedsTab.tsx` has an empty stub for pinning feeds.
+- [ ] Implement pin/unpin via `app.bsky.actor.putPreferences`
+- [ ] Show pinned feeds in the home tab feed selector
 
-- [ ] Introduce an overlay or backdrop so tapping outside the dropdown closes it consistently.
-- [ ] Audit dropdown accessibility (focus management plus roles/labels) once the actions are wired up.
+### Notification Settings Categories
+Settings > Notifications has a stubbed "notification categories" row.
+- [ ] Allow toggling which notification types show (likes, reposts, follows, etc.)
+- [ ] Persist via MMKV or AT Protocol preferences
 
-## Testing
+## Low Priority
 
-- [ ] Add integration tests that cover the full profile action menu once the real mutations are implemented.
+### Video Upload in Composer
+`PostComposer` only supports image upload.
+- [ ] Add video selection from gallery
+- [ ] Upload via `com.atproto.repo.uploadBlob`
+- [ ] Create video embed record
+- [ ] Show upload progress
+
+## Known Bugs
+
+### KeyTrace Claims Not Showing on iPad
+Claims show on iPhone but not iPad. Likely a React Query cache issue — the iPad cached empty/error results from earlier broken implementations. The query uses `['keytrace', handle]` as the cache key.
+- Files: `hooks/queries/useKeytraceClaims.ts`, `components/KeytraceClaims.tsx`
+
+### Handle History Empty
+The handle history modal shows empty results. The `useHandleHistory` hook fetches from the ClearSky API which may be returning empty data or the response format may have changed.
+- Files: `hooks/useHandleHistory.ts`, `components/HandleHistoryModal.tsx`
 
 ---
 
