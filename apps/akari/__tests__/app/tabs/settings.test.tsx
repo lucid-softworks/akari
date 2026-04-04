@@ -158,11 +158,9 @@ describe('Settings index screen', () => {
 
     expect(getByText('@user1')).toBeTruthy();
 
-    fireEvent.press(getByText('common.switchAccount'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
-
+    // Profile card navigates to account settings
     fireEvent.press(getByText('settings.account'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/settings/account');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
   });
 
   it('opens the add account panel', () => {

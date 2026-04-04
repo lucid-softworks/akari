@@ -35,6 +35,16 @@ const headerTitles: Record<string, string> = {
   settings: 'Settings',
   bookmarks: 'Bookmarks',
   post: 'Post',
+  // Settings sub-pages
+  account: 'Account',
+  'privacy-and-security': 'Privacy & Security',
+  moderation: 'Moderation',
+  'content-and-media': 'Content & Media',
+  appearance: 'Appearance',
+  accessibility: 'Accessibility',
+  languages: 'Languages',
+  about: 'About',
+  development: 'Development',
 };
 
 const fullDrawerSwipeEdgeWidth = Dimensions.get('window').width;
@@ -167,7 +177,7 @@ function HardcodedTabBar({
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const tabBarSurface = useThemeColor({ light: '#F3F4F6', dark: '#0B0F19' }, 'background');
+  const tabBarSurface = useThemeColor({}, 'background');
   const insets = useSafeAreaInsets();
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
@@ -237,30 +247,34 @@ export default function TabLayout() {
   const router = useRouter();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const drawerOverlayColor = useThemeColor({ light: 'rgba(15, 17, 21, 0.36)', dark: 'rgba(7, 10, 18, 0.6)' }, 'background');
-  const headerBackground = useThemeColor({ light: '#FFFFFF', dark: '#0B0F19' }, 'background');
+  const headerBackground = useThemeColor({}, 'background');
   const headerIconColor = useThemeColor({ light: '#111827', dark: '#F9FAFB' }, 'text');
   const headerBorderColor = useBorderColor();
   const headerTextColor = headerIconColor;
 
-  const { currentTabKey, isNestedRoute } = useMemo(() => {
+  const { currentTabKey, isNestedRoute, nestedRouteKey } = useMemo(() => {
     if (!pathname) {
-      return { currentTabKey: 'index', isNestedRoute: false };
+      return { currentTabKey: 'index', isNestedRoute: false, nestedRouteKey: undefined };
     }
 
     const segments = pathname.split('/').filter(Boolean);
     if (segments.length === 0) {
-      return { currentTabKey: 'index', isNestedRoute: false };
+      return { currentTabKey: 'index', isNestedRoute: false, nestedRouteKey: undefined };
     }
 
     const nonGroupSegments = segments.filter((segment) => !segment.startsWith('('));
     const firstNonGroupSegment = nonGroupSegments[0] ?? 'index';
+    const nested = nonGroupSegments.length > 1;
     return {
       currentTabKey: firstNonGroupSegment,
-      isNestedRoute: nonGroupSegments.length > 1,
+      isNestedRoute: nested,
+      nestedRouteKey: nested ? nonGroupSegments[nonGroupSegments.length - 1] : undefined,
     };
   }, [pathname]);
 
-  const headerTitle = headerTitles[currentTabKey] ?? 'Akari';
+  const headerTitle = isNestedRoute
+    ? (headerTitles[nestedRouteKey ?? ''] ?? headerTitles[currentTabKey] ?? 'Akari')
+    : (headerTitles[currentTabKey] ?? 'Akari');
   const shouldShowMobileHeader = currentTabKey !== 'profile';
   const drawerSwipeEdgeWidth = isNestedRoute ? nestedDrawerSwipeEdgeWidth : fullDrawerSwipeEdgeWidth;
 
@@ -448,7 +462,9 @@ export default function TabLayout() {
                       />
                     </HapticTab>
                     <View style={mobileDrawerStyles.headerContent}>
-                      <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                      {!isNestedRoute ? (
+                        <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
+                      ) : null}
                       {headerTitle ? (
                         <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
                           {headerTitle}

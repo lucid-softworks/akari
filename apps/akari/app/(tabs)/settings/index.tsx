@@ -1,8 +1,9 @@
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountPanel } from '@/components/AddAccountPanel';
@@ -14,17 +15,19 @@ import {
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { DialogModal } from '@/components/ui/DialogModal';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
+import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useSettingsNavigationItems } from '@/hooks/useSettingsNavigationItems';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useResponsive } from '@/hooks/useResponsive';
 import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-import { useResponsive } from '@/hooks/useResponsive';
 
 const EXTERNAL_LINKS = {
   helpCenter: 'https://blueskyweb.zendesk.com/hc/en-us',
@@ -32,6 +35,7 @@ const EXTERNAL_LINKS = {
   feedback: 'https://help.bsky.app/hc/en-us/requests/new',
   privacy: 'https://blueskyweb.xyz/support/privacy-policy',
   terms: 'https://blueskyweb.xyz/support/tos',
+  changeLog: 'https://blueskyweb.xyz/blog',
 } as const;
 
 export default function SettingsScreen() {
@@ -43,6 +47,11 @@ export default function SettingsScreen() {
   const { data: accountProfiles } = useAccountProfiles();
   const scrollViewRef = useRef<ScrollView>(null);
   const { isLargeScreen } = useResponsive();
+  const dialogManager = useDialogManager();
+
+  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
+  const cardBackground = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
+  const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
 
   const handleScrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -51,8 +60,6 @@ export default function SettingsScreen() {
   useEffect(() => {
     tabScrollRegistry.register('settings', handleScrollToTop);
   }, [handleScrollToTop]);
-
-  const navigationItems = useSettingsNavigationItems();
 
   const openExternalLink = useCallback(
     async (url: string) => {
@@ -69,11 +76,8 @@ export default function SettingsScreen() {
     [t],
   );
 
-  const dialogManager = useDialogManager();
-
   const handleAddAccount = useCallback(() => {
     const closePanel = () => dialogManager.close(ADD_ACCOUNT_PANEL_ID);
-
     dialogManager.open({
       id: ADD_ACCOUNT_PANEL_ID,
       component: (
@@ -84,57 +88,63 @@ export default function SettingsScreen() {
     });
   }, [dialogManager]);
 
-  const navigationRows = useMemo<SettingsRowDescriptor[]>(
-    () =>
-      navigationItems.map((item) => ({
-        key: item.key,
-        icon: item.icon,
-        label: item.label,
-        onPress: () => router.push(item.route as never),
-      })),
-    [navigationItems],
-  );
+  // Version info
+  const version = Constants.expoConfig?.version ?? t('common.unknown');
+  const extra = Constants.expoConfig?.extra as { buildMetadata?: { commitSha?: string | null } } | undefined;
+  const commitSha = typeof extra?.buildMetadata?.commitSha === 'string' && extra.buildMetadata.commitSha.length > 0
+    ? extra.buildMetadata.commitSha.slice(0, 7) : undefined;
+  const versionDisplay = commitSha ? `${version} (${commitSha})` : version;
 
-  const supportRows = useMemo<SettingsRowDescriptor[]>(
+  // Show dev section?
+  const variant = typeof Constants.expoConfig?.extra?.variant === 'string'
+    ? (Constants.expoConfig.extra?.variant as string) : undefined;
+  const showDev = __DEV__ || (variant ? variant !== 'production' : false);
+
+  // Settings rows
+  const settingsRows = useMemo<SettingsRowDescriptor[]>(
     () => [
       {
-        key: 'help-center',
-        icon: 'questionmark.circle',
-        label: t('settings.help'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.helpCenter),
+        key: 'account',
+        icon: 'person.crop.circle',
+        label: t('settings.account'),
+        description: t('settings.accountDescription'),
+        onPress: () => router.push('/(tabs)/settings/account'),
       },
       {
-        key: 'feedback',
-        icon: 'bubble.left',
-        label: t('settings.feedback'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.feedback),
+        key: 'notifications',
+        icon: 'bell.fill',
+        label: t('settings.notifications'),
+        onPress: () => router.push('/(tabs)/settings/notifications'),
       },
+      {
+        key: 'languages',
+        icon: 'globe',
+        label: t('settings.language'),
+        onPress: () => router.push('/(tabs)/settings/languages'),
+      },
+    ],
+    [t],
+  );
+
+  const linksRows = useMemo<SettingsRowDescriptor[]>(
+    () => [
+      { key: 'help', icon: 'questionmark.circle', label: t('settings.help'), onPress: () => openExternalLink(EXTERNAL_LINKS.helpCenter) },
+      { key: 'feedback', icon: 'bubble.left', label: t('settings.feedback'), onPress: () => openExternalLink(EXTERNAL_LINKS.feedback) },
+      { key: 'changelog', icon: 'clock.fill', label: t('settings.changeLog'), onPress: () => openExternalLink(EXTERNAL_LINKS.changeLog) },
+      { key: 'privacy', icon: 'lock.fill', label: t('settings.privacy'), onPress: () => openExternalLink(EXTERNAL_LINKS.privacy) },
+      { key: 'terms', icon: 'doc.text.fill', label: t('settings.terms'), onPress: () => openExternalLink(EXTERNAL_LINKS.terms) },
+      { key: 'status', icon: 'waveform.path', label: t('settings.status'), onPress: () => openExternalLink(EXTERNAL_LINKS.status) },
     ],
     [openExternalLink, t],
   );
 
-  const legalRows = useMemo<SettingsRowDescriptor[]>(
-    () => [
-      {
-        key: 'privacy',
-        icon: 'lock.fill',
-        label: t('settings.privacy'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.privacy),
-      },
-      {
-        key: 'terms',
-        icon: 'doc.text.fill',
-        label: t('settings.terms'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.terms),
-      },
-      {
-        key: 'status',
-        icon: 'waveform.path',
-        label: t('settings.status'),
-        onPress: () => openExternalLink(EXTERNAL_LINKS.status),
-      },
-    ],
-    [openExternalLink, t],
+  const devRows = useMemo<SettingsRowDescriptor[]>(
+    () => showDev
+      ? [
+          { key: 'development', icon: 'hammer.fill', label: t('settings.development'), onPress: () => router.push('/(tabs)/settings/development') },
+        ]
+      : [],
+    [showDev, t],
   );
 
   const currentProfile = currentAccount ? accountProfiles?.[currentAccount.did] : undefined;
@@ -142,110 +152,112 @@ export default function SettingsScreen() {
   const displayName = currentProfile?.displayName ?? currentAccount?.displayName ?? null;
   const fallbackLetter = (displayName || currentAccount?.handle || 'U').charAt(0).toUpperCase();
 
-  const contentPaddingBottom = Math.max(insets.bottom, 24) + 24;
-
   return (
     <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
       <ScrollView
         ref={scrollViewRef}
-        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: contentPaddingBottom }]}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(insets.bottom, spacing.xxl) + spacing.xxl }]}
         showsVerticalScrollIndicator={false}
-        style={styles.scrollView}
       >
-        {isLargeScreen ? (
-          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
-            <ThemedText style={styles.headerTitle}>{t('navigation.settings')}</ThemedText>
+        {/* Profile Card */}
+        <TouchableOpacity
+          style={[styles.profileCard, { backgroundColor: cardBackground, borderColor }]}
+          onPress={() => router.push('/(tabs)/settings/account')}
+          activeOpacity={activeOpacity.subtle}
+        >
+          <View style={styles.profileRow}>
+            {avatar ? (
+              <Image contentFit="cover" source={{ uri: avatar }} style={styles.avatar} />
+            ) : (
+              <View style={[styles.avatarFallback, { backgroundColor: accentColor }]}>
+                <ThemedText style={styles.avatarFallbackText}>{fallbackLetter}</ThemedText>
+              </View>
+            )}
+            <View style={styles.profileInfo}>
+              {displayName ? <ThemedText style={styles.displayName}>{displayName}</ThemedText> : null}
+              {currentAccount ? (
+                <ThemedText style={[styles.handle, { color: secondaryText }]}>@{currentAccount.handle}</ThemedText>
+              ) : null}
+            </View>
+            <IconSymbol name="chevron.right" size={16} color={secondaryText} />
+          </View>
+
+          {accounts && accounts.length > 1 ? (
+            <View style={styles.accountBadge}>
+              <ThemedText style={[styles.accountBadgeText, { color: secondaryText }]}>
+                {accounts.length} {t('common.accounts').toLowerCase()}
+              </ThemedText>
+            </View>
+          ) : null}
+        </TouchableOpacity>
+
+        {/* Add Account */}
+        <TouchableOpacity
+          style={[styles.addAccountButton, { borderColor }]}
+          onPress={handleAddAccount}
+          activeOpacity={activeOpacity.default}
+        >
+          <IconSymbol name="plus.circle.fill" size={20} color={accentColor} />
+          <ThemedText style={[styles.addAccountText, { color: accentColor }]}>{t('common.addAccount')}</ThemedText>
+        </TouchableOpacity>
+
+        {/* Settings */}
+        <SettingsSection isFirst title={t('navigation.settings')}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            {settingsRows.map((item, index) => (
+              <SettingsRow
+                key={item.key}
+                borderColor={borderColor}
+                icon={item.icon}
+                label={item.label}
+                description={item.description}
+                onPress={item.onPress}
+                showDivider={index < settingsRows.length - 1}
+              />
+            ))}
           </ThemedView>
+        </SettingsSection>
+
+        {/* Links & Info */}
+        <SettingsSection title={t('settings.support')}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            {linksRows.map((item, index) => (
+              <SettingsRow
+                key={item.key}
+                borderColor={borderColor}
+                icon={item.icon}
+                label={item.label}
+                onPress={item.onPress}
+                showDivider={index < linksRows.length - 1}
+              />
+            ))}
+          </ThemedView>
+        </SettingsSection>
+
+        {/* Dev (conditional) */}
+        {devRows.length > 0 ? (
+          <SettingsSection title={t('settings.development')}>
+            <ThemedView style={[styles.sectionCard, { borderColor }]}>
+              {devRows.map((item, index) => (
+                <SettingsRow
+                  key={item.key}
+                  borderColor={borderColor}
+                  icon={item.icon}
+                  label={item.label}
+                  onPress={item.onPress}
+                  showDivider={index < devRows.length - 1}
+                />
+              ))}
+            </ThemedView>
+          </SettingsSection>
         ) : null}
 
-        <ThemedView style={[styles.profileCard, { borderColor }]}> 
-          <ThemedView style={styles.profileInfo}>
-            {avatar ? (
-              <Image contentFit="cover" source={{ uri: avatar }} style={styles.profileAvatar} />
-            ) : (
-              <ThemedView style={styles.profileAvatarFallback}>
-                <ThemedText style={styles.profileAvatarFallbackText}>{fallbackLetter}</ThemedText>
-              </ThemedView>
-            )}
-
-            <ThemedView style={styles.profileDetails}>
-              {displayName ? <ThemedText style={styles.profileDisplayName}>{displayName}</ThemedText> : null}
-              {currentAccount ? <ThemedText style={styles.profileHandle}>@{currentAccount.handle}</ThemedText> : null}
-            </ThemedView>
-          </ThemedView>
-
-          <ThemedView style={styles.profileActions}>
-            {accounts.length > 1 ? (
-              <TouchableOpacity
-                accessibilityRole="button"
-                activeOpacity={0.7}
-                onPress={() => router.push('/(tabs)/settings/account')}
-                style={[styles.primaryActionButton, styles.profileActionButton]}
-              >
-                <ThemedText style={styles.primaryActionText}>{t('common.switchAccount')}</ThemedText>
-              </TouchableOpacity>
-            ) : null}
-
-            <TouchableOpacity
-              accessibilityRole="button"
-              activeOpacity={0.7}
-              onPress={handleAddAccount}
-              style={[styles.secondaryActionButton, styles.profileActionButton]}
-            >
-              <ThemedText style={styles.secondaryActionText}>{t('common.addAccount')}</ThemedText>
-            </TouchableOpacity>
-          </ThemedView>
-        </ThemedView>
-
-        <SettingsSection isFirst title={t('navigation.settings')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {navigationRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                description={item.description}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < navigationRows.length - 1}
-                value={item.value}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
-
-        <SettingsSection title={t('settings.support')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {supportRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                description={item.description}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < supportRows.length - 1}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
-
-        <SettingsSection title={t('settings.legal')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {legalRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                description={item.description}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < legalRows.length - 1}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
-
+        {/* Version footer */}
+        <View style={styles.versionFooter}>
+          <ThemedText style={[styles.versionText, { color: secondaryText }]}>
+            Akari {versionDisplay}
+          </ThemedText>
+        </View>
       </ScrollView>
     </ThemedView>
   );
@@ -255,99 +267,85 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    paddingBottom: 48,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 24,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-  },
-  sectionCard: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    backgroundColor: 'transparent',
-  },
+  scrollContent: {},
   profileCard: {
-    marginHorizontal: 16,
-    marginTop: 24,
-    padding: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    backgroundColor: 'transparent',
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xxl,
+    padding: spacing.lg,
+    borderWidth: layout.hairline,
+    borderRadius: radius.md,
+  },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: spacing.md,
+  },
+  avatarFallback: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  avatarFallbackText: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: '#FFFFFF',
   },
   profileInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileAvatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    marginRight: 12,
-  },
-  profileAvatarFallback: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  profileAvatarFallbackText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  profileDetails: {
     flex: 1,
   },
-  profileDisplayName: {
-    fontSize: 18,
-    fontWeight: '700',
+  displayName: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
-  profileHandle: {
-    fontSize: 15,
-    opacity: 0.7,
-    marginTop: 4,
+  handle: {
+    fontSize: fontSize.base,
+    marginTop: spacing.xxs,
   },
-  profileActions: {
+  accountBadge: {
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: layout.hairline,
+    borderTopColor: 'rgba(0,0,0,0.06)',
+  },
+  accountBadgeText: {
+    fontSize: fontSize.sm,
+  },
+  addAccountButton: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginTop: 16,
-  },
-  profileActionButton: {
-    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    gap: spacing.sm,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    paddingVertical: spacing.md,
+    borderWidth: layout.hairline,
+    borderRadius: radius.md,
+    borderStyle: 'dashed',
+  },
+  addAccountText: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+  },
+  sectionCard: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
-  },
-  primaryActionButton: {
-    borderColor: 'transparent',
-    backgroundColor: '#007AFF',
-  },
-  primaryActionText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  secondaryActionButton: {
-    borderColor: 'rgba(124, 140, 249, 0.4)',
     backgroundColor: 'transparent',
   },
-  secondaryActionText: {
-    fontSize: 15,
-    fontWeight: '600',
+  versionFooter: {
+    alignItems: 'center',
+    paddingVertical: spacing.xxl,
+  },
+  versionText: {
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
   },
 });
-

@@ -281,6 +281,7 @@
     },
     "settings": {
       "account": "Account",
+      "accountDescription": "Manage accounts, sign out",
       "accountDetails": "Account details",
       "accountSecurity": "Account security",
       "preferences": "Preferences",

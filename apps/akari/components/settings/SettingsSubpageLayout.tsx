@@ -38,9 +38,10 @@ export function SettingsSubpageLayout({ children, title }: SettingsSubpageLayout
   const activeItemColor = useThemeColor({}, 'text');
 
   if (!isLargeScreen) {
+    // On mobile, the parent tab layout already renders a header with
+    // back navigation, so we skip SettingsHeader to avoid a double header.
     return (
       <ThemedView style={styles.mobileContainer}>
-        <SettingsHeader title={title} />
         {children}
       </ThemedView>
     );

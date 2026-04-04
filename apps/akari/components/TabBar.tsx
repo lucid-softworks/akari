@@ -31,7 +31,7 @@ type TabBarProps<T extends string> = {
  */
 export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChange }: TabBarProps<T>) {
   const borderColor = useBorderColor();
-  const surfaceColor = useThemeColor({ light: '#FFFFFF', dark: '#0F1115' }, 'background');
+  const surfaceColor = useThemeColor({}, 'background');
   const inactiveTextColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const activeTextColor = useThemeColor({ light: '#111827', dark: '#F4F4F5' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');

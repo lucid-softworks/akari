@@ -26,9 +26,9 @@ export function Panel({
   contentStyle,
   footerStyle,
 }: PanelProps) {
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#0F1115' }, 'background');
-  const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F212D' }, 'border');
-  const headerBackground = useThemeColor({ light: '#F9FAFB', dark: '#151823' }, 'background');
+  const backgroundColor = useThemeColor({}, 'background');
+  const borderColor = useThemeColor({}, 'border');
+  const headerBackground = useThemeColor({ light: '#F9FAFB', dark: '#1c1c1e' }, 'background');
   const titleColor = useThemeColor({ light: '#111827', dark: '#F4F4F5' }, 'text');
 
   return (
