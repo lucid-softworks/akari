@@ -134,11 +134,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   sheet: {
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
     maxHeight: '70%',
+    width: '100%',
+    maxWidth: 420,
   },
   handleBarContainer: {
     alignItems: 'center',
