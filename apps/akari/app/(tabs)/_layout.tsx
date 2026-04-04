@@ -36,8 +36,12 @@ const headerTitles: Record<string, string> = {
   settings: 'Settings',
   bookmarks: 'Bookmarks',
   post: 'Post',
+  // Messages sub-pages
+  pending: 'Pending Messages',
+  'add-account': 'Add Account',
   // Settings sub-pages
   account: 'Account',
+  'customize-tabs': 'Customize Tabs',
   'privacy-and-security': 'Privacy & Security',
   moderation: 'Moderation',
   'content-and-media': 'Content & Media',
@@ -441,9 +445,6 @@ export default function TabLayout() {
                   </>
                 ) : (
                   <>
-                    {!isNestedRoute ? (
-                      <Image source={mobileHeaderLogo} style={mobileDrawerStyles.headerLogo} />
-                    ) : null}
                     {headerTitle ? (
                       <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
                         {headerTitle}
