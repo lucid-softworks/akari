@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -100,10 +100,29 @@ export default function ProfileScreen() {
     setActiveTab(tab);
   };
 
-  const tabProps = {
-    onRefresh: handleRefresh,
-    refreshing,
-  };
+  const headerComponent = useMemo(() => (
+    <>
+      <ProfileHeader
+        profile={{
+          avatar: profile?.avatar,
+          displayName: profile?.displayName || currentAccount?.handle || '',
+          handle: currentAccount?.handle || '',
+          description: profile?.description,
+          banner: profile?.banner,
+          did: profile?.did,
+          followersCount: profile?.followersCount,
+          followsCount: profile?.followsCount,
+          postsCount: profile?.postsCount,
+          viewer: profile?.viewer,
+          labels: profile?.labels,
+        }}
+        isOwnProfile={true}
+        onDropdownToggle={handleDropdownToggle}
+        dropdownRef={dropdownRef}
+      />
+      <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
+    </>
+  ), [profile, currentAccount, handleDropdownToggle, dropdownRef, activeTab, handleTabChange]);
 
   const renderTabContent = () => {
     if (!currentAccount?.handle) {
@@ -116,7 +135,7 @@ export default function ProfileScreen() {
 
     switch (activeTab) {
       case 'posts':
-        return <PostsTab handle={currentAccount.handle} {...tabProps} />;
+        return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
       case 'replies':
         return <RepliesTab handle={currentAccount.handle} />;
       case 'likes':
@@ -146,25 +165,6 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ProfileHeader
-        profile={{
-          avatar: profile?.avatar,
-          displayName: profile?.displayName || currentAccount?.handle || '',
-          handle: currentAccount?.handle || '',
-          description: profile?.description,
-          banner: profile?.banner,
-          did: profile?.did,
-          followersCount: profile?.followersCount,
-          followsCount: profile?.followsCount,
-          postsCount: profile?.postsCount,
-          viewer: profile?.viewer,
-          labels: profile?.labels,
-        }}
-        isOwnProfile={true}
-        onDropdownToggle={handleDropdownToggle}
-        dropdownRef={dropdownRef}
-      />
-      <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
       {renderTabContent()}
 
       <ProfileDropdown
