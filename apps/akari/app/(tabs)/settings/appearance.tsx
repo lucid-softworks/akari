@@ -192,6 +192,41 @@ function isLightColor(hex: string): boolean {
   return (r * 299 + g * 587 + b * 114) / 1000 > 150;
 }
 
+type ModeColorSectionsProps = {
+  mode: 'light' | 'dark';
+  config: ReturnType<typeof useThemeConfig>['config'];
+  setModeColor: ReturnType<typeof useThemeConfig>['setModeColor'];
+  borderColor: string;
+};
+
+function ModeColorSections({ mode, config, setModeColor, borderColor }: ModeColorSectionsProps) {
+  const isDark = mode === 'dark';
+  const fields: { key: ColorKeys; label: string; presets: { label: string; color: string }[] }[] = [
+    { key: 'background', label: 'Background', presets: isDark ? BACKGROUND_PRESETS_DARK : BACKGROUND_PRESETS_LIGHT },
+    { key: 'text', label: 'Text', presets: isDark ? TEXT_PRESETS_DARK : TEXT_PRESETS_LIGHT },
+    { key: 'icon', label: 'Icons', presets: isDark ? ICON_PRESETS_DARK : ICON_PRESETS_LIGHT },
+    { key: 'border', label: 'Borders', presets: isDark ? BORDER_PRESETS_DARK : BORDER_PRESETS_LIGHT },
+  ];
+
+  return (
+    <>
+      {fields.map((field) => (
+        <SettingsSection key={field.key} title={field.label}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SwatchPicker
+              presets={field.presets}
+              defaultColor={Colors[mode][field.key]}
+              currentColor={config[mode]?.[field.key]}
+              onSelect={(c) => setModeColor(mode, field.key, c)}
+              borderColor={borderColor}
+            />
+          </ThemedView>
+        </SettingsSection>
+      ))}
+    </>
+  );
+}
+
 export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
@@ -199,7 +234,6 @@ export default function AppearanceSettingsScreen() {
   const { config, setAccentColor, setModeColor, resetToDefaults } = useThemeConfig();
 
   const hasCustomizations = !!(config.accentColor || config.light || config.dark);
-  const isDark = theme === 'dark';
 
   return (
     <SettingsSubpageLayout title={t('settings.appearance')}>
@@ -221,53 +255,15 @@ export default function AppearanceSettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <SettingsSection title="Background">
-          <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <SwatchPicker
-              presets={isDark ? BACKGROUND_PRESETS_DARK : BACKGROUND_PRESETS_LIGHT}
-              defaultColor={Colors[theme].background}
-              currentColor={config[theme]?.background}
-              onSelect={(c) => setModeColor(theme, 'background', c)}
-              borderColor={borderColor}
-            />
-          </ThemedView>
+        <SettingsSection title="Light Mode">
+          <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in light mode.</ThemedText>
         </SettingsSection>
+        <ModeColorSections mode="light" config={config} setModeColor={setModeColor} borderColor={borderColor} />
 
-        <SettingsSection title="Text">
-          <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <SwatchPicker
-              presets={isDark ? TEXT_PRESETS_DARK : TEXT_PRESETS_LIGHT}
-              defaultColor={Colors[theme].text}
-              currentColor={config[theme]?.text}
-              onSelect={(c) => setModeColor(theme, 'text', c)}
-              borderColor={borderColor}
-            />
-          </ThemedView>
+        <SettingsSection title="Dark Mode">
+          <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in dark mode.</ThemedText>
         </SettingsSection>
-
-        <SettingsSection title="Icons">
-          <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <SwatchPicker
-              presets={isDark ? ICON_PRESETS_DARK : ICON_PRESETS_LIGHT}
-              defaultColor={Colors[theme].icon}
-              currentColor={config[theme]?.icon}
-              onSelect={(c) => setModeColor(theme, 'icon', c)}
-              borderColor={borderColor}
-            />
-          </ThemedView>
-        </SettingsSection>
-
-        <SettingsSection title="Borders">
-          <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <SwatchPicker
-              presets={isDark ? BORDER_PRESETS_DARK : BORDER_PRESETS_LIGHT}
-              defaultColor={Colors[theme].border}
-              currentColor={config[theme]?.border}
-              onSelect={(c) => setModeColor(theme, 'border', c)}
-              borderColor={borderColor}
-            />
-          </ThemedView>
-        </SettingsSection>
+        <ModeColorSections mode="dark" config={config} setModeColor={setModeColor} borderColor={borderColor} />
 
         {hasCustomizations ? (
           <SettingsSection>
@@ -364,6 +360,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.sm,
+  },
+  modeSubtitle: {
+    fontSize: fontSize.sm,
+    opacity: 0.5,
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
   },
   resetText: {
     fontSize: fontSize.base,
