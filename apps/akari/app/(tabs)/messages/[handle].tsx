@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
@@ -236,7 +236,7 @@ const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] 
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const keyboardOffset = useRef(new Animated.Value(0)).current;
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -250,22 +250,34 @@ export default function ConversationScreen() {
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
-  // Track keyboard height to shift content
+  // Animate content up/down with keyboard
   useEffect(() => {
     const showSub = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => setKeyboardHeight(e.endCoordinates.height),
+      (e) => {
+        Animated.timing(keyboardOffset, {
+          toValue: -e.endCoordinates.height,
+          duration: e.duration || 250,
+          useNativeDriver: true,
+        }).start();
+      },
     );
     const hideSub = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      () => setKeyboardHeight(0),
+      (e) => {
+        Animated.timing(keyboardOffset, {
+          toValue: 0,
+          duration: e.duration || 250,
+          useNativeDriver: true,
+        }).start();
+      },
     );
 
     return () => {
       showSub.remove();
       hideSub.remove();
     };
-  }, []);
+  }, [keyboardOffset]);
 
   // Get the conversation ID from the conversations list
   const { data: conversationsData } = useConversations();
@@ -478,7 +490,7 @@ export default function ConversationScreen() {
   const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
-      <ThemedView style={[styles.container, keyboardHeight > 0 && { paddingBottom: keyboardHeight }]}>
+      <Animated.View style={[styles.container, { transform: [{ translateY: keyboardOffset }] }]}>
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
@@ -505,7 +517,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: keyboardHeight > 0 ? spacing.md : insets.bottom,
+                paddingBottom: insets.bottom || spacing.md,
               },
             ]}
           >
@@ -540,7 +552,7 @@ export default function ConversationScreen() {
               />
             </TouchableOpacity>
           </ThemedView>
-      </ThemedView>
+      </Animated.View>
   );
 }
 
