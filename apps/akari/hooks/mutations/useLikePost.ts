@@ -55,17 +55,14 @@ export function useLikePost() {
       await queryClient.cancelQueries({ queryKey: ['feed'] });
       await queryClient.cancelQueries({ queryKey: ['authorFeed'] });
       await queryClient.cancelQueries({ queryKey: ['authorLikes'] });
-      await queryClient.cancelQueries({ queryKey: ['post', postUri] });
-      await queryClient.cancelQueries({ queryKey: ['postThread', postUri] });
+      await queryClient.cancelQueries({ queryKey: ['post'] });
+      await queryClient.cancelQueries({ queryKey: ['postThread'] });
 
       // Snapshot the previous value
       const previousTimeline = queryClient.getQueryData<BlueskyFeedResponse>(['timeline']);
       const previousFeed = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['feed']);
       const previousAuthorFeed = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['authorFeed']);
       const previousAuthorLikes = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['authorLikes']);
-      const previousPost = queryClient.getQueryData<BlueskyPostView>(['post', postUri]);
-      const previousPostThread = queryClient.getQueryData<{ thread: { post: BlueskyPostView } }>(['postThread', postUri]);
-
       // Helper function to update a post's like status
       const updatePostLikeStatus = (post: BlueskyPostView): BlueskyPostView => ({
         ...post,
@@ -133,21 +130,27 @@ export function useLikePost() {
         }
       }
 
-      queryClient.setQueryData<BlueskyPostView>(['post', postUri], (old) => {
-        if (!old) return old;
-        return updatePostLikeStatus(old);
-      });
+      // Update all individual post queries (keyed as ['post', { actor, rKey }, pdsUrl])
+      const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
+      for (const [queryKey, data] of postQueries) {
+        if (data && data.uri === postUri) {
+          queryClient.setQueryData(queryKey, updatePostLikeStatus(data));
+        }
+      }
 
-      queryClient.setQueryData<{ thread: { post: BlueskyPostView } }>(['postThread', postUri], (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          thread: {
-            ...old.thread,
-            post: updatePostLikeStatus(old.thread.post),
-          },
-        };
-      });
+      // Update all post thread queries
+      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+      for (const [queryKey, data] of threadQueries) {
+        if (data?.thread?.post?.uri === postUri) {
+          queryClient.setQueryData(queryKey, {
+            ...data,
+            thread: {
+              ...data.thread,
+              post: updatePostLikeStatus(data.thread.post),
+            },
+          });
+        }
+      }
 
       // Return a context object with the snapshotted value
       return {
@@ -155,8 +158,6 @@ export function useLikePost() {
         previousFeed,
         previousAuthorFeed,
         previousAuthorLikes,
-        previousPost,
-        previousPostThread,
       };
     },
     onError: (err, variables, context) => {
@@ -173,12 +174,9 @@ export function useLikePost() {
       if (context?.previousAuthorLikes) {
         queryClient.setQueryData(['authorLikes'], context.previousAuthorLikes);
       }
-      if (context?.previousPost) {
-        queryClient.setQueryData(['post', variables.postUri], context.previousPost);
-      }
-      if (context?.previousPostThread) {
-        queryClient.setQueryData(['postThread', variables.postUri], context.previousPostThread);
-      }
+      // Invalidate post queries to refetch correct state
+      void queryClient.invalidateQueries({ queryKey: ['post'] });
+      void queryClient.invalidateQueries({ queryKey: ['postThread'] });
     },
     onSuccess: (data: BlueskyLikeResponse | BlueskyUnlikeResponse, variables) => {
       // Update the temporary like URI with the real one from the server response
@@ -249,23 +247,27 @@ export function useLikePost() {
           }
         }
 
-        // Update individual post
-        queryClient.setQueryData<BlueskyPostView>(['post', variables.postUri], (old) => {
-          if (!old) return old;
-          return updateLikeUri(old);
-        });
+        // Update all individual post queries
+        const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
+        for (const [queryKey, postData] of postQueries) {
+          if (postData && postData.uri === variables.postUri) {
+            queryClient.setQueryData(queryKey, updateLikeUri(postData));
+          }
+        }
 
-        // Update post thread
-        queryClient.setQueryData<{ thread: { post: BlueskyPostView } }>(['postThread', variables.postUri], (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            thread: {
-              ...old.thread,
-              post: updateLikeUri(old.thread.post),
-            },
-          };
-        });
+        // Update all post thread queries
+        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+        for (const [queryKey, threadData] of threadQueries) {
+          if (threadData?.thread?.post?.uri === variables.postUri) {
+            queryClient.setQueryData(queryKey, {
+              ...threadData,
+              thread: {
+                ...threadData.thread,
+                post: updateLikeUri(threadData.thread.post),
+              },
+            });
+          }
+        }
       }
     },
   });
