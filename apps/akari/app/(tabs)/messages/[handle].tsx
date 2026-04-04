@@ -470,12 +470,29 @@ export default function ConversationScreen() {
   }
 
   // Flatten all pages of messages into a single array
-  // API returns newest first; reverse so inverted list shows newest at bottom
-  const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
+  // API returns newest first; keep that order for the inverted list
+  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ThemedView style={styles.container}>
+          {/* Conversation info bar */}
+          <TouchableOpacity
+            style={[styles.infoBar, { borderBottomColor: borderColor }]}
+            onPress={() => navigateToProfile({ actor: handle })}
+            activeOpacity={activeOpacity.default}
+          >
+            {conversation?.avatar ? (
+              <Image source={{ uri: conversation.avatar }} style={styles.infoAvatar} contentFit="cover" />
+            ) : null}
+            <ThemedView style={styles.infoText}>
+              <ThemedText style={styles.infoName} numberOfLines={1}>
+                {conversation?.displayName || decodeURIComponent(handle)}
+              </ThemedText>
+              <ThemedText style={styles.infoHandle} numberOfLines={1}>@{decodeURIComponent(handle)}</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
@@ -545,6 +562,30 @@ export default function ConversationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  infoBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: layout.hairline,
+    gap: spacing.sm,
+  },
+  infoAvatar: {
+    width: layout.avatarSmall,
+    height: layout.avatarSmall,
+    borderRadius: layout.avatarSmall / 2,
+  },
+  infoText: {
+    flex: 1,
+  },
+  infoName: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  infoHandle: {
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
   },
   messagesContent: {
     paddingVertical: spacing.lg,
