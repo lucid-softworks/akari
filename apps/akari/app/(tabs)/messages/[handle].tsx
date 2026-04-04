@@ -415,20 +415,13 @@ export default function ConversationScreen() {
   // Show loading state while finding conversation
   if (!conversation) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ThemedView style={styles.container}>
-          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <ThemedView style={styles.headerInfo}>
-              <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
-            </ThemedView>
-          </ThemedView>
+      <ThemedView style={styles.container}>
           <ThemedView style={styles.loadingState}>
             <ThemedText style={styles.loadingText}>
               {t('common.loading')} {t('common.conversations')}...
             </ThemedText>
           </ThemedView>
-        </ThemedView>
-      </SafeAreaView>
+      </ThemedView>
     );
   }
 
@@ -437,21 +430,14 @@ export default function ConversationScreen() {
     const messageError = messagesError as MessageError;
 
     return (
-      <SafeAreaView style={styles.container}>
-        <ThemedView style={styles.container}>
-          <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}>
-            <ThemedView style={styles.headerInfo}>
-              <ThemedText style={styles.headerTitle}>{decodeURIComponent(handle)}</ThemedText>
-            </ThemedView>
-          </ThemedView>
+      <ThemedView style={styles.container}>
           <ThemedView style={styles.errorState}>
             <ThemedText style={styles.errorText}>{messageError.message}</ThemedText>
             {messageError.type === 'permission' && (
               <ThemedText style={styles.errorSubtext}>{t('common.errorLoadingMessages')}</ThemedText>
             )}
           </ThemedView>
-        </ThemedView>
-      </SafeAreaView>
+      </ThemedView>
     );
   }
 

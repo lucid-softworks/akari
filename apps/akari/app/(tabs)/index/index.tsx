@@ -1,12 +1,13 @@
-import { spacing, radius, fontSize, fontWeight, opacity, shadows, layout, semanticColors } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, shadows, layout, semanticColors, activeOpacity } from '@/constants/tokens';
 import { useResponsive } from '@/hooks/useResponsive';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
+import { ReviewComposer } from '@/components/ReviewComposer';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -32,6 +33,8 @@ export default function HomeScreen() {
   const navigateToPost = useNavigateToPost();
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
+  const [showReviewComposer, setShowReviewComposer] = useState(false);
+  const [showFabMenu, setShowFabMenu] = useState(false);
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
@@ -322,13 +325,41 @@ export default function HomeScreen() {
         keyboardDismissMode="on-drag"
       />
 
-      {/* Floating Action Button for creating posts */}
-      <TouchableOpacity style={[styles.fab, { bottom: 20 }]} onPress={() => setShowPostComposer(true)} activeOpacity={0.8}>
+      {/* FAB Menu */}
+      {showFabMenu && (
+        <TouchableOpacity style={styles.fabOverlay} activeOpacity={1} onPress={() => setShowFabMenu(false)}>
+          <View style={[styles.fabMenu, { bottom: 90 }]}>
+            <TouchableOpacity
+              style={styles.fabMenuItem}
+              activeOpacity={activeOpacity.default}
+              onPress={() => { setShowFabMenu(false); setShowPostComposer(true); }}
+            >
+              <IconSymbol name="square.and.pencil" size={18} color="white" />
+              <ThemedText style={styles.fabMenuText}>Post</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.fabMenuItem}
+              activeOpacity={activeOpacity.default}
+              onPress={() => { setShowFabMenu(false); setShowReviewComposer(true); }}
+            >
+              <IconSymbol name="star.fill" size={18} color="white" />
+              <ThemedText style={styles.fabMenuText}>Review</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {/* FAB */}
+      <TouchableOpacity
+        style={[styles.fab, { bottom: 20 }]}
+        onPress={() => setShowFabMenu((prev) => !prev)}
+        activeOpacity={activeOpacity.subtle}
+      >
         <IconSymbol name="plus" size={24} color="white" />
       </TouchableOpacity>
 
-      {/* Post Composer Modal */}
       <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />
+      <ReviewComposer visible={showReviewComposer} onClose={() => setShowReviewComposer(false)} />
     </ThemedView>
   );
 }
@@ -401,5 +432,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...shadows.lg,
+  },
+  fabOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  fabMenu: {
+    position: 'absolute',
+    right: spacing.xl,
+    gap: spacing.sm,
+  },
+  fabMenuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: semanticColors.systemBlue,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.full,
+    ...shadows.md,
+  },
+  fabMenuText: {
+    color: '#fff',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
 });

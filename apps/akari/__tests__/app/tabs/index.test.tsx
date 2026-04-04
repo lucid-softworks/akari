@@ -35,6 +35,10 @@ jest.mock('@/components/PostComposer', () => {
   };
 });
 
+jest.mock('@/components/ReviewComposer', () => ({
+  ReviewComposer: () => null,
+}));
+
 jest.mock('@/components/TabBar', () => {
   const React = require('react');
   const { Text, TouchableOpacity, View } = require('react-native');
@@ -374,7 +378,9 @@ describe('HomeScreen', () => {
     const { getByText, queryByText } = render(<HomeScreen />);
 
     expect(queryByText('composer')).toBeNull();
+    // FAB opens a menu first, then select "Post"
     fireEvent.press(getByText('icon'));
+    fireEvent.press(getByText('Post'));
     expect(getByText('composer')).toBeTruthy();
   });
 });

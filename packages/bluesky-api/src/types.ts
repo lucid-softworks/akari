@@ -172,6 +172,36 @@ export type BlueskyCreatePostInput = {
   images?: BlueskyPostImageInput[];
 };
 
+export type CreateReviewInput = {
+  identifiers: {
+    tmdbId?: string;
+    imdbId?: string;
+    igdbId?: string;
+    isbn10?: string;
+    isbn13?: string;
+    asin?: string;
+    other?: string;
+    mbReleaseId?: string;
+    parentMbReleaseId?: string;
+    episodeNumber?: number;
+    seasonNumber?: number;
+    tmdbTvSeriesId?: string;
+  };
+  creativeWorkType: 'movie' | 'tv_show' | 'video_game' | 'album' | 'book' | 'book_series' | 'episode' | 'ep' | 'tv_season' | 'tv_episode' | 'track';
+  rating: number;
+  text?: string;
+  title?: string;
+  poster?: { $type: 'blob'; ref: { $link: string }; mimeType: string; size: number };
+  tags?: string[];
+  genres?: string[];
+  mainCredit?: string;
+  mainCreditRole?: 'director' | 'author' | 'artist' | 'showrunner' | 'lead_actor' | 'creator' | 'studio' | 'publisher' | 'developer' | 'performer' | 'network';
+  isRevisit?: boolean;
+  containsSpoilers?: boolean;
+  releaseDate?: string;
+  posterUrl?: string;
+};
+
 export type BlueskyUploadBlobResponse = {
   blob: {
     ref: {

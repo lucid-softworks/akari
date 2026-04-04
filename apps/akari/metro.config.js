@@ -9,6 +9,7 @@ config.resolver.alias = {
   '@/bluesky-api': path.resolve(__dirname, '../../packages/bluesky-api'),
   '@/libretranslate-api': path.resolve(__dirname, '../../packages/libretranslate-api'),
   '@/tenor-api': path.resolve(__dirname, '../../packages/tenor-api'),
+  '@/tmdb-api': path.resolve(__dirname, '../../packages/tmdb-api'),
 };
 
 module.exports = config;

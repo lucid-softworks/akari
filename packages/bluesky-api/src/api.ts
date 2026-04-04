@@ -12,6 +12,7 @@ import type {
   BlueskyConvosResponse,
   BlueskyCreatePostInput,
   BlueskyCreatePostResponse,
+  CreateReviewInput,
   BlueskyFeedGeneratorsResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
@@ -347,6 +348,17 @@ export class BlueskyApi extends BlueskyApiClient {
    */
   async createPost(accessJwt: string, userDid: string, post: BlueskyCreatePostInput): Promise<BlueskyCreatePostResponse> {
     return this.feeds.createPost(accessJwt, userDid, post);
+  }
+
+  /**
+   * Creates a review record in the social.popfeed.feed.review collection.
+   * @param accessJwt - Valid session token authorised to create records for the provided DID.
+   * @param userDid - DID of the repository where the review should be recorded.
+   * @param review - Review data including identifiers, rating, and optional metadata.
+   * @returns Metadata for the created record including AT URI and commit details.
+   */
+  async createReview(accessJwt: string, userDid: string, review: CreateReviewInput): Promise<BlueskyCreatePostResponse> {
+    return this.repos.createReview(accessJwt, userDid, review);
   }
 
   /**

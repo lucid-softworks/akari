@@ -1,5 +1,5 @@
 import { BlueskyApiClient } from './client';
-import type { BlueskyLinkatBoardResponse, BlueskyTangledReposResponse, BlueskyRecipeRecordsResponse } from './types';
+import type { BlueskyLinkatBoardResponse, BlueskyTangledReposResponse, BlueskyRecipeRecordsResponse, CreateReviewInput, BlueskyCreatePostResponse } from './types';
 
 /**
  * Bluesky API methods for interacting with Tangled repo records.
@@ -97,5 +97,69 @@ export class BlueskyRepos extends BlueskyApiClient {
         cursor: undefined,
       };
     }
+  }
+
+  /**
+   * Creates a review record in the social.popfeed.feed.review collection.
+   * @param accessJwt - Valid access JWT token for the authenticated user.
+   * @param userDid - DID of the repository where the review should be recorded.
+   * @param review - Review data including identifiers, rating, and optional metadata.
+   * @returns Promise resolving to metadata for the created record including AT URI and commit details.
+   */
+  async createReview(
+    accessJwt: string,
+    userDid: string,
+    review: CreateReviewInput,
+  ): Promise<BlueskyCreatePostResponse> {
+    const record: Record<string, unknown> = {
+      $type: 'social.popfeed.feed.review',
+      identifiers: review.identifiers,
+      creativeWorkType: review.creativeWorkType,
+      rating: review.rating,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (review.text !== undefined) {
+      record.text = review.text;
+    }
+    if (review.title !== undefined) {
+      record.title = review.title;
+    }
+    if (review.poster !== undefined) {
+      record.poster = review.poster;
+    }
+    if (review.tags !== undefined) {
+      record.tags = review.tags;
+    }
+    if (review.genres !== undefined) {
+      record.genres = review.genres;
+    }
+    if (review.mainCredit !== undefined) {
+      record.mainCredit = review.mainCredit;
+    }
+    if (review.mainCreditRole !== undefined) {
+      record.mainCreditRole = review.mainCreditRole;
+    }
+    if (review.isRevisit !== undefined) {
+      record.isRevisit = review.isRevisit;
+    }
+    if (review.containsSpoilers !== undefined) {
+      record.containsSpoilers = review.containsSpoilers;
+    }
+    if (review.releaseDate !== undefined) {
+      record.releaseDate = review.releaseDate;
+    }
+    if (review.posterUrl !== undefined) {
+      record.posterUrl = review.posterUrl;
+    }
+
+    return this.makeAuthenticatedRequest<BlueskyCreatePostResponse>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'social.popfeed.feed.review',
+        record,
+      },
+    });
   }
 }

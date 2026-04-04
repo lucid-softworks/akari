@@ -26,6 +26,7 @@ module.exports = {
     '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
+    '^@/tmdb-api$': '<rootDir>/../../packages/tmdb-api/src',
   },
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };

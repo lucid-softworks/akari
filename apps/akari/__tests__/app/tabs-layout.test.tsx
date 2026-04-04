@@ -54,6 +54,9 @@ jest.mock('@/hooks/useResponsive');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/usePushNotifications');
+jest.mock('@/hooks/queries/useConversations', () => ({
+  useConversations: () => ({ data: undefined }),
+}));
 jest.mock('@/hooks/useTabConfig', () => ({
   useTabConfig: () => ({
     visibleTabs: ['index', 'search', 'messages', 'notifications', 'bookmarks', 'profile'],

@@ -82,6 +82,7 @@ const MAPPING = {
   'speaker.slash.fill': 'volume-off',
   'hand.raised.fill': 'back-hand',
   'eye.fill': 'visibility',
+  star: 'star-border',
   'star.fill': 'star',
   'rectangle.stack.fill': 'collections',
   'play.circle.fill': 'play-circle-filled',

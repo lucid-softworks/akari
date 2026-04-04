@@ -10,7 +10,8 @@
       "@/bluesky-api": ["../../packages/bluesky-api"],
       "@/clearsky-api": ["../../packages/clearsky-api"],
       "@/libretranslate-api": ["../../packages/libretranslate-api"],
-      "@/tenor-api": ["../../packages/tenor-api"]
+      "@/tenor-api": ["../../packages/tenor-api"],
+      "@/tmdb-api": ["../../packages/tmdb-api"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.json", ".expo/types/**/*.ts", "expo-env.d.ts"]
