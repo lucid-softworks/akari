@@ -42,7 +42,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const activeBg = useThemeColor({ light: '#F3F4F6', dark: '#2A2D2E' }, 'background');
   const accentColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'tint');
   const borderColor = useThemeColor({}, 'border');
-  const badgeBg = useThemeColor({ light: '#FF3B30', dark: '#FF453A' }, 'tint');
+  const badgeBg = '#FF3B30';
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [

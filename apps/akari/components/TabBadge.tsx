@@ -11,21 +11,8 @@ type TabBadgeProps = {
 };
 
 export function TabBadge({ count, size = 'medium' }: TabBadgeProps) {
-  const backgroundColor = useThemeColor(
-    {
-      light: '#ff3b30',
-      dark: '#ff453a',
-    },
-    'tint',
-  );
-
-  const textColor = useThemeColor(
-    {
-      light: '#ffffff',
-      dark: '#ffffff',
-    },
-    'text',
-  );
+  const backgroundColor = Platform.OS === 'ios' ? '#ff3b30' : '#ff453a';
+  const textColor = '#ffffff';
 
   // Don't show badge if count is 0
   if (count === 0) {

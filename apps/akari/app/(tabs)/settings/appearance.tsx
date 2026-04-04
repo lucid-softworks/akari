@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -11,7 +11,6 @@ import { spacing, radius, fontSize, fontWeight, semanticColors, layout } from '@
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeConfig } from '@/hooks/useThemeConfig';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const ACCENT_PRESETS = [
@@ -25,70 +24,145 @@ const ACCENT_PRESETS = [
   { label: 'Indigo', color: '#5856D6' },
 ];
 
+const BACKGROUND_PRESETS_LIGHT = [
+  { label: 'White', color: '#FFFFFF' },
+  { label: 'Warm', color: '#FFFBF5' },
+  { label: 'Cool', color: '#F5F7FA' },
+  { label: 'Cream', color: '#FDF6EC' },
+  { label: 'Mint', color: '#F0FFF4' },
+];
+
+const BACKGROUND_PRESETS_DARK = [
+  { label: 'Dark', color: '#151718' },
+  { label: 'Black', color: '#000000' },
+  { label: 'Navy', color: '#0F1729' },
+  { label: 'Charcoal', color: '#1C1C1E' },
+  { label: 'Slate', color: '#1E293B' },
+];
+
+const TEXT_PRESETS_LIGHT = [
+  { label: 'Dark', color: '#11181C' },
+  { label: 'Black', color: '#000000' },
+  { label: 'Soft', color: '#374151' },
+  { label: 'Warm', color: '#292524' },
+];
+
+const TEXT_PRESETS_DARK = [
+  { label: 'Light', color: '#ECEDEE' },
+  { label: 'White', color: '#FFFFFF' },
+  { label: 'Soft', color: '#D1D5DB' },
+  { label: 'Warm', color: '#FDE68A' },
+];
+
 const HEX_REGEX = /^#[0-9A-Fa-f]{6}$/;
 
-type ColorRowProps = {
-  label: string;
-  currentColor: string;
-  onColorChange: (color: string | null) => void;
+type ColorKeys = keyof typeof Colors.light;
+
+type SwatchPickerProps = {
+  presets: { label: string; color: string }[];
+  defaultColor: string;
+  currentColor: string | undefined;
+  onSelect: (color: string | null) => void;
   borderColor: string;
-  showDivider?: boolean;
 };
 
-function ColorRow({ label, currentColor, onColorChange, borderColor, showDivider = true }: ColorRowProps) {
-  const [editing, setEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(currentColor);
-  const textColor = useThemeColor({}, 'text');
-
-  const handleSubmit = useCallback(() => {
-    setEditing(false);
-    if (HEX_REGEX.test(inputValue)) {
-      onColorChange(inputValue);
-    } else {
-      setInputValue(currentColor);
-    }
-  }, [inputValue, currentColor, onColorChange]);
+function SwatchPicker({ presets, defaultColor, currentColor, onSelect, borderColor }: SwatchPickerProps) {
+  const [showCustom, setShowCustom] = useState(false);
+  const [customHex, setCustomHex] = useState('');
+  const isDefault = !currentColor;
+  const isCustom = currentColor && !presets.some((p) => p.color === currentColor) && currentColor !== defaultColor;
 
   return (
-    <TouchableOpacity
-      style={[styles.colorRow, showDivider && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: borderColor }]}
-      onPress={() => {
-        setInputValue(currentColor);
-        setEditing(true);
-      }}
-      activeOpacity={0.7}
-    >
-      <View style={[styles.colorPreview, { backgroundColor: currentColor }]} />
-      <ThemedText style={styles.colorLabel}>{label}</ThemedText>
-      {editing ? (
-        <TextInput
-          style={[styles.colorInput, { color: textColor, borderColor }]}
-          value={inputValue}
-          onChangeText={setInputValue}
-          onBlur={handleSubmit}
-          onSubmitEditing={handleSubmit}
-          autoFocus
-          autoCapitalize="none"
-          autoCorrect={false}
-          maxLength={7}
-          placeholder="#000000"
-          placeholderTextColor="#999"
-        />
-      ) : (
-        <ThemedText style={styles.colorValue}>{currentColor}</ThemedText>
-      )}
-    </TouchableOpacity>
+    <View style={styles.swatchGrid}>
+      {/* Default */}
+      <TouchableOpacity
+        style={[styles.swatchButton, isDefault && styles.swatchSelected, { borderColor: isDefault ? defaultColor : 'transparent' }]}
+        onPress={() => { onSelect(null); setShowCustom(false); }}
+      >
+        <View style={[styles.swatch, { backgroundColor: defaultColor }]}>
+          {isDefault ? <IconSymbol name="checkmark" size={14} color="#fff" /> : null}
+        </View>
+        <ThemedText style={styles.swatchLabel}>Default</ThemedText>
+      </TouchableOpacity>
+
+      {/* Presets */}
+      {presets.map((preset) => {
+        const selected = currentColor === preset.color;
+        return (
+          <TouchableOpacity
+            key={preset.color}
+            style={[styles.swatchButton, selected && styles.swatchSelected, { borderColor: selected ? preset.color : 'transparent' }]}
+            onPress={() => { onSelect(preset.color); setShowCustom(false); }}
+          >
+            <View style={[styles.swatch, { backgroundColor: preset.color }]}>
+              {selected ? <IconSymbol name="checkmark" size={14} color={isLightColor(preset.color) ? '#000' : '#fff'} /> : null}
+            </View>
+            <ThemedText style={styles.swatchLabel}>{preset.label}</ThemedText>
+          </TouchableOpacity>
+        );
+      })}
+
+      {/* Custom */}
+      <TouchableOpacity
+        style={[styles.swatchButton, (showCustom || isCustom) && styles.swatchSelected, { borderColor: isCustom ? currentColor : showCustom ? borderColor : 'transparent' }]}
+        onPress={() => {
+          setCustomHex(isCustom && currentColor ? currentColor : '');
+          setShowCustom(true);
+        }}
+      >
+        <View style={[styles.swatch, styles.customSwatch, isCustom ? { backgroundColor: currentColor } : { borderColor }]}>
+          {isCustom ? (
+            <IconSymbol name="checkmark" size={14} color={isLightColor(currentColor!) ? '#000' : '#fff'} />
+          ) : (
+            <IconSymbol name="pencil" size={14} color="#999" />
+          )}
+        </View>
+        <ThemedText style={styles.swatchLabel}>Custom</ThemedText>
+      </TouchableOpacity>
+
+      {/* Custom hex input */}
+      {showCustom ? (
+        <View style={styles.customInputRow}>
+          <TextInput
+            style={[styles.customInput, { borderColor }]}
+            value={customHex}
+            onChangeText={setCustomHex}
+            onSubmitEditing={() => {
+              if (HEX_REGEX.test(customHex)) {
+                onSelect(customHex);
+                setShowCustom(false);
+              }
+            }}
+            autoFocus
+            autoCapitalize="none"
+            autoCorrect={false}
+            maxLength={7}
+            placeholder="#RRGGBB"
+            placeholderTextColor="#999"
+          />
+          <TouchableOpacity
+            style={[styles.customApply, { backgroundColor: HEX_REGEX.test(customHex) ? (customHex || '#999') : '#ccc' }]}
+            onPress={() => {
+              if (HEX_REGEX.test(customHex)) {
+                onSelect(customHex);
+                setShowCustom(false);
+              }
+            }}
+          >
+            <ThemedText style={styles.customApplyText}>Apply</ThemedText>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+    </View>
   );
 }
 
-type ColorKeys = keyof typeof Colors.light;
-const COLOR_FIELDS: { key: ColorKeys; label: string }[] = [
-  { key: 'background', label: 'Background' },
-  { key: 'text', label: 'Text' },
-  { key: 'tint', label: 'Tint' },
-  { key: 'icon', label: 'Icons' },
-  { key: 'border', label: 'Borders' },
-];
+function isLightColor(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 150;
+}
 
 export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
@@ -96,12 +170,8 @@ export default function AppearanceSettingsScreen() {
   const theme = useColorScheme() ?? 'light';
   const { config, setAccentColor, setModeColor, resetToDefaults } = useThemeConfig();
 
-  const currentAccent = config.accentColor;
   const hasCustomizations = !!(config.accentColor || config.light || config.dark);
-
-  const getEffectiveColor = useCallback((mode: 'light' | 'dark', key: ColorKeys): string => {
-    return config[mode]?.[key] ?? Colors[mode][key];
-  }, [config]);
+  const isDark = theme === 'dark';
 
   return (
     <SettingsSubpageLayout title={t('settings.appearance')}>
@@ -111,75 +181,42 @@ export default function AppearanceSettingsScreen() {
         style={styles.scrollView}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Accent Color */}
         <SettingsSection isFirst title="Accent Color">
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <View style={styles.swatchGrid}>
-              <TouchableOpacity
-                style={[styles.swatchButton, !currentAccent && styles.swatchSelected, { borderColor: !currentAccent ? Colors.light.tint : 'transparent' }]}
-                onPress={() => setAccentColor(null)}
-              >
-                <View style={[styles.swatch, { backgroundColor: Colors.light.tint }]}>
-                  {!currentAccent ? <IconSymbol name="checkmark" size={16} color="#fff" /> : null}
-                </View>
-                <ThemedText style={styles.swatchLabel}>Default</ThemedText>
-              </TouchableOpacity>
-
-              {ACCENT_PRESETS.map((preset) => {
-                const isSelected = currentAccent === preset.color;
-                return (
-                  <TouchableOpacity
-                    key={preset.color}
-                    style={[styles.swatchButton, isSelected && styles.swatchSelected, { borderColor: isSelected ? preset.color : 'transparent' }]}
-                    onPress={() => setAccentColor(preset.color)}
-                  >
-                    <View style={[styles.swatch, { backgroundColor: preset.color }]}>
-                      {isSelected ? <IconSymbol name="checkmark" size={16} color="#fff" /> : null}
-                    </View>
-                    <ThemedText style={styles.swatchLabel}>{preset.label}</ThemedText>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            <SwatchPicker
+              presets={ACCENT_PRESETS}
+              defaultColor={Colors.light.tint}
+              currentColor={config.accentColor}
+              onSelect={(c) => setAccentColor(c)}
+              borderColor={borderColor}
+            />
           </ThemedView>
         </SettingsSection>
 
-        {/* Current Mode Colors */}
-        <SettingsSection title={`${theme === 'dark' ? 'Dark' : 'Light'} Mode Colors`}>
-          <ThemedView style={[styles.sectionCard, { borderColor, padding: 0 }]}>
-            {COLOR_FIELDS.map((field, index) => (
-              <ColorRow
-                key={field.key}
-                label={field.label}
-                currentColor={getEffectiveColor(theme, field.key)}
-                onColorChange={(color) => setModeColor(theme, field.key, color)}
-                borderColor={borderColor}
-                showDivider={index < COLOR_FIELDS.length - 1}
-              />
-            ))}
+        <SettingsSection title="Background">
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SwatchPicker
+              presets={isDark ? BACKGROUND_PRESETS_DARK : BACKGROUND_PRESETS_LIGHT}
+              defaultColor={Colors[theme].background}
+              currentColor={config[theme]?.background}
+              onSelect={(c) => setModeColor(theme, 'background', c)}
+              borderColor={borderColor}
+            />
           </ThemedView>
         </SettingsSection>
 
-        {/* Other Mode Colors */}
-        <SettingsSection title={`${theme === 'dark' ? 'Light' : 'Dark'} Mode Colors`}>
-          <ThemedView style={[styles.sectionCard, { borderColor, padding: 0 }]}>
-            {COLOR_FIELDS.map((field, index) => {
-              const otherMode = theme === 'dark' ? 'light' : 'dark';
-              return (
-                <ColorRow
-                  key={field.key}
-                  label={field.label}
-                  currentColor={getEffectiveColor(otherMode, field.key)}
-                  onColorChange={(color) => setModeColor(otherMode, field.key, color)}
-                  borderColor={borderColor}
-                  showDivider={index < COLOR_FIELDS.length - 1}
-                />
-              );
-            })}
+        <SettingsSection title="Text">
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SwatchPicker
+              presets={isDark ? TEXT_PRESETS_DARK : TEXT_PRESETS_LIGHT}
+              defaultColor={Colors[theme].text}
+              currentColor={config[theme]?.text}
+              onSelect={(c) => setModeColor(theme, 'text', c)}
+              borderColor={borderColor}
+            />
           </ThemedView>
         </SettingsSection>
 
-        {/* Reset */}
         {hasCustomizations ? (
           <SettingsSection>
             <TouchableOpacity
@@ -206,70 +243,67 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: spacing.lg,
+    padding: spacing.md,
     backgroundColor: 'transparent',
   },
   swatchGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   swatchButton: {
     alignItems: 'center',
     gap: spacing.xs,
-    padding: spacing.sm,
+    padding: spacing.xs,
     borderRadius: radius.sm,
     borderWidth: 2,
     borderColor: 'transparent',
-    width: 72,
+    width: 68,
   },
   swatchSelected: {
     borderWidth: 2,
   },
   swatch: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  customSwatch: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
   },
   swatchLabel: {
     fontSize: fontSize.xs,
     fontWeight: fontWeight.medium,
   },
-  colorRow: {
+  customInputRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    gap: spacing.md,
+    width: '100%',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
   },
-  colorPreview: {
-    width: 24,
-    height: 24,
-    borderRadius: radius.xs,
-    borderWidth: layout.hairline,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  colorLabel: {
+  customInput: {
     flex: 1,
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.medium,
-  },
-  colorValue: {
-    fontSize: fontSize.base,
-    opacity: 0.6,
-    fontFamily: 'Menlo',
-  },
-  colorInput: {
     fontSize: fontSize.base,
     fontFamily: 'Menlo',
     borderWidth: 1,
     borderRadius: radius.xs,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    width: 90,
-    textAlign: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  customApply: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  customApplyText: {
+    color: '#fff',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
   resetButton: {
     marginHorizontal: spacing.lg,
