@@ -31,7 +31,7 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
   const chipBg = useThemeColor({ light: '#f0fdf4', dark: 'rgba(74, 222, 128, 0.1)' }, 'background');
   const chipBorder = useThemeColor({ light: '#bbf7d0', dark: 'rgba(74, 222, 128, 0.2)' }, 'border');
 
-  const claims = data ?? [];
+  const claims = Array.isArray(data) ? data : [];
 
   if (claims.length === 0) return null;
 
