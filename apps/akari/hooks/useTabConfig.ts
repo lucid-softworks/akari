@@ -27,13 +27,13 @@ const DEFAULT_CONFIG: TabConfig = { visibleTabs: DEFAULT_VISIBLE };
 
 // Cached snapshot -- useSyncExternalStore compares by reference,
 // so we must return the same object when nothing changed.
-let cachedConfig: TabConfig = readFromStorage();
+let cachedConfig: TabConfig | null = null;
 let listeners = new Set<() => void>();
 
 function readFromStorage(): TabConfig {
-  const raw = storage.getString(STORAGE_KEY);
-  if (!raw) return DEFAULT_CONFIG;
   try {
+    const raw = storage.getString(STORAGE_KEY);
+    if (!raw) return DEFAULT_CONFIG;
     const parsed = JSON.parse(raw) as TabConfig;
     if (!parsed.visibleTabs.includes('settings')) {
       parsed.visibleTabs.push('settings');
@@ -45,6 +45,9 @@ function readFromStorage(): TabConfig {
 }
 
 function getSnapshot(): TabConfig {
+  if (cachedConfig === null) {
+    cachedConfig = readFromStorage();
+  }
   return cachedConfig;
 }
 
