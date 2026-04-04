@@ -169,6 +169,7 @@ export default function ProfileScreen() {
 
       <ProfileDropdown
         isVisible={showDropdown}
+        onDismiss={() => setShowDropdown(false)}
         onCopyLink={handleCopyLink}
         onSearchPosts={handleSearchPosts}
         onAddToLists={() => {

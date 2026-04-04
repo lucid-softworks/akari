@@ -197,6 +197,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       {/* Dropdown rendered at root level */}
       <ProfileDropdown
         isVisible={showDropdown}
+        onDismiss={() => setShowDropdown(false)}
         onCopyLink={handleCopyLink}
         onSearchPosts={handleSearchPosts}
         onAddToLists={handleAddToLists}
@@ -207,10 +208,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         isBlocking={!!profile?.viewer?.blocking}
         isMuted={!!profile?.viewer?.muted}
         isOwnProfile={isOwnProfile}
-        style={{
-          top: dropdownPosition.top,
-          right: dropdownPosition.right,
-        }}
       />
     </ThemedView>
   );
