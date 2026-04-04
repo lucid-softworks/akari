@@ -11,6 +11,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "npx patch-package --patch-dir patches",
     "build": "APP_VARIANT=${APP_VARIANT:-development} turbo run build",
     "build:preview": "APP_VARIANT=preview turbo run build",
     "build:production": "APP_VARIANT=production turbo run build",

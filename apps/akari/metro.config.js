@@ -3,9 +3,8 @@ const path = require('path');
 
 const config = getDefaultConfig(__dirname);
 
-// Add path mapping for the internal packages and fix external packages shipping raw TS
+// Add path mapping for the internal packages
 config.resolver.alias = {
-  '@keytrace/claims': path.resolve(__dirname, '../../node_modules/@keytrace/claims/dist/verify.js'),
   '@/axiom-crash-reporter': path.resolve(__dirname, '../../packages/axiom-crash-reporter'),
   '@/bluesky-api': path.resolve(__dirname, '../../packages/bluesky-api'),
   '@/libretranslate-api': path.resolve(__dirname, '../../packages/libretranslate-api'),
