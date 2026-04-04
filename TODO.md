@@ -71,10 +71,6 @@ Settings > Notifications has a stubbed "notification categories" row.
 
 ## Known Bugs
 
-### KeyTrace Claims Not Showing on iPad
-Claims show on iPhone but not iPad. Likely a React Query cache issue — the iPad cached empty/error results from earlier broken implementations. The query uses `['keytrace', handle]` as the cache key.
-- Files: `hooks/queries/useKeytraceClaims.ts`, `components/KeytraceClaims.tsx`
-
 ### Handle History Empty
 The handle history modal shows empty results. The `useHandleHistory` hook fetches from the ClearSky API which may be returning empty data or the response format may have changed.
 - Files: `hooks/useHandleHistory.ts`, `components/HandleHistoryModal.tsx`
