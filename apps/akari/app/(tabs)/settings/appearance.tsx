@@ -16,7 +16,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 const ACCENT_PRESETS = [
   { label: 'Blue', color: '#007AFF' },
   { label: 'Purple', color: '#AF52DE' },
-  { label: 'Pink', color: '#FF2D55' },
+  { label: 'Pink', color: '#FF69B4' },
   { label: 'Red', color: '#FF3B30' },
   { label: 'Orange', color: '#FF9500' },
   { label: 'Green', color: '#34C759' },
