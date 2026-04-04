@@ -290,7 +290,9 @@ export default function AppearanceSettingsScreen() {
         {/* Light Mode Colors */}
         {showLight ? (
           <>
-            <SettingsSection title="Light Mode" />
+            <SettingsSection title="Light Mode">
+              <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in light mode.</ThemedText>
+            </SettingsSection>
             <ModeColorSections mode="light" config={config} setModeColor={setModeColor} borderColor={borderColor} />
           </>
         ) : null}
@@ -298,7 +300,9 @@ export default function AppearanceSettingsScreen() {
         {/* Dark Mode Colors */}
         {showDark ? (
           <>
-            <SettingsSection title="Dark Mode" />
+            <SettingsSection title="Dark Mode">
+              <ThemedText style={styles.modeSubtitle}>These colors apply when your device is in dark mode.</ThemedText>
+            </SettingsSection>
             <ModeColorSections mode="dark" config={config} setModeColor={setModeColor} borderColor={borderColor} />
           </>
         ) : null}
@@ -422,6 +426,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.sm,
+  },
+  modeSubtitle: {
+    fontSize: fontSize.sm,
+    opacity: 0.5,
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
   },
   resetText: {
     fontSize: fontSize.base,
