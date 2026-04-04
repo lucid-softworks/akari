@@ -18,8 +18,8 @@ export const ALL_TABS: { key: TabKey; label: string; icon: string; alwaysVisible
   { key: 'messages', label: 'Messages', icon: 'message.fill' },
   { key: 'notifications', label: 'Notifications', icon: 'bell.fill' },
   { key: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill' },
-  { key: 'profile', label: 'Profile', icon: 'person.fill', alwaysVisible: true },
-  { key: 'settings', label: 'Settings', icon: 'gearshape.fill' },
+  { key: 'profile', label: 'Profile', icon: 'person.fill' },
+  { key: 'settings', label: 'Settings', icon: 'gearshape.fill', alwaysVisible: true },
 ];
 
 const DEFAULT_VISIBLE: TabKey[] = ['index', 'search', 'notifications', 'bookmarks', 'profile', 'settings'];
@@ -35,8 +35,8 @@ function readFromStorage(): TabConfig {
   if (!raw) return DEFAULT_CONFIG;
   try {
     const parsed = JSON.parse(raw) as TabConfig;
-    if (!parsed.visibleTabs.includes('profile')) {
-      parsed.visibleTabs.push('profile');
+    if (!parsed.visibleTabs.includes('settings')) {
+      parsed.visibleTabs.push('settings');
     }
     return parsed;
   } catch {
@@ -66,8 +66,8 @@ export function useTabConfig() {
   const config = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   const setVisibleTabs = useCallback((tabs: readonly TabKey[]) => {
-    const withProfile: TabKey[] = tabs.includes('profile') ? [...tabs] : [...tabs, 'profile'];
-    const newConfig: TabConfig = { visibleTabs: withProfile };
+    const withSettings: TabKey[] = tabs.includes('settings') ? [...tabs] : [...tabs, 'settings'];
+    const newConfig: TabConfig = { visibleTabs: withSettings };
     storage.set(STORAGE_KEY, JSON.stringify(newConfig));
     notify();
   }, []);
