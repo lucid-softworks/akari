@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed } from '@/bluesky-api';
@@ -236,8 +236,7 @@ const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] 
 export default function ConversationScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const [messageText, setMessageText] = useState('');
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const [headerOffset, setHeaderOffset] = useState(100);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const insets = useSafeAreaInsets();
@@ -251,10 +250,16 @@ export default function ConversationScreen() {
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
-  // Keyboard state
+  // Track keyboard height to shift content
   useEffect(() => {
-    const showSub = Keyboard.addListener('keyboardWillShow', () => setIsKeyboardOpen(true));
-    const hideSub = Keyboard.addListener('keyboardWillHide', () => setIsKeyboardOpen(false));
+    const showSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => setKeyboardHeight(e.endCoordinates.height),
+    );
+    const hideSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setKeyboardHeight(0),
+    );
 
     return () => {
       showSub.remove();
@@ -473,23 +478,7 @@ export default function ConversationScreen() {
   const messages = (messagesData?.pages.flatMap((page) => page.messages) || []).slice().reverse();
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? headerOffset : 0}
-      onLayout={(e) => {
-        if (Platform.OS === 'ios') {
-          try {
-            e.target.measureInWindow((_x: number, y: number) => {
-              if (y > 0) setHeaderOffset(y);
-            });
-          } catch {
-            // measureInWindow not available in all environments
-          }
-        }
-      }}
-    >
-      <ThemedView style={styles.container}>
+      <ThemedView style={[styles.container, keyboardHeight > 0 && { paddingBottom: keyboardHeight }]}>
           {/* Messages */}
           {messagesLoading ? (
             <ThemedView style={styles.loadingState}>
@@ -516,7 +505,7 @@ export default function ConversationScreen() {
               styles.inputContainer,
               {
                 borderTopColor: borderColor,
-                paddingBottom: Platform.OS === 'ios' && !isKeyboardOpen ? insets.bottom : spacing.md,
+                paddingBottom: keyboardHeight > 0 ? spacing.md : insets.bottom,
               },
             ]}
           >
@@ -552,7 +541,6 @@ export default function ConversationScreen() {
             </TouchableOpacity>
           </ThemedView>
       </ThemedView>
-    </KeyboardAvoidingView>
   );
 }
 
