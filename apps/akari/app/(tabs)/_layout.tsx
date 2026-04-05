@@ -311,9 +311,18 @@ export default function TabLayout() {
   // Set browser tab title on web
   useEffect(() => {
     if (Platform.OS === 'web') {
-      document.title = headerTitle ? `${headerTitle} — Akari` : 'Akari';
+      let title = headerTitle || 'Akari';
+      // For profile routes, show the handle instead of "Profile"
+      if (currentTabKey === 'profile' && pathname) {
+        const segments = pathname.split('/').filter(Boolean);
+        const handleSegment = segments.find((s) => s !== 'profile' && !s.startsWith('('));
+        if (handleSegment) {
+          title = `@${decodeURIComponent(handleSegment)}`;
+        }
+      }
+      document.title = `${title} — Akari`;
     }
-  }, [headerTitle]);
+  }, [headerTitle, currentTabKey, pathname]);
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
