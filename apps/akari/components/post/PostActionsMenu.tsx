@@ -77,6 +77,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   );
 
   return (
+    <>
     <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
       <TouchableWithoutFeedback onPress={onDismiss}>
         <View style={styles.overlay}>
@@ -138,12 +139,12 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         </View>
       </TouchableWithoutFeedback>
     </Modal>
-
-      <ReportSheet
-        visible={showReportSheet}
-        onDismiss={() => setShowReportSheet(false)}
-        subject={postUri && postCid ? { type: 'post', uri: postUri, cid: postCid } : authorDid ? { type: 'account', did: authorDid } : null}
-      />
+    <ReportSheet
+      visible={showReportSheet}
+      onDismiss={() => setShowReportSheet(false)}
+      subject={postUri && postCid ? { type: 'post', uri: postUri, cid: postCid } : authorDid ? { type: 'account', did: authorDid } : null}
+    />
+    </>
   );
 });
 
