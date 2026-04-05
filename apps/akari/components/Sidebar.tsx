@@ -64,7 +64,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
         badge: unreadMessagesCount,
       },
       { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: Platform.OS === 'web' && activeAccount?.handle ? `/(tabs)/profile/${activeAccount.handle}` : '/(tabs)/profile' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: Platform.OS === 'web' && activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/(tabs)/profile' },
     ],
     [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
