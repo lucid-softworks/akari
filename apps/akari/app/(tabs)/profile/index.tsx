@@ -45,6 +45,42 @@ export default function ProfileScreen() {
     setRefreshing(false);
   }, [refetchProfile]);
 
+  const handleDropdownToggle = useCallback((isOpen: boolean) => {
+    setShowDropdown(isOpen);
+  }, []);
+
+  const handleTabChange = useCallback((tab: ProfileTabType) => {
+    setActiveTab(tab);
+  }, []);
+
+  const headerComponent = useMemo(() => {
+    if (!profile) return null;
+    return (
+      <ProfileHeader
+        profile={{
+          avatar: profile.avatar,
+          displayName: profile.displayName || currentAccount?.handle || '',
+          handle: currentAccount?.handle || '',
+          description: profile.description,
+          banner: profile.banner,
+          did: profile.did,
+          followersCount: profile.followersCount,
+          followsCount: profile.followsCount,
+          postsCount: profile.postsCount,
+          viewer: profile.viewer,
+          labels: profile.labels,
+        }}
+        isOwnProfile={true}
+        onDropdownToggle={handleDropdownToggle}
+        dropdownRef={dropdownRef}
+      />
+    );
+  }, [profile, currentAccount, handleDropdownToggle, dropdownRef]);
+
+  const tabsComponent = useMemo(() => (
+    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
+  ), [activeTab, handleTabChange, currentAccount?.handle]);
+
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {
     return (
@@ -53,10 +89,6 @@ export default function ProfileScreen() {
       </ThemedView>
     );
   }
-
-  const handleDropdownToggle = (isOpen: boolean) => {
-    setShowDropdown(isOpen);
-  };
 
   const handleCopyLink = async () => {
     const profileHandle = currentAccount?.handle || profile?.handle;
@@ -95,35 +127,6 @@ export default function ProfileScreen() {
       onComplete: () => setShowDropdown(false),
     });
   };
-
-  const handleTabChange = (tab: ProfileTabType) => {
-    setActiveTab(tab);
-  };
-
-  const headerComponent = useMemo(() => (
-    <ProfileHeader
-      profile={{
-        avatar: profile?.avatar,
-        displayName: profile?.displayName || currentAccount?.handle || '',
-        handle: currentAccount?.handle || '',
-        description: profile?.description,
-        banner: profile?.banner,
-        did: profile?.did,
-        followersCount: profile?.followersCount,
-        followsCount: profile?.followsCount,
-        postsCount: profile?.postsCount,
-        viewer: profile?.viewer,
-        labels: profile?.labels,
-      }}
-      isOwnProfile={true}
-      onDropdownToggle={handleDropdownToggle}
-      dropdownRef={dropdownRef}
-    />
-  ), [profile, currentAccount, handleDropdownToggle, dropdownRef]);
-
-  const tabsComponent = useMemo(() => (
-    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
-  ), [activeTab, handleTabChange, currentAccount?.handle]);
 
   const renderTabContent = () => {
     if (!currentAccount?.handle) {
