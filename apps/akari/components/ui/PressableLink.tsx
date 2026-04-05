@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { Platform, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { Platform, Pressable, type PressableProps } from 'react-native';
 
 type PressableLinkProps = {
   href: string;
@@ -13,9 +13,9 @@ type PressableLinkProps = {
 };
 
 /**
- * On web, renders as an <a> tag via expo-router's Link for proper
- * browser behavior (hover preview, cmd+click, right-click menu).
- * On native, renders as a Pressable with router.push.
+ * On web, wraps a Pressable inside a Link for proper <a> tag behavior
+ * (hover preview, cmd+click, right-click menu) while keeping Pressable
+ * layout. On native, renders as a plain Pressable.
  */
 export function PressableLink({
   href,
@@ -28,14 +28,15 @@ export function PressableLink({
 }: PressableLinkProps) {
   if (Platform.OS === 'web') {
     return (
-      <Link
-        href={href as any}
-        asChild={false}
-        style={typeof style === 'function' ? style({ pressed: false }) : style}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={accessibilityRole ?? 'link'}
-      >
-        {children}
+      <Link href={href as any} asChild>
+        <Pressable
+          style={style}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole={accessibilityRole ?? 'link'}
+          accessibilityState={accessibilityState}
+        >
+          {children}
+        </Pressable>
       </Link>
     );
   }
