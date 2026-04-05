@@ -1,7 +1,7 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Image } from 'expo-image';
 import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -307,6 +307,13 @@ export default function TabLayout() {
       ? (headerTitles[nestedRouteKey ?? ''] ?? headerTitles[currentTabKey] ?? 'Akari')
       : (headerTitles[currentTabKey] ?? 'Akari');
   const shouldShowMobileHeader = currentTabKey !== 'profile';
+
+  // Set browser tab title on web
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      document.title = headerTitle ? `${headerTitle} — Akari` : 'Akari';
+    }
+  }, [headerTitle]);
 
   const handleOpenAccountSwitcher = useCallback(() => {
     if (isLargeScreen) {
