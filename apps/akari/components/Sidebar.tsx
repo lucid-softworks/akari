@@ -43,6 +43,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const accentColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'tint');
   const borderColor = useThemeColor({}, 'border');
   const badgeBg = '#FF3B30';
+  const activeAccount = currentAccount ?? accounts[0];
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
@@ -67,8 +68,6 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
     ],
     [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
-
-  const activeAccount = currentAccount ?? accounts[0];
 
   const isActiveRoute = (item: NavigationItem) => {
     if (item.route === '/(tabs)') {
