@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, type PressableProps } from 'react-native';
 
@@ -33,31 +33,30 @@ export function PressableLink({
     const resolved = typeof style === 'function'
       ? style({ pressed: false })
       : style;
-    const flatStyle = {
-      ...StyleSheet.flatten(resolved),
-      textDecorationLine: 'none',
-      color: 'inherit',
-      display: 'flex',
-    };
-
-    const handleClick = (e: React.MouseEvent) => {
-      // Allow cmd+click / ctrl+click to open in new tab
-      if (e.metaKey || e.ctrlKey) return;
-      e.preventDefault();
-      handlePress();
-    };
+    const flatStyle = { ...StyleSheet.flatten(resolved), textDecorationLine: 'none' as const };
 
     return (
-      // @ts-expect-error - using <a> directly for proper web semantics
-      <a
-        href={href}
-        onClick={handleClick}
-        style={flatStyle}
-        aria-label={accessibilityLabel}
-        role={accessibilityRole ?? 'link'}
+      <Link
+        href={href as any}
+        asChild
+        onPress={(e) => {
+          // Prevent Link's default navigation to avoid ?handle= params
+          // Allow cmd+click / ctrl+click for new tab
+          const nativeEvent = (e as any).nativeEvent ?? e;
+          if (nativeEvent?.metaKey || nativeEvent?.ctrlKey) return;
+          e.preventDefault();
+          handlePress();
+        }}
       >
-        {children}
-      </a>
+        <Pressable
+          style={flatStyle}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole={accessibilityRole ?? 'link'}
+          accessibilityState={accessibilityState}
+        >
+          {children}
+        </Pressable>
+      </Link>
     );
   }
 
