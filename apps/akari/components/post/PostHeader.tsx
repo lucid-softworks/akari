@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
 import React, { useCallback } from 'react';
-import { Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { PressableLink } from '@/components/ui/PressableLink';
 import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNavigateToProfile } from '@/utils/navigation';
@@ -55,15 +56,17 @@ export const PostHeader = React.memo(function PostHeader({
   return (
     <ThemedView style={styles.header}>
       <ThemedView style={styles.authorSection}>
-        <Pressable
+        <PressableLink
+          href={`/profile/${author.handle}`}
           onPress={handleProfilePress}
-          accessibilityRole="button"
           accessibilityLabel={`View ${authorName}'s profile via avatar`}
-          onPointerEnter={handleAvatarPointerEnter}
-          onPointerLeave={handleAvatarPointerLeave}
-          style={({ pressed }) => [styles.avatarPressable, pressed && styles.avatarPressablePressed]}
+          style={styles.avatarPressable}
         >
-          <View style={[styles.avatarWrapper, isLive && styles.liveAvatarWrapper]}>
+          <View
+            style={[styles.avatarWrapper, isLive && styles.liveAvatarWrapper]}
+            onPointerEnter={handleAvatarPointerEnter}
+            onPointerLeave={handleAvatarPointerLeave}
+          >
             <Image
               source={{
                 uri: author.avatar || 'https://bsky.app/static/default-avatar.png',
@@ -78,17 +81,16 @@ export const PostHeader = React.memo(function PostHeader({
               </View>
             )}
           </View>
-        </Pressable>
+        </PressableLink>
         <ThemedView style={styles.authorInfo}>
           <ThemedText style={styles.displayName}>{authorName}</ThemedText>
-          <TouchableOpacity
+          <PressableLink
+            href={`/profile/${author.handle}`}
             onPress={handleProfilePress}
-            activeOpacity={activeOpacity.default}
-            accessibilityRole="button"
             accessibilityLabel={`View profile of ${authorName}`}
           >
             <ThemedText style={styles.handle}>@{author.handle}</ThemedText>
-          </TouchableOpacity>
+          </PressableLink>
         </ThemedView>
       </ThemedView>
       <View style={styles.headerMeta}>

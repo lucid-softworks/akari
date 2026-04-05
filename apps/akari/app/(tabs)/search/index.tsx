@@ -298,8 +298,8 @@ export default function SearchScreen() {
           uri: post.uri,
           cid: post.cid,
         }}
+        href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
         onPress={() => {
-          // Navigate to post in current tab context
           const uriParts = post.uri.split('/');
           const rKey = uriParts[uriParts.length - 1];
           navigateToPost({ actor: post.author.handle, rKey });

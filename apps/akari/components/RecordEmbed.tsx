@@ -1,6 +1,8 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { PressableLink } from '@/components/ui/PressableLink';
 
 import { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -61,21 +63,20 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
 
-  const handlePress = () => {
-    // Navigate to the quoted post in the current tab
-    const actor = embed.record.author?.handle;
+  const postActor = embed.record.author?.handle;
+  const postRKey = embed.record.uri.split('/').pop();
+  const postHref = postActor && postRKey ? `/profile/${postActor}/post/${postRKey}` : '#';
+  const authorHref = postActor ? `/profile/${postActor}` : '#';
 
-    if (actor) {
-      const uriParts = embed.record.uri.split('/');
-      const rKey = uriParts[uriParts.length - 1];
-      navigateToPost({ actor, rKey });
+  const handlePress = () => {
+    if (postActor && postRKey) {
+      navigateToPost({ actor: postActor, rKey: postRKey });
     }
   };
 
   const handleAuthorPress = () => {
-    // Navigate to the quoted post's author profile
-    if (embed.record.author?.handle) {
-      navigateToProfile({ actor: embed.record.author.handle });
+    if (postActor) {
+      navigateToProfile({ actor: postActor });
     }
   };
 
@@ -396,11 +397,11 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const authorInfo = getAuthorInfo();
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle} testID="record-embed-touchable">
+    <PressableLink href={postHref} onPress={handlePress} style={{ opacity: 1 }}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
           {authorInfo ? (
-            <TouchableOpacity onPress={handleAuthorPress} activeOpacity={activeOpacity.default} style={styles.authorSection}>
+            <PressableLink href={authorHref} onPress={handleAuthorPress} style={styles.authorSection}>
               <Image
                 source={{
                   uri: authorInfo.avatar || 'https://bsky.app/static/default-avatar.png',
@@ -416,7 +417,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                   <ThemedText style={[styles.blockingMessage, { color: secondaryTextColor }]}>{blockingMessage}</ThemedText>
                 )}
               </ThemedView>
-            </TouchableOpacity>
+            </PressableLink>
           ) : (
             <ThemedView style={styles.authorSection}>
               <Image
@@ -504,7 +505,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
           </ThemedView>
         )}
       </View>
-    </TouchableOpacity>
+    </PressableLink>
   );
 }
 

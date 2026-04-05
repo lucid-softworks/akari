@@ -1,5 +1,5 @@
-import { Link } from 'expo-router';
-import React from 'react';
+import { Link, router } from 'expo-router';
+import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, type PressableProps } from 'react-native';
 
 type PressableLinkProps = {
@@ -13,9 +13,12 @@ type PressableLinkProps = {
 };
 
 /**
- * On web, wraps a Pressable inside a Link for proper <a> tag behavior
+ * On web, renders as a Pressable inside a Link for proper <a> tag behavior
  * (hover preview, cmd+click, right-click menu) while keeping Pressable
  * layout. On native, renders as a plain Pressable.
+ *
+ * Uses router.push on click to avoid expo-router adding query params
+ * for dynamic segments, while still rendering a proper <a> tag.
  */
 export function PressableLink({
   href,
@@ -26,21 +29,31 @@ export function PressableLink({
   accessibilityRole,
   accessibilityState,
 }: PressableLinkProps) {
-  if (Platform.OS === 'web') {
-    const flatStyle = typeof style === 'function'
-      ? style({ pressed: false })
-      : StyleSheet.flatten(style);
+  const flatStyle = typeof style === 'function'
+    ? style({ pressed: false })
+    : StyleSheet.flatten(style);
 
+  const handleWebPress = useCallback((e: any) => {
+    // Let cmd+click / ctrl+click open in new tab naturally
+    if (e?.metaKey || e?.ctrlKey) return;
+    e?.preventDefault?.();
+    if (onPress) {
+      onPress();
+    } else {
+      router.push(href as any);
+    }
+  }, [href, onPress]);
+
+  if (Platform.OS === 'web') {
     return (
-      <Link href={href as any} asChild>
-        <Pressable
-          style={flatStyle}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole={accessibilityRole ?? 'link'}
-          accessibilityState={accessibilityState}
-        >
-          {children}
-        </Pressable>
+      <Link
+        href={href as any}
+        onPress={handleWebPress}
+        style={[flatStyle, { textDecorationLine: 'none' }] as any}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole={accessibilityRole ?? 'link'}
+      >
+        {children}
       </Link>
     );
   }

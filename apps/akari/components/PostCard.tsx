@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyLabel } from '@/bluesky-api';
 import { Labels } from '@/components/Labels';
@@ -8,6 +8,7 @@ import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { PressableLink } from '@/components/ui/PressableLink';
 import { PostActions } from '@/components/post/PostActions';
 import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
@@ -55,9 +56,10 @@ export type PostCardProps = {
     cid?: string;
   };
   onPress?: () => void;
+  href?: string;
 };
 
-export const PostCard = React.memo(function PostCard({ post, onPress }: PostCardProps) {
+export const PostCard = React.memo(function PostCard({ post, onPress, href }: PostCardProps) {
   const { t } = useTranslation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
@@ -232,14 +234,14 @@ export const PostCard = React.memo(function PostCard({ post, onPress }: PostCard
 
   return (
     <>
-      {onPress ? (
-        <TouchableOpacity
-          style={[styles.container, { borderBottomColor: borderColor }]}
+      {onPress || href ? (
+        <PressableLink
+          href={href ?? '#'}
           onPress={onPress}
-          activeOpacity={activeOpacity.default}
+          style={[styles.container, { borderBottomColor: borderColor }]}
         >
           {postContent}
-        </TouchableOpacity>
+        </PressableLink>
       ) : (
         <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
           {postContent}

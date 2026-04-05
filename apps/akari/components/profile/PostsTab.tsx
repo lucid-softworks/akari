@@ -97,6 +97,7 @@ export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRe
           uri: item.uri,
           cid: item.cid,
         }}
+        href={`/profile/${item.author.handle}/post/${item.uri.split('/').pop()}`}
         onPress={() => {
           const uriParts = item.uri.split('/');
           const rKey = uriParts[uriParts.length - 1];
