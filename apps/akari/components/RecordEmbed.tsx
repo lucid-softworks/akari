@@ -64,7 +64,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const navigateToProfile = useNavigateToProfile();
 
   const postActor = embed.record.author?.handle;
-  const postRKey = embed.record.uri.split('/').pop();
+  const postRKey = embed.record.uri?.split('/').pop();
   const postHref = postActor && postRKey ? `/profile/${postActor}/post/${postRKey}` : '#';
   const authorHref = postActor ? `/profile/${postActor}` : '#';
 
