@@ -1,11 +1,12 @@
 import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { Image } from 'expo-image';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, radius, fontSize, fontWeight } from '@/constants/tokens';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { PressableLink } from '@/components/ui/PressableLink';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
@@ -84,15 +85,11 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   return (
     <View style={[styles.container, { backgroundColor: bgColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Account header */}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Account"
+      <PressableLink
+        href={Platform.OS === 'web' && activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/(tabs)/profile'}
         onPress={() => router.push('/(tabs)/profile' as any)}
-        style={({ pressed }) => [
-          styles.accountSection,
-          { borderBottomColor: borderColor },
-          pressed && { opacity: 0.7 },
-        ]}
+        accessibilityLabel="Account"
+        style={[styles.accountSection, { borderBottomColor: borderColor }]}
       >
         <View style={[styles.avatar, { backgroundColor: accentColor }]}>
           {activeAccount?.avatar ? (
@@ -113,24 +110,22 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
             </Text>
           ) : null}
         </View>
-      </Pressable>
+      </PressableLink>
 
       {/* Navigation */}
       <View style={styles.nav}>
         {navigationItems.map((item) => {
           const active = isActiveRoute(item);
           return (
-            <Pressable
+            <PressableLink
               key={item.id}
+              href={item.route}
               accessibilityLabel={item.label}
-              accessibilityRole="button"
               accessibilityState={{ selected: active }}
               onPress={() => handleNavigate(item)}
-              style={({ pressed }) => [
+              style={[
                 styles.navItem,
-                {
-                  backgroundColor: active ? activeBg : pressed ? activeBg : 'transparent',
-                },
+                { backgroundColor: active ? activeBg : 'transparent' },
               ]}
             >
               <IconSymbol
@@ -156,25 +151,23 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
                   </Text>
                 </View>
               ) : null}
-            </Pressable>
+            </PressableLink>
           );
         })}
       </View>
 
       {/* Settings at the bottom */}
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
-        <Pressable
+        <PressableLink
+          href="/(tabs)/settings"
           accessibilityLabel="Settings"
-          accessibilityRole="button"
           onPress={() => {
             router.push('/(tabs)/settings' as any);
             onNavigate?.();
           }}
-          style={({ pressed }) => [
+          style={[
             styles.navItem,
-            {
-              backgroundColor: pathname.includes('/settings') ? activeBg : pressed ? activeBg : 'transparent',
-            },
+            { backgroundColor: pathname.includes('/settings') ? activeBg : 'transparent' },
           ]}
         >
           <IconSymbol
@@ -193,7 +186,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
           >
             Settings
           </Text>
-        </Pressable>
+        </PressableLink>
       </View>
     </View>
   );
