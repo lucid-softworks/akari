@@ -478,7 +478,7 @@ export default function ConversationScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
-      {isLargeScreen && conversation ? (
+      {Platform.OS === 'web' && conversation ? (
         <TouchableOpacity
           style={[styles.threadHeader, { borderBottomColor: borderColor }]}
           onPress={() => navigateToProfile({ actor: decodeURIComponent(handle) })}
