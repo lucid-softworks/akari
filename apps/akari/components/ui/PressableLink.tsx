@@ -42,15 +42,16 @@ export function PressableLink({
   }, [href, onPress]);
 
   if (Platform.OS === 'web') {
-    const flatStyle = typeof style === 'function'
+    const resolved = typeof style === 'function'
       ? style({ pressed: false })
-      : StyleSheet.flatten(style);
+      : style;
+    const flatStyle = { ...StyleSheet.flatten(resolved), textDecorationLine: 'none' as const };
 
     return (
       <Link href={href as any} asChild>
         <Pressable
           onPress={handlePress}
-          style={[flatStyle, { textDecorationLine: 'none' }]}
+          style={flatStyle}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole={accessibilityRole ?? 'link'}
           accessibilityState={accessibilityState}
