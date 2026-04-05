@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -26,6 +27,7 @@ type GifEmbedProps = {
 
 export function GifEmbed({ embed }: GifEmbedProps) {
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
+  const [aspectRatio, setAspectRatio] = useState(1);
 
   return (
     <TouchableOpacity
@@ -35,9 +37,14 @@ export function GifEmbed({ embed }: GifEmbedProps) {
       <View style={[styles.container, { borderColor }]}>
         <Image
           source={{ uri: embed.external.uri }}
-          style={styles.gif}
-          contentFit="cover"
+          style={[styles.gif, { aspectRatio }]}
+          contentFit="contain"
           autoplay
+          onLoad={(e) => {
+            if (e.source.width && e.source.height) {
+              setAspectRatio(e.source.width / e.source.height);
+            }
+          }}
         />
         <View style={styles.badge}>
           <ThemedText style={styles.badgeText}>GIF</ThemedText>
@@ -57,7 +64,6 @@ const styles = StyleSheet.create({
   },
   gif: {
     width: '100%',
-    aspectRatio: 16 / 9,
     backgroundColor: '#000',
   },
   badge: {
