@@ -1,7 +1,7 @@
 import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, radius, fontSize, fontWeight } from '@/constants/tokens';
@@ -63,9 +63,9 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
         badge: unreadMessagesCount,
       },
       { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: Platform.OS === 'web' && activeAccount?.handle ? `/(tabs)/profile/${activeAccount.handle}` : '/(tabs)/profile' },
     ],
-    [unreadMessagesCount, unreadNotificationsCount],
+    [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
 
   const activeAccount = currentAccount ?? accounts[0];
