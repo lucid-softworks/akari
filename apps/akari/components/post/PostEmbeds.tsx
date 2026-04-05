@@ -200,6 +200,19 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         </ThemedView>
       )}
 
+      {embedClassification === 'recordWithMedia' && embedData?.media && (() => {
+        const media = embedData.media as any;
+        const mediaUri = media?.external?.uri || '';
+        const isMediaExt = media?.$type?.includes('app.bsky.embed.external');
+        if (isMediaExt && (mediaUri.includes('tenor.com') || mediaUri.includes('media.tenor.com') || mediaUri.endsWith('.gif'))) {
+          return <GifEmbed embed={media} />;
+        }
+        if (isMediaExt) {
+          return <ExternalEmbed embed={media as ExternalEmbedData} />;
+        }
+        return null;
+      })()}
+
       {(embedClassification === 'record' || embedClassification === 'recordWithMedia') && embedData?.record && (
         <RecordEmbed embed={embedData as any} />
       )}
