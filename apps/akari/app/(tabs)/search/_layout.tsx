@@ -3,12 +3,12 @@ import { Stack } from 'expo-router';
 import { useResponsive } from '@/hooks/useResponsive';
 
 export default function SearchLayout() {
-  const { isLargeScreen } = useResponsive();
+  const { isLargeNative } = useResponsive();
 
   return (
     <Stack
       screenOptions={{
-        headerShown: isLargeScreen,
+        headerShown: isLargeNative,
         headerBackVisible: true,
         headerBackButtonDisplayMode: 'minimal',
         gestureEnabled: true,
@@ -25,7 +25,7 @@ export default function SearchLayout() {
         name="user-profile/[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: isLargeScreen,
+          headerShown: isLargeNative,
           headerBackVisible: true,
         }}
       />

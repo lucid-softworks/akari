@@ -1,4 +1,4 @@
-import { useWindowDimensions } from 'react-native';
+import { Platform, useWindowDimensions } from 'react-native';
 
 export const BREAKPOINTS = {
   mobile: 768,
@@ -13,6 +13,8 @@ export function useResponsive() {
   const isTablet = width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet;
   const isDesktop = width >= BREAKPOINTS.tablet;
   const isLargeScreen = width >= BREAKPOINTS.mobile;
+  /** Large screen on a native device (iPad), not web */
+  const isLargeNative = isLargeScreen && Platform.OS !== 'web';
 
   return {
     width,
@@ -21,6 +23,7 @@ export function useResponsive() {
     isTablet,
     isDesktop,
     isLargeScreen,
+    isLargeNative,
     breakpoints: BREAKPOINTS,
   };
 }
