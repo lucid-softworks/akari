@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { Platform, Pressable, type PressableProps } from 'react-native';
+import { Platform, Pressable, StyleSheet, type PressableProps } from 'react-native';
 
 type PressableLinkProps = {
   href: string;
@@ -27,10 +27,14 @@ export function PressableLink({
   accessibilityState,
 }: PressableLinkProps) {
   if (Platform.OS === 'web') {
+    const flatStyle = typeof style === 'function'
+      ? style({ pressed: false })
+      : StyleSheet.flatten(style);
+
     return (
       <Link href={href as any} asChild>
         <Pressable
-          style={style}
+          style={flatStyle}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole={accessibilityRole ?? 'link'}
           accessibilityState={accessibilityState}
