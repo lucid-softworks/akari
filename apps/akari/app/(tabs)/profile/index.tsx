@@ -1,7 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import { router } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -81,13 +80,6 @@ export default function ProfileScreen() {
   const tabsComponent = useMemo(() => (
     <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
   ), [activeTab, handleTabChange, currentAccount?.handle]);
-
-  // On web, redirect to /profile/[handle] for a clean URL
-  useEffect(() => {
-    if (Platform.OS === 'web' && currentAccount?.handle) {
-      router.replace(`/profile/${currentAccount.handle}` as any);
-    }
-  }, [currentAccount?.handle]);
 
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {
