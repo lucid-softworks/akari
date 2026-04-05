@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import { useResponsive } from '@/hooks/useResponsive';
 
 export default function MessagesLayout() {
-  const { isLargeNative } = useResponsive();
+  const { isLargeNative, isLargeScreen } = useResponsive();
 
   return (
     <Stack
@@ -16,7 +16,7 @@ export default function MessagesLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="pending" />
-      <Stack.Screen name="[handle]" />
+      <Stack.Screen name="[handle]" options={{ headerShown: isLargeScreen }} />
       <Stack.Screen
         name="user-profile/[handle]"
         options={{
