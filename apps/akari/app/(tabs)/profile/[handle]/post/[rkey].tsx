@@ -7,7 +7,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 export default function PostDetailScreen() {
   const { t } = useTranslation();
   const { handle, rkey } = useLocalSearchParams<{ handle: string; rkey: string }>();
-  const { isLargeScreen } = useResponsive();
+  const { isLargeNative } = useResponsive();
 
   return (
     <>
@@ -15,7 +15,7 @@ export default function PostDetailScreen() {
         options={{
           title: t('navigation.post'),
           headerBackButtonDisplayMode: 'minimal',
-          headerShown: isLargeScreen,
+          headerShown: isLargeNative,
           headerBackVisible: true,
         }}
       />
