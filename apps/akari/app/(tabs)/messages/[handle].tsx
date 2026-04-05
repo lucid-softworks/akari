@@ -20,6 +20,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
@@ -240,6 +241,7 @@ export default function ConversationScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
+  const { isLargeScreen } = useResponsive();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -476,6 +478,23 @@ export default function ConversationScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
+      {isLargeScreen && conversation ? (
+        <TouchableOpacity
+          style={[styles.threadHeader, { borderBottomColor: borderColor }]}
+          onPress={() => navigateToProfile({ actor: decodeURIComponent(handle) })}
+          activeOpacity={activeOpacity.default}
+        >
+          {conversation.avatar ? (
+            <Image source={{ uri: conversation.avatar }} style={styles.threadHeaderAvatar} contentFit="cover" />
+          ) : null}
+          <View>
+            <ThemedText style={styles.threadHeaderName}>
+              {conversation.displayName || decodeURIComponent(handle)}
+            </ThemedText>
+            <ThemedText style={styles.threadHeaderHandle}>@{decodeURIComponent(handle)}</ThemedText>
+          </View>
+        </TouchableOpacity>
+      ) : null}
       {messagesLoading ? (
         <View style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
@@ -503,6 +522,27 @@ export default function ConversationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  threadHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  threadHeaderAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
+  threadHeaderName: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+  },
+  threadHeaderHandle: {
+    fontSize: fontSize.sm,
+    opacity: opacity.secondary,
   },
   messagesContent: {
     paddingVertical: spacing.lg,
