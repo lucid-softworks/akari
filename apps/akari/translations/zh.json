@@ -62,7 +62,9 @@
       "bookmarks": "书签",
       "live": "居住",
       "watchNow": "立即观看",
-      "openProfile": "开放个人资料"
+      "openProfile": "开放个人资料",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",

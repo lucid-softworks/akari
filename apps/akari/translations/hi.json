@@ -62,7 +62,9 @@
       "viewPendingChats": "लंबित चैट्स देखें",
       "live": "लाइव",
       "watchNow": "अभी देखें",
-      "openProfile": "प्रोफ़ाइल खोलें"
+      "openProfile": "प्रोफ़ाइल खोलें",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",

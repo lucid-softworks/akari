@@ -62,7 +62,9 @@
       "viewPendingChats": "Gweld sgyrsiau ar y gweill",
       "live": "Byw",
       "watchNow": "Gwyliwch nawr",
-      "openProfile": "Agor proffil"
+      "openProfile": "Agor proffil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",

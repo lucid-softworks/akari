@@ -62,7 +62,9 @@
       "bookmarks": "نشانه ها",
       "live": "زنده",
       "watchNow": "اکنون تماشا کنید",
-      "openProfile": "نمایه باز"
+      "openProfile": "نمایه باز",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",

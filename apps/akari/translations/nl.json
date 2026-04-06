@@ -62,7 +62,9 @@
       "viewPendingChats": "Openstaande chats bekijken",
       "live": "LIVE",
       "watchNow": "Bekijk nu",
-      "openProfile": "Profiel openen"
+      "openProfile": "Profiel openen",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",

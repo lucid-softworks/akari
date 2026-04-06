@@ -6,6 +6,8 @@
     "common": {
       "loading": "Loading...",
       "error": "Error",
+      "home": "Home",
+      "profile": "Profile",
       "search": "Search",
       "messages": "Messages",
       "conversations": "Conversations",

@@ -62,7 +62,9 @@
       "viewPendingChats": "보류 중인 채팅 보기",
       "live": "라이브",
       "watchNow": "지금 시청하기",
-      "openProfile": "프로필 열기"
+      "openProfile": "프로필 열기",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",

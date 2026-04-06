@@ -62,7 +62,9 @@
       "bookmarks": "Kirjanmerkit",
       "live": "ELÄÄ",
       "watchNow": "Katsella nyt",
-      "openProfile": "Avoin profiili"
+      "openProfile": "Avoin profiili",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Täytä kaikki kentät",

@@ -62,7 +62,9 @@
       "bookmarks": "Отметки",
       "live": "На живо",
       "watchNow": "Гледайте сега",
-      "openProfile": "Отворен профил"
+      "openProfile": "Отворен профил",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Моля, попълнете всички полета",

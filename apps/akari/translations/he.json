@@ -62,7 +62,9 @@
       "bookmarks": "סימניות",
       "live": "לִחיוֹת",
       "watchNow": "צפה עכשיו",
-      "openProfile": "פתח פרופיל"
+      "openProfile": "פתח פרופיל",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",

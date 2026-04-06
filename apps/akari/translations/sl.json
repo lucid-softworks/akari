@@ -62,7 +62,9 @@
       "bookmarks": "Zaznamki",
       "live": "V živo",
       "watchNow": "Pazi zdaj",
-      "openProfile": "Odprt profil"
+      "openProfile": "Odprt profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Prosimo, izpolnite vsa polja",

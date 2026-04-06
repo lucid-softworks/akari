@@ -62,7 +62,9 @@
       "bookmarks": "Könyvjelzők",
       "live": "ÉLŐ",
       "watchNow": "Nézd meg most",
-      "openProfile": "Nyílt profil"
+      "openProfile": "Nyílt profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",

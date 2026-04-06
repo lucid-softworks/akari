@@ -62,7 +62,9 @@
       "viewPendingChats": "ดูแชทที่รอดำเนินการ",
       "live": "ไลฟ์สด",
       "watchNow": "ดูตอนนี้",
-      "openProfile": "เปิดโปรไฟล์"
+      "openProfile": "เปิดโปรไฟล์",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",

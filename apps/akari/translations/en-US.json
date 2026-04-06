@@ -62,7 +62,9 @@
       "bookmarks": "Bookmarks",
       "live": "LIVE",
       "watchNow": "Watch now",
-      "openProfile": "Open profile"
+      "openProfile": "Open profile",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",

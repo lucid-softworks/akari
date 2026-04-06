@@ -62,7 +62,9 @@
       "viewPendingChats": "Lihat obrolan tertunda",
       "live": "Langsung",
       "watchNow": "Tonton sekarang",
-      "openProfile": "Buka profil"
+      "openProfile": "Buka profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",

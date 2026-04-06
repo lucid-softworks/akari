@@ -62,7 +62,9 @@
       "viewPendingChats": "Vedi le chat in sospeso",
       "live": "IN DIRETTA",
       "watchNow": "Guarda ora",
-      "openProfile": "Apri profilo"
+      "openProfile": "Apri profilo",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Compila tutti i campi",

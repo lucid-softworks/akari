@@ -62,7 +62,9 @@
       "viewPendingChats": "Zobacz oczekujące czaty",
       "live": "NA ŻYWO",
       "watchNow": "Obejrzyj teraz",
-      "openProfile": "Otwórz profil"
+      "openProfile": "Otwórz profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",

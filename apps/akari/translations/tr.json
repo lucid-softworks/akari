@@ -62,7 +62,9 @@
       "viewPendingChats": "Bekleyen sohbetleri görüntüle",
       "live": "CANLI",
       "watchNow": "Şimdi izle",
-      "openProfile": "Profili aç"
+      "openProfile": "Profili aç",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",

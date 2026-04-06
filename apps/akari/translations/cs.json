@@ -62,7 +62,9 @@
       "bookmarks": "Záložky",
       "live": "ŽÍT",
       "watchNow": "Sledujte hned",
-      "openProfile": "Otevřený profil"
+      "openProfile": "Otevřený profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všechna pole",

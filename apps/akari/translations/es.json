@@ -62,7 +62,9 @@
       "viewPendingChats": "Ver chats pendientes",
       "live": "EN VIVO",
       "watchNow": "Ver ahora",
-      "openProfile": "Abrir perfil"
+      "openProfile": "Abrir perfil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Por favor completa todos los campos",

@@ -62,7 +62,9 @@
       "viewPendingChats": "Ver conversas pendentes",
       "live": "AO VIVO",
       "watchNow": "Assistir agora",
-      "openProfile": "Abrir perfil"
+      "openProfile": "Abrir perfil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",

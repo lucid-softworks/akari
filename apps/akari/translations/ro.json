@@ -62,7 +62,9 @@
       "bookmarks": "Marcaje",
       "live": "TRĂI",
       "watchNow": "Urmăriți acum",
-      "openProfile": "Profil deschis"
+      "openProfile": "Profil deschis",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",

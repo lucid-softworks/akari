@@ -62,7 +62,9 @@
       "viewPendingChats": "Voir les discussions en attente",
       "live": "EN DIRECT",
       "watchNow": "Regarder maintenant",
-      "openProfile": "Ouvrir le profil"
+      "openProfile": "Ouvrir le profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",

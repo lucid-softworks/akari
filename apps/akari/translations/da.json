@@ -62,7 +62,9 @@
       "bookmarks": "Bogmærker",
       "live": "Direkte",
       "watchNow": "Se nu",
-      "openProfile": "Åben profil"
+      "openProfile": "Åben profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Udfyld venligst alle felter",
