@@ -53,12 +53,8 @@ export const PostTranslation = React.memo(function PostTranslation({ text, visib
   }, [visible, text, targetLanguage]);
 
   const handleShowOriginal = useCallback(() => {
-    setTranslatedText(null);
-    setDetectedLanguage(null);
-    setError(false);
-    translationMutation.reset();
     onHide();
-  }, [onHide, translationMutation]);
+  }, [onHide]);
 
   if (!visible) return null;
 
