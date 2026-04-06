@@ -15,12 +15,21 @@
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleAllowMixedLocalizations": true,
         "ExpoLocalization_supportsRTL": true,
-        "UIBackgroundModes": ["processing"],
-        "CFBundleLocalizations": ["en", "ja", "ar", "fr"]
+        "UIBackgroundModes": [
+          "processing"
+        ],
+        "CFBundleLocalizations": [
+          "en",
+          "ja",
+          "ar",
+          "fr"
+        ]
       },
       "entitlements": {
         "aps-environment": "development",
-        "com.apple.developer.associated-domains": ["applinks:*.expo.dev"]
+        "com.apple.developer.associated-domains": [
+          "applinks:*.expo.dev"
+        ]
       },
       "runtimeVersion": "1.0.0"
     },
@@ -31,7 +40,9 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "works.lucidsoft.akari.dev",
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "runtimeVersion": {
         "policy": "appVersion"
       }
@@ -64,8 +75,18 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "ios": ["en", "ja", "ar", "fr"],
-            "android": ["en", "ja", "ar", "fr"]
+            "ios": [
+              "en",
+              "ja",
+              "ar",
+              "fr"
+            ],
+            "android": [
+              "en",
+              "ja",
+              "ar",
+              "fr"
+            ]
           }
         }
       ],
@@ -80,6 +101,14 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them in your posts."
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "lucid-softworks"
         }
       ]
     ],

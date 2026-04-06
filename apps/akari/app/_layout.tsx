@@ -28,6 +28,21 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
 import type { Query } from '@tanstack/query-core';
 import type { CrashProviderProps } from '@/axiom-crash-reporter';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://e8e7d85f238d070cde159aeed82d53b2@o4511173978619904.ingest.de.sentry.io/4511173979930704',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Enable Logs
+  enableLogs: true,
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 const REACT_QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
 const REACT_QUERY_CACHE_BUSTER = 'akari@1';
@@ -129,7 +144,7 @@ function AppProviders({ colorScheme }: ProvidersProps) {
   );
 }
 
-export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -178,4 +193,4 @@ export default function RootLayout() {
       {appTree}
     </CrashProvider>
   );
-}
+});
