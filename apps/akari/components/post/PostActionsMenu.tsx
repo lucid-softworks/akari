@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Modal, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -76,69 +76,83 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     [canTranslate, postText, authorDid, handleCopyText, handleMuteAccount, onTranslatePress, onDismiss, t],
   );
 
+  const menuItems = menuActions.map((item) => (
+    <TouchableOpacity
+      key={item.key}
+      style={styles.menuItem}
+      onPress={item.disabled ? undefined : item.onPress}
+      disabled={item.disabled}
+      accessibilityRole="menuitem"
+      accessibilityState={{ disabled: item.disabled }}
+      activeOpacity={item.disabled ? 1 : activeOpacity.default}
+    >
+      <IconSymbol
+        name={item.icon as any}
+        size={20}
+        color={item.destructive ? semanticColors.danger : iconColor}
+        style={item.disabled ? styles.menuItemDisabled : undefined}
+      />
+      <ThemedText
+        style={[
+          styles.menuItemText,
+          item.destructive && styles.menuItemTextDestructive,
+          item.disabled && styles.menuItemDisabled,
+        ]}
+      >
+        {item.label}
+      </ThemedText>
+    </TouchableOpacity>
+  ));
+
   return (
     <>
-    <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
-      <TouchableWithoutFeedback onPress={onDismiss}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <ThemedView
-              style={[
-                styles.sheet,
-                {
-                  backgroundColor: menuBackgroundColor,
-                  paddingBottom: insets.bottom + spacing.lg,
-                },
-              ]}
-            >
-              {/* Handle bar */}
-              <View style={styles.handleBarContainer}>
-                <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
-              </View>
-
-              <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                {menuActions.map((item) => (
-                  <TouchableOpacity
-                    key={item.key}
-                    style={styles.menuItem}
-                    onPress={item.disabled ? undefined : item.onPress}
-                    disabled={item.disabled}
-                    accessibilityRole="menuitem"
-                    accessibilityState={{ disabled: item.disabled }}
-                    activeOpacity={item.disabled ? 1 : activeOpacity.default}
-                  >
-                    <IconSymbol
-                      name={item.icon as any}
-                      size={20}
-                      color={item.destructive ? semanticColors.danger : item.disabled ? iconColor : iconColor}
-                      style={[styles.menuItemIcon, item.disabled && styles.menuItemDisabled]}
-                    />
-                    <ThemedText
-                      style={[
-                        styles.menuItemText,
-                        item.destructive && styles.menuItemTextDestructive,
-                        item.disabled && styles.menuItemDisabled,
-                      ]}
-                    >
-                      {item.label}
-                    </ThemedText>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              {/* Cancel button */}
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={onDismiss}
-                activeOpacity={activeOpacity.default}
-              >
-                <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
+    {Platform.OS === 'web' ? (
+      visible ? (
+        <>
+          <TouchableWithoutFeedback onPress={onDismiss}>
+            <View style={styles.webBackdrop} />
           </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+          <ThemedView
+            style={[styles.webDropdown, { backgroundColor: menuBackgroundColor, borderColor: handleBarColor }]}
+            {...{ onClick: (e: any) => e.stopPropagation() }}
+          >
+            {menuItems}
+          </ThemedView>
+        </>
+      ) : null
+    ) : (
+      <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
+        <TouchableWithoutFeedback onPress={onDismiss}>
+          <View style={styles.overlay}>
+            <TouchableWithoutFeedback>
+              <ThemedView
+                style={[
+                  styles.sheet,
+                  {
+                    backgroundColor: menuBackgroundColor,
+                    paddingBottom: insets.bottom + spacing.lg,
+                  },
+                ]}
+              >
+                <View style={styles.handleBarContainer}>
+                  <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
+                </View>
+                <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                  {menuItems}
+                </ScrollView>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={onDismiss}
+                  activeOpacity={activeOpacity.default}
+                >
+                  <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
+                </TouchableOpacity>
+              </ThemedView>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    )}
     <ReportSheet
       visible={showReportSheet}
       onDismiss={() => setShowReportSheet(false)}
@@ -199,5 +213,29 @@ const styles = StyleSheet.create({
   cancelText: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
+  },
+  webBackdrop: {
+    position: 'fixed' as any,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9998,
+  },
+  webDropdown: {
+    position: 'absolute' as any,
+    right: 0,
+    bottom: 40,
+    zIndex: 9999,
+    borderWidth: 1,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    minWidth: 200,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
   },
 });

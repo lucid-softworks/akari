@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Platform, Share, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, Pressable, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -104,7 +104,11 @@ export const PostActions = React.memo(function PostActions({
   }, [uri, authorHandle]);
 
   return (
-    <ThemedView style={styles.interactions}>
+    <ThemedView
+      style={styles.interactions}
+      onStartShouldSetResponder={() => true}
+      {...(Platform.OS === 'web' ? { onClick: (e: any) => e.stopPropagation() } : {})}
+    >
       <TouchableOpacity
         style={styles.interactionItem}
         onPress={onReplyPress}
