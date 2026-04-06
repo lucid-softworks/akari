@@ -188,16 +188,20 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
   const renderEmbedImages = () => {
     if (!notification.embed) return null;
 
-    // Extract resolved image URLs from the embed
-    // Record embeds have blob refs, view embeds have CDN URLs
+    const authorDid = notification.authors[0]?.did;
+    if (!authorDid) return null;
+
+    // Extract image URLs - handle both resolved CDN URLs and raw blob refs
     const images: string[] = [];
     const embedImages = notification.embed.images ?? notification.embed.media?.images;
     if (embedImages) {
       for (const img of embedImages) {
         const url = img.thumb || img.fullsize;
-        // Only use URLs that start with http (resolved CDN URLs, not blob refs)
         if (url && url.startsWith('http')) {
           images.push(url);
+        } else if (img.image?.ref?.$link) {
+          // Construct CDN URL from blob ref
+          images.push(`https://cdn.bsky.app/img/feed_thumbnail/plain/${authorDid}/${img.image.ref.$link}@jpeg`);
         }
       }
     }
