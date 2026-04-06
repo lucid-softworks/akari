@@ -190,24 +190,16 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
       return null;
     }
 
-    const images = notification.embed.images.slice(0, 2); // Show max 2 images in notifications
-    const fullWidth = Dimensions.get('window').width;
-    const aspectRatio = 16 / 9; // Default aspect ratio
-    const imageHeight = fullWidth / aspectRatio;
+    const images = notification.embed.images.slice(0, 2);
 
     return (
       <View style={styles.embedImagesContainer}>
         {images.map((image, index) => (
           <Image
             key={index}
-            source={{ uri: image.fullsize }}
-            style={{
-              ...EMBED_IMAGE_STYLE,
-              width: fullWidth,
-              height: imageHeight,
-            }}
+            source={{ uri: image.thumb ?? image.fullsize }}
+            style={styles.embedImage}
             contentFit="cover"
-            placeholder={require('@/assets/images/partial-react-logo.png')}
           />
         ))}
       </View>
@@ -678,6 +670,8 @@ const styles = StyleSheet.create({
   },
   embedImage: {
     ...EMBED_IMAGE_STYLE,
+    width: 60,
+    height: 60,
   },
   timeText: {
     fontSize: fontSize.sm,
