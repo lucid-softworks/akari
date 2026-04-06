@@ -201,15 +201,15 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
       />
 
       <ThemedView style={hasText || hasEmbed ? styles.content : undefined}>
-        {hasText && !isTranslationVisible ? (
-          <RichTextWithFacets text={post.text!} facets={post.facets} style={[styles.text, !hasEmbed && styles.textOnly]} />
+        {hasText ? (
+          <PostTranslation
+            text={post.text!}
+            visible={isTranslationVisible}
+            onHide={handleHideTranslation}
+            facets={post.facets}
+            textStyle={[styles.text, !hasEmbed && styles.textOnly]}
+          />
         ) : null}
-
-        <PostTranslation
-          text={post.text || ''}
-          visible={isTranslationVisible}
-          onHide={handleHideTranslation}
-        />
 
         {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} /> : null}
       </ThemedView>
