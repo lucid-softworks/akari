@@ -65,6 +65,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
+  const [translatedEmbed, setTranslatedEmbed] = useState<{ title?: string; description?: string } | null>(null);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
 
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
@@ -208,10 +209,12 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
             onHide={handleHideTranslation}
             facets={post.facets}
             textStyle={[styles.text, !hasEmbed && styles.textOnly]}
+            embedText={post.embed?.external ? { title: post.embed.external.title, description: post.embed.external.description } : undefined}
+            onEmbedTranslated={setTranslatedEmbed}
           />
         ) : null}
 
-        {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} /> : null}
+        {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} translatedEmbed={translatedEmbed} /> : null}
       </ThemedView>
 
       <Labels labels={post.labels} maxLabels={3} />

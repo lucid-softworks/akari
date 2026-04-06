@@ -8,12 +8,24 @@ import { spacing, fontSize, fontWeight, activeOpacity, semanticColors } from '@/
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
+type EmbedText = {
+  title?: string;
+  description?: string;
+};
+
+type TranslatedEmbed = {
+  title?: string;
+  description?: string;
+};
+
 type PostTranslationProps = {
   text: string;
   visible: boolean;
   onHide: () => void;
   facets?: any[];
   textStyle?: TextStyle | TextStyle[];
+  embedText?: EmbedText;
+  onEmbedTranslated?: (translated: TranslatedEmbed | null) => void;
 };
 
 const LANGUAGE_NAMES: Record<string, string> = {
@@ -33,6 +45,8 @@ export const PostTranslation = React.memo(function PostTranslation({
   onHide,
   facets,
   textStyle,
+  embedText,
+  onEmbedTranslated,
 }: PostTranslationProps) {
   const { currentLocale } = useTranslation();
   const translationMutation = usePostTranslation();
@@ -45,24 +59,44 @@ export const PostTranslation = React.memo(function PostTranslation({
 
   const targetLanguage = currentLocale?.split('-')[0] || 'en';
 
+  const SEPARATOR = '\n---AKARI_SPLIT---\n';
+
   useEffect(() => {
     if (!visible || !text.trim() || translatedText) return;
 
+    // Build combined text: post text + embed title + embed description
+    const parts = [text.trim()];
+    if (embedText?.title) parts.push(embedText.title);
+    if (embedText?.description) parts.push(embedText.description);
+    const combined = parts.join(SEPARATOR);
+
     setError(false);
     translationMutation.mutateAsync({
-      text,
+      text: combined,
       targetLanguage,
     }).then((result) => {
-      setTranslatedText(result.translatedText);
+      const translated = result.translatedText;
+      const splitParts = translated.split(SEPARATOR).map((s: string) => s.trim());
+
+      setTranslatedText(splitParts[0]);
       setDetectedLanguage(result.detectedLanguage ?? null);
+
+      // Pass translated embed text back
+      if (onEmbedTranslated && parts.length > 1) {
+        onEmbedTranslated({
+          title: embedText?.title ? splitParts[1] : undefined,
+          description: embedText?.description ? splitParts[embedText?.title ? 2 : 1] : undefined,
+        });
+      }
     }).catch(() => {
       setError(true);
     });
   }, [visible, text, targetLanguage]);
 
   const handleShowOriginal = useCallback(() => {
+    onEmbedTranslated?.(null);
     onHide();
-  }, [onHide]);
+  }, [onHide, onEmbedTranslated]);
 
   const isTranslated = visible && translatedText && !error;
 

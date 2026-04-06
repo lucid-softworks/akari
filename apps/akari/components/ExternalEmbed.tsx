@@ -31,7 +31,7 @@ type ExternalEmbedProps = {
  * Component to display external link embeds (non-YouTube)
  * Shows thumbnail, title, description, and opens the link when tapped
  */
-export function ExternalEmbed({ embed }: ExternalEmbedProps) {
+export function ExternalEmbed({ embed, translatedTitle, translatedDescription }: ExternalEmbedProps & { translatedTitle?: string; translatedDescription?: string }) {
   const { t } = useTranslation();
   const textColor = useThemeColor(
     {
@@ -88,10 +88,10 @@ export function ExternalEmbed({ embed }: ExternalEmbedProps) {
 
           <ThemedView style={styles.textContent}>
             <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
-              {embed.external.title}
+              {translatedTitle ?? embed.external.title}
             </ThemedText>
             <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
-              {embed.external.description}
+              {translatedDescription ?? embed.external.description}
             </ThemedText>
             <ThemedText style={[styles.domain, { color: secondaryTextColor }]}>{domain}</ThemedText>
           </ThemedView>

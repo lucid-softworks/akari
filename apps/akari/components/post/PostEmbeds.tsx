@@ -17,6 +17,7 @@ type PostEmbedsProps = {
   postId: string;
   embed?: BlueskyEmbed;
   embeds?: BlueskyEmbed[];
+  translatedEmbed?: { title?: string; description?: string } | null;
 };
 
 type ExternalEmbedData = {
@@ -34,7 +35,7 @@ type ExternalEmbedData = {
   };
 };
 
-export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds }: PostEmbedsProps) {
+export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds, translatedEmbed }: PostEmbedsProps) {
   const { t } = useTranslation();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
@@ -171,7 +172,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       )}
 
       {embedClassification === 'external' && embedData && (
-        <ExternalEmbed embed={embedData as ExternalEmbedData} />
+        <ExternalEmbed embed={embedData as ExternalEmbedData} translatedTitle={translatedEmbed?.title} translatedDescription={translatedEmbed?.description} />
       )}
 
       {imageData.urls.length > 0 && (
