@@ -51,6 +51,7 @@ export const PostTranslation = React.memo(function PostTranslation({
   const { currentLocale } = useTranslation();
   const translationMutation = usePostTranslation();
   const [translatedText, setTranslatedText] = useState<string | null>(null);
+  const [translatedFacets, setTranslatedFacets] = useState<any[] | undefined>(undefined);
   const [detectedLanguage, setDetectedLanguage] = useState<string | null>(null);
   const [error, setError] = useState(false);
 
@@ -64,9 +65,37 @@ export const PostTranslation = React.memo(function PostTranslation({
 
     setError(false);
 
+    // Extract links from facets and replace with placeholders before translating
+    // so the translation API doesn't mangle URLs
+    type LinkPlaceholder = { placeholder: string; uri: string; features: any[] };
+    const placeholders: LinkPlaceholder[] = [];
+    let textToTranslate = text.trim();
+
+    if (facets) {
+      // Process facets in reverse order so byte offsets stay valid
+      const sortedFacets = [...facets].sort((a, b) => b.index.byteStart - a.index.byteStart);
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      const bytes = encoder.encode(textToTranslate);
+
+      for (const facet of sortedFacets) {
+        const linkFeature = facet.features.find((f: any) =>
+          f.$type === 'app.bsky.richtext.facet#link' && f.uri
+        );
+        if (linkFeature) {
+          const placeholder = `[LINK${placeholders.length}]`;
+          placeholders.unshift({ placeholder, uri: linkFeature.uri, features: facet.features });
+
+          const before = decoder.decode(bytes.slice(0, facet.index.byteStart));
+          const after = decoder.decode(bytes.slice(facet.index.byteEnd));
+          textToTranslate = before + placeholder + after;
+        }
+      }
+    }
+
     // Translate post text
     const postTranslation = translationMutation.mutateAsync({
-      text: text.trim(),
+      text: textToTranslate,
       targetLanguage,
     });
 
@@ -82,7 +111,37 @@ export const PostTranslation = React.memo(function PostTranslation({
       : Promise.resolve(null);
 
     Promise.all([postTranslation, embedTranslation]).then(([postResult, embedResult]) => {
-      setTranslatedText(postResult.translatedText);
+      // Swap placeholders back with original link text and rebuild facets
+      let translated = postResult.translatedText;
+      const newFacets: any[] = [];
+      const enc = new TextEncoder();
+
+      for (const { placeholder, uri, features } of placeholders) {
+        const idx = translated.indexOf(placeholder);
+        if (idx === -1) continue;
+
+        // Calculate byte offsets in the translated text
+        const beforeBytes = enc.encode(translated.slice(0, idx));
+        const placeholderBytes = enc.encode(placeholder);
+        const byteStart = beforeBytes.length;
+        const byteEnd = byteStart + placeholderBytes.length;
+
+        // Replace placeholder with the original URL text
+        const displayUrl = uri.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        translated = translated.slice(0, idx) + displayUrl + translated.slice(idx + placeholder.length);
+
+        // Recalculate byte offsets after replacement
+        const newBeforeBytes = enc.encode(translated.slice(0, idx));
+        const newLinkBytes = enc.encode(displayUrl);
+
+        newFacets.push({
+          index: { byteStart: newBeforeBytes.length, byteEnd: newBeforeBytes.length + newLinkBytes.length },
+          features,
+        });
+      }
+
+      setTranslatedText(translated);
+      setTranslatedFacets(newFacets.length > 0 ? newFacets : undefined);
       setDetectedLanguage(postResult.detectedLanguage ?? null);
 
       if (onEmbedTranslated && embedResult?.translatedText) {
@@ -123,7 +182,7 @@ export const PostTranslation = React.memo(function PostTranslation({
             <ThemedText style={[styles.showOriginal, { color: linkColor }]}>Show original</ThemedText>
           </TouchableOpacity>
         </View>
-        <RichTextWithFacets text={translatedText} style={textStyle} />
+        <RichTextWithFacets text={translatedText} facets={translatedFacets} style={textStyle} />
       </View>
     );
   }
