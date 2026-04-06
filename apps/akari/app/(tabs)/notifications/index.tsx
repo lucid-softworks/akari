@@ -12,6 +12,7 @@ import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { useQueryClient } from '@tanstack/react-query';
 import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
@@ -392,12 +393,17 @@ export default function NotificationsScreen() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
+  const queryClient = useQueryClient();
+
   // Mark notifications as seen when the screen is viewed
   useEffect(() => {
     if (!token || !currentAccount?.pdsUrl) return;
     const api = new BlueskyApi(currentAccount.pdsUrl);
-    void api.markNotificationsSeen(token);
-  }, [token, currentAccount?.pdsUrl]);
+    void api.markNotificationsSeen(token).then(() => {
+      // Reset the unread count in the cache
+      queryClient.setQueryData(['unreadNotificationsCount'], { count: 0 });
+    });
+  }, [token, currentAccount?.pdsUrl, queryClient]);
 
   const tabs = useMemo(
     () => [

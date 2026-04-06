@@ -1,10 +1,13 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BlueskyEmbed } from '@/bluesky-api';
+import { useQueryClient } from '@tanstack/react-query';
+import { BlueskyApi, BlueskyEmbed } from '@/bluesky-api';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { RecordEmbed } from '@/components/RecordEmbed';
@@ -240,6 +243,9 @@ export default function ConversationScreen() {
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const { t } = useTranslation();
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+  const queryClient = useQueryClient();
   const navigateToProfile = useNavigateToProfile();
   const { isLargeScreen } = useResponsive();
 
@@ -269,6 +275,16 @@ export default function ConversationScreen() {
 
   // Send message mutation
   const sendMessageMutation = useSendMessage();
+
+  // Mark conversation as read when opened
+  useEffect(() => {
+    if (!conversation?.convoId || !token || !currentAccount?.pdsUrl) return;
+    const api = new BlueskyApi(currentAccount.pdsUrl);
+    void api.markConversationRead(token, conversation.convoId).then(() => {
+      void queryClient.invalidateQueries({ queryKey: ['unreadMessagesCount'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    });
+  }, [conversation?.convoId, token, currentAccount?.pdsUrl, queryClient]);
 
   const handleMessageImageLoad = (imageUrl: string, width: number, height: number) => {
     if (width > 0 && height > 0 && Number.isFinite(width) && Number.isFinite(height)) {

@@ -72,6 +72,19 @@ export class BlueskyConversations extends BlueskyApiClient {
    * @param message - The message to send
    * @returns Promise resolving to the sent message data
    */
+  /**
+   * Marks a conversation as read up to the current time.
+   */
+  async updateRead(accessJwt: string, convoId: string): Promise<void> {
+    await this.makeAuthenticatedRequest('/chat.bsky.convo.updateRead', accessJwt, {
+      method: 'POST',
+      headers: {
+        'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+      },
+      body: { convoId },
+    });
+  }
+
   async sendMessage(
     accessJwt: string,
     convoId: string,

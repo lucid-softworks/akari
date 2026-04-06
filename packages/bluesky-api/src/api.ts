@@ -463,6 +463,10 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.conversations.sendMessage(accessJwt, convoId, message);
   }
 
+  async markConversationRead(accessJwt: string, convoId: string): Promise<void> {
+    return this.conversations.updateRead(accessJwt, convoId);
+  }
+
   /**
    * Creates a follow record pointing at the supplied DID.
    * @param accessJwt - Valid session token for the actor initiating the follow.
