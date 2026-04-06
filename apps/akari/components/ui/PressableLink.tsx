@@ -1,4 +1,4 @@
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, type PressableProps } from 'react-native';
 
@@ -21,12 +21,8 @@ export function PressableLink({
   accessibilityRole,
   accessibilityState,
 }: PressableLinkProps) {
-  const handlePress = useCallback(() => {
-    if (Platform.OS === 'web') {
-      // Use router.push with the href directly on web
-      // to ensure proper browser history integration
-      router.push(href as any);
-    } else if (onPress) {
+  const handleNativePress = useCallback(() => {
+    if (onPress) {
       onPress();
     } else {
       router.push(href as any);
@@ -34,39 +30,36 @@ export function PressableLink({
   }, [href, onPress]);
 
   if (Platform.OS === 'web') {
-    const resolved = typeof style === 'function'
-      ? style({ pressed: false })
-      : style;
-    const flatStyle = { ...StyleSheet.flatten(resolved), textDecorationLine: 'none' as const };
+    const handleClick = useCallback((e: React.MouseEvent) => {
+      if (e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+      router.push(href as any);
+    }, [href]);
 
+    // Use display:contents on the <a> so it doesn't affect layout.
+    // The Pressable inside handles all RN styling.
     return (
-      <Link
-        href={href as any}
-        asChild
-        onPress={(e) => {
-          // Prevent Link's default navigation to avoid ?handle= params
-          // Allow cmd+click / ctrl+click for new tab
-          const nativeEvent = (e as any).nativeEvent ?? e;
-          if (nativeEvent?.metaKey || nativeEvent?.ctrlKey) return;
-          e.preventDefault();
-          handlePress();
-        }}
+      <a
+        href={href}
+        onClick={handleClick as any}
+        style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
+        aria-label={accessibilityLabel}
       >
         <Pressable
-          style={flatStyle}
-          accessibilityLabel={accessibilityLabel}
+          style={style}
           accessibilityRole={accessibilityRole ?? 'link'}
           accessibilityState={accessibilityState}
         >
           {children}
         </Pressable>
-      </Link>
+      </a>
     );
   }
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={handleNativePress}
       style={style}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole={accessibilityRole ?? 'button'}
