@@ -138,17 +138,43 @@ export function useLikePost() {
         }
       }
 
-      // Update all post thread queries
-      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+      // Update all post thread queries (main post + replies)
+      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView; replies?: any[] } }>({ queryKey: ['postThread'] });
       for (const [queryKey, data] of threadQueries) {
-        if (data?.thread?.post?.uri === postUri) {
-          queryClient.setQueryData(queryKey, {
-            ...data,
-            thread: {
-              ...data.thread,
-              post: updatePostLikeStatus(data.thread.post),
-            },
-          });
+        if (!data?.thread) continue;
+
+        let updated = false;
+        let newThread = data.thread;
+
+        // Check main post
+        if (newThread.post?.uri === postUri) {
+          newThread = { ...newThread, post: updatePostLikeStatus(newThread.post) };
+          updated = true;
+        }
+
+        // Check replies
+        if (newThread.replies) {
+          const updateReplies = (replies: any[]): any[] =>
+            replies.map((reply: any) => {
+              if (!reply?.post) return reply;
+              const newReply = reply.post.uri === postUri
+                ? { ...reply, post: updatePostLikeStatus(reply.post) }
+                : reply;
+              if (newReply.replies) {
+                return { ...newReply, replies: updateReplies(newReply.replies) };
+              }
+              return newReply;
+            });
+
+          const newReplies = updateReplies(newThread.replies);
+          if (JSON.stringify(newReplies) !== JSON.stringify(newThread.replies)) {
+            newThread = { ...newThread, replies: newReplies };
+            updated = true;
+          }
+        }
+
+        if (updated) {
+          queryClient.setQueryData(queryKey, { ...data, thread: newThread });
         }
       }
 
@@ -255,17 +281,41 @@ export function useLikePost() {
           }
         }
 
-        // Update all post thread queries
-        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+        // Update all post thread queries (main post + replies)
+        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView; replies?: any[] } }>({ queryKey: ['postThread'] });
         for (const [queryKey, threadData] of threadQueries) {
-          if (threadData?.thread?.post?.uri === variables.postUri) {
-            queryClient.setQueryData(queryKey, {
-              ...threadData,
-              thread: {
-                ...threadData.thread,
-                post: updateLikeUri(threadData.thread.post),
-              },
-            });
+          if (!threadData?.thread) continue;
+
+          let updated = false;
+          let newThread = threadData.thread;
+
+          if (newThread.post?.uri === variables.postUri) {
+            newThread = { ...newThread, post: updateLikeUri(newThread.post) };
+            updated = true;
+          }
+
+          if (newThread.replies) {
+            const updateReplies = (replies: any[]): any[] =>
+              replies.map((reply: any) => {
+                if (!reply?.post) return reply;
+                const newReply = reply.post.uri === variables.postUri
+                  ? { ...reply, post: updateLikeUri(reply.post) }
+                  : reply;
+                if (newReply.replies) {
+                  return { ...newReply, replies: updateReplies(newReply.replies) };
+                }
+                return newReply;
+              });
+
+            const newReplies = updateReplies(newThread.replies);
+            if (JSON.stringify(newReplies) !== JSON.stringify(newThread.replies)) {
+              newThread = { ...newThread, replies: newReplies };
+              updated = true;
+            }
+          }
+
+          if (updated) {
+            queryClient.setQueryData(queryKey, { ...threadData, thread: newThread });
           }
         }
       }
