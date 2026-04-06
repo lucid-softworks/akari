@@ -66,9 +66,11 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
   const [translatedEmbed, setTranslatedEmbed] = useState<{ title?: string; description?: string } | null>(null);
+  const [isCardHovered, setIsCardHovered] = useState(false);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
 
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
+  const hoverBg = useThemeColor({}, 'hover');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
   const authorName = post.author.displayName || post.author.handle;
@@ -174,13 +176,13 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
     <>
       {/* Reply Context */}
       {post.replyTo && (
-        <ThemedView style={styles.replyContext}>
+        <View style={styles.replyContext}>
           <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
           <ThemedText style={styles.replyText}>{t('ui.replyingTo', { handle: post.replyTo.author.handle })}</ThemedText>
           <ThemedText style={styles.replyPreview} numberOfLines={1}>
             {post.replyTo.text}
           </ThemedText>
-        </ThemedView>
+        </View>
       )}
 
       {/* Live Preview (web only) */}
@@ -201,7 +203,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <ThemedView style={hasText || hasEmbed ? styles.content : undefined}>
+      <View style={hasText || hasEmbed ? styles.content : undefined}>
         {hasText ? (
           <PostTranslation
             text={post.text!}
@@ -215,7 +217,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
         ) : null}
 
         {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} translatedEmbed={translatedEmbed} /> : null}
-      </ThemedView>
+      </View>
 
       <Labels labels={post.labels} maxLabels={3} />
     </>
@@ -252,7 +254,11 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
   return (
     <>
       {onPress || href ? (
-        <View style={[styles.container, { borderBottomColor: borderColor }]}>
+        <View
+          style={[styles.container, { borderBottomColor: borderColor }, isCardHovered && { backgroundColor: hoverBg }]}
+          onPointerEnter={() => setIsCardHovered(true)}
+          onPointerLeave={() => setIsCardHovered(false)}
+        >
           <PressableLink
             href={href ?? '#'}
             onPress={onPress}

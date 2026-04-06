@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -194,7 +194,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       )}
 
       {imageData.urls.length > 0 && (
-        <ThemedView style={styles.imagesContainer}>
+        <View style={styles.imagesContainer}>
           {imageData.urls.map((imageUrl: string, index: number) => {
             const dimensions = imageDimensions[imageUrl];
             const screenWidth = 400;
@@ -216,7 +216,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
               </TouchableOpacity>
             );
           })}
-        </ThemedView>
+        </View>
       )}
 
       {/* Render additional embeds (e.g. external link when primary embed is images) */}

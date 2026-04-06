@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, fontSize, opacity, activeOpacity, semanticColors, hitSlop } from '@/constants/tokens';
 import { formatCompactNumber } from '@/utils/formatNumber';
@@ -105,7 +104,7 @@ export const PostActions = React.memo(function PostActions({
   }, [uri, authorHandle]);
 
   return (
-    <ThemedView style={styles.interactions}>
+    <View style={styles.interactions}>
       <TouchableOpacity
         style={styles.interactionItem}
         onPress={onReplyPress}
@@ -178,7 +177,7 @@ export const PostActions = React.memo(function PostActions({
       >
         <IconSymbol name="ellipsis" size={20} color={iconColor} />
       </TouchableOpacity>
-    </ThemedView>
+    </View>
   );
 });
 

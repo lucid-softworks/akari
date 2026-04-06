@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
@@ -54,8 +53,8 @@ export const PostHeader = React.memo(function PostHeader({
   }, [onAvatarHoverChange]);
 
   return (
-    <ThemedView style={styles.header}>
-      <ThemedView style={styles.authorSection}>
+    <View style={styles.header}>
+      <View style={styles.authorSection}>
         <PressableLink
           href={`/profile/${author.handle}`}
           onPress={handleProfilePress}
@@ -82,7 +81,7 @@ export const PostHeader = React.memo(function PostHeader({
             )}
           </View>
         </PressableLink>
-        <ThemedView style={styles.authorInfo}>
+        <View style={styles.authorInfo}>
           <ThemedText style={styles.displayName}>{authorName}</ThemedText>
           <PressableLink
             href={`/profile/${author.handle}`}
@@ -91,12 +90,12 @@ export const PostHeader = React.memo(function PostHeader({
           >
             <ThemedText style={styles.handle}>@{author.handle}</ThemedText>
           </PressableLink>
-        </ThemedView>
-      </ThemedView>
+        </View>
+      </View>
       <View style={styles.headerMeta}>
         <ThemedText style={styles.timestamp}>{createdAt}</ThemedText>
       </View>
-    </ThemedView>
+    </View>
   );
 });
 

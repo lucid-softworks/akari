@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Label } from "@/components/Label";
-import { ThemedView } from "@/components/ThemedView";
 import { spacing } from '@/constants/tokens';
 
 type LabelData = {
@@ -90,14 +89,14 @@ export function Labels({ labels, maxLabels = 5 }: LabelsProps) {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       {displayLabels.map((label, index) => (
         <Label
           key={`${label.uri || label.cid || index}-${index}`}
           {...getLabelProps(label)}
         />
       ))}
-    </ThemedView>
+    </View>
   );
 }
 

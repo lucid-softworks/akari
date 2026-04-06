@@ -42,6 +42,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const textSecondary = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const bgColor = useThemeColor({}, 'background');
   const activeBg = useThemeColor({ light: '#F3F4F6', dark: '#2A2D2E' }, 'background');
+  const hoverBg = useThemeColor({}, 'hover');
   const accentColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'tint');
   const borderColor = useThemeColor({}, 'border');
   const badgeBg = '#FF3B30';
@@ -130,6 +131,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
                 styles.navItem,
                 { backgroundColor: active ? activeBg : 'transparent' },
               ]}
+              hoverStyle={{ backgroundColor: active ? activeBg : hoverBg }}
             >
               <IconSymbol
                 name={item.icon}

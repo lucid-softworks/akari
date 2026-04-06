@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
-import React, { useCallback, useRef } from 'react';
-import { Platform, Pressable, type PressableProps } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Platform, Pressable, StyleSheet, type PressableProps, type ViewStyle } from 'react-native';
 
 type PressableLinkProps = {
   href: string;
   onPress?: () => void;
   style?: PressableProps['style'];
+  hoverStyle?: ViewStyle;
   children: React.ReactNode;
   accessibilityLabel?: string;
   accessibilityRole?: PressableProps['accessibilityRole'];
@@ -16,11 +17,14 @@ export function PressableLink({
   href,
   onPress,
   style,
+  hoverStyle,
   children,
   accessibilityLabel,
   accessibilityRole,
   accessibilityState,
 }: PressableLinkProps) {
+  const [hovered, setHovered] = useState(false);
+
   const handleNativePress = useCallback(() => {
     if (onPress) {
       onPress();
@@ -30,16 +34,33 @@ export function PressableLink({
   }, [href, onPress]);
 
   if (Platform.OS === 'web') {
+    const resolved = typeof style === 'function' ? style({ pressed: false }) : style;
+    const flatStyle = StyleSheet.flatten(resolved);
+
     return (
-      <WebPressableLink
+      <a
         href={href}
-        style={style}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={accessibilityRole}
-        accessibilityState={accessibilityState}
+        ref={(aRef) => {
+          if (!aRef) return;
+          aRef.onclick = (e: MouseEvent) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+            e.preventDefault();
+            router.push(href as any);
+          };
+        }}
+        style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
+        aria-label={accessibilityLabel}
       >
-        {children}
-      </WebPressableLink>
+        <Pressable
+          style={[flatStyle, hovered && hoverStyle]}
+          accessibilityRole={accessibilityRole ?? 'link'}
+          accessibilityState={accessibilityState}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+        >
+          {children}
+        </Pressable>
+      </a>
     );
   }
 
@@ -53,63 +74,5 @@ export function PressableLink({
     >
       {children}
     </Pressable>
-  );
-}
-
-// Web-only component using refs to attach native DOM click handler
-function WebPressableLink({
-  href,
-  style,
-  children,
-  accessibilityLabel,
-  accessibilityRole,
-  accessibilityState,
-}: Omit<PressableLinkProps, 'onPress'>) {
-  const ref = useRef<any>(null);
-
-  const handleRef = useCallback((node: any) => {
-    ref.current = node;
-    if (!node) return;
-
-    // Get the actual DOM element from the React Native Web component
-    const el = node._nativeTag ?? node;
-    if (!el || !el.addEventListener) return;
-
-    // Find or create the wrapping <a> tag
-    const parent = el.parentElement;
-    if (parent?.tagName === 'A') {
-      // Already wrapped, attach click handler
-      parent.addEventListener('click', (e: MouseEvent) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-        e.preventDefault();
-        e.stopPropagation();
-        router.push(href as any);
-      });
-    }
-  }, [href]);
-
-  return (
-    <a
-      href={href}
-      ref={(aRef) => {
-        if (!aRef) return;
-        aRef.onclick = (e: MouseEvent) => {
-          if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-          e.preventDefault();
-          router.push(href as any);
-        };
-      }}
-      style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
-      aria-label={accessibilityLabel}
-    >
-      <Pressable
-        ref={handleRef}
-        style={style}
-        accessibilityRole={accessibilityRole ?? 'link'}
-        accessibilityState={accessibilityState}
-      >
-        {children}
-      </Pressable>
-    </a>
   );
 }
