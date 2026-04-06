@@ -260,7 +260,10 @@
         "to": "में अनुवाद करें",
         "selectLanguage": "भाषा चुनें",
         "noText": "इस पोस्ट में अनुवाद करने के लिए कोई पाठ नहीं है।",
-        "error": "हम इस पोस्ट का अनुवाद नहीं कर पाए। कृपया दोबारा प्रयास करें।"
+        "error": "हम इस पोस्ट का अनुवाद नहीं कर पाए। कृपया दोबारा प्रयास करें।",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "बड़े पाठ बैज दिखाएं",
       "notificationCategories": "सूचना श्रेणियां",
       "contentLanguages": "सामग्री की भाषाएं",
-      "systemLog": "सिस्टम लॉग"
+      "systemLog": "सिस्टम लॉग",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "GIF चुनें",
@@ -389,7 +410,9 @@
       "likes": "{{count}} लाइक",
       "interactive": "इंटरैक्टिव",
       "joined": "शामिल हुए",
-      "thisWeek": "इस सप्ताह"
+      "thisWeek": "इस सप्ताह",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "रेसिपी",
@@ -404,6 +427,23 @@
       "instructions": "निर्देश",
       "tags": "टैग",
       "source": "स्रोत"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

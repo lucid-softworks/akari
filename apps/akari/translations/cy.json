@@ -260,7 +260,10 @@
         "to": "Cyfieithu i",
         "selectLanguage": "Dewis iaith",
         "noText": "Nid oes testun i'w gyfieithu yn y cofnod hwn.",
-        "error": "Methwyd cyfieithu'r cofnod hwn. Ceisiwch eto."
+        "error": "Methwyd cyfieithu'r cofnod hwn. Ceisiwch eto.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "Arddangos bathodynnau testun mwy",
       "notificationCategories": "Categorïau hysbysiadau",
       "contentLanguages": "Ieithoedd cynnwys",
-      "systemLog": "Cofnod system"
+      "systemLog": "Cofnod system",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Dewis GIF",
@@ -389,7 +410,9 @@
       "likes": "{{count}} hoffter",
       "interactive": "Rhyngweithiol",
       "joined": "ymunodd",
-      "thisWeek": "yr wythnos hon"
+      "thisWeek": "yr wythnos hon",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Rysáit",
@@ -404,6 +427,23 @@
       "instructions": "Cyfarwyddiadau",
       "tags": "Tagiau",
       "source": "Ffynhonnell"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

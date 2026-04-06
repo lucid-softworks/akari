@@ -4,6 +4,7 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight } from '@/constants/tokens';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const HEX_REGEX = /^#[0-9A-Fa-f]{6}$/;
 
@@ -23,6 +24,7 @@ type SwatchPickerProps = {
 };
 
 export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, borderColor }: SwatchPickerProps) {
+  const { t } = useTranslation();
   const [showCustom, setShowCustom] = useState(false);
   const [customHex, setCustomHex] = useState('');
   const isDefault = !currentColor;
@@ -37,7 +39,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
         <View style={[styles.swatch, { backgroundColor: defaultColor }]}>
           {isDefault ? <IconSymbol name="checkmark" size={14} color={isLightColor(defaultColor) ? '#000' : '#fff'} /> : null}
         </View>
-        <ThemedText style={styles.swatchLabel}>Default</ThemedText>
+        <ThemedText style={styles.swatchLabel}>{t('settings.default')}</ThemedText>
       </TouchableOpacity>
 
       {presets.map((preset) => {
@@ -70,7 +72,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
             <IconSymbol name="pencil" size={14} color="#999" />
           )}
         </View>
-        <ThemedText style={styles.swatchLabel}>Custom</ThemedText>
+        <ThemedText style={styles.swatchLabel}>{t('settings.custom')}</ThemedText>
       </TouchableOpacity>
 
       {showCustom ? (
@@ -101,7 +103,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
               }
             }}
           >
-            <ThemedText style={styles.customApplyText}>Apply</ThemedText>
+            <ThemedText style={styles.customApplyText}>{t('settings.apply')}</ThemedText>
           </TouchableOpacity>
         </View>
       ) : null}

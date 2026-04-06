@@ -260,7 +260,10 @@
         "to": "Przetłumacz na",
         "selectLanguage": "Wybierz język",
         "noText": "Ten wpis nie zawiera tekstu do przetłumaczenia.",
-        "error": "Nie udało się przetłumaczyć tego wpisu. Spróbuj ponownie."
+        "error": "Nie udało się przetłumaczyć tego wpisu. Spróbuj ponownie.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "Wyświetlaj większe odznaki tekstowe",
       "notificationCategories": "Kategorie powiadomień",
       "contentLanguages": "Języki treści",
-      "systemLog": "Dziennik systemu"
+      "systemLog": "Dziennik systemu",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Wybierz GIF",
@@ -389,7 +410,9 @@
       "likes": "{{count}} polubień",
       "interactive": "Interaktywny",
       "joined": "dołączył",
-      "thisWeek": "w tym tygodniu"
+      "thisWeek": "w tym tygodniu",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Przepis",
@@ -404,6 +427,23 @@
       "instructions": "Instrukcje",
       "tags": "Tagi",
       "source": "Źródło"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

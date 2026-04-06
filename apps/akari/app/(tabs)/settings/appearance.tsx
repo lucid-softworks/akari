@@ -18,11 +18,11 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeConfig, type ColorMode } from '@/hooks/useThemeConfig';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const MODE_OPTIONS: { key: ColorMode; label: string; icon: React.ComponentProps<typeof IconSymbol>['name'] }[] = [
-  { key: 'light', label: 'Light', icon: 'sun.max.fill' },
-  { key: 'auto', label: 'Auto', icon: 'circle.lefthalf.filled' },
-  { key: 'dark', label: 'Dark', icon: 'moon.fill' },
-];
+const MODE_ICONS: Record<ColorMode, React.ComponentProps<typeof IconSymbol>['name']> = {
+  light: 'sun.max.fill',
+  auto: 'circle.lefthalf.filled',
+  dark: 'moon.fill',
+};
 
 export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
@@ -37,13 +37,13 @@ export default function AppearanceSettingsScreen() {
     {
       key: 'light-colors',
       icon: 'sun.max.fill',
-      label: 'Light Mode Colors',
+      label: t('settings.lightModeColors'),
       onPress: () => router.push('/(tabs)/settings/appearance-light'),
     },
     {
       key: 'dark-colors',
       icon: 'moon.fill',
-      label: 'Dark Mode Colors',
+      label: t('settings.darkModeColors'),
       onPress: () => router.push('/(tabs)/settings/appearance-dark'),
     },
   ];
@@ -57,19 +57,20 @@ export default function AppearanceSettingsScreen() {
         keyboardShouldPersistTaps="handled"
       >
         {/* Color Mode */}
-        <SettingsSection isFirst title="Color Mode">
+        <SettingsSection isFirst title={t("settings.colorMode")}>
           <ThemedView style={[styles.modeSelector, { borderColor }]}>
-            {MODE_OPTIONS.map((opt) => {
-              const active = colorMode === opt.key;
+            {(['light', 'auto', 'dark'] as ColorMode[]).map((mode) => {
+              const active = colorMode === mode;
+              const label = mode === 'light' ? t('settings.lightMode') : mode === 'dark' ? t('settings.darkMode') : t('settings.autoMode');
               return (
                 <TouchableOpacity
-                  key={opt.key}
+                  key={mode}
                   style={[styles.modeOption, active && { backgroundColor: accentColor }]}
-                  onPress={() => setColorMode(opt.key)}
+                  onPress={() => setColorMode(mode)}
                 >
-                  <IconSymbol name={opt.icon} size={16} color={active ? '#fff' : borderColor} />
+                  <IconSymbol name={MODE_ICONS[mode]} size={16} color={active ? '#fff' : borderColor} />
                   <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
-                    {opt.label}
+                    {label}
                   </ThemedText>
                 </TouchableOpacity>
               );
@@ -78,7 +79,7 @@ export default function AppearanceSettingsScreen() {
         </SettingsSection>
 
         {/* Accent Color */}
-        <SettingsSection title="Accent Color">
+        <SettingsSection title={t("settings.accentColor")}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <SwatchPicker
               presets={PRESETS.accent}
@@ -91,7 +92,7 @@ export default function AppearanceSettingsScreen() {
         </SettingsSection>
 
         {/* Mode Color Links */}
-        <SettingsSection title="Colors">
+        <SettingsSection title={t("settings.colors")}>
           <ThemedView style={[styles.linkCard, { borderColor }]}>
             {colorRows.map((item, index) => (
               <SettingsRow
@@ -113,7 +114,7 @@ export default function AppearanceSettingsScreen() {
               style={[styles.resetButton, { borderColor }]}
               onPress={resetToDefaults}
             >
-              <ThemedText style={styles.resetText}>Reset to Defaults</ThemedText>
+              <ThemedText style={styles.resetText}>{t('settings.resetToDefaults')}</ThemedText>
             </TouchableOpacity>
           </SettingsSection>
         ) : null}

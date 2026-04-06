@@ -260,7 +260,10 @@
         "to": "לתרגם ל",
         "selectLanguage": "בחר שפה",
         "noText": "לפוסט זה אין טקסט לתרגום.",
-        "error": "לא יכולנו לתרגם את הפוסט הזה. אנא נסה שוב."
+        "error": "לא יכולנו לתרגם את הפוסט הזה. אנא נסה שוב.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +340,25 @@
       "displayLargerTextBadges": "להציג תגי טקסט גדולים יותר",
       "notificationCategories": "קטגוריות הודעה",
       "contentLanguages": "שפות תוכן",
-      "systemLog": "יומן מערכת"
+      "systemLog": "יומן מערכת",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",
@@ -389,7 +410,9 @@
       "likes": "{{count}} לייקים",
       "interactive": "אינטראקטיבי",
       "joined": "הצטרף",
-      "thisWeek": "השבוע"
+      "thisWeek": "השבוע",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "מתכון",
@@ -404,6 +427,23 @@
       "instructions": "הוראות",
       "tags": "תגיות",
       "source": "מקור"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

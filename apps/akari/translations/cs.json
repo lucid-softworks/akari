@@ -260,7 +260,10 @@
         "to": "Přeložit do",
         "selectLanguage": "Vyberte jazyk",
         "noText": "Tento příspěvek nemá žádný text, který by měl přeložit.",
-        "error": "Tento příspěvek jsme nemohli přeložit. Zkuste to prosím znovu."
+        "error": "Tento příspěvek jsme nemohli přeložit. Zkuste to prosím znovu.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +340,25 @@
       "displayLargerTextBadges": "Zobrazit větší textové odznaky",
       "notificationCategories": "Kategorie oznámení",
       "contentLanguages": "Jazyky obsahu",
-      "systemLog": "Protokol systému"
+      "systemLog": "Protokol systému",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Zde se zobrazí uložená příspěvky a vlákna.",
@@ -389,7 +410,9 @@
       "likes": "{{count}} lajků",
       "interactive": "Interaktivní",
       "joined": "připojil se",
-      "thisWeek": "tento týden"
+      "thisWeek": "tento týden",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Recept",
@@ -404,6 +427,23 @@
       "instructions": "Pokyny",
       "tags": "Štítky",
       "source": "Zdroj"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

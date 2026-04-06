@@ -260,7 +260,10 @@
         "to": "Übersetzen in",
         "selectLanguage": "Sprache auswählen",
         "noText": "Dieser Beitrag enthält keinen zu übersetzenden Text.",
-        "error": "Dieser Beitrag konnte nicht übersetzt werden. Bitte versuche es erneut."
+        "error": "Dieser Beitrag konnte nicht übersetzt werden. Bitte versuche es erneut.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "Größere Text-Badges anzeigen",
       "notificationCategories": "Benachrichtigungskategorien",
       "contentLanguages": "Inhaltssprachen",
-      "systemLog": "System-Logs"
+      "systemLog": "System-Logs",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "GIF auswählen",
@@ -389,7 +410,9 @@
       "likes": "{{count}} Likes",
       "interactive": "Interaktiv",
       "joined": "beigetreten",
-      "thisWeek": "diese Woche"
+      "thisWeek": "diese Woche",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Rezept",
@@ -404,6 +427,23 @@
       "instructions": "Anweisungen",
       "tags": "Tags",
       "source": "Quelle"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

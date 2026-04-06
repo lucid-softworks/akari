@@ -25,14 +25,14 @@ type ReportSheetProps = {
   subject: ReportSubject | null;
 };
 
-const REASONS: { key: ReportReasonType; label: string; icon: string }[] = [
-  { key: 'reasonSpam', label: 'Spam', icon: 'xmark.bin' },
-  { key: 'reasonMisleading', label: 'Misleading', icon: 'exclamationmark.triangle' },
-  { key: 'reasonSexual', label: 'Unwanted sexual content', icon: 'eye.slash' },
-  { key: 'reasonRude', label: 'Anti-social behavior', icon: 'hand.raised' },
-  { key: 'reasonViolation', label: 'Illegal or harmful', icon: 'exclamationmark.shield' },
-  { key: 'reasonOther', label: 'Other', icon: 'ellipsis.circle' },
-];
+const REASON_ICONS: Record<ReportReasonType, string> = {
+  reasonSpam: 'xmark.bin',
+  reasonMisleading: 'exclamationmark.triangle',
+  reasonSexual: 'eye.slash',
+  reasonRude: 'hand.raised',
+  reasonViolation: 'exclamationmark.shield',
+  reasonOther: 'ellipsis.circle',
+};
 
 export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
   const { t } = useTranslation();
@@ -42,6 +42,15 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
 
   const [selectedReason, setSelectedReason] = useState<ReportReasonType | null>(null);
   const [details, setDetails] = useState('');
+
+  const reasons: { key: ReportReasonType; label: string; icon: string }[] = [
+    { key: 'reasonSpam', label: t('report.reasonSpam'), icon: REASON_ICONS.reasonSpam },
+    { key: 'reasonMisleading', label: t('report.reasonMisleading'), icon: REASON_ICONS.reasonMisleading },
+    { key: 'reasonSexual', label: t('report.reasonSexual'), icon: REASON_ICONS.reasonSexual },
+    { key: 'reasonRude', label: t('report.reasonRude'), icon: REASON_ICONS.reasonRude },
+    { key: 'reasonViolation', label: t('report.reasonViolation'), icon: REASON_ICONS.reasonViolation },
+    { key: 'reasonOther', label: t('report.reasonOther'), icon: REASON_ICONS.reasonOther },
+  ];
 
   const sheetBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
@@ -61,13 +70,13 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
       },
       {
         onSuccess: () => {
-          showToast({ message: 'Report submitted', type: 'success' });
+          showToast({ message: t('report.submitted'), type: 'success' });
           setSelectedReason(null);
           setDetails('');
           onDismiss();
         },
         onError: () => {
-          showToast({ message: 'Failed to submit report', type: 'error' });
+          showToast({ message: t('report.submitFailed'), type: 'error' });
         },
       },
     );
@@ -101,14 +110,14 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
               </View>
 
               <ThemedText style={styles.title}>
-                {subject?.type === 'post' ? 'Report Post' : 'Report Account'}
+                {subject?.type === 'post' ? t('report.reportPost') : t('report.reportAccount')}
               </ThemedText>
               <ThemedText style={[styles.subtitle, { color: iconColor }]}>
-                Why are you reporting this?
+                {t('report.whyReporting')}
               </ThemedText>
 
               <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                {REASONS.map((reason) => {
+                {reasons.map((reason) => {
                   const isSelected = selectedReason === reason.key;
                   return (
                     <TouchableOpacity
@@ -138,13 +147,13 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                 {selectedReason ? (
                   <View style={styles.detailsContainer}>
                     <ThemedText style={[styles.detailsLabel, { color: iconColor }]}>
-                      Additional details (optional)
+                      {t('report.additionalDetails')}
                     </ThemedText>
                     <TextInput
                       style={[styles.detailsInput, { backgroundColor: inputBg, borderColor, color: textColor }]}
                       value={details}
                       onChangeText={setDetails}
-                      placeholder="Describe the issue..."
+                      placeholder={t('report.describeIssue')}
                       placeholderTextColor={iconColor}
                       multiline
                       numberOfLines={3}
@@ -164,7 +173,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                   disabled={!selectedReason || isSubmitting}
                 >
                   <ThemedText style={styles.submitText}>
-                    {isSubmitting ? 'Submitting...' : 'Submit Report'}
+                    {isSubmitting ? t('report.submitting') : t('report.submitReport')}
                   </ThemedText>
                 </TouchableOpacity>
               </View>

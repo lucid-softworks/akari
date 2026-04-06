@@ -260,7 +260,10 @@
         "to": "Kääntyä jhk",
         "selectLanguage": "Valitse kieli",
         "noText": "Tässä viestissä ei ole tekstiä käännettäväksi.",
-        "error": "Emme voineet kääntää tätä viestiä. Yritä uudelleen."
+        "error": "Emme voineet kääntää tätä viestiä. Yritä uudelleen.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +340,25 @@
       "displayLargerTextBadges": "Näytä suuret tekstimerkit",
       "notificationCategories": "Ilmoitusluokat",
       "contentLanguages": "Sisältökielet",
-      "systemLog": "Järjestelmäloki"
+      "systemLog": "Järjestelmäloki",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Tallennetut viestit ja ketjut ilmestyvät täällä.",
@@ -389,7 +410,9 @@
       "likes": "{{count}} tykkäystä",
       "interactive": "Interaktiivinen",
       "joined": "liittyi",
-      "thisWeek": "tällä viikolla"
+      "thisWeek": "tällä viikolla",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Resepti",
@@ -404,6 +427,23 @@
       "instructions": "Ohjeet",
       "tags": "Tunnisteet",
       "source": "Lähde"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

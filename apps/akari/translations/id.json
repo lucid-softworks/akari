@@ -260,7 +260,10 @@
         "to": "Terjemahkan ke",
         "selectLanguage": "Pilih bahasa",
         "noText": "Postingan ini tidak memiliki teks untuk diterjemahkan.",
-        "error": "Kami tidak dapat menerjemahkan postingan ini. Silakan coba lagi."
+        "error": "Kami tidak dapat menerjemahkan postingan ini. Silakan coba lagi.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "Tampilkan lencana teks yang lebih besar",
       "notificationCategories": "Kategori notifikasi",
       "contentLanguages": "Bahasa konten",
-      "systemLog": "Log sistem"
+      "systemLog": "Log sistem",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Pilih GIF",
@@ -389,7 +410,9 @@
       "likes": "{{count}} suka",
       "interactive": "Interaktif",
       "joined": "bergabung",
-      "thisWeek": "minggu ini"
+      "thisWeek": "minggu ini",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Resep",
@@ -404,6 +427,23 @@
       "instructions": "Instruksi",
       "tags": "Tag",
       "source": "Sumber"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

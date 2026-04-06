@@ -260,7 +260,10 @@
         "to": "翻譯成",
         "selectLanguage": "選擇語言",
         "noText": "此貼文沒有可供翻譯的文字。",
-        "error": "無法翻譯此貼文。請再試一次。"
+        "error": "無法翻譯此貼文。請再試一次。",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "顯示較大的文字徽章",
       "notificationCategories": "通知分類",
       "contentLanguages": "內容語言",
-      "systemLog": "系統日誌"
+      "systemLog": "系統日誌",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "選擇GIF",
@@ -389,7 +410,9 @@
       "likes": "{{count}}個讚",
       "interactive": "互動式",
       "joined": "加入",
-      "thisWeek": "本週"
+      "thisWeek": "本週",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "食譜",
@@ -404,6 +427,23 @@
       "instructions": "說明",
       "tags": "標籤",
       "source": "來源"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

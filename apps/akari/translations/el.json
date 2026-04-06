@@ -260,7 +260,10 @@
         "to": "Μεταφράζω",
         "selectLanguage": "Επιλέξτε τη γλώσσα",
         "noText": "Αυτή η ανάρτηση δεν έχει κείμενο για μετάφραση.",
-        "error": "Δεν μπορούσαμε να μεταφράσουμε αυτήν την ανάρτηση. Δοκιμάστε ξανά."
+        "error": "Δεν μπορούσαμε να μεταφράσουμε αυτήν την ανάρτηση. Δοκιμάστε ξανά.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +340,25 @@
       "displayLargerTextBadges": "Εμφάνιση μεγαλύτερων κονκάρδων κειμένου",
       "notificationCategories": "Κατηγορίες ειδοποίησης",
       "contentLanguages": "Γλωσσές περιεχομένου",
-      "systemLog": "Αρχείο καταγραφής συστήματος"
+      "systemLog": "Αρχείο καταγραφής συστήματος",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Οι αποθηκευμένες θέσεις και τα νήματα θα εμφανιστούν εδώ.",
@@ -389,7 +410,9 @@
       "likes": "{{count}} likes",
       "interactive": "Διαδραστικό",
       "joined": "εγγράφηκε",
-      "thisWeek": "αυτή την εβδομάδα"
+      "thisWeek": "αυτή την εβδομάδα",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Συνταγή",
@@ -404,6 +427,23 @@
       "instructions": "Οδηγίες",
       "tags": "Ετικέτες",
       "source": "Πηγή"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

@@ -260,7 +260,10 @@
         "to": "翻訳先",
         "selectLanguage": "言語を選択",
         "noText": "この投稿には翻訳するテキストがありません。",
-        "error": "この投稿を翻訳できませんでした。もう一度お試しください。"
+        "error": "この投稿を翻訳できませんでした。もう一度お試しください。",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "大きなテキストバッジを表示",
       "notificationCategories": "通知のカテゴリ",
       "contentLanguages": "コンテンツの言語",
-      "systemLog": "システムログ"
+      "systemLog": "システムログ",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "GIFを選択",
@@ -389,7 +410,9 @@
       "likes": "{{count}}いいね",
       "interactive": "インタラクティブ",
       "joined": "参加",
-      "thisWeek": "今週"
+      "thisWeek": "今週",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "レシピ",
@@ -404,6 +427,23 @@
       "instructions": "手順",
       "tags": "タグ",
       "source": "出典"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

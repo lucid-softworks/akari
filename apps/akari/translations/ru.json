@@ -260,7 +260,10 @@
         "to": "Перевести на",
         "selectLanguage": "Выбрать язык",
         "noText": "В этой публикации нет текста для перевода.",
-        "error": "Не удалось перевести эту публикацию. Попробуйте еще раз."
+        "error": "Не удалось перевести эту публикацию. Попробуйте еще раз.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +330,25 @@
       "displayLargerTextBadges": "Показывать более крупные текстовые значки",
       "notificationCategories": "Категории уведомлений",
       "contentLanguages": "Языки контента",
-      "systemLog": "Системный журнал"
+      "systemLog": "Системный журнал",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Выбрать GIF",
@@ -389,7 +410,9 @@
       "likes": "{{count}} лайков",
       "interactive": "Интерактивный",
       "joined": "присоединился",
-      "thisWeek": "на этой неделе"
+      "thisWeek": "на этой неделе",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Рецепт",
@@ -404,6 +427,23 @@
       "instructions": "Инструкции",
       "tags": "Теги",
       "source": "Источник"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

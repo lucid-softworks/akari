@@ -260,7 +260,10 @@
         "to": "Prevede v",
         "selectLanguage": "Izberite jezik",
         "noText": "Ta objava nima besedila za prevajanje.",
-        "error": "Te objave nismo mogli prevesti. Poskusite znova."
+        "error": "Te objave nismo mogli prevesti. Poskusite znova.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +340,25 @@
       "displayLargerTextBadges": "Prikaz večjih besedilnih značk",
       "notificationCategories": "Kategorije obvestila",
       "contentLanguages": "Vsebinski jeziki",
-      "systemLog": "Sistemski dnevnik"
+      "systemLog": "Sistemski dnevnik",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",
@@ -389,7 +410,9 @@
       "likes": "{{count}} všečkov",
       "interactive": "Interaktivno",
       "joined": "se je pridružil",
-      "thisWeek": "ta teden"
+      "thisWeek": "ta teden",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Recept",
@@ -404,6 +427,23 @@
       "instructions": "Navodila",
       "tags": "Oznake",
       "source": "Vir"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

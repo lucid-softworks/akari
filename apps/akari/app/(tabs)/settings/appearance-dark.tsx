@@ -9,20 +9,22 @@ import { Colors } from '@/constants/Colors';
 import { spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeConfig } from '@/hooks/useThemeConfig';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AppearanceDarkScreen() {
   const borderColor = useBorderColor();
   const { config, setModeColor } = useThemeConfig();
+  const { t } = useTranslation();
 
   const fields = [
-    { key: 'background' as const, label: 'Background', presets: PRESETS.background.dark },
-    { key: 'text' as const, label: 'Text', presets: PRESETS.text.dark },
-    { key: 'icon' as const, label: 'Icons', presets: PRESETS.icon.dark },
-    { key: 'border' as const, label: 'Borders', presets: PRESETS.border.dark },
+    { key: 'background' as const, label: t('settings.background'), presets: PRESETS.background.dark },
+    { key: 'text' as const, label: t('settings.textColor'), presets: PRESETS.text.dark },
+    { key: 'icon' as const, label: t('settings.icons'), presets: PRESETS.icon.dark },
+    { key: 'border' as const, label: t('settings.borders'), presets: PRESETS.border.dark },
   ];
 
   return (
-    <SettingsSubpageLayout title="Dark Mode Colors">
+    <SettingsSubpageLayout title={t('settings.darkModeColors')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}

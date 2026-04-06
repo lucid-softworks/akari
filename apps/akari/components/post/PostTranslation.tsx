@@ -176,10 +176,10 @@ export const PostTranslation = React.memo(function PostTranslation({
       <View>
         <View style={styles.header}>
           <ThemedText style={[styles.headerText, { color: secondaryColor }]}>
-            {languageName ? `Translated from ${languageName} · ` : 'Translated · '}
+            {languageName ? `${t('post.translation.translatedFrom', { language: languageName })} · ` : `${t('post.translation.title')} · `}
           </ThemedText>
           <TouchableOpacity onPress={handleShowOriginal} activeOpacity={activeOpacity.default}>
-            <ThemedText style={[styles.showOriginal, { color: linkColor }]}>Show original</ThemedText>
+            <ThemedText style={[styles.showOriginal, { color: linkColor }]}>{t('post.translation.showOriginal')}</ThemedText>
           </TouchableOpacity>
         </View>
         <RichTextWithFacets text={translatedText} facets={translatedFacets} style={textStyle} />
@@ -193,7 +193,7 @@ export const PostTranslation = React.memo(function PostTranslation({
       <RichTextWithFacets text={text} facets={facets} style={textStyle} />
       {visible && error ? (
         <ThemedText style={[styles.errorText, { color: semanticColors.danger }]}>
-          Translation failed
+          {t('post.translation.failed')}
         </ThemedText>
       ) : null}
     </View>

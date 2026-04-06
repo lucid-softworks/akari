@@ -106,7 +106,7 @@ export default function DevelopmentSettingsScreen() {
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
               <IconSymbol color={iconColor} name="speedometer" size={20} style={styles.toggleIcon} />
-              <ThemedText style={styles.toggleLabel}>FPS Overlay</ThemedText>
+              <ThemedText style={styles.toggleLabel}>{t('settings.fpsOverlay')}</ThemedText>
               <Switch value={fpsOverlayEnabled} onValueChange={setFpsOverlayEnabled} />
             </ThemedView>
             {developmentRows.map((item, index) => (
