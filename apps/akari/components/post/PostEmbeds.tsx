@@ -57,6 +57,9 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
 
   const embedData = embed || (embeds && embeds[0]);
 
+  // Also check for additional embeds (e.g. images + external link as separate items)
+  const additionalEmbeds = embeds && embeds.length > 1 ? embeds.slice(1) : [];
+
   const imageData = useMemo(() => {
     if (!embedData) return { urls: [], altTexts: [] };
 
@@ -92,8 +95,23 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       };
     }
 
+    // Check additional embeds for images
+    for (const extra of additionalEmbeds) {
+      if (extra.$type === 'app.bsky.embed.images#view' && extra.images) {
+        const imageFiles = extra.images.filter(
+          (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
+        );
+        if (imageFiles.length > 0) {
+          return {
+            urls: imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean),
+            altTexts: imageFiles.map((img: BlueskyImage) => img.alt),
+          };
+        }
+      }
+    }
+
     return { urls: [], altTexts: [] };
-  }, [embedData]);
+  }, [embedData, additionalEmbeds]);
 
   const videoData = useMemo(() => {
     const tFn = t as (key: any) => string;
@@ -200,6 +218,21 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
           })}
         </ThemedView>
       )}
+
+      {/* Render additional embeds (e.g. external link when primary embed is images) */}
+      {additionalEmbeds.map((extra, i) => {
+        if (extra.$type?.includes('app.bsky.embed.external') && extra.external) {
+          const uri = extra.external.uri || '';
+          if (uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif')) {
+            return <GifEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+          }
+          if (uri.includes('youtube.com') || uri.includes('youtu.be')) {
+            return <YouTubeEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+          }
+          return <ExternalEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+        }
+        return null;
+      })}
 
       {embedClassification === 'recordWithMedia' && embedData?.media && (() => {
         const media = embedData.media as any;
