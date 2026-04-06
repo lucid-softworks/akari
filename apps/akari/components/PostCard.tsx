@@ -219,19 +219,31 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
 
       <Labels labels={post.labels} maxLabels={3} />
 
-      <PostActions
-        uri={post.uri}
-        cid={post.cid}
-        likeUri={post.viewer?.like}
-        repostUri={post.viewer?.repost}
-        authorHandle={post.author.handle}
-        authorName={authorName}
-        commentCount={post.commentCount || 0}
-        repostCount={post.repostCount || 0}
-        likeCount={post.likeCount || 0}
-        onReplyPress={handleReplyPress}
-        onMorePress={handleMenuToggle}
-      />
+      <View style={styles.actionsContainer}>
+        <PostActions
+          uri={post.uri}
+          cid={post.cid}
+          likeUri={post.viewer?.like}
+          repostUri={post.viewer?.repost}
+          authorHandle={post.author.handle}
+          authorName={authorName}
+          commentCount={post.commentCount || 0}
+          repostCount={post.repostCount || 0}
+          likeCount={post.likeCount || 0}
+          onReplyPress={handleReplyPress}
+          onMorePress={handleMenuToggle}
+        />
+        <PostActionsMenu
+          visible={showActionsMenu}
+          canTranslate={canTranslate}
+          postText={post.text}
+          postUri={post.uri}
+          postCid={post.cid}
+          authorDid={post.author.did}
+          onDismiss={handleMenuDismiss}
+          onTranslatePress={handleTranslatePress}
+        />
+      </View>
     </>
   );
 
@@ -250,17 +262,6 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
           {postContent}
         </ThemedView>
       )}
-
-      <PostActionsMenu
-        visible={showActionsMenu}
-        canTranslate={canTranslate}
-        postText={post.text}
-        postUri={post.uri}
-        postCid={post.cid}
-        authorDid={post.author.did}
-        onDismiss={handleMenuDismiss}
-        onTranslatePress={handleTranslatePress}
-      />
 
       <PostComposer
         visible={showReplyComposer}
@@ -333,6 +334,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     borderBottomWidth: layout.hairline,
+  },
+  actionsContainer: {
     position: 'relative',
   },
   replyContext: {
