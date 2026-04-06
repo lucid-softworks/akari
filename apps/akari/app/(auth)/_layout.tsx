@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { Platform } from "react-native";
 
 export default function AuthLayout() {
   return (
@@ -7,6 +8,7 @@ export default function AuthLayout() {
         name="signin"
         options={{
           title: "Sign In",
+          headerShown: Platform.OS !== 'web',
         }}
       />
     </Stack>
