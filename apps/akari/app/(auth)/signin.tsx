@@ -290,11 +290,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {
     gap: spacing.xxl,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xxl,
+    width: '100%',
+    maxWidth: 480,
   },
   form: {
     gap: spacing.xl,
