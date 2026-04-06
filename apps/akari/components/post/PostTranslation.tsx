@@ -59,34 +59,41 @@ export const PostTranslation = React.memo(function PostTranslation({
 
   const targetLanguage = currentLocale?.split('-')[0] || 'en';
 
-  const SEPARATOR = '\n---AKARI_SPLIT---\n';
-
   useEffect(() => {
     if (!visible || !text.trim() || translatedText) return;
 
-    // Build combined text: post text + embed title + embed description
-    const parts = [text.trim()];
-    if (embedText?.title) parts.push(embedText.title);
-    if (embedText?.description) parts.push(embedText.description);
-    const combined = parts.join(SEPARATOR);
-
     setError(false);
-    translationMutation.mutateAsync({
-      text: combined,
+
+    // Translate post text
+    const postTranslation = translationMutation.mutateAsync({
+      text: text.trim(),
       targetLanguage,
-    }).then((result) => {
-      const translated = result.translatedText;
-      const splitParts = translated.split(SEPARATOR).map((s: string) => s.trim());
+    });
 
-      setTranslatedText(splitParts[0]);
-      setDetectedLanguage(result.detectedLanguage ?? null);
+    // Translate embed text separately if present
+    const hasEmbedText = embedText?.title || embedText?.description;
+    const embedParts = [embedText?.title, embedText?.description].filter(Boolean).join('\n\n');
+    const embedTranslation = hasEmbedText
+      ? fetch('https://translate.akari.blue/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: embedParts, source: 'auto', target: targetLanguage }),
+        }).then((r) => r.json()).catch(() => null)
+      : Promise.resolve(null);
 
-      // Pass translated embed text back
-      if (onEmbedTranslated && parts.length > 1) {
-        onEmbedTranslated({
-          title: embedText?.title ? splitParts[1] : undefined,
-          description: embedText?.description ? splitParts[embedText?.title ? 2 : 1] : undefined,
-        });
+    Promise.all([postTranslation, embedTranslation]).then(([postResult, embedResult]) => {
+      setTranslatedText(postResult.translatedText);
+      setDetectedLanguage(postResult.detectedLanguage ?? null);
+
+      if (onEmbedTranslated && embedResult?.translatedText) {
+        const lines = embedResult.translatedText.split('\n\n');
+        if (embedText?.title && embedText?.description) {
+          onEmbedTranslated({ title: lines[0], description: lines.slice(1).join('\n\n') });
+        } else if (embedText?.title) {
+          onEmbedTranslated({ title: embedResult.translatedText });
+        } else {
+          onEmbedTranslated({ description: embedResult.translatedText });
+        }
       }
     }).catch(() => {
       setError(true);
