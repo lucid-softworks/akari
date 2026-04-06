@@ -456,9 +456,29 @@ export class BlueskyFeeds extends BlueskyApiClient {
       langs: ['en'],
     };
 
-    // Add reply context if provided
+    // Add reply context if provided — resolve URIs to { uri, cid } objects
     if (replyTo) {
-      record.reply = replyTo;
+      const resolvePost = async (uri: string) => {
+        const res = await this.makeAuthenticatedRequest<{ uri: string; cid: string; value: unknown }>(
+          '/com.atproto.repo.getRecord',
+          accessJwt,
+          {
+            params: {
+              repo: uri.split('/')[2],
+              collection: 'app.bsky.feed.post',
+              rkey: uri.split('/').pop()!,
+            },
+          },
+        );
+        return { uri: res.uri, cid: res.cid };
+      };
+
+      const [root, parent] = await Promise.all([
+        resolvePost(replyTo.root),
+        replyTo.root === replyTo.parent ? resolvePost(replyTo.root) : resolvePost(replyTo.parent),
+      ]);
+
+      record.reply = { root, parent };
     }
 
     // Add embeds if images/GIFs are provided
