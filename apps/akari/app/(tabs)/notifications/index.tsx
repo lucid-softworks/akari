@@ -190,16 +190,17 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
       return null;
     }
 
-    const images = notification.embed.images.slice(0, 2);
+    const images = notification.embed.images.slice(0, 4);
 
     return (
       <View style={styles.embedImagesContainer}>
         {images.map((image, index) => (
           <Image
             key={index}
-            source={{ uri: image.thumb ?? image.fullsize }}
+            source={{ uri: image.thumb || image.fullsize }}
             style={styles.embedImage}
             contentFit="cover"
+            placeholder={require('@/assets/images/partial-react-logo.png')}
           />
         ))}
       </View>
@@ -665,13 +666,15 @@ const styles = StyleSheet.create({
   },
   embedImagesContainer: {
     flexDirection: 'row',
-    marginTop: spacing.xs,
+    flexWrap: 'wrap',
+    marginTop: spacing.sm,
     gap: spacing.xs,
   },
   embedImage: {
     ...EMBED_IMAGE_STYLE,
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
+    backgroundColor: '#f0f0f0',
   },
   timeText: {
     fontSize: fontSize.sm,
