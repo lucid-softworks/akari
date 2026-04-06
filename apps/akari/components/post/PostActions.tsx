@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, fontSize, opacity, activeOpacity, semanticColors, hitSlop } from '@/constants/tokens';
+import { formatCompactNumber } from '@/utils/formatNumber';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useRepostPost } from '@/hooks/mutations/useRepostPost';
@@ -114,7 +115,7 @@ export const PostActions = React.memo(function PostActions({
         accessibilityLabel={`Reply to post by ${authorName}`}
       >
         <IconSymbol name="bubble.left" size={20} color={iconColor} />
-        <ThemedText style={styles.interactionCount}>{commentCount}</ThemedText>
+        <ThemedText style={styles.interactionCount}>{formatCompactNumber(commentCount)}</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -126,7 +127,7 @@ export const PostActions = React.memo(function PostActions({
         accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost post by ${authorName}`}
       >
         <IconSymbol name="arrow.2.squarepath" size={20} color={isReposted ? '#34C759' : iconColor} />
-        <ThemedText style={styles.interactionCount}>{repostCount}</ThemedText>
+        <ThemedText style={styles.interactionCount}>{formatCompactNumber(repostCount)}</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -142,7 +143,7 @@ export const PostActions = React.memo(function PostActions({
           size={20}
           color={isLiked ? semanticColors.like : iconColor}
         />
-        <ThemedText style={styles.interactionCount}>{likeCount}</ThemedText>
+        <ThemedText style={styles.interactionCount}>{formatCompactNumber(likeCount)}</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
