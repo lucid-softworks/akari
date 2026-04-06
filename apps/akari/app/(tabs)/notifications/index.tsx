@@ -63,6 +63,22 @@ const EMBED_IMAGE_STYLE: ImageStyle = {
   borderRadius: radius.sm,
 };
 
+function NotificationImage({ uri }: { uri: string }) {
+  const [aspectRatio, setAspectRatio] = useState(1);
+  return (
+    <Image
+      source={{ uri }}
+      style={[styles.embedImage, { aspectRatio }]}
+      contentFit="contain"
+      onLoad={(e) => {
+        if (e.source.width && e.source.height) {
+          setAspectRatio(e.source.width / e.source.height);
+        }
+      }}
+    />
+  );
+}
+
 function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
@@ -211,12 +227,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
     return (
       <View style={styles.embedImagesContainer}>
         {images.slice(0, 4).map((url, index) => (
-          <Image
-            key={index}
-            source={{ uri: url }}
-            style={styles.embedImage}
-            contentFit="cover"
-          />
+          <NotificationImage key={index} uri={url} />
         ))}
       </View>
     );
@@ -680,16 +691,13 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   embedImagesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     marginTop: spacing.sm,
     gap: spacing.xs,
   },
   embedImage: {
     ...EMBED_IMAGE_STYLE,
-    width: 80,
-    height: 80,
-    backgroundColor: '#f0f0f0',
+    width: '100%',
+    backgroundColor: '#000',
   },
   timeText: {
     fontSize: fontSize.sm,
