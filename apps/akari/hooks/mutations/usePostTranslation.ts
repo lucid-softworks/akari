@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { getLibreTranslateClient } from '@/utils/libretranslate';
-
 type TranslateVariables = {
   text: string;
   targetLanguage: string;
@@ -10,26 +8,35 @@ type TranslateVariables = {
 
 type TranslateResult = {
   translatedText: string;
+  detectedLanguage?: string;
 };
 
 export const usePostTranslation = () => {
   return useMutation<TranslateResult, Error, TranslateVariables>({
-    mutationKey: ['libretranslate', 'translate'],
+    mutationKey: ['translate'],
     mutationFn: async ({ text, targetLanguage, sourceLanguage = 'auto' }) => {
       const trimmed = text.trim();
+      if (!trimmed) return { translatedText: '' };
 
-      if (!trimmed) {
-        return { translatedText: '' };
+      const response = await fetch('https://translate.akari.blue/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          q: trimmed,
+          source: sourceLanguage,
+          target: targetLanguage,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Translation failed');
       }
 
-      const client = getLibreTranslateClient();
-      const response = await client.translate(trimmed, sourceLanguage, targetLanguage);
-
-      if (!response || response.status >= 400 || !response.translatedText) {
-        throw new Error(response?.error || 'Translation failed');
-      }
-
-      return { translatedText: response.translatedText };
+      const data = await response.json();
+      return {
+        translatedText: data.translatedText,
+        detectedLanguage: data.detectedLanguage?.language,
+      };
     },
   });
 };
