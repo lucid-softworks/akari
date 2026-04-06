@@ -22,7 +22,11 @@ export function PressableLink({
   accessibilityState,
 }: PressableLinkProps) {
   const handlePress = useCallback(() => {
-    if (onPress) {
+    if (Platform.OS === 'web') {
+      // Use router.push with the href directly on web
+      // to ensure proper browser history integration
+      router.push(href as any);
+    } else if (onPress) {
       onPress();
     } else {
       router.push(href as any);
