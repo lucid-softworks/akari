@@ -186,21 +186,32 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
   };
 
   const renderEmbedImages = () => {
-    if (!notification.embed || !notification.embed.images || notification.embed.images.length === 0) {
-      return null;
+    if (!notification.embed) return null;
+
+    // Extract resolved image URLs from the embed
+    // Record embeds have blob refs, view embeds have CDN URLs
+    const images: string[] = [];
+    const embedImages = notification.embed.images ?? notification.embed.media?.images;
+    if (embedImages) {
+      for (const img of embedImages) {
+        const url = img.thumb || img.fullsize;
+        // Only use URLs that start with http (resolved CDN URLs, not blob refs)
+        if (url && url.startsWith('http')) {
+          images.push(url);
+        }
+      }
     }
 
-    const images = notification.embed.images.slice(0, 4);
+    if (images.length === 0) return null;
 
     return (
       <View style={styles.embedImagesContainer}>
-        {images.map((image, index) => (
+        {images.slice(0, 4).map((url, index) => (
           <Image
             key={index}
-            source={{ uri: image.thumb || image.fullsize }}
+            source={{ uri: url }}
             style={styles.embedImage}
             contentFit="cover"
-            placeholder={require('@/assets/images/partial-react-logo.png')}
           />
         ))}
       </View>
