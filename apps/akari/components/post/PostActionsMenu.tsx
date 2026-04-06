@@ -101,11 +101,15 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     [canTranslate, postText, authorDid, handleCopyText, handleMuteAccount, onTranslatePress, onDismiss, t],
   );
 
+  const wrapPress = Platform.OS === 'web'
+    ? (handler: (() => void) | undefined) => (e: any) => { e?.stopPropagation?.(); e?.preventDefault?.(); handler?.(); }
+    : (handler: (() => void) | undefined) => handler;
+
   const menuItems = menuActions.map((item) => (
     <TouchableOpacity
       key={item.key}
       style={styles.menuItem}
-      onPress={item.disabled ? undefined : item.onPress}
+      onPress={item.disabled ? undefined : wrapPress(item.onPress)}
       disabled={item.disabled}
       accessibilityRole="menuitem"
       accessibilityState={{ disabled: item.disabled }}
