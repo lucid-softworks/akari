@@ -32,6 +32,9 @@ type PostActionsMenuProps = {
   onTranslatePress: () => void;
 };
 
+// Global ref to dismiss any currently open menu when a new one opens
+let activeMenuDismiss: (() => void) | null = null;
+
 export const PostActionsMenu = React.memo(function PostActionsMenu({
   visible,
   canTranslate,
@@ -46,15 +49,25 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const insets = useSafeAreaInsets();
   const [showReportSheet, setShowReportSheet] = useState(false);
 
-  // On web, close the dropdown when clicking anywhere
+  // On web, close the dropdown when clicking anywhere or when another menu opens
   useEffect(() => {
     if (Platform.OS !== 'web' || !visible) return;
-    const handler = () => onDismiss();
-    // Delay binding so the opening click doesn't immediately close it
+
+    // Dismiss any previously open menu
+    if (activeMenuDismiss && activeMenuDismiss !== onDismiss) {
+      activeMenuDismiss();
+    }
+    activeMenuDismiss = onDismiss;
+
+    const handler = () => {
+      if (activeMenuDismiss === onDismiss) activeMenuDismiss = null;
+      onDismiss();
+    };
     const id = requestAnimationFrame(() => window.addEventListener('click', handler, { once: true }));
     return () => {
       cancelAnimationFrame(id);
       window.removeEventListener('click', handler);
+      if (activeMenuDismiss === onDismiss) activeMenuDismiss = null;
     };
   }, [visible, onDismiss]);
 
