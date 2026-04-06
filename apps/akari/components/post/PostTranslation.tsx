@@ -123,7 +123,7 @@ export const PostTranslation = React.memo(function PostTranslation({
             <ThemedText style={[styles.showOriginal, { color: linkColor }]}>Show original</ThemedText>
           </TouchableOpacity>
         </View>
-        <ThemedText style={textStyle}>{translatedText}</ThemedText>
+        <RichTextWithFacets text={translatedText} style={textStyle} />
       </View>
     );
   }
