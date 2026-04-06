@@ -96,7 +96,6 @@ function WebPressableLink({
         aRef.onclick = (e: MouseEvent) => {
           if (e.metaKey || e.ctrlKey || e.shiftKey) return;
           e.preventDefault();
-          e.stopPropagation();
           router.push(href as any);
         };
       }}

@@ -218,48 +218,53 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
       </ThemedView>
 
       <Labels labels={post.labels} maxLabels={3} />
-
-      <View style={styles.actionsContainer}>
-        <PostActions
-          uri={post.uri}
-          cid={post.cid}
-          likeUri={post.viewer?.like}
-          repostUri={post.viewer?.repost}
-          authorHandle={post.author.handle}
-          authorName={authorName}
-          commentCount={post.commentCount || 0}
-          repostCount={post.repostCount || 0}
-          likeCount={post.likeCount || 0}
-          onReplyPress={handleReplyPress}
-          onMorePress={handleMenuToggle}
-        />
-        <PostActionsMenu
-          visible={showActionsMenu}
-          canTranslate={canTranslate}
-          postText={post.text}
-          postUri={post.uri}
-          postCid={post.cid}
-          authorDid={post.author.did}
-          onDismiss={handleMenuDismiss}
-          onTranslatePress={handleTranslatePress}
-        />
-      </View>
     </>
+  );
+
+  const actionsBar = (
+    <View style={styles.actionsContainer}>
+      <PostActions
+        uri={post.uri}
+        cid={post.cid}
+        likeUri={post.viewer?.like}
+        repostUri={post.viewer?.repost}
+        authorHandle={post.author.handle}
+        authorName={authorName}
+        commentCount={post.commentCount || 0}
+        repostCount={post.repostCount || 0}
+        likeCount={post.likeCount || 0}
+        onReplyPress={handleReplyPress}
+        onMorePress={handleMenuToggle}
+      />
+      <PostActionsMenu
+        visible={showActionsMenu}
+        canTranslate={canTranslate}
+        postText={post.text}
+        postUri={post.uri}
+        postCid={post.cid}
+        authorDid={post.author.did}
+        onDismiss={handleMenuDismiss}
+        onTranslatePress={handleTranslatePress}
+      />
+    </View>
   );
 
   return (
     <>
       {onPress || href ? (
-        <PressableLink
-          href={href ?? '#'}
-          onPress={onPress}
-          style={[styles.container, { borderBottomColor: borderColor }]}
-        >
-          {postContent}
-        </PressableLink>
+        <View style={[styles.container, { borderBottomColor: borderColor }]}>
+          <PressableLink
+            href={href ?? '#'}
+            onPress={onPress}
+          >
+            {postContent}
+          </PressableLink>
+          {actionsBar}
+        </View>
       ) : (
         <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
           {postContent}
+          {actionsBar}
         </ThemedView>
       )}
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Platform, Pressable, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -103,18 +103,11 @@ export const PostActions = React.memo(function PostActions({
     );
   }, [uri, authorHandle]);
 
-  const stopPropagation = Platform.OS === 'web'
-    ? (handler: (() => void) | undefined) => (e: any) => { e.stopPropagation(); e.preventDefault(); handler?.(); }
-    : (handler: (() => void) | undefined) => handler;
-
   return (
-    <Pressable
-      style={styles.interactions}
-      onPress={(e) => { if (Platform.OS === 'web') { (e as any).stopPropagation?.(); } }}
-    >
+    <ThemedView style={styles.interactions}>
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(onReplyPress)}
+        onPress={onReplyPress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -126,7 +119,7 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(handleRepostPress)}
+        onPress={handleRepostPress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -138,7 +131,7 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(handleLikePress)}
+        onPress={handleLikePress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -154,7 +147,7 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(handleBookmarkPress)}
+        onPress={handleBookmarkPress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -165,7 +158,7 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(handleSharePress)}
+        onPress={handleSharePress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -176,7 +169,7 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={stopPropagation(onMorePress)}
+        onPress={onMorePress}
         activeOpacity={activeOpacity.strong}
         hitSlop={hitSlop}
         accessibilityRole="button"
@@ -184,7 +177,7 @@ export const PostActions = React.memo(function PostActions({
       >
         <IconSymbol name="ellipsis" size={20} color={iconColor} />
       </TouchableOpacity>
-    </Pressable>
+    </ThemedView>
   );
 });
 
