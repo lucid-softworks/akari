@@ -20,6 +20,7 @@ type NavigationItem = {
   label: string;
   icon: React.ComponentProps<typeof IconSymbol>['name'];
   route: string;
+  webRoute: string;
   badge?: number | null;
 };
 
@@ -48,13 +49,14 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Home', icon: 'house', route: '/(tabs)' },
-      { id: 'search', label: 'Search', icon: 'magnifyingglass', route: '/(tabs)/search' },
+      { id: 'timeline', label: 'Home', icon: 'house', route: '/(tabs)', webRoute: '/' },
+      { id: 'search', label: 'Search', icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
       {
         id: 'notifications',
         label: 'Notifications',
         icon: 'bell',
         route: '/(tabs)/notifications',
+        webRoute: '/notifications',
         badge: unreadNotificationsCount,
       },
       {
@@ -62,10 +64,11 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
         label: 'Messages',
         icon: 'message.fill',
         route: '/(tabs)/messages',
+        webRoute: '/messages',
         badge: unreadMessagesCount,
       },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: Platform.OS === 'web' && activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/(tabs)/profile' },
+      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
+      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
     ],
     [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
@@ -86,7 +89,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
     <View style={[styles.container, { backgroundColor: bgColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Account header */}
       <PressableLink
-        href={Platform.OS === 'web' && activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/(tabs)/profile'}
+        href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
         onPress={() => router.push('/(tabs)/profile' as any)}
         accessibilityLabel="Account"
         style={[styles.accountSection, { borderBottomColor: borderColor }]}
@@ -119,7 +122,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
           return (
             <PressableLink
               key={item.id}
-              href={item.route}
+              href={Platform.OS === 'web' ? item.webRoute : item.route}
               accessibilityLabel={item.label}
               accessibilityState={{ selected: active }}
               onPress={() => handleNavigate(item)}
@@ -159,7 +162,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       {/* Settings at the bottom */}
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
         <PressableLink
-          href="/(tabs)/settings"
+          href={Platform.OS === 'web' ? '/settings' : '/(tabs)/settings'}
           accessibilityLabel="Settings"
           onPress={() => {
             router.push('/(tabs)/settings' as any);
