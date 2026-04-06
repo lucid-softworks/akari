@@ -78,4 +78,25 @@ export class BlueskyNotifications {
 
     return response.json();
   }
+
+  /**
+   * Marks notifications as seen up to the current time.
+   */
+  async updateSeen(accessJwt: string): Promise<void> {
+    const url = `${this.pdsUrl}/xrpc/app.bsky.notification.updateSeen`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessJwt}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ seenAt: new Date().toISOString() }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+  }
 }

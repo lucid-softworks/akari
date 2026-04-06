@@ -12,6 +12,9 @@ import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { BlueskyApi } from '@/bluesky-api';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -386,6 +389,15 @@ export default function NotificationsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+
+  // Mark notifications as seen when the screen is viewed
+  useEffect(() => {
+    if (!token || !currentAccount?.pdsUrl) return;
+    const api = new BlueskyApi(currentAccount.pdsUrl);
+    void api.markNotificationsSeen(token);
+  }, [token, currentAccount?.pdsUrl]);
 
   const tabs = useMemo(
     () => [

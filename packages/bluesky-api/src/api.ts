@@ -607,6 +607,10 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.notifications.getUnreadCount(accessJwt);
   }
 
+  async markNotificationsSeen(accessJwt: string): Promise<void> {
+    return this.notifications.updateSeen(accessJwt);
+  }
+
   /**
    * Convenience constructor that mirrors the standard constructor for parity with previous usage.
    * @param pdsUrl - Personal data server URL that hosts the AT Protocol endpoints.
