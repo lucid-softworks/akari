@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { PressableLink } from '@/components/ui/PressableLink';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -48,6 +49,7 @@ type NotificationsTab = 'all' | 'mentions';
 type NotificationItemProps = {
   notification: GroupedNotification;
   onPress: () => void;
+  href: string;
   borderColor: string;
 };
 
@@ -79,7 +81,7 @@ function NotificationImage({ uri }: { uri: string }) {
   );
 }
 
-function NotificationItem({ notification, onPress, borderColor }: NotificationItemProps) {
+function NotificationItem({ notification, onPress, href, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
   const likeColor = '#ff3b30';
@@ -236,10 +238,10 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
   const notificationIcon = getNotificationIcon(notification.type);
 
   return (
-    <TouchableOpacity
-      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
+    <PressableLink
+      href={href}
       onPress={onPress}
-      activeOpacity={activeOpacity.default}
+      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
     >
       <View style={styles.mainContent}>
         <View style={styles.iconContainer}>
@@ -266,7 +268,7 @@ function NotificationItem({ notification, onPress, borderColor }: NotificationIt
           {renderEmbedImages()}
         </View>
       )}
-    </TouchableOpacity>
+    </PressableLink>
   );
 }
 
@@ -453,15 +455,29 @@ export default function NotificationsScreen() {
     [navigateToProfile, navigateToPost],
   );
 
+  const getNotificationHref = useCallback((notification: GroupedNotification): string => {
+    if (notification.type === 'follow') {
+      return `/profile/${notification.authors[0].handle}`;
+    }
+    if (notification.subject) {
+      const uriParts = notification.subject.split('/');
+      const actor = uriParts[2];
+      const rKey = uriParts[uriParts.length - 1];
+      return `/profile/${actor}/post/${rKey}`;
+    }
+    return `/profile/${notification.authors[0].handle}`;
+  }, []);
+
   const renderNotificationItem = useCallback(
     (notification: GroupedNotification) => (
       <NotificationItem
         notification={notification}
         onPress={() => handleNotificationPress(notification)}
+        href={getNotificationHref(notification)}
         borderColor={borderColor}
       />
     ),
-    [borderColor, handleNotificationPress],
+    [borderColor, handleNotificationPress, getNotificationHref],
   );
 
   const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
