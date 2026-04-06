@@ -1,5 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -45,6 +45,18 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [showReportSheet, setShowReportSheet] = useState(false);
+
+  // On web, close the dropdown when clicking anywhere
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !visible) return;
+    const handler = () => onDismiss();
+    // Delay binding so the opening click doesn't immediately close it
+    const id = requestAnimationFrame(() => window.addEventListener('click', handler, { once: true }));
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('click', handler);
+    };
+  }, [visible, onDismiss]);
 
   const menuBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
@@ -108,17 +120,12 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     <>
     {Platform.OS === 'web' ? (
       visible ? (
-        <>
-          <TouchableWithoutFeedback onPress={onDismiss}>
-            <View style={styles.webBackdrop} />
-          </TouchableWithoutFeedback>
           <ThemedView
             style={[styles.webDropdown, { backgroundColor: menuBackgroundColor, borderColor: handleBarColor }]}
             {...{ onClick: (e: any) => e.stopPropagation() }}
           >
             {menuItems}
           </ThemedView>
-        </>
       ) : null
     ) : (
       <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
@@ -213,14 +220,6 @@ const styles = StyleSheet.create({
   cancelText: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
-  },
-  webBackdrop: {
-    position: 'fixed' as any,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9998,
   },
   webDropdown: {
     position: 'absolute' as any,
