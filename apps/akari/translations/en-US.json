@@ -62,7 +62,9 @@
       "bookmarks": "Bookmarks",
       "live": "LIVE",
       "watchNow": "Watch now",
-      "openProfile": "Open profile"
+      "openProfile": "Open profile",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -260,7 +262,10 @@
         "to": "Translate to",
         "selectLanguage": "Select language",
         "noText": "This post has no text to translate.",
-        "error": "We couldn't translate this post. Please try again."
+        "error": "We couldn't translate this post. Please try again.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +332,25 @@
       "displayLargerTextBadges": "Display larger text badges",
       "notificationCategories": "Notification categories",
       "contentLanguages": "Content languages",
-      "systemLog": "System log"
+      "systemLog": "System log",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Select GIF",
@@ -389,7 +412,9 @@
       "likes": "{{count}} likes",
       "interactive": "Interactive",
       "joined": "joined",
-      "thisWeek": "this week"
+      "thisWeek": "this week",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Recipe",
@@ -404,6 +429,23 @@
       "instructions": "Instructions",
       "tags": "Tags",
       "source": "Source"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

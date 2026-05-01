@@ -6,6 +6,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, fontSize, fontWeight, radius, activeOpacity } from '@/constants/tokens';
 import { useKeytraceClaims } from '@/hooks/queries/useKeytraceClaims';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const CLAIM_ICONS: Record<string, React.ComponentProps<typeof IconSymbol>['name']> = {
   github: 'chevron.left.forwardslash.chevron.right',
@@ -24,6 +25,7 @@ type KeytraceClaimsProps = {
 };
 
 export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
+  const { t } = useTranslation();
   const { data } = useKeytraceClaims(handle);
 
   const verifiedColor = useThemeColor({ light: '#16a34a', dark: '#4ade80' }, 'text');
@@ -38,7 +40,7 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
       <View style={styles.header}>
         <IconSymbol name="checkmark.seal.fill" size={14} color={verifiedColor} />
         <ThemedText style={[styles.headerText, { color: secondaryColor }]}>
-          Verified identities
+          {t('ui.verifiedIdentities')}
         </ThemedText>
       </View>
       <View style={styles.claims}>

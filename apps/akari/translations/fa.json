@@ -62,7 +62,9 @@
       "bookmarks": "نشانه ها",
       "live": "زنده",
       "watchNow": "اکنون تماشا کنید",
-      "openProfile": "نمایه باز"
+      "openProfile": "نمایه باز",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",
@@ -260,7 +262,10 @@
         "to": "ترجمه به",
         "selectLanguage": "زبان را انتخاب کنید",
         "noText": "این پست متنی برای ترجمه ندارد.",
-        "error": "ما نتوانستیم این پست را ترجمه کنیم. لطفا دوباره امتحان کنید"
+        "error": "ما نتوانستیم این پست را ترجمه کنیم. لطفا دوباره امتحان کنید",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "نشان های متن بزرگتر را نمایش دهید",
       "notificationCategories": "مقوله های اعلان",
       "contentLanguages": "زبان های محتوا",
-      "systemLog": "ورود به سیستم سیستم"
+      "systemLog": "ورود به سیستم سیستم",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} لایک",
       "interactive": "تعاملی",
       "joined": "عضویت",
-      "thisWeek": "این هفته"
+      "thisWeek": "این هفته",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "دستور پخت",
@@ -404,6 +429,23 @@
       "instructions": "دستورالعمل‌ها",
       "tags": "برچسب‌ها",
       "source": "منبع"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

@@ -12,6 +12,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export const SIDEBAR_WIDTH = 260;
 
@@ -34,6 +35,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
 
@@ -50,11 +52,11 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   const navigationItems = useMemo<NavigationItem[]>(
     () => [
-      { id: 'timeline', label: 'Home', icon: 'house', route: '/(tabs)', webRoute: '/' },
-      { id: 'search', label: 'Search', icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
+      { id: 'timeline', label: t('common.home'), icon: 'house', route: '/(tabs)', webRoute: '/' },
+      { id: 'search', label: t('common.search'), icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
       {
         id: 'notifications',
-        label: 'Notifications',
+        label: t('navigation.notifications'),
         icon: 'bell',
         route: '/(tabs)/notifications',
         webRoute: '/notifications',
@@ -62,14 +64,14 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       },
       {
         id: 'messages',
-        label: 'Messages',
+        label: t('common.messages'),
         icon: 'message.fill',
         route: '/(tabs)/messages',
         webRoute: '/messages',
         badge: unreadMessagesCount,
       },
-      { id: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
-      { id: 'profile', label: 'Profile', icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
+      { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
+      { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
     ],
     [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
@@ -165,7 +167,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
         <PressableLink
           href={Platform.OS === 'web' ? '/settings' : '/(tabs)/settings'}
-          accessibilityLabel="Settings"
+          accessibilityLabel={t('navigation.settings')}
           onPress={() => {
             router.push('/(tabs)/settings' as any);
             onNavigate?.();
@@ -189,7 +191,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
               },
             ]}
           >
-            Settings
+            {t('navigation.settings')}
           </Text>
         </PressableLink>
       </View>

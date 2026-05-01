@@ -5,6 +5,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type GifEmbedProps = {
   embed: {
@@ -26,6 +27,7 @@ type GifEmbedProps = {
 };
 
 export function GifEmbed({ embed }: GifEmbedProps) {
+  const { t } = useTranslation();
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [aspectRatio, setAspectRatio] = useState(1);
 
@@ -47,7 +49,7 @@ export function GifEmbed({ embed }: GifEmbedProps) {
           }}
         />
         <View style={styles.badge}>
-          <ThemedText style={styles.badgeText}>GIF</ThemedText>
+          <ThemedText style={styles.badgeText}>{t('ui.gif')}</ThemedText>
         </View>
       </View>
     </TouchableOpacity>

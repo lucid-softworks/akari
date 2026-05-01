@@ -62,7 +62,9 @@
       "bookmarks": "Marcaje",
       "live": "TRĂI",
       "watchNow": "Urmăriți acum",
-      "openProfile": "Profil deschis"
+      "openProfile": "Profil deschis",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -260,7 +262,10 @@
         "to": "Traduceți în",
         "selectLanguage": "Selectați limba",
         "noText": "Această postare nu are text de traducere.",
-        "error": "Nu am putut traduce această postare. Vă rugăm să încercați din nou."
+        "error": "Nu am putut traduce această postare. Vă rugăm să încercați din nou.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "Afișați ecusoane de text mai mari",
       "notificationCategories": "Categorii de notificări",
       "contentLanguages": "Limbi de conținut",
-      "systemLog": "Jurnal de sistem"
+      "systemLog": "Jurnal de sistem",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} aprecieri",
       "interactive": "Interactiv",
       "joined": "s-a alăturat",
-      "thisWeek": "săptămâna aceasta"
+      "thisWeek": "săptămâna aceasta",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Rețetă",
@@ -404,6 +429,23 @@
       "instructions": "Instrucțiuni",
       "tags": "Etichete",
       "source": "Sursă"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

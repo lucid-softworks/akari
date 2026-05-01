@@ -62,7 +62,9 @@
       "viewPendingChats": "Xem các cuộc trò chuyện đang chờ",
       "live": "TRỰC TIẾP",
       "watchNow": "Xem ngay",
-      "openProfile": "Mở hồ sơ"
+      "openProfile": "Mở hồ sơ",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -260,7 +262,10 @@
         "to": "Dịch sang",
         "selectLanguage": "Chọn ngôn ngữ",
         "noText": "Bài đăng này không có nội dung để dịch.",
-        "error": "Chúng tôi không thể dịch bài đăng này. Vui lòng thử lại."
+        "error": "Chúng tôi không thể dịch bài đăng này. Vui lòng thử lại.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +332,25 @@
       "displayLargerTextBadges": "Hiển thị huy hiệu văn bản lớn hơn",
       "notificationCategories": "Danh mục thông báo",
       "contentLanguages": "Ngôn ngữ nội dung",
-      "systemLog": "Nhật ký hệ thống"
+      "systemLog": "Nhật ký hệ thống",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "Chọn GIF",
@@ -389,7 +412,9 @@
       "likes": "{{count}} lượt thích",
       "interactive": "Tương Tác",
       "joined": "đã tham gia",
-      "thisWeek": "tuần này"
+      "thisWeek": "tuần này",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Công Thức",
@@ -404,6 +429,23 @@
       "instructions": "Hướng Dẫn",
       "tags": "Thẻ",
       "source": "Nguồn"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

@@ -62,7 +62,9 @@
       "bookmarks": "Закладки",
       "live": "Жити",
       "watchNow": "Дивіться зараз",
-      "openProfile": "Відкритий профіль"
+      "openProfile": "Відкритий профіль",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",
@@ -260,7 +262,10 @@
         "to": "Перекласти",
         "selectLanguage": "Виберіть мову",
         "noText": "Ця публікація не має тексту для перекладу.",
-        "error": "Ми не могли перекласти цю публікацію. Будь ласка, спробуйте ще раз."
+        "error": "Ми не могли перекласти цю публікацію. Будь ласка, спробуйте ще раз.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "Відображати більші текстові значки",
       "notificationCategories": "Категорії сповіщень",
       "contentLanguages": "Мови вмісту",
-      "systemLog": "Системний журнал"
+      "systemLog": "Системний журнал",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Збережені повідомлення та теми з'являться тут.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} лайків",
       "interactive": "Інтерактивний",
       "joined": "приєднався",
-      "thisWeek": "цього тижня"
+      "thisWeek": "цього тижня",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Рецепт",
@@ -404,6 +429,23 @@
       "instructions": "Інструкції",
       "tags": "Теги",
       "source": "Джерело"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

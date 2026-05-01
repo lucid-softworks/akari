@@ -62,7 +62,9 @@
       "bookmarks": "Bogmærker",
       "live": "Direkte",
       "watchNow": "Se nu",
-      "openProfile": "Åben profil"
+      "openProfile": "Åben profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Udfyld venligst alle felter",
@@ -260,7 +262,10 @@
         "to": "Oversæt til",
         "selectLanguage": "Vælg sprog",
         "noText": "Denne post har ingen tekst at oversætte.",
-        "error": "Vi kunne ikke oversætte dette indlæg. Prøv igen."
+        "error": "Vi kunne ikke oversætte dette indlæg. Prøv igen.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "Vis større tekstbadges",
       "notificationCategories": "Notifikationsskategorier",
       "contentLanguages": "Indholdssprog",
-      "systemLog": "Systemlog"
+      "systemLog": "Systemlog",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Gemte posts og tråde vises her.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} synes godt om",
       "interactive": "Interaktiv",
       "joined": "tilmeldte sig",
-      "thisWeek": "denne uge"
+      "thisWeek": "denne uge",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Opskrift",
@@ -404,6 +429,23 @@
       "instructions": "Instruktioner",
       "tags": "Tags",
       "source": "Kilde"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

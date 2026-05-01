@@ -62,7 +62,9 @@
       "viewPendingChats": "Ver chats pendientes",
       "live": "EN VIVO",
       "watchNow": "Ver ahora",
-      "openProfile": "Abrir perfil"
+      "openProfile": "Abrir perfil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Por favor completa todos los campos",
@@ -260,7 +262,10 @@
         "to": "Traducir a",
         "selectLanguage": "Seleccionar idioma",
         "noText": "Esta publicación no tiene texto para traducir.",
-        "error": "No pudimos traducir esta publicación. Inténtalo de nuevo."
+        "error": "No pudimos traducir esta publicación. Inténtalo de nuevo.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "Mostrar insignias de texto más grandes",
       "notificationCategories": "Categorías de notificaciones",
       "contentLanguages": "Idiomas de contenido",
-      "systemLog": "Registro del sistema"
+      "systemLog": "Registro del sistema",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} me gusta",
       "interactive": "Interactivo",
       "joined": "se unió",
-      "thisWeek": "esta semana"
+      "thisWeek": "esta semana",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Receta",
@@ -404,6 +429,23 @@
       "instructions": "Instrucciones",
       "tags": "Etiquetas",
       "source": "Fuente"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

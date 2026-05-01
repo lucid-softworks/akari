@@ -62,7 +62,9 @@
       "bookmarks": "Bokmärken",
       "live": "BO",
       "watchNow": "Se nu",
-      "openProfile": "Öppen profil"
+      "openProfile": "Öppen profil",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "Fyll i alla fält",
@@ -260,7 +262,10 @@
         "to": "Översättas till",
         "selectLanguage": "Välj språk",
         "noText": "Det här inlägget har ingen text att översätta.",
-        "error": "Vi kunde inte översätta det här inlägget. Försök igen."
+        "error": "Vi kunde inte översätta det här inlägget. Försök igen.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "gif": {
@@ -337,7 +342,25 @@
       "displayLargerTextBadges": "Visa större textmärken",
       "notificationCategories": "Meddelande kategorier",
       "contentLanguages": "Innehållsspråk",
-      "systemLog": "Systemlogg"
+      "systemLog": "Systemlogg",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "bookmarks": {
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",
@@ -389,7 +412,9 @@
       "likes": "{{count}} gillningar",
       "interactive": "Interaktiv",
       "joined": "gick med",
-      "thisWeek": "denna vecka"
+      "thisWeek": "denna vecka",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "Recept",
@@ -404,6 +429,23 @@
       "instructions": "Instruktioner",
       "tags": "Taggar",
       "source": "Källa"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

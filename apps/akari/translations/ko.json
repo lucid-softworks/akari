@@ -62,7 +62,9 @@
       "viewPendingChats": "보류 중인 채팅 보기",
       "live": "라이브",
       "watchNow": "지금 시청하기",
-      "openProfile": "프로필 열기"
+      "openProfile": "프로필 열기",
+      "home": "Home",
+      "profile": "Profile"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",
@@ -260,7 +262,10 @@
         "to": "다음으로 번역",
         "selectLanguage": "언어 선택",
         "noText": "이 게시글에는 번역할 텍스트가 없습니다.",
-        "error": "이 게시글을 번역하지 못했습니다. 다시 시도해 주세요."
+        "error": "이 게시글을 번역하지 못했습니다. 다시 시도해 주세요.",
+        "translatedFrom": "Translated from {{language}}",
+        "showOriginal": "Show original",
+        "failed": "Translation failed"
       }
     },
     "messages": {
@@ -327,7 +332,25 @@
       "displayLargerTextBadges": "더 큰 텍스트 배지 표시",
       "notificationCategories": "알림 범주",
       "contentLanguages": "콘텐츠 언어",
-      "systemLog": "시스템 로그"
+      "systemLog": "시스템 로그",
+      "fpsOverlay": "FPS Overlay",
+      "accentColor": "Accent Color",
+      "lightMode": "Light",
+      "darkMode": "Dark",
+      "autoMode": "Auto",
+      "lightModeColors": "Light Mode Colors",
+      "darkModeColors": "Dark Mode Colors",
+      "lightModeDescription": "These colors apply when your device is in light mode.",
+      "darkModeDescription": "These colors apply when your device is in dark mode.",
+      "resetToDefaults": "Reset to Defaults",
+      "default": "Default",
+      "custom": "Custom",
+      "apply": "Apply",
+      "background": "Background",
+      "textColor": "Text",
+      "icons": "Icons",
+      "borders": "Borders",
+      "colors": "Colors"
     },
     "gif": {
       "selectGif": "GIF 선택",
@@ -389,7 +412,9 @@
       "likes": "{{count}} 좋아요",
       "interactive": "대화형",
       "joined": "가입",
-      "thisWeek": "이번 주"
+      "thisWeek": "이번 주",
+      "verifiedIdentities": "Verified identities",
+      "gif": "GIF"
     },
     "recipe": {
       "title": "레시피",
@@ -404,6 +429,23 @@
       "instructions": "지침",
       "tags": "태그",
       "source": "출처"
+    },
+    "report": {
+      "reportPost": "Report Post",
+      "reportAccount": "Report Account",
+      "whyReporting": "Why are you reporting this?",
+      "additionalDetails": "Additional details (optional)",
+      "describeIssue": "Describe the issue...",
+      "submitReport": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted",
+      "submitFailed": "Failed to submit report",
+      "reasonSpam": "Spam",
+      "reasonMisleading": "Misleading",
+      "reasonSexual": "Unwanted sexual content",
+      "reasonRude": "Anti-social behavior",
+      "reasonViolation": "Illegal or harmful",
+      "reasonOther": "Other"
     }
   }
 }

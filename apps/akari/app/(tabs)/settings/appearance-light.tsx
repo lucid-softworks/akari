@@ -9,20 +9,22 @@ import { Colors } from '@/constants/Colors';
 import { spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeConfig } from '@/hooks/useThemeConfig';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AppearanceLightScreen() {
   const borderColor = useBorderColor();
   const { config, setModeColor } = useThemeConfig();
+  const { t } = useTranslation();
 
   const fields = [
-    { key: 'background' as const, label: 'Background', presets: PRESETS.background.light },
-    { key: 'text' as const, label: 'Text', presets: PRESETS.text.light },
-    { key: 'icon' as const, label: 'Icons', presets: PRESETS.icon.light },
-    { key: 'border' as const, label: 'Borders', presets: PRESETS.border.light },
+    { key: 'background' as const, label: t('settings.background'), presets: PRESETS.background.light },
+    { key: 'text' as const, label: t('settings.textColor'), presets: PRESETS.text.light },
+    { key: 'icon' as const, label: t('settings.icons'), presets: PRESETS.icon.light },
+    { key: 'border' as const, label: t('settings.borders'), presets: PRESETS.border.light },
   ];
 
   return (
-    <SettingsSubpageLayout title="Light Mode Colors">
+    <SettingsSubpageLayout title={t('settings.lightModeColors')}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
