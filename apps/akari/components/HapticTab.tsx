@@ -1,7 +1,7 @@
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import * as Haptics from "expo-haptics";
-import { StyleSheet, View } from "react-native";
+import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 
 import { useBorderColor } from "@/hooks/useBorderColor";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -19,32 +19,23 @@ export function HapticTab(props: HapticTabProps) {
   const accentColor = useThemeColor({ light: "#7C8CF9", dark: "#7C8CF9" }, "tint");
   const isActive = accessibilityState?.selected ?? false;
 
+  // PlatformPressable accepts a single style value rather than a function-of-state
+  // like react-native's Pressable, so build the static composition once. Pressed
+  // styling is delegated to PlatformPressable's pressColor below.
+  const composedStyle: StyleProp<ViewStyle> = [
+    styles.base,
+    {
+      backgroundColor: isActive ? activeBackground : inactiveBackground,
+      borderColor: isActive ? accentColor : borderColor,
+    },
+    typeof style !== "function" ? (style as StyleProp<ViewStyle>) : null,
+  ];
+
   return (
     <PlatformPressable
       {...restProps}
-      style={({ pressed, hovered, focused }) => {
-        const composedStyle = [
-          styles.base,
-          {
-            backgroundColor: isActive ? activeBackground : inactiveBackground,
-            borderColor: isActive ? accentColor : borderColor,
-          },
-          pressed && { backgroundColor: pressedBackground },
-        ];
-
-        if (typeof style === "function") {
-          const computedStyle = style({ pressed, hovered, focused });
-          if (Array.isArray(computedStyle)) {
-            composedStyle.push(...computedStyle);
-          } else if (computedStyle) {
-            composedStyle.push(computedStyle);
-          }
-        } else if (style) {
-          composedStyle.push(style as any);
-        }
-
-        return composedStyle;
-      }}
+      style={composedStyle}
+      pressColor={pressedBackground}
       onPressIn={(ev) => {
         if (process.env.EXPO_OS === "ios") {
           // Add a soft haptic feedback when pressing down on the tabs.
