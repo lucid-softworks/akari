@@ -26,7 +26,8 @@ import { showAlert } from '@/utils/alert';
 export default function AccountSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
-  const { data: accounts = [] } = useAccounts();
+  const { data: accountsData } = useAccounts();
+  const accounts = accountsData ?? [];
   const { data: currentAccount } = useCurrentAccount();
   const { data: accountProfiles } = useAccountProfiles();
 
@@ -78,7 +79,7 @@ export default function AccountSettingsScreen() {
               removeAccountMutation.mutate(account.did);
 
               if (account.did === currentAccount?.did) {
-                router.replace('/(tabs)');
+                router.replace('/index');
               }
             },
           },

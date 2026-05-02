@@ -95,7 +95,7 @@ export default function AuthScreen() {
 
       await switchAccountMutation.mutateAsync(newAccount);
 
-      router.replace(currentAccount ? '/(tabs)/settings' : '/(tabs)');
+      router.replace(currentAccount ? '/settings' : '/index');
     } catch (error) {
       showAlert({
         title: t('common.error'),
@@ -152,7 +152,7 @@ export default function AuthScreen() {
 
       await switchAccountMutation.mutateAsync(newAccount);
 
-      router.replace('/(tabs)');
+      router.replace('/index');
     } catch (error) {
       showAlert({
         title: t('common.error'),

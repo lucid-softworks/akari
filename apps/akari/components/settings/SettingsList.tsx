@@ -7,7 +7,9 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SettingsRowDescriptor = {
-  key: string;
+  // Used as React list key when rendering an array of rows; not needed
+  // when SettingsRow is rendered directly as a child element.
+  key?: string;
   icon?: React.ComponentProps<typeof IconSymbol>['name'];
   label: string;
   description?: string;
