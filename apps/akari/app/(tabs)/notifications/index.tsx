@@ -23,7 +23,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
-import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity, semanticColors } from '@/constants/tokens';
 
 /**
  * Grouped notification type
@@ -88,8 +88,8 @@ function NotificationImage({ uri }: { uri: string }) {
 function NotificationItem({ notification, onPress, href, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
-  const likeColor = '#ff3b30';
-  const repostColor = '#34c759';
+  const likeColor = semanticColors.like;
+  const repostColor = semanticColors.repost;
 
   const getNotificationIcon = (type: string) => {
     switch (type) {

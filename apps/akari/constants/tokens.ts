@@ -182,6 +182,8 @@ export const semanticColors = {
   danger: '#d13232',
   /** Like heart */
   like: '#ff3b30',
+  /** Repost / boost */
+  repost: '#34c759',
   /** Live streaming accent */
   live: '#ff274c',
   /** iOS system blue (use sparingly -- prefer theme accent) */

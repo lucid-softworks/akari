@@ -41,6 +41,7 @@ type SearchListHeaderProps = {
   backgroundColor: string;
   borderColor: string;
   textColor: string;
+  placeholderColor: string;
   title: string;
   inputPlaceholder: string;
   searchLabel: string;
@@ -61,6 +62,7 @@ const SearchListHeader = React.memo(
     backgroundColor,
     borderColor,
     textColor,
+    placeholderColor,
     title,
     inputPlaceholder,
     searchLabel,
@@ -94,7 +96,7 @@ const SearchListHeader = React.memo(
               },
             ]}
             placeholder={inputPlaceholder}
-            placeholderTextColor="#999999"
+            placeholderTextColor={placeholderColor}
             value={query}
             onChangeText={onQueryChange}
             onSubmitEditing={onSearch}
@@ -166,6 +168,8 @@ export default function SearchScreen() {
     },
     'background',
   );
+
+  const placeholderColor = useThemeColor({}, 'icon');
 
   // Use the infinite search hook with searchQuery (not query) - always fetch "all" data
   const {
@@ -368,6 +372,7 @@ export default function SearchScreen() {
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         textColor={textColor}
+        placeholderColor={placeholderColor}
         title={t('navigation.search')}
         inputPlaceholder={t('search.searchInputPlaceholder')}
         searchLabel={t('common.search')}
@@ -383,6 +388,7 @@ export default function SearchScreen() {
       insets.top,
       isLargeScreen,
       isLoading,
+      placeholderColor,
       query,
       setActiveTab,
       setQuery,
