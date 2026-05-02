@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -91,6 +92,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
 
   const handleFollow = async () => {
     if (!profile.did) return;
+
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
       if (isFollowing) {

@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import React, { useCallback } from 'react';
 import { Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -51,6 +52,8 @@ export const PostActions = React.memo(function PostActions({
   const handleLikePress = useCallback(() => {
     if (!uri || !cid) return;
 
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (likeUri) {
       likeMutation.mutate({
         postUri: uri,
@@ -69,6 +72,8 @@ export const PostActions = React.memo(function PostActions({
   const handleRepostPress = useCallback(() => {
     if (!uri || !cid) return;
 
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (repostUri) {
       repostMutation.mutate({
         postUri: uri,
@@ -86,6 +91,7 @@ export const PostActions = React.memo(function PostActions({
 
   const handleBookmarkPress = useCallback(() => {
     if (!uri || !cid) return;
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     bookmarkMutation.mutate({
       postUri: uri,
       postCid: cid,

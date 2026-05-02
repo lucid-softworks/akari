@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import * as Haptics from 'expo-haptics';
 import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -96,7 +97,12 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
           <TouchableOpacity
             key={item.key}
             style={styles.menuItem}
-            onPress={item.onPress}
+            onPress={() => {
+              void Haptics.impactAsync(
+                item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
+              );
+              item.onPress();
+            }}
             accessibilityRole="menuitem"
             activeOpacity={activeOpacity.default}
           >
