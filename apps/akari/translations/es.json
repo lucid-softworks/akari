@@ -241,7 +241,12 @@
       "quotePost": "Citar publicación",
       "repostAction": "Republicar",
       "quoteAction": "Citar publicación",
-      "undoRepost": "Deshacer republicación"
+      "undoRepost": "Deshacer republicación",
+      "pinned": "Fijado",
+      "pinToProfile": "Fijar en el perfil",
+      "unpinFromProfile": "Dejar de fijar",
+      "pinnedToast": "Publicación fijada",
+      "unpinnedToast": "Publicación desfijada"
     },
     "gif": {
       "selectGif": "Seleccionar GIF",

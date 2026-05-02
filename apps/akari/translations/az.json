@@ -241,7 +241,12 @@
       "quotePost": "Sitat paylaşımı",
       "repostAction": "Yenidən paylaş",
       "quoteAction": "Sitat paylaş",
-      "undoRepost": "Yenidən paylaşımı geri al"
+      "undoRepost": "Yenidən paylaşımı geri al",
+      "pinned": "Sancılıb",
+      "pinToProfile": "Profilə sancın",
+      "unpinFromProfile": "Sancağı götür",
+      "pinnedToast": "Paylaşım sancıldı",
+      "unpinnedToast": "Sancaq götürüldü"
     },
     "gif": {
       "selectGif": "Gif seçin",

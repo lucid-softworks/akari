@@ -241,7 +241,12 @@
       "quotePost": "Citează postare",
       "repostAction": "Repostează",
       "quoteAction": "Citează postare",
-      "undoRepost": "Anulează repostarea"
+      "undoRepost": "Anulează repostarea",
+      "pinned": "Fixat",
+      "pinToProfile": "Fixează pe profil",
+      "unpinFromProfile": "Anulează fixarea",
+      "pinnedToast": "Postarea a fost fixată",
+      "unpinnedToast": "Fixarea a fost anulată"
     },
     "gif": {
       "selectGif": "Selectați GIF",

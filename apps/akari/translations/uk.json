@@ -241,7 +241,12 @@
       "quotePost": "Цитата допису",
       "repostAction": "Репост",
       "quoteAction": "Цитувати допис",
-      "undoRepost": "Скасувати репост"
+      "undoRepost": "Скасувати репост",
+      "pinned": "Закріплено",
+      "pinToProfile": "Закріпити в профілі",
+      "unpinFromProfile": "Відкріпити",
+      "pinnedToast": "Допис закріплено",
+      "unpinnedToast": "Допис відкріплено"
     },
     "gif": {
       "selectGif": "Виберіть GIF",

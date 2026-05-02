@@ -781,6 +781,8 @@ export type BlueskyProfile = {
   };
   /** Labels applied to the profile */
   labels?: BlueskyLabel[];
+  /** Pinned post strong reference, if the user has pinned a post. */
+  pinnedPost?: { uri: string; cid: string };
 };
 
 /**

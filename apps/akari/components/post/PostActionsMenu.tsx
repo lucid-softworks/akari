@@ -11,6 +11,9 @@ import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semantic
 import { ReportSheet } from '@/components/ReportSheet';
 import { useToast } from '@/contexts/ToastContext';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
+import { usePinPost } from '@/hooks/mutations/usePinPost';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -81,6 +84,33 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const borderColor = useThemeColor({}, 'border');
 
   const muteMutation = useMuteUser();
+  const pinPostMutation = usePinPost();
+  const { data: currentAccount } = useCurrentAccount();
+  const { data: ownProfile } = useProfile(currentAccount?.did);
+  const isOwnPost = !!authorDid && !!currentAccount?.did && authorDid === currentAccount.did;
+  const isCurrentlyPinned = isOwnPost && !!postUri && ownProfile?.pinnedPost?.uri === postUri;
+
+  const handlePinPost = useCallback(() => {
+    if (!postUri || !postCid) return;
+    if (isCurrentlyPinned) {
+      pinPostMutation.mutate(
+        { action: 'unpin' },
+        {
+          onSuccess: () => showToast({ message: t('post.unpinnedToast'), type: 'success' }),
+          onError: () => showToast({ message: t('common.error'), type: 'error' }),
+        },
+      );
+    } else {
+      pinPostMutation.mutate(
+        { action: 'pin', uri: postUri, cid: postCid },
+        {
+          onSuccess: () => showToast({ message: t('post.pinnedToast'), type: 'success' }),
+          onError: () => showToast({ message: t('common.error'), type: 'error' }),
+        },
+      );
+    }
+    onDismiss();
+  }, [postUri, postCid, isCurrentlyPinned, pinPostMutation, showToast, t, onDismiss]);
 
   const handleCopyText = useCallback(() => {
     if (postText) {
@@ -99,14 +129,31 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   }, [authorDid, muteMutation, onDismiss]);
 
   const menuActions = useMemo<PostMenuItem[]>(
-    () => [
-      { key: 'translate', icon: 'character.book.closed', label: t('post.actions.translate'), onPress: onTranslatePress, disabled: !canTranslate },
-      { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: handleCopyText, disabled: !postText },
-      { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: () => { onDismiss(); setShowListPicker(true); }, disabled: !authorDid },
-      { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
-      { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
-    ],
-    [canTranslate, postText, authorDid, handleCopyText, handleMuteAccount, onTranslatePress, onDismiss, t],
+    () => {
+      const items: PostMenuItem[] = [
+        { key: 'translate', icon: 'character.book.closed', label: t('post.actions.translate'), onPress: onTranslatePress, disabled: !canTranslate },
+        { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: handleCopyText, disabled: !postText },
+      ];
+
+      if (isOwnPost) {
+        items.push({
+          key: 'pinPost',
+          icon: isCurrentlyPinned ? 'pin.slash' : 'pin',
+          label: isCurrentlyPinned ? t('post.unpinFromProfile') : t('post.pinToProfile'),
+          onPress: handlePinPost,
+          disabled: !postUri || !postCid,
+        });
+      }
+
+      items.push(
+        { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: () => { onDismiss(); setShowListPicker(true); }, disabled: !authorDid },
+        { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
+        { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
+      );
+
+      return items;
+    },
+    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, handleCopyText, handleMuteAccount, handlePinPost, onTranslatePress, onDismiss, t],
   );
 
   const wrapPress = Platform.OS === 'web'

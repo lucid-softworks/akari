@@ -241,7 +241,12 @@
       "quotePost": "引用貼文",
       "repostAction": "轉發",
       "quoteAction": "引用貼文",
-      "undoRepost": "取消轉發"
+      "undoRepost": "取消轉發",
+      "pinned": "已置頂",
+      "pinToProfile": "釘選至個人檔案",
+      "unpinFromProfile": "取消釘選",
+      "pinnedToast": "貼文已釘選",
+      "unpinnedToast": "貼文已取消釘選"
     },
     "messages": {
       "typeMessage": "輸入訊息...",

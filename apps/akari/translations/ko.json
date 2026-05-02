@@ -241,7 +241,12 @@
       "quotePost": "게시물 인용",
       "repostAction": "리포스트",
       "quoteAction": "게시물 인용",
-      "undoRepost": "리포스트 취소"
+      "undoRepost": "리포스트 취소",
+      "pinned": "고정됨",
+      "pinToProfile": "프로필에 고정",
+      "unpinFromProfile": "고정 해제",
+      "pinnedToast": "게시물이 고정되었습니다",
+      "unpinnedToast": "게시물 고정이 해제되었습니다"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

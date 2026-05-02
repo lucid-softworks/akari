@@ -122,6 +122,17 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Sets or clears the current user's pinned post.
+   */
+  async setPinnedPost(
+    accessJwt: string,
+    userDid: string,
+    pinned: { uri: string; cid: string } | null,
+  ) {
+    return this.actors.setPinnedPost(accessJwt, userDid, pinned);
+  }
+
+  /**
    * Lists Tangled repos created by the requested actor.
    * @param accessJwt - Valid session token authorised to query the actor's records.
    * @param actor - DID or handle identifying the actor whose repos should be loaded.

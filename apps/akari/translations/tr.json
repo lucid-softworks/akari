@@ -241,7 +241,12 @@
       "quotePost": "Alıntı gönderi",
       "repostAction": "Yeniden paylaş",
       "quoteAction": "Gönderiyi alıntıla",
-      "undoRepost": "Yeniden paylaşımı geri al"
+      "undoRepost": "Yeniden paylaşımı geri al",
+      "pinned": "Sabitlendi",
+      "pinToProfile": "Profile sabitle",
+      "unpinFromProfile": "Sabitlemeyi kaldır",
+      "pinnedToast": "Gönderi sabitlendi",
+      "unpinnedToast": "Gönderi sabitlemesi kaldırıldı"
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",

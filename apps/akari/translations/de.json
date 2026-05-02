@@ -241,7 +241,12 @@
       "quotePost": "Beitrag zitieren",
       "repostAction": "Reposten",
       "quoteAction": "Beitrag zitieren",
-      "undoRepost": "Repost rückgängig machen"
+      "undoRepost": "Repost rückgängig machen",
+      "pinned": "Angepinnt",
+      "pinToProfile": "An Profil anpinnen",
+      "unpinFromProfile": "Anpinnen aufheben",
+      "pinnedToast": "Beitrag angepinnt",
+      "unpinnedToast": "Anpinnen aufgehoben"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

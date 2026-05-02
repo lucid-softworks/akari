@@ -241,7 +241,12 @@
       "quotePost": "Citatinlägg",
       "repostAction": "Återpublicera",
       "quoteAction": "Citera inlägg",
-      "undoRepost": "Ångra återpublicering"
+      "undoRepost": "Ångra återpublicering",
+      "pinned": "Fäst",
+      "pinToProfile": "Fäst på profil",
+      "unpinFromProfile": "Lossa",
+      "pinnedToast": "Inlägg fäst",
+      "unpinnedToast": "Inlägg lossat"
     },
     "gif": {
       "selectGif": "Välj GIF",

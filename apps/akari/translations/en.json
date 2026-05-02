@@ -241,7 +241,12 @@
       "quotePost": "Quote Post",
       "repostAction": "Repost",
       "quoteAction": "Quote post",
-      "undoRepost": "Undo repost"
+      "undoRepost": "Undo repost",
+      "pinned": "Pinned",
+      "pinToProfile": "Pin to profile",
+      "unpinFromProfile": "Unpin from profile",
+      "pinnedToast": "Post pinned",
+      "unpinnedToast": "Post unpinned"
     },
     "gif": {
       "selectGif": "Select GIF",

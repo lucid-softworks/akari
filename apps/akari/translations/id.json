@@ -241,7 +241,12 @@
       "quotePost": "Kutip kiriman",
       "repostAction": "Posting ulang",
       "quoteAction": "Kutip kiriman",
-      "undoRepost": "Batalkan posting ulang"
+      "undoRepost": "Batalkan posting ulang",
+      "pinned": "Disematkan",
+      "pinToProfile": "Sematkan ke profil",
+      "unpinFromProfile": "Lepas sematan",
+      "pinnedToast": "Kiriman disematkan",
+      "unpinnedToast": "Sematan kiriman dilepas"
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

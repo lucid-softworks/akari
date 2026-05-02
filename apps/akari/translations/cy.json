@@ -241,7 +241,12 @@
       "quotePost": "Dyfynnu postiad",
       "repostAction": "Ailbostio",
       "quoteAction": "Dyfynnu postiad",
-      "undoRepost": "Dadwneud ailbostio"
+      "undoRepost": "Dadwneud ailbostio",
+      "pinned": "Pinio",
+      "pinToProfile": "Pinio i'r proffil",
+      "unpinFromProfile": "Dadbinio",
+      "pinnedToast": "Pinwyd y postiad",
+      "unpinnedToast": "Dadbiniwyd y postiad"
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

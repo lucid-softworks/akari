@@ -241,7 +241,12 @@
       "quotePost": "ציטוט פוסט",
       "repostAction": "פרסום מחדש",
       "quoteAction": "צטט פוסט",
-      "undoRepost": "בטל פרסום מחדש"
+      "undoRepost": "בטל פרסום מחדש",
+      "pinned": "מוצמד",
+      "pinToProfile": "הצמד לפרופיל",
+      "unpinFromProfile": "ביטול הצמדה",
+      "pinnedToast": "הפוסט הוצמד",
+      "unpinnedToast": "ההצמדה בוטלה"
     },
     "gif": {
       "selectGif": "בחר GIF",

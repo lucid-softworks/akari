@@ -241,7 +241,12 @@
       "quotePost": "اقتباس منشور",
       "repostAction": "إعادة نشر",
       "quoteAction": "اقتباس المنشور",
-      "undoRepost": "تراجع عن إعادة النشر"
+      "undoRepost": "تراجع عن إعادة النشر",
+      "pinned": "مثبت",
+      "pinToProfile": "تثبيت في الملف الشخصي",
+      "unpinFromProfile": "إلغاء تثبيت",
+      "pinnedToast": "تم تثبيت المنشور",
+      "unpinnedToast": "تم إلغاء تثبيت المنشور"
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

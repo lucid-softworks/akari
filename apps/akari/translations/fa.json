@@ -241,7 +241,12 @@
       "quotePost": "پست نقل‌قول",
       "repostAction": "بازنشر",
       "quoteAction": "نقل‌قول پست",
-      "undoRepost": "لغو بازنشر"
+      "undoRepost": "لغو بازنشر",
+      "pinned": "سنجاق‌شده",
+      "pinToProfile": "سنجاق به نمایه",
+      "unpinFromProfile": "برداشتن سنجاق",
+      "pinnedToast": "پست سنجاق شد",
+      "unpinnedToast": "سنجاق پست برداشته شد"
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",

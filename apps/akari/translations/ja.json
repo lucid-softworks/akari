@@ -241,7 +241,12 @@
       "quotePost": "引用ポスト",
       "repostAction": "リポスト",
       "quoteAction": "ポストを引用",
-      "undoRepost": "リポストを取り消す"
+      "undoRepost": "リポストを取り消す",
+      "pinned": "固定中",
+      "pinToProfile": "プロフィールに固定",
+      "unpinFromProfile": "固定を解除",
+      "pinnedToast": "ポストを固定しました",
+      "unpinnedToast": "ポストの固定を解除しました"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

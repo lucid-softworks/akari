@@ -241,7 +241,12 @@
       "quotePost": "Lainausjulkaisu",
       "repostAction": "Jaa uudelleen",
       "quoteAction": "Lainaa julkaisu",
-      "undoRepost": "Kumoa uudelleenjako"
+      "undoRepost": "Kumoa uudelleenjako",
+      "pinned": "Kiinnitetty",
+      "pinToProfile": "Kiinnitä profiiliin",
+      "unpinFromProfile": "Irrota",
+      "pinnedToast": "Julkaisu kiinnitetty",
+      "unpinnedToast": "Julkaisu irrotettu"
     },
     "gif": {
       "selectGif": "Valitse GIF",

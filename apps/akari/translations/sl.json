@@ -241,7 +241,12 @@
       "quotePost": "Citat objave",
       "repostAction": "Ponovna objava",
       "quoteAction": "Citiraj objavo",
-      "undoRepost": "Razveljavi ponovno objavo"
+      "undoRepost": "Razveljavi ponovno objavo",
+      "pinned": "Pripeto",
+      "pinToProfile": "Pripni na profil",
+      "unpinFromProfile": "Odpni",
+      "pinnedToast": "Objava je pripeta",
+      "unpinnedToast": "Objava je odpeta"
     },
     "gif": {
       "selectGif": "Izberite GIF",

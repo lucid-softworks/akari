@@ -241,7 +241,12 @@
       "quotePost": "पोस्ट उद्धृत करें",
       "repostAction": "रीपोस्ट",
       "quoteAction": "पोस्ट उद्धृत करें",
-      "undoRepost": "रीपोस्ट पूर्ववत करें"
+      "undoRepost": "रीपोस्ट पूर्ववत करें",
+      "pinned": "पिन किया गया",
+      "pinToProfile": "प्रोफ़ाइल पर पिन करें",
+      "unpinFromProfile": "अनपिन करें",
+      "pinnedToast": "पोस्ट पिन की गई",
+      "unpinnedToast": "पोस्ट अनपिन की गई"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

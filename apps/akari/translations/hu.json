@@ -241,7 +241,12 @@
       "quotePost": "Bejegyzés idézése",
       "repostAction": "Újraposztolás",
       "quoteAction": "Bejegyzés idézése",
-      "undoRepost": "Újraposztolás visszavonása"
+      "undoRepost": "Újraposztolás visszavonása",
+      "pinned": "Rögzítve",
+      "pinToProfile": "Rögzítés a profilra",
+      "unpinFromProfile": "Rögzítés feloldása",
+      "pinnedToast": "Bejegyzés rögzítve",
+      "unpinnedToast": "Rögzítés feloldva"
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",

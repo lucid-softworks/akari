@@ -241,7 +241,12 @@
       "quotePost": "Cita post",
       "repostAction": "Ripubblica",
       "quoteAction": "Cita post",
-      "undoRepost": "Annulla la ripubblicazione"
+      "undoRepost": "Annulla la ripubblicazione",
+      "pinned": "Fissato",
+      "pinToProfile": "Fissa al profilo",
+      "unpinFromProfile": "Rimuovi fissaggio",
+      "pinnedToast": "Post fissato",
+      "unpinnedToast": "Post non più fissato"
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",

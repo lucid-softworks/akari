@@ -241,7 +241,12 @@
       "quotePost": "Цитиране на публикация",
       "repostAction": "Повторно публикуване",
       "quoteAction": "Цитирай публикация",
-      "undoRepost": "Отмени повторното публикуване"
+      "undoRepost": "Отмени повторното публикуване",
+      "pinned": "Закачено",
+      "pinToProfile": "Закачи в профила",
+      "unpinFromProfile": "Откачи",
+      "pinnedToast": "Публикацията е закачена",
+      "unpinnedToast": "Публикацията е откачена"
     },
     "gif": {
       "selectGif": "Изберете GIF",

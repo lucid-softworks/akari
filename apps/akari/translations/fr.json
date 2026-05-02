@@ -241,7 +241,12 @@
       "quotePost": "Citer la publication",
       "repostAction": "Repartager",
       "quoteAction": "Citer la publication",
-      "undoRepost": "Annuler le repartage"
+      "undoRepost": "Annuler le repartage",
+      "pinned": "Épinglé",
+      "pinToProfile": "Épingler au profil",
+      "unpinFromProfile": "Désépingler",
+      "pinnedToast": "Publication épinglée",
+      "unpinnedToast": "Publication désépinglée"
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

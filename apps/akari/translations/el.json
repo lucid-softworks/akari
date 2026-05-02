@@ -241,7 +241,12 @@
       "quotePost": "Παράθεση ανάρτησης",
       "repostAction": "Αναδημοσίευση",
       "quoteAction": "Παράθεση ανάρτησης",
-      "undoRepost": "Αναίρεση αναδημοσίευσης"
+      "undoRepost": "Αναίρεση αναδημοσίευσης",
+      "pinned": "Καρφιτσωμένο",
+      "pinToProfile": "Καρφίτσωμα στο προφίλ",
+      "unpinFromProfile": "Ξεκαρφίτσωμα",
+      "pinnedToast": "Η ανάρτηση καρφιτσώθηκε",
+      "unpinnedToast": "Η ανάρτηση ξεκαρφιτσώθηκε"
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

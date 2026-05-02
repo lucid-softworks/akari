@@ -241,7 +241,12 @@
       "quotePost": "引用帖子",
       "repostAction": "转发",
       "quoteAction": "引用帖子",
-      "undoRepost": "撤销转发"
+      "undoRepost": "撤销转发",
+      "pinned": "已置顶",
+      "pinToProfile": "置顶到个人资料",
+      "unpinFromProfile": "取消置顶",
+      "pinnedToast": "帖子已置顶",
+      "unpinnedToast": "帖子已取消置顶"
     },
     "gif": {
       "selectGif": "选择GIF",

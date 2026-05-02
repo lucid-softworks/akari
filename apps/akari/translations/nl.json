@@ -241,7 +241,12 @@
       "quotePost": "Citaatbericht",
       "repostAction": "Herposten",
       "quoteAction": "Bericht citeren",
-      "undoRepost": "Repost ongedaan maken"
+      "undoRepost": "Repost ongedaan maken",
+      "pinned": "Vastgemaakt",
+      "pinToProfile": "Aan profiel vastmaken",
+      "unpinFromProfile": "Losmaken",
+      "pinnedToast": "Bericht vastgemaakt",
+      "unpinnedToast": "Bericht losgemaakt"
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

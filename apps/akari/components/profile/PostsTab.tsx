@@ -1,9 +1,16 @@
 import { useCallback, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
+import { ThemedText } from '@/components/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
+import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
+import { usePinnedPost } from '@/hooks/queries/usePinnedPost';
+import { useProfile } from '@/hooks/queries/useProfile';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -33,13 +40,20 @@ export function PostsTab({
     refetch,
     isRefetching,
   } = useAuthorPosts(handle);
+  const { data: profile } = useProfile(handle);
+  const { data: pinnedPost } = usePinnedPost(profile?.pinnedPost?.uri);
   const navigateToPost = useNavigateToPost();
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
+  const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
-  const filteredPosts = useMemo(
-    () => (posts ?? []).filter((item) => item && item.uri),
-    [posts],
-  );
+  const filteredPosts = useMemo(() => {
+    const regular = (posts ?? []).filter((item) => item && item.uri);
+    // Skip the pinned post if it would otherwise duplicate inside the feed.
+    const dedup = pinnedPost
+      ? regular.filter((p) => p.uri !== pinnedPost.uri)
+      : regular;
+    return pinnedPost ? [{ ...pinnedPost, _isPinned: true } as any, ...dedup] : dedup;
+  }, [posts, pinnedPost]);
 
   const renderItem = useCallback(
     (item: any) => {
@@ -53,7 +67,7 @@ export function PostsTab({
           }
         : undefined;
 
-      return (
+      const card = (
         <PostCard
           post={{
             id: item.uri,
@@ -85,15 +99,33 @@ export function PostsTab({
           }}
         />
       );
+
+      if (item._isPinned) {
+        return (
+          <View>
+            <View style={styles.pinnedBadge}>
+              <IconSymbol name="pin.fill" size={12} color={iconColor} />
+              <ThemedText style={[styles.pinnedBadgeText, { color: iconColor }]}>
+                {t('post.pinned')}
+              </ThemedText>
+            </View>
+            {card}
+          </View>
+        );
+      }
+
+      return card;
     },
-    [navigateToPost],
+    [navigateToPost, iconColor, t],
   );
 
   return (
     <ProfileTabFlatList
       data={filteredPosts}
       renderItem={renderItem}
-      keyExtractor={(item: any) => `${item.uri}-${item.indexedAt}`}
+      keyExtractor={(item: any) =>
+        item._isPinned ? `pinned-${item.uri}` : `${item.uri}-${item.indexedAt}`
+      }
       isLoading={isLoading}
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
@@ -110,3 +142,21 @@ export function PostsTab({
     />
   );
 }
+
+const styles = StyleSheet.create({
+  pinnedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+  },
+  pinnedBadgeText: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.semibold,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    opacity: opacity.secondary,
+  },
+});

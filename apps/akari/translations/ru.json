@@ -241,7 +241,12 @@
       "quotePost": "Цитата записи",
       "repostAction": "Репост",
       "quoteAction": "Цитировать запись",
-      "undoRepost": "Отменить репост"
+      "undoRepost": "Отменить репост",
+      "pinned": "Закреплено",
+      "pinToProfile": "Закрепить в профиле",
+      "unpinFromProfile": "Открепить",
+      "pinnedToast": "Запись закреплена",
+      "unpinnedToast": "Запись откреплена"
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

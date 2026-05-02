@@ -241,7 +241,12 @@
       "quotePost": "Cytat posta",
       "repostAction": "Repostuj",
       "quoteAction": "Cytuj posta",
-      "undoRepost": "Cofnij repost"
+      "undoRepost": "Cofnij repost",
+      "pinned": "Przypięty",
+      "pinToProfile": "Przypnij do profilu",
+      "unpinFromProfile": "Odepnij",
+      "pinnedToast": "Post przypięty",
+      "unpinnedToast": "Post odpięty"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

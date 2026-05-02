@@ -241,7 +241,12 @@
       "quotePost": "โพสต์แบบยกข้อความ",
       "repostAction": "รีโพสต์",
       "quoteAction": "ยกข้อความโพสต์",
-      "undoRepost": "ยกเลิกการรีโพสต์"
+      "undoRepost": "ยกเลิกการรีโพสต์",
+      "pinned": "ปักหมุด",
+      "pinToProfile": "ปักหมุดที่โปรไฟล์",
+      "unpinFromProfile": "ถอนหมุด",
+      "pinnedToast": "ปักหมุดโพสต์แล้ว",
+      "unpinnedToast": "ถอนหมุดโพสต์แล้ว"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

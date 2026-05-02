@@ -241,7 +241,12 @@
       "quotePost": "Bài đăng trích dẫn",
       "repostAction": "Đăng lại",
       "quoteAction": "Trích dẫn bài đăng",
-      "undoRepost": "Hoàn tác đăng lại"
+      "undoRepost": "Hoàn tác đăng lại",
+      "pinned": "Đã ghim",
+      "pinToProfile": "Ghim vào hồ sơ",
+      "unpinFromProfile": "Bỏ ghim",
+      "pinnedToast": "Đã ghim bài đăng",
+      "unpinnedToast": "Đã bỏ ghim bài đăng"
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

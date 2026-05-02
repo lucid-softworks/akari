@@ -241,7 +241,12 @@
       "quotePost": "Citovat příspěvek",
       "repostAction": "Sdílet",
       "quoteAction": "Citovat příspěvek",
-      "undoRepost": "Zrušit sdílení"
+      "undoRepost": "Zrušit sdílení",
+      "pinned": "Připnuto",
+      "pinToProfile": "Připnout k profilu",
+      "unpinFromProfile": "Odepnout",
+      "pinnedToast": "Příspěvek připnut",
+      "unpinnedToast": "Příspěvek odepnut"
     },
     "gif": {
       "selectGif": "Vyberte GIF",

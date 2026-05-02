@@ -241,7 +241,12 @@
       "quotePost": "Citatopslag",
       "repostAction": "Genopslå",
       "quoteAction": "Citer opslag",
-      "undoRepost": "Fortryd genopslag"
+      "undoRepost": "Fortryd genopslag",
+      "pinned": "Fastgjort",
+      "pinToProfile": "Fastgør på profil",
+      "unpinFromProfile": "Fjern fastgørelse",
+      "pinnedToast": "Opslag fastgjort",
+      "unpinnedToast": "Fastgørelse fjernet"
     },
     "gif": {
       "selectGif": "Vælg GIF",

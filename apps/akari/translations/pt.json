@@ -241,7 +241,12 @@
       "quotePost": "Citar publicação",
       "repostAction": "Repostar",
       "quoteAction": "Citar publicação",
-      "undoRepost": "Desfazer repost"
+      "undoRepost": "Desfazer repost",
+      "pinned": "Fixado",
+      "pinToProfile": "Fixar no perfil",
+      "unpinFromProfile": "Desafixar",
+      "pinnedToast": "Publicação fixada",
+      "unpinnedToast": "Publicação desafixada"
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",
