@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Tastați un mesaj ...",
-      "errorSendingMessage": "Nu a reușit să trimită un mesaj. Vă rugăm să încercați din nou."
+      "errorSendingMessage": "Nu a reușit să trimită un mesaj. Vă rugăm să încercați din nou.",
+      "newChat": "Chat nou",
+      "start": "Începe",
+      "searchPlaceholder": "Găsește oameni cu care să discuți",
+      "searchHint": "Caută pentru a adăuga oameni",
+      "deletedAccount": "Cont șters"
     },
     "settings": {
       "account": "Cont",

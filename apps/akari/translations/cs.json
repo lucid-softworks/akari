@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Zadejte zprávu ...",
-      "errorSendingMessage": "Nepodařilo se odeslat zprávu. Zkuste to prosím znovu."
+      "errorSendingMessage": "Nepodařilo se odeslat zprávu. Zkuste to prosím znovu.",
+      "newChat": "Nový chat",
+      "start": "Začít",
+      "searchPlaceholder": "Najdi lidi pro chat",
+      "searchHint": "Hledej, abys někoho přidal",
+      "deletedAccount": "Smazaný účet"
     },
     "settings": {
       "account": "Účet",

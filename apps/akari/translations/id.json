@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Ketik pesan...",
-      "errorSendingMessage": "Gagal mengirim pesan. Silakan coba lagi."
+      "errorSendingMessage": "Gagal mengirim pesan. Silakan coba lagi.",
+      "newChat": "Obrolan baru",
+      "start": "Mulai",
+      "searchPlaceholder": "Cari orang untuk diajak bicara",
+      "searchHint": "Cari untuk menambahkan orang",
+      "deletedAccount": "Akun dihapus"
     },
     "settings": {
       "account": "Akun",

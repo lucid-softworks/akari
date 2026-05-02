@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Írjon be egy üzenetet ...",
-      "errorSendingMessage": "Nem sikerült üzenetet küldeni. Kérjük, próbálkozzon újra."
+      "errorSendingMessage": "Nem sikerült üzenetet küldeni. Kérjük, próbálkozzon újra.",
+      "newChat": "Új chat",
+      "start": "Indítás",
+      "searchPlaceholder": "Keress embereket csevegéshez",
+      "searchHint": "Keresd, hogy embereket adj hozzá",
+      "deletedAccount": "Törölt fiók"
     },
     "settings": {
       "account": "Beszámoló",

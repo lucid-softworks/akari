@@ -550,6 +550,11 @@ export type BlueskyConvo = {
 };
 
 /**
+ * Alias matching the lexicon name (`chat.bsky.convo.defs#convoView`).
+ */
+export type BlueskyConvoView = BlueskyConvo;
+
+/**
  * Bluesky conversations response
  */
 export type BlueskyConvosResponse = {

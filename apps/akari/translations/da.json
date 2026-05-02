@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Skriv en besked ...",
-      "errorSendingMessage": "Kunne ikke sende besked. Prøv igen."
+      "errorSendingMessage": "Kunne ikke sende besked. Prøv igen.",
+      "newChat": "Ny chat",
+      "start": "Start",
+      "searchPlaceholder": "Find folk at chatte med",
+      "searchHint": "Søg for at tilføje folk",
+      "deletedAccount": "Slettet konto"
     },
     "settings": {
       "account": "Konto",

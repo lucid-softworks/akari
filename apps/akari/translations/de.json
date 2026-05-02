@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",
-      "errorSendingMessage": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut."
+      "errorSendingMessage": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "newChat": "Neuer Chat",
+      "start": "Starten",
+      "searchPlaceholder": "Personen zum Chatten finden",
+      "searchHint": "Suche, um Personen hinzuzufügen",
+      "deletedAccount": "Gelöschtes Konto"
     },
     "settings": {
       "account": "Konto",

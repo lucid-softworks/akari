@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Kirjoita viesti ...",
-      "errorSendingMessage": "Viestin lähettäminen epäonnistui. Yritä uudelleen."
+      "errorSendingMessage": "Viestin lähettäminen epäonnistui. Yritä uudelleen.",
+      "newChat": "Uusi keskustelu",
+      "start": "Aloita",
+      "searchPlaceholder": "Etsi henkilöitä",
+      "searchHint": "Etsi lisätäksesi ihmisiä",
+      "deletedAccount": "Poistettu tili"
     },
     "settings": {
       "account": "Tili",

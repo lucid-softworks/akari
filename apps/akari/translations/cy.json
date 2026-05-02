@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",
-      "errorSendingMessage": "Methwyd anfon y neges. Rhowch gynnig arall arni."
+      "errorSendingMessage": "Methwyd anfon y neges. Rhowch gynnig arall arni.",
+      "newChat": "Sgwrs newydd",
+      "start": "Dechrau",
+      "searchPlaceholder": "Chwilio am bobl i sgwrsio",
+      "searchHint": "Chwilio i ychwanegu pobl",
+      "deletedAccount": "Cyfrif wedi'i ddileu"
     },
     "settings": {
       "account": "Cyfrif",

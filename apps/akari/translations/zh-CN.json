@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "输入消息...",
-      "errorSendingMessage": "发送消息失败。请重试。"
+      "errorSendingMessage": "发送消息失败。请重试。",
+      "newChat": "新聊天",
+      "start": "开始",
+      "searchPlaceholder": "查找聊天对象",
+      "searchHint": "搜索添加人员",
+      "deletedAccount": "已删除的账户"
     },
     "settings": {
       "account": "账户",

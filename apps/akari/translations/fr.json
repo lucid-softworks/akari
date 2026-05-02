@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Tapez un message...",
-      "errorSendingMessage": "Impossible d'envoyer le message. Veuillez réessayer."
+      "errorSendingMessage": "Impossible d'envoyer le message. Veuillez réessayer.",
+      "newChat": "Nouvelle conversation",
+      "start": "Commencer",
+      "searchPlaceholder": "Trouver des personnes",
+      "searchHint": "Recherchez pour ajouter des personnes",
+      "deletedAccount": "Compte supprimé"
     },
     "settings": {
       "account": "Compte",

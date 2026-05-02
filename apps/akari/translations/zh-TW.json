@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "輸入訊息...",
-      "errorSendingMessage": "發送訊息失敗。請重試。"
+      "errorSendingMessage": "發送訊息失敗。請重試。",
+      "newChat": "新聊天",
+      "start": "開始",
+      "searchPlaceholder": "尋找聊天對象",
+      "searchHint": "搜尋以新增聯絡人",
+      "deletedAccount": "已刪除的帳戶"
     },
     "settings": {
       "account": "帳戶",

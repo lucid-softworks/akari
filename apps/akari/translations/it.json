@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",
-      "errorSendingMessage": "Impossibile inviare il messaggio. Riprova."
+      "errorSendingMessage": "Impossibile inviare il messaggio. Riprova.",
+      "newChat": "Nuova chat",
+      "start": "Avvia",
+      "searchPlaceholder": "Trova persone con cui chattare",
+      "searchHint": "Cerca per aggiungere persone",
+      "deletedAccount": "Account eliminato"
     },
     "settings": {
       "account": "Account",

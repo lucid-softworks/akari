@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "הקלד הודעה ...",
-      "errorSendingMessage": "נכשל הודעה על הודעה. אנא נסה שוב."
+      "errorSendingMessage": "נכשל הודעה על הודעה. אנא נסה שוב.",
+      "newChat": "צ׳אט חדש",
+      "start": "התחל",
+      "searchPlaceholder": "חפש אנשים לצ׳אט",
+      "searchHint": "חפש כדי להוסיף אנשים",
+      "deletedAccount": "חשבון שנמחק"
     },
     "settings": {
       "account": "חֶשְׁבּוֹן",

@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",
-      "errorSendingMessage": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى."
+      "errorSendingMessage": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+      "newChat": "محادثة جديدة",
+      "start": "ابدأ",
+      "searchPlaceholder": "ابحث عن أشخاص للدردشة معهم",
+      "searchHint": "ابحث للعثور على أشخاص لإضافتهم",
+      "deletedAccount": "حساب محذوف"
     },
     "settings": {
       "account": "الحساب",

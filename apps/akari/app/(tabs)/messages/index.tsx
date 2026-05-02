@@ -11,6 +11,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import en from '@/translations/en.json';
 import { useNavigateToProfile } from '@/utils/navigation';
@@ -21,6 +22,7 @@ import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity }
 
 type Conversation = {
   id: string;
+  convoId: string;
   handle: string;
   displayName: string;
   avatar?: string;
@@ -58,6 +60,7 @@ export function MessagesListScreen({
 }: MessagesListScreenProps) {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
+  const tintColor = useThemeColor({}, 'tint');
   const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
@@ -79,7 +82,6 @@ export function MessagesListScreen({
     hasNextPage,
     isFetchingNextPage,
     refetch,
-    isRefetching,
   } = useConversations(50, undefined, status);
 
   const conversations = React.useMemo(() => {
@@ -110,22 +112,37 @@ export function MessagesListScreen({
     [pendingData],
   );
 
+  // Track only user-initiated refreshes so background refetches (e.g. on
+  // back-navigation when the query is stale) don't flash the pull-to-refresh
+  // spinner over the list.
+  const [userRefreshing, setUserRefreshing] = React.useState(false);
   const handleRefresh = React.useCallback(async () => {
-    await refetch({ throwOnError: false });
+    setUserRefreshing(true);
+    try {
+      await refetch({ throwOnError: false });
+    } finally {
+      setUserRefreshing(false);
+    }
   }, [refetch]);
 
   const renderConversation = React.useCallback(
-    ({ item }: { item: Conversation }) => (
+    ({ item }: { item: Conversation }) => {
+      const isDeleted = item.handle === 'missing.invalid';
+      const displayName = isDeleted ? t('messages.deletedAccount') : item.displayName;
+      return (
       <TouchableOpacity
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
         onPress={() => {
-          router.push(`/(tabs)/messages/${encodeURIComponent(item.handle)}`);
+          router.push(
+            `/(tabs)/messages/${encodeURIComponent(item.handle)}?convoId=${encodeURIComponent(item.convoId)}` as any,
+          );
         }}
       >
         <ThemedView style={styles.conversationContent}>
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
+              if (isDeleted) return;
               navigateToProfile({ actor: item.handle });
             }}
             activeOpacity={activeOpacity.default}
@@ -136,7 +153,7 @@ export function MessagesListScreen({
               </ThemedView>
             ) : (
               <ThemedView style={styles.avatar}>
-                <ThemedText style={styles.avatarFallback}>{item.displayName[0].toUpperCase()}</ThemedText>
+                <ThemedText style={styles.avatarFallback}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
               </ThemedView>
             )}
           </TouchableOpacity>
@@ -144,7 +161,7 @@ export function MessagesListScreen({
           <ThemedView style={styles.conversationInfo}>
             <ThemedView style={styles.conversationHeader}>
               <ThemedText style={[styles.displayName, item.unreadCount > 0 && styles.displayNameUnread]}>
-                {item.displayName}
+                {displayName}
               </ThemedText>
               <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
             </ThemedView>
@@ -169,7 +186,8 @@ export function MessagesListScreen({
           </ThemedView>
         </ThemedView>
       </TouchableOpacity>
-    ),
+    );
+    },
     [borderColor, navigateToProfile, t],
   );
 
@@ -212,34 +230,65 @@ export function MessagesListScreen({
               ) : null} 
               <ThemedText style={styles.title}>{t(titleKey)}</ThemedText> 
             </ThemedView> 
-            {pendingButtonConfig ? ( 
-              <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={activeOpacity.default}> 
-                <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText> 
-              </TouchableOpacity> 
-            ) : null} 
-          </ThemedView> 
+            <View style={styles.headerActions}>
+              {pendingButtonConfig ? (
+                <>
+                  <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={activeOpacity.default}>
+                    <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.newChatButton}
+                    onPress={() => router.push('/(tabs)/messages/new' as any)}
+                    accessibilityLabel={t('messages.newChat')}
+                    activeOpacity={activeOpacity.default}
+                  >
+                    <IconSymbol name="square.and.pencil" size={22} color={tintColor} />
+                  </TouchableOpacity>
+                </>
+              ) : null}
+            </View>
+          </ThemedView>
         ) : pendingButtonConfig ? (
           <ThemedView style={[styles.mobileToolbar, { borderBottomColor: borderColor }]}>
-            <View style={styles.mobileToolbarAvatars}> 
-              {previewAvatars.map((avatar) => ( 
-                <ThemedView key={avatar.key} style={styles.mobileAvatar}> 
-                  {avatar.uri ? ( 
-                    <Image source={{ uri: avatar.uri }} style={styles.mobileAvatarImage} contentFit="cover" /> 
-                  ) : ( 
-                    <ThemedText style={styles.mobileAvatarFallback}>{avatar.fallback}</ThemedText> 
-                  )} 
-                </ThemedView> 
-              ))} 
-            </View> 
-            {pendingButtonConfig ? ( 
-              <TouchableOpacity
-                style={styles.mobilePendingButton}
-                onPress={pendingButtonConfig.onPress}
-                activeOpacity={activeOpacity.default}
-              >
-                <ThemedText style={styles.mobilePendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
-              </TouchableOpacity>
-            ) : null}
+            <View style={styles.mobileToolbarAvatars}>
+              {previewAvatars.map((avatar, index) => (
+                <ThemedView
+                  key={avatar.key}
+                  style={[
+                    styles.mobileAvatar,
+                    { borderColor },
+                    index > 0 && styles.mobileAvatarOverlap,
+                  ]}
+                >
+                  {avatar.uri ? (
+                    <Image source={{ uri: avatar.uri }} style={styles.mobileAvatarImage} contentFit="cover" />
+                  ) : (
+                    <ThemedText style={styles.mobileAvatarFallback}>{avatar.fallback}</ThemedText>
+                  )}
+                </ThemedView>
+              ))}
+            </View>
+            <View style={styles.headerActions}>
+              {pendingButtonConfig ? (
+                <>
+                  <TouchableOpacity
+                    style={styles.mobilePendingButton}
+                    onPress={pendingButtonConfig.onPress}
+                    activeOpacity={activeOpacity.default}
+                  >
+                    <ThemedText style={styles.mobilePendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.newChatButton}
+                    onPress={() => router.push('/(tabs)/messages/new' as any)}
+                    accessibilityLabel={t('messages.newChat')}
+                    activeOpacity={activeOpacity.default}
+                  >
+                    <IconSymbol name="square.and.pencil" size={22} color={tintColor} />
+                  </TouchableOpacity>
+                </>
+              ) : null}
+            </View>
           </ThemedView>
         ) : null}
       </ThemedView>
@@ -269,11 +318,11 @@ export function MessagesListScreen({
         onEndReachedThreshold={0.1}
         overscan={2}
         estimatedItemSize={ESTIMATED_CONVERSATION_HEIGHT}
-        refreshing={isRefetching}
+        refreshing={userRefreshing}
         onRefresh={handleRefresh}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
-          conversationsLoading ? (
+          conversationsLoading && !conversationsData ? (
             <ThemedView style={styles.skeletonContainer}>
               {Array.from({ length: 10 }).map((_, index) => (
                 <ConversationSkeleton key={index} />
@@ -336,7 +385,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: spacing.sm,
   },
   mobileAvatar: {
     width: layout.avatarSmall,
@@ -346,6 +394,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#007AFF',
+    borderWidth: 2,
+  },
+  mobileAvatarOverlap: {
+    marginLeft: -spacing.sm,
   },
   mobileAvatarImage: {
     width: layout.avatarSmall,
@@ -389,6 +441,17 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  newChatButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   conversationsContent: {
     paddingBottom: layout.tabBarPadding,

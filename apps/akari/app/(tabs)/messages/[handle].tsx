@@ -235,7 +235,10 @@ const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] 
 };
 
 export default function ConversationScreen() {
-  const { handle } = useLocalSearchParams<{ handle: string }>();
+  const { handle, convoId: convoIdParam } = useLocalSearchParams<{
+    handle: string;
+    convoId?: string;
+  }>();
   const [messageText, setMessageText] = useState('');
   const listRef = useRef<FlatList<Message>>(null);
   const insets = useSafeAreaInsets();
@@ -256,11 +259,16 @@ export default function ConversationScreen() {
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
 
-  // Get the conversation ID from the conversations list
+  // Get the conversation ID from the conversations list. Prefer the
+  // `convoId` query param when set — handle alone isn't unique (e.g. every
+  // deleted account collapses to `missing.invalid`), so routing-by-handle
+  // would silently collide. The link from the conversations list now passes
+  // `convoId` so we can look up the exact convo even when handles repeat.
   const { data: conversationsData } = useConversations();
-  const conversation = conversationsData?.pages
-    .flatMap((page) => page.conversations)
-    .find((conv) => conv.handle === decodeURIComponent(handle));
+  const allConversations = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
+  const conversation =
+    (convoIdParam && allConversations.find((conv) => conv.convoId === convoIdParam)) ||
+    allConversations.find((conv) => conv.handle === decodeURIComponent(handle));
 
   // Fetch messages for this conversation
   const {

@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",
-      "errorSendingMessage": "संदेश भेजने में विफल। कृपया पुनः प्रयास करें।"
+      "errorSendingMessage": "संदेश भेजने में विफल। कृपया पुनः प्रयास करें।",
+      "newChat": "नई चैट",
+      "start": "शुरू करें",
+      "searchPlaceholder": "चैट के लिए लोग खोजें",
+      "searchHint": "लोगों को जोड़ने के लिए खोजें",
+      "deletedAccount": "हटाया गया खाता"
     },
     "settings": {
       "account": "खाता",

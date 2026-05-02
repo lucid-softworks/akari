@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",
-      "errorSendingMessage": "메시지 전송에 실패했습니다. 다시 시도해 주세요."
+      "errorSendingMessage": "메시지 전송에 실패했습니다. 다시 시도해 주세요.",
+      "newChat": "새 채팅",
+      "start": "시작",
+      "searchPlaceholder": "채팅할 사람 찾기",
+      "searchHint": "사람을 추가하려면 검색하세요",
+      "deletedAccount": "삭제된 계정"
     },
     "settings": {
       "account": "계정",

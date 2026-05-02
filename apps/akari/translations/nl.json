@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Typ een bericht...",
-      "errorSendingMessage": "Bericht kon niet worden verzonden. Probeer het opnieuw."
+      "errorSendingMessage": "Bericht kon niet worden verzonden. Probeer het opnieuw.",
+      "newChat": "Nieuwe chat",
+      "start": "Start",
+      "searchPlaceholder": "Zoek mensen om mee te chatten",
+      "searchHint": "Zoek om mensen toe te voegen",
+      "deletedAccount": "Verwijderd account"
     },
     "settings": {
       "account": "Account",

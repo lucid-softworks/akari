@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Въведете съобщение ...",
-      "errorSendingMessage": "Неуспешно изпращане на съобщение. Моля, опитайте отново."
+      "errorSendingMessage": "Неуспешно изпращане на съобщение. Моля, опитайте отново.",
+      "newChat": "Нов чат",
+      "start": "Започни",
+      "searchPlaceholder": "Намери хора за чат",
+      "searchHint": "Търси хора, за да ги добавиш",
+      "deletedAccount": "Изтрит акаунт"
     },
     "settings": {
       "account": "Акаунт",

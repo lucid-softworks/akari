@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",
-      "errorSendingMessage": "Falha ao enviar mensagem. Tente novamente."
+      "errorSendingMessage": "Falha ao enviar mensagem. Tente novamente.",
+      "newChat": "Novo chat",
+      "start": "Iniciar",
+      "searchPlaceholder": "Encontre pessoas para conversar",
+      "searchHint": "Pesquise para adicionar pessoas",
+      "deletedAccount": "Conta excluída"
     },
     "settings": {
       "account": "Conta",

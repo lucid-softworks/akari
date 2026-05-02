@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
@@ -109,6 +109,10 @@ export function useConversations(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     enabled: enabled && !!token && !!currentUserDid,
+    // Keep showing the existing list during background refetch / when the
+    // query key transiently changes (e.g. token/currentUserDid flickers on
+    // remount), so we don't flash a skeleton on every back-nav.
+    placeholderData: keepPreviousData,
     staleTime: 30 * 1000, // 30 seconds
     retry: (failureCount, error: ConversationError) => {
       // Don't retry permission errors

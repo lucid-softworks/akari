@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",
-      "errorSendingMessage": "Không thể gửi tin nhắn. Vui lòng thử lại."
+      "errorSendingMessage": "Không thể gửi tin nhắn. Vui lòng thử lại.",
+      "newChat": "Trò chuyện mới",
+      "start": "Bắt đầu",
+      "searchPlaceholder": "Tìm người để trò chuyện",
+      "searchHint": "Tìm kiếm để thêm người",
+      "deletedAccount": "Tài khoản đã xoá"
     },
     "settings": {
       "account": "Tài khoản",

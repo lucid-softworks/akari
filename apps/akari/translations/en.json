@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Type a message...",
-      "errorSendingMessage": "Failed to send message. Please try again."
+      "errorSendingMessage": "Failed to send message. Please try again.",
+      "newChat": "New chat",
+      "start": "Start",
+      "searchPlaceholder": "Find people to chat with",
+      "searchHint": "Search to find people to add",
+      "deletedAccount": "Deleted account"
     },
     "settings": {
       "account": "Account",

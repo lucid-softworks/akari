@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Vnesite sporočilo ...",
-      "errorSendingMessage": "Ni uspelo poslati sporočila. Poskusite znova."
+      "errorSendingMessage": "Ni uspelo poslati sporočila. Poskusite znova.",
+      "newChat": "Novi klepet",
+      "start": "Začni",
+      "searchPlaceholder": "Najdi ljudi za klepet",
+      "searchHint": "Iskanje za dodajanje ljudi",
+      "deletedAccount": "Izbrisan račun"
     },
     "settings": {
       "account": "Račun",

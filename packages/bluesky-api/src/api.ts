@@ -487,6 +487,28 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Resolves (or creates) the conversation for a set of member DIDs.
+   * Pass the peers' DIDs only — the current user is implicit.
+   */
+  async getConvoForMembers(accessJwt: string, members: string[]) {
+    return this.conversations.getConvoForMembers(accessJwt, members);
+  }
+
+  /**
+   * Fetches a single conversation by its id.
+   */
+  async getConvo(accessJwt: string, convoId: string) {
+    return this.conversations.getConvo(accessJwt, convoId);
+  }
+
+  /**
+   * Leaves a conversation.
+   */
+  async leaveConvo(accessJwt: string, convoId: string) {
+    return this.conversations.leaveConvo(accessJwt, convoId);
+  }
+
+  /**
    * Creates a follow record pointing at the supplied DID.
    * @param accessJwt - Valid session token for the actor initiating the follow.
    * @param did - DID of the actor that should be followed.

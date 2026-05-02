@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "メッセージを入力...",
-      "errorSendingMessage": "メッセージの送信に失敗しました。もう一度お試しください。"
+      "errorSendingMessage": "メッセージの送信に失敗しました。もう一度お試しください。",
+      "newChat": "新しいチャット",
+      "start": "開始",
+      "searchPlaceholder": "チャット相手を検索",
+      "searchHint": "検索して相手を追加",
+      "deletedAccount": "削除されたアカウント"
     },
     "settings": {
       "account": "アカウント",

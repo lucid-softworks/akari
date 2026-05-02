@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",
-      "errorSendingMessage": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
+      "errorSendingMessage": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+      "newChat": "Yeni sohbet",
+      "start": "Başlat",
+      "searchPlaceholder": "Sohbet edecek kişileri bul",
+      "searchHint": "Kişi eklemek için ara",
+      "deletedAccount": "Silinmiş hesap"
     },
     "settings": {
       "account": "Hesap",

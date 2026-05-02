@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Escribe un mensaje...",
-      "errorSendingMessage": "No se pudo enviar el mensaje. Por favor, inténtalo de nuevo."
+      "errorSendingMessage": "No se pudo enviar el mensaje. Por favor, inténtalo de nuevo.",
+      "newChat": "Nuevo chat",
+      "start": "Iniciar",
+      "searchPlaceholder": "Busca personas con quien chatear",
+      "searchHint": "Busca para añadir personas",
+      "deletedAccount": "Cuenta eliminada"
     },
     "settings": {
       "account": "Cuenta",

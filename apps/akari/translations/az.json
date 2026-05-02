@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Bir mesaj yazın ...",
-      "errorSendingMessage": "Mesaj göndərə bilmədi. Xahiş edirəm yenidən cəhd edin."
+      "errorSendingMessage": "Mesaj göndərə bilmədi. Xahiş edirəm yenidən cəhd edin.",
+      "newChat": "Yeni söhbət",
+      "start": "Başlat",
+      "searchPlaceholder": "Söhbət üçün insan axtar",
+      "searchHint": "Əlavə etmək üçün insan axtarın",
+      "deletedAccount": "Silinmiş hesab"
     },
     "settings": {
       "account": "Hesab",

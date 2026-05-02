@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Введите сообщение...",
-      "errorSendingMessage": "Не удалось отправить сообщение. Попробуйте еще раз."
+      "errorSendingMessage": "Не удалось отправить сообщение. Попробуйте еще раз.",
+      "newChat": "Новый чат",
+      "start": "Начать",
+      "searchPlaceholder": "Найдите людей для чата",
+      "searchHint": "Ищите, чтобы добавить людей",
+      "deletedAccount": "Удалённый аккаунт"
     },
     "settings": {
       "account": "Аккаунт",

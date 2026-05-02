@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",
-      "errorSendingMessage": "ส่งข้อความไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+      "errorSendingMessage": "ส่งข้อความไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+      "newChat": "แชทใหม่",
+      "start": "เริ่ม",
+      "searchPlaceholder": "ค้นหาคนที่จะแชทด้วย",
+      "searchHint": "ค้นหาเพื่อเพิ่มคน",
+      "deletedAccount": "บัญชีที่ถูกลบ"
     },
     "settings": {
       "account": "บัญชี",

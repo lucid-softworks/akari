@@ -1,0 +1,324 @@
+import { Image } from 'expo-image';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, radius, fontSize, fontWeight, layout, activeOpacity, opacity } from '@/constants/tokens';
+import { useToast } from '@/contexts/ToastContext';
+import { useStartConvo } from '@/hooks/mutations/useStartConvo';
+import { useSearch } from '@/hooks/queries/useSearch';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
+import { isFeatureEnabled } from '@/utils/featureFlags';
+import type { BlueskyProfile } from '@/bluesky-api';
+
+// Bluesky's chat service currently only allows group convos for the bsky
+// team's accounts; everyone else hits an error past one peer. Cap the
+// picker accordingly until the `groupChats` feature flag flips.
+const MAX_MEMBERS = isFeatureEnabled('groupChats') ? 10 : 1;
+
+export default function NewChatScreen() {
+  const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const { showToast } = useToast();
+  const { initialMember } = useLocalSearchParams<{ initialMember?: string }>();
+
+  const [query, setQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
+  const [selected, setSelected] = useState<BlueskyProfile[]>([]);
+
+  const startConvo = useStartConvo();
+
+  const borderColor = useThemeColor({}, 'border');
+  const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
+  const textColor = useThemeColor({}, 'text');
+  const inputBg = useThemeColor({ light: '#f5f5f5', dark: '#1f2123' }, 'background');
+  const tintColor = useThemeColor({}, 'tint');
+
+  const { data: searchData, isLoading } = useSearch(submittedQuery.trim() || undefined, 'users', 20, 'top');
+  const profiles = useMemo(() => {
+    const all = searchData?.pages.flatMap((p) => p.results) ?? [];
+    return all
+      .filter((r): r is { type: 'profile'; data: BlueskyProfile } => r.type === 'profile')
+      .map((r) => r.data)
+      .filter((p) => !selected.some((s) => s.did === p.did));
+  }, [searchData, selected]);
+
+  // Debounce the query into submittedQuery so the search fires as the user
+  // types instead of only on Enter.
+  useEffect(() => {
+    const t = setTimeout(() => setSubmittedQuery(query.trim()), 200);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const handleAddMember = useCallback(
+    (profile: BlueskyProfile) => {
+      if (selected.length >= MAX_MEMBERS) return;
+      setSelected((prev) => [...prev, profile]);
+      // Clear input and search to encourage adding more.
+      setQuery('');
+      setSubmittedQuery('');
+    },
+    [selected.length],
+  );
+
+  const handleRemoveMember = useCallback((did: string) => {
+    setSelected((prev) => prev.filter((p) => p.did !== did));
+  }, []);
+
+  const handleStart = useCallback(() => {
+    if (selected.length === 0) return;
+    startConvo.mutate(
+      { memberDids: selected.map((s) => s.did) },
+      {
+        onSuccess: () => {
+          // Until the route is migrated to /[convoId], navigate using the
+          // first peer's handle so 1:1 chats land in the existing screen.
+          // For groups, the existing screen still resolves by handle —
+          // group rendering ships in stage 2.
+          const firstHandle = selected[0].handle;
+          router.replace(`/(tabs)/messages/${encodeURIComponent(firstHandle)}` as any);
+        },
+        onError: () => {
+          showToast({ message: t('common.error'), type: 'error' });
+        },
+      },
+    );
+  }, [selected, startConvo, showToast, t]);
+
+  // Pre-seed with a member if the screen was opened from a profile.
+  useMemo(() => {
+    if (initialMember && selected.length === 0) {
+      // We only have a handle/DID string, not a full profile. The user can
+      // search again to confirm — for now just stash a minimal placeholder.
+      // (Full implementation in stage 2 once we wire DID→profile lookups.)
+    }
+  }, [initialMember, selected.length]);
+
+  const canStart = selected.length > 0 && !startConvo.isPending;
+
+  return (
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={[styles.header, { borderBottomColor: borderColor }]}>
+        <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+          <ThemedText style={[styles.headerAction, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
+        </TouchableOpacity>
+        <ThemedText style={[styles.title, { color: textColor }]}>
+          {t('messages.newChat')}
+        </ThemedText>
+        <TouchableOpacity onPress={handleStart} disabled={!canStart} hitSlop={12}>
+          {startConvo.isPending ? (
+            <ActivityIndicator size="small" />
+          ) : (
+            <ThemedText
+              style={[
+                styles.headerAction,
+                { color: canStart ? tintColor : iconColor, fontWeight: fontWeight.semibold },
+              ]}
+            >
+              {t('messages.start')}
+            </ThemedText>
+          )}
+        </TouchableOpacity>
+      </View>
+
+      {selected.length > 0 ? (
+        <View style={[styles.chipsRow, { borderBottomColor: borderColor }]}>
+          {selected.map((profile) => (
+            <TouchableOpacity
+              key={profile.did}
+              onPress={() => handleRemoveMember(profile.did)}
+              style={[styles.chip, { backgroundColor: inputBg, borderColor }]}
+              activeOpacity={activeOpacity.default}
+            >
+              {profile.avatar ? (
+                <Image source={{ uri: profile.avatar }} style={styles.chipAvatar} />
+              ) : (
+                <View style={[styles.chipAvatar, { backgroundColor: borderColor }]} />
+              )}
+              <ThemedText style={[styles.chipText, { color: textColor }]} numberOfLines={1}>
+                {profile.displayName || profile.handle}
+              </ThemedText>
+              <IconSymbol name="xmark.circle.fill" size={16} color={iconColor} />
+            </TouchableOpacity>
+          ))}
+        </View>
+      ) : null}
+
+      <View style={[styles.searchRow, { borderBottomColor: borderColor }]}>
+        <IconSymbol name="magnifyingglass" size={18} color={iconColor} />
+        <TextInput
+          style={[styles.searchInput, { color: textColor }]}
+          placeholder={t('messages.searchPlaceholder')}
+          placeholderTextColor={iconColor}
+          value={query}
+          onChangeText={setQuery}
+          returnKeyType="search"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus
+        />
+        {query.length > 0 ? (
+          <TouchableOpacity
+            onPress={() => {
+              setQuery('');
+              setSubmittedQuery('');
+            }}
+            hitSlop={8}
+          >
+            <IconSymbol name="xmark.circle.fill" size={18} color={iconColor} />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      <ScrollView keyboardShouldPersistTaps="handled" style={styles.results}>
+        {submittedQuery.length === 0 ? (
+          <View style={styles.empty}>
+            <ThemedText style={[styles.emptyText, { color: iconColor }]}>
+              {t('messages.searchHint')}
+            </ThemedText>
+          </View>
+        ) : isLoading ? (
+          <View style={styles.empty}>
+            <ActivityIndicator />
+          </View>
+        ) : profiles.length === 0 ? (
+          <View style={styles.empty}>
+            <ThemedText style={[styles.emptyText, { color: iconColor }]}>
+              {t('search.noUsersFound')}
+            </ThemedText>
+          </View>
+        ) : (
+          profiles.map((profile) => (
+            <TouchableOpacity
+              key={profile.did}
+              style={[styles.row, { borderBottomColor: borderColor }]}
+              onPress={() => handleAddMember(profile)}
+              activeOpacity={activeOpacity.default}
+              disabled={selected.length >= MAX_MEMBERS}
+            >
+              {profile.avatar ? (
+                <Image source={{ uri: profile.avatar }} style={styles.avatar} />
+              ) : (
+                <View style={[styles.avatar, { backgroundColor: borderColor }]} />
+              )}
+              <View style={styles.rowText}>
+                <ThemedText style={[styles.rowName, { color: textColor }]} numberOfLines={1}>
+                  {profile.displayName || profile.handle}
+                </ThemedText>
+                <ThemedText style={[styles.rowHandle, { color: iconColor }]} numberOfLines={1}>
+                  @{profile.handle}
+                </ThemedText>
+              </View>
+              <IconSymbol name="plus" size={18} color={tintColor} />
+            </TouchableOpacity>
+          ))
+        )}
+      </ScrollView>
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
+  },
+  headerAction: {
+    fontSize: fontSize.lg,
+  },
+  title: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+  },
+  chipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: layout.hairline,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radius.xl,
+    borderWidth: layout.hairline,
+    maxWidth: 200,
+  },
+  chipAvatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
+  chipText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    flexShrink: 1,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: fontSize.base,
+  },
+  results: {
+    flex: 1,
+  },
+  empty: {
+    paddingVertical: spacing.xxxxl,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: fontSize.base,
+    opacity: opacity.secondary,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderBottomWidth: layout.hairline,
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  rowText: {
+    flex: 1,
+  },
+  rowName: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  rowHandle: {
+    fontSize: fontSize.sm,
+  },
+});

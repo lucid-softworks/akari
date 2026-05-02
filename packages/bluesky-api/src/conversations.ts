@@ -1,10 +1,13 @@
 import { BlueskyApiClient } from './client';
 import type {
+  BlueskyConvoView,
   BlueskyConvosResponse,
   BlueskyMessagesResponse,
   BlueskySendMessageInput,
   BlueskySendMessageResponse,
 } from './types';
+
+const CHAT_PROXY = 'did:web:api.bsky.chat#bsky_chat';
 
 /**
  * Bluesky API conversation methods
@@ -93,12 +96,54 @@ export class BlueskyConversations extends BlueskyApiClient {
     return this.makeAuthenticatedRequest<BlueskySendMessageResponse>('/chat.bsky.convo.sendMessage', accessJwt, {
       method: 'POST',
       headers: {
-        'atproto-proxy': 'did:web:api.bsky.chat#bsky_chat',
+        'atproto-proxy': CHAT_PROXY,
       },
       body: {
         convoId,
         message,
       },
+    });
+  }
+
+  /**
+   * Looks up the conversation for an exact set of member DIDs, creating
+   * one if it doesn't exist. Returns the convo view (including `id`).
+   *
+   * For 1:1 chats, pass the peer's DID. For a group chat, pass every
+   * member's DID — the current user is implicit and shouldn't be included.
+   */
+  async getConvoForMembers(
+    accessJwt: string,
+    members: string[],
+  ): Promise<{ convo: BlueskyConvoView }> {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>(
+      '/chat.bsky.convo.getConvoForMembers',
+      accessJwt,
+      {
+        params: { members },
+        headers: { 'atproto-proxy': CHAT_PROXY },
+      },
+    );
+  }
+
+  /**
+   * Fetches a single convo by id.
+   */
+  async getConvo(accessJwt: string, convoId: string): Promise<{ convo: BlueskyConvoView }> {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.getConvo', accessJwt, {
+      params: { convoId },
+      headers: { 'atproto-proxy': CHAT_PROXY },
+    });
+  }
+
+  /**
+   * Leaves a conversation. Returns the convo id and last seen rev.
+   */
+  async leaveConvo(accessJwt: string, convoId: string) {
+    return this.makeAuthenticatedRequest('/chat.bsky.convo.leaveConvo', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId },
     });
   }
 }

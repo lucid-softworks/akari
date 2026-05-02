@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "Skriv ett meddelande ...",
-      "errorSendingMessage": "Det gick inte att skicka meddelande. Försök igen."
+      "errorSendingMessage": "Det gick inte att skicka meddelande. Försök igen.",
+      "newChat": "Ny chatt",
+      "start": "Starta",
+      "searchPlaceholder": "Hitta personer att chatta med",
+      "searchHint": "Sök för att lägga till personer",
+      "deletedAccount": "Borttaget konto"
     },
     "settings": {
       "account": "Konto",

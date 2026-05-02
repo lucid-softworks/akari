@@ -250,7 +250,12 @@
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",
-      "errorSendingMessage": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
+      "errorSendingMessage": "Nie udało się wysłać wiadomości. Spróbuj ponownie.",
+      "newChat": "Nowy czat",
+      "start": "Rozpocznij",
+      "searchPlaceholder": "Znajdź osoby do czatu",
+      "searchHint": "Wyszukaj, aby dodać osoby",
+      "deletedAccount": "Usunięte konto"
     },
     "settings": {
       "account": "Konto",

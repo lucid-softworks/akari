@@ -259,7 +259,12 @@
     },
     "messages": {
       "typeMessage": "یک پیام را تایپ کنید ...",
-      "errorSendingMessage": "ارسال پیام انجام نشد. لطفا دوباره امتحان کنید"
+      "errorSendingMessage": "ارسال پیام انجام نشد. لطفا دوباره امتحان کنید",
+      "newChat": "گفت‌وگوی جدید",
+      "start": "شروع",
+      "searchPlaceholder": "افراد را برای گفت‌وگو پیدا کنید",
+      "searchHint": "برای افزودن افراد جستجو کنید",
+      "deletedAccount": "حساب حذف‌شده"
     },
     "settings": {
       "account": "حساب",
