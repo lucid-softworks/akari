@@ -1,18 +1,18 @@
 import React from 'react';
 import { Text } from 'react-native';
-import type { ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import { withSkeleton } from '@/components/ui/withSkeleton';
 
-type BaseProps = { label: string; style?: ViewStyle };
+type BaseProps = { label: string; style?: StyleProp<ViewStyle> };
 
 const BaseComponent = ({ label, style }: BaseProps) => (
-  <Text style={style}>{label}</Text>
+  <Text style={style as any}>{label}</Text>
 );
 
-const DefaultSkeleton = ({ style }: { style?: ViewStyle }) => (
-  <Text style={style}>Default Skeleton</Text>
+const DefaultSkeleton = ({ style }: { style?: StyleProp<ViewStyle> }) => (
+  <Text style={style as any}>Default Skeleton</Text>
 );
 
 describe('withSkeleton', () => {
@@ -41,8 +41,8 @@ describe('withSkeleton', () => {
 
   it('uses a custom skeleton component and forwards props and style', () => {
     const Wrapped = withSkeleton(BaseComponent, DefaultSkeleton);
-    const CustomSkeleton = ({ label, style }: { label: string; style?: ViewStyle }) => (
-      <Text style={style}>{label}</Text>
+    const CustomSkeleton = ({ label, style }: { label: string; style?: StyleProp<ViewStyle> }) => (
+      <Text style={style as any}>{label}</Text>
     );
     const style: ViewStyle = { backgroundColor: 'blue' };
     const { getByText, queryByText } = render(

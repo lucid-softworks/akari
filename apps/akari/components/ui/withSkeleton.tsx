@@ -3,7 +3,8 @@ import { ViewStyle } from 'react-native';
 
 type WithSkeletonProps = {
   isLoading?: boolean;
-  skeletonComponent: React.ComponentType<any>;
+  // Optional: defaults to the second argument of withSkeleton(...)
+  skeletonComponent?: React.ComponentType<any>;
   skeletonProps?: any;
   style?: ViewStyle;
 };
