@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Modal, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Modal, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -212,57 +212,69 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
     );
   }, [loading, searchLoading, searchQuery, iconColor, t, gifs.length]);
 
-  return (
-    <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
-      <ThemedView style={styles.overlay}>
-        <ThemedView style={[styles.container, { backgroundColor }]}>
-          {/* Header */}
-          <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity accessibilityRole="button" onPress={onClose} style={styles.headerButton}>
-              <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
-            </TouchableOpacity>
+  const isWeb = Platform.OS === 'web';
+  const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
+    Platform.OS === 'ios' ? 'pageSheet' : Platform.OS === 'android' ? 'fullScreen' : undefined;
 
-            <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
-              {t('gif.selectGif')}
-            </ThemedText>
+  const sheetContent = (
+    <ThemedView style={[styles.container, { backgroundColor }, isWeb && styles.webContainer]}>
+      {/* Header */}
+      <View style={[styles.header, { borderBottomColor: borderColor }]}>
+        <TouchableOpacity accessibilityRole="button" onPress={onClose} style={styles.headerButton}>
+          <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
+        </TouchableOpacity>
 
-            <View style={styles.headerSpacer} />
-          </View>
+        <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
+          {t('gif.selectGif')}
+        </ThemedText>
 
-          {/* Search Input */}
-          <View style={[styles.searchContainer, { borderBottomColor: borderColor }]}>
-            <View style={[styles.searchInputContainer, { backgroundColor: inputBackgroundColor, borderColor }]}>
-              <IconSymbol name="magnifyingglass" size={16} color={iconColor} style={styles.searchIcon} />
-              <TextInput
-                style={[styles.searchInput, { color: textColor }]}
-                value={searchQuery}
-                onChangeText={handleSearch}
-                placeholder={t('gif.searchPlaceholder')}
-                placeholderTextColor={iconColor}
-                returnKeyType="search"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              {searchLoading && <ActivityIndicator size="small" color={tintColor} style={styles.searchLoading} />}
-            </View>
-          </View>
+        <View style={styles.headerSpacer} />
+      </View>
 
-          {/* GIF Grid */}
-          <VirtualizedList
-            data={gifs}
-            renderItem={renderGifItem}
-            keyExtractor={(item) => item.id}
-            numColumns={3}
-            contentContainerStyle={styles.gifList}
-            showsVerticalScrollIndicator={false}
-            onEndReached={loadMoreGifs}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={renderFooter}
-            ListEmptyComponent={renderEmpty}
-            estimatedItemSize={ESTIMATED_GIF_ITEM_SIZE}
+      {/* Search Input */}
+      <View style={[styles.searchContainer, { borderBottomColor: borderColor }]}>
+        <View style={[styles.searchInputContainer, { backgroundColor: inputBackgroundColor, borderColor }]}>
+          <IconSymbol name="magnifyingglass" size={16} color={iconColor} style={styles.searchIcon} />
+          <TextInput
+            style={[styles.searchInput, { color: textColor }]}
+            value={searchQuery}
+            onChangeText={handleSearch}
+            placeholder={t('gif.searchPlaceholder')}
+            placeholderTextColor={iconColor}
+            returnKeyType="search"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-        </ThemedView>
-      </ThemedView>
+          {searchLoading && <ActivityIndicator size="small" color={tintColor} style={styles.searchLoading} />}
+        </View>
+      </View>
+
+      {/* GIF Grid */}
+      <VirtualizedList
+        data={gifs}
+        renderItem={renderGifItem}
+        keyExtractor={(item) => item.id}
+        numColumns={3}
+        contentContainerStyle={styles.gifList}
+        showsVerticalScrollIndicator={false}
+        onEndReached={loadMoreGifs}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
+        estimatedItemSize={ESTIMATED_GIF_ITEM_SIZE}
+      />
+    </ThemedView>
+  );
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle={nativePresentationStyle}
+      transparent={isWeb}
+      onRequestClose={onClose}
+    >
+      {isWeb ? <ThemedView style={styles.overlay}>{sheetContent}</ThemedView> : sheetContent}
     </Modal>
   );
 }
@@ -276,6 +288,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  webContainer: {
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
     maxWidth: 800,
