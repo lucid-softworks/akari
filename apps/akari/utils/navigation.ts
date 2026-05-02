@@ -14,20 +14,18 @@ type PostNavigationArgs = {
  * - Web: Uses top-level profile route
  */
 function getTabRouteFromPathname(pathname: string): TabRoute {
-  if (pathname.startsWith('/notifications')) return 'notifications';
-  if (pathname.startsWith('/messages')) return 'messages';
-  if (pathname.startsWith('/search')) return 'search';
-  if (pathname.startsWith('/bookmarks')) return 'bookmarks';
-  if (pathname.startsWith('/profile')) return 'profile';
+  // Expo Router can surface paths with the (tabs) group prefix in some
+  // contexts. Strip it so the prefix checks below still work.
+  const p = pathname.replace(/^\/\(tabs\)/, '');
+
+  if (p.startsWith('/notifications')) return 'notifications';
+  if (p.startsWith('/messages')) return 'messages';
+  if (p.startsWith('/search')) return 'search';
+  if (p.startsWith('/bookmarks')) return 'bookmarks';
+  if (p.startsWith('/profile')) return 'profile';
   // Index tab. Either '/' or '/index/...'. Also catch '/user-profile/...' which
-  // is what Expo Router can collapse '/index/user-profile/...' to in some
-  // contexts — fall back to 'index' so navigation from there stays in the
-  // home tab's stack.
-  if (
-    pathname === '/' ||
-    pathname.startsWith('/index') ||
-    pathname.startsWith('/user-profile')
-  ) {
+  // is the runtime URL after Expo Router collapses the 'index' segment.
+  if (p === '/' || p.startsWith('/index') || p.startsWith('/user-profile')) {
     return 'index';
   }
   // Unknown pathname — assume index tab rather than throwing so a transient
