@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/EmptyState';
@@ -182,6 +183,7 @@ const SearchListHeader = React.memo(
 SearchListHeader.displayName = 'SearchListHeader';
 
 const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
+const DEFAULT_HEADER_HEIGHT = 140;
 
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
@@ -192,6 +194,10 @@ export default function SearchScreen() {
     initialQuery && isHashtagQuery(initialQuery) ? 'posts' : 'all',
   );
   const [sort, setSort] = useState<SearchSort>('top');
+  const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
+  const headerHeightSv = useSharedValue(DEFAULT_HEADER_HEIGHT);
+  const headerTranslateY = useSharedValue(0);
+  const lastScrollY = useSharedValue(0);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
@@ -202,12 +208,44 @@ export default function SearchScreen() {
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
+    headerTranslateY.value = withTiming(0, { duration: 150 });
+  }, [headerTranslateY]);
 
   // Register with the tab scroll registry
   useEffect(() => {
     tabScrollRegistry.register('search', scrollToTop);
   }, [scrollToTop]);
+
+  const handleHeaderLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const h = event.nativeEvent.layout.height;
+      if (h > 0) {
+        setHeaderHeight(h);
+        headerHeightSv.value = h;
+      }
+    },
+    [headerHeightSv],
+  );
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const y = event.nativeEvent.contentOffset.y;
+      const delta = y - lastScrollY.value;
+      lastScrollY.value = y;
+      if (y <= 0) {
+        headerTranslateY.value = 0;
+      } else {
+        const max = headerHeightSv.value;
+        const next = headerTranslateY.value - delta;
+        headerTranslateY.value = Math.max(-max, Math.min(0, next));
+      }
+    },
+    [headerHeightSv, headerTranslateY, lastScrollY],
+  );
+
+  const headerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: headerTranslateY.value }],
+  }));
 
   const backgroundColor = useThemeColor(
     {
@@ -493,11 +531,13 @@ export default function SearchScreen() {
         data={filteredResults}
         renderItem={renderResult}
         keyExtractor={(item, index) => `${item.type}-${index}`}
-        contentContainerStyle={styles.resultsListContent}
+        contentContainerStyle={[styles.resultsListContent, { paddingTop: headerHeight }]}
         refreshing={isRefetching}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={
           isLoading ? (
@@ -518,9 +558,15 @@ export default function SearchScreen() {
           )
         }
         estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
-        ListHeaderComponent={listHeaderComponent}
         keyboardShouldPersistTaps="handled"
       />
+      <Animated.View
+        pointerEvents="box-none"
+        onLayout={handleHeaderLayout}
+        style={[styles.headerOverlay, { backgroundColor }, headerAnimatedStyle]}
+      >
+        {listHeaderComponent}
+      </Animated.View>
     </ThemedView>
   );
 }
@@ -542,7 +588,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.xs,
     gap: spacing.sm,
   },
   inputWrapper: {
@@ -628,8 +675,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
+  },
+  headerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   sortChip: {
     paddingHorizontal: spacing.md,
