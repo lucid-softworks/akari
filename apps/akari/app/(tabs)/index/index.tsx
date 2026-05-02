@@ -136,20 +136,23 @@ export default function HomeScreen() {
   } = useFeed(selectedFeed === 'following' ? null : selectedFeed, 20);
 
   // Get timeline data for "following" feed
-  const { data: timelineData, isLoading: timelineLoading } = useTimeline(20, selectedFeed === 'following');
+  const {
+    data: timelineData,
+    isLoading: timelineLoading,
+    refetch: refetchTimeline,
+  } = useTimeline(20, selectedFeed === 'following');
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     if (selectedFeed === 'following') {
-      // Refresh timeline for following feed
-      // Note: useTimeline doesn't have a refetch method, so we'll skip this for now
+      await refetchTimeline();
     } else if (selectedFeed) {
       await refetchFeed();
     } else {
       await refetchFeeds();
     }
     setRefreshing(false);
-  }, [refetchFeed, refetchFeeds, selectedFeed]);
+  }, [refetchFeed, refetchFeeds, refetchTimeline, selectedFeed]);
 
   const loadMorePosts = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
