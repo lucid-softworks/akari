@@ -12,21 +12,22 @@ export type VirtualizedListHandle<T> = FlashListRef<T>;
 export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize' | 'style'> & {
   estimatedItemSize?: number;
   overscan?: number;
+  ref?: React.Ref<VirtualizedListHandle<T>>;
 };
 
-function VirtualizedListInner<T>(
-  {
-    data,
-    renderItem,
-    overscan = DEFAULT_OVERSCAN,
-    estimatedItemSize: incomingEstimatedItemSize,
-    ListHeaderComponent,
-    ListHeaderComponentStyle,
-    stickyHeaderIndices,
-    ...rest
-  }: VirtualizedListProps<T>,
-  ref: React.ForwardedRef<VirtualizedListHandle<T>>,
-) {
+// React 19+ accepts `ref` as a regular prop, so we skip forwardRef and the
+// memo+generic-cast dance the previous version needed.
+export function VirtualizedList<T>({
+  data,
+  renderItem,
+  overscan = DEFAULT_OVERSCAN,
+  estimatedItemSize: incomingEstimatedItemSize,
+  ListHeaderComponent,
+  ListHeaderComponentStyle,
+  stickyHeaderIndices,
+  ref,
+  ...rest
+}: VirtualizedListProps<T>) {
   const estimatedItemSize = incomingEstimatedItemSize ?? DEFAULT_ESTIMATED_ITEM_SIZE;
   const typedData = data as T[];
 
@@ -40,9 +41,7 @@ function VirtualizedListInner<T>(
         : undefined;
 
   const renderItemWithStickyHeader = React.useCallback(
-    (
-      info: Parameters<NonNullable<FlashListProps<T>['renderItem']>>[0],
-    ) => {
+    (info: Parameters<NonNullable<FlashListProps<T>['renderItem']>>[0]) => {
       if (
         shouldAutoStickHeader &&
         info.target === 'StickyHeader' &&
@@ -62,29 +61,21 @@ function VirtualizedListInner<T>(
     [ListHeaderComponent, renderItem, shouldAutoStickHeader],
   );
 
+  const flashListPassthrough = {
+    ...(flashListProps as FlashListProps<T>),
+    ref,
+    data: typedData,
+    renderItem: renderItemWithStickyHeader,
+    estimatedItemSize,
+    drawDistance: drawDistance ?? overscan * estimatedItemSize,
+    ListHeaderComponent,
+    ListHeaderComponentStyle,
+    stickyHeaderIndices: computedStickyHeaderIndices,
+  } as React.ComponentProps<typeof FlashList<T>>;
+
   return (
     <ComponentErrorBoundary>
-      <FlashList
-        {...(flashListProps as FlashListProps<T>)}
-        ref={ref as React.Ref<FlashListRef<T>>}
-        data={typedData}
-        renderItem={renderItemWithStickyHeader}
-        estimatedItemSize={estimatedItemSize}
-        drawDistance={drawDistance ?? overscan * estimatedItemSize}
-        ListHeaderComponent={ListHeaderComponent}
-        ListHeaderComponentStyle={ListHeaderComponentStyle}
-        stickyHeaderIndices={computedStickyHeaderIndices}
-      />
+      <FlashList {...flashListPassthrough} />
     </ComponentErrorBoundary>
   );
 }
-
-const ForwardedVirtualizedList = React.forwardRef(VirtualizedListInner) as <T>(
-  props: VirtualizedListProps<T> & { ref?: React.Ref<VirtualizedListHandle<T>> },
-) => React.ReactElement;
-
-ForwardedVirtualizedList.displayName = 'VirtualizedList';
-
-export const VirtualizedList = React.memo(ForwardedVirtualizedList) as <T>(
-  props: VirtualizedListProps<T> & { ref?: React.Ref<VirtualizedListHandle<T>> },
-) => React.ReactElement;
