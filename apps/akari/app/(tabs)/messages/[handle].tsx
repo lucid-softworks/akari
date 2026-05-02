@@ -513,7 +513,7 @@ export default function ConversationScreen() {
       ) : null}
       {messagesLoading ? (
         <View style={styles.loadingState}>
-          <ThemedText style={styles.loadingText}>Loading messages...</ThemedText>
+          <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
         </View>
       ) : (
         <FlatList
