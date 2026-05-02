@@ -175,11 +175,13 @@ export default function HomeScreen() {
     }
 
     if (allPosts.length === 0) {
-      return [{ type: 'empty', state: feedLoading || timelineLoading ? 'loading' : 'empty' }];
+      const hasFetched = selectedFeed === 'following' ? timelineData !== undefined : feedData !== undefined;
+      const isLoading = feedLoading || timelineLoading || !hasFetched;
+      return [{ type: 'empty', state: isLoading ? 'loading' : 'empty' }];
     }
 
     return allPosts.map((item) => ({ type: 'post', item }));
-  }, [allPosts, feedLoading, selectedFeed, timelineLoading]);
+  }, [allPosts, feedData, feedLoading, selectedFeed, timelineData, timelineLoading]);
   const feedTabs = useMemo(
     () =>
       allFeedsWithCreated.map((feed) => ({
