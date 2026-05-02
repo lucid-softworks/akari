@@ -67,7 +67,8 @@
       "live": "LIVE",
       "watchNow": "Watch now",
       "openProfile": "Open profile",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "copiedToClipboard": "Copied to clipboard"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",

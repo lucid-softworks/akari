@@ -8,6 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { ReportSheet } from '@/components/ReportSheet';
+import { useToast } from '@/contexts/ToastContext';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -46,6 +47,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   onTranslatePress,
 }: PostActionsMenuProps) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const insets = useSafeAreaInsets();
   const [showReportSheet, setShowReportSheet] = useState(false);
 
@@ -79,10 +81,12 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 
   const handleCopyText = useCallback(() => {
     if (postText) {
-      void Clipboard.setStringAsync(postText);
+      void Clipboard.setStringAsync(postText).then(() => {
+        showToast({ message: t('common.copiedToClipboard'), type: 'success' });
+      });
     }
     onDismiss();
-  }, [postText, onDismiss]);
+  }, [postText, onDismiss, showToast, t]);
 
   const handleMuteAccount = useCallback(() => {
     if (authorDid) {

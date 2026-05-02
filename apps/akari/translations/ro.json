@@ -67,7 +67,8 @@
       "profile": "Profile",
       "signOutAllAccounts": "Sign Out of All Accounts",
       "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "copiedToClipboard": "Copied to clipboard"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
