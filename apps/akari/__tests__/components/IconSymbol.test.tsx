@@ -8,7 +8,11 @@ jest.mock('@expo/vector-icons/MaterialIcons', () => ({
 }));
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import { IconSymbol } from '@/components/ui/IconSymbol';
+// Force the MaterialIcons-backed (.tsx) variant — jest-expo resolves the
+// no-extension import to .ios.tsx, which uses expo-symbols' SymbolView and
+// doesn't call MaterialIcons at all.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { IconSymbol } = require('../../components/ui/IconSymbol.tsx');
 
 describe('IconSymbol', () => {
   beforeEach(() => {
