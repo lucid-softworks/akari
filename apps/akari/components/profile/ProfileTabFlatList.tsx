@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, type LayoutChangeEvent, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -130,17 +130,26 @@ export function ProfileTabFlatList<T>({
   // Pin to the parent-provided scroll target whenever this tab becomes the
   // active one — including on first mount. Keeps the visual banner/sticky-tab
   // state in sync across tab switches even though each tab owns its own
-  // FlatList. pinScrollY is read from the closure of the render that flipped
-  // isActive to true, so it always reflects the latest target.
+  // FlatList.
   const pinScrollYRef = useRef(pinScrollY ?? 0);
   pinScrollYRef.current = pinScrollY ?? 0;
 
-  useEffect(() => {
+  // First-mount: lock in the initial scroll natively via contentOffset so the
+  // FlatList starts at the right scroll on its very first paint — no frame
+  // where the user briefly sees the new tab from the top.
+  const initialContentOffsetRef = useRef({ x: 0, y: pinScrollY ?? 0 });
+
+  // Re-activations (already-mounted tab toggling back to active): scroll
+  // synchronously before the next paint via useLayoutEffect.
+  const isFirstActivationRef = useRef(true);
+  useLayoutEffect(() => {
     if (!isActive) return;
-    const target = pinScrollYRef.current;
-    requestAnimationFrame(() => {
-      listRef.current?.scrollToOffset({ offset: target, animated: false });
-    });
+    if (isFirstActivationRef.current) {
+      // First activation already handled by contentOffset; skip.
+      isFirstActivationRef.current = false;
+      return;
+    }
+    listRef.current?.scrollToOffset({ offset: pinScrollYRef.current, animated: false });
   }, [isActive]);
 
   return (
@@ -160,6 +169,7 @@ export function ProfileTabFlatList<T>({
       scrollEventThrottle={32}
       contentContainerStyle={styles.listContent}
       removeClippedSubviews={false}
+      contentOffset={initialContentOffsetRef.current}
       ListFooterComponent={
         isFetchingNextPage && data.length > 0 ? (
           <ActivityIndicator style={styles.loadingFooter} />
