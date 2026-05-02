@@ -47,6 +47,7 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
               minute: '2-digit',
             }),
             isFromMe,
+            senderDid: message.sender.did,
             sentAt: message.sentAt,
             embed: message.embed,
           };

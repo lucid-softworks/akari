@@ -20,12 +20,21 @@ import { Image } from 'expo-image';
 import { useResponsive } from '@/hooks/useResponsive';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
+type ConvoMember = {
+  did: string;
+  handle: string;
+  displayName?: string;
+  avatar?: string;
+};
+
 type Conversation = {
   id: string;
   convoId: string;
   handle: string;
   displayName: string;
   avatar?: string;
+  members: ConvoMember[];
+  isGroup: boolean;
   lastMessage: string;
   timestamp: string;
   unreadCount: number;
@@ -128,7 +137,13 @@ export function MessagesListScreen({
   const renderConversation = React.useCallback(
     ({ item }: { item: Conversation }) => {
       const isDeleted = item.handle === 'missing.invalid';
-      const displayName = isDeleted ? t('messages.deletedAccount') : item.displayName;
+      const displayName = item.isGroup
+        ? item.members
+            .map((m) => m.displayName || m.handle || t('messages.deletedAccount'))
+            .join(', ')
+        : isDeleted
+        ? t('messages.deletedAccount')
+        : item.displayName;
       return (
       <TouchableOpacity
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
@@ -142,12 +157,33 @@ export function MessagesListScreen({
           <TouchableOpacity
             style={styles.avatarContainer}
             onPress={() => {
-              if (isDeleted) return;
+              if (isDeleted || item.isGroup) return;
               navigateToProfile({ actor: item.handle });
             }}
             activeOpacity={activeOpacity.default}
           >
-            {item.avatar ? (
+            {item.isGroup ? (
+              <View style={styles.groupAvatar}>
+                {item.members.slice(0, 3).map((member, idx) => (
+                  <ThemedView
+                    key={member.did}
+                    style={[
+                      styles.groupAvatarSlot,
+                      { borderColor },
+                      idx > 0 && styles.groupAvatarSlotOverlap,
+                    ]}
+                  >
+                    {member.avatar ? (
+                      <Image source={{ uri: member.avatar }} style={styles.groupAvatarImage} contentFit="cover" />
+                    ) : (
+                      <ThemedText style={styles.groupAvatarFallback}>
+                        {(member.displayName || member.handle || 'U')[0].toUpperCase()}
+                      </ThemedText>
+                    )}
+                  </ThemedView>
+                ))}
+              </View>
+            ) : item.avatar ? (
               <ThemedView style={styles.avatar}>
                 <Image source={{ uri: item.avatar }} style={styles.avatarImage} contentFit="cover" />
               </ThemedView>
@@ -486,6 +522,34 @@ const styles = StyleSheet.create({
     fontSize: fontSize.xxl,
     fontWeight: fontWeight.bold,
     color: 'white',
+  },
+  groupAvatar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+  },
+  groupAvatarSlot: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+  },
+  groupAvatarSlotOverlap: {
+    marginLeft: -spacing.md,
+  },
+  groupAvatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  groupAvatarFallback: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+    color: '#FFFFFF',
   },
   conversationInfo: {
     flex: 1,

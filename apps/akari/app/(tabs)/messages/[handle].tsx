@@ -45,6 +45,7 @@ type Message = {
   text: string;
   timestamp: string;
   isFromMe: boolean;
+  senderDid: string;
   sentAt: string;
   embed?: BlueskyEmbed;
 };
@@ -376,9 +377,22 @@ export default function ConversationScreen() {
   const renderMessage = ({ item }: { item: Message }) => {
     const hasText = item.text.trim().length > 0;
     const embedContent = item.embed ? renderMessageEmbed(item.embed, item.id) : null;
+    // In group chats, show the sender's display name above each incoming
+    // message so you know who said what. Suppressed for 1:1 chats and for
+    // your own messages.
+    const senderLabel =
+      conversation?.isGroup && !item.isFromMe
+        ? conversation.members.find((m) => m.did === item.senderDid)?.displayName ??
+          conversation.members.find((m) => m.did === item.senderDid)?.handle
+        : null;
 
     return (
       <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
+        {senderLabel ? (
+          <ThemedText style={[styles.senderLabel, { color: iconColor }]} numberOfLines={1}>
+            {senderLabel}
+          </ThemedText>
+        ) : null}
         {(hasText || !item.embed) && (
           <ThemedView
             style={[
@@ -503,17 +517,45 @@ export default function ConversationScreen() {
       {Platform.OS === 'web' && conversation ? (
         <TouchableOpacity
           style={[styles.threadHeader, { borderBottomColor: borderColor }]}
-          onPress={() => navigateToProfile({ actor: decodeURIComponent(handle) })}
+          onPress={() => {
+            if (conversation.isGroup) return;
+            navigateToProfile({ actor: decodeURIComponent(handle) });
+          }}
           activeOpacity={activeOpacity.default}
         >
-          {conversation.avatar ? (
+          {conversation.isGroup ? (
+            <View style={styles.threadHeaderGroupAvatar}>
+              {conversation.members.slice(0, 3).map((member, idx) => (
+                <View
+                  key={member.did}
+                  style={[
+                    styles.threadHeaderGroupSlot,
+                    { borderColor },
+                    idx > 0 && styles.threadHeaderGroupSlotOverlap,
+                  ]}
+                >
+                  {member.avatar ? (
+                    <Image source={{ uri: member.avatar }} style={styles.threadHeaderGroupSlotImage} contentFit="cover" />
+                  ) : (
+                    <ThemedText style={styles.threadHeaderGroupSlotFallback}>
+                      {(member.displayName || member.handle || 'U')[0].toUpperCase()}
+                    </ThemedText>
+                  )}
+                </View>
+              ))}
+            </View>
+          ) : conversation.avatar ? (
             <Image source={{ uri: conversation.avatar }} style={styles.threadHeaderAvatar} contentFit="cover" />
           ) : null}
           <View>
             <ThemedText style={styles.threadHeaderName}>
-              {conversation.displayName || decodeURIComponent(handle)}
+              {conversation.isGroup
+                ? conversation.members.map((m) => m.displayName || m.handle).join(', ')
+                : conversation.displayName || decodeURIComponent(handle)}
             </ThemedText>
-            <ThemedText style={styles.threadHeaderHandle}>@{decodeURIComponent(handle)}</ThemedText>
+            {!conversation.isGroup ? (
+              <ThemedText style={styles.threadHeaderHandle}>@{decodeURIComponent(handle)}</ThemedText>
+            ) : null}
           </View>
         </TouchableOpacity>
       ) : null}
@@ -557,6 +599,39 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
+  },
+  threadHeaderGroupAvatar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 32,
+  },
+  threadHeaderGroupSlot: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+  },
+  threadHeaderGroupSlotOverlap: {
+    marginLeft: -8,
+  },
+  threadHeaderGroupSlotImage: {
+    width: '100%',
+    height: '100%',
+  },
+  threadHeaderGroupSlotFallback: {
+    fontSize: 10,
+    fontWeight: fontWeight.bold,
+    color: '#FFFFFF',
+  },
+  senderLabel: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    paddingHorizontal: spacing.md,
+    marginBottom: 2,
   },
   threadHeaderName: {
     fontSize: fontSize.lg,

@@ -44,19 +44,28 @@ export function useConversations(
 
         // Transform the data to match our UI needs
         const conversations = response.convos.map((convo) => {
-          // Find the other member (not the current user)
-          const otherMember = convo.members.find((member) => member.did !== currentAccount?.did);
+          // Other members = everyone except the current user. For 1:1 chats
+          // that's a single peer; for groups (when the feature flag flips
+          // on) it's the full peer list.
+          const otherMembers = convo.members.filter((member) => member.did !== currentAccount?.did);
 
-          if (!otherMember) {
+          if (otherMembers.length === 0) {
             throw new Error('No other member found in conversation');
           }
+
+          // Keep `handle`/`displayName`/`avatar` pointing at the first peer
+          // for backward compatibility with the existing 1:1 UI; groups
+          // pull from `members` directly.
+          const primary = otherMembers[0];
 
           return {
             id: convo.id,
             convoId: convo.id, // Keep the conversation ID for message fetching
-            handle: otherMember.handle,
-            displayName: otherMember.displayName || otherMember.handle,
-            avatar: otherMember.avatar,
+            handle: primary.handle,
+            displayName: primary.displayName || primary.handle,
+            avatar: primary.avatar,
+            members: otherMembers,
+            isGroup: otherMembers.length > 1,
             lastMessage: convo.lastMessage?.text || 'No messages yet',
             timestamp: convo.lastMessage?.sentAt ? new Date(convo.lastMessage.sentAt).toLocaleDateString() : 'No messages',
             unreadCount: convo.unreadCount,
