@@ -101,20 +101,32 @@ export function ProfileTabFlatList<T>({
     [keyExtractor],
   );
 
-  // On mount, if requested, pin the sticky tab strip to the top of the viewport
-  // so switching tabs keeps the user oriented at the tabs (not at the banner).
+  // Capture the pin intent at first mount only — we don't want a later
+  // re-render with pinTabsOnMount=false to forget our pending pin, and we
+  // don't want a re-render with pinTabsOnMount=true to re-pin after the user
+  // has scrolled.
+  const shouldPinRef = useRef(pinTabsOnMount);
+  const hasPinnedRef = useRef(false);
+
+  const tryPin = useCallback(() => {
+    if (hasPinnedRef.current) return;
+    if (!shouldPinRef.current || !hasStickyTab) return;
+    const list = listRef.current;
+    if (!list) return;
+    list.scrollToIndex({ index: stickyIndex, animated: false, viewPosition: 0 });
+    hasPinnedRef.current = true;
+  }, [hasStickyTab, stickyIndex]);
+
+  // First attempt: next frame after mount. The FlatList ref is set but its
+  // items often haven't laid out yet; if scrollToIndex fails we'll retry
+  // below from onContentSizeChange / onScrollToIndexFailed.
   useEffect(() => {
-    if (!pinTabsOnMount || !hasStickyTab) return;
-    requestAnimationFrame(() => {
-      listRef.current?.scrollToIndex({
-        index: stickyIndex,
-        animated: false,
-        viewPosition: 0,
-      });
-    });
-    // Mount-only; capture pinTabsOnMount at first render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    requestAnimationFrame(tryPin);
+  }, [tryPin]);
+
+  const handleContentSizeChange = useCallback(() => {
+    tryPin();
+  }, [tryPin]);
 
   return (
     <FlatList
@@ -131,14 +143,18 @@ export function ProfileTabFlatList<T>({
       refreshing={refreshing}
       contentContainerStyle={styles.listContent}
       removeClippedSubviews={false}
+      onContentSizeChange={handleContentSizeChange}
       onScrollToIndexFailed={(info) => {
-        // Item not measured yet — retry shortly.
+        // Item not measured yet — retry shortly. Reset the flag so tryPin can
+        // run again from the next onContentSizeChange.
+        hasPinnedRef.current = false;
         setTimeout(() => {
           listRef.current?.scrollToIndex({
             index: info.index,
             animated: false,
             viewPosition: 0,
           });
+          hasPinnedRef.current = true;
         }, 50);
       }}
       ListFooterComponent={
