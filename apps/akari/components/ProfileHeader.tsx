@@ -1,7 +1,9 @@
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
@@ -80,6 +82,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const borderColor = useBorderColor();
   const avatarBorderColor = useThemeColor({}, 'background');
   const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
+  const insets = useSafeAreaInsets();
+  const canGoBack = router.canGoBack();
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const muteMutation = useMuteUser();
@@ -286,6 +290,18 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             <ThemedText style={styles.bannerPlaceholderText}>{t('ui.noBanner')}</ThemedText>
           </View>
         )}
+        {canGoBack ? (
+          <TouchableOpacity
+            style={[styles.backButton, { top: insets.top + spacing.sm }]}
+            onPress={() => router.back()}
+            activeOpacity={activeOpacity.subtle}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.back')}
+            hitSlop={hitSlop}
+          >
+            <IconSymbol name="chevron.left" size={20} color="#ffffff" />
+          </TouchableOpacity>
+        ) : null}
       </ThemedView>
 
       {/* Profile Header */}
@@ -445,6 +461,16 @@ const styles = StyleSheet.create({
   bannerPlaceholderText: {
     fontSize: fontSize.lg,
     opacity: opacity.tertiary + 0.1,
+  },
+  backButton: {
+    position: 'absolute',
+    left: spacing.md,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   profileHeader: {
     paddingHorizontal: spacing.lg,
