@@ -444,13 +444,15 @@ describe('BlueskyFeeds', () => {
 
   it('creates a post with reply context and image embeds', async () => {
     const feeds = new TestFeeds();
+    const rootRecord = { uri: 'at://root', cid: 'cid-root', value: {} };
+    const parentRecord = { uri: 'at://parent', cid: 'cid-parent', value: {} };
     const response = {
       uri: 'at://post/with-images',
       cid: 'cid456',
       commit: { cid: 'cid456', rev: 'rev2' },
       validationStatus: 'valid',
     } as BlueskyCreatePostResponse;
-    feeds.responses = [response];
+    feeds.responses = [rootRecord, parentRecord, response];
     const uploadResult: BlueskyUploadBlobResponse = {
       blob: { ref: { $link: 'blob/image' }, mimeType: 'image/png', size: 2048 },
     };
@@ -472,8 +474,13 @@ describe('BlueskyFeeds', () => {
 
     expect(result).toBe(response);
     expect(uploadImageSpy).toHaveBeenCalledWith('jwt', 'file://image.png', 'image/png');
-    const body = feeds.authCalls[0].options.body as { record: Record<string, unknown> };
-    expect(body.record.reply).toEqual({ root: 'at://root', parent: 'at://parent' });
+    const createCall = feeds.authCalls.find((call) => call.endpoint === '/com.atproto.repo.createRecord');
+    expect(createCall).toBeDefined();
+    const body = createCall!.options.body as { record: Record<string, unknown> };
+    expect(body.record.reply).toEqual({
+      root: { uri: rootRecord.uri, cid: rootRecord.cid },
+      parent: { uri: parentRecord.uri, cid: parentRecord.cid },
+    });
     expect(body.record.embed).toEqual({
       $type: 'app.bsky.embed.images',
       images: [
