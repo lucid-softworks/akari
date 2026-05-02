@@ -68,7 +68,8 @@
       "signOutAllAccounts": "Sign Out of All Accounts",
       "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device",
       "tryAgain": "Try again",
-      "copiedToClipboard": "Copied to clipboard"
+      "copiedToClipboard": "Copied to clipboard",
+      "offline": "You're offline. Changes will sync when you reconnect."
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",

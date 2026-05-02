@@ -17,6 +17,7 @@ import 'react-native-reanimated';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { CrashProvider } from '@/axiom-crash-reporter';
+import { OfflineBanner } from '@/components/OfflineBanner';
 import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -130,6 +131,7 @@ function AppProviders({ colorScheme }: ProvidersProps) {
       <ToastProvider>
         <DialogProvider>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <OfflineBanner />
             <Stack>
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -68,7 +68,8 @@
       "watchNow": "Watch now",
       "openProfile": "Open profile",
       "tryAgain": "Try again",
-      "copiedToClipboard": "Copied to clipboard"
+      "copiedToClipboard": "Copied to clipboard",
+      "offline": "You're offline. Changes will sync when you reconnect."
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
