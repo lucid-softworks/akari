@@ -52,7 +52,6 @@ const headerTitles: Record<string, string> = {
   development: 'Development',
 };
 
-const zeroTopSceneContainerStyle = { paddingTop: 0 } as const;
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -401,7 +400,6 @@ export default function TabLayout() {
                 screenOptions={{
                   headerShown: false,
                   tabBarStyle: { display: 'none' },
-                  sceneContainerStyle: zeroTopSceneContainerStyle,
                 }}
                 backBehavior={Platform.OS === 'web' ? 'history' : undefined}
               >
@@ -487,7 +485,6 @@ export default function TabLayout() {
           <Tabs
             screenOptions={{
               headerShown: false,
-              sceneContainerStyle: zeroTopSceneContainerStyle,
             }}
             tabBar={(props) => (
               <HardcodedTabBar
@@ -508,8 +505,7 @@ export default function TabLayout() {
             <Tabs.Screen
               name="profile"
               listeners={() => ({
-                tabLongPress: (event) => {
-                  event.preventDefault();
+                tabLongPress: () => {
                   handleOpenAccountSwitcher();
                 },
               })}
