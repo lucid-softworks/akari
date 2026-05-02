@@ -64,7 +64,9 @@
       "watchNow": "Urmăriți acum",
       "openProfile": "Profil deschis",
       "home": "Home",
-      "profile": "Profile"
+      "profile": "Profile",
+      "signOutAllAccounts": "Sign Out of All Accounts",
+      "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -360,7 +362,14 @@
       "textColor": "Text",
       "icons": "Icons",
       "borders": "Borders",
-      "colors": "Colors"
+      "colors": "Colors",
+      "accountDescription": "Manage accounts, sign out",
+      "customizeTabs": "Customize Tabs",
+      "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
+      "visibleTabs": "Visible Tabs",
+      "hiddenTabs": "Hidden Tabs",
+      "alwaysOn": "Always on",
+      "resetToDefault": "Reset to Default"
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",
