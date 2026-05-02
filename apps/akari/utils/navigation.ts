@@ -46,6 +46,12 @@ export function useNavigateToPost() {
 
       if (targetTabRoute === 'profile') {
         router.push(`/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+      } else if (targetTabRoute === 'index') {
+        // The home tab's nested user-profile routes live under
+        // /(tabs)/index/user-profile/[handle], but Expo Router collapses the
+        // 'index' segment so the runtime URL is /user-profile/<handle>.
+        // @ts-expect-error collapsed-index-segment URL not in generated types
+        router.push(`/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
       } else {
         router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
       }
@@ -73,6 +79,9 @@ export function useNavigateToProfile() {
 
       if (targetTabRoute === 'profile') {
         router.push(`/profile/${encodeURIComponent(actor)}`);
+      } else if (targetTabRoute === 'index') {
+        // @ts-expect-error collapsed-index-segment URL not in generated types
+        router.push(`/user-profile/${encodeURIComponent(actor)}`);
       } else {
         router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`);
       }
@@ -94,6 +103,11 @@ export function useProfileHref() {
     const targetTabRoute = getTabRouteFromPathname(pathname);
     if (targetTabRoute === 'profile') {
       return `/profile/${encodeURIComponent(actor)}`;
+    }
+    if (targetTabRoute === 'index') {
+      // index tab's user-profile route is registered at /user-profile/<handle>
+      // because Expo Router collapses the 'index' segment.
+      return `/user-profile/${encodeURIComponent(actor)}`;
     }
     return `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`;
   };

@@ -250,7 +250,7 @@ describe('RecordEmbed Component', () => {
 
     fireEvent.press(getByText('Test User'));
     // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
-    expect(router.push).toHaveBeenCalledWith(`/index/user-profile/${encodeURIComponent(embed.record.author.handle)}`);
+    expect(router.push).toHaveBeenCalledWith(`/user-profile/${encodeURIComponent(embed.record.author.handle)}`);
   });
 
   it('should render images and handle load events', () => {
