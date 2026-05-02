@@ -143,11 +143,16 @@ export function MessagesListScreen({
 
           <ThemedView style={styles.conversationInfo}>
             <ThemedView style={styles.conversationHeader}>
-              <ThemedText style={styles.displayName}>{item.displayName}</ThemedText>
+              <ThemedText style={[styles.displayName, item.unreadCount > 0 && styles.displayNameUnread]}>
+                {item.displayName}
+              </ThemedText>
               <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.conversationFooter}>
-              <ThemedText style={styles.lastMessage} numberOfLines={1}>
+              <ThemedText
+                style={[styles.lastMessage, item.unreadCount > 0 && styles.lastMessageUnread]}
+                numberOfLines={1}
+              >
                 {item.lastMessage}
               </ThemedText>
               {item.unreadCount > 0 && (
@@ -432,6 +437,9 @@ const styles = StyleSheet.create({
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
   },
+  displayNameUnread: {
+    fontWeight: fontWeight.bold,
+  },
   timestamp: {
     fontSize: fontSize.sm,
     opacity: opacity.tertiary,
@@ -446,6 +454,10 @@ const styles = StyleSheet.create({
     opacity: opacity.secondary,
     flex: 1,
     marginRight: spacing.sm,
+  },
+  lastMessageUnread: {
+    opacity: 1,
+    fontWeight: fontWeight.medium,
   },
   unreadBadge: {
     backgroundColor: '#007AFF',
