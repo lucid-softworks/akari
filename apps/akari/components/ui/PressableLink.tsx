@@ -1,12 +1,15 @@
 import { router } from 'expo-router';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
 
-// Min interval between accepted presses on the same link. Guards against
+// Min interval between accepted presses anywhere in the app. Guards against
 // fast double-taps and any RN/expo-router edge case where a single touch
 // fires onPress twice (which pushes the same route twice and forces the
-// user to press back twice to get out).
-const PRESS_DEBOUNCE_MS = 500;
+// user to press back twice to get out). Tracked at module scope so it
+// survives across PressableLink instances — a feed re-render between two
+// taps can otherwise hand the second tap to a fresh ref starting at 0.
+const PRESS_DEBOUNCE_MS = 600;
+let lastPressAt = 0;
 
 type PressableLinkProps = {
   href: string;
@@ -30,7 +33,6 @@ export function PressableLink({
   accessibilityState,
 }: PressableLinkProps) {
   const [hovered, setHovered] = useState(false);
-  const lastPressAtRef = useRef(0);
 
   const handleNativePress = useCallback(
     (event?: GestureResponderEvent) => {
@@ -39,8 +41,8 @@ export function PressableLink({
       // PressableLink).
       event?.stopPropagation?.();
       const now = Date.now();
-      if (now - lastPressAtRef.current < PRESS_DEBOUNCE_MS) return;
-      lastPressAtRef.current = now;
+      if (now - lastPressAt < PRESS_DEBOUNCE_MS) return;
+      lastPressAt = now;
       if (onPress) {
         onPress();
       } else {
@@ -62,6 +64,9 @@ export function PressableLink({
           aRef.onclick = (e: MouseEvent) => {
             if (e.metaKey || e.ctrlKey || e.shiftKey) return;
             e.preventDefault();
+            const now = Date.now();
+            if (now - lastPressAt < PRESS_DEBOUNCE_MS) return;
+            lastPressAt = now;
             router.push(href as any);
           };
         }}
