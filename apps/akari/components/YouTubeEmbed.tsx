@@ -7,6 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { resolveExternalThumb, youtubeThumbnailUrl } from '@/utils/embedThumb';
 
 type YouTubeEmbedProps = {
   /** YouTube embed data from Bluesky */
@@ -71,8 +72,8 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
 
   const videoId = getYouTubeVideoId(embed.external.uri);
   const thumbnailUrl = videoId
-    ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-    : embed.external.thumb?.ref?.$link;
+    ? youtubeThumbnailUrl(videoId)
+    : resolveExternalThumb(embed.external.thumb);
 
   const borderColor = useThemeColor(
     {

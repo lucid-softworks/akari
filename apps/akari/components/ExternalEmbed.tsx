@@ -6,6 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { spacing, radius, fontSize, fontWeight, lineHeight, activeOpacity, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { resolveExternalThumb } from '@/utils/embedThumb';
 
 type ExternalEmbedProps = {
   /** External embed data from Bluesky */
@@ -64,6 +65,7 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
   };
 
   const domain = getDomain(embed.external.uri);
+  const thumbUrl = resolveExternalThumb(embed.external.thumb);
 
   const borderColor = useThemeColor(
     {
@@ -77,9 +79,9 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
     <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
-          {embed.external.thumb && embed.external.thumb.ref?.$link && (
+          {thumbUrl && (
             <Image
-              source={{ uri: embed.external.thumb.ref.$link }}
+              source={{ uri: thumbUrl }}
               style={styles.thumbnail}
               contentFit="cover"
               placeholder={require('@/assets/images/partial-react-logo.png')}

@@ -68,7 +68,7 @@ describe('YouTubeEmbed', () => {
     const Image = require('expo-image').Image as jest.Mock;
     const props = Image.mock.calls[0][0];
     expect(props.source).toEqual({
-      uri: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+      uri: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
     });
   });
 

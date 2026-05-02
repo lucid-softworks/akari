@@ -8,6 +8,7 @@ import { VideoPlayer } from '@/components/VideoPlayer';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { matchYouTubeId, resolveExternalThumb, vimeoThumbnailFor, youtubeThumbnailUrl } from '@/utils/embedThumb';
 
 type VideoEmbedProps = {
   /** Video embed data from Bluesky or native video data */
@@ -118,16 +119,20 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
       return embed.thumbnailUrl;
     }
 
-    if (embed.external?.thumb?.ref?.$link) {
-      return embed.external.thumb.ref.$link;
-    }
+    // External: prefer the bsky-resolved thumb URL string. If the embed
+    // doesn't include one, derive a host-specific thumbnail (currently
+    // YouTube) so the post still shows a preview.
+    const externalThumb = resolveExternalThumb(embed.external?.thumb);
+    if (externalThumb) return externalThumb;
+
+    const externalUri = embed.external?.uri ?? '';
+    const ytId = matchYouTubeId(externalUri);
+    if (ytId) return youtubeThumbnailUrl(ytId);
+    const vimeoThumb = vimeoThumbnailFor(externalUri);
+    if (vimeoThumb) return vimeoThumb;
 
     // For future native video support
-    if (embed.media?.video?.thumb?.ref?.$link) {
-      return embed.media.video.thumb.ref.$link;
-    }
-
-    return null;
+    return resolveExternalThumb(embed.media?.video?.thumb) ?? null;
   };
 
   // Get video title
