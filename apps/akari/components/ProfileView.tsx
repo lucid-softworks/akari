@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -152,30 +152,55 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const renderTabContent = () => {
     if (!handle) return null;
 
+    if (activeTab === 'posts') {
+      return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} />;
+    }
+
+    let tabBody: React.ReactNode = null;
     switch (activeTab) {
-      case 'posts':
-        return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} />;
       case 'replies':
-        return <RepliesTab handle={handle} />;
+        tabBody = <RepliesTab handle={handle} />;
+        break;
       case 'likes':
-        return <LikesTab handle={handle} />;
+        tabBody = <LikesTab handle={handle} />;
+        break;
       case 'media':
-        return <MediaTab handle={handle} />;
+        tabBody = <MediaTab handle={handle} />;
+        break;
       case 'videos':
-        return <VideosTab handle={handle} />;
+        tabBody = <VideosTab handle={handle} />;
+        break;
       case 'feeds':
-        return <FeedsTab handle={handle} />;
+        tabBody = <FeedsTab handle={handle} />;
+        break;
       case 'repos':
-        return <ReposTab handle={handle} />;
+        tabBody = <ReposTab handle={handle} />;
+        break;
       case 'starterpacks':
-        return <StarterpacksTab handle={handle} />;
+        tabBody = <StarterpacksTab handle={handle} />;
+        break;
       case 'recipes':
-        return <RecipesTab handle={handle} />;
+        tabBody = <RecipesTab handle={handle} />;
+        break;
       case 'links':
-        return <LinksTab handle={handle} />;
+        tabBody = <LinksTab handle={handle} />;
+        break;
       default:
         return null;
     }
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        stickyHeaderIndices={[1]}
+        stickyHeaderHiddenOnScroll
+        showsVerticalScrollIndicator={false}
+      >
+        {headerComponent}
+        {tabsComponent}
+        {tabBody}
+      </ScrollView>
+    );
   };
 
   return (
@@ -203,6 +228,9 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100,
   },
   errorText: {
     fontSize: fontSize.lg,

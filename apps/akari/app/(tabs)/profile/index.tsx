@@ -137,34 +137,59 @@ export default function ProfileScreen() {
       );
     }
 
+    if (activeTab === 'posts') {
+      return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
+    }
+
+    let tabBody: React.ReactNode = null;
     switch (activeTab) {
-      case 'posts':
-        return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
       case 'replies':
-        return <RepliesTab handle={currentAccount.handle} />;
+        tabBody = <RepliesTab handle={currentAccount.handle} />;
+        break;
       case 'likes':
-        return <LikesTab handle={currentAccount.handle} />;
+        tabBody = <LikesTab handle={currentAccount.handle} />;
+        break;
       case 'media':
-        return <MediaTab handle={currentAccount.handle} />;
+        tabBody = <MediaTab handle={currentAccount.handle} />;
+        break;
       case 'videos':
-        return <VideosTab handle={currentAccount.handle} />;
+        tabBody = <VideosTab handle={currentAccount.handle} />;
+        break;
       case 'feeds':
-        return <FeedsTab handle={currentAccount.handle} />;
+        tabBody = <FeedsTab handle={currentAccount.handle} />;
+        break;
       case 'repos':
-        return <ReposTab handle={currentAccount.handle} />;
+        tabBody = <ReposTab handle={currentAccount.handle} />;
+        break;
       case 'starterpacks':
-        return <StarterpacksTab handle={currentAccount.handle} />;
+        tabBody = <StarterpacksTab handle={currentAccount.handle} />;
+        break;
       case 'recipes':
-        return <RecipesTab handle={currentAccount.handle} />;
+        tabBody = <RecipesTab handle={currentAccount.handle} />;
+        break;
       case 'links':
-        return <LinksTab handle={currentAccount.handle} />;
+        tabBody = <LinksTab handle={currentAccount.handle} />;
+        break;
       default:
-        return (
+        tabBody = (
           <ThemedView style={styles.emptyState}>
             <ThemedText style={styles.emptyStateText}>{t('profile.noContent')}</ThemedText>
           </ThemedView>
         );
     }
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        stickyHeaderIndices={[1]}
+        stickyHeaderHiddenOnScroll
+        showsVerticalScrollIndicator={false}
+      >
+        {headerComponent}
+        {tabsComponent}
+        {tabBody}
+      </ScrollView>
+    );
   };
 
   return (
@@ -200,6 +225,9 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100,
   },
   emptyState: {
     paddingVertical: 40,
