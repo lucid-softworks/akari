@@ -11,4 +11,3 @@ export default function ProfileScreen() {
 
   return <ProfileView handle={handle} />;
 }
-
