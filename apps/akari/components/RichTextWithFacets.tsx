@@ -3,6 +3,7 @@ import { ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useProfileHref } from '@/utils/navigation';
 
 type Facet = {
   index: {
@@ -60,6 +61,8 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
     },
     'tint',
   );
+
+  const profileHref = useProfileHref();
 
   // Convert UTF-8 byte index to UTF-16 character index
   const byteToCharIndex = (text: string, byteIndex: number): number => {
@@ -201,7 +204,7 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               // The text should contain the actual handle (e.g., "@miragreen.bsky.social")
               const handle = segment.text.replace(/^@/, ''); // Remove the @ symbol
               return (
-                <Link key={index} href={`/profile/${handle}`}>
+                <Link key={index} href={profileHref(handle) as any}>
                   <ThemedText style={[{ color: mentionColor }]}>{segment.text}</ThemedText>
                 </Link>
               );

@@ -84,5 +84,27 @@ export function useNavigateToProfile() {
   };
 }
 
+/**
+ * Build a tab-aware profile href. Mirrors useNavigateToProfile but returns the
+ * URL string instead of pushing — useful with <Link> components.
+ */
+export function useProfileHref() {
+  const pathname = usePathname() as string;
+
+  return (actor: string): string => {
+    if (Platform.OS === 'web') {
+      return `/profile/${encodeURIComponent(actor)}`;
+    }
+    const targetTabRoute = getTabRouteFromPathname(pathname);
+    if (targetTabRoute === 'index') {
+      return `/user-profile/${encodeURIComponent(actor)}`;
+    }
+    if (targetTabRoute === 'profile') {
+      return `/profile/${encodeURIComponent(actor)}`;
+    }
+    return `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`;
+  };
+}
+
 // Export the TabRoute type for use in other files
 export type { TabRoute };
