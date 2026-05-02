@@ -102,7 +102,10 @@
       "all": "همه",
       "users": "کاربران",
       "posts": "پست",
-      "loadingMoreResults": "بارگیری نتایج بیشتر ..."
+      "loadingMoreResults": "بارگیری نتایج بیشتر ...",
+      "sortTop": "برتر",
+      "sortLatest": "جدیدترین",
+      "clearSearch": "پاک کردن جستجو"
     },
     "notifications": {
       "likedYourPost": "پست شما را دوست داشت",

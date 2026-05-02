@@ -102,7 +102,10 @@
       "all": "सभी",
       "users": "उपयोगकर्ता",
       "posts": "पोस्ट",
-      "loadingMoreResults": "अधिक परिणाम लोड हो रहे हैं..."
+      "loadingMoreResults": "अधिक परिणाम लोड हो रहे हैं...",
+      "sortTop": "शीर्ष",
+      "sortLatest": "नवीनतम",
+      "clearSearch": "खोज साफ़ करें"
     },
     "notifications": {
       "likedYourPost": "आपकी पोस्ट को लाइक किया",

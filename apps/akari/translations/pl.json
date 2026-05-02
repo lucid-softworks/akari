@@ -102,7 +102,10 @@
       "all": "Wszystko",
       "users": "Użytkownicy",
       "posts": "Posty",
-      "loadingMoreResults": "Ładowanie większej liczby wyników..."
+      "loadingMoreResults": "Ładowanie większej liczby wyników...",
+      "sortTop": "Najlepsze",
+      "sortLatest": "Najnowsze",
+      "clearSearch": "Wyczyść wyszukiwanie"
     },
     "notifications": {
       "likedYourPost": "polubił Twój post",

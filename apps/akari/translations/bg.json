@@ -102,7 +102,10 @@
       "all": "Всички",
       "users": "Потребители",
       "posts": "Постове",
-      "loadingMoreResults": "Зареждане на повече резултати ..."
+      "loadingMoreResults": "Зареждане на повече резултати ...",
+      "sortTop": "Топ",
+      "sortLatest": "Последни",
+      "clearSearch": "Изчисти търсенето"
     },
     "notifications": {
       "likedYourPost": "хареса публикацията ви",

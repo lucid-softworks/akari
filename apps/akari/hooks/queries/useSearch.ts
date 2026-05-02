@@ -2,9 +2,10 @@ import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { CursorPageParam } from "@/hooks/queries/types";
 import { BlueskyApi, type BlueskyPostView, type BlueskyProfile } from "@/bluesky-api";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 
 type SearchTabType = "all" | "users" | "posts";
+type SearchSort = "top" | "latest";
 
 type SearchResult = {
   type: "profile" | "post";
@@ -21,18 +22,19 @@ type SearchError = {
  * @param query - Search query string
  * @param activeTab - Currently active tab (all, users, posts)
  * @param limit - Number of results per page (default: 20)
- * @param enabled - Whether the query should be enabled (default: true)
+ * @param sort - Post result ordering ('top' or 'latest', default: 'top')
  */
 export function useSearch(
   query: string | undefined,
   activeTab: SearchTabType = "all",
-  limit: number = 20
+  limit: number = 20,
+  sort: SearchSort = "top"
 ) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ["search", query, activeTab, limit, currentAccount?.pdsUrl],
+    queryKey: ["search", query, activeTab, limit, sort, currentAccount?.pdsUrl],
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");
@@ -49,7 +51,8 @@ export function useSearch(
             token,
             query,
             limit,
-            pageParam
+            pageParam,
+            sort
           );
 
           const results: SearchResult[] = (postResults.posts || []).map(
@@ -90,7 +93,8 @@ export function useSearch(
             token,
             query,
             limit,
-            pageParam
+            pageParam,
+            sort
           );
 
           const results: SearchResult[] = (postResults.posts || []).map(
@@ -108,7 +112,7 @@ export function useSearch(
           // For "all" tab, combine both searches
           const [profileResults, postResults] = await Promise.all([
             api.searchProfiles(token, query, limit, pageParam),
-            api.searchPosts(token, query, limit, pageParam),
+            api.searchPosts(token, query, limit, pageParam, sort),
           ]);
 
           const results: SearchResult[] = [
@@ -178,6 +182,7 @@ export function useSearch(
     enabled: !!query && !!query.trim() && !!token,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
+    placeholderData: keepPreviousData,
     staleTime: 2 * 60 * 1000, // 2 minutes
     retry: (failureCount, error: SearchError) => {
       // Don't retry permission errors

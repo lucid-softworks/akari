@@ -102,7 +102,10 @@
       "all": "Alle",
       "users": "Benutzer",
       "posts": "Beiträge",
-      "loadingMoreResults": "Lade weitere Ergebnisse..."
+      "loadingMoreResults": "Lade weitere Ergebnisse...",
+      "sortTop": "Top",
+      "sortLatest": "Neueste",
+      "clearSearch": "Suche löschen"
     },
     "notifications": {
       "likedYourPost": "gefällt dein Beitrag",

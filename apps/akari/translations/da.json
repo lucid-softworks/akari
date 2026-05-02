@@ -102,7 +102,10 @@
       "all": "Alle",
       "users": "Brugere",
       "posts": "Posts",
-      "loadingMoreResults": "Indlæser flere resultater ..."
+      "loadingMoreResults": "Indlæser flere resultater ...",
+      "sortTop": "Top",
+      "sortLatest": "Seneste",
+      "clearSearch": "Ryd søgning"
     },
     "notifications": {
       "likedYourPost": "Kan lide din post",

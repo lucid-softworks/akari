@@ -102,7 +102,10 @@
       "all": "Kaikki",
       "users": "Käyttäjät",
       "posts": "Viestit",
-      "loadingMoreResults": "Lataamalla lisää tuloksia ..."
+      "loadingMoreResults": "Lataamalla lisää tuloksia ...",
+      "sortTop": "Suosituimmat",
+      "sortLatest": "Uusimmat",
+      "clearSearch": "Tyhjennä haku"
     },
     "notifications": {
       "likedYourPost": "piti viestistäsi",

@@ -577,8 +577,9 @@ export class BlueskyApi extends BlueskyApiClient {
     query: string,
     limit: number = 20,
     cursor?: string,
+    sort?: "top" | "latest",
   ): Promise<BlueskySearchPostsResponse> {
-    return this.search.searchPosts(accessJwt, query, limit, cursor);
+    return this.search.searchPosts(accessJwt, query, limit, cursor, sort);
   }
 
   /**

@@ -102,7 +102,10 @@
       "all": "Všetko",
       "users": "Užívatelia",
       "posts": "Pracovné miesta",
-      "loadingMoreResults": "Načítava sa viac výsledkov ..."
+      "loadingMoreResults": "Načítava sa viac výsledkov ...",
+      "sortTop": "Najlepšie",
+      "sortLatest": "Najnovšie",
+      "clearSearch": "Vymazať hľadanie"
     },
     "notifications": {
       "likedYourPost": "Páčilo sa mi váš príspevok",

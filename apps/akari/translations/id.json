@@ -102,7 +102,10 @@
       "all": "Semua",
       "users": "Pengguna",
       "posts": "Post",
-      "loadingMoreResults": "Memuat lebih banyak hasil..."
+      "loadingMoreResults": "Memuat lebih banyak hasil...",
+      "sortTop": "Teratas",
+      "sortLatest": "Terbaru",
+      "clearSearch": "Hapus pencarian"
     },
     "notifications": {
       "likedYourPost": "menyukai post Anda",

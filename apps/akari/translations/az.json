@@ -102,7 +102,10 @@
       "all": "Hamar",
       "users": "İstifadəçilər",
       "posts": "Yazı",
-      "loadingMoreResults": "Daha çox nəticə yüklənir ..."
+      "loadingMoreResults": "Daha çox nəticə yüklənir ...",
+      "sortTop": "Ən Yaxşı",
+      "sortLatest": "Ən Son",
+      "clearSearch": "Axtarışı təmizlə"
     },
     "notifications": {
       "likedYourPost": "Yazınıza xoş gəldi",

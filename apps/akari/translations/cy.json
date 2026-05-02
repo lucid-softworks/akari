@@ -102,7 +102,10 @@
       "all": "Pob un",
       "users": "Defnyddwyr",
       "posts": "Swyddi",
-      "loadingMoreResults": "Wrthi'n llwytho mwy o ganlyniadau..."
+      "loadingMoreResults": "Wrthi'n llwytho mwy o ganlyniadau...",
+      "sortTop": "Gorau",
+      "sortLatest": "Diweddaraf",
+      "clearSearch": "Clirio'r chwiliad"
     },
     "notifications": {
       "likedYourPost": "hoffodd eich swydd",

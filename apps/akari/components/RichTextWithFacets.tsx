@@ -218,12 +218,15 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
             }
             return segment.text;
 
-          case 'tag':
+          case 'tag': {
+            const tagValue = segment.tag ?? segment.text.replace(/^#/, '');
+            const hashtagQuery = `#${tagValue}`;
             return (
-              <Link key={index} href={`/search?q=${encodeURIComponent(segment.text)}`}>
+              <Link key={index} href={`/search?query=${encodeURIComponent(hashtagQuery)}`}>
                 <ThemedText style={[{ color: tagColor }]}>{segment.text}</ThemedText>
               </Link>
             );
+          }
 
           default:
             return segment.text;

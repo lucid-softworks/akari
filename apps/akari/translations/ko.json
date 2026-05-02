@@ -102,7 +102,10 @@
       "all": "전체",
       "users": "사용자",
       "posts": "게시물",
-      "loadingMoreResults": "더 많은 결과 로딩 중..."
+      "loadingMoreResults": "더 많은 결과 로딩 중...",
+      "sortTop": "인기",
+      "sortLatest": "최신",
+      "clearSearch": "검색 지우기"
     },
     "notifications": {
       "likedYourPost": "게시물에 좋아요를 눌렀습니다",

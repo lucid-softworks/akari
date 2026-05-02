@@ -12,6 +12,7 @@ import { SearchTabs } from '@/components/SearchTabs';
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -28,15 +29,20 @@ type SearchResult = {
 };
 
 type SearchTabType = 'all' | 'users' | 'posts';
+type SearchSort = 'top' | 'latest';
 
 type SearchListHeaderProps = {
   query: string;
   onQueryChange: (value: string) => void;
+  onClearQuery: () => void;
   onSearch: () => void;
   isLoading: boolean;
   activeTab: SearchTabType;
   onTabChange: (tab: SearchTabType) => void;
   showTabs: boolean;
+  sort: SearchSort;
+  onSortChange: (sort: SearchSort) => void;
+  showSort: boolean;
   topInset: number;
   backgroundColor: string;
   borderColor: string;
@@ -46,6 +52,9 @@ type SearchListHeaderProps = {
   inputPlaceholder: string;
   searchLabel: string;
   searchingLabel: string;
+  topLabel: string;
+  latestLabel: string;
+  clearLabel: string;
   showTitle: boolean;
 };
 
@@ -53,11 +62,15 @@ const SearchListHeader = React.memo(
   ({
     query,
     onQueryChange,
+    onClearQuery,
     onSearch,
     isLoading,
     activeTab,
     onTabChange,
     showTabs,
+    sort,
+    onSortChange,
+    showSort,
     topInset,
     backgroundColor,
     borderColor,
@@ -67,6 +80,9 @@ const SearchListHeader = React.memo(
     inputPlaceholder,
     searchLabel,
     searchingLabel,
+    topLabel,
+    latestLabel,
+    clearLabel,
     showTitle,
   }: SearchListHeaderProps) => {
     return (
@@ -86,34 +102,78 @@ const SearchListHeader = React.memo(
         ) : null}
 
         <ThemedView style={styles.searchContainer}>
-          <TextInput
+          <ThemedView
             style={[
-              styles.searchInput,
-              {
-                backgroundColor: backgroundColor,
-                borderColor: borderColor,
-                color: textColor,
-              },
+              styles.inputWrapper,
+              { backgroundColor, borderColor },
             ]}
-            placeholder={inputPlaceholder}
-            placeholderTextColor={placeholderColor}
-            value={query}
-            onChangeText={onQueryChange}
-            onSubmitEditing={onSearch}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+          >
+            <TextInput
+              style={[styles.searchInput, { color: textColor }]}
+              placeholder={inputPlaceholder}
+              placeholderTextColor={placeholderColor}
+              value={query}
+              onChangeText={onQueryChange}
+              onSubmitEditing={onSearch}
+              returnKeyType="search"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            {query.length > 0 ? (
+              <TouchableOpacity
+                onPress={onClearQuery}
+                accessibilityRole="button"
+                accessibilityLabel={clearLabel}
+                hitSlop={8}
+                style={styles.clearButton}
+              >
+                <IconSymbol name="xmark.circle.fill" size={18} color={placeholderColor} />
+              </TouchableOpacity>
+            ) : null}
+          </ThemedView>
           <TouchableOpacity
             style={[styles.searchButton, { backgroundColor: borderColor }]}
             onPress={onSearch}
             disabled={isLoading}
           >
-            <ThemedText style={styles.searchButtonText}>{isLoading ? searchingLabel : searchLabel}</ThemedText>
+            <ThemedText style={[styles.searchButtonText, { color: textColor }]}>
+              {isLoading ? searchingLabel : searchLabel}
+            </ThemedText>
           </TouchableOpacity>
         </ThemedView>
 
         {showTabs ? <SearchTabs activeTab={activeTab} onTabChange={onTabChange} /> : null}
+
+        {showSort ? (
+          <ThemedView style={styles.sortContainer}>
+            {(['top', 'latest'] as const).map((option) => {
+              const isActive = sort === option;
+              return (
+                <TouchableOpacity
+                  key={option}
+                  style={[
+                    styles.sortChip,
+                    {
+                      backgroundColor: isActive ? textColor : 'transparent',
+                      borderColor,
+                    },
+                  ]}
+                  onPress={() => onSortChange(option)}
+                  activeOpacity={activeOpacity.default}
+                >
+                  <ThemedText
+                    style={[
+                      styles.sortChipText,
+                      { color: isActive ? backgroundColor : textColor },
+                    ]}
+                  >
+                    {option === 'top' ? topLabel : latestLabel}
+                  </ThemedText>
+                </TouchableOpacity>
+              );
+            })}
+          </ThemedView>
+        ) : null}
       </ThemedView>
     );
   },
@@ -125,9 +185,13 @@ const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
 
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
+  const isHashtagQuery = (value: string) => value.trim().startsWith('#');
   const [query, setQuery] = useState(initialQuery || '');
   const [searchQuery, setSearchQuery] = useState(initialQuery || '');
-  const [activeTab, setActiveTab] = useState<SearchTabType>('all');
+  const [activeTab, setActiveTab] = useState<SearchTabType>(
+    initialQuery && isHashtagQuery(initialQuery) ? 'posts' : 'all',
+  );
+  const [sort, setSort] = useState<SearchSort>('top');
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
   const { t } = useTranslation();
@@ -182,10 +246,14 @@ export default function SearchScreen() {
     isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useSearch(searchQuery.trim() || undefined, 'all', 20);
+  } = useSearch(searchQuery.trim() || undefined, 'all', 20, sort);
 
-  // Flatten all search results from all pages
-  const allResults = searchData?.pages.flatMap((page) => page.results) || [];
+  // Flatten all search results from all pages. Gate on the active query so
+  // clearing the input also clears stale results that placeholderData held onto.
+  const trimmedSearchQuery = searchQuery.trim();
+  const allResults = trimmedSearchQuery
+    ? searchData?.pages.flatMap((page) => page.results) || []
+    : [];
 
   // Filter results based on active tab
   const filteredResults = allResults.filter((result) => {
@@ -200,11 +268,15 @@ export default function SearchScreen() {
     }
   });
 
-  // Handle initial query from URL
   useEffect(() => {
-    if (initialQuery) {
-      setQuery(initialQuery);
-      setSearchQuery(initialQuery);
+    if (initialQuery === undefined || initialQuery === searchQuery) {
+      return;
+    }
+    setQuery(initialQuery);
+    setSearchQuery(initialQuery);
+    if (isHashtagQuery(initialQuery)) {
+      setActiveTab('posts');
+      setSort('top');
     }
   }, [initialQuery]);
 
@@ -214,6 +286,11 @@ export default function SearchScreen() {
       Keyboard.dismiss();
     }
   }, [query]);
+
+  const handleClearQuery = useCallback(() => {
+    setQuery('');
+    setSearchQuery('');
+  }, []);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -356,18 +433,23 @@ export default function SearchScreen() {
     }
   };
 
-  const shouldShowTabs = searchQuery.length > 0 && allResults.length > 0;
+  const shouldShowTabs = trimmedSearchQuery.length > 0;
+  const shouldShowSort = trimmedSearchQuery.length > 0 && (activeTab === 'posts' || activeTab === 'all');
 
   const listHeaderComponent = useMemo(
     () => (
       <SearchListHeader
         query={query}
         onQueryChange={setQuery}
+        onClearQuery={handleClearQuery}
         onSearch={handleSearch}
         isLoading={isLoading}
         activeTab={activeTab}
         onTabChange={setActiveTab}
         showTabs={shouldShowTabs}
+        sort={sort}
+        onSortChange={setSort}
+        showSort={shouldShowSort}
         topInset={isLargeScreen ? insets.top : 0}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
@@ -377,6 +459,9 @@ export default function SearchScreen() {
         inputPlaceholder={t('search.searchInputPlaceholder')}
         searchLabel={t('common.search')}
         searchingLabel={t('search.searching')}
+        topLabel={t('search.sortTop')}
+        latestLabel={t('search.sortLatest')}
+        clearLabel={t('search.clearSearch')}
         showTitle={isLargeScreen}
       />
     ),
@@ -384,12 +469,15 @@ export default function SearchScreen() {
       activeTab,
       backgroundColor,
       borderColor,
+      handleClearQuery,
       handleSearch,
       insets.top,
       isLargeScreen,
       isLoading,
       placeholderColor,
       query,
+      shouldShowSort,
+      sort,
       setActiveTab,
       setQuery,
       shouldShowTabs,
@@ -452,28 +540,41 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     gap: spacing.sm,
   },
-  searchInput: {
+  inputWrapper: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
     height: 44,
     borderWidth: layout.border,
     borderRadius: radius.sm,
     paddingHorizontal: spacing.md,
+    gap: spacing.xs,
+  },
+  searchInput: {
+    flex: 1,
+    height: '100%',
     fontSize: fontSize.lg,
   },
+  clearButton: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   searchButton: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    height: 44,
+    paddingHorizontal: spacing.md,
     borderRadius: radius.sm,
     justifyContent: 'center',
     alignItems: 'center',
   },
   searchButtonText: {
-    color: '#ffffff',
-    fontSize: fontSize.lg,
+    fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
   },
   resultsListContent: {
@@ -522,5 +623,22 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: fontSize.base,
     opacity: opacity.tertiary,
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.md,
+  },
+  sortChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.full,
+    borderWidth: layout.border,
+  },
+  sortChipText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
   },
 });

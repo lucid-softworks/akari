@@ -43,18 +43,21 @@ export class BlueskySearch extends BlueskyApiClient {
    * @param query - Search query
    * @param limit - Number of results to fetch (default: 20)
    * @param cursor - Pagination cursor
+   * @param sort - Result ordering ('top' or 'latest')
    * @returns Promise resolving to search results
    */
   async searchPosts(
     accessJwt: string,
     query: string,
     limit: number = 20,
-    cursor?: string
+    cursor?: string,
+    sort?: "top" | "latest"
   ): Promise<BlueskySearchPostsResponse> {
     const params: Record<string, string> = {
       q: query,
       limit: limit.toString(),
       ...(cursor && { cursor }),
+      ...(sort && { sort }),
     };
 
     return this.makeAuthenticatedRequest<BlueskySearchPostsResponse>(

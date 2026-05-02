@@ -102,7 +102,10 @@
       "all": "Tout",
       "users": "Utilisateurs",
       "posts": "Publications",
-      "loadingMoreResults": "Chargement de plus de résultats..."
+      "loadingMoreResults": "Chargement de plus de résultats...",
+      "sortTop": "Populaires",
+      "sortLatest": "Récents",
+      "clearSearch": "Effacer la recherche"
     },
     "notifications": {
       "likedYourPost": "a aimé votre publication",

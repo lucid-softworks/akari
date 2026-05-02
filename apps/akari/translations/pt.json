@@ -102,7 +102,10 @@
       "all": "Todos",
       "users": "Usuários",
       "posts": "Publicações",
-      "loadingMoreResults": "Carregando mais resultados..."
+      "loadingMoreResults": "Carregando mais resultados...",
+      "sortTop": "Principais",
+      "sortLatest": "Recentes",
+      "clearSearch": "Limpar busca"
     },
     "notifications": {
       "likedYourPost": "curtiu sua publicação",

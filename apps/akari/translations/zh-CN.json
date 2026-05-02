@@ -102,7 +102,10 @@
       "all": "全部",
       "users": "用户",
       "posts": "帖子",
-      "loadingMoreResults": "加载更多结果..."
+      "loadingMoreResults": "加载更多结果...",
+      "sortTop": "热门",
+      "sortLatest": "最新",
+      "clearSearch": "清除搜索"
     },
     "notifications": {
       "likedYourPost": "点赞了您的帖子",

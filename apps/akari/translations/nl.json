@@ -102,7 +102,10 @@
       "all": "Alles",
       "users": "Gebruikers",
       "posts": "Berichten",
-      "loadingMoreResults": "Meer resultaten laden..."
+      "loadingMoreResults": "Meer resultaten laden...",
+      "sortTop": "Top",
+      "sortLatest": "Nieuwste",
+      "clearSearch": "Zoekopdracht wissen"
     },
     "notifications": {
       "likedYourPost": "vond je bericht leuk",

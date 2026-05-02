@@ -102,7 +102,10 @@
       "all": "All",
       "users": "Users",
       "posts": "Posts",
-      "loadingMoreResults": "Loading more results..."
+      "loadingMoreResults": "Loading more results...",
+      "sortTop": "Top",
+      "sortLatest": "Latest",
+      "clearSearch": "Clear search"
     },
     "notifications": {
       "likedYourPost": "liked your post",

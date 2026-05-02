@@ -102,7 +102,10 @@
       "all": "Toate",
       "users": "Utilizatori",
       "posts": "Postări",
-      "loadingMoreResults": "Încărcarea mai multor rezultate ..."
+      "loadingMoreResults": "Încărcarea mai multor rezultate ...",
+      "sortTop": "Populare",
+      "sortLatest": "Recente",
+      "clearSearch": "Șterge căutarea"
     },
     "notifications": {
       "likedYourPost": "Mi -a plăcut postarea ta",

@@ -102,7 +102,10 @@
       "all": "Tất cả",
       "users": "Người dùng",
       "posts": "Bài đăng",
-      "loadingMoreResults": "Đang tải thêm kết quả..."
+      "loadingMoreResults": "Đang tải thêm kết quả...",
+      "sortTop": "Nổi bật",
+      "sortLatest": "Mới nhất",
+      "clearSearch": "Xóa tìm kiếm"
     },
     "notifications": {
       "likedYourPost": "đã thích bài đăng của bạn",

@@ -102,7 +102,10 @@
       "all": "Ολοι",
       "users": "Χρήστες",
       "posts": "Θέσεις",
-      "loadingMoreResults": "Φόρτωση περισσότερων αποτελεσμάτων ..."
+      "loadingMoreResults": "Φόρτωση περισσότερων αποτελεσμάτων ...",
+      "sortTop": "Κορυφαία",
+      "sortLatest": "Πρόσφατα",
+      "clearSearch": "Καθαρισμός αναζήτησης"
     },
     "notifications": {
       "likedYourPost": "Μου άρεσε η ανάρτησή σας",

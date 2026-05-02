@@ -102,7 +102,10 @@
       "all": "全部",
       "users": "使用者",
       "posts": "貼文",
-      "loadingMoreResults": "載入更多結果..."
+      "loadingMoreResults": "載入更多結果...",
+      "sortTop": "熱門",
+      "sortLatest": "最新",
+      "clearSearch": "清除搜尋"
     },
     "notifications": {
       "likedYourPost": "對您的貼文按讚",

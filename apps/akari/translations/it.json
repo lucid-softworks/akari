@@ -102,7 +102,10 @@
       "all": "Tutti",
       "users": "Utenti",
       "posts": "Post",
-      "loadingMoreResults": "Caricamento di altri risultati..."
+      "loadingMoreResults": "Caricamento di altri risultati...",
+      "sortTop": "Popolari",
+      "sortLatest": "Recenti",
+      "clearSearch": "Cancella ricerca"
     },
     "notifications": {
       "likedYourPost": "è piaciuto il tuo post",

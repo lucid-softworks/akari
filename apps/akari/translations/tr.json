@@ -102,7 +102,10 @@
       "all": "Tümü",
       "users": "Kullanıcılar",
       "posts": "Gönderiler",
-      "loadingMoreResults": "Daha fazla sonuç yükleniyor..."
+      "loadingMoreResults": "Daha fazla sonuç yükleniyor...",
+      "sortTop": "En İyi",
+      "sortLatest": "En Son",
+      "clearSearch": "Aramayı temizle"
     },
     "notifications": {
       "likedYourPost": "gönderinizi beğendi",
