@@ -14,23 +14,25 @@ type PostNavigationArgs = {
  * - Web: Uses top-level profile route
  */
 function getTabRouteFromPathname(pathname: string): TabRoute {
-  if (pathname.startsWith('/notifications')) {
-    return 'notifications';
-  } else if (pathname.startsWith('/messages')) {
-    return 'messages';
-  } else if (pathname.startsWith('/search')) {
-    return 'search';
-  } else if (pathname.startsWith('/bookmarks')) {
-    return 'bookmarks';
-  } else if (pathname.startsWith('/profile')) {
-    return 'profile';
-  } else if (pathname.startsWith('/index') || pathname === '/') {
+  if (pathname.startsWith('/notifications')) return 'notifications';
+  if (pathname.startsWith('/messages')) return 'messages';
+  if (pathname.startsWith('/search')) return 'search';
+  if (pathname.startsWith('/bookmarks')) return 'bookmarks';
+  if (pathname.startsWith('/profile')) return 'profile';
+  // Index tab. Either '/' or '/index/...'. Also catch '/user-profile/...' which
+  // is what Expo Router can collapse '/index/user-profile/...' to in some
+  // contexts — fall back to 'index' so navigation from there stays in the
+  // home tab's stack.
+  if (
+    pathname === '/' ||
+    pathname.startsWith('/index') ||
+    pathname.startsWith('/user-profile')
+  ) {
     return 'index';
-  } else {
-    throw new Error(
-      `Unknown pathname: ${pathname}. Expected one of: /, /index, /notifications, /messages, /search, /bookmarks, /profile`,
-    );
   }
+  // Unknown pathname — assume index tab rather than throwing so a transient
+  // pathname during navigation can't crash the app.
+  return 'index';
 }
 
 export function useNavigateToPost() {
@@ -42,10 +44,7 @@ export function useNavigateToPost() {
     } else {
       const targetTabRoute = getTabRouteFromPathname(pathname);
 
-      if (targetTabRoute === 'index') {
-        // @ts-expect-error special case for index tab
-        router.push(`/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
-      } else if (targetTabRoute === 'profile') {
+      if (targetTabRoute === 'profile') {
         router.push(`/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
       } else {
         router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
@@ -72,10 +71,7 @@ export function useNavigateToProfile() {
     } else {
       const targetTabRoute = getTabRouteFromPathname(pathname);
 
-      if (targetTabRoute === 'index') {
-        // @ts-expect-error special case for index tab
-        router.push(`/user-profile/${encodeURIComponent(actor)}`);
-      } else if (targetTabRoute === 'profile') {
+      if (targetTabRoute === 'profile') {
         router.push(`/profile/${encodeURIComponent(actor)}`);
       } else {
         router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`);
@@ -96,9 +92,6 @@ export function useProfileHref() {
       return `/profile/${encodeURIComponent(actor)}`;
     }
     const targetTabRoute = getTabRouteFromPathname(pathname);
-    if (targetTabRoute === 'index') {
-      return `/user-profile/${encodeURIComponent(actor)}`;
-    }
     if (targetTabRoute === 'profile') {
       return `/profile/${encodeURIComponent(actor)}`;
     }

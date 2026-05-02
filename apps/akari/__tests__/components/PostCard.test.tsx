@@ -145,7 +145,7 @@ describe('PostCard', () => {
     const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
     // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
-    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
+    expect(router.push).toHaveBeenCalledWith('/index/user-profile/alice');
   });
 
   it('navigates to profile when avatar pressed', () => {
@@ -154,7 +154,7 @@ describe('PostCard', () => {
     const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
     fireEvent.press(avatarButton);
     // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
-    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice');
+    expect(router.push).toHaveBeenCalledWith('/index/user-profile/alice');
   });
 
   it('likes a post when not previously liked', () => {
