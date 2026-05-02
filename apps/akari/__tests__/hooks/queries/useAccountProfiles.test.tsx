@@ -18,7 +18,7 @@ jest.mock('@/hooks/queries/useJwtToken', () => ({
 }));
 
 jest.mock('@/bluesky-api', () => ({
-  BlueskyApi: jest.fn((...args) => mockBlueskyApi(...args)),
+  BlueskyApi: jest.fn((...args: unknown[]) => mockBlueskyApi(...(args as []))),
 }));
 
 describe('useAccountProfiles', () => {
@@ -47,7 +47,7 @@ describe('useAccountProfiles', () => {
       fetched = await result.current.refetch();
     });
 
-    expect(fetched.data).toEqual({});
+    expect(fetched!.data).toEqual({});
     expect(mockGetProfile).not.toHaveBeenCalled();
   });
 

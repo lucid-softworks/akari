@@ -62,7 +62,7 @@ describe('useProfile query hook', () => {
       fetched = await result.current.refetch();
     });
 
-    expect(fetched.error?.message).toBe('No access token');
+    expect(fetched!.error?.message).toBe('No access token');
     expect(mockGetProfile).not.toHaveBeenCalled();
   });
 
@@ -75,7 +75,7 @@ describe('useProfile query hook', () => {
       fetched = await result.current.refetch();
     });
 
-    expect(fetched.error?.message).toBe('No identifier provided');
+    expect(fetched!.error?.message).toBe('No identifier provided');
     expect(mockGetProfile).not.toHaveBeenCalled();
   });
 

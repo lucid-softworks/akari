@@ -180,9 +180,9 @@ describe('authentication and account mutation hooks', () => {
     result.current.mutate(account);
 
     await waitFor(() => {
-      expect(setCurrent().mutateAsync).toHaveBeenCalledWith(account);
+      expect((setCurrent as unknown as jest.Mock)().mutateAsync).toHaveBeenCalledWith(account);
     });
-    expect(setAuth().mutateAsync).toHaveBeenCalledWith({
+    expect((setAuth as unknown as jest.Mock)().mutateAsync).toHaveBeenCalledWith({
       token: 't',
       refreshToken: 'r',
       did: '3',

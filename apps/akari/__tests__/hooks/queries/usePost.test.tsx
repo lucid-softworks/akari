@@ -122,7 +122,7 @@ describe('useParentPost', () => {
     const { result } = renderHook(() => useParentPost(null), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.parentPost).toBeUndefined();
+      expect(result.current.data).toBeUndefined();
     });
     expect(mockGetPost).not.toHaveBeenCalled();
   });
@@ -165,7 +165,7 @@ describe('useRootPost', () => {
     const { result } = renderHook(() => useRootPost(null), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.rootPost).toBeUndefined();
+      expect(result.current.data).toBeUndefined();
     });
     expect(mockGetPost).not.toHaveBeenCalled();
   });

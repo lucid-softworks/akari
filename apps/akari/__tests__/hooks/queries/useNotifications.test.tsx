@@ -226,7 +226,7 @@ describe('useNotifications', () => {
       queryKey: ['notifications', 50, undefined, undefined, 'did:me'],
     });
     expect(query).toBeDefined();
-    await expect(query!.options.queryFn?.({ pageParam: undefined })).rejects.toThrow(
+    await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(
       'No access token',
     );
 
@@ -248,7 +248,7 @@ describe('useNotifications', () => {
       queryKey: ['notifications', 50, undefined, undefined, 'did:me'],
     });
     expect(query).toBeDefined();
-    await expect(query!.options.queryFn?.({ pageParam: undefined })).rejects.toThrow(
+    await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(
       'No PDS URL available',
     );
     expect(mockListNotifications).not.toHaveBeenCalled();
