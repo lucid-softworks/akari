@@ -92,7 +92,6 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
               source={{ uri: thumbnailUrl }}
               style={styles.thumbnail}
               contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           )}
           <ThemedView style={styles.playButton}>

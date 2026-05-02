@@ -114,7 +114,6 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   contentFit="cover"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
-                  placeholder={require('@/assets/images/partial-react-logo.png')}
                 />
                 {!imageLoaded && !imageError && (
                   <View style={styles.imagePlaceholder}>

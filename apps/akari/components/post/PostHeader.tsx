@@ -73,7 +73,6 @@ export const PostHeader = React.memo(function PostHeader({
               }}
               style={styles.authorAvatar}
               contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
             {isLive && (
               <View style={styles.liveBadge}>

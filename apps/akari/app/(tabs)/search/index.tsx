@@ -358,7 +358,6 @@ export default function SearchScreen() {
               source={{ uri: profile.avatar }}
               style={styles.profileAvatar}
               contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           ) : null}
           <ThemedView style={styles.profileInfo}>

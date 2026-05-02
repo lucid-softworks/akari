@@ -415,7 +415,6 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 }}
                 style={styles.authorAvatar}
                 contentFit="cover"
-                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
               <ThemedView style={styles.authorInfo}>
                 <ThemedText style={[styles.displayName, { color: textColor }]}>{authorInfo.displayName}</ThemedText>
@@ -433,7 +432,6 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 }}
                 style={styles.authorAvatar}
                 contentFit="cover"
-                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
               <ThemedView style={styles.authorInfo}>
                 <ThemedText style={[styles.displayName, { color: textColor }]}>{blockingMessage}</ThemedText>
@@ -504,7 +502,6 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                       source={{ uri: imageUrl }}
                       style={[styles.image, { height: imageHeight }]}
                       contentFit="contain"
-                      placeholder={require('@/assets/images/partial-react-logo.png')}
                       onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                     />
                   );

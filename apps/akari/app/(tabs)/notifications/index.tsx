@@ -179,7 +179,6 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
                 source={{ uri: author.avatar }}
                 style={AVATAR_IMAGE_STYLE}
                 contentFit="cover"
-                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
             ) : (
               <View style={[styles.avatar, styles.avatarFallback]}>

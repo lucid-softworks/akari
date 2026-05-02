@@ -27,7 +27,6 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 
-const PLACEHOLDER_IMAGE = require('@/assets/images/partial-react-logo.png');
 
 
 type RecordEmbedData = Parameters<typeof RecordEmbed>[0]['embed'];
@@ -336,7 +335,6 @@ export default function ConversationScreen() {
                 source={{ uri: image.url }}
                 style={[styles.messageImage, { width: imageWidth, height: imageHeight }]}
                 contentFit="cover"
-                placeholder={PLACEHOLDER_IMAGE}
                 onLoad={(event) => handleMessageImageLoad(image.url, event.source.width, event.source.height)}
                 accessible
                 accessibilityLabel={image.alt || 'Image attachment'}

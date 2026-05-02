@@ -202,7 +202,6 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
                   source={{ uri: imageUrl }}
                   style={[styles.image, { aspectRatio }]}
                   contentFit="cover"
-                  placeholder={require('@/assets/images/partial-react-logo.png')}
                   onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                 />
               </TouchableOpacity>

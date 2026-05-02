@@ -175,7 +175,6 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
             source={{ uri: gifUrl }}
             style={styles.gifImage}
             contentFit="cover"
-            placeholder={require('@/assets/images/partial-react-logo.png')}
           />
         </TouchableOpacity>
       );

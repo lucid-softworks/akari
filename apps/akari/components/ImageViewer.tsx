@@ -164,7 +164,6 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
                   contentFit="contain"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
-                  placeholder={require('@/assets/images/partial-react-logo.png')}
                 />
               </TouchableOpacity>
             </Animated.View>

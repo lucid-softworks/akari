@@ -215,7 +215,6 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
                 source={{ uri: thumbnailUrl }}
                 style={styles.thumbnail}
                 contentFit="cover"
-                placeholder={require('@/assets/images/partial-react-logo.png')}
               />
             ) : (
               <ThemedView style={styles.placeholderContainer}>

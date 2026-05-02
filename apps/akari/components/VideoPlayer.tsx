@@ -363,7 +363,6 @@ export function VideoPlayer({
               source={{ uri: thumbnailUrl }}
               style={styles.thumbnail}
               contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
               transition={200}
             />
           ) : (

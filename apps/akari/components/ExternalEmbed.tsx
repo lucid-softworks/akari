@@ -84,7 +84,6 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
               source={{ uri: thumbUrl }}
               style={styles.thumbnail}
               contentFit="cover"
-              placeholder={require('@/assets/images/partial-react-logo.png')}
             />
           )}
 
