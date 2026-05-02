@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Platform, Pressable, StyleSheet, type PressableProps, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
 
 type PressableLinkProps = {
   href: string;
@@ -25,13 +25,21 @@ export function PressableLink({
 }: PressableLinkProps) {
   const [hovered, setHovered] = useState(false);
 
-  const handleNativePress = useCallback(() => {
-    if (onPress) {
-      onPress();
-    } else {
-      router.push(href as any);
-    }
-  }, [href, onPress]);
+  const handleNativePress = useCallback(
+    (event?: GestureResponderEvent) => {
+      // Prevent the press from bubbling to a parent PressableLink (e.g. when
+      // an avatar or quoted-post link is rendered inside a PostCard's
+      // PressableLink — without this, both navigate and the user has to
+      // press back twice).
+      event?.stopPropagation?.();
+      if (onPress) {
+        onPress();
+      } else {
+        router.push(href as any);
+      }
+    },
+    [href, onPress],
+  );
 
   if (Platform.OS === 'web') {
     const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false }) : style;
