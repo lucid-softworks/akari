@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react-native';
 import * as Haptics from 'expo-haptics';
+import { Text } from 'react-native';
 
-const mockPressable = jest.fn(() => null);
+const mockPressable = jest.fn((_props: any) => null);
 jest.mock('@react-navigation/elements', () => ({
   PlatformPressable: (props: any) => {
     mockPressable(props);
@@ -28,8 +29,13 @@ describe('HapticTab', () => {
     process.env.EXPO_OS = 'ios';
     const onTabPress = jest.fn();
     const onPress = jest.fn();
-    render(<HapticTab onTabPress={onTabPress} onPress={onPress} />);
-    const props = mockPressable.mock.calls[0][0];
+    render(
+      <HapticTab onTabPress={onTabPress} onPress={onPress}>
+        <Text>tab</Text>
+      </HapticTab>,
+    );
+    const props = mockPressable.mock.calls[0]?.[0];
+    expect(props).toBeDefined();
     props.onPressIn({});
     props.onPress({});
     expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Light);
