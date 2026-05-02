@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.6.0](https://github.com/lucid-softworks/akari/compare/v1.5.0...v1.6.0) (2026-05-02)
+
+
+### Features
+
+* **dev:** show banner when Metro dev server is disconnected ([dd95a88](https://github.com/lucid-softworks/akari/commit/dd95a88b68f04a6c4c650912712fdf9eaeff7758))
+* **sheets:** migrate remaining drawers to native pageSheet presentation ([59d51b4](https://github.com/lucid-softworks/akari/commit/59d51b442b43418c03691d4d0ffcaf0f942d6860))
+
+
+### Bug Fixes
+
+* **account-switcher:** handle nullable accounts data ([7778f1d](https://github.com/lucid-softworks/akari/commit/7778f1da23dcbb6ea7ec537e9b8c3295cbab1988))
+* dependabot overrides + absolute-position banners ([eb714e7](https://github.com/lucid-softworks/akari/commit/eb714e749bf75789d7172fe04147dc0858f04a95))
+* **haptic-tab:** restore function-of-state style (no more border squares) ([c03cbec](https://github.com/lucid-softworks/akari/commit/c03cbecf04f072ad13cebbb5d01373ff085a9da2))
+* **haptic-tab:** use static style + pressColor instead of style fn ([5e4c21b](https://github.com/lucid-softworks/akari/commit/5e4c21bc5e84b550479458c7da16ba841bfa2ef5))
+* **home:** pull-to-refresh on Following feed actually refreshes ([021d204](https://github.com/lucid-softworks/akari/commit/021d20476f2bcb10b1094ddf68c95cb1af7e18df))
+* PostActionsMenu native sheet + quoted-post tap responder ([9464395](https://github.com/lucid-softworks/akari/commit/9464395bd77aaea577b7e7037c1b0a878f958028))
+* **post:** missing imports — TouchableOpacity in PostCard, t in PostTranslation ([cf05b5e](https://github.com/lucid-softworks/akari/commit/cf05b5e9813c30e558ae6137a8bcd4aa4062af2e))
+* **pressable-link:** debounce rapid presses (500ms) ([008fcfd](https://github.com/lucid-softworks/akari/commit/008fcfd6e2f4a99b841626c3cad5647853e00ff0))
+* **pressable-link:** stop press event from bubbling to parent ([8bc35b1](https://github.com/lucid-softworks/akari/commit/8bc35b1f168a57ee831cdb6e5dc3b3778889b0ec))
+* quoted-post taps + PostActionsMenu sheet height ([838fe3f](https://github.com/lucid-softworks/akari/commit/838fe3f0132dd624112d6923b284c406e6660f1e))
+* **recipe-modal:** wire up useTranslation ([323a115](https://github.com/lucid-softworks/akari/commit/323a115c6ce25dcddf82ff463747a7dc321df3d6))
+* **skeleton:** make skeletonComponent prop optional + test fixture types ([76c7df7](https://github.com/lucid-softworks/akari/commit/76c7df7b23f4edfc9d34964f88878306306754bd))
+* **test:** align GifPicker fixture with TenorGif type ([9ed5579](https://github.com/lucid-softworks/akari/commit/9ed5579c75cd57867d229cab865e62d14d2f2b6e))
+* **test:** align RecordEmbed fixtures with current Bluesky types ([8d2a5fa](https://github.com/lucid-softworks/akari/commit/8d2a5fa1e88aebe3007310c69f75ba69bf31f4a1))
+* **test:** clear long tail of single-error test fixtures ([2786918](https://github.com/lucid-softworks/akari/commit/2786918c0215007773cc700fe9e7eac65c42aa01))
+* **test:** HapticTab — children, typed mock, and optional-chain on call ([d528d4d](https://github.com/lucid-softworks/akari/commit/d528d4db243c8a0be1beea8607fd7ac5a8049874))
+* **test:** hooks query/mutation cluster type errors ([4f2734d](https://github.com/lucid-softworks/akari/commit/4f2734d460db884e64df3a3d334e25fab4f3b9e3))
+* **test:** three component test fixture cleanups ([f9be471](https://github.com/lucid-softworks/akari/commit/f9be471225691c2cdb0612cd3adc8ea559d3c8fa))
+* **test:** three small fixture/typing cleanups ([9932017](https://github.com/lucid-softworks/akari/commit/99320174e1651ee3d0ce812da066b53285e5f8e0))
+* **test:** three test fixture/mock cleanups ([584c0a8](https://github.com/lucid-softworks/akari/commit/584c0a8529258778e2bff64ad26009eac2628985))
+* **test:** YouTube/Gif fixtures + Labels type aligned with usage ([c3527e6](https://github.com/lucid-softworks/akari/commit/c3527e60901d324ff597d7524994184f59b52c04))
+* **types:** app/ residue — route paths, nullable accounts, optional row key ([00ab5e0](https://github.com/lucid-softworks/akari/commit/00ab5e058aec916d41084b9dc6773a567e0638cc))
+* **types:** production residue — 3 single-error files ([b06b5c1](https://github.com/lucid-softworks/akari/commit/b06b5c1fc372c5cb90ee7725a84b95ddd7b0aa5a))
+* **types:** production residue — useSearch import path, PressableLink state ([182afff](https://github.com/lucid-softworks/akari/commit/182afff65c194724331af0a60c088a20be490115))
+* **virtualized-list:** React 19 ref-as-prop + tightened FlashList passthrough ([14c30ce](https://github.com/lucid-softworks/akari/commit/14c30cea9f27850349308440968b838d7d44bfee))
+
 ## [1.5.0](https://github.com/lucid-softworks/akari/compare/v1.4.1...v1.5.0) (2026-05-02)
 
 
