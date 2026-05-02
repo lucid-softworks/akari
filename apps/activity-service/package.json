@@ -10,9 +10,9 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/node-server": "^1.13.5",
+    "@hono/node-server": "^1.19.13",
     "bluesky-api": "*",
-    "hono": "^4.9.10"
+    "hono": "^4.12.14"
   },
   "devDependencies": {
     "@types/node": "^20.17.12",
