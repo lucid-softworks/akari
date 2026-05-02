@@ -1,6 +1,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
+import type { TenorGif } from '@/tenor-api';
 import { GifPicker } from '@/components/GifPicker';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -26,7 +27,7 @@ describe.skip('GifPicker', () => {
   const mockUseTranslation = useTranslation as jest.Mock;
   const mockTenor = tenorApi as jest.Mocked<typeof tenorApi>;
 
-  const sampleGif = {
+  const sampleGif: TenorGif = {
     id: '1',
     title: 'funny',
     media_formats: {
@@ -45,8 +46,8 @@ describe.skip('GifPicker', () => {
     jest.clearAllMocks();
     mockUseThemeColor.mockReturnValue('#000');
     mockUseTranslation.mockReturnValue({ t: (key: string) => key });
-    mockTenor.getTrendingGifs.mockResolvedValue({ results: [sampleGif], next: undefined });
-    mockTenor.searchGifs.mockResolvedValue({ results: [sampleGif], next: undefined });
+    mockTenor.getTrendingGifs.mockResolvedValue({ results: [sampleGif], next: '' });
+    mockTenor.searchGifs.mockResolvedValue({ results: [sampleGif], next: '' });
     mockTenor.convertGifToAttachedImage.mockReturnValue({
       uri: 'converted',
       alt: 'alt',
@@ -145,7 +146,7 @@ describe.skip('GifPicker', () => {
   it('loads more trending GIFs when end is reached', async () => {
     mockTenor.getTrendingGifs
       .mockResolvedValueOnce({ results: [sampleGif], next: 'next' })
-      .mockResolvedValueOnce({ results: [sampleGif], next: undefined });
+      .mockResolvedValueOnce({ results: [sampleGif], next: '' });
 
     const { UNSAFE_getByType } = render(<GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />);
 
@@ -166,10 +167,10 @@ describe.skip('GifPicker', () => {
   });
 
   it('loads more search results when end is reached', async () => {
-    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [], next: undefined });
+    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [], next: '' });
     mockTenor.searchGifs
       .mockResolvedValueOnce({ results: [sampleGif], next: 'next' })
-      .mockResolvedValueOnce({ results: [sampleGif], next: undefined });
+      .mockResolvedValueOnce({ results: [sampleGif], next: '' });
 
     const { getByPlaceholderText, UNSAFE_getByType } = render(
       <GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />,
@@ -206,7 +207,7 @@ describe.skip('GifPicker', () => {
 
   it('skips GIFs without valid URLs', async () => {
     const invalidGif = { ...sampleGif, id: '2', media_formats: {} as any, url: '' };
-    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [invalidGif], next: undefined });
+    mockTenor.getTrendingGifs.mockResolvedValueOnce({ results: [invalidGif], next: '' });
 
     const { findAllByRole } = render(<GifPicker visible onClose={jest.fn()} onSelectGif={jest.fn()} />);
 
