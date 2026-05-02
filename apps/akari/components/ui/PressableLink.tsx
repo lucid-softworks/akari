@@ -1,6 +1,12 @@
 import { router } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
+
+// Min interval between accepted presses on the same link. Guards against
+// fast double-taps and any RN/expo-router edge case where a single touch
+// fires onPress twice (which pushes the same route twice and forces the
+// user to press back twice to get out).
+const PRESS_DEBOUNCE_MS = 500;
 
 type PressableLinkProps = {
   href: string;
@@ -24,14 +30,17 @@ export function PressableLink({
   accessibilityState,
 }: PressableLinkProps) {
   const [hovered, setHovered] = useState(false);
+  const lastPressAtRef = useRef(0);
 
   const handleNativePress = useCallback(
     (event?: GestureResponderEvent) => {
       // Prevent the press from bubbling to a parent PressableLink (e.g. when
       // an avatar or quoted-post link is rendered inside a PostCard's
-      // PressableLink — without this, both navigate and the user has to
-      // press back twice).
+      // PressableLink).
       event?.stopPropagation?.();
+      const now = Date.now();
+      if (now - lastPressAtRef.current < PRESS_DEBOUNCE_MS) return;
+      lastPressAtRef.current = now;
       if (onPress) {
         onPress();
       } else {
