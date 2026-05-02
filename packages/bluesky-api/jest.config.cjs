@@ -44,7 +44,8 @@ module.exports = {
         },
       },
     ],
+    'node_modules/.+\\.mjs$': '<rootDir>/../../scripts/jest-transform-mjs.cjs',
   },
-  transformIgnorePatterns: ['node_modules/(?!until-async)'],
+  transformIgnorePatterns: ['node_modules/(?!until-async/|.+\\.mjs$)'],
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };
