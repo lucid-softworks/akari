@@ -33,8 +33,7 @@ type AccountSwitcherSheetProps = {
 export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetProps) {
   const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
-  const { data: accountsData } = useAccounts();
-  const accounts = accountsData ?? [];
+  const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();

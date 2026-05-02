@@ -26,8 +26,7 @@ import { showAlert } from '@/utils/alert';
 export default function AccountSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
-  const { data: accountsData } = useAccounts();
-  const accounts = accountsData ?? [];
+  const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const { data: accountProfiles } = useAccountProfiles();
 
