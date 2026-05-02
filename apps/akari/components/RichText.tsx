@@ -4,6 +4,7 @@ import { ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useProfileHref } from '@/utils/navigation';
 
 type RichTextProps = {
   text: string;
@@ -74,6 +75,8 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
     'tint',
   );
 
+  const profileHref = useProfileHref();
+
   // Trim whitespace and parse the text
   const trimmedText = text.replace(WHITESPACE_TRIM_RE, '');
   const tokens = tokenize(trimmedText);
@@ -101,7 +104,7 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'mention':
             return (
-              <Link key={index} href={`/profile/${token.handle}`}>
+              <Link key={index} href={profileHref(token.handle) as any}>
                 <ThemedText style={[{ color: mentionColor }]}>@{token.handle}</ThemedText>
               </Link>
             );

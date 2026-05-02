@@ -7,7 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useNavigateToProfile } from '@/utils/navigation';
+import { useNavigateToProfile, useProfileHref } from '@/utils/navigation';
 
 type PostHeaderProps = {
   author: {
@@ -28,6 +28,7 @@ export const PostHeader = React.memo(function PostHeader({
   onAvatarHoverChange,
 }: PostHeaderProps) {
   const navigateToProfile = useNavigateToProfile();
+  const profileHref = useProfileHref();
 
   const iconColor = useThemeColor(
     { light: '#687076', dark: '#9BA1A6' },
@@ -56,7 +57,7 @@ export const PostHeader = React.memo(function PostHeader({
     <View style={styles.header}>
       <View style={styles.authorSection}>
         <PressableLink
-          href={`/profile/${author.handle}`}
+          href={profileHref(author.handle) as any}
           onPress={handleProfilePress}
           accessibilityLabel={`View ${authorName}'s profile via avatar`}
           style={styles.avatarPressable}
@@ -84,7 +85,7 @@ export const PostHeader = React.memo(function PostHeader({
         <View style={styles.authorInfo}>
           <ThemedText style={styles.displayName}>{authorName}</ThemedText>
           <PressableLink
-            href={`/profile/${author.handle}`}
+            href={profileHref(author.handle) as any}
             onPress={handleProfilePress}
             accessibilityLabel={`View profile of ${authorName}`}
           >
