@@ -26,15 +26,14 @@ export function useAuthStatus() {
         return { isAuthenticated: false };
       }
 
+      if (!currentAccount?.pdsUrl) {
+        return { isAuthenticated: false };
+      }
+
       try {
-        // Try to refresh the session to validate tokens
-        if (!currentAccount?.pdsUrl) {
-          throw new Error('No PDS URL available for this account');
-        }
         const api = new BlueskyApi(currentAccount.pdsUrl);
         const session = await api.refreshSession(refreshToken);
 
-        // Update stored tokens with fresh ones
         setAuthMutation.mutate({
           token: session.accessJwt,
           refreshToken: session.refreshJwt,
@@ -53,10 +52,24 @@ export function useAuthStatus() {
             status: session.active === false ? session.status : undefined,
           },
         };
-      } catch {
-        // Clear invalid tokens
-        clearAuthMutation.mutate();
-        return { isAuthenticated: false };
+      } catch (error) {
+        // Only clear tokens on a genuine auth failure. Network blips, request
+        // aborts (e.g. during HMR), and PDS errors must not log the user out.
+        const e = error as { status?: number; errorCode?: string };
+        const isAuthFailure =
+          e.status === 401 ||
+          e.status === 403 ||
+          e.errorCode === 'ExpiredToken' ||
+          e.errorCode === 'InvalidToken' ||
+          e.errorCode === 'AuthenticationRequired' ||
+          e.errorCode === 'AccountTakedown';
+
+        if (isAuthFailure) {
+          clearAuthMutation.mutate();
+          return { isAuthenticated: false };
+        }
+
+        throw error;
       }
     },
     staleTime: 2 * 60 * 1000, // 2 minutes - don't check too frequently

@@ -69,8 +69,14 @@ export class BlueskyApiClient {
     const response = await fetch(url, requestOptions);
 
     if (!response.ok) {
-      const error: BlueskyError = await response.json();
-      throw new Error(error.message || `Request failed with status ${response.status}`);
+      const body: Partial<BlueskyError> = await response.json().catch(() => ({}));
+      const err = new Error(body.message || `Request failed with status ${response.status}`) as Error & {
+        status: number;
+        errorCode?: string;
+      };
+      err.status = response.status;
+      if (body.error) err.errorCode = body.error;
+      throw err;
     }
 
     return await response.json();
