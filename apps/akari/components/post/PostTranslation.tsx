@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, type TextStyle } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, type StyleProp, type TextStyle } from 'react-native';
 
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
@@ -23,7 +23,7 @@ type PostTranslationProps = {
   visible: boolean;
   onHide: () => void;
   facets?: any[];
-  textStyle?: TextStyle | TextStyle[];
+  textStyle?: StyleProp<TextStyle>;
   embedText?: EmbedText;
   onEmbedTranslated?: (translated: TranslatedEmbed | null) => void;
 };
@@ -48,7 +48,7 @@ export const PostTranslation = React.memo(function PostTranslation({
   embedText,
   onEmbedTranslated,
 }: PostTranslationProps) {
-  const { currentLocale } = useTranslation();
+  const { t, currentLocale } = useTranslation();
   const translationMutation = usePostTranslation();
   const [translatedText, setTranslatedText] = useState<string | null>(null);
   const [translatedFacets, setTranslatedFacets] = useState<any[] | undefined>(undefined);

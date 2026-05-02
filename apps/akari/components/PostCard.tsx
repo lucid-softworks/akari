@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Linking, Platform, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyLabel } from '@/bluesky-api';
 import { Labels } from '@/components/Labels';
