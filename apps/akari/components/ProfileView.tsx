@@ -31,8 +31,22 @@ type ProfileViewProps = {
   handle: string;
 };
 
+const TAB_ORDER: ProfileTabType[] = [
+  'posts',
+  'replies',
+  'likes',
+  'media',
+  'videos',
+  'feeds',
+  'repos',
+  'starterpacks',
+  'recipes',
+  'links',
+];
+
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
+  const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   // Track the active tab's scroll position + measured header height so the
@@ -58,6 +72,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         nextTabPinScrollYRef.current = Math.max(0, target);
       }
       return tab;
+    });
+    setVisitedTabs((prev) => {
+      if (prev.has(tab)) return prev;
+      const next = new Set(prev);
+      next.add(tab);
+      return next;
     });
   }, []);
 
@@ -175,9 +195,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setShowDropdown(false);
   };
 
-  const renderTabContent = () => {
+  const renderTab = (tab: ProfileTabType) => {
     if (!handle) return null;
-
     const sharedProps = {
       handle,
       ListHeaderComponent: headerComponent,
@@ -187,31 +206,36 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       onScrollY: handleScrollY,
       onHeaderHeightChange: handleHeaderHeightChange,
     };
-
-    switch (activeTab) {
-      case 'posts':
-        return <PostsTab {...sharedProps} />;
-      case 'replies':
-        return <RepliesTab {...sharedProps} />;
-      case 'likes':
-        return <LikesTab {...sharedProps} />;
-      case 'media':
-        return <MediaTab {...sharedProps} />;
-      case 'videos':
-        return <VideosTab {...sharedProps} />;
-      case 'feeds':
-        return <FeedsTab {...sharedProps} />;
-      case 'repos':
-        return <ReposTab {...sharedProps} />;
-      case 'starterpacks':
-        return <StarterpacksTab {...sharedProps} />;
-      case 'recipes':
-        return <RecipesTab {...sharedProps} />;
-      case 'links':
-        return <LinksTab {...sharedProps} />;
-      default:
-        return null;
+    switch (tab) {
+      case 'posts': return <PostsTab {...sharedProps} />;
+      case 'replies': return <RepliesTab {...sharedProps} />;
+      case 'likes': return <LikesTab {...sharedProps} />;
+      case 'media': return <MediaTab {...sharedProps} />;
+      case 'videos': return <VideosTab {...sharedProps} />;
+      case 'feeds': return <FeedsTab {...sharedProps} />;
+      case 'repos': return <ReposTab {...sharedProps} />;
+      case 'starterpacks': return <StarterpacksTab {...sharedProps} />;
+      case 'recipes': return <RecipesTab {...sharedProps} />;
+      case 'links': return <LinksTab {...sharedProps} />;
+      default: return null;
     }
+  };
+
+  const renderTabContent = () => {
+    if (!handle) return null;
+    return TAB_ORDER.map((tab) => {
+      if (!visitedTabs.has(tab)) return null;
+      const isActive = tab === activeTab;
+      return (
+        <View
+          key={tab}
+          style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
+          pointerEvents={isActive ? 'auto' : 'none'}
+        >
+          {renderTab(tab)}
+        </View>
+      );
+    });
   };
 
   return (
@@ -239,6 +263,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  tabPane: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  tabPaneHidden: {
+    display: 'none',
   },
   errorText: {
     fontSize: fontSize.lg,
