@@ -204,7 +204,7 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               // The text should contain the actual handle (e.g., "@miragreen.bsky.social")
               const handle = segment.text.replace(/^@/, ''); // Remove the @ symbol
               return (
-                <Link key={index} href={profileHref(handle) as any}>
+                <Link key={index} push href={profileHref(handle) as any}>
                   <ThemedText style={[{ color: mentionColor }]}>{segment.text}</ThemedText>
                 </Link>
               );
