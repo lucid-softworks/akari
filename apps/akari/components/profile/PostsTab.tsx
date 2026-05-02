@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
@@ -17,9 +17,10 @@ type PostsTabProps = {
   StickyTabComponent?: React.ReactElement | null;
   onRefresh?: () => void;
   refreshing?: boolean;
+  listRef?: React.Ref<FlatList<any>>;
 };
 
-export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRefresh, refreshing }: PostsTabProps) {
+export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRefresh, refreshing, listRef }: PostsTabProps) {
   const { t } = useTranslation();
   const { data: posts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorPosts(handle);
   const navigateToPost = useNavigateToPost();
@@ -135,6 +136,7 @@ export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRe
 
   return (
     <FlatList
+      ref={listRef}
       data={listData}
       renderItem={renderItem}
       keyExtractor={(item: any) => item.__type ?? `${item.uri}-${item.indexedAt}`}

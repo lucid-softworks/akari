@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -53,6 +53,7 @@ export default function ProfileScreen() {
   }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);
+  const postsListRef = useRef<FlatList<any>>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const pendingPinAfterTabChange = useRef(false);
 
@@ -78,6 +79,15 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (!pendingPinAfterTabChange.current) return;
+
+    if (activeTab === 'posts') {
+      if (postsListRef.current) {
+        postsListRef.current.scrollToIndex({ index: 1, animated: false, viewPosition: 0 });
+        pendingPinAfterTabChange.current = false;
+      }
+      return;
+    }
+
     if (!scrollViewRef.current) return;
     scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
     if (headerHeight > 0) {
@@ -183,7 +193,7 @@ export default function ProfileScreen() {
     }
 
     if (activeTab === 'posts') {
-      return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} />;
+      return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} listRef={postsListRef} />;
     }
 
     let tabBody: React.ReactNode = null;

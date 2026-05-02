@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -39,6 +39,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const postsListRef = useRef<FlatList<any>>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const pendingPinAfterTabChange = useRef(false);
 
@@ -64,6 +65,15 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   useEffect(() => {
     if (!pendingPinAfterTabChange.current) return;
+
+    if (activeTab === 'posts') {
+      if (postsListRef.current) {
+        postsListRef.current.scrollToIndex({ index: 1, animated: false, viewPosition: 0 });
+        pendingPinAfterTabChange.current = false;
+      }
+      return;
+    }
+
     if (!scrollViewRef.current) return;
     scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
     if (headerHeight > 0) {
@@ -201,7 +211,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     if (!handle) return null;
 
     if (activeTab === 'posts') {
-      return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} />;
+      return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} listRef={postsListRef} />;
     }
 
     let tabBody: React.ReactNode = null;
