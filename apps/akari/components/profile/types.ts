@@ -5,8 +5,9 @@ export type ProfileTabContentProps = {
   ListHeaderComponent?: React.ReactElement | null;
   /** Tab strip. Rendered as item index 1, sticky to viewport top. */
   StickyTabComponent?: React.ReactElement | null;
-  /** When true, scroll the FlatList to put the sticky tab strip at the top on mount. */
-  pinTabsOnMount?: boolean;
+  /** Initial scroll Y for this tab on mount. Used to preserve the user's
+   * vertical position across tab switches. 0 (or undefined) = start at top. */
+  pinScrollY?: number;
   /**
    * Optional: refresh profile-level data (banner, name, follow counts). Composed
    * with the tab's own data refetch when the user pulls to refresh.

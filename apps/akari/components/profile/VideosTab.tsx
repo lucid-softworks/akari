@@ -17,7 +17,7 @@ export function VideosTab({
   handle,
   ListHeaderComponent,
   StickyTabComponent,
-  pinTabsOnMount,
+  pinScrollY,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -91,7 +91,7 @@ export function VideosTab({
       ListHeaderComponent={ListHeaderComponent}
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noVideos')}
-      pinTabsOnMount={pinTabsOnMount}
+      pinScrollY={pinScrollY}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

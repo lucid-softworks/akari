@@ -22,7 +22,7 @@ type ProfileTabFlatListProps<T> = {
   ListHeaderComponent?: React.ReactElement | null;
   StickyTabComponent?: React.ReactElement | null;
   emptyText: string;
-  pinTabsOnMount?: boolean;
+  pinScrollY?: number;
   onRefresh?: () => void;
   refreshing?: boolean;
   onScrollY?: (y: number) => void;
@@ -40,7 +40,7 @@ export function ProfileTabFlatList<T>({
   ListHeaderComponent,
   StickyTabComponent,
   emptyText,
-  pinTabsOnMount,
+  pinScrollY,
   onRefresh,
   refreshing,
   onScrollY,
@@ -125,22 +125,21 @@ export function ProfileTabFlatList<T>({
     [keyExtractor],
   );
 
-  // Capture the pin intent at first mount only — later re-renders shouldn't be
-  // able to forget or repeat a pending pin.
-  const shouldPinRef = useRef(pinTabsOnMount);
+  // Capture the desired initial scroll Y at first mount only. Later re-renders
+  // won't change it; we only want to scroll once, on initial layout.
+  const initialScrollYRef = useRef(pinScrollY ?? 0);
   const hasPinnedRef = useRef(false);
 
-  // Pin via scrollToOffset(headerHeight) once the header has been measured by
-  // onLayout. scrollToOffset doesn't require items to be measured ahead of time,
-  // unlike scrollToIndex, so this fires reliably right after the first layout
-  // pass.
   useEffect(() => {
     if (hasPinnedRef.current) return;
-    if (!shouldPinRef.current || !hasStickyTab) return;
-    if (headerHeight === 0) return;
-    listRef.current?.scrollToOffset({ offset: headerHeight, animated: false });
+    const target = initialScrollYRef.current;
+    if (target <= 0) {
+      hasPinnedRef.current = true;
+      return;
+    }
+    listRef.current?.scrollToOffset({ offset: target, animated: false });
     hasPinnedRef.current = true;
-  }, [headerHeight, hasStickyTab]);
+  }, []);
 
   return (
     <FlatList

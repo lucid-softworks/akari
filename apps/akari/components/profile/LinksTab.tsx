@@ -92,7 +92,7 @@ export function LinksTab({
   handle,
   ListHeaderComponent,
   StickyTabComponent,
-  pinTabsOnMount,
+  pinScrollY,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -126,7 +126,7 @@ export function LinksTab({
       ListHeaderComponent={ListHeaderComponent}
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noLinks')}
-      pinTabsOnMount={pinTabsOnMount}
+      pinScrollY={pinScrollY}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

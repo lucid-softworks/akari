@@ -35,15 +35,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
-  // True only when a tab change is the result of the user tapping a different
-  // tab — read at render time and consumed by the new tab's mount effect to
-  // pin its sticky tab strip at the top of the viewport.
-  const pendingPinAfterTabChange = useRef(false);
-  // Track the active tab's scroll position + measured header height so we can
-  // decide on tab change whether the prior tab had the sticky tabs pinned
-  // (scroll past banner) or the banner still in view.
+  // Track the active tab's scroll position + measured header height so the
+  // next tab can preserve the user's vertical position (banner-visible vs
+  // sticky-tabs-pinned) instead of jumping to the top or hiding the banner.
   const lastScrollYRef = useRef(0);
   const lastHeaderHeightRef = useRef(0);
+  const nextTabPinScrollYRef = useRef(0);
 
   const handleScrollY = useCallback((y: number) => {
     lastScrollYRef.current = y;
@@ -57,8 +54,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setActiveTab((current) => {
       if (current !== tab) {
         const headerH = lastHeaderHeightRef.current;
-        const wasPastHeader = headerH > 0 && lastScrollYRef.current >= headerH;
-        pendingPinAfterTabChange.current = wasPastHeader;
+        const target = headerH > 0 ? Math.min(lastScrollYRef.current, headerH) : 0;
+        nextTabPinScrollYRef.current = Math.max(0, target);
       }
       return tab;
     });
@@ -185,7 +182,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       handle,
       ListHeaderComponent: headerComponent,
       StickyTabComponent: tabsComponent,
-      pinTabsOnMount: pendingPinAfterTabChange.current,
+      pinScrollY: nextTabPinScrollYRef.current,
       onProfileRefresh: handleProfileRefresh,
       onScrollY: handleScrollY,
       onHeaderHeightChange: handleHeaderHeightChange,

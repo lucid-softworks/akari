@@ -70,7 +70,7 @@ export function StarterpacksTab({
   handle,
   ListHeaderComponent,
   StickyTabComponent,
-  pinTabsOnMount,
+  pinScrollY,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -96,7 +96,7 @@ export function StarterpacksTab({
       ListHeaderComponent={ListHeaderComponent}
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noStarterpacks')}
-      pinTabsOnMount={pinTabsOnMount}
+      pinScrollY={pinScrollY}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}
