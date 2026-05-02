@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { spacing, radius, fontSize, fontWeight, lineHeight } from '@/constants/tokens';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { spacing, radius, fontSize, fontWeight, lineHeight, opacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -22,13 +23,12 @@ type ComponentErrorBoundaryState = {
   error: Error | null;
 };
 
-const DefaultFallback: React.FC<ErrorBoundaryFallbackProps> = ({ error }) => {
-  const borderColor = useThemeColor({}, 'tint');
-  const backgroundColor = useThemeColor(
-    { light: '#FFF5F5', dark: '#2B1818' },
-    'background',
-  );
+const DefaultFallback: React.FC<ErrorBoundaryFallbackProps> = ({ error, reset }) => {
+  const borderColor = useThemeColor({}, 'border');
+  const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
+  const tintColor = useThemeColor({}, 'tint');
+  const iconColor = useThemeColor({}, 'icon');
   const { t } = useTranslation();
 
   return (
@@ -38,15 +38,23 @@ const DefaultFallback: React.FC<ErrorBoundaryFallbackProps> = ({ error }) => {
       accessibilityLabel={t('common.error')}
       accessibilityHint={t('notifications.somethingWentWrong')}
     >
+      <IconSymbol name="exclamationmark.triangle" size={28} color={iconColor} style={styles.icon} />
       <Text style={[styles.title, { color: textColor }]}>{t('common.error')}</Text>
       <Text style={[styles.message, { color: textColor }]}>
         {t('notifications.somethingWentWrong')}
       </Text>
       {__DEV__ && error ? (
-        <Text style={[styles.details, { color: textColor }]} numberOfLines={2}>
+        <Text style={[styles.details, { color: textColor }]} numberOfLines={3}>
           {error.message}
         </Text>
       ) : null}
+      <TouchableOpacity
+        accessibilityRole="button"
+        onPress={reset}
+        style={[styles.action, { borderColor: tintColor }]}
+      >
+        <Text style={[styles.actionLabel, { color: tintColor }]}>{t('common.tryAgain')}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -140,22 +148,42 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.md,
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
     gap: spacing.sm,
+    alignItems: 'center',
+  },
+  icon: {
+    marginBottom: spacing.xs,
+    opacity: opacity.tertiary,
   },
   title: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
+    textAlign: 'center',
   },
   message: {
     fontSize: fontSize.base,
     lineHeight: lineHeight.normal,
+    textAlign: 'center',
+    opacity: opacity.secondary,
   },
   details: {
     fontSize: fontSize.sm,
     lineHeight: lineHeight.tight,
-    opacity: 0.8,
+    opacity: opacity.tertiary,
+    textAlign: 'center',
+  },
+  action: {
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.full,
+    borderWidth: 1,
+  },
+  actionLabel: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
   },
 });
 
