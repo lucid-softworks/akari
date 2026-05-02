@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Tillbaka"
+      "back": "Tillbaka",
+      "done": "Klar"
     },
     "auth": {
       "fillAllFields": "Fyll i alla fält",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Skicka till"
+    },
+    "lists": {
+      "noLists": "Inga listor ännu",
+      "newList": "Ny lista",
+      "create": "Skapa",
+      "namePlaceholder": "Listans namn",
+      "descriptionPlaceholder": "Beskrivning (valfri)"
     }
   }
 }

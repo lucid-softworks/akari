@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "返回"
+      "back": "返回",
+      "done": "完成"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "傳送至"
+    },
+    "lists": {
+      "noLists": "還沒有清單",
+      "newList": "新增清單",
+      "create": "建立",
+      "namePlaceholder": "清單名稱",
+      "descriptionPlaceholder": "描述（選填）"
     }
   }
 }

@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "ย้อนกลับ"
+      "back": "ย้อนกลับ",
+      "done": "เสร็จ"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "ส่งถึง"
+    },
+    "lists": {
+      "noLists": "ยังไม่มีรายการ",
+      "newList": "รายการใหม่",
+      "create": "สร้าง",
+      "namePlaceholder": "ชื่อรายการ",
+      "descriptionPlaceholder": "คำอธิบาย (ไม่บังคับ)"
     }
   }
 }

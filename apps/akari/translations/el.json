@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Πίσω"
+      "back": "Πίσω",
+      "done": "Έγινε"
     },
     "auth": {
       "fillAllFields": "Συμπληρώστε όλα τα πεδία",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Αποστολή σε"
+    },
+    "lists": {
+      "noLists": "Δεν υπάρχουν λίστες ακόμη",
+      "newList": "Νέα λίστα",
+      "create": "Δημιουργία",
+      "namePlaceholder": "Όνομα λίστας",
+      "descriptionPlaceholder": "Περιγραφή (προαιρετικό)"
     }
   }
 }

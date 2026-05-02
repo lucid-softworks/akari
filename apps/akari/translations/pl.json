@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Wstecz"
+      "back": "Wstecz",
+      "done": "Gotowe"
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Wyślij do"
+    },
+    "lists": {
+      "noLists": "Brak list",
+      "newList": "Nowa lista",
+      "create": "Utwórz",
+      "namePlaceholder": "Nazwa listy",
+      "descriptionPlaceholder": "Opis (opcjonalny)"
     }
   }
 }

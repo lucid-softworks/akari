@@ -1,4 +1,10 @@
 import { BlueskyApiClient } from './client';
+import type {
+  BlueskyListView,
+  BlueskyListsResponse,
+  BlueskyListResponse,
+  BlueskyCreateRecordResponse,
+} from './types';
 
 /**
  * Bluesky API graph methods (follows, blocks, mutes, etc.)
@@ -133,4 +139,87 @@ export class BlueskyGraph extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Gets the lists curated by an actor.
+   */
+  async getLists(accessJwt: string, actor: string, limit = 50, cursor?: string): Promise<BlueskyListsResponse> {
+    const params: Record<string, string> = { actor, limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyListsResponse>('/app.bsky.graph.getLists', accessJwt, { params });
+  }
+
+  /**
+   * Gets a list view (metadata + members) by URI.
+   */
+  async getList(accessJwt: string, list: string, limit = 50, cursor?: string): Promise<BlueskyListResponse> {
+    const params: Record<string, string> = { list, limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyListResponse>('/app.bsky.graph.getList', accessJwt, { params });
+  }
+
+  /**
+   * Creates a curation/mute/block list.
+   *
+   * `purpose` is one of:
+   *   - app.bsky.graph.defs#curatelist
+   *   - app.bsky.graph.defs#modlist  (mute/block list)
+   */
+  async createList(
+    accessJwt: string,
+    userDid: string,
+    input: { name: string; purpose: string; description?: string },
+  ): Promise<BlueskyCreateRecordResponse> {
+    return this.makeAuthenticatedRequest<BlueskyCreateRecordResponse>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.graph.list',
+        record: {
+          $type: 'app.bsky.graph.list',
+          name: input.name,
+          purpose: input.purpose,
+          description: input.description,
+          createdAt: new Date().toISOString(),
+        },
+      },
+    });
+  }
+
+  /**
+   * Adds an actor to a list (creates a `app.bsky.graph.listitem` record).
+   * Returns the new listitem URI/CID.
+   */
+  async addToList(
+    accessJwt: string,
+    userDid: string,
+    listUri: string,
+    subjectDid: string,
+  ): Promise<BlueskyCreateRecordResponse> {
+    return this.makeAuthenticatedRequest<BlueskyCreateRecordResponse>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.graph.listitem',
+        record: {
+          $type: 'app.bsky.graph.listitem',
+          subject: subjectDid,
+          list: listUri,
+          createdAt: new Date().toISOString(),
+        },
+      },
+    });
+  }
+
+  /**
+   * Removes a list membership by deleting its listitem record.
+   */
+  async removeFromList(accessJwt: string, listItemUri: string) {
+    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+      method: 'POST',
+      body: { uri: listItemUri },
+    });
+  }
 }
+
+export type { BlueskyListView, BlueskyListsResponse, BlueskyListResponse };

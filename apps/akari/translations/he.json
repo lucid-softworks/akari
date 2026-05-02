@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "חזור"
+      "back": "חזור",
+      "done": "סיום"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "שליחה אל"
+    },
+    "lists": {
+      "noLists": "אין רשימות עדיין",
+      "newList": "רשימה חדשה",
+      "create": "צור",
+      "namePlaceholder": "שם הרשימה",
+      "descriptionPlaceholder": "תיאור (אופציונלי)"
     }
   }
 }

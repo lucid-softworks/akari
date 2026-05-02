@@ -225,6 +225,56 @@ export type BlueskyCreatePostResponse = {
   validationStatus: string;
 };
 
+/**
+ * Generic createRecord response shape (com.atproto.repo.createRecord).
+ */
+export type BlueskyCreateRecordResponse = {
+  uri: string;
+  cid: string;
+  commit?: { cid: string; rev: string };
+  validationStatus?: string;
+};
+
+/**
+ * View of an `app.bsky.graph.list` record (curation, mute, or block list).
+ */
+export type BlueskyListView = {
+  uri: string;
+  cid: string;
+  name: string;
+  /** `app.bsky.graph.defs#curatelist` or `#modlist` */
+  purpose: string;
+  description?: string;
+  avatar?: string;
+  listItemCount?: number;
+  creator: BlueskyRecordAuthor;
+  indexedAt: string;
+  viewer?: {
+    muted?: boolean;
+    blocked?: string;
+  };
+};
+
+/**
+ * Response from `app.bsky.graph.getLists` — actor's owned lists.
+ */
+export type BlueskyListsResponse = {
+  cursor?: string;
+  lists: BlueskyListView[];
+};
+
+/**
+ * Response from `app.bsky.graph.getList` — list metadata + members.
+ */
+export type BlueskyListResponse = {
+  cursor?: string;
+  list: BlueskyListView;
+  items: {
+    uri: string;
+    subject: BlueskyRecordAuthor;
+  }[];
+};
+
 export type BlueskySendMessageInput = {
   text: string;
 };

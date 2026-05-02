@@ -555,6 +555,30 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.graph.muteThread(accessJwt, root);
   }
 
+  async getLists(accessJwt: string, actor: string, limit?: number, cursor?: string) {
+    return this.graph.getLists(accessJwt, actor, limit, cursor);
+  }
+
+  async getList(accessJwt: string, list: string, limit?: number, cursor?: string) {
+    return this.graph.getList(accessJwt, list, limit, cursor);
+  }
+
+  async createList(
+    accessJwt: string,
+    userDid: string,
+    input: { name: string; purpose: string; description?: string },
+  ) {
+    return this.graph.createList(accessJwt, userDid, input);
+  }
+
+  async addToList(accessJwt: string, userDid: string, listUri: string, subjectDid: string) {
+    return this.graph.addToList(accessJwt, userDid, listUri, subjectDid);
+  }
+
+  async removeFromList(accessJwt: string, listItemUri: string) {
+    return this.graph.removeFromList(accessJwt, listItemUri);
+  }
+
   /**
    * Searches for actors matching the provided query string.
    * @param accessJwt - Valid session token used to authorise the search request.

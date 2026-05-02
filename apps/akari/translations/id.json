@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Kembali"
+      "back": "Kembali",
+      "done": "Selesai"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Kirim ke"
+    },
+    "lists": {
+      "noLists": "Belum ada daftar",
+      "newList": "Daftar baru",
+      "create": "Buat",
+      "namePlaceholder": "Nama daftar",
+      "descriptionPlaceholder": "Deskripsi (opsional)"
     }
   }
 }

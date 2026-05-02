@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Înapoi"
+      "back": "Înapoi",
+      "done": "Gata"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Trimite către"
+    },
+    "lists": {
+      "noLists": "Nicio listă încă",
+      "newList": "Listă nouă",
+      "create": "Creează",
+      "namePlaceholder": "Numele listei",
+      "descriptionPlaceholder": "Descriere (opțional)"
     }
   }
 }

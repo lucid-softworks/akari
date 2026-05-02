@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Назад"
+      "back": "Назад",
+      "done": "Готово"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Надіслати до"
+    },
+    "lists": {
+      "noLists": "Списків ще немає",
+      "newList": "Новий список",
+      "create": "Створити",
+      "namePlaceholder": "Назва списку",
+      "descriptionPlaceholder": "Опис (необов'язково)"
     }
   }
 }

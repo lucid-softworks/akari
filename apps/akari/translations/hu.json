@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Vissza"
+      "back": "Vissza",
+      "done": "Kész"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Küldés ide"
+    },
+    "lists": {
+      "noLists": "Még nincsenek listák",
+      "newList": "Új lista",
+      "create": "Létrehozás",
+      "namePlaceholder": "Lista neve",
+      "descriptionPlaceholder": "Leírás (nem kötelező)"
     }
   }
 }

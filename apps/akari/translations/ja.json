@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "戻る"
+      "back": "戻る",
+      "done": "完了"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "送信先"
+    },
+    "lists": {
+      "noLists": "リストがまだありません",
+      "newList": "新しいリスト",
+      "create": "作成",
+      "namePlaceholder": "リスト名",
+      "descriptionPlaceholder": "説明 (任意)"
     }
   }
 }

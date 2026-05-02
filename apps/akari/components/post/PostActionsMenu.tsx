@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -50,6 +51,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const { showToast } = useToast();
   const insets = useSafeAreaInsets();
   const [showReportSheet, setShowReportSheet] = useState(false);
+  const [showListPicker, setShowListPicker] = useState(false);
 
   // On web, close the dropdown when clicking anywhere or when another menu opens
   useEffect(() => {
@@ -100,6 +102,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     () => [
       { key: 'translate', icon: 'character.book.closed', label: t('post.actions.translate'), onPress: onTranslatePress, disabled: !canTranslate },
       { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: handleCopyText, disabled: !postText },
+      { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: () => { onDismiss(); setShowListPicker(true); }, disabled: !authorDid },
       { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
       { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
     ],
@@ -200,6 +203,11 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       visible={showReportSheet}
       onDismiss={() => setShowReportSheet(false)}
       subject={postUri && postCid ? { type: 'post', uri: postUri, cid: postCid } : authorDid ? { type: 'account', did: authorDid } : null}
+    />
+    <ListPickerSheet
+      visible={showListPicker}
+      onDismiss={() => setShowListPicker(false)}
+      subjectDid={authorDid}
     />
     </>
   );

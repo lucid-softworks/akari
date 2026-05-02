@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Takaisin"
+      "back": "Takaisin",
+      "done": "Valmis"
     },
     "auth": {
       "fillAllFields": "Täytä kaikki kentät",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Lähetä"
+    },
+    "lists": {
+      "noLists": "Ei vielä listoja",
+      "newList": "Uusi lista",
+      "create": "Luo",
+      "namePlaceholder": "Listan nimi",
+      "descriptionPlaceholder": "Kuvaus (valinnainen)"
     }
   }
 }

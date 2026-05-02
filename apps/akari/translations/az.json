@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Geri"
+      "back": "Geri",
+      "done": "Hazır"
     },
     "auth": {
       "fillAllFields": "Xahiş edirəm bütün sahələri doldurun",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Göndərilsin"
+    },
+    "lists": {
+      "noLists": "Hələ siyahı yoxdur",
+      "newList": "Yeni siyahı",
+      "create": "Yarat",
+      "namePlaceholder": "Siyahı adı",
+      "descriptionPlaceholder": "Açıqlama (istəyə görə)"
     }
   }
 }

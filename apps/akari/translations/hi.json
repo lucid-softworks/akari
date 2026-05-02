@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "वापस"
+      "back": "वापस",
+      "done": "हो गया"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "भेजें"
+    },
+    "lists": {
+      "noLists": "अभी तक कोई सूची नहीं",
+      "newList": "नई सूची",
+      "create": "बनाएँ",
+      "namePlaceholder": "सूची का नाम",
+      "descriptionPlaceholder": "विवरण (वैकल्पिक)"
     }
   }
 }

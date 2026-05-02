@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "رجوع"
+      "back": "رجوع",
+      "done": "تم"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "أرسل إلى"
+    },
+    "lists": {
+      "noLists": "لا توجد قوائم بعد",
+      "newList": "قائمة جديدة",
+      "create": "إنشاء",
+      "namePlaceholder": "اسم القائمة",
+      "descriptionPlaceholder": "الوصف (اختياري)"
     }
   }
 }

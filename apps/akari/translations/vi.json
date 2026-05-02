@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Quay lại"
+      "back": "Quay lại",
+      "done": "Xong"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Gửi đến"
+    },
+    "lists": {
+      "noLists": "Chưa có danh sách nào",
+      "newList": "Danh sách mới",
+      "create": "Tạo",
+      "namePlaceholder": "Tên danh sách",
+      "descriptionPlaceholder": "Mô tả (tùy chọn)"
     }
   }
 }

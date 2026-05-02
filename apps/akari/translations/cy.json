@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Yn ôl"
+      "back": "Yn ôl",
+      "done": "Iawn"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Anfon at"
+    },
+    "lists": {
+      "noLists": "Dim rhestrau eto",
+      "newList": "Rhestr newydd",
+      "create": "Creu",
+      "namePlaceholder": "Enw'r rhestr",
+      "descriptionPlaceholder": "Disgrifiad (dewisol)"
     }
   }
 }

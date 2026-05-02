@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "Späť"
+      "back": "Späť",
+      "done": "Hotovo"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všetky polia",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Odoslať do"
+    },
+    "lists": {
+      "noLists": "Zatiaľ žiadne zoznamy",
+      "newList": "Nový zoznam",
+      "create": "Vytvoriť",
+      "namePlaceholder": "Názov zoznamu",
+      "descriptionPlaceholder": "Popis (voliteľný)"
     }
   }
 }

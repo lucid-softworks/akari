@@ -63,7 +63,8 @@
       "pendingChats": "Pending chats",
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
-      "back": "뒤로"
+      "back": "뒤로",
+      "done": "완료"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",
@@ -416,6 +417,13 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "보낼 곳"
+    },
+    "lists": {
+      "noLists": "아직 목록이 없습니다",
+      "newList": "새 목록",
+      "create": "만들기",
+      "namePlaceholder": "목록 이름",
+      "descriptionPlaceholder": "설명 (선택사항)"
     }
   }
 }

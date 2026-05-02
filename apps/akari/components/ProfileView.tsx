@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
+import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
@@ -50,6 +51,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
+  const [showListPicker, setShowListPicker] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
@@ -178,8 +180,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   };
 
   const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
     setShowDropdown(false);
+    setShowListPicker(true);
   };
 
   const handleMuteAccount = () => {
@@ -264,6 +266,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         visible={showReportSheet}
         onDismiss={() => setShowReportSheet(false)}
         subject={profile?.did ? { type: 'account', did: profile.did } : null}
+      />
+
+      <ListPickerSheet
+        visible={showListPicker}
+        onDismiss={() => setShowListPicker(false)}
+        subjectDid={profile?.did}
       />
     </ThemedView>
   );
