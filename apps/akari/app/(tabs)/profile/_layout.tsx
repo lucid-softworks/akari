@@ -16,7 +16,7 @@ export default function ProfileLayout() {
       <Stack.Screen
         name="[handle]"
         options={{ headerShown: false }}
-        dangerouslySingular={(_name, params) => String((params as { handle?: string })?.handle ?? '')}
+        dangerouslySingular
       />
       <Stack.Screen
         name="[handle]/post/[rkey]"
