@@ -24,6 +24,8 @@ type RichTextWithFacetsProps = {
   style?: any;
   containerStyle?: ViewStyle;
   onPress?: () => void;
+  /** Render facet segments coloured but non-interactive (e.g. inside a quote preview). */
+  disableLinks?: boolean;
 };
 
 type TextSegment = {
@@ -37,7 +39,7 @@ type TextSegment = {
   did?: string;
 };
 
-export function RichTextWithFacets({ text, facets, style, containerStyle, onPress }: RichTextWithFacetsProps) {
+export function RichTextWithFacets({ text, facets, style, containerStyle, onPress, disableLinks }: RichTextWithFacetsProps) {
   const linkColor = useThemeColor(
     {
       light: '#007AFF',
@@ -203,6 +205,13 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               // For mentions, we need to extract the handle from the text since the did is just the DID
               // The text should contain the actual handle (e.g., "@miragreen.bsky.social")
               const handle = segment.text.replace(/^@/, ''); // Remove the @ symbol
+              if (disableLinks) {
+                return (
+                  <ThemedText key={index} style={[{ color: mentionColor }]}>
+                    {segment.text}
+                  </ThemedText>
+                );
+              }
               return (
                 <Link key={index} push href={profileHref(handle) as any}>
                   <ThemedText style={[{ color: mentionColor }]}>{segment.text}</ThemedText>
@@ -213,6 +222,13 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
 
           case 'link':
             if (segment.uri) {
+              if (disableLinks) {
+                return (
+                  <ThemedText key={index} style={[{ color: linkColor }]}>
+                    {segment.text || toShortUrl(segment.uri)}
+                  </ThemedText>
+                );
+              }
               return (
                 <Link key={index} href={segment.uri as any}>
                   <ThemedText style={[{ color: linkColor }]}>{segment.text || toShortUrl(segment.uri)}</ThemedText>
@@ -224,6 +240,13 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
           case 'tag': {
             const tagValue = segment.tag ?? segment.text.replace(/^#/, '');
             const hashtagQuery = `#${tagValue}`;
+            if (disableLinks) {
+              return (
+                <ThemedText key={index} style={[{ color: tagColor }]}>
+                  {segment.text}
+                </ThemedText>
+              );
+            }
             return (
               <Link key={index} href={`/search?query=${encodeURIComponent(hashtagQuery)}`}>
                 <ThemedText style={[{ color: tagColor }]}>{segment.text}</ThemedText>

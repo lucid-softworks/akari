@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Παράθεση ανάρτησης",
+      "repostAction": "Αναδημοσίευση",
+      "quoteAction": "Παράθεση ανάρτησης",
+      "undoRepost": "Αναίρεση αναδημοσίευσης"
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

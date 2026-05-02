@@ -1,9 +1,10 @@
 import * as Haptics from 'expo-haptics';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { RepostSheet } from '@/components/post/RepostSheet';
 import { spacing, fontSize, opacity, activeOpacity, semanticColors, hitSlop } from '@/constants/tokens';
 import { formatCompactNumber } from '@/utils/formatNumber';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
@@ -23,6 +24,7 @@ type PostActionsProps = {
   likeCount: number;
   onReplyPress: () => void;
   onMorePress: () => void;
+  onQuotePress?: () => void;
 };
 
 export const PostActions = React.memo(function PostActions({
@@ -37,12 +39,14 @@ export const PostActions = React.memo(function PostActions({
   likeCount,
   onReplyPress,
   onMorePress,
+  onQuotePress,
 }: PostActionsProps) {
   const likeMutation = useLikePost();
   const repostMutation = useRepostPost();
   const bookmarkMutation = useBookmarkPost();
   const isLiked = Boolean(likeUri);
   const isReposted = Boolean(repostUri);
+  const [repostSheetVisible, setRepostSheetVisible] = useState(false);
 
   const iconColor = useThemeColor(
     { light: '#687076', dark: '#9BA1A6' },
@@ -69,11 +73,14 @@ export const PostActions = React.memo(function PostActions({
     }
   }, [uri, cid, likeUri, likeMutation]);
 
-  const handleRepostPress = useCallback(() => {
+  const handleRepostButtonPress = useCallback(() => {
     if (!uri || !cid) return;
-
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setRepostSheetVisible(true);
+  }, [uri, cid]);
 
+  const handleRepostConfirm = useCallback(() => {
+    if (!uri || !cid) return;
     if (repostUri) {
       repostMutation.mutate({
         postUri: uri,
@@ -88,6 +95,15 @@ export const PostActions = React.memo(function PostActions({
       });
     }
   }, [uri, cid, repostUri, repostMutation]);
+
+  const handleQuoteConfirm = useCallback(() => {
+    if (!onQuotePress) return;
+    onQuotePress();
+  }, [onQuotePress]);
+
+  const handleSheetDismiss = useCallback(() => {
+    setRepostSheetVisible(false);
+  }, []);
 
   const handleBookmarkPress = useCallback(() => {
     if (!uri || !cid) return;
@@ -110,6 +126,7 @@ export const PostActions = React.memo(function PostActions({
   }, [uri, authorHandle]);
 
   return (
+    <>
     <View style={styles.interactions}>
       <TouchableOpacity
         style={styles.interactionItem}
@@ -125,11 +142,11 @@ export const PostActions = React.memo(function PostActions({
 
       <TouchableOpacity
         style={styles.interactionItem}
-        onPress={handleRepostPress}
+        onPress={handleRepostButtonPress}
         activeOpacity={activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
-        accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost post by ${authorName}`}
+        accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost or quote post by ${authorName}`}
       >
         <IconSymbol name="arrow.2.squarepath" size={20} color={isReposted ? '#34C759' : iconColor} />
         <ThemedText style={styles.interactionCount}>{formatCompactNumber(repostCount)}</ThemedText>
@@ -184,6 +201,14 @@ export const PostActions = React.memo(function PostActions({
         <IconSymbol name="ellipsis" size={20} color={iconColor} />
       </TouchableOpacity>
     </View>
+    <RepostSheet
+      visible={repostSheetVisible}
+      isReposted={isReposted}
+      onDismiss={handleSheetDismiss}
+      onRepostPress={handleRepostConfirm}
+      onQuotePress={handleQuoteConfirm}
+    />
+    </>
   );
 });
 

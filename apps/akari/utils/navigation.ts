@@ -33,27 +33,33 @@ function getTabRouteFromPathname(pathname: string): TabRoute {
   return 'index';
 }
 
+const isSamePath = (target: string, current: string) =>
+  target.split('?')[0].split('#')[0] === current.split('?')[0].split('#')[0];
+
 export function useNavigateToPost() {
   const pathname = usePathname() as string;
 
   return ({ actor, rKey }: PostNavigationArgs) => {
+    let target: string;
     if (Platform.OS === 'web') {
-      router.push(`/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+      target = `/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`;
     } else {
       const targetTabRoute = getTabRouteFromPathname(pathname);
-
       if (targetTabRoute === 'profile') {
-        router.push(`/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+        target = `/profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`;
       } else if (targetTabRoute === 'index') {
         // The home tab's nested user-profile routes live under
         // /(tabs)/index/user-profile/[handle], but Expo Router collapses the
         // 'index' segment so the runtime URL is /user-profile/<handle>.
-        // @ts-expect-error collapsed-index-segment URL not in generated types
-        router.push(`/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+        target = `/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`;
       } else {
-        router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+        target = `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`;
       }
     }
+
+    if (isSamePath(target, pathname)) return;
+    // @ts-expect-error collapsed-index-segment URL not in generated types
+    router.push(target);
   };
 }
 
@@ -70,20 +76,23 @@ export function useNavigateToProfile() {
   const pathname = usePathname() as string;
 
   return ({ actor }: ProfileNavigationArgs) => {
+    let target: string;
     if (Platform.OS === 'web') {
-      router.push(`/profile/${encodeURIComponent(actor)}`);
+      target = `/profile/${encodeURIComponent(actor)}`;
     } else {
       const targetTabRoute = getTabRouteFromPathname(pathname);
-
       if (targetTabRoute === 'profile') {
-        router.push(`/profile/${encodeURIComponent(actor)}`);
+        target = `/profile/${encodeURIComponent(actor)}`;
       } else if (targetTabRoute === 'index') {
-        // @ts-expect-error collapsed-index-segment URL not in generated types
-        router.push(`/user-profile/${encodeURIComponent(actor)}`);
+        target = `/user-profile/${encodeURIComponent(actor)}`;
       } else {
-        router.push(`/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`);
+        target = `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}`;
       }
     }
+
+    if (isSamePath(target, pathname)) return;
+    // @ts-expect-error collapsed-index-segment URL not in generated types
+    router.push(target);
   };
 }
 

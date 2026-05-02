@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "पोस्ट उद्धृत करें",
+      "repostAction": "रीपोस्ट",
+      "quoteAction": "पोस्ट उद्धृत करें",
+      "undoRepost": "रीपोस्ट पूर्ववत करें"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

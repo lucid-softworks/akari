@@ -170,6 +170,9 @@ export type BlueskyCreatePostInput = {
   text: string;
   replyTo?: BlueskyPostReplyReference;
   images?: BlueskyPostImageInput[];
+  /** Optional record to quote (post URI/CID). If `images` are also provided,
+   * the post is encoded as `app.bsky.embed.recordWithMedia`. */
+  quote?: { uri: string; cid: string };
 };
 
 export type CreateReviewInput = {

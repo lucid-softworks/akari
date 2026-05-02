@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Citer la publication",
+      "repostAction": "Repartager",
+      "quoteAction": "Citer la publication",
+      "undoRepost": "Annuler le repartage"
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

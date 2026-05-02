@@ -21,6 +21,8 @@ type CreatePostParams = {
     alt: string;
     mimeType: string;
   }[];
+  /** Optional quoted post (URI/CID) */
+  quote?: { uri: string; cid: string };
 };
 
 export function useCreatePost() {
@@ -30,7 +32,7 @@ export function useCreatePost() {
 
   return useMutation({
     mutationKey: ['createPost'],
-    mutationFn: async ({ text, replyTo, images }: CreatePostParams) => {
+    mutationFn: async ({ text, replyTo, images, quote }: CreatePostParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -40,6 +42,7 @@ export function useCreatePost() {
         text,
         replyTo,
         images,
+        quote,
       });
     },
     onMutate: async ({ text, replyTo, images }) => {

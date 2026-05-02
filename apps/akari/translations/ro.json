@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Citează postare",
+      "repostAction": "Repostează",
+      "quoteAction": "Citează postare",
+      "undoRepost": "Anulează repostarea"
     },
     "gif": {
       "selectGif": "Selectați GIF",

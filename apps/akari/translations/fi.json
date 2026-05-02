@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Lainausjulkaisu",
+      "repostAction": "Jaa uudelleen",
+      "quoteAction": "Lainaa julkaisu",
+      "undoRepost": "Kumoa uudelleenjako"
     },
     "gif": {
       "selectGif": "Valitse GIF",

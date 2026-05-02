@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -76,6 +76,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const menuBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
+  const borderColor = useThemeColor({}, 'border');
 
   const muteMutation = useMuteUser();
 
@@ -151,22 +152,48 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     ) : (
       <Modal
         visible={visible}
-        animationType="slide"
-        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+        transparent
+        animationType="fade"
         onRequestClose={onDismiss}
       >
-        <ThemedView style={[styles.nativeSheet, { backgroundColor: menuBackgroundColor }]}>
-          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-            {menuItems}
-          </ScrollView>
-          <TouchableOpacity
-            style={[styles.cancelButton, { borderTopColor: handleBarColor, paddingBottom: insets.bottom + spacing.md }]}
-            onPress={onDismiss}
-            activeOpacity={activeOpacity.default}
+        <Pressable style={styles.backdrop} onPress={onDismiss}>
+          <Pressable
+            style={[styles.sheetWrapper, { paddingBottom: insets.bottom + spacing.md }]}
+            onPress={(event) => event.stopPropagation()}
           >
-            <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
+            <ThemedView style={[styles.sheet, { backgroundColor: menuBackgroundColor, borderColor }]}>
+              {menuActions.map((item, index) => (
+                <React.Fragment key={item.key}>
+                  {index > 0 ? (
+                    <View style={[styles.divider, { backgroundColor: borderColor }]} />
+                  ) : null}
+                  <TouchableOpacity
+                    style={[styles.sheetItem, item.disabled && styles.menuItemDisabled]}
+                    onPress={item.disabled ? undefined : item.onPress}
+                    disabled={item.disabled}
+                    accessibilityRole="menuitem"
+                    accessibilityState={{ disabled: item.disabled }}
+                    activeOpacity={item.disabled ? 1 : activeOpacity.default}
+                  >
+                    <IconSymbol
+                      name={item.icon as any}
+                      size={22}
+                      color={item.destructive ? semanticColors.danger : iconColor}
+                    />
+                    <ThemedText
+                      style={[
+                        styles.sheetItemText,
+                        item.destructive && styles.menuItemTextDestructive,
+                      ]}
+                    >
+                      {item.label}
+                    </ThemedText>
+                  </TouchableOpacity>
+                </React.Fragment>
+              ))}
+            </ThemedView>
+          </Pressable>
+        </Pressable>
       </Modal>
     )}
     <ReportSheet
@@ -179,12 +206,33 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 });
 
 const styles = StyleSheet.create({
-  nativeSheet: {
+  backdrop: {
     flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
-  scrollView: {
+  sheetWrapper: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
+  },
+  sheet: {
+    borderRadius: radius.lg,
+    borderWidth: layout.hairline,
+    overflow: 'hidden',
+  },
+  sheetItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.lg,
+  },
+  sheetItemText: {
+    fontSize: fontSize.lg,
+    flex: 1,
+    fontWeight: fontWeight.medium,
+  },
+  divider: {
+    height: layout.hairline,
   },
   menuItem: {
     flexDirection: 'row',
@@ -192,7 +240,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     gap: spacing.md,
   },
-  menuItemIcon: {},
   menuItemText: {
     fontSize: fontSize.lg,
     flex: 1,
@@ -202,18 +249,6 @@ const styles = StyleSheet.create({
   },
   menuItemDisabled: {
     opacity: opacity.disabled,
-  },
-  cancelButton: {
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.sm,
-    paddingVertical: spacing.md,
-    alignItems: 'center',
-    borderTopWidth: layout.hairline,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  cancelText: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
   },
   webDropdown: {
     position: 'absolute' as any,

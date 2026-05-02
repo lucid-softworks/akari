@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Cytat posta",
+      "repostAction": "Repostuj",
+      "quoteAction": "Cytuj posta",
+      "undoRepost": "Cofnij repost"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

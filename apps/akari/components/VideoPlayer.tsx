@@ -353,10 +353,11 @@ export function VideoPlayer({
   }
 
   // Fallback: thumbnail with play button
+  const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.8} disabled={isResolvingUrl}>
       <ThemedCard style={styles.container}>
-        <ThemedView style={styles.thumbnailContainer}>
+        <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
           {thumbnailUrl ? (
             <Image
               source={{ uri: thumbnailUrl }}

@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "ציטוט פוסט",
+      "repostAction": "פרסום מחדש",
+      "quoteAction": "צטט פוסט",
+      "undoRepost": "בטל פרסום מחדש"
     },
     "gif": {
       "selectGif": "בחר GIF",

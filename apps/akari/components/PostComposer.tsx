@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import type { BlueskyEmbed } from '@/bluesky-api';
 import { GifPicker } from '@/components/GifPicker';
+import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -23,6 +25,88 @@ import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
+type PostFacet = {
+  index: { byteStart: number; byteEnd: number };
+  features: { $type: string; uri?: string; tag?: string; did?: string }[];
+};
+
+type PostPreview = {
+  text?: string;
+  author: {
+    handle: string;
+    displayName?: string;
+    avatar?: string;
+  };
+  embed?: BlueskyEmbed;
+  embeds?: BlueskyEmbed[];
+  facets?: PostFacet[];
+};
+
+type QuotedPost = PostPreview & {
+  uri: string;
+  cid: string;
+  indexedAt?: string;
+};
+
+type QuotedImage = { url: string; aspectRatio?: number };
+
+function extractQuotedMedia(quote?: QuotedPost): {
+  images: QuotedImage[];
+  video: { thumb: string; aspectRatio?: number } | null;
+  external: { thumb: string } | null;
+} {
+  if (!quote) {
+    return { images: [], video: null, external: null };
+  }
+
+  const candidates: (BlueskyEmbed | undefined)[] = [
+    quote.embed,
+    ...(quote.embeds ?? []),
+  ];
+
+  const images: QuotedImage[] = [];
+  let video: { thumb: string; aspectRatio?: number } | null = null;
+  let external: { thumb: string } | null = null;
+
+  const ratioFrom = (ar?: { width: number; height: number }) =>
+    ar && ar.width > 0 && ar.height > 0 ? ar.width / ar.height : undefined;
+
+  const visit = (embed?: BlueskyEmbed | null) => {
+    if (!embed) return;
+
+    if (
+      (embed.$type === 'app.bsky.embed.images#view' || embed.$type === 'app.bsky.embed.images') &&
+      embed.images
+    ) {
+      for (const img of embed.images) {
+        const url = img.thumb || img.fullsize;
+        const isVideoFile = img.image?.mimeType?.startsWith('video/');
+        if (url && !isVideoFile && images.length < 4) {
+          images.push({ url, aspectRatio: ratioFrom(img.aspectRatio) });
+        }
+      }
+    }
+
+    if (embed.$type === 'app.bsky.embed.video#view' && (embed.thumbnail || embed.playlist)) {
+      const thumb = embed.thumbnail;
+      if (thumb && !video) {
+        video = { thumb, aspectRatio: ratioFrom(embed.aspectRatio) };
+      }
+    }
+
+    if (embed.$type?.includes('app.bsky.embed.external') && embed.external?.thumb?.ref?.$link) {
+      external = { thumb: embed.external.thumb.ref.$link };
+    }
+
+    // recordWithMedia: descend into media
+    if (embed.media) visit(embed.media as unknown as BlueskyEmbed);
+  };
+
+  for (const c of candidates) visit(c);
+
+  return { images, video, external };
+}
+
 type PostComposerProps = {
   visible: boolean;
   onClose: () => void;
@@ -30,7 +114,13 @@ type PostComposerProps = {
     root: string;
     parent: string;
     authorHandle: string;
+    /** Optional preview data — renders the parent post above the input. */
+    preview?: PostPreview;
   };
+  /** Optional quoted post — renders an inline preview and includes
+   * `embed.record` (or `embed.recordWithMedia` if images are attached)
+   * when the post is published. */
+  quote?: QuotedPost;
 };
 
 type AttachedImage = {
@@ -44,7 +134,7 @@ const isWeb = Platform.OS === 'web';
 const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
   Platform.OS === 'ios' ? 'pageSheet' : Platform.OS === 'android' ? 'fullScreen' : undefined;
 
-export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
+export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerProps) {
   const { t } = useTranslation();
   const [text, setText] = useState('');
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
@@ -61,7 +151,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
   const tintColor = useThemeColor({}, 'tint');
 
   const handlePost = async () => {
-    if (!text.trim() && attachedImages.length === 0) return;
+    if (!text.trim() && attachedImages.length === 0 && !quote) return;
 
     try {
       await createPostMutation.mutateAsync({
@@ -73,6 +163,7 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
             }
           : undefined,
         images: attachedImages.length > 0 ? attachedImages : undefined,
+        quote: quote ? { uri: quote.uri, cid: quote.cid } : undefined,
       });
 
       // Reset form and close
@@ -146,7 +237,9 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
     }
   };
 
-  const isPostDisabled = (!text.trim() && attachedImages.length === 0) || createPostMutation.isPending;
+  const isPostDisabled =
+    (!text.trim() && attachedImages.length === 0 && !quote) || createPostMutation.isPending;
+  const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
   const characterCount = text.length;
   const maxCharacters = 300;
   const isNearLimit = characterCount > maxCharacters * 0.8;
@@ -184,7 +277,11 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
             </TouchableOpacity>
 
             <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
-              {replyTo ? t('post.reply') : t('post.newPost')}
+              {replyTo
+                ? t('post.reply')
+                : quote
+                ? t('post.quotePost')
+                : t('post.newPost')}
             </ThemedText>
 
             <TouchableOpacity
@@ -224,6 +321,16 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
 
           {/* Content Area */}
           <ScrollView style={styles.contentArea} showsVerticalScrollIndicator={false}>
+            {/* Reply preview shown above input */}
+            {replyTo && previewPost ? (
+              <PostPreviewCard
+                post={previewPost}
+                borderColor={borderColor}
+                textColor={textColor}
+                iconColor={iconColor}
+              />
+            ) : null}
+
             {/* Text Input */}
             <View style={styles.inputContainer}>
               <TextInput
@@ -238,12 +345,23 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
                 placeholderTextColor={iconColor}
                 multiline
                 autoFocus
+                autoCapitalize="none"
                 maxLength={maxCharacters}
                 textAlignVertical="top"
                 selectionColor={tintColor}
                 cursorColor={tintColor}
               />
             </View>
+
+            {/* Quote preview shown below input */}
+            {quote && previewPost ? (
+              <PostPreviewCard
+                post={previewPost}
+                borderColor={borderColor}
+                textColor={textColor}
+                iconColor={iconColor}
+              />
+            ) : null}
 
             {/* Attached Images */}
             {attachedImages.length > 0 && (
@@ -326,6 +444,117 @@ export function PostComposer({ visible, onClose, replyTo }: PostComposerProps) {
       {/* GIF Picker Modal */}
       <GifPicker visible={gifPickerVisible} onClose={() => setGifPickerVisible(false)} onSelectGif={handleSelectGif} />
     </Modal>
+  );
+}
+
+type PostPreviewCardProps = {
+  post: PostPreview;
+  borderColor: string;
+  textColor: string;
+  iconColor: string;
+};
+
+function PostPreviewCard({ post, borderColor, textColor, iconColor }: PostPreviewCardProps) {
+  const media = extractQuotedMedia({
+    uri: '',
+    cid: '',
+    author: post.author,
+    embed: post.embed,
+    embeds: post.embeds,
+  });
+  const hasImages = media.images.length > 0;
+  const hasVideo = !!media.video;
+  const hasExternal = !!media.external;
+
+  return (
+    <View style={styles.quoteContainer}>
+      <ThemedView style={[styles.quoteCard, { borderColor }]}>
+        <View style={styles.quoteHeader}>
+          {post.author.avatar ? (
+            <Image source={{ uri: post.author.avatar }} style={styles.quoteAvatar} />
+          ) : (
+            <View style={[styles.quoteAvatar, { backgroundColor: borderColor }]} />
+          )}
+          <View style={styles.quoteAuthorText}>
+            {post.author.displayName ? (
+              <ThemedText
+                style={[styles.quoteAuthorName, { color: textColor }]}
+                numberOfLines={1}
+              >
+                {post.author.displayName}
+              </ThemedText>
+            ) : null}
+            <ThemedText
+              style={[styles.quoteAuthorHandle, { color: iconColor }]}
+              numberOfLines={1}
+            >
+              @{post.author.handle}
+            </ThemedText>
+          </View>
+        </View>
+
+        {post.text ? (
+          <RichTextWithFacets
+            text={post.text}
+            facets={post.facets}
+            disableLinks
+            style={[styles.quoteText, { color: textColor }]}
+          />
+        ) : null}
+
+        {hasVideo && media.video && (
+          <View
+            style={[
+              styles.quoteMediaSingle,
+              { aspectRatio: media.video.aspectRatio ?? 16 / 9 },
+            ]}
+          >
+            <Image
+              source={{ uri: media.video.thumb }}
+              style={styles.quoteMediaImage}
+              contentFit="cover"
+            />
+            <View style={styles.quoteVideoBadge}>
+              <IconSymbol name="play.fill" size={18} color="#ffffff" />
+            </View>
+          </View>
+        )}
+
+        {!hasVideo && hasImages && media.images.length === 1 && (
+          <Image
+            source={{ uri: media.images[0].url }}
+            style={[
+              styles.quoteImageSingle,
+              { aspectRatio: media.images[0].aspectRatio ?? 1 },
+            ]}
+            contentFit="cover"
+          />
+        )}
+
+        {!hasVideo && hasImages && media.images.length > 1 && (
+          <View style={styles.quoteImagesRow}>
+            {media.images.map((img, idx) => (
+              <Image
+                key={`${img.url}-${idx}`}
+                source={{ uri: img.url }}
+                style={styles.quoteImageThumb}
+                contentFit="cover"
+              />
+            ))}
+          </View>
+        )}
+
+        {!hasVideo && !hasImages && hasExternal && media.external && (
+          <View style={[styles.quoteMediaSingle, { aspectRatio: 1.91 }]}>
+            <Image
+              source={{ uri: media.external.thumb }}
+              style={styles.quoteMediaImage}
+              contentFit="cover"
+            />
+          </View>
+        )}
+      </ThemedView>
+    </View>
   );
 }
 
@@ -420,6 +649,80 @@ const styles = StyleSheet.create({
   imagesContainer: {
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
+  },
+  quoteContainer: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.lg,
+  },
+  quoteCard: {
+    borderWidth: layout.border,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  quoteHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  quoteAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  quoteAuthorText: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: spacing.xs,
+  },
+  quoteAuthorName: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  quoteAuthorHandle: {
+    fontSize: fontSize.sm,
+  },
+  quoteText: {
+    fontSize: fontSize.base,
+    lineHeight: 20,
+  },
+  quoteImagesRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  quoteImageThumb: {
+    flex: 1,
+    aspectRatio: 1,
+    borderRadius: radius.sm,
+  },
+  quoteImageSingle: {
+    width: '100%',
+    borderRadius: radius.sm,
+  },
+  quoteMediaSingle: {
+    width: '100%',
+    borderRadius: radius.sm,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  quoteMediaImage: {
+    width: '100%',
+    height: '100%',
+  },
+  quoteVideoBadge: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -18,
+    marginTop: -18,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imageItem: {
     marginBottom: spacing.lg,

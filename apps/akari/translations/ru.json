@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Цитата записи",
+      "repostAction": "Репост",
+      "quoteAction": "Цитировать запись",
+      "undoRepost": "Отменить репост"
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

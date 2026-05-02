@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Citovat příspěvek",
+      "repostAction": "Sdílet",
+      "quoteAction": "Citovat příspěvek",
+      "undoRepost": "Zrušit sdílení"
     },
     "gif": {
       "selectGif": "Vyberte GIF",

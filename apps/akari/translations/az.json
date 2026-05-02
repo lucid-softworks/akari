@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Sitat paylaşımı",
+      "repostAction": "Yenidən paylaş",
+      "quoteAction": "Sitat paylaş",
+      "undoRepost": "Yenidən paylaşımı geri al"
     },
     "gif": {
       "selectGif": "Gif seçin",

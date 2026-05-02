@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Beitrag zitieren",
+      "repostAction": "Reposten",
+      "quoteAction": "Beitrag zitieren",
+      "undoRepost": "Repost rückgängig machen"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

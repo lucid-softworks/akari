@@ -448,11 +448,13 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
         {!isBlockedRecord && (
           <ThemedView style={styles.content}>
-            <RichTextWithFacets
-              text={quotedText}
-              facets={(embed.record as any)?.facets}
-              style={[styles.text, { color: textColor }]}
-            />
+            {quotedText.trim() ? (
+              <RichTextWithFacets
+                text={quotedText}
+                facets={(embed.record as any)?.facets}
+                style={[styles.text, { color: textColor }]}
+              />
+            ) : null}
 
             {/* Render native video embed if present */}
             {(() => {

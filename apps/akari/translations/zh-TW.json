@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "引用貼文",
+      "repostAction": "轉發",
+      "quoteAction": "引用貼文",
+      "undoRepost": "取消轉發"
     },
     "messages": {
       "typeMessage": "輸入訊息...",

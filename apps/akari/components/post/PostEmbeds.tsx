@@ -61,56 +61,46 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
   const additionalEmbeds = embeds && embeds.length > 1 ? embeds.slice(1) : [];
 
   const imageData = useMemo(() => {
-    if (!embedData) return { urls: [], altTexts: [] };
+    const empty = { urls: [] as string[], altTexts: [] as string[], ratios: [] as (number | undefined)[] };
+    if (!embedData) return empty;
+
+    const fromImages = (images: BlueskyImage[]) => {
+      const filtered = images.filter(
+        (img) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
+      );
+      return {
+        urls: filtered.map((img) => img.fullsize).filter(Boolean),
+        altTexts: filtered.map((img) => img.alt),
+        ratios: filtered.map((img) =>
+          img.aspectRatio && img.aspectRatio.width > 0 && img.aspectRatio.height > 0
+            ? img.aspectRatio.width / img.aspectRatio.height
+            : undefined,
+        ),
+      };
+    };
 
     if (embedData.$type === 'app.bsky.embed.images' || embedData.$type === 'app.bsky.embed.images#view') {
-      const imageFiles =
-        embedData.images?.filter((img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/')) ||
-        [];
-      return {
-        urls: imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean) || [],
-        altTexts: imageFiles.map((img: BlueskyImage) => img.alt) || [],
-      };
+      return embedData.images ? fromImages(embedData.images) : empty;
     }
 
     if (embedData.$type === 'app.bsky.embed.recordWithMedia#view' && embedData.media) {
       if (embedData.media.$type === 'app.bsky.embed.images#view' && embedData.media.images) {
-        const imageFiles = embedData.media.images.filter(
-          (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
-        );
-        return {
-          urls: imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean),
-          altTexts: imageFiles.map((img: BlueskyImage) => img.alt),
-        };
+        return fromImages(embedData.media.images);
       }
     }
 
     if (embedData.images) {
-      const imageFiles = embedData.images.filter(
-        (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
-      );
-      return {
-        urls: imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean),
-        altTexts: imageFiles.map((img: BlueskyImage) => img.alt),
-      };
+      return fromImages(embedData.images);
     }
 
-    // Check additional embeds for images
     for (const extra of additionalEmbeds) {
       if (extra.$type === 'app.bsky.embed.images#view' && extra.images) {
-        const imageFiles = extra.images.filter(
-          (img: BlueskyImage) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
-        );
-        if (imageFiles.length > 0) {
-          return {
-            urls: imageFiles.map((img: BlueskyImage) => img.fullsize).filter(Boolean),
-            altTexts: imageFiles.map((img: BlueskyImage) => img.alt),
-          };
-        }
+        const result = fromImages(extra.images);
+        if (result.urls.length > 0) return result;
       }
     }
 
-    return { urls: [], altTexts: [] };
+    return empty;
   }, [embedData, additionalEmbeds]);
 
   const videoData = useMemo(() => {
@@ -197,8 +187,10 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         <View style={styles.imagesContainer}>
           {imageData.urls.map((imageUrl: string, index: number) => {
             const dimensions = imageDimensions[imageUrl];
-            const screenWidth = 400;
-            const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 300;
+            const aspectRatio =
+              imageData.ratios[index] ??
+              (dimensions ? dimensions.width / dimensions.height : undefined) ??
+              4 / 3;
 
             return (
               <TouchableOpacity
@@ -208,8 +200,8 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
               >
                 <Image
                   source={{ uri: imageUrl }}
-                  style={[styles.image, { height: imageHeight }]}
-                  contentFit="contain"
+                  style={[styles.image, { aspectRatio }]}
+                  contentFit="cover"
                   placeholder={require('@/assets/images/partial-react-logo.png')}
                   onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                 />

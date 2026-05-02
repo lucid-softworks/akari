@@ -1,6 +1,8 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
+
+const stripQueryAndHash = (url: string) => url.split('?')[0].split('#')[0];
 
 // Min interval between accepted presses anywhere in the app. Guards against
 // fast double-taps and any RN/expo-router edge case where a single touch
@@ -33,6 +35,7 @@ export function PressableLink({
   accessibilityState,
 }: PressableLinkProps) {
   const [hovered, setHovered] = useState(false);
+  const pathname = usePathname() as string;
 
   const handleNativePress = useCallback(
     (event?: GestureResponderEvent) => {
@@ -45,11 +48,16 @@ export function PressableLink({
       lastPressAt = now;
       if (onPress) {
         onPress();
-      } else {
-        router.push(href as any);
+        return;
       }
+      // Skip pushing if we're already on this exact route — otherwise the
+      // user has to press back once for every redundant push.
+      if (stripQueryAndHash(href) === stripQueryAndHash(pathname)) {
+        return;
+      }
+      router.push(href as any);
     },
-    [href, onPress],
+    [href, onPress, pathname],
   );
 
   if (Platform.OS === 'web') {

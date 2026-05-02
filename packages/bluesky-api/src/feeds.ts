@@ -447,7 +447,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     userDid: string,
     post: BlueskyCreatePostInput,
   ): Promise<BlueskyCreatePostResponse> {
-    const { text, replyTo, images } = post;
+    const { text, replyTo, images, quote } = post;
 
     let record: Record<string, unknown> = {
       text,
@@ -481,7 +481,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
       record.reply = { root, parent };
     }
 
-    // Add embeds if images/GIFs are provided
+    // Build the media embed (images or GIFs) first; we'll wrap it in
+    // recordWithMedia below if a quote is also attached.
+    let mediaEmbed: Record<string, unknown> | undefined;
+
     if (images && images.length > 0) {
       // Separate regular images from GIFs
       const regularImages = images.filter((img) => img.mimeType !== 'image/gif');
@@ -499,7 +502,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
           }),
         );
 
-        record.embed = {
+        mediaEmbed = {
           $type: 'app.bsky.embed.images',
           images: uploadedImages,
         };
@@ -514,7 +517,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
         // Upload the GIF as a JPEG thumbnail (Bluesky requires JPEG, not GIF)
         const thumbnailBlob = await this.uploadImage(accessJwt, gif.uri, 'image/jpeg');
 
-        record.embed = {
+        mediaEmbed = {
           $type: 'app.bsky.embed.external',
           external: {
             uri: gif.uri,
@@ -529,6 +532,23 @@ export class BlueskyFeeds extends BlueskyApiClient {
           },
         };
       }
+    }
+
+    if (quote) {
+      const recordEmbed = {
+        $type: 'app.bsky.embed.record',
+        record: { uri: quote.uri, cid: quote.cid },
+      };
+
+      record.embed = mediaEmbed
+        ? {
+            $type: 'app.bsky.embed.recordWithMedia',
+            record: recordEmbed,
+            media: mediaEmbed,
+          }
+        : recordEmbed;
+    } else if (mediaEmbed) {
+      record.embed = mediaEmbed;
     }
 
     return this.makeAuthenticatedRequest<BlueskyCreatePostResponse>('/com.atproto.repo.createRecord', accessJwt, {

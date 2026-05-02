@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Citaatbericht",
+      "repostAction": "Herposten",
+      "quoteAction": "Bericht citeren",
+      "undoRepost": "Repost ongedaan maken"
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

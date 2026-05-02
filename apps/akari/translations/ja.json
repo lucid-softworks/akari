@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "引用ポスト",
+      "repostAction": "リポスト",
+      "quoteAction": "ポストを引用",
+      "undoRepost": "リポストを取り消す"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

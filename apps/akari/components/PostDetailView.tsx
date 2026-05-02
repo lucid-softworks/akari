@@ -343,7 +343,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
 
       {/* Reply Bar */}
       <TouchableOpacity
-        style={[styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom, spacing.md) }]}
+        style={[styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom - spacing.lg, spacing.xs) }]}
         onPress={() => setShowReplyComposer(true)}
         activeOpacity={0.7}
       >
@@ -361,6 +361,30 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           root: post?.uri || '',
           parent: post?.uri || '',
           authorHandle: post?.author.handle || actor,
+          preview: post
+            ? {
+                text:
+                  typeof post.record === 'object' && post.record && 'text' in post.record
+                    ? (post.record as { text: string }).text
+                    : undefined,
+                author: {
+                  handle: post.author.handle,
+                  displayName: post.author.displayName,
+                  avatar: post.author.avatar,
+                },
+                embed: post.embed,
+                embeds: post.embeds,
+                facets:
+                  typeof post.record === 'object' && post.record && 'facets' in post.record
+                    ? ((post.record as {
+                        facets?: {
+                          index: { byteStart: number; byteEnd: number };
+                          features: { $type: string; uri?: string; tag?: string; did?: string }[];
+                        }[];
+                      }).facets ?? undefined)
+                    : undefined,
+              }
+            : undefined,
         }}
       />
     </ThemedView>

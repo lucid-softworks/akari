@@ -64,6 +64,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
+  const [showQuoteComposer, setShowQuoteComposer] = useState(false);
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
   const [translatedEmbed, setTranslatedEmbed] = useState<{ title?: string; description?: string } | null>(null);
   const [isCardHovered, setIsCardHovered] = useState(false);
@@ -147,6 +148,11 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
   const handleReplyPress = useCallback(() => {
     setShowReplyComposer(true);
   }, []);
+
+  const handleQuotePress = useCallback(() => {
+    if (!post.uri || !post.cid) return;
+    setShowQuoteComposer(true);
+  }, [post.uri, post.cid]);
 
   const handleTranslatePress = useCallback(() => {
     setShowActionsMenu(false);
@@ -237,6 +243,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
         likeCount={post.likeCount || 0}
         onReplyPress={handleReplyPress}
         onMorePress={handleMenuToggle}
+        onQuotePress={handleQuotePress}
       />
       <PostActionsMenu
         visible={showActionsMenu}
@@ -281,8 +288,40 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
           root: post.uri || '',
           parent: post.uri || '',
           authorHandle: post.author.handle,
+          preview: {
+            text: post.text,
+            author: {
+              handle: post.author.handle,
+              displayName: post.author.displayName,
+              avatar: post.author.avatar,
+            },
+            embed: post.embed,
+            embeds: post.embeds,
+            facets: post.facets,
+          },
         }}
       />
+
+      {post.uri && post.cid ? (
+        <PostComposer
+          visible={showQuoteComposer}
+          onClose={() => setShowQuoteComposer(false)}
+          quote={{
+            uri: post.uri,
+            cid: post.cid,
+            text: post.text,
+            author: {
+              handle: post.author.handle,
+              displayName: post.author.displayName,
+              avatar: post.author.avatar,
+            },
+            indexedAt: post.createdAt,
+            embed: post.embed,
+            embeds: post.embeds,
+            facets: post.facets,
+          }}
+        />
+      ) : null}
     </>
   );
 });

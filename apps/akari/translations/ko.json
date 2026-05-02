@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "게시물 인용",
+      "repostAction": "리포스트",
+      "quoteAction": "게시물 인용",
+      "undoRepost": "리포스트 취소"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

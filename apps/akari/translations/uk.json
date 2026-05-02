@@ -235,7 +235,11 @@
         "translatedFrom": "Translated from {{language}}",
         "showOriginal": "Show original",
         "failed": "Translation failed"
-      }
+      },
+      "quotePost": "Цитата допису",
+      "repostAction": "Репост",
+      "quoteAction": "Цитувати допис",
+      "undoRepost": "Скасувати репост"
     },
     "gif": {
       "selectGif": "Виберіть GIF",
