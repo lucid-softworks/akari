@@ -107,8 +107,9 @@ describe('NotificationSettings', () => {
       fireEvent(toggle, 'valueChange', true);
     });
 
-    const settingsButton = alertSpy.mock.calls[0][2][1];
-    act(() => settingsButton.onPress());
+    const settingsButton = alertSpy.mock.calls[0][2]?.[1];
+    expect(settingsButton).toBeDefined();
+    act(() => settingsButton!.onPress!());
 
     expect(alertSpy.mock.calls[1][0]).toBe('notifications.openSettings');
     expect(alertSpy.mock.calls[1][1]).toBe(
@@ -134,9 +135,10 @@ describe('NotificationSettings', () => {
       fireEvent(toggle, 'valueChange', true);
     });
 
-    const settingsButton = alertSpy.mock.calls[0][2][1];
+    const settingsButton = alertSpy.mock.calls[0][2]?.[1];
+    expect(settingsButton).toBeDefined();
     Object.defineProperty(Platform, 'OS', { value: 'android' });
-    act(() => settingsButton.onPress());
+    act(() => settingsButton!.onPress!());
 
     expect(alertSpy.mock.calls[1][1]).toBe(
       'notifications.androidSettingsInstructions',

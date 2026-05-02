@@ -25,11 +25,11 @@ beforeEach(() => {
 });
 
 const createEmbed = (uri: string) => ({
-  $type: 'app.bsky.embed.external',
+  $type: 'app.bsky.embed.external' as const,
   external: {
     description: 'A cool site',
     thumb: {
-      $type: 'blob',
+      $type: 'blob' as const,
       ref: { $link: 'https://example.com/thumb.jpg' },
       mimeType: 'image/jpeg',
       size: 123,
@@ -54,7 +54,7 @@ describe('ExternalEmbed', () => {
   });
 
   it('opens link when pressed', () => {
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const embed = createEmbed('https://example.com/article');
     const { getByText } = render(<ExternalEmbed embed={embed} />);
 
