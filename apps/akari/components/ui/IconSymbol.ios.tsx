@@ -2,7 +2,10 @@ import { SymbolView, SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import { StyleProp, ViewStyle } from 'react-native';
 
 type IconSymbolProps = {
-  name: SymbolViewProps['name'];
+  // Accepts any string so callers can share names with the Android/Web
+  // material-icon mapping (e.g. "gif"). SymbolView falls back gracefully
+  // when the name doesn't resolve to an SF Symbol.
+  name: SymbolViewProps['name'] | (string & {});
   size?: number;
   color: string;
   style?: StyleProp<ViewStyle>;
@@ -21,7 +24,7 @@ export function IconSymbol({
       weight={weight}
       tintColor={color}
       resizeMode="scaleAspectFit"
-      name={name}
+      name={name as SymbolViewProps['name']}
       style={[
         {
           width: size,

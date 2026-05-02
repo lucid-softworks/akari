@@ -32,7 +32,8 @@ type SidebarProps = {
 export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: accounts = [] } = useAccounts();
+  const { data: accountsData } = useAccounts();
+  const accounts = accountsData ?? [];
   const { data: currentAccount } = useCurrentAccount();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();

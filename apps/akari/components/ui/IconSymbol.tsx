@@ -5,7 +5,10 @@ import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import { ComponentProps } from 'react';
 import { OpaqueColorValue, type StyleProp, type TextStyle, View } from 'react-native';
 
-type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
+// Keys are string (not just SymbolViewProps['name']) so callers can pass
+// MaterialIcon-only names like "gif" that don't have a corresponding
+// SF Symbol on iOS — the .ios.tsx variant accepts arbitrary strings too.
+type IconMapping = Record<string, ComponentProps<typeof MaterialIcons>['name']>;
 type IconSymbolName = keyof typeof MAPPING;
 type IconSymbolProps = {
   name: IconSymbolName;
