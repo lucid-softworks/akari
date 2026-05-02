@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -38,6 +38,22 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const pendingPinAfterTabChange = useRef(false);
+
+  const handleTabChange = useCallback((tab: ProfileTabType) => {
+    setActiveTab((current) => {
+      if (current !== tab) pendingPinAfterTabChange.current = true;
+      return tab;
+    });
+  }, []);
+
+  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
+    const h = event.nativeEvent.layout.height;
+    if (h > 0) setHeaderHeight(h);
+  }, []);
+
   const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
   const wasNearEnd = useRef(false);
 
@@ -45,6 +61,15 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setVisibleCount(VISIBLE_COUNT_PAGE);
     wasNearEnd.current = false;
   }, [activeTab]);
+
+  useEffect(() => {
+    if (!pendingPinAfterTabChange.current) return;
+    if (!scrollViewRef.current) return;
+    scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
+    if (headerHeight > 0) {
+      pendingPinAfterTabChange.current = false;
+    }
+  }, [activeTab, headerHeight]);
 
   const handleNearEndScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -91,8 +116,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   const tabsComponent = useMemo(() => {
     if (!profile) return null;
-    return <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} profileHandle={profile.handle} />;
-  }, [activeTab, setActiveTab, profile]);
+    return <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />;
+  }, [activeTab, handleTabChange, profile]);
 
   if (isLoading) {
     return (
@@ -214,6 +239,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
     return (
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={styles.scrollContent}
         stickyHeaderIndices={[1]}
         stickyHeaderHiddenOnScroll
@@ -221,7 +247,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         onScroll={handleNearEndScroll}
         scrollEventThrottle={200}
       >
-        {headerComponent}
+        <View onLayout={handleHeaderLayout}>{headerComponent}</View>
         {tabsComponent}
         {tabBody}
       </ScrollView>

@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -52,8 +52,20 @@ export default function ProfileScreen() {
     setShowDropdown(isOpen);
   }, []);
 
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const pendingPinAfterTabChange = useRef(false);
+
   const handleTabChange = useCallback((tab: ProfileTabType) => {
-    setActiveTab(tab);
+    setActiveTab((current) => {
+      if (current !== tab) pendingPinAfterTabChange.current = true;
+      return tab;
+    });
+  }, []);
+
+  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
+    const h = event.nativeEvent.layout.height;
+    if (h > 0) setHeaderHeight(h);
   }, []);
 
   const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
@@ -63,6 +75,15 @@ export default function ProfileScreen() {
     setVisibleCount(VISIBLE_COUNT_PAGE);
     wasNearEnd.current = false;
   }, [activeTab]);
+
+  useEffect(() => {
+    if (!pendingPinAfterTabChange.current) return;
+    if (!scrollViewRef.current) return;
+    scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
+    if (headerHeight > 0) {
+      pendingPinAfterTabChange.current = false;
+    }
+  }, [activeTab, headerHeight]);
 
   const handleNearEndScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -204,6 +225,7 @@ export default function ProfileScreen() {
 
     return (
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={styles.scrollContent}
         stickyHeaderIndices={[1]}
         stickyHeaderHiddenOnScroll
@@ -211,7 +233,7 @@ export default function ProfileScreen() {
         onScroll={handleNearEndScroll}
         scrollEventThrottle={200}
       >
-        {headerComponent}
+        <View onLayout={handleHeaderLayout}>{headerComponent}</View>
         {tabsComponent}
         {tabBody}
       </ScrollView>
