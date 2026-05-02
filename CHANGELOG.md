@@ -1,5 +1,52 @@
 # Changelog
 
+## [1.7.0](https://github.com/lucid-softworks/akari/compare/v1.6.0...v1.7.0) (2026-05-02)
+
+
+### Features
+
+* **profile:** auto-hide sticky tabs on scroll ([1deaa28](https://github.com/lucid-softworks/akari/commit/1deaa2805c68f9542d0fa1dea8ec613c5e613c87))
+* **profile:** in-banner back button on pushed profile screens ([f4b2ca2](https://github.com/lucid-softworks/akari/commit/f4b2ca26cbe770e20aaa867e3aec8e6d5601ecb7))
+* **profile:** show native header on profile-tab sub-pages ([207f0ef](https://github.com/lucid-softworks/akari/commit/207f0ef2f6e0a93ee8810e13a65049d614cb4deb))
+* **search:** auto-hide header on scroll, tighten tab spacing ([c0a60f6](https://github.com/lucid-softworks/akari/commit/c0a60f66e13bbe92925c6ec5f05a82f67a978fc8))
+* **search:** hashtag taps, top/latest sort, clear button + i18n ([f68a626](https://github.com/lucid-softworks/akari/commit/f68a62634826b19b2d5881a7832ae12c7e0bff6f))
+
+
+### Bug Fixes
+
+* **auth:** only sign out on real auth failures, not transient errors ([01c522c](https://github.com/lucid-softworks/akari/commit/01c522c1aa53ada894fccd7a88b8a00277472135))
+* **bookmarks:** drop title/subtitle header and side padding ([2a14852](https://github.com/lucid-softworks/akari/commit/2a1485220d37ea81f59f34c22a7ba2d79be03984))
+* **feed:** show skeleton instead of empty state on first load ([a8e5648](https://github.com/lucid-softworks/akari/commit/a8e5648b18623b73621387bb5c93a5d0626ef68d))
+* **navigation:** convert profile/[handle] to folder form for stack push ([bd38fef](https://github.com/lucid-softworks/akari/commit/bd38fef0b42525c32b55d80c9a13f5c93d60446c))
+* **navigation:** dedupe duplicate post and profile pushes ([fb02b3d](https://github.com/lucid-softworks/akari/commit/fb02b3d12a30ee5ae80800f895e14ee2b0c09ba4))
+* **navigation:** force push semantics on bio + post mention links ([1f665ca](https://github.com/lucid-softworks/akari/commit/1f665ca91949aa5089a220bb25f314c4bf4598b6))
+* **navigation:** give profile/[handle] a per-handle screen identity ([f2528c8](https://github.com/lucid-softworks/akari/commit/f2528c8182c2f1aab15b9cbd47e30614ea3f2c9e))
+* **navigation:** hoist PressableLink debounce to module scope ([35b6812](https://github.com/lucid-softworks/akari/commit/35b68120a7fa67dffc1c96772fd7ce8d999fc3da))
+* **navigation:** make bio + post-header mention links tab-aware ([2f23bf2](https://github.com/lucid-softworks/akari/commit/2f23bf2c3bf4cef4422d403931d98fda70027640))
+* **navigation:** push to canonical /index/user-profile URLs ([dad57ad](https://github.com/lucid-softworks/akari/commit/dad57adb24bf48c3461a0e1823845e65c3e11719))
+* **navigation:** revert to /user-profile/&lt;handle&gt; for home tab ([81be387](https://github.com/lucid-softworks/akari/commit/81be3876b2401ed6544ae7f5cbdb583a77255929))
+* **navigation:** simplify profile/[handle] singular to true ([9756c9c](https://github.com/lucid-softworks/akari/commit/9756c9cbc5fa75c714b9b8dd2e1e9cbe610937d0))
+* **navigation:** strip (tabs) group prefix from pathname before routing ([cfcb8fc](https://github.com/lucid-softworks/akari/commit/cfcb8fcb0b24f399886d9e05dde5e246307770fe))
+* pin override versions exactly so npm actually applies them ([f762e4b](https://github.com/lucid-softworks/akari/commit/f762e4bf799da83b79a0e808bf72c231566cc373))
+* **profile:** ensure tab-switch pin lands once items are laid out ([373c505](https://github.com/lucid-softworks/akari/commit/373c505c83feeadcb6ae1bdbfd1028ae9233cbf4))
+* **profile:** keep mention links inside the current tab's stack ([08f562f](https://github.com/lucid-softworks/akari/commit/08f562f64d3c32e4130bc7f47595d10ea011bd6e))
+* **profile:** keep sticky tabs pinned at top when switching tabs ([80689d6](https://github.com/lucid-softworks/akari/commit/80689d60208fb52877c24b94b0d3fbff084ddb2e))
+* **profile:** keep visited tabs mounted, eliminate banner re-mount flash ([0fc08a2](https://github.com/lucid-softworks/akari/commit/0fc08a26791a1459013182be307278f3c103f60f))
+* **profile:** only pin sticky tabs when prior tab was past the banner ([8da413f](https://github.com/lucid-softworks/akari/commit/8da413f373b612aa83082657418d05f6d3a86d66))
+* **profile:** paginate non-Posts tabs as user scrolls ([86a14e1](https://github.com/lucid-softworks/akari/commit/86a14e126d6485d4857515a68b815d2d9a947456))
+* **profile:** pin sticky tabs when switching back to Posts too ([583a949](https://github.com/lucid-softworks/akari/commit/583a949fe52282714f625ffd7db82d0e98b9e5b7))
+* **profile:** pin via scrollToOffset(headerHeight) instead of scrollToIndex ([f587d3d](https://github.com/lucid-softworks/akari/commit/f587d3d04df8b953e3784eac6f3f6f786cc72aa3))
+* **profile:** preserve scroll position across tab switches ([4b23114](https://github.com/lucid-softworks/akari/commit/4b231143186f74b66cb5aeb73485dcd62ee3f910))
+* **profile:** re-pin scroll on every tab activation, not just first mount ([8445478](https://github.com/lucid-softworks/akari/commit/8445478ada406b84de609c4fb494e429cfdc5b1a))
+* **profile:** scroll new tabs to target before first paint ([3cc51de](https://github.com/lucid-softworks/akari/commit/3cc51de1ed3dde9bb1f6ac902bb1e2b044ae2893))
+* **profile:** show header + sticky tabs on every tab, not just posts ([a219e13](https://github.com/lucid-softworks/akari/commit/a219e13bf95bdc8661630aff74ed6503230af57d))
+* **profile:** swap tab panes with opacity, not display:none ([515c8db](https://github.com/lucid-softworks/akari/commit/515c8dbd8dc0e88d5f5c27fbfc847ae8a7ce44a3))
+* **profile:** wire pull-to-refresh on every tab ([f1ddd53](https://github.com/lucid-softworks/akari/commit/f1ddd53aa64428b09af35a215b8064ec487de95e))
+* **search:** show pull-to-refresh spinner below the header overlay ([5da86df](https://github.com/lucid-softworks/akari/commit/5da86dff807eb0dadd624a758118040c41e6a4e7))
+* **test:** align GifEmbed test with the minimal-chrome component ([0d6e9bd](https://github.com/lucid-softworks/akari/commit/0d6e9bd801fffa4a3ece22050d6c1b2462b92bd0))
+* **test:** force non-iOS variant via require for tests asserting that path ([2110971](https://github.com/lucid-softworks/akari/commit/2110971bf5ec171a7d2f718c27d340a143304076))
+* **test:** mock Sentry.wrap + NetInfo, gate DevServerBanner in jest ([6dc93eb](https://github.com/lucid-softworks/akari/commit/6dc93eb3134652d10b2179cb30557ac104639877))
+
 ## [1.6.0](https://github.com/lucid-softworks/akari/compare/v1.5.0...v1.6.0) (2026-05-02)
 
 
