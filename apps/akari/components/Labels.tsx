@@ -7,12 +7,12 @@ import { spacing } from '@/constants/tokens';
 type LabelData = {
   /** The label text */
   val: string;
-  /** The label source/creator */
-  src: string;
-  /** When the label was created */
-  cts: string;
-  /** The label URI */
-  uri: string;
+  /** The label source/creator (server-provided; may be absent in fixtures) */
+  src?: string;
+  /** When the label was created (server-provided; may be absent in fixtures) */
+  cts?: string;
+  /** The label URI (server-provided; may be absent in fixtures) */
+  uri?: string;
   /** The label CID (optional - not always present) */
   cid?: string;
   /** Whether the label is negative */

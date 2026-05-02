@@ -53,7 +53,7 @@ describe('YouTubeEmbed', () => {
     ['embed link', 'https://youtube.com/embed/dQw4w9WgXcQ'],
   ])('renders video for %s and opens link on press', (_, uri) => {
     const embed = createEmbed(uri);
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
 
     const { getByText } = render(<YouTubeEmbed embed={embed} />);
 
@@ -77,7 +77,7 @@ describe('YouTubeEmbed', () => {
       'https://example.com/video',
       'https://example.com/thumb.jpg',
     );
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const { getByText } = render(<YouTubeEmbed embed={embed} />);
 
     fireEvent.press(getByText('Video title'));
@@ -90,7 +90,7 @@ describe('YouTubeEmbed', () => {
 
   it('renders without thumbnail when none available', () => {
     const embed = createEmbed('https://example.com/video');
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const { getByText } = render(<YouTubeEmbed embed={embed} />);
 
     fireEvent.press(getByText('Video title'));

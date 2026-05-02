@@ -27,16 +27,16 @@ beforeEach(() => {
 type Embed = {
   $type: 'app.bsky.embed.external';
   external: {
-    description?: string;
+    description: string;
     title: string;
     uri: string;
   };
 };
 
-const createEmbed = (description?: string): Embed => ({
+const createEmbed = (description: string = ''): Embed => ({
   $type: 'app.bsky.embed.external',
   external: {
-    ...(description !== undefined && { description }),
+    description,
     title: 'Funny GIF',
     uri: 'https://example.com/gif.gif',
   },
@@ -45,7 +45,7 @@ const createEmbed = (description?: string): Embed => ({
 describe('GifEmbed', () => {
   it('renders GIF info and opens link on press', () => {
     const embed = createEmbed('A cool gif');
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const { getByText } = render(<GifEmbed embed={embed} />);
 
     expect(getByText('Funny GIF')).toBeTruthy();
