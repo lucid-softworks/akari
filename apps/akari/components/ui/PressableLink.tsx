@@ -34,7 +34,7 @@ export function PressableLink({
   }, [href, onPress]);
 
   if (Platform.OS === 'web') {
-    const resolved = typeof style === 'function' ? style({ pressed: false }) : style;
+    const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false }) : style;
     const flatStyle = StyleSheet.flatten(resolved);
 
     return (

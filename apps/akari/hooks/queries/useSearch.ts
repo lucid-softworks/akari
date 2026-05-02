@@ -1,8 +1,7 @@
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { CursorPageParam } from "@/hooks/queries/types";
-import { BlueskyPostView, BlueskyProfile } from "@/utils/bluesky/types";
-import { BlueskyApi } from "@/bluesky-api";
+import { BlueskyApi, type BlueskyPostView, type BlueskyProfile } from "@/bluesky-api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 type SearchTabType = "all" | "users" | "posts";
