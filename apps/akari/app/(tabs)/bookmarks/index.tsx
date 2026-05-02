@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
+import { EmptyState } from '@/components/EmptyState';
 import { PostCard } from '@/components/PostCard';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
@@ -126,13 +127,9 @@ export default function BookmarksScreen() {
               <FeedSkeleton count={4} />
             </View>
           ) : error ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('bookmarks.error')}</ThemedText>
-            </ThemedView>
+            <EmptyState title={t('bookmarks.error')} />
           ) : (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('bookmarks.emptyState')}</ThemedText>
-            </ThemedView>
+            <EmptyState title={t('bookmarks.emptyState')} />
           )
         }
       />

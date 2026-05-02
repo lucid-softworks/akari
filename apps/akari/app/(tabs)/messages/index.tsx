@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { EmptyState } from '@/components/EmptyState';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -274,13 +275,9 @@ export function MessagesListScreen({
               ))}
             </ThemedView>
           ) : error ? (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('common.errorLoadingConversations')}</ThemedText>
-            </ThemedView>
+            <EmptyState title={t('common.errorLoadingConversations')} />
           ) : (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={styles.emptyStateText}>{t('common.noConversations')}</ThemedText>
-            </ThemedView>
+            <EmptyState title={t('common.noConversations')} />
           )
         }
         ListHeaderComponent={listHeaderComponent}
