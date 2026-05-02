@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Modal, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -70,61 +70,80 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
     ];
   }, [isOwnProfile, isMuted, isBlocking, t, onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount]);
 
-  return (
-    <Modal transparent animationType="slide" visible={isVisible} onRequestClose={onDismiss}>
-      <TouchableWithoutFeedback onPress={onDismiss}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <ThemedView
+  const isWeb = Platform.OS === 'web';
+  const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
+    Platform.OS === 'ios' ? 'pageSheet' : Platform.OS === 'android' ? 'fullScreen' : undefined;
+
+  const sheetContent = (
+    <ThemedView
+      style={[
+        styles.sheet,
+        isWeb ? styles.webSheet : styles.nativeSheet,
+        {
+          backgroundColor: sheetBg,
+          paddingBottom: insets.bottom + spacing.lg,
+        },
+      ]}
+    >
+      {isWeb ? (
+        <View style={styles.handleBarContainer}>
+          <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
+        </View>
+      ) : null}
+
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {menuItems.map((item) => (
+          <TouchableOpacity
+            key={item.key}
+            style={styles.menuItem}
+            onPress={item.onPress}
+            accessibilityRole="menuitem"
+            activeOpacity={activeOpacity.default}
+          >
+            <IconSymbol
+              name={item.icon as any}
+              size={20}
+              color={item.destructive ? semanticColors.danger : iconColor}
+            />
+            <ThemedText
               style={[
-                styles.sheet,
-                {
-                  backgroundColor: sheetBg,
-                  paddingBottom: insets.bottom + spacing.lg,
-                },
+                styles.menuItemText,
+                item.destructive && styles.menuItemTextDestructive,
               ]}
             >
-              <View style={styles.handleBarContainer}>
-                <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
-              </View>
+              {item.label}
+            </ThemedText>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
 
-              <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                {menuItems.map((item) => (
-                  <TouchableOpacity
-                    key={item.key}
-                    style={styles.menuItem}
-                    onPress={item.onPress}
-                    accessibilityRole="menuitem"
-                    activeOpacity={activeOpacity.default}
-                  >
-                    <IconSymbol
-                      name={item.icon as any}
-                      size={20}
-                      color={item.destructive ? semanticColors.danger : iconColor}
-                    />
-                    <ThemedText
-                      style={[
-                        styles.menuItemText,
-                        item.destructive && styles.menuItemTextDestructive,
-                      ]}
-                    >
-                      {item.label}
-                    </ThemedText>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+      <TouchableOpacity
+        style={styles.cancelButton}
+        onPress={onDismiss}
+        activeOpacity={activeOpacity.default}
+      >
+        <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
+      </TouchableOpacity>
+    </ThemedView>
+  );
 
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={onDismiss}
-                activeOpacity={activeOpacity.default}
-              >
-                <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
+  return (
+    <Modal
+      visible={isVisible}
+      animationType="slide"
+      presentationStyle={nativePresentationStyle}
+      transparent={isWeb}
+      onRequestClose={onDismiss}
+    >
+      {isWeb ? (
+        <TouchableWithoutFeedback onPress={onDismiss}>
+          <View style={styles.overlay}>
+            <TouchableWithoutFeedback>{sheetContent}</TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      ) : (
+        sheetContent
+      )}
     </Modal>
   );
 });
@@ -137,10 +156,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sheet: {
+    width: '100%',
+  },
+  nativeSheet: {
+    flex: 1,
+  },
+  webSheet: {
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
     maxHeight: '70%',
-    width: '100%',
     maxWidth: 420,
   },
   handleBarContainer: {
