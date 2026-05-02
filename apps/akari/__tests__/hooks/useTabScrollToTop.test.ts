@@ -14,7 +14,7 @@ describe('useTabScrollToTop', () => {
   it('returns same handler across re-renders with same function', () => {
     const scrollToTop = jest.fn();
     const { result, rerender } = renderHook(
-      ({ fn }) => useTabScrollToTop(fn),
+      ({ fn }: { fn: () => void }) => useTabScrollToTop(fn),
       { initialProps: { fn: scrollToTop } },
     );
 
@@ -27,7 +27,7 @@ describe('useTabScrollToTop', () => {
   it('updates handler when scrollToTop changes', () => {
     const initialScrollToTop = jest.fn();
     const { result, rerender } = renderHook(
-      ({ fn }) => useTabScrollToTop(fn),
+      ({ fn }: { fn: () => void }) => useTabScrollToTop(fn),
       { initialProps: { fn: initialScrollToTop } },
     );
 

@@ -15,7 +15,10 @@ const mockGetAllScheduledNotificationsAsync = jest.fn();
 const mockDismissAllNotificationsAsync = jest.fn();
 const mockGetPresentedNotificationsAsync = jest.fn();
 
-const mockConstants = {
+const mockConstants: {
+  expoConfig: { extra: { eas: { projectId: string | undefined } } };
+  easConfig: { projectId: string | undefined };
+} = {
   expoConfig: { extra: { eas: { projectId: 'test-project' } } },
   easConfig: { projectId: 'test-project' },
 };

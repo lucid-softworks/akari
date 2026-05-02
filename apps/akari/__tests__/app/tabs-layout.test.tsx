@@ -203,7 +203,7 @@ describe('TabLayout', () => {
       headerShown: false,
       sceneContainerStyle: { paddingTop: 0 },
     });
-    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
+    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactElement;
     expect(typeof tabBar).toBe('function');
 
     const navigation = {
@@ -268,7 +268,7 @@ describe('TabLayout', () => {
     mockUseUnreadNotificationsCount.mockReturnValue({});
     render(<TabLayout />);
     const TabsModule = require('expo-router');
-    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
+    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactElement;
     const navigation = {
       emit: jest.fn(() => ({ defaultPrevented: false })),
       navigate: jest.fn(),
@@ -391,7 +391,7 @@ describe('HardcodedTabBar interactions', () => {
     render(<TabLayout />);
     mockHapticTab.mockClear();
     const TabsModule = require('expo-router');
-    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactNode;
+    const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactElement;
     const navigation = {
       emit: jest.fn(() => ({ defaultPrevented: false })),
       navigate: jest.fn(),
