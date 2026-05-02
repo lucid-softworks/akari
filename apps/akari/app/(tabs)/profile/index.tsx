@@ -1,13 +1,12 @@
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { spacing } from '@/constants/tokens';
 import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
 import { LinksTab } from '@/components/profile/LinksTab';
@@ -27,9 +26,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
 import type { ProfileTabType } from '@/types/profile';
-
-const VISIBLE_COUNT_PAGE = 10;
-const NEAR_END_THRESHOLD_PX = 300;
 
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
@@ -52,9 +48,9 @@ export default function ProfileScreen() {
     setShowDropdown(isOpen);
   }, []);
 
-  const scrollViewRef = useRef<ScrollView>(null);
-  const postsListRef = useRef<FlatList<any>>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  // True only when a tab change is the result of the user tapping a different
+  // tab — read at render time and consumed by the new tab's mount effect to
+  // pin its sticky tab strip at the top of the viewport.
   const pendingPinAfterTabChange = useRef(false);
 
   const handleTabChange = useCallback((tab: ProfileTabType) => {
@@ -63,50 +59,6 @@ export default function ProfileScreen() {
       return tab;
     });
   }, []);
-
-  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
-    const h = event.nativeEvent.layout.height;
-    if (h > 0) setHeaderHeight(h);
-  }, []);
-
-  const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
-  const wasNearEnd = useRef(false);
-
-  useEffect(() => {
-    setVisibleCount(VISIBLE_COUNT_PAGE);
-    wasNearEnd.current = false;
-  }, [activeTab]);
-
-  useEffect(() => {
-    if (!pendingPinAfterTabChange.current) return;
-
-    if (activeTab === 'posts') {
-      if (postsListRef.current) {
-        postsListRef.current.scrollToIndex({ index: 1, animated: false, viewPosition: 0 });
-        pendingPinAfterTabChange.current = false;
-      }
-      return;
-    }
-
-    if (!scrollViewRef.current) return;
-    scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
-    if (headerHeight > 0) {
-      pendingPinAfterTabChange.current = false;
-    }
-  }, [activeTab, headerHeight]);
-
-  const handleNearEndScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-      const nearEnd =
-        contentOffset.y + layoutMeasurement.height >= contentSize.height - NEAR_END_THRESHOLD_PX;
-      if (nearEnd && !wasNearEnd.current) {
-        setVisibleCount((c) => c + VISIBLE_COUNT_PAGE);
-      }
-      wasNearEnd.current = nearEnd;
-    },
-    [],
-  );
 
   const headerComponent = useMemo(() => {
     if (!profile) return null;
@@ -192,62 +144,41 @@ export default function ProfileScreen() {
       );
     }
 
-    if (activeTab === 'posts') {
-      return <PostsTab handle={currentAccount.handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} onRefresh={handleRefresh} refreshing={refreshing} listRef={postsListRef} />;
-    }
+    const sharedProps = {
+      handle: currentAccount.handle,
+      ListHeaderComponent: headerComponent,
+      StickyTabComponent: tabsComponent,
+      pinTabsOnMount: pendingPinAfterTabChange.current,
+    };
 
-    let tabBody: React.ReactNode = null;
     switch (activeTab) {
+      case 'posts':
+        return <PostsTab {...sharedProps} onRefresh={handleRefresh} refreshing={refreshing} />;
       case 'replies':
-        tabBody = <RepliesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <RepliesTab {...sharedProps} />;
       case 'likes':
-        tabBody = <LikesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <LikesTab {...sharedProps} />;
       case 'media':
-        tabBody = <MediaTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <MediaTab {...sharedProps} />;
       case 'videos':
-        tabBody = <VideosTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <VideosTab {...sharedProps} />;
       case 'feeds':
-        tabBody = <FeedsTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <FeedsTab {...sharedProps} />;
       case 'repos':
-        tabBody = <ReposTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <ReposTab {...sharedProps} />;
       case 'starterpacks':
-        tabBody = <StarterpacksTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <StarterpacksTab {...sharedProps} />;
       case 'recipes':
-        tabBody = <RecipesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <RecipesTab {...sharedProps} />;
       case 'links':
-        tabBody = <LinksTab handle={currentAccount.handle} visibleCount={visibleCount} />;
-        break;
+        return <LinksTab {...sharedProps} />;
       default:
-        tabBody = (
+        return (
           <ThemedView style={styles.emptyState}>
             <ThemedText style={styles.emptyStateText}>{t('profile.noContent')}</ThemedText>
           </ThemedView>
         );
     }
-
-    return (
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollContent}
-        stickyHeaderIndices={[1]}
-        stickyHeaderHiddenOnScroll
-        showsVerticalScrollIndicator={false}
-        onScroll={handleNearEndScroll}
-        scrollEventThrottle={200}
-      >
-        <View onLayout={handleHeaderLayout}>{headerComponent}</View>
-        {tabsComponent}
-        {tabBody}
-      </ScrollView>
-    );
   };
 
   return (
@@ -283,9 +214,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 100,
   },
   emptyState: {
     paddingVertical: 40,

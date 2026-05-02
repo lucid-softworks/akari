@@ -1,14 +1,13 @@
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
 import { RecipeModal } from '@/components/RecipeModal';
-import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useAuthorRecipes } from '@/hooks/queries/useAuthorRecipes';
 import { usePdsUrlFromDid } from '@/hooks/queries/usePdsUrl';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -142,50 +141,53 @@ function RecipeItem({ recipe, onPress }: RecipeItemProps) {
   );
 }
 
-export function RecipesTab({ handle, visibleCount = 10 }: RecipesTabProps) {
+export function RecipesTab({
+  handle,
+  ListHeaderComponent,
+  StickyTabComponent,
+  pinTabsOnMount,
+  onRefresh,
+  refreshing,
+}: RecipesTabProps) {
   const { t } = useTranslation();
   const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRecipes(handle);
   const [selectedRecipe, setSelectedRecipe] = useState<BlueskyRecipeRecord | null>(null);
-
-  // Fetch more pages when visible count approaches data length
-  useEffect(() => {
-    if (recipes && visibleCount >= recipes.length - 3 && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [visibleCount, recipes?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleRecipePress = (recipe: BlueskyRecipeRecord) => {
+  const handleRecipePress = useCallback((recipe: BlueskyRecipeRecord) => {
     setSelectedRecipe(recipe);
     setModalVisible(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setModalVisible(false);
     setSelectedRecipe(null);
-  };
+  }, []);
 
-  if (isLoading) {
-    return <FeedSkeleton count={3} />;
-  }
-
-  if (!recipes || recipes.length === 0) {
-    return (
-      <ThemedView style={styles.emptyContainer}>
-        <ThemedText style={styles.emptyText}>{t('profile.noRecipes')}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  const visibleRecipes = recipes.slice(0, visibleCount);
+  const renderItem = useCallback(
+    (item: BlueskyRecipeRecord) => (
+      <RecipeItem recipe={item} onPress={() => handleRecipePress(item)} />
+    ),
+    [handleRecipePress],
+  );
 
   return (
     <>
-      <View>
-        {visibleRecipes.map((item) => (
-          <RecipeItem key={item.uri} recipe={item} onPress={() => handleRecipePress(item)} />
-        ))}
-      </View>
+      <ProfileTabFlatList
+        data={recipes ?? []}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.uri}
+        isLoading={isLoading}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+        ListHeaderComponent={ListHeaderComponent}
+        StickyTabComponent={StickyTabComponent}
+        emptyText={t('profile.noRecipes')}
+        pinTabsOnMount={pinTabsOnMount}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+      />
 
       <RecipeModal visible={modalVisible} onClose={handleCloseModal} recipe={selectedRecipe} />
     </>

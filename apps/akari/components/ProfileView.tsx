@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -31,16 +31,13 @@ type ProfileViewProps = {
   handle: string;
 };
 
-const VISIBLE_COUNT_PAGE = 10;
-const NEAR_END_THRESHOLD_PX = 300;
-
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const postsListRef = useRef<FlatList<any>>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  // True only when a tab change is the result of the user tapping a different
+  // tab — read at render time and consumed by the new tab's mount effect to
+  // pin its sticky tab strip at the top of the viewport.
   const pendingPinAfterTabChange = useRef(false);
 
   const handleTabChange = useCallback((tab: ProfileTabType) => {
@@ -50,49 +47,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     });
   }, []);
 
-  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
-    const h = event.nativeEvent.layout.height;
-    if (h > 0) setHeaderHeight(h);
-  }, []);
-
-  const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
-  const wasNearEnd = useRef(false);
-
-  useEffect(() => {
-    setVisibleCount(VISIBLE_COUNT_PAGE);
-    wasNearEnd.current = false;
-  }, [activeTab]);
-
-  useEffect(() => {
-    if (!pendingPinAfterTabChange.current) return;
-
-    if (activeTab === 'posts') {
-      if (postsListRef.current) {
-        postsListRef.current.scrollToIndex({ index: 1, animated: false, viewPosition: 0 });
-        pendingPinAfterTabChange.current = false;
-      }
-      return;
-    }
-
-    if (!scrollViewRef.current) return;
-    scrollViewRef.current.scrollTo({ y: headerHeight, animated: false });
-    if (headerHeight > 0) {
-      pendingPinAfterTabChange.current = false;
-    }
-  }, [activeTab, headerHeight]);
-
-  const handleNearEndScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-      const nearEnd =
-        contentOffset.y + layoutMeasurement.height >= contentSize.height - NEAR_END_THRESHOLD_PX;
-      if (nearEnd && !wasNearEnd.current) {
-        setVisibleCount((c) => c + VISIBLE_COUNT_PAGE);
-      }
-      wasNearEnd.current = nearEnd;
-    },
-    [],
-  );
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
@@ -144,10 +98,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       </ThemedView>
     );
   }
-
-  const handleDropdownToggle = (isOpen: boolean) => {
-    setShowDropdown(isOpen);
-  };
 
   const handleCopyLink = async () => {
     const profileHandle = profile?.handle;
@@ -210,58 +160,37 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const renderTabContent = () => {
     if (!handle) return null;
 
-    if (activeTab === 'posts') {
-      return <PostsTab handle={handle} ListHeaderComponent={headerComponent} StickyTabComponent={tabsComponent} listRef={postsListRef} />;
-    }
+    const sharedProps = {
+      handle,
+      ListHeaderComponent: headerComponent,
+      StickyTabComponent: tabsComponent,
+      pinTabsOnMount: pendingPinAfterTabChange.current,
+    };
 
-    let tabBody: React.ReactNode = null;
     switch (activeTab) {
+      case 'posts':
+        return <PostsTab {...sharedProps} />;
       case 'replies':
-        tabBody = <RepliesTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <RepliesTab {...sharedProps} />;
       case 'likes':
-        tabBody = <LikesTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <LikesTab {...sharedProps} />;
       case 'media':
-        tabBody = <MediaTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <MediaTab {...sharedProps} />;
       case 'videos':
-        tabBody = <VideosTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <VideosTab {...sharedProps} />;
       case 'feeds':
-        tabBody = <FeedsTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <FeedsTab {...sharedProps} />;
       case 'repos':
-        tabBody = <ReposTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <ReposTab {...sharedProps} />;
       case 'starterpacks':
-        tabBody = <StarterpacksTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <StarterpacksTab {...sharedProps} />;
       case 'recipes':
-        tabBody = <RecipesTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <RecipesTab {...sharedProps} />;
       case 'links':
-        tabBody = <LinksTab handle={handle} visibleCount={visibleCount} />;
-        break;
+        return <LinksTab {...sharedProps} />;
       default:
         return null;
     }
-
-    return (
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollContent}
-        stickyHeaderIndices={[1]}
-        stickyHeaderHiddenOnScroll
-        showsVerticalScrollIndicator={false}
-        onScroll={handleNearEndScroll}
-        scrollEventThrottle={200}
-      >
-        <View onLayout={handleHeaderLayout}>{headerComponent}</View>
-        {tabsComponent}
-        {tabBody}
-      </ScrollView>
-    );
   };
 
   return (
@@ -289,9 +218,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 100,
   },
   errorText: {
     fontSize: fontSize.lg,

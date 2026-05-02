@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useAuthorRepos } from '@/hooks/queries/useAuthorRepos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -94,37 +93,35 @@ function RepoItem({ repo }: RepoItemProps) {
   );
 }
 
-export function ReposTab({ handle, visibleCount = 10 }: ReposTabProps) {
+export function ReposTab({
+  handle,
+  ListHeaderComponent,
+  StickyTabComponent,
+  pinTabsOnMount,
+  onRefresh,
+  refreshing,
+}: ReposTabProps) {
   const { t } = useTranslation();
   const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRepos(handle);
 
-  // Fetch more pages when visible count approaches data length
-  useEffect(() => {
-    if (repos && visibleCount >= repos.length - 3 && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [visibleCount, repos?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  if (isLoading) {
-    return <FeedSkeleton count={3} />;
-  }
-
-  if (!repos || repos.length === 0) {
-    return (
-      <ThemedView style={styles.emptyContainer}>
-        <ThemedText style={styles.emptyText}>{t('profile.noRepos')}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  const visibleRepos = repos.slice(0, visibleCount);
+  const renderItem = useCallback((item: BlueskyTangledRepo) => <RepoItem repo={item} />, []);
 
   return (
-    <View>
-      {visibleRepos.map((item) => (
-        <RepoItem key={item.uri} repo={item} />
-      ))}
-    </View>
+    <ProfileTabFlatList
+      data={repos ?? []}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      ListHeaderComponent={ListHeaderComponent}
+      StickyTabComponent={StickyTabComponent}
+      emptyText={t('profile.noRepos')}
+      pinTabsOnMount={pinTabsOnMount}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
   );
 }
 

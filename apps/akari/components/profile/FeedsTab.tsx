@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useCallback } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -68,37 +68,35 @@ function FeedItem({ feed }: FeedItemProps) {
   );
 }
 
-export function FeedsTab({ handle, visibleCount = 10 }: FeedsTabProps) {
+export function FeedsTab({
+  handle,
+  ListHeaderComponent,
+  StickyTabComponent,
+  pinTabsOnMount,
+  onRefresh,
+  refreshing,
+}: FeedsTabProps) {
   const { t } = useTranslation();
   const { data: feeds, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeeds(handle);
 
-  // Fetch more pages when visible count approaches data length
-  useEffect(() => {
-    if (feeds && visibleCount >= feeds.length - 3 && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [visibleCount, feeds?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  if (isLoading) {
-    return <FeedSkeleton count={3} />;
-  }
-
-  if (!feeds || feeds.length === 0) {
-    return (
-      <ThemedView style={styles.emptyContainer}>
-        <ThemedText style={styles.emptyText}>{t('profile.noFeeds')}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  const visibleFeeds = feeds.slice(0, visibleCount);
+  const renderItem = useCallback((item: BlueskyFeed) => <FeedItem feed={item} />, []);
 
   return (
-    <View>
-      {visibleFeeds.map((item) => (
-        <FeedItem key={item.uri} feed={item} />
-      ))}
-    </View>
+    <ProfileTabFlatList
+      data={feeds ?? []}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      ListHeaderComponent={ListHeaderComponent}
+      StickyTabComponent={StickyTabComponent}
+      emptyText={t('profile.noFeeds')}
+      pinTabsOnMount={pinTabsOnMount}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
   );
 }
 

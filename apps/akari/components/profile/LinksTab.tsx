@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { FeedSkeleton } from '@/components/skeletons';
+import { useCallback, useMemo } from 'react';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useLinks } from '@/hooks/queries/useLinks';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -81,46 +80,53 @@ function LinkItem({ card }: LinkItemProps) {
   return <Pressable onPress={handleLinkPress}>{linkContent}</Pressable>;
 }
 
-export function LinksTab({ handle, visibleCount = 10 }: LinksTabProps) {
+type LinkCardItem = {
+  id: string;
+  url: string;
+  text: string;
+  emoji: string;
+};
+
+export function LinksTab({
+  handle,
+  ListHeaderComponent,
+  StickyTabComponent,
+  pinTabsOnMount,
+  onRefresh,
+  refreshing,
+}: LinksTabProps) {
   const { t } = useTranslation();
   const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks(handle);
 
-  // Flatten all cards from all boards into individual link items
-  const allLinks =
-    links?.flatMap((board) =>
-      board.value.cards.map((card, index) => ({
-        ...card,
-        id: `${board.uri}-${index}`, // Unique key for each link
-      })),
-    ) || [];
+  const allLinks = useMemo<LinkCardItem[]>(
+    () =>
+      links?.flatMap((board) =>
+        board.value.cards.map((card, index) => ({
+          ...card,
+          id: `${board.uri}-${index}`,
+        })),
+      ) ?? [],
+    [links],
+  );
 
-  // Fetch more pages when visible count approaches data length
-  useEffect(() => {
-    if (allLinks && visibleCount >= allLinks.length - 3 && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [visibleCount, allLinks?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  if (isLoading) {
-    return <FeedSkeleton count={3} />;
-  }
-
-  if (!allLinks || allLinks.length === 0) {
-    return (
-      <ThemedView style={styles.emptyContainer}>
-        <ThemedText style={styles.emptyText}>{t('profile.noLinks')}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  const visibleLinks = allLinks.slice(0, visibleCount);
+  const renderItem = useCallback((item: LinkCardItem) => <LinkItem card={item} />, []);
 
   return (
-    <View>
-      {visibleLinks.map((item) => (
-        <LinkItem key={item.id} card={item} />
-      ))}
-    </View>
+    <ProfileTabFlatList
+      data={allLinks}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      ListHeaderComponent={ListHeaderComponent}
+      StickyTabComponent={StickyTabComponent}
+      emptyText={t('profile.noLinks')}
+      pinTabsOnMount={pinTabsOnMount}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
   );
 }
 

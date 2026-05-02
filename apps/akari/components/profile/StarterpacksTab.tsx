@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 
 import type { BlueskyStarterPack } from '@/bluesky-api';
-import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -65,37 +65,38 @@ function StarterpackItem({ starterpack }: StarterpackItemProps) {
   );
 }
 
-export function StarterpacksTab({ handle, visibleCount = 10 }: StarterpacksTabProps) {
+export function StarterpacksTab({
+  handle,
+  ListHeaderComponent,
+  StickyTabComponent,
+  pinTabsOnMount,
+  onRefresh,
+  refreshing,
+}: StarterpacksTabProps) {
   const { t } = useTranslation();
   const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorStarterpacks(handle);
 
-  // Fetch more pages when visible count approaches data length
-  useEffect(() => {
-    if (starterpacks && visibleCount >= starterpacks.length - 3 && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [visibleCount, starterpacks?.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  if (isLoading) {
-    return <FeedSkeleton count={3} />;
-  }
-
-  if (!starterpacks || starterpacks.length === 0) {
-    return (
-      <ThemedView style={styles.emptyContainer}>
-        <ThemedText style={styles.emptyText}>{t('profile.noStarterpacks')}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  const visibleStarterpacks = starterpacks.slice(0, visibleCount);
+  const renderItem = useCallback(
+    (item: BlueskyStarterPack) => <StarterpackItem starterpack={item} />,
+    [],
+  );
 
   return (
-    <View>
-      {visibleStarterpacks.map((item) => (
-        <StarterpackItem key={item.uri} starterpack={item} />
-      ))}
-    </View>
+    <ProfileTabFlatList
+      data={starterpacks ?? []}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      ListHeaderComponent={ListHeaderComponent}
+      StickyTabComponent={StickyTabComponent}
+      emptyText={t('profile.noStarterpacks')}
+      pinTabsOnMount={pinTabsOnMount}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
   );
 }
 
