@@ -255,7 +255,19 @@
       "start": "शुरू करें",
       "searchPlaceholder": "चैट के लिए लोग खोजें",
       "searchHint": "लोगों को जोड़ने के लिए खोजें",
-      "deletedAccount": "हटाया गया खाता"
+      "deletedAccount": "हटाया गया खाता",
+      "groupSettings": "ग्रुप सेटिंग्स",
+      "chatSettings": "चैट सेटिंग्स",
+      "groupName": "ग्रुप का नाम",
+      "members": "सदस्य",
+      "removeMember": "सदस्य हटाएँ",
+      "removeMemberConfirm": "इस चैट से {{name}} को हटाएँ?",
+      "remove": "हटाएँ",
+      "leaveChat": "चैट छोड़ें",
+      "leaveChatConfirm": "क्या आप वाकई छोड़ना चाहते हैं?",
+      "leave": "छोड़ें",
+      "deleteChat": "चैट हटाएँ",
+      "groupRenamed": "ग्रुप का नाम बदला गया"
     },
     "settings": {
       "account": "खाता",

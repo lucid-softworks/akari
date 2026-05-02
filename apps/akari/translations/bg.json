@@ -264,7 +264,19 @@
       "start": "Започни",
       "searchPlaceholder": "Намери хора за чат",
       "searchHint": "Търси хора, за да ги добавиш",
-      "deletedAccount": "Изтрит акаунт"
+      "deletedAccount": "Изтрит акаунт",
+      "groupSettings": "Настройки на групата",
+      "chatSettings": "Настройки на чата",
+      "groupName": "Име на групата",
+      "members": "Членове",
+      "removeMember": "Премахни член",
+      "removeMemberConfirm": "Премахни {{name}} от този чат?",
+      "remove": "Премахни",
+      "leaveChat": "Напусни чата",
+      "leaveChatConfirm": "Сигурен ли си, че искаш да напуснеш?",
+      "leave": "Напусни",
+      "deleteChat": "Изтрий чата",
+      "groupRenamed": "Групата е преименувана"
     },
     "settings": {
       "account": "Акаунт",

@@ -255,7 +255,19 @@
       "start": "Начать",
       "searchPlaceholder": "Найдите людей для чата",
       "searchHint": "Ищите, чтобы добавить людей",
-      "deletedAccount": "Удалённый аккаунт"
+      "deletedAccount": "Удалённый аккаунт",
+      "groupSettings": "Настройки группы",
+      "chatSettings": "Настройки чата",
+      "groupName": "Название группы",
+      "members": "Участники",
+      "removeMember": "Удалить участника",
+      "removeMemberConfirm": "Удалить {{name}} из этого чата?",
+      "remove": "Удалить",
+      "leaveChat": "Покинуть чат",
+      "leaveChatConfirm": "Вы уверены, что хотите выйти?",
+      "leave": "Выйти",
+      "deleteChat": "Удалить чат",
+      "groupRenamed": "Группа переименована"
     },
     "settings": {
       "account": "Аккаунт",

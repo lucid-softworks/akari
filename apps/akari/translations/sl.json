@@ -264,7 +264,19 @@
       "start": "Začni",
       "searchPlaceholder": "Najdi ljudi za klepet",
       "searchHint": "Iskanje za dodajanje ljudi",
-      "deletedAccount": "Izbrisan račun"
+      "deletedAccount": "Izbrisan račun",
+      "groupSettings": "Nastavitve skupine",
+      "chatSettings": "Nastavitve klepeta",
+      "groupName": "Ime skupine",
+      "members": "Člani",
+      "removeMember": "Odstrani člana",
+      "removeMemberConfirm": "Odstraniti {{name}} iz tega klepeta?",
+      "remove": "Odstrani",
+      "leaveChat": "Zapusti klepet",
+      "leaveChatConfirm": "Ali res želite oditi?",
+      "leave": "Zapusti",
+      "deleteChat": "Izbriši klepet",
+      "groupRenamed": "Skupina preimenovana"
     },
     "settings": {
       "account": "Račun",

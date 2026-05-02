@@ -264,7 +264,19 @@
       "start": "Start",
       "searchPlaceholder": "Find folk at chatte med",
       "searchHint": "Søg for at tilføje folk",
-      "deletedAccount": "Slettet konto"
+      "deletedAccount": "Slettet konto",
+      "groupSettings": "Gruppeindstillinger",
+      "chatSettings": "Chatindstillinger",
+      "groupName": "Gruppenavn",
+      "members": "Medlemmer",
+      "removeMember": "Fjern medlem",
+      "removeMemberConfirm": "Fjern {{name}} fra denne chat?",
+      "remove": "Fjern",
+      "leaveChat": "Forlad chat",
+      "leaveChatConfirm": "Er du sikker på, at du vil forlade?",
+      "leave": "Forlad",
+      "deleteChat": "Slet chat",
+      "groupRenamed": "Gruppen er omdøbt"
     },
     "settings": {
       "account": "Konto",

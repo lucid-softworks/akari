@@ -255,7 +255,19 @@
       "start": "เริ่ม",
       "searchPlaceholder": "ค้นหาคนที่จะแชทด้วย",
       "searchHint": "ค้นหาเพื่อเพิ่มคน",
-      "deletedAccount": "บัญชีที่ถูกลบ"
+      "deletedAccount": "บัญชีที่ถูกลบ",
+      "groupSettings": "ตั้งค่ากลุ่ม",
+      "chatSettings": "ตั้งค่าแชท",
+      "groupName": "ชื่อกลุ่ม",
+      "members": "สมาชิก",
+      "removeMember": "นำสมาชิกออก",
+      "removeMemberConfirm": "นำ {{name}} ออกจากแชทนี้?",
+      "remove": "นำออก",
+      "leaveChat": "ออกจากแชท",
+      "leaveChatConfirm": "คุณแน่ใจว่าต้องการออก?",
+      "leave": "ออก",
+      "deleteChat": "ลบแชท",
+      "groupRenamed": "เปลี่ยนชื่อกลุ่มแล้ว"
     },
     "settings": {
       "account": "บัญชี",

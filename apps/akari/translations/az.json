@@ -264,7 +264,19 @@
       "start": "Başlat",
       "searchPlaceholder": "Söhbət üçün insan axtar",
       "searchHint": "Əlavə etmək üçün insan axtarın",
-      "deletedAccount": "Silinmiş hesab"
+      "deletedAccount": "Silinmiş hesab",
+      "groupSettings": "Qrup ayarları",
+      "chatSettings": "Söhbət ayarları",
+      "groupName": "Qrup adı",
+      "members": "Üzvlər",
+      "removeMember": "Üzvü çıxar",
+      "removeMemberConfirm": "{{name}} bu söhbətdən çıxarılsın?",
+      "remove": "Çıxar",
+      "leaveChat": "Söhbətdən çıx",
+      "leaveChatConfirm": "Çıxmaq istədiyinizə əminsiniz?",
+      "leave": "Çıx",
+      "deleteChat": "Söhbəti sil",
+      "groupRenamed": "Qrupun adı dəyişdirildi"
     },
     "settings": {
       "account": "Hesab",

@@ -264,7 +264,19 @@
       "start": "Začať",
       "searchPlaceholder": "Nájdi ľudí na chatovanie",
       "searchHint": "Hľadaj na pridanie ľudí",
-      "deletedAccount": "Odstránený účet"
+      "deletedAccount": "Odstránený účet",
+      "groupSettings": "Nastavenia skupiny",
+      "chatSettings": "Nastavenia chatu",
+      "groupName": "Názov skupiny",
+      "members": "Členovia",
+      "removeMember": "Odstrániť člena",
+      "removeMemberConfirm": "Odstrániť {{name}} z tohto chatu?",
+      "remove": "Odstrániť",
+      "leaveChat": "Opustiť chat",
+      "leaveChatConfirm": "Naozaj chcete odísť?",
+      "leave": "Odísť",
+      "deleteChat": "Odstrániť chat",
+      "groupRenamed": "Skupina premenovaná"
     },
     "settings": {
       "account": "Účtovať",

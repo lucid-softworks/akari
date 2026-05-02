@@ -264,7 +264,19 @@
       "start": "Începe",
       "searchPlaceholder": "Găsește oameni cu care să discuți",
       "searchHint": "Caută pentru a adăuga oameni",
-      "deletedAccount": "Cont șters"
+      "deletedAccount": "Cont șters",
+      "groupSettings": "Setări grup",
+      "chatSettings": "Setări chat",
+      "groupName": "Nume grup",
+      "members": "Membri",
+      "removeMember": "Elimină membrul",
+      "removeMemberConfirm": "Eliminați {{name}} din acest chat?",
+      "remove": "Elimină",
+      "leaveChat": "Părăsește chatul",
+      "leaveChatConfirm": "Sigur vrei să pleci?",
+      "leave": "Pleacă",
+      "deleteChat": "Șterge chatul",
+      "groupRenamed": "Grup redenumit"
     },
     "settings": {
       "account": "Cont",

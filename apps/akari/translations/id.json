@@ -255,7 +255,19 @@
       "start": "Mulai",
       "searchPlaceholder": "Cari orang untuk diajak bicara",
       "searchHint": "Cari untuk menambahkan orang",
-      "deletedAccount": "Akun dihapus"
+      "deletedAccount": "Akun dihapus",
+      "groupSettings": "Pengaturan grup",
+      "chatSettings": "Pengaturan obrolan",
+      "groupName": "Nama grup",
+      "members": "Anggota",
+      "removeMember": "Keluarkan anggota",
+      "removeMemberConfirm": "Keluarkan {{name}} dari obrolan ini?",
+      "remove": "Keluarkan",
+      "leaveChat": "Keluar dari obrolan",
+      "leaveChatConfirm": "Yakin ingin keluar?",
+      "leave": "Keluar",
+      "deleteChat": "Hapus obrolan",
+      "groupRenamed": "Grup diubah namanya"
     },
     "settings": {
       "account": "Akun",

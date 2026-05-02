@@ -255,7 +255,19 @@
       "start": "Avvia",
       "searchPlaceholder": "Trova persone con cui chattare",
       "searchHint": "Cerca per aggiungere persone",
-      "deletedAccount": "Account eliminato"
+      "deletedAccount": "Account eliminato",
+      "groupSettings": "Impostazioni gruppo",
+      "chatSettings": "Impostazioni chat",
+      "groupName": "Nome del gruppo",
+      "members": "Membri",
+      "removeMember": "Rimuovi membro",
+      "removeMemberConfirm": "Rimuovere {{name}} da questa chat?",
+      "remove": "Rimuovi",
+      "leaveChat": "Esci dalla chat",
+      "leaveChatConfirm": "Sei sicuro di voler uscire?",
+      "leave": "Esci",
+      "deleteChat": "Elimina chat",
+      "groupRenamed": "Gruppo rinominato"
     },
     "settings": {
       "account": "Account",

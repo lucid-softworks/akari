@@ -264,7 +264,19 @@
       "start": "Έναρξη",
       "searchPlaceholder": "Βρες άτομα για συνομιλία",
       "searchHint": "Αναζήτησε για να προσθέσεις άτομα",
-      "deletedAccount": "Διαγραμμένος λογαριασμός"
+      "deletedAccount": "Διαγραμμένος λογαριασμός",
+      "groupSettings": "Ρυθμίσεις ομάδας",
+      "chatSettings": "Ρυθμίσεις συνομιλίας",
+      "groupName": "Όνομα ομάδας",
+      "members": "Μέλη",
+      "removeMember": "Αφαίρεση μέλους",
+      "removeMemberConfirm": "Αφαίρεση {{name}} από τη συνομιλία;",
+      "remove": "Αφαίρεση",
+      "leaveChat": "Αποχώρηση",
+      "leaveChatConfirm": "Σίγουρα θέλεις να αποχωρήσεις;",
+      "leave": "Αποχώρηση",
+      "deleteChat": "Διαγραφή συνομιλίας",
+      "groupRenamed": "Η ομάδα μετονομάστηκε"
     },
     "settings": {
       "account": "Λογαριασμός",

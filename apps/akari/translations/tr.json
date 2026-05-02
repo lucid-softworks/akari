@@ -255,7 +255,19 @@
       "start": "Başlat",
       "searchPlaceholder": "Sohbet edecek kişileri bul",
       "searchHint": "Kişi eklemek için ara",
-      "deletedAccount": "Silinmiş hesap"
+      "deletedAccount": "Silinmiş hesap",
+      "groupSettings": "Grup ayarları",
+      "chatSettings": "Sohbet ayarları",
+      "groupName": "Grup adı",
+      "members": "Üyeler",
+      "removeMember": "Üyeyi kaldır",
+      "removeMemberConfirm": "{{name}} bu sohbetten kaldırılsın mı?",
+      "remove": "Kaldır",
+      "leaveChat": "Sohbetten ayrıl",
+      "leaveChatConfirm": "Ayrılmak istediğinden emin misin?",
+      "leave": "Ayrıl",
+      "deleteChat": "Sohbeti sil",
+      "groupRenamed": "Grup yeniden adlandırıldı"
     },
     "settings": {
       "account": "Hesap",

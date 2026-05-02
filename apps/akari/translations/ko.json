@@ -255,7 +255,19 @@
       "start": "시작",
       "searchPlaceholder": "채팅할 사람 찾기",
       "searchHint": "사람을 추가하려면 검색하세요",
-      "deletedAccount": "삭제된 계정"
+      "deletedAccount": "삭제된 계정",
+      "groupSettings": "그룹 설정",
+      "chatSettings": "채팅 설정",
+      "groupName": "그룹 이름",
+      "members": "구성원",
+      "removeMember": "구성원 제거",
+      "removeMemberConfirm": "{{name}} 님을 이 채팅에서 제거할까요?",
+      "remove": "제거",
+      "leaveChat": "채팅 나가기",
+      "leaveChatConfirm": "정말 나가시겠어요?",
+      "leave": "나가기",
+      "deleteChat": "채팅 삭제",
+      "groupRenamed": "그룹 이름이 변경되었습니다"
     },
     "settings": {
       "account": "계정",

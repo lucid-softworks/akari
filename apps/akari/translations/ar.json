@@ -255,7 +255,19 @@
       "start": "ابدأ",
       "searchPlaceholder": "ابحث عن أشخاص للدردشة معهم",
       "searchHint": "ابحث للعثور على أشخاص لإضافتهم",
-      "deletedAccount": "حساب محذوف"
+      "deletedAccount": "حساب محذوف",
+      "groupSettings": "إعدادات المجموعة",
+      "chatSettings": "إعدادات الدردشة",
+      "groupName": "اسم المجموعة",
+      "members": "الأعضاء",
+      "removeMember": "إزالة العضو",
+      "removeMemberConfirm": "إزالة {{name}} من هذه الدردشة؟",
+      "remove": "إزالة",
+      "leaveChat": "مغادرة الدردشة",
+      "leaveChatConfirm": "هل أنت متأكد من رغبتك في المغادرة؟",
+      "leave": "مغادرة",
+      "deleteChat": "حذف الدردشة",
+      "groupRenamed": "تم تغيير اسم المجموعة"
     },
     "settings": {
       "account": "الحساب",

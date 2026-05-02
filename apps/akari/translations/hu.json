@@ -264,7 +264,19 @@
       "start": "Indítás",
       "searchPlaceholder": "Keress embereket csevegéshez",
       "searchHint": "Keresd, hogy embereket adj hozzá",
-      "deletedAccount": "Törölt fiók"
+      "deletedAccount": "Törölt fiók",
+      "groupSettings": "Csoportbeállítások",
+      "chatSettings": "Csevegés beállításai",
+      "groupName": "Csoport neve",
+      "members": "Tagok",
+      "removeMember": "Tag eltávolítása",
+      "removeMemberConfirm": "Eltávolítod {{name}}-t ebből a csevegésből?",
+      "remove": "Eltávolítás",
+      "leaveChat": "Csevegés elhagyása",
+      "leaveChatConfirm": "Biztosan elhagyod?",
+      "leave": "Elhagyás",
+      "deleteChat": "Csevegés törlése",
+      "groupRenamed": "Csoport átnevezve"
     },
     "settings": {
       "account": "Beszámoló",

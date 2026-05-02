@@ -255,7 +255,19 @@
       "start": "Bắt đầu",
       "searchPlaceholder": "Tìm người để trò chuyện",
       "searchHint": "Tìm kiếm để thêm người",
-      "deletedAccount": "Tài khoản đã xoá"
+      "deletedAccount": "Tài khoản đã xoá",
+      "groupSettings": "Cài đặt nhóm",
+      "chatSettings": "Cài đặt trò chuyện",
+      "groupName": "Tên nhóm",
+      "members": "Thành viên",
+      "removeMember": "Xóa thành viên",
+      "removeMemberConfirm": "Xóa {{name}} khỏi trò chuyện này?",
+      "remove": "Xóa",
+      "leaveChat": "Rời trò chuyện",
+      "leaveChatConfirm": "Bạn có chắc chắn muốn rời?",
+      "leave": "Rời",
+      "deleteChat": "Xóa trò chuyện",
+      "groupRenamed": "Đã đổi tên nhóm"
     },
     "settings": {
       "account": "Tài khoản",

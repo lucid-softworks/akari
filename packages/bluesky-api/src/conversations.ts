@@ -146,4 +146,37 @@ export class BlueskyConversations extends BlueskyApiClient {
       body: { convoId },
     });
   }
+
+  /**
+   * Adds members to an existing group conversation.
+   */
+  async addMembers(accessJwt: string, convoId: string, dids: string[]) {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.addMembers', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId, dids },
+    });
+  }
+
+  /**
+   * Removes members from an existing group conversation.
+   */
+  async removeMembers(accessJwt: string, convoId: string, dids: string[]) {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.removeMembers', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId, dids },
+    });
+  }
+
+  /**
+   * Renames a group conversation.
+   */
+  async updateConvoName(accessJwt: string, convoId: string, name: string) {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.updateConvoName', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId, name },
+    });
+  }
 }

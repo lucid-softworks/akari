@@ -264,7 +264,19 @@
       "start": "Starta",
       "searchPlaceholder": "Hitta personer att chatta med",
       "searchHint": "Sök för att lägga till personer",
-      "deletedAccount": "Borttaget konto"
+      "deletedAccount": "Borttaget konto",
+      "groupSettings": "Gruppinställningar",
+      "chatSettings": "Chattinställningar",
+      "groupName": "Gruppens namn",
+      "members": "Medlemmar",
+      "removeMember": "Ta bort medlem",
+      "removeMemberConfirm": "Ta bort {{name}} från den här chatten?",
+      "remove": "Ta bort",
+      "leaveChat": "Lämna chatten",
+      "leaveChatConfirm": "Är du säker på att du vill lämna?",
+      "leave": "Lämna",
+      "deleteChat": "Ta bort chatten",
+      "groupRenamed": "Gruppen har döpts om"
     },
     "settings": {
       "account": "Konto",

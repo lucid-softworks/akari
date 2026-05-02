@@ -255,7 +255,19 @@
       "start": "Dechrau",
       "searchPlaceholder": "Chwilio am bobl i sgwrsio",
       "searchHint": "Chwilio i ychwanegu pobl",
-      "deletedAccount": "Cyfrif wedi'i ddileu"
+      "deletedAccount": "Cyfrif wedi'i ddileu",
+      "groupSettings": "Gosodiadau'r grŵp",
+      "chatSettings": "Gosodiadau sgwrs",
+      "groupName": "Enw'r grŵp",
+      "members": "Aelodau",
+      "removeMember": "Tynnu aelod",
+      "removeMemberConfirm": "Tynnu {{name}} o'r sgwrs?",
+      "remove": "Tynnu",
+      "leaveChat": "Gadael y sgwrs",
+      "leaveChatConfirm": "A ydych chi'n siŵr am adael?",
+      "leave": "Gadael",
+      "deleteChat": "Dileu'r sgwrs",
+      "groupRenamed": "Grŵp wedi'i ailenwi"
     },
     "settings": {
       "account": "Cyfrif",

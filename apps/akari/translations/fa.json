@@ -264,7 +264,19 @@
       "start": "شروع",
       "searchPlaceholder": "افراد را برای گفت‌وگو پیدا کنید",
       "searchHint": "برای افزودن افراد جستجو کنید",
-      "deletedAccount": "حساب حذف‌شده"
+      "deletedAccount": "حساب حذف‌شده",
+      "groupSettings": "تنظیمات گروه",
+      "chatSettings": "تنظیمات گفت‌وگو",
+      "groupName": "نام گروه",
+      "members": "اعضا",
+      "removeMember": "حذف عضو",
+      "removeMemberConfirm": "{{name}} از این گفت‌وگو حذف شود؟",
+      "remove": "حذف",
+      "leaveChat": "ترک گفت‌وگو",
+      "leaveChatConfirm": "آیا مطمئنید که می‌خواهید ترک کنید؟",
+      "leave": "ترک",
+      "deleteChat": "حذف گفت‌وگو",
+      "groupRenamed": "نام گروه تغییر کرد"
     },
     "settings": {
       "account": "حساب",

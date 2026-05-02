@@ -149,7 +149,7 @@ export function MessagesListScreen({
         style={[styles.conversationItem, { borderBottomColor: borderColor }]}
         onPress={() => {
           router.push(
-            `/(tabs)/messages/${encodeURIComponent(item.handle)}?convoId=${encodeURIComponent(item.convoId)}` as any,
+            `/(tabs)/messages/${encodeURIComponent(item.convoId)}?handle=${encodeURIComponent(item.handle)}` as any,
           );
         }}
       >

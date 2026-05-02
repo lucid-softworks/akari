@@ -82,13 +82,14 @@ export default function NewChatScreen() {
     startConvo.mutate(
       { memberDids: selected.map((s) => s.did) },
       {
-        onSuccess: () => {
-          // Until the route is migrated to /[convoId], navigate using the
-          // first peer's handle so 1:1 chats land in the existing screen.
-          // For groups, the existing screen still resolves by handle —
-          // group rendering ships in stage 2.
+        onSuccess: (convo) => {
+          // Route by convoId. Pass handle as a hint so the chat screen can
+          // still resolve from the conversations list when the convoId hasn't
+          // been cached yet (immediately after creation).
           const firstHandle = selected[0].handle;
-          router.replace(`/(tabs)/messages/${encodeURIComponent(firstHandle)}` as any);
+          router.replace(
+            `/(tabs)/messages/${encodeURIComponent(convo.id)}?handle=${encodeURIComponent(firstHandle)}` as any,
+          );
         },
         onError: () => {
           showToast({ message: t('common.error'), type: 'error' });

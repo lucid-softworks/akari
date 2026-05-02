@@ -264,7 +264,19 @@
       "start": "Commencer",
       "searchPlaceholder": "Trouver des personnes",
       "searchHint": "Recherchez pour ajouter des personnes",
-      "deletedAccount": "Compte supprimé"
+      "deletedAccount": "Compte supprimé",
+      "groupSettings": "Paramètres du groupe",
+      "chatSettings": "Paramètres de la conversation",
+      "groupName": "Nom du groupe",
+      "members": "Membres",
+      "removeMember": "Retirer le membre",
+      "removeMemberConfirm": "Retirer {{name}} de cette conversation ?",
+      "remove": "Retirer",
+      "leaveChat": "Quitter la conversation",
+      "leaveChatConfirm": "Voulez-vous vraiment quitter ?",
+      "leave": "Quitter",
+      "deleteChat": "Supprimer la conversation",
+      "groupRenamed": "Groupe renommé"
     },
     "settings": {
       "account": "Compte",

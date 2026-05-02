@@ -264,7 +264,19 @@
       "start": "Začít",
       "searchPlaceholder": "Najdi lidi pro chat",
       "searchHint": "Hledej, abys někoho přidal",
-      "deletedAccount": "Smazaný účet"
+      "deletedAccount": "Smazaný účet",
+      "groupSettings": "Nastavení skupiny",
+      "chatSettings": "Nastavení chatu",
+      "groupName": "Název skupiny",
+      "members": "Členové",
+      "removeMember": "Odebrat člena",
+      "removeMemberConfirm": "Odebrat {{name}} z chatu?",
+      "remove": "Odebrat",
+      "leaveChat": "Opustit chat",
+      "leaveChatConfirm": "Opravdu chcete odejít?",
+      "leave": "Odejít",
+      "deleteChat": "Smazat chat",
+      "groupRenamed": "Skupina přejmenována"
     },
     "settings": {
       "account": "Účet",

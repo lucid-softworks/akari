@@ -509,6 +509,27 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Adds members to a group conversation.
+   */
+  async addConvoMembers(accessJwt: string, convoId: string, dids: string[]) {
+    return this.conversations.addMembers(accessJwt, convoId, dids);
+  }
+
+  /**
+   * Removes members from a group conversation.
+   */
+  async removeConvoMembers(accessJwt: string, convoId: string, dids: string[]) {
+    return this.conversations.removeMembers(accessJwt, convoId, dids);
+  }
+
+  /**
+   * Renames a group conversation.
+   */
+  async updateConvoName(accessJwt: string, convoId: string, name: string) {
+    return this.conversations.updateConvoName(accessJwt, convoId, name);
+  }
+
+  /**
    * Creates a follow record pointing at the supplied DID.
    * @param accessJwt - Valid session token for the actor initiating the follow.
    * @param did - DID of the actor that should be followed.

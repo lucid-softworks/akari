@@ -264,7 +264,19 @@
       "start": "התחל",
       "searchPlaceholder": "חפש אנשים לצ׳אט",
       "searchHint": "חפש כדי להוסיף אנשים",
-      "deletedAccount": "חשבון שנמחק"
+      "deletedAccount": "חשבון שנמחק",
+      "groupSettings": "הגדרות קבוצה",
+      "chatSettings": "הגדרות צ׳אט",
+      "groupName": "שם קבוצה",
+      "members": "חברים",
+      "removeMember": "הסר חבר",
+      "removeMemberConfirm": "להסיר את {{name}} מהצ׳אט?",
+      "remove": "הסר",
+      "leaveChat": "צא מהצ׳אט",
+      "leaveChatConfirm": "האם אתה בטוח שברצונך לצאת?",
+      "leave": "צא",
+      "deleteChat": "מחק צ׳אט",
+      "groupRenamed": "שם הקבוצה שונה"
     },
     "settings": {
       "account": "חֶשְׁבּוֹן",

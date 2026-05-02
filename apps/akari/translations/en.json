@@ -264,7 +264,19 @@
       "start": "Start",
       "searchPlaceholder": "Find people to chat with",
       "searchHint": "Search to find people to add",
-      "deletedAccount": "Deleted account"
+      "deletedAccount": "Deleted account",
+      "groupSettings": "Group settings",
+      "chatSettings": "Chat settings",
+      "groupName": "Group name",
+      "members": "Members",
+      "removeMember": "Remove member",
+      "removeMemberConfirm": "Remove {{name}} from this chat?",
+      "remove": "Remove",
+      "leaveChat": "Leave chat",
+      "leaveChatConfirm": "Are you sure you want to leave?",
+      "leave": "Leave",
+      "deleteChat": "Delete chat",
+      "groupRenamed": "Group renamed"
     },
     "settings": {
       "account": "Account",

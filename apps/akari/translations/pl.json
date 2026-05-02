@@ -255,7 +255,19 @@
       "start": "Rozpocznij",
       "searchPlaceholder": "Znajdź osoby do czatu",
       "searchHint": "Wyszukaj, aby dodać osoby",
-      "deletedAccount": "Usunięte konto"
+      "deletedAccount": "Usunięte konto",
+      "groupSettings": "Ustawienia grupy",
+      "chatSettings": "Ustawienia czatu",
+      "groupName": "Nazwa grupy",
+      "members": "Członkowie",
+      "removeMember": "Usuń członka",
+      "removeMemberConfirm": "Usunąć {{name}} z tego czatu?",
+      "remove": "Usuń",
+      "leaveChat": "Opuść czat",
+      "leaveChatConfirm": "Na pewno chcesz opuścić?",
+      "leave": "Opuść",
+      "deleteChat": "Usuń czat",
+      "groupRenamed": "Grupa została zmieniona"
     },
     "settings": {
       "account": "Konto",

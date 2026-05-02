@@ -264,7 +264,19 @@
       "start": "Aloita",
       "searchPlaceholder": "Etsi henkilöitä",
       "searchHint": "Etsi lisätäksesi ihmisiä",
-      "deletedAccount": "Poistettu tili"
+      "deletedAccount": "Poistettu tili",
+      "groupSettings": "Ryhmäasetukset",
+      "chatSettings": "Keskusteluasetukset",
+      "groupName": "Ryhmän nimi",
+      "members": "Jäsenet",
+      "removeMember": "Poista jäsen",
+      "removeMemberConfirm": "Poistetaanko {{name}} tästä keskustelusta?",
+      "remove": "Poista",
+      "leaveChat": "Poistu keskustelusta",
+      "leaveChatConfirm": "Haluatko varmasti poistua?",
+      "leave": "Poistu",
+      "deleteChat": "Poista keskustelu",
+      "groupRenamed": "Ryhmä nimettiin uudelleen"
     },
     "settings": {
       "account": "Tili",

@@ -255,7 +255,19 @@
       "start": "Start",
       "searchPlaceholder": "Zoek mensen om mee te chatten",
       "searchHint": "Zoek om mensen toe te voegen",
-      "deletedAccount": "Verwijderd account"
+      "deletedAccount": "Verwijderd account",
+      "groupSettings": "Groepsinstellingen",
+      "chatSettings": "Chatinstellingen",
+      "groupName": "Groepsnaam",
+      "members": "Leden",
+      "removeMember": "Lid verwijderen",
+      "removeMemberConfirm": "{{name}} uit deze chat verwijderen?",
+      "remove": "Verwijderen",
+      "leaveChat": "Chat verlaten",
+      "leaveChatConfirm": "Weet je zeker dat je wilt verlaten?",
+      "leave": "Verlaten",
+      "deleteChat": "Chat verwijderen",
+      "groupRenamed": "Groep hernoemd"
     },
     "settings": {
       "account": "Account",
