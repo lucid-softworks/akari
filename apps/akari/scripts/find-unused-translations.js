@@ -186,6 +186,26 @@ function findTranslationUsage(keys) {
         keyUsageCount[key] = (keyUsageCount[key] || 0) + 1;
       }
     });
+
+    // Also pick up indirect usages: props or object properties whose name ends
+    // in "Key" and whose value is a string literal — e.g.
+    //   <Component titleKey="common.foo" />
+    //   { labelKey: 'common.bar' }
+    // The key string is later passed to t(), but the static analysis above
+    // would miss it.
+    const indirectMatches = content.match(/\w*Key\s*[:=]\s*["']([^"']+)["']/g) || [];
+    indirectMatches.forEach((match) => {
+      const inner = match.match(/["']([^"']+)["']/);
+      if (!inner) return;
+      const key = inner[1];
+      // Translation keys are dot-separated paths; values without a dot
+      // (route keys, IDs, etc.) aren't translation keys.
+      if (!key.includes(".")) return;
+      if (!isStorageKey(key)) {
+        usedKeys.add(key);
+        keyUsageCount[key] = (keyUsageCount[key] || 0) + 1;
+      }
+    });
   });
 
   return { usedKeys, keyUsageCount };

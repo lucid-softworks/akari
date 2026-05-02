@@ -59,7 +59,9 @@
       "tryAgain": "Try again",
       "copiedToClipboard": "Copied to clipboard",
       "offline": "You're offline. Changes will sync when you reconnect.",
-      "somethingWentWrong": "Something went wrong"
+      "somethingWentWrong": "Something went wrong",
+      "pendingChats": "Pending chats",
+      "viewPendingChats": "View pending chats"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",

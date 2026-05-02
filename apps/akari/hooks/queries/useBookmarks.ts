@@ -1,7 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { BlueskyApi } from '@/bluesky-api';
-import type { BlueskyBookmarksResponse } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
@@ -14,7 +13,7 @@ export function useBookmarks(limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
-  return useInfiniteQuery<BlueskyBookmarksResponse>({
+  return useInfiniteQuery({
     queryKey: ['bookmarks', limit, currentAccount?.did],
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
