@@ -246,7 +246,8 @@
       "pinToProfile": "Pinio i'r proffil",
       "unpinFromProfile": "Dadbinio",
       "pinnedToast": "Pinwyd y postiad",
-      "unpinnedToast": "Dadbiniwyd y postiad"
+      "unpinnedToast": "Dadbiniwyd y postiad",
+      "addEmoji": "Ychwanegu emoji"
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "A ydych chi'n siŵr am adael?",
       "leave": "Gadael",
       "deleteChat": "Dileu'r sgwrs",
-      "groupRenamed": "Grŵp wedi'i ailenwi"
+      "groupRenamed": "Grŵp wedi'i ailenwi",
+      "reactions": "Ymatebion",
+      "moreEmoji": "Mwy o emoji"
     },
     "settings": {
       "account": "Cyfrif",

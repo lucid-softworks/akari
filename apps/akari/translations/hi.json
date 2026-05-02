@@ -246,7 +246,8 @@
       "pinToProfile": "प्रोफ़ाइल पर पिन करें",
       "unpinFromProfile": "अनपिन करें",
       "pinnedToast": "पोस्ट पिन की गई",
-      "unpinnedToast": "पोस्ट अनपिन की गई"
+      "unpinnedToast": "पोस्ट अनपिन की गई",
+      "addEmoji": "इमोजी जोड़ें"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "क्या आप वाकई छोड़ना चाहते हैं?",
       "leave": "छोड़ें",
       "deleteChat": "चैट हटाएँ",
-      "groupRenamed": "ग्रुप का नाम बदला गया"
+      "groupRenamed": "ग्रुप का नाम बदला गया",
+      "reactions": "प्रतिक्रियाएँ",
+      "moreEmoji": "और इमोजी"
     },
     "settings": {
       "account": "खाता",

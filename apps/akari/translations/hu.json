@@ -246,7 +246,8 @@
       "pinToProfile": "Rögzítés a profilra",
       "unpinFromProfile": "Rögzítés feloldása",
       "pinnedToast": "Bejegyzés rögzítve",
-      "unpinnedToast": "Rögzítés feloldva"
+      "unpinnedToast": "Rögzítés feloldva",
+      "addEmoji": "Emoji hozzáadása"
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Biztosan elhagyod?",
       "leave": "Elhagyás",
       "deleteChat": "Csevegés törlése",
-      "groupRenamed": "Csoport átnevezve"
+      "groupRenamed": "Csoport átnevezve",
+      "reactions": "Reakciók",
+      "moreEmoji": "Több emoji"
     },
     "settings": {
       "account": "Beszámoló",

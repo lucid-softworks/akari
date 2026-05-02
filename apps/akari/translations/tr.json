@@ -246,7 +246,8 @@
       "pinToProfile": "Profile sabitle",
       "unpinFromProfile": "Sabitlemeyi kaldır",
       "pinnedToast": "Gönderi sabitlendi",
-      "unpinnedToast": "Gönderi sabitlemesi kaldırıldı"
+      "unpinnedToast": "Gönderi sabitlemesi kaldırıldı",
+      "addEmoji": "Emoji ekle"
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Ayrılmak istediğinden emin misin?",
       "leave": "Ayrıl",
       "deleteChat": "Sohbeti sil",
-      "groupRenamed": "Grup yeniden adlandırıldı"
+      "groupRenamed": "Grup yeniden adlandırıldı",
+      "reactions": "Tepkiler",
+      "moreEmoji": "Daha fazla emoji"
     },
     "settings": {
       "account": "Hesap",

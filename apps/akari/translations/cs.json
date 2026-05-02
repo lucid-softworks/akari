@@ -246,7 +246,8 @@
       "pinToProfile": "Připnout k profilu",
       "unpinFromProfile": "Odepnout",
       "pinnedToast": "Příspěvek připnut",
-      "unpinnedToast": "Příspěvek odepnut"
+      "unpinnedToast": "Příspěvek odepnut",
+      "addEmoji": "Přidat emoji"
     },
     "gif": {
       "selectGif": "Vyberte GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Opravdu chcete odejít?",
       "leave": "Odejít",
       "deleteChat": "Smazat chat",
-      "groupRenamed": "Skupina přejmenována"
+      "groupRenamed": "Skupina přejmenována",
+      "reactions": "Reakce",
+      "moreEmoji": "Další emoji"
     },
     "settings": {
       "account": "Účet",

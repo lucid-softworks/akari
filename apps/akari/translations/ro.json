@@ -246,7 +246,8 @@
       "pinToProfile": "Fixează pe profil",
       "unpinFromProfile": "Anulează fixarea",
       "pinnedToast": "Postarea a fost fixată",
-      "unpinnedToast": "Fixarea a fost anulată"
+      "unpinnedToast": "Fixarea a fost anulată",
+      "addEmoji": "Adaugă emoji"
     },
     "gif": {
       "selectGif": "Selectați GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Sigur vrei să pleci?",
       "leave": "Pleacă",
       "deleteChat": "Șterge chatul",
-      "groupRenamed": "Grup redenumit"
+      "groupRenamed": "Grup redenumit",
+      "reactions": "Reacții",
+      "moreEmoji": "Mai multe emoji"
     },
     "settings": {
       "account": "Cont",

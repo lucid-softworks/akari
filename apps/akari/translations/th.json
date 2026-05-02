@@ -246,7 +246,8 @@
       "pinToProfile": "ปักหมุดที่โปรไฟล์",
       "unpinFromProfile": "ถอนหมุด",
       "pinnedToast": "ปักหมุดโพสต์แล้ว",
-      "unpinnedToast": "ถอนหมุดโพสต์แล้ว"
+      "unpinnedToast": "ถอนหมุดโพสต์แล้ว",
+      "addEmoji": "เพิ่มอีโมจิ"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "คุณแน่ใจว่าต้องการออก?",
       "leave": "ออก",
       "deleteChat": "ลบแชท",
-      "groupRenamed": "เปลี่ยนชื่อกลุ่มแล้ว"
+      "groupRenamed": "เปลี่ยนชื่อกลุ่มแล้ว",
+      "reactions": "การตอบสนอง",
+      "moreEmoji": "อีโมจิเพิ่มเติม"
     },
     "settings": {
       "account": "บัญชี",

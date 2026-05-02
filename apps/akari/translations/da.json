@@ -246,7 +246,8 @@
       "pinToProfile": "Fastgør på profil",
       "unpinFromProfile": "Fjern fastgørelse",
       "pinnedToast": "Opslag fastgjort",
-      "unpinnedToast": "Fastgørelse fjernet"
+      "unpinnedToast": "Fastgørelse fjernet",
+      "addEmoji": "Tilføj emoji"
     },
     "gif": {
       "selectGif": "Vælg GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Er du sikker på, at du vil forlade?",
       "leave": "Forlad",
       "deleteChat": "Slet chat",
-      "groupRenamed": "Gruppen er omdøbt"
+      "groupRenamed": "Gruppen er omdøbt",
+      "reactions": "Reaktioner",
+      "moreEmoji": "Flere emoji"
     },
     "settings": {
       "account": "Konto",

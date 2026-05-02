@@ -246,7 +246,8 @@
       "pinToProfile": "Aan profiel vastmaken",
       "unpinFromProfile": "Losmaken",
       "pinnedToast": "Bericht vastgemaakt",
-      "unpinnedToast": "Bericht losgemaakt"
+      "unpinnedToast": "Bericht losgemaakt",
+      "addEmoji": "Emoji toevoegen"
     },
     "messages": {
       "typeMessage": "Typ een bericht...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Weet je zeker dat je wilt verlaten?",
       "leave": "Verlaten",
       "deleteChat": "Chat verwijderen",
-      "groupRenamed": "Groep hernoemd"
+      "groupRenamed": "Groep hernoemd",
+      "reactions": "Reacties",
+      "moreEmoji": "Meer emoji"
     },
     "settings": {
       "account": "Account",

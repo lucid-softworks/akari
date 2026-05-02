@@ -246,7 +246,8 @@
       "pinToProfile": "Pripni na profil",
       "unpinFromProfile": "Odpni",
       "pinnedToast": "Objava je pripeta",
-      "unpinnedToast": "Objava je odpeta"
+      "unpinnedToast": "Objava je odpeta",
+      "addEmoji": "Dodaj emoji"
     },
     "gif": {
       "selectGif": "Izberite GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Ali res želite oditi?",
       "leave": "Zapusti",
       "deleteChat": "Izbriši klepet",
-      "groupRenamed": "Skupina preimenovana"
+      "groupRenamed": "Skupina preimenovana",
+      "reactions": "Odzivi",
+      "moreEmoji": "Več emojijev"
     },
     "settings": {
       "account": "Račun",

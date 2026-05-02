@@ -16,6 +16,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { EmojiPicker } from '@/components/EmojiPicker';
+import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -300,6 +302,8 @@ export default function ConversationScreen() {
   const sendMessageMutation = useSendMessage();
   const reactionMutation = useMessageReaction();
   const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
+  const [reactionsDialogFor, setReactionsDialogFor] = useState<string | null>(null);
+  const [emojiPickerFor, setEmojiPickerFor] = useState<string | null>(null);
 
   const handleToggleReaction = (messageId: string, value: string) => {
     if (!conversation?.convoId || !currentAccount?.did) return;
@@ -465,6 +469,17 @@ export default function ConversationScreen() {
                 <ThemedText style={styles.reactionPickerEmoji}>{emoji}</ThemedText>
               </TouchableOpacity>
             ))}
+            <TouchableOpacity
+              onPress={() => {
+                setReactionPickerFor(null);
+                setEmojiPickerFor(item.id);
+              }}
+              hitSlop={6}
+              style={styles.reactionPickerSlot}
+              accessibilityLabel={t('messages.moreEmoji')}
+            >
+              <IconSymbol name="plus.circle" size={24} color={iconColor} />
+            </TouchableOpacity>
           </View>
         ) : null}
 
@@ -511,6 +526,8 @@ export default function ConversationScreen() {
               <TouchableOpacity
                 key={emoji}
                 onPress={() => handleToggleReaction(item.id, emoji)}
+                onLongPress={() => setReactionsDialogFor(item.id)}
+                delayLongPress={250}
                 style={[
                   styles.reactionChip,
                   { borderColor },
@@ -699,6 +716,34 @@ export default function ConversationScreen() {
         />
       )}
       {inputBar}
+
+      <ReactionsDialog
+        visible={!!reactionsDialogFor}
+        reactions={messages.find((m) => m.id === reactionsDialogFor)?.reactions ?? []}
+        reactors={[
+          ...(currentAccount
+            ? [{
+                did: currentAccount.did,
+                handle: currentAccount.handle,
+                displayName: currentAccount.displayName,
+                avatar: currentAccount.avatar,
+              }]
+            : []),
+          ...(conversation?.members ?? []),
+        ]}
+        onDismiss={() => setReactionsDialogFor(null)}
+      />
+
+      <EmojiPicker
+        visible={!!emojiPickerFor}
+        onClose={() => setEmojiPickerFor(null)}
+        onSelectEmoji={(emoji) => {
+          if (emojiPickerFor) {
+            handleToggleReaction(emojiPickerFor, emoji);
+          }
+          setEmojiPickerFor(null);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }

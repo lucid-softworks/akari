@@ -246,7 +246,8 @@
       "pinToProfile": "Καρφίτσωμα στο προφίλ",
       "unpinFromProfile": "Ξεκαρφίτσωμα",
       "pinnedToast": "Η ανάρτηση καρφιτσώθηκε",
-      "unpinnedToast": "Η ανάρτηση ξεκαρφιτσώθηκε"
+      "unpinnedToast": "Η ανάρτηση ξεκαρφιτσώθηκε",
+      "addEmoji": "Προσθήκη emoji"
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Σίγουρα θέλεις να αποχωρήσεις;",
       "leave": "Αποχώρηση",
       "deleteChat": "Διαγραφή συνομιλίας",
-      "groupRenamed": "Η ομάδα μετονομάστηκε"
+      "groupRenamed": "Η ομάδα μετονομάστηκε",
+      "reactions": "Αντιδράσεις",
+      "moreEmoji": "Περισσότερα emoji"
     },
     "settings": {
       "account": "Λογαριασμός",

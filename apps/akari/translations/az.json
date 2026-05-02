@@ -246,7 +246,8 @@
       "pinToProfile": "Profilə sancın",
       "unpinFromProfile": "Sancağı götür",
       "pinnedToast": "Paylaşım sancıldı",
-      "unpinnedToast": "Sancaq götürüldü"
+      "unpinnedToast": "Sancaq götürüldü",
+      "addEmoji": "Emoji əlavə et"
     },
     "gif": {
       "selectGif": "Gif seçin",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Çıxmaq istədiyinizə əminsiniz?",
       "leave": "Çıx",
       "deleteChat": "Söhbəti sil",
-      "groupRenamed": "Qrupun adı dəyişdirildi"
+      "groupRenamed": "Qrupun adı dəyişdirildi",
+      "reactions": "Reaksiyalar",
+      "moreEmoji": "Daha çox emoji"
     },
     "settings": {
       "account": "Hesab",

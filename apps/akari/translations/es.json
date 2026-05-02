@@ -246,7 +246,8 @@
       "pinToProfile": "Fijar en el perfil",
       "unpinFromProfile": "Dejar de fijar",
       "pinnedToast": "Publicación fijada",
-      "unpinnedToast": "Publicación desfijada"
+      "unpinnedToast": "Publicación desfijada",
+      "addEmoji": "Añadir emoji"
     },
     "gif": {
       "selectGif": "Seleccionar GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "¿Seguro que quieres salir?",
       "leave": "Salir",
       "deleteChat": "Eliminar chat",
-      "groupRenamed": "Grupo renombrado"
+      "groupRenamed": "Grupo renombrado",
+      "reactions": "Reacciones",
+      "moreEmoji": "Más emojis"
     },
     "settings": {
       "account": "Cuenta",

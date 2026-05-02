@@ -246,7 +246,8 @@
       "pinToProfile": "Kiinnitä profiiliin",
       "unpinFromProfile": "Irrota",
       "pinnedToast": "Julkaisu kiinnitetty",
-      "unpinnedToast": "Julkaisu irrotettu"
+      "unpinnedToast": "Julkaisu irrotettu",
+      "addEmoji": "Lisää emoji"
     },
     "gif": {
       "selectGif": "Valitse GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Haluatko varmasti poistua?",
       "leave": "Poistu",
       "deleteChat": "Poista keskustelu",
-      "groupRenamed": "Ryhmä nimettiin uudelleen"
+      "groupRenamed": "Ryhmä nimettiin uudelleen",
+      "reactions": "Reaktiot",
+      "moreEmoji": "Lisää emojeja"
     },
     "settings": {
       "account": "Tili",

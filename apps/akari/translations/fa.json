@@ -246,7 +246,8 @@
       "pinToProfile": "سنجاق به نمایه",
       "unpinFromProfile": "برداشتن سنجاق",
       "pinnedToast": "پست سنجاق شد",
-      "unpinnedToast": "سنجاق پست برداشته شد"
+      "unpinnedToast": "سنجاق پست برداشته شد",
+      "addEmoji": "افزودن ایموجی"
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "آیا مطمئنید که می‌خواهید ترک کنید؟",
       "leave": "ترک",
       "deleteChat": "حذف گفت‌وگو",
-      "groupRenamed": "نام گروه تغییر کرد"
+      "groupRenamed": "نام گروه تغییر کرد",
+      "reactions": "واکنش‌ها",
+      "moreEmoji": "ایموجی‌های بیشتر"
     },
     "settings": {
       "account": "حساب",

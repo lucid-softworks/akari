@@ -246,7 +246,8 @@
       "pinToProfile": "프로필에 고정",
       "unpinFromProfile": "고정 해제",
       "pinnedToast": "게시물이 고정되었습니다",
-      "unpinnedToast": "게시물 고정이 해제되었습니다"
+      "unpinnedToast": "게시물 고정이 해제되었습니다",
+      "addEmoji": "이모지 추가"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "정말 나가시겠어요?",
       "leave": "나가기",
       "deleteChat": "채팅 삭제",
-      "groupRenamed": "그룹 이름이 변경되었습니다"
+      "groupRenamed": "그룹 이름이 변경되었습니다",
+      "reactions": "반응",
+      "moreEmoji": "더 많은 이모지"
     },
     "settings": {
       "account": "계정",

@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyEmbed } from '@/bluesky-api';
+import { EmojiPicker } from '@/components/EmojiPicker';
 import { GifPicker } from '@/components/GifPicker';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
@@ -139,6 +140,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const [text, setText] = useState('');
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+  const [textSelection, setTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
   const createPostMutation = useCreatePost();
   const { showToast } = useToast();
   const { bottom, top } = useSafeAreaInsets();
@@ -229,6 +232,18 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
   const handleAddGif = () => {
     setGifPickerVisible(true);
+  };
+
+  const handleInsertEmoji = (emoji: string) => {
+    // Insert the emoji at the current cursor position. Falls back to
+    // appending to the end when the user hasn't selected anywhere yet.
+    const { start, end } = textSelection;
+    const safeStart = Math.min(Math.max(start, 0), text.length);
+    const safeEnd = Math.min(Math.max(end, safeStart), text.length);
+    setText(text.slice(0, safeStart) + emoji + text.slice(safeEnd));
+    const next = safeStart + emoji.length;
+    setTextSelection({ start: next, end: next });
+    setEmojiPickerVisible(false);
   };
 
   const handleSelectGif = (gif: AttachedImage) => {
@@ -341,6 +356,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 ]}
                 value={text}
                 onChangeText={setText}
+                onSelectionChange={(e) => setTextSelection(e.nativeEvent.selection)}
                 placeholder={replyTo ? t('post.replyPlaceholder') : t('post.postPlaceholder')}
                 placeholderTextColor={iconColor}
                 multiline
@@ -420,6 +436,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               >
                 <IconSymbol name="gif" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => setEmojiPickerVisible(true)}
+                accessibilityLabel={t('post.addEmoji')}
+              >
+                <IconSymbol name="face.smiling" size={20} color={tintColor} />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.footerRight}>
@@ -443,6 +466,11 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
       {/* GIF Picker Modal */}
       <GifPicker visible={gifPickerVisible} onClose={() => setGifPickerVisible(false)} onSelectGif={handleSelectGif} />
+      <EmojiPicker
+        visible={emojiPickerVisible}
+        onClose={() => setEmojiPickerVisible(false)}
+        onSelectEmoji={handleInsertEmoji}
+      />
     </Modal>
   );
 }

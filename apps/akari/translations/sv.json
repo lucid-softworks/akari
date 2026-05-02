@@ -246,7 +246,8 @@
       "pinToProfile": "Fäst på profil",
       "unpinFromProfile": "Lossa",
       "pinnedToast": "Inlägg fäst",
-      "unpinnedToast": "Inlägg lossat"
+      "unpinnedToast": "Inlägg lossat",
+      "addEmoji": "Lägg till emoji"
     },
     "gif": {
       "selectGif": "Välj GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Är du säker på att du vill lämna?",
       "leave": "Lämna",
       "deleteChat": "Ta bort chatten",
-      "groupRenamed": "Gruppen har döpts om"
+      "groupRenamed": "Gruppen har döpts om",
+      "reactions": "Reaktioner",
+      "moreEmoji": "Fler emoji"
     },
     "settings": {
       "account": "Konto",

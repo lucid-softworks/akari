@@ -246,7 +246,8 @@
       "pinToProfile": "プロフィールに固定",
       "unpinFromProfile": "固定を解除",
       "pinnedToast": "ポストを固定しました",
-      "unpinnedToast": "ポストの固定を解除しました"
+      "unpinnedToast": "ポストの固定を解除しました",
+      "addEmoji": "絵文字を追加"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "本当に退出しますか？",
       "leave": "退出",
       "deleteChat": "チャットを削除",
-      "groupRenamed": "グループの名前を変更しました"
+      "groupRenamed": "グループの名前を変更しました",
+      "reactions": "リアクション",
+      "moreEmoji": "他の絵文字"
     },
     "settings": {
       "account": "アカウント",

@@ -246,7 +246,8 @@
       "pinToProfile": "Fixar no perfil",
       "unpinFromProfile": "Desafixar",
       "pinnedToast": "Publicação fixada",
-      "unpinnedToast": "Publicação desafixada"
+      "unpinnedToast": "Publicação desafixada",
+      "addEmoji": "Adicionar emoji"
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Tem a certeza que quer sair?",
       "leave": "Sair",
       "deleteChat": "Eliminar chat",
-      "groupRenamed": "Grupo renomeado"
+      "groupRenamed": "Grupo renomeado",
+      "reactions": "Reações",
+      "moreEmoji": "Mais emoji"
     },
     "settings": {
       "account": "Conta",

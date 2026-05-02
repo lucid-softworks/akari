@@ -246,7 +246,8 @@
       "pinToProfile": "An Profil anpinnen",
       "unpinFromProfile": "Anpinnen aufheben",
       "pinnedToast": "Beitrag angepinnt",
-      "unpinnedToast": "Anpinnen aufgehoben"
+      "unpinnedToast": "Anpinnen aufgehoben",
+      "addEmoji": "Emoji hinzufügen"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Möchtest du den Chat wirklich verlassen?",
       "leave": "Verlassen",
       "deleteChat": "Chat löschen",
-      "groupRenamed": "Gruppe umbenannt"
+      "groupRenamed": "Gruppe umbenannt",
+      "reactions": "Reaktionen",
+      "moreEmoji": "Mehr Emojis"
     },
     "settings": {
       "account": "Konto",

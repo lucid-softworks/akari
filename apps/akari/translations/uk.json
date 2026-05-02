@@ -246,7 +246,8 @@
       "pinToProfile": "Закріпити в профілі",
       "unpinFromProfile": "Відкріпити",
       "pinnedToast": "Допис закріплено",
-      "unpinnedToast": "Допис відкріплено"
+      "unpinnedToast": "Допис відкріплено",
+      "addEmoji": "Додати емодзі"
     },
     "gif": {
       "selectGif": "Виберіть GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Ви впевнені, що хочете вийти?",
       "leave": "Покинути",
       "deleteChat": "Видалити чат",
-      "groupRenamed": "Групу перейменовано"
+      "groupRenamed": "Групу перейменовано",
+      "reactions": "Реакції",
+      "moreEmoji": "Більше емодзі"
     },
     "settings": {
       "account": "Рахунок",

@@ -246,7 +246,8 @@
       "pinToProfile": "הצמד לפרופיל",
       "unpinFromProfile": "ביטול הצמדה",
       "pinnedToast": "הפוסט הוצמד",
-      "unpinnedToast": "ההצמדה בוטלה"
+      "unpinnedToast": "ההצמדה בוטלה",
+      "addEmoji": "הוסף אמוג׳י"
     },
     "gif": {
       "selectGif": "בחר GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "האם אתה בטוח שברצונך לצאת?",
       "leave": "צא",
       "deleteChat": "מחק צ׳אט",
-      "groupRenamed": "שם הקבוצה שונה"
+      "groupRenamed": "שם הקבוצה שונה",
+      "reactions": "תגובות",
+      "moreEmoji": "עוד אמוג׳י"
     },
     "settings": {
       "account": "חֶשְׁבּוֹן",

@@ -246,7 +246,8 @@
       "pinToProfile": "Закрепить в профиле",
       "unpinFromProfile": "Открепить",
       "pinnedToast": "Запись закреплена",
-      "unpinnedToast": "Запись откреплена"
+      "unpinnedToast": "Запись откреплена",
+      "addEmoji": "Добавить эмодзи"
     },
     "messages": {
       "typeMessage": "Введите сообщение...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Вы уверены, что хотите выйти?",
       "leave": "Выйти",
       "deleteChat": "Удалить чат",
-      "groupRenamed": "Группа переименована"
+      "groupRenamed": "Группа переименована",
+      "reactions": "Реакции",
+      "moreEmoji": "Больше эмодзи"
     },
     "settings": {
       "account": "Аккаунт",

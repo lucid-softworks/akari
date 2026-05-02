@@ -246,7 +246,8 @@
       "pinToProfile": "Закачи в профила",
       "unpinFromProfile": "Откачи",
       "pinnedToast": "Публикацията е закачена",
-      "unpinnedToast": "Публикацията е откачена"
+      "unpinnedToast": "Публикацията е откачена",
+      "addEmoji": "Добави емоджи"
     },
     "gif": {
       "selectGif": "Изберете GIF",
@@ -276,7 +277,9 @@
       "leaveChatConfirm": "Сигурен ли си, че искаш да напуснеш?",
       "leave": "Напусни",
       "deleteChat": "Изтрий чата",
-      "groupRenamed": "Групата е преименувана"
+      "groupRenamed": "Групата е преименувана",
+      "reactions": "Реакции",
+      "moreEmoji": "Още емоджи"
     },
     "settings": {
       "account": "Акаунт",

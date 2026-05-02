@@ -246,7 +246,8 @@
       "pinToProfile": "Przypnij do profilu",
       "unpinFromProfile": "Odepnij",
       "pinnedToast": "Post przypięty",
-      "unpinnedToast": "Post odpięty"
+      "unpinnedToast": "Post odpięty",
+      "addEmoji": "Dodaj emoji"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Na pewno chcesz opuścić?",
       "leave": "Opuść",
       "deleteChat": "Usuń czat",
-      "groupRenamed": "Grupa została zmieniona"
+      "groupRenamed": "Grupa została zmieniona",
+      "reactions": "Reakcje",
+      "moreEmoji": "Więcej emoji"
     },
     "settings": {
       "account": "Konto",

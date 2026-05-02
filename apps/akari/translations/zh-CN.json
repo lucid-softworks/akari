@@ -246,7 +246,8 @@
       "pinToProfile": "置顶到个人资料",
       "unpinFromProfile": "取消置顶",
       "pinnedToast": "帖子已置顶",
-      "unpinnedToast": "帖子已取消置顶"
+      "unpinnedToast": "帖子已取消置顶",
+      "addEmoji": "添加表情"
     },
     "messages": {
       "typeMessage": "输入消息...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "确定要退出吗？",
       "leave": "退出",
       "deleteChat": "删除聊天",
-      "groupRenamed": "群组已重命名"
+      "groupRenamed": "群组已重命名",
+      "reactions": "反应",
+      "moreEmoji": "更多表情"
     },
     "settings": {
       "account": "账户",

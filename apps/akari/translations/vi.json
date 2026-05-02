@@ -246,7 +246,8 @@
       "pinToProfile": "Ghim vào hồ sơ",
       "unpinFromProfile": "Bỏ ghim",
       "pinnedToast": "Đã ghim bài đăng",
-      "unpinnedToast": "Đã bỏ ghim bài đăng"
+      "unpinnedToast": "Đã bỏ ghim bài đăng",
+      "addEmoji": "Thêm biểu tượng"
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",
@@ -267,7 +268,9 @@
       "leaveChatConfirm": "Bạn có chắc chắn muốn rời?",
       "leave": "Rời",
       "deleteChat": "Xóa trò chuyện",
-      "groupRenamed": "Đã đổi tên nhóm"
+      "groupRenamed": "Đã đổi tên nhóm",
+      "reactions": "Phản ứng",
+      "moreEmoji": "Thêm biểu tượng"
     },
     "settings": {
       "account": "Tài khoản",
