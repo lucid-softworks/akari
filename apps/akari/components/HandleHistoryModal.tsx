@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -61,8 +61,12 @@ export function HandleHistoryModal({ visible, onClose, did, currentHandle }: Han
   );
 
   return (
-    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={onClose}>
-      <View style={styles.overlay}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+      onRequestClose={onClose}
+    >
         <ThemedView style={[styles.container, { backgroundColor }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
@@ -95,25 +99,13 @@ export function HandleHistoryModal({ visible, onClose, did, currentHandle }: Han
             )}
           </View>
         </ThemedView>
-      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
   container: {
-    width: '95%',
-    maxWidth: 500,
-    maxHeight: '80%',
-    borderRadius: 12,
-    padding: 0,
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

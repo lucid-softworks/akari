@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -83,22 +83,15 @@ export const LanguageSelector = () => {
 
       <Modal
         visible={isModalVisible}
-        transparent={true}
-        animationType="fade"
+        animationType="slide"
+        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <TouchableOpacity
-          accessibilityLabel={t('common.cancel')}
-          accessibilityRole="button"
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsModalVisible(false)}
-        >
           <ThemedView
             accessible
             accessibilityRole="menu"
             accessibilityLabel={t('settings.language')}
-            style={styles.modalContent}
+            style={styles.nativeSheet}
           >
             <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
             <ScrollView style={styles.languageList}>
@@ -128,7 +121,6 @@ export const LanguageSelector = () => {
               ))}
             </ScrollView>
           </ThemedView>
-        </TouchableOpacity>
       </Modal>
     </ThemedView>
   );
@@ -177,16 +169,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.6,
   },
-  modalOverlay: {
+  nativeSheet: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '80%',
-    maxHeight: '70%',
-    borderRadius: 12,
     padding: 16,
   },
   modalTitle: {

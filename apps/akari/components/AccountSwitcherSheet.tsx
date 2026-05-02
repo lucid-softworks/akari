@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import React, { useCallback, useMemo } from 'react';
 import {
   Modal,
-  Pressable,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -39,7 +39,6 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
   const dialogManager = useDialogManager();
 
   const sheetBackground = useThemeColor({ light: '#FFFFFF', dark: '#0F172A' }, 'background');
-  const backdropColor = 'rgba(12, 18, 32, 0.65)';
   const secondaryTextColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const avatarBackground = useThemeColor({ light: '#E0E7FF', dark: '#1E2537' }, 'background');
@@ -97,28 +96,21 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
   }
 
   return (
-    <Modal visible transparent animationType="slide" onRequestClose={onClose}>
-      <View style={[styles.overlay, { backgroundColor: backdropColor }]}>
-        <Pressable
-          style={StyleSheet.absoluteFill}
-          onPress={onClose}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.cancel')}
-        />
-        <ThemedView
-          style={[
-            styles.sheet,
-            {
-              backgroundColor: sheetBackground,
-              paddingBottom: bottom + 16,
-              borderTopColor: borderColor,
-            },
-          ]}
-        >
-          <View style={styles.handleContainer}>
-            <View style={[styles.handle, { backgroundColor: handleColor }]} />
-          </View>
-
+    <Modal
+      visible
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+      onRequestClose={onClose}
+    >
+      <ThemedView
+        style={[
+          styles.nativeSheet,
+          {
+            backgroundColor: sheetBackground,
+            paddingBottom: bottom + 16,
+          },
+        ]}
+      >
           <View style={styles.header}>
             <ThemedText type="defaultSemiBold">{t('common.switchAccount')}</ThemedText>
             <ThemedText style={[styles.subtitle, { color: secondaryTextColor }]}>
@@ -200,32 +192,16 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
               {t('common.addAccount')}
             </ThemedText>
           </TouchableOpacity>
-        </ThemedView>
-      </View>
+      </ThemedView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  nativeSheet: {
     flex: 1,
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
     paddingHorizontal: 20,
-    paddingTop: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  handleContainer: {
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  handle: {
-    width: 48,
-    height: 5,
-    borderRadius: 999,
+    paddingTop: 16,
   },
   header: {
     gap: 2,

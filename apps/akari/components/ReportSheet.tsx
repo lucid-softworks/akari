@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import {
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -53,7 +53,6 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
   ];
 
   const sheetBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
   const borderColor = useThemeColor({}, 'border');
   const inputBg = useThemeColor({ light: '#f5f5f5', dark: '#2c2c2e' }, 'background');
@@ -91,24 +90,13 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
   const isSubmitting = reportMutation.isPending;
 
   return (
-    <Modal transparent animationType="slide" visible={visible} onRequestClose={handleClose}>
-      <TouchableWithoutFeedback onPress={handleClose}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <ThemedView
-              style={[
-                styles.sheet,
-                {
-                  backgroundColor: sheetBg,
-                  paddingBottom: insets.bottom + spacing.lg,
-                  maxWidth: 420,
-                },
-              ]}
-            >
-              <View style={styles.handleBarContainer}>
-                <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
-              </View>
-
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+      onRequestClose={handleClose}
+    >
+      <ThemedView style={[styles.nativeSheet, { backgroundColor: sheetBg, paddingBottom: insets.bottom + spacing.lg }]}>
               <ThemedText style={styles.title}>
                 {subject?.type === 'post' ? t('report.reportPost') : t('report.reportAccount')}
               </ThemedText>
@@ -177,35 +165,15 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                   </ThemedText>
                 </TouchableOpacity>
               </View>
-            </ThemedView>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
+      </ThemedView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  nativeSheet: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  sheet: {
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    width: '100%',
-    maxHeight: '80%',
-  },
-  handleBarContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  handleBar: {
-    width: 36,
-    height: 4,
-    borderRadius: radius.full,
+    paddingTop: spacing.md,
   },
   title: {
     fontSize: fontSize.xxl,

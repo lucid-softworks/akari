@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
@@ -59,8 +59,12 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
     banner !== profile.banner;
 
   return (
-    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={handleCancel}>
-      <View style={styles.overlay}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+      onRequestClose={handleCancel}
+    >
         <ThemedView style={[styles.container, { backgroundColor }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
@@ -166,23 +170,13 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
             </View>
           </View>
         </ThemedView>
-      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
-    width: '95%',
-    maxWidth: 500,
-    borderRadius: radius.md,
-    padding: 0,
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

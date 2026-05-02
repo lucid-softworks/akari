@@ -49,7 +49,6 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
     'background',
   );
 
-  const isMobile = Platform.OS !== 'web';
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -85,20 +84,11 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
   return (
     <Modal
       visible={visible}
-      transparent
-      animationType={isMobile ? 'slide' : 'fade'}
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
-      statusBarTranslucent
     >
-      <View style={[styles.overlay, isMobile && styles.mobileOverlay]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
-        <ThemedView style={[styles.container, { backgroundColor }, isMobile && styles.mobileContainer]}>
-          {/* Mobile drag handle */}
-          {isMobile && (
-            <View style={styles.dragHandleContainer} accessibilityRole="button" accessibilityLabel="Drag to resize">
-              <View style={[styles.dragHandle, { backgroundColor: borderColor }]} />
-            </View>
-          )}
+        <ThemedView style={[styles.nativeSheet, { backgroundColor }]}>
 
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
@@ -290,39 +280,13 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             <View style={styles.bottomPadding} />
           </ScrollView>
         </ThemedView>
-      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  nativeSheet: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  mobileOverlay: {
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
-  container: {
-    flex: 1,
-    maxHeight: '90%',
-    maxWidth: 600,
-    width: '100%',
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  mobileContainer: {
-    maxHeight: '90%',
-    maxWidth: '100%',
-    width: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
   },
   dragHandleContainer: {
     alignItems: 'center',
