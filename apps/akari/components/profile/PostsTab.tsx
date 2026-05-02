@@ -142,6 +142,7 @@ export function PostsTab({ handle, ListHeaderComponent, StickyTabComponent, onRe
       onEndReachedThreshold={0.3}
       showsVerticalScrollIndicator={false}
       stickyHeaderIndices={stickyIndices}
+      stickyHeaderHiddenOnScroll
       onRefresh={onRefresh}
       refreshing={refreshing}
       contentContainerStyle={styles.listContent}
