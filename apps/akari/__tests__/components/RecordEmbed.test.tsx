@@ -258,9 +258,10 @@ describe('RecordEmbed Component', () => {
       record: {
         ...createMockEmbed().record,
         embed: {
+          $type: 'app.bsky.embed.images#view',
           images: [
-            { fullsize: 'https://example.com/img.jpg', alt: 'img', image: { mimeType: 'image/jpeg' } },
-            { fullsize: 'https://example.com/vid.mp4', image: { mimeType: 'video/mp4' } },
+            { thumb: 'https://example.com/img-thumb.jpg', fullsize: 'https://example.com/img.jpg', alt: 'img', image: { ref: { $link: 'bafy-img' }, mimeType: 'image/jpeg', size: 0 } },
+            { thumb: 'https://example.com/vid-thumb.jpg', fullsize: 'https://example.com/vid.mp4', alt: '', image: { ref: { $link: 'bafy-vid' }, mimeType: 'video/mp4', size: 0 } },
           ],
         },
       },
@@ -279,7 +280,8 @@ describe('RecordEmbed Component', () => {
         ...createMockEmbed().record,
         embeds: [
           {
-            images: [{ fullsize: 'https://example.com/alt-img.jpg', alt: 'alt' }],
+            $type: 'app.bsky.embed.images#view',
+            images: [{ thumb: 'https://example.com/alt-thumb.jpg', fullsize: 'https://example.com/alt-img.jpg', alt: 'alt' }],
           },
         ],
       },
@@ -298,7 +300,7 @@ describe('RecordEmbed Component', () => {
         embed={createMockEmbed({
           record: {
             ...baseRecord,
-            embed: { external: { uri: 'https://example.com/anim.gif' } },
+            embed: { $type: 'app.bsky.embed.external#view', external: { uri: 'https://example.com/anim.gif', title: '', description: '' } },
           },
         })}
       />,
@@ -310,7 +312,7 @@ describe('RecordEmbed Component', () => {
         embed={createMockEmbed({
           record: {
             ...baseRecord,
-            embed: { external: { uri: 'https://youtube.com/watch?v=1' } },
+            embed: { $type: 'app.bsky.embed.external#view', external: { uri: 'https://youtube.com/watch?v=1', title: '', description: '' } },
           },
         })}
       />,
@@ -322,7 +324,7 @@ describe('RecordEmbed Component', () => {
         embed={createMockEmbed({
           record: {
             ...baseRecord,
-            embed: { external: { uri: 'https://example.com' } },
+            embed: { $type: 'app.bsky.embed.external#view', external: { uri: 'https://example.com', title: '', description: '' } },
           },
         })}
       />,
@@ -372,11 +374,12 @@ describe('RecordEmbed Component', () => {
     const blocked = (viewer: any) =>
       createMockEmbed({
         record: {
+          ...createMockEmbed().record,
           uri: 'at://did:plc:blocked/app.bsky.feed.post/999',
           cid: 'blocked-cid',
           record: {
             $type: 'app.bsky.embed.record#viewBlocked',
-            author: { did: 'did:plc:blocked', viewer },
+            author: { did: 'did:plc:blocked', handle: 'blocked.bsky.social', displayName: 'Blocked User', avatar: '', viewer },
           },
         },
       });
@@ -400,11 +403,12 @@ describe('RecordEmbed Component', () => {
 
     const embed = createMockEmbed({
       record: {
+        ...createMockEmbed().record,
         uri: 'at://did:plc:blocked/app.bsky.feed.post/999',
         cid: 'blocked-cid',
         record: {
           $type: 'app.bsky.embed.record#viewBlocked',
-          author: { did: 'did:plc:blocked', viewer: { blockedBy: true, blocking: true } },
+          author: { did: 'did:plc:blocked', handle: 'blocked.bsky.social', displayName: 'Blocked User', avatar: '', viewer: { blockedBy: true, blocking: 'at://did:plc:test/app.bsky.graph.block/123' } },
         },
       },
     });
