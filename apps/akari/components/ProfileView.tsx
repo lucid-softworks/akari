@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import { useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -31,10 +31,33 @@ type ProfileViewProps = {
   handle: string;
 };
 
+const VISIBLE_COUNT_PAGE = 10;
+const NEAR_END_THRESHOLD_PX = 300;
+
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
+  const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
+  const wasNearEnd = useRef(false);
+
+  useEffect(() => {
+    setVisibleCount(VISIBLE_COUNT_PAGE);
+    wasNearEnd.current = false;
+  }, [activeTab]);
+
+  const handleNearEndScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+      const nearEnd =
+        contentOffset.y + layoutMeasurement.height >= contentSize.height - NEAR_END_THRESHOLD_PX;
+      if (nearEnd && !wasNearEnd.current) {
+        setVisibleCount((c) => c + VISIBLE_COUNT_PAGE);
+      }
+      wasNearEnd.current = nearEnd;
+    },
+    [],
+  );
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
@@ -159,31 +182,31 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     let tabBody: React.ReactNode = null;
     switch (activeTab) {
       case 'replies':
-        tabBody = <RepliesTab handle={handle} />;
+        tabBody = <RepliesTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'likes':
-        tabBody = <LikesTab handle={handle} />;
+        tabBody = <LikesTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'media':
-        tabBody = <MediaTab handle={handle} />;
+        tabBody = <MediaTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'videos':
-        tabBody = <VideosTab handle={handle} />;
+        tabBody = <VideosTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'feeds':
-        tabBody = <FeedsTab handle={handle} />;
+        tabBody = <FeedsTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'repos':
-        tabBody = <ReposTab handle={handle} />;
+        tabBody = <ReposTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'starterpacks':
-        tabBody = <StarterpacksTab handle={handle} />;
+        tabBody = <StarterpacksTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'recipes':
-        tabBody = <RecipesTab handle={handle} />;
+        tabBody = <RecipesTab handle={handle} visibleCount={visibleCount} />;
         break;
       case 'links':
-        tabBody = <LinksTab handle={handle} />;
+        tabBody = <LinksTab handle={handle} visibleCount={visibleCount} />;
         break;
       default:
         return null;
@@ -195,6 +218,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         stickyHeaderIndices={[1]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={false}
+        onScroll={handleNearEndScroll}
+        scrollEventThrottle={200}
       >
         {headerComponent}
         {tabsComponent}

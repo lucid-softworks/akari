@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -28,6 +28,9 @@ import { showAlert } from '@/utils/alert';
 
 import type { ProfileTabType } from '@/types/profile';
 
+const VISIBLE_COUNT_PAGE = 10;
+const NEAR_END_THRESHOLD_PX = 300;
+
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
@@ -52,6 +55,27 @@ export default function ProfileScreen() {
   const handleTabChange = useCallback((tab: ProfileTabType) => {
     setActiveTab(tab);
   }, []);
+
+  const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_PAGE);
+  const wasNearEnd = useRef(false);
+
+  useEffect(() => {
+    setVisibleCount(VISIBLE_COUNT_PAGE);
+    wasNearEnd.current = false;
+  }, [activeTab]);
+
+  const handleNearEndScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+      const nearEnd =
+        contentOffset.y + layoutMeasurement.height >= contentSize.height - NEAR_END_THRESHOLD_PX;
+      if (nearEnd && !wasNearEnd.current) {
+        setVisibleCount((c) => c + VISIBLE_COUNT_PAGE);
+      }
+      wasNearEnd.current = nearEnd;
+    },
+    [],
+  );
 
   const headerComponent = useMemo(() => {
     if (!profile) return null;
@@ -144,31 +168,31 @@ export default function ProfileScreen() {
     let tabBody: React.ReactNode = null;
     switch (activeTab) {
       case 'replies':
-        tabBody = <RepliesTab handle={currentAccount.handle} />;
+        tabBody = <RepliesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'likes':
-        tabBody = <LikesTab handle={currentAccount.handle} />;
+        tabBody = <LikesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'media':
-        tabBody = <MediaTab handle={currentAccount.handle} />;
+        tabBody = <MediaTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'videos':
-        tabBody = <VideosTab handle={currentAccount.handle} />;
+        tabBody = <VideosTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'feeds':
-        tabBody = <FeedsTab handle={currentAccount.handle} />;
+        tabBody = <FeedsTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'repos':
-        tabBody = <ReposTab handle={currentAccount.handle} />;
+        tabBody = <ReposTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'starterpacks':
-        tabBody = <StarterpacksTab handle={currentAccount.handle} />;
+        tabBody = <StarterpacksTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'recipes':
-        tabBody = <RecipesTab handle={currentAccount.handle} />;
+        tabBody = <RecipesTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       case 'links':
-        tabBody = <LinksTab handle={currentAccount.handle} />;
+        tabBody = <LinksTab handle={currentAccount.handle} visibleCount={visibleCount} />;
         break;
       default:
         tabBody = (
@@ -184,6 +208,8 @@ export default function ProfileScreen() {
         stickyHeaderIndices={[1]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={false}
+        onScroll={handleNearEndScroll}
+        scrollEventThrottle={200}
       >
         {headerComponent}
         {tabsComponent}
