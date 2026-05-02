@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, type LayoutChangeEvent, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -43,6 +43,7 @@ export function ProfileTabFlatList<T>({
   refreshing,
 }: ProfileTabFlatListProps<T>) {
   const listRef = useRef<FlatList<T | SpecialItem>>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const hasHeader = !!ListHeaderComponent;
   const hasStickyTab = !!StickyTabComponent;
@@ -51,7 +52,6 @@ export function ProfileTabFlatList<T>({
     () => (hasStickyTab ? [hasHeader ? 1 : 0] : undefined),
     [hasHeader, hasStickyTab],
   );
-  const stickyIndex = hasHeader ? 1 : 0;
 
   const listData = useMemo<(T | SpecialItem)[]>(() => {
     const prefix: SpecialItem[] = [];
@@ -73,12 +73,19 @@ export function ProfileTabFlatList<T>({
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
+    const h = event.nativeEvent.layout.height;
+    if (h > 0) setHeaderHeight(h);
+  }, []);
+
   const renderItemInner = useCallback(
     ({ item }: { item: T | SpecialItem }) => {
       if (isSpecial(item)) {
         switch (item.__type) {
           case 'header':
-            return ListHeaderComponent ?? null;
+            return ListHeaderComponent ? (
+              <View onLayout={handleHeaderLayout}>{ListHeaderComponent}</View>
+            ) : null;
           case 'stickyTab':
             return StickyTabComponent ?? null;
           case 'skeleton':
@@ -93,7 +100,7 @@ export function ProfileTabFlatList<T>({
       }
       return renderItem(item);
     },
-    [ListHeaderComponent, StickyTabComponent, emptyText, renderItem],
+    [ListHeaderComponent, StickyTabComponent, emptyText, handleHeaderLayout, renderItem],
   );
 
   const keyExtractorInner = useCallback(
@@ -101,32 +108,22 @@ export function ProfileTabFlatList<T>({
     [keyExtractor],
   );
 
-  // Capture the pin intent at first mount only — we don't want a later
-  // re-render with pinTabsOnMount=false to forget our pending pin, and we
-  // don't want a re-render with pinTabsOnMount=true to re-pin after the user
-  // has scrolled.
+  // Capture the pin intent at first mount only — later re-renders shouldn't be
+  // able to forget or repeat a pending pin.
   const shouldPinRef = useRef(pinTabsOnMount);
   const hasPinnedRef = useRef(false);
 
-  const tryPin = useCallback(() => {
+  // Pin via scrollToOffset(headerHeight) once the header has been measured by
+  // onLayout. scrollToOffset doesn't require items to be measured ahead of time,
+  // unlike scrollToIndex, so this fires reliably right after the first layout
+  // pass.
+  useEffect(() => {
     if (hasPinnedRef.current) return;
     if (!shouldPinRef.current || !hasStickyTab) return;
-    const list = listRef.current;
-    if (!list) return;
-    list.scrollToIndex({ index: stickyIndex, animated: false, viewPosition: 0 });
+    if (headerHeight === 0) return;
+    listRef.current?.scrollToOffset({ offset: headerHeight, animated: false });
     hasPinnedRef.current = true;
-  }, [hasStickyTab, stickyIndex]);
-
-  // First attempt: next frame after mount. The FlatList ref is set but its
-  // items often haven't laid out yet; if scrollToIndex fails we'll retry
-  // below from onContentSizeChange / onScrollToIndexFailed.
-  useEffect(() => {
-    requestAnimationFrame(tryPin);
-  }, [tryPin]);
-
-  const handleContentSizeChange = useCallback(() => {
-    tryPin();
-  }, [tryPin]);
+  }, [headerHeight, hasStickyTab]);
 
   return (
     <FlatList
@@ -143,20 +140,6 @@ export function ProfileTabFlatList<T>({
       refreshing={refreshing}
       contentContainerStyle={styles.listContent}
       removeClippedSubviews={false}
-      onContentSizeChange={handleContentSizeChange}
-      onScrollToIndexFailed={(info) => {
-        // Item not measured yet — retry shortly. Reset the flag so tryPin can
-        // run again from the next onContentSizeChange.
-        hasPinnedRef.current = false;
-        setTimeout(() => {
-          listRef.current?.scrollToIndex({
-            index: info.index,
-            animated: false,
-            viewPosition: 0,
-          });
-          hasPinnedRef.current = true;
-        }, 50);
-      }}
       ListFooterComponent={
         isFetchingNextPage && data.length > 0 ? (
           <ActivityIndicator style={styles.loadingFooter} />
