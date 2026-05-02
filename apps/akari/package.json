@@ -44,7 +44,7 @@
     "@formatjs/intl-numberformat": "^8.15.4",
     "@formatjs/intl-pluralrules": "^5.4.4",
     "@formatjs/intl-relativetimeformat": "^11.4.11",
-    "@keytrace/claims": "^1.1.1",
+    "@keytrace/claims": "^1.4.0",
     "@react-native-community/netinfo": "^12.0.1",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
