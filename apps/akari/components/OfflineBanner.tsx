@@ -30,6 +30,11 @@ export function OfflineBanner() {
 
 const styles = StyleSheet.create({
   banner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 999,
     backgroundColor: '#1f1f1f',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.sm,

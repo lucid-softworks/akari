@@ -58,6 +58,11 @@ export function DevServerBanner() {
 
 const styles = StyleSheet.create({
   banner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
     backgroundColor: '#7c2d12',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.sm,
