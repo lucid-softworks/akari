@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
@@ -59,38 +59,36 @@ export default function BookmarksScreen() {
       : undefined;
 
     return (
-      <View style={styles.postCardContainer}>
-        <PostCard
-          post={{
-            id: post.uri,
-            text: (post.record as { text?: string } | undefined)?.text,
-            author: {
-              did: post.author.did,
-              handle: post.author.handle,
-              displayName: post.author.displayName,
-              avatar: post.author.avatar,
-            },
-            createdAt: formatRelativeTime(post.indexedAt),
-            likeCount: post.likeCount || 0,
-            commentCount: post.replyCount || 0,
-            repostCount: post.repostCount || 0,
-            embed: post.embed,
-            embeds: post.embeds,
-            labels: post.labels,
-            viewer: post.viewer,
-            facets: (post.record as any)?.facets,
-            replyTo,
-            uri: post.uri,
-            cid: post.cid,
-          }}
-          href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
-          onPress={() => {
-            const uriParts = post.uri.split('/');
-            const rKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: post.author.handle, rKey });
-          }}
-        />
-      </View>
+      <PostCard
+        post={{
+          id: post.uri,
+          text: (post.record as { text?: string } | undefined)?.text,
+          author: {
+            did: post.author.did,
+            handle: post.author.handle,
+            displayName: post.author.displayName,
+            avatar: post.author.avatar,
+          },
+          createdAt: formatRelativeTime(post.indexedAt),
+          likeCount: post.likeCount || 0,
+          commentCount: post.replyCount || 0,
+          repostCount: post.repostCount || 0,
+          embed: post.embed,
+          embeds: post.embeds,
+          labels: post.labels,
+          viewer: post.viewer,
+          facets: (post.record as any)?.facets,
+          replyTo,
+          uri: post.uri,
+          cid: post.cid,
+        }}
+        href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
+        onPress={() => {
+          const uriParts = post.uri.split('/');
+          const rKey = uriParts[uriParts.length - 1];
+          navigateToPost({ actor: post.author.handle, rKey });
+        }}
+      />
     );
   };
 
@@ -108,12 +106,6 @@ export default function BookmarksScreen() {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         estimatedItemSize={ESTIMATED_POST_CARD_HEIGHT}
-        ListHeaderComponent={
-          <ThemedView style={styles.header}>
-            <ThemedText style={styles.title}>{t('common.bookmarks')}</ThemedText>
-            <ThemedText style={styles.subtitle}>{t('bookmarks.subtitle')}</ThemedText>
-          </ThemedView>
-        }
         ListFooterComponent={
           isFetchingNextPage ? (
             <ThemedView style={styles.loadingMore}>
@@ -123,9 +115,7 @@ export default function BookmarksScreen() {
         }
         ListEmptyComponent={
           isLoading ? (
-            <View style={styles.skeletonContainer}>
-              <FeedSkeleton count={4} />
-            </View>
+            <FeedSkeleton count={4} />
           ) : error ? (
             <EmptyState
               title={t('bookmarks.error')}
@@ -144,40 +134,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.6,
-  },
   listContent: {
     paddingBottom: 32,
   },
   emptyListContent: {
     flexGrow: 1,
-  },
-  postCardContainer: {
-    paddingHorizontal: 24,
-    marginBottom: 16,
-  },
-  emptyState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 64,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    opacity: 0.6,
-    textAlign: 'center',
   },
   loadingMore: {
     paddingVertical: 16,
@@ -186,8 +147,5 @@ const styles = StyleSheet.create({
   loadingMoreText: {
     fontSize: 14,
     opacity: 0.6,
-  },
-  skeletonContainer: {
-    paddingHorizontal: 24,
   },
 });
