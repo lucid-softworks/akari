@@ -63,8 +63,15 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const navigateToPost = useNavigateToPost();
   const navigateToProfile = useNavigateToProfile();
 
-  const postActor = embed.record.author?.handle;
-  const postRKey = embed.record.uri?.split('/').pop();
+  // For recordWithMedia#view and other nested record shapes, the actual
+  // quoted post lives at embed.record.record (or one level deeper). Walk the
+  // chain so taps on quoted posts navigate to the correct uri.
+  const quotedAuthor =
+    embed.record.record?.record?.author ?? embed.record.record?.author ?? embed.record.author;
+  const quotedUri =
+    embed.record.record?.record?.uri ?? embed.record.record?.uri ?? embed.record.uri;
+  const postActor = quotedAuthor?.handle;
+  const postRKey = quotedUri?.split('/').pop();
   const postHref = postActor && postRKey ? `/profile/${postActor}/post/${postRKey}` : '#';
   const authorHref = postActor ? `/profile/${postActor}` : '#';
 
@@ -397,12 +404,6 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const authorInfo = getAuthorInfo();
 
   return (
-    // Claim the touch responder at the container level so the parent
-    // PostCard's PressableLink doesn't swallow taps on the quoted post.
-    <View
-      onStartShouldSetResponder={() => true}
-      onMoveShouldSetResponder={() => false}
-    >
     <PressableLink href={postHref} onPress={handlePress} style={{ opacity: 1 }}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
@@ -512,7 +513,6 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         )}
       </View>
     </PressableLink>
-    </View>
   );
 }
 

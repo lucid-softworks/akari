@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -152,29 +152,35 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       <Modal
         visible={visible}
         animationType="slide"
-        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+        transparent
         onRequestClose={onDismiss}
       >
-        <ThemedView
-          style={[
-            styles.nativeSheet,
-            {
-              backgroundColor: menuBackgroundColor,
-              paddingBottom: insets.bottom + spacing.lg,
-            },
-          ]}
-        >
-          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-            {menuItems}
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={onDismiss}
-            activeOpacity={activeOpacity.default}
+        <Pressable style={styles.backdrop} onPress={onDismiss}>
+          <View />
+        </Pressable>
+        <View pointerEvents="box-none" style={styles.sheetWrap}>
+          <ThemedView
+            style={[
+              styles.sheet,
+              {
+                backgroundColor: menuBackgroundColor,
+                paddingBottom: insets.bottom + spacing.md,
+              },
+            ]}
           >
-            <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
+            <View style={styles.handleBarContainer}>
+              <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
+            </View>
+            <View style={styles.menuItems}>{menuItems}</View>
+            <TouchableOpacity
+              style={[styles.cancelButton, { borderTopColor: handleBarColor }]}
+              onPress={onDismiss}
+              activeOpacity={activeOpacity.default}
+            >
+              <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        </View>
       </Modal>
     )}
     <ReportSheet
@@ -187,11 +193,32 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 });
 
 const styles = StyleSheet.create({
-  nativeSheet: {
-    flex: 1,
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
-  scrollView: {
-    paddingHorizontal: spacing.lg,
+  sheetWrap: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+  },
+  sheet: {
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    paddingTop: spacing.xs,
+  },
+  handleBarContainer: {
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+  },
+  handleBar: {
+    width: 40,
+    height: 4,
+    borderRadius: radius.full,
+    opacity: 0.5,
+  },
+  menuItems: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
   menuItem: {
     flexDirection: 'row',
