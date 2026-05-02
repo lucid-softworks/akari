@@ -12,4 +12,9 @@ export type ProfileTabContentProps = {
    * with the tab's own data refetch when the user pulls to refresh.
    */
   onProfileRefresh?: () => Promise<void> | void;
+  /** Reports the current scroll Y to the parent so it can decide whether to
+   * pin the sticky tab strip on the next tab switch. */
+  onScrollY?: (y: number) => void;
+  /** Reports the measured ProfileHeader pixel height to the parent. */
+  onHeaderHeightChange?: (h: number) => void;
 };

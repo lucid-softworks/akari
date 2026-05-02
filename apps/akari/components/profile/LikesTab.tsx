@@ -19,6 +19,8 @@ export function LikesTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: LikesTabProps) {
   const { t } = useTranslation();
   const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorLikes(handle);
@@ -92,6 +94,8 @@ export function LikesTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

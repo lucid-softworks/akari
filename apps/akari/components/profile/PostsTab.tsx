@@ -19,6 +19,8 @@ export function PostsTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: PostsTabProps) {
   const { t } = useTranslation();
   const {
@@ -101,6 +103,8 @@ export function PostsTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

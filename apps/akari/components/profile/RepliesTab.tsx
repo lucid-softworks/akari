@@ -19,6 +19,8 @@ export function RepliesTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: RepliesTabProps) {
   const { t } = useTranslation();
   const { data: replies, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorReplies(handle);
@@ -92,6 +94,8 @@ export function RepliesTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

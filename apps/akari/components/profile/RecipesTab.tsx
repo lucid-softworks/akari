@@ -148,6 +148,8 @@ export function RecipesTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: RecipesTabProps) {
   const { t } = useTranslation();
   const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorRecipes(handle);
@@ -188,6 +190,8 @@ export function RecipesTab({
         pinTabsOnMount={pinTabsOnMount}
         onRefresh={handleRefresh}
         refreshing={isRefetching}
+      onScrollY={onScrollY}
+      onHeaderHeightChange={onHeaderHeightChange}
       />
 
       <RecipeModal visible={modalVisible} onClose={handleCloseModal} recipe={selectedRecipe} />

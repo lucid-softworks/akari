@@ -100,6 +100,8 @@ export function ReposTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: ReposTabProps) {
   const { t } = useTranslation();
   const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorRepos(handle);
@@ -122,6 +124,8 @@ export function ReposTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

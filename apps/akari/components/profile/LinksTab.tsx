@@ -94,6 +94,8 @@ export function LinksTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: LinksTabProps) {
   const { t } = useTranslation();
   const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useLinks(handle);
@@ -127,6 +129,8 @@ export function LinksTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

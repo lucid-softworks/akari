@@ -25,6 +25,8 @@ type ProfileTabFlatListProps<T> = {
   pinTabsOnMount?: boolean;
   onRefresh?: () => void;
   refreshing?: boolean;
+  onScrollY?: (y: number) => void;
+  onHeaderHeightChange?: (h: number) => void;
 };
 
 export function ProfileTabFlatList<T>({
@@ -41,6 +43,8 @@ export function ProfileTabFlatList<T>({
   pinTabsOnMount,
   onRefresh,
   refreshing,
+  onScrollY,
+  onHeaderHeightChange,
 }: ProfileTabFlatListProps<T>) {
   const listRef = useRef<FlatList<T | SpecialItem>>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -73,10 +77,23 @@ export function ProfileTabFlatList<T>({
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleHeaderLayout = useCallback((event: LayoutChangeEvent) => {
-    const h = event.nativeEvent.layout.height;
-    if (h > 0) setHeaderHeight(h);
-  }, []);
+  const handleHeaderLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const h = event.nativeEvent.layout.height;
+      if (h > 0) {
+        setHeaderHeight(h);
+        onHeaderHeightChange?.(h);
+      }
+    },
+    [onHeaderHeightChange],
+  );
+
+  const handleScroll = useCallback(
+    (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+      onScrollY?.(event.nativeEvent.contentOffset.y);
+    },
+    [onScrollY],
+  );
 
   const renderItemInner = useCallback(
     ({ item }: { item: T | SpecialItem }) => {
@@ -138,6 +155,8 @@ export function ProfileTabFlatList<T>({
       stickyHeaderHiddenOnScroll
       onRefresh={onRefresh}
       refreshing={refreshing}
+      onScroll={handleScroll}
+      scrollEventThrottle={32}
       contentContainerStyle={styles.listContent}
       removeClippedSubviews={false}
       ListFooterComponent={

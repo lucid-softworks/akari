@@ -72,6 +72,8 @@ export function StarterpacksTab({
   StickyTabComponent,
   pinTabsOnMount,
   onProfileRefresh,
+  onScrollY,
+  onHeaderHeightChange,
 }: StarterpacksTabProps) {
   const { t } = useTranslation();
   const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorStarterpacks(handle);
@@ -97,6 +99,8 @@ export function StarterpacksTab({
       pinTabsOnMount={pinTabsOnMount}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
+    onScrollY={onScrollY}
+    onHeaderHeightChange={onHeaderHeightChange}
     />
   );
 }

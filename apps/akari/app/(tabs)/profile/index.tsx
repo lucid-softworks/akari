@@ -49,10 +49,27 @@ export default function ProfileScreen() {
   // tab — read at render time and consumed by the new tab's mount effect to
   // pin its sticky tab strip at the top of the viewport.
   const pendingPinAfterTabChange = useRef(false);
+  // Track the active tab's scroll position + measured header height so we can
+  // decide on tab change whether the prior tab had the sticky tabs pinned
+  // (scroll past banner) or the banner still in view.
+  const lastScrollYRef = useRef(0);
+  const lastHeaderHeightRef = useRef(0);
+
+  const handleScrollY = useCallback((y: number) => {
+    lastScrollYRef.current = y;
+  }, []);
+
+  const handleHeaderHeightChange = useCallback((h: number) => {
+    lastHeaderHeightRef.current = h;
+  }, []);
 
   const handleTabChange = useCallback((tab: ProfileTabType) => {
     setActiveTab((current) => {
-      if (current !== tab) pendingPinAfterTabChange.current = true;
+      if (current !== tab) {
+        const headerH = lastHeaderHeightRef.current;
+        const wasPastHeader = headerH > 0 && lastScrollYRef.current >= headerH;
+        pendingPinAfterTabChange.current = wasPastHeader;
+      }
       return tab;
     });
   }, []);
@@ -147,6 +164,8 @@ export default function ProfileScreen() {
       StickyTabComponent: tabsComponent,
       pinTabsOnMount: pendingPinAfterTabChange.current,
       onProfileRefresh: handleProfileRefresh,
+      onScrollY: handleScrollY,
+      onHeaderHeightChange: handleHeaderHeightChange,
     };
 
     switch (activeTab) {
