@@ -13,7 +13,11 @@ export default function ProfileLayout() {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="[handle]" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="[handle]"
+        options={{ headerShown: false }}
+        dangerouslySingular={(_name, params) => String((params as { handle?: string })?.handle ?? '')}
+      />
       <Stack.Screen
         name="[handle]/post/[rkey]"
         options={{
