@@ -21,7 +21,7 @@ type Data = {
   reactQueryCache: PersistedClient;
 };
 
-export const REACT_QUERY_CACHE_STORAGE_KEY: keyof Data = 'reactQueryCache';
+export const REACT_QUERY_CACHE_STORAGE_KEY = 'reactQueryCache' as const;
 
 export const storage = {
   getItem: <K extends keyof Data>(key: K): Data[K] | null => {
