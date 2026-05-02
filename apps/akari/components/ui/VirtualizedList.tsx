@@ -1,13 +1,13 @@
 import React from 'react';
 import { FlashList } from '@shopify/flash-list';
-import type { FlashListProps } from '@shopify/flash-list';
+import type { FlashListProps, FlashListRef } from '@shopify/flash-list';
 
 import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 240;
 const DEFAULT_OVERSCAN = 2;
 
-export type VirtualizedListHandle<T> = FlashList<T>;
+export type VirtualizedListHandle<T> = FlashListRef<T>;
 
 export type VirtualizedListProps<T> = Omit<FlashListProps<T>, 'estimatedItemSize' | 'style'> & {
   estimatedItemSize?: number;
@@ -66,7 +66,7 @@ function VirtualizedListInner<T>(
     <ComponentErrorBoundary>
       <FlashList
         {...(flashListProps as FlashListProps<T>)}
-        ref={ref as React.Ref<FlashList<T>>}
+        ref={ref as React.Ref<FlashListRef<T>>}
         data={typedData}
         renderItem={renderItemWithStickyHeader}
         estimatedItemSize={estimatedItemSize}
