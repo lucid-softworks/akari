@@ -122,7 +122,7 @@ describe('ParallaxScrollView', () => {
     const styleArray = Array.isArray(header.props.style)
       ? header.props.style
       : [header.props.style];
-    const animatedStyle = styleArray.find((s) => s && s.transform);
+    const animatedStyle = styleArray.find((s: any) => s && s.transform);
     expect(animatedStyle.transform[0].translateY).toBe(-125);
     expect(animatedStyle.transform[1].scale).toBe(2);
 
@@ -139,7 +139,7 @@ describe('ParallaxScrollView', () => {
     const updatedArray = Array.isArray(updatedHeader.props.style)
       ? updatedHeader.props.style
       : [updatedHeader.props.style];
-    const updatedAnimated = updatedArray.find((s) => s && s.transform);
+    const updatedAnimated = updatedArray.find((s: any) => s && s.transform);
     expect(updatedAnimated.transform[0].translateY).toBeCloseTo(187.5);
     expect(updatedAnimated.transform[1].scale).toBe(1);
   });

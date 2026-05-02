@@ -26,7 +26,7 @@ describe('TabBar', () => {
     const tabs = [
       { key: 'home', label: 'Home' },
       { key: 'settings', label: 'Settings' },
-    ] as const;
+    ];
 
     const { getByTestId, getByText } = render(
       <TabBar tabs={tabs} activeTab="home" onTabChange={() => {}} />,
@@ -64,7 +64,7 @@ describe('TabBar', () => {
     const tabs = [
       { key: 'home', label: 'Home' },
       { key: 'settings', label: 'Settings' },
-    ] as const;
+    ];
     const onTabChange = jest.fn();
 
     const { getByTestId } = render(

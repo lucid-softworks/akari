@@ -54,14 +54,15 @@ describe('VideoEmbed', () => {
   });
 
   it('renders external video and opens link on press', () => {
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const embed = {
+      $type: 'app.bsky.embed.external#view' as const,
       external: {
         uri: 'https://example.com/video',
         title: 'Test Video',
         description: 'An external video',
         thumb: {
-          $type: 'blob',
+          $type: 'blob' as const,
           ref: { $link: 'https://example.com/thumb.jpg' },
           mimeType: 'image/jpeg',
           size: 0,
