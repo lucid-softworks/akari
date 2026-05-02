@@ -78,7 +78,7 @@ beforeEach(() => {
   });
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   keyboardListeners = {};
-  jest.spyOn(Keyboard, 'addListener').mockImplementation((event: string, callback: () => void) => {
+  jest.spyOn(Keyboard, 'addListener').mockImplementation(((event: string, callback: () => void) => {
     if (event === 'keyboardWillShow') {
       keyboardListeners.show = callback;
     }
@@ -86,7 +86,7 @@ beforeEach(() => {
       keyboardListeners.hide = callback;
     }
     return { remove: jest.fn() } as any;
-  });
+  }) as any);
   jest.spyOn(Keyboard, 'removeAllListeners').mockImplementation(() => {
     keyboardListeners = {};
   });

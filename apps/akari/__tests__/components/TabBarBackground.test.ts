@@ -1,6 +1,6 @@
 import TabBarBackground, {
   useBottomTabOverflow,
-} from '@/components/ui/TabBarBackground.tsx';
+} from '@/components/ui/TabBarBackground';
 
 describe('TabBarBackground', () => {
   it('default export is undefined on non-iOS platforms', () => {

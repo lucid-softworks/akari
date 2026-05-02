@@ -75,7 +75,7 @@ describe('useSavedFeeds query', () => {
         value: 'at://feed1',
         pinned: true,
         id: '2',
-        metadata: { uri: 'at://feed1', displayName: 'Feed 1' },
+        metadata: { uri: 'at://feed1', displayName: 'Feed 1' } as any,
       },
     ];
 

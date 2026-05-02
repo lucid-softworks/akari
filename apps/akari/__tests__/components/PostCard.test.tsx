@@ -322,7 +322,8 @@ describe('PostCard', () => {
 
     const touchables = UNSAFE_getAllByType(TouchableOpacity);
     const imageButton = touchables.find((t: any) => !t.props.accessibilityLabel);
-    fireEvent.press(imageButton);
+    expect(imageButton).toBeDefined();
+    fireEvent.press(imageButton!);
     expect(ImageViewerMock.mock.calls[0][0].visible).toBe(true);
     act(() => {
       ImageViewerMock.mock.calls[0][0].onClose();

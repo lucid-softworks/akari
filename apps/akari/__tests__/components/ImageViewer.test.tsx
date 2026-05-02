@@ -212,7 +212,7 @@ describe('ImageViewer', () => {
     Platform.OS = 'web';
 
     const click = jest.fn();
-    const link = { href: '', download: '', click } as HTMLAnchorElement;
+    const link = { href: '', download: '', click } as unknown as HTMLAnchorElement;
     const appendChild = jest.fn();
     const removeChild = jest.fn();
     (global as any).document = {

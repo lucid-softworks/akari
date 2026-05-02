@@ -32,7 +32,7 @@ describe('useSelectedFeed query hook', () => {
 
     const query = queryClient.getQueryCache().find({ queryKey: ['selectedFeed'] });
     expect(query?.meta?.persist).toBe(true);
-    expect(query?.options.staleTime).toBe(Infinity);
+    expect((query?.options as any)?.staleTime).toBe(Infinity);
     expect(query?.options.gcTime).toBe(Infinity);
   });
 });

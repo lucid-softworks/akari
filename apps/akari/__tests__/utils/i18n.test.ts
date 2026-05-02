@@ -111,10 +111,10 @@ describe('i18n utility', () => {
     expect(pseudoData?.language).toBe('Pseudo');
     expect(pseudoData?.nativeName).toBe('Pseudo');
     expect(pseudoData?.flag).toBe('🔤');
-    expect(pseudoData?.translations.common.loading).toBe('[Lòàdìñg...]');
+    expect((pseudoData?.translations as any)?.common?.loading).toBe('[Lòàdìñg...]');
 
     const englishData = i18nModule.getTranslationData('en');
     expect(englishData?.language).toBe('English');
-    expect(englishData?.translations.common.loading).toBe('Loading...');
+    expect((englishData?.translations as any)?.common?.loading).toBe('Loading...');
   });
 });

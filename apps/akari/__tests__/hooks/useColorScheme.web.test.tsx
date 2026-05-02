@@ -6,6 +6,7 @@ jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
   default: jest.fn(),
 }));
 
+// @ts-expect-error -- deep import has no .d.ts; mocked above
 import nativeUseColorScheme from 'react-native/Libraries/Utilities/useColorScheme';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
 

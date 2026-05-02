@@ -18,7 +18,7 @@ jest.doMock('@/hooks/useTranslation', () => {
 const useTranslation = require('@/hooks/useTranslation').default;
 
 const mockUseLanguage = useLanguage as jest.Mock;
-const mockI18n = i18n as { t: jest.Mock };
+const mockI18n = i18n as unknown as { t: jest.Mock };
 
 describe('useTranslation', () => {
   let changeLanguage: jest.Mock;

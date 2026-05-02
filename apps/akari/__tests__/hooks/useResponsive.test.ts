@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-native';
+// @ts-expect-error -- deep import has no .d.ts; mocked for the test below
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions');

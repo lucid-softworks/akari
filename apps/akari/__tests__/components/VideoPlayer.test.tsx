@@ -23,7 +23,7 @@ jest.mock('react-native-video', () => {
   });
 });
 
-const mockWebPlayer = jest.spyOn(WebPlayerModule, 'VideoPlayer').mockImplementation(() => null);
+const mockWebPlayer = jest.spyOn(WebPlayerModule, 'VideoPlayer').mockImplementation((() => null) as never);
 
 import { VideoPlayer } from '@/components/VideoPlayer';
 

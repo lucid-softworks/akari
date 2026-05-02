@@ -18,7 +18,7 @@ jest.mock('@/hooks/queries/useCurrentAccount', () => ({
 }));
 
 jest.mock('@/bluesky-api', () => ({
-  BlueskyApi: jest.fn((...args) => mockBlueskyApi(...args)),
+  BlueskyApi: jest.fn((...args: unknown[]) => mockBlueskyApi(...(args as []))),
 }));
 
 describe('useUnreadMessagesCount', () => {
