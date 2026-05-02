@@ -31,6 +31,7 @@ export default function ProfileLayout() {
           headerBackVisible: true,
           headerBackButtonDisplayMode: 'minimal',
         }}
+        dangerouslySingular
       />
     </Stack>
   );

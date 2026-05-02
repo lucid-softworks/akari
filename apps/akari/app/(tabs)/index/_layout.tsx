@@ -20,6 +20,7 @@ export default function IndexLayout() {
         options={{
           headerShown: false,
         }}
+        dangerouslySingular
       />
       <Stack.Screen
         name="user-profile/[handle]/post/[rkey]"
@@ -28,6 +29,7 @@ export default function IndexLayout() {
           headerShown: isLargeNative,
           headerBackVisible: true,
         }}
+        dangerouslySingular
       />
     </Stack>
   );

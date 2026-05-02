@@ -22,6 +22,7 @@ export default function MessagesLayout() {
         options={{
           headerShown: false,
         }}
+        dangerouslySingular
       />
       <Stack.Screen
         name="user-profile/[handle]/post/[rkey]"
@@ -30,6 +31,7 @@ export default function MessagesLayout() {
           headerShown: isLargeNative,
           headerBackVisible: true,
         }}
+        dangerouslySingular
       />
     </Stack>
   );
