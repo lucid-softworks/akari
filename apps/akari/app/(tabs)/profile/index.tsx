@@ -31,17 +31,14 @@ export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const { showToast } = useToast();
 
   const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
 
-  const handleRefresh = useCallback(async () => {
-    setRefreshing(true);
+  const handleProfileRefresh = useCallback(async () => {
     await refetchProfile();
-    setRefreshing(false);
   }, [refetchProfile]);
 
   const handleDropdownToggle = useCallback((isOpen: boolean) => {
@@ -149,11 +146,12 @@ export default function ProfileScreen() {
       ListHeaderComponent: headerComponent,
       StickyTabComponent: tabsComponent,
       pinTabsOnMount: pendingPinAfterTabChange.current,
+      onProfileRefresh: handleProfileRefresh,
     };
 
     switch (activeTab) {
       case 'posts':
-        return <PostsTab {...sharedProps} onRefresh={handleRefresh} refreshing={refreshing} />;
+        return <PostsTab {...sharedProps} />;
       case 'replies':
         return <RepliesTab {...sharedProps} />;
       case 'likes':

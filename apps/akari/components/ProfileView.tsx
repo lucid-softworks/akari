@@ -51,8 +51,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
 
-  const { data: profile, isLoading, error } = useProfile(handle);
+  const { data: profile, isLoading, error, refetch: refetchProfile } = useProfile(handle);
   const isOwnProfile = currentUser?.handle === profile?.handle;
+
+  const handleProfileRefresh = useCallback(async () => {
+    await refetchProfile();
+  }, [refetchProfile]);
 
   const headerComponent = useMemo(() => {
     if (!profile) return null;
@@ -165,6 +169,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       ListHeaderComponent: headerComponent,
       StickyTabComponent: tabsComponent,
       pinTabsOnMount: pendingPinAfterTabChange.current,
+      onProfileRefresh: handleProfileRefresh,
     };
 
     switch (activeTab) {

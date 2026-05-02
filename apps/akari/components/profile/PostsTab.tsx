@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
@@ -17,12 +18,20 @@ export function PostsTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: PostsTabProps) {
   const { t } = useTranslation();
-  const { data: posts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorPosts(handle);
+  const {
+    data: posts,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isRefetching,
+  } = useAuthorPosts(handle);
   const navigateToPost = useNavigateToPost();
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
   const filteredPosts = useMemo(
     () => (posts ?? []).filter((item) => item && item.uri),
@@ -90,8 +99,8 @@ export function PostsTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noPosts')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

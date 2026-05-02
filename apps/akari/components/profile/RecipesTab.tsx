@@ -8,6 +8,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorRecipes } from '@/hooks/queries/useAuthorRecipes';
 import { usePdsUrlFromDid } from '@/hooks/queries/usePdsUrl';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -146,11 +147,11 @@ export function RecipesTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: RecipesTabProps) {
   const { t } = useTranslation();
-  const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRecipes(handle);
+  const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorRecipes(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const [selectedRecipe, setSelectedRecipe] = useState<BlueskyRecipeRecord | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -185,8 +186,8 @@ export function RecipesTab({
         StickyTabComponent={StickyTabComponent}
         emptyText={t('profile.noRecipes')}
         pinTabsOnMount={pinTabsOnMount}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        refreshing={isRefetching}
       />
 
       <RecipeModal visible={modalVisible} onClose={handleCloseModal} recipe={selectedRecipe} />

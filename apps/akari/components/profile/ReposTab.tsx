@@ -5,6 +5,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorRepos } from '@/hooks/queries/useAuthorRepos';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -98,11 +99,11 @@ export function ReposTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: ReposTabProps) {
   const { t } = useTranslation();
-  const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorRepos(handle);
+  const { data: repos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorRepos(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
   const renderItem = useCallback((item: BlueskyTangledRepo) => <RepoItem repo={item} />, []);
 
@@ -119,8 +120,8 @@ export function ReposTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noRepos')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

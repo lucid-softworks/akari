@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
@@ -17,11 +18,11 @@ export function VideosTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: VideosTabProps) {
   const { t } = useTranslation();
-  const { data: videos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorVideos(handle);
+  const { data: videos, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorVideos(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
   const filteredVideos = useMemo(
@@ -89,8 +90,8 @@ export function VideosTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noVideos')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

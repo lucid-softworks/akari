@@ -3,6 +3,7 @@ import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useLinks } from '@/hooks/queries/useLinks';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -92,11 +93,11 @@ export function LinksTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: LinksTabProps) {
   const { t } = useTranslation();
-  const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks(handle);
+  const { data: links, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useLinks(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
   const allLinks = useMemo<LinkCardItem[]>(
     () =>
@@ -124,8 +125,8 @@ export function LinksTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noLinks')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

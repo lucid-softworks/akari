@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
@@ -17,11 +18,11 @@ export function LikesTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: LikesTabProps) {
   const { t } = useTranslation();
-  const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorLikes(handle);
+  const { data: likes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorLikes(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
   const filteredLikes = useMemo(
@@ -89,8 +90,8 @@ export function LikesTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noLikes')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

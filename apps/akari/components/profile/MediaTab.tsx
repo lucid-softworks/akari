@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
@@ -17,11 +18,11 @@ export function MediaTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: MediaTabProps) {
   const { t } = useTranslation();
-  const { data: media, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorMedia(handle);
+  const { data: media, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorMedia(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
   const filteredMedia = useMemo(
@@ -89,8 +90,8 @@ export function MediaTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noMedia')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

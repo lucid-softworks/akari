@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorFeeds } from '@/hooks/queries/useAuthorFeeds';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -73,11 +74,11 @@ export function FeedsTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: FeedsTabProps) {
   const { t } = useTranslation();
-  const { data: feeds, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeeds(handle);
+  const { data: feeds, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorFeeds(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
   const renderItem = useCallback((item: BlueskyFeed) => <FeedItem feed={item} />, []);
 
@@ -94,8 +95,8 @@ export function FeedsTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noFeeds')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

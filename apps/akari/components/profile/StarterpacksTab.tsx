@@ -5,6 +5,7 @@ import type { BlueskyStarterPack } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
+import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorStarterpacks } from '@/hooks/queries/useAuthorStarterpacks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -70,11 +71,11 @@ export function StarterpacksTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinTabsOnMount,
-  onRefresh,
-  refreshing,
+  onProfileRefresh,
 }: StarterpacksTabProps) {
   const { t } = useTranslation();
-  const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorStarterpacks(handle);
+  const { data: starterpacks, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorStarterpacks(handle);
+  const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
   const renderItem = useCallback(
     (item: BlueskyStarterPack) => <StarterpackItem starterpack={item} />,
@@ -94,8 +95,8 @@ export function StarterpacksTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noStarterpacks')}
       pinTabsOnMount={pinTabsOnMount}
-      onRefresh={onRefresh}
-      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
     />
   );
 }

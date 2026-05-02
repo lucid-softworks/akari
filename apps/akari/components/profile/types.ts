@@ -7,7 +7,9 @@ export type ProfileTabContentProps = {
   StickyTabComponent?: React.ReactElement | null;
   /** When true, scroll the FlatList to put the sticky tab strip at the top on mount. */
   pinTabsOnMount?: boolean;
-  /** Pull-to-refresh callback (used on the own-profile screen). */
-  onRefresh?: () => void;
-  refreshing?: boolean;
+  /**
+   * Optional: refresh profile-level data (banner, name, follow counts). Composed
+   * with the tab's own data refetch when the user pulls to refresh.
+   */
+  onProfileRefresh?: () => Promise<void> | void;
 };
