@@ -50,6 +50,7 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
             senderDid: message.sender.did,
             sentAt: message.sentAt,
             embed: message.embed,
+            reactions: message.reactions ?? [],
           };
         });
 

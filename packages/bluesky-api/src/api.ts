@@ -530,6 +530,20 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Adds an emoji reaction to a message.
+   */
+  async addReaction(accessJwt: string, convoId: string, messageId: string, value: string) {
+    return this.conversations.addReaction(accessJwt, convoId, messageId, value);
+  }
+
+  /**
+   * Removes an emoji reaction from a message.
+   */
+  async removeReaction(accessJwt: string, convoId: string, messageId: string, value: string) {
+    return this.conversations.removeReaction(accessJwt, convoId, messageId, value);
+  }
+
+  /**
    * Creates a follow record pointing at the supplied DID.
    * @param accessJwt - Valid session token for the actor initiating the follow.
    * @param did - DID of the actor that should be followed.

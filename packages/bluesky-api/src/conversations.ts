@@ -179,4 +179,26 @@ export class BlueskyConversations extends BlueskyApiClient {
       body: { convoId, name },
     });
   }
+
+  /**
+   * Adds an emoji reaction to a message.
+   */
+  async addReaction(accessJwt: string, convoId: string, messageId: string, value: string) {
+    return this.makeAuthenticatedRequest('/chat.bsky.convo.addReaction', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId, messageId, value },
+    });
+  }
+
+  /**
+   * Removes an emoji reaction from a message.
+   */
+  async removeReaction(accessJwt: string, convoId: string, messageId: string, value: string) {
+    return this.makeAuthenticatedRequest('/chat.bsky.convo.removeReaction', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId, messageId, value },
+    });
+  }
 }

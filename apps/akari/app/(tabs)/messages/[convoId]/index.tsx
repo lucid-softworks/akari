@@ -16,6 +16,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
@@ -40,6 +41,12 @@ type MessageImageData = {
   alt: string;
 };
 
+type Reaction = {
+  value: string;
+  sender: { did: string };
+  createdAt: string;
+};
+
 type Message = {
   id: string;
   text: string;
@@ -48,7 +55,10 @@ type Message = {
   senderDid: string;
   sentAt: string;
   embed?: BlueskyEmbed;
+  reactions: Reaction[];
 };
+
+const QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
 
 type MessageError = {
   type: 'permission' | 'network' | 'unknown';
@@ -288,6 +298,27 @@ export default function ConversationScreen() {
 
   // Send message mutation
   const sendMessageMutation = useSendMessage();
+  const reactionMutation = useMessageReaction();
+  const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
+
+  const handleToggleReaction = (messageId: string, value: string) => {
+    if (!conversation?.convoId || !currentAccount?.did) return;
+    const message = messages.find((m) => m.id === messageId);
+    const alreadyReacted = message?.reactions.some(
+      (r) => r.value === value && r.sender.did === currentAccount.did,
+    );
+    reactionMutation.mutate({
+      convoId: conversation.convoId,
+      messageId,
+      value,
+      action: alreadyReacted ? 'remove' : 'add',
+    });
+    setReactionPickerFor(null);
+  };
+
+  const handleLongPressMessage = (messageId: string) => {
+    setReactionPickerFor((current) => (current === messageId ? null : messageId));
+  };
 
   // Mark conversation as read when opened
   useEffect(() => {
@@ -391,6 +422,23 @@ export default function ConversationScreen() {
           conversation.members.find((m) => m.did === item.senderDid)?.handle
         : null;
 
+    // Group reactions by emoji for compact display under the bubble.
+    // Defensive ?? [] in case the message arrived from a cache path that
+    // didn't initialise the field (e.g. optimistic send before transform).
+    const reactionGroups = (item.reactions ?? []).reduce<
+      Map<string, { count: number; mine: boolean }>
+    >(
+      (acc, r) => {
+        const existing = acc.get(r.value) ?? { count: 0, mine: false };
+        existing.count += 1;
+        if (r.sender.did === currentAccount?.did) existing.mine = true;
+        acc.set(r.value, existing);
+        return acc;
+      },
+      new Map(),
+    );
+    const showPicker = reactionPickerFor === item.id;
+
     return (
       <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
         {senderLabel ? (
@@ -398,22 +446,50 @@ export default function ConversationScreen() {
             {senderLabel}
           </ThemedText>
         ) : null}
-        {(hasText || !item.embed) && (
-          <ThemedView
+
+        {showPicker ? (
+          <View
             style={[
-              styles.messageBubble,
-              item.isFromMe ? styles.myBubble : styles.theirBubble,
-              {
-                backgroundColor: item.isFromMe ? outgoingMessageBackground : incomingMessageBackground,
-              },
+              styles.reactionPicker,
+              item.isFromMe ? styles.reactionPickerMine : styles.reactionPickerTheirs,
+              { backgroundColor: incomingMessageBackground },
             ]}
           >
-            {hasText && (
-              <ThemedText style={[styles.messageText, { color: item.isFromMe ? '#fff' : textColor }]}>
-                {item.text}
-              </ThemedText>
-            )}
-          </ThemedView>
+            {QUICK_REACTIONS.map((emoji) => (
+              <TouchableOpacity
+                key={emoji}
+                onPress={() => handleToggleReaction(item.id, emoji)}
+                hitSlop={6}
+                style={styles.reactionPickerSlot}
+              >
+                <ThemedText style={styles.reactionPickerEmoji}>{emoji}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : null}
+
+        {(hasText || !item.embed) && (
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onLongPress={() => handleLongPressMessage(item.id)}
+            delayLongPress={250}
+          >
+            <ThemedView
+              style={[
+                styles.messageBubble,
+                item.isFromMe ? styles.myBubble : styles.theirBubble,
+                {
+                  backgroundColor: item.isFromMe ? outgoingMessageBackground : incomingMessageBackground,
+                },
+              ]}
+            >
+              {hasText && (
+                <ThemedText style={[styles.messageText, { color: item.isFromMe ? '#fff' : textColor }]}>
+                  {item.text}
+                </ThemedText>
+              )}
+            </ThemedView>
+          </TouchableOpacity>
         )}
 
         {item.embed && (
@@ -423,6 +499,33 @@ export default function ConversationScreen() {
             )}
           </ThemedView>
         )}
+
+        {reactionGroups.size > 0 ? (
+          <View
+            style={[
+              styles.reactionsRow,
+              item.isFromMe ? styles.reactionsRowMine : styles.reactionsRowTheirs,
+            ]}
+          >
+            {Array.from(reactionGroups.entries()).map(([emoji, { count, mine }]) => (
+              <TouchableOpacity
+                key={emoji}
+                onPress={() => handleToggleReaction(item.id, emoji)}
+                style={[
+                  styles.reactionChip,
+                  { borderColor },
+                  mine && { backgroundColor: incomingMessageBackground, borderColor: outgoingMessageBackground },
+                ]}
+                activeOpacity={0.7}
+              >
+                <ThemedText style={styles.reactionChipEmoji}>{emoji}</ThemedText>
+                {count > 1 ? (
+                  <ThemedText style={[styles.reactionChipCount, { color: iconColor }]}>{count}</ThemedText>
+                ) : null}
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : null}
 
         <ThemedText
           style={[
@@ -702,6 +805,54 @@ const styles = StyleSheet.create({
   },
   timestampIncoming: {
     alignSelf: 'flex-start',
+  },
+  reactionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xxs,
+    marginTop: -spacing.xxs,
+  },
+  reactionsRowMine: {
+    alignSelf: 'flex-end',
+  },
+  reactionsRowTheirs: {
+    alignSelf: 'flex-start',
+  },
+  reactionChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    borderRadius: 999,
+    borderWidth: layout.hairline,
+  },
+  reactionChipEmoji: {
+    fontSize: fontSize.sm,
+  },
+  reactionChipCount: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+  },
+  reactionPicker: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 999,
+    marginBottom: spacing.xxs,
+  },
+  reactionPickerMine: {
+    alignSelf: 'flex-end',
+  },
+  reactionPickerTheirs: {
+    alignSelf: 'flex-start',
+  },
+  reactionPickerSlot: {
+    paddingHorizontal: 2,
+  },
+  reactionPickerEmoji: {
+    fontSize: 24,
   },
   embedContainer: {
     maxWidth: '80%',
