@@ -268,7 +268,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   tabPaneHidden: {
-    display: 'none',
+    opacity: 0,
+    zIndex: -1,
   },
   errorText: {
     fontSize: fontSize.lg,
