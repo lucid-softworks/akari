@@ -71,6 +71,9 @@ function removeUnusedKeys(unusedKeys) {
       const filePath = path.join(process.cwd(), file);
       const content = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
+      // Snapshot key count BEFORE mutation so the diff is meaningful.
+      const originalKeyCount = extractKeys(content.translations).length;
+
       // Remove unused keys from the translations object
       const cleanedTranslations = removeKeysFromObject(
         content.translations,
@@ -83,10 +86,8 @@ function removeUnusedKeys(unusedKeys) {
       // Write the cleaned content back to the file
       fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
 
-      // Count how many keys were actually removed from this file
-      const originalKeys = extractKeys(content.translations);
-      const newKeys = extractKeys(cleanedTranslations);
-      const removedFromThisFile = originalKeys.length - newKeys.length;
+      const newKeyCount = extractKeys(cleanedTranslations).length;
+      const removedFromThisFile = originalKeyCount - newKeyCount;
       totalRemoved += removedFromThisFile;
 
       console.log(`  📝 ${file}: removed ${removedFromThisFile} keys`);
