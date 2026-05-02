@@ -206,7 +206,8 @@
       "profileUpdateError": "Échec de la mise à jour du profil",
       "handleHistory": "Historique du handle",
       "noHandleHistory": "Aucun historique de handle",
-      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle."
+      "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle.",
+      "reportPost": "Signaler la publication"
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Envoyer à"
     }
   }
 }

@@ -206,7 +206,8 @@
       "profileUpdateError": "Gagal memperbarui profil",
       "handleHistory": "Riwayat handle",
       "noHandleHistory": "Tidak ada riwayat handle",
-      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya."
+      "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
+      "reportPost": "Laporkan kiriman"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Kirim ke"
     }
   }
 }

@@ -206,7 +206,8 @@
       "profileUpdateError": "فشل في تحديث الملف الشخصي",
       "handleHistory": "سجل المعرف",
       "noHandleHistory": "لا يوجد سجل للمعرف",
-      "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد."
+      "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد.",
+      "reportPost": "الإبلاغ عن المنشور"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "أرسل إلى"
     }
   }
 }

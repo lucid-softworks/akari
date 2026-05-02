@@ -206,7 +206,8 @@
       "profileUpdateError": "Nu a reușit să actualizeze profilul. Vă rugăm să încercați din nou.",
       "handleHistory": "Gestionează istoria",
       "noHandleHistory": "Fără istorie",
-      "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul."
+      "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul.",
+      "reportPost": "Raportează postarea"
     },
     "feed": {
       "loadingMorePosts": "Încărcarea mai multor postări ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Trimite către"
     }
   }
 }

@@ -206,7 +206,8 @@
       "profileUpdateError": "प्रोफ़ाइल अपडेट करने में विफल",
       "handleHistory": "हैंडल इतिहास",
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
-      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।"
+      "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
+      "reportPost": "पोस्ट की रिपोर्ट करें"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "भेजें"
     }
   }
 }

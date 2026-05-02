@@ -206,7 +206,8 @@
       "profileUpdateError": "프로필 업데이트에 실패했습니다",
       "handleHistory": "핸들 변경 기록",
       "noHandleHistory": "핸들 변경 기록이 없습니다",
-      "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다."
+      "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다.",
+      "reportPost": "게시물 신고"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "보낼 곳"
     }
   }
 }

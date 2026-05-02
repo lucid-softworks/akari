@@ -1,5 +1,6 @@
 import { BlueskyApiClient } from './client';
 import type {
+  BlueskyLabelerServicesResponse,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
   BlueskyProfileUpdateInput,
@@ -49,5 +50,21 @@ export class BlueskyActors extends BlueskyApiClient {
    */
   async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
     return this.makeAuthenticatedRequest<BlueskyPreferencesResponse>('/app.bsky.actor.getPreferences', accessJwt);
+  }
+
+  /**
+   * Resolve labeler service DIDs to detailed views (creator, policies).
+   */
+  async getLabelerServices(
+    accessJwt: string,
+    dids: string[],
+    detailed = true,
+  ): Promise<BlueskyLabelerServicesResponse> {
+    return this.makeAuthenticatedRequest<BlueskyLabelerServicesResponse>('/app.bsky.labeler.getServices', accessJwt, {
+      params: {
+        dids,
+        detailed: detailed ? 'true' : 'false',
+      },
+    });
   }
 }

@@ -115,6 +115,13 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Resolves labeler service DIDs to detailed views.
+   */
+  async getLabelerServices(accessJwt: string, dids: string[], detailed = true) {
+    return this.actors.getLabelerServices(accessJwt, dids, detailed);
+  }
+
+  /**
    * Lists Tangled repos created by the requested actor.
    * @param accessJwt - Valid session token authorised to query the actor's records.
    * @param actor - DID or handle identifying the actor whose repos should be loaded.
@@ -408,8 +415,9 @@ export class BlueskyApi extends BlueskyApiClient {
     subject: { did: string } | { uri: string; cid: string },
     reasonType: string,
     reason?: string,
+    labelerDid?: string,
   ) {
-    return this.feeds.createReport(accessJwt, subject, reasonType, reason);
+    return this.feeds.createReport(accessJwt, subject, reasonType, reason, labelerDid);
   }
 
   /**

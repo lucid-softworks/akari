@@ -206,7 +206,8 @@
       "profileUpdateError": "Nepodařilo se aktualizovat profil. Zkuste to prosím znovu.",
       "handleHistory": "HISTORIE Zvládněte",
       "noHandleHistory": "Žádná historie rukojeti",
-      "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť."
+      "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť.",
+      "reportPost": "Nahlásit příspěvek"
     },
     "feed": {
       "loadingMorePosts": "Načítání více příspěvků ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Odeslat na"
     }
   }
 }

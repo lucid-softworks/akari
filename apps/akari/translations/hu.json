@@ -206,7 +206,8 @@
       "profileUpdateError": "Nem sikerült frissíteni a profilot. Kérjük, próbálkozzon újra.",
       "handleHistory": "Kezelje a történetet",
       "noHandleHistory": "Nincs fogantyú története",
-      "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját."
+      "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját.",
+      "reportPost": "Bejegyzés jelentése"
     },
     "feed": {
       "loadingMorePosts": "További hozzászólások betöltése ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Küldés ide"
     }
   }
 }

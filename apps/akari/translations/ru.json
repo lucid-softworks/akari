@@ -206,7 +206,8 @@
       "profileUpdateError": "Не удалось обновить профиль",
       "handleHistory": "История хэндла",
       "noHandleHistory": "Нет истории хэндла",
-      "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл."
+      "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл.",
+      "reportPost": "Пожаловаться на запись"
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Отправить в"
     }
   }
 }

@@ -1047,6 +1047,16 @@ export type BlueskyAppStatePref = {
 };
 
 /**
+ * Subscribed labelers preference
+ */
+export type BlueskyLabelersPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#labelersPref';
+  /** List of labeler service DIDs the user subscribes to */
+  labelers: { did: string }[];
+};
+
+/**
  * Union type for all preference types
  */
 export type BlueskyPreference =
@@ -1055,7 +1065,42 @@ export type BlueskyPreference =
   | BlueskyInterestsPref
   | BlueskyAdultContentPref
   | BlueskyContentLabelPref
-  | BlueskyAppStatePref;
+  | BlueskyAppStatePref
+  | BlueskyLabelersPref;
+
+/**
+ * Labeler service view
+ */
+export type BlueskyLabelerView = {
+  $type?: string;
+  uri: string;
+  cid: string;
+  creator: BlueskyRecordAuthor;
+  likeCount?: number;
+  viewer?: { like?: string };
+  indexedAt: string;
+  /** Detailed view only — defines what the service moderates. */
+  policies?: {
+    labelValues: string[];
+    labelValueDefinitions?: {
+      identifier: string;
+      severity: string;
+      blurs: string;
+      defaultSetting?: string;
+      adultOnly?: boolean;
+      locales: { lang: string; name: string; description: string }[];
+    }[];
+  };
+  /** Detailed view only — report reason types this labeler accepts (e.g.
+   * `com.atproto.moderation.defs#reasonSpam`). When omitted, treat as accepting all. */
+  reasonTypes?: string[];
+  /** Detailed view only — subject types accepted (`account` / `record`). */
+  subjectTypes?: ('account' | 'record')[];
+};
+
+export type BlueskyLabelerServicesResponse = {
+  views: BlueskyLabelerView[];
+};
 
 /**
  * Response from the getPreferences endpoint

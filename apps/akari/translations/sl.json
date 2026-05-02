@@ -206,7 +206,8 @@
       "profileUpdateError": "Ni uspelo posodobiti profila. Poskusite znova.",
       "handleHistory": "Zgodovina",
       "noHandleHistory": "Brez zgodovine ročaja",
-      "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja."
+      "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja.",
+      "reportPost": "Prijavi objavo"
     },
     "feed": {
       "loadingMorePosts": "Nalaganje več objav ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Pošlji na"
     }
   }
 }

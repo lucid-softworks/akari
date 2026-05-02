@@ -206,7 +206,8 @@
       "profileUpdateError": "Kunne ikke opdatere profilen. Prøv igen.",
       "handleHistory": "Handle-historik",
       "noHandleHistory": "Ingen handle-historik",
-      "noHandleHistoryDescription": "Denne bruger har ikke ændret sit handle endnu."
+      "noHandleHistoryDescription": "Denne bruger har ikke ændret sit handle endnu.",
+      "reportPost": "Anmeld opslag"
     },
     "feed": {
       "loadingMorePosts": "Indlæser flere Posts ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Send til"
     }
   }
 }

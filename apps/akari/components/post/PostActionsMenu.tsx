@@ -101,7 +101,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       { key: 'translate', icon: 'character.book.closed', label: t('post.actions.translate'), onPress: onTranslatePress, disabled: !canTranslate },
       { key: 'copyText', icon: 'doc.on.doc', label: t('post.actions.copyText'), onPress: handleCopyText, disabled: !postText },
       { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
-      { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportAccount'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
+      { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
     ],
     [canTranslate, postText, authorDid, handleCopyText, handleMuteAccount, onTranslatePress, onDismiss, t],
   );

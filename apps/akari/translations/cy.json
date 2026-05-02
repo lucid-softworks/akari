@@ -206,7 +206,8 @@
       "profileUpdateError": "Methu diweddaru proffil",
       "handleHistory": "Hanes handlen",
       "noHandleHistory": "Dim hanes handlen",
-      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto."
+      "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
+      "reportPost": "Adrodd am bostiad"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Anfon at"
     }
   }
 }

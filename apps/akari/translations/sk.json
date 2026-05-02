@@ -206,7 +206,8 @@
       "profileUpdateError": "Nepodarilo sa aktualizovať profil. Skúste to znova.",
       "handleHistory": "History",
       "noHandleHistory": "Žiadna história rukovätia",
-      "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť."
+      "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť.",
+      "reportPost": "Nahlásiť príspevok"
     },
     "feed": {
       "loadingMorePosts": "Načítava viac príspevkov ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Odoslať do"
     }
   }
 }

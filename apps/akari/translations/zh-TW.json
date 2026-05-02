@@ -206,7 +206,8 @@
       "profileUpdateError": "更新個人資料失敗",
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
-      "noHandleHistoryDescription": "此使用者尚未變更過代號。"
+      "noHandleHistoryDescription": "此使用者尚未變更過代號。",
+      "reportPost": "檢舉貼文"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "傳送至"
     }
   }
 }

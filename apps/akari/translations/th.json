@@ -206,7 +206,8 @@
       "profileUpdateError": "อัปเดตโปรไฟล์ไม่สำเร็จ",
       "handleHistory": "ประวัติแฮนเดิล",
       "noHandleHistory": "ไม่มีประวัติแฮนเดิล",
-      "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล"
+      "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล",
+      "reportPost": "รายงานโพสต์"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "ส่งถึง"
     }
   }
 }

@@ -6,6 +6,7 @@ import { spacing, fontSize } from '@/constants/tokens';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
+import { ReportSheet } from '@/components/ReportSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedsTab } from '@/components/profile/FeedsTab';
@@ -48,6 +49,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showReportSheet, setShowReportSheet] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
@@ -191,8 +193,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   };
 
   const handleReportAccount = () => {
-    // TODO: Implement report functionality
     setShowDropdown(false);
+    setShowReportSheet(true);
   };
 
   const renderTab = (tab: ProfileTabType) => {
@@ -256,6 +258,12 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         isBlocking={!!profile?.viewer?.blocking}
         isMuted={!!profile?.viewer?.muted}
         isOwnProfile={isOwnProfile}
+      />
+
+      <ReportSheet
+        visible={showReportSheet}
+        onDismiss={() => setShowReportSheet(false)}
+        subject={profile?.did ? { type: 'account', did: profile.did } : null}
       />
     </ThemedView>
   );

@@ -206,7 +206,8 @@
       "profileUpdateError": "Profiilin päivittäminen epäonnistui. Yritä uudelleen.",
       "handleHistory": "Käsityshistoria",
       "noHandleHistory": "Ei kahvahistoriaa",
-      "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa."
+      "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa.",
+      "reportPost": "Ilmoita julkaisusta"
     },
     "feed": {
       "loadingMorePosts": "Lataa lisää viestejä ...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Lähetä"
     }
   }
 }

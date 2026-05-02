@@ -392,12 +392,15 @@ export class BlueskyFeeds extends BlueskyApiClient {
 
   /**
    * Reports an account or post to moderation
+   * @param labelerDid - Optional labeler service DID. When set, the report is
+   *   routed to that labeler via the `atproto-proxy` header instead of the user's PDS.
    */
   async createReport(
     accessJwt: string,
     subject: { did: string } | { uri: string; cid: string },
     reasonType: string,
     reason?: string,
+    labelerDid?: string,
   ) {
     const subjectPayload = 'did' in subject
       ? { $type: 'com.atproto.admin.defs#repoRef', did: subject.did }
@@ -410,6 +413,9 @@ export class BlueskyFeeds extends BlueskyApiClient {
         reason,
         subject: subjectPayload,
       },
+      ...(labelerDid && {
+        headers: { 'atproto-proxy': `${labelerDid}#atproto_labeler` },
+      }),
     });
   }
 

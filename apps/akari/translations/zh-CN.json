@@ -206,7 +206,8 @@
       "profileUpdateError": "更新个人资料失败",
       "handleHistory": "用户名历史记录",
       "noHandleHistory": "暂无用户名历史记录",
-      "noHandleHistoryDescription": "该用户尚未更改过用户名。"
+      "noHandleHistoryDescription": "该用户尚未更改过用户名。",
+      "reportPost": "举报帖子"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "发送给"
     }
   }
 }

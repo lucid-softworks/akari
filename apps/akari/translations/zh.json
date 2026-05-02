@@ -206,7 +206,8 @@
       "profileUpdateError": "无法更新配置文件。请重试。",
       "handleHistory": "处理历史",
       "noHandleHistory": "没有处理历史",
-      "noHandleHistoryDescription": "该用户尚未更改其手柄。"
+      "noHandleHistoryDescription": "该用户尚未更改其手柄。",
+      "reportPost": "举报帖子"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "发送给"
     }
   }
 }

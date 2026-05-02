@@ -206,7 +206,8 @@
       "profileUpdateError": "Profil güncellenemedi",
       "handleHistory": "Kullanıcı adı geçmişi",
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
-      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi."
+      "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
+      "reportPost": "Gönderiyi bildir"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
@@ -413,7 +414,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Gönderilecek yer"
     }
   }
 }

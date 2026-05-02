@@ -206,7 +206,8 @@
       "profileUpdateError": "Failed to update profile. Please try again.",
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
-      "noHandleHistoryDescription": "This user hasn't changed their handle yet."
+      "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
+      "reportPost": "Report post"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
@@ -399,7 +400,8 @@
       "reasonSexual": "Unwanted sexual content",
       "reasonRude": "Anti-social behavior",
       "reasonViolation": "Illegal or harmful",
-      "reasonOther": "Other"
+      "reasonOther": "Other",
+      "sendTo": "Send to"
     },
     "recipe": {
       "title": "Recipe",
