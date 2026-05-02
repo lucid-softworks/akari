@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { EmptyState } from '@/components/EmptyState';
 import { Labels } from '@/components/Labels';
 
 import { PostCard } from '@/components/PostCard';
@@ -412,9 +413,7 @@ export default function SearchScreen() {
               ))}
             </ThemedView>
           ) : (
-            <ThemedView style={styles.emptyState}>
-              <ThemedText style={[styles.emptyStateText, { color: textColor }]}>{getEmptyStateText()}</ThemedText>
-            </ThemedView>
+            <EmptyState title={getEmptyStateText()} />
           )
         }
         estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
@@ -502,10 +501,6 @@ const styles = StyleSheet.create({
   emptyState: {
     paddingVertical: spacing.xxxxl,
     alignItems: 'center',
-  },
-  emptyStateText: {
-    fontSize: fontSize.lg,
-    opacity: opacity.tertiary,
   },
   loadingFooter: {
     paddingVertical: spacing.xl,
