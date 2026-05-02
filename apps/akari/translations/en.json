@@ -66,7 +66,8 @@
       "bookmarks": "Bookmarks",
       "live": "LIVE",
       "watchNow": "Watch now",
-      "openProfile": "Open profile"
+      "openProfile": "Open profile",
+      "tryAgain": "Try again"
     },
     "auth": {
       "fillAllFields": "Please fill in all fields",
@@ -317,7 +318,7 @@
       "checkMissingTranslations": "🔍 Check Missing Translations",
       "developmentTool": "Development tool",
       "accentColor": "Accent Color",
-      "colorMode": "Color Mode",
+      "colorMode": "Color mode",
       "lightMode": "Light",
       "darkMode": "Dark",
       "autoMode": "Auto",
@@ -363,7 +364,6 @@
       "threadPreferences": "Thread preferences",
       "externalMedia": "External media",
       "autoplayVideos": "Autoplay videos and GIFs",
-      "colorMode": "Color mode",
       "theme": "Theme",
       "fontSize": "Font size",
       "requireAltText": "Require alt text before posting",

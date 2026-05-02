@@ -127,7 +127,10 @@ export default function BookmarksScreen() {
               <FeedSkeleton count={4} />
             </View>
           ) : error ? (
-            <EmptyState title={t('bookmarks.error')} />
+            <EmptyState
+              title={t('bookmarks.error')}
+              action={{ label: t('common.tryAgain'), onPress: () => void refetch() }}
+            />
           ) : (
             <EmptyState title={t('bookmarks.emptyState')} />
           )

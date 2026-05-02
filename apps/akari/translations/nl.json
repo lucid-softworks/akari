@@ -66,7 +66,8 @@
       "home": "Home",
       "profile": "Profile",
       "signOutAllAccounts": "Sign Out of All Accounts",
-      "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device"
+      "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device",
+      "tryAgain": "Try again"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",

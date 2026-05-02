@@ -275,7 +275,10 @@ export function MessagesListScreen({
               ))}
             </ThemedView>
           ) : error ? (
-            <EmptyState title={t('common.errorLoadingConversations')} />
+            <EmptyState
+              title={t('common.errorLoadingConversations')}
+              action={{ label: t('common.tryAgain'), onPress: () => void refetch({ throwOnError: false }) }}
+            />
           ) : (
             <EmptyState title={t('common.noConversations')} />
           )

@@ -413,7 +413,14 @@ export default function SearchScreen() {
               ))}
             </ThemedView>
           ) : (
-            <EmptyState title={getEmptyStateText()} />
+            <EmptyState
+              title={getEmptyStateText()}
+              action={
+                isError
+                  ? { label: t('common.tryAgain'), onPress: () => void refetch() }
+                  : undefined
+              }
+            />
           )
         }
         estimatedItemSize={ESTIMATED_RESULT_ITEM_HEIGHT}
