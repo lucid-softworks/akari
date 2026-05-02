@@ -397,6 +397,12 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const authorInfo = getAuthorInfo();
 
   return (
+    // Claim the touch responder at the container level so the parent
+    // PostCard's PressableLink doesn't swallow taps on the quoted post.
+    <View
+      onStartShouldSetResponder={() => true}
+      onMoveShouldSetResponder={() => false}
+    >
     <PressableLink href={postHref} onPress={handlePress} style={{ opacity: 1 }}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.header}>
@@ -506,6 +512,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         )}
       </View>
     </PressableLink>
+    </View>
   );
 }
 

@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -149,36 +149,32 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
           </ThemedView>
       ) : null
     ) : (
-      <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
-        <TouchableWithoutFeedback onPress={onDismiss}>
-          <View style={styles.overlay}>
-            <TouchableWithoutFeedback>
-              <ThemedView
-                style={[
-                  styles.sheet,
-                  {
-                    backgroundColor: menuBackgroundColor,
-                    paddingBottom: insets.bottom + spacing.lg,
-                  },
-                ]}
-              >
-                <View style={styles.handleBarContainer}>
-                  <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
-                </View>
-                <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                  {menuItems}
-                </ScrollView>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={onDismiss}
-                  activeOpacity={activeOpacity.default}
-                >
-                  <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-                </TouchableOpacity>
-              </ThemedView>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+        onRequestClose={onDismiss}
+      >
+        <ThemedView
+          style={[
+            styles.nativeSheet,
+            {
+              backgroundColor: menuBackgroundColor,
+              paddingBottom: insets.bottom + spacing.lg,
+            },
+          ]}
+        >
+          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+            {menuItems}
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={onDismiss}
+            activeOpacity={activeOpacity.default}
+          >
+            <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
       </Modal>
     )}
     <ReportSheet
@@ -191,24 +187,8 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 });
 
 const styles = StyleSheet.create({
-  overlay: {
+  nativeSheet: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    maxHeight: '70%',
-  },
-  handleBarContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  handleBar: {
-    width: 36,
-    height: 4,
-    borderRadius: radius.full,
   },
   scrollView: {
     paddingHorizontal: spacing.lg,
