@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 
 import ProfileView from '@/components/ProfileView';
 
@@ -9,5 +9,17 @@ export default function ProfileScreen() {
     return null;
   }
 
-  return <ProfileView handle={handle} />;
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackVisible: true,
+          headerBackButtonDisplayMode: 'minimal',
+          headerTitle: `@${handle}`,
+        }}
+      />
+      <ProfileView handle={handle} />
+    </>
+  );
 }

@@ -15,14 +15,19 @@ export default function ProfileLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="[handle]"
-        options={{ headerShown: false }}
+        options={({ route }) => ({
+          headerShown: true,
+          headerBackVisible: true,
+          headerBackButtonDisplayMode: 'minimal',
+          headerTitle: `@${(route.params as { handle?: string })?.handle ?? ''}`,
+        })}
         dangerouslySingular
       />
       <Stack.Screen
         name="[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: isLargeNative,
+          headerShown: true,
           headerBackVisible: true,
           headerBackButtonDisplayMode: 'minimal',
         }}
