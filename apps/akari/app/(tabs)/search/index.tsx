@@ -534,6 +534,7 @@ export default function SearchScreen() {
         contentContainerStyle={[styles.resultsListContent, { paddingTop: headerHeight }]}
         refreshing={isRefetching}
         onRefresh={handleRefresh}
+        progressViewOffset={headerHeight}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         onScroll={handleScroll}
