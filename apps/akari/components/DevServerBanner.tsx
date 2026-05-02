@@ -17,6 +17,8 @@ export function DevServerBanner() {
 
   useEffect(() => {
     if (!__DEV__) return;
+    // Don't poll Metro from jest — the fetch hangs and tests time out.
+    if (process.env.JEST_WORKER_ID !== undefined) return;
 
     const hostUri = Constants.expoConfig?.hostUri;
     if (!hostUri) return;

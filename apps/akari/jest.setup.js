@@ -6,6 +6,31 @@ jest.mock('react-native-reanimated', () => {
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
 
+// NetInfo's native side isn't available in jest; the OfflineBanner subscribes
+// to it on mount and the mock-less version throws "Cannot read isInternetReachable".
+jest.mock('@react-native-community/netinfo', () => ({
+  __esModule: true,
+  default: {
+    addEventListener: jest.fn(() => () => {}),
+    fetch: jest.fn(() => Promise.resolve({ isConnected: true, isInternetReachable: true })),
+    configure: jest.fn(),
+  },
+}));
+
+// Sentry.wrap() is an HOC that adds touch + error boundary wrappers around
+// the component, breaking tests that assert the wrapped component's exact
+// output (e.g. a null render). Make wrap() identity in tests.
+jest.mock('@sentry/react-native', () => ({
+  init: jest.fn(),
+  wrap: (Component) => Component,
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
+  addBreadcrumb: jest.fn(),
+  setUser: jest.fn(),
+  setTag: jest.fn(),
+  setContext: jest.fn(),
+}));
+
 // Global mock for expo-router usePathname
 jest.mock('expo-router', () => ({
   usePathname: jest.fn(() => '/index'),
