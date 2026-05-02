@@ -8,6 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { usePdsUrlFromDid } from '@/hooks/queries/usePdsUrl';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { resolveDietaryRestrictions, resolveRecipeDefinition } from '@/utils/recipeDefinitions';
 
 type RecipeModalProps = {
@@ -37,6 +38,7 @@ function getAttributionName(attribution: BlueskyRecipeAttribution): string {
 }
 
 export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
+  const { t } = useTranslation();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const borderColor = useThemeColor({}, 'border');
