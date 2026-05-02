@@ -173,6 +173,7 @@ export default function ProfileScreen() {
       ListHeaderComponent: headerComponent,
       StickyTabComponent: tabsComponent,
       pinScrollY: nextTabPinScrollYRef.current,
+      isActive: tab === activeTab,
       onProfileRefresh: handleProfileRefresh,
       onScrollY: handleScrollY,
       onHeaderHeightChange: handleHeaderHeightChange,

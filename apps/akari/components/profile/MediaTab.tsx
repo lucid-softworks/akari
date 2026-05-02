@@ -18,6 +18,7 @@ export function MediaTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -92,6 +93,7 @@ export function MediaTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noMedia')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

@@ -18,6 +18,7 @@ export function RepliesTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -92,6 +93,7 @@ export function RepliesTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noReplies')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

@@ -23,6 +23,7 @@ type ProfileTabFlatListProps<T> = {
   StickyTabComponent?: React.ReactElement | null;
   emptyText: string;
   pinScrollY?: number;
+  isActive?: boolean;
   onRefresh?: () => void;
   refreshing?: boolean;
   onScrollY?: (y: number) => void;
@@ -41,6 +42,7 @@ export function ProfileTabFlatList<T>({
   StickyTabComponent,
   emptyText,
   pinScrollY,
+  isActive = true,
   onRefresh,
   refreshing,
   onScrollY,
@@ -125,21 +127,21 @@ export function ProfileTabFlatList<T>({
     [keyExtractor],
   );
 
-  // Capture the desired initial scroll Y at first mount only. Later re-renders
-  // won't change it; we only want to scroll once, on initial layout.
-  const initialScrollYRef = useRef(pinScrollY ?? 0);
-  const hasPinnedRef = useRef(false);
+  // Pin to the parent-provided scroll target whenever this tab becomes the
+  // active one — including on first mount. Keeps the visual banner/sticky-tab
+  // state in sync across tab switches even though each tab owns its own
+  // FlatList. pinScrollY is read from the closure of the render that flipped
+  // isActive to true, so it always reflects the latest target.
+  const pinScrollYRef = useRef(pinScrollY ?? 0);
+  pinScrollYRef.current = pinScrollY ?? 0;
 
   useEffect(() => {
-    if (hasPinnedRef.current) return;
-    const target = initialScrollYRef.current;
-    if (target <= 0) {
-      hasPinnedRef.current = true;
-      return;
-    }
-    listRef.current?.scrollToOffset({ offset: target, animated: false });
-    hasPinnedRef.current = true;
-  }, []);
+    if (!isActive) return;
+    const target = pinScrollYRef.current;
+    requestAnimationFrame(() => {
+      listRef.current?.scrollToOffset({ offset: target, animated: false });
+    });
+  }, [isActive]);
 
   return (
     <FlatList

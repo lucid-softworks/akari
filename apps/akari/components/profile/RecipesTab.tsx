@@ -147,6 +147,7 @@ export function RecipesTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -188,6 +189,7 @@ export function RecipesTab({
         StickyTabComponent={StickyTabComponent}
         emptyText={t('profile.noRecipes')}
         pinScrollY={pinScrollY}
+        isActive={isActive}
         onRefresh={handleRefresh}
         refreshing={isRefetching}
       onScrollY={onScrollY}

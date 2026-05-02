@@ -18,6 +18,7 @@ export function PostsTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -101,6 +102,7 @@ export function PostsTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noPosts')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

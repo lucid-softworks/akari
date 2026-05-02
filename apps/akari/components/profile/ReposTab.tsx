@@ -99,6 +99,7 @@ export function ReposTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -122,6 +123,7 @@ export function ReposTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noRepos')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

@@ -18,6 +18,7 @@ export function LikesTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -92,6 +93,7 @@ export function LikesTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noLikes')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}

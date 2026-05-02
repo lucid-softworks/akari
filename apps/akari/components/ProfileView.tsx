@@ -202,6 +202,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
       ListHeaderComponent: headerComponent,
       StickyTabComponent: tabsComponent,
       pinScrollY: nextTabPinScrollYRef.current,
+      isActive: tab === activeTab,
       onProfileRefresh: handleProfileRefresh,
       onScrollY: handleScrollY,
       onHeaderHeightChange: handleHeaderHeightChange,

@@ -74,6 +74,7 @@ export function FeedsTab({
   ListHeaderComponent,
   StickyTabComponent,
   pinScrollY,
+  isActive,
   onProfileRefresh,
   onScrollY,
   onHeaderHeightChange,
@@ -97,6 +98,7 @@ export function FeedsTab({
       StickyTabComponent={StickyTabComponent}
       emptyText={t('profile.noFeeds')}
       pinScrollY={pinScrollY}
+      isActive={isActive}
       onRefresh={handleRefresh}
       refreshing={isRefetching}
     onScrollY={onScrollY}
