@@ -61,7 +61,8 @@
       "offline": "You're offline. Changes will sync when you reconnect.",
       "somethingWentWrong": "Something went wrong",
       "pendingChats": "Pending chats",
-      "viewPendingChats": "View pending chats"
+      "viewPendingChats": "View pending chats",
+      "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect."
     },
     "auth": {
       "fillAllFields": "Wypełnij wszystkie pola",
