@@ -69,7 +69,8 @@
       "signOutAllAccountsDescription": "Sign out and remove all saved accounts from this device",
       "tryAgain": "Try again",
       "copiedToClipboard": "Copied to clipboard",
-      "offline": "You're offline. Changes will sync when you reconnect."
+      "offline": "You're offline. Changes will sync when you reconnect.",
+      "somethingWentWrong": "Something went wrong"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",

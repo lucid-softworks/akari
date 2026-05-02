@@ -173,8 +173,10 @@ function findTranslationUsage(keys) {
     const filePath = path.join(process.cwd(), file);
     const content = fs.readFileSync(filePath, "utf8");
 
-    // Search for t("key") or t('key') patterns
-    const tFunctionMatches = content.match(/t\(["']([^"']+)["']/g) || [];
+    // Search for t("key") or t('key') patterns. Use a negative lookbehind so
+    // we don't match the trailing "t(" of unrelated identifiers like getByText,
+    // expect, fireEvent, etc.
+    const tFunctionMatches = content.match(/(?<![a-zA-Z0-9_$])t\(["']([^"']+)["']/g) || [];
     tFunctionMatches.forEach((match) => {
       const key = match.match(/t\(["']([^"']+)["']/)[1];
       // Filter out storage keys and other non-translation strings
