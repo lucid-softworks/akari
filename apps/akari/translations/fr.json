@@ -282,7 +282,10 @@
         "untitled": "(sans texte)",
         "delete": "Supprimer",
         "limitReached": "Limite de brouillons atteinte. Supprime-en un pour en enregistrer un nouveau."
-      }
+      },
+      "addPostToThread": "Ajouter un post",
+      "removePostFromThread": "Supprimer le post",
+      "continueThreadPlaceholder": "Continue le fil…"
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

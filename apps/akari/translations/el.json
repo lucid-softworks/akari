@@ -282,7 +282,10 @@
         "untitled": "(χωρίς κείμενο)",
         "delete": "Διαγραφή",
         "limitReached": "Φτάσατε το όριο πρόχειρων. Διαγράψτε ένα για να αποθηκεύσετε νέο."
-      }
+      },
+      "addPostToThread": "Προσθήκη ανάρτησης",
+      "removePostFromThread": "Αφαίρεση ανάρτησης",
+      "continueThreadPlaceholder": "Συνεχίστε το νήμα..."
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

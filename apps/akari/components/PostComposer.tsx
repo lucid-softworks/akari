@@ -144,19 +144,69 @@ type AttachedImage = {
   tenorId?: string;
 };
 
+/** One leaf in a thread compose. The composer holds an array of these
+ *  and posts them sequentially with reply chaining when published. */
+type ThreadPost = {
+  text: string;
+  attachedImages: AttachedImage[];
+};
+
+const EMPTY_THREAD_POST: ThreadPost = { text: '', attachedImages: [] };
+
 const isWeb = Platform.OS === 'web';
 const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
   Platform.OS === 'ios' ? 'pageSheet' : Platform.OS === 'android' ? 'fullScreen' : undefined;
 
 export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerProps) {
   const { t } = useTranslation();
-  const [text, setText] = useState('');
-  const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
+  // Thread of posts to publish. Length 1 = standard single-post compose;
+  // length > 1 = multi-post thread. activeIndex tracks which post is
+  // focused (so footer actions like the emoji picker / image picker
+  // target the right entry).
+  const [posts, setPosts] = useState<ThreadPost[]>([{ ...EMPTY_THREAD_POST }]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [controlsSheetVisible, setControlsSheetVisible] = useState(false);
   const [postControls, setPostControls] = useState<PostControls>(DEFAULT_POST_CONTROLS);
   const [textSelection, setTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+
+  const activePost = posts[activeIndex] ?? EMPTY_THREAD_POST;
+  const text = activePost.text;
+  const attachedImages = activePost.attachedImages;
+
+  const setText = useCallback(
+    (next: string) => {
+      setPosts((prev) =>
+        prev.map((p, i) => (i === activeIndex ? { ...p, text: next } : p)),
+      );
+    },
+    [activeIndex],
+  );
+
+  const setAttachedImages = useCallback(
+    (next: AttachedImage[]) => {
+      setPosts((prev) =>
+        prev.map((p, i) => (i === activeIndex ? { ...p, attachedImages: next } : p)),
+      );
+    },
+    [activeIndex],
+  );
+
+  const addPost = useCallback(() => {
+    setPosts((prev) => [...prev, { ...EMPTY_THREAD_POST }]);
+    // Focus moves to the new (last) post.
+    setActiveIndex((prev) => prev + 1);
+    setTextSelection({ start: 0, end: 0 });
+  }, []);
+
+  const removePost = useCallback((index: number) => {
+    setPosts((prev) => {
+      if (prev.length <= 1) return prev;
+      return prev.filter((_, i) => i !== index);
+    });
+    setActiveIndex((prev) => (index <= prev ? Math.max(0, prev - 1) : prev));
+  }, []);
   const createPostMutation = useCreatePost();
   const postControlsMutation = usePostControls();
   const { showToast } = useToast();
@@ -191,8 +241,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   // close-alert "Save draft" button needs to wait for it).
   const savePromiseRef = useRef<Promise<void> | null>(null);
   const pendingPayloadRef = useRef<{
-    text: string;
-    images: AttachedImage[];
+    posts: ThreadPost[];
     controls: PostControls;
   } | null>(null);
   const hydratedRef = useRef(false);
@@ -208,6 +257,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setCurrentDraftId(null);
     draftIdRef.current = null;
     pendingPayloadRef.current = null;
+    setPosts([{ ...EMPTY_THREAD_POST }]);
+    setActiveIndex(0);
     hydratedRef.current = true;
   }, [visible]);
 
@@ -227,8 +278,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
   const runSave = useCallback(
     (payload: {
-      text: string;
-      images: AttachedImage[];
+      posts: ThreadPost[];
       controls: PostControls;
     }): Promise<void> => {
       pendingPayloadRef.current = payload;
@@ -251,8 +301,24 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           while (pendingPayloadRef.current) {
             const next = pendingPayloadRef.current;
             pendingPayloadRef.current = null;
+            // Reshape thread posts → draft entries; trim trailing empties.
+            const trimmed = next.posts.slice();
+            while (
+              trimmed.length > 1 &&
+              trimmed[trimmed.length - 1].text.trim().length === 0 &&
+              trimmed[trimmed.length - 1].attachedImages.length === 0
+            ) {
+              trimmed.pop();
+            }
             const isEmpty =
-              next.text.trim().length === 0 && next.images.length === 0;
+              trimmed.length === 0 ||
+              (trimmed.length === 1 &&
+                trimmed[0].text.trim().length === 0 &&
+                trimmed[0].attachedImages.length === 0);
+            const draftPosts = trimmed.map((p) => ({
+              text: p.text,
+              images: p.attachedImages,
+            }));
             try {
               if (isEmpty) {
                 if (!draftIdRef.current) continue;
@@ -263,10 +329,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               } else if (draftIdRef.current) {
                 await updateMutateRef.current({
                   id: draftIdRef.current,
-                  ...next,
+                  posts: draftPosts,
+                  controls: next.controls,
                 });
               } else {
-                const created = await createMutateRef.current(next);
+                const created = await createMutateRef.current({
+                  posts: draftPosts,
+                  controls: next.controls,
+                });
                 draftIdRef.current = created.id;
                 setCurrentDraftId(created.id);
               }
@@ -304,10 +374,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     if (!visible || !draftsApply || !did || !hydratedRef.current) return;
     if (!currentDraftId) return;
     const timeout = setTimeout(() => {
-      runSave({ text, images: attachedImages, controls: postControls });
+      runSave({ posts, controls: postControls });
     }, 800);
     return () => clearTimeout(timeout);
-  }, [visible, draftsApply, did, currentDraftId, text, attachedImages, postControls, runSave]);
+  }, [visible, draftsApply, did, currentDraftId, posts, postControls, runSave]);
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -317,46 +387,79 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const tintColor = useThemeColor({}, 'tint');
 
   const handlePost = async () => {
-    if (!text.trim() && attachedImages.length === 0 && !quote) return;
+    // Trim trailing empty posts the user added but didn't fill in.
+    const trimmed = (() => {
+      const out = posts.slice();
+      while (
+        out.length > 1 &&
+        out[out.length - 1].text.trim().length === 0 &&
+        out[out.length - 1].attachedImages.length === 0
+      ) {
+        out.pop();
+      }
+      return out;
+    })();
+    const root = trimmed[0];
+    const rootHasContent =
+      root.text.trim().length > 0 || root.attachedImages.length > 0 || !!quote;
+    if (!rootHasContent) return;
 
     try {
-      const created = await createPostMutation.mutateAsync({
-        text: text.trim(),
-        replyTo: replyTo
-          ? {
-              root: replyTo.root,
-              parent: replyTo.parent,
-            }
-          : undefined,
-        images: attachedImages.length > 0 ? attachedImages : undefined,
-        quote: quote ? { uri: quote.uri, cid: quote.cid } : undefined,
-      });
+      // For replies, the conversation root is the upstream post. For
+      // standalone threads, the root is the URI of post #0 (which we
+      // learn after the first createPost resolves).
+      const conversationRoot = replyTo?.root;
+      let our0Uri: string | undefined;
+      let prevUri: string | undefined;
 
-      // Threadgate / postgate: only writes when the user actually changed
-      // the controls away from the defaults. Failure here doesn't block
-      // closing the composer — the post is already up.
-      if (created?.uri) {
-        postControlsMutation
-          .mutateAsync({ postUri: created.uri, controls: postControls })
-          .catch((err) => {
-            if (__DEV__) console.warn('Failed to set post controls', err);
-          });
+      for (let i = 0; i < trimmed.length; i++) {
+        const p = trimmed[i];
+        const isRoot = i === 0;
+        let replyContext: { root: string; parent: string } | undefined;
+        if (isRoot && replyTo) {
+          replyContext = { root: replyTo.root, parent: replyTo.parent };
+        } else if (!isRoot) {
+          const rootForReply = conversationRoot ?? our0Uri;
+          if (rootForReply && prevUri) {
+            replyContext = { root: rootForReply, parent: prevUri };
+          }
+        }
+
+        const created = await createPostMutation.mutateAsync({
+          text: p.text.trim(),
+          replyTo: replyContext,
+          images: p.attachedImages.length > 0 ? p.attachedImages : undefined,
+          quote: isRoot && quote ? { uri: quote.uri, cid: quote.cid } : undefined,
+        });
+
+        if (isRoot) {
+          our0Uri = created?.uri;
+          // Threadgate / postgate apply only to the root of OUR thread.
+          if (created?.uri) {
+            postControlsMutation
+              .mutateAsync({ postUri: created.uri, controls: postControls })
+              .catch((err) => {
+                if (__DEV__) console.warn('Failed to set post controls', err);
+              });
+          }
+        }
+        prevUri = created?.uri;
       }
 
-      // Drop the in-progress draft now that the post is up.
+      // Drop the in-progress draft now that the thread is up.
       if (draftsApply && currentDraftId) {
         deleteDraftMutation.mutate({ id: currentDraftId });
       }
 
       // Reset form and close
-      setText('');
-      setAttachedImages([]);
+      setPosts([{ ...EMPTY_THREAD_POST }]);
+      setActiveIndex(0);
       setPostControls(DEFAULT_POST_CONTROLS);
       setCurrentDraftId(null);
       draftIdRef.current = null;
       onClose();
     } catch (error) {
-      console.error('Failed to create post:', error);
+      console.error('Failed to create thread:', error);
       showToast({
         type: 'error',
         title: t('post.post'),
@@ -366,8 +469,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   };
 
   const resetAndClose = useCallback(() => {
-    setText('');
-    setAttachedImages([]);
+    setPosts([{ ...EMPTY_THREAD_POST }]);
+    setActiveIndex(0);
     setPostControls(DEFAULT_POST_CONTROLS);
     setCurrentDraftId(null);
     draftIdRef.current = null;
@@ -376,7 +479,9 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   }, [onClose]);
 
   const handleClose = useCallback(() => {
-    const hasContent = text.trim().length > 0 || attachedImages.length > 0;
+    const hasContent = posts.some(
+      (p) => p.text.trim().length > 0 || p.attachedImages.length > 0,
+    );
     if (draftsApply && did && hasContent) {
       Alert.alert(t('post.draft.discardTitle'), undefined, [
         { text: t('common.cancel'), style: 'cancel' },
@@ -394,7 +499,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
             // Flush any pending debounce so the latest content lands on the
             // server before we close. runSave serializes against any
             // already-running save.
-            await runSave({ text, images: attachedImages, controls: postControls });
+            await runSave({ posts, controls: postControls });
             showToast({ type: 'success', message: t('post.draft.savedToast') });
             resetAndClose();
           },
@@ -406,8 +511,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   }, [
     draftsApply,
     did,
-    text,
-    attachedImages,
+    posts,
     postControls,
     currentDraftId,
     deleteDraftMutation,
@@ -418,8 +522,12 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   ]);
 
   const handleSelectDraft = useCallback((draft: ComposerDraftState) => {
-    setText(draft.text);
-    setAttachedImages(draft.images);
+    setPosts(
+      draft.posts.length > 0
+        ? draft.posts.map((p) => ({ text: p.text, attachedImages: p.images }))
+        : [{ ...EMPTY_THREAD_POST }],
+    );
+    setActiveIndex(0);
     setPostControls(draft.controls);
     setCurrentDraftId(draft.id);
     draftIdRef.current = draft.id;
@@ -467,15 +575,33 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setAttachedImages(attachedImages.filter((_, i) => i !== index));
-  };
+  const handleRemoveImage = useCallback((postIdx: number, imageIdx: number) => {
+    setPosts((prev) =>
+      prev.map((p, i) =>
+        i === postIdx
+          ? { ...p, attachedImages: p.attachedImages.filter((_, j) => j !== imageIdx) }
+          : p,
+      ),
+    );
+  }, []);
 
-  const handleUpdateImageAlt = (index: number, alt: string) => {
-    const updatedImages = [...attachedImages];
-    updatedImages[index] = { ...updatedImages[index], alt };
-    setAttachedImages(updatedImages);
-  };
+  const handleUpdateImageAlt = useCallback(
+    (postIdx: number, imageIdx: number, alt: string) => {
+      setPosts((prev) =>
+        prev.map((p, i) =>
+          i === postIdx
+            ? {
+                ...p,
+                attachedImages: p.attachedImages.map((img, j) =>
+                  j === imageIdx ? { ...img, alt } : img,
+                ),
+              }
+            : p,
+        ),
+      );
+    },
+    [],
+  );
 
   const handleAddGif = () => {
     setGifPickerVisible(true);
@@ -499,11 +625,17 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     }
   };
 
+  const maxCharacters = 300;
+  // Disable post when the root has no content, OR when any post in the
+  // thread blew the character limit (we'd reject silently otherwise).
+  const root = posts[0];
+  const rootHasContent =
+    root.text.trim().length > 0 || root.attachedImages.length > 0 || !!quote;
+  const anyPostOverLimit = posts.some((p) => p.text.length > maxCharacters);
   const isPostDisabled =
-    (!text.trim() && attachedImages.length === 0 && !quote) || createPostMutation.isPending;
+    !rootHasContent || anyPostOverLimit || createPostMutation.isPending;
   const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
   const characterCount = text.length;
-  const maxCharacters = 300;
   const isNearLimit = characterCount > maxCharacters * 0.8;
   const isOverLimit = characterCount > maxCharacters;
 
@@ -611,66 +743,116 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               </View>
             ) : null}
 
-            {/* Text Input */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[
-                  styles.textInput,
-                  { color: textColor },
-                  isWeb && { outline: 'none' },
-                ]}
-                value={text}
-                onChangeText={setText}
-                onSelectionChange={(e) => setTextSelection(e.nativeEvent.selection)}
-                placeholder={replyTo ? t('post.replyPlaceholder') : t('post.postPlaceholder')}
-                placeholderTextColor={iconColor}
-                multiline
-                autoFocus
-                autoCapitalize="none"
-                maxLength={maxCharacters}
-                textAlignVertical="top"
-                selectionColor={tintColor}
-                cursorColor={tintColor}
-              />
-            </View>
-
-            {/* Quote preview shown below input */}
-            {quote && previewPost ? (
-              <PostPreviewCard
-                post={previewPost}
-                borderColor={borderColor}
-                textColor={textColor}
-                iconColor={iconColor}
-              />
-            ) : null}
-
-            {/* Attached Images */}
-            {attachedImages.length > 0 && (
-              <View style={styles.imagesContainer}>
-                {attachedImages.map((image, index) => (
-                  <View key={index} style={styles.imageItem}>
-                    <View style={styles.imageContainer}>
-                      <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
-                      <TouchableOpacity
-                        style={styles.removeImageButton}
-                        onPress={() => handleRemoveImage(index)}
-                        testID={`remove-image-${index}`}
-                      >
-                        <IconSymbol name="xmark" size={16} color="#ffffff" />
-                      </TouchableOpacity>
-                    </View>
-                    <TextInput
-                      style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
-                      value={image.alt}
-                      onChangeText={(alt) => handleUpdateImageAlt(index, alt)}
-                      placeholder={t('post.imageAltTextPlaceholder')}
-                      placeholderTextColor={iconColor}
-                      maxLength={1000}
+            {posts.map((post, postIdx) => {
+              const isFirst = postIdx === 0;
+              const isLast = postIdx === posts.length - 1;
+              const isActive = postIdx === activeIndex;
+              return (
+                <View key={postIdx} style={styles.threadPostBlock}>
+                  {!isFirst ? (
+                    <View
+                      style={[styles.threadDivider, { backgroundColor: borderColor }]}
                     />
+                  ) : null}
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={[
+                        styles.textInput,
+                        { color: textColor },
+                        !isActive && styles.textInputInactive,
+                        isWeb && { outline: 'none' },
+                      ]}
+                      value={post.text}
+                      onChangeText={(next) =>
+                        setPosts((prev) =>
+                          prev.map((p, i) => (i === postIdx ? { ...p, text: next } : p)),
+                        )
+                      }
+                      onFocus={() => setActiveIndex(postIdx)}
+                      onSelectionChange={(e) => {
+                        if (postIdx === activeIndex) {
+                          setTextSelection(e.nativeEvent.selection);
+                        }
+                      }}
+                      placeholder={
+                        isFirst
+                          ? replyTo
+                            ? t('post.replyPlaceholder')
+                            : t('post.postPlaceholder')
+                          : t('post.continueThreadPlaceholder')
+                      }
+                      placeholderTextColor={iconColor}
+                      multiline
+                      autoFocus={isFirst}
+                      autoCapitalize="none"
+                      maxLength={maxCharacters}
+                      textAlignVertical="top"
+                      selectionColor={tintColor}
+                      cursorColor={tintColor}
+                    />
+                    {!isFirst ? (
+                      <TouchableOpacity
+                        style={styles.removePostButton}
+                        onPress={() => removePost(postIdx)}
+                        accessibilityLabel={t('post.removePostFromThread')}
+                        hitSlop={10}
+                      >
+                        <IconSymbol name="xmark.circle.fill" size={18} color={iconColor} />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
-                ))}
-              </View>
-            )}
+
+                  {isFirst && quote && previewPost ? (
+                    <PostPreviewCard
+                      post={previewPost}
+                      borderColor={borderColor}
+                      textColor={textColor}
+                      iconColor={iconColor}
+                    />
+                  ) : null}
+
+                  {post.attachedImages.length > 0 ? (
+                    <View style={styles.imagesContainer}>
+                      {post.attachedImages.map((image, imgIdx) => (
+                        <View key={imgIdx} style={styles.imageItem}>
+                          <View style={styles.imageContainer}>
+                            <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
+                            <TouchableOpacity
+                              style={styles.removeImageButton}
+                              onPress={() => handleRemoveImage(postIdx, imgIdx)}
+                              testID={`remove-image-${postIdx}-${imgIdx}`}
+                            >
+                              <IconSymbol name="xmark" size={16} color="#ffffff" />
+                            </TouchableOpacity>
+                          </View>
+                          <TextInput
+                            style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
+                            value={image.alt}
+                            onChangeText={(alt) => handleUpdateImageAlt(postIdx, imgIdx, alt)}
+                            placeholder={t('post.imageAltTextPlaceholder')}
+                            placeholderTextColor={iconColor}
+                            maxLength={1000}
+                          />
+                        </View>
+                      ))}
+                    </View>
+                  ) : null}
+
+                  {isLast ? (
+                    <TouchableOpacity
+                      style={[styles.addPostButton, { borderColor }]}
+                      onPress={addPost}
+                      accessibilityLabel={t('post.addPostToThread')}
+                    >
+                      <IconSymbol name="plus" size={14} color={tintColor} />
+                      <ThemedText style={[styles.addPostText, { color: tintColor }]}>
+                        {t('post.addPostToThread')}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              );
+            })}
           </ScrollView>
 
           {/* Footer with Character Count and Actions */}
@@ -966,6 +1148,40 @@ const styles = StyleSheet.create({
   inputContainer: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
+    position: 'relative',
+  },
+  threadPostBlock: {
+    // Each post in the thread is its own block; the divider between
+    // them lives at the top so post #0 doesn't get one.
+  },
+  threadDivider: {
+    height: layout.hairline,
+    marginHorizontal: spacing.lg,
+  },
+  textInputInactive: {
+    opacity: 0.7,
+  },
+  removePostButton: {
+    position: 'absolute',
+    top: spacing.md,
+    right: spacing.md,
+    padding: spacing.xs,
+  },
+  addPostButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderWidth: layout.hairline,
+    borderStyle: 'dashed',
+    borderRadius: radius.md,
+  },
+  addPostText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
   },
   draftsBar: {
     paddingHorizontal: spacing.lg,

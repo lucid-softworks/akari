@@ -282,7 +282,10 @@
         "untitled": "(ללא טקסט)",
         "delete": "מחק",
         "limitReached": "הגעת לגבול הטיוטות. מחק אחת כדי לשמור טיוטה חדשה."
-      }
+      },
+      "addPostToThread": "הוסף פוסט",
+      "removePostFromThread": "הסר פוסט",
+      "continueThreadPlaceholder": "המשך את השרשור…"
     },
     "gif": {
       "selectGif": "בחר GIF",

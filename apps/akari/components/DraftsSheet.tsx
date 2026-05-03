@@ -60,8 +60,14 @@ export function DraftsSheet({ visible, drafts, onDismiss, onSelect, onDelete }: 
             ) : (
               <ScrollView style={styles.scroll}>
                 {drafts.map((draft, idx) => {
-                  const preview = draft.text.trim();
+                  const firstPost = draft.posts[0];
+                  const preview = firstPost?.text.trim() ?? '';
                   const previewLine = preview.length > 0 ? preview : t('post.draft.untitled');
+                  const totalImages = draft.posts.reduce(
+                    (sum, p) => sum + p.images.length,
+                    0,
+                  );
+                  const firstImage = draft.posts.find((p) => p.images.length > 0)?.images[0];
                   return (
                     <View key={draft.id}>
                       {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
@@ -81,19 +87,27 @@ export function DraftsSheet({ visible, drafts, onDismiss, onSelect, onDelete }: 
                             <ThemedText style={[styles.metaText, { color: iconColor }]}>
                               {formatRelativeTime(draft.updatedAt, locale)}
                             </ThemedText>
-                            {draft.images.length > 0 ? (
+                            {draft.posts.length > 1 ? (
+                              <View style={styles.metaImages}>
+                                <IconSymbol name="text.bubble" size={12} color={iconColor} />
+                                <ThemedText style={[styles.metaText, { color: iconColor }]}>
+                                  {draft.posts.length}
+                                </ThemedText>
+                              </View>
+                            ) : null}
+                            {totalImages > 0 ? (
                               <View style={styles.metaImages}>
                                 <IconSymbol name="photo" size={12} color={iconColor} />
                                 <ThemedText style={[styles.metaText, { color: iconColor }]}>
-                                  {draft.images.length}
+                                  {totalImages}
                                 </ThemedText>
                               </View>
                             ) : null}
                           </View>
                         </View>
-                        {draft.images[0]?.uri ? (
+                        {firstImage?.uri ? (
                           <Image
-                            source={{ uri: draft.images[0].uri }}
+                            source={{ uri: firstImage.uri }}
                             style={[styles.thumb, { borderColor }]}
                             contentFit="cover"
                           />

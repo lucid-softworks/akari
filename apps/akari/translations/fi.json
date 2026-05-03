@@ -282,7 +282,10 @@
         "untitled": "(ei tekstiä)",
         "delete": "Poista",
         "limitReached": "Luonnosraja saavutettu. Poista yksi tallentaaksesi uuden."
-      }
+      },
+      "addPostToThread": "Lisää julkaisu",
+      "removePostFromThread": "Poista julkaisu",
+      "continueThreadPlaceholder": "Jatka ketjua…"
     },
     "gif": {
       "selectGif": "Valitse GIF",

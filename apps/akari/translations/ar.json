@@ -282,7 +282,10 @@
         "untitled": "(بدون نص)",
         "delete": "حذف",
         "limitReached": "تم الوصول إلى حد المسودات. احذف واحدة قبل حفظ مسودة جديدة."
-      }
+      },
+      "addPostToThread": "إضافة منشور",
+      "removePostFromThread": "إزالة المنشور",
+      "continueThreadPlaceholder": "تابع السلسلة..."
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

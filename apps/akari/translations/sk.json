@@ -282,7 +282,10 @@
         "untitled": "(bez textu)",
         "delete": "Zmazať",
         "limitReached": "Dosiahnutý limit konceptov. Zmažte jeden, aby ste uložili nový."
-      }
+      },
+      "addPostToThread": "Pridať príspevok",
+      "removePostFromThread": "Odstrániť príspevok",
+      "continueThreadPlaceholder": "Pokračovať vo vlákne…"
     },
     "gif": {
       "selectGif": "Vyberte GIF",

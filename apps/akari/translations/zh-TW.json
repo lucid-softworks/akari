@@ -282,7 +282,10 @@
         "untitled": "(無文字)",
         "delete": "刪除",
         "limitReached": "草稿數量已達上限。請刪除一個再儲存新草稿。"
-      }
+      },
+      "addPostToThread": "加入貼文",
+      "removePostFromThread": "移除貼文",
+      "continueThreadPlaceholder": "繼續這串…"
     },
     "messages": {
       "typeMessage": "輸入訊息...",

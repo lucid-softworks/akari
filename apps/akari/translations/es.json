@@ -282,7 +282,10 @@
         "untitled": "(sin texto)",
         "delete": "Eliminar",
         "limitReached": "Límite de borradores alcanzado. Elimina uno para guardar otro."
-      }
+      },
+      "addPostToThread": "Añadir publicación",
+      "removePostFromThread": "Eliminar publicación",
+      "continueThreadPlaceholder": "Continúa el hilo..."
     },
     "gif": {
       "selectGif": "Seleccionar GIF",

@@ -282,7 +282,10 @@
         "untitled": "(bez textu)",
         "delete": "Smazat",
         "limitReached": "Dosažen limit konceptů. Smažte jeden, abyste mohli uložit nový."
-      }
+      },
+      "addPostToThread": "Přidat příspěvek",
+      "removePostFromThread": "Odebrat příspěvek",
+      "continueThreadPlaceholder": "Pokračovat ve vlákně..."
     },
     "gif": {
       "selectGif": "Vyberte GIF",

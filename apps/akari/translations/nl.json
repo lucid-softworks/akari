@@ -282,7 +282,10 @@
         "untitled": "(geen tekst)",
         "delete": "Verwijderen",
         "limitReached": "Conceptenlimiet bereikt. Verwijder er een om een nieuwe op te slaan."
-      }
+      },
+      "addPostToThread": "Bericht toevoegen",
+      "removePostFromThread": "Bericht verwijderen",
+      "continueThreadPlaceholder": "Vervolg de thread…"
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

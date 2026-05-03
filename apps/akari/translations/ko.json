@@ -282,7 +282,10 @@
         "untitled": "(텍스트 없음)",
         "delete": "삭제",
         "limitReached": "초안 한도에 도달했습니다. 새 초안을 저장하려면 하나를 삭제하세요."
-      }
+      },
+      "addPostToThread": "게시물 추가",
+      "removePostFromThread": "게시물 삭제",
+      "continueThreadPlaceholder": "스레드 이어가기…"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

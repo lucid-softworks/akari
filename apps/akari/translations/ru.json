@@ -282,7 +282,10 @@
         "untitled": "(без текста)",
         "delete": "Удалить",
         "limitReached": "Достигнут лимит черновиков. Удалите один, чтобы сохранить новый."
-      }
+      },
+      "addPostToThread": "Добавить пост",
+      "removePostFromThread": "Удалить пост",
+      "continueThreadPlaceholder": "Продолжите тред…"
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

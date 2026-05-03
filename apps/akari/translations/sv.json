@@ -282,7 +282,10 @@
         "untitled": "(ingen text)",
         "delete": "Ta bort",
         "limitReached": "Utkastgränsen nådd. Ta bort ett för att spara ett nytt."
-      }
+      },
+      "addPostToThread": "Lägg till inlägg",
+      "removePostFromThread": "Ta bort inlägg",
+      "continueThreadPlaceholder": "Fortsätt tråden…"
     },
     "gif": {
       "selectGif": "Välj GIF",

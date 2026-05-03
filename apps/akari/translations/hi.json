@@ -282,7 +282,10 @@
         "untitled": "(कोई टेक्स्ट नहीं)",
         "delete": "हटाएँ",
         "limitReached": "ड्राफ़्ट सीमा पूरी हो गई। नया सहेजने के लिए एक हटाएँ।"
-      }
+      },
+      "addPostToThread": "पोस्ट जोड़ें",
+      "removePostFromThread": "पोस्ट हटाएँ",
+      "continueThreadPlaceholder": "थ्रेड जारी रखें…"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

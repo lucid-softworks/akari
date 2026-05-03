@@ -282,7 +282,10 @@
         "untitled": "(kein Text)",
         "delete": "Löschen",
         "limitReached": "Entwurfslimit erreicht. Lösche einen, um einen neuen zu speichern."
-      }
+      },
+      "addPostToThread": "Beitrag hinzufügen",
+      "removePostFromThread": "Beitrag entfernen",
+      "continueThreadPlaceholder": "Thread fortsetzen…"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

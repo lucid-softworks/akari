@@ -282,7 +282,10 @@
         "untitled": "(без текст)",
         "delete": "Изтрий",
         "limitReached": "Достигнат лимит на черновите. Изтрийте една, за да запазите нова."
-      }
+      },
+      "addPostToThread": "Добави публикация",
+      "removePostFromThread": "Премахни публикацията",
+      "continueThreadPlaceholder": "Продължи темата..."
     },
     "gif": {
       "selectGif": "Изберете GIF",

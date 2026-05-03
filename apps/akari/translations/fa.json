@@ -282,7 +282,10 @@
         "untitled": "(بدون متن)",
         "delete": "حذف",
         "limitReached": "به حد مجاز پیش‌نویس‌ها رسیده‌اید. یکی را حذف کنید تا پیش‌نویس جدید ذخیره شود."
-      }
+      },
+      "addPostToThread": "افزودن پست",
+      "removePostFromThread": "حذف پست",
+      "continueThreadPlaceholder": "رشته را ادامه دهید..."
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",

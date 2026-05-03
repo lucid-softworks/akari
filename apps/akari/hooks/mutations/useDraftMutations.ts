@@ -7,13 +7,12 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import {
   composerStateToDraft,
   type ComposerDraftState,
-  type DraftAttachedImage,
+  type DraftPostEntry,
 } from '@/utils/draftMapper';
 import type { PostControls } from '@/utils/postControls';
 
 type DraftPayload = {
-  text: string;
-  images: DraftAttachedImage[];
+  posts: DraftPostEntry[];
   controls: PostControls;
 };
 
@@ -45,8 +44,7 @@ export function useCreateDraft() {
       const now = new Date().toISOString();
       return {
         id: res.id,
-        text: payload.text,
-        images: payload.images,
+        posts: payload.posts,
         controls: payload.controls,
         createdAt: now,
         updatedAt: now,

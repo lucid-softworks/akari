@@ -282,7 +282,10 @@
         "untitled": "(không có văn bản)",
         "delete": "Xóa",
         "limitReached": "Đã đạt giới hạn bản nháp. Xóa một bản để lưu bản mới."
-      }
+      },
+      "addPostToThread": "Thêm bài",
+      "removePostFromThread": "Xóa bài",
+      "continueThreadPlaceholder": "Tiếp tục chuỗi bài…"
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

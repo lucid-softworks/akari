@@ -282,7 +282,10 @@
         "untitled": "(fără text)",
         "delete": "Șterge",
         "limitReached": "Limită de ciorne atinsă. Șterge una pentru a salva una nouă."
-      }
+      },
+      "addPostToThread": "Adaugă postare",
+      "removePostFromThread": "Elimină postarea",
+      "continueThreadPlaceholder": "Continuă firul…"
     },
     "gif": {
       "selectGif": "Selectați GIF",

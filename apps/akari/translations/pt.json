@@ -282,7 +282,10 @@
         "untitled": "(sem texto)",
         "delete": "Excluir",
         "limitReached": "Limite de rascunhos atingido. Exclua um para salvar um novo."
-      }
+      },
+      "addPostToThread": "Adicionar post",
+      "removePostFromThread": "Remover post",
+      "continueThreadPlaceholder": "Continue a thread…"
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",

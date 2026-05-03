@@ -282,7 +282,10 @@
         "untitled": "(nessun testo)",
         "delete": "Elimina",
         "limitReached": "Limite di bozze raggiunto. Eliminane una per salvarne una nuova."
-      }
+      },
+      "addPostToThread": "Aggiungi post",
+      "removePostFromThread": "Rimuovi post",
+      "continueThreadPlaceholder": "Continua il thread…"
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",

@@ -282,7 +282,10 @@
         "untitled": "(brak tekstu)",
         "delete": "Usuń",
         "limitReached": "Osiągnięto limit wersji roboczych. Usuń jedną, aby zapisać nową."
-      }
+      },
+      "addPostToThread": "Dodaj post",
+      "removePostFromThread": "Usuń post",
+      "continueThreadPlaceholder": "Kontynuuj wątek…"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

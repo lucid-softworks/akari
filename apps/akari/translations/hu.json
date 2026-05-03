@@ -282,7 +282,10 @@
         "untitled": "(nincs szöveg)",
         "delete": "Törlés",
         "limitReached": "Elérted a piszkozat-korlátot. Törölj egyet újabb mentéséhez."
-      }
+      },
+      "addPostToThread": "Új bejegyzés",
+      "removePostFromThread": "Bejegyzés törlése",
+      "continueThreadPlaceholder": "Folytasd a szálat…"
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",

@@ -15,10 +15,16 @@ export type DraftAttachedImage = {
   tenorId?: string;
 };
 
-export type ComposerDraftState = {
-  id: string;
+/** One leaf in a thread draft. The composer rebuilds these into its
+ *  ThreadPost shape on load. */
+export type DraftPostEntry = {
   text: string;
   images: DraftAttachedImage[];
+};
+
+export type ComposerDraftState = {
+  id: string;
+  posts: DraftPostEntry[];
   controls: PostControls;
   createdAt: string;
   updatedAt: string;
@@ -81,26 +87,47 @@ function postgateRulesToAllowQuote(
   return !rules.some((r) => r.$type === POSTGATE_DISABLE);
 }
 
-/**
- * Encodes the composer state as a single-post draft. The lexicon supports
- * multi-post threads (up to 100 entries) but we ship a one-post composer
- * today — wider thread support will plug in here later.
- */
-export function composerStateToDraft(input: {
-  text: string;
-  images: DraftAttachedImage[];
-  controls: PostControls;
-  deviceId?: string;
-  deviceName?: string;
-}): BlueskyDraft {
-  const post: BlueskyDraftPost = { text: input.text };
-  if (input.images.length > 0) {
-    post.embedImages = input.images.map((img) => ({
+function entryToDraftPost(entry: DraftPostEntry): BlueskyDraftPost {
+  const post: BlueskyDraftPost = { text: entry.text };
+  if (entry.images.length > 0) {
+    post.embedImages = entry.images.map((img) => ({
       localRef: { path: img.uri },
       alt: img.alt || undefined,
     }));
   }
-  const draft: BlueskyDraft = { posts: [post] };
+  return post;
+}
+
+function draftPostToEntry(post: BlueskyDraftPost): DraftPostEntry {
+  const images: DraftAttachedImage[] =
+    post.embedImages?.map((img) => ({
+      uri: img.localRef.path,
+      alt: img.alt ?? '',
+      mimeType: 'image/jpeg',
+    })) ?? [];
+  return { text: post.text ?? '', images };
+}
+
+/**
+ * Encodes a thread of composer posts as a Bluesky draft. The lexicon
+ * caps `posts` at 100 entries, so we trust the caller hasn't blown
+ * past that.
+ *
+ * Threadgate / postgate are tracked at the draft level (one set of
+ * rules applies to the whole thread, since they only attach to the
+ * root post on publish).
+ */
+export function composerStateToDraft(input: {
+  posts: DraftPostEntry[];
+  controls: PostControls;
+  deviceId?: string;
+  deviceName?: string;
+}): BlueskyDraft {
+  // The lexicon requires `posts.length >= 1`. If the caller hands us an
+  // empty array (shouldn't happen), seed with one blank post so the
+  // server accepts the draft.
+  const entries = input.posts.length > 0 ? input.posts : [{ text: '', images: [] }];
+  const draft: BlueskyDraft = { posts: entries.map(entryToDraftPost) };
   const allow = controlsToThreadgateAllow(input.controls.replyAllow);
   if (allow !== undefined) draft.threadgateAllow = allow;
   const postgate = controlsToPostgateRules(input.controls.allowQuote);
@@ -111,27 +138,22 @@ export function composerStateToDraft(input: {
 }
 
 /**
- * Decodes a draftView back into the composer's local state. Only the
- * first post is read today (the composer is single-post). Embed metadata
- * for video / external / record is dropped here — when we build thread
- * publishing this should grow to handle the full shape.
+ * Decodes a server draftView back into the composer's local state.
+ * Embed metadata for video / external / record is dropped here — wire
+ * those in alongside their composer support.
  */
 export function draftViewToComposerState(view: BlueskyDraftView): ComposerDraftState {
-  const first = view.draft.posts[0];
-  const images: DraftAttachedImage[] =
-    first?.embedImages?.map((img) => ({
-      uri: img.localRef.path,
-      alt: img.alt ?? '',
-      mimeType: 'image/jpeg',
-    })) ?? [];
+  const posts =
+    view.draft.posts.length > 0
+      ? view.draft.posts.map(draftPostToEntry)
+      : [{ text: '', images: [] }];
   const controls: PostControls = {
     replyAllow: threadgateAllowToControls(view.draft.threadgateAllow),
     allowQuote: postgateRulesToAllowQuote(view.draft.postgateEmbeddingRules),
   };
   return {
     id: view.id,
-    text: first?.text ?? '',
-    images,
+    posts,
     controls,
     createdAt: view.createdAt,
     updatedAt: view.updatedAt,

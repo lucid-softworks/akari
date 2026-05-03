@@ -282,7 +282,10 @@
         "untitled": "(tanpa teks)",
         "delete": "Hapus",
         "limitReached": "Batas draf tercapai. Hapus satu untuk menyimpan draf baru."
-      }
+      },
+      "addPostToThread": "Tambah post",
+      "removePostFromThread": "Hapus post",
+      "continueThreadPlaceholder": "Lanjutkan utas…"
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

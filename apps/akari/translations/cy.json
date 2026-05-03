@@ -282,7 +282,10 @@
         "untitled": "(dim testun)",
         "delete": "Dileu",
         "limitReached": "Cyrhaeddwyd terfyn drafftiau. Dileu un cyn cadw un newydd."
-      }
+      },
+      "addPostToThread": "Ychwanegu post",
+      "removePostFromThread": "Tynnu'r post",
+      "continueThreadPlaceholder": "Parhau'r edefyn..."
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

@@ -282,7 +282,10 @@
         "untitled": "(metin yok)",
         "delete": "Sil",
         "limitReached": "Taslak sınırına ulaşıldı. Yeni bir taslak kaydetmek için birini sil."
-      }
+      },
+      "addPostToThread": "Gönderi ekle",
+      "removePostFromThread": "Gönderiyi sil",
+      "continueThreadPlaceholder": "Konuya devam et…"
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",

@@ -282,7 +282,10 @@
         "untitled": "(无文本)",
         "delete": "删除",
         "limitReached": "草稿数量已达上限。请删除一个再保存新草稿。"
-      }
+      },
+      "addPostToThread": "添加帖子",
+      "removePostFromThread": "删除帖子",
+      "continueThreadPlaceholder": "继续这个串…"
     },
     "gif": {
       "selectGif": "选择GIF",

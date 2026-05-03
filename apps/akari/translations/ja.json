@@ -282,7 +282,10 @@
         "untitled": "(テキストなし)",
         "delete": "削除",
         "limitReached": "下書きの上限に達しました。新しい下書きを保存するには 1 つ削除してください。"
-      }
+      },
+      "addPostToThread": "投稿を追加",
+      "removePostFromThread": "投稿を削除",
+      "continueThreadPlaceholder": "スレッドを続ける…"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

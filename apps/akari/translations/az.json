@@ -282,7 +282,10 @@
         "untitled": "(mətn yoxdur)",
         "delete": "Sil",
         "limitReached": "Qaralama limiti dolub. Yenisini saxlamadan əvvəl birini silin."
-      }
+      },
+      "addPostToThread": "Paylaşım əlavə et",
+      "removePostFromThread": "Paylaşımı sil",
+      "continueThreadPlaceholder": "Mövzunu davam etdir..."
     },
     "gif": {
       "selectGif": "Gif seçin",

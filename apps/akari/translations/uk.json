@@ -282,7 +282,10 @@
         "untitled": "(без тексту)",
         "delete": "Видалити",
         "limitReached": "Досягнуто ліміту чернеток. Видаліть одну, щоб зберегти нову."
-      }
+      },
+      "addPostToThread": "Додати допис",
+      "removePostFromThread": "Видалити допис",
+      "continueThreadPlaceholder": "Продовжіть гілку…"
     },
     "gif": {
       "selectGif": "Виберіть GIF",

@@ -282,7 +282,10 @@
         "untitled": "(ไม่มีข้อความ)",
         "delete": "ลบ",
         "limitReached": "ถึงขีดจำกัดร่างแล้ว ลบสักรายการเพื่อบันทึกร่างใหม่"
-      }
+      },
+      "addPostToThread": "เพิ่มโพสต์",
+      "removePostFromThread": "ลบโพสต์",
+      "continueThreadPlaceholder": "เขียนต่อในเธรด…"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

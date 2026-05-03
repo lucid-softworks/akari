@@ -282,7 +282,10 @@
         "untitled": "(brez besedila)",
         "delete": "Izbriši",
         "limitReached": "Doseženo število osnutkov. Izbriši enega za nov osnutek."
-      }
+      },
+      "addPostToThread": "Dodaj objavo",
+      "removePostFromThread": "Odstrani objavo",
+      "continueThreadPlaceholder": "Nadaljuj nit…"
     },
     "gif": {
       "selectGif": "Izberite GIF",

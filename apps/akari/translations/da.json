@@ -282,7 +282,10 @@
         "untitled": "(ingen tekst)",
         "delete": "Slet",
         "limitReached": "Kladde-grænse nået. Slet en for at gemme en ny."
-      }
+      },
+      "addPostToThread": "Tilføj indlæg",
+      "removePostFromThread": "Fjern indlæg",
+      "continueThreadPlaceholder": "Fortsæt tråden..."
     },
     "gif": {
       "selectGif": "Vælg GIF",
