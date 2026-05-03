@@ -499,6 +499,16 @@
       "joined": "csatlakozott",
       "thisWeek": "ezen a héten",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Hitelesített",
+      "trustedVerifierBadge": "Megbízható hitelesítő",
+      "verifiedBadgeHint": "Nézd meg, ki hitelesítette ezt a fiókot",
+      "verifiersSheetTitle": "Hitelesítők",
+      "verifiersSheetIntroTitle": "{{name}} hitelesítve van",
+      "verifiersSheetIntroBody": "Ezek a fiókok igazolták, hogy ez a fiók valódi.",
+      "trustedVerifierSheetIntroTitle": "{{name}} megbízható hitelesítő",
+      "trustedVerifierSheetIntroBody": "A megbízható hitelesítők hitelesítéseket adhatnak ki más fiókoknak.",
+      "noVerifiers": "Nincsenek hitelesítők",
+      "verifiedOn": "Hitelesítve {{date}}",
       "gif": "GIF"
     },
     "recipe": {

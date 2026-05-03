@@ -3,10 +3,12 @@ import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import type { BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { ReportSheet } from '@/components/ReportSheet';
 import { Labels } from '@/components/Labels';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { RichText } from '@/components/RichText';
@@ -55,6 +57,7 @@ type ProfileHeaderProps = {
       ver?: number;
       exp?: string;
     }[];
+    verification?: BlueskyVerification;
   };
   isOwnProfile?: boolean;
   onSettingsPress?: () => void;
@@ -315,7 +318,15 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
         <View style={styles.profileInfoSection}>
           {/* Name and Handle */}
           <View style={styles.nameHandleSection}>
-            <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
+            <View style={styles.displayNameRow}>
+              <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
+              <VerificationBadge
+                verification={profile.verification}
+                subjectHandle={profile.handle}
+                subjectDisplayName={profile.displayName}
+                size={20}
+              />
+            </View>
             <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
               <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
               <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
@@ -518,10 +529,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: spacing.sm + spacing.xxs,
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.xxs,
+  },
   displayName: {
     fontSize: fontSize.xxl,
     fontWeight: fontWeight.bold,
-    marginBottom: spacing.xxs,
+    flexShrink: 1,
   },
   handle: {
     fontSize: 15,

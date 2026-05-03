@@ -10,6 +10,7 @@ import { GifEmbed } from '@/components/GifEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -429,6 +430,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         handle: author.handle,
         displayName: author.displayName || author.handle,
         avatar: author.avatar,
+        verification: author.verification,
       };
     }
 
@@ -437,6 +439,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         handle: profileData.handle,
         displayName: profileData.displayName || profileData.handle,
         avatar: profileData.avatar,
+        verification: profileData.verification,
       };
     }
 
@@ -445,7 +448,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
       embed.record.record?.author?.did ||
       embed.record.record?.record?.author?.did;
     if (did) {
-      return { handle: did, displayName: did, avatar: undefined };
+      return { handle: did, displayName: did, avatar: undefined, verification: undefined };
     }
 
     return null;
@@ -525,7 +528,15 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 contentFit="cover"
               />
               <ThemedView style={styles.authorInfo}>
-                <ThemedText style={[styles.displayName, { color: textColor }]}>{authorInfo.displayName}</ThemedText>
+                <ThemedView style={styles.displayNameRow}>
+                  <ThemedText style={[styles.displayName, { color: textColor }]} numberOfLines={1}>{authorInfo.displayName}</ThemedText>
+                  <VerificationBadge
+                    verification={authorInfo.verification}
+                    subjectHandle={authorInfo.handle}
+                    subjectDisplayName={authorInfo.displayName}
+                    size={fontSize.base}
+                  />
+                </ThemedView>
                 <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>@{authorInfo.handle}</ThemedText>
                 {blockingMessage && (
                   <ThemedText style={[styles.blockingMessage, { color: secondaryTextColor }]}>{blockingMessage}</ThemedText>
@@ -670,9 +681,15 @@ const styles = StyleSheet.create({
   authorInfo: {
     flex: 1,
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
   displayName: {
     fontSize: fontSize.md,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   handle: {
     fontSize: fontSize.xs,

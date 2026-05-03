@@ -499,6 +499,16 @@
       "joined": "s-a alăturat",
       "thisWeek": "săptămâna aceasta",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Verificat",
+      "trustedVerifierBadge": "Verificator de încredere",
+      "verifiedBadgeHint": "Vezi cine a verificat acest cont",
+      "verifiersSheetTitle": "Verificatori",
+      "verifiersSheetIntroTitle": "{{name}} este verificat",
+      "verifiersSheetIntroBody": "Aceste conturi au confirmat că acest cont este autentic.",
+      "trustedVerifierSheetIntroTitle": "{{name}} este un verificator de încredere",
+      "trustedVerifierSheetIntroBody": "Verificatorii de încredere pot emite verificări pentru alte conturi.",
+      "noVerifiers": "Niciun verificator",
+      "verifiedOn": "Verificat {{date}}",
       "gif": "GIF"
     },
     "recipe": {

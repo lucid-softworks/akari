@@ -499,6 +499,16 @@
       "joined": "se je pridružil",
       "thisWeek": "ta teden",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Preverjen",
+      "trustedVerifierBadge": "Zaupanja vreden preveritelj",
+      "verifiedBadgeHint": "Poglej, kdo je preveril ta račun",
+      "verifiersSheetTitle": "Preveritelji",
+      "verifiersSheetIntroTitle": "{{name}} je preverjen",
+      "verifiersSheetIntroBody": "Ti računi so potrdili, da je ta račun pristen.",
+      "trustedVerifierSheetIntroTitle": "{{name}} je zaupanja vreden preveritelj",
+      "trustedVerifierSheetIntroBody": "Zaupanja vredni preveritelji lahko izdajajo preverjanja za druge račune.",
+      "noVerifiers": "Brez preveriteljev",
+      "verifiedOn": "Preverjeno {{date}}",
       "gif": "GIF"
     },
     "recipe": {

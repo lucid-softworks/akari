@@ -4,10 +4,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BlueskyEmbed } from '@/bluesky-api';
+import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
@@ -39,6 +40,7 @@ type GroupedNotification = {
     handle: string;
     displayName: string;
     avatar: string;
+    verification?: BlueskyVerification;
   }[];
   isRead: boolean;
   latestTimestamp: string;
@@ -143,17 +145,52 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
     }
   };
 
-  const formatAuthorNames = (authors: typeof notification.authors) => {
+  const renderAuthorNames = (authors: typeof notification.authors) => {
+    const first = authors[0];
+    const firstName = first.displayName || first.handle;
+    const firstBadge = (
+      <VerificationBadge
+        verification={first.verification}
+        subjectHandle={first.handle}
+        subjectDisplayName={first.displayName}
+        size={14}
+      />
+    );
+
     if (authors.length === 1) {
-      return authors[0].displayName || authors[0].handle;
-    } else if (authors.length === 2) {
-      const name1 = authors[0].displayName || authors[0].handle;
-      const name2 = authors[1].displayName || authors[1].handle;
-      return `${name1} and ${name2}`;
-    } else {
-      const firstName = authors[0].displayName || authors[0].handle;
-      return `${firstName} and ${authors.length - 1} others`;
+      return (
+        <>
+          <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+          {firstBadge}
+        </>
+      );
     }
+
+    if (authors.length === 2) {
+      const second = authors[1];
+      const secondName = second.displayName || second.handle;
+      return (
+        <>
+          <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+          {firstBadge}
+          <ThemedText style={styles.authorNames} numberOfLines={1}> and {secondName}</ThemedText>
+          <VerificationBadge
+            verification={second.verification}
+            subjectHandle={second.handle}
+            subjectDisplayName={second.displayName}
+            size={14}
+          />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+        {firstBadge}
+        <ThemedText style={styles.authorNames} numberOfLines={1}> and {authors.length - 1} others</ThemedText>
+      </>
+    );
   };
 
   const renderAvatars = () => {
@@ -253,9 +290,9 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
         <View style={styles.avatarContainer}>{renderAvatars()}</View>
         <View style={styles.contentContainer}>
           <View style={styles.headerRow}>
-            <ThemedText style={styles.authorNames} numberOfLines={1}>
-              {formatAuthorNames(notification.authors)}
-            </ThemedText>
+            <View style={styles.authorNamesRow}>
+              {renderAuthorNames(notification.authors)}
+            </View>
             <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
           <ThemedText style={styles.reasonText}>{getReasonText(notification.type, notification.count)}</ThemedText>
@@ -285,6 +322,7 @@ type NotificationData = {
     handle: string;
     displayName: string;
     avatar: string;
+    verification?: BlueskyVerification;
   };
   reason: string;
   reasonSubject?: string;
@@ -318,6 +356,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
             handle: notification.author.handle,
             displayName: notification.author.displayName,
             avatar: notification.author.avatar,
+            verification: notification.author.verification,
           });
           group.count++;
         }
@@ -340,6 +379,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
               handle: notification.author.handle,
               displayName: notification.author.displayName,
               avatar: notification.author.avatar,
+              verification: notification.author.verification,
             },
           ],
           isRead: notification.isRead,
@@ -361,6 +401,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
             handle: notification.author.handle,
             displayName: notification.author.displayName,
             avatar: notification.author.avatar,
+            verification: notification.author.verification,
           },
         ],
         isRead: notification.isRead,
@@ -828,8 +869,14 @@ const styles = StyleSheet.create({
   authorNames: {
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
+  },
+  authorNamesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
     marginRight: spacing.sm,
+    gap: spacing.xxs,
+    flexWrap: 'wrap',
   },
   timestamp: {
     fontSize: fontSize.sm,

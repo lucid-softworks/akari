@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity, semanticColors } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
@@ -182,9 +183,17 @@ export default function ConvoSettingsScreen() {
                           <View style={[styles.memberAvatar, { backgroundColor: borderColor }]} />
                         )}
                         <View style={styles.memberText}>
-                          <ThemedText style={[styles.memberName, { color: textColor }]} numberOfLines={1}>
-                            {member.displayName || member.handle}
-                          </ThemedText>
+                          <View style={styles.memberNameRow}>
+                            <ThemedText style={[styles.memberName, { color: textColor }]} numberOfLines={1}>
+                              {member.displayName || member.handle}
+                            </ThemedText>
+                            <VerificationBadge
+                              verification={member.verification}
+                              subjectHandle={member.handle}
+                              subjectDisplayName={member.displayName}
+                              size={14}
+                            />
+                          </View>
                           <ThemedText style={[styles.memberHandle, { color: iconColor }]} numberOfLines={1}>
                             @{member.handle}
                           </ThemedText>
@@ -295,9 +304,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   memberText: { flex: 1 },
+  memberNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
   memberName: {
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   memberHandle: {
     fontSize: fontSize.sm,

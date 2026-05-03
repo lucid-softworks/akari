@@ -499,6 +499,16 @@
       "joined": "присъедини се",
       "thisWeek": "тази седмица",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Потвърден",
+      "trustedVerifierBadge": "Доверен верификатор",
+      "verifiedBadgeHint": "Виж кой е потвърдил този профил",
+      "verifiersSheetTitle": "Верификатори",
+      "verifiersSheetIntroTitle": "{{name}} е потвърден",
+      "verifiersSheetIntroBody": "Тези профили са потвърдили, че този профил е истински.",
+      "trustedVerifierSheetIntroTitle": "{{name}} е доверен верификатор",
+      "trustedVerifierSheetIntroBody": "Доверените верификатори могат да издават потвърждения за други профили.",
+      "noVerifiers": "Няма верификатори",
+      "verifiedOn": "Потвърдено {{date}}",
       "gif": "GIF"
     },
     "recipe": {

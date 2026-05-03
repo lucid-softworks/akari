@@ -499,6 +499,16 @@
       "joined": "tilmeldte sig",
       "thisWeek": "denne uge",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Verificeret",
+      "trustedVerifierBadge": "Betroet verifikator",
+      "verifiedBadgeHint": "Se hvem der har verificeret denne konto",
+      "verifiersSheetTitle": "Verifikatorer",
+      "verifiersSheetIntroTitle": "{{name}} er verificeret",
+      "verifiersSheetIntroBody": "Disse konti har bekræftet, at denne konto er ægte.",
+      "trustedVerifierSheetIntroTitle": "{{name}} er en betroet verifikator",
+      "trustedVerifierSheetIntroBody": "Betroede verifikatorer kan udstede verifikationer for andre konti.",
+      "noVerifiers": "Ingen verifikatorer",
+      "verifiedOn": "Verificeret {{date}}",
       "gif": "GIF"
     },
     "recipe": {

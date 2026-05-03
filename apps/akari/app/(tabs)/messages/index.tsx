@@ -3,10 +3,12 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import type { BlueskyVerification } from '@/bluesky-api';
 import { EmptyState } from '@/components/EmptyState';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useConversations } from '@/hooks/queries/useConversations';
@@ -25,6 +27,7 @@ type ConvoMember = {
   handle: string;
   displayName?: string;
   avatar?: string;
+  verification?: BlueskyVerification;
 };
 
 type Conversation = {
@@ -33,6 +36,7 @@ type Conversation = {
   handle: string;
   displayName: string;
   avatar?: string;
+  verification?: BlueskyVerification;
   members: ConvoMember[];
   isGroup: boolean;
   lastMessage: string;
@@ -196,9 +200,19 @@ export function MessagesListScreen({
 
           <ThemedView style={styles.conversationInfo}>
             <ThemedView style={styles.conversationHeader}>
-              <ThemedText style={[styles.displayName, item.unreadCount > 0 && styles.displayNameUnread]}>
-                {displayName}
-              </ThemedText>
+              <ThemedView style={styles.displayNameRow}>
+                <ThemedText style={[styles.displayName, item.unreadCount > 0 && styles.displayNameUnread]} numberOfLines={1}>
+                  {displayName}
+                </ThemedText>
+                {!item.isGroup ? (
+                  <VerificationBadge
+                    verification={item.verification}
+                    subjectHandle={item.handle}
+                    subjectDisplayName={item.displayName}
+                    size={fontSize.base}
+                  />
+                ) : null}
+              </ThemedView>
               <ThemedText style={styles.timestamp}>{item.timestamp}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.conversationFooter}>
@@ -560,9 +574,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xs,
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+    flex: 1,
+    marginRight: spacing.sm,
+  },
   displayName: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   displayNameUnread: {
     fontWeight: fontWeight.bold,

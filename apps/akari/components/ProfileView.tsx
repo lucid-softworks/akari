@@ -116,6 +116,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
           postsCount: profile.postsCount,
           viewer: profile.viewer,
           labels: profile.labels,
+          verification: profile.verification,
         }}
         isOwnProfile={isOwnProfile}
         onDropdownToggle={(isOpen: boolean) => setShowDropdown(isOpen)}

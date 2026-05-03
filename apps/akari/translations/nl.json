@@ -499,6 +499,16 @@
       "joined": "toegetreden",
       "thisWeek": "deze week",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Geverifieerd",
+      "trustedVerifierBadge": "Vertrouwde verificateur",
+      "verifiedBadgeHint": "Bekijk wie deze account heeft geverifieerd",
+      "verifiersSheetTitle": "Verificateurs",
+      "verifiersSheetIntroTitle": "{{name}} is geverifieerd",
+      "verifiersSheetIntroBody": "Deze accounts hebben bevestigd dat deze account authentiek is.",
+      "trustedVerifierSheetIntroTitle": "{{name}} is een vertrouwde verificateur",
+      "trustedVerifierSheetIntroBody": "Vertrouwde verificateurs kunnen verificaties uitgeven voor andere accounts.",
+      "noVerifiers": "Geen verificateurs",
+      "verifiedOn": "Geverifieerd {{date}}",
       "gif": "GIF"
     },
     "recipe": {

@@ -499,6 +499,16 @@
       "joined": "pripojil sa",
       "thisWeek": "tento týždeň",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Overené",
+      "trustedVerifierBadge": "Dôveryhodný overovateľ",
+      "verifiedBadgeHint": "Zobraziť, kto tento účet overil",
+      "verifiersSheetTitle": "Overovatelia",
+      "verifiersSheetIntroTitle": "{{name}} je overený",
+      "verifiersSheetIntroBody": "Tieto účty potvrdili, že tento účet je autentický.",
+      "trustedVerifierSheetIntroTitle": "{{name}} je dôveryhodný overovateľ",
+      "trustedVerifierSheetIntroBody": "Dôveryhodní overovatelia môžu vydávať overenia pre iné účty.",
+      "noVerifiers": "Žiadni overovatelia",
+      "verifiedOn": "Overené {{date}}",
       "gif": "GIF"
     },
     "recipe": {

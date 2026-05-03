@@ -13,6 +13,7 @@ import { SearchTabs } from '@/components/SearchTabs';
 import { SearchResultSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useSearch } from '@/hooks/queries/useSearch';
@@ -361,9 +362,17 @@ export default function SearchScreen() {
             />
           ) : null}
           <ThemedView style={styles.profileInfo}>
-            <ThemedText style={[styles.displayName, { color: textColor }]}>
-              {profile.displayName || profile.handle}
-            </ThemedText>
+            <ThemedView style={styles.displayNameRow}>
+              <ThemedText style={[styles.displayName, { color: textColor }]} numberOfLines={1}>
+                {profile.displayName || profile.handle}
+              </ThemedText>
+              <VerificationBadge
+                verification={profile.verification}
+                subjectHandle={profile.handle}
+                subjectDisplayName={profile.displayName}
+                size={fontSize.lg}
+              />
+            </ThemedView>
             <ThemedText style={[styles.handle, { color: textColor }]}>@{profile.handle}</ThemedText>
             {profile.description ? (
               <ThemedText style={[styles.description, { color: textColor }]} numberOfLines={2}>
@@ -403,6 +412,7 @@ export default function SearchScreen() {
             handle: post.author.handle,
             displayName: post.author.displayName,
             avatar: post.author.avatar,
+            verification: post.author.verification,
           },
           createdAt: formatRelativeTime(post.indexedAt),
           likeCount: post.likeCount || 0,
@@ -646,9 +656,15 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing.xs,
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
   displayName: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   handle: {
     fontSize: fontSize.base,

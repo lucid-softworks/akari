@@ -499,6 +499,16 @@
       "joined": "انضم",
       "thisWeek": "هذا الأسبوع",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "موثّق",
+      "trustedVerifierBadge": "مُوثِّق موثوق",
+      "verifiedBadgeHint": "عرض من قام بتوثيق هذا الحساب",
+      "verifiersSheetTitle": "المُوثِّقون",
+      "verifiersSheetIntroTitle": "{{name}} موثّق",
+      "verifiersSheetIntroBody": "أكّدت هذه الحسابات أن هذا الحساب أصلي.",
+      "trustedVerifierSheetIntroTitle": "{{name}} مُوثِّق موثوق",
+      "trustedVerifierSheetIntroBody": "يمكن للمُوثِّقين الموثوقين إصدار توثيقات لحسابات أخرى.",
+      "noVerifiers": "لا يوجد مُوثِّقون",
+      "verifiedOn": "تم التوثيق {{date}}",
       "gif": "GIF"
     },
     "recipe": {

@@ -499,6 +499,16 @@
       "joined": "приєднався",
       "thisWeek": "цього тижня",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Підтверджено",
+      "trustedVerifierBadge": "Довірений верифікатор",
+      "verifiedBadgeHint": "Переглянути, хто підтвердив цей акаунт",
+      "verifiersSheetTitle": "Верифікатори",
+      "verifiersSheetIntroTitle": "{{name}} підтверджений",
+      "verifiersSheetIntroBody": "Ці акаунти підтвердили автентичність цього акаунта.",
+      "trustedVerifierSheetIntroTitle": "{{name}} — довірений верифікатор",
+      "trustedVerifierSheetIntroBody": "Довірені верифікатори можуть видавати верифікації для інших акаунтів.",
+      "noVerifiers": "Немає верифікаторів",
+      "verifiedOn": "Підтверджено {{date}}",
       "gif": "GIF"
     },
     "recipe": {

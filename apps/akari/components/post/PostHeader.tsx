@@ -2,7 +2,9 @@ import { Image } from 'expo-image';
 import React, { useCallback } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
+import type { BlueskyVerification } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
@@ -15,6 +17,7 @@ type PostHeaderProps = {
     handle: string;
     displayName?: string;
     avatar?: string;
+    verification?: BlueskyVerification;
   };
   createdAt: string;
   isLive: boolean;
@@ -82,7 +85,15 @@ export const PostHeader = React.memo(function PostHeader({
           </View>
         </PressableLink>
         <View style={styles.authorInfo}>
-          <ThemedText style={styles.displayName}>{authorName}</ThemedText>
+          <View style={styles.displayNameRow}>
+            <ThemedText style={styles.displayName} numberOfLines={1}>{authorName}</ThemedText>
+            <VerificationBadge
+              verification={author.verification}
+              subjectHandle={author.handle}
+              subjectDisplayName={author.displayName}
+              size={fontSize.base}
+            />
+          </View>
           <PressableLink
             href={profileHref(author.handle) as any}
             onPress={handleProfilePress}
@@ -155,9 +166,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   displayName: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   handle: {
     fontSize: fontSize.base,

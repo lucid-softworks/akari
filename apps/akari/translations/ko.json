@@ -499,6 +499,16 @@
       "joined": "가입",
       "thisWeek": "이번 주",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "인증됨",
+      "trustedVerifierBadge": "신뢰할 수 있는 인증자",
+      "verifiedBadgeHint": "이 계정을 인증한 사람 보기",
+      "verifiersSheetTitle": "인증자",
+      "verifiersSheetIntroTitle": "{{name}}님은 인증되었습니다",
+      "verifiersSheetIntroBody": "이 계정들이 이 계정이 진짜임을 확인했습니다.",
+      "trustedVerifierSheetIntroTitle": "{{name}}님은 신뢰할 수 있는 인증자입니다",
+      "trustedVerifierSheetIntroBody": "신뢰할 수 있는 인증자는 다른 계정의 인증을 발급할 수 있습니다.",
+      "noVerifiers": "인증자 없음",
+      "verifiedOn": "{{date}}에 인증됨",
       "gif": "GIF"
     },
     "recipe": {

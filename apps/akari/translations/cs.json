@@ -499,6 +499,16 @@
       "joined": "připojil se",
       "thisWeek": "tento týden",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Ověřeno",
+      "trustedVerifierBadge": "Důvěryhodný ověřovatel",
+      "verifiedBadgeHint": "Zobrazit, kdo tento účet ověřil",
+      "verifiersSheetTitle": "Ověřovatelé",
+      "verifiersSheetIntroTitle": "{{name}} je ověřen",
+      "verifiersSheetIntroBody": "Tyto účty potvrdily, že tento účet je autentický.",
+      "trustedVerifierSheetIntroTitle": "{{name}} je důvěryhodný ověřovatel",
+      "trustedVerifierSheetIntroBody": "Důvěryhodní ověřovatelé mohou vydávat ověření pro jiné účty.",
+      "noVerifiers": "Žádní ověřovatelé",
+      "verifiedOn": "Ověřeno {{date}}",
       "gif": "GIF"
     },
     "recipe": {

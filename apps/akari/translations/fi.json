@@ -499,6 +499,16 @@
       "joined": "liittyi",
       "thisWeek": "tällä viikolla",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Vahvistettu",
+      "trustedVerifierBadge": "Luotettu vahvistaja",
+      "verifiedBadgeHint": "Näytä, kuka on vahvistanut tämän tilin",
+      "verifiersSheetTitle": "Vahvistajat",
+      "verifiersSheetIntroTitle": "{{name}} on vahvistettu",
+      "verifiersSheetIntroBody": "Nämä tilit ovat vahvistaneet, että tämä tili on aito.",
+      "trustedVerifierSheetIntroTitle": "{{name}} on luotettu vahvistaja",
+      "trustedVerifierSheetIntroBody": "Luotetut vahvistajat voivat myöntää vahvistuksia muille tileille.",
+      "noVerifiers": "Ei vahvistajia",
+      "verifiedOn": "Vahvistettu {{date}}",
       "gif": "GIF"
     },
     "recipe": {

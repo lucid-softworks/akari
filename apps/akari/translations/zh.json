@@ -499,6 +499,16 @@
       "joined": "加入",
       "thisWeek": "本周",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "已认证",
+      "trustedVerifierBadge": "可信认证者",
+      "verifiedBadgeHint": "查看谁认证了此账户",
+      "verifiersSheetTitle": "认证者",
+      "verifiersSheetIntroTitle": "{{name}} 已认证",
+      "verifiersSheetIntroBody": "这些账户已证明此账户是真实的。",
+      "trustedVerifierSheetIntroTitle": "{{name}} 是可信认证者",
+      "trustedVerifierSheetIntroBody": "可信认证者可以为其他账户颁发认证。",
+      "noVerifiers": "无认证者",
+      "verifiedOn": "{{date}} 认证",
       "gif": "GIF"
     },
     "recipe": {

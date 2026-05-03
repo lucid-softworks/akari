@@ -499,6 +499,16 @@
       "joined": "शामिल हुए",
       "thisWeek": "इस सप्ताह",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "सत्यापित",
+      "trustedVerifierBadge": "विश्वसनीय सत्यापक",
+      "verifiedBadgeHint": "देखें कि इस खाते को किसने सत्यापित किया",
+      "verifiersSheetTitle": "सत्यापक",
+      "verifiersSheetIntroTitle": "{{name}} सत्यापित है",
+      "verifiersSheetIntroBody": "इन खातों ने पुष्टि की है कि यह खाता असली है।",
+      "trustedVerifierSheetIntroTitle": "{{name}} एक विश्वसनीय सत्यापक है",
+      "trustedVerifierSheetIntroBody": "विश्वसनीय सत्यापक अन्य खातों के लिए सत्यापन जारी कर सकते हैं।",
+      "noVerifiers": "कोई सत्यापक नहीं",
+      "verifiedOn": "{{date}} को सत्यापित",
       "gif": "GIF"
     },
     "recipe": {

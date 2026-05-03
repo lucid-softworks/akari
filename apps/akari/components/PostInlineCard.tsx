@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { usePost } from '@/hooks/queries/usePost';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -87,12 +88,20 @@ export function PostInlineCard({ handle, rkey, onPress, style }: PostInlineCardP
         )}
         <View style={styles.headerText}>
           {author?.displayName ? (
-            <ThemedText
-              style={[styles.displayName, { color: textColor }]}
-              numberOfLines={1}
-            >
-              {author.displayName}
-            </ThemedText>
+            <View style={styles.displayNameRow}>
+              <ThemedText
+                style={[styles.displayName, { color: textColor }]}
+                numberOfLines={1}
+              >
+                {author.displayName}
+              </ThemedText>
+              <VerificationBadge
+                verification={author.verification}
+                subjectHandle={author.handle}
+                subjectDisplayName={author.displayName}
+                size={fontSize.base}
+              />
+            </View>
           ) : null}
           <ThemedText
             style={[styles.handle, { color: mutedTextColor }]}
@@ -155,9 +164,15 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
+  displayNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
   displayName: {
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   handle: {
     fontSize: fontSize.xs,

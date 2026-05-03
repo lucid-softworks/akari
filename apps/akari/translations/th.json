@@ -499,6 +499,16 @@
       "joined": "เข้าร่วม",
       "thisWeek": "สัปดาห์นี้",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "ยืนยันแล้ว",
+      "trustedVerifierBadge": "ผู้ยืนยันที่เชื่อถือได้",
+      "verifiedBadgeHint": "ดูว่าใครยืนยันบัญชีนี้",
+      "verifiersSheetTitle": "ผู้ยืนยัน",
+      "verifiersSheetIntroTitle": "{{name}} ได้รับการยืนยันแล้ว",
+      "verifiersSheetIntroBody": "บัญชีเหล่านี้ได้ยืนยันว่าบัญชีนี้เป็นของจริง",
+      "trustedVerifierSheetIntroTitle": "{{name}} เป็นผู้ยืนยันที่เชื่อถือได้",
+      "trustedVerifierSheetIntroBody": "ผู้ยืนยันที่เชื่อถือได้สามารถออกการยืนยันสำหรับบัญชีอื่นได้",
+      "noVerifiers": "ไม่มีผู้ยืนยัน",
+      "verifiedOn": "ยืนยันเมื่อ {{date}}",
       "gif": "GIF"
     },
     "recipe": {

@@ -499,6 +499,16 @@
       "joined": "đã tham gia",
       "thisWeek": "tuần này",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Đã xác minh",
+      "trustedVerifierBadge": "Người xác minh đáng tin cậy",
+      "verifiedBadgeHint": "Xem ai đã xác minh tài khoản này",
+      "verifiersSheetTitle": "Người xác minh",
+      "verifiersSheetIntroTitle": "{{name}} đã được xác minh",
+      "verifiersSheetIntroBody": "Các tài khoản này đã xác nhận rằng tài khoản này là xác thực.",
+      "trustedVerifierSheetIntroTitle": "{{name}} là người xác minh đáng tin cậy",
+      "trustedVerifierSheetIntroBody": "Người xác minh đáng tin cậy có thể cấp xác minh cho các tài khoản khác.",
+      "noVerifiers": "Không có người xác minh",
+      "verifiedOn": "Đã xác minh {{date}}",
       "gif": "GIF"
     },
     "recipe": {

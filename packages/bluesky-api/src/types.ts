@@ -27,10 +27,30 @@ export type BlueskyViewer = {
   };
 };
 
+/**
+ * A single verification record from a trusted verifier (per app.bsky.actor.defs#verificationView).
+ */
+export type BlueskyVerificationView = {
+  /** DID of the issuing verifier */
+  issuer: string;
+  /** AT-URI of the verification record */
+  uri: string;
+  /** Whether the verification is currently valid */
+  isValid: boolean;
+  /** When the verification record was created */
+  createdAt: string;
+};
+
+export type BlueskyVerificationStatus = 'valid' | 'invalid' | 'none';
+
+/**
+ * Bluesky verification state (app.bsky.actor.defs#verificationState).
+ * Attached to profile views when the actor is verified or is a trusted verifier.
+ */
 export type BlueskyVerification = {
-  verifications: string[];
-  verifiedStatus: string;
-  trustedVerifierStatus: string;
+  verifications: BlueskyVerificationView[];
+  verifiedStatus: BlueskyVerificationStatus;
+  trustedVerifierStatus: BlueskyVerificationStatus;
 };
 
 export type BlueskyStatus = {
@@ -107,6 +127,7 @@ export type BlueskyRecordAuthor = {
     blockedBy?: boolean;
     blocking?: string;
   };
+  verification?: BlueskyVerification;
 };
 
 export type BlueskyRecordValue = {
@@ -820,6 +841,8 @@ export type BlueskyProfile = {
   labels?: BlueskyLabel[];
   /** Pinned post strong reference, if the user has pinned a post. */
   pinnedPost?: { uri: string; cid: string };
+  /** Verification state (verified accounts and trusted verifiers). */
+  verification?: BlueskyVerification;
 };
 
 /**

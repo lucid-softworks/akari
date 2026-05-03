@@ -55,6 +55,7 @@ export function RepliesTab({
               handle: item.author.handle,
               displayName: item.author.displayName,
               avatar: item.author.avatar,
+              verification: item.author.verification,
             },
             createdAt: formatRelativeTime(item.indexedAt),
             likeCount: item.likeCount || 0,

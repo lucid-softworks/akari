@@ -499,6 +499,16 @@
       "joined": "عضویت",
       "thisWeek": "این هفته",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "تأیید شده",
+      "trustedVerifierBadge": "تأییدکنندهٔ مورد اعتماد",
+      "verifiedBadgeHint": "نمایش چه کسی این حساب را تأیید کرده است",
+      "verifiersSheetTitle": "تأییدکنندگان",
+      "verifiersSheetIntroTitle": "{{name}} تأیید شده است",
+      "verifiersSheetIntroBody": "این حساب‌ها تأیید کرده‌اند که این حساب واقعی است.",
+      "trustedVerifierSheetIntroTitle": "{{name}} یک تأییدکنندهٔ مورد اعتماد است",
+      "trustedVerifierSheetIntroBody": "تأییدکنندگان مورد اعتماد می‌توانند تأییدیه برای دیگر حساب‌ها صادر کنند.",
+      "noVerifiers": "بدون تأییدکننده",
+      "verifiedOn": "تأیید شده {{date}}",
       "gif": "GIF"
     },
     "recipe": {

@@ -499,6 +499,16 @@
       "joined": "参加",
       "thisWeek": "今週",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "認証済み",
+      "trustedVerifierBadge": "信頼できる認証者",
+      "verifiedBadgeHint": "このアカウントを認証した人を表示",
+      "verifiersSheetTitle": "認証者",
+      "verifiersSheetIntroTitle": "{{name}}は認証済みです",
+      "verifiersSheetIntroBody": "これらのアカウントが、このアカウントが本物であることを証明しています。",
+      "trustedVerifierSheetIntroTitle": "{{name}}は信頼できる認証者です",
+      "trustedVerifierSheetIntroBody": "信頼できる認証者は、他のアカウントの認証を発行できます。",
+      "noVerifiers": "認証者なし",
+      "verifiedOn": "{{date}}に認証",
       "gif": "GIF"
     },
     "recipe": {

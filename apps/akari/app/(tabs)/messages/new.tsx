@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity, opacity } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
@@ -215,9 +216,17 @@ export default function NewChatScreen() {
                 <View style={[styles.avatar, { backgroundColor: borderColor }]} />
               )}
               <View style={styles.rowText}>
-                <ThemedText style={[styles.rowName, { color: textColor }]} numberOfLines={1}>
-                  {profile.displayName || profile.handle}
-                </ThemedText>
+                <View style={styles.rowNameLine}>
+                  <ThemedText style={[styles.rowName, { color: textColor }]} numberOfLines={1}>
+                    {profile.displayName || profile.handle}
+                  </ThemedText>
+                  <VerificationBadge
+                    verification={profile.verification}
+                    subjectHandle={profile.handle}
+                    subjectDisplayName={profile.displayName}
+                    size={14}
+                  />
+                </View>
                 <ThemedText style={[styles.rowHandle, { color: iconColor }]} numberOfLines={1}>
                   @{profile.handle}
                 </ThemedText>
@@ -315,9 +324,15 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
   },
+  rowNameLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+  },
   rowName: {
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
+    flexShrink: 1,
   },
   rowHandle: {
     fontSize: fontSize.sm,

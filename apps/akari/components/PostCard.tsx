@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import type { BlueskyEmbed, BlueskyLabel } from '@/bluesky-api';
+import type { BlueskyEmbed, BlueskyLabel, BlueskyVerification } from '@/bluesky-api';
 import { Labels } from '@/components/Labels';
 import { PostComposer } from '@/components/PostComposer';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
@@ -29,6 +29,7 @@ export type PostCardProps = {
       handle: string;
       displayName?: string;
       avatar?: string;
+      verification?: BlueskyVerification;
     };
     createdAt: string;
     likeCount?: number;

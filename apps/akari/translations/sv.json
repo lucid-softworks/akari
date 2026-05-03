@@ -499,6 +499,16 @@
       "joined": "gick med",
       "thisWeek": "denna vecka",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Verifierad",
+      "trustedVerifierBadge": "Betrodd verifierare",
+      "verifiedBadgeHint": "Se vem som verifierat detta konto",
+      "verifiersSheetTitle": "Verifierare",
+      "verifiersSheetIntroTitle": "{{name}} är verifierad",
+      "verifiersSheetIntroBody": "Dessa konton har bekräftat att detta konto är äkta.",
+      "trustedVerifierSheetIntroTitle": "{{name}} är en betrodd verifierare",
+      "trustedVerifierSheetIntroBody": "Betrodda verifierare kan utfärda verifieringar för andra konton.",
+      "noVerifiers": "Inga verifierare",
+      "verifiedOn": "Verifierad {{date}}",
       "gif": "GIF"
     },
     "recipe": {

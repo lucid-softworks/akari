@@ -499,6 +499,16 @@
       "joined": "加入",
       "thisWeek": "本週",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "已認證",
+      "trustedVerifierBadge": "可信認證者",
+      "verifiedBadgeHint": "查看誰認證了此帳號",
+      "verifiersSheetTitle": "認證者",
+      "verifiersSheetIntroTitle": "{{name}} 已認證",
+      "verifiersSheetIntroBody": "這些帳號已證明此帳號是真實的。",
+      "trustedVerifierSheetIntroTitle": "{{name}} 是可信認證者",
+      "trustedVerifierSheetIntroBody": "可信認證者可以為其他帳號頒發認證。",
+      "noVerifiers": "無認證者",
+      "verifiedOn": "{{date}} 認證",
       "gif": "GIF"
     },
     "recipe": {

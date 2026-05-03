@@ -499,6 +499,16 @@
       "joined": "הצטרף",
       "thisWeek": "השבוע",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "מאומת",
+      "trustedVerifierBadge": "מאמת מהימן",
+      "verifiedBadgeHint": "צפו במי אימת את החשבון הזה",
+      "verifiersSheetTitle": "מאמתים",
+      "verifiersSheetIntroTitle": "{{name}} מאומת",
+      "verifiersSheetIntroBody": "החשבונות האלה אישרו שהחשבון הזה אמיתי.",
+      "trustedVerifierSheetIntroTitle": "{{name}} הוא מאמת מהימן",
+      "trustedVerifierSheetIntroBody": "מאמתים מהימנים יכולים להנפיק אימותים לחשבונות אחרים.",
+      "noVerifiers": "אין מאמתים",
+      "verifiedOn": "אומת {{date}}",
       "gif": "GIF"
     },
     "recipe": {

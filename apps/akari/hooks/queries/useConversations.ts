@@ -64,6 +64,7 @@ export function useConversations(
             handle: primary.handle,
             displayName: primary.displayName || primary.handle,
             avatar: primary.avatar,
+            verification: primary.verification,
             members: otherMembers,
             isGroup: otherMembers.length > 1,
             lastMessage: convo.lastMessage?.text || 'No messages yet',

@@ -499,6 +499,16 @@
       "joined": "присоединился",
       "thisWeek": "на этой неделе",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Подтверждён",
+      "trustedVerifierBadge": "Доверенный верификатор",
+      "verifiedBadgeHint": "Узнать, кто подтвердил этот аккаунт",
+      "verifiersSheetTitle": "Верификаторы",
+      "verifiersSheetIntroTitle": "{{name}} подтверждён",
+      "verifiersSheetIntroBody": "Эти аккаунты подтвердили подлинность этого аккаунта.",
+      "trustedVerifierSheetIntroTitle": "{{name}} — доверенный верификатор",
+      "trustedVerifierSheetIntroBody": "Доверенные верификаторы могут подтверждать другие аккаунты.",
+      "noVerifiers": "Нет верификаторов",
+      "verifiedOn": "Подтверждено {{date}}",
       "gif": "GIF"
     },
     "recipe": {

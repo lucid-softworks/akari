@@ -25,6 +25,8 @@ jest.mock('@/components/Labels', () => ({ Labels: jest.fn(() => null) }));
 jest.mock('@/components/RichText', () => ({ RichText: jest.fn(() => null) }));
 jest.mock('@/components/HandleHistoryModal', () => ({ HandleHistoryModal: jest.fn(() => null) }));
 jest.mock('@/components/ProfileEditModal', () => ({ ProfileEditModal: jest.fn(() => null) }));
+jest.mock('@/components/KeytraceClaims', () => ({ KeytraceClaims: jest.fn(() => null) }));
+jest.mock('@/components/VerificationBadge', () => ({ VerificationBadge: jest.fn(() => null) }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 jest.mock('@/components/ui/IconSymbol', () => {
   const React = require('react');

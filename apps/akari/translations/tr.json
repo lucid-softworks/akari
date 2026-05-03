@@ -499,6 +499,16 @@
       "joined": "katıldı",
       "thisWeek": "bu hafta",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Doğrulanmış",
+      "trustedVerifierBadge": "Güvenilir doğrulayıcı",
+      "verifiedBadgeHint": "Bu hesabı kimin doğruladığını görüntüle",
+      "verifiersSheetTitle": "Doğrulayıcılar",
+      "verifiersSheetIntroTitle": "{{name}} doğrulanmış",
+      "verifiersSheetIntroBody": "Bu hesaplar, bu hesabın gerçek olduğunu onayladı.",
+      "trustedVerifierSheetIntroTitle": "{{name}} güvenilir bir doğrulayıcıdır",
+      "trustedVerifierSheetIntroBody": "Güvenilir doğrulayıcılar, diğer hesaplar için doğrulamalar yayınlayabilir.",
+      "noVerifiers": "Doğrulayıcı yok",
+      "verifiedOn": "{{date}} tarihinde doğrulandı",
       "gif": "GIF"
     },
     "recipe": {

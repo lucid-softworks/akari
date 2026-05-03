@@ -107,6 +107,7 @@ export default function ProfileScreen() {
           postsCount: profile.postsCount,
           viewer: profile.viewer,
           labels: profile.labels,
+          verification: profile.verification,
         }}
         isOwnProfile={true}
         onDropdownToggle={handleDropdownToggle}

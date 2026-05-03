@@ -499,6 +499,16 @@
       "joined": "se unió",
       "thisWeek": "esta semana",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Verificado",
+      "trustedVerifierBadge": "Verificador de confianza",
+      "verifiedBadgeHint": "Ver quién verificó esta cuenta",
+      "verifiersSheetTitle": "Verificadores",
+      "verifiersSheetIntroTitle": "{{name}} está verificado",
+      "verifiersSheetIntroBody": "Estas cuentas han confirmado que esta cuenta es auténtica.",
+      "trustedVerifierSheetIntroTitle": "{{name}} es un verificador de confianza",
+      "trustedVerifierSheetIntroBody": "Los verificadores de confianza pueden emitir verificaciones para otras cuentas.",
+      "noVerifiers": "Sin verificadores",
+      "verifiedOn": "Verificado {{date}}",
       "gif": "GIF"
     },
     "recipe": {

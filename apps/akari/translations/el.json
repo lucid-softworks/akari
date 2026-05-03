@@ -499,6 +499,16 @@
       "joined": "εγγράφηκε",
       "thisWeek": "αυτή την εβδομάδα",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Επαληθευμένος",
+      "trustedVerifierBadge": "Έμπιστος επαληθευτής",
+      "verifiedBadgeHint": "Δείτε ποιος επαλήθευσε αυτόν τον λογαριασμό",
+      "verifiersSheetTitle": "Επαληθευτές",
+      "verifiersSheetIntroTitle": "Ο/Η {{name}} έχει επαληθευτεί",
+      "verifiersSheetIntroBody": "Αυτοί οι λογαριασμοί επιβεβαίωσαν ότι αυτός ο λογαριασμός είναι αυθεντικός.",
+      "trustedVerifierSheetIntroTitle": "Ο/Η {{name}} είναι έμπιστος επαληθευτής",
+      "trustedVerifierSheetIntroBody": "Οι έμπιστοι επαληθευτές μπορούν να εκδίδουν επαληθεύσεις για άλλους λογαριασμούς.",
+      "noVerifiers": "Καμία επαλήθευση",
+      "verifiedOn": "Επαληθεύτηκε {{date}}",
       "gif": "GIF"
     },
     "recipe": {

@@ -499,6 +499,16 @@
       "joined": "ymunodd",
       "thisWeek": "yr wythnos hon",
       "verifiedIdentities": "Verified identities",
+      "verifiedBadge": "Wedi'i ddilysu",
+      "trustedVerifierBadge": "Dilyswr dibynadwy",
+      "verifiedBadgeHint": "Gweld pwy ddilysodd y cyfrif hwn",
+      "verifiersSheetTitle": "Dilyswyr",
+      "verifiersSheetIntroTitle": "Mae {{name}} wedi'i ddilysu",
+      "verifiersSheetIntroBody": "Mae'r cyfrifon hyn wedi cadarnhau bod y cyfrif hwn yn ddilys.",
+      "trustedVerifierSheetIntroTitle": "Mae {{name}} yn ddilyswr dibynadwy",
+      "trustedVerifierSheetIntroBody": "Gall dilyswyr dibynadwy gyhoeddi dilysiadau ar gyfer cyfrifon eraill.",
+      "noVerifiers": "Dim dilyswyr",
+      "verifiedOn": "Wedi'i ddilysu {{date}}",
       "gif": "GIF"
     },
     "recipe": {
