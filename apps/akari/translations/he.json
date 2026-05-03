@@ -269,6 +269,18 @@
         "edit": "ערוך מי יכול להגיב",
         "updated": "ההגדרות עודכנו",
         "allowFromLists": "אפשר מרשימות"
+      },
+      "draft": {
+        "discardTitle": "למחוק טיוטה?",
+        "saveDraft": "שמור טיוטה",
+        "discard": "מחק",
+        "savedToast": "הטיוטה נשמרה",
+        "title": "טיוטות",
+        "openButton": "טיוטות ({{count}})",
+        "empty": "אין טיוטות שמורות",
+        "untitled": "(ללא טקסט)",
+        "delete": "מחק",
+        "limitReached": "הגעת לגבול הטיוטות. מחק אחת כדי לשמור טיוטה חדשה."
       }
     },
     "gif": {

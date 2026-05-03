@@ -269,6 +269,18 @@
         "edit": "Upravit, kdo může odpovídat",
         "updated": "Ovládací prvky aktualizovány",
         "allowFromLists": "Povolit ze seznamů"
+      },
+      "draft": {
+        "discardTitle": "Zahodit koncept?",
+        "saveDraft": "Uložit koncept",
+        "discard": "Zahodit",
+        "savedToast": "Koncept uložen",
+        "title": "Koncepty",
+        "openButton": "Koncepty ({{count}})",
+        "empty": "Žádné uložené koncepty",
+        "untitled": "(bez textu)",
+        "delete": "Smazat",
+        "limitReached": "Dosažen limit konceptů. Smažte jeden, abyste mohli uložit nový."
       }
     },
     "gif": {

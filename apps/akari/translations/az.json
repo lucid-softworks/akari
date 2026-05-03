@@ -269,6 +269,18 @@
         "edit": "Cavab tənzimləmələrini dəyişdir",
         "updated": "Tənzimləmələr yeniləndi",
         "allowFromLists": "Siyahılardan icazə ver"
+      },
+      "draft": {
+        "discardTitle": "Qaralama atılsın?",
+        "saveDraft": "Qaralamayı saxla",
+        "discard": "At",
+        "savedToast": "Qaralama saxlanıldı",
+        "title": "Qaralamalar",
+        "openButton": "Qaralamalar ({{count}})",
+        "empty": "Saxlanmış qaralama yoxdur",
+        "untitled": "(mətn yoxdur)",
+        "delete": "Sil",
+        "limitReached": "Qaralama limiti dolub. Yenisini saxlamadan əvvəl birini silin."
       }
     },
     "gif": {

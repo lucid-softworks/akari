@@ -269,6 +269,18 @@
         "edit": "Muokkaa vastausoikeuksia",
         "updated": "Asetukset päivitetty",
         "allowFromLists": "Salli listoilta"
+      },
+      "draft": {
+        "discardTitle": "Hylätäänkö luonnos?",
+        "saveDraft": "Tallenna luonnos",
+        "discard": "Hylkää",
+        "savedToast": "Luonnos tallennettu",
+        "title": "Luonnokset",
+        "openButton": "Luonnokset ({{count}})",
+        "empty": "Ei tallennettuja luonnoksia",
+        "untitled": "(ei tekstiä)",
+        "delete": "Poista",
+        "limitReached": "Luonnosraja saavutettu. Poista yksi tallentaaksesi uuden."
       }
     },
     "gif": {

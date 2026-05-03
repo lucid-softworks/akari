@@ -2,6 +2,7 @@ import { BlueskyActors } from './actors';
 import { BlueskyAuth } from './auth';
 import { BlueskyApiClient } from './client';
 import { BlueskyConversations } from './conversations';
+import { BlueskyDrafts } from './draft';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
 import { BlueskyNotifications } from './notifications';
@@ -10,12 +11,15 @@ import { BlueskySearch } from './search';
 import type {
   BlueskyBookmarksResponse,
   BlueskyConvosResponse,
+  BlueskyCreateDraftResponse,
   BlueskyCreatePostInput,
   BlueskyCreatePostResponse,
   CreateReviewInput,
+  BlueskyDraft,
   BlueskyFeedGeneratorsResponse,
   BlueskyFeedResponse,
   BlueskyFeedsResponse,
+  BlueskyGetDraftsResponse,
   BlueskyLinkatBoardResponse,
   BlueskyMessagesResponse,
   BlueskyNotificationsResponse,
@@ -44,6 +48,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private actors: BlueskyActors;
   private auth: BlueskyAuth;
   private conversations: BlueskyConversations;
+  private drafts: BlueskyDrafts;
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
   private notifications: BlueskyNotifications;
@@ -59,6 +64,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.actors = new BlueskyActors(pdsUrl);
     this.auth = new BlueskyAuth(pdsUrl);
     this.conversations = new BlueskyConversations(pdsUrl);
+    this.drafts = new BlueskyDrafts(pdsUrl);
     this.feeds = new BlueskyFeeds(pdsUrl);
     this.graph = new BlueskyGraph(pdsUrl);
     this.notifications = new BlueskyNotifications(pdsUrl);
@@ -746,6 +752,31 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async markNotificationsSeen(accessJwt: string): Promise<void> {
     return this.notifications.updateSeen(accessJwt);
+  }
+
+  /** Lists composer drafts stored in the user's private stash. */
+  async getDrafts(
+    accessJwt: string,
+    options: { limit?: number; cursor?: string } = {},
+  ): Promise<BlueskyGetDraftsResponse> {
+    return this.drafts.getDrafts(accessJwt, options);
+  }
+
+  /** Creates a new composer draft. May throw `DraftLimitReached`. */
+  async createDraft(
+    accessJwt: string,
+    draft: BlueskyDraft,
+  ): Promise<BlueskyCreateDraftResponse> {
+    return this.drafts.createDraft(accessJwt, draft);
+  }
+
+  /** Updates an existing draft (no-op if id is unknown server-side). */
+  async updateDraft(accessJwt: string, id: string, draft: BlueskyDraft): Promise<void> {
+    return this.drafts.updateDraft(accessJwt, id, draft);
+  }
+
+  async deleteDraft(accessJwt: string, id: string): Promise<void> {
+    return this.drafts.deleteDraft(accessJwt, id);
   }
 
   /**

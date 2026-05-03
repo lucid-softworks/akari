@@ -269,6 +269,18 @@
         "edit": "Modifica chi può rispondere",
         "updated": "Impostazioni aggiornate",
         "allowFromLists": "Consenti dagli elenchi"
+      },
+      "draft": {
+        "discardTitle": "Eliminare bozza?",
+        "saveDraft": "Salva bozza",
+        "discard": "Elimina",
+        "savedToast": "Bozza salvata",
+        "title": "Bozze",
+        "openButton": "Bozze ({{count}})",
+        "empty": "Nessuna bozza salvata",
+        "untitled": "(nessun testo)",
+        "delete": "Elimina",
+        "limitReached": "Limite di bozze raggiunto. Eliminane una per salvarne una nuova."
       }
     },
     "messages": {

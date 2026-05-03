@@ -269,6 +269,18 @@
         "edit": "編輯誰可以回覆",
         "updated": "設定已更新",
         "allowFromLists": "允許來自清單"
+      },
+      "draft": {
+        "discardTitle": "放棄草稿？",
+        "saveDraft": "儲存草稿",
+        "discard": "放棄",
+        "savedToast": "草稿已儲存",
+        "title": "草稿",
+        "openButton": "草稿 ({{count}})",
+        "empty": "沒有儲存的草稿",
+        "untitled": "(無文字)",
+        "delete": "刪除",
+        "limitReached": "草稿數量已達上限。請刪除一個再儲存新草稿。"
       }
     },
     "messages": {

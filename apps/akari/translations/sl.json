@@ -269,6 +269,18 @@
         "edit": "Uredi, kdo lahko odgovori",
         "updated": "Nastavitve posodobljene",
         "allowFromLists": "Dovoli s seznamov"
+      },
+      "draft": {
+        "discardTitle": "Zavržem osnutek?",
+        "saveDraft": "Shrani osnutek",
+        "discard": "Zavrzi",
+        "savedToast": "Osnutek shranjen",
+        "title": "Osnutki",
+        "openButton": "Osnutki ({{count}})",
+        "empty": "Ni shranjenih osnutkov",
+        "untitled": "(brez besedila)",
+        "delete": "Izbriši",
+        "limitReached": "Doseženo število osnutkov. Izbriši enega za nov osnutek."
       }
     },
     "gif": {

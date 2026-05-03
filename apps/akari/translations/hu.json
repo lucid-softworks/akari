@@ -269,6 +269,18 @@
         "edit": "Válaszadási beállítások szerkesztése",
         "updated": "Beállítások frissítve",
         "allowFromLists": "Listákból engedélyezés"
+      },
+      "draft": {
+        "discardTitle": "Piszkozat elvetése?",
+        "saveDraft": "Piszkozat mentése",
+        "discard": "Elvetés",
+        "savedToast": "Piszkozat mentve",
+        "title": "Piszkozatok",
+        "openButton": "Piszkozatok ({{count}})",
+        "empty": "Nincsenek mentett piszkozatok",
+        "untitled": "(nincs szöveg)",
+        "delete": "Törlés",
+        "limitReached": "Elérted a piszkozat-korlátot. Törölj egyet újabb mentéséhez."
       }
     },
     "gif": {

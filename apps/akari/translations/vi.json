@@ -269,6 +269,18 @@
         "edit": "Sửa ai có thể trả lời",
         "updated": "Đã cập nhật cài đặt",
         "allowFromLists": "Cho phép từ danh sách"
+      },
+      "draft": {
+        "discardTitle": "Hủy bản nháp?",
+        "saveDraft": "Lưu bản nháp",
+        "discard": "Hủy",
+        "savedToast": "Đã lưu bản nháp",
+        "title": "Bản nháp",
+        "openButton": "Bản nháp ({{count}})",
+        "empty": "Không có bản nháp đã lưu",
+        "untitled": "(không có văn bản)",
+        "delete": "Xóa",
+        "limitReached": "Đã đạt giới hạn bản nháp. Xóa một bản để lưu bản mới."
       }
     },
     "messages": {

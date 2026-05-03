@@ -269,6 +269,18 @@
         "edit": "Modifier qui peut répondre",
         "updated": "Paramètres mis à jour",
         "allowFromLists": "Autoriser depuis les listes"
+      },
+      "draft": {
+        "discardTitle": "Supprimer le brouillon ?",
+        "saveDraft": "Enregistrer le brouillon",
+        "discard": "Supprimer",
+        "savedToast": "Brouillon enregistré",
+        "title": "Brouillons",
+        "openButton": "Brouillons ({{count}})",
+        "empty": "Aucun brouillon enregistré",
+        "untitled": "(sans texte)",
+        "delete": "Supprimer",
+        "limitReached": "Limite de brouillons atteinte. Supprime-en un pour en enregistrer un nouveau."
       }
     },
     "gif": {

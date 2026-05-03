@@ -269,6 +269,18 @@
         "edit": "Edit who can reply",
         "updated": "Reply controls updated",
         "allowFromLists": "Allow from lists"
+      },
+      "draft": {
+        "discardTitle": "Discard draft?",
+        "saveDraft": "Save draft",
+        "discard": "Discard",
+        "savedToast": "Draft saved",
+        "title": "Drafts",
+        "openButton": "Drafts ({{count}})",
+        "empty": "No saved drafts",
+        "untitled": "(no text)",
+        "delete": "Delete",
+        "limitReached": "Draft limit reached. Delete one to save a new draft."
       }
     },
     "messages": {

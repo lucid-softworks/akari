@@ -269,6 +269,18 @@
         "edit": "返信できる人を編集",
         "updated": "設定を更新しました",
         "allowFromLists": "リストから許可"
+      },
+      "draft": {
+        "discardTitle": "下書きを破棄しますか?",
+        "saveDraft": "下書きを保存",
+        "discard": "破棄",
+        "savedToast": "下書きを保存しました",
+        "title": "下書き",
+        "openButton": "下書き ({{count}})",
+        "empty": "保存された下書きはありません",
+        "untitled": "(テキストなし)",
+        "delete": "削除",
+        "limitReached": "下書きの上限に達しました。新しい下書きを保存するには 1 つ削除してください。"
       }
     },
     "messages": {

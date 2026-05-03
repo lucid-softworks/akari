@@ -269,6 +269,18 @@
         "edit": "Editar quem pode responder",
         "updated": "Controles atualizados",
         "allowFromLists": "Permitir de listas"
+      },
+      "draft": {
+        "discardTitle": "Descartar rascunho?",
+        "saveDraft": "Salvar rascunho",
+        "discard": "Descartar",
+        "savedToast": "Rascunho salvo",
+        "title": "Rascunhos",
+        "openButton": "Rascunhos ({{count}})",
+        "empty": "Nenhum rascunho salvo",
+        "untitled": "(sem texto)",
+        "delete": "Excluir",
+        "limitReached": "Limite de rascunhos atingido. Exclua um para salvar um novo."
       }
     },
     "messages": {

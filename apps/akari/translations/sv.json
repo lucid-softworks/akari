@@ -269,6 +269,18 @@
         "edit": "Redigera vem som kan svara",
         "updated": "Inställningar uppdaterade",
         "allowFromLists": "Tillåt från listor"
+      },
+      "draft": {
+        "discardTitle": "Kasta utkast?",
+        "saveDraft": "Spara utkast",
+        "discard": "Kasta",
+        "savedToast": "Utkast sparat",
+        "title": "Utkast",
+        "openButton": "Utkast ({{count}})",
+        "empty": "Inga sparade utkast",
+        "untitled": "(ingen text)",
+        "delete": "Ta bort",
+        "limitReached": "Utkastgränsen nådd. Ta bort ett för att spara ett nytt."
       }
     },
     "gif": {

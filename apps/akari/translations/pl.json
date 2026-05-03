@@ -269,6 +269,18 @@
         "edit": "Edytuj, kto może odpowiadać",
         "updated": "Ustawienia zaktualizowane",
         "allowFromLists": "Zezwól z list"
+      },
+      "draft": {
+        "discardTitle": "Odrzucić wersję roboczą?",
+        "saveDraft": "Zapisz wersję roboczą",
+        "discard": "Odrzuć",
+        "savedToast": "Wersja robocza zapisana",
+        "title": "Wersje robocze",
+        "openButton": "Wersje robocze ({{count}})",
+        "empty": "Brak zapisanych wersji roboczych",
+        "untitled": "(brak tekstu)",
+        "delete": "Usuń",
+        "limitReached": "Osiągnięto limit wersji roboczych. Usuń jedną, aby zapisać nową."
       }
     },
     "messages": {

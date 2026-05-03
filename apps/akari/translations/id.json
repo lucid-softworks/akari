@@ -269,6 +269,18 @@
         "edit": "Atur siapa yang bisa membalas",
         "updated": "Pengaturan diperbarui",
         "allowFromLists": "Izinkan dari daftar"
+      },
+      "draft": {
+        "discardTitle": "Buang draf?",
+        "saveDraft": "Simpan draf",
+        "discard": "Buang",
+        "savedToast": "Draf disimpan",
+        "title": "Draf",
+        "openButton": "Draf ({{count}})",
+        "empty": "Tidak ada draf tersimpan",
+        "untitled": "(tanpa teks)",
+        "delete": "Hapus",
+        "limitReached": "Batas draf tercapai. Hapus satu untuk menyimpan draf baru."
       }
     },
     "messages": {

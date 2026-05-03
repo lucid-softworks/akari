@@ -1369,3 +1369,85 @@ export type BlueskyRecipeRecordsResponse = {
   /** Pagination cursor for next page */
   cursor?: string;
 };
+
+/**
+ * Local file reference for a draft embed. Embeds are device-bound — the
+ * `path` is interpreted on the device that holds the file (a `file://` URI
+ * on native, or whatever scheme the host chose).
+ */
+export type BlueskyDraftEmbedLocalRef = {
+  path: string;
+};
+
+export type BlueskyDraftEmbedCaption = {
+  lang: string;
+  content: string;
+};
+
+export type BlueskyDraftEmbedImage = {
+  localRef: BlueskyDraftEmbedLocalRef;
+  alt?: string;
+};
+
+export type BlueskyDraftEmbedVideo = {
+  localRef: BlueskyDraftEmbedLocalRef;
+  alt?: string;
+  captions?: BlueskyDraftEmbedCaption[];
+};
+
+export type BlueskyDraftEmbedExternal = {
+  uri: string;
+};
+
+export type BlueskyDraftEmbedRecord = {
+  record: { uri: string; cid: string };
+};
+
+export type BlueskyDraftPost = {
+  text: string;
+  labels?: { $type: 'com.atproto.label.defs#selfLabels'; values: { val: string }[] };
+  embedImages?: BlueskyDraftEmbedImage[];
+  embedVideos?: BlueskyDraftEmbedVideo[];
+  embedExternals?: BlueskyDraftEmbedExternal[];
+  embedRecords?: BlueskyDraftEmbedRecord[];
+};
+
+/**
+ * Threadgate `allow` rule unions, as accepted by the lexicon. We model
+ * these as discriminated `$type` values so we can read/write them
+ * directly without an intermediate shape.
+ */
+export type BlueskyDraftThreadgateRule =
+  | { $type: 'app.bsky.feed.threadgate#mentionRule' }
+  | { $type: 'app.bsky.feed.threadgate#followingRule' }
+  | { $type: 'app.bsky.feed.threadgate#followerRule' }
+  | { $type: 'app.bsky.feed.threadgate#listRule'; list: string };
+
+export type BlueskyDraftPostgateRule = {
+  $type: 'app.bsky.feed.postgate#disableRule';
+};
+
+export type BlueskyDraft = {
+  posts: BlueskyDraftPost[];
+  langs?: string[];
+  postgateEmbeddingRules?: BlueskyDraftPostgateRule[];
+  threadgateAllow?: BlueskyDraftThreadgateRule[];
+  deviceId?: string;
+  deviceName?: string;
+};
+
+export type BlueskyDraftView = {
+  id: string;
+  draft: BlueskyDraft;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BlueskyGetDraftsResponse = {
+  drafts: BlueskyDraftView[];
+  cursor?: string;
+};
+
+export type BlueskyCreateDraftResponse = {
+  id: string;
+};

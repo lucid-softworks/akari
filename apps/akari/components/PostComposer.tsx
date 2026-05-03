@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -14,6 +15,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyEmbed } from '@/bluesky-api';
+import { DraftsSheet } from '@/components/DraftsSheet';
 import { EmojiPicker } from '@/components/EmojiPicker';
 import { GifPicker } from '@/components/GifPicker';
 import { PostControlsSheet } from '@/components/PostControlsSheet';
@@ -24,9 +26,17 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, shadows } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
+import {
+  useCreateDraft,
+  useDeleteDraft,
+  useUpdateDraft,
+} from '@/hooks/mutations/useDraftMutations';
 import { usePostControls } from '@/hooks/mutations/usePostControls';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useDrafts } from '@/hooks/queries/useDrafts';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { ComposerDraftState } from '@/utils/draftMapper';
 import { DEFAULT_POST_CONTROLS, describePostControls, type PostControls } from '@/utils/postControls';
 
 type PostFacet = {
@@ -151,6 +161,153 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const postControlsMutation = usePostControls();
   const { showToast } = useToast();
   const { bottom, top } = useSafeAreaInsets();
+  const { data: currentAccount } = useCurrentAccount();
+  const did = currentAccount?.did;
+
+  // Drafts only apply to plain new posts — re-opening a stale reply/quote
+  // composer with mismatched context is more confusing than helpful.
+  const draftsApply = !replyTo && !quote;
+
+  // Server-side drafts via app.bsky.draft.*. Only fetched when the
+  // composer is visible and we're in plain-post mode.
+  const draftsQuery = useDrafts(visible && draftsApply);
+  const drafts = draftsQuery.data ?? [];
+  const createDraftMutation = useCreateDraft();
+  const updateDraftMutation = useUpdateDraft();
+  const deleteDraftMutation = useDeleteDraft();
+
+  const [currentDraftId, setCurrentDraftId] = useState<string | null>(null);
+  const [draftsSheetVisible, setDraftsSheetVisible] = useState(false);
+
+  // Mirror the id into a ref so the async save loop never reads stale state.
+  const draftIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    draftIdRef.current = currentDraftId;
+  }, [currentDraftId]);
+
+  // Single-flight drain loop. New saves overwrite `pendingPayloadRef`;
+  // `savePromiseRef` holds the active drain so concurrent callers can
+  // await the same completion (the autosave timer kicks one off, the
+  // close-alert "Save draft" button needs to wait for it).
+  const savePromiseRef = useRef<Promise<void> | null>(null);
+  const pendingPayloadRef = useRef<{
+    text: string;
+    images: AttachedImage[];
+    controls: PostControls;
+  } | null>(null);
+  const hydratedRef = useRef(false);
+
+  // Reset state on each open cycle. We do NOT auto-load any draft — the
+  // user picks one explicitly via the drafts pill.
+  useEffect(() => {
+    if (!visible) {
+      hydratedRef.current = false;
+      pendingPayloadRef.current = null;
+      return;
+    }
+    setCurrentDraftId(null);
+    draftIdRef.current = null;
+    pendingPayloadRef.current = null;
+    hydratedRef.current = true;
+  }, [visible]);
+
+  // The `mutate*` methods on react-query mutations are stable across
+  // renders, but the surrounding result objects are not — pulling them
+  // into useCallback deps would invalidate the callback on every
+  // mutation state transition. We keep references to the stable methods
+  // in refs so `runSave` itself can stay stable.
+  const createMutateRef = useRef(createDraftMutation.mutateAsync);
+  const updateMutateRef = useRef(updateDraftMutation.mutateAsync);
+  const deleteMutateRef = useRef(deleteDraftMutation.mutateAsync);
+  useEffect(() => {
+    createMutateRef.current = createDraftMutation.mutateAsync;
+    updateMutateRef.current = updateDraftMutation.mutateAsync;
+    deleteMutateRef.current = deleteDraftMutation.mutateAsync;
+  });
+
+  const runSave = useCallback(
+    (payload: {
+      text: string;
+      images: AttachedImage[];
+      controls: PostControls;
+    }): Promise<void> => {
+      pendingPayloadRef.current = payload;
+      // If a drain is already running, the loop will pick up our payload
+      // on its next iteration. Returning that promise lets the caller
+      // await full completion — important for the close-alert "Save
+      // draft" path, which must finish before resetAndClose() clears
+      // `draftIdRef.current`.
+      if (savePromiseRef.current) return savePromiseRef.current;
+      const drain = (async () => {
+        // Yield once so the outer `savePromiseRef.current = drain`
+        // assignment lands BEFORE the finally below runs. Without this,
+        // a synchronous-only path through the loop (e.g. an empty
+        // payload with no draft id, which `continue`s and exits) would
+        // null savePromiseRef inside the IIFE, then the outer code
+        // would re-assign it to a now-resolved promise — leaving a
+        // stale reference that blocks every subsequent save.
+        await Promise.resolve();
+        try {
+          while (pendingPayloadRef.current) {
+            const next = pendingPayloadRef.current;
+            pendingPayloadRef.current = null;
+            const isEmpty =
+              next.text.trim().length === 0 && next.images.length === 0;
+            try {
+              if (isEmpty) {
+                if (!draftIdRef.current) continue;
+                const id = draftIdRef.current;
+                draftIdRef.current = null;
+                setCurrentDraftId(null);
+                await deleteMutateRef.current({ id });
+              } else if (draftIdRef.current) {
+                await updateMutateRef.current({
+                  id: draftIdRef.current,
+                  ...next,
+                });
+              } else {
+                const created = await createMutateRef.current(next);
+                draftIdRef.current = created.id;
+                setCurrentDraftId(created.id);
+              }
+            } catch (err) {
+              const code = (err as { errorCode?: string } | null)?.errorCode;
+              if (code === 'DraftLimitReached') {
+                showToast({
+                  type: 'error',
+                  message: t('post.draft.limitReached'),
+                });
+                // Stop draining — the user needs to delete one before retrying.
+                pendingPayloadRef.current = null;
+                break;
+              }
+              if (__DEV__) console.warn('Draft save failed', err);
+            }
+          }
+        } finally {
+          savePromiseRef.current = null;
+        }
+      })();
+      savePromiseRef.current = drain;
+      return drain;
+    },
+    [showToast, t],
+  );
+
+  // Debounced autosave on form changes. We ONLY autosave drafts that
+  // the user explicitly opened from the drafts sheet — fresh composes
+  // never auto-create a draft. The user must tap "Save draft" via the
+  // close alert to persist a new draft. This prevents a brand-new
+  // session from ever silently overwriting (or replacing) an unrelated
+  // existing draft.
+  useEffect(() => {
+    if (!visible || !draftsApply || !did || !hydratedRef.current) return;
+    if (!currentDraftId) return;
+    const timeout = setTimeout(() => {
+      runSave({ text, images: attachedImages, controls: postControls });
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [visible, draftsApply, did, currentDraftId, text, attachedImages, postControls, runSave]);
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -186,10 +343,17 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           });
       }
 
+      // Drop the in-progress draft now that the post is up.
+      if (draftsApply && currentDraftId) {
+        deleteDraftMutation.mutate({ id: currentDraftId });
+      }
+
       // Reset form and close
       setText('');
       setAttachedImages([]);
       setPostControls(DEFAULT_POST_CONTROLS);
+      setCurrentDraftId(null);
+      draftIdRef.current = null;
       onClose();
     } catch (error) {
       console.error('Failed to create post:', error);
@@ -201,12 +365,77 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     }
   };
 
-  const handleClose = useCallback(() => {
+  const resetAndClose = useCallback(() => {
     setText('');
     setAttachedImages([]);
+    setPostControls(DEFAULT_POST_CONTROLS);
+    setCurrentDraftId(null);
+    draftIdRef.current = null;
     setGifPickerVisible(false);
     onClose();
   }, [onClose]);
+
+  const handleClose = useCallback(() => {
+    const hasContent = text.trim().length > 0 || attachedImages.length > 0;
+    if (draftsApply && did && hasContent) {
+      Alert.alert(t('post.draft.discardTitle'), undefined, [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('post.draft.discard'),
+          style: 'destructive',
+          onPress: () => {
+            if (currentDraftId) deleteDraftMutation.mutate({ id: currentDraftId });
+            resetAndClose();
+          },
+        },
+        {
+          text: t('post.draft.saveDraft'),
+          onPress: async () => {
+            // Flush any pending debounce so the latest content lands on the
+            // server before we close. runSave serializes against any
+            // already-running save.
+            await runSave({ text, images: attachedImages, controls: postControls });
+            showToast({ type: 'success', message: t('post.draft.savedToast') });
+            resetAndClose();
+          },
+        },
+      ]);
+      return;
+    }
+    resetAndClose();
+  }, [
+    draftsApply,
+    did,
+    text,
+    attachedImages,
+    postControls,
+    currentDraftId,
+    deleteDraftMutation,
+    runSave,
+    t,
+    showToast,
+    resetAndClose,
+  ]);
+
+  const handleSelectDraft = useCallback((draft: ComposerDraftState) => {
+    setText(draft.text);
+    setAttachedImages(draft.images);
+    setPostControls(draft.controls);
+    setCurrentDraftId(draft.id);
+    draftIdRef.current = draft.id;
+    setDraftsSheetVisible(false);
+  }, []);
+
+  const handleDeleteDraft = useCallback(
+    (draft: ComposerDraftState) => {
+      deleteDraftMutation.mutate({ id: draft.id });
+      if (currentDraftId === draft.id) {
+        setCurrentDraftId(null);
+        draftIdRef.current = null;
+      }
+    },
+    [deleteDraftMutation, currentDraftId],
+  );
 
   const handleAddImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -364,6 +593,24 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               />
             ) : null}
 
+            {draftsApply && drafts.length > 0 ? (
+              <View style={styles.draftsBar}>
+                <TouchableOpacity
+                  style={[styles.draftsPill, { borderColor }]}
+                  onPress={() => {
+                    draftsQuery.refetch();
+                    setDraftsSheetVisible(true);
+                  }}
+                  accessibilityLabel={t('post.draft.title')}
+                >
+                  <IconSymbol name="square.and.pencil" size={14} color={tintColor} />
+                  <ThemedText style={[styles.draftsPillText, { color: tintColor }]}>
+                    {t('post.draft.openButton', { count: drafts.length })}
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
             {/* Text Input */}
             <View style={styles.inputContainer}>
               <TextInput
@@ -515,6 +762,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           setPostControls(next);
           setControlsSheetVisible(false);
         }}
+      />
+      <DraftsSheet
+        visible={draftsSheetVisible}
+        drafts={drafts}
+        onDismiss={() => setDraftsSheetVisible(false)}
+        onSelect={handleSelectDraft}
+        onDelete={handleDeleteDraft}
       />
     </Modal>
   );
@@ -712,6 +966,24 @@ const styles = StyleSheet.create({
   inputContainer: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
+  },
+  draftsBar: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    flexDirection: 'row',
+  },
+  draftsPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    borderWidth: layout.hairline,
+    borderRadius: radius.xl,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  draftsPillText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
   },
   textInput: {
     fontSize: 18,

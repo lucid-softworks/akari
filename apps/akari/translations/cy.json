@@ -269,6 +269,18 @@
         "edit": "Golygu pwy all ymateb",
         "updated": "Rheolyddion wedi'u diweddaru",
         "allowFromLists": "Caniatáu o restrau"
+      },
+      "draft": {
+        "discardTitle": "Dileu drafft?",
+        "saveDraft": "Cadw drafft",
+        "discard": "Dileu",
+        "savedToast": "Drafft wedi'i gadw",
+        "title": "Drafftiau",
+        "openButton": "Drafftiau ({{count}})",
+        "empty": "Dim drafftiau wedi’u cadw",
+        "untitled": "(dim testun)",
+        "delete": "Dileu",
+        "limitReached": "Cyrhaeddwyd terfyn drafftiau. Dileu un cyn cadw un newydd."
       }
     },
     "messages": {

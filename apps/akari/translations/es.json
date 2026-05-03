@@ -269,6 +269,18 @@
         "edit": "Editar quién puede responder",
         "updated": "Controles actualizados",
         "allowFromLists": "Permitir desde listas"
+      },
+      "draft": {
+        "discardTitle": "¿Descartar borrador?",
+        "saveDraft": "Guardar borrador",
+        "discard": "Descartar",
+        "savedToast": "Borrador guardado",
+        "title": "Borradores",
+        "openButton": "Borradores ({{count}})",
+        "empty": "No hay borradores guardados",
+        "untitled": "(sin texto)",
+        "delete": "Eliminar",
+        "limitReached": "Límite de borradores alcanzado. Elimina uno para guardar otro."
       }
     },
     "gif": {

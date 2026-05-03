@@ -269,6 +269,18 @@
         "edit": "Antwortregeln bearbeiten",
         "updated": "Einstellungen aktualisiert",
         "allowFromLists": "Aus Listen zulassen"
+      },
+      "draft": {
+        "discardTitle": "Entwurf verwerfen?",
+        "saveDraft": "Entwurf speichern",
+        "discard": "Verwerfen",
+        "savedToast": "Entwurf gespeichert",
+        "title": "Entwürfe",
+        "openButton": "Entwürfe ({{count}})",
+        "empty": "Keine gespeicherten Entwürfe",
+        "untitled": "(kein Text)",
+        "delete": "Löschen",
+        "limitReached": "Entwurfslimit erreicht. Lösche einen, um einen neuen zu speichern."
       }
     },
     "messages": {

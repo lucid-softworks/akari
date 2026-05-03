@@ -269,6 +269,18 @@
         "edit": "Kim cevap verebilir ayarla",
         "updated": "Ayarlar güncellendi",
         "allowFromLists": "Listelerden izin ver"
+      },
+      "draft": {
+        "discardTitle": "Taslak silinsin mi?",
+        "saveDraft": "Taslağı kaydet",
+        "discard": "Sil",
+        "savedToast": "Taslak kaydedildi",
+        "title": "Taslaklar",
+        "openButton": "Taslaklar ({{count}})",
+        "empty": "Kaydedilmiş taslak yok",
+        "untitled": "(metin yok)",
+        "delete": "Sil",
+        "limitReached": "Taslak sınırına ulaşıldı. Yeni bir taslak kaydetmek için birini sil."
       }
     },
     "messages": {

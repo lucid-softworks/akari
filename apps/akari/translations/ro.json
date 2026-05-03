@@ -269,6 +269,18 @@
         "edit": "Editează cine poate răspunde",
         "updated": "Setările au fost actualizate",
         "allowFromLists": "Permite din liste"
+      },
+      "draft": {
+        "discardTitle": "Renunți la ciornă?",
+        "saveDraft": "Salvează ciorna",
+        "discard": "Renunță",
+        "savedToast": "Ciornă salvată",
+        "title": "Ciorne",
+        "openButton": "Ciorne ({{count}})",
+        "empty": "Nicio ciornă salvată",
+        "untitled": "(fără text)",
+        "delete": "Șterge",
+        "limitReached": "Limită de ciorne atinsă. Șterge una pentru a salva una nouă."
       }
     },
     "gif": {

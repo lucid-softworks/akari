@@ -269,6 +269,18 @@
         "edit": "Bewerk wie kan reageren",
         "updated": "Instellingen bijgewerkt",
         "allowFromLists": "Toestaan vanuit lijsten"
+      },
+      "draft": {
+        "discardTitle": "Concept verwijderen?",
+        "saveDraft": "Concept opslaan",
+        "discard": "Verwijderen",
+        "savedToast": "Concept opgeslagen",
+        "title": "Concepten",
+        "openButton": "Concepten ({{count}})",
+        "empty": "Geen opgeslagen concepten",
+        "untitled": "(geen tekst)",
+        "delete": "Verwijderen",
+        "limitReached": "Conceptenlimiet bereikt. Verwijder er een om een nieuwe op te slaan."
       }
     },
     "messages": {

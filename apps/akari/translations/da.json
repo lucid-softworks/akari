@@ -269,6 +269,18 @@
         "edit": "Rediger hvem der kan svare",
         "updated": "Indstillinger opdateret",
         "allowFromLists": "Tillad fra lister"
+      },
+      "draft": {
+        "discardTitle": "Kassér kladde?",
+        "saveDraft": "Gem kladde",
+        "discard": "Kassér",
+        "savedToast": "Kladde gemt",
+        "title": "Kladder",
+        "openButton": "Kladder ({{count}})",
+        "empty": "Ingen gemte kladder",
+        "untitled": "(ingen tekst)",
+        "delete": "Slet",
+        "limitReached": "Kladde-grænse nået. Slet en for at gemme en ny."
       }
     },
     "gif": {

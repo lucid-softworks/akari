@@ -4,6 +4,7 @@ export * from './api';
 export * from './auth';
 export * from './client';
 export * from './conversations';
+export * from './draft';
 export * from './feeds';
 export * from './graph';
 export * from './notifications';
