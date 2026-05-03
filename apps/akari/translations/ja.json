@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "戻る",
-      "done": "完了"
+      "done": "完了",
+      "following": "フォロー中"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",

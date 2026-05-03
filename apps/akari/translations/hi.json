@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "वापस",
-      "done": "हो गया"
+      "done": "हो गया",
+      "following": "फ़ॉलो किया हुआ"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",

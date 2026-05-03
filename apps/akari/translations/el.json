@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Πίσω",
-      "done": "Έγινε"
+      "done": "Έγινε",
+      "following": "Ακολουθείτε"
     },
     "auth": {
       "fillAllFields": "Συμπληρώστε όλα τα πεδία",

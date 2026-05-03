@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Vissza",
-      "done": "Kész"
+      "done": "Kész",
+      "following": "Követed"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",

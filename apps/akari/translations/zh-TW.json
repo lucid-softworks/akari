@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "返回",
-      "done": "完成"
+      "done": "完成",
+      "following": "追蹤中"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",

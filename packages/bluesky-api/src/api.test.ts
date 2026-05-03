@@ -202,9 +202,9 @@ describe('BlueskyApi', () => {
       getUnreadCount: jest.fn().mockResolvedValue(unread),
     };
 
-    await api.followUser('jwt', 'did:example');
+    await api.followUser('jwt', 'did:example:me', 'did:example');
     await api.unfollowUser('jwt', 'at://follow/1');
-    await api.blockUser('jwt', 'did:example');
+    await api.blockUser('jwt', 'did:example:me', 'did:example');
     await api.unblockUser('jwt', 'at://block/1');
     await api.muteUser('jwt', 'did:example');
     await api.unmuteUser('jwt', 'did:example');
@@ -215,7 +215,7 @@ describe('BlueskyApi', () => {
     await expect(api.listNotifications('jwt', 20)).resolves.toBe(notifications);
     await expect(api.getUnreadNotificationsCount('jwt')).resolves.toBe(unread);
 
-    expect(internal.graph.followUser).toHaveBeenCalledWith('jwt', 'did:example');
+    expect(internal.graph.followUser).toHaveBeenCalledWith('jwt', 'did:example:me', 'did:example');
     expect(internal.search.searchProfiles).toHaveBeenCalledWith('jwt', 'query', 10, undefined);
     expect(internal.notifications.listNotifications).toHaveBeenCalledWith(
       'jwt',

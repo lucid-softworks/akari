@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "ย้อนกลับ",
-      "done": "เสร็จ"
+      "done": "เสร็จ",
+      "following": "กำลังติดตาม"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",

@@ -28,11 +28,12 @@ export function useFollowUser() {
     }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+      if (!currentAccount?.did) throw new Error('No user DID available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
 
       if (action === 'follow') {
-        return await api.followUser(token, did);
+        return await api.followUser(token, currentAccount.did, did);
       } else {
         if (!followUri) throw new Error('Follow URI is required for unfollow');
         return await api.unfollowUser(token, followUri);

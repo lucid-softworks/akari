@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Înapoi",
-      "done": "Gata"
+      "done": "Gata",
+      "following": "Urmăriți"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",

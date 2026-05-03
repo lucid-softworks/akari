@@ -338,6 +338,20 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
               </>
             ) : (
               <>
+                {!isBlockedBy && !profile.viewer?.blocking ? (
+                  <TouchableOpacity
+                    style={isFollowing ? styles.followingButton : styles.followButton}
+                    onPress={handleFollowPress}
+                    disabled={followMutation.isPending}
+                    activeOpacity={activeOpacity.default}
+                  >
+                    <ThemedText
+                      style={isFollowing ? styles.followingButtonText : styles.followButtonText}
+                    >
+                      {isFollowing ? t('common.following') : t('common.follow')}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ) : null}
                 <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
                   <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
                 </TouchableOpacity>
@@ -537,6 +551,36 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     color: '#fff',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  followButton: {
+    height: layout.avatarSmall,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.lg,
+    borderWidth: layout.border,
+    borderColor: semanticColors.systemBlue,
+    backgroundColor: semanticColors.systemBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  followButtonText: {
+    color: '#fff',
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  followingButton: {
+    height: layout.avatarSmall,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.lg,
+    borderWidth: layout.border,
+    borderColor: semanticColors.systemBlue,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  followingButtonText: {
+    color: semanticColors.systemBlue,
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
   },

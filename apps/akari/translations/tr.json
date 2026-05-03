@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Geri",
-      "done": "Tamam"
+      "done": "Tamam",
+      "following": "Takip ediliyor"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",

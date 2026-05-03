@@ -38,8 +38,8 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{ uri: 'follow-record' }, { success: true }];
 
-    const followResult = await graph.followUser('jwt', 'did:example:alice');
-    const unfollowResult = await graph.unfollowUser('jwt', 'at://follow/123');
+    const followResult = await graph.followUser('jwt', 'did:example:me', 'did:example:alice');
+    const unfollowResult = await graph.unfollowUser('jwt', 'at://did:example:me/app.bsky.graph.follow/123');
 
     expect(followResult).toEqual({ uri: 'follow-record' });
     expect(unfollowResult).toEqual({ success: true });
@@ -50,7 +50,7 @@ describe('BlueskyGraph', () => {
       options: {
         method: 'POST',
         body: {
-          repo: 'self',
+          repo: 'did:example:me',
           collection: 'app.bsky.graph.follow',
           record: expect.objectContaining({ subject: 'did:example:alice' }),
         },
@@ -65,7 +65,9 @@ describe('BlueskyGraph', () => {
       options: {
         method: 'POST',
         body: {
-          uri: 'at://follow/123',
+          repo: 'did:example:me',
+          collection: 'app.bsky.graph.follow',
+          rkey: '123',
         },
       },
     });
@@ -75,15 +77,15 @@ describe('BlueskyGraph', () => {
     const graph = new TestGraph();
     graph.responses = [{ block: true }, { success: true }];
 
-    const blockResult = await graph.blockUser('jwt', 'did:example:bob');
-    const unblockResult = await graph.unblockUser('jwt', 'at://block/1');
+    const blockResult = await graph.blockUser('jwt', 'did:example:me', 'did:example:bob');
+    const unblockResult = await graph.unblockUser('jwt', 'at://did:example:me/app.bsky.graph.block/1');
 
     expect(blockResult).toEqual({ block: true });
     expect(unblockResult).toEqual({ success: true });
 
     expect(graph.calls[0].endpoint).toBe('/com.atproto.repo.createRecord');
     expect(graph.calls[0].options.body).toMatchObject({
-      repo: 'self',
+      repo: 'did:example:me',
       collection: 'app.bsky.graph.block',
       record: expect.objectContaining({ subject: 'did:example:bob' }),
     });
@@ -93,7 +95,9 @@ describe('BlueskyGraph', () => {
       options: {
         method: 'POST',
         body: {
-          uri: 'at://block/1',
+          repo: 'did:example:me',
+          collection: 'app.bsky.graph.block',
+          rkey: '1',
         },
       },
     });

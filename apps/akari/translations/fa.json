@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "بازگشت",
-      "done": "انجام شد"
+      "done": "انجام شد",
+      "following": "دنبال می‌شود"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",

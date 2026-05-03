@@ -26,11 +26,12 @@ export function useBlockUser() {
     mutationFn: async ({ did, blockUri, action }: BlockUserParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+      if (!currentAccount?.did) throw new Error('No user DID available');
 
       const api = new BlueskyApi(currentAccount.pdsUrl);
 
       if (action === 'block') {
-        return await api.blockUser(token, did);
+        return await api.blockUser(token, currentAccount.did, did);
       } else {
         if (!blockUri) throw new Error('Block URI is required for unblock');
         return await api.unblockUser(token, blockUri);

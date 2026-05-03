@@ -11,18 +11,17 @@ import type {
  */
 export class BlueskyGraph extends BlueskyApiClient {
   /**
-   * Follows a user
-   * @param accessJwt - Valid access JWT token
-   * @param did - The DID of the user to follow
-   * @returns Promise resolving to follow operation result
+   * Follows a user. `userDid` is the current user's DID — atproto's
+   * createRecord requires `repo` to be a real DID, not the literal "self".
    */
-  async followUser(accessJwt: string, did: string) {
+  async followUser(accessJwt: string, userDid: string, did: string) {
     return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
       method: 'POST',
       body: {
-        repo: 'self',
+        repo: userDid,
         collection: 'app.bsky.graph.follow',
         record: {
+          $type: 'app.bsky.graph.follow',
           subject: did,
           createdAt: new Date().toISOString(),
         },
@@ -31,33 +30,29 @@ export class BlueskyGraph extends BlueskyApiClient {
   }
 
   /**
-   * Unfollows a user
-   * @param accessJwt - Valid access JWT token
-   * @param followUri - The URI of the follow record to delete
-   * @returns Promise resolving to unfollow operation result
+   * Unfollows a user by deleting the follow record. `followUri` is the AT
+   * URI returned by the original follow (e.g. `at://<userDid>/app.bsky.graph.follow/<rkey>`);
+   * we parse it back into the repo + collection + rkey that deleteRecord wants.
    */
   async unfollowUser(accessJwt: string, followUri: string) {
+    const { repo, collection, rkey } = parseAtUri(followUri);
     return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
       method: 'POST',
-      body: {
-        uri: followUri,
-      },
+      body: { repo, collection, rkey },
     });
   }
 
   /**
-   * Blocks a user
-   * @param accessJwt - Valid access JWT token
-   * @param did - The DID of the user to block
-   * @returns Promise resolving to block operation result
+   * Blocks a user. See followUser re: the userDid argument.
    */
-  async blockUser(accessJwt: string, did: string) {
+  async blockUser(accessJwt: string, userDid: string, did: string) {
     return this.makeAuthenticatedRequest('/com.atproto.repo.createRecord', accessJwt, {
       method: 'POST',
       body: {
-        repo: 'self',
+        repo: userDid,
         collection: 'app.bsky.graph.block',
         record: {
+          $type: 'app.bsky.graph.block',
           subject: did,
           createdAt: new Date().toISOString(),
         },
@@ -66,17 +61,13 @@ export class BlueskyGraph extends BlueskyApiClient {
   }
 
   /**
-   * Unblocks a user
-   * @param accessJwt - Valid access JWT token
-   * @param blockUri - The URI of the block record to delete
-   * @returns Promise resolving to unblock operation result
+   * Unblocks a user by deleting the block record.
    */
   async unblockUser(accessJwt: string, blockUri: string) {
+    const { repo, collection, rkey } = parseAtUri(blockUri);
     return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
       method: 'POST',
-      body: {
-        uri: blockUri,
-      },
+      body: { repo, collection, rkey },
     });
   }
 
@@ -223,3 +214,13 @@ export class BlueskyGraph extends BlueskyApiClient {
 }
 
 export type { BlueskyListView, BlueskyListsResponse, BlueskyListResponse };
+
+/**
+ * Parses an AT URI of the form `at://<repo>/<collection>/<rkey>` into its
+ * three components for use with com.atproto.repo.deleteRecord.
+ */
+function parseAtUri(uri: string): { repo: string; collection: string; rkey: string } {
+  const m = uri.match(/^at:\/\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  if (!m) throw new Error(`Invalid AT URI: ${uri}`);
+  return { repo: m[1], collection: m[2], rkey: m[3] };
+}

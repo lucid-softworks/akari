@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Yn ôl",
-      "done": "Iawn"
+      "done": "Iawn",
+      "following": "Dilyn"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",

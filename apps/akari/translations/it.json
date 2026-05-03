@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Indietro",
-      "done": "Fatto"
+      "done": "Fatto",
+      "following": "Seguito"
     },
     "auth": {
       "fillAllFields": "Compila tutti i campi",

@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Назад",
-      "done": "Готово"
+      "done": "Готово",
+      "following": "Підписані"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",

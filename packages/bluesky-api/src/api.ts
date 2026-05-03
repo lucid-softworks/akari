@@ -563,8 +563,8 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param did - DID of the actor that should be followed.
    * @returns Response emitted by the repo.createRecord mutation.
    */
-  async followUser(accessJwt: string, did: string) {
-    return this.graph.followUser(accessJwt, did);
+  async followUser(accessJwt: string, userDid: string, did: string) {
+    return this.graph.followUser(accessJwt, userDid, did);
   }
 
   /**
@@ -583,8 +583,8 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param did - DID of the actor that should be blocked.
    * @returns Response emitted by the repo.createRecord mutation.
    */
-  async blockUser(accessJwt: string, did: string) {
-    return this.graph.blockUser(accessJwt, did);
+  async blockUser(accessJwt: string, userDid: string, did: string) {
+    return this.graph.blockUser(accessJwt, userDid, did);
   }
 
   /**

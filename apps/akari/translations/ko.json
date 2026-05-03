@@ -64,7 +64,8 @@
       "viewPendingChats": "View pending chats",
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "뒤로",
-      "done": "완료"
+      "done": "완료",
+      "following": "팔로잉"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",
