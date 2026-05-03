@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    maxHeight: 400,
   },
   loadingContainer: {
     flex: 1,

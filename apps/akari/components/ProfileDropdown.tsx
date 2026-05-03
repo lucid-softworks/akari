@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import * as Haptics from 'expo-haptics';
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -47,11 +47,12 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
   isOwnProfile,
 }: ProfileDropdownProps) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   const sheetBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
+  const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
+  const textColor = useThemeColor({}, 'text');
 
   const menuItems = useMemo<MenuItem[]>(() => {
     if (isOwnProfile) {
@@ -71,143 +72,82 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
     ];
   }, [isOwnProfile, isMuted, isBlocking, t, onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount]);
 
-  const isWeb = Platform.OS === 'web';
-  const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
-    Platform.OS === 'ios' ? 'pageSheet' : Platform.OS === 'android' ? 'fullScreen' : undefined;
-
-  const sheetContent = (
-    <ThemedView
-      style={[
-        styles.sheet,
-        isWeb ? styles.webSheet : styles.nativeSheet,
-        {
-          backgroundColor: sheetBg,
-          paddingBottom: insets.bottom + spacing.lg,
-        },
-      ]}
-    >
-      {isWeb ? (
-        <View style={styles.handleBarContainer}>
-          <View style={[styles.handleBar, { backgroundColor: handleBarColor }]} />
-        </View>
-      ) : null}
-
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {menuItems.map((item) => (
-          <TouchableOpacity
-            key={item.key}
-            style={styles.menuItem}
-            onPress={() => {
-              void Haptics.impactAsync(
-                item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
-              );
-              item.onPress();
-            }}
-            accessibilityRole="menuitem"
-            activeOpacity={activeOpacity.default}
-          >
-            <IconSymbol
-              name={item.icon as any}
-              size={20}
-              color={item.destructive ? semanticColors.danger : iconColor}
-            />
-            <ThemedText
-              style={[
-                styles.menuItemText,
-                item.destructive && styles.menuItemTextDestructive,
-              ]}
-            >
-              {item.label}
-            </ThemedText>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={onDismiss}
-        activeOpacity={activeOpacity.default}
-      >
-        <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-      </TouchableOpacity>
-    </ThemedView>
-  );
-
   return (
-    <Modal
-      visible={isVisible}
-      animationType="slide"
-      presentationStyle={nativePresentationStyle}
-      transparent={isWeb}
-      onRequestClose={onDismiss}
-    >
-      {isWeb ? (
-        <TouchableWithoutFeedback onPress={onDismiss}>
-          <View style={styles.overlay}>
-            <TouchableWithoutFeedback>{sheetContent}</TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      ) : (
-        sheetContent
-      )}
+    <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onDismiss}>
+      <Pressable style={styles.backdrop} onPress={onDismiss}>
+        <Pressable
+          style={[styles.sheetWrapper, { paddingBottom: bottom + spacing.md }]}
+          onPress={(event) => event.stopPropagation()}
+        >
+          <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
+            {menuItems.map((item, index) => (
+              <React.Fragment key={item.key}>
+                {index > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
+                <TouchableOpacity
+                  style={styles.item}
+                  onPress={() => {
+                    void Haptics.impactAsync(
+                      item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
+                    );
+                    item.onPress();
+                  }}
+                  accessibilityRole="menuitem"
+                  activeOpacity={activeOpacity.default}
+                >
+                  <IconSymbol
+                    name={item.icon as any}
+                    size={22}
+                    color={item.destructive ? semanticColors.danger : iconColor}
+                  />
+                  <ThemedText
+                    style={[
+                      styles.itemText,
+                      { color: item.destructive ? semanticColors.danger : textColor },
+                    ]}
+                  >
+                    {item.label}
+                  </ThemedText>
+                </TouchableOpacity>
+              </React.Fragment>
+            ))}
+          </ThemedView>
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 });
 
 const styles = StyleSheet.create({
-  overlay: {
+  backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
-  sheet: {
-    width: '100%',
-  },
-  nativeSheet: {
-    flex: 1,
-  },
-  webSheet: {
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    maxHeight: '70%',
-    maxWidth: 420,
-  },
-  handleBarContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  handleBar: {
-    width: 36,
-    height: 4,
-    borderRadius: radius.full,
-  },
-  scrollView: {
+  sheetWrapper: {
     paddingHorizontal: spacing.lg,
   },
-  menuItem: {
+  sheet: {
+    borderRadius: radius.lg,
+    borderWidth: layout.hairline,
+    overflow: 'hidden',
+    ...Platform.select({
+      web: { maxWidth: 420, alignSelf: 'center', width: '100%' },
+      default: {},
+    }),
+  },
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.md,
     gap: spacing.md,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.lg,
   },
-  menuItemText: {
+  itemText: {
     fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
     flex: 1,
   },
-  menuItemTextDestructive: {
-    color: semanticColors.danger,
-  },
-  cancelButton: {
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.sm,
-    paddingVertical: spacing.md,
-    alignItems: 'center',
-    borderTopWidth: layout.hairline,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  cancelText: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
+  divider: {
+    height: layout.hairline,
   },
 });
