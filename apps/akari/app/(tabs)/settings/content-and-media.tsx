@@ -22,7 +22,12 @@ export default function ContentAndMediaScreen() {
   const iconColor = useThemeColor({}, 'text');
   const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
-  const { trendingBarEnabled, setTrendingBarEnabled } = useFeedSettings();
+  const {
+    trendingBarEnabled,
+    setTrendingBarEnabled,
+    videoAutoplayEnabled,
+    setVideoAutoplayEnabled,
+  } = useFeedSettings();
 
   const contentRows = useMemo<SettingsRowDescriptor[]>(
     () => [
@@ -42,12 +47,6 @@ export default function ContentAndMediaScreen() {
         key: 'external-media',
         icon: 'rectangle.stack.fill',
         label: t('settings.externalMedia'),
-        onPress: showNotImplemented,
-      },
-      {
-        key: 'autoplay',
-        icon: 'play.circle.fill',
-        label: t('settings.autoplayVideos'),
         onPress: showNotImplemented,
       },
       {
@@ -73,6 +72,21 @@ export default function ContentAndMediaScreen() {
               <IconSymbol color={iconColor} name="flame" size={20} style={styles.toggleIcon} />
               <ThemedText style={styles.toggleLabel}>{t('settings.trendingBar')}</ThemedText>
               <Switch value={trendingBarEnabled} onValueChange={setTrendingBarEnabled} />
+            </ThemedView>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+              <IconSymbol
+                color={iconColor}
+                name="play.circle.fill"
+                size={20}
+                style={styles.toggleIcon}
+              />
+              <ThemedText style={styles.toggleLabel}>
+                {t('settings.autoplayVideos')}
+              </ThemedText>
+              <Switch
+                value={videoAutoplayEnabled}
+                onValueChange={setVideoAutoplayEnabled}
+              />
             </ThemedView>
             {contentRows.map((item, index) => (
               <SettingsRow

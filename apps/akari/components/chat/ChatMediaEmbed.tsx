@@ -7,6 +7,7 @@ import { PostInlineCard } from '@/components/PostInlineCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
+import { useFeedSettings } from '@/hooks/useFeedSettings';
 import { matchYouTubeId, youtubeThumbnailUrl } from '@/utils/embedThumb';
 import { useNavigateToPost } from '@/utils/navigation';
 
@@ -71,6 +72,7 @@ type ChatMediaEmbedProps = {
 };
 
 export function ChatMediaEmbed({ media, alignment }: ChatMediaEmbedProps) {
+  const { videoAutoplayEnabled } = useFeedSettings();
   if (media.kind === 'gif') {
     return (
       <View
@@ -83,7 +85,7 @@ export function ChatMediaEmbed({ media, alignment }: ChatMediaEmbedProps) {
           source={{ uri: media.url }}
           style={styles.gif}
           contentFit="cover"
-          autoplay
+          autoplay={videoAutoplayEnabled}
         />
       </View>
     );

@@ -4,6 +4,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/constants/tokens';
+import { useFeedSettings } from '@/hooks/useFeedSettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -28,6 +29,7 @@ type GifEmbedProps = {
 
 export function GifEmbed({ embed }: GifEmbedProps) {
   const { t } = useTranslation();
+  const { videoAutoplayEnabled } = useFeedSettings();
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [aspectRatio, setAspectRatio] = useState(1);
 
@@ -41,7 +43,7 @@ export function GifEmbed({ embed }: GifEmbedProps) {
           source={{ uri: embed.external.uri }}
           style={[styles.gif, { aspectRatio }]}
           contentFit="contain"
-          autoplay
+          autoplay={videoAutoplayEnabled}
           onLoad={(e) => {
             if (e.source.width && e.source.height) {
               setAspectRatio(e.source.width / e.source.height);

@@ -2,26 +2,39 @@ import { useCallback, useSyncExternalStore } from 'react';
 import { MMKV } from 'react-native-mmkv';
 
 /**
- * Local user preferences for the feed tab. Currently just the
- * trending-bar toggle, but lives in its own MMKV instance so unrelated
- * settings (dev-tools, etc.) don't share keys.
+ * Local user preferences for the feed tab. Lives in its own MMKV
+ * instance so unrelated settings (dev-tools, drafts, etc.) don't
+ * share keys.
  */
 const storage = new MMKV({ id: 'feed-settings' });
 const TRENDING_BAR_KEY = 'trending_bar_enabled';
+const VIDEO_AUTOPLAY_KEY = 'video_autoplay_enabled';
 
-let cached: boolean | null = null;
+type FeedSettingsSnapshot = {
+  trendingBarEnabled: boolean;
+  videoAutoplayEnabled: boolean;
+};
+
+let cached: FeedSettingsSnapshot | null = null;
 const listeners = new Set<() => void>();
 
-function read(): boolean {
+function readBool(key: string, fallback: boolean): boolean {
   try {
-    return storage.getBoolean(TRENDING_BAR_KEY) ?? true;
+    return storage.getBoolean(key) ?? fallback;
   } catch {
-    return true;
+    return fallback;
   }
 }
 
-function getSnapshot(): boolean {
-  if (cached === null) cached = read();
+function readAll(): FeedSettingsSnapshot {
+  return {
+    trendingBarEnabled: readBool(TRENDING_BAR_KEY, true),
+    videoAutoplayEnabled: readBool(VIDEO_AUTOPLAY_KEY, true),
+  };
+}
+
+function getSnapshot(): FeedSettingsSnapshot {
+  if (cached === null) cached = readAll();
   return cached;
 }
 
@@ -33,15 +46,27 @@ function subscribe(listener: () => void) {
 }
 
 function notify() {
-  cached = read();
+  cached = readAll();
   for (const l of listeners) l();
 }
 
 export function useFeedSettings() {
-  const trendingBarEnabled = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  const value = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
   const setTrendingBarEnabled = useCallback((enabled: boolean) => {
     storage.set(TRENDING_BAR_KEY, enabled);
     notify();
   }, []);
-  return { trendingBarEnabled, setTrendingBarEnabled };
+
+  const setVideoAutoplayEnabled = useCallback((enabled: boolean) => {
+    storage.set(VIDEO_AUTOPLAY_KEY, enabled);
+    notify();
+  }, []);
+
+  return {
+    trendingBarEnabled: value.trendingBarEnabled,
+    setTrendingBarEnabled,
+    videoAutoplayEnabled: value.videoAutoplayEnabled,
+    setVideoAutoplayEnabled,
+  };
 }
