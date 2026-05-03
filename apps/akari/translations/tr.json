@@ -215,7 +215,8 @@
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
       "noPostsInFeed": "Bu akışta henüz gönderi yok.",
       "selectFeedToView": "Gönderileri görmek için bir akış seçin",
-      "loadingFeeds": "Akışlarınız yükleniyor..."
+      "loadingFeeds": "Akışlarınız yükleniyor...",
+      "trending": "Gündem"
     },
     "post": {
       "postNotFound": "Gönderi bulunamadı",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Gündem çubuğu"
     },
     "gif": {
       "selectGif": "GIF Seç",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
       "noPostsInFeed": "ยังไม่มีโพสต์ในฟีดนี้",
       "selectFeedToView": "เลือกฟีดเพื่อดูโพสต์",
-      "loadingFeeds": "กำลังโหลดฟีดของคุณ..."
+      "loadingFeeds": "กำลังโหลดฟีดของคุณ...",
+      "trending": "มาแรง"
     },
     "post": {
       "postNotFound": "ไม่พบโพสต์",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "แถบมาแรง"
     },
     "gif": {
       "selectGif": "เลือก GIF",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "Lade weitere Beiträge...",
       "noPostsInFeed": "Noch keine Beiträge in diesem Feed.",
       "selectFeedToView": "Wähle einen Feed aus, um Beiträge anzuzeigen",
-      "loadingFeeds": "Lade deine Feeds..."
+      "loadingFeeds": "Lade deine Feeds...",
+      "trending": "Im Trend"
     },
     "post": {
       "postNotFound": "Beitrag nicht gefunden",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trend-Leiste"
     },
     "gif": {
       "selectGif": "GIF auswählen",

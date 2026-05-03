@@ -79,7 +79,11 @@ export class BlueskyApiClient {
       throw err;
     }
 
-    return await response.json();
+    // Some XRPC procedures (e.g. app.bsky.draft.updateDraft, deleteDraft)
+    // return 200 with an empty body. `response.json()` throws on those —
+    // fall back to undefined so void-returning callers don't crash.
+    const text = await response.text();
+    return (text ? JSON.parse(text) : undefined) as T;
   }
 
   /**

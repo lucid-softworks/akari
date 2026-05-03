@@ -215,7 +215,8 @@
       "loadingMorePosts": "Načítání více příspěvků ...",
       "noPostsInFeed": "Zatím žádné příspěvky v tomto zdroji.",
       "selectFeedToView": "Vyberte zdroj pro zobrazení příspěvků",
-      "loadingFeeds": "Načítání vašich kanálů ..."
+      "loadingFeeds": "Načítání vašich kanálů ...",
+      "trending": "Trendy"
     },
     "post": {
       "postNotFound": "Příspěvek není nalezen",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Lišta trendů"
     },
     "bookmarks": {
       "subtitle": "Zde se zobrazí uložená příspěvky a vlákna.",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "Indlæser flere Posts ...",
       "noPostsInFeed": "Ingen posts i dette feed endnu.",
       "selectFeedToView": "Vælg et feed for at se posts",
-      "loadingFeeds": "Indlæser dine feeds ..."
+      "loadingFeeds": "Indlæser dine feeds ...",
+      "trending": "Trender"
     },
     "post": {
       "postNotFound": "Post ikke fundet",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trendbjælke"
     },
     "bookmarks": {
       "subtitle": "Gemte posts og tråde vises her.",

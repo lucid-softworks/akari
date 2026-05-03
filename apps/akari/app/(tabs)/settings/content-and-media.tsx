@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Switch } from 'react-native';
 
 import {
   SettingsRow,
@@ -7,15 +7,21 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useFeedSettings } from '@/hooks/useFeedSettings';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ContentAndMediaScreen() {
   const borderColor = useBorderColor();
+  const iconColor = useThemeColor({}, 'text');
   const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
+  const { trendingBarEnabled, setTrendingBarEnabled } = useFeedSettings();
 
   const contentRows = useMemo<SettingsRowDescriptor[]>(
     () => [
@@ -56,6 +62,11 @@ export default function ContentAndMediaScreen() {
       >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+              <IconSymbol color={iconColor} name="flame" size={20} style={styles.toggleIcon} />
+              <ThemedText style={styles.toggleLabel}>{t('settings.trendingBar')}</ThemedText>
+              <Switch value={trendingBarEnabled} onValueChange={setTrendingBarEnabled} />
+            </ThemedView>
             {contentRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
@@ -85,6 +96,21 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  toggleIcon: {
+    marginRight: 12,
+  },
+  toggleLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
 

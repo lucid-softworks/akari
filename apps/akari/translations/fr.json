@@ -215,7 +215,8 @@
       "loadingMorePosts": "Chargement de plus de publications...",
       "noPostsInFeed": "Aucune publication dans ce flux pour le moment.",
       "selectFeedToView": "Sélectionnez un flux pour voir les publications",
-      "loadingFeeds": "Chargement de vos flux..."
+      "loadingFeeds": "Chargement de vos flux...",
+      "trending": "Tendances"
     },
     "post": {
       "postNotFound": "Publication introuvable",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Barre de tendances"
     },
     "bookmarks": {
       "subtitle": "Les publications et fils enregistrés apparaîtront ici.",

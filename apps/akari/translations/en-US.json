@@ -215,7 +215,8 @@
       "loadingMorePosts": "Loading more posts...",
       "noPostsInFeed": "No posts in this feed yet.",
       "selectFeedToView": "Select a feed to view posts",
-      "loadingFeeds": "Loading your feeds..."
+      "loadingFeeds": "Loading your feeds...",
+      "trending": "Trending"
     },
     "post": {
       "postNotFound": "Post not found",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trending bar"
     },
     "gif": {
       "selectGif": "Select GIF",

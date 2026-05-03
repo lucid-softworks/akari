@@ -215,7 +215,8 @@
       "loadingMorePosts": "載入更多貼文...",
       "noPostsInFeed": "此動態中尚無貼文。",
       "selectFeedToView": "選擇動態以查看貼文",
-      "loadingFeeds": "正在載入您的訂閱源..."
+      "loadingFeeds": "正在載入您的訂閱源...",
+      "trending": "熱門"
     },
     "post": {
       "postNotFound": "找不到貼文",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "熱門列"
     },
     "gif": {
       "selectGif": "選擇GIF",

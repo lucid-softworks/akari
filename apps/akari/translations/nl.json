@@ -215,7 +215,8 @@
       "loadingMorePosts": "Meer berichten laden...",
       "noPostsInFeed": "Nog geen berichten in deze feed.",
       "selectFeedToView": "Selecteer een feed om berichten te bekijken",
-      "loadingFeeds": "Je feeds laden..."
+      "loadingFeeds": "Je feeds laden...",
+      "trending": "Trending"
     },
     "post": {
       "postNotFound": "Bericht niet gevonden",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trending-balk"
     },
     "gif": {
       "selectGif": "GIF selecteren",

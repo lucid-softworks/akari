@@ -110,6 +110,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/customize-tabs'),
       },
       {
+        key: 'content-and-media',
+        icon: 'photo.on.rectangle',
+        label: t('settings.contentAndMedia'),
+        onPress: () => router.push('/(tabs)/settings/content-and-media'),
+      },
+      {
         key: 'appearance',
         icon: 'paintbrush.fill',
         label: t('settings.appearance'),

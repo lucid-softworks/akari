@@ -215,7 +215,8 @@
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
       "noPostsInFeed": "이 피드에는 아직 게시물이 없습니다.",
       "selectFeedToView": "게시물을 보려면 피드를 선택하세요",
-      "loadingFeeds": "피드를 로딩 중..."
+      "loadingFeeds": "피드를 로딩 중...",
+      "trending": "트렌드"
     },
     "post": {
       "postNotFound": "게시물을 찾을 수 없습니다",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "트렌드 바"
     },
     "gif": {
       "selectGif": "GIF 선택",

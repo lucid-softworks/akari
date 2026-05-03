@@ -215,7 +215,8 @@
       "loadingMorePosts": "Lataa lisää viestejä ...",
       "noPostsInFeed": "Ei vielä viestejä tässä syötteessä.",
       "selectFeedToView": "Valitse syöttö nähdäksesi viestejä",
-      "loadingFeeds": "Syötteiden lataaminen ..."
+      "loadingFeeds": "Syötteiden lataaminen ...",
+      "trending": "Suosittua"
     },
     "post": {
       "postNotFound": "Viesti ei löydy",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trendipalkki"
     },
     "bookmarks": {
       "subtitle": "Tallennetut viestit ja ketjut ilmestyvät täällä.",

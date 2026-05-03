@@ -215,7 +215,8 @@
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
       "noPostsInFeed": "Dim postiadau yn y porthiant hwn eto.",
       "selectFeedToView": "Dewiswch borthiant i weld postiadau",
-      "loadingFeeds": "Llwytho eich ffrydiau..."
+      "loadingFeeds": "Llwytho eich ffrydiau...",
+      "trending": "Trendiog"
     },
     "post": {
       "postNotFound": "Heb ddod o hyd i'r post",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Bar trendiog"
     },
     "gif": {
       "selectGif": "Dewis GIF",

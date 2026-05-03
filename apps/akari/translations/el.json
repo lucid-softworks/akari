@@ -215,7 +215,8 @@
       "loadingMorePosts": "Φόρτωση περισσότερων αναρτήσεων ...",
       "noPostsInFeed": "Δεν υπάρχουν θέσεις σε αυτήν την τροφοδοσία ακόμα.",
       "selectFeedToView": "Επιλέξτε μια ροή για προβολή δημοσιεύσεων",
-      "loadingFeeds": "Φόρτωση των ζωοτροφών σας ..."
+      "loadingFeeds": "Φόρτωση των ζωοτροφών σας ...",
+      "trending": "Δημοφιλή"
     },
     "post": {
       "postNotFound": "Η ανάρτηση δεν βρέθηκε",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Μπάρα δημοφιλών"
     },
     "bookmarks": {
       "subtitle": "Οι αποθηκευμένες θέσεις και τα νήματα θα εμφανιστούν εδώ.",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "加载更多帖子...",
       "noPostsInFeed": "此动态中尚无帖子。",
       "selectFeedToView": "选择动态以查看帖子",
-      "loadingFeeds": "正在加载您的订阅源..."
+      "loadingFeeds": "正在加载您的订阅源...",
+      "trending": "热门"
     },
     "post": {
       "postNotFound": "未找到帖子",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "热门栏"
     },
     "gif": {
       "selectGif": "选择GIF",

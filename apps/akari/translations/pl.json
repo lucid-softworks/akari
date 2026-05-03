@@ -215,7 +215,8 @@
       "loadingMorePosts": "Ładowanie większej liczby postów...",
       "noPostsInFeed": "Brak postów w tym kanale jeszcze.",
       "selectFeedToView": "Wybierz kanał, aby zobaczyć posty",
-      "loadingFeeds": "Ładowanie twoich kanałów..."
+      "loadingFeeds": "Ładowanie twoich kanałów...",
+      "trending": "Na czasie"
     },
     "post": {
       "postNotFound": "Nie znaleziono posta",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Pasek tematów"
     },
     "gif": {
       "selectGif": "Wybierz GIF",

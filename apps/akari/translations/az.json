@@ -215,7 +215,8 @@
       "loadingMorePosts": "Daha çox yazı yüklənir ...",
       "noPostsInFeed": "Hələ bu yemdə heç bir yazı yoxdur.",
       "selectFeedToView": "Yazılara baxmaq üçün bir yem seçin",
-      "loadingFeeds": "Yemlərinizi yükləyir ..."
+      "loadingFeeds": "Yemlərinizi yükləyir ...",
+      "trending": "Trend"
     },
     "post": {
       "postNotFound": "Post tapılmadı",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trend paneli"
     },
     "bookmarks": {
       "subtitle": "Burada xilas edilmiş yazılar və mövzular görünəcək.",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "加载更多帖子...",
       "noPostsInFeed": "该提要中还没有帖子。",
       "selectFeedToView": "选择一个提要来查看帖子",
-      "loadingFeeds": "加载饲料..."
+      "loadingFeeds": "加载饲料...",
+      "trending": "热门"
     },
     "post": {
       "postNotFound": "帖子找不到",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "热门栏"
     },
     "bookmarks": {
       "subtitle": "保存的帖子和线程将出现在这里。",

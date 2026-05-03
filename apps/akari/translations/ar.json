@@ -215,7 +215,8 @@
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",
       "noPostsInFeed": "لا توجد منشورات في هذا التغذية بعد.",
       "selectFeedToView": "اختر تغذية لعرض المنشورات",
-      "loadingFeeds": "جاري تحميل مصادرك..."
+      "loadingFeeds": "جاري تحميل مصادرك...",
+      "trending": "الأكثر رواجًا"
     },
     "post": {
       "postNotFound": "لم يتم العثور على المنشور",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "شريط الأكثر رواجًا"
     },
     "gif": {
       "selectGif": "اختر GIF",

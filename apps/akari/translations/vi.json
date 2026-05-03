@@ -215,7 +215,8 @@
       "loadingMorePosts": "Đang tải thêm bài đăng...",
       "noPostsInFeed": "Chưa có bài đăng nào trong nguồn cấp này.",
       "selectFeedToView": "Chọn nguồn cấp để xem bài đăng",
-      "loadingFeeds": "Đang tải nguồn cấp dữ liệu của bạn..."
+      "loadingFeeds": "Đang tải nguồn cấp dữ liệu của bạn...",
+      "trending": "Xu hướng"
     },
     "post": {
       "postNotFound": "Không tìm thấy bài viết",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Thanh xu hướng"
     },
     "gif": {
       "selectGif": "Chọn GIF",

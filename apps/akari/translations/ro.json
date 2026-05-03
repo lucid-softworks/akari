@@ -215,7 +215,8 @@
       "loadingMorePosts": "Încărcarea mai multor postări ...",
       "noPostsInFeed": "Încă nu există postări în acest feed.",
       "selectFeedToView": "Selectați un feed pentru a vizualiza postările",
-      "loadingFeeds": "Încărcarea fluxurilor ..."
+      "loadingFeeds": "Încărcarea fluxurilor ...",
+      "trending": "În tendințe"
     },
     "post": {
       "postNotFound": "Post nu a fost găsit",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Bară de tendințe"
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "Memuat lebih banyak postingan...",
       "noPostsInFeed": "Belum ada postingan di feed ini.",
       "selectFeedToView": "Pilih feed untuk melihat postingan",
-      "loadingFeeds": "Memuat feed Anda..."
+      "loadingFeeds": "Memuat feed Anda...",
+      "trending": "Tren"
     },
     "post": {
       "postNotFound": "Postingan tidak ditemukan",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Bilah tren"
     },
     "gif": {
       "selectGif": "Pilih GIF",

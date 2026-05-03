@@ -215,7 +215,8 @@
       "loadingMorePosts": "טוען פוסטים נוספים ...",
       "noPostsInFeed": "עדיין אין פוסטים בעדכון זה.",
       "selectFeedToView": "בחר העדכון כדי להציג פוסטים",
-      "loadingFeeds": "טוען את העדכונים שלך ..."
+      "loadingFeeds": "טוען את העדכונים שלך ...",
+      "trending": "מובילים"
     },
     "post": {
       "postNotFound": "פוסט לא נמצא",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "סרגל מובילים"
     },
     "bookmarks": {
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",

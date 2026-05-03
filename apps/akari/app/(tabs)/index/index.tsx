@@ -9,6 +9,7 @@ import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
 import { ReviewComposer } from '@/components/ReviewComposer';
 import { TabBar } from '@/components/TabBar';
+import { TrendingBar } from '@/components/TrendingBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FeedSkeleton } from '@/components/skeletons';
@@ -203,6 +204,7 @@ export default function HomeScreen() {
       >
         <ThemedView style={styles.listHeaderContent}>
           <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
+          <TrendingBar />
         </ThemedView>
       </ThemedView>
     ),

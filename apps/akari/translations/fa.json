@@ -215,7 +215,8 @@
       "loadingMorePosts": "در حال بارگیری بیشتر پست ها ...",
       "noPostsInFeed": "هنوز هیچ پستی در این فید وجود ندارد.",
       "selectFeedToView": "برای مشاهده پست ها یک فید را انتخاب کنید",
-      "loadingFeeds": "در حال بارگیری فیدهای خود ..."
+      "loadingFeeds": "در حال بارگیری فیدهای خود ...",
+      "trending": "پرطرفدار"
     },
     "post": {
       "postNotFound": "پست یافت نشد",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "نوار پرطرفدار"
     },
     "bookmarks": {
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",

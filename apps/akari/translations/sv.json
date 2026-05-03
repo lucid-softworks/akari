@@ -215,7 +215,8 @@
       "loadingMorePosts": "Laddar fler inlägg ...",
       "noPostsInFeed": "Inga inlägg i detta flöde ännu.",
       "selectFeedToView": "Välj ett flöde för att se inlägg",
-      "loadingFeeds": "Laddar dina flöden ..."
+      "loadingFeeds": "Laddar dina flöden ...",
+      "trending": "Trender"
     },
     "post": {
       "postNotFound": "Post hittades inte",
@@ -401,7 +402,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Trender-fält"
     },
     "bookmarks": {
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",

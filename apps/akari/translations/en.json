@@ -215,7 +215,8 @@
       "loadingMorePosts": "Loading more posts...",
       "noPostsInFeed": "No posts in this feed yet.",
       "selectFeedToView": "Select a feed to view posts",
-      "loadingFeeds": "Loading your feeds..."
+      "loadingFeeds": "Loading your feeds...",
+      "trending": "Trending"
     },
     "post": {
       "postNotFound": "Post not found",
@@ -401,7 +402,8 @@
       "displayLargerTextBadges": "Display larger text badges",
       "notificationCategories": "Notification categories",
       "contentLanguages": "Content languages",
-      "systemLog": "System log"
+      "systemLog": "System log",
+      "trendingBar": "Trending bar"
     },
     "bookmarks": {
       "subtitle": "Saved posts and threads will appear here.",

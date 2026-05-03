@@ -215,7 +215,8 @@
       "loadingMorePosts": "さらに投稿を読み込み中...",
       "noPostsInFeed": "このフィードにはまだ投稿がありません。",
       "selectFeedToView": "投稿を表示するにはフィードを選択してください",
-      "loadingFeeds": "フィードを読み込み中..."
+      "loadingFeeds": "フィードを読み込み中...",
+      "trending": "トレンド"
     },
     "post": {
       "postNotFound": "投稿が見つかりません",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "トレンドバー"
     },
     "gif": {
       "selectGif": "GIFを選択",

@@ -215,7 +215,8 @@
       "loadingMorePosts": "Загрузка дополнительных постов...",
       "noPostsInFeed": "В этой ленте пока нет постов.",
       "selectFeedToView": "Выберите ленту для просмотра постов",
-      "loadingFeeds": "Загрузка ваших лент..."
+      "loadingFeeds": "Загрузка ваших лент...",
+      "trending": "В тренде"
     },
     "post": {
       "postNotFound": "Пост не найден",
@@ -392,7 +393,8 @@
       "visibleTabs": "Visible Tabs",
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
-      "resetToDefault": "Reset to Default"
+      "resetToDefault": "Reset to Default",
+      "trendingBar": "Панель трендов"
     },
     "gif": {
       "selectGif": "Выбрать GIF",
