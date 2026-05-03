@@ -279,7 +279,16 @@
       "deleteChat": "Izbriši klepet",
       "groupRenamed": "Skupina preimenovana",
       "reactions": "Odzivi",
-      "moreEmoji": "Več emojijev"
+      "moreEmoji": "Več emojijev",
+      "muteConversation": "Utišaj klepet",
+      "unmuteConversation": "Vklopi zvok",
+      "muted": "Klepet je utišan",
+      "unmuted": "Zvok je vklopljen",
+      "blockAccount": "Blokiraj račun",
+      "blockAccountConfirm": "Ali res želite blokirati ta račun?",
+      "block": "Blokiraj",
+      "blocked": "Račun je blokiran",
+      "reportConversation": "Prijavi klepet"
     },
     "settings": {
       "account": "Račun",

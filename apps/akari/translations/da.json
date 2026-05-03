@@ -279,7 +279,16 @@
       "deleteChat": "Slet chat",
       "groupRenamed": "Gruppen er omdøbt",
       "reactions": "Reaktioner",
-      "moreEmoji": "Flere emoji"
+      "moreEmoji": "Flere emoji",
+      "muteConversation": "Sluk for samtale",
+      "unmuteConversation": "Tænd for samtale",
+      "muted": "Samtale slået fra",
+      "unmuted": "Samtale slået til",
+      "blockAccount": "Bloker konto",
+      "blockAccountConfirm": "Er du sikker på, at du vil blokere denne konto?",
+      "block": "Bloker",
+      "blocked": "Blokeret",
+      "reportConversation": "Anmeld samtale"
     },
     "settings": {
       "account": "Konto",

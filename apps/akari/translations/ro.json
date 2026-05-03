@@ -279,7 +279,16 @@
       "deleteChat": "Șterge chatul",
       "groupRenamed": "Grup redenumit",
       "reactions": "Reacții",
-      "moreEmoji": "Mai multe emoji"
+      "moreEmoji": "Mai multe emoji",
+      "muteConversation": "Silențiază conversația",
+      "unmuteConversation": "Reactivează sunetul",
+      "muted": "Conversație silențiată",
+      "unmuted": "Sunet reactivat",
+      "blockAccount": "Blochează contul",
+      "blockAccountConfirm": "Sigur vrei să blochezi acest cont?",
+      "block": "Blochează",
+      "blocked": "Cont blocat",
+      "reportConversation": "Raportează conversația"
     },
     "settings": {
       "account": "Cont",

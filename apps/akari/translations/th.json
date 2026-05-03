@@ -270,7 +270,16 @@
       "deleteChat": "ลบแชท",
       "groupRenamed": "เปลี่ยนชื่อกลุ่มแล้ว",
       "reactions": "การตอบสนอง",
-      "moreEmoji": "อีโมจิเพิ่มเติม"
+      "moreEmoji": "อีโมจิเพิ่มเติม",
+      "muteConversation": "ปิดเสียงการสนทนา",
+      "unmuteConversation": "เปิดเสียง",
+      "muted": "ปิดเสียงการสนทนาแล้ว",
+      "unmuted": "เปิดเสียงแล้ว",
+      "blockAccount": "บล็อกบัญชี",
+      "blockAccountConfirm": "คุณแน่ใจว่าต้องการบล็อกบัญชีนี้?",
+      "block": "บล็อก",
+      "blocked": "บล็อกบัญชีแล้ว",
+      "reportConversation": "รายงานการสนทนา"
     },
     "settings": {
       "account": "บัญชี",

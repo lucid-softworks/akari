@@ -8,9 +8,11 @@ import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area
 import { spacing, radius, fontSize, fontWeight, shadows, layout, touchTarget } from '@/constants/tokens';
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { HapticTab } from '@/components/HapticTab';
+import { ReportSheet } from '@/components/ReportSheet';
 import { Sidebar } from '@/components/Sidebar';
 import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
+import { ChatActionsSheet } from '@/components/chat/ChatActionsSheet';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
@@ -250,6 +252,8 @@ export default function TabLayout() {
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
+  const [chatActionsSheetVisible, setChatActionsSheetVisible] = useState(false);
+  const [chatReportSheetVisible, setChatReportSheetVisible] = useState(false);
   const safeAreaInsets = useSafeAreaInsets();
   const pathname = usePathname();
   const router = useRouter();
@@ -295,9 +299,13 @@ export default function TabLayout() {
   const isMessageThread = currentTabKey === 'messages' && isNestedRoute && nestedRouteKey !== 'pending';
   const { data: conversationsData } = useConversations();
   const messageThreadConvo = isMessageThread && nestedRouteKey
-    ? conversationsData?.pages?.flatMap((p) => p.conversations).find(
-        (c) => c.handle === decodeURIComponent(nestedRouteKey)
-      )
+    ? (() => {
+        const decoded = decodeURIComponent(nestedRouteKey);
+        const convos = conversationsData?.pages?.flatMap((p) => p.conversations) ?? [];
+        // Route is now convoId-keyed; fall back to handle for any legacy
+        // links / push notifications still using the old [handle] form.
+        return convos.find((c) => c.convoId === decoded) ?? convos.find((c) => c.handle === decoded);
+      })()
     : undefined;
 
   const headerTitle = isMessageThread
@@ -462,11 +470,15 @@ export default function TabLayout() {
                     ) : null}
                     <View style={mobileDrawerStyles.headerConvoInfo}>
                       <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                        {messageThreadConvo.displayName || decodeURIComponent(nestedRouteKey ?? '')}
+                        {messageThreadConvo.isGroup
+                          ? messageThreadConvo.members.map((m) => m.displayName || m.handle).join(', ')
+                          : messageThreadConvo.displayName || messageThreadConvo.handle}
                       </Text>
-                      <Text style={[mobileDrawerStyles.headerConvoHandle, { color: headerTextColor }]} numberOfLines={1}>
-                        @{decodeURIComponent(nestedRouteKey ?? '')}
-                      </Text>
+                      {!messageThreadConvo.isGroup ? (
+                        <Text style={[mobileDrawerStyles.headerConvoHandle, { color: headerTextColor }]} numberOfLines={1}>
+                          @{messageThreadConvo.handle}
+                        </Text>
+                      ) : null}
                     </View>
                   </>
                 ) : (
@@ -479,8 +491,41 @@ export default function TabLayout() {
                   </>
                 )}
               </View>
-              <View style={mobileDrawerStyles.headerSpacer} />
+              {isMessageThread && messageThreadConvo ? (
+                <HapticTab
+                  accessibilityRole="button"
+                  accessibilityLabel="Chat options"
+                  onPress={() => setChatActionsSheetVisible(true)}
+                  style={mobileDrawerStyles.headerButton}
+                >
+                  <IconSymbol name="ellipsis" color={headerIconColor} size={22} />
+                </HapticTab>
+              ) : (
+                <View style={mobileDrawerStyles.headerSpacer} />
+              )}
             </View>
+          ) : null}
+
+          {messageThreadConvo ? (
+            <>
+              <ChatActionsSheet
+                visible={chatActionsSheetVisible}
+                onDismiss={() => setChatActionsSheetVisible(false)}
+                convoId={messageThreadConvo.convoId}
+                isMuted={messageThreadConvo.muted}
+                isGroup={messageThreadConvo.isGroup}
+                peerDid={messageThreadConvo.isGroup ? undefined : messageThreadConvo.members[0]?.did}
+                onReportPress={() => setChatReportSheetVisible(true)}
+                onLeft={() => router.back()}
+              />
+              {!messageThreadConvo.isGroup && messageThreadConvo.members[0]?.did ? (
+                <ReportSheet
+                  visible={chatReportSheetVisible}
+                  onDismiss={() => setChatReportSheetVisible(false)}
+                  subject={{ type: 'account', did: messageThreadConvo.members[0].did }}
+                />
+              ) : null}
+            </>
           ) : null}
           <Tabs
             screenOptions={{

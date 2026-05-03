@@ -279,7 +279,16 @@
       "deleteChat": "删除聊天",
       "groupRenamed": "群组已重命名",
       "reactions": "反应",
-      "moreEmoji": "更多表情"
+      "moreEmoji": "更多表情",
+      "muteConversation": "静音对话",
+      "unmuteConversation": "取消静音",
+      "muted": "对话已静音",
+      "unmuted": "已取消静音",
+      "blockAccount": "屏蔽账号",
+      "blockAccountConfirm": "确定要屏蔽该账号吗？",
+      "block": "屏蔽",
+      "blocked": "账号已屏蔽",
+      "reportConversation": "举报对话"
     },
     "settings": {
       "account": "帐户",

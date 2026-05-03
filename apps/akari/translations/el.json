@@ -279,7 +279,16 @@
       "deleteChat": "Διαγραφή συνομιλίας",
       "groupRenamed": "Η ομάδα μετονομάστηκε",
       "reactions": "Αντιδράσεις",
-      "moreEmoji": "Περισσότερα emoji"
+      "moreEmoji": "Περισσότερα emoji",
+      "muteConversation": "Σίγαση συνομιλίας",
+      "unmuteConversation": "Άρση σίγασης",
+      "muted": "Η συνομιλία είναι σε σίγαση",
+      "unmuted": "Η σίγαση αφαιρέθηκε",
+      "blockAccount": "Αποκλεισμός λογαριασμού",
+      "blockAccountConfirm": "Σίγουρα θέλεις να αποκλείσεις αυτόν τον λογαριασμό;",
+      "block": "Αποκλεισμός",
+      "blocked": "Αποκλεισμένος",
+      "reportConversation": "Αναφορά συνομιλίας"
     },
     "settings": {
       "account": "Λογαριασμός",

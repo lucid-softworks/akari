@@ -270,7 +270,16 @@
       "deleteChat": "Удалить чат",
       "groupRenamed": "Группа переименована",
       "reactions": "Реакции",
-      "moreEmoji": "Больше эмодзи"
+      "moreEmoji": "Больше эмодзи",
+      "muteConversation": "Отключить уведомления",
+      "unmuteConversation": "Включить уведомления",
+      "muted": "Чат заглушён",
+      "unmuted": "Уведомления включены",
+      "blockAccount": "Заблокировать аккаунт",
+      "blockAccountConfirm": "Вы уверены, что хотите заблокировать этот аккаунт?",
+      "block": "Заблокировать",
+      "blocked": "Аккаунт заблокирован",
+      "reportConversation": "Пожаловаться на чат"
     },
     "settings": {
       "account": "Аккаунт",

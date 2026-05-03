@@ -270,7 +270,16 @@
       "deleteChat": "Chat verwijderen",
       "groupRenamed": "Groep hernoemd",
       "reactions": "Reacties",
-      "moreEmoji": "Meer emoji"
+      "moreEmoji": "Meer emoji",
+      "muteConversation": "Gesprek dempen",
+      "unmuteConversation": "Dempen opheffen",
+      "muted": "Gesprek gedempt",
+      "unmuted": "Dempen opgeheven",
+      "blockAccount": "Account blokkeren",
+      "blockAccountConfirm": "Weet je zeker dat je dit account wilt blokkeren?",
+      "block": "Blokkeren",
+      "blocked": "Account geblokkeerd",
+      "reportConversation": "Gesprek melden"
     },
     "settings": {
       "account": "Account",

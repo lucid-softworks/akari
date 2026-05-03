@@ -279,7 +279,16 @@
       "deleteChat": "Supprimer la conversation",
       "groupRenamed": "Groupe renommé",
       "reactions": "Réactions",
-      "moreEmoji": "Plus d'emoji"
+      "moreEmoji": "Plus d'emoji",
+      "muteConversation": "Mettre en sourdine",
+      "unmuteConversation": "Réactiver le son",
+      "muted": "Conversation mise en sourdine",
+      "unmuted": "Son réactivé",
+      "blockAccount": "Bloquer le compte",
+      "blockAccountConfirm": "Voulez-vous vraiment bloquer ce compte ?",
+      "block": "Bloquer",
+      "blocked": "Compte bloqué",
+      "reportConversation": "Signaler la conversation"
     },
     "settings": {
       "account": "Compte",

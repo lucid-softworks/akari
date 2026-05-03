@@ -270,7 +270,16 @@
       "deleteChat": "Xóa trò chuyện",
       "groupRenamed": "Đã đổi tên nhóm",
       "reactions": "Phản ứng",
-      "moreEmoji": "Thêm biểu tượng"
+      "moreEmoji": "Thêm biểu tượng",
+      "muteConversation": "Tắt thông báo trò chuyện",
+      "unmuteConversation": "Bật thông báo",
+      "muted": "Đã tắt thông báo trò chuyện",
+      "unmuted": "Đã bật thông báo",
+      "blockAccount": "Chặn tài khoản",
+      "blockAccountConfirm": "Bạn có chắc chắn muốn chặn tài khoản này?",
+      "block": "Chặn",
+      "blocked": "Đã chặn tài khoản",
+      "reportConversation": "Báo cáo trò chuyện"
     },
     "settings": {
       "account": "Tài khoản",

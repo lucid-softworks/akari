@@ -279,7 +279,16 @@
       "deleteChat": "מחק צ׳אט",
       "groupRenamed": "שם הקבוצה שונה",
       "reactions": "תגובות",
-      "moreEmoji": "עוד אמוג׳י"
+      "moreEmoji": "עוד אמוג׳י",
+      "muteConversation": "השתק שיחה",
+      "unmuteConversation": "בטל השתקה",
+      "muted": "השיחה הושתקה",
+      "unmuted": "ההשתקה בוטלה",
+      "blockAccount": "חסום חשבון",
+      "blockAccountConfirm": "האם אתה בטוח שברצונך לחסום חשבון זה?",
+      "block": "חסום",
+      "blocked": "החשבון נחסם",
+      "reportConversation": "דווח על שיחה"
     },
     "settings": {
       "account": "חֶשְׁבּוֹן",

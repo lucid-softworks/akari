@@ -270,7 +270,16 @@
       "deleteChat": "Sohbeti sil",
       "groupRenamed": "Grup yeniden adlandırıldı",
       "reactions": "Tepkiler",
-      "moreEmoji": "Daha fazla emoji"
+      "moreEmoji": "Daha fazla emoji",
+      "muteConversation": "Sohbeti sessize al",
+      "unmuteConversation": "Sesi aç",
+      "muted": "Sohbet sessize alındı",
+      "unmuted": "Ses açıldı",
+      "blockAccount": "Hesabı engelle",
+      "blockAccountConfirm": "Bu hesabı engellemek istediğine emin misin?",
+      "block": "Engelle",
+      "blocked": "Hesap engellendi",
+      "reportConversation": "Sohbeti bildir"
     },
     "settings": {
       "account": "Hesap",

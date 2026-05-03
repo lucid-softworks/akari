@@ -279,7 +279,16 @@
       "deleteChat": "Smazat chat",
       "groupRenamed": "Skupina přejmenována",
       "reactions": "Reakce",
-      "moreEmoji": "Další emoji"
+      "moreEmoji": "Další emoji",
+      "muteConversation": "Ztlumit konverzaci",
+      "unmuteConversation": "Zrušit ztlumení",
+      "muted": "Konverzace ztlumena",
+      "unmuted": "Ztlumení zrušeno",
+      "blockAccount": "Zablokovat účet",
+      "blockAccountConfirm": "Opravdu chcete tento účet zablokovat?",
+      "block": "Zablokovat",
+      "blocked": "Zablokováno",
+      "reportConversation": "Nahlásit konverzaci"
     },
     "settings": {
       "account": "Účet",

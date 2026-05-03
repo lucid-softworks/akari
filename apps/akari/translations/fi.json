@@ -279,7 +279,16 @@
       "deleteChat": "Poista keskustelu",
       "groupRenamed": "Ryhmä nimettiin uudelleen",
       "reactions": "Reaktiot",
-      "moreEmoji": "Lisää emojeja"
+      "moreEmoji": "Lisää emojeja",
+      "muteConversation": "Mykistä keskustelu",
+      "unmuteConversation": "Poista mykistys",
+      "muted": "Keskustelu mykistetty",
+      "unmuted": "Mykistys poistettu",
+      "blockAccount": "Estä tili",
+      "blockAccountConfirm": "Haluatko varmasti estää tämän tilin?",
+      "block": "Estä",
+      "blocked": "Tili estetty",
+      "reportConversation": "Ilmoita keskustelusta"
     },
     "settings": {
       "account": "Tili",

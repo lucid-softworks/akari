@@ -181,6 +181,28 @@ export class BlueskyConversations extends BlueskyApiClient {
   }
 
   /**
+   * Mutes a conversation so its messages stop generating notifications.
+   */
+  async muteConvo(accessJwt: string, convoId: string) {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.muteConvo', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId },
+    });
+  }
+
+  /**
+   * Unmutes a previously muted conversation.
+   */
+  async unmuteConvo(accessJwt: string, convoId: string) {
+    return this.makeAuthenticatedRequest<{ convo: BlueskyConvoView }>('/chat.bsky.convo.unmuteConvo', accessJwt, {
+      method: 'POST',
+      headers: { 'atproto-proxy': CHAT_PROXY },
+      body: { convoId },
+    });
+  }
+
+  /**
    * Adds an emoji reaction to a message.
    */
   async addReaction(accessJwt: string, convoId: string, messageId: string, value: string) {

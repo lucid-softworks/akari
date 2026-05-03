@@ -270,7 +270,16 @@
       "deleteChat": "채팅 삭제",
       "groupRenamed": "그룹 이름이 변경되었습니다",
       "reactions": "반응",
-      "moreEmoji": "더 많은 이모지"
+      "moreEmoji": "더 많은 이모지",
+      "muteConversation": "대화 음소거",
+      "unmuteConversation": "음소거 해제",
+      "muted": "대화 음소거됨",
+      "unmuted": "음소거 해제됨",
+      "blockAccount": "계정 차단",
+      "blockAccountConfirm": "정말 이 계정을 차단하시겠어요?",
+      "block": "차단",
+      "blocked": "계정이 차단되었습니다",
+      "reportConversation": "대화 신고"
     },
     "settings": {
       "account": "계정",

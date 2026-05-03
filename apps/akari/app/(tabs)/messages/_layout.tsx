@@ -17,8 +17,8 @@ export default function MessagesLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="pending" />
       <Stack.Screen name="new" options={{ headerShown: false }} />
-      <Stack.Screen name="[convoId]/index" />
-      <Stack.Screen name="[convoId]/settings" />
+      <Stack.Screen name="[convoId]/index" options={{ headerShown: false }} />
+      <Stack.Screen name="[convoId]/settings" options={{ headerShown: false }} />
       <Stack.Screen
         name="user-profile/[handle]"
         options={{

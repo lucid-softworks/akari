@@ -270,7 +270,16 @@
       "deleteChat": "刪除聊天",
       "groupRenamed": "已變更群組名稱",
       "reactions": "反應",
-      "moreEmoji": "更多表情符號"
+      "moreEmoji": "更多表情符號",
+      "muteConversation": "靜音對話",
+      "unmuteConversation": "取消靜音",
+      "muted": "對話已靜音",
+      "unmuted": "已取消靜音",
+      "blockAccount": "封鎖帳號",
+      "blockAccountConfirm": "確定要封鎖這個帳號嗎？",
+      "block": "封鎖",
+      "blocked": "帳號已封鎖",
+      "reportConversation": "檢舉對話"
     },
     "settings": {
       "account": "帳戶",

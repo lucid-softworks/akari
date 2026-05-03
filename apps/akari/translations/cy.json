@@ -270,7 +270,16 @@
       "deleteChat": "Dileu'r sgwrs",
       "groupRenamed": "Grŵp wedi'i ailenwi",
       "reactions": "Ymatebion",
-      "moreEmoji": "Mwy o emoji"
+      "moreEmoji": "Mwy o emoji",
+      "muteConversation": "Mudo'r sgwrs",
+      "unmuteConversation": "Dad-fudo",
+      "muted": "Mae'r sgwrs wedi'i mudo",
+      "unmuted": "Wedi'i dad-fudo",
+      "blockAccount": "Blocio cyfrif",
+      "blockAccountConfirm": "A ydych chi'n siŵr eich bod am flocio'r cyfrif hwn?",
+      "block": "Blocio",
+      "blocked": "Wedi'i flocio",
+      "reportConversation": "Adrodd am sgwrs"
     },
     "settings": {
       "account": "Cyfrif",

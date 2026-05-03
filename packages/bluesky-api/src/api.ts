@@ -530,6 +530,20 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Mutes a conversation.
+   */
+  async muteConvo(accessJwt: string, convoId: string) {
+    return this.conversations.muteConvo(accessJwt, convoId);
+  }
+
+  /**
+   * Unmutes a conversation.
+   */
+  async unmuteConvo(accessJwt: string, convoId: string) {
+    return this.conversations.unmuteConvo(accessJwt, convoId);
+  }
+
+  /**
    * Adds an emoji reaction to a message.
    */
   async addReaction(accessJwt: string, convoId: string, messageId: string, value: string) {

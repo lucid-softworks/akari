@@ -279,7 +279,16 @@
       "deleteChat": "Delete chat",
       "groupRenamed": "Group renamed",
       "reactions": "Reactions",
-      "moreEmoji": "More emoji"
+      "moreEmoji": "More emoji",
+      "muteConversation": "Mute conversation",
+      "unmuteConversation": "Unmute conversation",
+      "muted": "Conversation muted",
+      "unmuted": "Conversation unmuted",
+      "blockAccount": "Block account",
+      "blockAccountConfirm": "Are you sure you want to block this account?",
+      "block": "Block",
+      "blocked": "Account blocked",
+      "reportConversation": "Report conversation"
     },
     "settings": {
       "account": "Account",

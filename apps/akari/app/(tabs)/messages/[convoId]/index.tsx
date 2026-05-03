@@ -277,6 +277,7 @@ export default function ConversationScreen() {
   const iconColor = useThemeColor({}, 'icon');
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
+  const tintColor = useThemeColor({}, 'tint');
 
 
   // Get the conversation ID from the conversations list. Prefer the
@@ -676,63 +677,8 @@ export default function ConversationScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
-      {Platform.OS === 'web' && conversation ? (
-        <View style={[styles.threadHeader, { borderBottomColor: borderColor }]}>
-        <TouchableOpacity
-          style={styles.threadHeaderMain}
-          onPress={() => {
-            if (conversation.isGroup) return;
-            navigateToProfile({ actor: (handle || conversation?.handle || '') });
-          }}
-          activeOpacity={activeOpacity.default}
-        >
-          {conversation.isGroup ? (
-            <View style={styles.threadHeaderGroupAvatar}>
-              {conversation.members.slice(0, 3).map((member, idx) => (
-                <View
-                  key={member.did}
-                  style={[
-                    styles.threadHeaderGroupSlot,
-                    { borderColor },
-                    idx > 0 && styles.threadHeaderGroupSlotOverlap,
-                  ]}
-                >
-                  {member.avatar ? (
-                    <Image source={{ uri: member.avatar }} style={styles.threadHeaderGroupSlotImage} contentFit="cover" />
-                  ) : (
-                    <ThemedText style={styles.threadHeaderGroupSlotFallback}>
-                      {(member.displayName || member.handle || 'U')[0].toUpperCase()}
-                    </ThemedText>
-                  )}
-                </View>
-              ))}
-            </View>
-          ) : conversation.avatar ? (
-            <Image source={{ uri: conversation.avatar }} style={styles.threadHeaderAvatar} contentFit="cover" />
-          ) : null}
-          <View>
-            <ThemedText style={styles.threadHeaderName}>
-              {conversation.isGroup
-                ? conversation.members.map((m) => m.displayName || m.handle).join(', ')
-                : conversation.displayName || (handle || conversation?.handle || '')}
-            </ThemedText>
-            {!conversation.isGroup ? (
-              <ThemedText style={styles.threadHeaderHandle}>@{(handle || conversation?.handle || '')}</ThemedText>
-            ) : null}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            const targetId = conversation.convoId;
-            router.push(`/(tabs)/messages/${encodeURIComponent(targetId)}/settings` as any);
-          }}
-          accessibilityLabel={t('messages.chatSettings')}
-          hitSlop={12}
-        >
-          <IconSymbol name="ellipsis" size={22} color={iconColor} />
-        </TouchableOpacity>
-        </View>
-      ) : null}
+      {/* Header is rendered by the (tabs) layout's mobileDrawerHeader so the
+          chat thread looks consistent with the rest of the app. */}
       {messagesLoading ? (
         <View style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
@@ -828,6 +774,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
+  },
+  threadHeaderBack: {
+    paddingRight: spacing.xs,
   },
   threadHeaderAvatar: {
     width: 32,

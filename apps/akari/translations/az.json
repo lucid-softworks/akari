@@ -279,7 +279,16 @@
       "deleteChat": "Söhbəti sil",
       "groupRenamed": "Qrupun adı dəyişdirildi",
       "reactions": "Reaksiyalar",
-      "moreEmoji": "Daha çox emoji"
+      "moreEmoji": "Daha çox emoji",
+      "muteConversation": "Söhbəti susdur",
+      "unmuteConversation": "Səsi açın",
+      "muted": "Söhbət susduruldu",
+      "unmuted": "Səs açıldı",
+      "blockAccount": "Hesabı blokla",
+      "blockAccountConfirm": "Bu hesabı bloklamaq istədiyinizə əminsiniz?",
+      "block": "Blokla",
+      "blocked": "Bloklandı",
+      "reportConversation": "Söhbəti şikayət et"
     },
     "settings": {
       "account": "Hesab",

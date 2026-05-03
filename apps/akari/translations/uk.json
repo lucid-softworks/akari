@@ -279,7 +279,16 @@
       "deleteChat": "Видалити чат",
       "groupRenamed": "Групу перейменовано",
       "reactions": "Реакції",
-      "moreEmoji": "Більше емодзі"
+      "moreEmoji": "Більше емодзі",
+      "muteConversation": "Вимкнути сповіщення",
+      "unmuteConversation": "Увімкнути сповіщення",
+      "muted": "Чат заглушено",
+      "unmuted": "Сповіщення увімкнено",
+      "blockAccount": "Заблокувати акаунт",
+      "blockAccountConfirm": "Ви впевнені, що хочете заблокувати цей акаунт?",
+      "block": "Заблокувати",
+      "blocked": "Акаунт заблоковано",
+      "reportConversation": "Поскаржитися на чат"
     },
     "settings": {
       "account": "Рахунок",

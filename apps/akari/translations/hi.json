@@ -270,7 +270,16 @@
       "deleteChat": "चैट हटाएँ",
       "groupRenamed": "ग्रुप का नाम बदला गया",
       "reactions": "प्रतिक्रियाएँ",
-      "moreEmoji": "और इमोजी"
+      "moreEmoji": "और इमोजी",
+      "muteConversation": "बातचीत म्यूट करें",
+      "unmuteConversation": "अनम्यूट करें",
+      "muted": "बातचीत म्यूट की गई",
+      "unmuted": "बातचीत अनम्यूट की गई",
+      "blockAccount": "खाता ब्लॉक करें",
+      "blockAccountConfirm": "क्या आप वाकई इस खाते को ब्लॉक करना चाहते हैं?",
+      "block": "ब्लॉक करें",
+      "blocked": "खाता ब्लॉक किया गया",
+      "reportConversation": "बातचीत की रिपोर्ट करें"
     },
     "settings": {
       "account": "खाता",

@@ -270,7 +270,16 @@
       "deleteChat": "Elimina chat",
       "groupRenamed": "Gruppo rinominato",
       "reactions": "Reazioni",
-      "moreEmoji": "Altre emoji"
+      "moreEmoji": "Altre emoji",
+      "muteConversation": "Silenzia conversazione",
+      "unmuteConversation": "Riattiva audio",
+      "muted": "Conversazione silenziata",
+      "unmuted": "Audio riattivato",
+      "blockAccount": "Blocca account",
+      "blockAccountConfirm": "Sei sicuro di voler bloccare questo account?",
+      "block": "Blocca",
+      "blocked": "Account bloccato",
+      "reportConversation": "Segnala conversazione"
     },
     "settings": {
       "account": "Account",

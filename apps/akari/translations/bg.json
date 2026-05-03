@@ -279,7 +279,16 @@
       "deleteChat": "Изтрий чата",
       "groupRenamed": "Групата е преименувана",
       "reactions": "Реакции",
-      "moreEmoji": "Още емоджи"
+      "moreEmoji": "Още емоджи",
+      "muteConversation": "Заглуши разговора",
+      "unmuteConversation": "Включи звука",
+      "muted": "Разговорът е заглушен",
+      "unmuted": "Звукът е включен",
+      "blockAccount": "Блокирай акаунта",
+      "blockAccountConfirm": "Сигурен ли си, че искаш да блокираш този акаунт?",
+      "block": "Блокирай",
+      "blocked": "Блокиран",
+      "reportConversation": "Докладвай разговора"
     },
     "settings": {
       "account": "Акаунт",

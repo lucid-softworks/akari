@@ -270,7 +270,16 @@
       "deleteChat": "حذف الدردشة",
       "groupRenamed": "تم تغيير اسم المجموعة",
       "reactions": "التفاعلات",
-      "moreEmoji": "المزيد من الرموز"
+      "moreEmoji": "المزيد من الرموز",
+      "muteConversation": "كتم المحادثة",
+      "unmuteConversation": "إلغاء كتم المحادثة",
+      "muted": "تم كتم المحادثة",
+      "unmuted": "تم إلغاء الكتم",
+      "blockAccount": "حظر الحساب",
+      "blockAccountConfirm": "هل أنت متأكد من رغبتك في حظر هذا الحساب؟",
+      "block": "حظر",
+      "blocked": "تم الحظر",
+      "reportConversation": "الإبلاغ عن المحادثة"
     },
     "settings": {
       "account": "الحساب",

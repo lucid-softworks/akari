@@ -67,6 +67,27 @@ export function useUpdateConvoName() {
 }
 
 /**
+ * Mutes or unmutes a conversation.
+ */
+export function useMuteConvo() {
+  const queryClient = useQueryClient();
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
+
+  return useMutation({
+    mutationFn: async ({ convoId, action }: { convoId: string; action: 'mute' | 'unmute' }) => {
+      if (!token) throw new Error('No access token');
+      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+      const api = new BlueskyApi(currentAccount.pdsUrl);
+      return action === 'mute'
+        ? api.muteConvo(token, convoId)
+        : api.unmuteConvo(token, convoId);
+    },
+    onSuccess: () => invalidateConvoQueries(queryClient),
+  });
+}
+
+/**
  * Leaves a conversation. After success, callers should pop the screen since
  * the convo is no longer accessible to the current user.
  */

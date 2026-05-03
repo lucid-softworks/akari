@@ -270,7 +270,16 @@
       "deleteChat": "Hapus obrolan",
       "groupRenamed": "Grup diubah namanya",
       "reactions": "Reaksi",
-      "moreEmoji": "Lebih banyak emoji"
+      "moreEmoji": "Lebih banyak emoji",
+      "muteConversation": "Bisukan obrolan",
+      "unmuteConversation": "Bunyikan obrolan",
+      "muted": "Obrolan dibisukan",
+      "unmuted": "Obrolan dibunyikan",
+      "blockAccount": "Blokir akun",
+      "blockAccountConfirm": "Yakin ingin memblokir akun ini?",
+      "block": "Blokir",
+      "blocked": "Akun diblokir",
+      "reportConversation": "Laporkan obrolan"
     },
     "settings": {
       "account": "Akun",
