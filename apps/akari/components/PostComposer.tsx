@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BlueskyEmbed } from '@/bluesky-api';
 import { EmojiPicker } from '@/components/EmojiPicker';
 import { GifPicker } from '@/components/GifPicker';
+import { PostControlsSheet } from '@/components/PostControlsSheet';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -23,8 +24,10 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, shadows } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
+import { usePostControls } from '@/hooks/mutations/usePostControls';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { DEFAULT_POST_CONTROLS, describePostControls, type PostControls } from '@/utils/postControls';
 
 type PostFacet = {
   index: { byteStart: number; byteEnd: number };
@@ -141,8 +144,11 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+  const [controlsSheetVisible, setControlsSheetVisible] = useState(false);
+  const [postControls, setPostControls] = useState<PostControls>(DEFAULT_POST_CONTROLS);
   const [textSelection, setTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
   const createPostMutation = useCreatePost();
+  const postControlsMutation = usePostControls();
   const { showToast } = useToast();
   const { bottom, top } = useSafeAreaInsets();
 
@@ -157,7 +163,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     if (!text.trim() && attachedImages.length === 0 && !quote) return;
 
     try {
-      await createPostMutation.mutateAsync({
+      const created = await createPostMutation.mutateAsync({
         text: text.trim(),
         replyTo: replyTo
           ? {
@@ -169,9 +175,21 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         quote: quote ? { uri: quote.uri, cid: quote.cid } : undefined,
       });
 
+      // Threadgate / postgate: only writes when the user actually changed
+      // the controls away from the defaults. Failure here doesn't block
+      // closing the composer — the post is already up.
+      if (created?.uri) {
+        postControlsMutation
+          .mutateAsync({ postUri: created.uri, controls: postControls })
+          .catch((err) => {
+            if (__DEV__) console.warn('Failed to set post controls', err);
+          });
+      }
+
       // Reset form and close
       setText('');
       setAttachedImages([]);
+      setPostControls(DEFAULT_POST_CONTROLS);
       onClose();
     } catch (error) {
       console.error('Failed to create post:', error);
@@ -428,6 +446,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 <IconSymbol name="photo" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
               </TouchableOpacity>
               <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => setEmojiPickerVisible(true)}
+                accessibilityLabel={t('post.addEmoji')}
+              >
+                <IconSymbol name="face.smiling" size={20} color={tintColor} />
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
                 onPress={handleAddGif}
                 disabled={attachedImages.length >= 4}
@@ -436,13 +461,24 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               >
                 <IconSymbol name="gif" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={() => setEmojiPickerVisible(true)}
-                accessibilityLabel={t('post.addEmoji')}
-              >
-                <IconSymbol name="face.smiling" size={20} color={tintColor} />
-              </TouchableOpacity>
+            </View>
+
+            <View style={styles.footerCenter} pointerEvents="box-none">
+              {!replyTo ? (
+                <TouchableOpacity
+                  style={styles.controlsButton}
+                  onPress={() => setControlsSheetVisible(true)}
+                  accessibilityLabel={t('post.controls.title')}
+                >
+                  <IconSymbol name="bubble.left.and.bubble.right" size={16} color={tintColor} />
+                  <ThemedText
+                    style={[styles.controlsButtonText, { color: tintColor }]}
+                    numberOfLines={1}
+                  >
+                    {describePostControls(postControls, t as any)}
+                  </ThemedText>
+                </TouchableOpacity>
+              ) : null}
             </View>
 
             <View style={styles.footerRight}>
@@ -470,6 +506,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         visible={emojiPickerVisible}
         onClose={() => setEmojiPickerVisible(false)}
         onSelectEmoji={handleInsertEmoji}
+      />
+      <PostControlsSheet
+        visible={controlsSheetVisible}
+        initialControls={postControls}
+        onDismiss={() => setControlsSheetVisible(false)}
+        onSave={(next) => {
+          setPostControls(next);
+          setControlsSheetVisible(false);
+        }}
       />
     </Modal>
   );
@@ -788,11 +833,40 @@ const styles = StyleSheet.create({
     borderTopWidth: layout.hairline,
     paddingHorizontal: spacing.lg,
     paddingVertical: 10,
+    // Container is the positioning context for the absolute-centered
+    // threadgate button (see footerCenter).
+    position: 'relative',
+  },
+  controlsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+    maxWidth: 220,
+  },
+  controlsButtonText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    flexShrink: 1,
   },
   footerLeft: {
-    flex: 1,
     flexDirection: 'row',
     gap: spacing.xs,
+  },
+  footerCenter: {
+    // Absolute-position the centered control so it's centered on the
+    // FOOTER (not split-the-difference of leftover space). pointerEvents
+    // box-none lets taps still hit footerLeft / footerRight when the
+    // button doesn't cover them.
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   footerRight: {
     alignItems: 'flex-end',

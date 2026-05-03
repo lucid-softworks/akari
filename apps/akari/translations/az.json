@@ -248,7 +248,28 @@
       "unpinFromProfile": "Sancağı götür",
       "pinnedToast": "Paylaşım sancıldı",
       "unpinnedToast": "Sancaq götürüldü",
-      "addEmoji": "Emoji əlavə et"
+      "addEmoji": "Emoji əlavə et",
+      "controls": {
+        "title": "Kim cavablandıra bilər",
+        "whoCanReply": "Kim cavablandıra bilər",
+        "everyoneReply": "Hamı cavablandıra bilər",
+        "everyoneReplyNoQuote": "Hamı cavablandıra bilər, sitatsız",
+        "limited": "Yalnız bəzi insanlar",
+        "nobodyReply": "Heç kim cavablandıra bilməz",
+        "mentioned": "Qeyd olunanlar",
+        "following": "İzlədiklərin",
+        "followers": "İzləyicilərin",
+        "lists": "Siyahılar",
+        "mentionedOnly": "Qeyd edilən istifadəçilər",
+        "followingOnly": "İzlədiyiniz insanlar",
+        "followersOnly": "İzləyiciləriniz",
+        "embedding": "Yerləşdirmə",
+        "allowQuote": "Başqalarının sitat gətirməsinə icazə ver",
+        "reset": "Defolt",
+        "edit": "Cavab tənzimləmələrini dəyişdir",
+        "updated": "Tənzimləmələr yeniləndi",
+        "allowFromLists": "Siyahılardan icazə ver"
+      }
     },
     "gif": {
       "selectGif": "Gif seçin",

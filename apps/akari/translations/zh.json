@@ -248,7 +248,28 @@
       "unpinFromProfile": "取消置顶",
       "pinnedToast": "帖子已置顶",
       "unpinnedToast": "帖子已取消置顶",
-      "addEmoji": "添加表情"
+      "addEmoji": "添加表情",
+      "controls": {
+        "title": "谁可以回复",
+        "whoCanReply": "谁可以回复",
+        "everyoneReply": "所有人都可以回复",
+        "everyoneReplyNoQuote": "所有人都可以回复，禁止引用",
+        "limited": "仅部分人",
+        "nobodyReply": "没有人可以回复",
+        "mentioned": "被提及的人",
+        "following": "正在关注",
+        "followers": "关注者",
+        "lists": "列表",
+        "mentionedOnly": "被提及的用户",
+        "followingOnly": "你关注的人",
+        "followersOnly": "你的关注者",
+        "embedding": "嵌入",
+        "allowQuote": "允许他人引用",
+        "reset": "恢复默认",
+        "edit": "编辑谁可以回复",
+        "updated": "设置已更新",
+        "allowFromLists": "允许来自列表"
+      }
     },
     "gif": {
       "selectGif": "选择GIF",

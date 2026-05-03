@@ -248,7 +248,28 @@
       "unpinFromProfile": "Відкріпити",
       "pinnedToast": "Допис закріплено",
       "unpinnedToast": "Допис відкріплено",
-      "addEmoji": "Додати емодзі"
+      "addEmoji": "Додати емодзі",
+      "controls": {
+        "title": "Хто може відповідати",
+        "whoCanReply": "Хто може відповідати",
+        "everyoneReply": "Усі можуть відповідати",
+        "everyoneReplyNoQuote": "Усі можуть відповідати, без цитат",
+        "limited": "Лише деякі",
+        "nobodyReply": "Ніхто не може відповідати",
+        "mentioned": "Згадані",
+        "following": "Підписки",
+        "followers": "Підписники",
+        "lists": "Списки",
+        "mentionedOnly": "Згадані користувачі",
+        "followingOnly": "Люди, на яких ви підписані",
+        "followersOnly": "Ваші підписники",
+        "embedding": "Вбудовування",
+        "allowQuote": "Дозволити цитування",
+        "reset": "Скинути",
+        "edit": "Змінити, хто може відповідати",
+        "updated": "Налаштування оновлено",
+        "allowFromLists": "Дозволити зі списків"
+      }
     },
     "gif": {
       "selectGif": "Виберіть GIF",

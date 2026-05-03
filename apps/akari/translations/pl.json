@@ -248,7 +248,28 @@
       "unpinFromProfile": "Odepnij",
       "pinnedToast": "Post przypięty",
       "unpinnedToast": "Post odpięty",
-      "addEmoji": "Dodaj emoji"
+      "addEmoji": "Dodaj emoji",
+      "controls": {
+        "title": "Kto może odpowiedzieć",
+        "whoCanReply": "Kto może odpowiedzieć",
+        "everyoneReply": "Każdy może odpowiedzieć",
+        "everyoneReplyNoQuote": "Każdy może odpowiedzieć, bez cytatów",
+        "limited": "Tylko niektórzy",
+        "nobodyReply": "Nikt nie może odpowiedzieć",
+        "mentioned": "Wspomniani",
+        "following": "Obserwowani",
+        "followers": "Obserwujący",
+        "lists": "Listy",
+        "mentionedOnly": "Wspomniani użytkownicy",
+        "followingOnly": "Osoby, które obserwujesz",
+        "followersOnly": "Twoi obserwujący",
+        "embedding": "Osadzanie",
+        "allowQuote": "Zezwalaj na cytowanie",
+        "reset": "Przywróć domyślne",
+        "edit": "Edytuj, kto może odpowiadać",
+        "updated": "Ustawienia zaktualizowane",
+        "allowFromLists": "Zezwól z list"
+      }
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

@@ -248,7 +248,28 @@
       "unpinFromProfile": "अनपिन करें",
       "pinnedToast": "पोस्ट पिन की गई",
       "unpinnedToast": "पोस्ट अनपिन की गई",
-      "addEmoji": "इमोजी जोड़ें"
+      "addEmoji": "इमोजी जोड़ें",
+      "controls": {
+        "title": "कौन उत्तर दे सकता है",
+        "whoCanReply": "कौन उत्तर दे सकता है",
+        "everyoneReply": "हर कोई उत्तर दे सकता है",
+        "everyoneReplyNoQuote": "हर कोई उत्तर दे सकता है, उद्धरण नहीं",
+        "limited": "केवल कुछ लोग",
+        "nobodyReply": "कोई उत्तर नहीं दे सकता",
+        "mentioned": "उल्लेखित",
+        "following": "अनुसरण कर रहे हैं",
+        "followers": "अनुयायी",
+        "lists": "सूचियाँ",
+        "mentionedOnly": "उल्लेखित उपयोगकर्ता",
+        "followingOnly": "जिनका आप अनुसरण करते हैं",
+        "followersOnly": "आपके अनुयायी",
+        "embedding": "एम्बेडिंग",
+        "allowQuote": "उद्धरण की अनुमति दें",
+        "reset": "रीसेट",
+        "edit": "संपादित करें कौन उत्तर दे सकता है",
+        "updated": "सेटिंग्स अपडेट की गईं",
+        "allowFromLists": "सूचियों से अनुमति दें"
+      }
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

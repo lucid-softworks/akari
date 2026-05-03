@@ -248,7 +248,28 @@
       "unpinFromProfile": "Anulează fixarea",
       "pinnedToast": "Postarea a fost fixată",
       "unpinnedToast": "Fixarea a fost anulată",
-      "addEmoji": "Adaugă emoji"
+      "addEmoji": "Adaugă emoji",
+      "controls": {
+        "title": "Cine poate răspunde",
+        "whoCanReply": "Cine poate răspunde",
+        "everyoneReply": "Toți pot răspunde",
+        "everyoneReplyNoQuote": "Toți pot răspunde, fără citare",
+        "limited": "Doar anumite persoane",
+        "nobodyReply": "Nimeni nu poate răspunde",
+        "mentioned": "Menționați",
+        "following": "Urmăriți",
+        "followers": "Urmăritori",
+        "lists": "Liste",
+        "mentionedOnly": "Utilizatori menționați",
+        "followingOnly": "Persoane pe care le urmărești",
+        "followersOnly": "Urmăritorii tăi",
+        "embedding": "Încorporare",
+        "allowQuote": "Permite citarea",
+        "reset": "Resetare",
+        "edit": "Editează cine poate răspunde",
+        "updated": "Setările au fost actualizate",
+        "allowFromLists": "Permite din liste"
+      }
     },
     "gif": {
       "selectGif": "Selectați GIF",

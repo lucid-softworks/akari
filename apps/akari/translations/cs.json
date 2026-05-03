@@ -248,7 +248,28 @@
       "unpinFromProfile": "Odepnout",
       "pinnedToast": "Příspěvek připnut",
       "unpinnedToast": "Příspěvek odepnut",
-      "addEmoji": "Přidat emoji"
+      "addEmoji": "Přidat emoji",
+      "controls": {
+        "title": "Kdo může odpovídat",
+        "whoCanReply": "Kdo může odpovídat",
+        "everyoneReply": "Každý může odpovědět",
+        "everyoneReplyNoQuote": "Každý může odpovědět, bez citace",
+        "limited": "Jen někteří lidé",
+        "nobodyReply": "Nikdo nemůže odpovědět",
+        "mentioned": "Zmínění",
+        "following": "Sledovaní",
+        "followers": "Sledující",
+        "lists": "Seznamy",
+        "mentionedOnly": "Zmínění uživatelé",
+        "followingOnly": "Lidé, které sleduješ",
+        "followersOnly": "Tví sledující",
+        "embedding": "Vkládání",
+        "allowQuote": "Povolit citování",
+        "reset": "Obnovit",
+        "edit": "Upravit, kdo může odpovídat",
+        "updated": "Ovládací prvky aktualizovány",
+        "allowFromLists": "Povolit ze seznamů"
+      }
     },
     "gif": {
       "selectGif": "Vyberte GIF",

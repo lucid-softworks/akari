@@ -4,6 +4,7 @@ import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from '
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ListPickerSheet } from '@/components/ListPickerSheet';
+import { PostControlsSheet } from '@/components/PostControlsSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -12,10 +13,13 @@ import { ReportSheet } from '@/components/ReportSheet';
 import { useToast } from '@/contexts/ToastContext';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { usePinPost } from '@/hooks/mutations/usePinPost';
+import { usePostControls } from '@/hooks/mutations/usePostControls';
+import { useExistingPostControls } from '@/hooks/queries/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { DEFAULT_POST_CONTROLS, type PostControls } from '@/utils/postControls';
 
 type PostMenuItem = {
   key: string;
@@ -55,6 +59,12 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const insets = useSafeAreaInsets();
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showListPicker, setShowListPicker] = useState(false);
+  const [showControlsSheet, setShowControlsSheet] = useState(false);
+  const postControlsMutation = usePostControls();
+  // Fetch existing threadgate/postgate state when the user is the author —
+  // only enabled while the sheet is open to skip the network round-trip on
+  // every menu render.
+  const existingControls = useExistingPostControls(showControlsSheet ? postUri : undefined);
 
   // On web, close the dropdown when clicking anywhere or when another menu opens
   useEffect(() => {
@@ -142,6 +152,16 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
           label: isCurrentlyPinned ? t('post.unpinFromProfile') : t('post.pinToProfile'),
           onPress: handlePinPost,
           disabled: !postUri || !postCid,
+        });
+        items.push({
+          key: 'editControls',
+          icon: 'bubble.left.and.bubble.right',
+          label: t('post.controls.edit'),
+          onPress: () => {
+            onDismiss();
+            setShowControlsSheet(true);
+          },
+          disabled: !postUri,
         });
       }
 
@@ -256,6 +276,27 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       onDismiss={() => setShowListPicker(false)}
       subjectDid={authorDid}
     />
+    {postUri ? (
+      <PostControlsSheet
+        visible={showControlsSheet}
+        // Prefill with the post's current threadgate/postgate state so the
+        // user can tweak rather than redo from scratch. Falls back to
+        // defaults if the records are missing or still loading.
+        initialControls={existingControls.data ?? DEFAULT_POST_CONTROLS}
+        onDismiss={() => setShowControlsSheet(false)}
+        onSave={(next: PostControls) => {
+          postControlsMutation.mutate(
+            { postUri, controls: next },
+            {
+              onSuccess: () =>
+                showToast({ message: t('post.controls.updated'), type: 'success' }),
+              onError: () => showToast({ message: t('common.error'), type: 'error' }),
+            },
+          );
+          setShowControlsSheet(false);
+        }}
+      />
+    ) : null}
     </>
   );
 });

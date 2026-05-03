@@ -248,7 +248,28 @@
       "unpinFromProfile": "Dadbinio",
       "pinnedToast": "Pinwyd y postiad",
       "unpinnedToast": "Dadbiniwyd y postiad",
-      "addEmoji": "Ychwanegu emoji"
+      "addEmoji": "Ychwanegu emoji",
+      "controls": {
+        "title": "Pwy all ymateb",
+        "whoCanReply": "Pwy all ymateb",
+        "everyoneReply": "Gall pawb ymateb",
+        "everyoneReplyNoQuote": "Gall pawb ymateb, dim dyfynnu",
+        "limited": "Dim ond rhai pobl",
+        "nobodyReply": "Ni all neb ymateb",
+        "mentioned": "Sôn amdanyn nhw",
+        "following": "Yn dilyn",
+        "followers": "Dilynwyr",
+        "lists": "Rhestrau",
+        "mentionedOnly": "Defnyddwyr y soniwyd amdanynt",
+        "followingOnly": "Pobl rydych chi'n eu dilyn",
+        "followersOnly": "Eich dilynwyr",
+        "embedding": "Ymgorffori",
+        "allowQuote": "Caniatáu i eraill ddyfynnu",
+        "reset": "Ailosod",
+        "edit": "Golygu pwy all ymateb",
+        "updated": "Rheolyddion wedi'u diweddaru",
+        "allowFromLists": "Caniatáu o restrau"
+      }
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

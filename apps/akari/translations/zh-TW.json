@@ -248,7 +248,28 @@
       "unpinFromProfile": "取消釘選",
       "pinnedToast": "貼文已釘選",
       "unpinnedToast": "貼文已取消釘選",
-      "addEmoji": "新增表情符號"
+      "addEmoji": "新增表情符號",
+      "controls": {
+        "title": "誰可以回覆",
+        "whoCanReply": "誰可以回覆",
+        "everyoneReply": "所有人都可以回覆",
+        "everyoneReplyNoQuote": "所有人都可以回覆，不允許引用",
+        "limited": "僅部分人",
+        "nobodyReply": "沒有人可以回覆",
+        "mentioned": "被提及的人",
+        "following": "追蹤中",
+        "followers": "追蹤者",
+        "lists": "清單",
+        "mentionedOnly": "被提及的使用者",
+        "followingOnly": "你追蹤的人",
+        "followersOnly": "你的追蹤者",
+        "embedding": "嵌入",
+        "allowQuote": "允許他人引用",
+        "reset": "重設為預設值",
+        "edit": "編輯誰可以回覆",
+        "updated": "設定已更新",
+        "allowFromLists": "允許來自清單"
+      }
     },
     "messages": {
       "typeMessage": "輸入訊息...",

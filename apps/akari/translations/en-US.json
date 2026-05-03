@@ -248,7 +248,28 @@
       "unpinFromProfile": "Unpin from profile",
       "pinnedToast": "Post pinned",
       "unpinnedToast": "Post unpinned",
-      "addEmoji": "Add emoji"
+      "addEmoji": "Add emoji",
+      "controls": {
+        "title": "Who can reply",
+        "whoCanReply": "Who can reply",
+        "everyoneReply": "Everyone can reply",
+        "everyoneReplyNoQuote": "Everyone can reply, no quotes",
+        "limited": "Only some people",
+        "nobodyReply": "Nobody can reply",
+        "mentioned": "Mentioned",
+        "following": "Following",
+        "followers": "Followers",
+        "lists": "Lists",
+        "mentionedOnly": "Mentioned users",
+        "followingOnly": "People you follow",
+        "followersOnly": "Your followers",
+        "embedding": "Embedding",
+        "allowQuote": "Allow others to quote this post",
+        "reset": "Reset to default",
+        "edit": "Edit who can reply",
+        "updated": "Reply controls updated",
+        "allowFromLists": "Allow from lists"
+      }
     },
     "messages": {
       "typeMessage": "Type a message...",

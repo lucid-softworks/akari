@@ -566,4 +566,100 @@ export class BlueskyFeeds extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Sets (or replaces) the threadgate record on a post — controls who can
+   * reply to the thread. The threadgate record lives at the same rkey as
+   * the post itself, so we look up the rkey from the post URI and
+   * putRecord with that rkey.
+   *
+   * `allow` rules:
+   *   - `undefined` → everyone can reply (no threadgate record needed; we
+   *     still write one so the user can change their mind later via the same
+   *     codepath, but with an empty `allow: []` array which means *nobody*).
+   *     Pass an empty array explicitly to mean "nobody".
+   *   - any combination of mention / following / follower / list rules.
+   */
+  async setThreadgate(
+    accessJwt: string,
+    userDid: string,
+    postUri: string,
+    allow:
+      | { type: 'everyone' }
+      | {
+          type: 'limited';
+          mention?: boolean;
+          following?: boolean;
+          follower?: boolean;
+          listUris?: string[];
+        }
+      | { type: 'nobody' },
+  ) {
+    const rkey = postUri.split('/').pop();
+    if (!rkey) throw new Error(`Invalid post URI: ${postUri}`);
+
+    const record: Record<string, unknown> = {
+      $type: 'app.bsky.feed.threadgate',
+      post: postUri,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (allow.type === 'nobody') {
+      record.allow = [];
+    } else if (allow.type === 'limited') {
+      const rules: Record<string, unknown>[] = [];
+      if (allow.mention) rules.push({ $type: 'app.bsky.feed.threadgate#mentionRule' });
+      if (allow.following) rules.push({ $type: 'app.bsky.feed.threadgate#followingRule' });
+      if (allow.follower) rules.push({ $type: 'app.bsky.feed.threadgate#followerRule' });
+      for (const list of allow.listUris ?? []) {
+        rules.push({ $type: 'app.bsky.feed.threadgate#listRule', list });
+      }
+      record.allow = rules;
+    }
+    // type === 'everyone' → omit `allow` entirely so the lexicon treats it
+    // as "all rules pass".
+
+    return this.makeAuthenticatedRequest('/com.atproto.repo.putRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.feed.threadgate',
+        rkey,
+        record,
+      },
+    });
+  }
+
+  /**
+   * Sets (or replaces) the postgate record on a post — controls quote
+   * embedding. Lives at the same rkey as the post.
+   */
+  async setPostgate(
+    accessJwt: string,
+    userDid: string,
+    postUri: string,
+    options: { allowQuote: boolean },
+  ) {
+    const rkey = postUri.split('/').pop();
+    if (!rkey) throw new Error(`Invalid post URI: ${postUri}`);
+
+    const record: Record<string, unknown> = {
+      $type: 'app.bsky.feed.postgate',
+      post: postUri,
+      createdAt: new Date().toISOString(),
+      embeddingRules: options.allowQuote
+        ? []
+        : [{ $type: 'app.bsky.feed.postgate#disableRule' }],
+    };
+
+    return this.makeAuthenticatedRequest('/com.atproto.repo.putRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.feed.postgate',
+        rkey,
+        record,
+      },
+    });
+  }
 }

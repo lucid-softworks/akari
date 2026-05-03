@@ -248,7 +248,28 @@
       "unpinFromProfile": "Bỏ ghim",
       "pinnedToast": "Đã ghim bài đăng",
       "unpinnedToast": "Đã bỏ ghim bài đăng",
-      "addEmoji": "Thêm biểu tượng"
+      "addEmoji": "Thêm biểu tượng",
+      "controls": {
+        "title": "Ai có thể trả lời",
+        "whoCanReply": "Ai có thể trả lời",
+        "everyoneReply": "Mọi người có thể trả lời",
+        "everyoneReplyNoQuote": "Mọi người có thể trả lời, không trích dẫn",
+        "limited": "Chỉ một số người",
+        "nobodyReply": "Không ai có thể trả lời",
+        "mentioned": "Được nhắc đến",
+        "following": "Đang theo dõi",
+        "followers": "Người theo dõi",
+        "lists": "Danh sách",
+        "mentionedOnly": "Người dùng được nhắc đến",
+        "followingOnly": "Người bạn theo dõi",
+        "followersOnly": "Người theo dõi của bạn",
+        "embedding": "Nhúng",
+        "allowQuote": "Cho phép trích dẫn",
+        "reset": "Đặt lại",
+        "edit": "Sửa ai có thể trả lời",
+        "updated": "Đã cập nhật cài đặt",
+        "allowFromLists": "Cho phép từ danh sách"
+      }
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

@@ -248,7 +248,28 @@
       "unpinFromProfile": "Ξεκαρφίτσωμα",
       "pinnedToast": "Η ανάρτηση καρφιτσώθηκε",
       "unpinnedToast": "Η ανάρτηση ξεκαρφιτσώθηκε",
-      "addEmoji": "Προσθήκη emoji"
+      "addEmoji": "Προσθήκη emoji",
+      "controls": {
+        "title": "Ποιοι μπορούν να απαντήσουν",
+        "whoCanReply": "Ποιοι μπορούν να απαντήσουν",
+        "everyoneReply": "Όλοι μπορούν να απαντήσουν",
+        "everyoneReplyNoQuote": "Όλοι μπορούν να απαντήσουν, χωρίς παράθεση",
+        "limited": "Μόνο μερικοί",
+        "nobodyReply": "Κανείς δεν μπορεί να απαντήσει",
+        "mentioned": "Αναφερόμενοι",
+        "following": "Ακολουθούμενοι",
+        "followers": "Ακόλουθοι",
+        "lists": "Λίστες",
+        "mentionedOnly": "Αναφερόμενοι χρήστες",
+        "followingOnly": "Άτομα που ακολουθείς",
+        "followersOnly": "Οι ακόλουθοί σου",
+        "embedding": "Ενσωμάτωση",
+        "allowQuote": "Επιτρέπεται η παράθεση",
+        "reset": "Επαναφορά",
+        "edit": "Επεξεργασία απαντήσεων",
+        "updated": "Οι ρυθμίσεις ενημερώθηκαν",
+        "allowFromLists": "Επιτρέπεται από λίστες"
+      }
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

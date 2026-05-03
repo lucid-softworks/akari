@@ -248,7 +248,28 @@
       "unpinFromProfile": "Dejar de fijar",
       "pinnedToast": "Publicación fijada",
       "unpinnedToast": "Publicación desfijada",
-      "addEmoji": "Añadir emoji"
+      "addEmoji": "Añadir emoji",
+      "controls": {
+        "title": "Quién puede responder",
+        "whoCanReply": "Quién puede responder",
+        "everyoneReply": "Todos pueden responder",
+        "everyoneReplyNoQuote": "Todos pueden responder, sin citas",
+        "limited": "Solo algunas personas",
+        "nobodyReply": "Nadie puede responder",
+        "mentioned": "Mencionados",
+        "following": "Sigues",
+        "followers": "Seguidores",
+        "lists": "Listas",
+        "mentionedOnly": "Usuarios mencionados",
+        "followingOnly": "Personas que sigues",
+        "followersOnly": "Tus seguidores",
+        "embedding": "Inserción",
+        "allowQuote": "Permitir que otros citen",
+        "reset": "Restablecer",
+        "edit": "Editar quién puede responder",
+        "updated": "Controles actualizados",
+        "allowFromLists": "Permitir desde listas"
+      }
     },
     "gif": {
       "selectGif": "Seleccionar GIF",

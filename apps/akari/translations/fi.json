@@ -248,7 +248,28 @@
       "unpinFromProfile": "Irrota",
       "pinnedToast": "Julkaisu kiinnitetty",
       "unpinnedToast": "Julkaisu irrotettu",
-      "addEmoji": "Lisää emoji"
+      "addEmoji": "Lisää emoji",
+      "controls": {
+        "title": "Kuka voi vastata",
+        "whoCanReply": "Kuka voi vastata",
+        "everyoneReply": "Kaikki voivat vastata",
+        "everyoneReplyNoQuote": "Kaikki voivat vastata, ei lainauksia",
+        "limited": "Vain tietyt",
+        "nobodyReply": "Kukaan ei voi vastata",
+        "mentioned": "Mainitut",
+        "following": "Seurattavat",
+        "followers": "Seuraajat",
+        "lists": "Listat",
+        "mentionedOnly": "Mainitut käyttäjät",
+        "followingOnly": "Henkilöt, joita seuraat",
+        "followersOnly": "Seuraajasi",
+        "embedding": "Upotus",
+        "allowQuote": "Salli lainaus",
+        "reset": "Palauta oletukset",
+        "edit": "Muokkaa vastausoikeuksia",
+        "updated": "Asetukset päivitetty",
+        "allowFromLists": "Salli listoilta"
+      }
     },
     "gif": {
       "selectGif": "Valitse GIF",

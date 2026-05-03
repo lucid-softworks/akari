@@ -248,7 +248,28 @@
       "unpinFromProfile": "Открепить",
       "pinnedToast": "Запись закреплена",
       "unpinnedToast": "Запись откреплена",
-      "addEmoji": "Добавить эмодзи"
+      "addEmoji": "Добавить эмодзи",
+      "controls": {
+        "title": "Кто может отвечать",
+        "whoCanReply": "Кто может отвечать",
+        "everyoneReply": "Все могут отвечать",
+        "everyoneReplyNoQuote": "Все могут отвечать, без цитат",
+        "limited": "Только некоторые",
+        "nobodyReply": "Никто не может отвечать",
+        "mentioned": "Упомянутые",
+        "following": "Подписки",
+        "followers": "Подписчики",
+        "lists": "Списки",
+        "mentionedOnly": "Упомянутые пользователи",
+        "followingOnly": "Люди, на которых вы подписаны",
+        "followersOnly": "Ваши подписчики",
+        "embedding": "Встраивание",
+        "allowQuote": "Разрешить цитирование",
+        "reset": "Сбросить",
+        "edit": "Изменить, кто может отвечать",
+        "updated": "Настройки обновлены",
+        "allowFromLists": "Разрешить из списков"
+      }
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

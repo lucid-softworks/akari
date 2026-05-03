@@ -248,7 +248,28 @@
       "unpinFromProfile": "ביטול הצמדה",
       "pinnedToast": "הפוסט הוצמד",
       "unpinnedToast": "ההצמדה בוטלה",
-      "addEmoji": "הוסף אמוג׳י"
+      "addEmoji": "הוסף אמוג׳י",
+      "controls": {
+        "title": "מי יכול להגיב",
+        "whoCanReply": "מי יכול להגיב",
+        "everyoneReply": "כולם יכולים להגיב",
+        "everyoneReplyNoQuote": "כולם יכולים להגיב, ללא ציטוט",
+        "limited": "רק חלק מהאנשים",
+        "nobodyReply": "אף אחד לא יכול להגיב",
+        "mentioned": "מוזכרים",
+        "following": "עוקב",
+        "followers": "עוקבים",
+        "lists": "רשימות",
+        "mentionedOnly": "משתמשים שהוזכרו",
+        "followingOnly": "אנשים שאתה עוקב אחריהם",
+        "followersOnly": "העוקבים שלך",
+        "embedding": "הטמעה",
+        "allowQuote": "אפשר לאחרים לצטט",
+        "reset": "איפוס",
+        "edit": "ערוך מי יכול להגיב",
+        "updated": "ההגדרות עודכנו",
+        "allowFromLists": "אפשר מרשימות"
+      }
     },
     "gif": {
       "selectGif": "בחר GIF",

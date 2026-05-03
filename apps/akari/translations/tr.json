@@ -248,7 +248,28 @@
       "unpinFromProfile": "Sabitlemeyi kaldır",
       "pinnedToast": "Gönderi sabitlendi",
       "unpinnedToast": "Gönderi sabitlemesi kaldırıldı",
-      "addEmoji": "Emoji ekle"
+      "addEmoji": "Emoji ekle",
+      "controls": {
+        "title": "Kim cevap verebilir",
+        "whoCanReply": "Kim cevap verebilir",
+        "everyoneReply": "Herkes cevap verebilir",
+        "everyoneReplyNoQuote": "Herkes cevap verebilir, alıntı yok",
+        "limited": "Sadece bazı kişiler",
+        "nobodyReply": "Kimse cevap veremez",
+        "mentioned": "Bahsedilenler",
+        "following": "Takip edilenler",
+        "followers": "Takipçiler",
+        "lists": "Listeler",
+        "mentionedOnly": "Bahsedilen kullanıcılar",
+        "followingOnly": "Takip ettiğin kişiler",
+        "followersOnly": "Takipçilerin",
+        "embedding": "Yerleştirme",
+        "allowQuote": "Alıntıya izin ver",
+        "reset": "Sıfırla",
+        "edit": "Kim cevap verebilir ayarla",
+        "updated": "Ayarlar güncellendi",
+        "allowFromLists": "Listelerden izin ver"
+      }
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",

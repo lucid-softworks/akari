@@ -384,6 +384,12 @@ export type BlueskyPostView = {
     like?: string;
     repost?: string;
     reply?: string;
+    /** Set by the AppView when the viewer is excluded by the post's
+     * threadgate rules (mention/follow/list). Surface this in the UI so
+     * the user knows their reply attempt would be rejected. */
+    replyDisabled?: boolean;
+    /** Whether quoting this post is currently allowed for the viewer. */
+    embeddingDisabled?: boolean;
   };
   /** The post's thread data */
   thread?: {

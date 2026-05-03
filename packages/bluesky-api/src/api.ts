@@ -368,6 +368,24 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.feeds.createPost(accessJwt, userDid, post);
   }
 
+  async setThreadgate(
+    accessJwt: string,
+    userDid: string,
+    postUri: string,
+    allow: Parameters<typeof this.feeds.setThreadgate>[3],
+  ) {
+    return this.feeds.setThreadgate(accessJwt, userDid, postUri, allow);
+  }
+
+  async setPostgate(
+    accessJwt: string,
+    userDid: string,
+    postUri: string,
+    options: { allowQuote: boolean },
+  ) {
+    return this.feeds.setPostgate(accessJwt, userDid, postUri, options);
+  }
+
   /**
    * Creates a review record in the social.popfeed.feed.review collection.
    * @param accessJwt - Valid session token authorised to create records for the provided DID.

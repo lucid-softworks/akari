@@ -248,7 +248,28 @@
       "unpinFromProfile": "Откачи",
       "pinnedToast": "Публикацията е закачена",
       "unpinnedToast": "Публикацията е откачена",
-      "addEmoji": "Добави емоджи"
+      "addEmoji": "Добави емоджи",
+      "controls": {
+        "title": "Кой може да отговаря",
+        "whoCanReply": "Кой може да отговаря",
+        "everyoneReply": "Всеки може да отговори",
+        "everyoneReplyNoQuote": "Всеки може да отговори, без цитати",
+        "limited": "Само определени хора",
+        "nobodyReply": "Никой не може да отговори",
+        "mentioned": "Споменати",
+        "following": "Следваните",
+        "followers": "Последователи",
+        "lists": "Списъци",
+        "mentionedOnly": "Споменати потребители",
+        "followingOnly": "Хора, които следваш",
+        "followersOnly": "Последователите ти",
+        "embedding": "Цитиране",
+        "allowQuote": "Позволи цитиране",
+        "reset": "Възстановяване",
+        "edit": "Редактирай кой може да отговаря",
+        "updated": "Контролите са обновени",
+        "allowFromLists": "Разреши от списъци"
+      }
     },
     "gif": {
       "selectGif": "Изберете GIF",

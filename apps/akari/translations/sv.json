@@ -248,7 +248,28 @@
       "unpinFromProfile": "Lossa",
       "pinnedToast": "Inlägg fäst",
       "unpinnedToast": "Inlägg lossat",
-      "addEmoji": "Lägg till emoji"
+      "addEmoji": "Lägg till emoji",
+      "controls": {
+        "title": "Vem kan svara",
+        "whoCanReply": "Vem kan svara",
+        "everyoneReply": "Alla kan svara",
+        "everyoneReplyNoQuote": "Alla kan svara, inga citat",
+        "limited": "Endast vissa personer",
+        "nobodyReply": "Ingen kan svara",
+        "mentioned": "Nämnda",
+        "following": "Följer",
+        "followers": "Följare",
+        "lists": "Listor",
+        "mentionedOnly": "Nämnda användare",
+        "followingOnly": "Personer du följer",
+        "followersOnly": "Dina följare",
+        "embedding": "Inbäddning",
+        "allowQuote": "Tillåt citat",
+        "reset": "Återställ",
+        "edit": "Redigera vem som kan svara",
+        "updated": "Inställningar uppdaterade",
+        "allowFromLists": "Tillåt från listor"
+      }
     },
     "gif": {
       "selectGif": "Välj GIF",

@@ -248,7 +248,28 @@
       "unpinFromProfile": "إلغاء تثبيت",
       "pinnedToast": "تم تثبيت المنشور",
       "unpinnedToast": "تم إلغاء تثبيت المنشور",
-      "addEmoji": "أضف رمزًا تعبيريًا"
+      "addEmoji": "أضف رمزًا تعبيريًا",
+      "controls": {
+        "title": "من يمكنه الرد",
+        "whoCanReply": "من يمكنه الرد",
+        "everyoneReply": "يمكن للجميع الرد",
+        "everyoneReplyNoQuote": "يمكن للجميع الرد، بدون اقتباس",
+        "limited": "بعض الأشخاص فقط",
+        "nobodyReply": "لا أحد يمكنه الرد",
+        "mentioned": "المذكورون",
+        "following": "تتابعهم",
+        "followers": "متابعوك",
+        "lists": "القوائم",
+        "mentionedOnly": "المستخدمون المذكورون",
+        "followingOnly": "الأشخاص الذين تتابعهم",
+        "followersOnly": "متابعوك",
+        "embedding": "التضمين",
+        "allowQuote": "السماح للآخرين بالاقتباس",
+        "reset": "إعادة تعيين إلى الافتراضي",
+        "edit": "تعديل من يمكنه الرد",
+        "updated": "تم تحديث عناصر التحكم",
+        "allowFromLists": "السماح من القوائم"
+      }
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

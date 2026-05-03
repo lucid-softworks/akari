@@ -248,7 +248,28 @@
       "unpinFromProfile": "ถอนหมุด",
       "pinnedToast": "ปักหมุดโพสต์แล้ว",
       "unpinnedToast": "ถอนหมุดโพสต์แล้ว",
-      "addEmoji": "เพิ่มอีโมจิ"
+      "addEmoji": "เพิ่มอีโมจิ",
+      "controls": {
+        "title": "ใครตอบกลับได้",
+        "whoCanReply": "ใครตอบกลับได้",
+        "everyoneReply": "ทุกคนตอบกลับได้",
+        "everyoneReplyNoQuote": "ทุกคนตอบกลับได้ ไม่อนุญาตให้อ้างอิง",
+        "limited": "เฉพาะบางคน",
+        "nobodyReply": "ไม่มีใครตอบกลับได้",
+        "mentioned": "ที่ถูกกล่าวถึง",
+        "following": "ที่กำลังติดตาม",
+        "followers": "ผู้ติดตาม",
+        "lists": "รายการ",
+        "mentionedOnly": "ผู้ใช้ที่ถูกกล่าวถึง",
+        "followingOnly": "คนที่คุณติดตาม",
+        "followersOnly": "ผู้ติดตามของคุณ",
+        "embedding": "การฝัง",
+        "allowQuote": "อนุญาตให้คนอื่นอ้างอิง",
+        "reset": "รีเซ็ต",
+        "edit": "แก้ไขผู้ที่ตอบกลับได้",
+        "updated": "อัปเดตการตั้งค่าแล้ว",
+        "allowFromLists": "อนุญาตจากรายการ"
+      }
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

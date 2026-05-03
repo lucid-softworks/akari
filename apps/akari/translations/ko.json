@@ -248,7 +248,28 @@
       "unpinFromProfile": "고정 해제",
       "pinnedToast": "게시물이 고정되었습니다",
       "unpinnedToast": "게시물 고정이 해제되었습니다",
-      "addEmoji": "이모지 추가"
+      "addEmoji": "이모지 추가",
+      "controls": {
+        "title": "답글을 달 수 있는 사람",
+        "whoCanReply": "답글을 달 수 있는 사람",
+        "everyoneReply": "누구나 답글 가능",
+        "everyoneReplyNoQuote": "누구나 답글 가능, 인용 불가",
+        "limited": "특정 사용자만",
+        "nobodyReply": "답글 불가",
+        "mentioned": "언급된 사람",
+        "following": "팔로잉",
+        "followers": "팔로워",
+        "lists": "리스트",
+        "mentionedOnly": "언급된 사용자",
+        "followingOnly": "팔로우하는 사람",
+        "followersOnly": "당신의 팔로워",
+        "embedding": "임베딩",
+        "allowQuote": "다른 사람의 인용 허용",
+        "reset": "기본값으로",
+        "edit": "답글 권한 편집",
+        "updated": "설정이 업데이트되었습니다",
+        "allowFromLists": "목록에서 허용"
+      }
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

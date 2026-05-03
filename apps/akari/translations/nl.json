@@ -248,7 +248,28 @@
       "unpinFromProfile": "Losmaken",
       "pinnedToast": "Bericht vastgemaakt",
       "unpinnedToast": "Bericht losgemaakt",
-      "addEmoji": "Emoji toevoegen"
+      "addEmoji": "Emoji toevoegen",
+      "controls": {
+        "title": "Wie kan reageren",
+        "whoCanReply": "Wie kan reageren",
+        "everyoneReply": "Iedereen kan reageren",
+        "everyoneReplyNoQuote": "Iedereen kan reageren, geen citaten",
+        "limited": "Alleen sommige mensen",
+        "nobodyReply": "Niemand kan reageren",
+        "mentioned": "Genoemd",
+        "following": "Volgend",
+        "followers": "Volgers",
+        "lists": "Lijsten",
+        "mentionedOnly": "Genoemde gebruikers",
+        "followingOnly": "Mensen die je volgt",
+        "followersOnly": "Je volgers",
+        "embedding": "Inbedden",
+        "allowQuote": "Citeren toestaan",
+        "reset": "Standaard herstellen",
+        "edit": "Bewerk wie kan reageren",
+        "updated": "Instellingen bijgewerkt",
+        "allowFromLists": "Toestaan vanuit lijsten"
+      }
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

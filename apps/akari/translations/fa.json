@@ -248,7 +248,28 @@
       "unpinFromProfile": "برداشتن سنجاق",
       "pinnedToast": "پست سنجاق شد",
       "unpinnedToast": "سنجاق پست برداشته شد",
-      "addEmoji": "افزودن ایموجی"
+      "addEmoji": "افزودن ایموجی",
+      "controls": {
+        "title": "چه کسی می‌تواند پاسخ دهد",
+        "whoCanReply": "چه کسی می‌تواند پاسخ دهد",
+        "everyoneReply": "همه می‌توانند پاسخ دهند",
+        "everyoneReplyNoQuote": "همه می‌توانند پاسخ دهند، بدون نقل قول",
+        "limited": "فقط برخی افراد",
+        "nobodyReply": "هیچ‌کس نمی‌تواند پاسخ دهد",
+        "mentioned": "اشاره شده",
+        "following": "دنبال می‌کنی",
+        "followers": "دنبال‌کنندگان",
+        "lists": "فهرست‌ها",
+        "mentionedOnly": "کاربران اشاره شده",
+        "followingOnly": "افرادی که دنبال می‌کنی",
+        "followersOnly": "دنبال‌کنندگان شما",
+        "embedding": "جاسازی",
+        "allowQuote": "اجازه نقل قول بده",
+        "reset": "بازنشانی",
+        "edit": "ویرایش کسی که می‌تواند پاسخ دهد",
+        "updated": "تنظیمات به‌روز شد",
+        "allowFromLists": "اجازه از فهرست‌ها"
+      }
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",

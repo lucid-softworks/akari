@@ -248,7 +248,28 @@
       "unpinFromProfile": "Odpni",
       "pinnedToast": "Objava je pripeta",
       "unpinnedToast": "Objava je odpeta",
-      "addEmoji": "Dodaj emoji"
+      "addEmoji": "Dodaj emoji",
+      "controls": {
+        "title": "Kdo lahko odgovori",
+        "whoCanReply": "Kdo lahko odgovori",
+        "everyoneReply": "Vsi lahko odgovorijo",
+        "everyoneReplyNoQuote": "Vsi lahko odgovorijo, brez citatov",
+        "limited": "Samo nekateri",
+        "nobodyReply": "Nihče ne more odgovoriti",
+        "mentioned": "Omenjeni",
+        "following": "Sledite",
+        "followers": "Sledilci",
+        "lists": "Seznami",
+        "mentionedOnly": "Omenjeni uporabniki",
+        "followingOnly": "Ljudje, ki jim sledite",
+        "followersOnly": "Vaši sledilci",
+        "embedding": "Vdelava",
+        "allowQuote": "Dovoli citiranje",
+        "reset": "Ponastavi",
+        "edit": "Uredi, kdo lahko odgovori",
+        "updated": "Nastavitve posodobljene",
+        "allowFromLists": "Dovoli s seznamov"
+      }
     },
     "gif": {
       "selectGif": "Izberite GIF",

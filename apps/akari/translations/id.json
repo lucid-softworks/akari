@@ -248,7 +248,28 @@
       "unpinFromProfile": "Lepas sematan",
       "pinnedToast": "Kiriman disematkan",
       "unpinnedToast": "Sematan kiriman dilepas",
-      "addEmoji": "Tambah emoji"
+      "addEmoji": "Tambah emoji",
+      "controls": {
+        "title": "Siapa yang bisa membalas",
+        "whoCanReply": "Siapa yang bisa membalas",
+        "everyoneReply": "Semua orang bisa membalas",
+        "everyoneReplyNoQuote": "Semua bisa membalas, tanpa kutipan",
+        "limited": "Hanya beberapa orang",
+        "nobodyReply": "Tidak ada yang bisa membalas",
+        "mentioned": "Disebutkan",
+        "following": "Mengikuti",
+        "followers": "Pengikut",
+        "lists": "Daftar",
+        "mentionedOnly": "Pengguna yang disebutkan",
+        "followingOnly": "Orang yang Anda ikuti",
+        "followersOnly": "Pengikut Anda",
+        "embedding": "Penyematan",
+        "allowQuote": "Izinkan dikutip",
+        "reset": "Atur ulang",
+        "edit": "Atur siapa yang bisa membalas",
+        "updated": "Pengaturan diperbarui",
+        "allowFromLists": "Izinkan dari daftar"
+      }
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

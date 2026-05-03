@@ -22,6 +22,9 @@ type PostActionsProps = {
   commentCount: number;
   repostCount: number;
   likeCount: number;
+  /** Set when the post's threadgate excludes the viewer; the reply button
+   * dims and a small lock icon appears next to it. */
+  replyDisabled?: boolean;
   onReplyPress: () => void;
   onMorePress: () => void;
   onQuotePress?: () => void;
@@ -37,6 +40,7 @@ export const PostActions = React.memo(function PostActions({
   commentCount,
   repostCount,
   likeCount,
+  replyDisabled,
   onReplyPress,
   onMorePress,
   onQuotePress,
@@ -129,14 +133,24 @@ export const PostActions = React.memo(function PostActions({
     <>
     <View style={styles.interactions}>
       <TouchableOpacity
-        style={styles.interactionItem}
-        onPress={onReplyPress}
-        activeOpacity={activeOpacity.default}
+        style={[styles.interactionItem, replyDisabled && styles.interactionDisabled]}
+        onPress={replyDisabled ? undefined : onReplyPress}
+        disabled={replyDisabled}
+        activeOpacity={replyDisabled ? 1 : activeOpacity.default}
         hitSlop={hitSlop}
         accessibilityRole="button"
-        accessibilityLabel={`Reply to post by ${authorName}`}
+        accessibilityState={{ disabled: !!replyDisabled }}
+        accessibilityLabel={
+          replyDisabled
+            ? `Replies restricted on post by ${authorName}`
+            : `Reply to post by ${authorName}`
+        }
       >
-        <IconSymbol name="bubble.left" size={20} color={iconColor} />
+        <IconSymbol
+          name={replyDisabled ? 'lock' : 'bubble.left'}
+          size={20}
+          color={iconColor}
+        />
         <ThemedText style={styles.interactionCount}>{formatCompactNumber(commentCount)}</ThemedText>
       </TouchableOpacity>
 
@@ -223,6 +237,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
+  },
+  interactionDisabled: {
+    opacity: opacity.tertiary,
   },
   interactionCount: {
     fontSize: fontSize.base,

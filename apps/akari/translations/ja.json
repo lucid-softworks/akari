@@ -248,7 +248,28 @@
       "unpinFromProfile": "固定を解除",
       "pinnedToast": "ポストを固定しました",
       "unpinnedToast": "ポストの固定を解除しました",
-      "addEmoji": "絵文字を追加"
+      "addEmoji": "絵文字を追加",
+      "controls": {
+        "title": "返信できる人",
+        "whoCanReply": "返信できる人",
+        "everyoneReply": "誰でも返信できます",
+        "everyoneReplyNoQuote": "誰でも返信できますが、引用は不可",
+        "limited": "一部の人だけ",
+        "nobodyReply": "誰も返信できません",
+        "mentioned": "メンションされた人",
+        "following": "フォロー中",
+        "followers": "フォロワー",
+        "lists": "リスト",
+        "mentionedOnly": "メンションされたユーザー",
+        "followingOnly": "フォロー中の人",
+        "followersOnly": "あなたのフォロワー",
+        "embedding": "埋め込み",
+        "allowQuote": "引用を許可",
+        "reset": "デフォルトに戻す",
+        "edit": "返信できる人を編集",
+        "updated": "設定を更新しました",
+        "allowFromLists": "リストから許可"
+      }
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

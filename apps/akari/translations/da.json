@@ -248,7 +248,28 @@
       "unpinFromProfile": "Fjern fastgørelse",
       "pinnedToast": "Opslag fastgjort",
       "unpinnedToast": "Fastgørelse fjernet",
-      "addEmoji": "Tilføj emoji"
+      "addEmoji": "Tilføj emoji",
+      "controls": {
+        "title": "Hvem kan svare",
+        "whoCanReply": "Hvem kan svare",
+        "everyoneReply": "Alle kan svare",
+        "everyoneReplyNoQuote": "Alle kan svare, ingen citat",
+        "limited": "Kun nogle personer",
+        "nobodyReply": "Ingen kan svare",
+        "mentioned": "Nævnte",
+        "following": "Følger",
+        "followers": "Følgere",
+        "lists": "Lister",
+        "mentionedOnly": "Nævnte brugere",
+        "followingOnly": "Personer du følger",
+        "followersOnly": "Dine følgere",
+        "embedding": "Indlejring",
+        "allowQuote": "Tillad citering",
+        "reset": "Nulstil",
+        "edit": "Rediger hvem der kan svare",
+        "updated": "Indstillinger opdateret",
+        "allowFromLists": "Tillad fra lister"
+      }
     },
     "gif": {
       "selectGif": "Vælg GIF",

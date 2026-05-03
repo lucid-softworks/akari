@@ -248,7 +248,28 @@
       "unpinFromProfile": "Anpinnen aufheben",
       "pinnedToast": "Beitrag angepinnt",
       "unpinnedToast": "Anpinnen aufgehoben",
-      "addEmoji": "Emoji hinzufügen"
+      "addEmoji": "Emoji hinzufügen",
+      "controls": {
+        "title": "Wer kann antworten",
+        "whoCanReply": "Wer kann antworten",
+        "everyoneReply": "Alle können antworten",
+        "everyoneReplyNoQuote": "Alle können antworten, kein Zitat",
+        "limited": "Nur bestimmte Personen",
+        "nobodyReply": "Niemand kann antworten",
+        "mentioned": "Erwähnte",
+        "following": "Gefolgt",
+        "followers": "Follower",
+        "lists": "Listen",
+        "mentionedOnly": "Erwähnte Nutzer",
+        "followingOnly": "Personen, denen du folgst",
+        "followersOnly": "Deine Follower",
+        "embedding": "Einbettung",
+        "allowQuote": "Zitate erlauben",
+        "reset": "Zurücksetzen",
+        "edit": "Antwortregeln bearbeiten",
+        "updated": "Einstellungen aktualisiert",
+        "allowFromLists": "Aus Listen zulassen"
+      }
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",
