@@ -313,6 +313,14 @@
         "nextWithCount": "次へ ({{count}})",
         "toLabel": "宛先",
         "sentToChatPartial": "{{count}} 件に送信しました"
+      },
+      "addVideo": "動画を追加",
+      "video": {
+        "preparing": "準備中…",
+        "uploading": "アップロード中… {{percent}}%",
+        "processing": "処理中… {{percent}}%",
+        "processingIndeterminate": "処理中…",
+        "ready": "投稿の準備完了"
       }
     },
     "messages": {

@@ -313,6 +313,14 @@
         "nextWithCount": "İleri ({{count}})",
         "toLabel": "Kime",
         "sentToChatPartial": "{{count}} kişiye gönderildi"
+      },
+      "addVideo": "Video ekle",
+      "video": {
+        "preparing": "Hazırlanıyor…",
+        "uploading": "Yükleniyor… %{{percent}}",
+        "processing": "İşleniyor… %{{percent}}",
+        "processingIndeterminate": "İşleniyor…",
+        "ready": "Paylaşıma hazır"
       }
     },
     "messages": {

@@ -43,4 +43,25 @@ export class BlueskyAuth extends BlueskyApiClient {
       }
     );
   }
+
+  /**
+   * Mints a short-lived service auth JWT scoped to a single audience
+   * (e.g. the video transcode service) and a single lexicon method.
+   * Required to talk to services hosted off the user's PDS.
+   */
+  async getServiceAuth(
+    accessJwt: string,
+    aud: string,
+    lxm: string,
+    expSeconds: number = 60 * 5,
+  ): Promise<{ token: string }> {
+    const exp = Math.floor(Date.now() / 1000) + expSeconds;
+    return this.makeAuthenticatedRequest<{ token: string }>(
+      "/com.atproto.server.getServiceAuth",
+      accessJwt,
+      {
+        params: { aud, lxm, exp: String(exp) },
+      },
+    );
+  }
 }

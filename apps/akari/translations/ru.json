@@ -313,6 +313,14 @@
         "nextWithCount": "Далее ({{count}})",
         "toLabel": "Кому",
         "sentToChatPartial": "Отправлено {{count}}"
+      },
+      "addVideo": "Добавить видео",
+      "video": {
+        "preparing": "Подготовка…",
+        "uploading": "Загрузка… {{percent}}%",
+        "processing": "Обработка… {{percent}}%",
+        "processingIndeterminate": "Обработка…",
+        "ready": "Готово к публикации"
       }
     },
     "messages": {

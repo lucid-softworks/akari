@@ -124,16 +124,24 @@ export class BlueskyApiClient {
     blob: Blob,
     mimeType: string,
   ): Promise<BlueskyUploadBlobResponse> {
-    // Get the blob data as array buffer and create a new blob with correct MIME type
-    const arrayBuffer = await blob.arrayBuffer();
-    const typedBlob = new Blob([arrayBuffer], { type: mimeType });
+    // React Native's Blob polyfill doesn't always implement
+    // `arrayBuffer()` (notably for blobs returned by `fetch(file://)`,
+    // which is what we get for image / video picks). Fall back to
+    // sending the original blob directly when arrayBuffer is missing —
+    // we still force the correct MIME via the explicit Content-Type
+    // header on the request.
+    const hasArrayBuffer =
+      blob && typeof (blob as { arrayBuffer?: () => Promise<ArrayBuffer> }).arrayBuffer === 'function';
+    const body: Blob = hasArrayBuffer
+      ? new Blob([await blob.arrayBuffer()], { type: mimeType })
+      : blob;
 
     const result = await this.makeAuthenticatedRequest<BlueskyUploadBlobResponse>(
       '/com.atproto.repo.uploadBlob',
       accessJwt,
       {
         method: 'POST',
-        body: typedBlob,
+        body,
         headers: {
           'Content-Type': mimeType,
         },

@@ -313,6 +313,14 @@
         "nextWithCount": "Næste ({{count}})",
         "toLabel": "Til",
         "sentToChatPartial": "Sendt til {{count}}"
+      },
+      "addVideo": "Tilføj video",
+      "video": {
+        "preparing": "Forbereder...",
+        "uploading": "Uploader... {{percent}}%",
+        "processing": "Behandler... {{percent}}%",
+        "processingIndeterminate": "Behandler...",
+        "ready": "Klar til at sende"
       }
     },
     "gif": {

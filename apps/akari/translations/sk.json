@@ -313,6 +313,14 @@
         "nextWithCount": "Ďalej ({{count}})",
         "toLabel": "Komu",
         "sentToChatPartial": "Odoslané {{count}} príjemcom"
+      },
+      "addVideo": "Pridať video",
+      "video": {
+        "preparing": "Príprava…",
+        "uploading": "Nahrávanie… {{percent}}%",
+        "processing": "Spracovanie… {{percent}}%",
+        "processingIndeterminate": "Spracovanie…",
+        "ready": "Pripravené na uverejnenie"
       }
     },
     "gif": {

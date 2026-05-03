@@ -453,7 +453,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     userDid: string,
     post: BlueskyCreatePostInput,
   ): Promise<BlueskyCreatePostResponse> {
-    const { text, replyTo, images, quote } = post;
+    const { text, replyTo, images, video, quote } = post;
 
     let record: Record<string, unknown> = {
       text,
@@ -538,6 +538,18 @@ export class BlueskyFeeds extends BlueskyApiClient {
           },
         };
       }
+    }
+
+    // Video must already be transcoded by the time we get here — the
+    // composer runs the app.bsky.video.uploadVideo + getJobStatus
+    // pipeline and hands us the resulting blob ref. We just embed it.
+    if (video && !mediaEmbed) {
+      mediaEmbed = {
+        $type: 'app.bsky.embed.video',
+        video: video.blob,
+        ...(video.alt ? { alt: video.alt } : {}),
+        ...(video.aspectRatio ? { aspectRatio: video.aspectRatio } : {}),
+      };
     }
 
     if (quote) {

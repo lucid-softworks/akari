@@ -313,6 +313,14 @@
         "nextWithCount": "Tiếp ({{count}})",
         "toLabel": "Tới",
         "sentToChatPartial": "Đã gửi tới {{count}}"
+      },
+      "addVideo": "Thêm video",
+      "video": {
+        "preparing": "Đang chuẩn bị…",
+        "uploading": "Đang tải lên… {{percent}}%",
+        "processing": "Đang xử lý… {{percent}}%",
+        "processingIndeterminate": "Đang xử lý…",
+        "ready": "Sẵn sàng đăng"
       }
     },
     "messages": {

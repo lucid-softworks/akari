@@ -91,6 +91,16 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.auth.refreshSession(refreshJwt);
   }
 
+  /** Mints a service-auth JWT scoped to a single audience + lexicon. */
+  async getServiceAuth(
+    accessJwt: string,
+    aud: string,
+    lxm: string,
+    expSeconds?: number,
+  ): Promise<{ token: string }> {
+    return this.auth.getServiceAuth(accessJwt, aud, lxm, expSeconds);
+  }
+
   /**
    * Loads profile metadata and viewer state for the requested DID.
    * @param accessJwt - Valid session token used to authorise the profile lookup.

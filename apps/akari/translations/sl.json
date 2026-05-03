@@ -313,6 +313,14 @@
         "nextWithCount": "Naprej ({{count}})",
         "toLabel": "Za",
         "sentToChatPartial": "Poslano {{count}} prejemnikom"
+      },
+      "addVideo": "Dodaj video",
+      "video": {
+        "preparing": "Pripravljanje…",
+        "uploading": "Nalaganje… {{percent}}%",
+        "processing": "Obdelovanje… {{percent}}%",
+        "processingIndeterminate": "Obdelovanje…",
+        "ready": "Pripravljeno za objavo"
       }
     },
     "gif": {

@@ -313,6 +313,14 @@
         "nextWithCount": "التالي ({{count}})",
         "toLabel": "إلى",
         "sentToChatPartial": "تم الإرسال إلى {{count}}"
+      },
+      "addVideo": "إضافة فيديو",
+      "video": {
+        "preparing": "جارٍ التحضير...",
+        "uploading": "جارٍ الرفع... {{percent}}%",
+        "processing": "جارٍ المعالجة... {{percent}}%",
+        "processingIndeterminate": "جارٍ المعالجة...",
+        "ready": "جاهز للنشر"
       }
     },
     "messages": {

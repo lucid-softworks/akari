@@ -313,6 +313,14 @@
         "nextWithCount": "הבא ({{count}})",
         "toLabel": "אל",
         "sentToChatPartial": "נשלח ל-{{count}}"
+      },
+      "addVideo": "הוסף סרטון",
+      "video": {
+        "preparing": "מכין...",
+        "uploading": "מעלה... {{percent}}%",
+        "processing": "מעבד... {{percent}}%",
+        "processingIndeterminate": "מעבד...",
+        "ready": "מוכן לפרסום"
       }
     },
     "gif": {

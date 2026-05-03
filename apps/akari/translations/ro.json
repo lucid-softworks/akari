@@ -313,6 +313,14 @@
         "nextWithCount": "Înainte ({{count}})",
         "toLabel": "Către",
         "sentToChatPartial": "Trimis către {{count}}"
+      },
+      "addVideo": "Adaugă videoclip",
+      "video": {
+        "preparing": "Se pregătește…",
+        "uploading": "Se încarcă… {{percent}}%",
+        "processing": "Se procesează… {{percent}}%",
+        "processingIndeterminate": "Se procesează…",
+        "ready": "Gata de postare"
       }
     },
     "gif": {

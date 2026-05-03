@@ -313,6 +313,14 @@
         "nextWithCount": "Berikutnya ({{count}})",
         "toLabel": "Ke",
         "sentToChatPartial": "Terkirim ke {{count}}"
+      },
+      "addVideo": "Tambah video",
+      "video": {
+        "preparing": "Menyiapkan...",
+        "uploading": "Mengunggah... {{percent}}%",
+        "processing": "Memproses... {{percent}}%",
+        "processingIndeterminate": "Memproses...",
+        "ready": "Siap dikirim"
       }
     },
     "messages": {

@@ -313,6 +313,14 @@
         "nextWithCount": "Növbəti ({{count}})",
         "toLabel": "Kimə",
         "sentToChatPartial": "{{count}} alıcıya göndərildi"
+      },
+      "addVideo": "Video əlavə et",
+      "video": {
+        "preparing": "Hazırlanır...",
+        "uploading": "Yüklənir... {{percent}}%",
+        "processing": "Emal olunur... {{percent}}%",
+        "processingIndeterminate": "Emal olunur...",
+        "ready": "Paylaşmağa hazırdır"
       }
     },
     "gif": {

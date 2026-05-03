@@ -313,6 +313,14 @@
         "nextWithCount": "Volgende ({{count}})",
         "toLabel": "Aan",
         "sentToChatPartial": "Verzonden naar {{count}}"
+      },
+      "addVideo": "Video toevoegen",
+      "video": {
+        "preparing": "Voorbereiden…",
+        "uploading": "Uploaden… {{percent}}%",
+        "processing": "Verwerken… {{percent}}%",
+        "processingIndeterminate": "Verwerken…",
+        "ready": "Klaar om te plaatsen"
       }
     },
     "messages": {

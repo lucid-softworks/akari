@@ -313,6 +313,14 @@
         "nextWithCount": "Επόμενο ({{count}})",
         "toLabel": "Προς",
         "sentToChatPartial": "Στάλθηκε σε {{count}}"
+      },
+      "addVideo": "Προσθήκη βίντεο",
+      "video": {
+        "preparing": "Προετοιμασία...",
+        "uploading": "Μεταφόρτωση... {{percent}}%",
+        "processing": "Επεξεργασία... {{percent}}%",
+        "processingIndeterminate": "Επεξεργασία...",
+        "ready": "Έτοιμο για ανάρτηση"
       }
     },
     "gif": {

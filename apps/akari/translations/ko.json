@@ -313,6 +313,14 @@
         "nextWithCount": "다음 ({{count}})",
         "toLabel": "받는 사람",
         "sentToChatPartial": "{{count}}명에게 보냈음"
+      },
+      "addVideo": "동영상 추가",
+      "video": {
+        "preparing": "준비 중…",
+        "uploading": "업로드 중… {{percent}}%",
+        "processing": "처리 중… {{percent}}%",
+        "processingIndeterminate": "처리 중…",
+        "ready": "게시 준비 완료"
       }
     },
     "messages": {

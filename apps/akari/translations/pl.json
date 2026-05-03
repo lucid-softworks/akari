@@ -313,6 +313,14 @@
         "nextWithCount": "Dalej ({{count}})",
         "toLabel": "Do",
         "sentToChatPartial": "Wysłano do {{count}}"
+      },
+      "addVideo": "Dodaj wideo",
+      "video": {
+        "preparing": "Przygotowywanie…",
+        "uploading": "Wysyłanie… {{percent}}%",
+        "processing": "Przetwarzanie… {{percent}}%",
+        "processingIndeterminate": "Przetwarzanie…",
+        "ready": "Gotowe do opublikowania"
       }
     },
     "messages": {

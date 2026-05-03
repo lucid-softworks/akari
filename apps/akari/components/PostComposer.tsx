@@ -14,11 +14,18 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { BlueskyEmbed } from '@/bluesky-api';
+import {
+  createUploadTask,
+  FileSystemUploadType,
+} from 'expo-file-system/legacy';
+
+import { BlueskyApi, getVideoJobStatus, type BlueskyEmbed, type VideoJobStatus } from '@/bluesky-api';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { DraftsSheet } from '@/components/DraftsSheet';
 import { EmojiPicker } from '@/components/EmojiPicker';
 import { GifPicker } from '@/components/GifPicker';
 import { PostControlsSheet } from '@/components/PostControlsSheet';
+import { VideoThumbnail } from '@/components/VideoThumbnail';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -144,14 +151,36 @@ type AttachedImage = {
   tenorId?: string;
 };
 
+type AttachedVideo = {
+  uri: string;
+  mimeType: string;
+  alt: string;
+  aspectRatio?: { width: number; height: number };
+  /** Set once the transcode pipeline finishes. The post button stays
+   *  disabled until this lands. */
+  blob?: { $type: 'blob'; ref: { $link: string }; mimeType: string; size: number };
+  /** UI state during upload + transcode. `phase` drives the progress
+   *  row's label / spinner. */
+  upload?:
+    | { phase: 'authorizing' }
+    | { phase: 'uploading'; progress: number }
+    | { phase: 'processing'; progress?: number }
+    | { phase: 'error'; message: string };
+};
+
 /** One leaf in a thread compose. The composer holds an array of these
  *  and posts them sequentially with reply chaining when published. */
 type ThreadPost = {
   text: string;
   attachedImages: AttachedImage[];
+  attachedVideo: AttachedVideo | null;
 };
 
-const EMPTY_THREAD_POST: ThreadPost = { text: '', attachedImages: [] };
+const EMPTY_THREAD_POST: ThreadPost = {
+  text: '',
+  attachedImages: [],
+  attachedVideo: null,
+};
 
 const isWeb = Platform.OS === 'web';
 const nativePresentationStyle: 'pageSheet' | 'fullScreen' | undefined =
@@ -174,6 +203,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const activePost = posts[activeIndex] ?? EMPTY_THREAD_POST;
   const text = activePost.text;
   const attachedImages = activePost.attachedImages;
+  const attachedVideo = activePost.attachedVideo;
 
   const setText = useCallback(
     (next: string) => {
@@ -188,6 +218,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     (next: AttachedImage[]) => {
       setPosts((prev) =>
         prev.map((p, i) => (i === activeIndex ? { ...p, attachedImages: next } : p)),
+      );
+    },
+    [activeIndex],
+  );
+
+  const setAttachedVideo = useCallback(
+    (next: AttachedVideo | null) => {
+      setPosts((prev) =>
+        prev.map((p, i) => (i === activeIndex ? { ...p, attachedVideo: next } : p)),
       );
     },
     [activeIndex],
@@ -212,6 +251,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const { showToast } = useToast();
   const { bottom, top } = useSafeAreaInsets();
   const { data: currentAccount } = useCurrentAccount();
+  const { data: jwtToken } = useJwtToken();
   const did = currentAccount?.did;
 
   // Drafts only apply to plain new posts — re-opening a stale reply/quote
@@ -401,7 +441,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     })();
     const root = trimmed[0];
     const rootHasContent =
-      root.text.trim().length > 0 || root.attachedImages.length > 0 || !!quote;
+      root.text.trim().length > 0 ||
+      root.attachedImages.length > 0 ||
+      !!root.attachedVideo ||
+      !!quote;
     if (!rootHasContent) return;
 
     try {
@@ -428,7 +471,19 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         const created = await createPostMutation.mutateAsync({
           text: p.text.trim(),
           replyTo: replyContext,
-          images: p.attachedImages.length > 0 ? p.attachedImages : undefined,
+          // Video and images are mutually exclusive at the lexicon
+          // level — a post is one OR the other, not both.
+          images:
+            !p.attachedVideo && p.attachedImages.length > 0
+              ? p.attachedImages
+              : undefined,
+          video: p.attachedVideo?.blob
+            ? {
+                blob: p.attachedVideo.blob,
+                alt: p.attachedVideo.alt || undefined,
+                aspectRatio: p.attachedVideo.aspectRatio,
+              }
+            : undefined,
           quote: isRoot && quote ? { uri: quote.uri, cid: quote.cid } : undefined,
         });
 
@@ -480,7 +535,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
   const handleClose = useCallback(() => {
     const hasContent = posts.some(
-      (p) => p.text.trim().length > 0 || p.attachedImages.length > 0,
+      (p) =>
+        p.text.trim().length > 0 ||
+        p.attachedImages.length > 0 ||
+        !!p.attachedVideo,
     );
     if (draftsApply && did && hasContent) {
       Alert.alert(t('post.draft.discardTitle'), undefined, [
@@ -524,7 +582,11 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const handleSelectDraft = useCallback((draft: ComposerDraftState) => {
     setPosts(
       draft.posts.length > 0
-        ? draft.posts.map((p) => ({ text: p.text, attachedImages: p.images }))
+        ? draft.posts.map((p) => ({
+            text: p.text,
+            attachedImages: p.images,
+            attachedVideo: null,
+          }))
         : [{ ...EMPTY_THREAD_POST }],
     );
     setActiveIndex(0);
@@ -574,6 +636,224 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       }
     }
   };
+
+  const updateVideoOnPost = useCallback(
+    (postIdx: number, patch: Partial<AttachedVideo> | null) => {
+      setPosts((prev) =>
+        prev.map((p, i) => {
+          if (i !== postIdx) return p;
+          if (patch === null) return { ...p, attachedVideo: null };
+          if (!p.attachedVideo) return p;
+          return { ...p, attachedVideo: { ...p.attachedVideo, ...patch } };
+        }),
+      );
+    },
+    [],
+  );
+
+  const startVideoUpload = useCallback(
+    async (
+      postIdx: number,
+      asset: { uri: string; mimeType: string },
+    ) => {
+      if (!jwtToken || !currentAccount?.did || !currentAccount?.pdsUrl) return;
+      setPosts((prev) =>
+        prev.map((p, i) =>
+          i === postIdx && p.attachedVideo
+            ? {
+                ...p,
+                attachedVideo: { ...p.attachedVideo, upload: { phase: 'authorizing' } },
+              }
+            : p,
+        ),
+      );
+      try {
+        const api = new BlueskyApi(currentAccount.pdsUrl);
+        // The video service expects the JWT's audience to be the
+        // user's PDS DID (did:web:<pds-hostname>) and the lxm to be
+        // `com.atproto.repo.uploadBlob` — *not* the obvious
+        // `app.bsky.video.uploadVideo` lxm. That uses the PDS-issued
+        // service-auth as a stand-in for an uploadBlob credential
+        // (the video service stores the resulting blob on the PDS).
+        const pdsHostMatch = currentAccount.pdsUrl.match(/^https?:\/\/([^\/?#]+)/i);
+        const pdsHost = pdsHostMatch?.[1];
+        if (!pdsHost) throw new Error('Invalid PDS URL');
+        const auth = await api.getServiceAuth(
+          jwtToken,
+          `did:web:${pdsHost}`,
+          'com.atproto.repo.uploadBlob',
+          30 * 60, // 30 minutes — matches the official client.
+        );
+        const serviceJwt = auth?.token;
+        if (!serviceJwt) {
+          throw new Error("PDS didn't return a video service token");
+        }
+
+        // The video service dedupes by `did + name`. Reusing the same
+        // filename triggers a 409 `already_exists` even when the bytes
+        // are identical (it doesn't hand back the previous blob, so
+        // we can't reuse it). Keep the original extension but stamp
+        // each attempt with a random + timestamped slug so retries
+        // don't collide.
+        const ext =
+          asset.uri.split('/').pop()?.split('?')[0]?.split('.').pop() || 'mp4';
+        const fileName = `akari-${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2, 10)}.${ext}`;
+
+        updateVideoOnPost(postIdx, { upload: { phase: 'uploading', progress: 0 } });
+
+        // expo-file-system's createUploadTask streams the file from
+        // disk and reports progress reliably — RN's XHR upload events
+        // are flaky on iOS for blob bodies which is why our previous
+        // attempt sat at 0%.
+        const uploadUrl =
+          `https://video.bsky.app/xrpc/app.bsky.video.uploadVideo` +
+          `?did=${encodeURIComponent(currentAccount.did)}` +
+          `&name=${encodeURIComponent(fileName)}`;
+        const uploadTask = createUploadTask(
+          uploadUrl,
+          asset.uri,
+          {
+            httpMethod: 'POST',
+            uploadType: FileSystemUploadType.BINARY_CONTENT,
+            headers: {
+              'Content-Type': asset.mimeType,
+              Authorization: `Bearer ${serviceJwt}`,
+            },
+          },
+          (p) => {
+            if (p.totalBytesExpectedToSend > 0) {
+              updateVideoOnPost(postIdx, {
+                upload: {
+                  phase: 'uploading',
+                  progress: p.totalBytesSent / p.totalBytesExpectedToSend,
+                },
+              });
+            }
+          },
+        );
+        const uploadRes = await uploadTask.uploadAsync();
+        if (__DEV__) {
+          console.warn(
+            'Video upload response',
+            uploadRes?.status,
+            uploadRes?.body,
+          );
+        }
+        const isOk =
+          uploadRes && uploadRes.status >= 200 && uploadRes.status < 300;
+        const parsedJsonBody = (() => {
+          try {
+            return uploadRes?.body ? JSON.parse(uploadRes.body) : null;
+          } catch {
+            return null;
+          }
+        })();
+        // The 409 "already_exists" response sometimes contains the
+        // previous jobId at one of these locations; if it does we can
+        // skip straight to polling. If it doesn't, no recovery — the
+        // server gave us a hash collision with no handle on the
+        // existing blob.
+        const existingJobId =
+          parsedJsonBody?.jobId ||
+          parsedJsonBody?.jobStatus?.jobId ||
+          parsedJsonBody?.id;
+        const isAlreadyProcessed =
+          uploadRes?.status === 409 && existingJobId;
+        if (!isOk && !isAlreadyProcessed) {
+          const detail = uploadRes?.body || `status ${uploadRes?.status ?? 'unknown'}`;
+          throw new Error(`upload ${uploadRes?.status}: ${detail}`);
+        }
+        let job: VideoJobStatus =
+          parsedJsonBody?.jobStatus ?? (parsedJsonBody as VideoJobStatus);
+        // The dedupe response carries `state: COMPLETED` and a jobId
+        // but omits the blob ref. Hit getJobStatus once with the
+        // returned jobId to pull the actual blob in — without this
+        // step the poll loop exits immediately and we error out on
+        // "no blob" even though the server has one.
+        if (isAlreadyProcessed && !job.blob && existingJobId) {
+          const refreshed = await getVideoJobStatus(serviceJwt, existingJobId);
+          job = refreshed.jobStatus;
+        }
+        updateVideoOnPost(postIdx, {
+          upload: {
+            phase: 'processing',
+            progress: job.progress ? job.progress / 100 : undefined,
+          },
+        });
+
+        const startedAt = Date.now();
+        while (job.state !== 'JOB_STATE_COMPLETED' && job.state !== 'JOB_STATE_FAILED') {
+          if (Date.now() - startedAt > 3 * 60 * 1000) {
+            throw new Error('Video transcode timed out');
+          }
+          await new Promise<void>((r) => setTimeout(r, 1500));
+          const next = await getVideoJobStatus(serviceJwt, job.jobId);
+          job = next.jobStatus;
+          updateVideoOnPost(postIdx, {
+            upload: {
+              phase: 'processing',
+              progress: job.progress ? job.progress / 100 : undefined,
+            },
+          });
+        }
+
+        if (job.state === 'JOB_STATE_FAILED' || !job.blob) {
+          throw new Error(job.error || job.message || 'Transcode failed');
+        }
+
+        updateVideoOnPost(postIdx, {
+          blob: { $type: 'blob', ...job.blob },
+          upload: undefined,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Upload failed';
+        updateVideoOnPost(postIdx, { upload: { phase: 'error', message } });
+      }
+    },
+    [jwtToken, currentAccount?.did, currentAccount?.pdsUrl, updateVideoOnPost],
+  );
+
+  const handleAddVideo = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') return;
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      allowsMultipleSelection: false,
+      quality: 0.8,
+      videoMaxDuration: 60,
+    });
+    if (result.canceled || !result.assets || result.assets.length === 0) return;
+    const asset = result.assets[0];
+    const mimeType = asset.mimeType || 'video/mp4';
+    const targetIndex = activeIndex;
+    // Set the file metadata immediately so the preview row renders;
+    // upload state is filled in by startVideoUpload as it progresses.
+    setPosts((prev) =>
+      prev.map((p, i) =>
+        i === targetIndex
+          ? {
+              ...p,
+              attachedImages: [],
+              attachedVideo: {
+                uri: asset.uri,
+                mimeType,
+                alt: '',
+                aspectRatio:
+                  asset.width && asset.height
+                    ? { width: asset.width, height: asset.height }
+                    : undefined,
+              },
+            }
+          : p,
+      ),
+    );
+    void startVideoUpload(targetIndex, { uri: asset.uri, mimeType });
+  };
+
+  // (per-post video remove / alt updates are inlined into the render
+  // block so they can target the right thread index.)
 
   const handleRemoveImage = useCallback((postIdx: number, imageIdx: number) => {
     setPosts((prev) =>
@@ -630,10 +910,21 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   // thread blew the character limit (we'd reject silently otherwise).
   const root = posts[0];
   const rootHasContent =
-    root.text.trim().length > 0 || root.attachedImages.length > 0 || !!quote;
+    root.text.trim().length > 0 ||
+    root.attachedImages.length > 0 ||
+    !!root.attachedVideo ||
+    !!quote;
   const anyPostOverLimit = posts.some((p) => p.text.length > maxCharacters);
+  // Block sending while any video is still uploading or transcoding.
+  // An attached video without a `blob` ref isn't ready to embed.
+  const anyVideoPending = posts.some(
+    (p) => p.attachedVideo && !p.attachedVideo.blob,
+  );
   const isPostDisabled =
-    !rootHasContent || anyPostOverLimit || createPostMutation.isPending;
+    !rootHasContent ||
+    anyPostOverLimit ||
+    anyVideoPending ||
+    createPostMutation.isPending;
   const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
   const characterCount = text.length;
   const isNearLimit = characterCount > maxCharacters * 0.8;
@@ -838,6 +1129,117 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                     </View>
                   ) : null}
 
+                  {post.attachedVideo ? (
+                    <View style={styles.imagesContainer}>
+                      <View style={styles.imageItem}>
+                        <View
+                          style={[
+                            styles.imageContainer,
+                            styles.videoPreview,
+                            { borderColor },
+                          ]}
+                        >
+                          <VideoThumbnail
+                            uri={post.attachedVideo.uri}
+                            style={styles.videoThumbnail}
+                          />
+                          <View style={styles.videoPreviewBody}>
+                            <ThemedText
+                              style={[styles.videoPreviewText, { color: textColor }]}
+                              numberOfLines={1}
+                            >
+                              {post.attachedVideo.uri.split('/').pop() ?? t('common.video')}
+                            </ThemedText>
+                            {post.attachedVideo.upload ? (
+                              <ThemedText
+                                style={[styles.videoStatusText, { color: iconColor }]}
+                                numberOfLines={1}
+                              >
+                                {post.attachedVideo.upload.phase === 'authorizing'
+                                  ? t('post.video.preparing')
+                                  : post.attachedVideo.upload.phase === 'uploading'
+                                  ? t('post.video.uploading', {
+                                      percent: Math.round(
+                                        post.attachedVideo.upload.progress * 100,
+                                      ),
+                                    })
+                                  : post.attachedVideo.upload.phase === 'processing'
+                                  ? post.attachedVideo.upload.progress !== undefined
+                                    ? t('post.video.processing', {
+                                        percent: Math.round(
+                                          post.attachedVideo.upload.progress * 100,
+                                        ),
+                                      })
+                                    : t('post.video.processingIndeterminate')
+                                  : post.attachedVideo.upload.message}
+                              </ThemedText>
+                            ) : post.attachedVideo.blob ? (
+                              <ThemedText
+                                style={[styles.videoStatusText, { color: iconColor }]}
+                                numberOfLines={1}
+                              >
+                                {t('post.video.ready')}
+                              </ThemedText>
+                            ) : null}
+                            {post.attachedVideo.upload?.phase === 'uploading' ||
+                            post.attachedVideo.upload?.phase === 'processing' ? (
+                              <View style={[styles.progressTrack, { backgroundColor: borderColor }]}>
+                                <View
+                                  style={[
+                                    styles.progressFill,
+                                    { backgroundColor: tintColor },
+                                    {
+                                      width: `${
+                                        Math.round(
+                                          (post.attachedVideo.upload.phase === 'uploading'
+                                            ? post.attachedVideo.upload.progress
+                                            : post.attachedVideo.upload.progress ?? 0) *
+                                            100,
+                                        )
+                                      }%`,
+                                    },
+                                  ]}
+                                />
+                              </View>
+                            ) : null}
+                          </View>
+                          <TouchableOpacity
+                            style={styles.removeImageButton}
+                            onPress={() =>
+                              setPosts((prev) =>
+                                prev.map((p, i) =>
+                                  i === postIdx ? { ...p, attachedVideo: null } : p,
+                                ),
+                              )
+                            }
+                            testID={`remove-video-${postIdx}`}
+                          >
+                            <IconSymbol name="xmark" size={16} color="#ffffff" />
+                          </TouchableOpacity>
+                        </View>
+                        <TextInput
+                          style={[
+                            styles.altTextInput,
+                            { color: textColor, borderColor, backgroundColor },
+                          ]}
+                          value={post.attachedVideo.alt}
+                          onChangeText={(alt) =>
+                            setPosts((prev) =>
+                              prev.map((p, i) =>
+                                i === postIdx && p.attachedVideo
+                                  ? { ...p, attachedVideo: { ...p.attachedVideo, alt } }
+                                  : p,
+                              ),
+                            )
+                          }
+                          placeholder={t('post.imageAltTextPlaceholder')}
+                          placeholderTextColor={iconColor}
+                          maxLength={1000}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
+
                   {isLast ? (
                     <TouchableOpacity
                       style={[styles.addPostButton, { borderColor }]}
@@ -865,31 +1267,48 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
             ]}
           >
             <View style={styles.footerLeft}>
-              <TouchableOpacity
-                style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
-                onPress={handleAddImage}
-                disabled={attachedImages.length >= 4}
-                accessibilityLabel={t('post.addPhoto')}
-                accessibilityHint={t('post.selectPhoto')}
-              >
-                <IconSymbol name="photo" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={() => setEmojiPickerVisible(true)}
-                accessibilityLabel={t('post.addEmoji')}
-              >
-                <IconSymbol name="face.smiling" size={20} color={tintColor} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionButton, attachedImages.length >= 4 && styles.actionButtonDisabled]}
-                onPress={handleAddGif}
-                disabled={attachedImages.length >= 4}
-                accessibilityLabel={t('gif.addGif')}
-                accessibilityHint={t('gif.selectGif')}
-              >
-                <IconSymbol name="gif" size={20} color={attachedImages.length >= 4 ? iconColor : tintColor} />
-              </TouchableOpacity>
+              {(() => {
+                const photoDisabled = attachedImages.length >= 4 || !!attachedVideo;
+                const videoDisabled = attachedImages.length > 0 || !!attachedVideo;
+                const gifDisabled = attachedImages.length >= 4 || !!attachedVideo;
+                return (
+                  <>
+                    <TouchableOpacity
+                      style={[styles.actionButton, photoDisabled && styles.actionButtonDisabled]}
+                      onPress={handleAddImage}
+                      disabled={photoDisabled}
+                      accessibilityLabel={t('post.addPhoto')}
+                      accessibilityHint={t('post.selectPhoto')}
+                    >
+                      <IconSymbol name="photo" size={20} color={photoDisabled ? iconColor : tintColor} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.actionButton, videoDisabled && styles.actionButtonDisabled]}
+                      onPress={handleAddVideo}
+                      disabled={videoDisabled}
+                      accessibilityLabel={t('post.addVideo')}
+                    >
+                      <IconSymbol name="video" size={20} color={videoDisabled ? iconColor : tintColor} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={() => setEmojiPickerVisible(true)}
+                      accessibilityLabel={t('post.addEmoji')}
+                    >
+                      <IconSymbol name="face.smiling" size={20} color={tintColor} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.actionButton, gifDisabled && styles.actionButtonDisabled]}
+                      onPress={handleAddGif}
+                      disabled={gifDisabled}
+                      accessibilityLabel={t('gif.addGif')}
+                      accessibilityHint={t('gif.selectGif')}
+                    >
+                      <IconSymbol name="gif" size={20} color={gifDisabled ? iconColor : tintColor} />
+                    </TouchableOpacity>
+                  </>
+                );
+              })()}
             </View>
 
             <View style={styles.footerCenter} pointerEvents="box-none">
@@ -1291,6 +1710,41 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
     width: '100%',
+  },
+  videoPreview: {
+    height: 120,
+    borderWidth: layout.hairline,
+    borderRadius: radius.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingRight: spacing.md,
+    overflow: 'hidden',
+  },
+  videoThumbnail: {
+    width: 120,
+    height: '100%',
+  },
+  videoPreviewText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  videoPreviewBody: {
+    flex: 1,
+    gap: spacing.xxs,
+  },
+  videoStatusText: {
+    fontSize: fontSize.xs,
+  },
+  progressTrack: {
+    height: 4,
+    borderRadius: 2,
+    overflow: 'hidden',
+    marginTop: spacing.xxs,
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 2,
   },
   attachedImage: {
     width: '100%',

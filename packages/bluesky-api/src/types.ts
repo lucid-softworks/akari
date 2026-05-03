@@ -170,6 +170,15 @@ export type BlueskyCreatePostInput = {
   text: string;
   replyTo?: BlueskyPostReplyReference;
   images?: BlueskyPostImageInput[];
+  /** Optional video to attach. The lexicon disallows mixing
+   *  images + video, so callers should send only one. The blob ref
+   *  must already be transcoded — produced by the
+   *  app.bsky.video.uploadVideo + getJobStatus pipeline. */
+  video?: {
+    blob: { $type: 'blob'; ref: { $link: string }; mimeType: string; size: number };
+    alt?: string;
+    aspectRatio?: { width: number; height: number };
+  };
   /** Optional record to quote (post URI/CID). If `images` are also provided,
    * the post is encoded as `app.bsky.embed.recordWithMedia`. */
   quote?: { uri: string; cid: string };

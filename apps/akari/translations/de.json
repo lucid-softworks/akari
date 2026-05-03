@@ -313,6 +313,14 @@
         "nextWithCount": "Weiter ({{count}})",
         "toLabel": "An",
         "sentToChatPartial": "An {{count}} gesendet"
+      },
+      "addVideo": "Video hinzufügen",
+      "video": {
+        "preparing": "Wird vorbereitet…",
+        "uploading": "Wird hochgeladen… {{percent}}%",
+        "processing": "Wird verarbeitet… {{percent}}%",
+        "processingIndeterminate": "Wird verarbeitet…",
+        "ready": "Bereit zum Posten"
       }
     },
     "messages": {

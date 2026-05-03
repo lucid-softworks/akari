@@ -21,6 +21,15 @@ type CreatePostParams = {
     alt: string;
     mimeType: string;
   }[];
+  /** Optional video. Mutually exclusive with `images` per lexicon.
+   *  Pass the already-transcoded blob ref produced by the
+   *  app.bsky.video.uploadVideo pipeline; createPost no longer
+   *  uploads the file itself. */
+  video?: {
+    blob: { $type: 'blob'; ref: { $link: string }; mimeType: string; size: number };
+    alt?: string;
+    aspectRatio?: { width: number; height: number };
+  };
   /** Optional quoted post (URI/CID) */
   quote?: { uri: string; cid: string };
 };
@@ -32,7 +41,7 @@ export function useCreatePost() {
 
   return useMutation({
     mutationKey: ['createPost'],
-    mutationFn: async ({ text, replyTo, images, quote }: CreatePostParams) => {
+    mutationFn: async ({ text, replyTo, images, video, quote }: CreatePostParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -42,6 +51,7 @@ export function useCreatePost() {
         text,
         replyTo,
         images,
+        video,
         quote,
       });
     },

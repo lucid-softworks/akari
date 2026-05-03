@@ -313,6 +313,14 @@
         "nextWithCount": "Напред ({{count}})",
         "toLabel": "До",
         "sentToChatPartial": "Изпратено до {{count}}"
+      },
+      "addVideo": "Добави видео",
+      "video": {
+        "preparing": "Подготовка...",
+        "uploading": "Качване... {{percent}}%",
+        "processing": "Обработка... {{percent}}%",
+        "processingIndeterminate": "Обработка...",
+        "ready": "Готово за публикуване"
       }
     },
     "gif": {

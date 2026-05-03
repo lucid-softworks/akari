@@ -313,6 +313,14 @@
         "nextWithCount": "بعدی ({{count}})",
         "toLabel": "به",
         "sentToChatPartial": "به {{count}} نفر ارسال شد"
+      },
+      "addVideo": "افزودن ویدیو",
+      "video": {
+        "preparing": "در حال آماده‌سازی...",
+        "uploading": "در حال آپلود... {{percent}}٪",
+        "processing": "در حال پردازش... {{percent}}٪",
+        "processingIndeterminate": "در حال پردازش...",
+        "ready": "آماده ارسال"
       }
     },
     "gif": {

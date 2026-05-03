@@ -313,6 +313,14 @@
         "nextWithCount": "ถัดไป ({{count}})",
         "toLabel": "ถึง",
         "sentToChatPartial": "ส่งไปยัง {{count}} รายการ"
+      },
+      "addVideo": "เพิ่มวิดีโอ",
+      "video": {
+        "preparing": "กำลังเตรียม...",
+        "uploading": "กำลังอัปโหลด... {{percent}}%",
+        "processing": "กำลังประมวลผล... {{percent}}%",
+        "processingIndeterminate": "กำลังประมวลผล...",
+        "ready": "พร้อมโพสต์"
       }
     },
     "messages": {

@@ -313,6 +313,14 @@
         "nextWithCount": "अगला ({{count}})",
         "toLabel": "किसको",
         "sentToChatPartial": "{{count}} को भेजा गया"
+      },
+      "addVideo": "वीडियो जोड़ें",
+      "video": {
+        "preparing": "तैयार किया जा रहा...",
+        "uploading": "अपलोड हो रहा... {{percent}}%",
+        "processing": "प्रोसेस हो रहा... {{percent}}%",
+        "processingIndeterminate": "प्रोसेस हो रहा...",
+        "ready": "पोस्ट के लिए तैयार"
       }
     },
     "messages": {

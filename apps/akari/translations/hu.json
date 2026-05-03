@@ -313,6 +313,14 @@
         "nextWithCount": "Tovább ({{count}})",
         "toLabel": "Címzett",
         "sentToChatPartial": "Elküldve {{count}} címzettnek"
+      },
+      "addVideo": "Videó hozzáadása",
+      "video": {
+        "preparing": "Előkészítés…",
+        "uploading": "Feltöltés… {{percent}}%",
+        "processing": "Feldolgozás… {{percent}}%",
+        "processingIndeterminate": "Feldolgozás…",
+        "ready": "Készen áll a közzétételre"
       }
     },
     "gif": {

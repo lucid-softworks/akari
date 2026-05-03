@@ -313,6 +313,14 @@
         "nextWithCount": "下一步 ({{count}})",
         "toLabel": "收件人",
         "sentToChatPartial": "已发送给 {{count}} 人"
+      },
+      "addVideo": "添加视频",
+      "video": {
+        "preparing": "准备中…",
+        "uploading": "上传中… {{percent}}%",
+        "processing": "处理中… {{percent}}%",
+        "processingIndeterminate": "处理中…",
+        "ready": "可以发布了"
       }
     },
     "gif": {

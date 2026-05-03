@@ -313,6 +313,14 @@
         "nextWithCount": "Próximo ({{count}})",
         "toLabel": "Para",
         "sentToChatPartial": "Enviado para {{count}}"
+      },
+      "addVideo": "Adicionar vídeo",
+      "video": {
+        "preparing": "Preparando…",
+        "uploading": "Enviando… {{percent}}%",
+        "processing": "Processando… {{percent}}%",
+        "processingIndeterminate": "Processando…",
+        "ready": "Pronto para postar"
       }
     },
     "messages": {

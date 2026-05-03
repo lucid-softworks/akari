@@ -313,6 +313,14 @@
         "nextWithCount": "Next ({{count}})",
         "toLabel": "To",
         "sentToChatPartial": "Sent to {{count}}"
+      },
+      "addVideo": "Add video",
+      "video": {
+        "preparing": "Preparing…",
+        "uploading": "Uploading… {{percent}}%",
+        "processing": "Processing… {{percent}}%",
+        "processingIndeterminate": "Processing…",
+        "ready": "Ready to post"
       }
     },
     "gif": {

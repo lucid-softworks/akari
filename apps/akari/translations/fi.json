@@ -313,6 +313,14 @@
         "nextWithCount": "Seuraava ({{count}})",
         "toLabel": "Vastaanottaja",
         "sentToChatPartial": "Lähetetty {{count}}:lle"
+      },
+      "addVideo": "Lisää video",
+      "video": {
+        "preparing": "Valmistellaan...",
+        "uploading": "Lähetetään... {{percent}}%",
+        "processing": "Käsitellään... {{percent}}%",
+        "processingIndeterminate": "Käsitellään...",
+        "ready": "Valmis julkaistavaksi"
       }
     },
     "gif": {

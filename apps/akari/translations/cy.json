@@ -313,6 +313,14 @@
         "nextWithCount": "Nesaf ({{count}})",
         "toLabel": "I",
         "sentToChatPartial": "Anfonwyd at {{count}}"
+      },
+      "addVideo": "Ychwanegu fideo",
+      "video": {
+        "preparing": "Paratoi...",
+        "uploading": "Llwytho... {{percent}}%",
+        "processing": "Prosesu... {{percent}}%",
+        "processingIndeterminate": "Prosesu...",
+        "ready": "Yn barod i'w bostio"
       }
     },
     "messages": {

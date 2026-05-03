@@ -313,6 +313,14 @@
         "nextWithCount": "Nästa ({{count}})",
         "toLabel": "Till",
         "sentToChatPartial": "Skickat till {{count}}"
+      },
+      "addVideo": "Lägg till video",
+      "video": {
+        "preparing": "Förbereder…",
+        "uploading": "Laddar upp… {{percent}}%",
+        "processing": "Bearbetar… {{percent}}%",
+        "processingIndeterminate": "Bearbetar…",
+        "ready": "Klar att publicera"
       }
     },
     "gif": {
