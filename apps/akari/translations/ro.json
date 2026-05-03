@@ -232,7 +232,13 @@
       "selectPhoto": "Selectați fotografie din galerie",
       "actions": {
         "translate": "Traduce",
-        "copyText": "Copiați textul postării"
+        "copyText": "Copiați textul postării",
+        "muteThread": "Dezactivează firul",
+        "threadMuted": "Firul a fost dezactivat",
+        "hidePost": "Ascunde postarea",
+        "hideAccount": "Ascunde contul",
+        "postHidden": "Postare ascunsă",
+        "accountHidden": "Cont ascuns"
       },
       "translation": {
         "title": "Traducere",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Bară de tendințe"
+      "trendingBar": "Bară de tendințe",
+      "hiddenContent": "Conținut ascuns",
+      "hiddenAccounts": "Conturi ascunse",
+      "hiddenPosts": "Postări ascunse",
+      "noHiddenAccounts": "Niciun cont ascuns",
+      "noHiddenPosts": "Nicio postare ascunsă",
+      "unhide": "Afișează"
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",

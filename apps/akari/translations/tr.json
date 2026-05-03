@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Erişilebilirlik için bu görseli açıklayın...",
       "actions": {
         "translate": "Çevir",
-        "copyText": "Gönderi metnini kopyala"
+        "copyText": "Gönderi metnini kopyala",
+        "muteThread": "Konuyu sustur",
+        "threadMuted": "Konu susturuldu",
+        "hidePost": "Gönderiyi gizle",
+        "hideAccount": "Hesabı gizle",
+        "postHidden": "Gönderi gizlendi",
+        "accountHidden": "Hesap gizlendi"
       },
       "translation": {
         "title": "Çeviri",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Gündem çubuğu"
+      "trendingBar": "Gündem çubuğu",
+      "hiddenContent": "Gizlenmiş içerik",
+      "hiddenAccounts": "Gizlenmiş hesaplar",
+      "hiddenPosts": "Gizlenmiş gönderiler",
+      "noHiddenAccounts": "Gizlenmiş hesap yok",
+      "noHiddenPosts": "Gizlenmiş gönderi yok",
+      "unhide": "Göster"
     },
     "gif": {
       "selectGif": "GIF Seç",

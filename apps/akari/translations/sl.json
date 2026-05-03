@@ -232,7 +232,13 @@
       "selectPhoto": "Izberite fotografijo iz galerije",
       "actions": {
         "translate": "Prevajanje",
-        "copyText": "Kopirajte besedilo"
+        "copyText": "Kopirajte besedilo",
+        "muteThread": "Utišaj nit",
+        "threadMuted": "Nit utišana",
+        "hidePost": "Skrij objavo",
+        "hideAccount": "Skrij račun",
+        "postHidden": "Objava skrita",
+        "accountHidden": "Račun skrit"
       },
       "translation": {
         "title": "Prevod",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Vrstica trendov"
+      "trendingBar": "Vrstica trendov",
+      "hiddenContent": "Skrita vsebina",
+      "hiddenAccounts": "Skriti računi",
+      "hiddenPosts": "Skrite objave",
+      "noHiddenAccounts": "Ni skritih računov",
+      "noHiddenPosts": "Ni skritih objav",
+      "unhide": "Pokaži"
     },
     "bookmarks": {
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",

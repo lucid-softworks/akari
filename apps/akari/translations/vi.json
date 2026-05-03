@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Mô tả hình ảnh này để hỗ trợ khả năng tiếp cận...",
       "actions": {
         "translate": "Dịch",
-        "copyText": "Sao chép nội dung bài đăng"
+        "copyText": "Sao chép nội dung bài đăng",
+        "muteThread": "Tắt tiếng chuỗi",
+        "threadMuted": "Đã tắt tiếng chuỗi",
+        "hidePost": "Ẩn bài đăng",
+        "hideAccount": "Ẩn tài khoản",
+        "postHidden": "Đã ẩn bài đăng",
+        "accountHidden": "Đã ẩn tài khoản"
       },
       "translation": {
         "title": "Bản dịch",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Thanh xu hướng"
+      "trendingBar": "Thanh xu hướng",
+      "hiddenContent": "Nội dung đã ẩn",
+      "hiddenAccounts": "Tài khoản đã ẩn",
+      "hiddenPosts": "Bài đăng đã ẩn",
+      "noHiddenAccounts": "Không có tài khoản đã ẩn",
+      "noHiddenPosts": "Không có bài đăng đã ẩn",
+      "unhide": "Hiện"
     },
     "gif": {
       "selectGif": "Chọn GIF",

@@ -232,7 +232,13 @@
       "selectPhoto": "Qalereyadan şəkil seçin",
       "actions": {
         "translate": "Tərcümə etmək",
-        "copyText": "Poçt mətnini kopyalayın"
+        "copyText": "Poçt mətnini kopyalayın",
+        "muteThread": "Mövzunu səssizə al",
+        "threadMuted": "Mövzu səssizə alındı",
+        "hidePost": "Paylaşımı gizlət",
+        "hideAccount": "Hesabı gizlət",
+        "postHidden": "Paylaşım gizlədildi",
+        "accountHidden": "Hesab gizlədildi"
       },
       "translation": {
         "title": "Tərcümə",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trend paneli"
+      "trendingBar": "Trend paneli",
+      "hiddenContent": "Gizlədilmiş məzmun",
+      "hiddenAccounts": "Gizlədilmiş hesablar",
+      "hiddenPosts": "Gizlədilmiş paylaşımlar",
+      "noHiddenAccounts": "Gizlədilmiş hesab yoxdur",
+      "noHiddenPosts": "Gizlədilmiş paylaşım yoxdur",
+      "unhide": "Göstər"
     },
     "bookmarks": {
       "subtitle": "Burada xilas edilmiş yazılar və mövzular görünəcək.",

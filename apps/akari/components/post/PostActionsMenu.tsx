@@ -11,12 +11,14 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { ReportSheet } from '@/components/ReportSheet';
 import { useToast } from '@/contexts/ToastContext';
+import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { usePinPost } from '@/hooks/mutations/usePinPost';
 import { usePostControls } from '@/hooks/mutations/usePostControls';
 import { useExistingPostControls } from '@/hooks/queries/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useHiddenContent } from '@/hooks/useHiddenContent';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_POST_CONTROLS, type PostControls } from '@/utils/postControls';
@@ -94,7 +96,9 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const borderColor = useThemeColor({}, 'border');
 
   const muteMutation = useMuteUser();
+  const muteThreadMutation = useMuteThread();
   const pinPostMutation = usePinPost();
+  const { hidePost, hideAccount } = useHiddenContent();
   const { data: currentAccount } = useCurrentAccount();
   const { data: ownProfile } = useProfile(currentAccount?.did);
   const isOwnPost = !!authorDid && !!currentAccount?.did && authorDid === currentAccount.did;
@@ -138,6 +142,41 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     onDismiss();
   }, [authorDid, muteMutation, onDismiss]);
 
+  const handleMuteThread = useCallback(() => {
+    // Best-effort: use the post's own URI as the thread root. If the
+    // user invoked this from a reply rather than the root post, they
+    // may need to mute again from the root for full coverage. We don't
+    // have the conversation root plumbed all the way through PostCard
+    // yet; revisit once that data flows down.
+    if (!postUri) return;
+    muteThreadMutation.mutate(
+      { root: postUri, action: 'mute' },
+      {
+        onSuccess: () =>
+          showToast({ message: t('post.actions.threadMuted'), type: 'success' }),
+        onError: () =>
+          showToast({ message: t('common.somethingWentWrong'), type: 'error' }),
+      },
+    );
+    onDismiss();
+  }, [postUri, muteThreadMutation, onDismiss, showToast, t]);
+
+  const handleHidePost = useCallback(() => {
+    if (postUri) {
+      hidePost(postUri);
+      showToast({ message: t('post.actions.postHidden'), type: 'success' });
+    }
+    onDismiss();
+  }, [postUri, hidePost, onDismiss, showToast, t]);
+
+  const handleHideAccount = useCallback(() => {
+    if (authorDid) {
+      hideAccount(authorDid);
+      showToast({ message: t('post.actions.accountHidden'), type: 'success' });
+    }
+    onDismiss();
+  }, [authorDid, hideAccount, onDismiss, showToast, t]);
+
   const menuActions = useMemo<PostMenuItem[]>(
     () => {
       const items: PostMenuItem[] = [
@@ -167,13 +206,16 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 
       items.push(
         { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: () => { onDismiss(); setShowListPicker(true); }, disabled: !authorDid },
+        { key: 'muteThread', icon: 'bell.slash', label: t('post.actions.muteThread'), onPress: handleMuteThread, disabled: !postUri },
         { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
+        { key: 'hidePost', icon: 'eye.slash', label: t('post.actions.hidePost'), onPress: handleHidePost, disabled: !postUri },
+        { key: 'hideAccount', icon: 'person.crop.circle.badge.xmark', label: t('post.actions.hideAccount'), onPress: handleHideAccount, disabled: !authorDid },
         { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
       );
 
       return items;
     },
-    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, handleCopyText, handleMuteAccount, handlePinPost, onTranslatePress, onDismiss, t],
+    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handlePinPost, onTranslatePress, onDismiss, t],
   );
 
   const wrapPress = Platform.OS === 'web'

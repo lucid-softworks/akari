@@ -232,7 +232,13 @@
       "selectPhoto": "Vyberte fotografiu z galérie",
       "actions": {
         "translate": "Preložiť",
-        "copyText": "Kopírovať text"
+        "copyText": "Kopírovať text",
+        "muteThread": "Stíšiť vlákno",
+        "threadMuted": "Vlákno stíšené",
+        "hidePost": "Skryť príspevok",
+        "hideAccount": "Skryť účet",
+        "postHidden": "Príspevok skrytý",
+        "accountHidden": "Účet skrytý"
       },
       "translation": {
         "title": "Preklad",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Lišta trendov"
+      "trendingBar": "Lišta trendov",
+      "hiddenContent": "Skrytý obsah",
+      "hiddenAccounts": "Skryté účty",
+      "hiddenPosts": "Skryté príspevky",
+      "noHiddenAccounts": "Žiadne skryté účty",
+      "noHiddenPosts": "Žiadne skryté príspevky",
+      "unhide": "Zobraziť"
     },
     "bookmarks": {
       "subtitle": "Tu sa zobrazia uložené príspevky a vlákna.",

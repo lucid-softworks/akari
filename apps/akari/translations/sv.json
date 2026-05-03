@@ -232,7 +232,13 @@
       "selectPhoto": "Välj foto från galleriet",
       "actions": {
         "translate": "Översätta",
-        "copyText": "Kopiera inläggstext"
+        "copyText": "Kopiera inläggstext",
+        "muteThread": "Tysta tråd",
+        "threadMuted": "Tråden är tystad",
+        "hidePost": "Dölj inlägg",
+        "hideAccount": "Dölj konto",
+        "postHidden": "Inlägg dolt",
+        "accountHidden": "Konto dolt"
       },
       "translation": {
         "title": "Översättning",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trender-fält"
+      "trendingBar": "Trender-fält",
+      "hiddenContent": "Dolt innehåll",
+      "hiddenAccounts": "Dolda konton",
+      "hiddenPosts": "Dolda inlägg",
+      "noHiddenAccounts": "Inga dolda konton",
+      "noHiddenPosts": "Inga dolda inlägg",
+      "unhide": "Visa"
     },
     "bookmarks": {
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",

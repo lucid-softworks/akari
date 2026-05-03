@@ -232,7 +232,13 @@
       "selectPhoto": "Виберіть фото з галереї",
       "actions": {
         "translate": "Перекладати",
-        "copyText": "Скопіюйте текст публікації"
+        "copyText": "Скопіюйте текст публікації",
+        "muteThread": "Заглушити гілку",
+        "threadMuted": "Гілку заглушено",
+        "hidePost": "Приховати допис",
+        "hideAccount": "Приховати обліковий запис",
+        "postHidden": "Допис приховано",
+        "accountHidden": "Обліковий запис приховано"
       },
       "translation": {
         "title": "Переклад",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Панель трендів"
+      "trendingBar": "Панель трендів",
+      "hiddenContent": "Прихований вміст",
+      "hiddenAccounts": "Приховані облікові записи",
+      "hiddenPosts": "Приховані дописи",
+      "noHiddenAccounts": "Немає прихованих облікових записів",
+      "noHiddenPosts": "Немає прихованих дописів",
+      "unhide": "Показати"
     },
     "bookmarks": {
       "subtitle": "Збережені повідомлення та теми з'являться тут.",

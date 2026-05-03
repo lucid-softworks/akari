@@ -232,7 +232,13 @@
       "selectPhoto": "Επιλέξτε φωτογραφία από τη γκαλερί",
       "actions": {
         "translate": "Μεταφράζω",
-        "copyText": "Αντιγραφή κειμένου"
+        "copyText": "Αντιγραφή κειμένου",
+        "muteThread": "Σίγαση νήματος",
+        "threadMuted": "Το νήμα είναι σε σίγαση",
+        "hidePost": "Απόκρυψη ανάρτησης",
+        "hideAccount": "Απόκρυψη λογαριασμού",
+        "postHidden": "Η ανάρτηση κρύφτηκε",
+        "accountHidden": "Ο λογαριασμός κρύφτηκε"
       },
       "translation": {
         "title": "Μετάφραση",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Μπάρα δημοφιλών"
+      "trendingBar": "Μπάρα δημοφιλών",
+      "hiddenContent": "Κρυφό περιεχόμενο",
+      "hiddenAccounts": "Κρυφοί λογαριασμοί",
+      "hiddenPosts": "Κρυφές αναρτήσεις",
+      "noHiddenAccounts": "Δεν υπάρχουν κρυφοί λογαριασμοί",
+      "noHiddenPosts": "Δεν υπάρχουν κρυφές αναρτήσεις",
+      "unhide": "Εμφάνιση"
     },
     "bookmarks": {
       "subtitle": "Οι αποθηκευμένες θέσεις και τα νήματα θα εμφανιστούν εδώ.",

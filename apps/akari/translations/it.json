@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Descrivi questa immagine per l'accessibilità...",
       "actions": {
         "translate": "Traduci",
-        "copyText": "Copia testo del post"
+        "copyText": "Copia testo del post",
+        "muteThread": "Silenzia thread",
+        "threadMuted": "Thread silenziato",
+        "hidePost": "Nascondi post",
+        "hideAccount": "Nascondi account",
+        "postHidden": "Post nascosto",
+        "accountHidden": "Account nascosto"
       },
       "translation": {
         "title": "Traduzione",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Barra delle tendenze"
+      "trendingBar": "Barra delle tendenze",
+      "hiddenContent": "Contenuti nascosti",
+      "hiddenAccounts": "Account nascosti",
+      "hiddenPosts": "Post nascosti",
+      "noHiddenAccounts": "Nessun account nascosto",
+      "noHiddenPosts": "Nessun post nascosto",
+      "unhide": "Mostra"
     },
     "gif": {
       "selectGif": "Seleziona GIF",

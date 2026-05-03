@@ -232,7 +232,13 @@
       "selectPhoto": "Sélectionner une photo depuis la galerie",
       "actions": {
         "translate": "Traduire",
-        "copyText": "Copier le texte de la publication"
+        "copyText": "Copier le texte de la publication",
+        "muteThread": "Couper le fil",
+        "threadMuted": "Fil mis en sourdine",
+        "hidePost": "Masquer le post",
+        "hideAccount": "Masquer le compte",
+        "postHidden": "Post masqué",
+        "accountHidden": "Compte masqué"
       },
       "translation": {
         "title": "Traduction",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Barre de tendances"
+      "trendingBar": "Barre de tendances",
+      "hiddenContent": "Contenu masqué",
+      "hiddenAccounts": "Comptes masqués",
+      "hiddenPosts": "Posts masqués",
+      "noHiddenAccounts": "Aucun compte masqué",
+      "noHiddenPosts": "Aucun post masqué",
+      "unhide": "Afficher"
     },
     "bookmarks": {
       "subtitle": "Les publications et fils enregistrés apparaîtront ici.",

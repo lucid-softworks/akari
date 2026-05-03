@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "सुगम्यता के लिए इस छवि का वर्णन करें...",
       "actions": {
         "translate": "अनुवाद करें",
-        "copyText": "पोस्ट का पाठ कॉपी करें"
+        "copyText": "पोस्ट का पाठ कॉपी करें",
+        "muteThread": "थ्रेड म्यूट करें",
+        "threadMuted": "थ्रेड म्यूट हो गया",
+        "hidePost": "पोस्ट छिपाएँ",
+        "hideAccount": "खाता छिपाएँ",
+        "postHidden": "पोस्ट छिपाया गया",
+        "accountHidden": "खाता छिपाया गया"
       },
       "translation": {
         "title": "अनुवाद",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "ट्रेंडिंग बार"
+      "trendingBar": "ट्रेंडिंग बार",
+      "hiddenContent": "छिपी हुई सामग्री",
+      "hiddenAccounts": "छिपे हुए खाते",
+      "hiddenPosts": "छिपी हुई पोस्ट",
+      "noHiddenAccounts": "कोई छिपा खाता नहीं",
+      "noHiddenPosts": "कोई छिपी पोस्ट नहीं",
+      "unhide": "दिखाएँ"
     },
     "gif": {
       "selectGif": "GIF चुनें",

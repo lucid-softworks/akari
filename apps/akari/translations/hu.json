@@ -232,7 +232,13 @@
       "selectPhoto": "Válassza ki a Fotó lehetőséget a Galériából",
       "actions": {
         "translate": "Lefordít",
-        "copyText": "Másolja a bejegyzés szövegét"
+        "copyText": "Másolja a bejegyzés szövegét",
+        "muteThread": "Szál némítása",
+        "threadMuted": "Szál némítva",
+        "hidePost": "Bejegyzés elrejtése",
+        "hideAccount": "Fiók elrejtése",
+        "postHidden": "Bejegyzés elrejtve",
+        "accountHidden": "Fiók elrejtve"
       },
       "translation": {
         "title": "Fordítás",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Felkapott sáv"
+      "trendingBar": "Felkapott sáv",
+      "hiddenContent": "Rejtett tartalom",
+      "hiddenAccounts": "Rejtett fiókok",
+      "hiddenPosts": "Rejtett bejegyzések",
+      "noHiddenAccounts": "Nincsenek rejtett fiókok",
+      "noHiddenPosts": "Nincsenek rejtett bejegyzések",
+      "unhide": "Mutatás"
     },
     "bookmarks": {
       "subtitle": "A mentett hozzászólások és szálak itt jelennek meg.",

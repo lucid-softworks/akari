@@ -132,6 +132,20 @@ export class BlueskyGraph extends BlueskyApiClient {
   }
 
   /**
+   * Unmutes a previously-muted thread.
+   * @param accessJwt - Valid access JWT token
+   * @param root - The root post URI of the thread to unmute
+   */
+  async unmuteThread(accessJwt: string, root: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.unmuteThread', accessJwt, {
+      method: 'POST',
+      body: {
+        root,
+      },
+    });
+  }
+
+  /**
    * Gets the lists curated by an actor.
    */
   async getLists(accessJwt: string, actor: string, limit = 50, cursor?: string): Promise<BlueskyListsResponse> {

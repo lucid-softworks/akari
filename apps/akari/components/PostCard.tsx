@@ -16,6 +16,7 @@ import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
+import { useHiddenContent } from '@/hooks/useHiddenContent';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -80,6 +81,13 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
   const hasText = Boolean(post.text && post.text.trim());
   const hasEmbed = Boolean(post.embed || (post.embeds && post.embeds.length > 0));
   const canTranslate = hasText;
+
+  // Locally-hidden posts / accounts disappear from any feed they show
+  // up in. The hook must be invoked unconditionally to keep hook order
+  // stable across renders — we apply the result in the render block
+  // below.
+  const { isHidden } = useHiddenContent();
+  const hideThisCard = isHidden(post.uri, post.author.did);
 
   // Live stream detection
   const { data: liveNowEntries = [] } = useLiveNow();
@@ -260,6 +268,8 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
       />
     </View>
   );
+
+  if (hideThisCard) return null;
 
   return (
     <>

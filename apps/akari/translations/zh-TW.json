@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "請描述此圖片以利無障礙使用...",
       "actions": {
         "translate": "翻譯",
-        "copyText": "複製貼文文字"
+        "copyText": "複製貼文文字",
+        "muteThread": "靜音此串",
+        "threadMuted": "已靜音此串",
+        "hidePost": "隱藏貼文",
+        "hideAccount": "隱藏帳號",
+        "postHidden": "貼文已隱藏",
+        "accountHidden": "帳號已隱藏"
       },
       "translation": {
         "title": "翻譯",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "熱門列"
+      "trendingBar": "熱門列",
+      "hiddenContent": "已隱藏的內容",
+      "hiddenAccounts": "已隱藏的帳號",
+      "hiddenPosts": "已隱藏的貼文",
+      "noHiddenAccounts": "沒有隱藏的帳號",
+      "noHiddenPosts": "沒有隱藏的貼文",
+      "unhide": "取消隱藏"
     },
     "gif": {
       "selectGif": "選擇GIF",

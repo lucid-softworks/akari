@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Beschreiben Sie dieses Bild für die Barrierefreiheit...",
       "actions": {
         "translate": "Übersetzen",
-        "copyText": "Beitragstext kopieren"
+        "copyText": "Beitragstext kopieren",
+        "muteThread": "Thread stummschalten",
+        "threadMuted": "Thread stummgeschaltet",
+        "hidePost": "Beitrag ausblenden",
+        "hideAccount": "Konto ausblenden",
+        "postHidden": "Beitrag ausgeblendet",
+        "accountHidden": "Konto ausgeblendet"
       },
       "translation": {
         "title": "Übersetzung",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trend-Leiste"
+      "trendingBar": "Trend-Leiste",
+      "hiddenContent": "Ausgeblendete Inhalte",
+      "hiddenAccounts": "Ausgeblendete Konten",
+      "hiddenPosts": "Ausgeblendete Beiträge",
+      "noHiddenAccounts": "Keine ausgeblendeten Konten",
+      "noHiddenPosts": "Keine ausgeblendeten Beiträge",
+      "unhide": "Anzeigen"
     },
     "gif": {
       "selectGif": "GIF auswählen",

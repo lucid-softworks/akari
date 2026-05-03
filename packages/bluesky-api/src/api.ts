@@ -661,6 +661,10 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.graph.muteThread(accessJwt, root);
   }
 
+  async unmuteThread(accessJwt: string, root: string) {
+    return this.graph.unmuteThread(accessJwt, root);
+  }
+
   async getLists(accessJwt: string, actor: string, limit?: number, cursor?: string) {
     return this.graph.getLists(accessJwt, actor, limit, cursor);
   }

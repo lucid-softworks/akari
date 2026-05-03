@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Describe this image for accessibility...",
       "actions": {
         "translate": "Translate",
-        "copyText": "Copy post text"
+        "copyText": "Copy post text",
+        "muteThread": "Mute thread",
+        "threadMuted": "Thread muted",
+        "hidePost": "Hide post",
+        "hideAccount": "Hide account",
+        "postHidden": "Post hidden",
+        "accountHidden": "Account hidden"
       },
       "translation": {
         "title": "Translation",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trending bar"
+      "trendingBar": "Trending bar",
+      "hiddenContent": "Hidden content",
+      "hiddenAccounts": "Hidden accounts",
+      "hiddenPosts": "Hidden posts",
+      "noHiddenAccounts": "No hidden accounts",
+      "noHiddenPosts": "No hidden posts",
+      "unhide": "Unhide"
     },
     "gif": {
       "selectGif": "Select GIF",

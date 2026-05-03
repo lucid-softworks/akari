@@ -232,7 +232,13 @@
       "selectPhoto": "Vælg foto fra galleriet",
       "actions": {
         "translate": "Oversætte",
-        "copyText": "Kopier posttekst"
+        "copyText": "Kopier posttekst",
+        "muteThread": "Skjul tråd",
+        "threadMuted": "Tråden er skjult",
+        "hidePost": "Skjul indlæg",
+        "hideAccount": "Skjul konto",
+        "postHidden": "Indlæg skjult",
+        "accountHidden": "Konto skjult"
       },
       "translation": {
         "title": "Oversættelse",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trendbjælke"
+      "trendingBar": "Trendbjælke",
+      "hiddenContent": "Skjult indhold",
+      "hiddenAccounts": "Skjulte konti",
+      "hiddenPosts": "Skjulte indlæg",
+      "noHiddenAccounts": "Ingen skjulte konti",
+      "noHiddenPosts": "Ingen skjulte indlæg",
+      "unhide": "Vis"
     },
     "bookmarks": {
       "subtitle": "Gemte posts og tråde vises her.",

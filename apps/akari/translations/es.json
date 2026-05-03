@@ -232,7 +232,13 @@
       "selectPhoto": "Seleccionar foto de la galería",
       "actions": {
         "translate": "Traducir",
-        "copyText": "Copiar texto de la publicación"
+        "copyText": "Copiar texto de la publicación",
+        "muteThread": "Silenciar hilo",
+        "threadMuted": "Hilo silenciado",
+        "hidePost": "Ocultar publicación",
+        "hideAccount": "Ocultar cuenta",
+        "postHidden": "Publicación oculta",
+        "accountHidden": "Cuenta oculta"
       },
       "translation": {
         "title": "Traducción",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Barra de tendencias"
+      "trendingBar": "Barra de tendencias",
+      "hiddenContent": "Contenido oculto",
+      "hiddenAccounts": "Cuentas ocultas",
+      "hiddenPosts": "Publicaciones ocultas",
+      "noHiddenAccounts": "No hay cuentas ocultas",
+      "noHiddenPosts": "No hay publicaciones ocultas",
+      "unhide": "Mostrar"
     },
     "bookmarks": {
       "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",

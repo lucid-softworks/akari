@@ -232,7 +232,13 @@
       "selectPhoto": "ギャラリーから写真を選択",
       "actions": {
         "translate": "翻訳する",
-        "copyText": "投稿のテキストをコピー"
+        "copyText": "投稿のテキストをコピー",
+        "muteThread": "スレッドをミュート",
+        "threadMuted": "スレッドをミュートしました",
+        "hidePost": "投稿を非表示",
+        "hideAccount": "アカウントを非表示",
+        "postHidden": "投稿を非表示にしました",
+        "accountHidden": "アカウントを非表示にしました"
       },
       "translation": {
         "title": "翻訳",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "トレンドバー"
+      "trendingBar": "トレンドバー",
+      "hiddenContent": "非表示のコンテンツ",
+      "hiddenAccounts": "非表示のアカウント",
+      "hiddenPosts": "非表示の投稿",
+      "noHiddenAccounts": "非表示のアカウントはありません",
+      "noHiddenPosts": "非表示の投稿はありません",
+      "unhide": "表示する"
     },
     "gif": {
       "selectGif": "GIFを選択",

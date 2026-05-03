@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "صف هذه الصورة لإمكانية الوصول...",
       "actions": {
         "translate": "ترجمة",
-        "copyText": "نسخ نص المنشور"
+        "copyText": "نسخ نص المنشور",
+        "muteThread": "كتم السلسلة",
+        "threadMuted": "تم كتم السلسلة",
+        "hidePost": "إخفاء المنشور",
+        "hideAccount": "إخفاء الحساب",
+        "postHidden": "تم إخفاء المنشور",
+        "accountHidden": "تم إخفاء الحساب"
       },
       "translation": {
         "title": "الترجمة",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "شريط الأكثر رواجًا"
+      "trendingBar": "شريط الأكثر رواجًا",
+      "hiddenContent": "المحتوى المخفي",
+      "hiddenAccounts": "الحسابات المخفية",
+      "hiddenPosts": "المنشورات المخفية",
+      "noHiddenAccounts": "لا توجد حسابات مخفية",
+      "noHiddenPosts": "لا توجد منشورات مخفية",
+      "unhide": "إظهار"
     },
     "gif": {
       "selectGif": "اختر GIF",

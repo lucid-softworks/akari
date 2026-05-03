@@ -232,7 +232,13 @@
       "selectPhoto": "Изберете снимка от галерията",
       "actions": {
         "translate": "Превод",
-        "copyText": "Копирайте текст на публикацията"
+        "copyText": "Копирайте текст на публикацията",
+        "muteThread": "Заглуши темата",
+        "threadMuted": "Темата е заглушена",
+        "hidePost": "Скрий публикацията",
+        "hideAccount": "Скрий профила",
+        "postHidden": "Публикацията е скрита",
+        "accountHidden": "Профилът е скрит"
       },
       "translation": {
         "title": "Превод",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Лента с тенденции"
+      "trendingBar": "Лента с тенденции",
+      "hiddenContent": "Скрито съдържание",
+      "hiddenAccounts": "Скрити профили",
+      "hiddenPosts": "Скрити публикации",
+      "noHiddenAccounts": "Няма скрити профили",
+      "noHiddenPosts": "Няма скрити публикации",
+      "unhide": "Покажи"
     },
     "bookmarks": {
       "subtitle": "Запазените публикации и нишки ще се появят тук.",

@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Opisz ten obraz dla dostępności...",
       "actions": {
         "translate": "Przetłumacz",
-        "copyText": "Kopiuj tekst wpisu"
+        "copyText": "Kopiuj tekst wpisu",
+        "muteThread": "Wycisz wątek",
+        "threadMuted": "Wątek wyciszony",
+        "hidePost": "Ukryj post",
+        "hideAccount": "Ukryj konto",
+        "postHidden": "Post ukryty",
+        "accountHidden": "Konto ukryte"
       },
       "translation": {
         "title": "Tłumaczenie",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Pasek tematów"
+      "trendingBar": "Pasek tematów",
+      "hiddenContent": "Ukryta zawartość",
+      "hiddenAccounts": "Ukryte konta",
+      "hiddenPosts": "Ukryte posty",
+      "noHiddenAccounts": "Brak ukrytych kont",
+      "noHiddenPosts": "Brak ukrytych postów",
+      "unhide": "Pokaż"
     },
     "gif": {
       "selectGif": "Wybierz GIF",

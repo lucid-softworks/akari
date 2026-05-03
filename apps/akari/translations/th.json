@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "อธิบายรูปภาพนี้เพื่อการเข้าถึง...",
       "actions": {
         "translate": "แปล",
-        "copyText": "คัดลอกข้อความโพสต์"
+        "copyText": "คัดลอกข้อความโพสต์",
+        "muteThread": "ปิดเสียงเธรด",
+        "threadMuted": "ปิดเสียงเธรดแล้ว",
+        "hidePost": "ซ่อนโพสต์",
+        "hideAccount": "ซ่อนบัญชี",
+        "postHidden": "ซ่อนโพสต์แล้ว",
+        "accountHidden": "ซ่อนบัญชีแล้ว"
       },
       "translation": {
         "title": "การแปล",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "แถบมาแรง"
+      "trendingBar": "แถบมาแรง",
+      "hiddenContent": "เนื้อหาที่ซ่อน",
+      "hiddenAccounts": "บัญชีที่ซ่อน",
+      "hiddenPosts": "โพสต์ที่ซ่อน",
+      "noHiddenAccounts": "ไม่มีบัญชีที่ซ่อน",
+      "noHiddenPosts": "ไม่มีโพสต์ที่ซ่อน",
+      "unhide": "เลิกซ่อน"
     },
     "gif": {
       "selectGif": "เลือก GIF",

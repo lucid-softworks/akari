@@ -232,7 +232,13 @@
       "selectPhoto": "عکس را از گالری انتخاب کنید",
       "actions": {
         "translate": "ترجمه کردن",
-        "copyText": "کپی کردن متن پست"
+        "copyText": "کپی کردن متن پست",
+        "muteThread": "بی‌صدا کردن رشته",
+        "threadMuted": "رشته بی‌صدا شد",
+        "hidePost": "مخفی کردن پست",
+        "hideAccount": "مخفی کردن حساب",
+        "postHidden": "پست مخفی شد",
+        "accountHidden": "حساب مخفی شد"
       },
       "translation": {
         "title": "ترجمه",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "نوار پرطرفدار"
+      "trendingBar": "نوار پرطرفدار",
+      "hiddenContent": "محتوای مخفی",
+      "hiddenAccounts": "حساب‌های مخفی",
+      "hiddenPosts": "پست‌های مخفی",
+      "noHiddenAccounts": "حساب مخفی نیست",
+      "noHiddenPosts": "پست مخفی نیست",
+      "unhide": "نمایش"
     },
     "bookmarks": {
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",

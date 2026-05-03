@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Disgrifiwch y ddelwedd hon ar gyfer hygyrchedd...",
       "actions": {
         "translate": "Cyfieithu",
-        "copyText": "Copïo testun y cofnod"
+        "copyText": "Copïo testun y cofnod",
+        "muteThread": "Tewi'r edefyn",
+        "threadMuted": "Mae'r edefyn wedi'i dewi",
+        "hidePost": "Cuddio post",
+        "hideAccount": "Cuddio cyfrif",
+        "postHidden": "Post wedi’i guddio",
+        "accountHidden": "Cyfrif wedi’i guddio"
       },
       "translation": {
         "title": "Cyfieithiad",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Bar trendiog"
+      "trendingBar": "Bar trendiog",
+      "hiddenContent": "Cynnwys cudd",
+      "hiddenAccounts": "Cyfrifon cudd",
+      "hiddenPosts": "Postiadau cudd",
+      "noHiddenAccounts": "Dim cyfrifon cudd",
+      "noHiddenPosts": "Dim postiadau cudd",
+      "unhide": "Dadguddio"
     },
     "gif": {
       "selectGif": "Dewis GIF",

@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Switch } from 'react-native';
 
@@ -48,6 +49,12 @@ export default function ContentAndMediaScreen() {
         icon: 'play.circle.fill',
         label: t('settings.autoplayVideos'),
         onPress: showNotImplemented,
+      },
+      {
+        key: 'hidden-content',
+        icon: 'eye.slash',
+        label: t('settings.hiddenContent'),
+        onPress: () => router.push('/(tabs)/settings/hidden-content'),
       },
     ],
     [showNotImplemented, t],

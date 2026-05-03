@@ -232,7 +232,13 @@
       "selectPhoto": "从画廊中选择照片",
       "actions": {
         "translate": "翻译",
-        "copyText": "复制发布文字"
+        "copyText": "复制发布文字",
+        "muteThread": "静音此串",
+        "threadMuted": "已静音此串",
+        "hidePost": "隐藏帖子",
+        "hideAccount": "隐藏账号",
+        "postHidden": "帖子已隐藏",
+        "accountHidden": "账号已隐藏"
       },
       "translation": {
         "title": "翻译",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "热门栏"
+      "trendingBar": "热门栏",
+      "hiddenContent": "已隐藏的内容",
+      "hiddenAccounts": "已隐藏的账号",
+      "hiddenPosts": "已隐藏的帖子",
+      "noHiddenAccounts": "没有隐藏的账号",
+      "noHiddenPosts": "没有隐藏的帖子",
+      "unhide": "取消隐藏"
     },
     "bookmarks": {
       "subtitle": "保存的帖子和线程将出现在这里。",

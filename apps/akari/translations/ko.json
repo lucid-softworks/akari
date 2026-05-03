@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "접근성을 위해 이 이미지를 설명해주세요...",
       "actions": {
         "translate": "번역하기",
-        "copyText": "게시글 텍스트 복사"
+        "copyText": "게시글 텍스트 복사",
+        "muteThread": "스레드 음소거",
+        "threadMuted": "스레드 음소거됨",
+        "hidePost": "게시물 숨기기",
+        "hideAccount": "계정 숨기기",
+        "postHidden": "게시물이 숨겨졌습니다",
+        "accountHidden": "계정이 숨겨졌습니다"
       },
       "translation": {
         "title": "번역",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "트렌드 바"
+      "trendingBar": "트렌드 바",
+      "hiddenContent": "숨긴 콘텐츠",
+      "hiddenAccounts": "숨긴 계정",
+      "hiddenPosts": "숨긴 게시물",
+      "noHiddenAccounts": "숨긴 계정이 없습니다",
+      "noHiddenPosts": "숨긴 게시물이 없습니다",
+      "unhide": "숨김 해제"
     },
     "gif": {
       "selectGif": "GIF 선택",

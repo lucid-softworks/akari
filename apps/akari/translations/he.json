@@ -232,7 +232,13 @@
       "selectPhoto": "בחר תמונה מהגלריה",
       "actions": {
         "translate": "לְתַרְגֵם",
-        "copyText": "העתק טקסט הודעה"
+        "copyText": "העתק טקסט הודעה",
+        "muteThread": "השתק שרשור",
+        "threadMuted": "השרשור הושתק",
+        "hidePost": "הסתר פוסט",
+        "hideAccount": "הסתר חשבון",
+        "postHidden": "הפוסט הוסתר",
+        "accountHidden": "החשבון הוסתר"
       },
       "translation": {
         "title": "תִרגוּם",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "סרגל מובילים"
+      "trendingBar": "סרגל מובילים",
+      "hiddenContent": "תוכן מוסתר",
+      "hiddenAccounts": "חשבונות מוסתרים",
+      "hiddenPosts": "פוסטים מוסתרים",
+      "noHiddenAccounts": "אין חשבונות מוסתרים",
+      "noHiddenPosts": "אין פוסטים מוסתרים",
+      "unhide": "הצג"
     },
     "bookmarks": {
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",

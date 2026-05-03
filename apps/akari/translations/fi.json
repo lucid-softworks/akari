@@ -232,7 +232,13 @@
       "selectPhoto": "Valitse kuva galleriasta",
       "actions": {
         "translate": "Kääntää",
-        "copyText": "Kopioi viesti"
+        "copyText": "Kopioi viesti",
+        "muteThread": "Vaimenna ketju",
+        "threadMuted": "Ketju vaimennettu",
+        "hidePost": "Piilota julkaisu",
+        "hideAccount": "Piilota tili",
+        "postHidden": "Julkaisu piilotettu",
+        "accountHidden": "Tili piilotettu"
       },
       "translation": {
         "title": "Käännös",
@@ -424,7 +430,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trendipalkki"
+      "trendingBar": "Trendipalkki",
+      "hiddenContent": "Piilotettu sisältö",
+      "hiddenAccounts": "Piilotetut tilit",
+      "hiddenPosts": "Piilotetut julkaisut",
+      "noHiddenAccounts": "Ei piilotettuja tilejä",
+      "noHiddenPosts": "Ei piilotettuja julkaisuja",
+      "unhide": "Näytä"
     },
     "bookmarks": {
       "subtitle": "Tallennetut viestit ja ketjut ilmestyvät täällä.",

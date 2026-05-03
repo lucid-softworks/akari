@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Beschrijf deze afbeelding voor toegankelijkheid...",
       "actions": {
         "translate": "Vertalen",
-        "copyText": "Berichttekst kopiëren"
+        "copyText": "Berichttekst kopiëren",
+        "muteThread": "Thread dempen",
+        "threadMuted": "Thread gedempt",
+        "hidePost": "Bericht verbergen",
+        "hideAccount": "Account verbergen",
+        "postHidden": "Bericht verborgen",
+        "accountHidden": "Account verborgen"
       },
       "translation": {
         "title": "Vertaling",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Trending-balk"
+      "trendingBar": "Trending-balk",
+      "hiddenContent": "Verborgen inhoud",
+      "hiddenAccounts": "Verborgen accounts",
+      "hiddenPosts": "Verborgen berichten",
+      "noHiddenAccounts": "Geen verborgen accounts",
+      "noHiddenPosts": "Geen verborgen berichten",
+      "unhide": "Tonen"
     },
     "gif": {
       "selectGif": "GIF selecteren",

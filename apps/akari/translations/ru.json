@@ -232,7 +232,13 @@
       "imageAltTextPlaceholder": "Опишите это изображение для доступности...",
       "actions": {
         "translate": "Перевести",
-        "copyText": "Копировать текст публикации"
+        "copyText": "Копировать текст публикации",
+        "muteThread": "Заглушить тред",
+        "threadMuted": "Тред заглушён",
+        "hidePost": "Скрыть пост",
+        "hideAccount": "Скрыть аккаунт",
+        "postHidden": "Пост скрыт",
+        "accountHidden": "Аккаунт скрыт"
       },
       "translation": {
         "title": "Перевод",
@@ -415,7 +421,13 @@
       "hiddenTabs": "Hidden Tabs",
       "alwaysOn": "Always on",
       "resetToDefault": "Reset to Default",
-      "trendingBar": "Панель трендов"
+      "trendingBar": "Панель трендов",
+      "hiddenContent": "Скрытое содержимое",
+      "hiddenAccounts": "Скрытые аккаунты",
+      "hiddenPosts": "Скрытые посты",
+      "noHiddenAccounts": "Нет скрытых аккаунтов",
+      "noHiddenPosts": "Нет скрытых постов",
+      "unhide": "Показать"
     },
     "gif": {
       "selectGif": "Выбрать GIF",
