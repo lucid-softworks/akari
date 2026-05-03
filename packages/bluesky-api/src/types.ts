@@ -277,6 +277,14 @@ export type BlueskyListResponse = {
 
 export type BlueskySendMessageInput = {
   text: string;
+  /**
+   * Optional richtext facets (links, mentions, tags). atproto byte offsets,
+   * not JS string indices.
+   */
+  facets?: {
+    index: { byteStart: number; byteEnd: number };
+    features: { $type: string; uri?: string; tag?: string; did?: string }[];
+  }[];
 };
 
 export type BlueskyUnreadNotificationCount = {

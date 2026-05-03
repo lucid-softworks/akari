@@ -17,6 +17,8 @@ import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { EmojiPicker } from '@/components/EmojiPicker';
+import { GifPicker } from '@/components/GifPicker';
+import { ChatMediaEmbed, extractChatMedia, stripChatMediaText } from '@/components/chat/ChatMediaEmbed';
 import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
@@ -304,6 +306,9 @@ export default function ConversationScreen() {
   const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
   const [reactionsDialogFor, setReactionsDialogFor] = useState<string | null>(null);
   const [emojiPickerFor, setEmojiPickerFor] = useState<string | null>(null);
+  const [composerEmojiPickerVisible, setComposerEmojiPickerVisible] = useState(false);
+  const [composerSelection, setComposerSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const [composerGifPickerVisible, setComposerGifPickerVisible] = useState(false);
 
   const handleToggleReaction = (messageId: string, value: string) => {
     if (!conversation?.convoId || !currentAccount?.did) return;
@@ -415,7 +420,9 @@ export default function ConversationScreen() {
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
-    const hasText = item.text.trim().length > 0;
+    const inlineMedia = extractChatMedia(item.text);
+    const displayText = inlineMedia ? stripChatMediaText(item.text, inlineMedia.matchedText) : item.text;
+    const hasText = displayText.trim().length > 0;
     const embedContent = item.embed ? renderMessageEmbed(item.embed, item.id) : null;
     // In group chats, show the sender's display name above each incoming
     // message so you know who said what. Suppressed for 1:1 chats and for
@@ -483,7 +490,7 @@ export default function ConversationScreen() {
           </View>
         ) : null}
 
-        {(hasText || !item.embed) && (
+        {(hasText || inlineMedia || !item.embed) && (
           <TouchableOpacity
             activeOpacity={0.85}
             onLongPress={() => handleLongPressMessage(item.id)}
@@ -493,16 +500,29 @@ export default function ConversationScreen() {
               style={[
                 styles.messageBubble,
                 item.isFromMe ? styles.myBubble : styles.theirBubble,
+                inlineMedia ? styles.messageBubbleMedia : null,
                 {
                   backgroundColor: item.isFromMe ? outgoingMessageBackground : incomingMessageBackground,
                 },
               ]}
             >
               {hasText && (
-                <ThemedText style={[styles.messageText, { color: item.isFromMe ? '#fff' : textColor }]}>
-                  {item.text}
+                <ThemedText
+                  style={[
+                    styles.messageText,
+                    { color: item.isFromMe ? '#fff' : textColor },
+                    inlineMedia ? styles.messageTextWithMedia : null,
+                  ]}
+                >
+                  {displayText}
                 </ThemedText>
               )}
+              {inlineMedia ? (
+                <ChatMediaEmbed
+                  media={inlineMedia}
+                  alignment={item.isFromMe ? 'right' : 'left'}
+                />
+              ) : null}
             </ThemedView>
           </TouchableOpacity>
         )}
@@ -610,10 +630,27 @@ export default function ConversationScreen() {
 
   const inputBar = (
     <ThemedView style={[styles.inputContainer, { borderTopColor: borderColor }]}>
+      <TouchableOpacity
+        style={styles.inputBarAction}
+        onPress={() => setComposerEmojiPickerVisible(true)}
+        accessibilityLabel={t('post.addEmoji')}
+        hitSlop={8}
+      >
+        <IconSymbol name="face.smiling" size={26} color={iconColor} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.inputBarAction}
+        onPress={() => setComposerGifPickerVisible(true)}
+        accessibilityLabel={t('gif.addGif')}
+        hitSlop={8}
+      >
+        <IconSymbol name="photo.on.rectangle.angled" size={24} color={iconColor} />
+      </TouchableOpacity>
       <TextInput
         style={[styles.textInput, { backgroundColor, borderColor, color: textColor }]}
         value={messageText}
         onChangeText={setMessageText}
+        onSelectionChange={(e) => setComposerSelection(e.nativeEvent.selection)}
         placeholder={t('messages.typeMessage')}
         placeholderTextColor={iconColor}
         multiline
@@ -744,6 +781,32 @@ export default function ConversationScreen() {
           setEmojiPickerFor(null);
         }}
       />
+
+      <EmojiPicker
+        visible={composerEmojiPickerVisible}
+        onClose={() => setComposerEmojiPickerVisible(false)}
+        onSelectEmoji={(emoji) => {
+          const { start, end } = composerSelection;
+          const safeStart = Math.min(Math.max(start, 0), messageText.length);
+          const safeEnd = Math.min(Math.max(end, safeStart), messageText.length);
+          const next = messageText.slice(0, safeStart) + emoji + messageText.slice(safeEnd);
+          setMessageText(next);
+          const cursor = safeStart + emoji.length;
+          setComposerSelection({ start: cursor, end: cursor });
+          setComposerEmojiPickerVisible(false);
+        }}
+      />
+
+      <GifPicker
+        visible={composerGifPickerVisible}
+        onClose={() => setComposerGifPickerVisible(false)}
+        onSelectGif={(gif) => {
+          // Append the GIF URL to the message; ChatMediaEmbed renders it
+          // inline below the bubble on receivers using this client.
+          setMessageText((prev) => (prev ? `${prev} ${gif.uri}` : gif.uri));
+          setComposerGifPickerVisible(false);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -831,6 +894,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderRadius: radius.xl,
   },
+  messageBubbleMedia: {
+    // When inline media (gif/youtube) is rendered inside the bubble,
+    // tighten the surrounding padding so the media reads as content,
+    // not as a card-in-a-card.
+    padding: spacing.xs,
+  },
   myBubble: {
     // backgroundColor is set dynamically
   },
@@ -839,6 +908,10 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: fontSize.lg,
+  },
+  messageTextWithMedia: {
+    paddingHorizontal: spacing.sm,
+    paddingTop: spacing.xs,
   },
   messageTimestamp: {
     fontSize: fontSize.xs,
@@ -927,6 +1000,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     borderTopWidth: layout.hairline,
+    gap: spacing.xs,
+  },
+  inputBarAction: {
+    paddingBottom: spacing.xs,
   },
   textInput: {
     flex: 1,
@@ -934,7 +1011,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
-    marginRight: spacing.sm,
     maxHeight: 100,
     fontSize: fontSize.lg,
   },
