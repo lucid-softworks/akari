@@ -238,7 +238,11 @@
         "hidePost": "Gönderiyi gizle",
         "hideAccount": "Hesabı gizle",
         "postHidden": "Gönderi gizlendi",
-        "accountHidden": "Hesap gizlendi"
+        "accountHidden": "Hesap gizlendi",
+        "showMore": "Bunun gibi daha fazlasını göster",
+        "showLess": "Bunun gibi daha azını göster",
+        "showMoreSent": "\"Daha fazla\" gönderildi",
+        "showLessSent": "\"Daha az\" gönderildi"
       },
       "translation": {
         "title": "Çeviri",

@@ -238,7 +238,11 @@
         "hidePost": "投稿を非表示",
         "hideAccount": "アカウントを非表示",
         "postHidden": "投稿を非表示にしました",
-        "accountHidden": "アカウントを非表示にしました"
+        "accountHidden": "アカウントを非表示にしました",
+        "showMore": "これと同じものをもっと表示",
+        "showLess": "これと同じものを少なく表示",
+        "showMoreSent": "「もっと表示」を送信しました",
+        "showLessSent": "「少なく表示」を送信しました"
       },
       "translation": {
         "title": "翻訳",

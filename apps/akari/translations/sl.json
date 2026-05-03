@@ -238,7 +238,11 @@
         "hidePost": "Skrij objavo",
         "hideAccount": "Skrij račun",
         "postHidden": "Objava skrita",
-        "accountHidden": "Račun skrit"
+        "accountHidden": "Račun skrit",
+        "showMore": "Prikaži več takih",
+        "showLess": "Prikaži manj takih",
+        "showMoreSent": "Poslano: več takih",
+        "showLessSent": "Poslano: manj takih"
       },
       "translation": {
         "title": "Prevod",

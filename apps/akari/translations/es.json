@@ -238,7 +238,11 @@
         "hidePost": "Ocultar publicación",
         "hideAccount": "Ocultar cuenta",
         "postHidden": "Publicación oculta",
-        "accountHidden": "Cuenta oculta"
+        "accountHidden": "Cuenta oculta",
+        "showMore": "Mostrar más como esto",
+        "showLess": "Mostrar menos como esto",
+        "showMoreSent": "Enviado: más como esto",
+        "showLessSent": "Enviado: menos como esto"
       },
       "translation": {
         "title": "Traducción",

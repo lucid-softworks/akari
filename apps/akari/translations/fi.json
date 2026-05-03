@@ -238,7 +238,11 @@
         "hidePost": "Piilota julkaisu",
         "hideAccount": "Piilota tili",
         "postHidden": "Julkaisu piilotettu",
-        "accountHidden": "Tili piilotettu"
+        "accountHidden": "Tili piilotettu",
+        "showMore": "Näytä enemmän tällaisia",
+        "showLess": "Näytä vähemmän tällaisia",
+        "showMoreSent": "Pyydettiin enemmän",
+        "showLessSent": "Pyydettiin vähemmän"
       },
       "translation": {
         "title": "Käännös",

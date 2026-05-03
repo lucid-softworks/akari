@@ -238,7 +238,11 @@
         "hidePost": "Hide post",
         "hideAccount": "Hide account",
         "postHidden": "Post hidden",
-        "accountHidden": "Account hidden"
+        "accountHidden": "Account hidden",
+        "showMore": "Show more like this",
+        "showLess": "Show less like this",
+        "showMoreSent": "Asked for more like this",
+        "showLessSent": "Asked for less like this"
       },
       "translation": {
         "title": "Translation",

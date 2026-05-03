@@ -238,7 +238,11 @@
         "hidePost": "Paylaşımı gizlət",
         "hideAccount": "Hesabı gizlət",
         "postHidden": "Paylaşım gizlədildi",
-        "accountHidden": "Hesab gizlədildi"
+        "accountHidden": "Hesab gizlədildi",
+        "showMore": "Bunun kimi daha çox göstər",
+        "showLess": "Bunun kimi daha az göstər",
+        "showMoreSent": "“Daha çox” göndərildi",
+        "showLessSent": "“Daha az” göndərildi"
       },
       "translation": {
         "title": "Tərcümə",

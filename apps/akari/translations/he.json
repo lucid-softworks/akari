@@ -238,7 +238,11 @@
         "hidePost": "הסתר פוסט",
         "hideAccount": "הסתר חשבון",
         "postHidden": "הפוסט הוסתר",
-        "accountHidden": "החשבון הוסתר"
+        "accountHidden": "החשבון הוסתר",
+        "showMore": "הצג עוד כמו זה",
+        "showLess": "הצג פחות כמו זה",
+        "showMoreSent": "נשלח: עוד כמו זה",
+        "showLessSent": "נשלח: פחות כמו זה"
       },
       "translation": {
         "title": "תִרגוּם",

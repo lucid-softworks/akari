@@ -238,7 +238,11 @@
         "hidePost": "Dölj inlägg",
         "hideAccount": "Dölj konto",
         "postHidden": "Inlägg dolt",
-        "accountHidden": "Konto dolt"
+        "accountHidden": "Konto dolt",
+        "showMore": "Visa fler som denna",
+        "showLess": "Visa färre som denna",
+        "showMoreSent": "Skickat: fler som denna",
+        "showLessSent": "Skickat: färre som denna"
       },
       "translation": {
         "title": "Översättning",

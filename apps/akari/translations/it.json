@@ -238,7 +238,11 @@
         "hidePost": "Nascondi post",
         "hideAccount": "Nascondi account",
         "postHidden": "Post nascosto",
-        "accountHidden": "Account nascosto"
+        "accountHidden": "Account nascosto",
+        "showMore": "Mostra altri simili",
+        "showLess": "Mostra meno simili",
+        "showMoreSent": "Inviato: più contenuti come questi",
+        "showLessSent": "Inviato: meno contenuti come questi"
       },
       "translation": {
         "title": "Traduzione",

@@ -238,7 +238,11 @@
         "hidePost": "Skryť príspevok",
         "hideAccount": "Skryť účet",
         "postHidden": "Príspevok skrytý",
-        "accountHidden": "Účet skrytý"
+        "accountHidden": "Účet skrytý",
+        "showMore": "Zobraziť viac podobných",
+        "showLess": "Zobraziť menej podobných",
+        "showMoreSent": "Odoslané: viac podobných",
+        "showLessSent": "Odoslané: menej podobných"
       },
       "translation": {
         "title": "Preklad",

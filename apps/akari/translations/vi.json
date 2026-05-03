@@ -238,7 +238,11 @@
         "hidePost": "Ẩn bài đăng",
         "hideAccount": "Ẩn tài khoản",
         "postHidden": "Đã ẩn bài đăng",
-        "accountHidden": "Đã ẩn tài khoản"
+        "accountHidden": "Đã ẩn tài khoản",
+        "showMore": "Hiện thêm bài như vậy",
+        "showLess": "Hiện ít bài như vậy",
+        "showMoreSent": "Đã gửi yêu cầu \"thêm\"",
+        "showLessSent": "Đã gửi yêu cầu \"ít\""
       },
       "translation": {
         "title": "Bản dịch",

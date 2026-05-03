@@ -238,7 +238,11 @@
         "hidePost": "Skjul indlæg",
         "hideAccount": "Skjul konto",
         "postHidden": "Indlæg skjult",
-        "accountHidden": "Konto skjult"
+        "accountHidden": "Konto skjult",
+        "showMore": "Vis flere som denne",
+        "showLess": "Vis færre som denne",
+        "showMoreSent": "Sendt: vis flere",
+        "showLessSent": "Sendt: vis færre"
       },
       "translation": {
         "title": "Oversættelse",

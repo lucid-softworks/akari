@@ -238,7 +238,11 @@
         "hidePost": "Sembunyikan post",
         "hideAccount": "Sembunyikan akun",
         "postHidden": "Post disembunyikan",
-        "accountHidden": "Akun disembunyikan"
+        "accountHidden": "Akun disembunyikan",
+        "showMore": "Tampilkan lebih banyak seperti ini",
+        "showLess": "Tampilkan lebih sedikit seperti ini",
+        "showMoreSent": "Diminta: lebih banyak",
+        "showLessSent": "Diminta: lebih sedikit"
       },
       "translation": {
         "title": "Terjemahan",

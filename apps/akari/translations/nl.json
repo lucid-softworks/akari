@@ -238,7 +238,11 @@
         "hidePost": "Bericht verbergen",
         "hideAccount": "Account verbergen",
         "postHidden": "Bericht verborgen",
-        "accountHidden": "Account verborgen"
+        "accountHidden": "Account verborgen",
+        "showMore": "Meer zoals deze tonen",
+        "showLess": "Minder zoals deze tonen",
+        "showMoreSent": "\"Meer zoals deze\" verzonden",
+        "showLessSent": "\"Minder zoals deze\" verzonden"
       },
       "translation": {
         "title": "Vertaling",

@@ -238,7 +238,11 @@
         "hidePost": "게시물 숨기기",
         "hideAccount": "계정 숨기기",
         "postHidden": "게시물이 숨겨졌습니다",
-        "accountHidden": "계정이 숨겨졌습니다"
+        "accountHidden": "계정이 숨겨졌습니다",
+        "showMore": "이런 게시물 더 보기",
+        "showLess": "이런 게시물 덜 보기",
+        "showMoreSent": "\"더 보기\" 전송됨",
+        "showLessSent": "\"덜 보기\" 전송됨"
       },
       "translation": {
         "title": "번역",

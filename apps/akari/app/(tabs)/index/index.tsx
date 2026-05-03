@@ -245,6 +245,7 @@ export default function HomeScreen() {
 
       return (
         <PostCard
+          feedUri={selectedFeed ?? undefined}
           post={{
             id: post.uri,
             text: post.record?.text as string,
@@ -266,6 +267,7 @@ export default function HomeScreen() {
             replyTo,
             uri: post.uri,
             cid: post.cid,
+            feedContext: item.item.feedContext,
           }}
           href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
           onPress={() => {
@@ -276,7 +278,7 @@ export default function HomeScreen() {
         />
       );
     },
-    [t, navigateToPost],
+    [t, navigateToPost, selectedFeed],
   );
 
   const keyExtractor = useCallback((item: FeedListItem) => {

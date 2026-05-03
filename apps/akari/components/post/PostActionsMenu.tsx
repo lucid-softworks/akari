@@ -15,6 +15,7 @@ import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { usePinPost } from '@/hooks/mutations/usePinPost';
 import { usePostControls } from '@/hooks/mutations/usePostControls';
+import { useSendFeedInteraction } from '@/hooks/mutations/useSendFeedInteraction';
 import { useExistingPostControls } from '@/hooks/queries/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -39,6 +40,11 @@ type PostActionsMenuProps = {
   postUri?: string;
   postCid?: string;
   authorDid?: string;
+  /** When set to an algorithmic feed's at:// URI, the menu surfaces
+   *  "Show more / less like this" rows that send interaction events
+   *  back to that feed gen. */
+  feedUri?: string;
+  feedContext?: string;
   onDismiss: () => void;
   onTranslatePress: () => void;
 };
@@ -53,6 +59,8 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   postUri,
   postCid,
   authorDid,
+  feedUri,
+  feedContext,
   onDismiss,
   onTranslatePress,
 }: PostActionsMenuProps) {
@@ -98,7 +106,14 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const muteMutation = useMuteUser();
   const muteThreadMutation = useMuteThread();
   const pinPostMutation = usePinPost();
+  const feedInteractionMutation = useSendFeedInteraction();
   const { hidePost, hideAccount } = useHiddenContent();
+
+  // Algorithmic feed gens advertise their context via at:// URIs that
+  // include `app.bsky.feed.generator`. The Following timeline (URI
+  // `following`) and the user's own author feed don't, so we only
+  // surface the show-more / show-less rows when we're inside one.
+  const isAlgorithmicFeed = !!feedUri && feedUri.includes('app.bsky.feed.generator');
   const { data: currentAccount } = useCurrentAccount();
   const { data: ownProfile } = useProfile(currentAccount?.did);
   const isOwnPost = !!authorDid && !!currentAccount?.did && authorDid === currentAccount.did;
@@ -177,6 +192,40 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     onDismiss();
   }, [authorDid, hideAccount, onDismiss, showToast, t]);
 
+  const handleShowMore = useCallback(() => {
+    if (!feedUri || !postUri) return;
+    feedInteractionMutation.mutate(
+      {
+        feedUri,
+        postUri,
+        event: 'app.bsky.feed.defs#interactionRequestMore',
+        feedContext,
+      },
+      {
+        onSuccess: () =>
+          showToast({ message: t('post.actions.showMoreSent'), type: 'success' }),
+      },
+    );
+    onDismiss();
+  }, [feedUri, postUri, feedContext, feedInteractionMutation, onDismiss, showToast, t]);
+
+  const handleShowLess = useCallback(() => {
+    if (!feedUri || !postUri) return;
+    feedInteractionMutation.mutate(
+      {
+        feedUri,
+        postUri,
+        event: 'app.bsky.feed.defs#interactionRequestLess',
+        feedContext,
+      },
+      {
+        onSuccess: () =>
+          showToast({ message: t('post.actions.showLessSent'), type: 'success' }),
+      },
+    );
+    onDismiss();
+  }, [feedUri, postUri, feedContext, feedInteractionMutation, onDismiss, showToast, t]);
+
   const menuActions = useMemo<PostMenuItem[]>(
     () => {
       const items: PostMenuItem[] = [
@@ -206,6 +255,16 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 
       items.push(
         { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: () => { onDismiss(); setShowListPicker(true); }, disabled: !authorDid },
+      );
+
+      if (isAlgorithmicFeed) {
+        items.push(
+          { key: 'showMore', icon: 'hand.thumbsup', label: t('post.actions.showMore'), onPress: handleShowMore, disabled: !postUri },
+          { key: 'showLess', icon: 'hand.thumbsdown', label: t('post.actions.showLess'), onPress: handleShowLess, disabled: !postUri },
+        );
+      }
+
+      items.push(
         { key: 'muteThread', icon: 'bell.slash', label: t('post.actions.muteThread'), onPress: handleMuteThread, disabled: !postUri },
         { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
         { key: 'hidePost', icon: 'eye.slash', label: t('post.actions.hidePost'), onPress: handleHidePost, disabled: !postUri },
@@ -215,7 +274,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 
       return items;
     },
-    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handlePinPost, onTranslatePress, onDismiss, t],
+    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, isAlgorithmicFeed, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handleShowMore, handleShowLess, handlePinPost, onTranslatePress, onDismiss, t],
   );
 
   const wrapPress = Platform.OS === 'web'

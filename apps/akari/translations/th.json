@@ -238,7 +238,11 @@
         "hidePost": "ซ่อนโพสต์",
         "hideAccount": "ซ่อนบัญชี",
         "postHidden": "ซ่อนโพสต์แล้ว",
-        "accountHidden": "ซ่อนบัญชีแล้ว"
+        "accountHidden": "ซ่อนบัญชีแล้ว",
+        "showMore": "แสดงเพิ่มแบบนี้",
+        "showLess": "แสดงน้อยลงแบบนี้",
+        "showMoreSent": "ส่งคำขอ \"เพิ่มแบบนี้\" แล้ว",
+        "showLessSent": "ส่งคำขอ \"น้อยลงแบบนี้\" แล้ว"
       },
       "translation": {
         "title": "การแปล",

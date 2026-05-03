@@ -238,7 +238,11 @@
         "hidePost": "Скрыть пост",
         "hideAccount": "Скрыть аккаунт",
         "postHidden": "Пост скрыт",
-        "accountHidden": "Аккаунт скрыт"
+        "accountHidden": "Аккаунт скрыт",
+        "showMore": "Показывать больше таких",
+        "showLess": "Показывать меньше таких",
+        "showMoreSent": "Отправлено: больше таких",
+        "showLessSent": "Отправлено: меньше таких"
       },
       "translation": {
         "title": "Перевод",

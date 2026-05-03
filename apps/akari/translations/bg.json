@@ -238,7 +238,11 @@
         "hidePost": "Скрий публикацията",
         "hideAccount": "Скрий профила",
         "postHidden": "Публикацията е скрита",
-        "accountHidden": "Профилът е скрит"
+        "accountHidden": "Профилът е скрит",
+        "showMore": "Повече такива",
+        "showLess": "По-малко такива",
+        "showMoreSent": "Изпратено: повече такива",
+        "showLessSent": "Изпратено: по-малко такива"
       },
       "translation": {
         "title": "Превод",

@@ -662,4 +662,26 @@ export class BlueskyFeeds extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Sends per-item interaction events to a feed generator. Used by the
+   * "show more / show less like this" menu items so algorithmic feeds
+   * can adjust their ranking.
+   *
+   * Routed through the appview, which proxies to the feed gen via the
+   * `atproto-proxy` header (`<feedGenDid>#bsky_fg`).
+   */
+  async sendInteractions(
+    accessJwt: string,
+    feedGenDid: string,
+    interactions: { event: string; item: string; feedContext?: string }[],
+  ) {
+    return this.makeAuthenticatedRequest('/app.bsky.feed.sendInteractions', accessJwt, {
+      method: 'POST',
+      body: { interactions },
+      headers: {
+        'atproto-proxy': `${feedGenDid}#bsky_fg`,
+      },
+    });
+  }
 }

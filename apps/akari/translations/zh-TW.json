@@ -238,7 +238,11 @@
         "hidePost": "隱藏貼文",
         "hideAccount": "隱藏帳號",
         "postHidden": "貼文已隱藏",
-        "accountHidden": "帳號已隱藏"
+        "accountHidden": "帳號已隱藏",
+        "showMore": "多看這類",
+        "showLess": "少看這類",
+        "showMoreSent": "已傳送 \"多看這類\"",
+        "showLessSent": "已傳送 \"少看這類\""
       },
       "translation": {
         "title": "翻譯",

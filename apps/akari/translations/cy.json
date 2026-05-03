@@ -238,7 +238,11 @@
         "hidePost": "Cuddio post",
         "hideAccount": "Cuddio cyfrif",
         "postHidden": "Post wedi’i guddio",
-        "accountHidden": "Cyfrif wedi’i guddio"
+        "accountHidden": "Cyfrif wedi’i guddio",
+        "showMore": "Dangos mwy fel hyn",
+        "showLess": "Dangos llai fel hyn",
+        "showMoreSent": "Anfonwyd \"mwy fel hyn\"",
+        "showLessSent": "Anfonwyd \"llai fel hyn\""
       },
       "translation": {
         "title": "Cyfieithiad",

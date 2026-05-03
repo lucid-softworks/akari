@@ -57,12 +57,17 @@ export type PostCardProps = {
     }[];
     uri?: string;
     cid?: string;
+    feedContext?: string;
   };
   onPress?: () => void;
   href?: string;
+  /** When set, post-actions menu shows "Show more / less like this"
+   *  feedback rows that route to that feed gen. Pass the at:// URI of
+   *  the feed the post was rendered from. */
+  feedUri?: string;
 };
 
-export const PostCard = React.memo(function PostCard({ post, onPress, href }: PostCardProps) {
+export const PostCard = React.memo(function PostCard({ post, onPress, href, feedUri }: PostCardProps) {
   const { t } = useTranslation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
@@ -263,6 +268,8 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href }: Po
         postUri={post.uri}
         postCid={post.cid}
         authorDid={post.author.did}
+        feedUri={feedUri}
+        feedContext={post.feedContext}
         onDismiss={handleMenuDismiss}
         onTranslatePress={handleTranslatePress}
       />

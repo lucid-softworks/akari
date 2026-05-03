@@ -238,7 +238,11 @@
         "hidePost": "إخفاء المنشور",
         "hideAccount": "إخفاء الحساب",
         "postHidden": "تم إخفاء المنشور",
-        "accountHidden": "تم إخفاء الحساب"
+        "accountHidden": "تم إخفاء الحساب",
+        "showMore": "إظهار المزيد مثل هذا",
+        "showLess": "إظهار أقل مثل هذا",
+        "showMoreSent": "تم إرسال \"المزيد مثل هذا\"",
+        "showLessSent": "تم إرسال \"أقل مثل هذا\""
       },
       "translation": {
         "title": "الترجمة",

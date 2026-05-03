@@ -238,7 +238,11 @@
         "hidePost": "Ascunde postarea",
         "hideAccount": "Ascunde contul",
         "postHidden": "Postare ascunsă",
-        "accountHidden": "Cont ascuns"
+        "accountHidden": "Cont ascuns",
+        "showMore": "Arată mai multe ca acesta",
+        "showLess": "Arată mai puține ca acesta",
+        "showMoreSent": "Trimis: mai multe",
+        "showLessSent": "Trimis: mai puține"
       },
       "translation": {
         "title": "Traducere",

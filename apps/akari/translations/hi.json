@@ -238,7 +238,11 @@
         "hidePost": "पोस्ट छिपाएँ",
         "hideAccount": "खाता छिपाएँ",
         "postHidden": "पोस्ट छिपाया गया",
-        "accountHidden": "खाता छिपाया गया"
+        "accountHidden": "खाता छिपाया गया",
+        "showMore": "इस जैसा और दिखाएँ",
+        "showLess": "इस जैसा कम दिखाएँ",
+        "showMoreSent": "\"और दिखाएँ\" भेजा गया",
+        "showLessSent": "\"कम दिखाएँ\" भेजा गया"
       },
       "translation": {
         "title": "अनुवाद",

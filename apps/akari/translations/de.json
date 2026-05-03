@@ -238,7 +238,11 @@
         "hidePost": "Beitrag ausblenden",
         "hideAccount": "Konto ausblenden",
         "postHidden": "Beitrag ausgeblendet",
-        "accountHidden": "Konto ausgeblendet"
+        "accountHidden": "Konto ausgeblendet",
+        "showMore": "Mehr davon zeigen",
+        "showLess": "Weniger davon zeigen",
+        "showMoreSent": "\"Mehr davon\" gesendet",
+        "showLessSent": "\"Weniger davon\" gesendet"
       },
       "translation": {
         "title": "Übersetzung",

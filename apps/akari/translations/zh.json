@@ -238,7 +238,11 @@
         "hidePost": "隐藏帖子",
         "hideAccount": "隐藏账号",
         "postHidden": "帖子已隐藏",
-        "accountHidden": "账号已隐藏"
+        "accountHidden": "账号已隐藏",
+        "showMore": "多看这类",
+        "showLess": "少看这类",
+        "showMoreSent": "已发送 \"多看这类\"",
+        "showLessSent": "已发送 \"少看这类\""
       },
       "translation": {
         "title": "翻译",

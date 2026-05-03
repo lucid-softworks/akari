@@ -238,7 +238,11 @@
         "hidePost": "مخفی کردن پست",
         "hideAccount": "مخفی کردن حساب",
         "postHidden": "پست مخفی شد",
-        "accountHidden": "حساب مخفی شد"
+        "accountHidden": "حساب مخفی شد",
+        "showMore": "بیشتر مانند این نشان بده",
+        "showLess": "کمتر مانند این نشان بده",
+        "showMoreSent": "درخواست بیشتر ارسال شد",
+        "showLessSent": "درخواست کمتر ارسال شد"
       },
       "translation": {
         "title": "ترجمه",

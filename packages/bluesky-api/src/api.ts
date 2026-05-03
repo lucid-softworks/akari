@@ -665,6 +665,18 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.graph.unmuteThread(accessJwt, root);
   }
 
+  /**
+   * Forwards per-item interaction events to a feed generator's service
+   * via the appview. Used for "show more/less like this".
+   */
+  async sendInteractions(
+    accessJwt: string,
+    feedGenDid: string,
+    interactions: { event: string; item: string; feedContext?: string }[],
+  ) {
+    return this.feeds.sendInteractions(accessJwt, feedGenDid, interactions);
+  }
+
   async getLists(accessJwt: string, actor: string, limit?: number, cursor?: string) {
     return this.graph.getLists(accessJwt, actor, limit, cursor);
   }

@@ -238,7 +238,11 @@
         "hidePost": "Bejegyzés elrejtése",
         "hideAccount": "Fiók elrejtése",
         "postHidden": "Bejegyzés elrejtve",
-        "accountHidden": "Fiók elrejtve"
+        "accountHidden": "Fiók elrejtve",
+        "showMore": "Több ilyet mutass",
+        "showLess": "Kevesebb ilyet mutass",
+        "showMoreSent": "\"Több ilyet\" elküldve",
+        "showLessSent": "\"Kevesebb ilyet\" elküldve"
       },
       "translation": {
         "title": "Fordítás",
