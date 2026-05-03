@@ -289,7 +289,21 @@
       "blockedPost": "차단된 계정의 게시물",
       "deletedPost": "게시물이 삭제됨",
       "detachedPost": "작성자가 이 인용을 분리했습니다",
-      "unavailablePost": "게시물을 사용할 수 없음"
+      "unavailablePost": "게시물을 사용할 수 없음",
+      "share": {
+        "title": "공유",
+        "copyLink": "링크 복사",
+        "sendToChat": "채팅으로 보내기",
+        "embedPost": "게시물 임베드",
+        "linkCopied": "링크가 복사됨",
+        "embedCopied": "임베드 코드가 복사됨",
+        "sentToChat": "보냈음",
+        "addMessagePlaceholder": "메시지 추가…",
+        "send": "보내기",
+        "nextWithCount": "다음 ({{count}})",
+        "toLabel": "받는 사람",
+        "sentToChatPartial": "{{count}}명에게 보냈음"
+      }
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

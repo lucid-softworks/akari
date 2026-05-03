@@ -289,7 +289,21 @@
       "blockedPost": "Inlägg från ett blockerat konto",
       "deletedPost": "Inlägg borttaget",
       "detachedPost": "Författaren tog bort citatet",
-      "unavailablePost": "Inlägg ej tillgängligt"
+      "unavailablePost": "Inlägg ej tillgängligt",
+      "share": {
+        "title": "Dela",
+        "copyLink": "Kopiera länk",
+        "sendToChat": "Skicka via chatt",
+        "embedPost": "Bädda in inlägget",
+        "linkCopied": "Länk kopierad",
+        "embedCopied": "Inbäddningskod kopierad",
+        "sentToChat": "Skickat",
+        "addMessagePlaceholder": "Lägg till ett meddelande…",
+        "send": "Skicka",
+        "nextWithCount": "Nästa ({{count}})",
+        "toLabel": "Till",
+        "sentToChatPartial": "Skickat till {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Välj GIF",

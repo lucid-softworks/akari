@@ -289,7 +289,21 @@
       "blockedPost": "来自已屏蔽账号的帖子",
       "deletedPost": "帖子已删除",
       "detachedPost": "作者已撤回该引用",
-      "unavailablePost": "帖子不可用"
+      "unavailablePost": "帖子不可用",
+      "share": {
+        "title": "分享",
+        "copyLink": "复制链接",
+        "sendToChat": "通过聊天发送",
+        "embedPost": "嵌入帖子",
+        "linkCopied": "链接已复制",
+        "embedCopied": "嵌入代码已复制",
+        "sentToChat": "已发送",
+        "addMessagePlaceholder": "添加消息…",
+        "send": "发送",
+        "nextWithCount": "下一步 ({{count}})",
+        "toLabel": "收件人",
+        "sentToChatPartial": "已发送给 {{count}} 人"
+      }
     },
     "messages": {
       "typeMessage": "输入消息...",

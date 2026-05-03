@@ -289,7 +289,21 @@
       "blockedPost": "Indlæg fra blokeret konto",
       "deletedPost": "Indlæg slettet",
       "detachedPost": "Forfatteren fjernede citatet",
-      "unavailablePost": "Indlæg ikke tilgængeligt"
+      "unavailablePost": "Indlæg ikke tilgængeligt",
+      "share": {
+        "title": "Del",
+        "copyLink": "Kopiér link",
+        "sendToChat": "Send via chat",
+        "embedPost": "Indlejr indlæg",
+        "linkCopied": "Link kopieret",
+        "embedCopied": "Kode kopieret",
+        "sentToChat": "Sendt",
+        "addMessagePlaceholder": "Tilføj en besked...",
+        "send": "Send",
+        "nextWithCount": "Næste ({{count}})",
+        "toLabel": "Til",
+        "sentToChatPartial": "Sendt til {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Vælg GIF",

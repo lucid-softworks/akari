@@ -289,7 +289,21 @@
       "blockedPost": "Post dari akun yang diblokir",
       "deletedPost": "Post telah dihapus",
       "detachedPost": "Penulis menghapus kutipan ini",
-      "unavailablePost": "Post tidak tersedia"
+      "unavailablePost": "Post tidak tersedia",
+      "share": {
+        "title": "Bagikan",
+        "copyLink": "Salin tautan",
+        "sendToChat": "Kirim via chat",
+        "embedPost": "Sematkan post",
+        "linkCopied": "Tautan disalin",
+        "embedCopied": "Kode embed disalin",
+        "sentToChat": "Terkirim",
+        "addMessagePlaceholder": "Tambahkan pesan...",
+        "send": "Kirim",
+        "nextWithCount": "Berikutnya ({{count}})",
+        "toLabel": "Ke",
+        "sentToChatPartial": "Terkirim ke {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

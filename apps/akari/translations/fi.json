@@ -289,7 +289,21 @@
       "blockedPost": "Julkaisu estetyltä tililtä",
       "deletedPost": "Julkaisu poistettu",
       "detachedPost": "Tekijä irrotti lainauksen",
-      "unavailablePost": "Julkaisu ei saatavilla"
+      "unavailablePost": "Julkaisu ei saatavilla",
+      "share": {
+        "title": "Jaa",
+        "copyLink": "Kopioi linkki",
+        "sendToChat": "Lähetä chatissa",
+        "embedPost": "Upota julkaisu",
+        "linkCopied": "Linkki kopioitu",
+        "embedCopied": "Upotuskoodi kopioitu",
+        "sentToChat": "Lähetetty",
+        "addMessagePlaceholder": "Lisää viesti…",
+        "send": "Lähetä",
+        "nextWithCount": "Seuraava ({{count}})",
+        "toLabel": "Vastaanottaja",
+        "sentToChatPartial": "Lähetetty {{count}}:lle"
+      }
     },
     "gif": {
       "selectGif": "Valitse GIF",

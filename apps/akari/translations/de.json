@@ -289,7 +289,21 @@
       "blockedPost": "Beitrag eines blockierten Kontos",
       "deletedPost": "Beitrag gelöscht",
       "detachedPost": "Autor:in hat das Zitat entfernt",
-      "unavailablePost": "Beitrag nicht verfügbar"
+      "unavailablePost": "Beitrag nicht verfügbar",
+      "share": {
+        "title": "Teilen",
+        "copyLink": "Link kopieren",
+        "sendToChat": "Per Chat senden",
+        "embedPost": "Beitrag einbetten",
+        "linkCopied": "Link kopiert",
+        "embedCopied": "Einbettungscode kopiert",
+        "sentToChat": "Gesendet",
+        "addMessagePlaceholder": "Nachricht hinzufügen…",
+        "send": "Senden",
+        "nextWithCount": "Weiter ({{count}})",
+        "toLabel": "An",
+        "sentToChatPartial": "An {{count}} gesendet"
+      }
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

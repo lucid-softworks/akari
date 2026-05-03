@@ -289,7 +289,21 @@
       "blockedPost": "Postare de la un cont blocat",
       "deletedPost": "Postare ștearsă",
       "detachedPost": "Autorul a detașat acest citat",
-      "unavailablePost": "Postare indisponibilă"
+      "unavailablePost": "Postare indisponibilă",
+      "share": {
+        "title": "Distribuie",
+        "copyLink": "Copiază linkul",
+        "sendToChat": "Trimite prin chat",
+        "embedPost": "Încorporează postarea",
+        "linkCopied": "Link copiat",
+        "embedCopied": "Cod copiat",
+        "sentToChat": "Trimis",
+        "addMessagePlaceholder": "Adaugă un mesaj…",
+        "send": "Trimite",
+        "nextWithCount": "Înainte ({{count}})",
+        "toLabel": "Către",
+        "sentToChatPartial": "Trimis către {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Selectați GIF",

@@ -289,7 +289,21 @@
       "blockedPost": "Bericht van een geblokkeerd account",
       "deletedPost": "Bericht verwijderd",
       "detachedPost": "De auteur heeft dit citaat verwijderd",
-      "unavailablePost": "Bericht niet beschikbaar"
+      "unavailablePost": "Bericht niet beschikbaar",
+      "share": {
+        "title": "Delen",
+        "copyLink": "Link kopiëren",
+        "sendToChat": "Verzenden via chat",
+        "embedPost": "Bericht insluiten",
+        "linkCopied": "Link gekopieerd",
+        "embedCopied": "Insluitcode gekopieerd",
+        "sentToChat": "Verzonden",
+        "addMessagePlaceholder": "Bericht toevoegen…",
+        "send": "Verzenden",
+        "nextWithCount": "Volgende ({{count}})",
+        "toLabel": "Aan",
+        "sentToChatPartial": "Verzonden naar {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

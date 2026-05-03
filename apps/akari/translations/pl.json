@@ -289,7 +289,21 @@
       "blockedPost": "Post z zablokowanego konta",
       "deletedPost": "Post został usunięty",
       "detachedPost": "Autor odłączył ten cytat",
-      "unavailablePost": "Post niedostępny"
+      "unavailablePost": "Post niedostępny",
+      "share": {
+        "title": "Udostępnij",
+        "copyLink": "Kopiuj link",
+        "sendToChat": "Wyślij przez czat",
+        "embedPost": "Osadź post",
+        "linkCopied": "Link skopiowany",
+        "embedCopied": "Kod osadzania skopiowany",
+        "sentToChat": "Wysłano",
+        "addMessagePlaceholder": "Dodaj wiadomość…",
+        "send": "Wyślij",
+        "nextWithCount": "Dalej ({{count}})",
+        "toLabel": "Do",
+        "sentToChatPartial": "Wysłano do {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

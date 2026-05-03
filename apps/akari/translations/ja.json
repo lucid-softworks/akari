@@ -289,7 +289,21 @@
       "blockedPost": "ブロックされたアカウントの投稿",
       "deletedPost": "投稿は削除されました",
       "detachedPost": "作者がこの引用を解除しました",
-      "unavailablePost": "投稿は利用できません"
+      "unavailablePost": "投稿は利用できません",
+      "share": {
+        "title": "共有",
+        "copyLink": "リンクをコピー",
+        "sendToChat": "チャットで送信",
+        "embedPost": "投稿を埋め込む",
+        "linkCopied": "リンクをコピーしました",
+        "embedCopied": "埋め込みコードをコピーしました",
+        "sentToChat": "送信しました",
+        "addMessagePlaceholder": "メッセージを追加…",
+        "send": "送信",
+        "nextWithCount": "次へ ({{count}})",
+        "toLabel": "宛先",
+        "sentToChatPartial": "{{count}} 件に送信しました"
+      }
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

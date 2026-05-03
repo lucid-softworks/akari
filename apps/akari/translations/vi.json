@@ -289,7 +289,21 @@
       "blockedPost": "Bài đăng từ tài khoản bị chặn",
       "deletedPost": "Bài đăng đã bị xóa",
       "detachedPost": "Tác giả đã gỡ trích dẫn này",
-      "unavailablePost": "Bài đăng không khả dụng"
+      "unavailablePost": "Bài đăng không khả dụng",
+      "share": {
+        "title": "Chia sẻ",
+        "copyLink": "Sao chép liên kết",
+        "sendToChat": "Gửi qua chat",
+        "embedPost": "Nhúng bài đăng",
+        "linkCopied": "Đã sao chép liên kết",
+        "embedCopied": "Đã sao chép mã nhúng",
+        "sentToChat": "Đã gửi",
+        "addMessagePlaceholder": "Thêm tin nhắn…",
+        "send": "Gửi",
+        "nextWithCount": "Tiếp ({{count}})",
+        "toLabel": "Tới",
+        "sentToChatPartial": "Đã gửi tới {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

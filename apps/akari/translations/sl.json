@@ -289,7 +289,21 @@
       "blockedPost": "Objava z blokiranega računa",
       "deletedPost": "Objava je bila izbrisana",
       "detachedPost": "Avtor je odstranil ta citat",
-      "unavailablePost": "Objava ni na voljo"
+      "unavailablePost": "Objava ni na voljo",
+      "share": {
+        "title": "Deli",
+        "copyLink": "Kopiraj povezavo",
+        "sendToChat": "Pošlji prek klepeta",
+        "embedPost": "Vdelaj objavo",
+        "linkCopied": "Povezava kopirana",
+        "embedCopied": "Koda kopirana",
+        "sentToChat": "Poslano",
+        "addMessagePlaceholder": "Dodaj sporočilo…",
+        "send": "Pošlji",
+        "nextWithCount": "Naprej ({{count}})",
+        "toLabel": "Za",
+        "sentToChatPartial": "Poslano {{count}} prejemnikom"
+      }
     },
     "gif": {
       "selectGif": "Izberite GIF",

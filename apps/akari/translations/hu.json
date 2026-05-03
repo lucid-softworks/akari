@@ -289,7 +289,21 @@
       "blockedPost": "Bejegyzés letiltott fiókból",
       "deletedPost": "A bejegyzést törölték",
       "detachedPost": "A szerző eltávolította ezt az idézetet",
-      "unavailablePost": "A bejegyzés nem elérhető"
+      "unavailablePost": "A bejegyzés nem elérhető",
+      "share": {
+        "title": "Megosztás",
+        "copyLink": "Link másolása",
+        "sendToChat": "Küldés chaten",
+        "embedPost": "Bejegyzés beágyazása",
+        "linkCopied": "Link másolva",
+        "embedCopied": "Kód másolva",
+        "sentToChat": "Elküldve",
+        "addMessagePlaceholder": "Üzenet hozzáadása…",
+        "send": "Küldés",
+        "nextWithCount": "Tovább ({{count}})",
+        "toLabel": "Címzett",
+        "sentToChatPartial": "Elküldve {{count}} címzettnek"
+      }
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",

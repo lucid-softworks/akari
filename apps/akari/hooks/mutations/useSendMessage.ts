@@ -13,6 +13,11 @@ type SendMessageParams = {
   convoId: string;
   /** The message text content */
   text: string;
+  /** Optional record embed — used to attach a post share. */
+  embed?: {
+    $type: 'app.bsky.embed.record';
+    record: { uri: string; cid: string };
+  };
 };
 
 export function useSendMessage() {
@@ -22,7 +27,7 @@ export function useSendMessage() {
 
   return useMutation({
     mutationKey: ['sendMessage'],
-    mutationFn: async ({ convoId, text }: SendMessageParams) => {
+    mutationFn: async ({ convoId, text, embed }: SendMessageParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -35,6 +40,7 @@ export function useSendMessage() {
       return await api.sendMessage(token, convoId, {
         text,
         ...(facets.length > 0 ? { facets } : {}),
+        ...(embed ? { embed } : {}),
       });
     },
     onMutate: async ({ convoId, text }) => {

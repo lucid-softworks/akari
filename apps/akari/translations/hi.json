@@ -289,7 +289,21 @@
       "blockedPost": "अवरुद्ध खाते से पोस्ट",
       "deletedPost": "पोस्ट हटा दी गई",
       "detachedPost": "लेखक ने इस उद्धरण को हटा दिया",
-      "unavailablePost": "पोस्ट उपलब्ध नहीं"
+      "unavailablePost": "पोस्ट उपलब्ध नहीं",
+      "share": {
+        "title": "साझा करें",
+        "copyLink": "लिंक कॉपी करें",
+        "sendToChat": "चैट से भेजें",
+        "embedPost": "पोस्ट एम्बेड करें",
+        "linkCopied": "लिंक कॉपी हुआ",
+        "embedCopied": "एम्बेड कोड कॉपी हुआ",
+        "sentToChat": "भेज दिया",
+        "addMessagePlaceholder": "संदेश जोड़ें...",
+        "send": "भेजें",
+        "nextWithCount": "अगला ({{count}})",
+        "toLabel": "किसको",
+        "sentToChatPartial": "{{count}} को भेजा गया"
+      }
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

@@ -1,7 +1,9 @@
 import * as Haptics from 'expo-haptics';
 import React, { useCallback, useState } from 'react';
-import { Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { SharePostSheet } from '@/components/SharePostSheet';
+import { ShareToChatSheet } from '@/components/ShareToChatSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { RepostSheet } from '@/components/post/RepostSheet';
@@ -51,6 +53,8 @@ export const PostActions = React.memo(function PostActions({
   const isLiked = Boolean(likeUri);
   const isReposted = Boolean(repostUri);
   const [repostSheetVisible, setRepostSheetVisible] = useState(false);
+  const [shareSheetVisible, setShareSheetVisible] = useState(false);
+  const [shareToChatVisible, setShareToChatVisible] = useState(false);
 
   const iconColor = useThemeColor(
     { light: '#687076', dark: '#9BA1A6' },
@@ -119,15 +123,19 @@ export const PostActions = React.memo(function PostActions({
     });
   }, [uri, cid, bookmarkMutation]);
 
+  const postUrl = uri
+    ? `https://bsky.app/profile/${authorHandle}/post/${uri.split('/').pop()}`
+    : '';
+
   const handleSharePress = useCallback(() => {
     if (!uri) return;
-    const postUrl = `https://bsky.app/profile/${authorHandle}/post/${uri.split('/').pop()}`;
-    void Share.share(
-      Platform.OS === 'ios'
-        ? { url: postUrl }
-        : { message: postUrl },
-    );
-  }, [uri, authorHandle]);
+    setShareSheetVisible(true);
+  }, [uri]);
+
+  const handleSendToChat = useCallback(() => {
+    setShareSheetVisible(false);
+    setShareToChatVisible(true);
+  }, []);
 
   return (
     <>
@@ -222,6 +230,25 @@ export const PostActions = React.memo(function PostActions({
       onRepostPress={handleRepostConfirm}
       onQuotePress={handleQuoteConfirm}
     />
+    {uri && cid ? (
+      <SharePostSheet
+        visible={shareSheetVisible}
+        onDismiss={() => setShareSheetVisible(false)}
+        onSendToChat={handleSendToChat}
+        postUrl={postUrl}
+        postUri={uri}
+        postCid={cid}
+      />
+    ) : null}
+    {uri && cid ? (
+      <ShareToChatSheet
+        visible={shareToChatVisible}
+        onDismiss={() => setShareToChatVisible(false)}
+        message={postUrl}
+        postUri={uri}
+        postCid={cid}
+      />
+    ) : null}
     </>
   );
 });

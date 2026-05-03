@@ -289,7 +289,21 @@
       "blockedPost": "Bloklanmış hesabdan paylaşım",
       "deletedPost": "Paylaşım silinib",
       "detachedPost": "Müəllif sitatı çıxarıb",
-      "unavailablePost": "Paylaşım mövcud deyil"
+      "unavailablePost": "Paylaşım mövcud deyil",
+      "share": {
+        "title": "Paylaş",
+        "copyLink": "Linki kopyala",
+        "sendToChat": "Söhbətdə paylaş",
+        "embedPost": "Paylaşımı yerləşdir",
+        "linkCopied": "Link kopyalandı",
+        "embedCopied": "Yerləşdirmə kodu kopyalandı",
+        "sentToChat": "Göndərildi",
+        "addMessagePlaceholder": "Mesaj əlavə et...",
+        "send": "Göndər",
+        "nextWithCount": "Növbəti ({{count}})",
+        "toLabel": "Kimə",
+        "sentToChatPartial": "{{count}} alıcıya göndərildi"
+      }
     },
     "gif": {
       "selectGif": "Gif seçin",

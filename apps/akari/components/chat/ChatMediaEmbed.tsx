@@ -3,19 +3,24 @@ import { useState } from 'react';
 import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
+import { PostInlineCard } from '@/components/PostInlineCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { matchYouTubeId, youtubeThumbnailUrl } from '@/utils/embedThumb';
+import { useNavigateToPost } from '@/utils/navigation';
 
 const TENOR_RX = /(https?:\/\/(?:media\.)?tenor\.com\/\S+)/i;
 
 export type ChatMedia =
   | { kind: 'gif'; url: string; matchedText: string }
-  | { kind: 'youtube'; videoId: string; matchedText: string };
+  | { kind: 'youtube'; videoId: string; matchedText: string }
+  | { kind: 'bskyPost'; handle: string; rkey: string; matchedText: string };
 
 const YT_URL_RX =
   /(https?:\/\/(?:www\.|music\.|m\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[^\s]+)/i;
+const BSKY_POST_RX =
+  /(https?:\/\/(?:www\.)?bsky\.app\/profile\/([^\/\s]+)\/post\/([^\/\s?#]+))/i;
 
 /**
  * Scans a chat message's text for the first inline-media URL we know how
@@ -38,6 +43,15 @@ export function extractChatMedia(text: string): ChatMedia | null {
   const tenorMatch = text.match(TENOR_RX);
   if (tenorMatch) {
     return { kind: 'gif', url: tenorMatch[1], matchedText: tenorMatch[1] };
+  }
+  const bskyMatch = text.match(BSKY_POST_RX);
+  if (bskyMatch) {
+    return {
+      kind: 'bskyPost',
+      handle: bskyMatch[2],
+      rkey: bskyMatch[3],
+      matchedText: bskyMatch[1],
+    };
   }
   return null;
 }
@@ -75,8 +89,39 @@ export function ChatMediaEmbed({ media, alignment }: ChatMediaEmbedProps) {
     );
   }
 
+  if (media.kind === 'bskyPost') {
+    return (
+      <BlueskyPostChatEmbed
+        handle={media.handle}
+        rkey={media.rkey}
+        alignment={alignment}
+      />
+    );
+  }
+
   return (
     <YouTubeChatEmbed videoId={media.videoId} alignment={alignment} />
+  );
+}
+
+type BlueskyPostChatEmbedProps = {
+  handle: string;
+  rkey: string;
+  alignment: 'left' | 'right';
+};
+
+function BlueskyPostChatEmbed({ handle, rkey, alignment }: BlueskyPostChatEmbedProps) {
+  const navigateToPost = useNavigateToPost();
+  return (
+    <PostInlineCard
+      handle={handle}
+      rkey={rkey}
+      onPress={() => navigateToPost({ actor: handle, rKey: rkey })}
+      style={[
+        styles.bskyCard,
+        alignment === 'right' ? styles.alignRight : styles.alignLeft,
+      ]}
+    />
   );
 }
 
@@ -213,5 +258,8 @@ const styles = StyleSheet.create({
   youtubeFallbackText: {
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
+  },
+  bskyCard: {
+    width: 240,
   },
 });

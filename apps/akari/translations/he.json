@@ -289,7 +289,21 @@
       "blockedPost": "פוסט מחשבון חסום",
       "deletedPost": "הפוסט נמחק",
       "detachedPost": "הכותב הסיר את הציטוט הזה",
-      "unavailablePost": "הפוסט אינו זמין"
+      "unavailablePost": "הפוסט אינו זמין",
+      "share": {
+        "title": "שתף",
+        "copyLink": "העתק קישור",
+        "sendToChat": "שלח בצ’אט",
+        "embedPost": "הטמע פוסט",
+        "linkCopied": "הקישור הועתק",
+        "embedCopied": "קוד ההטמעה הועתק",
+        "sentToChat": "נשלח",
+        "addMessagePlaceholder": "הוסף הודעה...",
+        "send": "שלח",
+        "nextWithCount": "הבא ({{count}})",
+        "toLabel": "אל",
+        "sentToChatPartial": "נשלח ל-{{count}}"
+      }
     },
     "gif": {
       "selectGif": "בחר GIF",

@@ -289,7 +289,21 @@
       "blockedPost": "Engellenmiş hesaptan gönderi",
       "deletedPost": "Gönderi silinmiş",
       "detachedPost": "Yazar bu alıntıyı kaldırdı",
-      "unavailablePost": "Gönderi kullanılamıyor"
+      "unavailablePost": "Gönderi kullanılamıyor",
+      "share": {
+        "title": "Paylaş",
+        "copyLink": "Bağlantıyı kopyala",
+        "sendToChat": "Sohbette gönder",
+        "embedPost": "Gönderiyi göm",
+        "linkCopied": "Bağlantı kopyalandı",
+        "embedCopied": "Gömme kodu kopyalandı",
+        "sentToChat": "Gönderildi",
+        "addMessagePlaceholder": "Mesaj ekle…",
+        "send": "Gönder",
+        "nextWithCount": "İleri ({{count}})",
+        "toLabel": "Kime",
+        "sentToChatPartial": "{{count}} kişiye gönderildi"
+      }
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",

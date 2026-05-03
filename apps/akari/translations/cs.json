@@ -289,7 +289,21 @@
       "blockedPost": "Příspěvek od zablokovaného účtu",
       "deletedPost": "Příspěvek byl smazán",
       "detachedPost": "Autor odpojil citaci",
-      "unavailablePost": "Příspěvek není dostupný"
+      "unavailablePost": "Příspěvek není dostupný",
+      "share": {
+        "title": "Sdílet",
+        "copyLink": "Zkopírovat odkaz",
+        "sendToChat": "Odeslat do chatu",
+        "embedPost": "Vložit příspěvek",
+        "linkCopied": "Odkaz zkopírován",
+        "embedCopied": "Kód zkopírován",
+        "sentToChat": "Odesláno",
+        "addMessagePlaceholder": "Přidat zprávu...",
+        "send": "Odeslat",
+        "nextWithCount": "Další ({{count}})",
+        "toLabel": "Komu",
+        "sentToChatPartial": "Odesláno {{count}} příjemcům"
+      }
     },
     "gif": {
       "selectGif": "Vyberte GIF",

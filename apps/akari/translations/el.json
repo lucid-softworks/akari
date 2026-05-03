@@ -289,7 +289,21 @@
       "blockedPost": "Ανάρτηση από αποκλεισμένο λογαριασμό",
       "deletedPost": "Η ανάρτηση διαγράφηκε",
       "detachedPost": "Ο συντάκτης αποσύνδεσε την αναφορά",
-      "unavailablePost": "Η ανάρτηση δεν είναι διαθέσιμη"
+      "unavailablePost": "Η ανάρτηση δεν είναι διαθέσιμη",
+      "share": {
+        "title": "Κοινοποίηση",
+        "copyLink": "Αντιγραφή συνδέσμου",
+        "sendToChat": "Αποστολή μέσω συνομιλίας",
+        "embedPost": "Ενσωμάτωση ανάρτησης",
+        "linkCopied": "Ο σύνδεσμος αντιγράφηκε",
+        "embedCopied": "Ο κώδικας αντιγράφηκε",
+        "sentToChat": "Στάλθηκε",
+        "addMessagePlaceholder": "Προσθήκη μηνύματος...",
+        "send": "Αποστολή",
+        "nextWithCount": "Επόμενο ({{count}})",
+        "toLabel": "Προς",
+        "sentToChatPartial": "Στάλθηκε σε {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

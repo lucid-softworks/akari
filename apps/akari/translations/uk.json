@@ -289,7 +289,21 @@
       "blockedPost": "Допис від заблокованого облікового запису",
       "deletedPost": "Допис видалено",
       "detachedPost": "Автор від’єднав цю цитату",
-      "unavailablePost": "Допис недоступний"
+      "unavailablePost": "Допис недоступний",
+      "share": {
+        "title": "Поділитися",
+        "copyLink": "Скопіювати посилання",
+        "sendToChat": "Надіслати у чаті",
+        "embedPost": "Вбудувати допис",
+        "linkCopied": "Посилання скопійовано",
+        "embedCopied": "Код вбудовування скопійовано",
+        "sentToChat": "Надіслано",
+        "addMessagePlaceholder": "Додати повідомлення…",
+        "send": "Надіслати",
+        "nextWithCount": "Далі ({{count}})",
+        "toLabel": "Кому",
+        "sentToChatPartial": "Надіслано {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Виберіть GIF",

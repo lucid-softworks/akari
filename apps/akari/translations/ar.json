@@ -289,7 +289,21 @@
       "blockedPost": "منشور من حساب محظور",
       "deletedPost": "تم حذف المنشور",
       "detachedPost": "تم فصل الاقتباس بواسطة الكاتب",
-      "unavailablePost": "المنشور غير متاح"
+      "unavailablePost": "المنشور غير متاح",
+      "share": {
+        "title": "مشاركة",
+        "copyLink": "نسخ الرابط",
+        "sendToChat": "إرسال عبر المحادثة",
+        "embedPost": "تضمين المنشور",
+        "linkCopied": "تم نسخ الرابط",
+        "embedCopied": "تم نسخ كود التضمين",
+        "sentToChat": "تم الإرسال",
+        "addMessagePlaceholder": "أضف رسالة...",
+        "send": "إرسال",
+        "nextWithCount": "التالي ({{count}})",
+        "toLabel": "إلى",
+        "sentToChatPartial": "تم الإرسال إلى {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

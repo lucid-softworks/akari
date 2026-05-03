@@ -289,7 +289,21 @@
       "blockedPost": "來自已封鎖帳號的貼文",
       "deletedPost": "貼文已刪除",
       "detachedPost": "作者已撤回此引用",
-      "unavailablePost": "貼文無法使用"
+      "unavailablePost": "貼文無法使用",
+      "share": {
+        "title": "分享",
+        "copyLink": "複製連結",
+        "sendToChat": "透過聊天發送",
+        "embedPost": "嵌入貼文",
+        "linkCopied": "連結已複製",
+        "embedCopied": "嵌入程式碼已複製",
+        "sentToChat": "已傳送",
+        "addMessagePlaceholder": "加入訊息…",
+        "send": "傳送",
+        "nextWithCount": "下一步 ({{count}})",
+        "toLabel": "收件人",
+        "sentToChatPartial": "已傳送給 {{count}} 人"
+      }
     },
     "messages": {
       "typeMessage": "輸入訊息...",

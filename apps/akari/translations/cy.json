@@ -289,7 +289,21 @@
       "blockedPost": "Post o gyfrif sydd wedi ei rwystro",
       "deletedPost": "Cafodd y post ei ddileu",
       "detachedPost": "Mae'r awdur wedi tynnu'r dyfyniad",
-      "unavailablePost": "Nid yw'r post ar gael"
+      "unavailablePost": "Nid yw'r post ar gael",
+      "share": {
+        "title": "Rhannu",
+        "copyLink": "Copïo dolen",
+        "sendToChat": "Anfon drwy sgwrs",
+        "embedPost": "Mewnosod post",
+        "linkCopied": "Cysylltiad wedi’i gopïo",
+        "embedCopied": "Cod wedi’i gopïo",
+        "sentToChat": "Wedi’i anfon",
+        "addMessagePlaceholder": "Ychwanegu neges...",
+        "send": "Anfon",
+        "nextWithCount": "Nesaf ({{count}})",
+        "toLabel": "I",
+        "sentToChatPartial": "Anfonwyd at {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

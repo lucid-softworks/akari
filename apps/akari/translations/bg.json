@@ -289,7 +289,21 @@
       "blockedPost": "Публикация от блокиран профил",
       "deletedPost": "Публикацията е изтрита",
       "detachedPost": "Авторът премахна цитата",
-      "unavailablePost": "Публикацията е недостъпна"
+      "unavailablePost": "Публикацията е недостъпна",
+      "share": {
+        "title": "Споделяне",
+        "copyLink": "Копирай линка",
+        "sendToChat": "Изпрати в чат",
+        "embedPost": "Вгради публикация",
+        "linkCopied": "Линкът е копиран",
+        "embedCopied": "Кодът е копиран",
+        "sentToChat": "Изпратено",
+        "addMessagePlaceholder": "Добави съобщение...",
+        "send": "Изпрати",
+        "nextWithCount": "Напред ({{count}})",
+        "toLabel": "До",
+        "sentToChatPartial": "Изпратено до {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Изберете GIF",

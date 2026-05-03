@@ -289,7 +289,21 @@
       "blockedPost": "Пост из заблокированного аккаунта",
       "deletedPost": "Пост удалён",
       "detachedPost": "Автор отсоединил эту цитату",
-      "unavailablePost": "Пост недоступен"
+      "unavailablePost": "Пост недоступен",
+      "share": {
+        "title": "Поделиться",
+        "copyLink": "Скопировать ссылку",
+        "sendToChat": "Отправить в чат",
+        "embedPost": "Вставить пост",
+        "linkCopied": "Ссылка скопирована",
+        "embedCopied": "Код вставки скопирован",
+        "sentToChat": "Отправлено",
+        "addMessagePlaceholder": "Добавить сообщение…",
+        "send": "Отправить",
+        "nextWithCount": "Далее ({{count}})",
+        "toLabel": "Кому",
+        "sentToChatPartial": "Отправлено {{count}}"
+      }
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

@@ -289,7 +289,21 @@
       "blockedPost": "Post d’un compte bloqué",
       "deletedPost": "Post supprimé",
       "detachedPost": "L’auteur a retiré cette citation",
-      "unavailablePost": "Post indisponible"
+      "unavailablePost": "Post indisponible",
+      "share": {
+        "title": "Partager",
+        "copyLink": "Copier le lien",
+        "sendToChat": "Envoyer en chat",
+        "embedPost": "Intégrer le post",
+        "linkCopied": "Lien copié",
+        "embedCopied": "Code d’intégration copié",
+        "sentToChat": "Envoyé",
+        "addMessagePlaceholder": "Ajouter un message…",
+        "send": "Envoyer",
+        "nextWithCount": "Suivant ({{count}})",
+        "toLabel": "À",
+        "sentToChatPartial": "Envoyé à {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

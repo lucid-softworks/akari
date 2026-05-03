@@ -289,7 +289,21 @@
       "blockedPost": "پست از یک حساب مسدود شده",
       "deletedPost": "پست حذف شده است",
       "detachedPost": "نویسنده این نقل‌قول را برداشت",
-      "unavailablePost": "پست در دسترس نیست"
+      "unavailablePost": "پست در دسترس نیست",
+      "share": {
+        "title": "اشتراک‌گذاری",
+        "copyLink": "کپی لینک",
+        "sendToChat": "ارسال از طریق چت",
+        "embedPost": "جاسازی پست",
+        "linkCopied": "لینک کپی شد",
+        "embedCopied": "کد جاسازی کپی شد",
+        "sentToChat": "ارسال شد",
+        "addMessagePlaceholder": "پیام اضافه کنید...",
+        "send": "ارسال",
+        "nextWithCount": "بعدی ({{count}})",
+        "toLabel": "به",
+        "sentToChatPartial": "به {{count}} نفر ارسال شد"
+      }
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",

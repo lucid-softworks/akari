@@ -289,7 +289,21 @@
       "blockedPost": "Post from a blocked account",
       "deletedPost": "Post was deleted",
       "detachedPost": "Author removed this quote",
-      "unavailablePost": "Post unavailable"
+      "unavailablePost": "Post unavailable",
+      "share": {
+        "title": "Share",
+        "copyLink": "Copy link",
+        "sendToChat": "Send via chat",
+        "embedPost": "Embed post",
+        "linkCopied": "Link copied",
+        "embedCopied": "Embed code copied",
+        "sentToChat": "Sent",
+        "addMessagePlaceholder": "Add a message…",
+        "send": "Send",
+        "nextWithCount": "Next ({{count}})",
+        "toLabel": "To",
+        "sentToChatPartial": "Sent to {{count}}"
+      }
     },
     "gif": {
       "selectGif": "Select GIF",

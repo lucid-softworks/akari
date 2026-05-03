@@ -289,7 +289,21 @@
       "blockedPost": "โพสต์จากบัญชีที่ถูกบล็อก",
       "deletedPost": "โพสต์ถูกลบแล้ว",
       "detachedPost": "ผู้เขียนยกเลิกการอ้างถึงนี้",
-      "unavailablePost": "ไม่สามารถแสดงโพสต์ได้"
+      "unavailablePost": "ไม่สามารถแสดงโพสต์ได้",
+      "share": {
+        "title": "แชร์",
+        "copyLink": "คัดลอกลิงก์",
+        "sendToChat": "ส่งผ่านแชท",
+        "embedPost": "ฝังโพสต์",
+        "linkCopied": "คัดลอกลิงก์แล้ว",
+        "embedCopied": "คัดลอกโค้ดฝังแล้ว",
+        "sentToChat": "ส่งแล้ว",
+        "addMessagePlaceholder": "เพิ่มข้อความ...",
+        "send": "ส่ง",
+        "nextWithCount": "ถัดไป ({{count}})",
+        "toLabel": "ถึง",
+        "sentToChatPartial": "ส่งไปยัง {{count}} รายการ"
+      }
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

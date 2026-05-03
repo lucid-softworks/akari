@@ -285,6 +285,15 @@ export type BlueskySendMessageInput = {
     index: { byteStart: number; byteEnd: number };
     features: { $type: string; uri?: string; tag?: string; did?: string }[];
   }[];
+  /**
+   * Optional embedded record (a post share). The chat lexicon only
+   * permits `app.bsky.embed.record` here; richer embed types are not
+   * accepted and will be rejected by the appview.
+   */
+  embed?: {
+    $type: 'app.bsky.embed.record';
+    record: { uri: string; cid: string };
+  };
 };
 
 export type BlueskyUnreadNotificationCount = {
