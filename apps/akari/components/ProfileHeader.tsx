@@ -80,6 +80,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const borderColor = useBorderColor();
   const avatarBorderColor = useThemeColor({}, 'background');
   const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
+  const mutedTextColor = useThemeColor(
+    { light: '#687076', dark: '#9BA1A6' },
+    'text',
+  );
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const muteMutation = useMuteUser();
@@ -355,13 +359,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
                 <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
                   <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
                 </TouchableOpacity>
-                {!isBlockedBy && (
-                  <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                    <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
-                      <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                    </TouchableOpacity>
-                  </View>
-                )}
+                <View style={styles.moreButtonContainer} ref={dropdownRef}>
+                  <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                    <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
+                  </TouchableOpacity>
+                </View>
               </>
             )}
           </View>
@@ -397,11 +399,18 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
         {/* Labels */}
         <Labels labels={profile.labels} />
 
-        {isBlockedBy && (
-          <ThemedView style={styles.blockedMessage}>
-            <ThemedText style={styles.blockedText}>{t('profile.youAreBlockedByUser')}</ThemedText>
-          </ThemedView>
-        )}
+        {(isBlockedBy || isBlocking) ? (
+          <View style={[styles.blockedMessage, { borderColor }]}>
+            <IconSymbol name="hand.raised.fill" size={16} color={mutedTextColor} />
+            <ThemedText style={[styles.blockedText, { color: mutedTextColor }]}>
+              {isBlockedBy && isBlocking
+                ? t('profile.mutualBlock')
+                : isBlockedBy
+                ? t('profile.youAreBlockedByUser')
+                : t('profile.youHaveBlockedUser')}
+            </ThemedText>
+          </View>
+        ) : null}
       </ThemedView>
 
       {/* Profile Edit Modal */}
@@ -618,14 +627,17 @@ const styles = StyleSheet.create({
 
   blockedMessage: {
     marginTop: spacing.lg,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: '#ffebee',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderWidth: layout.hairline,
     borderRadius: radius.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
   },
   blockedText: {
-    fontSize: fontSize.base,
-    color: '#c62828',
-    textAlign: 'center',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
   },
 });

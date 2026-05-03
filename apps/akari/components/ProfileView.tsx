@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ListPickerSheet } from '@/components/ListPickerSheet';
@@ -23,6 +23,8 @@ import { VideosTab } from '@/components/profile/VideosTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
+import { useBlockUser } from '@/hooks/mutations/useBlockUser';
+import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -88,6 +90,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
   const { showToast } = useToast();
+  const blockMutation = useBlockUser();
+  const muteMutation = useMuteUser();
 
   const { data: profile, isLoading, error, refetch: refetchProfile } = useProfile(handle);
   const isOwnProfile = currentUser?.handle === profile?.handle;
@@ -184,14 +188,77 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setShowListPicker(true);
   };
 
-  const handleMuteAccount = () => {
-    // TODO: Implement mute functionality
-    setShowDropdown(false);
-  };
+  const runBlock = useCallback(async () => {
+    if (!profile?.did) return;
+    const isBlocking = !!profile.viewer?.blocking;
+    try {
+      if (isBlocking) {
+        await blockMutation.mutateAsync({
+          did: profile.did,
+          blockUri: profile.viewer?.blocking,
+          action: 'unblock',
+        });
+      } else {
+        await blockMutation.mutateAsync({
+          did: profile.did,
+          action: 'block',
+        });
+      }
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: isBlocking ? t('common.unblock') : t('common.block'),
+        message: t('common.somethingWentWrong'),
+      });
+      if (__DEV__) console.warn('Block error:', err);
+    }
+  }, [profile, blockMutation, showToast, t]);
 
   const handleBlockPress = () => {
-    // TODO: Implement block functionality
     setShowDropdown(false);
+    if (!profile) return;
+    const isBlocking = !!profile.viewer?.blocking;
+    showAlert({
+      title: isBlocking ? t('common.unblock') : t('common.block'),
+      message: isBlocking
+        ? t('profile.unblockConfirmation', { handle: profile.handle })
+        : t('profile.blockConfirmation', { handle: profile.handle }),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: isBlocking ? t('common.unblock') : t('common.block'),
+          style: 'destructive',
+          onPress: () => {
+            runBlock();
+          },
+        },
+      ],
+    });
+  };
+
+  const handleMuteAccount = () => {
+    setShowDropdown(false);
+    if (!profile?.did) return;
+    const isMuted = !!profile.viewer?.muted;
+    showAlert({
+      title: isMuted ? t('common.unmute') : t('common.mute'),
+      message: isMuted
+        ? t('profile.unmuteConfirmation', { handle: profile.handle })
+        : t('profile.muteConfirmation', { handle: profile.handle }),
+      buttons: [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: isMuted ? t('common.unmute') : t('common.mute'),
+          style: 'destructive',
+          onPress: () => {
+            muteMutation.mutate({
+              actor: profile.did!,
+              action: isMuted ? 'unmute' : 'mute',
+            });
+          },
+        },
+      ],
+    });
   };
 
   const handleReportAccount = () => {
@@ -243,6 +310,44 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     });
   };
 
+  // When the relationship is blocked in either direction, the post-feed
+  // queries would either 4xx or return empty pages — skip them entirely
+  // and just show the profile header (which already explains the
+  // relationship via its own blocked banner).
+  const isBlockedRelationship =
+    !!profile?.viewer?.blockedBy || !!profile?.viewer?.blocking;
+
+  if (isBlockedRelationship) {
+    return (
+      <ThemedView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.blockedScroll}>
+          {headerComponent}
+        </ScrollView>
+
+        <ProfileDropdown
+          isVisible={showDropdown}
+          onDismiss={() => setShowDropdown(false)}
+          onCopyLink={handleCopyLink}
+          onSearchPosts={handleSearchPosts}
+          onAddToLists={handleAddToLists}
+          onMuteAccount={handleMuteAccount}
+          onBlockPress={handleBlockPress}
+          onReportAccount={handleReportAccount}
+          isFollowing={!!profile?.viewer?.following}
+          isBlocking={!!profile?.viewer?.blocking}
+          isMuted={!!profile?.viewer?.muted}
+          isOwnProfile={isOwnProfile}
+        />
+
+        <ReportSheet
+          visible={showReportSheet}
+          onDismiss={() => setShowReportSheet(false)}
+          subject={profile?.did ? { type: 'account', did: profile.did } : null}
+        />
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
       {renderTabContent()}
@@ -287,6 +392,9 @@ const styles = StyleSheet.create({
   tabPaneHidden: {
     opacity: 0,
     zIndex: -1,
+  },
+  blockedScroll: {
+    paddingBottom: spacing.xxl,
   },
   errorText: {
     fontSize: fontSize.lg,
