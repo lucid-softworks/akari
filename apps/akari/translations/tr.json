@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Gönderi ekle",
       "removePostFromThread": "Gönderiyi sil",
-      "continueThreadPlaceholder": "Konuya devam et…"
+      "continueThreadPlaceholder": "Konuya devam et…",
+      "blockedPost": "Engellenmiş hesaptan gönderi",
+      "deletedPost": "Gönderi silinmiş",
+      "detachedPost": "Yazar bu alıntıyı kaldırdı",
+      "unavailablePost": "Gönderi kullanılamıyor"
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",

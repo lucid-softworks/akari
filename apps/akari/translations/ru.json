@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Добавить пост",
       "removePostFromThread": "Удалить пост",
-      "continueThreadPlaceholder": "Продолжите тред…"
+      "continueThreadPlaceholder": "Продолжите тред…",
+      "blockedPost": "Пост из заблокированного аккаунта",
+      "deletedPost": "Пост удалён",
+      "detachedPost": "Автор отсоединил эту цитату",
+      "unavailablePost": "Пост недоступен"
     },
     "messages": {
       "typeMessage": "Введите сообщение...",

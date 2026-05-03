@@ -285,7 +285,11 @@
       },
       "addPostToThread": "เพิ่มโพสต์",
       "removePostFromThread": "ลบโพสต์",
-      "continueThreadPlaceholder": "เขียนต่อในเธรด…"
+      "continueThreadPlaceholder": "เขียนต่อในเธรด…",
+      "blockedPost": "โพสต์จากบัญชีที่ถูกบล็อก",
+      "deletedPost": "โพสต์ถูกลบแล้ว",
+      "detachedPost": "ผู้เขียนยกเลิกการอ้างถึงนี้",
+      "unavailablePost": "ไม่สามารถแสดงโพสต์ได้"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",

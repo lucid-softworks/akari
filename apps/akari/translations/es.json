@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Añadir publicación",
       "removePostFromThread": "Eliminar publicación",
-      "continueThreadPlaceholder": "Continúa el hilo..."
+      "continueThreadPlaceholder": "Continúa el hilo...",
+      "blockedPost": "Publicación de una cuenta bloqueada",
+      "deletedPost": "Publicación eliminada",
+      "detachedPost": "El autor eliminó esta cita",
+      "unavailablePost": "Publicación no disponible"
     },
     "gif": {
       "selectGif": "Seleccionar GIF",

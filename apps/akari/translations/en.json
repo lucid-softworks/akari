@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Add post",
       "removePostFromThread": "Remove post",
-      "continueThreadPlaceholder": "Continue the thread…"
+      "continueThreadPlaceholder": "Continue the thread…",
+      "blockedPost": "Post from a blocked account",
+      "deletedPost": "Post was deleted",
+      "detachedPost": "Author removed this quote",
+      "unavailablePost": "Post unavailable"
     },
     "gif": {
       "selectGif": "Select GIF",

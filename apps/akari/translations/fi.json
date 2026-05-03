@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Lisää julkaisu",
       "removePostFromThread": "Poista julkaisu",
-      "continueThreadPlaceholder": "Jatka ketjua…"
+      "continueThreadPlaceholder": "Jatka ketjua…",
+      "blockedPost": "Julkaisu estetyltä tililtä",
+      "deletedPost": "Julkaisu poistettu",
+      "detachedPost": "Tekijä irrotti lainauksen",
+      "unavailablePost": "Julkaisu ei saatavilla"
     },
     "gif": {
       "selectGif": "Valitse GIF",

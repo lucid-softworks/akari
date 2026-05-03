@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Bericht toevoegen",
       "removePostFromThread": "Bericht verwijderen",
-      "continueThreadPlaceholder": "Vervolg de thread…"
+      "continueThreadPlaceholder": "Vervolg de thread…",
+      "blockedPost": "Bericht van een geblokkeerd account",
+      "deletedPost": "Bericht verwijderd",
+      "detachedPost": "De auteur heeft dit citaat verwijderd",
+      "unavailablePost": "Bericht niet beschikbaar"
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

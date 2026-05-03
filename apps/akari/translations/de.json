@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Beitrag hinzufügen",
       "removePostFromThread": "Beitrag entfernen",
-      "continueThreadPlaceholder": "Thread fortsetzen…"
+      "continueThreadPlaceholder": "Thread fortsetzen…",
+      "blockedPost": "Beitrag eines blockierten Kontos",
+      "deletedPost": "Beitrag gelöscht",
+      "detachedPost": "Autor:in hat das Zitat entfernt",
+      "unavailablePost": "Beitrag nicht verfügbar"
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

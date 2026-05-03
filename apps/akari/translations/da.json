@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Tilføj indlæg",
       "removePostFromThread": "Fjern indlæg",
-      "continueThreadPlaceholder": "Fortsæt tråden..."
+      "continueThreadPlaceholder": "Fortsæt tråden...",
+      "blockedPost": "Indlæg fra blokeret konto",
+      "deletedPost": "Indlæg slettet",
+      "detachedPost": "Forfatteren fjernede citatet",
+      "unavailablePost": "Indlæg ikke tilgængeligt"
     },
     "gif": {
       "selectGif": "Vælg GIF",

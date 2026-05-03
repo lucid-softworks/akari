@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Dodaj post",
       "removePostFromThread": "Usuń post",
-      "continueThreadPlaceholder": "Kontynuuj wątek…"
+      "continueThreadPlaceholder": "Kontynuuj wątek…",
+      "blockedPost": "Post z zablokowanego konta",
+      "deletedPost": "Post został usunięty",
+      "detachedPost": "Autor odłączył ten cytat",
+      "unavailablePost": "Post niedostępny"
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

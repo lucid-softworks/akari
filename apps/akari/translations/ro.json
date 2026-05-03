@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Adaugă postare",
       "removePostFromThread": "Elimină postarea",
-      "continueThreadPlaceholder": "Continuă firul…"
+      "continueThreadPlaceholder": "Continuă firul…",
+      "blockedPost": "Postare de la un cont blocat",
+      "deletedPost": "Postare ștearsă",
+      "detachedPost": "Autorul a detașat acest citat",
+      "unavailablePost": "Postare indisponibilă"
     },
     "gif": {
       "selectGif": "Selectați GIF",

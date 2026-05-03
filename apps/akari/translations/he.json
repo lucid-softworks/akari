@@ -285,7 +285,11 @@
       },
       "addPostToThread": "הוסף פוסט",
       "removePostFromThread": "הסר פוסט",
-      "continueThreadPlaceholder": "המשך את השרשור…"
+      "continueThreadPlaceholder": "המשך את השרשור…",
+      "blockedPost": "פוסט מחשבון חסום",
+      "deletedPost": "הפוסט נמחק",
+      "detachedPost": "הכותב הסיר את הציטוט הזה",
+      "unavailablePost": "הפוסט אינו זמין"
     },
     "gif": {
       "selectGif": "בחר GIF",

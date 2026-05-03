@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Добави публикация",
       "removePostFromThread": "Премахни публикацията",
-      "continueThreadPlaceholder": "Продължи темата..."
+      "continueThreadPlaceholder": "Продължи темата...",
+      "blockedPost": "Публикация от блокиран профил",
+      "deletedPost": "Публикацията е изтрита",
+      "detachedPost": "Авторът премахна цитата",
+      "unavailablePost": "Публикацията е недостъпна"
     },
     "gif": {
       "selectGif": "Изберете GIF",

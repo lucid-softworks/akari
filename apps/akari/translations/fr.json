@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Ajouter un post",
       "removePostFromThread": "Supprimer le post",
-      "continueThreadPlaceholder": "Continue le fil…"
+      "continueThreadPlaceholder": "Continue le fil…",
+      "blockedPost": "Post d’un compte bloqué",
+      "deletedPost": "Post supprimé",
+      "detachedPost": "L’auteur a retiré cette citation",
+      "unavailablePost": "Post indisponible"
     },
     "gif": {
       "selectGif": "Sélectionner GIF",

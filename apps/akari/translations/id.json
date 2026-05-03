@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Tambah post",
       "removePostFromThread": "Hapus post",
-      "continueThreadPlaceholder": "Lanjutkan utas…"
+      "continueThreadPlaceholder": "Lanjutkan utas…",
+      "blockedPost": "Post dari akun yang diblokir",
+      "deletedPost": "Post telah dihapus",
+      "detachedPost": "Penulis menghapus kutipan ini",
+      "unavailablePost": "Post tidak tersedia"
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

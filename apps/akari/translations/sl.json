@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Dodaj objavo",
       "removePostFromThread": "Odstrani objavo",
-      "continueThreadPlaceholder": "Nadaljuj nit…"
+      "continueThreadPlaceholder": "Nadaljuj nit…",
+      "blockedPost": "Objava z blokiranega računa",
+      "deletedPost": "Objava je bila izbrisana",
+      "detachedPost": "Avtor je odstranil ta citat",
+      "unavailablePost": "Objava ni na voljo"
     },
     "gif": {
       "selectGif": "Izberite GIF",

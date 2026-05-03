@@ -285,7 +285,11 @@
       },
       "addPostToThread": "加入貼文",
       "removePostFromThread": "移除貼文",
-      "continueThreadPlaceholder": "繼續這串…"
+      "continueThreadPlaceholder": "繼續這串…",
+      "blockedPost": "來自已封鎖帳號的貼文",
+      "deletedPost": "貼文已刪除",
+      "detachedPost": "作者已撤回此引用",
+      "unavailablePost": "貼文無法使用"
     },
     "messages": {
       "typeMessage": "輸入訊息...",

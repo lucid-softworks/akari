@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Додати допис",
       "removePostFromThread": "Видалити допис",
-      "continueThreadPlaceholder": "Продовжіть гілку…"
+      "continueThreadPlaceholder": "Продовжіть гілку…",
+      "blockedPost": "Допис від заблокованого облікового запису",
+      "deletedPost": "Допис видалено",
+      "detachedPost": "Автор від’єднав цю цитату",
+      "unavailablePost": "Допис недоступний"
     },
     "gif": {
       "selectGif": "Виберіть GIF",

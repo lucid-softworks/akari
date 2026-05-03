@@ -285,7 +285,11 @@
       },
       "addPostToThread": "पोस्ट जोड़ें",
       "removePostFromThread": "पोस्ट हटाएँ",
-      "continueThreadPlaceholder": "थ्रेड जारी रखें…"
+      "continueThreadPlaceholder": "थ्रेड जारी रखें…",
+      "blockedPost": "अवरुद्ध खाते से पोस्ट",
+      "deletedPost": "पोस्ट हटा दी गई",
+      "detachedPost": "लेखक ने इस उद्धरण को हटा दिया",
+      "unavailablePost": "पोस्ट उपलब्ध नहीं"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",

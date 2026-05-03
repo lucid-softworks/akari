@@ -12,6 +12,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -323,17 +324,61 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const videoData = getVideoData();
   const { urls: imageUrls } = imageData;
 
-  // Check if this is a blocked record by checking the $type field
-  // For recordWithMedia, check the nested record.record.$type
-  // For regular record embeds, check record.$type
-  const isBlockedRecord =
-    embed.record.record?.record?.$type === 'app.bsky.embed.record#viewBlocked' ||
-    embed.record.record?.$type === 'app.bsky.embed.record#viewBlocked';
+  // Detect "unavailable" record variants. The lexicon uses dedicated
+  // $type values for each case — blocked author, deleted post, detached
+  // quote — and any of them should render as a minimal placeholder
+  // instead of the normal author/content layout (which can't fill in
+  // the missing fields and used to fall back to a confusing bare
+  // "Block" label).
+  //
+  // The $type can sit at one of several depths depending on whether the
+  // post is a regular record embed or a recordWithMedia embed, so we
+  // probe each plausible location.
+  const candidateTypes: (string | undefined)[] = [
+    (embed as { $type?: string })?.$type,
+    embed.record?.$type,
+    (embed.record as { record?: { $type?: string } } | undefined)?.record?.$type,
+    (embed.record as { record?: { record?: { $type?: string } } } | undefined)
+      ?.record?.record?.$type,
+  ];
+  const recordType = candidateTypes.find((s) =>
+    typeof s === 'string' &&
+    (s.includes('viewBlocked') ||
+      s.includes('viewNotFound') ||
+      s.includes('viewDetached')),
+  );
+  // The record viewer also gets populated when the relationship is
+  // mutual or the user is doing the blocking — fall back to that as a
+  // signal even when $type isn't carried through.
+  const viewerOnRecord =
+    (embed.record as { author?: { viewer?: { blocking?: string; blockedBy?: boolean } } })
+      ?.author?.viewer ??
+    (embed.record.record as { author?: { viewer?: { blocking?: string; blockedBy?: boolean } } } | undefined)
+      ?.author?.viewer;
+  const viewerImpliesBlocked =
+    !!viewerOnRecord && (!!viewerOnRecord.blocking || !!viewerOnRecord.blockedBy);
+  const unavailableKind: 'blocked' | 'notFound' | 'detached' | null = recordType
+    ? recordType.includes('viewBlocked')
+      ? 'blocked'
+      : recordType.includes('viewNotFound')
+      ? 'notFound'
+      : 'detached'
+    : viewerImpliesBlocked
+    ? 'blocked'
+    : null;
+  const isBlockedRecord = unavailableKind === 'blocked';
 
-  // Get the author's DID or handle for profile lookup
-  const authorIdentifier = isBlockedRecord
-    ? embed.record.record?.record?.author?.did || embed.record.record?.author?.did
-    : embed.record.author?.handle || embed.record.author?.did;
+  // Get the author's DID or handle for profile lookup. Use the
+  // shallowest identifier we can find so the placeholder picks up a
+  // handle/avatar even when only the direct `embed.record.author` is
+  // populated (which is the common case for blocked records).
+  const authorIdentifier =
+    embed.record.author?.handle ||
+    embed.record.author?.did ||
+    embed.record.record?.author?.handle ||
+    embed.record.record?.author?.did ||
+    embed.record.record?.record?.author?.handle ||
+    embed.record.record?.record?.author?.did;
 
   // Fetch profile information if needed
   const { data: profileData } = useProfile(authorIdentifier);
@@ -367,12 +412,19 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const blockingMessage = getBlockingMessage();
 
-  // Get author information from available sources
+  // Get author information from available sources. We prefer whatever
+  // identifier is on the record itself (handle when present, falling
+  // back to DID), then upgrade with the resolved profile from
+  // useProfile when it lands. This keeps blocked records from
+  // rendering as anonymous "Block" boxes — we always know at least
+  // who's on the other side, even if we can't fetch their profile.
   const getAuthorInfo = () => {
-    // For normal (non-blocked) records, check multiple possible locations for author info
-    const author = embed.record.record?.record?.author || embed.record.record?.author || embed.record.author;
+    const author =
+      embed.record.author ||
+      embed.record.record?.author ||
+      embed.record.record?.record?.author;
 
-    if (!isBlockedRecord && author?.handle) {
+    if (author?.handle) {
       return {
         handle: author.handle,
         displayName: author.displayName || author.handle,
@@ -380,8 +432,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
       };
     }
 
-    // For blocked records, use the blocking-specific logic
-    if (isBlockedRecord && profileData) {
+    if (profileData) {
       return {
         handle: profileData.handle,
         displayName: profileData.displayName || profileData.handle,
@@ -389,19 +440,76 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
       };
     }
 
-    if (isBlockedRecord && (embed.record.record?.record?.author?.did || embed.record.record?.author?.did)) {
-      const authorDid = embed.record.record?.record?.author?.did || embed.record.record?.author?.did;
-      return {
-        handle: authorDid,
-        displayName: authorDid,
-        avatar: undefined,
-      };
+    const did =
+      author?.did ||
+      embed.record.record?.author?.did ||
+      embed.record.record?.record?.author?.did;
+    if (did) {
+      return { handle: did, displayName: did, avatar: undefined };
     }
 
     return null;
   };
 
   const authorInfo = getAuthorInfo();
+
+  // Unavailable variants (blocked / not found / detached) get a minimal
+  // placeholder. We also fall through to this path when we couldn't
+  // resolve any author info at all — that means the upstream record is
+  // malformed or hidden, and the normal author header would be empty.
+  if (unavailableKind || !authorInfo) {
+    const kind = unavailableKind ?? 'unknown';
+    // Show the handle whenever we know it — even when it duplicates the
+    // display name, it's still useful context for the reader.
+    const handleLabel = authorInfo?.handle
+      ? authorInfo.handle.startsWith('did:')
+        ? authorInfo.handle
+        : `@${authorInfo.handle}`
+      : null;
+    const placeholderMessage =
+      kind === 'blocked'
+        ? blockingMessage ?? t('post.blockedPost')
+        : kind === 'notFound'
+        ? t('post.deletedPost')
+        : kind === 'detached'
+        ? t('post.detachedPost')
+        : t('post.unavailablePost');
+    const iconName: 'hand.raised.fill' | 'eye.slash' | 'link.badge.plus' =
+      kind === 'blocked'
+        ? 'hand.raised.fill'
+        : kind === 'notFound'
+        ? 'eye.slash'
+        : kind === 'detached'
+        ? 'link.badge.plus'
+        : 'eye.slash';
+    return (
+      <View
+        style={[
+          styles.container,
+          styles.blockedPlaceholder,
+          { borderColor, backgroundColor: 'transparent' },
+        ]}
+      >
+        <IconSymbol name={iconName} size={18} color={secondaryTextColor} />
+        <View style={styles.blockedPlaceholderText}>
+          <ThemedText
+            style={[styles.blockedPlaceholderTitle, { color: textColor }]}
+            numberOfLines={1}
+          >
+            {placeholderMessage}
+          </ThemedText>
+          {handleLabel ? (
+            <ThemedText
+              style={[styles.blockedPlaceholderHandle, { color: secondaryTextColor }]}
+              numberOfLines={1}
+            >
+              {handleLabel}
+            </ThemedText>
+          ) : null}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <PressableLink href={postHref} onPress={handlePress} style={{ opacity: 1 }}>
@@ -521,6 +629,24 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     marginTop: 6,
     overflow: 'hidden',
+  },
+  blockedPlaceholder: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  blockedPlaceholderText: {
+    flex: 1,
+  },
+  blockedPlaceholderTitle: {
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.medium,
+  },
+  blockedPlaceholderHandle: {
+    fontSize: fontSize.sm,
+    marginTop: 2,
   },
   header: {
     flexDirection: 'row',

@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Paylaşım əlavə et",
       "removePostFromThread": "Paylaşımı sil",
-      "continueThreadPlaceholder": "Mövzunu davam etdir..."
+      "continueThreadPlaceholder": "Mövzunu davam etdir...",
+      "blockedPost": "Bloklanmış hesabdan paylaşım",
+      "deletedPost": "Paylaşım silinib",
+      "detachedPost": "Müəllif sitatı çıxarıb",
+      "unavailablePost": "Paylaşım mövcud deyil"
     },
     "gif": {
       "selectGif": "Gif seçin",

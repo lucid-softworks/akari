@@ -285,7 +285,11 @@
       },
       "addPostToThread": "投稿を追加",
       "removePostFromThread": "投稿を削除",
-      "continueThreadPlaceholder": "スレッドを続ける…"
+      "continueThreadPlaceholder": "スレッドを続ける…",
+      "blockedPost": "ブロックされたアカウントの投稿",
+      "deletedPost": "投稿は削除されました",
+      "detachedPost": "作者がこの引用を解除しました",
+      "unavailablePost": "投稿は利用できません"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",

@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Lägg till inlägg",
       "removePostFromThread": "Ta bort inlägg",
-      "continueThreadPlaceholder": "Fortsätt tråden…"
+      "continueThreadPlaceholder": "Fortsätt tråden…",
+      "blockedPost": "Inlägg från ett blockerat konto",
+      "deletedPost": "Inlägg borttaget",
+      "detachedPost": "Författaren tog bort citatet",
+      "unavailablePost": "Inlägg ej tillgängligt"
     },
     "gif": {
       "selectGif": "Välj GIF",

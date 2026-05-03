@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Προσθήκη ανάρτησης",
       "removePostFromThread": "Αφαίρεση ανάρτησης",
-      "continueThreadPlaceholder": "Συνεχίστε το νήμα..."
+      "continueThreadPlaceholder": "Συνεχίστε το νήμα...",
+      "blockedPost": "Ανάρτηση από αποκλεισμένο λογαριασμό",
+      "deletedPost": "Η ανάρτηση διαγράφηκε",
+      "detachedPost": "Ο συντάκτης αποσύνδεσε την αναφορά",
+      "unavailablePost": "Η ανάρτηση δεν είναι διαθέσιμη"
     },
     "gif": {
       "selectGif": "Επιλέξτε GIF",

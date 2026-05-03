@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Thêm bài",
       "removePostFromThread": "Xóa bài",
-      "continueThreadPlaceholder": "Tiếp tục chuỗi bài…"
+      "continueThreadPlaceholder": "Tiếp tục chuỗi bài…",
+      "blockedPost": "Bài đăng từ tài khoản bị chặn",
+      "deletedPost": "Bài đăng đã bị xóa",
+      "detachedPost": "Tác giả đã gỡ trích dẫn này",
+      "unavailablePost": "Bài đăng không khả dụng"
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

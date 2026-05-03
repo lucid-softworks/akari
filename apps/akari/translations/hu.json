@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Új bejegyzés",
       "removePostFromThread": "Bejegyzés törlése",
-      "continueThreadPlaceholder": "Folytasd a szálat…"
+      "continueThreadPlaceholder": "Folytasd a szálat…",
+      "blockedPost": "Bejegyzés letiltott fiókból",
+      "deletedPost": "A bejegyzést törölték",
+      "detachedPost": "A szerző eltávolította ezt az idézetet",
+      "unavailablePost": "A bejegyzés nem elérhető"
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",

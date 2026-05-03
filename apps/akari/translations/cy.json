@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Ychwanegu post",
       "removePostFromThread": "Tynnu'r post",
-      "continueThreadPlaceholder": "Parhau'r edefyn..."
+      "continueThreadPlaceholder": "Parhau'r edefyn...",
+      "blockedPost": "Post o gyfrif sydd wedi ei rwystro",
+      "deletedPost": "Cafodd y post ei ddileu",
+      "detachedPost": "Mae'r awdur wedi tynnu'r dyfyniad",
+      "unavailablePost": "Nid yw'r post ar gael"
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",

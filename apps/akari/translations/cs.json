@@ -285,7 +285,11 @@
       },
       "addPostToThread": "Přidat příspěvek",
       "removePostFromThread": "Odebrat příspěvek",
-      "continueThreadPlaceholder": "Pokračovat ve vlákně..."
+      "continueThreadPlaceholder": "Pokračovat ve vlákně...",
+      "blockedPost": "Příspěvek od zablokovaného účtu",
+      "deletedPost": "Příspěvek byl smazán",
+      "detachedPost": "Autor odpojil citaci",
+      "unavailablePost": "Příspěvek není dostupný"
     },
     "gif": {
       "selectGif": "Vyberte GIF",

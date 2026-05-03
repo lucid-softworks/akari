@@ -285,7 +285,11 @@
       },
       "addPostToThread": "게시물 추가",
       "removePostFromThread": "게시물 삭제",
-      "continueThreadPlaceholder": "스레드 이어가기…"
+      "continueThreadPlaceholder": "스레드 이어가기…",
+      "blockedPost": "차단된 계정의 게시물",
+      "deletedPost": "게시물이 삭제됨",
+      "detachedPost": "작성자가 이 인용을 분리했습니다",
+      "unavailablePost": "게시물을 사용할 수 없음"
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

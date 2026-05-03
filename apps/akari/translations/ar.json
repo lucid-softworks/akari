@@ -285,7 +285,11 @@
       },
       "addPostToThread": "إضافة منشور",
       "removePostFromThread": "إزالة المنشور",
-      "continueThreadPlaceholder": "تابع السلسلة..."
+      "continueThreadPlaceholder": "تابع السلسلة...",
+      "blockedPost": "منشور من حساب محظور",
+      "deletedPost": "تم حذف المنشور",
+      "detachedPost": "تم فصل الاقتباس بواسطة الكاتب",
+      "unavailablePost": "المنشور غير متاح"
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",

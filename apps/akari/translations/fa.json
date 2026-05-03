@@ -285,7 +285,11 @@
       },
       "addPostToThread": "افزودن پست",
       "removePostFromThread": "حذف پست",
-      "continueThreadPlaceholder": "رشته را ادامه دهید..."
+      "continueThreadPlaceholder": "رشته را ادامه دهید...",
+      "blockedPost": "پست از یک حساب مسدود شده",
+      "deletedPost": "پست حذف شده است",
+      "detachedPost": "نویسنده این نقل‌قول را برداشت",
+      "unavailablePost": "پست در دسترس نیست"
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",
