@@ -1,4 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
@@ -95,10 +96,15 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   const { data: profile, isLoading, error, refetch: refetchProfile } = useProfile(handle);
   const isOwnProfile = currentUser?.handle === profile?.handle;
+  const queryClient = useQueryClient();
 
   const handleProfileRefresh = useCallback(async () => {
-    await refetchProfile();
-  }, [refetchProfile]);
+    const refreshed = await refetchProfile();
+    const did = refreshed.data?.did ?? profile?.did;
+    if (did) {
+      await queryClient.invalidateQueries({ queryKey: ['verifiersForDid', did] });
+    }
+  }, [refetchProfile, queryClient, profile?.did]);
 
   const runBlock = useCallback(async () => {
     if (!profile?.did) return;

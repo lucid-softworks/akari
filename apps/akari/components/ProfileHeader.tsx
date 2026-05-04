@@ -321,6 +321,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             <View style={styles.displayNameRow}>
               <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
               <VerificationBadge
+                subjectDid={profile.did}
                 verification={profile.verification}
                 subjectHandle={profile.handle}
                 subjectDisplayName={profile.displayName}

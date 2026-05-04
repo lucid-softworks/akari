@@ -9,6 +9,7 @@
       "@/axiom-crash-reporter": ["../../packages/axiom-crash-reporter"],
       "@/bluesky-api": ["../../packages/bluesky-api"],
       "@/clearsky-api": ["../../packages/clearsky-api"],
+      "@/constellation-api": ["../../packages/constellation-api"],
       "@/libretranslate-api": ["../../packages/libretranslate-api"],
       "@/tenor-api": ["../../packages/tenor-api"],
       "@/tmdb-api": ["../../packages/tmdb-api"]

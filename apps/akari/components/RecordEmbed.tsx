@@ -427,6 +427,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
     if (author?.handle) {
       return {
+        did: author.did,
         handle: author.handle,
         displayName: author.displayName || author.handle,
         avatar: author.avatar,
@@ -436,6 +437,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
     if (profileData) {
       return {
+        did: profileData.did,
         handle: profileData.handle,
         displayName: profileData.displayName || profileData.handle,
         avatar: profileData.avatar,
@@ -448,7 +450,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
       embed.record.record?.author?.did ||
       embed.record.record?.record?.author?.did;
     if (did) {
-      return { handle: did, displayName: did, avatar: undefined, verification: undefined };
+      return { did, handle: did, displayName: did, avatar: undefined, verification: undefined };
     }
 
     return null;
@@ -531,6 +533,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
                 <ThemedView style={styles.displayNameRow}>
                   <ThemedText style={[styles.displayName, { color: textColor }]} numberOfLines={1}>{authorInfo.displayName}</ThemedText>
                   <VerificationBadge
+                    subjectDid={authorInfo.did}
                     verification={authorInfo.verification}
                     subjectHandle={authorInfo.handle}
                     subjectDisplayName={authorInfo.displayName}

@@ -1,4 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -50,10 +51,15 @@ export default function ProfileScreen() {
   const { showToast } = useToast();
 
   const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
+  const queryClient = useQueryClient();
 
   const handleProfileRefresh = useCallback(async () => {
-    await refetchProfile();
-  }, [refetchProfile]);
+    const refreshed = await refetchProfile();
+    const did = refreshed.data?.did ?? profile?.did;
+    if (did) {
+      await queryClient.invalidateQueries({ queryKey: ['verifiersForDid', did] });
+    }
+  }, [refetchProfile, queryClient, profile?.did]);
 
   const handleDropdownToggle = useCallback((isOpen: boolean) => {
     setShowDropdown(isOpen);

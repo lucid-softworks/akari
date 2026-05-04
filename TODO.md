@@ -5,24 +5,12 @@ implemented*; everything that's already shipped lives in `git log`.
 
 ## P1 — official-app parity gaps
 
-- **Verification — creds.blue + opt-out.** Blue check rendering on
-  posts and profiles plus the verifier-list sheet are shipped via
-  `VerificationBadge` / `VerifiersSheet`, but only honor the
-  appview-supplied `app.bsky.actor.defs#verificationState`. Still
-  pending: pull verification records directly from third-party
-  verifiers (notably **creds.blue**, `did:plc:stznz7qsokto2345qtdzogjb`,
-  collection `app.bsky.graph.verification`) and merge them into the
-  badge / sheet, plus a settings toggle to opt out of seeing
-  verification entirely.
 - **Feed filters.** Per-feed filtering rules (minimum like count,
   exclude / include specific users, keyword filters, media-only, etc.)
   applied at render time so filtered posts disappear from the
   rendered list. Needs a settings UI to author rules per feed and a
   filter-pass plugged into every feed renderer (home, custom feeds,
   profile tabs).
-- **Image carousel for multi-image embeds.** Today a post with 2+
-  images shows a static grid; the official app renders a horizontal
-  pager with page dots and swipe.
 - **Activity Subscriptions.** Per-user "ring the bell" toggle that
   pushes a notification on every new post from that account. Lexicon
   is `app.bsky.notification.declaration` + the per-user subscription

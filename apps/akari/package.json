@@ -57,6 +57,7 @@
     "@tanstack/react-query-persist-client": "^5.83.0",
     "bluesky-api": "*",
     "clearsky-api": "*",
+    "constellation-api": "*",
     "expo": "^54.0.10",
     "expo-background-task": "~1.0.8",
     "expo-blur": "~15.0.7",

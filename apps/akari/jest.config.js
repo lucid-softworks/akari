@@ -24,6 +24,7 @@ module.exports = {
     '^@/axiom-crash-reporter$': '<rootDir>/../../packages/axiom-crash-reporter/src',
     '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',
     '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
+    '^@/constellation-api$': '<rootDir>/../../packages/constellation-api/src',
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
     '^@/tmdb-api$': '<rootDir>/../../packages/tmdb-api/src',

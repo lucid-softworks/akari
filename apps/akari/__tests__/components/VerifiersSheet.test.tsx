@@ -6,14 +6,32 @@ import { VerifiersSheet } from '@/components/VerifiersSheet';
 
 const mockNavigate = jest.fn();
 const mockUseProfile = jest.fn();
+const mockUseVerifiersForDid = jest.fn();
+const mockAddTrusted = jest.fn();
+const mockRemoveTrusted = jest.fn();
+let mockTrustedDids: string[] = [];
 
 jest.mock('@/hooks/useTranslation', () => ({
-  useTranslation: () => ({ t: (key: string, params?: Record<string, string>) => (params ? `${key}:${JSON.stringify(params)}` : key) }),
+  useTranslation: () => ({
+    t: (key: string, params?: Record<string, string>) =>
+      params ? `${key}:${JSON.stringify(params)}` : key,
+  }),
 }));
 jest.mock('@/hooks/useBorderColor', () => ({ useBorderColor: () => '#ccc' }));
 jest.mock('@/hooks/useThemeColor', () => ({ useThemeColor: () => '#000' }));
 jest.mock('@/hooks/queries/useProfile', () => ({
   useProfile: (...args: unknown[]) => mockUseProfile(...args),
+}));
+jest.mock('@/hooks/queries/useVerifiersForDid', () => ({
+  useVerifiersForDid: (...args: unknown[]) => mockUseVerifiersForDid(...args),
+}));
+jest.mock('@/hooks/useVerificationSettings', () => ({
+  useVerificationSettings: () => ({
+    trustedVerifierDids: mockTrustedDids,
+    isTrustedVerifier: (did: string) => mockTrustedDids.includes(did),
+    addTrustedVerifier: mockAddTrusted,
+    removeTrustedVerifier: mockRemoveTrusted,
+  }),
 }));
 jest.mock('@/utils/navigation', () => ({
   useNavigateToProfile: () => mockNavigate,
@@ -47,65 +65,145 @@ const verification: BlueskyVerification = {
   verifiedStatus: 'valid',
   trustedVerifierStatus: 'none',
   verifications: [
-    { issuer: 'did:plc:bsky-mod', uri: 'at://bsky-mod/app.bsky.graph.verification/1', isValid: true, createdAt: '2025-04-01T00:00:00Z' },
-    { issuer: 'did:plc:expired', uri: 'at://expired/app.bsky.graph.verification/2', isValid: false, createdAt: '2025-01-01T00:00:00Z' },
+    {
+      issuer: 'did:plc:appview',
+      uri: 'at://appview/app.bsky.graph.verification/1',
+      isValid: true,
+      createdAt: '2025-04-01T00:00:00Z',
+    },
   ],
 };
 
 beforeEach(() => {
   mockNavigate.mockReset();
   mockUseProfile.mockReset();
-  mockUseProfile.mockReturnValue({
-    data: { handle: 'verifier.bsky.app', displayName: 'Bluesky Verifier', avatar: undefined },
+  mockAddTrusted.mockReset();
+  mockRemoveTrusted.mockReset();
+  mockTrustedDids = [];
+  mockUseVerifiersForDid.mockReturnValue({ data: [] });
+  mockUseProfile.mockImplementation((did: string) => ({
+    data: { handle: `${did.split(':').pop()}.test`, displayName: `User ${did}`, avatar: undefined },
     isLoading: false,
-  });
+  }));
 });
 
 describe('VerifiersSheet', () => {
-  it('filters out invalid verifiers', () => {
+  it('renders rows from the appview verifications', () => {
     const { queryByText } = render(
-      <VerifiersSheet visible onClose={() => undefined} verification={verification} subjectHandle="alice" />,
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
     );
-    expect(queryByText('Bluesky Verifier')).not.toBeNull();
-    // The expired verifier (isValid=false) should not produce a profile lookup row
-    expect(mockUseProfile).toHaveBeenCalledTimes(1);
-    expect(mockUseProfile).toHaveBeenCalledWith('did:plc:bsky-mod');
+    expect(queryByText('User did:plc:appview')).not.toBeNull();
   });
 
-  it('navigates to verifier profile and closes when tapped', () => {
+  it('merges Constellation DIDs that are not in the appview list', () => {
+    mockUseVerifiersForDid.mockReturnValue({
+      data: ['did:plc:appview', 'did:plc:thirdparty'],
+    });
+    const { queryByText } = render(
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
+    );
+    expect(queryByText('User did:plc:appview')).not.toBeNull();
+    expect(queryByText('User did:plc:thirdparty')).not.toBeNull();
+  });
+
+  it('groups trusted verifiers above other verifiers with section headers', () => {
+    mockTrustedDids = ['did:plc:appview'];
+    mockUseVerifiersForDid.mockReturnValue({
+      data: ['did:plc:appview', 'did:plc:thirdparty'],
+    });
+    const { getByText } = render(
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
+    );
+    // Section header keys uppercased; the t() mock returns keys verbatim.
+    expect(getByText('UI.VERIFIERSTRUSTEDHEADER')).toBeTruthy();
+    expect(getByText('UI.VERIFIERSOTHERHEADER')).toBeTruthy();
+  });
+
+  it('navigates to verifier profile and closes when the row is tapped', () => {
     const onClose = jest.fn();
     const { getAllByRole } = render(
-      <VerifiersSheet visible onClose={onClose} verification={verification} subjectHandle="alice" />,
+      <VerifiersSheet
+        visible
+        onClose={onClose}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
     );
-    // First button is the "Done" header button; verifier rows come after
+    // Buttons are: [0] Done header, [1] row main, [2] trust toggle
     const buttons = getAllByRole('button');
     fireEvent.press(buttons[1]);
     expect(onClose).toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith({ actor: 'verifier.bsky.app' });
+    expect(mockNavigate).toHaveBeenCalledWith({ actor: 'appview.test' });
   });
 
-  it('shows the empty state when no verifiers are valid', () => {
+  it('promotes a verifier into the trusted list when the trust toggle is tapped', () => {
+    const { getAllByRole } = render(
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
+    );
+    const buttons = getAllByRole('button');
+    // [0] Done, [1] row main, [2] trust toggle
+    fireEvent.press(buttons[2]);
+    expect(mockAddTrusted).toHaveBeenCalledWith('did:plc:appview');
+    expect(mockRemoveTrusted).not.toHaveBeenCalled();
+  });
+
+  it('demotes a verifier when the trust toggle is tapped on an already-trusted row', () => {
+    mockTrustedDids = ['did:plc:appview'];
+    const { getAllByRole } = render(
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={verification}
+        subjectHandle="alice"
+      />,
+    );
+    const buttons = getAllByRole('button');
+    fireEvent.press(buttons[2]);
+    expect(mockRemoveTrusted).toHaveBeenCalledWith('did:plc:appview');
+    expect(mockAddTrusted).not.toHaveBeenCalled();
+  });
+
+  it('shows the empty state when there are no verifiers anywhere', () => {
     const noneVerification: BlueskyVerification = {
       verifiedStatus: 'valid',
       trustedVerifierStatus: 'none',
       verifications: [],
     };
     const { getByText } = render(
-      <VerifiersSheet visible onClose={() => undefined} verification={noneVerification} subjectHandle="alice" />,
+      <VerifiersSheet
+        visible
+        onClose={() => undefined}
+        subjectDid="did:plc:alice"
+        verification={noneVerification}
+        subjectHandle="alice"
+      />,
     );
     expect(getByText('ui.noVerifiers')).toBeTruthy();
-  });
-
-  it('uses the trusted-verifier intro copy when trustedVerifierStatus is valid', () => {
-    const trusted: BlueskyVerification = {
-      verifiedStatus: 'none',
-      trustedVerifierStatus: 'valid',
-      verifications: [],
-    };
-    const { getByText } = render(
-      <VerifiersSheet visible onClose={() => undefined} verification={trusted} subjectHandle="nyt.com" subjectDisplayName="The New York Times" />,
-    );
-    expect(getByText(/ui\.trustedVerifierSheetIntroTitle/)).toBeTruthy();
-    expect(getByText('ui.trustedVerifierSheetIntroBody')).toBeTruthy();
   });
 });

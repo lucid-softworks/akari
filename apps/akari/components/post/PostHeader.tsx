@@ -88,6 +88,7 @@ export const PostHeader = React.memo(function PostHeader({
           <View style={styles.displayNameRow}>
             <ThemedText style={styles.displayName} numberOfLines={1}>{authorName}</ThemedText>
             <VerificationBadge
+              subjectDid={author.did}
               verification={author.verification}
               subjectHandle={author.handle}
               subjectDisplayName={author.displayName}

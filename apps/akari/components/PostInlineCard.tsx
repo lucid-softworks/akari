@@ -96,6 +96,7 @@ export function PostInlineCard({ handle, rkey, onPress, style }: PostInlineCardP
                 {author.displayName}
               </ThemedText>
               <VerificationBadge
+                subjectDid={author?.did}
                 verification={author.verification}
                 subjectHandle={author.handle}
                 subjectDisplayName={author.displayName}

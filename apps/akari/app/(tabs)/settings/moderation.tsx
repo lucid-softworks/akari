@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -48,7 +49,7 @@ export default function ModerationSettingsScreen() {
         key: 'verification',
         icon: 'checkmark.seal.fill',
         label: t('settings.verificationSettings'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/verification'),
       },
       {
         key: 'adult-content',

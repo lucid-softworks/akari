@@ -24,6 +24,10 @@ export default function SettingsLayout() {
       />
       <Stack.Screen name="moderation" options={{ title: t('settings.moderation') }} />
       <Stack.Screen
+        name="verification"
+        options={{ title: t('settings.verificationSettings') }}
+      />
+      <Stack.Screen
         name="notifications"
         options={{ title: t('settings.notifications') }}
       />

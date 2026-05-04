@@ -116,6 +116,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/content-and-media'),
       },
       {
+        key: 'moderation',
+        icon: 'hand.raised.fill',
+        label: t('settings.moderation'),
+        onPress: () => router.push('/(tabs)/settings/moderation'),
+      },
+      {
         key: 'appearance',
         icon: 'paintbrush.fill',
         label: t('settings.appearance'),
