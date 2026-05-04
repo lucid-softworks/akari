@@ -28,6 +28,53 @@ implemented*; everything that's already shipped lives in `git log`.
 - **Hashtag feed screen.** `/tag/[tag]` route with Top / Latest tabs.
   Hashtag taps currently route to `/search?query=#tag`.
 
+## P1 — settings screens (~41 stubbed rows)
+
+Each row below currently routes through `useNotImplementedToast`.
+Items marked **(=> TODO)** also unblock a separate P1 item — knock
+those out together.
+
+**Local-prefs only** — same shape as `useFeedSettings`; just MMKV +
+a Switch.
+- `content-and-media.tsx`: `threadPreferences` (sort order picker,
+  prioritise-followed-replies toggle), `externalMedia` (per-provider
+  on/off list — YouTube, Twitter/X, Tenor, Spotify, etc.)
+- `languages.tsx`: `contentLanguages` (multi-select language list,
+  also writes to `app.bsky.actor.preferences#contentLanguagesPref`)
+
+**Behaviour gating for prefs that already persist** — the toggles are
+saved but don't yet drive a label-filtering pass.
+- `enableAdultContent` (moderation.tsx) — persists locally but no
+  feed pass exists yet. Need to identify Bluesky's adult labels
+  (`porn`, `sexual`, `nudity`, `graphic-media`), add a filter pass to
+  every feed renderer, and wire a blur/warning overlay on individual
+  posts. Should also round-trip to
+  `app.bsky.actor.preferences#adultContentPref` so the choice
+  follows the user across clients.
+
+**List views over existing data** — Bluesky already returns these
+via `getPreferences` / `getMutes` / `getBlocks`; just need a list UI.
+- `moderation.tsx`: `mutedAccounts`, `blockedAccounts`
+
+**Cross-feature with TODO**
+- `moderation.tsx`: `mutedWordsTags` => TODO "Mute words / tags"
+- `notifications.tsx`: `notificationCategories` => TODO
+  "Notification settings categories"
+- `content-and-media.tsx`: `manageSavedFeeds` => TODO "Custom feed
+  pins"
+
+**Account / security flows** — require Bluesky API integration;
+several are destructive and need confirmation flows.
+- `account.tsx`: `email`, `updateEmail`, `password`, `birthday`,
+  `exportData`, `deactivateAccount`, `deleteAccount`
+- `privacy-and-security.tsx`: `twoFactor`, `appPasswords`,
+  `notifyOthers`, `loggedOutVisibility`
+
+**Skippable / niche**
+- `about.tsx`: `systemLog`
+- `moderation.tsx`: `interactionSettings` (overlaps with
+  PostComposer's reply-controls)
+
 ## P1 — original task list (still pending)
 
 - **Mute words / tags.** Settings UI + filter pass over feed text and

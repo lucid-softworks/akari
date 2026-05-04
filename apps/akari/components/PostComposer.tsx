@@ -41,6 +41,7 @@ import {
 import { usePostControls } from '@/hooks/mutations/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useDrafts } from '@/hooks/queries/useDrafts';
+import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ComposerDraftState } from '@/utils/draftMapper';
@@ -920,10 +921,21 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const anyVideoPending = posts.some(
     (p) => p.attachedVideo && !p.attachedVideo.blob,
   );
+  const { requireAltText } = useAccessibilitySettings();
+  // When the user opts in to "require alt text," any image (or video) in the
+  // thread that's missing alt text blocks the post.
+  const anyMediaMissingAlt =
+    requireAltText &&
+    posts.some(
+      (p) =>
+        p.attachedImages.some((img) => !img.alt.trim()) ||
+        (p.attachedVideo && !p.attachedVideo.alt.trim()),
+    );
   const isPostDisabled =
     !rootHasContent ||
     anyPostOverLimit ||
     anyVideoPending ||
+    anyMediaMissingAlt ||
     createPostMutation.isPending;
   const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
   const characterCount = text.length;

@@ -12,6 +12,7 @@ import { formatCompactNumber } from '@/utils/formatNumber';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useRepostPost } from '@/hooks/mutations/useRepostPost';
+import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type PostActionsProps = {
@@ -47,6 +48,7 @@ export const PostActions = React.memo(function PostActions({
   onMorePress,
   onQuotePress,
 }: PostActionsProps) {
+  const { largerTextBadges } = useAccessibilitySettings();
   const likeMutation = useLikePost();
   const repostMutation = useRepostPost();
   const bookmarkMutation = useBookmarkPost();
@@ -159,7 +161,9 @@ export const PostActions = React.memo(function PostActions({
           size={20}
           color={iconColor}
         />
-        <ThemedText style={styles.interactionCount}>{formatCompactNumber(commentCount)}</ThemedText>
+        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
+          {formatCompactNumber(commentCount)}
+        </ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -171,7 +175,9 @@ export const PostActions = React.memo(function PostActions({
         accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost or quote post by ${authorName}`}
       >
         <IconSymbol name="arrow.2.squarepath" size={20} color={isReposted ? '#34C759' : iconColor} />
-        <ThemedText style={styles.interactionCount}>{formatCompactNumber(repostCount)}</ThemedText>
+        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
+          {formatCompactNumber(repostCount)}
+        </ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -187,7 +193,9 @@ export const PostActions = React.memo(function PostActions({
           size={20}
           color={isLiked ? semanticColors.like : iconColor}
         />
-        <ThemedText style={styles.interactionCount}>{formatCompactNumber(likeCount)}</ThemedText>
+        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
+          {formatCompactNumber(likeCount)}
+        </ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -271,5 +279,8 @@ const styles = StyleSheet.create({
   interactionCount: {
     fontSize: fontSize.base,
     opacity: opacity.secondary,
+  },
+  interactionCountLarge: {
+    fontSize: fontSize.lg,
   },
 });

@@ -98,6 +98,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/account'),
       },
       {
+        key: 'privacy-and-security',
+        icon: 'lock.fill',
+        label: t('settings.privacyAndSecurity'),
+        onPress: () => router.push('/(tabs)/settings/privacy-and-security'),
+      },
+      {
         key: 'notifications',
         icon: 'bell.fill',
         label: t('settings.notifications'),
@@ -132,6 +138,18 @@ export default function SettingsScreen() {
         icon: 'globe',
         label: t('settings.language'),
         onPress: () => router.push('/(tabs)/settings/languages'),
+      },
+      {
+        key: 'accessibility',
+        icon: 'figure.wave.circle',
+        label: t('settings.accessibility'),
+        onPress: () => router.push('/(tabs)/settings/accessibility'),
+      },
+      {
+        key: 'about',
+        icon: 'info.circle',
+        label: t('settings.about'),
+        onPress: () => router.push('/(tabs)/settings/about'),
       },
     ],
     [t],

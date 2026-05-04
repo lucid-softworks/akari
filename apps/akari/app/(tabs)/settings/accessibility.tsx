@@ -1,39 +1,23 @@
-import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 
-import {
-  SettingsRow,
-  SettingsSection,
-  type SettingsRowDescriptor,
-} from '@/components/settings/SettingsList';
+import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AccessibilitySettingsScreen() {
   const borderColor = useBorderColor();
-  const showNotImplemented = useNotImplementedToast();
+  const iconColor = useThemeColor({}, 'text');
+  const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { t } = useTranslation();
-
-  const accessibilityRows = useMemo<SettingsRowDescriptor[]>(
-    () => [
-      {
-        key: 'require-alt-text',
-        icon: 'text.bubble',
-        label: t('settings.requireAltText'),
-        onPress: showNotImplemented,
-      },
-      {
-        key: 'display-larger-text',
-        icon: 'textformat.size',
-        label: t('settings.displayLargerTextBadges'),
-        onPress: showNotImplemented,
-      },
-    ],
-    [showNotImplemented, t],
-  );
+  const { requireAltText, setRequireAltText, largerTextBadges, setLargerTextBadges } =
+    useAccessibilitySettings();
 
   return (
     <SettingsSubpageLayout title={t('settings.accessibility')}>
@@ -44,16 +28,40 @@ export default function AccessibilitySettingsScreen() {
       >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            {accessibilityRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < accessibilityRows.length - 1}
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+              <IconSymbol
+                color={iconColor}
+                name="text.bubble"
+                size={20}
+                style={styles.toggleIcon}
               />
-            ))}
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.requireAltText')}
+                </ThemedText>
+                <ThemedText style={[styles.toggleHint, { color: subduedColor }]}>
+                  {t('settings.requireAltTextHint')}
+                </ThemedText>
+              </View>
+              <Switch value={requireAltText} onValueChange={setRequireAltText} />
+            </ThemedView>
+            <ThemedView style={styles.toggleRow}>
+              <IconSymbol
+                color={iconColor}
+                name="textformat.size"
+                size={20}
+                style={styles.toggleIcon}
+              />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.displayLargerTextBadges')}
+                </ThemedText>
+                <ThemedText style={[styles.toggleHint, { color: subduedColor }]}>
+                  {t('settings.displayLargerTextBadgesHint')}
+                </ThemedText>
+              </View>
+              <Switch value={largerTextBadges} onValueChange={setLargerTextBadges} />
+            </ThemedView>
           </ThemedView>
         </SettingsSection>
       </ScrollView>
@@ -74,5 +82,26 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 0,
+  },
+  toggleIcon: {
+    marginRight: 12,
+  },
+  toggleLabelWrap: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  toggleLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  toggleHint: {
+    fontSize: 12,
+    marginTop: 2,
+  },
 });
-
