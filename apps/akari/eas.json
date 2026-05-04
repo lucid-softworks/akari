@@ -42,7 +42,16 @@
   "submit": {
     "production": {
       "ios": {
-        "companyName": "Lucid Softworks"
+        "companyName": "Lucid Softworks",
+        "ascAppId": "6754194000",
+        "bundleIdentifier": "works.lucidsoft.akari"
+      }
+    },
+    "preview": {
+      "ios": {
+        "companyName": "Lucid Softworks",
+        "ascAppId": "6766172137",
+        "bundleIdentifier": "works.lucidsoft.akari.dev"
       }
     }
   }
