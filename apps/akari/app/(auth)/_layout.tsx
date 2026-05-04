@@ -8,6 +8,20 @@ export default function AuthLayout() {
         name="signin"
         options={{
           title: "Sign In",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="oauth"
+        options={{
+          title: "Sign in with atproto",
+          headerShown: Platform.OS !== 'web',
+        }}
+      />
+      <Stack.Screen
+        name="password"
+        options={{
+          title: "Sign in with app password",
           headerShown: Platform.OS !== 'web',
         }}
       />

@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 
 import { spacing } from '@/constants/tokens';
 import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
@@ -34,6 +34,11 @@ export default function AccountSettingsScreen() {
   const removeAccountMutation = useRemoveAccount();
   const wipeAllDataMutation = useWipeAllData();
   const showNotImplemented = useNotImplementedToast();
+  // After wiping all auth, render <Redirect> rather than calling router
+  // imperatively — the imperative router doesn't strip group syntax
+  // (`(auth)` ends up as a literal URL segment), but <Redirect> handles
+  // cross-navigator-group transitions correctly.
+  const [signedOut, setSignedOut] = useState(false);
 
   const handleSwitchAccount = useCallback(
     (account: Account) => {
@@ -78,7 +83,7 @@ export default function AccountSettingsScreen() {
               removeAccountMutation.mutate(account.did);
 
               if (account.did === currentAccount?.did) {
-                router.replace('/(tabs)/index');
+                router.replace('/');
               }
             },
           },
@@ -95,6 +100,7 @@ export default function AccountSettingsScreen() {
   const handleLogout = useCallback(async () => {
     try {
       await wipeAllDataMutation.mutateAsync();
+      setSignedOut(true);
     } catch {
       showAlert({
         title: t('common.error'),
@@ -179,6 +185,10 @@ export default function AccountSettingsScreen() {
     ],
     [handleAddAccount, handleLogout, t],
   );
+
+  if (signedOut) {
+    return <Redirect href="/(auth)/signin" />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.account')}>

@@ -6,7 +6,14 @@ type AppVariant = 'development' | 'preview' | 'production';
 
 type VariantDefinition = {
   appName: string;
-  scheme: string;
+  /**
+   * Registered URL schemes for this variant. The first entry is the primary
+   * brand scheme used by deep links into the app; subsequent entries are
+   * additional schemes the OS must route to the app — most importantly the
+   * reverse-DNS-of-bundle-id scheme that the atproto OAuth callback uses
+   * (matches `redirect_uris` in the hosted client metadata).
+   */
+  schemes: string[];
   iosBundleIdentifier: string;
   androidPackage: string;
 };
@@ -16,19 +23,19 @@ const DEFAULT_VARIANT: AppVariant = 'development';
 const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
     appName: 'akari.blue Dev',
-    scheme: 'akari.blue-dev',
+    schemes: ['akari.blue-dev', 'works.lucidsoft.akari.dev'],
     iosBundleIdentifier: 'works.lucidsoft.akari.dev',
     androidPackage: 'works.lucidsoft.akari.dev',
   },
   preview: {
     appName: 'akari.blue Preview',
-    scheme: 'akari.blue-preview',
+    schemes: ['akari.blue-preview', 'works.lucidsoft.akari.preview'],
     iosBundleIdentifier: 'works.lucidsoft.akari.preview',
     androidPackage: 'works.lucidsoft.akari.preview',
   },
   production: {
     appName: 'akari.blue',
-    scheme: 'akari.blue',
+    schemes: ['akari.blue', 'works.lucidsoft.akari'],
     iosBundleIdentifier: 'works.lucidsoft.akari',
     androidPackage: 'works.lucidsoft.akari',
   },
@@ -63,7 +70,7 @@ const createConfigForVariant = (variant: AppVariant, baseConfig: ExpoConfig): Pa
   return {
     name: variantDefinition.appName,
     slug,
-    scheme: variantDefinition.scheme,
+    scheme: variantDefinition.schemes,
     ios: {
       ...(baseConfig.ios ?? {}),
       bundleIdentifier: variantDefinition.iosBundleIdentifier,

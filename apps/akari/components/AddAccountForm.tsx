@@ -104,7 +104,7 @@ export function AddAccountForm() {
 
       setHandle('');
       setAppPassword('');
-      router.replace(currentAccount ? '/settings' : '/index');
+      router.replace(currentAccount ? '/(tabs)/settings' : '/');
     } catch (error) {
       showAlert({
         title: t('common.error'),

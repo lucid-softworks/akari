@@ -20,6 +20,12 @@ module.exports = {
   ],
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
+  // The default jest-expo `transformIgnorePatterns` skips most of
+  // node_modules. `@noble/*` v2 ships ESM that babel-jest needs to transform,
+  // so allow-list them here.
+  transformIgnorePatterns: [
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@noble/curves|@noble/hashes))',
+  ],
   moduleNameMapper: {
     '^@/axiom-crash-reporter$': '<rootDir>/../../packages/axiom-crash-reporter/src',
     '^@/bluesky-api$': '<rootDir>/../../packages/bluesky-api/src',

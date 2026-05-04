@@ -1,3 +1,4 @@
+import '@/utils/polyfills/getRandomValues'; // Polyfills globalThis.crypto.getRandomValues via expo-crypto so @noble can sign DPoP proofs on Hermes
 import '@/utils/intl-polyfills'; // Initialize Intl polyfills
 
 import { DevPerformanceOverlay } from '@/components/DevPerformanceOverlay';

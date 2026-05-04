@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -17,14 +16,13 @@ export function useWipeAllData() {
       storage.removeItem('refreshToken');
 
       // Clear query cache entirely to prevent stale queries from
-      // refetching with null tokens and crashing
+      // refetching with null tokens and crashing. Clearing the cache also
+      // invalidates useAuthStatus, so (tabs)/_layout.tsx's built-in
+      // <Redirect href="/(auth)/signin"> will fire on the next render and
+      // route the user back to the auth flow without an imperative call.
       queryClient.clear();
 
       return true;
-    },
-    onSuccess: () => {
-      // Navigate to sign-in immediately
-      router.replace('/(auth)/signin');
     },
   });
 }
