@@ -3,15 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react-native';
 
 import { usePostTranslation } from '@/hooks/mutations/usePostTranslation';
-import { getLibreTranslateClient } from '@/utils/libretranslate';
 
-jest.mock('@/utils/libretranslate', () => {
-  const actual = jest.requireActual('@/utils/libretranslate');
-  return {
-    ...actual,
-    getLibreTranslateClient: jest.fn(),
-  };
-});
+// Production no longer uses the LibreTranslate client wrapper — it calls
+// `fetch('https://translate.akari.blue/', ...)` directly. Mock global fetch
+// for these tests instead.
+const originalFetch = global.fetch;
+let fetchMock: jest.Mock;
 
 describe('usePostTranslation', () => {
   const createWrapper = () => {
@@ -31,26 +28,38 @@ describe('usePostTranslation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    fetchMock = jest.fn();
+    (global as any).fetch = fetchMock;
+  });
+
+  afterAll(() => {
+    (global as any).fetch = originalFetch;
   });
 
   it('translates text successfully', async () => {
-    const translateMock = jest.fn().mockResolvedValue({ status: 200, translatedText: 'Hola mundo' });
-    (getLibreTranslateClient as jest.Mock).mockReturnValue({ translate: translateMock });
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ translatedText: 'Hola mundo', detectedLanguage: { language: 'en' } }),
+    });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => usePostTranslation(), { wrapper });
 
     await expect(result.current.mutateAsync({ text: 'Hello world', targetLanguage: 'es' })).resolves.toEqual({
       translatedText: 'Hola mundo',
+      detectedLanguage: 'en',
     });
 
-    expect(translateMock).toHaveBeenCalledWith('Hello world', 'auto', 'es');
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://translate.akari.blue/',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ q: 'Hello world', source: 'auto', target: 'es' }),
+      }),
+    );
   });
 
   it('returns empty translation when text is blank', async () => {
-    const translateMock = jest.fn();
-    (getLibreTranslateClient as jest.Mock).mockReturnValue({ translate: translateMock });
-
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => usePostTranslation(), { wrapper });
 
@@ -58,18 +67,21 @@ describe('usePostTranslation', () => {
       translatedText: '',
     });
 
-    expect(translateMock).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('throws an error when translation request fails', async () => {
-    const translateMock = jest.fn().mockResolvedValue({ status: 500, error: 'Service unavailable' });
-    (getLibreTranslateClient as jest.Mock).mockReturnValue({ translate: translateMock });
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: 'Service unavailable' }),
+    });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => usePostTranslation(), { wrapper });
 
     await expect(result.current.mutateAsync({ text: 'Hello world', targetLanguage: 'de' })).rejects.toThrow(
-      'Service unavailable',
+      'Translation failed',
     );
   });
 });

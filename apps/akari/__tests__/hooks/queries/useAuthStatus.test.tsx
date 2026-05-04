@@ -117,7 +117,8 @@ describe('useAuthStatus', () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({
       data: { pdsUrl: 'https://pds', did: 'did' },
     });
-    mockRefreshSession.mockRejectedValue(new Error('boom'));
+    const authError = Object.assign(new Error('expired'), { status: 401 });
+    mockRefreshSession.mockRejectedValue(authError);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useAuthStatus(), { wrapper });

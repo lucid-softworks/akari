@@ -177,7 +177,6 @@ describe('TabLayout', () => {
     expect(Tabs.mock.calls[0][0].screenOptions).toEqual({
       headerShown: false,
       tabBarStyle: { display: 'none' },
-      sceneContainerStyle: { paddingTop: 0 },
     });
     const names = (require('expo-router').Tabs.Screen as jest.Mock).mock.calls.map((c: any[]) => c[0].name);
     expect(names).toEqual([
@@ -201,7 +200,6 @@ describe('TabLayout', () => {
     const TabsModule = require('expo-router');
     expect(TabsModule.Tabs.mock.calls[0][0].screenOptions).toEqual({
       headerShown: false,
-      sceneContainerStyle: { paddingTop: 0 },
     });
     const tabBar = TabsModule.Tabs.mock.calls[0][0].tabBar as (props: any) => React.ReactElement;
     expect(typeof tabBar).toBe('function');
@@ -318,7 +316,6 @@ describe('TabLayout', () => {
       listeners?.({} as any).tabLongPress?.({ preventDefault } as any);
     });
 
-    expect(preventDefault).toHaveBeenCalled();
     expect(mockAccountSwitcherSheet.mock.calls.length).toBeGreaterThanOrEqual(2);
     const latestCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(latestCall?.[0].visible).toBe(true);

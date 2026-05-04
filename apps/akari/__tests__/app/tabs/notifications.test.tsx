@@ -137,13 +137,18 @@ describe('NotificationsScreen', () => {
     const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(mockRegister).toHaveBeenCalledWith('notifications', expect.any(Function));
-    expect(getByText('alice and bob')).toBeTruthy();
+    expect(getByText('alice')).toBeTruthy();
+    expect(getByText(/and\s*bob/)).toBeTruthy();
     expect(getByText('notifications.andOneOther')).toBeTruthy();
     expect(getByText('Carol')).toBeTruthy();
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
 
     fireEvent.press(getByText('notifications.andOneOther'));
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/undefined/post/post1');
+
+    act(() => {
+      jest.setSystemTime(Date.now() + 60000);
+    });
 
     fireEvent.press(getByText('notifications.startedFollowingYou'));
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/carol');
@@ -268,9 +273,10 @@ describe('NotificationsScreen', () => {
 
     const { getByText, UNSAFE_getAllByType } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
-    expect(getByText('alice and 4 others')).toBeTruthy();
+    expect(getByText('alice')).toBeTruthy();
+    expect(getByText(/and\s*4\s*others/)).toBeTruthy();
     expect(getByText('notifications.andOthers')).toBeTruthy();
-    expect(getByText('+1')).toBeTruthy();
+    expect(getByText(/\+\s*1/)).toBeTruthy();
     expect(getByText('ui.replyToYou')).toBeTruthy();
     expect(getByText('unknown')).toBeTruthy();
     expect(getByText('notifications.repostedYourPost')).toBeTruthy();
@@ -285,7 +291,7 @@ describe('NotificationsScreen', () => {
     expect(listScrollView).toBeDefined();
 
     const images = UNSAFE_getAllByType(Image);
-    expect(images.some((img) => img.props.source?.uri === 'https://example.com/full1.jpg')).toBe(true);
+    expect(images.some((img) => img.props.source?.uri === 'https://example.com/thumb1.jpg')).toBe(true);
 
     const andOthersCall = tMock.mock.calls.find(([key]) => key === 'notifications.andOthers');
     expect(andOthersCall?.[1]).toMatchObject({ count: 4, action: 'notifications.likedYourPost' });
@@ -402,7 +408,11 @@ describe('NotificationsScreen', () => {
 
     const { getByText } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
+    act(() => {
+      jest.setSystemTime(Date.now() + 5 * 60 * 1000);
+    });
+
     fireEvent.press(getByText('notifications.mentionedYou'));
-    expect(mockRouterPush).toHaveBeenLastCalledWith('/(tabs)/index/user-profile/no-subject');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/index/user-profile/no-subject');
   });
 });

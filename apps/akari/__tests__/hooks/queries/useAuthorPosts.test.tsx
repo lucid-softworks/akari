@@ -87,14 +87,14 @@ describe('useAuthorPosts', () => {
       1,
       'token',
       'alice',
-      20,
+      50,
       undefined,
     );
     expect(mockGetAuthorFeed).toHaveBeenNthCalledWith(
       2,
       'token',
       'alice',
-      20,
+      50,
       'cursor1',
     );
   });

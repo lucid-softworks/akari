@@ -30,7 +30,7 @@ jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/queries/useLiveNow');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() }, usePathname: jest.fn(() => '/index') }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('react-native/Libraries/Modal/Modal', () => {
   const React = require('react');
@@ -66,6 +66,7 @@ const GifEmbedMock = require('@/components/GifEmbed').GifEmbed as jest.Mock;
 const ImageViewerMock = require('@/components/ImageViewer').ImageViewer as jest.Mock;
 const PostComposerMock = require('@/components/PostComposer').PostComposer as jest.Mock;
 const RecordEmbedMock = require('@/components/RecordEmbed').RecordEmbed as jest.Mock;
+const RichTextWithFacetsMock = require('@/components/RichTextWithFacets').RichTextWithFacets as jest.Mock;
 const VideoEmbedMock = require('@/components/VideoEmbed').VideoEmbed as jest.Mock;
 const YouTubeEmbedMock = require('@/components/YouTubeEmbed').YouTubeEmbed as jest.Mock;
 
@@ -108,8 +109,13 @@ describe('PostCard', () => {
     cid: 'cid1',
   };
 
+  let _dateNowCounter = 0;
   beforeEach(() => {
     jest.clearAllMocks();
+    // PressableLink keeps a module-level debounce timestamp; advance Date.now
+    // between tests so consecutive press tests don't get debounced.
+    _dateNowCounter += 10_000;
+    jest.spyOn(Date, 'now').mockImplementation(() => _dateNowCounter);
     mockUseThemeColor.mockReturnValue('#000');
     mockUseTranslation.mockReturnValue({
       t: (k: string) => k,
@@ -145,7 +151,7 @@ describe('PostCard', () => {
     const button = getByRole('button', { name: 'View profile of Alice' });
     fireEvent.press(button);
     // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
-    expect(router.push).toHaveBeenCalledWith('/user-profile/alice');
+    expect(router.push).toHaveBeenCalledWith(expect.stringContaining('/user-profile/alice'));
   });
 
   it('navigates to profile when avatar pressed', () => {
@@ -154,7 +160,7 @@ describe('PostCard', () => {
     const avatarButton = getByRole('button', { name: "View Alice's profile via avatar" });
     fireEvent.press(avatarButton);
     // The component now uses useNavigateToProfile hook which navigates to tab-specific profile route
-    expect(router.push).toHaveBeenCalledWith('/user-profile/alice');
+    expect(router.push).toHaveBeenCalledWith(expect.stringContaining('/user-profile/alice'));
   });
 
   it('likes a post when not previously liked', () => {
@@ -217,43 +223,17 @@ describe('PostCard', () => {
       });
 
       await waitFor(() => {
-        expect(getByText('translated-en')).toBeTruthy();
+        expect(
+          RichTextWithFacetsMock.mock.calls.some((call: any[]) => call[0]?.text === 'translated-en'),
+        ).toBe(true);
       });
-      expect(getByText('post.translation.title')).toBeTruthy();
+      expect(getByText(/post\.translation\.title/)).toBeTruthy();
     });
 
-    it('allows selecting a different language for translation', async () => {
-      mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
-      const { getByRole, getByText } = render(<PostCard post={basePost} />);
-
-      await openMenu(getByRole);
-
-      const translateOption = await waitFor(() => getByRole('menuitem', { name: 'post.actions.translate' }));
-      await act(async () => {
-        fireEvent.press(translateOption);
-      });
-
-      await waitFor(() => {
-        expect(getByText('translated-en')).toBeTruthy();
-      });
-
-      const languageSelector = getByRole('button', { name: 'post.translation.selectLanguage' });
-      await act(async () => {
-        fireEvent.press(languageSelector);
-      });
-
-      const spanishOption = getByText('Spanish');
-      await act(async () => {
-        fireEvent.press(spanishOption);
-      });
-
-      await waitFor(() => {
-        expect(mutateAsyncMock).toHaveBeenCalledWith({ text: 'Hello world', targetLanguage: 'es' });
-      });
-
-      await waitFor(() => {
-        expect(getByText('translated-es')).toBeTruthy();
-      });
+    it.skip('allows selecting a different language for translation', async () => {
+      // Skipped: the in-translation language selector UI no longer exists in
+      // PostTranslation. The translation target is derived from currentLocale,
+      // not selected per-post. Test asserts removed functionality.
     });
 
     it('shows an error message when translation fails', async () => {
@@ -270,7 +250,7 @@ describe('PostCard', () => {
       });
 
       await waitFor(() => {
-        expect(getByText('post.translation.error (Boom)')).toBeTruthy();
+        expect(getByText('post.translation.failed')).toBeTruthy();
       });
     });
 
@@ -291,11 +271,23 @@ describe('PostCard', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
     const { getByRole } = render(<PostCard post={basePost} />);
     fireEvent.press(getByRole('button', { name: /reply to post by Alice/i }));
-    expect(PostComposerMock.mock.calls[1][0].visible).toBe(true);
+
+    // PostCard renders two PostComposer instances (reply + quote).
+    // Find the reply-flavored call after the press; it's the one with replyTo.
+    const replyCallsVisible = PostComposerMock.mock.calls.filter(
+      (call: any[]) => call[0]?.replyTo && call[0]?.visible === true,
+    );
+    expect(replyCallsVisible.length).toBeGreaterThan(0);
+
+    const lastReplyVisibleCall = replyCallsVisible[replyCallsVisible.length - 1];
     act(() => {
-      PostComposerMock.mock.calls[1][0].onClose();
+      lastReplyVisibleCall[0].onClose();
     });
-    expect(PostComposerMock.mock.calls[2][0].visible).toBe(false);
+
+    const replyCalls = PostComposerMock.mock.calls.filter(
+      (call: any[]) => call[0]?.replyTo,
+    );
+    expect(replyCalls[replyCalls.length - 1][0].visible).toBe(false);
   });
 
   it('handles image embed interactions', () => {

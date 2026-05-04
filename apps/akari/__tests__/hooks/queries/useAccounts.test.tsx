@@ -46,7 +46,7 @@ describe('useAccounts query hook', () => {
     expect(mockGetItem).toHaveBeenCalledWith('accounts');
   });
 
-  it('handles missing accounts', async () => {
+  it('falls back to an empty array when no accounts are stored', async () => {
     mockGetItem.mockReturnValue(null);
 
     const { wrapper } = createWrapper();
@@ -56,7 +56,7 @@ describe('useAccounts query hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toBeNull();
+    expect(result.current.data).toEqual([]);
     expect(mockGetItem).toHaveBeenCalledWith('accounts');
   });
 });

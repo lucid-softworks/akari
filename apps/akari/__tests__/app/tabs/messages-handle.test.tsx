@@ -277,7 +277,7 @@ describe('ConversationScreen', () => {
 
     const { getByText } = render(<ConversationScreen />);
 
-    expect(getByText('Loading messages...')).toBeTruthy();
+    expect(getByText('common.loading')).toBeTruthy();
   });
 
   it('applies distinct backgrounds to incoming and outgoing messages', () => {

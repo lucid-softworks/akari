@@ -65,20 +65,18 @@ describe('TabBadge', () => {
     expect(style.height).toBe(20);
   });
 
-  it('calls useThemeColor for background and text colors', () => {
+  it('applies platform-specific background and white text colors', () => {
     const TabBadge = loadTabBadge();
 
-    render(<TabBadge count={1} />);
-    expect(mockUseThemeColor).toHaveBeenNthCalledWith(
-      1,
-      { light: '#ff3b30', dark: '#ff453a' },
-      'tint',
-    );
-    expect(mockUseThemeColor).toHaveBeenNthCalledWith(
-      2,
-      { light: '#ffffff', dark: '#ffffff' },
-      'text',
-    );
+    const { toJSON, getByText } = render(<TabBadge count={1} />);
+    const view = toJSON() as any;
+    const badgeStyle = StyleSheet.flatten(view.props.style);
+    // Default platform mock is iOS
+    expect(badgeStyle.backgroundColor).toBe('#ff3b30');
+
+    const textNode = getByText('1');
+    const textStyle = StyleSheet.flatten(textNode.props.style);
+    expect(textStyle.color).toBe('#ffffff');
   });
 
   it('uses Android offsets for badge positioning', () => {

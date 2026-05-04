@@ -39,7 +39,7 @@ describe('useBlockUser mutation hook', () => {
     jest.clearAllMocks();
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
     (useCurrentAccount as jest.Mock).mockReturnValue({
-      data: { pdsUrl: 'https://pds' },
+      data: { pdsUrl: 'https://pds', did: 'did:current' },
     });
     mockBlockUser.mockResolvedValue({});
     mockUnblockUser.mockResolvedValue({});
@@ -54,7 +54,7 @@ describe('useBlockUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockBlockUser).toHaveBeenCalledWith('token', 'did');
+    expect(mockBlockUser).toHaveBeenCalledWith('token', 'did:current', 'did');
   });
 
   it('errors when token missing', async () => {

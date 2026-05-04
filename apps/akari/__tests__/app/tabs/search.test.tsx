@@ -110,7 +110,7 @@ describe('SearchScreen', () => {
     const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
     fireEvent.press(getByText('common.search'));
     await waitFor(() => {
-      expect(mockUseSearch).toHaveBeenLastCalledWith('hello', 'all', 20);
+      expect(mockUseSearch).toHaveBeenLastCalledWith('hello', 'all', 20, 'top');
     });
     expect(dismissSpy).toHaveBeenCalled();
   });

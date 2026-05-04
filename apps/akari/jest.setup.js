@@ -1,3 +1,30 @@
+// In-memory MMKV stand-in so tests that don't explicitly mock secureStorage
+// can still read/write through the real `storage` object. Tests that assert
+// against MMKV directly can override this with their own jest.mock.
+jest.mock('react-native-mmkv', () => {
+  const stores = new Map();
+  return {
+    MMKV: jest.fn(({ id } = {}) => {
+      const storeKey = id ?? 'default';
+      if (!stores.has(storeKey)) stores.set(storeKey, new Map());
+      const store = stores.get(storeKey);
+      return {
+        getString: (key) => store.get(key),
+        set: (key, value) => store.set(key, value),
+        delete: (key) => store.delete(key),
+        contains: (key) => store.has(key),
+        getAllKeys: () => [...store.keys()],
+        recrypt: jest.fn(),
+      };
+    }),
+  };
+});
+
+// secureStorage now lazy-inits via bootstrapSecureStorage(); kick that off
+// here so hooks reading storage in `initialData` don't throw in tests.
+const { initialiseSecureStorage } = require('./utils/secureStorage');
+initialiseSecureStorage('jest-test-key');
+
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
   Reanimated.default.call = () => {};
@@ -44,13 +71,103 @@ jest.mock('expo-router', () => ({
 
 // Navigation utilities are mocked in jest.setup.early.js
 
+// react-native-webview's WebView constructor reaches into the native turbo
+// module at import time — stub the public surface for jest.
+jest.mock('react-native-webview', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  const WebView = React.forwardRef((props, ref) =>
+    React.createElement(View, { ...props, ref }),
+  );
+  WebView.displayName = 'WebView';
+  return { __esModule: true, default: WebView, WebView };
+});
+
+// expo-video patches NativeVideoModule.VideoPlayer.prototype at module-load
+// time, which throws in jest because the native module is undefined. Mock the
+// public surface so importers don't blow up.
+jest.mock('expo-video', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    useVideoPlayer: jest.fn(() => ({
+      play: jest.fn(),
+      pause: jest.fn(),
+      replace: jest.fn(),
+      replaceAsync: jest.fn(),
+      release: jest.fn(),
+      muted: false,
+      playing: false,
+      loop: false,
+      currentTime: 0,
+      duration: 0,
+    })),
+    VideoView: React.forwardRef((props, ref) => React.createElement(View, { ...props, ref })),
+  };
+});
+
+// Auto-wrap `render` / `renderHook` in a QueryClientProvider so tests that
+// don't construct their own client don't blow up at `useQuery`. Tests that
+// already supply a `wrapper` option keep working — we nest theirs inside.
+jest.mock('@testing-library/react-native', () => {
+  const actual = jest.requireActual('@testing-library/react-native');
+  const React = require('react');
+  const { QueryClient, QueryClientProvider } = require('@tanstack/react-query');
+
+  const wrap = (fn) => (ui, options = {}) => {
+    const userWrapper = options.wrapper;
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false, gcTime: 0 } },
+    });
+    const Wrapper = ({ children }) => {
+      const inner = userWrapper
+        ? React.createElement(userWrapper, null, children)
+        : children;
+      return React.createElement(QueryClientProvider, { client }, inner);
+    };
+    return fn(ui, { ...options, wrapper: Wrapper });
+  };
+
+  return {
+    ...actual,
+    render: wrap(actual.render),
+    renderHook: wrap(actual.renderHook),
+  };
+});
+
+// useSafeAreaInsets() throws when no provider is up; tests rarely wrap their
+// renders, so stub the hook + context at the module level.
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const EdgeInsetsContext = React.createContext({ top: 0, right: 0, bottom: 0, left: 0 });
+  const FrameContext = React.createContext({ x: 0, y: 0, width: 0, height: 0 });
+  return {
+    __esModule: true,
+    SafeAreaProvider: ({ children }) => children,
+    SafeAreaView: ({ children }) => children,
+    SafeAreaInsetsContext: EdgeInsetsContext,
+    SafeAreaFrameContext: FrameContext,
+    useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+    useSafeAreaFrame: () => ({ x: 0, y: 0, width: 0, height: 0 }),
+    initialWindowMetrics: null,
+  };
+});
+
 jest.mock(
   '@shopify/flash-list',
   () => {
     const React = require('react');
     const { FlatList } = require('react-native');
 
-    const FlashList = React.forwardRef((props, ref) => <FlatList ref={ref} {...props} />);
+    const FlashList = React.forwardRef((props, ref) => {
+      // FlashList tolerates an absent `refreshing` prop; FlatList does not when
+      // `onRefresh` is set, so default it here to keep the shim transparent.
+      const merged = props.onRefresh && props.refreshing == null
+        ? { ...props, refreshing: false }
+        : props;
+      return <FlatList ref={ref} {...merged} />;
+    });
     FlashList.displayName = 'FlashList';
 
     return { FlashList };

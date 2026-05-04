@@ -119,6 +119,11 @@ describe('useConversations', () => {
           unreadCount: 1,
           status: 'accepted',
           muted: false,
+          isGroup: false,
+          members: [
+            { did: 'did:other', handle: 'alice', displayName: 'Alice', avatar: 'alice.jpg' },
+          ],
+          verification: undefined,
         },
         {
           id: '2',
@@ -131,6 +136,11 @@ describe('useConversations', () => {
           unreadCount: 3,
           status: 'request',
           muted: true,
+          isGroup: false,
+          members: [
+            { did: 'did:two', handle: 'bob', avatar: 'bob.jpg' },
+          ],
+          verification: undefined,
         },
       ],
       cursor: 'cursor',

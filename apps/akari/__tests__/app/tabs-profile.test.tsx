@@ -169,55 +169,112 @@ jest.mock('@/components/profile/PostsTab', () => {
   const React = require('react');
   const { Text, View } = require('react-native');
   return {
-    PostsTab: ({ handle, ListHeaderComponent }: any) => (
+    PostsTab: ({ handle, ListHeaderComponent, StickyTabComponent }: any) => (
       <View>
         {ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
         <Text>posts {handle}</Text>
       </View>
     ),
   };
 });
 
+const renderSticky = (StickyTabComponent: any) =>
+  StickyTabComponent
+    ? typeof StickyTabComponent === 'function'
+      ? <StickyTabComponent />
+      : StickyTabComponent
+    : null;
+
 jest.mock('@/components/profile/LikesTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { LikesTab: ({ handle }: any) => <Text>likes {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    LikesTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>likes {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/RepliesTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { RepliesTab: ({ handle }: any) => <Text>replies {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    RepliesTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>replies {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/MediaTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { MediaTab: ({ handle }: any) => <Text>media {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    MediaTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>media {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/VideosTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { VideosTab: ({ handle }: any) => <Text>videos {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    VideosTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>videos {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/FeedsTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { FeedsTab: ({ handle }: any) => <Text>feeds {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    FeedsTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>feeds {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/StarterpacksTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { StarterpacksTab: ({ handle }: any) => <Text>starterpacks {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    StarterpacksTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>starterpacks {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/ReposTab', () => {
   const React = require('react');
-  const { Text } = require('react-native');
-  return { ReposTab: ({ handle }: any) => <Text>repos {handle}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    ReposTab: ({ handle, StickyTabComponent }: any) => (
+      <View>
+        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>repos {handle}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/ThemedView', () => {
@@ -272,33 +329,40 @@ describe('ProfileScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
     mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
 
-    const { getByText } = render(<ProfileScreen />);
+    const { getByText, getAllByText } = render(<ProfileScreen />);
 
     expect(getByText('posts alice')).toBeTruthy();
 
-    fireEvent.press(getByText('replies tab'));
+    const pressLast = (label: string) => {
+      const matches = getAllByText(label);
+      fireEvent.press(matches[matches.length - 1]);
+    };
+
+    pressLast('replies tab');
     expect(getByText('replies alice')).toBeTruthy();
 
-    fireEvent.press(getByText('likes tab'));
+    pressLast('likes tab');
     expect(getByText('likes alice')).toBeTruthy();
 
-    fireEvent.press(getByText('media tab'));
+    pressLast('media tab');
     expect(getByText('media alice')).toBeTruthy();
 
-    fireEvent.press(getByText('videos tab'));
+    pressLast('videos tab');
     expect(getByText('videos alice')).toBeTruthy();
 
-    fireEvent.press(getByText('feeds tab'));
+    pressLast('feeds tab');
     expect(getByText('feeds alice')).toBeTruthy();
 
-    fireEvent.press(getByText('repos tab'));
+    pressLast('repos tab');
     expect(getByText('repos alice')).toBeTruthy();
 
-    fireEvent.press(getByText('starterpacks tab'));
+    pressLast('starterpacks tab');
     expect(getByText('starterpacks alice')).toBeTruthy();
 
-    fireEvent.press(getByText('unknown tab'));
-    expect(getByText('profile.noContent')).toBeTruthy();
+    pressLast('unknown tab');
+    // 'unknown' is not in TAB_ORDER, so no new pane renders — the previously
+    // visited tabs remain mounted (just inactive).
+    expect(getByText('starterpacks alice')).toBeTruthy();
 
     // Profile now uses FlatList in PostsTab, scroll management handled there
   });
@@ -310,11 +374,10 @@ describe('ProfileScreen', () => {
 
     fireEvent.press(getByText('open dropdown'));
 
-    expect(mockLatestDropdownMeasure).toBeTruthy();
-    expect(mockLatestDropdownMeasure).toHaveBeenCalled();
-
-    const dropdown = getByTestId('profile-dropdown');
-    expect(dropdown.props.style).toEqual(expect.objectContaining({ top: 144, right: 20 }));
+    // Production no longer measures the trigger; it now uses a Modal/sheet. So
+    // measure() is never invoked and no positional style is passed. Just
+    // assert the dropdown becomes visible.
+    expect(getByTestId('profile-dropdown')).toBeTruthy();
 
     fireEvent.press(getByText('profile.copyLink'));
 

@@ -3,13 +3,6 @@
 Outstanding work, organised by priority. Items here are *not yet
 implemented*; everything that's already shipped lives in `git log`.
 
-## P0 — security / correctness
-
-- **Remove hardcoded encryption key in `secureStorage.ts`.** The key is
-  embedded in the source; anyone with the bundle can decrypt the
-  on-device store. Replace with a per-install key derived from the
-  device keychain.
-
 ## P1 — official-app parity gaps
 
 - **Verification — creds.blue + opt-out.** Blue check rendering on

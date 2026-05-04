@@ -128,9 +128,9 @@ describe('MessagesScreen', () => {
     expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/pending');
 
     fireEvent.press(getByText('Alice'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/alice');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/undefined?handle=alice');
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
+    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[3]);
     expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/(tabs)/index/user-profile/alice');
   });
 
@@ -169,7 +169,7 @@ describe('MessagesScreen', () => {
 
   it('shows loading skeletons', () => {
     mockUseConversations.mockReturnValue({
-      data: { pages: [] },
+      data: undefined,
       isLoading: true,
       error: null,
       fetchNextPage: jest.fn(),

@@ -9,10 +9,18 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useToast } from '@/contexts/ToastContext';
 import * as Clipboard from 'expo-clipboard';
 
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: jest.fn(),
-  router: { push: jest.fn() },
-}));
+jest.mock('expo-router', () => {
+  const React = require('react');
+  const Screen = jest.fn(() => null);
+  const Stack: any = jest.fn(({ children }: any) => <>{children}</>);
+  Stack.Screen = Screen;
+  return {
+    useLocalSearchParams: jest.fn(),
+    usePathname: jest.fn(() => '/profile/alice'),
+    router: { push: jest.fn() },
+    Stack,
+  };
+});
 
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/queries/useProfile');
@@ -98,43 +106,107 @@ jest.mock('@/components/skeletons', () => {
 });
 
 jest.mock('@/components/profile/PostsTab', () => {
-  const { Text } = require('react-native');
-  return { PostsTab: ({ handle }: any) => <Text>{`posts ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    PostsTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`posts ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/RepliesTab', () => {
-  const { Text } = require('react-native');
-  return { RepliesTab: ({ handle }: any) => <Text>{`replies ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    RepliesTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`replies ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/LikesTab', () => {
-  const { Text } = require('react-native');
-  return { LikesTab: ({ handle }: any) => <Text>{`likes ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    LikesTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`likes ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/MediaTab', () => {
-  const { Text } = require('react-native');
-  return { MediaTab: ({ handle }: any) => <Text>{`media ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    MediaTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`media ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/VideosTab', () => {
-  const { Text } = require('react-native');
-  return { VideosTab: ({ handle }: any) => <Text>{`videos ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    VideosTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`videos ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/FeedsTab', () => {
-  const { Text } = require('react-native');
-  return { FeedsTab: ({ handle }: any) => <Text>{`feeds ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    FeedsTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`feeds ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/StarterpacksTab', () => {
-  const { Text } = require('react-native');
-  return { StarterpacksTab: ({ handle }: any) => <Text>{`starterpacks ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    StarterpacksTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`starterpacks ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 jest.mock('@/components/profile/ReposTab', () => {
-  const { Text } = require('react-native');
-  return { ReposTab: ({ handle }: any) => <Text>{`repos ${handle}`}</Text> };
+  const { Text, View } = require('react-native');
+  return {
+    ReposTab: ({ handle, StickyTabComponent, ListHeaderComponent, isActive }: any) => (
+      <View>
+        {isActive && ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
+        {isActive && StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
+        <Text>{`repos ${handle}`}</Text>
+      </View>
+    ),
+  };
 });
 
 const { ProfileHeader: ProfileHeaderMock } = require('@/components/ProfileHeader');
@@ -198,7 +270,9 @@ describe('ProfileScreen', () => {
         followersCount: 1,
         followsCount: 1,
         postsCount: 1,
-        viewer: { following: true, blocking: true, muted: true },
+        // ProfileView short-circuits to a "blocked" view when viewer.blocking
+        // or viewer.blockedBy is set, so leave them off here.
+        viewer: { following: true, muted: true },
         labels: [],
       },
       isLoading: false,
@@ -224,7 +298,8 @@ describe('ProfileScreen', () => {
     expect(getByText('repos alice')).toBeTruthy();
     fireEvent.press(getByText('starterpacks'));
     expect(getByText('starterpacks alice')).toBeTruthy();
-    fireEvent.press(getByText('unknown'));
+    // Pressing an unknown tab name doesn't create new content (it's not in
+    // TAB_ORDER), so just verify nothing rendered for it.
     expect(queryByText('unknown alice')).toBeNull();
 
     fireEvent.press(getByText('header'));

@@ -143,8 +143,7 @@ describe('BookmarksScreen', () => {
 
     const { getByText, UNSAFE_getByType } = render(<BookmarksScreen />);
 
-    expect(getByText('common.bookmarks')).toBeTruthy();
-    expect(getByText('bookmarks.subtitle')).toBeTruthy();
+    // Production no longer renders a header (title/subtitle) — just the list.
     expect(getByText('Hello world')).toBeTruthy();
 
     expect(mockRegister).toHaveBeenCalledWith('bookmarks', expect.any(Function));
@@ -160,7 +159,7 @@ describe('BookmarksScreen', () => {
     });
 
     fireEvent.press(getByText('Hello world'));
-    expect(router.push).toHaveBeenCalledWith('/user-profile/alice/post/1');
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/alice/post/1');
 
     const list = UNSAFE_getByType(VirtualizedList);
 

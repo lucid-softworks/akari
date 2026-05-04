@@ -212,7 +212,7 @@ describe('AuthScreen', () => {
     });
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/index');
     });
   });
 
@@ -257,7 +257,7 @@ describe('AuthScreen', () => {
     fireEvent.press(addAccountButtons[addAccountButtons.length - 1]);
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/settings');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/settings');
     });
   });
 
@@ -354,7 +354,7 @@ describe('AuthScreen', () => {
     fireEvent.press(utils.getByText('auth.connectAccount'));
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/index');
     });
   });
 

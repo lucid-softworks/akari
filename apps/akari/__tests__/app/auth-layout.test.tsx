@@ -27,7 +27,7 @@ describe('AuthLayout', () => {
       options.push(call[0].options);
     }
     expect(names).toEqual(['signin']);
-    expect(options).toEqual([{ title: 'Authentication', headerShown: false }]);
+    expect(options).toEqual([{ title: 'Sign In', headerShown: true }]);
   });
 });
 

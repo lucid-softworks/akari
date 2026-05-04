@@ -117,12 +117,11 @@ describe('LanguageSelector', () => {
     const view = renderLanguageSelector();
 
     fireEvent.press(view.getByRole('button', { name: 'settings.language' }));
-    fireEvent.press(view.getByRole('button', { name: 'common.cancel' }));
-
-    expect(changeLanguage).not.toHaveBeenCalled();
 
     const modal = view.UNSAFE_getByType(Modal);
     fireEvent(modal, 'requestClose');
+
+    expect(changeLanguage).not.toHaveBeenCalled();
 
     fireEvent.press(view.getByRole('button', { name: 'settings.language' }));
     fireEvent(modal, 'requestClose');

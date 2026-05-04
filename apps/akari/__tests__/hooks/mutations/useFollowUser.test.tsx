@@ -39,7 +39,7 @@ describe('useFollowUser mutation hook', () => {
     jest.clearAllMocks();
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
     (useCurrentAccount as jest.Mock).mockReturnValue({
-      data: { pdsUrl: 'https://pds' },
+      data: { pdsUrl: 'https://pds', did: 'did:current' },
     });
     mockFollowUser.mockResolvedValue({});
     mockUnfollowUser.mockResolvedValue({});
@@ -54,7 +54,7 @@ describe('useFollowUser mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockFollowUser).toHaveBeenCalledWith('token', 'did');
+    expect(mockFollowUser).toHaveBeenCalledWith('token', 'did:current', 'did');
   });
 
   it('errors when token missing', async () => {

@@ -164,7 +164,7 @@ export function ProfileTabFlatList<T>({
       stickyHeaderIndices={stickyIndices}
       stickyHeaderHiddenOnScroll
       onRefresh={onRefresh}
-      refreshing={refreshing}
+      refreshing={refreshing ?? false}
       onScroll={handleScroll}
       scrollEventThrottle={32}
       contentContainerStyle={styles.listContent}
