@@ -2,6 +2,7 @@ import { BlueskyApi } from '@/bluesky-api';
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
 import type { Account } from '@/types/account';
+import { readJwtExpiry } from '@/utils/jwt';
 import { refreshOAuthSession } from '@/utils/oauth/refresh';
 import { storage } from '@/utils/secureStorage';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -9,8 +10,8 @@ import { useCurrentAccount } from './useCurrentAccount';
 import { useJwtToken } from './useJwtToken';
 import { useRefreshToken } from './useRefreshToken';
 
-/** Refresh the OAuth access token whenever it's within this window of expiry. */
-const OAUTH_REFRESH_LEEWAY_SECONDS = 5 * 60;
+/** Refresh the access token whenever it's within this window of expiry. */
+const REFRESH_LEEWAY_SECONDS = 5 * 60;
 
 /**
  * Query hook for checking authentication status
@@ -37,17 +38,16 @@ export function useAuthStatus() {
         return { isAuthenticated: false };
       }
 
+      const now = Math.floor(Date.now() / 1000);
+
       // OAuth accounts refresh against the auth server's token endpoint with
       // DPoP — a different shape from the password flow's
       // `com.atproto.server.refreshSession`. We refresh proactively when the
-      // access token is within `OAUTH_REFRESH_LEEWAY_SECONDS` of expiry, then
+      // access token is within `REFRESH_LEEWAY_SECONDS` of expiry, then
       // mirror the new token + rotated refresh token across react-query and
       // secureStorage so every subsequent reader picks them up.
       if (currentAccount.oauth) {
-        const now = Math.floor(Date.now() / 1000);
-        const expiresInSeconds = currentAccount.oauth.expiresAt - now;
-
-        if (expiresInSeconds > OAUTH_REFRESH_LEEWAY_SECONDS) {
+        if (currentAccount.oauth.expiresAt - now > REFRESH_LEEWAY_SECONDS) {
           return {
             isAuthenticated: true,
             user: { did: currentAccount.did, handle: currentAccount.handle },
@@ -86,6 +86,18 @@ export function useAuthStatus() {
           clearAuthMutation.mutate();
           return { isAuthenticated: false };
         }
+      }
+
+      // Bearer / app-password — same expiry-driven gating as OAuth. The
+      // access token is a JWT; read its `exp` claim locally to decide
+      // whether we still need to call refreshSession. If we can't read
+      // `exp` (malformed token), refresh defensively rather than trust it.
+      const bearerExp = readJwtExpiry(token);
+      if (bearerExp !== null && bearerExp - now > REFRESH_LEEWAY_SECONDS) {
+        return {
+          isAuthenticated: true,
+          user: { did: currentAccount.did, handle: currentAccount.handle },
+        };
       }
 
       try {
