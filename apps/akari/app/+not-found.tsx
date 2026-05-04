@@ -17,7 +17,7 @@ export default function NotFoundScreen() {
         <ThemedText style={styles.pathname}>
           {t('errors.pathname', { pathname })}
         </ThemedText>
-        <Link href="/" style={styles.link}>
+        <Link href={'/' as never} style={styles.link}>
           <ThemedText type="link">{t('errors.goToHome')}</ThemedText>
         </Link>
         <Link href="/_sitemap" style={styles.link}>

@@ -1,6 +1,70 @@
 import type { BlueskyError, BlueskyUploadBlobResponse } from './types';
 
 /**
+ * Per-request DPoP proof signer for OAuth-authenticated accounts.
+ *
+ * The app registers one signer per access token via `registerDpopSigner`.
+ * When the API client calls `makeAuthenticatedRequest`, it looks up the
+ * signer by access token and, when present, takes the DPoP-bound code path
+ * instead of `Authorization: Bearer …`.
+ *
+ * Implementations own the DPoP keypair and embed the access token's `ath`
+ * claim themselves; the client only forwards method/url/nonce.
+ */
+export type DpopSigner = (params: {
+  method: 'GET' | 'POST';
+  url: string;
+  /** Server-issued nonce from a prior response, if any. */
+  nonce?: string;
+}) => Promise<string>;
+
+const dpopSignersByAccessToken = new Map<string, DpopSigner>();
+/**
+ * Per-origin DPoP nonce cache. RFC 9449 lets each origin (auth server and
+ * resource server) maintain its own nonce stream, so we key by URL origin
+ * rather than collapsing them into a single value.
+ */
+const dpopNoncesByOrigin = new Map<string, string>();
+
+/**
+ * Register a DPoP signer for `accessJwt`. Subsequent authenticated requests
+ * carrying that token will be DPoP-bound. Idempotent — re-registering the
+ * same token replaces the prior signer.
+ */
+export function registerDpopSigner(accessJwt: string, signer: DpopSigner): void {
+  dpopSignersByAccessToken.set(accessJwt, signer);
+}
+
+/** Drop the signer for `accessJwt`. Subsequent calls fall back to Bearer. */
+export function unregisterDpopSigner(accessJwt: string): void {
+  dpopSignersByAccessToken.delete(accessJwt);
+}
+
+function getCachedDpopNonce(url: string): string | undefined {
+  return dpopNoncesByOrigin.get(originOf(url));
+}
+
+function cacheDpopNonce(url: string, nonce: string): void {
+  dpopNoncesByOrigin.set(originOf(url), nonce);
+}
+
+function originOf(url: string): string {
+  return new URL(url).origin;
+}
+
+async function bodyIsUseDpopNonce(response: Response): Promise<boolean> {
+  try {
+    const cloned = response.clone();
+    const text = await cloned.text();
+    if (!text) return false;
+    const json = JSON.parse(text) as { error?: string };
+    return json.error === 'use_dpop_nonce';
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
  */
 export class BlueskyApiClient {
@@ -12,6 +76,34 @@ export class BlueskyApiClient {
    */
   constructor(pdsUrl: string) {
     this.baseUrl = pdsUrl;
+  }
+
+  /**
+   * Build the absolute XRPC URL for `endpoint` with `params` merged into
+   * the query string. Extracted so the DPoP code path can produce a proof
+   * over exactly the URL it will fetch.
+   */
+  protected buildXrpcUrl(endpoint: string, params?: Record<string, string | string[]>): string {
+    let url = `${this.baseUrl}/xrpc${endpoint}`;
+    if (params && Object.keys(params).length > 0) {
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value === undefined || value === null) {
+          return;
+        }
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            if (item !== undefined && item !== null) {
+              searchParams.append(key, item);
+            }
+          }
+        } else {
+          searchParams.append(key, value);
+        }
+      });
+      url += `?${searchParams.toString()}`;
+    }
+    return url;
   }
 
   /**
@@ -31,27 +123,7 @@ export class BlueskyApiClient {
   ): Promise<T> {
     const { method = 'GET', headers = {}, body, params } = options;
 
-    let url = `${this.baseUrl}/xrpc${endpoint}`;
-
-    if (params && Object.keys(params).length > 0) {
-      const searchParams = new URLSearchParams();
-      Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined || value === null) {
-          return;
-        }
-
-        if (Array.isArray(value)) {
-          for (const item of value) {
-            if (item !== undefined && item !== null) {
-              searchParams.append(key, item);
-            }
-          }
-        } else {
-          searchParams.append(key, value);
-        }
-      });
-      url += `?${searchParams.toString()}`;
-    }
+    const url = this.buildXrpcUrl(endpoint, params);
 
     const requestOptions: RequestInit = {
       method,
@@ -87,7 +159,13 @@ export class BlueskyApiClient {
   }
 
   /**
-   * Makes an authenticated request with JWT token
+   * Makes an authenticated request with the access token bound to the
+   * current account. When the app has registered a DPoP signer for
+   * `accessJwt` (OAuth accounts) we send `Authorization: DPoP …` plus a
+   * per-request proof and transparently retry once on `use_dpop_nonce`.
+   * Otherwise we fall back to the existing `Authorization: Bearer …`
+   * shape used by handle/app-password sessions.
+   *
    * @param endpoint - The API endpoint path
    * @param accessJwt - Valid access JWT token
    * @param options - Request options
@@ -103,13 +181,61 @@ export class BlueskyApiClient {
       headers?: Record<string, string>;
     } = {},
   ): Promise<T> {
-    return this.makeRequest<T>(endpoint, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        ...options.headers,
-      },
-    });
+    const signer = dpopSignersByAccessToken.get(accessJwt);
+    if (!signer) {
+      return this.makeRequest<T>(endpoint, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${accessJwt}`,
+          ...options.headers,
+        },
+      });
+    }
+
+    const { method = 'GET', body, params, headers: callerHeaders = {} } = options;
+    const url = this.buildXrpcUrl(endpoint, params);
+
+    const sendOnce = async (nonce: string | undefined): Promise<Response> => {
+      const proof = await signer({ method, url, nonce });
+      const headers: Record<string, string> = {
+        ...callerHeaders,
+        Authorization: `DPoP ${accessJwt}`,
+        DPoP: proof,
+        ...(body && !(body instanceof FormData) && !(body instanceof Blob)
+          ? { 'Content-Type': 'application/json' }
+          : {}),
+      };
+      const requestOptions: RequestInit = { method, headers };
+      if (body) {
+        requestOptions.body =
+          body instanceof FormData || body instanceof Blob ? body : JSON.stringify(body);
+      }
+      return fetch(url, requestOptions);
+    };
+
+    let response = await sendOnce(getCachedDpopNonce(url));
+    const firstResponseNonce = response.headers.get('DPoP-Nonce');
+    if (firstResponseNonce) cacheDpopNonce(url, firstResponseNonce);
+
+    if (!response.ok && firstResponseNonce && (await bodyIsUseDpopNonce(response))) {
+      response = await sendOnce(firstResponseNonce);
+      const retryNonce = response.headers.get('DPoP-Nonce');
+      if (retryNonce) cacheDpopNonce(url, retryNonce);
+    }
+
+    if (!response.ok) {
+      const errBody: Partial<BlueskyError> = await response.json().catch(() => ({}));
+      const err = new Error(errBody.message || `Request failed with status ${response.status}`) as Error & {
+        status: number;
+        errorCode?: string;
+      };
+      err.status = response.status;
+      if (errBody.error) err.errorCode = errBody.error;
+      throw err;
+    }
+
+    const text = await response.text();
+    return (text ? JSON.parse(text) : undefined) as T;
   }
 
   /**

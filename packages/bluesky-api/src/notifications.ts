@@ -1,14 +1,14 @@
+import { BlueskyApiClient } from './client';
 import type { BlueskyNotificationsResponse, BlueskyUnreadNotificationCount } from './types';
 
 /**
  * Bluesky notifications API client
  */
-export class BlueskyNotifications {
-  private pdsUrl: string;
-
+export class BlueskyNotifications extends BlueskyApiClient {
   constructor(pdsUrl: string = 'https://bsky.social') {
-    // Ensure the PDS URL doesn't end with /xrpc (it will be added in API calls)
-    this.pdsUrl = pdsUrl.endsWith('/xrpc') ? pdsUrl.slice(0, -5) : pdsUrl;
+    // Strip a trailing /xrpc — `makeRequest` re-appends `/xrpc${endpoint}`,
+    // so a baseUrl ending in `/xrpc` would double up.
+    super(pdsUrl.endsWith('/xrpc') ? pdsUrl.slice(0, -5) : pdsUrl);
   }
 
   /**
@@ -28,31 +28,18 @@ export class BlueskyNotifications {
     priority?: boolean,
     seenAt?: string,
   ): Promise<BlueskyNotificationsResponse> {
-    const url = `${this.pdsUrl}/xrpc/app.bsky.notification.listNotifications`;
+    const params: Record<string, string | string[]> = {};
+    if (limit) params.limit = limit.toString();
+    if (cursor) params.cursor = cursor;
+    if (priority !== undefined) params.priority = priority.toString();
+    if (seenAt) params.seenAt = seenAt;
+    if (reasons && reasons.length > 0) params.reasons = reasons;
 
-    const params = new URLSearchParams();
-    if (limit) params.append('limit', limit.toString());
-    if (cursor) params.append('cursor', cursor);
-    if (priority !== undefined) params.append('priority', priority.toString());
-    if (seenAt) params.append('seenAt', seenAt);
-    if (reasons && reasons.length > 0) {
-      reasons.forEach((reason) => params.append('reasons', reason));
-    }
-
-    const response = await fetch(`${url}?${params.toString()}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    return response.json();
+    return this.makeAuthenticatedRequest<BlueskyNotificationsResponse>(
+      '/app.bsky.notification.listNotifications',
+      accessJwt,
+      { params },
+    );
   }
 
   /**
@@ -61,42 +48,23 @@ export class BlueskyNotifications {
    * @returns Object containing the unread notification total.
    */
   async getUnreadCount(accessJwt: string): Promise<BlueskyUnreadNotificationCount> {
-    const url = `${this.pdsUrl}/xrpc/app.bsky.notification.getUnreadCount`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    return response.json();
+    return this.makeAuthenticatedRequest<BlueskyUnreadNotificationCount>(
+      '/app.bsky.notification.getUnreadCount',
+      accessJwt,
+    );
   }
 
   /**
    * Marks notifications as seen up to the current time.
    */
   async updateSeen(accessJwt: string): Promise<void> {
-    const url = `${this.pdsUrl}/xrpc/app.bsky.notification.updateSeen`;
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessJwt}`,
-        'Content-Type': 'application/json',
+    await this.makeAuthenticatedRequest<void>(
+      '/app.bsky.notification.updateSeen',
+      accessJwt,
+      {
+        method: 'POST',
+        body: { seenAt: new Date().toISOString() },
       },
-      body: JSON.stringify({ seenAt: new Date().toISOString() }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-    }
+    );
   }
 }

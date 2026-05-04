@@ -83,7 +83,7 @@ export default function AccountSettingsScreen() {
               removeAccountMutation.mutate(account.did);
 
               if (account.did === currentAccount?.did) {
-                router.replace('/');
+                router.replace('/' as never);
               }
             },
           },

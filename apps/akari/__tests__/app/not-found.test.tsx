@@ -34,7 +34,7 @@ describe('NotFoundScreen', () => {
     expect(getByText('errors.screenNotFound')).toBeTruthy();
 
     const link = getByRole('link', { name: 'errors.goToHome' });
-    expect(link.props.href).toBe('/index');
+    expect(link.props.href).toBe('/');
   });
 
   it('sets stack screen title', () => {

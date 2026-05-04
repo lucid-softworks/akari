@@ -30,6 +30,21 @@ export function useAuthStatus() {
         return { isAuthenticated: false };
       }
 
+      // OAuth accounts use the auth server's token endpoint with DPoP for
+      // refresh — `BlueskyApi.refreshSession` only knows the password-flow
+      // shape and would 401 on every check. Trust the tokens we have until
+      // expiry-driven refresh wires them up; a real failure surfaces on the
+      // first authenticated XRPC call instead.
+      if (currentAccount.oauth) {
+        return {
+          isAuthenticated: true,
+          user: {
+            did: currentAccount.did,
+            handle: currentAccount.handle,
+          },
+        };
+      }
+
       try {
         const api = new BlueskyApi(currentAccount.pdsUrl);
         const session = await api.refreshSession(refreshToken);

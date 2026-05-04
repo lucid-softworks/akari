@@ -19,12 +19,14 @@ import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-c
 
 import { CrashProvider } from '@/axiom-crash-reporter';
 import { DevServerBanner } from '@/components/DevServerBanner';
+import { OAuthAccountBinder } from '@/components/OAuthAccountBinder';
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
+import { restoreOAuthBindingFromStorage } from '@/utils/oauth/clientBinding';
 import { REACT_QUERY_CACHE_STORAGE_KEY, storage } from '@/utils/secureStorage';
 import { bootstrapSecureStorage } from '@/utils/secureStorageBootstrap';
 import '@/utils/i18n';
@@ -134,6 +136,7 @@ function AppProviders({ colorScheme }: ProvidersProps) {
       <ToastProvider>
         <DialogProvider>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <OAuthAccountBinder />
             <DevServerBanner />
             <OfflineBanner />
             <Stack>
@@ -167,6 +170,10 @@ export default Sentry.wrap(function RootLayout() {
     let cancelled = false;
     bootstrapSecureStorage()
       .then(() => {
+        // Re-bind the DPoP signer for an OAuth-authed persisted account
+        // before flipping the ready flag, so the home tab's first XRPC
+        // call sees the registry already populated.
+        restoreOAuthBindingFromStorage();
         if (!cancelled) setSecureStorageReady(true);
       })
       .catch((error) => {

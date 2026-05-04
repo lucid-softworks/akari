@@ -38,7 +38,8 @@ describe('BlueskyNotifications', () => {
     expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
-    expect(headers['content-type']).toBe('application/json');
+    // GET requests no longer carry a redundant Content-Type — they have no body.
+    expect(headers['content-type']).toBeUndefined();
   });
 
   it('throws descriptive errors when notification request fails', async () => {
@@ -71,7 +72,7 @@ describe('BlueskyNotifications', () => {
     expect(capturedHeaders).not.toBeNull();
     const headers = capturedHeaders!;
     expect(headers.authorization).toBe('Bearer jwt-token');
-    expect(headers['content-type']).toBe('application/json');
+    expect(headers['content-type']).toBeUndefined();
   });
 
   it('throws fallback errors when unread count json parsing fails', async () => {
@@ -83,6 +84,6 @@ describe('BlueskyNotifications', () => {
 
     const client = new BlueskyNotifications('https://example.pds');
 
-    await expect(client.getUnreadCount('jwt-token')).rejects.toThrow('HTTP 404: Not Found');
+    await expect(client.getUnreadCount('jwt-token')).rejects.toThrow('Request failed with status 404');
   });
 });

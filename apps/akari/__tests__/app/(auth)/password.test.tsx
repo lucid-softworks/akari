@@ -218,7 +218,7 @@ describe('AuthScreen', () => {
     });
 
     await waitFor(() => {
-      expect(utils.getByTestId('redirect-/(tabs)/index/index')).toBeTruthy();
+      expect(utils.getByTestId('redirect-/')).toBeTruthy();
     });
   });
 

@@ -1,5 +1,6 @@
+import { BlueskyApi } from '@/bluesky-api';
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -15,11 +16,13 @@ import {
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors } from '@/constants/tokens';
+import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { upsertOAuthSession } from '@/utils/oauth/sessionStorage';
+import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
 import { oauthSignIn } from '@/utils/oauth/signIn';
 
 const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
@@ -31,11 +34,14 @@ export default function OauthSignInScreen() {
 
   const [handle, setHandle] = useState(initialHandle);
   const [signInInFlight, setSignInInFlight] = useState(false);
+  const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
   // Closes the typeahead dropdown after the user picks a suggestion. Selecting
   // a result fills the handle field with the full handle, which would otherwise
   // re-trigger the query and immediately re-show the same list.
   const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
   const inputRef = useRef<TextInput>(null);
+  const addAccountMutation = useAddAccount();
+  const switchAccountMutation = useSwitchAccount();
 
   const trimmed = handle.replace(/^@/, '').trim();
   const canSubmit = trimmed.length > 0 && HANDLE_PATTERN.test(trimmed);
@@ -74,36 +80,54 @@ export default function OauthSignInScreen() {
     setSignInInFlight(true);
     try {
       const result = await oauthSignIn(trimmed);
-      upsertOAuthSession({
+
+      const baseAccount = {
         did: result.did,
         handle: result.handle,
         pdsUrl: result.pdsUrl,
-        accessJwt: result.accessJwt,
-        refreshJwt: result.refreshJwt,
-        scope: result.scope,
-        expiresAt: result.expiresAt,
-        dpopPrivateKeyHex: result.keypair.privateKeyHex,
-        dpopPublicJwk: result.keypair.publicJwk,
-        authServer: {
-          issuer: result.authServer.issuer,
-          authorization_endpoint: result.authServer.authorization_endpoint,
-          token_endpoint: result.authServer.token_endpoint,
-          pushed_authorization_request_endpoint:
-            result.authServer.pushed_authorization_request_endpoint,
-        },
-        nonce: result.nonce,
-        createdAt: Math.floor(Date.now() / 1000),
-      });
-      showAlert({
-        title: t('auth.oauthSuccessTitle'),
-        message: t('auth.oauthSuccessMessage', { handle: result.handle, did: result.did }),
-        buttons: [
-          {
-            text: t('common.done'),
-            onPress: () => router.back(),
+        jwtToken: result.accessJwt,
+        refreshToken: result.refreshJwt,
+        oauth: {
+          dpopPrivateKeyHex: result.keypair.privateKeyHex,
+          dpopPublicJwk: result.keypair.publicJwk,
+          authServer: {
+            issuer: result.authServer.issuer,
+            token_endpoint: result.authServer.token_endpoint,
           },
-        ],
-      });
+          authServerNonce: result.nonce,
+          expiresAt: result.expiresAt,
+          scope: result.scope,
+        },
+      };
+
+      // Bind the DPoP signer synchronously, before any XRPC call: the
+      // profile fetch below + the home tab's first request race the
+      // OAuthAccountBinder's `useEffect` and would otherwise hit the
+      // PDS as plain Bearer.
+      bindOAuthAccount(baseAccount);
+
+      // Backfill displayName + avatar so the navbar / account switcher
+      // render the user's identity. Failure is non-fatal — the account
+      // record is still valid without it.
+      let profile: { displayName?: string; avatar?: string } = {};
+      try {
+        const api = new BlueskyApi(result.pdsUrl);
+        const fetched = await api.getProfile(result.accessJwt, result.did);
+        profile = {
+          displayName: fetched.displayName ?? undefined,
+          avatar: fetched.avatar ?? undefined,
+        };
+      } catch (profileError) {
+        if (__DEV__) {
+          console.warn('OAuth profile backfill failed:', profileError);
+        }
+      }
+
+      const newAccount = await addAccountMutation.mutateAsync({ ...baseAccount, ...profile });
+
+      await switchAccountMutation.mutateAsync(newAccount);
+
+      setRedirectAfterAuth('/');
     } catch (error) {
       showAlert({
         title: t('common.error'),
@@ -112,7 +136,11 @@ export default function OauthSignInScreen() {
     } finally {
       setSignInInFlight(false);
     }
-  }, [canSubmit, signInInFlight, trimmed, t]);
+  }, [addAccountMutation, canSubmit, signInInFlight, switchAccountMutation, t, trimmed]);
+
+  if (redirectAfterAuth) {
+    return <Redirect href={redirectAfterAuth as never} />;
+  }
 
   return (
     <KeyboardAvoidingView
