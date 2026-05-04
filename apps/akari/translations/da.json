@@ -321,7 +321,9 @@
         "processing": "Behandler... {{percent}}%",
         "processingIndeterminate": "Behandler...",
         "ready": "Klar til at sende"
-      }
+      },
+      "likeFailed": "Kunne ikke like opslag. Prøv igen.",
+      "unlikeFailed": "Kunne ikke fjerne like. Prøv igen."
     },
     "gif": {
       "selectGif": "Vælg GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Skjulte indlæg",
       "noHiddenAccounts": "Ingen skjulte konti",
       "noHiddenPosts": "Ingen skjulte indlæg",
-      "unhide": "Vis"
+      "unhide": "Vis",
+      "mutedWordsListHeader": "Skjult lige nu",
+      "mutedWordsEmpty": "Intet er skjult endnu. Tilføj et ord, en sætning eller et tag ovenfor, og opslag, der matcher, forsvinder fra dine feeds.",
+      "mutedWordPlaceholder": "Ord, sætning eller tag",
+      "mutedWordAdd": "Skjul",
+      "mutedWordRemove": "Fjern",
+      "mutedWordAlreadyExists": "Det ord er allerede skjult.",
+      "mutedWordSaveFailed": "Din ændring kunne ikke gemmes. Prøv igen.",
+      "mutedWordTarget": {
+        "both": "Tekst og tags",
+        "content": "Kun tekst",
+        "tag": "Kun tag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Matcher opslagstekst og hashtags",
+        "content": "Matcher kun opslagstekst",
+        "tag": "Matcher kun hashtag"
+      },
+      "verificationBadgesEnabled": "Vis verifikationsmærker",
+      "verificationBadgesHint": "Skjuler alle verifikationsmærker for konti i appen, uanset hvem der har udstedt dem.",
+      "trustedVerifiersHeader": "Betroede verifikatorer",
+      "trustedVerifiersEmpty": "Du har endnu ikke markeret nogen som betroet verifikator. Tryk på en verifikator i en verifikationsoversigt for at tilføje vedkommende.",
+      "enableAdultContentHint": "Viser opslag og medier mærket som indhold for voksne. Slået fra som standard.",
+      "requireAltTextHint": "Blokerer afsendelse af et opslag med billeder, medmindre hvert billede har en alt-tekstbeskrivelse.",
+      "displayLargerTextBadgesHint": "Brug en større, mere læsbar tekststørrelse til interaktionstal (likes, svar, genopslag)."
     },
     "bookmarks": {
       "subtitle": "Gemte posts og tråde vises her.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Betroede verifikatorer kan udstede verifikationer for andre konti.",
       "noVerifiers": "Ingen verifikatorer",
       "verifiedOn": "Verificeret {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verificeret af nogen, du har tillid til",
+      "verifiedBadgeGold": "Verificeret af alle, du har tillid til",
+      "verifiersSheetIntroTitleSilver": "{{name}} er verificeret af nogen, du har tillid til",
+      "verifiersSheetIntroTitleGold": "{{name}} er verificeret af alle, du har tillid til",
+      "verifiersSheetIntroBodyNoTrusted": "Disse konti har bekræftet, at denne konto er ægte. Tryk på mærket ud for en verifikator for at tilføje vedkommende til din betroede liste.",
+      "verifiersTrustedHeader": "Du har tillid til",
+      "verifiersOtherHeader": "Andre verifikationer",
+      "trustVerifier": "Hav tillid til denne verifikator",
+      "untrustVerifier": "Stop med at have tillid til denne verifikator"
     },
     "recipe": {
       "title": "Opskrift",

@@ -321,7 +321,9 @@
         "processing": "処理中… {{percent}}%",
         "processingIndeterminate": "処理中…",
         "ready": "投稿の準備完了"
-      }
+      },
+      "likeFailed": "投稿にいいねできませんでした。もう一度お試しください。",
+      "unlikeFailed": "いいねを取り消せませんでした。もう一度お試しください。"
     },
     "messages": {
       "typeMessage": "メッセージを入力...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "非表示の投稿",
       "noHiddenAccounts": "非表示のアカウントはありません",
       "noHiddenPosts": "非表示の投稿はありません",
-      "unhide": "表示する"
+      "unhide": "表示する",
+      "mutedWordsListHeader": "ミュート中",
+      "mutedWordsEmpty": "まだ何もミュートしていません。単語、フレーズ、ハッシュタグを上に追加すると、一致する投稿はフィードから非表示になります。",
+      "mutedWordPlaceholder": "単語、フレーズ、またはハッシュタグ",
+      "mutedWordAdd": "ミュート",
+      "mutedWordRemove": "削除",
+      "mutedWordAlreadyExists": "その単語はすでにミュートされています。",
+      "mutedWordSaveFailed": "ミュート単語の変更を保存できませんでした。もう一度お試しください。",
+      "mutedWordTarget": {
+        "both": "本文とハッシュタグ",
+        "content": "本文のみ",
+        "tag": "ハッシュタグのみ"
+      },
+      "mutedWordTargetLabel": {
+        "both": "投稿の本文とハッシュタグの両方に一致",
+        "content": "投稿の本文のみに一致",
+        "tag": "ハッシュタグのみに一致"
+      },
+      "verificationBadgesEnabled": "認証バッジを表示",
+      "verificationBadgesHint": "発行元に関係なく、アプリ内のすべての認証済みアカウントのバッジを非表示にします。",
+      "trustedVerifiersHeader": "信頼できる認証者",
+      "trustedVerifiersEmpty": "まだ信頼できる認証者を指定していません。認証シート内の認証者をタップして追加してください。",
+      "enableAdultContentHint": "アダルト指定された投稿やメディアを表示します。デフォルトはオフです。",
+      "requireAltTextHint": "すべての画像に代替テキストの説明がない限り、画像付き投稿の送信をブロックします。",
+      "displayLargerTextBadgesHint": "エンゲージメント数（いいね、返信、リポスト）に、より大きく読みやすい文字サイズを使用します。"
     },
     "gif": {
       "selectGif": "GIFを選択",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "信頼できる認証者は、他のアカウントの認証を発行できます。",
       "noVerifiers": "認証者なし",
       "verifiedOn": "{{date}}に認証",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "あなたが信頼する人によって認証済み",
+      "verifiedBadgeGold": "あなたが信頼するすべての人によって認証済み",
+      "verifiersSheetIntroTitleSilver": "{{name}}はあなたが信頼する人によって認証されています",
+      "verifiersSheetIntroTitleGold": "{{name}}はあなたが信頼するすべての人によって認証されています",
+      "verifiersSheetIntroBodyNoTrusted": "これらのアカウントが、このアカウントが本物であることを証明しています。認証者の横にあるバッジをタップして、信頼リストに追加してください。",
+      "verifiersTrustedHeader": "あなたが信頼している認証者",
+      "verifiersOtherHeader": "その他の認証",
+      "trustVerifier": "この認証者を信頼する",
+      "untrustVerifier": "この認証者を信頼しない"
     },
     "recipe": {
       "title": "レシピ",

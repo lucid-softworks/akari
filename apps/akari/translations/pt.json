@@ -321,7 +321,9 @@
         "processing": "Processando… {{percent}}%",
         "processingIndeterminate": "Processando…",
         "ready": "Pronto para postar"
-      }
+      },
+      "likeFailed": "Não foi possível curtir a publicação. Tente novamente.",
+      "unlikeFailed": "Não foi possível remover a curtida. Tente novamente."
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Posts ocultos",
       "noHiddenAccounts": "Nenhuma conta oculta",
       "noHiddenPosts": "Nenhum post oculto",
-      "unhide": "Mostrar"
+      "unhide": "Mostrar",
+      "mutedWordsListHeader": "Silenciados atualmente",
+      "mutedWordsEmpty": "Nada silenciado ainda. Adicione acima uma palavra, frase ou tag e as publicações correspondentes desaparecerão dos seus feeds.",
+      "mutedWordPlaceholder": "Palavra, frase ou tag",
+      "mutedWordAdd": "Silenciar",
+      "mutedWordRemove": "Remover",
+      "mutedWordAlreadyExists": "Essa palavra já está silenciada.",
+      "mutedWordSaveFailed": "Não foi possível salvar sua alteração. Tente novamente.",
+      "mutedWordTarget": {
+        "both": "Texto e tags",
+        "content": "Apenas texto",
+        "tag": "Apenas tag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Corresponde ao texto da publicação e às hashtags",
+        "content": "Corresponde apenas ao texto da publicação",
+        "tag": "Corresponde apenas à hashtag"
+      },
+      "verificationBadgesEnabled": "Mostrar selos de verificação",
+      "verificationBadgesHint": "Oculta todos os selos de contas verificadas no aplicativo, independentemente de quem os emitiu.",
+      "trustedVerifiersHeader": "Verificadores confiáveis",
+      "trustedVerifiersEmpty": "Você ainda não marcou ninguém como verificador confiável. Toque em um verificador em qualquer painel de verificação para adicioná-lo.",
+      "enableAdultContentHint": "Mostra publicações e mídia marcadas como adulto. Desativado por padrão.",
+      "requireAltTextHint": "Impede o envio de uma publicação com imagens a menos que cada imagem tenha uma descrição de texto alternativo.",
+      "displayLargerTextBadgesHint": "Usa um tamanho de texto maior e mais legível para os contadores de interação (curtidas, respostas, reposts)."
     },
     "gif": {
       "selectGif": "Selecionar GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Verificadores confiáveis podem emitir verificações para outras contas.",
       "noVerifiers": "Sem verificadores",
       "verifiedOn": "Verificado {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verificado por alguém em quem você confia",
+      "verifiedBadgeGold": "Verificado por todos em quem você confia",
+      "verifiersSheetIntroTitleSilver": "{{name}} é verificado por alguém em quem você confia",
+      "verifiersSheetIntroTitleGold": "{{name}} é verificado por todos em quem você confia",
+      "verifiersSheetIntroBodyNoTrusted": "Estas contas confirmaram que esta conta é autêntica. Toque no selo ao lado de um verificador para adicioná-lo à sua lista de confiança.",
+      "verifiersTrustedHeader": "Da sua confiança",
+      "verifiersOtherHeader": "Outras verificações",
+      "trustVerifier": "Confiar neste verificador",
+      "untrustVerifier": "Deixar de confiar neste verificador"
     },
     "recipe": {
       "title": "Receita",

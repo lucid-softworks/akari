@@ -321,7 +321,9 @@
         "processing": "Elaborazione… {{percent}}%",
         "processingIndeterminate": "Elaborazione…",
         "ready": "Pronto per la pubblicazione"
-      }
+      },
+      "likeFailed": "Impossibile mettere mi piace al post. Riprova.",
+      "unlikeFailed": "Impossibile rimuovere il mi piace. Riprova."
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Post nascosti",
       "noHiddenAccounts": "Nessun account nascosto",
       "noHiddenPosts": "Nessun post nascosto",
-      "unhide": "Mostra"
+      "unhide": "Mostra",
+      "mutedWordsListHeader": "Attualmente silenziati",
+      "mutedWordsEmpty": "Nessun elemento silenziato. Aggiungi sopra una parola, una frase o un tag e i post corrispondenti scompariranno dai tuoi feed.",
+      "mutedWordPlaceholder": "Parola, frase o tag",
+      "mutedWordAdd": "Silenzia",
+      "mutedWordRemove": "Rimuovi",
+      "mutedWordAlreadyExists": "Questa parola è già silenziata.",
+      "mutedWordSaveFailed": "Impossibile salvare la modifica. Riprova.",
+      "mutedWordTarget": {
+        "both": "Testo e tag",
+        "content": "Solo testo",
+        "tag": "Solo tag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Corrisponde al testo del post e ai tag",
+        "content": "Corrisponde solo al testo del post",
+        "tag": "Corrisponde solo al tag"
+      },
+      "verificationBadgesEnabled": "Mostra i badge di verifica",
+      "verificationBadgesHint": "Nasconde tutti i badge degli account verificati nell'app, indipendentemente da chi li ha emessi.",
+      "trustedVerifiersHeader": "Verificatori di fiducia",
+      "trustedVerifiersEmpty": "Non hai ancora contrassegnato nessuno come verificatore di fiducia. Tocca un verificatore in una scheda di verifica per aggiungerlo.",
+      "enableAdultContentHint": "Mostra post e contenuti contrassegnati come per adulti. Disattivato per impostazione predefinita.",
+      "requireAltTextHint": "Impedisce di inviare un post con immagini a meno che ogni immagine non abbia una descrizione in testo alternativo.",
+      "displayLargerTextBadgesHint": "Usa una dimensione del testo più grande e leggibile per i conteggi di interazione (mi piace, risposte, repost)."
     },
     "gif": {
       "selectGif": "Seleziona GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "I verificatori di fiducia possono rilasciare verifiche per altri account.",
       "noVerifiers": "Nessun verificatore",
       "verifiedOn": "Verificato {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verificato da qualcuno di cui ti fidi",
+      "verifiedBadgeGold": "Verificato da tutti quelli di cui ti fidi",
+      "verifiersSheetIntroTitleSilver": "{{name}} è verificato da qualcuno di cui ti fidi",
+      "verifiersSheetIntroTitleGold": "{{name}} è verificato da tutti quelli di cui ti fidi",
+      "verifiersSheetIntroBodyNoTrusted": "Questi account hanno confermato che questo account è autentico. Tocca il badge accanto a un verificatore per aggiungerlo al tuo elenco di fiducia.",
+      "verifiersTrustedHeader": "Di tua fiducia",
+      "verifiersOtherHeader": "Altre verifiche",
+      "trustVerifier": "Fidati di questo verificatore",
+      "untrustVerifier": "Smetti di fidarti di questo verificatore"
     },
     "recipe": {
       "title": "Ricetta",

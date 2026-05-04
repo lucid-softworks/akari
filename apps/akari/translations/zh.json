@@ -321,7 +321,9 @@
         "processing": "处理中… {{percent}}%",
         "processingIndeterminate": "处理中…",
         "ready": "可以发布了"
-      }
+      },
+      "likeFailed": "无法为帖子点赞。请重试。",
+      "unlikeFailed": "无法取消点赞。请重试。"
     },
     "gif": {
       "selectGif": "选择GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "已隐藏的帖子",
       "noHiddenAccounts": "没有隐藏的账号",
       "noHiddenPosts": "没有隐藏的帖子",
-      "unhide": "取消隐藏"
+      "unhide": "取消隐藏",
+      "mutedWordsListHeader": "当前已静音",
+      "mutedWordsEmpty": "还没有静音任何内容。在上方添加单词、短语或标签，匹配的帖子将从你的信息流中消失。",
+      "mutedWordPlaceholder": "单词、短语或标签",
+      "mutedWordAdd": "静音",
+      "mutedWordRemove": "移除",
+      "mutedWordAlreadyExists": "该单词已被静音。",
+      "mutedWordSaveFailed": "无法保存静音单词的更改。请重试。",
+      "mutedWordTarget": {
+        "both": "正文和标签",
+        "content": "仅正文",
+        "tag": "仅标签"
+      },
+      "mutedWordTargetLabel": {
+        "both": "匹配帖子正文和话题标签",
+        "content": "仅匹配帖子正文",
+        "tag": "仅匹配话题标签"
+      },
+      "verificationBadgesEnabled": "显示认证徽章",
+      "verificationBadgesHint": "在整个应用中隐藏所有已认证账户的徽章，无论由谁颁发。",
+      "trustedVerifiersHeader": "可信认证者",
+      "trustedVerifiersEmpty": "你还没有将任何人标记为可信认证者。在任何认证面板中点击认证者即可添加。",
+      "enableAdultContentHint": "显示标记为成人内容的帖子和媒体。默认关闭。",
+      "requireAltTextHint": "除非每张图片都附有替代文字描述，否则禁止发送图片帖子。",
+      "displayLargerTextBadgesHint": "在互动数据（点赞、回复、转发）中使用更大、更清晰的字号。"
     },
     "bookmarks": {
       "subtitle": "保存的帖子和线程将出现在这里。",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "可信认证者可以为其他账户颁发认证。",
       "noVerifiers": "无认证者",
       "verifiedOn": "{{date}} 认证",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "由你信任的人认证",
+      "verifiedBadgeGold": "由你信任的所有人认证",
+      "verifiersSheetIntroTitleSilver": "{{name}} 已由你信任的人认证",
+      "verifiersSheetIntroTitleGold": "{{name}} 已由你信任的所有人认证",
+      "verifiersSheetIntroBodyNoTrusted": "这些账户已证明此账户是真实的。点击认证者旁边的徽章，将其加入你的信任列表。",
+      "verifiersTrustedHeader": "你信任的认证者",
+      "verifiersOtherHeader": "其他认证",
+      "trustVerifier": "信任此认证者",
+      "untrustVerifier": "停止信任此认证者"
     },
     "recipe": {
       "title": "食谱",

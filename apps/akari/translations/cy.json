@@ -321,7 +321,9 @@
         "processing": "Prosesu... {{percent}}%",
         "processingIndeterminate": "Prosesu...",
         "ready": "Yn barod i'w bostio"
-      }
+      },
+      "likeFailed": "Methwyd hoffi'r post. Ceisiwch eto.",
+      "unlikeFailed": "Methwyd dad-hoffi'r post. Ceisiwch eto."
     },
     "messages": {
       "typeMessage": "Teipiwch neges...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Postiadau cudd",
       "noHiddenAccounts": "Dim cyfrifon cudd",
       "noHiddenPosts": "Dim postiadau cudd",
-      "unhide": "Dadguddio"
+      "unhide": "Dadguddio",
+      "mutedWordsListHeader": "Wedi'u tewi ar hyn o bryd",
+      "mutedWordsEmpty": "Dim byd wedi'i dewi eto. Ychwanegwch air, ymadrodd neu dag uchod a bydd postiadau sy'n cyd-fynd yn diflannu o'ch ffrydiau.",
+      "mutedWordPlaceholder": "Gair, ymadrodd neu dag",
+      "mutedWordAdd": "Tewi",
+      "mutedWordRemove": "Tynnu",
+      "mutedWordAlreadyExists": "Mae'r gair hwnnw eisoes wedi'i dewi.",
+      "mutedWordSaveFailed": "Methwyd cadw'ch newid i eiriau wedi'u tewi. Ceisiwch eto.",
+      "mutedWordTarget": {
+        "both": "Testun a thagiau",
+        "content": "Testun yn unig",
+        "tag": "Tag yn unig"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Yn cyd-fynd â thestun y postiad a hashnodau",
+        "content": "Yn cyd-fynd â thestun y postiad yn unig",
+        "tag": "Yn cyd-fynd â hashnod yn unig"
+      },
+      "verificationBadgesEnabled": "Dangos bathodynnau dilysu",
+      "verificationBadgesHint": "Yn cuddio pob bathodyn cyfrif wedi'i ddilysu ar draws yr ap, waeth pwy a'i cyhoeddodd.",
+      "trustedVerifiersHeader": "Dilyswyr dibynadwy",
+      "trustedVerifiersEmpty": "Dydych chi heb nodi neb fel dilyswr dibynadwy eto. Tapiwch ddilyswr mewn unrhyw daflen ddilysu i'w ychwanegu.",
+      "enableAdultContentHint": "Dangoswch bostiadau a chyfryngau wedi'u labelu fel rhai i oedolion. I ffwrdd yn ddiofyn.",
+      "requireAltTextHint": "Atal anfon postiad delwedd oni bai bod gan bob delwedd ddisgrifiad testun amgen.",
+      "displayLargerTextBadgesHint": "Defnyddiwch faint testun mwy a mwy darllenadwy ar gyfer cyfrifau ymgysylltu (hoffiadau, atebion, ailbostiadau)."
     },
     "gif": {
       "selectGif": "Dewis GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Gall dilyswyr dibynadwy gyhoeddi dilysiadau ar gyfer cyfrifon eraill.",
       "noVerifiers": "Dim dilyswyr",
       "verifiedOn": "Wedi'i ddilysu {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Wedi'i ddilysu gan rywun rydych yn ymddiried ynddo",
+      "verifiedBadgeGold": "Wedi'i ddilysu gan bawb rydych yn ymddiried ynddo",
+      "verifiersSheetIntroTitleSilver": "Mae {{name}} wedi'i ddilysu gan rywun rydych yn ymddiried ynddo",
+      "verifiersSheetIntroTitleGold": "Mae {{name}} wedi'i ddilysu gan bawb rydych yn ymddiried ynddo",
+      "verifiersSheetIntroBodyNoTrusted": "Mae'r cyfrifon hyn wedi cadarnhau bod y cyfrif hwn yn ddilys. Tapiwch y bathodyn wrth ymyl dilyswr i'w ychwanegu at eich rhestr ddibynadwy.",
+      "verifiersTrustedHeader": "Yn ddibynadwy gennych",
+      "verifiersOtherHeader": "Dilysiadau eraill",
+      "trustVerifier": "Ymddiried yn y dilyswr hwn",
+      "untrustVerifier": "Rhoi'r gorau i ymddiried yn y dilyswr hwn"
     },
     "recipe": {
       "title": "Rysáit",

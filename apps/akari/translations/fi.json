@@ -321,7 +321,9 @@
         "processing": "Käsitellään... {{percent}}%",
         "processingIndeterminate": "Käsitellään...",
         "ready": "Valmis julkaistavaksi"
-      }
+      },
+      "likeFailed": "Julkaisusta ei voitu tykätä. Yritä uudelleen.",
+      "unlikeFailed": "Tykkäystä ei voitu poistaa. Yritä uudelleen."
     },
     "gif": {
       "selectGif": "Valitse GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Piilotetut julkaisut",
       "noHiddenAccounts": "Ei piilotettuja tilejä",
       "noHiddenPosts": "Ei piilotettuja julkaisuja",
-      "unhide": "Näytä"
+      "unhide": "Näytä",
+      "mutedWordsListHeader": "Mykistettynä parhaillaan",
+      "mutedWordsEmpty": "Mitään ei ole vielä mykistetty. Lisää yllä sana, lause tai tunniste, niin niitä vastaavat julkaisut katoavat syötteistäsi.",
+      "mutedWordPlaceholder": "Sana, lause tai tunniste",
+      "mutedWordAdd": "Mykistä",
+      "mutedWordRemove": "Poista",
+      "mutedWordAlreadyExists": "Tämä sana on jo mykistetty.",
+      "mutedWordSaveFailed": "Muutoksen tallentaminen epäonnistui. Yritä uudelleen.",
+      "mutedWordTarget": {
+        "both": "Teksti ja tunnisteet",
+        "content": "Vain teksti",
+        "tag": "Vain tunniste"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Vastaa julkaisun tekstiä ja hashtageja",
+        "content": "Vastaa vain julkaisun tekstiä",
+        "tag": "Vastaa vain hashtagia"
+      },
+      "verificationBadgesEnabled": "Näytä vahvistusmerkit",
+      "verificationBadgesHint": "Piilottaa kaikki vahvistettujen tilien merkit sovelluksessa, riippumatta siitä, kuka ne on myöntänyt.",
+      "trustedVerifiersHeader": "Luotetut vahvistajat",
+      "trustedVerifiersEmpty": "Et ole vielä merkinnyt ketään luotetuksi vahvistajaksi. Lisää vahvistaja napauttamalla häntä missä tahansa vahvistusnäkymässä.",
+      "enableAdultContentHint": "Näyttää aikuisille merkityt julkaisut ja sisällöt. Oletuksena pois käytöstä.",
+      "requireAltTextHint": "Estää kuvajulkaisun lähettämisen, ellei jokaisessa kuvassa ole vaihtoehtoista tekstikuvausta.",
+      "displayLargerTextBadgesHint": "Käytä suurempaa ja luettavampaa tekstikokoa vuorovaikutuslukemille (tykkäykset, vastaukset, uudelleenjaot)."
     },
     "bookmarks": {
       "subtitle": "Tallennetut viestit ja ketjut ilmestyvät täällä.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Luotetut vahvistajat voivat myöntää vahvistuksia muille tileille.",
       "noVerifiers": "Ei vahvistajia",
       "verifiedOn": "Vahvistettu {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Vahvistanut joku, johon luotat",
+      "verifiedBadgeGold": "Vahvistanut kaikki, joihin luotat",
+      "verifiersSheetIntroTitleSilver": "{{name}}:n on vahvistanut joku, johon luotat",
+      "verifiersSheetIntroTitleGold": "{{name}}:n ovat vahvistaneet kaikki, joihin luotat",
+      "verifiersSheetIntroBodyNoTrusted": "Nämä tilit ovat vahvistaneet, että tämä tili on aito. Lisää vahvistaja luotettujen listallesi napauttamalla hänen vieressään olevaa merkkiä.",
+      "verifiersTrustedHeader": "Luottamasi",
+      "verifiersOtherHeader": "Muut vahvistukset",
+      "trustVerifier": "Luota tähän vahvistajaan",
+      "untrustVerifier": "Lopeta luottaminen tähän vahvistajaan"
     },
     "recipe": {
       "title": "Resepti",

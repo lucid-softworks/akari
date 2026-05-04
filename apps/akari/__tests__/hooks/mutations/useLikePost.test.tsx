@@ -236,23 +236,24 @@ describe('useLikePost mutation hook', () => {
       expect(result.current.isError).toBe(true);
     });
 
+    // onError now rolls back every prefix-matched cache, including the
+    // single-post and post-thread queries — the optimistic red heart and
+    // bumped count must disappear when the network call fails.
     expect(queryClient.getQueryData(['timeline'])).toEqual(snapshot.timeline);
     expect(queryClient.getQueryData(['feed'])).toEqual(snapshot.feed);
     expect(queryClient.getQueryData(['authorFeed'])).toEqual(snapshot.authorFeed);
     expect(queryClient.getQueryData(['authorLikes'])).toEqual(snapshot.authorLikes);
-    // onError rolls back feed-shaped caches but only invalidates post/postThread queries,
-    // so the optimistic update remains in those caches until refetch.
     expect(queryClient.getQueryData(['post', postUri])).toMatchObject({
       uri: postUri,
-      likeCount: 1,
-      viewer: { like: `temp-like-${postUri}` },
+      likeCount: 0,
+      viewer: {},
     });
     expect(queryClient.getQueryData(['postThread', postUri])).toMatchObject({
       thread: {
         post: {
           uri: postUri,
-          likeCount: 1,
-          viewer: { like: `temp-like-${postUri}` },
+          likeCount: 0,
+          viewer: {},
         },
       },
     });

@@ -321,7 +321,9 @@
         "processing": "Zpracování... {{percent}}%",
         "processingIndeterminate": "Zpracování...",
         "ready": "Připraveno k odeslání"
-      }
+      },
+      "likeFailed": "Nepodařilo se dát „to se mi líbí“. Zkuste to znovu.",
+      "unlikeFailed": "Nepodařilo se odebrat „to se mi líbí“. Zkuste to znovu."
     },
     "gif": {
       "selectGif": "Vyberte GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Skryté příspěvky",
       "noHiddenAccounts": "Žádné skryté účty",
       "noHiddenPosts": "Žádné skryté příspěvky",
-      "unhide": "Zobrazit"
+      "unhide": "Zobrazit",
+      "mutedWordsListHeader": "Aktuálně ztlumeno",
+      "mutedWordsEmpty": "Zatím nic není ztlumeno. Přidejte výše slovo, frázi nebo hashtag a příspěvky, které jim odpovídají, zmizí z vašich kanálů.",
+      "mutedWordPlaceholder": "Slovo, fráze nebo hashtag",
+      "mutedWordAdd": "Ztlumit",
+      "mutedWordRemove": "Odebrat",
+      "mutedWordAlreadyExists": "Toto slovo je již ztlumeno.",
+      "mutedWordSaveFailed": "Změnu se nepodařilo uložit. Zkuste to znovu.",
+      "mutedWordTarget": {
+        "both": "Text a hashtagy",
+        "content": "Pouze text",
+        "tag": "Pouze hashtagy"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Odpovídá textu příspěvku a hashtagům",
+        "content": "Odpovídá pouze textu příspěvku",
+        "tag": "Odpovídá pouze hashtagům"
+      },
+      "verificationBadgesEnabled": "Zobrazovat odznaky ověření",
+      "verificationBadgesHint": "Skryje všechny odznaky ověřených účtů v aplikaci bez ohledu na to, kdo je vydal.",
+      "trustedVerifiersHeader": "Důvěryhodní ověřovatelé",
+      "trustedVerifiersEmpty": "Zatím jste nikoho neoznačili jako důvěryhodného ověřovatele. Klepněte na ověřovatele v jakémkoli okně ověření, abyste ho přidali.",
+      "enableAdultContentHint": "Zobrazovat příspěvky a média označené jako pro dospělé. Ve výchozím nastavení vypnuto.",
+      "requireAltTextHint": "Blokovat odeslání příspěvku s obrázkem, pokud každý obrázek nemá popis alt-text.",
+      "displayLargerTextBadgesHint": "Používat větší, čitelnější velikost textu pro počty reakcí (lajky, odpovědi, sdílení)."
     },
     "bookmarks": {
       "subtitle": "Zde se zobrazí uložená příspěvky a vlákna.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Důvěryhodní ověřovatelé mohou vydávat ověření pro jiné účty.",
       "noVerifiers": "Žádní ověřovatelé",
       "verifiedOn": "Ověřeno {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Ověřeno někým, komu důvěřujete",
+      "verifiedBadgeGold": "Ověřeno všemi, kterým důvěřujete",
+      "verifiersSheetIntroTitleSilver": "{{name}} je ověřen někým, komu důvěřujete",
+      "verifiersSheetIntroTitleGold": "{{name}} je ověřen všemi, kterým důvěřujete",
+      "verifiersSheetIntroBodyNoTrusted": "Tyto účty potvrdily, že tento účet je autentický. Klepněte na odznak vedle ověřovatele, abyste ho přidali do svého seznamu důvěryhodných.",
+      "verifiersTrustedHeader": "Vámi důvěryhodní",
+      "verifiersOtherHeader": "Ostatní ověření",
+      "trustVerifier": "Důvěřovat tomuto ověřovateli",
+      "untrustVerifier": "Přestat důvěřovat tomuto ověřovateli"
     },
     "recipe": {
       "title": "Recept",

@@ -321,7 +321,9 @@
         "processing": "Traitement… {{percent}}%",
         "processingIndeterminate": "Traitement…",
         "ready": "Prêt à publier"
-      }
+      },
+      "likeFailed": "Impossible d'aimer le post. Réessayez.",
+      "unlikeFailed": "Impossible de retirer le j'aime. Réessayez."
     },
     "gif": {
       "selectGif": "Sélectionner GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Posts masqués",
       "noHiddenAccounts": "Aucun compte masqué",
       "noHiddenPosts": "Aucun post masqué",
-      "unhide": "Afficher"
+      "unhide": "Afficher",
+      "mutedWordsListHeader": "Actuellement masqués",
+      "mutedWordsEmpty": "Rien n'est encore masqué. Ajoutez ci-dessus un mot, une expression ou un hashtag et les posts correspondants disparaîtront de vos flux.",
+      "mutedWordPlaceholder": "Mot, expression ou hashtag",
+      "mutedWordAdd": "Masquer",
+      "mutedWordRemove": "Retirer",
+      "mutedWordAlreadyExists": "Ce mot est déjà masqué.",
+      "mutedWordSaveFailed": "Impossible d'enregistrer votre modification. Réessayez.",
+      "mutedWordTarget": {
+        "both": "Texte et hashtags",
+        "content": "Texte uniquement",
+        "tag": "Hashtag uniquement"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Correspond au texte du post et aux hashtags",
+        "content": "Correspond uniquement au texte du post",
+        "tag": "Correspond uniquement au hashtag"
+      },
+      "verificationBadgesEnabled": "Afficher les badges de vérification",
+      "verificationBadgesHint": "Masque tous les badges de comptes vérifiés dans l'application, quel que soit l'émetteur.",
+      "trustedVerifiersHeader": "Vérificateurs de confiance",
+      "trustedVerifiersEmpty": "Vous n'avez encore désigné aucun vérificateur de confiance. Appuyez sur un vérificateur dans une fiche de vérification pour l'ajouter.",
+      "enableAdultContentHint": "Affiche les posts et médias marqués pour adultes. Désactivé par défaut.",
+      "requireAltTextHint": "Empêche l'envoi d'un post avec image tant que chaque image n'a pas de description en texte alternatif.",
+      "displayLargerTextBadgesHint": "Utilise une taille de texte plus grande et plus lisible pour les compteurs d'engagement (j'aime, réponses, repartages)."
     },
     "bookmarks": {
       "subtitle": "Les publications et fils enregistrés apparaîtront ici.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Les vérificateurs de confiance peuvent émettre des vérifications pour d’autres comptes.",
       "noVerifiers": "Aucun vérificateur",
       "verifiedOn": "Vérifié {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Vérifié par quelqu'un en qui vous avez confiance",
+      "verifiedBadgeGold": "Vérifié par toutes les personnes en qui vous avez confiance",
+      "verifiersSheetIntroTitleSilver": "{{name}} est vérifié par quelqu'un en qui vous avez confiance",
+      "verifiersSheetIntroTitleGold": "{{name}} est vérifié par toutes les personnes en qui vous avez confiance",
+      "verifiersSheetIntroBodyNoTrusted": "Ces comptes attestent que ce compte est authentique. Appuyez sur le badge à côté d'un vérificateur pour l'ajouter à votre liste de confiance.",
+      "verifiersTrustedHeader": "Vos vérificateurs de confiance",
+      "verifiersOtherHeader": "Autres vérifications",
+      "trustVerifier": "Faire confiance à ce vérificateur",
+      "untrustVerifier": "Ne plus faire confiance à ce vérificateur"
     },
     "recipe": {
       "title": "Recette",

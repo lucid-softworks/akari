@@ -321,7 +321,9 @@
         "processing": "Bearbetar… {{percent}}%",
         "processingIndeterminate": "Bearbetar…",
         "ready": "Klar att publicera"
-      }
+      },
+      "likeFailed": "Det gick inte att gilla inlägget. Försök igen.",
+      "unlikeFailed": "Det gick inte att ta bort gillamarkeringen. Försök igen."
     },
     "gif": {
       "selectGif": "Välj GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Dolda inlägg",
       "noHiddenAccounts": "Inga dolda konton",
       "noHiddenPosts": "Inga dolda inlägg",
-      "unhide": "Visa"
+      "unhide": "Visa",
+      "mutedWordsListHeader": "Dämpade just nu",
+      "mutedWordsEmpty": "Inget är dämpat än. Lägg till ett ord, en fras eller en tagg ovan, så försvinner inlägg som matchar från dina flöden.",
+      "mutedWordPlaceholder": "Ord, fras eller tagg",
+      "mutedWordAdd": "Dämpa",
+      "mutedWordRemove": "Ta bort",
+      "mutedWordAlreadyExists": "Det ordet är redan dämpat.",
+      "mutedWordSaveFailed": "Det gick inte att spara din ändring. Försök igen.",
+      "mutedWordTarget": {
+        "both": "Text och taggar",
+        "content": "Endast text",
+        "tag": "Endast tagg"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Matchar inläggstext och hashtags",
+        "content": "Matchar endast inläggstext",
+        "tag": "Matchar endast hashtag"
+      },
+      "verificationBadgesEnabled": "Visa verifieringsmärken",
+      "verificationBadgesHint": "Döljer alla verifieringsmärken för konton i appen, oavsett vem som har utfärdat dem.",
+      "trustedVerifiersHeader": "Betrodda verifierare",
+      "trustedVerifiersEmpty": "Du har ännu inte markerat någon som betrodd verifierare. Tryck på en verifierare i en verifieringsruta för att lägga till denne.",
+      "enableAdultContentHint": "Visar inlägg och media märkta som vuxeninnehåll. Avstängt som standard.",
+      "requireAltTextHint": "Blockerar att skicka ett bildinlägg om inte varje bild har en alt-textbeskrivning.",
+      "displayLargerTextBadgesHint": "Använd en större, mer läsbar textstorlek för interaktionsräknare (gillningar, svar, ompubliceringar)."
     },
     "bookmarks": {
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Betrodda verifierare kan utfärda verifieringar för andra konton.",
       "noVerifiers": "Inga verifierare",
       "verifiedOn": "Verifierad {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verifierad av någon du litar på",
+      "verifiedBadgeGold": "Verifierad av alla du litar på",
+      "verifiersSheetIntroTitleSilver": "{{name}} är verifierad av någon du litar på",
+      "verifiersSheetIntroTitleGold": "{{name}} är verifierad av alla du litar på",
+      "verifiersSheetIntroBodyNoTrusted": "Dessa konton har bekräftat att detta konto är äkta. Tryck på märket bredvid en verifierare för att lägga till denne i din betrodda lista.",
+      "verifiersTrustedHeader": "Du litar på",
+      "verifiersOtherHeader": "Andra verifieringar",
+      "trustVerifier": "Lita på denna verifierare",
+      "untrustVerifier": "Sluta lita på denna verifierare"
     },
     "recipe": {
       "title": "Recept",

@@ -321,7 +321,9 @@
         "processing": "Spracovanie… {{percent}}%",
         "processingIndeterminate": "Spracovanie…",
         "ready": "Pripravené na uverejnenie"
-      }
+      },
+      "likeFailed": "Nepodarilo sa dať „páči sa mi“. Skúste to znova.",
+      "unlikeFailed": "Nepodarilo sa odobrať „páči sa mi“. Skúste to znova."
     },
     "gif": {
       "selectGif": "Vyberte GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Skryté príspevky",
       "noHiddenAccounts": "Žiadne skryté účty",
       "noHiddenPosts": "Žiadne skryté príspevky",
-      "unhide": "Zobraziť"
+      "unhide": "Zobraziť",
+      "mutedWordsListHeader": "Aktuálne stlmené",
+      "mutedWordsEmpty": "Zatiaľ nie je nič stlmené. Pridajte vyššie slovo, frázu alebo hashtag a príspevky, ktoré im zodpovedajú, zmiznú z vašich kanálov.",
+      "mutedWordPlaceholder": "Slovo, fráza alebo hashtag",
+      "mutedWordAdd": "Stlmiť",
+      "mutedWordRemove": "Odstrániť",
+      "mutedWordAlreadyExists": "Toto slovo je už stlmené.",
+      "mutedWordSaveFailed": "Zmenu sa nepodarilo uložiť. Skúste to znova.",
+      "mutedWordTarget": {
+        "both": "Text a hashtagy",
+        "content": "Iba text",
+        "tag": "Iba hashtagy"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Zhoduje sa s textom príspevku a hashtagmi",
+        "content": "Zhoduje sa iba s textom príspevku",
+        "tag": "Zhoduje sa iba s hashtagmi"
+      },
+      "verificationBadgesEnabled": "Zobrazovať odznaky overenia",
+      "verificationBadgesHint": "Skryje všetky odznaky overených účtov v aplikácii bez ohľadu na to, kto ich vydal.",
+      "trustedVerifiersHeader": "Dôveryhodní overovatelia",
+      "trustedVerifiersEmpty": "Zatiaľ ste nikoho neoznačili ako dôveryhodného overovateľa. Klepnite na overovateľa v ľubovoľnom okne overenia, aby ste ho pridali.",
+      "enableAdultContentHint": "Zobrazovať príspevky a médiá označené ako pre dospelých. V predvolenom nastavení vypnuté.",
+      "requireAltTextHint": "Blokovať odoslanie príspevku s obrázkom, ak každý obrázok nemá popis alt-text.",
+      "displayLargerTextBadgesHint": "Používať väčšiu, čitateľnejšiu veľkosť textu pre počty reakcií (páči sa, odpovede, zdieľania)."
     },
     "bookmarks": {
       "subtitle": "Tu sa zobrazia uložené príspevky a vlákna.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Dôveryhodní overovatelia môžu vydávať overenia pre iné účty.",
       "noVerifiers": "Žiadni overovatelia",
       "verifiedOn": "Overené {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Overené niekým, komu dôverujete",
+      "verifiedBadgeGold": "Overené všetkými, ktorým dôverujete",
+      "verifiersSheetIntroTitleSilver": "{{name}} je overený niekým, komu dôverujete",
+      "verifiersSheetIntroTitleGold": "{{name}} je overený všetkými, ktorým dôverujete",
+      "verifiersSheetIntroBodyNoTrusted": "Tieto účty potvrdili, že tento účet je autentický. Klepnite na odznak vedľa overovateľa, aby ste ho pridali do svojho zoznamu dôveryhodných.",
+      "verifiersTrustedHeader": "Vami dôveryhodní",
+      "verifiersOtherHeader": "Ostatné overenia",
+      "trustVerifier": "Dôverovať tomuto overovateľovi",
+      "untrustVerifier": "Prestať dôverovať tomuto overovateľovi"
     },
     "recipe": {
       "title": "Recept",

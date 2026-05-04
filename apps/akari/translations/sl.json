@@ -321,7 +321,9 @@
         "processing": "Obdelovanje… {{percent}}%",
         "processingIndeterminate": "Obdelovanje…",
         "ready": "Pripravljeno za objavo"
-      }
+      },
+      "likeFailed": "Objave ni bilo mogoče označiti z všečkom. Poskusite znova.",
+      "unlikeFailed": "Všečka ni bilo mogoče odstraniti. Poskusite znova."
     },
     "gif": {
       "selectGif": "Izberite GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Skrite objave",
       "noHiddenAccounts": "Ni skritih računov",
       "noHiddenPosts": "Ni skritih objav",
-      "unhide": "Pokaži"
+      "unhide": "Pokaži",
+      "mutedWordsListHeader": "Trenutno utišano",
+      "mutedWordsEmpty": "Ničesar še ni utišanega. Dodajte besedo, frazo ali hashtag zgoraj in objave, ki se ujemajo, bodo izginile iz vaših virov.",
+      "mutedWordPlaceholder": "Beseda, fraza ali hashtag",
+      "mutedWordAdd": "Utišaj",
+      "mutedWordRemove": "Odstrani",
+      "mutedWordAlreadyExists": "Ta beseda je že utišana.",
+      "mutedWordSaveFailed": "Spremembe ni bilo mogoče shraniti. Poskusite znova.",
+      "mutedWordTarget": {
+        "both": "Besedilo in hashtagi",
+        "content": "Samo besedilo",
+        "tag": "Samo hashtagi"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Ujema se z besedilom objave in hashtagi",
+        "content": "Ujema se samo z besedilom objave",
+        "tag": "Ujema se samo s hashtagi"
+      },
+      "verificationBadgesEnabled": "Prikaži značke preverjanja",
+      "verificationBadgesHint": "Skrije vse značke preverjenih računov v aplikaciji, ne glede na to, kdo jih je izdal.",
+      "trustedVerifiersHeader": "Zaupanja vredni preveritelji",
+      "trustedVerifiersEmpty": "Še niste označili nikogar kot zaupanja vrednega preveritelja. Tapnite preveritelja v katerem koli oknu preverjanja, da ga dodate.",
+      "enableAdultContentHint": "Prikaži objave in medije, označene kot za odrasle. Privzeto izklopljeno.",
+      "requireAltTextHint": "Prepreči pošiljanje objave s sliko, če vsaka slika nima opisa alt-text.",
+      "displayLargerTextBadgesHint": "Uporabi večjo, bolj berljivo velikost pisave za števce reakcij (všečki, odgovori, ponovne objave)."
     },
     "bookmarks": {
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Zaupanja vredni preveritelji lahko izdajajo preverjanja za druge račune.",
       "noVerifiers": "Brez preveriteljev",
       "verifiedOn": "Preverjeno {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Preverjen s strani nekoga, ki mu zaupate",
+      "verifiedBadgeGold": "Preverjen s strani vseh, ki jim zaupate",
+      "verifiersSheetIntroTitleSilver": "{{name}} je preverjen s strani nekoga, ki mu zaupate",
+      "verifiersSheetIntroTitleGold": "{{name}} je preverjen s strani vseh, ki jim zaupate",
+      "verifiersSheetIntroBodyNoTrusted": "Ti računi so potrdili, da je ta račun pristen. Tapnite značko poleg preveritelja, da ga dodate na svoj seznam zaupanja vrednih.",
+      "verifiersTrustedHeader": "Vi mu zaupate",
+      "verifiersOtherHeader": "Druga preverjanja",
+      "trustVerifier": "Zaupaj temu preveritelju",
+      "untrustVerifier": "Prenehaj zaupati temu preveritelju"
     },
     "recipe": {
       "title": "Recept",

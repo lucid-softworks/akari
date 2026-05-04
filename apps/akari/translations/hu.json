@@ -321,7 +321,9 @@
         "processing": "Feldolgozás… {{percent}}%",
         "processingIndeterminate": "Feldolgozás…",
         "ready": "Készen áll a közzétételre"
-      }
+      },
+      "likeFailed": "Nem sikerült kedvelni a bejegyzést. Próbáld újra.",
+      "unlikeFailed": "Nem sikerült visszavonni a kedvelést. Próbáld újra."
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Rejtett bejegyzések",
       "noHiddenAccounts": "Nincsenek rejtett fiókok",
       "noHiddenPosts": "Nincsenek rejtett bejegyzések",
-      "unhide": "Mutatás"
+      "unhide": "Mutatás",
+      "mutedWordsListHeader": "Jelenleg némítva",
+      "mutedWordsEmpty": "Még nincs semmi némítva. Adj hozzá egy szót, kifejezést vagy hashtaget fent, és az ezekkel egyező bejegyzések eltűnnek a hírcsatornáidból.",
+      "mutedWordPlaceholder": "Szó, kifejezés vagy hashtag",
+      "mutedWordAdd": "Némítás",
+      "mutedWordRemove": "Eltávolítás",
+      "mutedWordAlreadyExists": "Ez a szó már némítva van.",
+      "mutedWordSaveFailed": "Nem sikerült menteni a változtatást. Próbáld újra.",
+      "mutedWordTarget": {
+        "both": "Szöveg és hashtagek",
+        "content": "Csak szöveg",
+        "tag": "Csak hashtagek"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Egyezik a bejegyzés szövegével és a hashtagekkel",
+        "content": "Csak a bejegyzés szövegével egyezik",
+        "tag": "Csak hashtagekkel egyezik"
+      },
+      "verificationBadgesEnabled": "Hitelesítési jelvények megjelenítése",
+      "verificationBadgesHint": "Elrejt minden hitelesített fiók-jelvényt az alkalmazásban, függetlenül attól, hogy ki adta ki.",
+      "trustedVerifiersHeader": "Megbízható hitelesítők",
+      "trustedVerifiersEmpty": "Még nem jelöltél meg senkit megbízható hitelesítőként. Érints meg egy hitelesítőt bármely hitelesítési lapon, hogy hozzáadd.",
+      "enableAdultContentHint": "Felnőtt tartalomként jelölt bejegyzések és médiák megjelenítése. Alapértelmezés szerint kikapcsolva.",
+      "requireAltTextHint": "Képet tartalmazó bejegyzés küldésének tiltása, amíg minden képhez nem tartozik alt-text leírás.",
+      "displayLargerTextBadgesHint": "Nagyobb, olvashatóbb szövegméret használata a reakciószámlálókhoz (kedvelések, válaszok, újraposztolások)."
     },
     "bookmarks": {
       "subtitle": "A mentett hozzászólások és szálak itt jelennek meg.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "A megbízható hitelesítők hitelesítéseket adhatnak ki más fiókoknak.",
       "noVerifiers": "Nincsenek hitelesítők",
       "verifiedOn": "Hitelesítve {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Hitelesítve egy általad megbízhatónak tartott személy által",
+      "verifiedBadgeGold": "Hitelesítve mindenki által, akiben megbízol",
+      "verifiersSheetIntroTitleSilver": "{{name}} hitelesítve van egy általad megbízhatónak tartott személy által",
+      "verifiersSheetIntroTitleGold": "{{name}} hitelesítve van mindenki által, akiben megbízol",
+      "verifiersSheetIntroBodyNoTrusted": "Ezek a fiókok igazolták, hogy ez a fiók valódi. Érintsd meg a hitelesítő melletti jelvényt, hogy hozzáadd a megbízható listádhoz.",
+      "verifiersTrustedHeader": "Megbízhatók számodra",
+      "verifiersOtherHeader": "Egyéb hitelesítések",
+      "trustVerifier": "Bízz meg ebben a hitelesítőben",
+      "untrustVerifier": "Ne bízz többé ebben a hitelesítőben"
     },
     "recipe": {
       "title": "Recept",

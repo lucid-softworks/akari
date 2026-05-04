@@ -321,7 +321,9 @@
         "processing": "처리 중… {{percent}}%",
         "processingIndeterminate": "처리 중…",
         "ready": "게시 준비 완료"
-      }
+      },
+      "likeFailed": "게시물에 좋아요를 표시할 수 없습니다. 다시 시도해 주세요.",
+      "unlikeFailed": "좋아요를 취소할 수 없습니다. 다시 시도해 주세요."
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "숨긴 게시물",
       "noHiddenAccounts": "숨긴 계정이 없습니다",
       "noHiddenPosts": "숨긴 게시물이 없습니다",
-      "unhide": "숨김 해제"
+      "unhide": "숨김 해제",
+      "mutedWordsListHeader": "현재 음소거 중",
+      "mutedWordsEmpty": "아직 음소거된 항목이 없습니다. 위에 단어, 문구 또는 태그를 추가하면 일치하는 게시물이 피드에서 사라집니다.",
+      "mutedWordPlaceholder": "단어, 문구 또는 태그",
+      "mutedWordAdd": "음소거",
+      "mutedWordRemove": "삭제",
+      "mutedWordAlreadyExists": "해당 단어는 이미 음소거되어 있습니다.",
+      "mutedWordSaveFailed": "음소거 단어 변경 사항을 저장할 수 없습니다. 다시 시도해 주세요.",
+      "mutedWordTarget": {
+        "both": "텍스트 및 태그",
+        "content": "텍스트만",
+        "tag": "태그만"
+      },
+      "mutedWordTargetLabel": {
+        "both": "게시물 텍스트와 해시태그 모두 일치",
+        "content": "게시물 텍스트만 일치",
+        "tag": "해시태그만 일치"
+      },
+      "verificationBadgesEnabled": "인증 배지 표시",
+      "verificationBadgesHint": "발급자와 관계없이 앱 전체에서 모든 인증 계정 배지를 숨깁니다.",
+      "trustedVerifiersHeader": "신뢰할 수 있는 인증자",
+      "trustedVerifiersEmpty": "아직 신뢰할 수 있는 인증자로 지정한 사람이 없습니다. 인증 시트에서 인증자를 탭하여 추가하세요.",
+      "enableAdultContentHint": "성인용으로 표시된 게시물과 미디어를 보여줍니다. 기본값은 꺼짐입니다.",
+      "requireAltTextHint": "모든 이미지에 대체 텍스트 설명이 있을 때까지 이미지 게시물 전송을 차단합니다.",
+      "displayLargerTextBadgesHint": "참여 수(좋아요, 답글, 리포스트)에 더 크고 읽기 쉬운 글자 크기를 사용합니다."
     },
     "gif": {
       "selectGif": "GIF 선택",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "신뢰할 수 있는 인증자는 다른 계정의 인증을 발급할 수 있습니다.",
       "noVerifiers": "인증자 없음",
       "verifiedOn": "{{date}}에 인증됨",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "신뢰하는 사람이 인증함",
+      "verifiedBadgeGold": "신뢰하는 모든 사람이 인증함",
+      "verifiersSheetIntroTitleSilver": "{{name}}님은 신뢰하는 사람이 인증했습니다",
+      "verifiersSheetIntroTitleGold": "{{name}}님은 신뢰하는 모든 사람이 인증했습니다",
+      "verifiersSheetIntroBodyNoTrusted": "이 계정들이 이 계정이 진짜임을 확인했습니다. 인증자 옆의 배지를 탭하여 신뢰 목록에 추가하세요.",
+      "verifiersTrustedHeader": "내가 신뢰함",
+      "verifiersOtherHeader": "다른 인증",
+      "trustVerifier": "이 인증자 신뢰하기",
+      "untrustVerifier": "이 인증자 신뢰 중지"
     },
     "recipe": {
       "title": "레시피",

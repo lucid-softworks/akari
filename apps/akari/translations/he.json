@@ -321,7 +321,9 @@
         "processing": "מעבד... {{percent}}%",
         "processingIndeterminate": "מעבד...",
         "ready": "מוכן לפרסום"
-      }
+      },
+      "likeFailed": "לא ניתן היה לסמן את הפוסט בלייק. נסה שוב.",
+      "unlikeFailed": "לא ניתן היה לבטל את הלייק. נסה שוב."
     },
     "gif": {
       "selectGif": "בחר GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "פוסטים מוסתרים",
       "noHiddenAccounts": "אין חשבונות מוסתרים",
       "noHiddenPosts": "אין פוסטים מוסתרים",
-      "unhide": "הצג"
+      "unhide": "הצג",
+      "mutedWordsListHeader": "מושתקים כעת",
+      "mutedWordsEmpty": "עדיין לא הושתק דבר. הוסף מילה, ביטוי או תגית למעלה ופוסטים תואמים ייעלמו מהפיד שלך.",
+      "mutedWordPlaceholder": "מילה, ביטוי או תגית",
+      "mutedWordAdd": "השתק",
+      "mutedWordRemove": "הסר",
+      "mutedWordAlreadyExists": "המילה הזאת כבר מושתקת.",
+      "mutedWordSaveFailed": "לא ניתן היה לשמור את שינוי המילים המושתקות. נסה שוב.",
+      "mutedWordTarget": {
+        "both": "טקסט ותגיות",
+        "content": "טקסט בלבד",
+        "tag": "תגיות בלבד"
+      },
+      "mutedWordTargetLabel": {
+        "both": "תואם לטקסט הפוסט ולהאשטאגים",
+        "content": "תואם לטקסט הפוסט בלבד",
+        "tag": "תואם להאשטאג בלבד"
+      },
+      "verificationBadgesEnabled": "הצג תגי אימות",
+      "verificationBadgesHint": "מסתיר כל תג של חשבון מאומת באפליקציה, ללא קשר למי שהנפיק אותו.",
+      "trustedVerifiersHeader": "מאמתים מהימנים",
+      "trustedVerifiersEmpty": "עדיין לא סימנת אף אחד כמאמת מהימן. הקש על מאמת בכל גיליון אימות כדי להוסיף אותו.",
+      "enableAdultContentHint": "הצג פוסטים ומדיה המסומנים למבוגרים. כבוי כברירת מחדל.",
+      "requireAltTextHint": "חסום שליחה של פוסט תמונה אלא אם לכל תמונה יש תיאור טקסט חלופי.",
+      "displayLargerTextBadgesHint": "השתמש בגודל טקסט גדול וקריא יותר עבור ספירת מעורבות (לייקים, תגובות, פרסומים מחדש)."
     },
     "bookmarks": {
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "מאמתים מהימנים יכולים להנפיק אימותים לחשבונות אחרים.",
       "noVerifiers": "אין מאמתים",
       "verifiedOn": "אומת {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "מאומת על ידי מישהו שאתה בוטח בו",
+      "verifiedBadgeGold": "מאומת על ידי כל מי שאתה בוטח בו",
+      "verifiersSheetIntroTitleSilver": "{{name}} מאומת על ידי מישהו שאתה בוטח בו",
+      "verifiersSheetIntroTitleGold": "{{name}} מאומת על ידי כל מי שאתה בוטח בו",
+      "verifiersSheetIntroBodyNoTrusted": "החשבונות האלה אישרו שהחשבון הזה אמיתי. הקש על התג ליד מאמת כדי להוסיף אותו לרשימת המאמתים המהימנים שלך.",
+      "verifiersTrustedHeader": "מהימנים על ידך",
+      "verifiersOtherHeader": "אימותים אחרים",
+      "trustVerifier": "סמן מאמת זה כמהימן",
+      "untrustVerifier": "הפסק לסמוך על מאמת זה"
     },
     "recipe": {
       "title": "מתכון",

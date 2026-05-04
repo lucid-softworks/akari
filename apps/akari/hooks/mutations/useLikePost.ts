@@ -1,7 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 
+import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { useTranslation } from '@/hooks/useTranslation';
 import type {
   BlueskyFeedItem,
   BlueskyFeedResponse,
@@ -11,6 +13,32 @@ import type {
 } from '@/bluesky-api';
 import { BlueskyApi } from '@/bluesky-api';
 
+type FeedPagesQueryData = { pages: BlueskyFeedResponse[] };
+type LikesPagesQueryData = { pages: { likes?: BlueskyPostView[]; cursor?: string }[] };
+type ThreadQueryData = { thread: { post: BlueskyPostView; replies?: any[] } };
+
+/**
+ * Snapshot the data of every query whose key starts with `prefix` so we can
+ * restore them in `onError`. React Query's `getQueriesData` is prefix-matched
+ * out of the box; the typed wrapper just narrows the value type.
+ */
+function snapshotByPrefix<T>(
+  queryClient: ReturnType<typeof useQueryClient>,
+  prefix: QueryKey,
+): [QueryKey, T | undefined][] {
+  return queryClient.getQueriesData<T>({ queryKey: prefix }) as [QueryKey, T | undefined][];
+}
+
+function restoreSnapshots<T>(
+  queryClient: ReturnType<typeof useQueryClient>,
+  snapshots: [QueryKey, T | undefined][] | undefined,
+) {
+  if (!snapshots) return;
+  for (const [queryKey, data] of snapshots) {
+    queryClient.setQueryData(queryKey, data);
+  }
+}
+
 /**
  * Mutation hook for liking and unliking posts
  */
@@ -18,6 +46,8 @@ export function useLikePost() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async ({
@@ -50,7 +80,7 @@ export function useLikePost() {
       }
     },
     onMutate: async ({ postUri, action }) => {
-      // Cancel any outgoing refetches
+      // Cancel any outgoing refetches across all the prefixes we'll touch.
       await queryClient.cancelQueries({ queryKey: ['timeline'] });
       await queryClient.cancelQueries({ queryKey: ['feed'] });
       await queryClient.cancelQueries({ queryKey: ['authorFeed'] });
@@ -58,12 +88,19 @@ export function useLikePost() {
       await queryClient.cancelQueries({ queryKey: ['post'] });
       await queryClient.cancelQueries({ queryKey: ['postThread'] });
 
-      // Snapshot the previous value
-      const previousTimeline = queryClient.getQueryData<BlueskyFeedResponse>(['timeline']);
-      const previousFeed = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['feed']);
-      const previousAuthorFeed = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['authorFeed']);
-      const previousAuthorLikes = queryClient.getQueryData<{ pages: BlueskyFeedResponse[] }>(['authorLikes']);
-      // Helper function to update a post's like status
+      // Snapshot every matching query (prefix-matched) so onError can roll
+      // each one back. The previous implementation snapshotted by exact key
+      // (`['timeline']`, etc.), which never matched the real cached keys
+      // (`['timeline', limit, did]`, `['feed', feedUri]`, …) and so silently
+      // no-op'd on rollback — leaving optimistic likes pinned to the UI even
+      // when the create-record call failed.
+      const timelineSnapshots = snapshotByPrefix<BlueskyFeedResponse>(queryClient, ['timeline']);
+      const feedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['feed']);
+      const authorFeedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['authorFeed']);
+      const authorLikesSnapshots = snapshotByPrefix<LikesPagesQueryData>(queryClient, ['authorLikes']);
+      const postSnapshots = snapshotByPrefix<BlueskyPostView>(queryClient, ['post']);
+      const postThreadSnapshots = snapshotByPrefix<ThreadQueryData>(queryClient, ['postThread']);
+
       const updatePostLikeStatus = (post: BlueskyPostView): BlueskyPostView => ({
         ...post,
         likeCount: action === 'like' ? (post.likeCount || 0) + 1 : Math.max(0, (post.likeCount || 0) - 1),
@@ -73,99 +110,92 @@ export function useLikePost() {
         },
       });
 
-      // Helper function to update a feed item's post
       const updateFeedItemPost = (item: BlueskyFeedItem): BlueskyFeedItem => ({
         ...item,
-        post: updatePostLikeStatus(item.post),
+        post: item.post.uri === postUri ? updatePostLikeStatus(item.post) : item.post,
       });
 
-      // Optimistically update the queries
-      queryClient.setQueryData<BlueskyFeedResponse>(['timeline'], (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          feed: old.feed?.map((item) => (item.post.uri === postUri ? updateFeedItemPost(item) : item)),
-        };
-      });
+      // Apply optimistic updates by walking the snapshots we just took. Going
+      // through `setQueryData` per-key keeps every cache in lockstep with
+      // what we'll restore on error.
+      for (const [queryKey, data] of timelineSnapshots) {
+        if (!data) continue;
+        queryClient.setQueryData(queryKey, {
+          ...data,
+          feed: data.feed?.map((item) =>
+            item.post.uri === postUri ? updateFeedItemPost(item) : item,
+          ),
+        });
+      }
 
-      // Update all feed queries (they have the format ['feed', feedUri])
-      const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['feed'] });
-      for (const [queryKey, data] of feedQueries) {
-        if (data && Array.isArray(data.pages)) {
-          queryClient.setQueryData(queryKey, {
-            ...data,
-            pages: data.pages.map((page) => ({
+      for (const [queryKey, data] of feedSnapshots) {
+        if (!data || !Array.isArray(data.pages)) continue;
+        queryClient.setQueryData(queryKey, {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            feed: page.feed.map((item) => updateFeedItemPost(item)),
+          })),
+        });
+      }
+
+      for (const [queryKey, data] of authorFeedSnapshots) {
+        if (!data || !Array.isArray(data.pages)) continue;
+        queryClient.setQueryData(queryKey, {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            feed: page.feed.map((item) => updateFeedItemPost(item)),
+          })),
+        });
+      }
+
+      // useAuthorLikes pages have shape `{ likes: BlueskyPostView[], cursor }`
+      // — bare posts, not the `{ feed: BlueskyFeedItem[] }` envelope the
+      // other feed queries use. Iterate `likes` directly and skip pages
+      // that don't conform.
+      for (const [queryKey, data] of authorLikesSnapshots) {
+        if (!data || !Array.isArray(data.pages)) continue;
+        queryClient.setQueryData(queryKey, {
+          ...data,
+          pages: data.pages.map((page) => {
+            if (!Array.isArray(page.likes)) return page;
+            return {
               ...page,
-              feed: page.feed.map((item) => (item.post.uri === postUri ? updateFeedItemPost(item) : item)),
-            })),
-          });
-        }
+              likes: page.likes.map((post) =>
+                post.uri === postUri ? updatePostLikeStatus(post) : post,
+              ),
+            };
+          }),
+        });
       }
 
-      // Update all authorFeed queries (they have the format ['authorFeed', identifier, limit])
-      const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['authorFeed'] });
-      for (const [queryKey, data] of authorFeedQueries) {
-        if (data && Array.isArray(data.pages)) {
-          queryClient.setQueryData(queryKey, {
-            ...data,
-            pages: data.pages.map((page) => ({
-              ...page,
-              feed: page.feed.map((item) => (item.post.uri === postUri ? updateFeedItemPost(item) : item)),
-            })),
-          });
-        }
+      for (const [queryKey, data] of postSnapshots) {
+        if (!data || data.uri !== postUri) continue;
+        queryClient.setQueryData(queryKey, updatePostLikeStatus(data));
       }
 
-      // Update all authorLikes queries (they have the format ['authorLikes', identifier, limit])
-      const authorLikesQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['authorLikes'] });
-      for (const [queryKey, data] of authorLikesQueries) {
-        if (data && Array.isArray(data.pages)) {
-          queryClient.setQueryData(queryKey, {
-            ...data,
-            pages: data.pages.map((page) => ({
-              ...page,
-              feed: page.feed.map((item) => (item.post.uri === postUri ? updateFeedItemPost(item) : item)),
-            })),
-          });
-        }
-      }
-
-      // Update all individual post queries (keyed as ['post', { actor, rKey }, pdsUrl])
-      const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
-      for (const [queryKey, data] of postQueries) {
-        if (data && data.uri === postUri) {
-          queryClient.setQueryData(queryKey, updatePostLikeStatus(data));
-        }
-      }
-
-      // Update all post thread queries (main post + replies)
-      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView; replies?: any[] } }>({ queryKey: ['postThread'] });
-      for (const [queryKey, data] of threadQueries) {
+      for (const [queryKey, data] of postThreadSnapshots) {
         if (!data?.thread) continue;
-
         let updated = false;
         let newThread = data.thread;
 
-        // Check main post
         if (newThread.post?.uri === postUri) {
           newThread = { ...newThread, post: updatePostLikeStatus(newThread.post) };
           updated = true;
         }
 
-        // Check replies
         if (newThread.replies) {
           const updateReplies = (replies: any[]): any[] =>
             replies.map((reply: any) => {
               if (!reply?.post) return reply;
-              const newReply = reply.post.uri === postUri
-                ? { ...reply, post: updatePostLikeStatus(reply.post) }
-                : reply;
+              const newReply =
+                reply.post.uri === postUri ? { ...reply, post: updatePostLikeStatus(reply.post) } : reply;
               if (newReply.replies) {
                 return { ...newReply, replies: updateReplies(newReply.replies) };
               }
               return newReply;
             });
-
           const newReplies = updateReplies(newThread.replies);
           if (JSON.stringify(newReplies) !== JSON.stringify(newThread.replies)) {
             newThread = { ...newThread, replies: newReplies };
@@ -178,31 +208,32 @@ export function useLikePost() {
         }
       }
 
-      // Return a context object with the snapshotted value
       return {
-        previousTimeline,
-        previousFeed,
-        previousAuthorFeed,
-        previousAuthorLikes,
+        timelineSnapshots,
+        feedSnapshots,
+        authorFeedSnapshots,
+        authorLikesSnapshots,
+        postSnapshots,
+        postThreadSnapshots,
       };
     },
-    onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
-      if (context?.previousTimeline) {
-        queryClient.setQueryData(['timeline'], context.previousTimeline);
-      }
-      if (context?.previousFeed) {
-        queryClient.setQueryData(['feed'], context.previousFeed);
-      }
-      if (context?.previousAuthorFeed) {
-        queryClient.setQueryData(['authorFeed'], context.previousAuthorFeed);
-      }
-      if (context?.previousAuthorLikes) {
-        queryClient.setQueryData(['authorLikes'], context.previousAuthorLikes);
-      }
-      // Invalidate post queries to refetch correct state
-      void queryClient.invalidateQueries({ queryKey: ['post'] });
-      void queryClient.invalidateQueries({ queryKey: ['postThread'] });
+    onError: (_err, variables, context) => {
+      // Roll back every snapshotted cache entry so the optimistic heart
+      // disappears when the network call fails.
+      restoreSnapshots(queryClient, context?.timelineSnapshots);
+      restoreSnapshots(queryClient, context?.feedSnapshots);
+      restoreSnapshots(queryClient, context?.authorFeedSnapshots);
+      restoreSnapshots(queryClient, context?.authorLikesSnapshots);
+      restoreSnapshots(queryClient, context?.postSnapshots);
+      restoreSnapshots(queryClient, context?.postThreadSnapshots);
+
+      showToast({
+        type: 'error',
+        message:
+          variables.action === 'like'
+            ? t('post.likeFailed')
+            : t('post.unlikeFailed'),
+      });
     },
     onSuccess: (data: BlueskyLikeResponse | BlueskyUnlikeResponse, variables) => {
       // Update the temporary like URI with the real one from the server response
@@ -220,14 +251,17 @@ export function useLikePost() {
           post: updateLikeUri(item.post),
         });
 
-        // Update timeline
-        queryClient.setQueryData<BlueskyFeedResponse>(['timeline'], (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            feed: old.feed?.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
-          };
-        });
+        // Update timeline (prefix-matched).
+        const timelineQueries = queryClient.getQueriesData<BlueskyFeedResponse>({ queryKey: ['timeline'] });
+        for (const [queryKey, data] of timelineQueries) {
+          if (!data) continue;
+          queryClient.setQueryData(queryKey, {
+            ...data,
+            feed: data.feed?.map((item) =>
+              item.post.uri === variables.postUri ? updateFeedItemPost(item) : item,
+            ),
+          });
+        }
 
         // Update all feed queries (they have the format ['feed', feedUri])
         const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['feed'] });
@@ -257,20 +291,25 @@ export function useLikePost() {
           }
         }
 
-        // Update all authorLikes queries (they have the format ['authorLikes', identifier, limit])
-        const authorLikesQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({
+        // Update all authorLikes queries — pages here are
+        // `{ likes: BlueskyPostView[] }`, not `{ feed: BlueskyFeedItem[] }`.
+        const authorLikesQueries = queryClient.getQueriesData<LikesPagesQueryData>({
           queryKey: ['authorLikes'],
         });
         for (const [queryKey, data] of authorLikesQueries) {
-          if (data && Array.isArray(data.pages)) {
-            queryClient.setQueryData(queryKey, {
-              ...data,
-              pages: data.pages.map((page) => ({
+          if (!data || !Array.isArray(data.pages)) continue;
+          queryClient.setQueryData(queryKey, {
+            ...data,
+            pages: data.pages.map((page) => {
+              if (!Array.isArray(page.likes)) return page;
+              return {
                 ...page,
-                feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
-              })),
-            });
-          }
+                likes: page.likes.map((post) =>
+                  post.uri === variables.postUri ? updateLikeUri(post) : post,
+                ),
+              };
+            }),
+          });
         }
 
         // Update all individual post queries

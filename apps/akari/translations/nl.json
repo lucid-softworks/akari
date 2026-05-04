@@ -321,7 +321,9 @@
         "processing": "Verwerken… {{percent}}%",
         "processingIndeterminate": "Verwerken…",
         "ready": "Klaar om te plaatsen"
-      }
+      },
+      "likeFailed": "Kon bericht niet liken. Probeer het opnieuw.",
+      "unlikeFailed": "Kon like niet verwijderen. Probeer het opnieuw."
     },
     "messages": {
       "typeMessage": "Typ een bericht...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Verborgen berichten",
       "noHiddenAccounts": "Geen verborgen accounts",
       "noHiddenPosts": "Geen verborgen berichten",
-      "unhide": "Tonen"
+      "unhide": "Tonen",
+      "mutedWordsListHeader": "Momenteel gedempt",
+      "mutedWordsEmpty": "Nog niets gedempt. Voeg hierboven een woord, zin of tag toe, en berichten die overeenkomen verdwijnen uit je feeds.",
+      "mutedWordPlaceholder": "Woord, zin of tag",
+      "mutedWordAdd": "Dempen",
+      "mutedWordRemove": "Verwijderen",
+      "mutedWordAlreadyExists": "Dat woord is al gedempt.",
+      "mutedWordSaveFailed": "Je wijziging kon niet worden opgeslagen. Probeer het opnieuw.",
+      "mutedWordTarget": {
+        "both": "Tekst en tags",
+        "content": "Alleen tekst",
+        "tag": "Alleen tag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Komt overeen met de berichttekst en hashtags",
+        "content": "Komt alleen overeen met de berichttekst",
+        "tag": "Komt alleen overeen met de hashtag"
+      },
+      "verificationBadgesEnabled": "Verificatiebadges weergeven",
+      "verificationBadgesHint": "Verbergt elke badge van geverifieerde accounts in de app, ongeacht wie ze heeft uitgegeven.",
+      "trustedVerifiersHeader": "Vertrouwde verificateurs",
+      "trustedVerifiersEmpty": "Je hebt nog niemand aangemerkt als vertrouwde verificateur. Tik op een verificateur in een verificatievenster om hem toe te voegen.",
+      "enableAdultContentHint": "Toont berichten en media die als volwassen zijn gemarkeerd. Standaard uitgeschakeld.",
+      "requireAltTextHint": "Voorkomt het verzenden van een bericht met afbeeldingen tenzij elke afbeelding een alt-tekstbeschrijving heeft.",
+      "displayLargerTextBadgesHint": "Gebruik een grotere, beter leesbare tekstgrootte voor de interactietellers (likes, reacties, reposts)."
     },
     "gif": {
       "selectGif": "GIF selecteren",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Vertrouwde verificateurs kunnen verificaties uitgeven voor andere accounts.",
       "noVerifiers": "Geen verificateurs",
       "verifiedOn": "Geverifieerd {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Geverifieerd door iemand die je vertrouwt",
+      "verifiedBadgeGold": "Geverifieerd door iedereen die je vertrouwt",
+      "verifiersSheetIntroTitleSilver": "{{name}} is geverifieerd door iemand die je vertrouwt",
+      "verifiersSheetIntroTitleGold": "{{name}} is geverifieerd door iedereen die je vertrouwt",
+      "verifiersSheetIntroBodyNoTrusted": "Deze accounts hebben bevestigd dat deze account authentiek is. Tik op de badge naast een verificateur om hem aan je vertrouwde lijst toe te voegen.",
+      "verifiersTrustedHeader": "Door jou vertrouwd",
+      "verifiersOtherHeader": "Andere verificaties",
+      "trustVerifier": "Deze verificateur vertrouwen",
+      "untrustVerifier": "Deze verificateur niet meer vertrouwen"
     },
     "recipe": {
       "title": "Recept",

@@ -321,7 +321,9 @@
         "processing": "Przetwarzanie… {{percent}}%",
         "processingIndeterminate": "Przetwarzanie…",
         "ready": "Gotowe do opublikowania"
-      }
+      },
+      "likeFailed": "Nie udało się polubić posta. Spróbuj ponownie.",
+      "unlikeFailed": "Nie udało się cofnąć polubienia. Spróbuj ponownie."
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Ukryte posty",
       "noHiddenAccounts": "Brak ukrytych kont",
       "noHiddenPosts": "Brak ukrytych postów",
-      "unhide": "Pokaż"
+      "unhide": "Pokaż",
+      "mutedWordsListHeader": "Aktualnie wyciszone",
+      "mutedWordsEmpty": "Nic nie jest jeszcze wyciszone. Dodaj słowo, frazę lub hashtag powyżej, a posty, które będą do nich pasować, znikną z Twoich kanałów.",
+      "mutedWordPlaceholder": "Słowo, fraza lub hashtag",
+      "mutedWordAdd": "Wycisz",
+      "mutedWordRemove": "Usuń",
+      "mutedWordAlreadyExists": "To słowo jest już wyciszone.",
+      "mutedWordSaveFailed": "Nie udało się zapisać zmiany. Spróbuj ponownie.",
+      "mutedWordTarget": {
+        "both": "Tekst i hashtagi",
+        "content": "Tylko tekst",
+        "tag": "Tylko hashtagi"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Dopasowuje do tekstu posta i hashtagów",
+        "content": "Dopasowuje tylko do tekstu posta",
+        "tag": "Dopasowuje tylko do hashtagów"
+      },
+      "verificationBadgesEnabled": "Pokazuj odznaki weryfikacji",
+      "verificationBadgesHint": "Ukrywa każdą odznakę zweryfikowanego konta w aplikacji, niezależnie od tego, kto ją wystawił.",
+      "trustedVerifiersHeader": "Zaufani weryfikatorzy",
+      "trustedVerifiersEmpty": "Nie oznaczyłeś jeszcze nikogo jako zaufanego weryfikatora. Dotknij weryfikatora w dowolnym arkuszu weryfikacji, aby go dodać.",
+      "enableAdultContentHint": "Pokazuj posty i media oznaczone jako dla dorosłych. Domyślnie wyłączone.",
+      "requireAltTextHint": "Blokuj wysyłanie postów ze zdjęciami, jeśli każde zdjęcie nie ma opisu alt-text.",
+      "displayLargerTextBadgesHint": "Używaj większego, bardziej czytelnego rozmiaru tekstu dla liczników reakcji (polubień, odpowiedzi, repostów)."
     },
     "gif": {
       "selectGif": "Wybierz GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Zaufani weryfikatorzy mogą wystawiać weryfikacje dla innych kont.",
       "noVerifiers": "Brak weryfikatorów",
       "verifiedOn": "Zweryfikowano {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Zweryfikowane przez kogoś, komu ufasz",
+      "verifiedBadgeGold": "Zweryfikowane przez wszystkich, którym ufasz",
+      "verifiersSheetIntroTitleSilver": "{{name}} jest zweryfikowany przez kogoś, komu ufasz",
+      "verifiersSheetIntroTitleGold": "{{name}} jest zweryfikowany przez wszystkich, którym ufasz",
+      "verifiersSheetIntroBodyNoTrusted": "Te konta potwierdziły, że to konto jest autentyczne. Dotknij odznaki obok weryfikatora, aby dodać go do swojej listy zaufanych.",
+      "verifiersTrustedHeader": "Zaufani przez Ciebie",
+      "verifiersOtherHeader": "Inne weryfikacje",
+      "trustVerifier": "Zaufaj temu weryfikatorowi",
+      "untrustVerifier": "Przestań ufać temu weryfikatorowi"
     },
     "recipe": {
       "title": "Przepis",

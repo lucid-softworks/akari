@@ -321,7 +321,9 @@
         "processing": "Memproses... {{percent}}%",
         "processingIndeterminate": "Memproses...",
         "ready": "Siap dikirim"
-      }
+      },
+      "likeFailed": "Tidak dapat menyukai postingan. Coba lagi.",
+      "unlikeFailed": "Tidak dapat membatalkan suka. Coba lagi."
     },
     "messages": {
       "typeMessage": "Ketik pesan...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Post tersembunyi",
       "noHiddenAccounts": "Tidak ada akun tersembunyi",
       "noHiddenPosts": "Tidak ada post tersembunyi",
-      "unhide": "Tampilkan"
+      "unhide": "Tampilkan",
+      "mutedWordsListHeader": "Sedang dibisukan",
+      "mutedWordsEmpty": "Belum ada yang dibisukan. Tambahkan kata, frasa, atau tag di atas dan postingan yang cocok akan hilang dari beranda Anda.",
+      "mutedWordPlaceholder": "Kata, frasa, atau tag",
+      "mutedWordAdd": "Bisukan",
+      "mutedWordRemove": "Hapus",
+      "mutedWordAlreadyExists": "Kata tersebut sudah dibisukan.",
+      "mutedWordSaveFailed": "Tidak dapat menyimpan perubahan kata bisu. Coba lagi.",
+      "mutedWordTarget": {
+        "both": "Teks & tag",
+        "content": "Hanya teks",
+        "tag": "Hanya tag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Mencocokkan teks postingan dan tagar",
+        "content": "Hanya mencocokkan teks postingan",
+        "tag": "Hanya mencocokkan tagar"
+      },
+      "verificationBadgesEnabled": "Tampilkan lencana verifikasi",
+      "verificationBadgesHint": "Menyembunyikan setiap lencana akun terverifikasi di seluruh aplikasi, terlepas dari siapa yang menerbitkannya.",
+      "trustedVerifiersHeader": "Verifikator tepercaya",
+      "trustedVerifiersEmpty": "Anda belum menandai siapa pun sebagai verifikator tepercaya. Ketuk verifikator di panel verifikasi mana pun untuk menambahkannya.",
+      "enableAdultContentHint": "Tampilkan postingan dan media yang ditandai sebagai konten dewasa. Mati secara default.",
+      "requireAltTextHint": "Cegah pengiriman postingan gambar kecuali setiap gambar memiliki deskripsi teks alt.",
+      "displayLargerTextBadgesHint": "Gunakan ukuran teks yang lebih besar dan mudah dibaca untuk jumlah interaksi (suka, balasan, postingan ulang)."
     },
     "gif": {
       "selectGif": "Pilih GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Verifikator tepercaya dapat menerbitkan verifikasi untuk akun lain.",
       "noVerifiers": "Tidak ada verifikator",
       "verifiedOn": "Diverifikasi {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Diverifikasi oleh seseorang yang Anda percayai",
+      "verifiedBadgeGold": "Diverifikasi oleh semua orang yang Anda percayai",
+      "verifiersSheetIntroTitleSilver": "{{name}} diverifikasi oleh seseorang yang Anda percayai",
+      "verifiersSheetIntroTitleGold": "{{name}} diverifikasi oleh semua orang yang Anda percayai",
+      "verifiersSheetIntroBodyNoTrusted": "Akun-akun ini telah memastikan bahwa akun ini asli. Ketuk lencana di sebelah verifikator untuk menambahkannya ke daftar tepercaya Anda.",
+      "verifiersTrustedHeader": "Tepercaya oleh Anda",
+      "verifiersOtherHeader": "Verifikasi lainnya",
+      "trustVerifier": "Percayai verifikator ini",
+      "untrustVerifier": "Berhenti memercayai verifikator ini"
     },
     "recipe": {
       "title": "Resep",

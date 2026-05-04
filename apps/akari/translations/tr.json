@@ -321,7 +321,9 @@
         "processing": "İşleniyor… %{{percent}}",
         "processingIndeterminate": "İşleniyor…",
         "ready": "Paylaşıma hazır"
-      }
+      },
+      "likeFailed": "Gönderi beğenilemedi. Tekrar dene.",
+      "unlikeFailed": "Gönderinin beğenisi kaldırılamadı. Tekrar dene."
     },
     "messages": {
       "typeMessage": "Mesaj yazın...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Gizlenmiş gönderiler",
       "noHiddenAccounts": "Gizlenmiş hesap yok",
       "noHiddenPosts": "Gizlenmiş gönderi yok",
-      "unhide": "Göster"
+      "unhide": "Göster",
+      "mutedWordsListHeader": "Şu anda sessize alınanlar",
+      "mutedWordsEmpty": "Henüz sessize alınan bir şey yok. Yukarıdan bir kelime, ifade veya etiket ekle; eşleşen gönderiler akışlarından kaybolacak.",
+      "mutedWordPlaceholder": "Kelime, ifade veya etiket",
+      "mutedWordAdd": "Sessize al",
+      "mutedWordRemove": "Kaldır",
+      "mutedWordAlreadyExists": "Bu kelime zaten sessize alınmış.",
+      "mutedWordSaveFailed": "Sessize alma değişiklikleriniz kaydedilemedi. Tekrar dene.",
+      "mutedWordTarget": {
+        "both": "Metin ve etiketler",
+        "content": "Yalnızca metin",
+        "tag": "Yalnızca etiket"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Gönderi metni ve hashtaglerle eşleşir",
+        "content": "Yalnızca gönderi metniyle eşleşir",
+        "tag": "Yalnızca hashtagle eşleşir"
+      },
+      "verificationBadgesEnabled": "Doğrulama rozetlerini göster",
+      "verificationBadgesHint": "Kimin verdiğine bakılmaksızın, uygulamadaki tüm doğrulanmış hesap rozetlerini gizler.",
+      "trustedVerifiersHeader": "Güvenilir doğrulayıcılar",
+      "trustedVerifiersEmpty": "Henüz kimseyi güvenilir doğrulayıcı olarak işaretlemedin. Eklemek için herhangi bir doğrulama sayfasındaki bir doğrulayıcıya dokun.",
+      "enableAdultContentHint": "Yetişkin olarak etiketlenmiş gönderileri ve medyayı göster. Varsayılan olarak kapalıdır.",
+      "requireAltTextHint": "Her görselin alternatif metin açıklaması olmadıkça görselli gönderi paylaşılmasını engelle.",
+      "displayLargerTextBadgesHint": "Etkileşim sayıları (beğeni, yanıt, yeniden paylaşım) için daha büyük ve okunaklı bir metin boyutu kullan."
     },
     "gif": {
       "selectGif": "GIF Seç",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Güvenilir doğrulayıcılar, diğer hesaplar için doğrulamalar yayınlayabilir.",
       "noVerifiers": "Doğrulayıcı yok",
       "verifiedOn": "{{date}} tarihinde doğrulandı",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Güvendiğin biri tarafından doğrulandı",
+      "verifiedBadgeGold": "Güvendiğin herkes tarafından doğrulandı",
+      "verifiersSheetIntroTitleSilver": "{{name}}, güvendiğin biri tarafından doğrulandı",
+      "verifiersSheetIntroTitleGold": "{{name}}, güvendiğin herkes tarafından doğrulandı",
+      "verifiersSheetIntroBodyNoTrusted": "Bu hesaplar, bu hesabın gerçek olduğunu onayladı. Bir doğrulayıcıyı güvenilir listene eklemek için yanındaki rozete dokun.",
+      "verifiersTrustedHeader": "Senin güvendiklerin",
+      "verifiersOtherHeader": "Diğer doğrulamalar",
+      "trustVerifier": "Bu doğrulayıcıya güven",
+      "untrustVerifier": "Bu doğrulayıcıya güvenmeyi bırak"
     },
     "recipe": {
       "title": "Tarif",

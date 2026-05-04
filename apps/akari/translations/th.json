@@ -321,7 +321,9 @@
         "processing": "กำลังประมวลผล... {{percent}}%",
         "processingIndeterminate": "กำลังประมวลผล...",
         "ready": "พร้อมโพสต์"
-      }
+      },
+      "likeFailed": "ไม่สามารถถูกใจโพสต์ได้ กรุณาลองอีกครั้ง",
+      "unlikeFailed": "ไม่สามารถยกเลิกการถูกใจได้ กรุณาลองอีกครั้ง"
     },
     "messages": {
       "typeMessage": "พิมพ์ข้อความ...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "โพสต์ที่ซ่อน",
       "noHiddenAccounts": "ไม่มีบัญชีที่ซ่อน",
       "noHiddenPosts": "ไม่มีโพสต์ที่ซ่อน",
-      "unhide": "เลิกซ่อน"
+      "unhide": "เลิกซ่อน",
+      "mutedWordsListHeader": "ที่ปิดเสียงอยู่",
+      "mutedWordsEmpty": "ยังไม่มีอะไรถูกปิดเสียง เพิ่มคำ วลี หรือแท็กด้านบน แล้วโพสต์ที่ตรงกันจะหายไปจากฟีดของคุณ",
+      "mutedWordPlaceholder": "คำ วลี หรือแท็ก",
+      "mutedWordAdd": "ปิดเสียง",
+      "mutedWordRemove": "ลบ",
+      "mutedWordAlreadyExists": "คำนั้นถูกปิดเสียงไปแล้ว",
+      "mutedWordSaveFailed": "ไม่สามารถบันทึกการเปลี่ยนแปลงคำที่ปิดเสียงได้ กรุณาลองอีกครั้ง",
+      "mutedWordTarget": {
+        "both": "ข้อความและแท็ก",
+        "content": "ข้อความเท่านั้น",
+        "tag": "แท็กเท่านั้น"
+      },
+      "mutedWordTargetLabel": {
+        "both": "ตรงกับเนื้อหาโพสต์และแฮชแท็ก",
+        "content": "ตรงกับเนื้อหาโพสต์เท่านั้น",
+        "tag": "ตรงกับแฮชแท็กเท่านั้น"
+      },
+      "verificationBadgesEnabled": "แสดงป้ายยืนยัน",
+      "verificationBadgesHint": "ซ่อนป้ายของบัญชีที่ได้รับการยืนยันทุกป้ายในแอป โดยไม่คำนึงถึงผู้ออก",
+      "trustedVerifiersHeader": "ผู้ยืนยันที่เชื่อถือได้",
+      "trustedVerifiersEmpty": "คุณยังไม่ได้ทำเครื่องหมายใครเป็นผู้ยืนยันที่เชื่อถือได้ แตะที่ผู้ยืนยันในแผ่นการยืนยันใด ๆ เพื่อเพิ่มเข้าไป",
+      "enableAdultContentHint": "แสดงโพสต์และสื่อที่ถูกระบุว่าเป็นเนื้อหาสำหรับผู้ใหญ่ ปิดอยู่ตามค่าเริ่มต้น",
+      "requireAltTextHint": "ปิดกั้นการส่งโพสต์รูปภาพ ยกเว้นเมื่อทุกรูปมีคำอธิบายข้อความทางเลือก",
+      "displayLargerTextBadgesHint": "ใช้ขนาดข้อความที่ใหญ่ขึ้นและอ่านง่ายขึ้นสำหรับจำนวนการมีส่วนร่วม (ถูกใจ ตอบกลับ รีโพสต์)"
     },
     "gif": {
       "selectGif": "เลือก GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "ผู้ยืนยันที่เชื่อถือได้สามารถออกการยืนยันสำหรับบัญชีอื่นได้",
       "noVerifiers": "ไม่มีผู้ยืนยัน",
       "verifiedOn": "ยืนยันเมื่อ {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "ยืนยันโดยคนที่คุณเชื่อถือ",
+      "verifiedBadgeGold": "ยืนยันโดยทุกคนที่คุณเชื่อถือ",
+      "verifiersSheetIntroTitleSilver": "{{name}} ได้รับการยืนยันโดยคนที่คุณเชื่อถือ",
+      "verifiersSheetIntroTitleGold": "{{name}} ได้รับการยืนยันโดยทุกคนที่คุณเชื่อถือ",
+      "verifiersSheetIntroBodyNoTrusted": "บัญชีเหล่านี้ได้ยืนยันว่าบัญชีนี้เป็นของจริง แตะที่ป้ายข้างผู้ยืนยันเพื่อเพิ่มเข้าในรายการที่คุณเชื่อถือ",
+      "verifiersTrustedHeader": "คุณเชื่อถือ",
+      "verifiersOtherHeader": "การยืนยันอื่น ๆ",
+      "trustVerifier": "เชื่อถือผู้ยืนยันนี้",
+      "untrustVerifier": "เลิกเชื่อถือผู้ยืนยันนี้"
     },
     "recipe": {
       "title": "สูตรอาหาร",

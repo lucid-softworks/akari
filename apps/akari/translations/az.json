@@ -321,7 +321,9 @@
         "processing": "Emal olunur... {{percent}}%",
         "processingIndeterminate": "Emal olunur...",
         "ready": "Paylaşmağa hazırdır"
-      }
+      },
+      "likeFailed": "Paylaşımı bəyənmək alınmadı. Yenidən cəhd et.",
+      "unlikeFailed": "Bəyənməni geri almaq alınmadı. Yenidən cəhd et."
     },
     "gif": {
       "selectGif": "Gif seçin",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Gizlədilmiş paylaşımlar",
       "noHiddenAccounts": "Gizlədilmiş hesab yoxdur",
       "noHiddenPosts": "Gizlədilmiş paylaşım yoxdur",
-      "unhide": "Göstər"
+      "unhide": "Göstər",
+      "mutedWordsListHeader": "Hazırda susdurulmuş",
+      "mutedWordsEmpty": "Hələ heç nə susdurulmayıb. Yuxarıdan bir söz, ifadə və ya teq əlavə et; uyğun paylaşımlar lentlərindən yox olacaq.",
+      "mutedWordPlaceholder": "Söz, ifadə və ya teq",
+      "mutedWordAdd": "Susdur",
+      "mutedWordRemove": "Sil",
+      "mutedWordAlreadyExists": "Bu söz artıq susdurulub.",
+      "mutedWordSaveFailed": "Susdurulmuş söz dəyişikliyi yadda saxlanmadı. Yenidən cəhd et.",
+      "mutedWordTarget": {
+        "both": "Mətn və teqlər",
+        "content": "Yalnız mətn",
+        "tag": "Yalnız teq"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Paylaşım mətni və heşteqlərə uyğun gəlir",
+        "content": "Yalnız paylaşım mətninə uyğun gəlir",
+        "tag": "Yalnız heşteqə uyğun gəlir"
+      },
+      "verificationBadgesEnabled": "Təsdiqləmə nişanlarını göstər",
+      "verificationBadgesHint": "Kimin verməsindən asılı olmayaraq, tətbiqdəki bütün təsdiqlənmiş hesab nişanlarını gizlədir.",
+      "trustedVerifiersHeader": "Etibarlı təsdiqləyicilər",
+      "trustedVerifiersEmpty": "Hələ heç kimi etibarlı təsdiqləyici kimi qeyd etməmisən. Əlavə etmək üçün hər hansı təsdiqləmə vərəqindəki bir təsdiqləyiciyə toxun.",
+      "enableAdultContentHint": "Yetkinlər üçün etiketlənmiş paylaşımları və medianı göstər. Susmaqla söndürülmüş olur.",
+      "requireAltTextHint": "Hər şəklin alt-mətn təsviri olmadıqca şəkilli paylaşımın göndərilməsini blokla.",
+      "displayLargerTextBadgesHint": "Qarşılıqlı təsir sayları (bəyəni, cavab, yenidən paylaşım) üçün daha böyük və daha aydın oxunan mətn ölçüsü istifadə et."
     },
     "bookmarks": {
       "subtitle": "Burada xilas edilmiş yazılar və mövzular görünəcək.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Etibarlı təsdiqləyicilər digər hesablar üçün təsdiqlər verə bilərlər.",
       "noVerifiers": "Təsdiqləyici yoxdur",
       "verifiedOn": "{{date}} təsdiqlənib",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Etibar etdiyin biri tərəfindən təsdiqlənib",
+      "verifiedBadgeGold": "Etibar etdiyin hər kəs tərəfindən təsdiqlənib",
+      "verifiersSheetIntroTitleSilver": "{{name}} etibar etdiyin biri tərəfindən təsdiqlənib",
+      "verifiersSheetIntroTitleGold": "{{name}} etibar etdiyin hər kəs tərəfindən təsdiqlənib",
+      "verifiersSheetIntroBodyNoTrusted": "Bu hesablar bu hesabın həqiqi olduğunu təsdiqləyib. Bir təsdiqləyicini etibarlı siyahına əlavə etmək üçün yanındakı nişana toxun.",
+      "verifiersTrustedHeader": "Sənin etibar etdiklərin",
+      "verifiersOtherHeader": "Digər təsdiqləmələr",
+      "trustVerifier": "Bu təsdiqləyiciyə etibar et",
+      "untrustVerifier": "Bu təsdiqləyiciyə etibar etməyi dayandır"
     },
     "recipe": {
       "title": "Resept",

@@ -321,7 +321,9 @@
         "processing": "Procesando... {{percent}}%",
         "processingIndeterminate": "Procesando...",
         "ready": "Listo para publicar"
-      }
+      },
+      "likeFailed": "No se pudo dar me gusta a la publicación. Inténtalo de nuevo.",
+      "unlikeFailed": "No se pudo quitar el me gusta. Inténtalo de nuevo."
     },
     "gif": {
       "selectGif": "Seleccionar GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Publicaciones ocultas",
       "noHiddenAccounts": "No hay cuentas ocultas",
       "noHiddenPosts": "No hay publicaciones ocultas",
-      "unhide": "Mostrar"
+      "unhide": "Mostrar",
+      "mutedWordsListHeader": "Silenciadas actualmente",
+      "mutedWordsEmpty": "Aún no has silenciado nada. Añade arriba una palabra, frase o etiqueta y las publicaciones que coincidan desaparecerán de tus feeds.",
+      "mutedWordPlaceholder": "Palabra, frase o etiqueta",
+      "mutedWordAdd": "Silenciar",
+      "mutedWordRemove": "Eliminar",
+      "mutedWordAlreadyExists": "Esa palabra ya está silenciada.",
+      "mutedWordSaveFailed": "No se pudo guardar tu cambio de palabra silenciada. Inténtalo de nuevo.",
+      "mutedWordTarget": {
+        "both": "Texto y etiquetas",
+        "content": "Solo texto",
+        "tag": "Solo etiquetas"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Coincide con el texto y los hashtags de la publicación",
+        "content": "Coincide solo con el texto de la publicación",
+        "tag": "Coincide solo con el hashtag"
+      },
+      "verificationBadgesEnabled": "Mostrar insignias de verificación",
+      "verificationBadgesHint": "Oculta todas las insignias de cuentas verificadas en la aplicación, sin importar quién las haya emitido.",
+      "trustedVerifiersHeader": "Verificadores de confianza",
+      "trustedVerifiersEmpty": "Aún no has marcado a nadie como verificador de confianza. Toca un verificador en cualquier hoja de verificación para añadirlo.",
+      "enableAdultContentHint": "Muestra publicaciones y contenido marcado como adulto. Desactivado por defecto.",
+      "requireAltTextHint": "Impide enviar una publicación con imágenes a menos que cada imagen tenga una descripción de texto alternativo.",
+      "displayLargerTextBadgesHint": "Usa un tamaño de texto más grande y legible para los contadores de interacción (me gusta, respuestas, republicaciones)."
     },
     "bookmarks": {
       "subtitle": "Las publicaciones y conversaciones guardadas aparecerán aquí.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Los verificadores de confianza pueden emitir verificaciones para otras cuentas.",
       "noVerifiers": "Sin verificadores",
       "verifiedOn": "Verificado {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verificado por alguien en quien confías",
+      "verifiedBadgeGold": "Verificado por todos en los que confías",
+      "verifiersSheetIntroTitleSilver": "{{name}} está verificado por alguien en quien confías",
+      "verifiersSheetIntroTitleGold": "{{name}} está verificado por todos en los que confías",
+      "verifiersSheetIntroBodyNoTrusted": "Estas cuentas han confirmado que esta cuenta es auténtica. Toca la insignia junto a un verificador para añadirlo a tu lista de confianza.",
+      "verifiersTrustedHeader": "De tu confianza",
+      "verifiersOtherHeader": "Otras verificaciones",
+      "trustVerifier": "Confiar en este verificador",
+      "untrustVerifier": "Dejar de confiar en este verificador"
     },
     "recipe": {
       "title": "Receta",

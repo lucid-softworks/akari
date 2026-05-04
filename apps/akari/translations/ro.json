@@ -321,7 +321,9 @@
         "processing": "Se procesează… {{percent}}%",
         "processingIndeterminate": "Se procesează…",
         "ready": "Gata de postare"
-      }
+      },
+      "likeFailed": "Nu s-a putut aprecia postarea. Încearcă din nou.",
+      "unlikeFailed": "Nu s-a putut retrage aprecierea. Încearcă din nou."
     },
     "gif": {
       "selectGif": "Selectați GIF",
@@ -448,7 +450,31 @@
       "hiddenPosts": "Postări ascunse",
       "noHiddenAccounts": "Niciun cont ascuns",
       "noHiddenPosts": "Nicio postare ascunsă",
-      "unhide": "Afișează"
+      "unhide": "Afișează",
+      "mutedWordsListHeader": "Dezactivate momentan",
+      "mutedWordsEmpty": "Nimic dezactivat încă. Adaugă mai sus un cuvânt, o expresie sau o etichetă și postările care se potrivesc vor dispărea din fluxurile tale.",
+      "mutedWordPlaceholder": "Cuvânt, expresie sau etichetă",
+      "mutedWordAdd": "Dezactivează",
+      "mutedWordRemove": "Elimină",
+      "mutedWordAlreadyExists": "Acest cuvânt este deja dezactivat.",
+      "mutedWordSaveFailed": "Nu s-a putut salva modificarea. Încearcă din nou.",
+      "mutedWordTarget": {
+        "both": "Text și etichete",
+        "content": "Doar text",
+        "tag": "Doar etichetă"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Se potrivește cu textul postării și hashtag-urile",
+        "content": "Se potrivește doar cu textul postării",
+        "tag": "Se potrivește doar cu hashtag-ul"
+      },
+      "verificationBadgesEnabled": "Afișează ecusoanele de verificare",
+      "verificationBadgesHint": "Ascunde toate ecusoanele conturilor verificate din aplicație, indiferent de cine le-a emis.",
+      "trustedVerifiersHeader": "Verificatori de încredere",
+      "trustedVerifiersEmpty": "Nu ai marcat încă pe nimeni drept verificator de încredere. Atinge un verificator în orice fereastră de verificare pentru a-l adăuga.",
+      "enableAdultContentHint": "Afișează postările și conținutul marcate ca pentru adulți. Dezactivat în mod implicit.",
+      "requireAltTextHint": "Blochează trimiterea unei postări cu imagini dacă fiecare imagine nu are o descriere de text alternativ.",
+      "displayLargerTextBadgesHint": "Folosește un text mai mare și mai lizibil pentru contoarele de interacțiune (aprecieri, răspunsuri, repostări)."
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Verificatorii de încredere pot emite verificări pentru alte conturi.",
       "noVerifiers": "Niciun verificator",
       "verifiedOn": "Verificat {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verificat de cineva în care ai încredere",
+      "verifiedBadgeGold": "Verificat de toți cei în care ai încredere",
+      "verifiersSheetIntroTitleSilver": "{{name}} este verificat de cineva în care ai încredere",
+      "verifiersSheetIntroTitleGold": "{{name}} este verificat de toți cei în care ai încredere",
+      "verifiersSheetIntroBodyNoTrusted": "Aceste conturi au confirmat că acest cont este autentic. Atinge ecusonul de lângă un verificator pentru a-l adăuga la lista ta de încredere.",
+      "verifiersTrustedHeader": "În care ai încredere",
+      "verifiersOtherHeader": "Alte verificări",
+      "trustVerifier": "Ai încredere în acest verificator",
+      "untrustVerifier": "Nu mai avea încredere în acest verificator"
     },
     "recipe": {
       "title": "Rețetă",

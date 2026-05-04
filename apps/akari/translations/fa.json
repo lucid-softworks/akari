@@ -321,7 +321,9 @@
         "processing": "در حال پردازش... {{percent}}٪",
         "processingIndeterminate": "در حال پردازش...",
         "ready": "آماده ارسال"
-      }
+      },
+      "likeFailed": "نتوانستیم پست را لایک کنیم. دوباره تلاش کنید.",
+      "unlikeFailed": "نتوانستیم لایک پست را لغو کنیم. دوباره تلاش کنید."
     },
     "gif": {
       "selectGif": "GIF را انتخاب کنید",
@@ -448,7 +450,31 @@
       "hiddenPosts": "پست‌های مخفی",
       "noHiddenAccounts": "حساب مخفی نیست",
       "noHiddenPosts": "پست مخفی نیست",
-      "unhide": "نمایش"
+      "unhide": "نمایش",
+      "mutedWordsListHeader": "اکنون بی‌صدا شده",
+      "mutedWordsEmpty": "هنوز چیزی بی‌صدا نشده است. یک کلمه، عبارت یا هشتگ در بالا اضافه کنید تا پست‌های مطابق از فید شما ناپدید شوند.",
+      "mutedWordPlaceholder": "کلمه، عبارت یا هشتگ",
+      "mutedWordAdd": "بی‌صدا",
+      "mutedWordRemove": "حذف",
+      "mutedWordAlreadyExists": "این کلمه از قبل بی‌صدا شده است.",
+      "mutedWordSaveFailed": "نتوانستیم تغییرات کلمات بی‌صدا را ذخیره کنیم. دوباره تلاش کنید.",
+      "mutedWordTarget": {
+        "both": "متن و هشتگ‌ها",
+        "content": "فقط متن",
+        "tag": "فقط هشتگ"
+      },
+      "mutedWordTargetLabel": {
+        "both": "با متن پست و هشتگ‌ها مطابقت دارد",
+        "content": "فقط با متن پست مطابقت دارد",
+        "tag": "فقط با هشتگ مطابقت دارد"
+      },
+      "verificationBadgesEnabled": "نمایش نشان‌های تأیید",
+      "verificationBadgesHint": "همه نشان‌های حساب تأییدشده را در سراسر برنامه پنهان می‌کند، صرف‌نظر از اینکه چه کسی آن را صادر کرده است.",
+      "trustedVerifiersHeader": "تأییدکنندگان مورد اعتماد",
+      "trustedVerifiersEmpty": "هنوز کسی را به‌عنوان تأییدکنندهٔ مورد اعتماد علامت‌گذاری نکرده‌اید. در هر صفحهٔ تأیید روی یک تأییدکننده ضربه بزنید تا اضافه شود.",
+      "enableAdultContentHint": "پست‌ها و رسانه‌های دارای برچسب بزرگسالان را نمایش بده. به‌طور پیش‌فرض خاموش است.",
+      "requireAltTextHint": "از ارسال پست تصویری جلوگیری می‌کند مگر اینکه هر تصویر توضیح متن جایگزین داشته باشد.",
+      "displayLargerTextBadgesHint": "از اندازهٔ متن بزرگ‌تر و خواناتر برای شمارش تعامل (لایک‌ها، پاسخ‌ها، بازنشرها) استفاده کن."
     },
     "bookmarks": {
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "تأییدکنندگان مورد اعتماد می‌توانند تأییدیه برای دیگر حساب‌ها صادر کنند.",
       "noVerifiers": "بدون تأییدکننده",
       "verifiedOn": "تأیید شده {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "تأیید شده توسط شخصی که به او اعتماد داری",
+      "verifiedBadgeGold": "تأیید شده توسط همهٔ کسانی که به آن‌ها اعتماد داری",
+      "verifiersSheetIntroTitleSilver": "{{name}} توسط شخصی که به او اعتماد داری تأیید شده است",
+      "verifiersSheetIntroTitleGold": "{{name}} توسط همهٔ کسانی که به آن‌ها اعتماد داری تأیید شده است",
+      "verifiersSheetIntroBodyNoTrusted": "این حساب‌ها تأیید کرده‌اند که این حساب واقعی است. روی نشان کنار یک تأییدکننده ضربه بزنید تا به فهرست افراد مورد اعتماد خود اضافه کنید.",
+      "verifiersTrustedHeader": "مورد اعتماد شما",
+      "verifiersOtherHeader": "تأییدیه‌های دیگر",
+      "trustVerifier": "به این تأییدکننده اعتماد کن",
+      "untrustVerifier": "اعتماد به این تأییدکننده را متوقف کن"
     },
     "recipe": {
       "title": "دستور پخت",

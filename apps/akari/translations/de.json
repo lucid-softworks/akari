@@ -321,7 +321,9 @@
         "processing": "Wird verarbeitet… {{percent}}%",
         "processingIndeterminate": "Wird verarbeitet…",
         "ready": "Bereit zum Posten"
-      }
+      },
+      "likeFailed": "Beitrag konnte nicht geliked werden. Versuche es erneut.",
+      "unlikeFailed": "Like konnte nicht entfernt werden. Versuche es erneut."
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Ausgeblendete Beiträge",
       "noHiddenAccounts": "Keine ausgeblendeten Konten",
       "noHiddenPosts": "Keine ausgeblendeten Beiträge",
-      "unhide": "Anzeigen"
+      "unhide": "Anzeigen",
+      "mutedWordsListHeader": "Aktuell stummgeschaltet",
+      "mutedWordsEmpty": "Noch nichts stummgeschaltet. Füge oben ein Wort, eine Phrase oder einen Hashtag hinzu und passende Beiträge verschwinden aus deinen Feeds.",
+      "mutedWordPlaceholder": "Wort, Phrase oder Hashtag",
+      "mutedWordAdd": "Stummschalten",
+      "mutedWordRemove": "Entfernen",
+      "mutedWordAlreadyExists": "Dieses Wort ist bereits stummgeschaltet.",
+      "mutedWordSaveFailed": "Deine Änderung konnte nicht gespeichert werden. Versuche es erneut.",
+      "mutedWordTarget": {
+        "both": "Text & Hashtags",
+        "content": "Nur Text",
+        "tag": "Nur Hashtag"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Trifft auf Beitragstext und Hashtags zu",
+        "content": "Trifft nur auf den Beitragstext zu",
+        "tag": "Trifft nur auf den Hashtag zu"
+      },
+      "verificationBadgesEnabled": "Verifizierungs-Badges anzeigen",
+      "verificationBadgesHint": "Blendet alle Badges für verifizierte Konten in der App aus, unabhängig davon, wer sie ausgestellt hat.",
+      "trustedVerifiersHeader": "Vertrauenswürdige Verifizierer",
+      "trustedVerifiersEmpty": "Du hast noch niemanden als vertrauenswürdigen Verifizierer markiert. Tippe in einer Verifizierungs-Übersicht auf einen Verifizierer, um ihn hinzuzufügen.",
+      "enableAdultContentHint": "Zeigt Beiträge und Medien an, die als für Erwachsene gekennzeichnet sind. Standardmäßig aus.",
+      "requireAltTextHint": "Blockiert das Senden eines Bildbeitrags, wenn nicht jedes Bild eine Alt-Text-Beschreibung hat.",
+      "displayLargerTextBadgesHint": "Verwendet eine größere, besser lesbare Schriftgröße für Interaktionszahlen (Likes, Antworten, Reposts)."
     },
     "gif": {
       "selectGif": "GIF auswählen",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Vertrauenswürdige Verifizierer können Verifizierungen für andere Konten ausstellen.",
       "noVerifiers": "Keine Verifizierer",
       "verifiedOn": "Verifiziert {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verifiziert von jemandem, dem du vertraust",
+      "verifiedBadgeGold": "Verifiziert von allen, denen du vertraust",
+      "verifiersSheetIntroTitleSilver": "{{name}} ist von jemandem verifiziert, dem du vertraust",
+      "verifiersSheetIntroTitleGold": "{{name}} ist von allen verifiziert, denen du vertraust",
+      "verifiersSheetIntroBodyNoTrusted": "Diese Konten bestätigen, dass dieses Konto authentisch ist. Tippe auf das Badge neben einem Verifizierer, um ihn zu deiner Vertrauensliste hinzuzufügen.",
+      "verifiersTrustedHeader": "Von dir vertraut",
+      "verifiersOtherHeader": "Andere Verifizierungen",
+      "trustVerifier": "Diesem Verifizierer vertrauen",
+      "untrustVerifier": "Diesem Verifizierer nicht mehr vertrauen"
     },
     "recipe": {
       "title": "Rezept",

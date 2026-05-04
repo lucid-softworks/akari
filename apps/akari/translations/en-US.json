@@ -321,7 +321,9 @@
         "processing": "Processing… {{percent}}%",
         "processingIndeterminate": "Processing…",
         "ready": "Ready to post"
-      }
+      },
+      "likeFailed": "Couldn’t like post. Try again.",
+      "unlikeFailed": "Couldn’t unlike post. Try again."
     },
     "messages": {
       "typeMessage": "Type a message...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Hidden posts",
       "noHiddenAccounts": "No hidden accounts",
       "noHiddenPosts": "No hidden posts",
-      "unhide": "Unhide"
+      "unhide": "Unhide",
+      "mutedWordsListHeader": "Currently muted",
+      "mutedWordsEmpty": "Nothing muted yet. Add a word, phrase, or tag above and posts that match will disappear from your feeds.",
+      "mutedWordPlaceholder": "Word, phrase, or tag",
+      "mutedWordAdd": "Mute",
+      "mutedWordRemove": "Remove",
+      "mutedWordAlreadyExists": "That word is already muted.",
+      "mutedWordSaveFailed": "Couldn’t save your muted-word change. Try again.",
+      "mutedWordTarget": {
+        "both": "Text & tags",
+        "content": "Text only",
+        "tag": "Tag only"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Matches post text and hashtags",
+        "content": "Matches post text only",
+        "tag": "Matches hashtag only"
+      },
+      "verificationBadgesEnabled": "Show verification badges",
+      "verificationBadgesHint": "Hides every verified-account badge across the app, regardless of who issued it.",
+      "trustedVerifiersHeader": "Trusted verifiers",
+      "trustedVerifiersEmpty": "You haven’t marked anyone as a trusted verifier yet. Tap a verifier in any verification sheet to add them.",
+      "enableAdultContentHint": "Show posts and media labelled as adult. Off by default.",
+      "requireAltTextHint": "Block sending an image post unless every image has an alt-text description.",
+      "displayLargerTextBadgesHint": "Use a larger, more legible text size for engagement counts (likes, replies, reposts)."
     },
     "gif": {
       "selectGif": "Select GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Trusted verifiers can issue verifications for other accounts.",
       "noVerifiers": "No verifiers",
       "verifiedOn": "Verified {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Verified by someone you trust",
+      "verifiedBadgeGold": "Verified by everyone you trust",
+      "verifiersSheetIntroTitleSilver": "{{name}} is verified by someone you trust",
+      "verifiersSheetIntroTitleGold": "{{name}} is verified by everyone you trust",
+      "verifiersSheetIntroBodyNoTrusted": "These accounts have signed off that this account is authentic. Tap the badge next to a verifier to add them to your trusted list.",
+      "verifiersTrustedHeader": "Trusted by you",
+      "verifiersOtherHeader": "Other verifications",
+      "trustVerifier": "Trust this verifier",
+      "untrustVerifier": "Stop trusting this verifier"
     },
     "recipe": {
       "title": "Recipe",

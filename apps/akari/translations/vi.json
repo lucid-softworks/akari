@@ -321,7 +321,9 @@
         "processing": "Đang xử lý… {{percent}}%",
         "processingIndeterminate": "Đang xử lý…",
         "ready": "Sẵn sàng đăng"
-      }
+      },
+      "likeFailed": "Không thể thích bài viết. Vui lòng thử lại.",
+      "unlikeFailed": "Không thể bỏ thích bài viết. Vui lòng thử lại."
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "Bài đăng đã ẩn",
       "noHiddenAccounts": "Không có tài khoản đã ẩn",
       "noHiddenPosts": "Không có bài đăng đã ẩn",
-      "unhide": "Hiện"
+      "unhide": "Hiện",
+      "mutedWordsListHeader": "Đang tắt tiếng",
+      "mutedWordsEmpty": "Chưa có gì bị tắt tiếng. Thêm một từ, cụm từ hoặc thẻ ở trên và các bài viết khớp sẽ biến mất khỏi bảng tin của bạn.",
+      "mutedWordPlaceholder": "Từ, cụm từ hoặc thẻ",
+      "mutedWordAdd": "Tắt tiếng",
+      "mutedWordRemove": "Xóa",
+      "mutedWordAlreadyExists": "Từ đó đã được tắt tiếng.",
+      "mutedWordSaveFailed": "Không thể lưu thay đổi từ tắt tiếng. Vui lòng thử lại.",
+      "mutedWordTarget": {
+        "both": "Văn bản & thẻ",
+        "content": "Chỉ văn bản",
+        "tag": "Chỉ thẻ"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Khớp với nội dung bài viết và hashtag",
+        "content": "Chỉ khớp với nội dung bài viết",
+        "tag": "Chỉ khớp với hashtag"
+      },
+      "verificationBadgesEnabled": "Hiển thị huy hiệu xác minh",
+      "verificationBadgesHint": "Ẩn mọi huy hiệu của tài khoản đã xác minh trong toàn bộ ứng dụng, bất kể ai cấp.",
+      "trustedVerifiersHeader": "Người xác minh đáng tin cậy",
+      "trustedVerifiersEmpty": "Bạn chưa đánh dấu ai là người xác minh đáng tin cậy. Chạm vào một người xác minh trong bảng xác minh bất kỳ để thêm.",
+      "enableAdultContentHint": "Hiển thị các bài viết và phương tiện được gắn nhãn người lớn. Mặc định là tắt.",
+      "requireAltTextHint": "Chặn việc gửi bài viết có hình ảnh trừ khi mỗi hình ảnh đều có mô tả văn bản thay thế.",
+      "displayLargerTextBadgesHint": "Sử dụng cỡ chữ lớn hơn, dễ đọc hơn cho số lượng tương tác (lượt thích, trả lời, đăng lại)."
     },
     "gif": {
       "selectGif": "Chọn GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "Người xác minh đáng tin cậy có thể cấp xác minh cho các tài khoản khác.",
       "noVerifiers": "Không có người xác minh",
       "verifiedOn": "Đã xác minh {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "Được xác minh bởi người bạn tin tưởng",
+      "verifiedBadgeGold": "Được xác minh bởi tất cả những người bạn tin tưởng",
+      "verifiersSheetIntroTitleSilver": "{{name}} được xác minh bởi người bạn tin tưởng",
+      "verifiersSheetIntroTitleGold": "{{name}} được xác minh bởi tất cả những người bạn tin tưởng",
+      "verifiersSheetIntroBodyNoTrusted": "Các tài khoản này đã xác nhận rằng tài khoản này là xác thực. Chạm vào huy hiệu bên cạnh một người xác minh để thêm họ vào danh sách tin cậy của bạn.",
+      "verifiersTrustedHeader": "Bạn tin tưởng",
+      "verifiersOtherHeader": "Xác minh khác",
+      "trustVerifier": "Tin tưởng người xác minh này",
+      "untrustVerifier": "Ngừng tin tưởng người xác minh này"
     },
     "recipe": {
       "title": "Công Thức",

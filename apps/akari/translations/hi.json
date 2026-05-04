@@ -321,7 +321,9 @@
         "processing": "प्रोसेस हो रहा... {{percent}}%",
         "processingIndeterminate": "प्रोसेस हो रहा...",
         "ready": "पोस्ट के लिए तैयार"
-      }
+      },
+      "likeFailed": "पोस्ट को लाइक नहीं किया जा सका। पुनः प्रयास करें।",
+      "unlikeFailed": "लाइक हटाया नहीं जा सका। पुनः प्रयास करें।"
     },
     "messages": {
       "typeMessage": "संदेश लिखें...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "छिपी हुई पोस्ट",
       "noHiddenAccounts": "कोई छिपा खाता नहीं",
       "noHiddenPosts": "कोई छिपी पोस्ट नहीं",
-      "unhide": "दिखाएँ"
+      "unhide": "दिखाएँ",
+      "mutedWordsListHeader": "वर्तमान में म्यूट",
+      "mutedWordsEmpty": "अभी तक कुछ भी म्यूट नहीं है। ऊपर कोई शब्द, वाक्यांश या टैग जोड़ें और मेल खाने वाले पोस्ट आपकी फ़ीड से गायब हो जाएँगे।",
+      "mutedWordPlaceholder": "शब्द, वाक्यांश या टैग",
+      "mutedWordAdd": "म्यूट करें",
+      "mutedWordRemove": "हटाएँ",
+      "mutedWordAlreadyExists": "यह शब्द पहले से म्यूट है।",
+      "mutedWordSaveFailed": "आपके म्यूट किए गए शब्द में बदलाव सहेजा नहीं जा सका। पुनः प्रयास करें।",
+      "mutedWordTarget": {
+        "both": "टेक्स्ट और टैग",
+        "content": "केवल टेक्स्ट",
+        "tag": "केवल टैग"
+      },
+      "mutedWordTargetLabel": {
+        "both": "पोस्ट टेक्स्ट और हैशटैग दोनों से मेल खाता है",
+        "content": "केवल पोस्ट टेक्स्ट से मेल खाता है",
+        "tag": "केवल हैशटैग से मेल खाता है"
+      },
+      "verificationBadgesEnabled": "सत्यापन बैज दिखाएँ",
+      "verificationBadgesHint": "जारीकर्ता की परवाह किए बिना ऐप में सभी सत्यापित-खाते बैज छिपाता है।",
+      "trustedVerifiersHeader": "विश्वसनीय सत्यापक",
+      "trustedVerifiersEmpty": "आपने अभी तक किसी को विश्वसनीय सत्यापक के रूप में चिह्नित नहीं किया है। किसी भी सत्यापन शीट में सत्यापक पर टैप करके उन्हें जोड़ें।",
+      "enableAdultContentHint": "वयस्क के रूप में चिह्नित पोस्ट और मीडिया दिखाएँ। डिफ़ॉल्ट रूप से बंद।",
+      "requireAltTextHint": "जब तक हर छवि में ऑल्ट-टेक्स्ट विवरण न हो, तब तक छवि पोस्ट भेजने को रोकें।",
+      "displayLargerTextBadgesHint": "एंगेजमेंट गिनती (लाइक, उत्तर, रीपोस्ट) के लिए बड़े और अधिक पठनीय टेक्स्ट आकार का उपयोग करें।"
     },
     "gif": {
       "selectGif": "GIF चुनें",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "विश्वसनीय सत्यापक अन्य खातों के लिए सत्यापन जारी कर सकते हैं।",
       "noVerifiers": "कोई सत्यापक नहीं",
       "verifiedOn": "{{date}} को सत्यापित",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "किसी ऐसे व्यक्ति द्वारा सत्यापित जिस पर आप भरोसा करते हैं",
+      "verifiedBadgeGold": "उन सभी द्वारा सत्यापित जिन पर आप भरोसा करते हैं",
+      "verifiersSheetIntroTitleSilver": "{{name}} किसी ऐसे व्यक्ति द्वारा सत्यापित है जिस पर आप भरोसा करते हैं",
+      "verifiersSheetIntroTitleGold": "{{name}} उन सभी द्वारा सत्यापित है जिन पर आप भरोसा करते हैं",
+      "verifiersSheetIntroBodyNoTrusted": "इन खातों ने पुष्टि की है कि यह खाता असली है। किसी सत्यापक के बगल वाले बैज पर टैप करके उन्हें अपनी विश्वसनीय सूची में जोड़ें।",
+      "verifiersTrustedHeader": "आपके द्वारा भरोसेमंद",
+      "verifiersOtherHeader": "अन्य सत्यापन",
+      "trustVerifier": "इस सत्यापक पर भरोसा करें",
+      "untrustVerifier": "इस सत्यापक पर भरोसा करना बंद करें"
     },
     "recipe": {
       "title": "रेसिपी",

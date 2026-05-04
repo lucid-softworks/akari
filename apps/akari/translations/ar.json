@@ -321,7 +321,9 @@
         "processing": "جارٍ المعالجة... {{percent}}%",
         "processingIndeterminate": "جارٍ المعالجة...",
         "ready": "جاهز للنشر"
-      }
+      },
+      "likeFailed": "تعذّر الإعجاب بالمنشور. حاول مرة أخرى.",
+      "unlikeFailed": "تعذّر إلغاء الإعجاب بالمنشور. حاول مرة أخرى."
     },
     "messages": {
       "typeMessage": "اكتب رسالة...",
@@ -439,7 +441,31 @@
       "hiddenPosts": "المنشورات المخفية",
       "noHiddenAccounts": "لا توجد حسابات مخفية",
       "noHiddenPosts": "لا توجد منشورات مخفية",
-      "unhide": "إظهار"
+      "unhide": "إظهار",
+      "mutedWordsListHeader": "المكتومة حاليًا",
+      "mutedWordsEmpty": "لا توجد كلمات مكتومة بعد. أضف كلمة أو عبارة أو وسمًا أعلاه وستختفي المنشورات المطابقة من خلاصاتك.",
+      "mutedWordPlaceholder": "كلمة أو عبارة أو وسم",
+      "mutedWordAdd": "كتم",
+      "mutedWordRemove": "إزالة",
+      "mutedWordAlreadyExists": "هذه الكلمة مكتومة بالفعل.",
+      "mutedWordSaveFailed": "تعذّر حفظ تغييرات الكلمات المكتومة. حاول مرة أخرى.",
+      "mutedWordTarget": {
+        "both": "النص والوسوم",
+        "content": "النص فقط",
+        "tag": "الوسوم فقط"
+      },
+      "mutedWordTargetLabel": {
+        "both": "يطابق نص المنشور والوسوم",
+        "content": "يطابق نص المنشور فقط",
+        "tag": "يطابق الوسوم فقط"
+      },
+      "verificationBadgesEnabled": "إظهار شارات التوثيق",
+      "verificationBadgesHint": "إخفاء جميع شارات الحسابات الموثّقة في التطبيق، بغض النظر عن جهة التوثيق.",
+      "trustedVerifiersHeader": "المُوثِّقون الموثوقون",
+      "trustedVerifiersEmpty": "لم تحدّد أي مُوثِّق موثوق بعد. انقر على مُوثِّق في أي ورقة توثيق لإضافته.",
+      "enableAdultContentHint": "عرض المنشورات والوسائط المصنّفة للبالغين. معطّل افتراضيًا.",
+      "requireAltTextHint": "منع إرسال منشور يحتوي على صور ما لم يكن لكل صورة وصف نص بديل.",
+      "displayLargerTextBadgesHint": "استخدم حجم نص أكبر وأوضح لأعداد التفاعل (الإعجابات، الردود، إعادات النشر)."
     },
     "gif": {
       "selectGif": "اختر GIF",
@@ -509,7 +535,16 @@
       "trustedVerifierSheetIntroBody": "يمكن للمُوثِّقين الموثوقين إصدار توثيقات لحسابات أخرى.",
       "noVerifiers": "لا يوجد مُوثِّقون",
       "verifiedOn": "تم التوثيق {{date}}",
-      "gif": "GIF"
+      "gif": "GIF",
+      "verifiedBadgeSilver": "موثَّق من قِبَل شخص تثق به",
+      "verifiedBadgeGold": "موثَّق من قِبَل جميع من تثق بهم",
+      "verifiersSheetIntroTitleSilver": "{{name}} موثَّق من قِبَل شخص تثق به",
+      "verifiersSheetIntroTitleGold": "{{name}} موثَّق من قِبَل جميع من تثق بهم",
+      "verifiersSheetIntroBodyNoTrusted": "أكّدت هذه الحسابات أن هذا الحساب أصلي. انقر على الشارة بجانب المُوثِّق لإضافته إلى قائمة الموثوقين لديك.",
+      "verifiersTrustedHeader": "موثوقون لديك",
+      "verifiersOtherHeader": "توثيقات أخرى",
+      "trustVerifier": "الثقة بهذا المُوثِّق",
+      "untrustVerifier": "إيقاف الثقة بهذا المُوثِّق"
     },
     "recipe": {
       "title": "وصفة",
