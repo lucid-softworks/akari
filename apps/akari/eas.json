@@ -27,7 +27,7 @@
       "channel": "preview",
       "env": {
         "APP_VARIANT": "preview",
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_DISABLE_AUTO_UPLOAD": "false"
       }
     },
     "production": {
@@ -35,7 +35,7 @@
       "channel": "production",
       "env": {
         "APP_VARIANT": "production",
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_DISABLE_AUTO_UPLOAD": "false"
       }
     }
   },
