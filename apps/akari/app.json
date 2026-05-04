@@ -136,7 +136,10 @@
     },
     "owner": "lucid-softworks",
     "updates": {
-      "url": "https://u.expo.dev/51a386f4-6cb2-4901-ad5f-29b69a16ba28"
+      "url": "https://u.expo.dev/51a386f4-6cb2-4901-ad5f-29b69a16ba28",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
