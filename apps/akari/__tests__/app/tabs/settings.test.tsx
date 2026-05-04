@@ -233,7 +233,7 @@ describe('AccountSettingsScreen', () => {
     removeButton?.onPress?.();
 
     expect(mutate).toHaveBeenCalledWith(account.did);
-    expect(mockRouterReplace).toHaveBeenCalledWith('/index');
+    expect(mockRouterReplace).toHaveBeenCalledWith('/(tabs)/index');
   });
 
   it('shows error alert when logout fails', async () => {

@@ -78,7 +78,7 @@ export default function AccountSettingsScreen() {
               removeAccountMutation.mutate(account.did);
 
               if (account.did === currentAccount?.did) {
-                router.replace('/index');
+                router.replace('/(tabs)/index');
               }
             },
           },
