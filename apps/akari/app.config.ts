@@ -1,5 +1,7 @@
 import type { ConfigContext, ExpoConfig } from '@expo/config';
 
+import { version as packageVersion } from './package.json';
+
 type AppVariant = 'development' | 'preview' | 'production';
 
 type VariantDefinition = {
@@ -95,6 +97,7 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
   return {
     ...config,
     ...variantConfig,
+    version: packageVersion,
     ios: {
       ...(config.ios ?? {}),
       ...(variantConfig.ios ?? {}),
