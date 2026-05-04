@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.8.0](https://github.com/lucid-softworks/akari/compare/v1.7.0...v1.8.0) (2026-05-04)
+
+
+### Features
+
+* **akari:** autoplay-videos toggle in Content & Media ([b885709](https://github.com/lucid-softworks/akari/commit/b885709bb38fc977009e6681b4c7c13206a10a6b))
+* **akari:** blocked-profile UX cleanup ([58cca16](https://github.com/lucid-softworks/akari/commit/58cca1629ca18e1e7d0458c1e42aaeef452b6d4d))
+* **akari:** chat message reactions ([b24ac77](https://github.com/lucid-softworks/akari/commit/b24ac77693b8d31fc47bf3de0cecb50aae32b0a8))
+* **akari:** chat picker + group-chat foundation (gated) ([e54f6f7](https://github.com/lucid-softworks/akari/commit/e54f6f7ef61a816a75ece8813305e5eea59a8fa1))
+* **akari:** chat thread actions sheet + single header ([58d9685](https://github.com/lucid-softworks/akari/commit/58d968536ab6ba6f448716159e7651104102f346))
+* **akari:** composer drafts via app.bsky.draft.* (server-synced) ([49ed089](https://github.com/lucid-softworks/akari/commit/49ed089024340868ac47ad56fceb65283a9d74c3))
+* **akari:** custom share sheet with multi-recipient DM share ([7529d50](https://github.com/lucid-softworks/akari/commit/7529d504fc3ed2735a050990e429d20d943e2dd7))
+* **akari:** full emoji picker (chat reactions + composer) + reactions dialog ([1ec3562](https://github.com/lucid-softworks/akari/commit/1ec3562672733d61c027a4b273006ae577390fcd))
+* **akari:** group chat settings + route migration to /[convoId] ([97bcefd](https://github.com/lucid-softworks/akari/commit/97bcefd6caeb4dbfb05de926a45e06b9e7529eeb))
+* **akari:** group-aware rendering for chat list + thread ([a6f606c](https://github.com/lucid-softworks/akari/commit/a6f606c922b8855c2fd369e87d1001159279949c))
+* **akari:** inline GIF + YouTube in chat, link facets on send ([4f7391d](https://github.com/lucid-softworks/akari/commit/4f7391dcf6d8527c283c89d91175f17ba2d6d2d4))
+* **akari:** list picker (add to lists + create list inline) ([9ca5b3d](https://github.com/lucid-softworks/akari/commit/9ca5b3dda0fdd15ae1cb8a00b95ace449725ada4))
+* **akari:** multi-post threads in composer (publish + drafts) ([b9c7d54](https://github.com/lucid-softworks/akari/commit/b9c7d548b562575aabb87c5b870c7927727e43fc))
+* **akari:** mute thread + hide post / account + recovery screen ([dada131](https://github.com/lucid-softworks/akari/commit/dada13192761607110abbb8b15adbc302aa19296))
+* **akari:** pinned post (read + pin/unpin from menu) ([88efe4e](https://github.com/lucid-softworks/akari/commit/88efe4ee906789e51f747fc2ff22583810952027))
+* **akari:** plc.directory handle history + sheet polish ([236ab03](https://github.com/lucid-softworks/akari/commit/236ab03b0f86be5c53af2a60fc8adf4589bab569))
+* **akari:** quote post + composer/menu polish ([aa2bdfa](https://github.com/lucid-softworks/akari/commit/aa2bdfa86688b6874771240ac60d6708c2a2f135))
+* **akari:** report flow with multi-labeler selection ([ef1df8b](https://github.com/lucid-softworks/akari/commit/ef1df8b3ff13f92ae786f9da98907280bb277214))
+* **akari:** show more / less like this on algorithmic feeds ([02067d0](https://github.com/lucid-softworks/akari/commit/02067d051de2993ddf4e9f4224fa70ad83ec9e10))
+* **akari:** threadgate + postgate (compose, edit, read indicator) ([2ee211c](https://github.com/lucid-softworks/akari/commit/2ee211ccd0e77d886bc66b32880c7c6594122375))
+* **akari:** trending bar under home tabs + Content & Media link ([1a363bb](https://github.com/lucid-softworks/akari/commit/1a363bb33c1099ed7ca4452447113e791e2fa3c9))
+* **akari:** verified-account checkmarks across handle render sites ([1cee778](https://github.com/lucid-softworks/akari/commit/1cee778b3a09f04e1f3bb06d4cac09a283b07002))
+* **akari:** video uploads in composer (full transcode pipeline) ([347fd87](https://github.com/lucid-softworks/akari/commit/347fd874ef5bfe62225a106d6b7317a0d46f6036))
+* **akari:** wire emoji picker into chat reactions + composer ([d18d046](https://github.com/lucid-softworks/akari/commit/d18d04616324adc08f0f8549235c283fd0e87c9f))
+
+
+### Bug Fixes
+
+* **akari:** blocked-record embed renders a real placeholder ([c58f68f](https://github.com/lucid-softworks/akari/commit/c58f68fc50ca7e192c74abb63ba5433c7c4867ee))
+* **akari:** external embed thumbnails now render ([1c6ffa0](https://github.com/lucid-softworks/akari/commit/1c6ffa00b85161b7359bb42982c44a7d0e5cbff7))
+* **akari:** follow / unfollow / block / unblock now actually work ([fe0639e](https://github.com/lucid-softworks/akari/commit/fe0639e71eb25b9ccbcf591be5a085399220f510))
+* **bluesky-api:** align feeds reply test with createPost cid resolution ([7ac5366](https://github.com/lucid-softworks/akari/commit/7ac5366455266889c7bce5947faba908e992684a))
+* **eas:** disable sentry sourcemap auto-upload until token is configured ([1a28324](https://github.com/lucid-softworks/akari/commit/1a283240156f6d5a98b59493853d7d3371c100ed))
+* **eas:** pin ascAppId on iOS submit profiles ([79a6f87](https://github.com/lucid-softworks/akari/commit/79a6f87117f9bffcc9284d8d3b36cd58bb642155))
+* **packages:** unbreak ci lint + tests across api packages ([fa21769](https://github.com/lucid-softworks/akari/commit/fa21769216971160baa88625cf7290d610fdb16c))
+
 ## [1.7.0](https://github.com/lucid-softworks/akari/compare/v1.6.0...v1.7.0) (2026-05-02)
 
 
