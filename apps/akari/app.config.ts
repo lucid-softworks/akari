@@ -120,6 +120,7 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
       'expo-font',
       'expo-localization',
       'expo-router',
+      'expo-secure-store',
       'expo-video',
       'expo-web-browser',
     ],

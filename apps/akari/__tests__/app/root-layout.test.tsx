@@ -54,6 +54,19 @@ jest.mock('@/contexts/LanguageContext', () => ({
   LanguageProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+jest.mock('@/utils/secureStorageBootstrap', () => ({
+  bootstrapSecureStorage: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('@/utils/secureStorage', () => ({
+  REACT_QUERY_CACHE_STORAGE_KEY: 'reactQueryCache',
+  storage: {
+    getItem: jest.fn(() => null),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+  },
+}));
+
 jest.mock('expo-router', () => {
   const React = require('react');
   const Screen = jest.fn(() => null);

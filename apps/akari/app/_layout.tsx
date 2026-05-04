@@ -11,7 +11,7 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
@@ -25,6 +25,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
 import { REACT_QUERY_CACHE_STORAGE_KEY, storage } from '@/utils/secureStorage';
+import { bootstrapSecureStorage } from '@/utils/secureStorageBootstrap';
 import '@/utils/i18n';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform } from 'react-native';
@@ -153,6 +154,7 @@ export default Sentry.wrap(function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+  const [secureStorageReady, setSecureStorageReady] = useState(false);
 
   useEffect(() => {
     setupBackgroundUpdates().catch((error) => {
@@ -160,7 +162,24 @@ export default Sentry.wrap(function RootLayout() {
     });
   }, []);
 
-  if (!loaded) {
+  useEffect(() => {
+    let cancelled = false;
+    bootstrapSecureStorage()
+      .then(() => {
+        if (!cancelled) setSecureStorageReady(true);
+      })
+      .catch((error) => {
+        // Without secure storage we can't read/write JWTs or restore the
+        // React Query cache; surface to Sentry and stay on the splash.
+        Sentry.captureException(error);
+        console.error('Failed to bootstrap secure storage:', error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!loaded || !secureStorageReady) {
     // Async font loading only occurs in development.
     return null;
   }
