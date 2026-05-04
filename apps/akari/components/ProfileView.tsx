@@ -100,6 +100,32 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     await refetchProfile();
   }, [refetchProfile]);
 
+  const runBlock = useCallback(async () => {
+    if (!profile?.did) return;
+    const isBlocking = !!profile.viewer?.blocking;
+    try {
+      if (isBlocking) {
+        await blockMutation.mutateAsync({
+          did: profile.did,
+          blockUri: profile.viewer?.blocking,
+          action: 'unblock',
+        });
+      } else {
+        await blockMutation.mutateAsync({
+          did: profile.did,
+          action: 'block',
+        });
+      }
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: isBlocking ? t('common.unblock') : t('common.block'),
+        message: t('common.somethingWentWrong'),
+      });
+      if (__DEV__) console.warn('Block error:', err);
+    }
+  }, [profile, blockMutation, showToast, t]);
+
   const headerComponent = useMemo(() => {
     if (!profile) return null;
     return (
@@ -188,32 +214,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setShowDropdown(false);
     setShowListPicker(true);
   };
-
-  const runBlock = useCallback(async () => {
-    if (!profile?.did) return;
-    const isBlocking = !!profile.viewer?.blocking;
-    try {
-      if (isBlocking) {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          blockUri: profile.viewer?.blocking,
-          action: 'unblock',
-        });
-      } else {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          action: 'block',
-        });
-      }
-    } catch (err) {
-      showToast({
-        type: 'error',
-        title: isBlocking ? t('common.unblock') : t('common.block'),
-        message: t('common.somethingWentWrong'),
-      });
-      if (__DEV__) console.warn('Block error:', err);
-    }
-  }, [profile, blockMutation, showToast, t]);
 
   const handleBlockPress = () => {
     setShowDropdown(false);
