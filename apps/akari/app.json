@@ -30,7 +30,9 @@
           "applinks:*.expo.dev"
         ]
       },
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
