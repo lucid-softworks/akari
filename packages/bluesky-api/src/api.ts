@@ -24,6 +24,7 @@ import type {
   BlueskyMessagesResponse,
   BlueskyNotificationsResponse,
   BlueskyPostView,
+  BlueskyPreference,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
   BlueskyProfileUpdateInput,
@@ -128,6 +129,15 @@ export class BlueskyApi extends BlueskyApiClient {
    */
   async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
     return this.actors.getPreferences(accessJwt);
+  }
+
+  /**
+   * Overwrites the authenticated user's preference list. Bluesky requires the
+   * full preference array on every put — callers should read first, modify
+   * the slice they care about, and pass the merged list back.
+   */
+  async putPreferences(accessJwt: string, preferences: BlueskyPreference[]): Promise<void> {
+    return this.actors.putPreferences(accessJwt, preferences);
   }
 
   /**

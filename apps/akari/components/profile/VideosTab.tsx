@@ -4,6 +4,7 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorVideos } from '@/hooks/queries/useAuthorVideos';
+import { useMutedFilter } from '@/hooks/useMutedFilter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -28,9 +29,10 @@ export function VideosTab({
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
+  const mutedVideos = useMutedFilter(videos);
   const filteredVideos = useMemo(
-    () => (videos ?? []).filter((item) => item && item.uri),
-    [videos],
+    () => mutedVideos.filter((item) => item && item.uri),
+    [mutedVideos],
   );
 
   const renderItem = useCallback(

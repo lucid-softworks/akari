@@ -20,9 +20,11 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeeds } from '@/hooks/queries/useFeeds';
 import { useSavedFeeds } from '@/hooks/queries/usePreferences';
+import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -161,14 +163,17 @@ export default function HomeScreen() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // Get posts based on selected feed type
+  // Get posts based on selected feed type, filtering out anything that
+  // matches a muted-word rule.
+  const { data: mutedWords } = useMutedWords();
   const allPosts = useMemo(() => {
-    if (selectedFeed === 'following') {
-      return timelineData?.feed ?? [];
-    }
-
-    return feedData?.pages.flatMap((page) => page.feed) ?? [];
-  }, [feedData, selectedFeed, timelineData]);
+    const raw =
+      selectedFeed === 'following'
+        ? (timelineData?.feed ?? [])
+        : (feedData?.pages.flatMap((page) => page.feed) ?? []);
+    if (!mutedWords.length) return raw;
+    return raw.filter((entry) => !isPostMuted(entry.post, mutedWords));
+  }, [feedData, mutedWords, selectedFeed, timelineData]);
 
   const feedItems = useMemo<FeedListItem[]>(() => {
     if (!selectedFeed) {

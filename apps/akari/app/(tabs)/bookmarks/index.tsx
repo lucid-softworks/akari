@@ -10,7 +10,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
+import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -32,8 +34,12 @@ export default function BookmarksScreen() {
   }, []);
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(20);
+  const { data: mutedWords } = useMutedWords();
 
-  const bookmarks = data?.pages.flatMap((page) => page.bookmarks) ?? [];
+  const rawBookmarks = data?.pages.flatMap((page) => page.bookmarks) ?? [];
+  const bookmarks = mutedWords.length
+    ? rawBookmarks.filter((b) => !isPostMuted(b.item, mutedWords))
+    : rawBookmarks;
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {

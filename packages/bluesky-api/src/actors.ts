@@ -1,6 +1,7 @@
 import { BlueskyApiClient } from './client';
 import type {
   BlueskyLabelerServicesResponse,
+  BlueskyPreference,
   BlueskyPreferencesResponse,
   BlueskyProfileResponse,
   BlueskyProfileUpdateInput,
@@ -50,6 +51,19 @@ export class BlueskyActors extends BlueskyApiClient {
    */
   async getPreferences(accessJwt: string): Promise<BlueskyPreferencesResponse> {
     return this.makeAuthenticatedRequest<BlueskyPreferencesResponse>('/app.bsky.actor.getPreferences', accessJwt);
+  }
+
+  /**
+   * Replaces the user's preference list. Bluesky's `putPreferences` is a full
+   * overwrite — pass every preference you want to keep, including ones you
+   * aren't editing. Callers that only want to change one preference type
+   * should read with `getPreferences`, swap the relevant entry, and put back.
+   */
+  async putPreferences(accessJwt: string, preferences: BlueskyPreference[]): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>('/app.bsky.actor.putPreferences', accessJwt, {
+      method: 'POST',
+      body: { preferences },
+    });
   }
 
   /**

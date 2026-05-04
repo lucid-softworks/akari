@@ -57,7 +57,6 @@ via `getPreferences` / `getMutes` / `getBlocks`; just need a list UI.
 - `moderation.tsx`: `mutedAccounts`, `blockedAccounts`
 
 **Cross-feature with TODO**
-- `moderation.tsx`: `mutedWordsTags` => TODO "Mute words / tags"
 - `notifications.tsx`: `notificationCategories` => TODO
   "Notification settings categories"
 - `content-and-media.tsx`: `manageSavedFeeds` => TODO "Custom feed
@@ -77,9 +76,6 @@ several are destructive and need confirmation flows.
 
 ## P1 — original task list (still pending)
 
-- **Mute words / tags.** Settings UI + filter pass over feed text and
-  facets. Lexicon is the user's
-  `app.bsky.actor.preferences#mutedWordsPref`.
 - **Profile tabs — scrollable header + sticky tabs parity.** Banner
   scrolls under the tabs; tabs pin to top once they reach it.
 - **Custom feed pins.** Reorder / pin / unpin saved feeds via
@@ -106,6 +102,91 @@ several are destructive and need confirmation flows.
   scale-from-thumbnail animation used in the official app.
 - **Hotkeys (web).** `?` opens shortcut help, `j/k` navigation,
   `r/q/l` reply / quote / like, etc.
+
+## Witchsky-inspired ideas
+
+Cribbed from <https://witchsky.app>. Skipping the items that don't
+apply to akari (kawaii branding, "no age assurance/location blocks",
+"no push notifications", "kept up-to-date" meta-promises).
+
+### Improvements
+
+- **Theme customization.** Color scheme picker plus a hue slider on
+  top of the existing palette so users can tint the whole UI.
+- **Customizable "post" noun.** Settings field that lets users rename
+  "post" to anything (skeet, toot, peep, etc.) wherever the UI
+  surfaces the word.
+- **Share-link domain choice.** Toggle between `bsky.app/...` and
+  `akari.blue/...` (or whatever akari's web domain ends up being)
+  when copying / sharing post URLs.
+- **stream.place embeds.** Render the inline player for stream.place
+  links the same way YouTube / Twitch embeds work.
+- **PDSls + bridged-post jump.** "Open in PDSls" action and, for
+  bridged posts (Bridgy Fed, etc.), an "Open original" action that
+  links to the source fediverse post.
+- **Redraft.** Delete + restore a post into the composer in one tap
+  so the user can edit-by-redraft.
+- **Stricter defaults.** Alt text required for image posts, video
+  autoplay off, etc. — gather under a "Defaults" section in settings
+  with the akari opinion baked in.
+- **Repost icon refresh.** Replace the default repost glyph with
+  something more distinctive than two arrows.
+- **Video download.** Long-press / overflow-menu action to save the
+  underlying video file for posts that embed one.
+- **Preserve route on account switch.** Stay on the current screen
+  (and ideally scroll position) when switching between accounts
+  rather than bouncing back to the home feed.
+- **Mutuals label.** Show "Mutuals" instead of "Following" when the
+  viewer is also followed back, on profile pills and follow-state
+  chips.
+
+### Experiments (settings sub-page)
+
+- **`go.bsky.app` proxy toggle.** Strip / preserve the analytics
+  redirect on shared links.
+- **See through quote blocks/detachments.** Toggle to render quoted
+  posts even when the quoter has blocked the viewer or detached the
+  quote.
+- **PDSls + fedi-original buttons.** Same as above, but gated behind
+  an experiments toggle so it can be hidden by default.
+- **Self-trusted verifiers.** Let the user mark accounts as trusted
+  verifiers (and themselves operate as one) for the tiered
+  verification UI we already ship.
+- **Custom Constellation instance.** Override the back-reference
+  service URL so users on self-hosted Constellation can point akari
+  at it.
+- **Disable default app labeler(s).** Toggle to opt out of Bluesky's
+  built-in labeler subscriptions.
+
+### Tweaks (settings sub-page)
+
+- Make non-`bsky.social` handles in post text clickable.
+- Combine consecutive reposts into a horizontal carousel.
+- Fall back to the Discover feed when Following is empty / errors.
+- Higher-resolution image rendering toggle.
+- Collapse to a single tab when only one feed is pinned.
+- Quietly interact with reposts (don't notify the reposter when you
+  like / reply to their repost).
+- Hide "similar accounts" recommendations on profiles.
+- Square avatars (matching labeler avatars) toggle.
+- "Squarer UI" toggle that drops the heavily-rounded corners.
+- Hide the composer prompt at the top of Following / Discover feeds.
+- Use DIDs instead of handles in URLs and share links.
+- Translation provider picker (Google / Kagi / Papago /
+  LibreTranslate) plumbed into the existing translate action.
+- OpenRouter API key field for AI-generated alt text in the
+  composer.
+
+### Metrics visibility
+
+Per-counter "hide this metric" toggles in settings so a privacy- or
+focus-minded user can blank out:
+
+- like / repost / quote / save / reply counts on posts
+- follower / following / followed-by counts on profiles
+
+Each is independent; UI should collapse the row entirely when
+hidden, not show a `0` or a placeholder.
 
 ## Codebase-wide refactors
 

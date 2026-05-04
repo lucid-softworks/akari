@@ -428,6 +428,23 @@
       "loggedOutVisibilityDescription": "Discourage signed-out users from seeing your account.",
       "interactionSettings": "Interaction settings",
       "mutedWordsTags": "Muted words & tags",
+      "mutedWordsListHeader": "Currently muted",
+      "mutedWordsEmpty": "Nothing muted yet. Add a word, phrase, or tag above and posts that match will disappear from your feeds.",
+      "mutedWordPlaceholder": "Word, phrase, or tag",
+      "mutedWordAdd": "Mute",
+      "mutedWordRemove": "Remove",
+      "mutedWordAlreadyExists": "That word is already muted.",
+      "mutedWordSaveFailed": "Couldn’t save your muted-word change. Try again.",
+      "mutedWordTarget": {
+        "both": "Text & tags",
+        "content": "Text only",
+        "tag": "Tag only"
+      },
+      "mutedWordTargetLabel": {
+        "both": "Matches post text and hashtags",
+        "content": "Matches post text only",
+        "tag": "Matches hashtag only"
+      },
       "mutedAccounts": "Muted accounts",
       "blockedAccounts": "Blocked accounts",
       "verificationSettings": "Verification settings",

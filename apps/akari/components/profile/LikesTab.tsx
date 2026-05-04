@@ -4,6 +4,7 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorLikes } from '@/hooks/queries/useAuthorLikes';
+import { useMutedFilter } from '@/hooks/useMutedFilter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -28,9 +29,10 @@ export function LikesTab({
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
+  const mutedLikes = useMutedFilter(likes);
   const filteredLikes = useMemo(
-    () => (likes ?? []).filter((item) => item && item.uri),
-    [likes],
+    () => mutedLikes.filter((item) => item && item.uri),
+    [mutedLikes],
   );
 
   const renderItem = useCallback(

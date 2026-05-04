@@ -1169,6 +1169,33 @@ export type BlueskyLabelersPref = {
 };
 
 /**
+ * A single muted word/phrase entry inside `mutedWordsPref`.
+ * @see https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/actor/defs.json
+ */
+export type BlueskyMutedWord = {
+  /** Server-assigned identifier (omit when adding a new entry — server fills it). */
+  id?: string;
+  /** The word, phrase, or tag to mute. */
+  value: string;
+  /** Where to match: post `content` (text), `tag` (hashtags/facets), or both. */
+  targets: ('content' | 'tag')[];
+  /** Whose posts to apply the rule to. Default `'all'`. `'exclude-following'` skips accounts you follow. */
+  actorTarget?: 'all' | 'exclude-following';
+  /** Optional ISO 8601 datetime — once past, the rule is ignored client-side. */
+  expiresAt?: string;
+};
+
+/**
+ * Muted words preference
+ */
+export type BlueskyMutedWordsPref = {
+  /** Type identifier */
+  $type: 'app.bsky.actor.defs#mutedWordsPref';
+  /** List of muted word entries */
+  items: BlueskyMutedWord[];
+};
+
+/**
  * Union type for all preference types
  */
 export type BlueskyPreference =
@@ -1178,7 +1205,8 @@ export type BlueskyPreference =
   | BlueskyAdultContentPref
   | BlueskyContentLabelPref
   | BlueskyAppStatePref
-  | BlueskyLabelersPref;
+  | BlueskyLabelersPref
+  | BlueskyMutedWordsPref;
 
 /**
  * Labeler service view

@@ -10,6 +10,7 @@ import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { usePinnedPost } from '@/hooks/queries/usePinnedPost';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useMutedFilter } from '@/hooks/useMutedFilter';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
@@ -46,14 +47,15 @@ export function PostsTab({
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
+  const mutedPosts = useMutedFilter(posts);
   const filteredPosts = useMemo(() => {
-    const regular = (posts ?? []).filter((item) => item && item.uri);
+    const regular = mutedPosts.filter((item) => item && item.uri);
     // Skip the pinned post if it would otherwise duplicate inside the feed.
     const dedup = pinnedPost
       ? regular.filter((p) => p.uri !== pinnedPost.uri)
       : regular;
     return pinnedPost ? [{ ...pinnedPost, _isPinned: true } as any, ...dedup] : dedup;
-  }, [posts, pinnedPost]);
+  }, [mutedPosts, pinnedPost]);
 
   const renderItem = useCallback(
     (item: any) => {

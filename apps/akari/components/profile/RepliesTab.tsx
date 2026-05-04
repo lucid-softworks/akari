@@ -4,6 +4,7 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorReplies } from '@/hooks/queries/useAuthorReplies';
+import { useMutedFilter } from '@/hooks/useMutedFilter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -28,9 +29,10 @@ export function RepliesTab({
   const navigateToPost = useNavigateToPost();
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
 
+  const mutedReplies = useMutedFilter(replies);
   const filteredReplies = useMemo(
-    () => (replies ?? []).filter((item) => item && item.uri),
-    [replies],
+    () => mutedReplies.filter((item) => item && item.uri),
+    [mutedReplies],
   );
 
   const renderItem = useCallback(

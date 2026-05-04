@@ -37,7 +37,7 @@ export default function ModerationSettingsScreen() {
         key: 'muted-words',
         icon: 'text.badge.minus',
         label: t('settings.mutedWordsTags'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/muted-words'),
       },
       {
         key: 'muted-accounts',

@@ -4,6 +4,7 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
+import { useMutedFilter } from '@/hooks/useMutedFilter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
@@ -28,9 +29,10 @@ export function MediaTab({
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const navigateToPost = useNavigateToPost();
 
+  const mutedMedia = useMutedFilter(media);
   const filteredMedia = useMemo(
-    () => (media ?? []).filter((item) => item && item.uri),
-    [media],
+    () => mutedMedia.filter((item) => item && item.uri),
+    [mutedMedia],
   );
 
   const renderItem = useCallback(
