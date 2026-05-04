@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.8.1](https://github.com/lucid-softworks/akari/compare/v1.8.0...v1.8.1) (2026-05-04)
+
+
+### Bug Fixes
+
+* **akari:** make OTA update check non-blocking on launch ([51f1b86](https://github.com/lucid-softworks/akari/commit/51f1b86f6a085b6e687c395bef0a9a4017e3eed8))
+* **akari:** repair pre-existing test suite drift across 39 suites ([ef9167e](https://github.com/lucid-softworks/akari/commit/ef9167ea5d18433fc0e2c75b927e837c95cd3f88))
+* **akari:** replace hardcoded MMKV encryption key with per-install key ([a26ca83](https://github.com/lucid-softworks/akari/commit/a26ca83483ed0934c5c2c2c64f2105b31d06f6ff))
+* **profile:** hoist runBlock useCallback above early returns ([539a501](https://github.com/lucid-softworks/akari/commit/539a5017a6f54bc2ec4f3714fc2dfcb317059cea))
+
 ## [1.8.0](https://github.com/lucid-softworks/akari/compare/v1.7.0...v1.8.0) (2026-05-04)
 
 
