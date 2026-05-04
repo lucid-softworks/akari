@@ -71,6 +71,7 @@ export function LikesTab({
             replyTo,
             uri: item.uri,
             cid: item.cid,
+            threadRootUri: (item.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
           onPress={() => {
             const uriParts = item.uri.split('/');

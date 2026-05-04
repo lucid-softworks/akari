@@ -93,6 +93,7 @@ export function PostsTab({
             replyTo,
             uri: item.uri,
             cid: item.cid,
+            threadRootUri: (item.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
           href={`/profile/${item.author.handle}/post/${item.uri.split('/').pop()}`}
           onPress={() => {

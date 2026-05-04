@@ -59,6 +59,15 @@ export type PostCardProps = {
     uri?: string;
     cid?: string;
     feedContext?: string;
+    /**
+     * URI of the thread root when this post is itself a reply. Threading
+     * through the raw `record.reply.root.uri`. When set, replying to this
+     * post will preserve the original thread root in the new reply's
+     * `record.reply.root` — without it the new reply would falsely claim
+     * `root === parent`, which the official client renders as a stranded
+     * post with no parent context.
+     */
+    threadRootUri?: string;
   };
   onPress?: () => void;
   href?: string;
@@ -306,7 +315,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         visible={showReplyComposer}
         onClose={() => setShowReplyComposer(false)}
         replyTo={{
-          root: post.uri || '',
+          root: post.threadRootUri || post.uri || '',
           parent: post.uri || '',
           authorHandle: post.author.handle,
           preview: {

@@ -426,6 +426,7 @@ export default function SearchScreen() {
           replyTo,
           uri: post.uri,
           cid: post.cid,
+          threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
         }}
         href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
         onPress={() => {

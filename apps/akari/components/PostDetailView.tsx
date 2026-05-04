@@ -80,6 +80,7 @@ export const renderComment = (
           replyTo,
           uri: post.uri,
           cid: post.cid,
+          threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
         }}
         onPress={() => {
           // Navigate to the same tab's post view
@@ -140,6 +141,7 @@ export const renderComment = (
         replyTo,
         uri: postItem.uri,
         cid: postItem.cid,
+        threadRootUri: (postItem.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
       }}
       onPress={() => {
         // Navigate to the same tab's post view
@@ -233,6 +235,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             facets: (rootPost.record as any)?.facets,
             uri: rootPost.uri,
             cid: rootPost.cid,
+            threadRootUri: (rootPost.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
           onPress={() => {
             // Navigate to root post in current tab
@@ -276,6 +279,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             facets: (parentPost.record as any)?.facets,
             uri: parentPost.uri,
             cid: parentPost.cid,
+            threadRootUri: (parentPost.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
           onPress={() => {
             // Navigate to parent post in current tab
@@ -328,6 +332,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             facets: (post.record as any)?.facets,
             uri: post.uri,
             cid: post.cid,
+            threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
         />
 
@@ -363,7 +368,10 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
         visible={showReplyComposer}
         onClose={() => setShowReplyComposer(false)}
         replyTo={{
-          root: post?.uri || '',
+          root:
+            (post?.record as { reply?: { root?: { uri?: string } } } | undefined)?.reply?.root?.uri ||
+            post?.uri ||
+            '',
           parent: post?.uri || '',
           authorHandle: post?.author.handle || actor,
           preview: post

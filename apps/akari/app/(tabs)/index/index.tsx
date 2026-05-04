@@ -274,6 +274,7 @@ export default function HomeScreen() {
             uri: post.uri,
             cid: post.cid,
             feedContext: item.item.feedContext,
+            threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
           }}
           href={`/profile/${post.author.handle}/post/${post.uri.split('/').pop()}`}
           onPress={() => {
