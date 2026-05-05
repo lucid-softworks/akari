@@ -7,6 +7,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -950,15 +951,34 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       transparent={isWeb}
       onRequestClose={handleClose}
     >
-      <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ThemedView
-          testID="post-composer-container"
-          style={[
-            styles.container,
-            { backgroundColor },
-            isWeb && styles.webContainer,
-            !isWeb && { paddingTop: Platform.OS === 'android' ? top : 0, paddingBottom: bottom },
-          ]}
+      {/*
+       * ThemedView wraps KeyboardAvoidingView — not the other way around — so
+       * the dark background always paints the full modal frame. With KAV on
+       * the outside, when it shrinks (Android `behavior='height'` reserves
+       * space for the keyboard accessory bar) the inner background shrinks
+       * with it and the Modal's default opaque white shows through at the
+       * bottom.
+       */}
+      <ThemedView
+        testID="post-composer-container"
+        style={[
+          styles.container,
+          { backgroundColor },
+          isWeb && styles.webContainer,
+          // `useSafeAreaInsets` returns 0 inside a Modal on Android (the
+          // Modal is its own native window — SafeAreaProvider context
+          // doesn't reach), so use `StatusBar.currentHeight` for the top
+          // padding. iOS pageSheet auto-respects the safe area.
+          !isWeb && {
+            paddingTop:
+              Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : top,
+            paddingBottom: bottom,
+          },
+        ]}
+      >
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           {/* Header */}
           <View
@@ -1357,8 +1377,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               </View>
             </View>
           </View>
-        </ThemedView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ThemedView>
 
       {/* GIF Picker Modal */}
       <GifPicker visible={gifPickerVisible} onClose={() => setGifPickerVisible(false)} onSelectGif={handleSelectGif} />
