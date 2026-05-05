@@ -4,7 +4,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import { BadgeCheck, type LucideProps } from 'lucide-react-native';
 import { ComponentProps, ComponentType } from 'react';
-import { OpaqueColorValue, type StyleProp, type TextStyle, View } from 'react-native';
+import { OpaqueColorValue, type StyleProp, type ViewStyle, View } from 'react-native';
 
 // Keys are string (not just SymbolViewProps['name']) so callers can pass
 // MaterialIcon-only names like "gif" that don't have a corresponding
@@ -32,7 +32,7 @@ type IconSymbolProps = {
   name: IconSymbolName;
   size?: number;
   color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
+  style?: StyleProp<ViewStyle>;
   weight?: SymbolWeight;
 };
 
@@ -91,7 +91,10 @@ const MAPPING = {
   // and use `lucide-react-native`'s `<BadgeCheck>` directly.
   'checkmark.seal': 'verified',
   'checkmark.seal.fill': 'verified',
+  'info.circle': 'info-outline',
   'info.circle.fill': 'info',
+  'square.grid.2x2': 'grid-view',
+  'figure.wave.circle': 'accessibility-new',
   'lock.fill': 'lock',
   'lock.shield.fill': 'security',
   'shield.fill': 'shield',
@@ -162,12 +165,22 @@ export function IconSymbol({
   style,
 }: IconSymbolProps) {
   const Lucide = LUCIDE_OVERRIDES[name];
+  // `style` is forwarded to the *outer* View (where layout props like
+  // `marginRight` belong). Applying it to the inner MaterialIcons / lucide
+  // glyph instead would either get clipped by the fixed-size wrapper
+  // (MaterialIcons) or silently dropped (lucide doesn't accept style props),
+  // causing icons to render mis-positioned and squished.
   return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={[
+        { width: size, height: size, alignItems: 'center', justifyContent: 'center' },
+        style,
+      ]}
+    >
       {Lucide ? (
         <Lucide size={size} color={color as string} strokeWidth={1.75} />
       ) : (
-        <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />
+        <MaterialIcons color={color} size={size} name={MAPPING[name]} />
       )}
     </View>
   );
