@@ -5,6 +5,14 @@ implemented*; everything that's already shipped lives in `git log`.
 
 ## P1 — official-app parity gaps
 
+- **Real account creation.** `password.tsx`'s "signup" mode is a
+  label-only distinction — the "Connect account" button calls the same
+  `signInMutation` as sign-in, so it only authenticates against existing
+  PDS accounts. Wire `com.atproto.server.createAccount` into a real
+  signup mutation (handle, email, password, optional invite code) so
+  users can create accounts on any PDS without leaving the app. Declared
+  to Google Play as a not-yet-supported method on 2026-05-04.
+
 - **Feed filters.** Per-feed filtering rules (minimum like count,
   exclude / include specific users, keyword filters, media-only, etc.)
   applied at render time so filtered posts disappear from the

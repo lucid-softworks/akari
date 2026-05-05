@@ -45,6 +45,10 @@
         "companyName": "Lucid Softworks",
         "ascAppId": "6754194000",
         "bundleIdentifier": "works.lucidsoft.akari"
+      },
+      "android": {
+        "track": "beta",
+        "releaseStatus": "draft"
       }
     },
     "preview": {

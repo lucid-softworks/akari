@@ -4,6 +4,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -107,6 +108,11 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
           styles.nativeSheet,
           {
             backgroundColor: sheetBackground,
+            // Android Modal `presentationStyle='fullScreen'` draws under the
+            // status bar; iOS pageSheet auto-respects the top safe area.
+            // `useSafeAreaInsets` returns 0 inside a Modal (separate native
+            // window) — `StatusBar.currentHeight` works without any provider.
+            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0,
             paddingBottom: bottom + 16,
           },
         ]}

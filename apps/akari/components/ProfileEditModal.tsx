@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Modal, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
@@ -24,6 +24,12 @@ type ProfileEditModalProps = {
 
 export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading = false }: ProfileEditModalProps) {
   const { t } = useTranslation();
+  // Android Modals with `presentationStyle='fullScreen'` draw under the
+  // status bar; iOS pageSheet already respects the safe area. Inside a Modal
+  // `useSafeAreaInsets` returns 0 (separate native window, the
+  // SafeAreaProvider context doesn't reach), so use `StatusBar.currentHeight`
+  // — Android exposes it statically without any provider.
+  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#151718' }, 'background');
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
   const borderColor = useThemeColor({ light: '#f0f0f0', dark: '#2c2c2e' }, 'background');
@@ -65,7 +71,7 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={handleCancel}
     >
-        <ThemedView style={[styles.container, { backgroundColor }]}>
+        <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
             <TouchableOpacity

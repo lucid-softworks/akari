@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
@@ -53,6 +53,11 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // Android Modal `presentationStyle='fullScreen'` draws under the status
+  // bar; iOS pageSheet auto-respects the safe area. Use `StatusBar.currentHeight`
+  // — `useSafeAreaInsets` returns 0 inside a Modal (separate native window).
+  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
+
   // Extract DID from recipe URI to resolve the correct PDS (call hook unconditionally)
   const did = recipe?.uri.split('/')[2];
   const { data: pdsUrl } = usePdsUrlFromDid(did);
@@ -88,7 +93,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
     >
-        <ThemedView style={[styles.nativeSheet, { backgroundColor }]}>
+        <ThemedView style={[styles.nativeSheet, { backgroundColor, paddingTop: containerTopPadding }]}>
 
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>

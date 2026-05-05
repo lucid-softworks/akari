@@ -1,4 +1,4 @@
-import { Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -25,6 +25,10 @@ type HandleHistoryModalProps = {
 
 export function HandleHistoryModal({ visible, onClose, did, currentHandle }: HandleHistoryModalProps) {
   const { t } = useTranslation();
+  // Android Modal `presentationStyle='fullScreen'` draws under the status
+  // bar; iOS pageSheet auto-respects the safe area. Use `StatusBar.currentHeight`
+  // — `useSafeAreaInsets` returns 0 inside a Modal (separate native window).
+  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
   const { data: handleHistory = [], isLoading } = useHandleHistory(did);
   const borderColor = useBorderColor();
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#151718' }, 'background');
@@ -67,7 +71,7 @@ export function HandleHistoryModal({ visible, onClose, did, currentHandle }: Han
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
     >
-        <ThemedView style={[styles.container, { backgroundColor }]}>
+        <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
             <TouchableOpacity onPress={onClose} style={styles.headerButton}>

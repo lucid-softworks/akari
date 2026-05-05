@@ -2,7 +2,8 @@
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
-import { ComponentProps } from 'react';
+import { BadgeCheck, type LucideProps } from 'lucide-react-native';
+import { ComponentProps, ComponentType } from 'react';
 import { OpaqueColorValue, type StyleProp, type TextStyle, View } from 'react-native';
 
 // Keys are string (not just SymbolViewProps['name']) so callers can pass
@@ -10,6 +11,23 @@ import { OpaqueColorValue, type StyleProp, type TextStyle, View } from 'react-na
 // SF Symbol on iOS — the .ios.tsx variant accepts arbitrary strings too.
 type IconMapping = Record<string, ComponentProps<typeof MaterialIcons>['name']>;
 type IconSymbolName = keyof typeof MAPPING;
+
+// Per-icon lucide overrides for SF Symbols that MaterialIcons can't render
+// faithfully. Looked up before the MaterialIcons fallback. Keep this list
+// short — lucide has a different visual weight from MaterialIcons, so only
+// override when MaterialIcons genuinely lacks an equivalent.
+//
+// `strokeWidth` defaults to 1.75 on lucide icons used here — lucide's stock 2
+// reads visibly thicker than SF Symbols' weight at small sizes; 1.75 brings
+// the two platforms into reasonable parity.
+const LUCIDE_OVERRIDES: Record<string, ComponentType<LucideProps>> = {
+  // The outline-only `seal-with-check` shape. MaterialIcons has only the
+  // filled `verified` variant, so use lucide's BadgeCheck for the outline.
+  // The filled variant (`checkmark.seal.fill`) keeps using MaterialIcons
+  // `verified` — it already renders as a properly filled badge with a
+  // contrasting check inside.
+  'checkmark.seal': BadgeCheck,
+};
 type IconSymbolProps = {
   name: IconSymbolName;
   size?: number;
@@ -67,6 +85,11 @@ const MAPPING = {
   'clock.fill': 'schedule',
   'arrow.up.circle.fill': 'keyboard-arrow-up',
   'checkmark.circle.fill': 'check-circle',
+  // MaterialIcons has only one verified-with-check icon — both states map
+  // to it. Call sites that need the filled-vs-outline distinction
+  // (e.g. VerifiersSheet's per-row trust toggle) should bypass IconSymbol
+  // and use `lucide-react-native`'s `<BadgeCheck>` directly.
+  'checkmark.seal': 'verified',
   'checkmark.seal.fill': 'verified',
   'info.circle.fill': 'info',
   'lock.fill': 'lock',
@@ -103,6 +126,28 @@ const MAPPING = {
   'number.circle': 'numbers',
   'number.circle.fill': 'numbers',
   'person.2.fill': 'group',
+  bookmark: 'bookmark-border',
+  'bubble.left.and.bubble.right': 'forum',
+  checkmark: 'check',
+  'chevron.up': 'expand-less',
+  circle: 'radio-button-unchecked',
+  'exclamationmark.triangle': 'warning-amber',
+  'face.smiling': 'mood',
+  flame: 'local-fire-department',
+  'fork.knife': 'restaurant',
+  gearshape: 'settings',
+  link: 'link',
+  'list.bullet': 'format-list-bulleted',
+  'minus.circle': 'remove-circle-outline',
+  'minus.circle.fill': 'remove-circle',
+  'photo.on.rectangle.angled': 'photo-library',
+  'play.fill': 'play-arrow',
+  'plus.circle': 'add-circle-outline',
+  'plus.circle.fill': 'add-circle',
+  speedometer: 'speed',
+  tag: 'sell',
+  trash: 'delete-outline',
+  video: 'videocam',
 } as unknown as IconMapping;
 
 /**
@@ -116,9 +161,14 @@ export function IconSymbol({
   color,
   style,
 }: IconSymbolProps) {
+  const Lucide = LUCIDE_OVERRIDES[name];
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />
+      {Lucide ? (
+        <Lucide size={size} color={color as string} strokeWidth={1.75} />
+      ) : (
+        <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />
+      )}
     </View>
   );
 }

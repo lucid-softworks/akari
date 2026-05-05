@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -52,6 +52,10 @@ const getLanguages = (): LanguageOption[] => {
 export const LanguageSelector = () => {
   const { t, currentLocale, changeLanguage } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  // Android Modal `presentationStyle='fullScreen'` draws under the status
+  // bar; iOS pageSheet auto-respects the safe area. Use `StatusBar.currentHeight`
+  // — `useSafeAreaInsets` returns 0 inside a Modal (separate native window).
+  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
   const languages = getLanguages();
   const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0];
@@ -91,7 +95,7 @@ export const LanguageSelector = () => {
             accessible
             accessibilityRole="menu"
             accessibilityLabel={t('settings.language')}
-            style={styles.nativeSheet}
+            style={[styles.nativeSheet, { paddingTop: containerTopPadding }]}
           >
             <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
             <ScrollView style={styles.languageList}>

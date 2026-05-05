@@ -4,6 +4,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -174,7 +175,20 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={handleClose}
     >
-      <ThemedView style={[styles.nativeSheet, { backgroundColor: sheetBg, paddingBottom: insets.bottom + spacing.lg }]}>
+      <ThemedView
+        style={[
+          styles.nativeSheet,
+          {
+            backgroundColor: sheetBg,
+            // Android Modal `presentationStyle='fullScreen'` draws under the
+            // status bar; iOS pageSheet auto-respects the top safe area.
+            // `useSafeAreaInsets` returns 0 inside a Modal (separate native
+            // window) — `StatusBar.currentHeight` works without any provider.
+            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0,
+            paddingBottom: insets.bottom + spacing.lg,
+          },
+        ]}
+      >
               <ThemedText style={styles.title}>
                 {subject?.type === 'post' ? t('report.reportPost') : t('report.reportAccount')}
               </ThemedText>

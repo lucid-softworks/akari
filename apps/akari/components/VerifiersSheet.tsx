@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import React, { useMemo } from 'react';
-import { Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
@@ -62,6 +62,13 @@ export function VerifiersSheet({
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { trustedVerifierDids, isTrustedVerifier } = useVerificationSettings();
   const { data: constellationDids } = useVerifiersForDid(visible ? subjectDid : undefined);
+  // iOS pageSheet auto-respects the safe area; Android fullScreen draws under
+  // the status bar, so we have to push the header down ourselves or the Done
+  // button lands behind the notch / clock. `useSafeAreaInsets` returns 0
+  // inside a Modal (the Modal is its own native window, the SafeAreaProvider
+  // context doesn't reach), so we use `StatusBar.currentHeight` instead —
+  // a static Android-only value exposed without any provider.
+  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
   const { trustedRows, otherRows } = useMemo(() => {
     const byIssuer = new Map<string, VerifierRowData>();
@@ -117,7 +124,7 @@ export function VerifiersSheet({
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
     >
-      <ThemedView style={[styles.container, { backgroundColor }]}>
+      <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <TouchableOpacity onPress={onClose} style={styles.headerButton} accessibilityRole="button">
             <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
