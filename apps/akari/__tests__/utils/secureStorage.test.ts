@@ -19,6 +19,10 @@ jest.mock('react-native-mmkv', () => ({
 describe('secureStorage', () => {
   beforeEach(() => {
     jest.resetModules();
+    // The singleton now lives on globalThis (so HMR doesn't drop it in dev);
+    // clear it so each test starts uninitialised, mirroring the pre-globalThis
+    // behaviour of jest.resetModules() alone.
+    delete (globalThis as unknown as Record<string, unknown>).__akari_secureStorage_v1;
     for (const key of Object.keys(store)) {
       delete store[key];
     }

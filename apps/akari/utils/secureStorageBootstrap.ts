@@ -20,7 +20,14 @@ const LEGACY_ENCRYPTION_KEY = 'dev-key-akari-v2-2024-secure-storage-encryption';
 
 const KEY_BYTES = 32;
 
-let bootstrapPromise: Promise<void> | null = null;
+// Same Fast-Refresh-survival trick as `secureStorage.ts`: park the in-flight
+// bootstrap on `globalThis` so an HMR-induced module re-evaluation doesn't
+// reset us back to "not yet bootstrapped" while the live MMKV handle is still
+// alive on the global ref. Without this, consumers that re-render after Fast
+// Refresh hit the uninitialised guard and log the user out.
+const BOOTSTRAP_GLOBAL_KEY = '__akari_secureStorageBootstrap_v1' as const;
+type BootstrapGlobals = { [BOOTSTRAP_GLOBAL_KEY]?: Promise<void> };
+const globalsRef = globalThis as unknown as BootstrapGlobals;
 
 /**
  * Resolve the per-install MMKV encryption key from the OS keychain (creating
@@ -28,13 +35,13 @@ let bootstrapPromise: Promise<void> | null = null;
  * across re-entrant calls — the second caller awaits the first.
  */
 export function bootstrapSecureStorage(): Promise<void> {
-  if (!bootstrapPromise) {
-    bootstrapPromise = doBootstrap().catch((error) => {
-      bootstrapPromise = null;
+  if (!globalsRef[BOOTSTRAP_GLOBAL_KEY]) {
+    globalsRef[BOOTSTRAP_GLOBAL_KEY] = doBootstrap().catch((error) => {
+      delete globalsRef[BOOTSTRAP_GLOBAL_KEY];
       throw error;
     });
   }
-  return bootstrapPromise;
+  return globalsRef[BOOTSTRAP_GLOBAL_KEY]!;
 }
 
 async function doBootstrap(): Promise<void> {

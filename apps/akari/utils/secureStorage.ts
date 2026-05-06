@@ -3,7 +3,12 @@ import { Account } from '@/types/account';
 import { Platform } from 'react-native';
 import { MMKV } from 'react-native-mmkv';
 
-let secureStorageInstance: MMKV | null = null;
+// Stashed on `globalThis` so Fast Refresh re-evaluating this module reuses the
+// live MMKV handle instead of dropping it and forcing every storage consumer
+// to re-bootstrap (which would log the user out mid-edit).
+const SECURE_STORAGE_GLOBAL_KEY = '__akari_secureStorage_v1' as const;
+type SecureStorageGlobals = { [SECURE_STORAGE_GLOBAL_KEY]?: MMKV };
+const globalsRef = globalThis as unknown as SecureStorageGlobals;
 
 /**
  * Initialise the MMKV-backed secure store with a per-install encryption key.
@@ -15,22 +20,23 @@ let secureStorageInstance: MMKV | null = null;
  * the live MMKV file handle.
  */
 export function initialiseSecureStorage(encryptionKey: string | undefined): MMKV {
-  if (!secureStorageInstance) {
-    secureStorageInstance = new MMKV({
+  if (!globalsRef[SECURE_STORAGE_GLOBAL_KEY]) {
+    globalsRef[SECURE_STORAGE_GLOBAL_KEY] = new MMKV({
       id: 'secure-storage',
       encryptionKey: Platform.OS === 'web' ? undefined : encryptionKey,
     });
   }
-  return secureStorageInstance;
+  return globalsRef[SECURE_STORAGE_GLOBAL_KEY]!;
 }
 
 function getSecureStorage(): MMKV {
-  if (!secureStorageInstance) {
+  const instance = globalsRef[SECURE_STORAGE_GLOBAL_KEY];
+  if (!instance) {
     throw new Error(
       'secureStorage accessed before initialisation. Call bootstrapSecureStorage() before rendering.',
     );
   }
-  return secureStorageInstance;
+  return instance;
 }
 
 type Data = {
