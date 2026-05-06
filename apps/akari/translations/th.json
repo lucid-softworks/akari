@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "ย้อนกลับ",
       "done": "เสร็จ",
-      "following": "กำลังติดตาม"
+      "following": "กำลังติดตาม",
+      "reset": "รีเซ็ต"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "ยังไม่มีโพสต์ในฟีดนี้",
       "selectFeedToView": "เลือกฟีดเพื่อดูโพสต์",
       "loadingFeeds": "กำลังโหลดฟีดของคุณ...",
-      "trending": "มาแรง"
+      "trending": "มาแรง",
+      "filters": "ตัวกรอง",
+      "filterSheetTitle": "กรองโพสต์",
+      "filterSectionHide": "ซ่อน",
+      "filterSectionAuthor": "ผู้เขียน",
+      "filterSectionCounts": "จำนวน",
+      "hideReplies": "ซ่อนการตอบกลับ",
+      "hideReposts": "ซ่อนการรีโพสต์",
+      "hideQuotes": "ซ่อนโพสต์อ้างอิง",
+      "onlyFollowing": "เฉพาะคนที่ฉันติดตาม",
+      "onlyMutuals": "เฉพาะการติดตามแบบสองทาง",
+      "countLikes": "ถูกใจ",
+      "countReposts": "รีโพสต์",
+      "countReplies": "การตอบกลับ",
+      "countBookmarks": "ที่คั่น",
+      "filterMin": "ต่ำสุด",
+      "filterMax": "สูงสุด",
+      "filterMinLabel": "ขั้นต่ำ {{metric}}",
+      "filterMaxLabel": "สูงสุด {{metric}}"
     },
     "post": {
       "postNotFound": "ไม่พบโพสต์",

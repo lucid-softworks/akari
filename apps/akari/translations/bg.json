@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Назад",
       "done": "Готово",
-      "following": "Следва се"
+      "following": "Следва се",
+      "reset": "Нулиране"
     },
     "auth": {
       "fillAllFields": "Моля, попълнете всички полета",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Все още няма публикации в тази емисия.",
       "selectFeedToView": "Изберете емисия, за да видите публикации",
       "loadingFeeds": "Зареждане на вашите емисии ...",
-      "trending": "Тенденции"
+      "trending": "Тенденции",
+      "filters": "Филтри",
+      "filterSheetTitle": "Филтриране на публикации",
+      "filterSectionHide": "Скрий",
+      "filterSectionAuthor": "Автор",
+      "filterSectionCounts": "Брой",
+      "hideReplies": "Скрий отговорите",
+      "hideReposts": "Скрий споделянията",
+      "hideQuotes": "Скрий цитираните публикации",
+      "onlyFollowing": "Само хората, които следвам",
+      "onlyMutuals": "Само взаимни последователи",
+      "countLikes": "Харесвания",
+      "countReposts": "Споделяния",
+      "countReplies": "Отговори",
+      "countBookmarks": "Отметки",
+      "filterMin": "Мин",
+      "filterMax": "Макс",
+      "filterMinLabel": "Минимум {{metric}}",
+      "filterMaxLabel": "Максимум {{metric}}"
     },
     "post": {
       "postNotFound": "Публикация не е намерена",

@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Zpět",
       "done": "Hotovo",
-      "following": "Sleduje se"
+      "following": "Sleduje se",
+      "reset": "Obnovit"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všechna pole",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Zatím žádné příspěvky v tomto zdroji.",
       "selectFeedToView": "Vyberte zdroj pro zobrazení příspěvků",
       "loadingFeeds": "Načítání vašich kanálů ...",
-      "trending": "Trendy"
+      "trending": "Trendy",
+      "filters": "Filtry",
+      "filterSheetTitle": "Filtrovat příspěvky",
+      "filterSectionHide": "Skrýt",
+      "filterSectionAuthor": "Autor",
+      "filterSectionCounts": "Počty",
+      "hideReplies": "Skrýt odpovědi",
+      "hideReposts": "Skrýt sdílení",
+      "hideQuotes": "Skrýt citované příspěvky",
+      "onlyFollowing": "Pouze lidé, které sleduji",
+      "onlyMutuals": "Pouze vzájemné kontakty",
+      "countLikes": "To se mi líbí",
+      "countReposts": "Sdílení",
+      "countReplies": "Odpovědi",
+      "countBookmarks": "Záložky",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maximum {{metric}}"
     },
     "post": {
       "postNotFound": "Příspěvek není nalezen",

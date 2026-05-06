@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Назад",
       "done": "Готово",
-      "following": "Подписаны"
+      "following": "Подписаны",
+      "reset": "Сбросить"
     },
     "auth": {
       "fillAllFields": "Заполните все поля",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "В этой ленте пока нет постов.",
       "selectFeedToView": "Выберите ленту для просмотра постов",
       "loadingFeeds": "Загрузка ваших лент...",
-      "trending": "В тренде"
+      "trending": "В тренде",
+      "filters": "Фильтры",
+      "filterSheetTitle": "Фильтр публикаций",
+      "filterSectionHide": "Скрыть",
+      "filterSectionAuthor": "Автор",
+      "filterSectionCounts": "Количество",
+      "hideReplies": "Скрыть ответы",
+      "hideReposts": "Скрыть репосты",
+      "hideQuotes": "Скрыть цитаты",
+      "onlyFollowing": "Только подписки",
+      "onlyMutuals": "Только взаимные подписки",
+      "countLikes": "Лайки",
+      "countReposts": "Репосты",
+      "countReplies": "Ответы",
+      "countBookmarks": "Закладки",
+      "filterMin": "Мин",
+      "filterMax": "Макс",
+      "filterMinLabel": "Минимум {{metric}}",
+      "filterMaxLabel": "Максимум {{metric}}"
     },
     "post": {
       "postNotFound": "Пост не найден",

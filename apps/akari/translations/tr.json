@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Geri",
       "done": "Tamam",
-      "following": "Takip ediliyor"
+      "following": "Takip ediliyor",
+      "reset": "Sıfırla"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Bu akışta henüz gönderi yok.",
       "selectFeedToView": "Gönderileri görmek için bir akış seçin",
       "loadingFeeds": "Akışlarınız yükleniyor...",
-      "trending": "Gündem"
+      "trending": "Gündem",
+      "filters": "Filtreler",
+      "filterSheetTitle": "Gönderileri filtrele",
+      "filterSectionHide": "Gizle",
+      "filterSectionAuthor": "Yazar",
+      "filterSectionCounts": "Sayılar",
+      "hideReplies": "Yanıtları gizle",
+      "hideReposts": "Yeniden paylaşımları gizle",
+      "hideQuotes": "Alıntı gönderileri gizle",
+      "onlyFollowing": "Yalnızca takip ettiklerim",
+      "onlyMutuals": "Yalnızca karşılıklı takipler",
+      "countLikes": "Beğeniler",
+      "countReposts": "Yeniden paylaşımlar",
+      "countReplies": "Yanıtlar",
+      "countBookmarks": "Yer imleri",
+      "filterMin": "Min",
+      "filterMax": "Maks",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maksimum {{metric}}"
     },
     "post": {
       "postNotFound": "Gönderi bulunamadı",

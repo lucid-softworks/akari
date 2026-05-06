@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Voltar",
       "done": "Concluído",
-      "following": "A seguir"
+      "following": "A seguir",
+      "reset": "Redefinir"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Ainda não há publicações neste feed.",
       "selectFeedToView": "Selecione um feed para ver publicações",
       "loadingFeeds": "Carregando seus feeds...",
-      "trending": "Em alta"
+      "trending": "Em alta",
+      "filters": "Filtros",
+      "filterSheetTitle": "Filtrar publicações",
+      "filterSectionHide": "Ocultar",
+      "filterSectionAuthor": "Autor",
+      "filterSectionCounts": "Contagens",
+      "hideReplies": "Ocultar respostas",
+      "hideReposts": "Ocultar repostagens",
+      "hideQuotes": "Ocultar publicações citadas",
+      "onlyFollowing": "Apenas pessoas que sigo",
+      "onlyMutuals": "Apenas seguidores mútuos",
+      "countLikes": "Curtidas",
+      "countReposts": "Repostagens",
+      "countReplies": "Respostas",
+      "countBookmarks": "Marcadores",
+      "filterMin": "Mín",
+      "filterMax": "Máx",
+      "filterMinLabel": "Mínimo de {{metric}}",
+      "filterMaxLabel": "Máximo de {{metric}}"
     },
     "post": {
       "postNotFound": "Post não encontrado",

@@ -13,12 +13,13 @@ implemented*; everything that's already shipped lives in `git log`.
   users can create accounts on any PDS without leaving the app. Declared
   to Google Play as a not-yet-supported method on 2026-05-04.
 
-- **Feed filters.** Per-feed filtering rules (minimum like count,
-  exclude / include specific users, keyword filters, media-only, etc.)
-  applied at render time so filtered posts disappear from the
-  rendered list. Needs a settings UI to author rules per feed and a
-  filter-pass plugged into every feed renderer (home, custom feeds,
-  profile tabs).
+- **Feed filters — propagate beyond the home tab.** Per-feed filter
+  sheet shipped on the home tab (toggles for hiding replies / reposts
+  / quote posts, only-following / only-mutuals, and min/max ranges
+  for likes / reposts / replies / bookmarks; persisted per feed URI
+  in MMKV via `useFeedFilters`). Still TODO: wire the same filter
+  pass into the profile post tabs and any other feed-list surfaces
+  so the toggles apply globally as users expect.
 - **Activity Subscriptions.** Per-user "ring the bell" toggle that
   pushes a notification on every new post from that account. Lexicon
   is `app.bsky.notification.declaration` + the per-user subscription

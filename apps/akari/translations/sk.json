@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Späť",
       "done": "Hotovo",
-      "following": "Sledujete"
+      "following": "Sledujete",
+      "reset": "Obnoviť"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všetky polia",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "V tomto krmive zatiaľ žiadne príspevky.",
       "selectFeedToView": "Vyberte informačný kanál na zobrazenie príspevkov",
       "loadingFeeds": "Načítava sa svoje informačné kanály ...",
-      "trending": "Trendy"
+      "trending": "Trendy",
+      "filters": "Filtre",
+      "filterSheetTitle": "Filtrovať príspevky",
+      "filterSectionHide": "Skryť",
+      "filterSectionAuthor": "Autor",
+      "filterSectionCounts": "Počty",
+      "hideReplies": "Skryť odpovede",
+      "hideReposts": "Skryť zdieľania",
+      "hideQuotes": "Skryť citované príspevky",
+      "onlyFollowing": "Iba ľudia, ktorých sledujem",
+      "onlyMutuals": "Iba vzájomní",
+      "countLikes": "Páči sa mi",
+      "countReposts": "Zdieľania",
+      "countReplies": "Odpovede",
+      "countBookmarks": "Záložky",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maximum {{metric}}"
     },
     "post": {
       "postNotFound": "Príspevok sa nenašiel",

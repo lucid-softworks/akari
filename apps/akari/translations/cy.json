@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Yn ôl",
       "done": "Iawn",
-      "following": "Dilyn"
+      "following": "Dilyn",
+      "reset": "Ailosod"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Dim postiadau yn y porthiant hwn eto.",
       "selectFeedToView": "Dewiswch borthiant i weld postiadau",
       "loadingFeeds": "Llwytho eich ffrydiau...",
-      "trending": "Trendiog"
+      "trending": "Trendiog",
+      "filters": "Hidlwyr",
+      "filterSheetTitle": "Hidlo postiadau",
+      "filterSectionHide": "Cuddio",
+      "filterSectionAuthor": "Awdur",
+      "filterSectionCounts": "Cyfrifau",
+      "hideReplies": "Cuddio atebion",
+      "hideReposts": "Cuddio rhannu",
+      "hideQuotes": "Cuddio postiadau dyfynnu",
+      "onlyFollowing": "Pobl rwyn eu dilyn yn unig",
+      "onlyMutuals": "Dilynwyr ar y cyd yn unig",
+      "countLikes": "Hoffwyd",
+      "countReposts": "Rhannu",
+      "countReplies": "Atebion",
+      "countBookmarks": "Nodau tudalen",
+      "filterMin": "Lleiaf",
+      "filterMax": "Mwyaf",
+      "filterMinLabel": "Lleiaf {{metric}}",
+      "filterMaxLabel": "Mwyaf {{metric}}"
     },
     "post": {
       "postNotFound": "Heb ddod o hyd i'r post",

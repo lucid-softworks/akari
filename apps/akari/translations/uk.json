@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Назад",
       "done": "Готово",
-      "following": "Підписані"
+      "following": "Підписані",
+      "reset": "Скинути"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Ще немає публікацій у цьому каналі.",
       "selectFeedToView": "Виберіть канал для перегляду публікацій",
       "loadingFeeds": "Завантаження своїх каналів ...",
-      "trending": "У тренді"
+      "trending": "У тренді",
+      "filters": "Фільтри",
+      "filterSheetTitle": "Фільтрувати дописи",
+      "filterSectionHide": "Сховати",
+      "filterSectionAuthor": "Автор",
+      "filterSectionCounts": "Кількість",
+      "hideReplies": "Сховати відповіді",
+      "hideReposts": "Сховати репости",
+      "hideQuotes": "Сховати цитати",
+      "onlyFollowing": "Лише ті, кого я читаю",
+      "onlyMutuals": "Лише взаємні",
+      "countLikes": "Уподобання",
+      "countReposts": "Репости",
+      "countReplies": "Відповіді",
+      "countBookmarks": "Закладки",
+      "filterMin": "Мін",
+      "filterMax": "Макс",
+      "filterMinLabel": "Мінімум {{metric}}",
+      "filterMaxLabel": "Максимум {{metric}}"
     },
     "post": {
       "postNotFound": "Повідомлення не знайдено",

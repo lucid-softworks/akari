@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "返回",
       "done": "完成",
-      "following": "已关注"
+      "following": "已关注",
+      "reset": "重置"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "此动态中尚无帖子。",
       "selectFeedToView": "选择动态以查看帖子",
       "loadingFeeds": "正在加载您的订阅源...",
-      "trending": "热门"
+      "trending": "热门",
+      "filters": "筛选",
+      "filterSheetTitle": "筛选帖子",
+      "filterSectionHide": "隐藏",
+      "filterSectionAuthor": "作者",
+      "filterSectionCounts": "计数",
+      "hideReplies": "隐藏回复",
+      "hideReposts": "隐藏转发",
+      "hideQuotes": "隐藏引用帖子",
+      "onlyFollowing": "仅我关注的人",
+      "onlyMutuals": "仅互关",
+      "countLikes": "喜欢",
+      "countReposts": "转发",
+      "countReplies": "回复",
+      "countBookmarks": "书签",
+      "filterMin": "最小",
+      "filterMax": "最大",
+      "filterMinLabel": "最小 {{metric}}",
+      "filterMaxLabel": "最大 {{metric}}"
     },
     "post": {
       "postNotFound": "未找到帖子",

@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Πίσω",
       "done": "Έγινε",
-      "following": "Ακολουθείτε"
+      "following": "Ακολουθείτε",
+      "reset": "Επαναφορά"
     },
     "auth": {
       "fillAllFields": "Συμπληρώστε όλα τα πεδία",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Δεν υπάρχουν θέσεις σε αυτήν την τροφοδοσία ακόμα.",
       "selectFeedToView": "Επιλέξτε μια ροή για προβολή δημοσιεύσεων",
       "loadingFeeds": "Φόρτωση των ζωοτροφών σας ...",
-      "trending": "Δημοφιλή"
+      "trending": "Δημοφιλή",
+      "filters": "Φίλτρα",
+      "filterSheetTitle": "Φιλτράρισμα δημοσιεύσεων",
+      "filterSectionHide": "Απόκρυψη",
+      "filterSectionAuthor": "Συντάκτης",
+      "filterSectionCounts": "Αριθμοί",
+      "hideReplies": "Απόκρυψη απαντήσεων",
+      "hideReposts": "Απόκρυψη αναδημοσιεύσεων",
+      "hideQuotes": "Απόκρυψη παραθέσεων",
+      "onlyFollowing": "Μόνο όσους ακολουθώ",
+      "onlyMutuals": "Μόνο αμοιβαίοι ακόλουθοι",
+      "countLikes": "Μου αρέσει",
+      "countReposts": "Αναδημοσιεύσεις",
+      "countReplies": "Απαντήσεις",
+      "countBookmarks": "Σελιδοδείκτες",
+      "filterMin": "Ελάχ.",
+      "filterMax": "Μέγ.",
+      "filterMinLabel": "Ελάχιστο {{metric}}",
+      "filterMaxLabel": "Μέγιστο {{metric}}"
     },
     "post": {
       "postNotFound": "Η ανάρτηση δεν βρέθηκε",

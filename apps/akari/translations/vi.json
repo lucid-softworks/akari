@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Quay lại",
       "done": "Xong",
-      "following": "Đang theo dõi"
+      "following": "Đang theo dõi",
+      "reset": "Đặt lại"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Chưa có bài đăng nào trong nguồn cấp này.",
       "selectFeedToView": "Chọn nguồn cấp để xem bài đăng",
       "loadingFeeds": "Đang tải nguồn cấp dữ liệu của bạn...",
-      "trending": "Xu hướng"
+      "trending": "Xu hướng",
+      "filters": "Bộ lọc",
+      "filterSheetTitle": "Lọc bài viết",
+      "filterSectionHide": "Ẩn",
+      "filterSectionAuthor": "Tác giả",
+      "filterSectionCounts": "Số lượng",
+      "hideReplies": "Ẩn phản hồi",
+      "hideReposts": "Ẩn repost",
+      "hideQuotes": "Ẩn bài trích dẫn",
+      "onlyFollowing": "Chỉ người tôi theo dõi",
+      "onlyMutuals": "Chỉ theo dõi qua lại",
+      "countLikes": "Lượt thích",
+      "countReposts": "Lượt repost",
+      "countReplies": "Phản hồi",
+      "countBookmarks": "Đánh dấu",
+      "filterMin": "Tối thiểu",
+      "filterMax": "Tối đa",
+      "filterMinLabel": "Tối thiểu {{metric}}",
+      "filterMaxLabel": "Tối đa {{metric}}"
     },
     "post": {
       "postNotFound": "Không tìm thấy bài viết",

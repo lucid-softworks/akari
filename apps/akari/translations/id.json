@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Kembali",
       "done": "Selesai",
-      "following": "Mengikuti"
+      "following": "Mengikuti",
+      "reset": "Atur ulang"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Belum ada postingan di feed ini.",
       "selectFeedToView": "Pilih feed untuk melihat postingan",
       "loadingFeeds": "Memuat feed Anda...",
-      "trending": "Tren"
+      "trending": "Tren",
+      "filters": "Filter",
+      "filterSheetTitle": "Filter postingan",
+      "filterSectionHide": "Sembunyikan",
+      "filterSectionAuthor": "Penulis",
+      "filterSectionCounts": "Jumlah",
+      "hideReplies": "Sembunyikan balasan",
+      "hideReposts": "Sembunyikan repost",
+      "hideQuotes": "Sembunyikan kutipan",
+      "onlyFollowing": "Hanya orang yang saya ikuti",
+      "onlyMutuals": "Hanya yang saling mengikuti",
+      "countLikes": "Suka",
+      "countReposts": "Repost",
+      "countReplies": "Balasan",
+      "countBookmarks": "Markah",
+      "filterMin": "Min",
+      "filterMax": "Maks",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maksimum {{metric}}"
     },
     "post": {
       "postNotFound": "Postingan tidak ditemukan",

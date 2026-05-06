@@ -73,8 +73,12 @@ jest.mock('@/components/skeletons', () => {
 
 jest.mock('@/components/ui/IconSymbol', () => {
   const { Text } = require('react-native');
-  return { IconSymbol: () => <Text>icon</Text> };
+  return { IconSymbol: ({ name }: { name: string }) => <Text>icon-{name}</Text> };
 });
+
+jest.mock('@/components/FeedFiltersSheet', () => ({
+  FeedFiltersSheet: () => null,
+}));
 
 jest.mock('@/hooks/mutations/useSetSelectedFeed');
 jest.mock('@/hooks/queries/useFeeds');
@@ -379,7 +383,7 @@ describe('HomeScreen', () => {
 
     expect(queryByText('composer')).toBeNull();
     // FAB opens a menu first, then select "Post"
-    fireEvent.press(getByText('icon'));
+    fireEvent.press(getByText('icon-plus'));
     fireEvent.press(getByText('Post'));
     expect(getByText('composer')).toBeTruthy();
   });

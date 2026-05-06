@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Terug",
       "done": "Klaar",
-      "following": "Volgend"
+      "following": "Volgend",
+      "reset": "Resetten"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Nog geen berichten in deze feed.",
       "selectFeedToView": "Selecteer een feed om berichten te bekijken",
       "loadingFeeds": "Je feeds laden...",
-      "trending": "Trending"
+      "trending": "Trending",
+      "filters": "Filters",
+      "filterSheetTitle": "Berichten filteren",
+      "filterSectionHide": "Verbergen",
+      "filterSectionAuthor": "Auteur",
+      "filterSectionCounts": "Aantallen",
+      "hideReplies": "Reacties verbergen",
+      "hideReposts": "Reposts verbergen",
+      "hideQuotes": "Citaatberichten verbergen",
+      "onlyFollowing": "Alleen mensen die ik volg",
+      "onlyMutuals": "Alleen wederzijdse volgers",
+      "countLikes": "Vind-ik-leuks",
+      "countReposts": "Reposts",
+      "countReplies": "Reacties",
+      "countBookmarks": "Bladwijzers",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maximum {{metric}}"
     },
     "post": {
       "postNotFound": "Bericht niet gevonden",

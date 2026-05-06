@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "بازگشت",
       "done": "انجام شد",
-      "following": "دنبال می‌شود"
+      "following": "دنبال می‌شود",
+      "reset": "بازنشانی"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "هنوز هیچ پستی در این فید وجود ندارد.",
       "selectFeedToView": "برای مشاهده پست ها یک فید را انتخاب کنید",
       "loadingFeeds": "در حال بارگیری فیدهای خود ...",
-      "trending": "پرطرفدار"
+      "trending": "پرطرفدار",
+      "filters": "فیلترها",
+      "filterSheetTitle": "فیلتر کردن پست‌ها",
+      "filterSectionHide": "پنهان کردن",
+      "filterSectionAuthor": "نویسنده",
+      "filterSectionCounts": "تعدادها",
+      "hideReplies": "پنهان کردن پاسخ‌ها",
+      "hideReposts": "پنهان کردن بازنشرها",
+      "hideQuotes": "پنهان کردن پست‌های نقل قول",
+      "onlyFollowing": "فقط افرادی که دنبال می‌کنم",
+      "onlyMutuals": "فقط دنبال‌کنندگان متقابل",
+      "countLikes": "پسندها",
+      "countReposts": "بازنشرها",
+      "countReplies": "پاسخ‌ها",
+      "countBookmarks": "نشان‌ها",
+      "filterMin": "حداقل",
+      "filterMax": "حداکثر",
+      "filterMinLabel": "حداقل {{metric}}",
+      "filterMaxLabel": "حداکثر {{metric}}"
     },
     "post": {
       "postNotFound": "پست یافت نشد",

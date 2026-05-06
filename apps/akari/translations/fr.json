@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Retour",
       "done": "Terminé",
-      "following": "Abonné"
+      "following": "Abonné",
+      "reset": "Réinitialiser"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Aucune publication dans ce flux pour le moment.",
       "selectFeedToView": "Sélectionnez un flux pour voir les publications",
       "loadingFeeds": "Chargement de vos flux...",
-      "trending": "Tendances"
+      "trending": "Tendances",
+      "filters": "Filtres",
+      "filterSheetTitle": "Filtrer les publications",
+      "filterSectionHide": "Masquer",
+      "filterSectionAuthor": "Auteur",
+      "filterSectionCounts": "Compteurs",
+      "hideReplies": "Masquer les réponses",
+      "hideReposts": "Masquer les reposts",
+      "hideQuotes": "Masquer les citations",
+      "onlyFollowing": "Uniquement les personnes que je suis",
+      "onlyMutuals": "Uniquement les abonnements mutuels",
+      "countLikes": "Jaime",
+      "countReposts": "Reposts",
+      "countReplies": "Réponses",
+      "countBookmarks": "Marque-pages",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maximum {{metric}}"
     },
     "post": {
       "postNotFound": "Publication introuvable",

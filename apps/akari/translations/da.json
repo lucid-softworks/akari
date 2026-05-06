@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Tilbage",
       "done": "Færdig",
-      "following": "Følger"
+      "following": "Følger",
+      "reset": "Nulstil"
     },
     "auth": {
       "fillAllFields": "Udfyld venligst alle felter",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Ingen posts i dette feed endnu.",
       "selectFeedToView": "Vælg et feed for at se posts",
       "loadingFeeds": "Indlæser dine feeds ...",
-      "trending": "Trender"
+      "trending": "Trender",
+      "filters": "Filtre",
+      "filterSheetTitle": "Filtrér opslag",
+      "filterSectionHide": "Skjul",
+      "filterSectionAuthor": "Forfatter",
+      "filterSectionCounts": "Antal",
+      "hideReplies": "Skjul svar",
+      "hideReposts": "Skjul reposts",
+      "hideQuotes": "Skjul citerede opslag",
+      "onlyFollowing": "Kun personer jeg følger",
+      "onlyMutuals": "Kun gensidige følgere",
+      "countLikes": "Likes",
+      "countReposts": "Reposts",
+      "countReplies": "Svar",
+      "countBookmarks": "Bogmærker",
+      "filterMin": "Min",
+      "filterMax": "Maks",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maksimum {{metric}}"
     },
     "post": {
       "postNotFound": "Post ikke fundet",

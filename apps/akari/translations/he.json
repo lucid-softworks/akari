@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "חזור",
       "done": "סיום",
-      "following": "עוקב"
+      "following": "עוקב",
+      "reset": "איפוס"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "עדיין אין פוסטים בעדכון זה.",
       "selectFeedToView": "בחר העדכון כדי להציג פוסטים",
       "loadingFeeds": "טוען את העדכונים שלך ...",
-      "trending": "מובילים"
+      "trending": "מובילים",
+      "filters": "מסננים",
+      "filterSheetTitle": "סינון פוסטים",
+      "filterSectionHide": "הסתר",
+      "filterSectionAuthor": "מחבר",
+      "filterSectionCounts": "כמויות",
+      "hideReplies": "הסתר תגובות",
+      "hideReposts": "הסתר שיתופים",
+      "hideQuotes": "הסתר ציטוטים",
+      "onlyFollowing": "רק אנשים שאני עוקב אחריהם",
+      "onlyMutuals": "רק עוקבים הדדיים",
+      "countLikes": "לייקים",
+      "countReposts": "שיתופים",
+      "countReplies": "תגובות",
+      "countBookmarks": "סימניות",
+      "filterMin": "מינ.",
+      "filterMax": "מקס.",
+      "filterMinLabel": "מינימום {{metric}}",
+      "filterMaxLabel": "מקסימום {{metric}}"
     },
     "post": {
       "postNotFound": "פוסט לא נמצא",

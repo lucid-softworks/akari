@@ -1,0 +1,94 @@
+import type { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
+import type { FeedFilters } from '@/hooks/useFeedFilters';
+
+/**
+ * The reply / quote checks for a single post — shared by `shouldHideFeedItem`
+ * and `shouldHidePost` so the rules don't drift between feed-list surfaces
+ * (home, profile posts) and post-list surfaces (search results).
+ */
+function postIsReply(post: BlueskyPostView): boolean {
+  return Boolean((post.record as { reply?: unknown } | undefined)?.reply);
+}
+
+function postIsQuote(post: BlueskyPostView): boolean {
+  const embedType = (post.embed as { $type?: string } | undefined)?.$type;
+  return (
+    embedType === 'app.bsky.embed.record#view' ||
+    embedType === 'app.bsky.embed.recordWithMedia#view'
+  );
+}
+
+function getBookmarkCount(post: BlueskyPostView): number | undefined {
+  const value = (post as { bookmarkCount?: unknown }).bookmarkCount;
+  return typeof value === 'number' ? value : undefined;
+}
+
+function outOfRange(count: number | undefined, min: number | undefined, max: number | undefined): boolean {
+  if (count === undefined) return false; // missing data — don't filter
+  if (min !== undefined && count < min) return true;
+  if (max !== undefined && count > max) return true;
+  return false;
+}
+
+function authorFails(post: BlueskyPostView, filters: FeedFilters): boolean {
+  if (!filters.onlyFollowing && !filters.onlyMutuals) return false;
+  const viewer = post.author?.viewer;
+  const following = !!viewer?.following;
+  const followedBy = !!viewer?.followedBy;
+  if (filters.onlyMutuals) return !(following && followedBy);
+  if (filters.onlyFollowing) return !following;
+  return false;
+}
+
+function postFailsCounts(post: BlueskyPostView, filters: FeedFilters): boolean {
+  if (outOfRange(post.likeCount, filters.minLikes, filters.maxLikes)) return true;
+  if (outOfRange(post.repostCount, filters.minReposts, filters.maxReposts)) return true;
+  if (outOfRange(post.replyCount, filters.minReplies, filters.maxReplies)) return true;
+  if (outOfRange(getBookmarkCount(post), filters.minBookmarks, filters.maxBookmarks)) return true;
+  return false;
+}
+
+/**
+ * Apply the user's persistent feed-filter toggles to a feed entry.
+ * Returns true when the entry should be hidden from the rendered list.
+ *
+ * `applyHideReplies` is opt-in per call site — surfaces that exist to show
+ * replies (a profile's "Replies" tab, a thread view) should pass `false` so
+ * the toggle doesn't empty them out.
+ */
+export function shouldHideFeedItem(
+  item: BlueskyFeedItem,
+  filters: FeedFilters,
+  options: { applyHideReplies?: boolean } = {},
+): boolean {
+  const { applyHideReplies = true } = options;
+
+  if (filters.hideReposts && item.reason) return true;
+  if (applyHideReplies && filters.hideReplies && postIsReply(item.post)) return true;
+  if (filters.hideQuotes && postIsQuote(item.post)) return true;
+  if (authorFails(item.post, filters)) return true;
+  if (postFailsCounts(item.post, filters)) return true;
+
+  return false;
+}
+
+/**
+ * Apply the user's filter toggles to a bare post (search results, bookmarks —
+ * surfaces without the feed-item wrapper). Reposts can't be detected at the
+ * post level (no `reason` from a feed generator), so `hideReposts` is a no-op
+ * here by design.
+ */
+export function shouldHidePost(
+  post: BlueskyPostView,
+  filters: FeedFilters,
+  options: { applyHideReplies?: boolean } = {},
+): boolean {
+  const { applyHideReplies = true } = options;
+
+  if (applyHideReplies && filters.hideReplies && postIsReply(post)) return true;
+  if (filters.hideQuotes && postIsQuote(post)) return true;
+  if (authorFails(post, filters)) return true;
+  if (postFailsCounts(post, filters)) return true;
+
+  return false;
+}

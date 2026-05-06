@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "返回",
       "done": "完成",
-      "following": "追蹤中"
+      "following": "追蹤中",
+      "reset": "重設"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "此動態中尚無貼文。",
       "selectFeedToView": "選擇動態以查看貼文",
       "loadingFeeds": "正在載入您的訂閱源...",
-      "trending": "熱門"
+      "trending": "熱門",
+      "filters": "篩選",
+      "filterSheetTitle": "篩選貼文",
+      "filterSectionHide": "隱藏",
+      "filterSectionAuthor": "作者",
+      "filterSectionCounts": "計數",
+      "hideReplies": "隱藏回覆",
+      "hideReposts": "隱藏轉發",
+      "hideQuotes": "隱藏引用貼文",
+      "onlyFollowing": "只看我追蹤的人",
+      "onlyMutuals": "只看互相追蹤",
+      "countLikes": "喜歡",
+      "countReposts": "轉發",
+      "countReplies": "回覆",
+      "countBookmarks": "書籤",
+      "filterMin": "最小",
+      "filterMax": "最大",
+      "filterMinLabel": "最小 {{metric}}",
+      "filterMaxLabel": "最大 {{metric}}"
     },
     "post": {
       "postNotFound": "找不到貼文",

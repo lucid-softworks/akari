@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Tillbaka",
       "done": "Klar",
-      "following": "Följer"
+      "following": "Följer",
+      "reset": "Återställ"
     },
     "auth": {
       "fillAllFields": "Fyll i alla fält",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Inga inlägg i detta flöde ännu.",
       "selectFeedToView": "Välj ett flöde för att se inlägg",
       "loadingFeeds": "Laddar dina flöden ...",
-      "trending": "Trender"
+      "trending": "Trender",
+      "filters": "Filter",
+      "filterSheetTitle": "Filtrera inlägg",
+      "filterSectionHide": "Dölj",
+      "filterSectionAuthor": "Författare",
+      "filterSectionCounts": "Antal",
+      "hideReplies": "Dölj svar",
+      "hideReposts": "Dölj reposts",
+      "hideQuotes": "Dölj citatinlägg",
+      "onlyFollowing": "Endast personer jag följer",
+      "onlyMutuals": "Endast ömsesidiga",
+      "countLikes": "Gillningar",
+      "countReposts": "Reposts",
+      "countReplies": "Svar",
+      "countBookmarks": "Bokmärken",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minst {{metric}}",
+      "filterMaxLabel": "Högst {{metric}}"
     },
     "post": {
       "postNotFound": "Post hittades inte",

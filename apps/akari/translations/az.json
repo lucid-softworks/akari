@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Geri",
       "done": "Hazır",
-      "following": "İzlənir"
+      "following": "İzlənir",
+      "reset": "Sıfırla"
     },
     "auth": {
       "fillAllFields": "Xahiş edirəm bütün sahələri doldurun",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Hələ bu yemdə heç bir yazı yoxdur.",
       "selectFeedToView": "Yazılara baxmaq üçün bir yem seçin",
       "loadingFeeds": "Yemlərinizi yükləyir ...",
-      "trending": "Trend"
+      "trending": "Trend",
+      "filters": "Filtrlər",
+      "filterSheetTitle": "Paylaşımları süz",
+      "filterSectionHide": "Gizlət",
+      "filterSectionAuthor": "Müəllif",
+      "filterSectionCounts": "Saylar",
+      "hideReplies": "Cavabları gizlət",
+      "hideReposts": "Yenidən paylaşımları gizlət",
+      "hideQuotes": "Sitatları gizlət",
+      "onlyFollowing": "Yalnız izlədiyim insanlar",
+      "onlyMutuals": "Yalnız qarşılıqlı izləyicilər",
+      "countLikes": "Bəyənmələr",
+      "countReposts": "Yenidən paylaşımlar",
+      "countReplies": "Cavablar",
+      "countBookmarks": "Əlfəcinlər",
+      "filterMin": "Min",
+      "filterMax": "Maks",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maksimum {{metric}}"
     },
     "post": {
       "postNotFound": "Post tapılmadı",

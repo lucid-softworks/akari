@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Înapoi",
       "done": "Gata",
-      "following": "Urmăriți"
+      "following": "Urmăriți",
+      "reset": "Resetare"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Încă nu există postări în acest feed.",
       "selectFeedToView": "Selectați un feed pentru a vizualiza postările",
       "loadingFeeds": "Încărcarea fluxurilor ...",
-      "trending": "În tendințe"
+      "trending": "În tendințe",
+      "filters": "Filtre",
+      "filterSheetTitle": "Filtrează postările",
+      "filterSectionHide": "Ascunde",
+      "filterSectionAuthor": "Autor",
+      "filterSectionCounts": "Numere",
+      "hideReplies": "Ascunde răspunsurile",
+      "hideReposts": "Ascunde repostările",
+      "hideQuotes": "Ascunde citările",
+      "onlyFollowing": "Doar persoane pe care le urmăresc",
+      "onlyMutuals": "Doar urmărire reciprocă",
+      "countLikes": "Aprecieri",
+      "countReposts": "Repostări",
+      "countReplies": "Răspunsuri",
+      "countBookmarks": "Marcaje",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minim {{metric}}",
+      "filterMaxLabel": "Maxim {{metric}}"
     },
     "post": {
       "postNotFound": "Post nu a fost găsit",

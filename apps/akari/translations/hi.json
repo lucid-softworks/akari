@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "वापस",
       "done": "हो गया",
-      "following": "फ़ॉलो किया हुआ"
+      "following": "फ़ॉलो किया हुआ",
+      "reset": "रीसेट"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "इस फीड में अभी तक कोई पोस्ट नहीं है।",
       "selectFeedToView": "पोस्ट देखने के लिए फीड चुनें",
       "loadingFeeds": "आपके फीड लोड हो रहे हैं...",
-      "trending": "ट्रेंडिंग"
+      "trending": "ट्रेंडिंग",
+      "filters": "फ़िल्टर",
+      "filterSheetTitle": "पोस्ट फ़िल्टर करें",
+      "filterSectionHide": "छिपाएँ",
+      "filterSectionAuthor": "लेखक",
+      "filterSectionCounts": "गिनती",
+      "hideReplies": "उत्तर छिपाएँ",
+      "hideReposts": "रीपोस्ट छिपाएँ",
+      "hideQuotes": "उद्धरण पोस्ट छिपाएँ",
+      "onlyFollowing": "केवल वे लोग जिन्हें मैं फ़ॉलो करता हूँ",
+      "onlyMutuals": "केवल पारस्परिक",
+      "countLikes": "लाइक",
+      "countReposts": "रीपोस्ट",
+      "countReplies": "उत्तर",
+      "countBookmarks": "बुकमार्क",
+      "filterMin": "न्यूनतम",
+      "filterMax": "अधिकतम",
+      "filterMinLabel": "न्यूनतम {{metric}}",
+      "filterMaxLabel": "अधिकतम {{metric}}"
     },
     "post": {
       "postNotFound": "पोस्ट नहीं मिली",

@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "رجوع",
       "done": "تم",
-      "following": "متابع"
+      "following": "متابع",
+      "reset": "إعادة تعيين"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "لا توجد منشورات في هذا التغذية بعد.",
       "selectFeedToView": "اختر تغذية لعرض المنشورات",
       "loadingFeeds": "جاري تحميل مصادرك...",
-      "trending": "الأكثر رواجًا"
+      "trending": "الأكثر رواجًا",
+      "filters": "الفلاتر",
+      "filterSheetTitle": "تصفية المنشورات",
+      "filterSectionHide": "إخفاء",
+      "filterSectionAuthor": "المؤلف",
+      "filterSectionCounts": "الأعداد",
+      "hideReplies": "إخفاء الردود",
+      "hideReposts": "إخفاء إعادات النشر",
+      "hideQuotes": "إخفاء الاقتباسات",
+      "onlyFollowing": "فقط الأشخاص الذين أتابعهم",
+      "onlyMutuals": "المتابعون المتبادلون فقط",
+      "countLikes": "الإعجابات",
+      "countReposts": "إعادات النشر",
+      "countReplies": "الردود",
+      "countBookmarks": "الإشارات المرجعية",
+      "filterMin": "الأدنى",
+      "filterMax": "الأقصى",
+      "filterMinLabel": "الحد الأدنى لـ {{metric}}",
+      "filterMaxLabel": "الحد الأقصى لـ {{metric}}"
     },
     "post": {
       "postNotFound": "لم يتم العثور على المنشور",

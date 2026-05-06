@@ -139,6 +139,7 @@ const MAPPING = {
   flame: 'local-fire-department',
   'fork.knife': 'restaurant',
   gearshape: 'settings',
+  'line.3.horizontal.decrease.circle': 'tune',
   link: 'link',
   'list.bullet': 'format-list-bulleted',
   'minus.circle': 'remove-circle-outline',

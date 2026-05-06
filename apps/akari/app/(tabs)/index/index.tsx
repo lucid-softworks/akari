@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
+import { FeedFiltersSheet } from '@/components/FeedFiltersSheet';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
 import { ReviewComposer } from '@/components/ReviewComposer';
@@ -23,7 +24,10 @@ import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
+import { useFeedFilters } from '@/hooks/useFeedFilters';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { shouldHideFeedItem } from '@/utils/feedFilters';
 import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -38,6 +42,8 @@ export default function HomeScreen() {
   const [showPostComposer, setShowPostComposer] = useState(false);
   const [showReviewComposer, setShowReviewComposer] = useState(false);
   const [showFabMenu, setShowFabMenu] = useState(false);
+  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  const filterIconColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
@@ -119,6 +125,8 @@ export default function HomeScreen() {
   const { data: selectedFeed } = useSelectedFeed();
   const setSelectedFeedMutation = useSetSelectedFeed();
 
+  const { filters, anyFilterActive } = useFeedFilters(selectedFeed ?? null);
+
   // Handle feed selection with scroll to top
   const handleFeedSelection = useCallback(
     (feedUri: string) => {
@@ -164,16 +172,19 @@ export default function HomeScreen() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Get posts based on selected feed type, filtering out anything that
-  // matches a muted-word rule.
+  // matches a muted-word rule or a global feed-filter toggle.
   const { data: mutedWords } = useMutedWords();
   const allPosts = useMemo(() => {
     const raw =
       selectedFeed === 'following'
         ? (timelineData?.feed ?? [])
         : (feedData?.pages.flatMap((page) => page.feed) ?? []);
-    if (!mutedWords.length) return raw;
-    return raw.filter((entry) => !isPostMuted(entry.post, mutedWords));
-  }, [feedData, mutedWords, selectedFeed, timelineData]);
+    return raw.filter((entry) => {
+      if (mutedWords.length && isPostMuted(entry.post, mutedWords)) return false;
+      if (shouldHideFeedItem(entry, filters)) return false;
+      return true;
+    });
+  }, [feedData, filters, mutedWords, selectedFeed, timelineData]);
 
   const feedItems = useMemo<FeedListItem[]>(() => {
     if (!selectedFeed) {
@@ -208,12 +219,39 @@ export default function HomeScreen() {
         ]}
       >
         <ThemedView style={styles.listHeaderContent}>
-          <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
+          <ThemedView style={styles.feedRow}>
+            <ThemedView style={styles.tabBarSlot}>
+              <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
+            </ThemedView>
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => setShowFiltersSheet(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t('feed.filters')}
+              activeOpacity={activeOpacity.default}
+              disabled={!selectedFeed}
+            >
+              <IconSymbol
+                name="line.3.horizontal.decrease.circle"
+                size={fontSize.xxl}
+                color={anyFilterActive ? semanticColors.systemBlue : filterIconColor}
+              />
+            </TouchableOpacity>
+          </ThemedView>
           <TrendingBar />
         </ThemedView>
       </ThemedView>
     ),
-    [feedTabs, handleFeedSelection, insets.top, isLargeScreen, selectedFeed],
+    [
+      anyFilterActive,
+      feedTabs,
+      filterIconColor,
+      handleFeedSelection,
+      insets.top,
+      isLargeScreen,
+      selectedFeed,
+      t,
+    ],
   );
   const renderFeedItem = useCallback(
     ({ item }: { item: FeedListItem }) => {
@@ -376,6 +414,11 @@ export default function HomeScreen() {
 
       <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />
       <ReviewComposer visible={showReviewComposer} onClose={() => setShowReviewComposer(false)} />
+      <FeedFiltersSheet
+        visible={showFiltersSheet}
+        onClose={() => setShowFiltersSheet(false)}
+        feedKey={selectedFeed ?? null}
+      />
     </ThemedView>
   );
 }
@@ -391,6 +434,20 @@ const styles = StyleSheet.create({
   listHeaderContent: {
     width: '100%',
     alignSelf: 'stretch',
+  },
+  feedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tabBarSlot: {
+    flex: 1,
+    minWidth: 0,
+  },
+  filterButton: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     alignItems: 'center',

@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Takaisin",
       "done": "Valmis",
-      "following": "Seurataan"
+      "following": "Seurataan",
+      "reset": "Nollaa"
     },
     "auth": {
       "fillAllFields": "Täytä kaikki kentät",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Ei vielä viestejä tässä syötteessä.",
       "selectFeedToView": "Valitse syöttö nähdäksesi viestejä",
       "loadingFeeds": "Syötteiden lataaminen ...",
-      "trending": "Suosittua"
+      "trending": "Suosittua",
+      "filters": "Suodattimet",
+      "filterSheetTitle": "Suodata julkaisut",
+      "filterSectionHide": "Piilota",
+      "filterSectionAuthor": "Tekijä",
+      "filterSectionCounts": "Lukumäärät",
+      "hideReplies": "Piilota vastaukset",
+      "hideReposts": "Piilota uudelleenjulkaisut",
+      "hideQuotes": "Piilota lainausjulkaisut",
+      "onlyFollowing": "Vain seuraamani henkilöt",
+      "onlyMutuals": "Vain molemminpuoliset",
+      "countLikes": "Tykkäykset",
+      "countReposts": "Uudelleenjulkaisut",
+      "countReplies": "Vastaukset",
+      "countBookmarks": "Kirjanmerkit",
+      "filterMin": "Min",
+      "filterMax": "Maks",
+      "filterMinLabel": "Vähintään {{metric}}",
+      "filterMaxLabel": "Enintään {{metric}}"
     },
     "post": {
       "postNotFound": "Viesti ei löydy",

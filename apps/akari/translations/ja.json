@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "戻る",
       "done": "完了",
-      "following": "フォロー中"
+      "following": "フォロー中",
+      "reset": "リセット"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "このフィードにはまだ投稿がありません。",
       "selectFeedToView": "投稿を表示するにはフィードを選択してください",
       "loadingFeeds": "フィードを読み込み中...",
-      "trending": "トレンド"
+      "trending": "トレンド",
+      "filters": "フィルター",
+      "filterSheetTitle": "投稿をフィルター",
+      "filterSectionHide": "非表示",
+      "filterSectionAuthor": "投稿者",
+      "filterSectionCounts": "カウント",
+      "hideReplies": "返信を非表示",
+      "hideReposts": "リポストを非表示",
+      "hideQuotes": "引用投稿を非表示",
+      "onlyFollowing": "フォロー中の人のみ",
+      "onlyMutuals": "相互フォローのみ",
+      "countLikes": "いいね",
+      "countReposts": "リポスト",
+      "countReplies": "返信",
+      "countBookmarks": "ブックマーク",
+      "filterMin": "最小",
+      "filterMax": "最大",
+      "filterMinLabel": "最小 {{metric}}",
+      "filterMaxLabel": "最大 {{metric}}"
     },
     "post": {
       "postNotFound": "投稿が見つかりません",

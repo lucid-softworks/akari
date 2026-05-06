@@ -65,7 +65,8 @@
       "devServerDisconnected": "Dev server disconnected. Restart Metro to reconnect.",
       "back": "Vissza",
       "done": "Kész",
-      "following": "Követed"
+      "following": "Követed",
+      "reset": "Visszaállítás"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",
@@ -217,7 +218,25 @@
       "noPostsInFeed": "Ebben a hírcsatornában még nincs hozzászólás.",
       "selectFeedToView": "Válasszon egy hírcsatornát a hozzászólások megtekintéséhez",
       "loadingFeeds": "A hírcsatornák betöltése ...",
-      "trending": "Felkapott"
+      "trending": "Felkapott",
+      "filters": "Szűrők",
+      "filterSheetTitle": "Bejegyzések szűrése",
+      "filterSectionHide": "Elrejtés",
+      "filterSectionAuthor": "Szerző",
+      "filterSectionCounts": "Számok",
+      "hideReplies": "Válaszok elrejtése",
+      "hideReposts": "Megosztások elrejtése",
+      "hideQuotes": "Idézett bejegyzések elrejtése",
+      "onlyFollowing": "Csak akiket követek",
+      "onlyMutuals": "Csak kölcsönös követések",
+      "countLikes": "Kedvelések",
+      "countReposts": "Megosztások",
+      "countReplies": "Válaszok",
+      "countBookmarks": "Könyvjelzők",
+      "filterMin": "Min",
+      "filterMax": "Max",
+      "filterMinLabel": "Minimum {{metric}}",
+      "filterMaxLabel": "Maximum {{metric}}"
     },
     "post": {
       "postNotFound": "A hozzászólás nem található",
