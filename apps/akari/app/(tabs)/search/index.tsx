@@ -482,7 +482,7 @@ export default function SearchScreen() {
   };
 
   const shouldShowTabs = trimmedSearchQuery.length > 0;
-  const shouldShowSort = trimmedSearchQuery.length > 0 && (activeTab === 'posts' || activeTab === 'all');
+  const shouldShowSort = trimmedSearchQuery.length > 0 && activeTab === 'posts';
 
   const listHeaderComponent = useMemo(
     () => (
