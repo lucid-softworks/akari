@@ -134,6 +134,8 @@ const MAPPING = {
   checkmark: 'check',
   'chevron.up': 'expand-less',
   circle: 'radio-button-unchecked',
+  'doc.text': 'description',
+  'arrow.up.right.square': 'open-in-new',
   'exclamationmark.triangle': 'warning-amber',
   'face.smiling': 'mood',
   flame: 'local-fire-department',

@@ -604,6 +604,13 @@
       "create": "创建",
       "namePlaceholder": "列表名称",
       "descriptionPlaceholder": "描述（可选）"
+    },
+    "unthread": {
+      "readMore": "阅读更多",
+      "collapse": "收起",
+      "loadError": "无法加载该主题。",
+      "noBody": "该主题没有正文。",
+      "openExternal": "在 unthread.at 打开"
     }
   }
 }

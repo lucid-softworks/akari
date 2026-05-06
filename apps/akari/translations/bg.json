@@ -604,6 +604,13 @@
       "create": "Създай",
       "namePlaceholder": "Име на списъка",
       "descriptionPlaceholder": "Описание (по избор)"
+    },
+    "unthread": {
+      "readMore": "Прочети още",
+      "collapse": "Свий",
+      "loadError": "Не може да се зареди тази тема.",
+      "noBody": "Тази тема няма съдържание.",
+      "openExternal": "Отвори в unthread.at"
     }
   }
 }

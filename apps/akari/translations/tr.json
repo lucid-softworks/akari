@@ -604,6 +604,13 @@
       "create": "Oluştur",
       "namePlaceholder": "Liste adı",
       "descriptionPlaceholder": "Açıklama (isteğe bağlı)"
+    },
+    "unthread": {
+      "readMore": "Devamını oku",
+      "collapse": "Daralt",
+      "loadError": "Bu konu yüklenemedi.",
+      "noBody": "Bu konuda metin yok.",
+      "openExternal": "unthread.atta aç"
     }
   }
 }

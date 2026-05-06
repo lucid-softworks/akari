@@ -604,6 +604,13 @@
       "create": "Créer",
       "namePlaceholder": "Nom de la liste",
       "descriptionPlaceholder": "Description (facultatif)"
+    },
+    "unthread": {
+      "readMore": "Lire la suite",
+      "collapse": "Réduire",
+      "loadError": "Impossible de charger ce fil.",
+      "noBody": "Ce fil na pas de contenu.",
+      "openExternal": "Ouvrir sur unthread.at"
     }
   }
 }

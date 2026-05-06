@@ -604,6 +604,13 @@
       "create": "Vytvoriť",
       "namePlaceholder": "Názov zoznamu",
       "descriptionPlaceholder": "Popis (voliteľný)"
+    },
+    "unthread": {
+      "readMore": "Čítať viac",
+      "collapse": "Zbaliť",
+      "loadError": "Toto vlákno sa nepodarilo načítať.",
+      "noBody": "Toto vlákno nemá text.",
+      "openExternal": "Otvoriť na unthread.at"
     }
   }
 }

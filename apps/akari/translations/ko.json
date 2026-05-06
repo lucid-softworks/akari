@@ -604,6 +604,13 @@
       "create": "만들기",
       "namePlaceholder": "목록 이름",
       "descriptionPlaceholder": "설명 (선택사항)"
+    },
+    "unthread": {
+      "readMore": "더 읽기",
+      "collapse": "접기",
+      "loadError": "이 스레드를 불러오지 못했습니다.",
+      "noBody": "이 스레드에는 본문이 없습니다.",
+      "openExternal": "unthread.at에서 열기"
     }
   }
 }

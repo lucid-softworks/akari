@@ -604,6 +604,13 @@
       "create": "Buat",
       "namePlaceholder": "Nama daftar",
       "descriptionPlaceholder": "Deskripsi (opsional)"
+    },
+    "unthread": {
+      "readMore": "Baca selengkapnya",
+      "collapse": "Ciutkan",
+      "loadError": "Tidak dapat memuat utas ini.",
+      "noBody": "Utas ini tidak memiliki isi teks.",
+      "openExternal": "Buka di unthread.at"
     }
   }
 }

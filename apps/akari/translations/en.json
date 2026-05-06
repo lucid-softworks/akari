@@ -255,6 +255,13 @@
       "filterMinLabel": "Minimum {{metric}}",
       "filterMaxLabel": "Maximum {{metric}}"
     },
+    "unthread": {
+      "readMore": "Read more",
+      "collapse": "Collapse",
+      "loadError": "Couldn't load this thread.",
+      "noBody": "This thread has no body text.",
+      "openExternal": "Open on unthread.at"
+    },
     "post": {
       "postNotFound": "Post not found",
       "newPost": "New Post",

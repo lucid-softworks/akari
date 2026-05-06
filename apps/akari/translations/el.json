@@ -604,6 +604,13 @@
       "create": "Δημιουργία",
       "namePlaceholder": "Όνομα λίστας",
       "descriptionPlaceholder": "Περιγραφή (προαιρετικό)"
+    },
+    "unthread": {
+      "readMore": "Διαβάστε περισσότερα",
+      "collapse": "Σύμπτυξη",
+      "loadError": "Δεν ήταν δυνατή η φόρτωση αυτού του νήματος.",
+      "noBody": "Αυτό το νήμα δεν έχει κείμενο.",
+      "openExternal": "Άνοιγμα στο unthread.at"
     }
   }
 }

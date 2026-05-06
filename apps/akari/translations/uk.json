@@ -604,6 +604,13 @@
       "create": "Створити",
       "namePlaceholder": "Назва списку",
       "descriptionPlaceholder": "Опис (необов'язково)"
+    },
+    "unthread": {
+      "readMore": "Читати далі",
+      "collapse": "Згорнути",
+      "loadError": "Не вдалося завантажити цю гілку.",
+      "noBody": "Ця гілка не має тексту.",
+      "openExternal": "Відкрити на unthread.at"
     }
   }
 }

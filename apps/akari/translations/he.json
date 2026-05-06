@@ -604,6 +604,13 @@
       "create": "צור",
       "namePlaceholder": "שם הרשימה",
       "descriptionPlaceholder": "תיאור (אופציונלי)"
+    },
+    "unthread": {
+      "readMore": "קרא עוד",
+      "collapse": "כווץ",
+      "loadError": "לא ניתן לטעון את השרשור הזה.",
+      "noBody": "לשרשור הזה אין טקסט.",
+      "openExternal": "פתח ב-unthread.at"
     }
   }
 }

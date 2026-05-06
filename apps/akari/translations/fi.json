@@ -604,6 +604,13 @@
       "create": "Luo",
       "namePlaceholder": "Listan nimi",
       "descriptionPlaceholder": "Kuvaus (valinnainen)"
+    },
+    "unthread": {
+      "readMore": "Lue lisää",
+      "collapse": "Pienennä",
+      "loadError": "Tätä ketjua ei voitu ladata.",
+      "noBody": "Tällä ketjulla ei ole tekstiä.",
+      "openExternal": "Avaa palvelussa unthread.at"
     }
   }
 }

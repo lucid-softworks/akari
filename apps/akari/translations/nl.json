@@ -604,6 +604,13 @@
       "create": "Aanmaken",
       "namePlaceholder": "Naam van de lijst",
       "descriptionPlaceholder": "Beschrijving (optioneel)"
+    },
+    "unthread": {
+      "readMore": "Lees meer",
+      "collapse": "Inklappen",
+      "loadError": "Kan deze thread niet laden.",
+      "noBody": "Deze thread heeft geen tekst.",
+      "openExternal": "Openen op unthread.at"
     }
   }
 }

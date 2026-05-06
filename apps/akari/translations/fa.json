@@ -604,6 +604,13 @@
       "create": "ایجاد",
       "namePlaceholder": "نام فهرست",
       "descriptionPlaceholder": "توضیحات (اختیاری)"
+    },
+    "unthread": {
+      "readMore": "بیشتر بخوانید",
+      "collapse": "بستن",
+      "loadError": "بارگیری این رشته ممکن نشد.",
+      "noBody": "این رشته متن اصلی ندارد.",
+      "openExternal": "باز کردن در unthread.at"
     }
   }
 }

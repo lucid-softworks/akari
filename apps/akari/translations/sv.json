@@ -604,6 +604,13 @@
       "create": "Skapa",
       "namePlaceholder": "Listans namn",
       "descriptionPlaceholder": "Beskrivning (valfri)"
+    },
+    "unthread": {
+      "readMore": "Läs mer",
+      "collapse": "Dölj",
+      "loadError": "Kunde inte läsa in tråden.",
+      "noBody": "Tråden saknar text.",
+      "openExternal": "Öppna på unthread.at"
     }
   }
 }

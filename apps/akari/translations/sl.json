@@ -604,6 +604,13 @@
       "create": "Ustvari",
       "namePlaceholder": "Ime seznama",
       "descriptionPlaceholder": "Opis (neobvezno)"
+    },
+    "unthread": {
+      "readMore": "Preberi več",
+      "collapse": "Strni",
+      "loadError": "Te niti ni bilo mogoče naložiti.",
+      "noBody": "Ta nit nima besedila.",
+      "openExternal": "Odpri v unthread.at"
     }
   }
 }

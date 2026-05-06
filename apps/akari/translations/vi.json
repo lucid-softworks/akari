@@ -604,6 +604,13 @@
       "create": "Tạo",
       "namePlaceholder": "Tên danh sách",
       "descriptionPlaceholder": "Mô tả (tùy chọn)"
+    },
+    "unthread": {
+      "readMore": "Đọc thêm",
+      "collapse": "Thu gọn",
+      "loadError": "Không thể tải chủ đề này.",
+      "noBody": "Chủ đề này không có nội dung.",
+      "openExternal": "Mở trên unthread.at"
     }
   }
 }

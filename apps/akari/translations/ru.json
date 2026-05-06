@@ -604,6 +604,13 @@
       "create": "Создать",
       "namePlaceholder": "Название списка",
       "descriptionPlaceholder": "Описание (необязательно)"
+    },
+    "unthread": {
+      "readMore": "Читать далее",
+      "collapse": "Свернуть",
+      "loadError": "Не удалось загрузить эту ветку.",
+      "noBody": "В этой ветке нет текста.",
+      "openExternal": "Открыть на unthread.at"
     }
   }
 }

@@ -604,6 +604,13 @@
       "create": "Yarat",
       "namePlaceholder": "Siyahı adı",
       "descriptionPlaceholder": "Açıqlama (istəyə görə)"
+    },
+    "unthread": {
+      "readMore": "Daha çox oxu",
+      "collapse": "Daralt",
+      "loadError": "Bu mövzunu yükləmək mümkün olmadı.",
+      "noBody": "Bu mövzuda mətn yoxdur.",
+      "openExternal": "unthread.at-da aç"
     }
   }
 }

@@ -7,6 +7,7 @@ import { PostComposer } from '@/components/PostComposer';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { UnthreadEmbed } from '@/components/UnthreadEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { PostActions } from '@/components/post/PostActions';
@@ -14,6 +15,7 @@ import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
+import { findUnthreadFacet, parseUnthreadUrl, stripUnthreadFromPost } from '@/utils/unthread';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useHiddenContent } from '@/hooks/useHiddenContent';
@@ -93,8 +95,27 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
   const authorName = post.author.displayName || post.author.handle;
-  const hasText = Boolean(post.text && post.text.trim());
-  const hasEmbed = Boolean(post.embed || (post.embeds && post.embeds.length > 0));
+
+  // Detect a post that links to an unthread.at long-form document. When
+  // present we (1) strip the unthread link's byte range from the rendered
+  // text + facets so the "View full post" CTA disappears, (2) suppress the
+  // auto-generated external link card pointing at unthread.at, and
+  // (3) render our own inline `UnthreadEmbed` expander after the text.
+  const unthreadRef = useMemo(() => findUnthreadFacet(post.facets), [post.facets]);
+  const cleanedPost = useMemo(() => {
+    if (!unthreadRef || !post.text) return { text: post.text, facets: post.facets };
+    return stripUnthreadFromPost(post.text, post.facets);
+  }, [post.facets, post.text, unthreadRef]);
+  const displayText = cleanedPost.text ?? post.text;
+  const displayFacets = cleanedPost.facets ?? post.facets;
+  const externalEmbedIsUnthread = useMemo(() => {
+    const embed = post.embed as { $type?: string; external?: { uri?: string } } | undefined;
+    if (!embed?.$type?.includes('app.bsky.embed.external')) return false;
+    return parseUnthreadUrl(embed.external?.uri) !== null;
+  }, [post.embed]);
+  const renderEmbed = !externalEmbedIsUnthread;
+  const hasText = Boolean(displayText && displayText.trim());
+  const hasEmbed = renderEmbed && Boolean(post.embed || (post.embeds && post.embeds.length > 0));
   const canTranslate = hasText;
 
   // Locally-hidden posts / accounts disappear from any feed they show
@@ -234,13 +255,15 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <View style={hasText || hasEmbed ? styles.content : undefined}>
-        {hasText ? (
+      <View style={hasText || hasEmbed || unthreadRef ? styles.content : undefined}>
+        {unthreadRef ? (
+          <UnthreadEmbed unthread={unthreadRef} fallbackText={displayText} />
+        ) : hasText ? (
           <PostTranslation
-            text={post.text!}
+            text={displayText!}
             visible={isTranslationVisible}
             onHide={handleHideTranslation}
-            facets={post.facets}
+            facets={displayFacets}
             textStyle={[styles.text, !hasEmbed && styles.textOnly]}
             embedText={post.embed?.external ? { title: post.embed.external.title, description: post.embed.external.description } : undefined}
             onEmbedTranslated={setTranslatedEmbed}

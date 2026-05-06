@@ -604,6 +604,13 @@
       "create": "作成",
       "namePlaceholder": "リスト名",
       "descriptionPlaceholder": "説明 (任意)"
+    },
+    "unthread": {
+      "readMore": "続きを読む",
+      "collapse": "折りたたむ",
+      "loadError": "このスレッドを読み込めませんでした。",
+      "noBody": "このスレッドには本文がありません。",
+      "openExternal": "unthread.at で開く"
     }
   }
 }

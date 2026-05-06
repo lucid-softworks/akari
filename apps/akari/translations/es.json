@@ -604,6 +604,13 @@
       "create": "Crear",
       "namePlaceholder": "Nombre de la lista",
       "descriptionPlaceholder": "Descripción (opcional)"
+    },
+    "unthread": {
+      "readMore": "Leer más",
+      "collapse": "Contraer",
+      "loadError": "No se pudo cargar este hilo.",
+      "noBody": "Este hilo no tiene texto.",
+      "openExternal": "Abrir en unthread.at"
     }
   }
 }
