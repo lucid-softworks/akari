@@ -444,7 +444,13 @@ export default function TabLayout() {
               style={[
                 mobileDrawerStyles.header,
                 {
-                  paddingTop: safeAreaInsets.top + 6,
+                  // The `+6` here used to give a touch of extra breathing room
+                  // above the title row, but on Android with edge-to-edge +
+                  // display cutout `safeAreaInsets.top` already covers both
+                  // the status bar AND the cutout, so the extra dp pile up
+                  // visibly. The button row has its own ~44dp height — that's
+                  // plenty of vertical space without padding past the inset.
+                  paddingTop: safeAreaInsets.top,
                   backgroundColor: headerBackground,
                   borderBottomColor: headerBorderColor,
                 },
