@@ -209,7 +209,8 @@
       "handleHistory": "לטפל בהיסטוריה",
       "noHandleHistory": "אין היסטוריה של ידית",
       "noHandleHistoryDescription": "משתמש זה עדיין לא שינה את הידית שלו.",
-      "reportPost": "דווח על פוסט"
+      "reportPost": "דווח על פוסט",
+      "joinedDate": "הצטרף ב-{{date}}"
     },
     "feed": {
       "loadingMorePosts": "טוען פוסטים נוספים ...",

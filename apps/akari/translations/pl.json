@@ -209,7 +209,8 @@
       "handleHistory": "Historia handle'u",
       "noHandleHistory": "Brak historii handle'u",
       "noHandleHistoryDescription": "Ten użytkownik jeszcze nie zmienił swojego handle'u.",
-      "reportPost": "Zgłoś posta"
+      "reportPost": "Zgłoś posta",
+      "joinedDate": "Dołączył(-a) {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",

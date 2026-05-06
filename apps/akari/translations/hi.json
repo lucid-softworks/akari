@@ -209,7 +209,8 @@
       "handleHistory": "हैंडल इतिहास",
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
       "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
-      "reportPost": "पोस्ट की रिपोर्ट करें"
+      "reportPost": "पोस्ट की रिपोर्ट करें",
+      "joinedDate": "{{date}} में शामिल हुए"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",

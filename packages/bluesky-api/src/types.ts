@@ -817,10 +817,16 @@ export type BlueskyProfile = {
   displayName?: string;
   /** The user's description/bio */
   description?: string;
+  /** Free-form pronouns text (max 20 graphemes per app.bsky.actor.profile). */
+  pronouns?: string;
+  /** The user's website URL (free-form URI per app.bsky.actor.profile). */
+  website?: string;
   /** The user's avatar URL */
   avatar?: string;
   /** The user's banner URL */
   banner?: string;
+  /** When the profile record was created (account creation date, ISO 8601). */
+  createdAt?: string;
   /** When the profile was indexed */
   indexedAt: string;
   /** Number of followers */

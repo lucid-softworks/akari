@@ -209,7 +209,8 @@
       "handleHistory": "Lịch sử tên định danh",
       "noHandleHistory": "Chưa có lịch sử tên định danh",
       "noHandleHistoryDescription": "Người dùng này chưa từng đổi tên định danh.",
-      "reportPost": "Báo cáo bài đăng"
+      "reportPost": "Báo cáo bài đăng",
+      "joinedDate": "Tham gia vào {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",

@@ -209,7 +209,8 @@
       "handleHistory": "تاریخ رسیدگی",
       "noHandleHistory": "بدون سابقه دسته",
       "noHandleHistoryDescription": "این کاربر هنوز دسته خود را تغییر نداده است.",
-      "reportPost": "گزارش پست"
+      "reportPost": "گزارش پست",
+      "joinedDate": "عضو از {{date}}"
     },
     "feed": {
       "loadingMorePosts": "در حال بارگیری بیشتر پست ها ...",

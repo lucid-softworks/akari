@@ -209,7 +209,8 @@
       "handleHistory": "Kullanıcı adı geçmişi",
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
       "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
-      "reportPost": "Gönderiyi bildir"
+      "reportPost": "Gönderiyi bildir",
+      "joinedDate": "{{date}} tarihinde katıldı"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",

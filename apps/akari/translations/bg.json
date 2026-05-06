@@ -209,7 +209,8 @@
       "handleHistory": "Справяне с историята",
       "noHandleHistory": "Без дръжка история",
       "noHandleHistoryDescription": "Този потребител все още не е променил дръжката си.",
-      "reportPost": "Докладвай публикация"
+      "reportPost": "Докладвай публикация",
+      "joinedDate": "Присъединил се през {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Зареждане на още публикации ...",

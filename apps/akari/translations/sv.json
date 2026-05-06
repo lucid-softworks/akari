@@ -209,7 +209,8 @@
       "handleHistory": "Hantera historia",
       "noHandleHistory": "Inget handtagshistorik",
       "noHandleHistoryDescription": "Den här användaren har inte bytt handtag ännu.",
-      "reportPost": "Anmäl inlägg"
+      "reportPost": "Anmäl inlägg",
+      "joinedDate": "Gick med {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Laddar fler inlägg ...",

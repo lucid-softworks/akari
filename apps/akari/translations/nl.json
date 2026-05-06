@@ -209,7 +209,8 @@
       "handleHistory": "Handle-geschiedenis",
       "noHandleHistory": "Geen handle-geschiedenis",
       "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd.",
-      "reportPost": "Bericht melden"
+      "reportPost": "Bericht melden",
+      "joinedDate": "Lid sinds {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",

@@ -209,7 +209,8 @@
       "handleHistory": "Riwayat handle",
       "noHandleHistory": "Tidak ada riwayat handle",
       "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
-      "reportPost": "Laporkan kiriman"
+      "reportPost": "Laporkan kiriman",
+      "joinedDate": "Bergabung {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",

@@ -209,7 +209,8 @@
       "handleHistory": "Handle-historik",
       "noHandleHistory": "Ingen handle-historik",
       "noHandleHistoryDescription": "Denne bruger har ikke ændret sit handle endnu.",
-      "reportPost": "Anmeld opslag"
+      "reportPost": "Anmeld opslag",
+      "joinedDate": "Tilmeldt {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Indlæser flere Posts ...",

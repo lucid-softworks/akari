@@ -209,7 +209,8 @@
       "handleHistory": "Cronologia dell'handle",
       "noHandleHistory": "Nessuna cronologia dell'handle",
       "noHandleHistoryDescription": "Questo utente non ha ancora cambiato handle.",
-      "reportPost": "Segnala post"
+      "reportPost": "Segnala post",
+      "joinedDate": "Iscritto da {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Caricamento di altri post...",

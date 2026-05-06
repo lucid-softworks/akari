@@ -209,7 +209,8 @@
       "handleHistory": "Gestionează istoria",
       "noHandleHistory": "Fără istorie",
       "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul.",
-      "reportPost": "Raportează postarea"
+      "reportPost": "Raportează postarea",
+      "joinedDate": "S-a alăturat în {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Încărcarea mai multor postări ...",

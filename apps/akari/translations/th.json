@@ -209,7 +209,8 @@
       "handleHistory": "ประวัติแฮนเดิล",
       "noHandleHistory": "ไม่มีประวัติแฮนเดิล",
       "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล",
-      "reportPost": "รายงานโพสต์"
+      "reportPost": "รายงานโพสต์",
+      "joinedDate": "เข้าร่วมเมื่อ {{date}}"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",

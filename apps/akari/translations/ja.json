@@ -209,7 +209,8 @@
       "handleHistory": "ハンドルの履歴",
       "noHandleHistory": "ハンドルの履歴はありません",
       "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。",
-      "reportPost": "ポストを報告"
+      "reportPost": "ポストを報告",
+      "joinedDate": "{{date}}に参加"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",

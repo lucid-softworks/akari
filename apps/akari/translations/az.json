@@ -209,7 +209,8 @@
       "handleHistory": "Tarixi idarə edin",
       "noHandleHistory": "Dəstək tarixi yoxdur",
       "noHandleHistoryDescription": "Bu istifadəçi hələ də saplarını dəyişməyib.",
-      "reportPost": "Paylaşımı şikayət et"
+      "reportPost": "Paylaşımı şikayət et",
+      "joinedDate": "{{date}} tarixində qoşuldu"
     },
     "feed": {
       "loadingMorePosts": "Daha çox yazı yüklənir ...",

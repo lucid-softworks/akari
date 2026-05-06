@@ -209,7 +209,8 @@
       "handleHistory": "使用者代號歷程",
       "noHandleHistory": "沒有使用者代號歷程",
       "noHandleHistoryDescription": "此使用者尚未變更過代號。",
-      "reportPost": "檢舉貼文"
+      "reportPost": "檢舉貼文",
+      "joinedDate": "{{date}}加入"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",

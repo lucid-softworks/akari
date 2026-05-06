@@ -209,7 +209,8 @@
       "handleHistory": "Käsityshistoria",
       "noHandleHistory": "Ei kahvahistoriaa",
       "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa.",
-      "reportPost": "Ilmoita julkaisusta"
+      "reportPost": "Ilmoita julkaisusta",
+      "joinedDate": "Liittynyt {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Lataa lisää viestejä ...",

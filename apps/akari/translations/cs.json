@@ -209,7 +209,8 @@
       "handleHistory": "HISTORIE Zvládněte",
       "noHandleHistory": "Žádná historie rukojeti",
       "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť.",
-      "reportPost": "Nahlásit příspěvek"
+      "reportPost": "Nahlásit příspěvek",
+      "joinedDate": "Připojil(a) se {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Načítání více příspěvků ...",

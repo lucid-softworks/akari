@@ -209,7 +209,8 @@
       "handleHistory": "Handle History",
       "noHandleHistory": "No handle history",
       "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
-      "reportPost": "Report post"
+      "reportPost": "Report post",
+      "joinedDate": "Joined {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",

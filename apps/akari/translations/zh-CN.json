@@ -209,7 +209,8 @@
       "handleHistory": "用户名历史记录",
       "noHandleHistory": "暂无用户名历史记录",
       "noHandleHistoryDescription": "该用户尚未更改过用户名。",
-      "reportPost": "举报帖子"
+      "reportPost": "举报帖子",
+      "joinedDate": "{{date}}加入"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",

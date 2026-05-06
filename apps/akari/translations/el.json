@@ -209,7 +209,8 @@
       "handleHistory": "Χειριστήριο ιστορικό",
       "noHandleHistory": "Χωρίς ιστορικό λαβής",
       "noHandleHistoryDescription": "Αυτός ο χρήστης δεν έχει αλλάξει ακόμα τη λαβή του.",
-      "reportPost": "Αναφορά ανάρτησης"
+      "reportPost": "Αναφορά ανάρτησης",
+      "joinedDate": "Εγγραφή {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Φόρτωση περισσότερων αναρτήσεων ...",

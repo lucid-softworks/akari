@@ -209,7 +209,8 @@
       "handleHistory": "Kezelje a történetet",
       "noHandleHistory": "Nincs fogantyú története",
       "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját.",
-      "reportPost": "Bejegyzés jelentése"
+      "reportPost": "Bejegyzés jelentése",
+      "joinedDate": "Csatlakozott: {{date}}"
     },
     "feed": {
       "loadingMorePosts": "További hozzászólások betöltése ...",

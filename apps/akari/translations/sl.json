@@ -209,7 +209,8 @@
       "handleHistory": "Zgodovina",
       "noHandleHistory": "Brez zgodovine ročaja",
       "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja.",
-      "reportPost": "Prijavi objavo"
+      "reportPost": "Prijavi objavo",
+      "joinedDate": "Pridružil(a) se {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Nalaganje več objav ...",

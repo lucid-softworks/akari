@@ -209,7 +209,8 @@
       "handleHistory": "Hanes handlen",
       "noHandleHistory": "Dim hanes handlen",
       "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
-      "reportPost": "Adrodd am bostiad"
+      "reportPost": "Adrodd am bostiad",
+      "joinedDate": "Ymunodd {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",

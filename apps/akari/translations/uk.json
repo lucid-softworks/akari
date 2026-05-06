@@ -209,7 +209,8 @@
       "handleHistory": "Обробляти історію",
       "noHandleHistory": "Немає історії ручки",
       "noHandleHistoryDescription": "Цей користувач ще не змінив свою ручку.",
-      "reportPost": "Поскаржитися на допис"
+      "reportPost": "Поскаржитися на допис",
+      "joinedDate": "Приєднався {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Завантаження більше публікацій ...",

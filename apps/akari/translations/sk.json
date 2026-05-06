@@ -209,7 +209,8 @@
       "handleHistory": "History",
       "noHandleHistory": "Žiadna história rukovätia",
       "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť.",
-      "reportPost": "Nahlásiť príspevok"
+      "reportPost": "Nahlásiť príspevok",
+      "joinedDate": "Pripojil(a) sa {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Načítava viac príspevkov ...",

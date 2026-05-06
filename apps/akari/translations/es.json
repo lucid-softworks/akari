@@ -209,7 +209,8 @@
       "handleHistory": "Historial del identificador",
       "noHandleHistory": "Sin historial de identificador",
       "noHandleHistoryDescription": "Este usuario aún no ha cambiado su identificador.",
-      "reportPost": "Reportar publicación"
+      "reportPost": "Reportar publicación",
+      "joinedDate": "Se unió en {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Cargando más publicaciones...",

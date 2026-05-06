@@ -209,7 +209,8 @@
       "handleHistory": "핸들 변경 기록",
       "noHandleHistory": "핸들 변경 기록이 없습니다",
       "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다.",
-      "reportPost": "게시물 신고"
+      "reportPost": "게시물 신고",
+      "joinedDate": "{{date}}에 가입"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",

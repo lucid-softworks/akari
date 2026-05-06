@@ -209,7 +209,8 @@
       "handleHistory": "Handle-Verlauf",
       "noHandleHistory": "Kein Handle-Verlauf",
       "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert.",
-      "reportPost": "Beitrag melden"
+      "reportPost": "Beitrag melden",
+      "joinedDate": "Beigetreten {{date}}"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",

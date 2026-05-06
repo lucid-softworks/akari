@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
@@ -33,7 +33,10 @@ type ProfileHeaderProps = {
     displayName?: string;
     handle: string;
     description?: string;
+    pronouns?: string;
+    website?: string;
     banner?: string;
+    createdAt?: string;
     did?: string;
     followersCount?: number;
     followsCount?: number;
@@ -71,6 +74,24 @@ const formatNumber = (num: number, locale: string): string => {
     compactDisplay: 'short',
   });
   return formatter.format(num);
+};
+
+const formatJoinedDate = (iso: string, locale: string): string | null => {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+
+const formatWebsiteLabel = (url: string): string => {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.host}${parsed.pathname === '/' ? '' : parsed.pathname}`;
+  } catch {
+    return url;
+  }
 };
 
 export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
@@ -328,10 +349,18 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
                 size={20}
               />
             </View>
-            <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
-              <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
-              <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
-            </TouchableOpacity>
+            <View style={styles.handleRow}>
+              <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
+                <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
+              </TouchableOpacity>
+              {profile.pronouns ? (
+                <>
+                  <ThemedText style={styles.pronounsSeparator}>·</ThemedText>
+                  <ThemedText style={styles.pronouns} numberOfLines={1}>{profile.pronouns}</ThemedText>
+                </>
+              ) : null}
+            </View>
           </View>
 
           {/* Action Buttons */}
@@ -398,12 +427,43 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           </ThemedText>
         </View>
 
+        {/* Website */}
+        {profile.website ? (
+          <View style={styles.metaRow}>
+            <TouchableOpacity
+              style={styles.metaItem}
+              onPress={() => void Linking.openURL(profile.website!)}
+              activeOpacity={activeOpacity.default}
+              hitSlop={hitSlop}
+            >
+              <IconSymbol name="link" size={fontSize.base} color={mutedTextColor} />
+              <ThemedText style={[styles.metaLink, { color: semanticColors.systemBlue }]} numberOfLines={1}>
+                {formatWebsiteLabel(profile.website)}
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
         {/* Description */}
         {profile.description && (
           <View style={styles.descriptionContainer}>
             <RichText text={profile.description} style={styles.description} />
           </View>
         )}
+
+        {/* Joined date */}
+        {profile.createdAt ? (() => {
+          const joined = formatJoinedDate(profile.createdAt, currentLocale);
+          if (!joined) return null;
+          return (
+            <View style={styles.joinedRow}>
+              <IconSymbol name="calendar" size={fontSize.base} color={mutedTextColor} />
+              <ThemedText style={[styles.metaText, { color: mutedTextColor, marginLeft: spacing.xxs }]}>
+                {t('profile.joinedDate', { date: joined })}
+              </ThemedText>
+            </View>
+          );
+        })() : null}
 
         {/* Verified Identities */}
         <KeytraceClaims handle={profile.handle} />
@@ -545,9 +605,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     opacity: opacity.secondary,
   },
+  handleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
   handleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  pronounsSeparator: {
+    fontSize: 15,
+    opacity: opacity.tertiary,
+  },
+  pronouns: {
+    fontSize: 15,
+    opacity: opacity.secondary,
+    flexShrink: 1,
   },
   handleHistoryIcon: {
     marginLeft: spacing.sm - spacing.xxs,
@@ -640,6 +715,31 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   descriptionContainer: {
+    marginBottom: spacing.sm,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    rowGap: spacing.xxs,
+    columnGap: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+    flexShrink: 1,
+  },
+  metaLink: {
+    fontSize: fontSize.base,
+    flexShrink: 1,
+  },
+  metaText: {
+    fontSize: fontSize.base,
+  },
+  joinedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: spacing.sm,
   },
 

@@ -209,7 +209,8 @@
       "handleHistory": "处理历史",
       "noHandleHistory": "没有处理历史",
       "noHandleHistoryDescription": "该用户尚未更改其手柄。",
-      "reportPost": "举报帖子"
+      "reportPost": "举报帖子",
+      "joinedDate": "{{date}}加入"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
