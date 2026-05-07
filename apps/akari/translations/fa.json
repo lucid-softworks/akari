@@ -211,7 +211,8 @@
       "noHandleHistory": "بدون سابقه دسته",
       "noHandleHistoryDescription": "این کاربر هنوز دسته خود را تغییر نداده است.",
       "reportPost": "گزارش پست",
-      "joinedDate": "عضو از {{date}}"
+      "joinedDate": "عضو از {{date}}",
+      "sendMessage": "ارسال پیام"
     },
     "feed": {
       "loadingMorePosts": "در حال بارگیری بیشتر پست ها ...",
@@ -611,6 +612,9 @@
       "loadError": "بارگیری این رشته ممکن نشد.",
       "noBody": "این رشته متن اصلی ندارد.",
       "openExternal": "باز کردن در unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "پیام در Germ"
     }
   }
 }

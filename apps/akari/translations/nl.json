@@ -211,7 +211,8 @@
       "noHandleHistory": "Geen handle-geschiedenis",
       "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd.",
       "reportPost": "Bericht melden",
-      "joinedDate": "Lid sinds {{date}}"
+      "joinedDate": "Lid sinds {{date}}",
+      "sendMessage": "Bericht versturen"
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",
@@ -611,6 +612,9 @@
       "loadError": "Kan deze thread niet laden.",
       "noBody": "Deze thread heeft geen tekst.",
       "openExternal": "Openen op unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Bericht via Germ"
     }
   }
 }

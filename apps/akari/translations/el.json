@@ -211,7 +211,8 @@
       "noHandleHistory": "Χωρίς ιστορικό λαβής",
       "noHandleHistoryDescription": "Αυτός ο χρήστης δεν έχει αλλάξει ακόμα τη λαβή του.",
       "reportPost": "Αναφορά ανάρτησης",
-      "joinedDate": "Εγγραφή {{date}}"
+      "joinedDate": "Εγγραφή {{date}}",
+      "sendMessage": "Αποστολή μηνύματος"
     },
     "feed": {
       "loadingMorePosts": "Φόρτωση περισσότερων αναρτήσεων ...",
@@ -611,6 +612,9 @@
       "loadError": "Δεν ήταν δυνατή η φόρτωση αυτού του νήματος.",
       "noBody": "Αυτό το νήμα δεν έχει κείμενο.",
       "openExternal": "Άνοιγμα στο unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Μήνυμα στο Germ"
     }
   }
 }

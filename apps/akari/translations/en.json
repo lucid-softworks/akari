@@ -228,7 +228,8 @@
       "noHandleHistory": "No handle history",
       "noHandleHistoryDescription": "This user hasn't changed their handle yet.",
       "reportPost": "Report post",
-      "joinedDate": "Joined {{date}}"
+      "joinedDate": "Joined {{date}}",
+      "sendMessage": "Send message"
     },
     "feed": {
       "loadingMorePosts": "Loading more posts...",
@@ -261,6 +262,9 @@
       "loadError": "Couldn't load this thread.",
       "noBody": "This thread has no body text.",
       "openExternal": "Open on unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Message on Germ"
     },
     "post": {
       "postNotFound": "Post not found",

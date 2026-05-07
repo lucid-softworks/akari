@@ -211,7 +211,8 @@
       "noHandleHistory": "Dəstək tarixi yoxdur",
       "noHandleHistoryDescription": "Bu istifadəçi hələ də saplarını dəyişməyib.",
       "reportPost": "Paylaşımı şikayət et",
-      "joinedDate": "{{date}} tarixində qoşuldu"
+      "joinedDate": "{{date}} tarixində qoşuldu",
+      "sendMessage": "Mesaj göndər"
     },
     "feed": {
       "loadingMorePosts": "Daha çox yazı yüklənir ...",
@@ -611,6 +612,9 @@
       "loadError": "Bu mövzunu yükləmək mümkün olmadı.",
       "noBody": "Bu mövzuda mətn yoxdur.",
       "openExternal": "unthread.at-da aç"
+    },
+    "germ": {
+      "messageOnGerm": "Germ-də mesaj göndər"
     }
   }
 }

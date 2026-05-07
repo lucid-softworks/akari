@@ -27,6 +27,9 @@ type ProfileDropdownProps = {
   onMuteAccount: () => void;
   onBlockPress: () => void;
   onReportAccount: () => void;
+  /** Optional — only set when both viewer and target have a Germ declaration
+   *  and the target's `showButtonTo` audience permits the viewer. */
+  onMessageOnGerm?: () => void;
   isFollowing: boolean;
   isBlocking: boolean;
   isMuted: boolean;
@@ -42,6 +45,7 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
   onMuteAccount,
   onBlockPress,
   onReportAccount,
+  onMessageOnGerm,
   isBlocking,
   isMuted,
   isOwnProfile,
@@ -62,15 +66,26 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
       ];
     }
 
-    return [
+    const items: MenuItem[] = [
       { key: 'copyLink', icon: 'link', label: t('profile.copyLink'), onPress: onCopyLink },
       { key: 'search', icon: 'magnifyingglass', label: t('common.search'), onPress: onSearchPosts },
       { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: onAddToLists },
+    ];
+    if (onMessageOnGerm) {
+      items.push({
+        key: 'messageOnGerm',
+        icon: 'arrow.up.right.square',
+        label: t('germ.messageOnGerm'),
+        onPress: onMessageOnGerm,
+      });
+    }
+    items.push(
       { key: 'mute', icon: 'speaker.slash', label: isMuted ? t('common.unmute') : t('profile.muteAccount'), onPress: onMuteAccount },
       { key: 'block', icon: 'hand.raised.fill', label: isBlocking ? t('common.unblock') : t('common.block'), onPress: onBlockPress, destructive: true },
       { key: 'report', icon: 'exclamationmark.triangle', label: t('profile.reportAccount'), onPress: onReportAccount, destructive: true },
-    ];
-  }, [isOwnProfile, isMuted, isBlocking, t, onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount]);
+    );
+    return items;
+  }, [isOwnProfile, isMuted, isBlocking, t, onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount, onMessageOnGerm]);
 
   return (
     <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onDismiss}>

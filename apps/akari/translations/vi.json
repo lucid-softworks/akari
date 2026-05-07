@@ -211,7 +211,8 @@
       "noHandleHistory": "Chưa có lịch sử tên định danh",
       "noHandleHistoryDescription": "Người dùng này chưa từng đổi tên định danh.",
       "reportPost": "Báo cáo bài đăng",
-      "joinedDate": "Tham gia vào {{date}}"
+      "joinedDate": "Tham gia vào {{date}}",
+      "sendMessage": "Gửi tin nhắn"
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",
@@ -611,6 +612,9 @@
       "loadError": "Không thể tải chủ đề này.",
       "noBody": "Chủ đề này không có nội dung.",
       "openExternal": "Mở trên unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Nhắn tin trên Germ"
     }
   }
 }

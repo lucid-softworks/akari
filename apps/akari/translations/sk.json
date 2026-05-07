@@ -211,7 +211,8 @@
       "noHandleHistory": "Žiadna história rukovätia",
       "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť.",
       "reportPost": "Nahlásiť príspevok",
-      "joinedDate": "Pripojil(a) sa {{date}}"
+      "joinedDate": "Pripojil(a) sa {{date}}",
+      "sendMessage": "Odoslať správu"
     },
     "feed": {
       "loadingMorePosts": "Načítava viac príspevkov ...",
@@ -611,6 +612,9 @@
       "loadError": "Toto vlákno sa nepodarilo načítať.",
       "noBody": "Toto vlákno nemá text.",
       "openExternal": "Otvoriť na unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Správa cez Germ"
     }
   }
 }

@@ -211,7 +211,8 @@
       "noHandleHistory": "Brak historii handle'u",
       "noHandleHistoryDescription": "Ten użytkownik jeszcze nie zmienił swojego handle'u.",
       "reportPost": "Zgłoś posta",
-      "joinedDate": "Dołączył(-a) {{date}}"
+      "joinedDate": "Dołączył(-a) {{date}}",
+      "sendMessage": "Wyślij wiadomość"
     },
     "feed": {
       "loadingMorePosts": "Ładowanie większej liczby postów...",
@@ -611,6 +612,9 @@
       "loadError": "Nie udało się wczytać tego wątku.",
       "noBody": "Ten wątek nie ma treści.",
       "openExternal": "Otwórz w unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Wiadomość przez Germ"
     }
   }
 }

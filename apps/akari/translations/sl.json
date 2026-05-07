@@ -211,7 +211,8 @@
       "noHandleHistory": "Brez zgodovine ročaja",
       "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja.",
       "reportPost": "Prijavi objavo",
-      "joinedDate": "Pridružil(a) se {{date}}"
+      "joinedDate": "Pridružil(a) se {{date}}",
+      "sendMessage": "Pošlji sporočilo"
     },
     "feed": {
       "loadingMorePosts": "Nalaganje več objav ...",
@@ -611,6 +612,9 @@
       "loadError": "Te niti ni bilo mogoče naložiti.",
       "noBody": "Ta nit nima besedila.",
       "openExternal": "Odpri v unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Sporočilo v Germ"
     }
   }
 }

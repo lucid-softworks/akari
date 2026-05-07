@@ -211,7 +211,8 @@
       "noHandleHistory": "Немає історії ручки",
       "noHandleHistoryDescription": "Цей користувач ще не змінив свою ручку.",
       "reportPost": "Поскаржитися на допис",
-      "joinedDate": "Приєднався {{date}}"
+      "joinedDate": "Приєднався {{date}}",
+      "sendMessage": "Надіслати повідомлення"
     },
     "feed": {
       "loadingMorePosts": "Завантаження більше публікацій ...",
@@ -611,6 +612,9 @@
       "loadError": "Не вдалося завантажити цю гілку.",
       "noBody": "Ця гілка не має тексту.",
       "openExternal": "Відкрити на unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Повідомлення в Germ"
     }
   }
 }

@@ -1,7 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
 import { ListPickerSheet } from '@/components/ListPickerSheet';
@@ -27,6 +27,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { germButtonVisibleFor, useGermDeclaration } from '@/hooks/queries/useGermDeclaration';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
@@ -164,6 +165,32 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     if (!profile) return null;
     return <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />;
   }, [activeTab, handleTabChange, profile]);
+
+  // Germ Network message-me — both viewer and target must have published a
+  // `com.germnetwork.declaration/self` record, and the target's
+  // `messageMe.showButtonTo` audience must permit the current viewer. These
+  // hooks MUST sit above any early return so React sees the same hook order
+  // every render.
+  const viewerDid = currentUser?.did;
+  const { data: targetGerm } = useGermDeclaration(!isOwnProfile ? profile?.did : undefined);
+  const { data: viewerGerm } = useGermDeclaration(!isOwnProfile ? viewerDid : undefined);
+  const handleMessageOnGerm = useMemo(() => {
+    if (isOwnProfile) return undefined;
+    if (!profile?.did || !viewerDid) return undefined;
+    if (!targetGerm || !viewerGerm) return undefined;
+    const allowed = germButtonVisibleFor(
+      targetGerm.messageMe?.showButtonTo,
+      Boolean(profile.viewer?.followedBy),
+      Boolean(profile.viewer?.following),
+    );
+    if (!allowed) return undefined;
+    const baseUrl =
+      targetGerm.messageMe?.messageMeUrl?.replace(/\/$/, '') ?? 'https://landing.ger.mx/newUser';
+    return () => {
+      setShowDropdown(false);
+      void Linking.openURL(`${baseUrl}/web/#${profile.did}+${viewerDid}`);
+    };
+  }, [isOwnProfile, profile?.did, profile?.viewer, targetGerm, viewerDid, viewerGerm]);
 
   if (isLoading) {
     return (
@@ -343,6 +370,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
           onMuteAccount={handleMuteAccount}
           onBlockPress={handleBlockPress}
           onReportAccount={handleReportAccount}
+          onMessageOnGerm={handleMessageOnGerm}
           isFollowing={!!profile?.viewer?.following}
           isBlocking={!!profile?.viewer?.blocking}
           isMuted={!!profile?.viewer?.muted}
@@ -371,6 +399,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
         onMuteAccount={handleMuteAccount}
         onBlockPress={handleBlockPress}
         onReportAccount={handleReportAccount}
+        onMessageOnGerm={handleMessageOnGerm}
         isFollowing={!!profile?.viewer?.following}
         isBlocking={!!profile?.viewer?.blocking}
         isMuted={!!profile?.viewer?.muted}

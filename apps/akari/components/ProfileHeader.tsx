@@ -1,5 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -21,6 +22,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
+import { useStartConvo } from '@/hooks/mutations/useStartConvo';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -43,6 +45,7 @@ type ProfileHeaderProps = {
     postsCount?: number;
     viewer?: {
       following?: string;
+      followedBy?: string;
       blocking?: string;
       blockedBy?: boolean;
       muted?: boolean;
@@ -111,12 +114,37 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const followMutation = useFollowUser();
   const blockMutation = useBlockUser();
   const muteMutation = useMuteUser();
+  const startConvoMutation = useStartConvo();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
+
+  const handleBskyMessage = async () => {
+    if (!profile.did) return;
+    try {
+      const convo = await startConvoMutation.mutateAsync({ memberDids: [profile.did] });
+      router.push(
+        `/(tabs)/messages/${encodeURIComponent(convo.id)}?handle=${encodeURIComponent(profile.handle)}` as never,
+      );
+    } catch (error) {
+      if (__DEV__) console.warn('Start convo error:', error);
+      showToast({
+        type: 'error',
+        title: t('profile.sendMessage'),
+        message: t('common.somethingWentWrong'),
+      });
+    }
+  };
 
   const isFollowing = !!profile.viewer?.following;
   const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
+
+  // Bluesky DM action — visible whenever we're looking at someone else who
+  // we aren't blocking (and who isn't blocking us). The Bluesky chat service
+  // gates incoming based on the target's own preference, so a tap that
+  // hits a "user only allows DMs from people they follow"-style refusal
+  // surfaces as a toast rather than a silent no-op.
+  const showBskyMessageButton = !isOwnProfile && !!profile.did && !isBlocking && !isBlockedBy;
 
   const handleFollow = async () => {
     if (!profile.did) return;
@@ -400,6 +428,19 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
                 <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
                   <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
                 </TouchableOpacity>
+                {showBskyMessageButton ? (
+                  <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={handleBskyMessage}
+                    activeOpacity={activeOpacity.default}
+                    hitSlop={hitSlop}
+                    disabled={startConvoMutation.isPending}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('profile.sendMessage')}
+                  >
+                    <IconSymbol name="bubble.left" size={fontSize.xxl} color={semanticColors.systemBlue} />
+                  </TouchableOpacity>
+                ) : null}
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
                   <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
                     <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
@@ -630,6 +671,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.sm,
   },
   iconButton: {

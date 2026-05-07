@@ -211,7 +211,8 @@
       "noHandleHistory": "Inget handtagshistorik",
       "noHandleHistoryDescription": "Den här användaren har inte bytt handtag ännu.",
       "reportPost": "Anmäl inlägg",
-      "joinedDate": "Gick med {{date}}"
+      "joinedDate": "Gick med {{date}}",
+      "sendMessage": "Skicka meddelande"
     },
     "feed": {
       "loadingMorePosts": "Laddar fler inlägg ...",
@@ -611,6 +612,9 @@
       "loadError": "Kunde inte läsa in tråden.",
       "noBody": "Tråden saknar text.",
       "openExternal": "Öppna på unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Meddelande på Germ"
     }
   }
 }

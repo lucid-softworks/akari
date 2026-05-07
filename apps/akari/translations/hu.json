@@ -211,7 +211,8 @@
       "noHandleHistory": "Nincs fogantyú története",
       "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját.",
       "reportPost": "Bejegyzés jelentése",
-      "joinedDate": "Csatlakozott: {{date}}"
+      "joinedDate": "Csatlakozott: {{date}}",
+      "sendMessage": "Üzenet küldése"
     },
     "feed": {
       "loadingMorePosts": "További hozzászólások betöltése ...",
@@ -611,6 +612,9 @@
       "loadError": "A szál betöltése sikertelen.",
       "noBody": "Ennek a szálnak nincs törzse.",
       "openExternal": "Megnyitás az unthread.at-on"
+    },
+    "germ": {
+      "messageOnGerm": "Üzenet a Germen"
     }
   }
 }

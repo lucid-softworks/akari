@@ -211,7 +211,8 @@
       "noHandleHistory": "Kullanıcı adı geçmişi yok",
       "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
       "reportPost": "Gönderiyi bildir",
-      "joinedDate": "{{date}} tarihinde katıldı"
+      "joinedDate": "{{date}} tarihinde katıldı",
+      "sendMessage": "Mesaj gönder"
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
@@ -611,6 +612,9 @@
       "loadError": "Bu konu yüklenemedi.",
       "noBody": "Bu konuda metin yok.",
       "openExternal": "unthread.atta aç"
+    },
+    "germ": {
+      "messageOnGerm": "Germde mesaj"
     }
   }
 }

@@ -211,7 +211,8 @@
       "noHandleHistory": "暂无用户名历史记录",
       "noHandleHistoryDescription": "该用户尚未更改过用户名。",
       "reportPost": "举报帖子",
-      "joinedDate": "{{date}}加入"
+      "joinedDate": "{{date}}加入",
+      "sendMessage": "发送消息"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -611,6 +612,9 @@
       "loadError": "无法加载该主题。",
       "noBody": "该主题没有正文。",
       "openExternal": "在 unthread.at 打开"
+    },
+    "germ": {
+      "messageOnGerm": "在 Germ 上发消息"
     }
   }
 }

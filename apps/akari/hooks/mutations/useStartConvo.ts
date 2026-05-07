@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -16,6 +16,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 export function useStartConvo() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ memberDids }: { memberDids: string[] }) => {
@@ -26,6 +27,14 @@ export function useStartConvo() {
       const api = new BlueskyApi(currentAccount.pdsUrl);
       const result = await api.getConvoForMembers(token, memberDids);
       return result.convo;
+    },
+    // The /messages/[convoId] route resolves a conversation by looking it up
+    // in the cached `useConversations` infinite query — which has a 30s
+    // stale window AND filters convos via Bluesky's `listConvos`, so a
+    // freshly-created convo with no messages may not appear at all. Trigger
+    // a refetch so the route can find the new convo when it mounts.
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
 }

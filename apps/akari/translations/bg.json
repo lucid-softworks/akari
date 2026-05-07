@@ -211,7 +211,8 @@
       "noHandleHistory": "Без дръжка история",
       "noHandleHistoryDescription": "Този потребител все още не е променил дръжката си.",
       "reportPost": "Докладвай публикация",
-      "joinedDate": "Присъединил се през {{date}}"
+      "joinedDate": "Присъединил се през {{date}}",
+      "sendMessage": "Изпрати съобщение"
     },
     "feed": {
       "loadingMorePosts": "Зареждане на още публикации ...",
@@ -611,6 +612,9 @@
       "loadError": "Не може да се зареди тази тема.",
       "noBody": "Тази тема няма съдържание.",
       "openExternal": "Отвори в unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Съобщение в Germ"
     }
   }
 }

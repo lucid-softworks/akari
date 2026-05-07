@@ -211,7 +211,8 @@
       "noHandleHistory": "Fără istorie",
       "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul.",
       "reportPost": "Raportează postarea",
-      "joinedDate": "S-a alăturat în {{date}}"
+      "joinedDate": "S-a alăturat în {{date}}",
+      "sendMessage": "Trimite mesaj"
     },
     "feed": {
       "loadingMorePosts": "Încărcarea mai multor postări ...",
@@ -611,6 +612,9 @@
       "loadError": "Nu s-a putut încărca acest fir.",
       "noBody": "Acest fir nu are text.",
       "openExternal": "Deschide pe unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Mesaj pe Germ"
     }
   }
 }

@@ -211,7 +211,8 @@
       "noHandleHistory": "Dim hanes handlen",
       "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
       "reportPost": "Adrodd am bostiad",
-      "joinedDate": "Ymunodd {{date}}"
+      "joinedDate": "Ymunodd {{date}}",
+      "sendMessage": "Anfon neges"
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -611,6 +612,9 @@
       "loadError": "Methwyd llwythor drafodaeth hon.",
       "noBody": "Nid oes testun yn y drafodaeth hon.",
       "openExternal": "Agor ar unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Anfon neges ar Germ"
     }
   }
 }

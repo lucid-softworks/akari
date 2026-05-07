@@ -211,7 +211,8 @@
       "noHandleHistory": "Žádná historie rukojeti",
       "noHandleHistoryDescription": "Tento uživatel ještě nezměnil rukojeť.",
       "reportPost": "Nahlásit příspěvek",
-      "joinedDate": "Připojil(a) se {{date}}"
+      "joinedDate": "Připojil(a) se {{date}}",
+      "sendMessage": "Odeslat zprávu"
     },
     "feed": {
       "loadingMorePosts": "Načítání více příspěvků ...",
@@ -611,6 +612,9 @@
       "loadError": "Toto vlákno se nepodařilo načíst.",
       "noBody": "Toto vlákno nemá text.",
       "openExternal": "Otevřít na unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Zpráva přes Germ"
     }
   }
 }

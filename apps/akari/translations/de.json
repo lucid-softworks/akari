@@ -211,7 +211,8 @@
       "noHandleHistory": "Kein Handle-Verlauf",
       "noHandleHistoryDescription": "Dieser Nutzer hat sein Handle noch nicht geändert.",
       "reportPost": "Beitrag melden",
-      "joinedDate": "Beigetreten {{date}}"
+      "joinedDate": "Beigetreten {{date}}",
+      "sendMessage": "Nachricht senden"
     },
     "feed": {
       "loadingMorePosts": "Lade weitere Beiträge...",
@@ -611,6 +612,9 @@
       "loadError": "Dieser Thread konnte nicht geladen werden.",
       "noBody": "Dieser Thread hat keinen Text.",
       "openExternal": "Auf unthread.at öffnen"
+    },
+    "germ": {
+      "messageOnGerm": "Nachricht auf Germ"
     }
   }
 }

@@ -211,7 +211,8 @@
       "noHandleHistory": "핸들 변경 기록이 없습니다",
       "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다.",
       "reportPost": "게시물 신고",
-      "joinedDate": "{{date}}에 가입"
+      "joinedDate": "{{date}}에 가입",
+      "sendMessage": "메시지 보내기"
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
@@ -611,6 +612,9 @@
       "loadError": "이 스레드를 불러오지 못했습니다.",
       "noBody": "이 스레드에는 본문이 없습니다.",
       "openExternal": "unthread.at에서 열기"
+    },
+    "germ": {
+      "messageOnGerm": "Germ에서 메시지"
     }
   }
 }

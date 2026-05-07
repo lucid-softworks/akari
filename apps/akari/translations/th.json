@@ -211,7 +211,8 @@
       "noHandleHistory": "ไม่มีประวัติแฮนเดิล",
       "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล",
       "reportPost": "รายงานโพสต์",
-      "joinedDate": "เข้าร่วมเมื่อ {{date}}"
+      "joinedDate": "เข้าร่วมเมื่อ {{date}}",
+      "sendMessage": "ส่งข้อความ"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
@@ -611,6 +612,9 @@
       "loadError": "ไม่สามารถโหลดเธรดนี้ได้",
       "noBody": "เธรดนี้ไม่มีเนื้อหา",
       "openExternal": "เปิดใน unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "ส่งข้อความบน Germ"
     }
   }
 }

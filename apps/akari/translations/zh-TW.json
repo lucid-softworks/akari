@@ -211,7 +211,8 @@
       "noHandleHistory": "沒有使用者代號歷程",
       "noHandleHistoryDescription": "此使用者尚未變更過代號。",
       "reportPost": "檢舉貼文",
-      "joinedDate": "{{date}}加入"
+      "joinedDate": "{{date}}加入",
+      "sendMessage": "傳送訊息"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -611,6 +612,9 @@
       "loadError": "無法載入此討論串。",
       "noBody": "此討論串沒有內文。",
       "openExternal": "在 unthread.at 開啟"
+    },
+    "germ": {
+      "messageOnGerm": "在 Germ 上傳訊息"
     }
   }
 }

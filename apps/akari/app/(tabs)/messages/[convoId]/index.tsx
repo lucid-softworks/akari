@@ -22,6 +22,7 @@ import { ChatMediaEmbed, extractChatMedia, stripChatMediaText } from '@/componen
 import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
+import { useConvo } from '@/hooks/queries/useConvo';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -287,9 +288,17 @@ export default function ConversationScreen() {
   // `convoId` so we can look up the exact convo even when handles repeat.
   const { data: conversationsData } = useConversations();
   const allConversations = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
-  const conversation =
+  const conversationFromList =
     (convoIdParam && allConversations.find((conv) => conv.convoId === convoIdParam)) ||
     (handle ? allConversations.find((conv) => conv.handle === handle) : undefined);
+  // Fallback: a freshly-created convo (e.g. opened from a profile DM button)
+  // may not appear in `listConvos` until it has at least one message. Fetch
+  // the convo directly by id when the list lookup misses, so the route can
+  // render instead of getting stuck on the loading-conversations spinner.
+  const { data: conversationDirect } = useConvo(
+    !conversationFromList && convoIdParam ? convoIdParam : null,
+  );
+  const conversation = conversationFromList ?? conversationDirect;
 
   // Fetch messages for this conversation
   const {

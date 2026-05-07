@@ -211,7 +211,8 @@
       "noHandleHistory": "Ingen handle-historik",
       "noHandleHistoryDescription": "Denne bruger har ikke ændret sit handle endnu.",
       "reportPost": "Anmeld opslag",
-      "joinedDate": "Tilmeldt {{date}}"
+      "joinedDate": "Tilmeldt {{date}}",
+      "sendMessage": "Send besked"
     },
     "feed": {
       "loadingMorePosts": "Indlæser flere Posts ...",
@@ -611,6 +612,9 @@
       "loadError": "Kunne ikke indlæse tråden.",
       "noBody": "Tråden har ingen tekst.",
       "openExternal": "Åbn på unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Besked på Germ"
     }
   }
 }

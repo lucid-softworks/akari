@@ -211,7 +211,8 @@
       "noHandleHistory": "Ei kahvahistoriaa",
       "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa.",
       "reportPost": "Ilmoita julkaisusta",
-      "joinedDate": "Liittynyt {{date}}"
+      "joinedDate": "Liittynyt {{date}}",
+      "sendMessage": "Lähetä viesti"
     },
     "feed": {
       "loadingMorePosts": "Lataa lisää viestejä ...",
@@ -611,6 +612,9 @@
       "loadError": "Tätä ketjua ei voitu ladata.",
       "noBody": "Tällä ketjulla ei ole tekstiä.",
       "openExternal": "Avaa palvelussa unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Lähetä viesti Germissä"
     }
   }
 }

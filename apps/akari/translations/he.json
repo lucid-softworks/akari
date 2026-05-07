@@ -211,7 +211,8 @@
       "noHandleHistory": "אין היסטוריה של ידית",
       "noHandleHistoryDescription": "משתמש זה עדיין לא שינה את הידית שלו.",
       "reportPost": "דווח על פוסט",
-      "joinedDate": "הצטרף ב-{{date}}"
+      "joinedDate": "הצטרף ב-{{date}}",
+      "sendMessage": "שלח הודעה"
     },
     "feed": {
       "loadingMorePosts": "טוען פוסטים נוספים ...",
@@ -611,6 +612,9 @@
       "loadError": "לא ניתן לטעון את השרשור הזה.",
       "noBody": "לשרשור הזה אין טקסט.",
       "openExternal": "פתח ב-unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "הודעה ב-Germ"
     }
   }
 }

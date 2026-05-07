@@ -211,7 +211,8 @@
       "noHandleHistory": "Aucun historique de handle",
       "noHandleHistoryDescription": "Cet utilisateur n'a pas encore changé de handle.",
       "reportPost": "Signaler la publication",
-      "joinedDate": "Inscrit en {{date}}"
+      "joinedDate": "Inscrit en {{date}}",
+      "sendMessage": "Envoyer un message"
     },
     "feed": {
       "loadingMorePosts": "Chargement de plus de publications...",
@@ -611,6 +612,9 @@
       "loadError": "Impossible de charger ce fil.",
       "noBody": "Ce fil na pas de contenu.",
       "openExternal": "Ouvrir sur unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Message sur Germ"
     }
   }
 }

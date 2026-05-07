@@ -211,7 +211,8 @@
       "noHandleHistory": "कोई हैंडल इतिहास नहीं",
       "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
       "reportPost": "पोस्ट की रिपोर्ट करें",
-      "joinedDate": "{{date}} में शामिल हुए"
+      "joinedDate": "{{date}} में शामिल हुए",
+      "sendMessage": "संदेश भेजें"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",
@@ -611,6 +612,9 @@
       "loadError": "यह थ्रेड लोड नहीं हो सका।",
       "noBody": "इस थ्रेड में कोई पाठ नहीं है।",
       "openExternal": "unthread.at पर खोलें"
+    },
+    "germ": {
+      "messageOnGerm": "Germ पर संदेश"
     }
   }
 }

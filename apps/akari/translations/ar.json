@@ -211,7 +211,8 @@
       "noHandleHistory": "لا يوجد سجل للمعرف",
       "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد.",
       "reportPost": "الإبلاغ عن المنشور",
-      "joinedDate": "انضم في {{date}}"
+      "joinedDate": "انضم في {{date}}",
+      "sendMessage": "إرسال رسالة"
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",
@@ -611,6 +612,9 @@
       "loadError": "تعذر تحميل هذا الموضوع.",
       "noBody": "لا يحتوي هذا الموضوع على نص.",
       "openExternal": "فتح في unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "أرسل رسالة على Germ"
     }
   }
 }

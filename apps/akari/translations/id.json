@@ -211,7 +211,8 @@
       "noHandleHistory": "Tidak ada riwayat handle",
       "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
       "reportPost": "Laporkan kiriman",
-      "joinedDate": "Bergabung {{date}}"
+      "joinedDate": "Bergabung {{date}}",
+      "sendMessage": "Kirim pesan"
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -611,6 +612,9 @@
       "loadError": "Tidak dapat memuat utas ini.",
       "noBody": "Utas ini tidak memiliki isi teks.",
       "openExternal": "Buka di unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Pesan di Germ"
     }
   }
 }

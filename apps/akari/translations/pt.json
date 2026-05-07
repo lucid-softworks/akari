@@ -211,7 +211,8 @@
       "noHandleHistory": "Nenhum histórico do identificador",
       "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador.",
       "reportPost": "Denunciar publicação",
-      "joinedDate": "Entrou em {{date}}"
+      "joinedDate": "Entrou em {{date}}",
+      "sendMessage": "Enviar mensagem"
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",
@@ -611,6 +612,9 @@
       "loadError": "Não foi possível carregar este tópico.",
       "noBody": "Este tópico não tem texto.",
       "openExternal": "Abrir em unthread.at"
+    },
+    "germ": {
+      "messageOnGerm": "Mensagem no Germ"
     }
   }
 }
