@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Сообщение в Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Язык публикации",
+      "postLanguageHint": "Выберите до {{max}} языков для вашей публикации.",
+      "postLanguageSearch": "Поиск языков",
+      "postLanguageA11y": "Язык публикации: {{value}}"
     }
   }
 }

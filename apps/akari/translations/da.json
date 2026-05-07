@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Besked på Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Opslagets sprog",
+      "postLanguageHint": "Vælg op til {{max}} sprog for dit opslag.",
+      "postLanguageSearch": "Søg sprog",
+      "postLanguageA11y": "Opslagets sprog: {{value}}"
     }
   }
 }

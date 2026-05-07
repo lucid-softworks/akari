@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Germ-də mesaj göndər"
+    },
+    "composer": {
+      "postLanguageTitle": "Paylaşım dili",
+      "postLanguageHint": "Paylaşımınız üçün {{max}}-yə qədər dil seçin.",
+      "postLanguageSearch": "Dilləri axtar",
+      "postLanguageA11y": "Paylaşım dili: {{value}}"
     }
   }
 }

@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Üzenet a Germen"
+    },
+    "composer": {
+      "postLanguageTitle": "Bejegyzés nyelve",
+      "postLanguageHint": "Válassz legfeljebb {{max}} nyelvet a bejegyzésedhez.",
+      "postLanguageSearch": "Nyelvek keresése",
+      "postLanguageA11y": "Bejegyzés nyelve: {{value}}"
     }
   }
 }

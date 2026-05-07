@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Messaggio su Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Lingua del post",
+      "postLanguageHint": "Scegli fino a {{max}} lingue per il tuo post.",
+      "postLanguageSearch": "Cerca lingue",
+      "postLanguageA11y": "Lingua del post: {{value}}"
     }
   }
 }

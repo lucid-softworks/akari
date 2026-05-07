@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Sporočilo v Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Jezik objave",
+      "postLanguageHint": "Izberite do {{max}} jezikov za svojo objavo.",
+      "postLanguageSearch": "Iskanje jezikov",
+      "postLanguageA11y": "Jezik objave: {{value}}"
     }
   }
 }

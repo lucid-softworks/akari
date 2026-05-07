@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Germ पर संदेश"
+    },
+    "composer": {
+      "postLanguageTitle": "पोस्ट की भाषा",
+      "postLanguageHint": "अपनी पोस्ट के लिए अधिकतम {{max}} भाषाएँ चुनें।",
+      "postLanguageSearch": "भाषाएँ खोजें",
+      "postLanguageA11y": "पोस्ट की भाषा: {{value}}"
     }
   }
 }

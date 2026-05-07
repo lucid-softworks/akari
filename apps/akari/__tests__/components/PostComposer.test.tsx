@@ -154,6 +154,9 @@ describe('PostComposer', () => {
         text: 'Hello World',
         replyTo: undefined,
         images: undefined,
+        video: undefined,
+        quote: undefined,
+        langs: ['en'],
       });
       expect(onClose).toHaveBeenCalled();
       expect(getByPlaceholderText('post.postPlaceholder').props.value).toBe('');
@@ -227,6 +230,9 @@ describe('PostComposer', () => {
       text: 'Reply body',
       replyTo: { root: 'at://root', parent: 'at://parent' },
       images: undefined,
+      video: undefined,
+      quote: undefined,
+      langs: ['en'],
     });
     expect(onClose).toHaveBeenCalled();
   });
@@ -409,6 +415,9 @@ describe('PostComposer', () => {
         { uri: 'img-1.jpg', alt: 'First image', mimeType: 'image/png' },
         { uri: 'img-2.jpg', alt: '', mimeType: 'image/jpeg' },
       ],
+      video: undefined,
+      quote: undefined,
+      langs: ['en'],
     });
   });
 

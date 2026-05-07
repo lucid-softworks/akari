@@ -453,13 +453,13 @@ export class BlueskyFeeds extends BlueskyApiClient {
     userDid: string,
     post: BlueskyCreatePostInput,
   ): Promise<BlueskyCreatePostResponse> {
-    const { text, replyTo, images, video, quote } = post;
+    const { text, replyTo, images, video, quote, langs } = post;
 
     let record: Record<string, unknown> = {
       text,
       createdAt: new Date().toISOString(),
       $type: 'app.bsky.feed.post',
-      langs: ['en'],
+      langs: langs && langs.length > 0 ? langs : ['en'],
     };
 
     // Add reply context if provided — resolve URIs to { uri, cid } objects

@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Germ でメッセージ"
+    },
+    "composer": {
+      "postLanguageTitle": "投稿の言語",
+      "postLanguageHint": "投稿の言語を最大{{max}}個まで選択してください。",
+      "postLanguageSearch": "言語を検索",
+      "postLanguageA11y": "投稿の言語: {{value}}"
     }
   }
 }

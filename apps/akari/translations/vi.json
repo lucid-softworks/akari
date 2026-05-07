@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Nhắn tin trên Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Ngôn ngữ bài viết",
+      "postLanguageHint": "Chọn tối đa {{max}} ngôn ngữ cho bài viết của bạn.",
+      "postLanguageSearch": "Tìm ngôn ngữ",
+      "postLanguageA11y": "Ngôn ngữ bài viết: {{value}}"
     }
   }
 }

@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Anfon neges ar Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Iaith y postiad",
+      "postLanguageHint": "Dewiswch hyd at {{max}} iaith ar gyfer eich postiad.",
+      "postLanguageSearch": "Chwilio ieithoedd",
+      "postLanguageA11y": "Iaith y postiad: {{value}}"
     }
   }
 }

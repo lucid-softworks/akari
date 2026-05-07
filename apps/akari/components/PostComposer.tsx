@@ -26,6 +26,7 @@ import { DraftsSheet } from '@/components/DraftsSheet';
 import { EmojiPicker } from '@/components/EmojiPicker';
 import { GifPicker } from '@/components/GifPicker';
 import { PostControlsSheet } from '@/components/PostControlsSheet';
+import { PostLanguagesSheet } from '@/components/PostLanguagesSheet';
 import { VideoThumbnail } from '@/components/VideoThumbnail';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
@@ -43,8 +44,11 @@ import { usePostControls } from '@/hooks/mutations/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useDrafts } from '@/hooks/queries/useDrafts';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
+import { usePostLanguages } from '@/hooks/usePostLanguages';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getLanguageLabel } from '@/utils/bcp47';
 import type { ComposerDraftState } from '@/utils/draftMapper';
 import { DEFAULT_POST_CONTROLS, describePostControls, type PostControls } from '@/utils/postControls';
 
@@ -255,6 +259,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const { data: currentAccount } = useCurrentAccount();
   const { data: jwtToken } = useJwtToken();
   const did = currentAccount?.did;
+
+  // Per-post BCP-47 language tags. Persists across composer opens via
+  // `usePostLanguages` (defaults to the user's UI locale on first run).
+  const { langs: postLangs, setLangs: setPostLangs } = usePostLanguages();
+  const [languagesSheetVisible, setLanguagesSheetVisible] = useState(false);
+  const { currentLocale } = useLanguage();
+  const postLangsLabel = postLangs
+    .map((tag) => getLanguageLabel(tag, currentLocale))
+    .join(', ');
 
   // Drafts only apply to plain new posts — re-opening a stale reply/quote
   // composer with mismatched context is more confusing than helpful.
@@ -487,6 +500,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               }
             : undefined,
           quote: isRoot && quote ? { uri: quote.uri, cid: quote.cid } : undefined,
+          langs: postLangs,
         });
 
         if (isRoot) {
@@ -1362,6 +1376,17 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
             </View>
 
             <View style={styles.footerRight}>
+              <TouchableOpacity
+                style={[styles.langChip, { borderColor: iconColor }]}
+                onPress={() => setLanguagesSheetVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel={t('composer.postLanguageA11y', { value: postLangsLabel })}
+              >
+                <IconSymbol name="globe" size={fontSize.sm} color={iconColor} />
+                <ThemedText style={[styles.langChipText, { color: iconColor }]} numberOfLines={1}>
+                  {postLangs.length === 1 ? postLangs[0].toUpperCase() : `${postLangs.length}`}
+                </ThemedText>
+              </TouchableOpacity>
               <View style={styles.characterCountContainer}>
                 <ThemedText
                   style={[
@@ -1379,6 +1404,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           </View>
         </KeyboardAvoidingView>
       </ThemedView>
+
+      <PostLanguagesSheet
+        visible={languagesSheetVisible}
+        onClose={() => setLanguagesSheetVisible(false)}
+        selected={postLangs}
+        onChange={setPostLangs}
+      />
 
       {/* GIF Picker Modal */}
       <GifPicker visible={gifPickerVisible} onClose={() => setGifPickerVisible(false)} onSelectGif={handleSelectGif} />
@@ -1843,7 +1875,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   footerRight: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  langChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: radius.full,
+    borderWidth: layout.border,
+  },
+  langChipText: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.semibold,
   },
   actionButton: {
     padding: 6,

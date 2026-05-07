@@ -14,7 +14,12 @@ import '@formatjs/intl-locale/polyfill-force';
 import '@formatjs/intl-numberformat/polyfill-force';
 import '@formatjs/intl-pluralrules/polyfill-force';
 import '@formatjs/intl-relativetimeformat/polyfill-force';
+// `Intl.DisplayNames` is missing on Hermes (used by the post-language picker
+// to translate BCP-47 tags like `en` into `English`). Polyfill it + load
+// the English locale data so we always have a sensible baseline.
+import '@formatjs/intl-displaynames/polyfill-force';
 
 import '@formatjs/intl-numberformat/locale-data/en';
 import '@formatjs/intl-pluralrules/locale-data/en';
 import '@formatjs/intl-relativetimeformat/locale-data/en';
+import '@formatjs/intl-displaynames/locale-data/en';

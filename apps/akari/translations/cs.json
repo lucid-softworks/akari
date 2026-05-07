@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Zpráva přes Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Jazyk příspěvku",
+      "postLanguageHint": "Vyberte až {{max}} jazyky vašeho příspěvku.",
+      "postLanguageSearch": "Hledat jazyky",
+      "postLanguageA11y": "Jazyk příspěvku: {{value}}"
     }
   }
 }

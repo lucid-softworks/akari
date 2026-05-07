@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Lähetä viesti Germissä"
+    },
+    "composer": {
+      "postLanguageTitle": "Julkaisun kieli",
+      "postLanguageHint": "Valitse enintään {{max}} kieltä julkaisullesi.",
+      "postLanguageSearch": "Hae kieliä",
+      "postLanguageA11y": "Julkaisun kieli: {{value}}"
     }
   }
 }

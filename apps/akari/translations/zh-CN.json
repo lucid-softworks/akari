@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "在 Germ 上发消息"
+    },
+    "composer": {
+      "postLanguageTitle": "帖子语言",
+      "postLanguageHint": "为你的帖子选择最多 {{max}} 种语言。",
+      "postLanguageSearch": "搜索语言",
+      "postLanguageA11y": "帖子语言：{{value}}"
     }
   }
 }

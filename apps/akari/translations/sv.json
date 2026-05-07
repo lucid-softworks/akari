@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Meddelande på Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Inläggsspråk",
+      "postLanguageHint": "Välj upp till {{max}} språk för ditt inlägg.",
+      "postLanguageSearch": "Sök språk",
+      "postLanguageA11y": "Inläggsspråk: {{value}}"
     }
   }
 }

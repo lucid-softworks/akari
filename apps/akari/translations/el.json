@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Μήνυμα στο Germ"
+    },
+    "composer": {
+      "postLanguageTitle": "Γλώσσα δημοσίευσης",
+      "postLanguageHint": "Επιλέξτε έως {{max}} γλώσσες για τη δημοσίευσή σας.",
+      "postLanguageSearch": "Αναζήτηση γλωσσών",
+      "postLanguageA11y": "Γλώσσα δημοσίευσης: {{value}}"
     }
   }
 }

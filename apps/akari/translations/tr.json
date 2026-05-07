@@ -615,6 +615,12 @@
     },
     "germ": {
       "messageOnGerm": "Germde mesaj"
+    },
+    "composer": {
+      "postLanguageTitle": "Gönderi dili",
+      "postLanguageHint": "Gönderiniz için en fazla {{max}} dil seçin.",
+      "postLanguageSearch": "Dilleri ara",
+      "postLanguageA11y": "Gönderi dili: {{value}}"
     }
   }
 }
