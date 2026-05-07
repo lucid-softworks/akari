@@ -88,7 +88,7 @@ export const LanguageSelector = () => {
       <Modal
         visible={isModalVisible}
         animationType="slide"
-        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+        presentationStyle="fullScreen"
         onRequestClose={() => setIsModalVisible(false)}
       >
           <ThemedView
@@ -97,8 +97,20 @@ export const LanguageSelector = () => {
             accessibilityLabel={t('settings.language')}
             style={[styles.nativeSheet, { paddingTop: containerTopPadding }]}
           >
-            <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
-            <ScrollView style={styles.languageList}>
+            <View style={styles.modalHeader}>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.back')}
+                style={styles.modalBackButton}
+                hitSlop={8}
+              >
+                <IconSymbol name="chevron.left" size={20} color="#007AFF" />
+              </TouchableOpacity>
+              <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
+              <View style={styles.modalBackButton} />
+            </View>
+            <ScrollView style={styles.languageList} contentContainerStyle={styles.languageListContent}>
               {languages.map((language) => (
                 <TouchableOpacity
                   key={language.code}
@@ -175,16 +187,32 @@ const styles = StyleSheet.create({
   },
   nativeSheet: {
     flex: 1,
-    padding: 16,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  modalBackButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 16,
     textAlign: 'center',
+    flex: 1,
   },
   languageList: {
-    maxHeight: 300,
+    flex: 1,
+  },
+  languageListContent: {
+    padding: 16,
+    paddingTop: 0,
   },
   languageOption: {
     flexDirection: 'row',
