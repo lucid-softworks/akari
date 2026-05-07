@@ -1,6 +1,13 @@
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 
 import { useResponsive } from '@/hooks/useResponsive';
+
+// Web uses the sidebar layout (see (tabs)/_layout.tsx) and provides its own
+// in-page navigation, so a Stack header on top of that is just a duplicate
+// row. On native we keep the header for the iOS back-swipe affordance and
+// the Android back arrow.
+const SHOW_STACK_HEADER = Platform.OS !== 'web';
 
 export default function ProfileLayout() {
   const { isLargeNative } = useResponsive();
@@ -16,7 +23,7 @@ export default function ProfileLayout() {
       <Stack.Screen
         name="[handle]"
         options={({ route }) => ({
-          headerShown: true,
+          headerShown: SHOW_STACK_HEADER,
           headerBackVisible: true,
           headerBackButtonDisplayMode: 'minimal',
           headerTitle: `@${(route.params as { handle?: string })?.handle ?? ''}`,
@@ -27,7 +34,7 @@ export default function ProfileLayout() {
         name="[handle]/post/[rkey]"
         options={{
           title: 'Post',
-          headerShown: true,
+          headerShown: SHOW_STACK_HEADER,
           headerBackVisible: true,
           headerBackButtonDisplayMode: 'minimal',
         }}
