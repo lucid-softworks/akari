@@ -66,7 +66,8 @@
       "back": "Πίσω",
       "done": "Έγινε",
       "following": "Ακολουθείτε",
-      "reset": "Επαναφορά"
+      "reset": "Επαναφορά",
+      "or": "ή"
     },
     "auth": {
       "fillAllFields": "Συμπληρώστε όλα τα πεδία",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Πρέπει να συνδέσετε έναν διαφορετικό λογαριασμό;",
       "connectNew": "Συνδέστε το νέο",
       "howToGetAppPassword": "Πώς να λάβετε τον κωδικό πρόσβασης της εφαρμογής σας",
-      "appPasswordInstructions": "1. Πηγαίνετε στην εφαρμογή Bluesky Web\n2. Μεταβείτε στις Ρυθμίσεις → Κωδικοί πρόσβασης εφαρμογών\n3. Δημιουργήστε έναν νέο κωδικό πρόσβασης εφαρμογής\n4. Χρησιμοποιήστε αυτόν τον κωδικό πρόσβασης εδώ"
+      "appPasswordInstructions": "1. Πηγαίνετε στην εφαρμογή Bluesky Web\n2. Μεταβείτε στις Ρυθμίσεις → Κωδικοί πρόσβασης εφαρμογών\n3. Δημιουργήστε έναν νέο κωδικό πρόσβασης εφαρμογής\n4. Χρησιμοποιήστε αυτόν τον κωδικό πρόσβασης εδώ",
+      "welcomeTitle": "Καλώς ήρθες στο Akari",
+      "welcomeSubtitle": "Επίλεξε πώς θέλεις να συνδεθείς στον λογαριασμό σου στο AT Protocol.",
+      "oauthChoiceTitle": "Σύνδεση με atproto",
+      "oauthChoiceSubtitle": "Θα ανοίξουμε την υπηρεσία σου στο πρόγραμμα περιήγησης. Συνιστάται.",
+      "passwordChoiceTitle": "Σύνδεση με app password",
+      "passwordChoiceSubtitle": "Χρησιμοποίησε ένα handle και ένα app password από τις ρυθμίσεις του λογαριασμού σου.",
+      "oauthSignIn": "Σύνδεση με atproto",
+      "oauthScreenTitle": "Σύνδεση με atproto",
+      "oauthScreenSubtitle": "Πληκτρολόγησε το handle σου και θα σε συνδέσουμε μέσω της υπηρεσίας σου στο πρόγραμμα περιήγησης.",
+      "passwordScreenTitle": "Σύνδεση με app password",
+      "passwordScreenSubtitle": "Πληκτρολόγησε ένα handle και ένα app password από τον λογαριασμό σου στο AT Protocol.",
+      "oauthInFlight": "Άνοιγμα προγράμματος περιήγησης…",
+      "continue": "Συνέχεια",
+      "invalidHandle": "Δώσε ένα έγκυρο handle.",
+      "oauthSuccessTitle": "Συνδεθήκατε",
+      "oauthSuccessMessage": "Το @{{handle}} ({{did}}) πιστοποιήθηκε μέσω atproto OAuth. Επόμενο βήμα είναι η σύνδεση αυτής της συνεδρίας με τον πελάτη του API."
     },
     "navigation": {
       "search": "Ερευνα",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Δεν έχετε ορίσει ακόμα κανέναν ως έμπιστο επαληθευτή. Πατήστε σε έναν επαληθευτή σε οποιοδήποτε φύλλο επαλήθευσης για να τον προσθέσετε.",
       "enableAdultContentHint": "Εμφάνιση αναρτήσεων και μέσων με σήμανση για ενηλίκους. Απενεργοποιημένο από προεπιλογή.",
       "requireAltTextHint": "Αποκλεισμός αποστολής ανάρτησης με εικόνα, εκτός εάν κάθε εικόνα διαθέτει περιγραφή alt-text.",
-      "displayLargerTextBadgesHint": "Χρήση μεγαλύτερου, πιο ευανάγνωστου μεγέθους κειμένου για τους μετρητές αλληλεπίδρασης (μου αρέσει, απαντήσεις, αναδημοσιεύσεις)."
+      "displayLargerTextBadgesHint": "Χρήση μεγαλύτερου, πιο ευανάγνωστου μεγέθους κειμένου για τους μετρητές αλληλεπίδρασης (μου αρέσει, απαντήσεις, αναδημοσιεύσεις).",
+      "network": {
+        "title": "Δίκτυο",
+        "indexDescription": "Επιλέξτε ποιο AppView και CDN εικόνων διαχειρίζονται την κίνηση AT Protocol.",
+        "intro": "Το Akari επικοινωνεί με δύο upstream υπηρεσίες: ένα AppView που συγκεντρώνει το δίκτυο στις προβολές που βλέπετε (ροές, προφίλ, αναζήτηση) και ένα CDN εικόνων που φιλοξενεί μικρογραφίες και avatar. Από προεπιλογή και τα δύο λειτουργούνται από την Bluesky Social — επιλέξτε εναλλακτικές παρακάτω για να τις παρακάμψετε."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Προεπιλεγμένο AppView",
+        "customSection": "Προσαρμοσμένο AppView",
+        "customHint": "Εισάγετε τη βασική HTTPS URL του AppView και το service DID του. Και τα δύο δημοσιεύονται στο έγγραφο `did:web` του διαχειριστή του AppView, στην υπηρεσία `#bsky_appview`.",
+        "customUrlLabel": "Βασική URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Ενεργό AppView",
+        "activeUrl": "Επιλυμένη URL",
+        "activeDid": "DID διαμεσολάβησης",
+        "noProxy": "Χωρίς κεφαλίδα proxy",
+        "perAccountSection": "Παρακάμψεις ανά λογαριασμό",
+        "perAccountHint": "Άφησε έναν λογαριασμό στο «Χρήση προεπιλογής» για να ακολουθεί τη ρύθμιση εφαρμογής παραπάνω. Παράκαμψε μεμονωμένους λογαριασμούς όταν κάποιος χρειάζεται διαφορετικό AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — το προεπιλεγμένο AppView που λειτουργεί η Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView που διαχειρίζεται η κοινότητα με προσαρμοσμένη εποπτεία."
+          },
+          "custom": {
+            "label": "Προσαρμοσμένο",
+            "description": "Δείξε σε οποιοδήποτε AppView μέσω URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Χρήση προεπιλογής",
+          "custom": "Προσαρμοσμένο",
+          "defaultSummary": "Ακολουθεί την προεπιλογή ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN εικόνων",
+        "intro": "Οι URL εικόνων που επιστρέφει το AppView δείχνουν εξ ορισμού στο CDN της Bluesky. Επιλέξτε διαφορετικό CDN εδώ και τα αντίστοιχα URL (avatar, banner, μικρογραφίες αναρτήσεων) θα ξαναγραφούν ώστε να το χρησιμοποιούν — η διάταξη διαδρομής είναι ίδια μεταξύ των mirror, οπότε μια αλλαγή host αρκεί.",
+        "customSection": "Προσαρμοσμένο CDN",
+        "customUrlLabel": "URL προσαρμοσμένου CDN",
+        "activeSection": "Ενεργό CDN",
+        "activeHost": "Πραγματικός host",
+        "noOverride": "Χωρίς υπερίσχυση (ευθεία διέλευση)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — το προεπιλεγμένο CDN που λειτουργεί η Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — CDN mirror που λειτουργεί η κοινότητα."
+          },
+          "custom": {
+            "label": "Προσαρμοσμένο",
+            "description": "Δείξτε σε οποιοδήποτε συμβατό CDN μέσω URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Οι αποθηκευμένες θέσεις και τα νήματα θα εμφανιστούν εδώ.",

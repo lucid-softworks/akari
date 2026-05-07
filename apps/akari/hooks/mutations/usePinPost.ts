@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 type PinPostArgs = {
   action: 'pin';
@@ -31,7 +31,7 @@ export function usePinPost() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const pinned = args.action === 'pin' ? { uri: args.uri, cid: args.cid } : null;
       return api.setPinnedPost(token, currentAccount.did, pinned);
     },

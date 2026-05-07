@@ -66,7 +66,8 @@
       "back": "Kembali",
       "done": "Selesai",
       "following": "Mengikuti",
-      "reset": "Atur ulang"
+      "reset": "Atur ulang",
+      "or": "atau"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Perlu menghubungkan akun yang berbeda? ",
       "connectNew": "Hubungkan Baru",
       "howToGetAppPassword": "Cara mendapatkan kata sandi aplikasi",
-      "appPasswordInstructions": "1. Buka aplikasi web Bluesky\n2. Buka Pengaturan → Kata Sandi Aplikasi\n3. Buat kata sandi aplikasi baru\n4. Gunakan kata sandi tersebut di sini"
+      "appPasswordInstructions": "1. Buka aplikasi web Bluesky\n2. Buka Pengaturan → Kata Sandi Aplikasi\n3. Buat kata sandi aplikasi baru\n4. Gunakan kata sandi tersebut di sini",
+      "welcomeTitle": "Selamat datang di Akari",
+      "welcomeSubtitle": "Pilih cara kamu masuk ke akun AT Protocol-mu.",
+      "oauthChoiceTitle": "Masuk dengan atproto",
+      "oauthChoiceSubtitle": "Kami akan membuka layananmu di browser. Disarankan.",
+      "passwordChoiceTitle": "Masuk dengan app password",
+      "passwordChoiceSubtitle": "Gunakan handle dan app password dari pengaturan akunmu.",
+      "oauthSignIn": "Masuk dengan atproto",
+      "oauthScreenTitle": "Masuk dengan atproto",
+      "oauthScreenSubtitle": "Masukkan handle-mu dan kami akan menyambungkanmu melalui layananmu di browser.",
+      "passwordScreenTitle": "Masuk dengan app password",
+      "passwordScreenSubtitle": "Masukkan handle dan app password dari akun AT Protocol-mu.",
+      "oauthInFlight": "Membuka browser…",
+      "continue": "Lanjutkan",
+      "invalidHandle": "Masukkan handle yang valid.",
+      "oauthSuccessTitle": "Masuk berhasil",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) berhasil diautentikasi lewat atproto OAuth. Menyambungkan sesi ini ke klien API adalah langkah berikutnya."
     },
     "navigation": {
       "search": "Cari",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "Anda belum menandai siapa pun sebagai verifikator tepercaya. Ketuk verifikator di panel verifikasi mana pun untuk menambahkannya.",
       "enableAdultContentHint": "Tampilkan postingan dan media yang ditandai sebagai konten dewasa. Mati secara default.",
       "requireAltTextHint": "Cegah pengiriman postingan gambar kecuali setiap gambar memiliki deskripsi teks alt.",
-      "displayLargerTextBadgesHint": "Gunakan ukuran teks yang lebih besar dan mudah dibaca untuk jumlah interaksi (suka, balasan, postingan ulang)."
+      "displayLargerTextBadgesHint": "Gunakan ukuran teks yang lebih besar dan mudah dibaca untuk jumlah interaksi (suka, balasan, postingan ulang).",
+      "network": {
+        "title": "Jaringan",
+        "indexDescription": "Pilih AppView dan CDN gambar mana yang menangani lalu lintas AT Protocol Anda.",
+        "intro": "Akari berbicara dengan dua layanan upstream: AppView yang mengagregasi jaringan menjadi tampilan yang Anda lihat (umpan, profil, pencarian) dan CDN gambar yang menampung thumbnail dan avatar. Secara default keduanya dioperasikan oleh Bluesky Social — pilih alternatif di bawah untuk melewati keduanya."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView bawaan",
+        "customSection": "AppView khusus",
+        "customHint": "Masukkan URL dasar HTTPS AppView dan service DID-nya. Keduanya dipublikasikan di dokumen `did:web` operator AppView di bawah layanan `#bsky_appview`.",
+        "customUrlLabel": "URL dasar",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView aktif",
+        "activeUrl": "URL yang diselesaikan",
+        "activeDid": "DID proxy",
+        "noProxy": "Tanpa header proxy",
+        "perAccountSection": "Penggantian per akun",
+        "perAccountHint": "Biarkan akun pada \"Gunakan bawaan\" agar mengikuti pengaturan seluruh aplikasi di atas. Ganti akun individual saat satu akun butuh AppView berbeda.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView bawaan yang dijalankan Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView yang dijalankan komunitas dengan moderasi khusus."
+          },
+          "custom": {
+            "label": "Khusus",
+            "description": "Arahkan ke AppView mana pun lewat URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Gunakan bawaan",
+          "custom": "Khusus",
+          "defaultSummary": "Mengikuti bawaan ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN gambar",
+        "intro": "URL gambar yang dikembalikan oleh AppView mengarah ke CDN Bluesky secara default. Pilih CDN berbeda di sini dan URL yang cocok (avatar, banner, thumbnail postingan) akan ditulis ulang untuk menggunakannya — struktur jalur sama di seluruh mirror, jadi penggantian host sudah cukup.",
+        "customSection": "CDN khusus",
+        "customUrlLabel": "URL CDN khusus",
+        "activeSection": "CDN aktif",
+        "activeHost": "Host efektif",
+        "noOverride": "Tanpa penggantian (diteruskan langsung)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN default yang dioperasikan Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — mirror CDN yang dijalankan komunitas."
+          },
+          "custom": {
+            "label": "Khusus",
+            "description": "Arahkan ke CDN kompatibel mana pun via URL."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "Pilih GIF",

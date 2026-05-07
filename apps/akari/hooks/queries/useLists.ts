@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi, type BlueskyListResponse, type BlueskyListsResponse } from '@/bluesky-api';
+import { type BlueskyListResponse, type BlueskyListsResponse } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Lists owned by the given actor (defaults to the current user).
@@ -22,7 +23,7 @@ export function useLists(actor?: string) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!target) throw new Error('No actor');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.getLists(token, target, 50, pageParam as string | undefined);
     },
     getNextPageParam: (lastPage) => lastPage.cursor,
@@ -45,7 +46,7 @@ export function useList(listUri?: string) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!listUri) throw new Error('No list URI');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.getList(token, listUri, 50, pageParam as string | undefined);
     },
     getNextPageParam: (lastPage) => lastPage.cursor,
@@ -100,7 +101,7 @@ export function useListSnapshot(listUri?: string) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!listUri) throw new Error('No list URI');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.getList(token, listUri, 100);
     },
   });

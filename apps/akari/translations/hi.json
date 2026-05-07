@@ -66,7 +66,8 @@
       "back": "वापस",
       "done": "हो गया",
       "following": "फ़ॉलो किया हुआ",
-      "reset": "रीसेट"
+      "reset": "रीसेट",
+      "or": "या"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "एक अलग खाता कनेक्ट करने की आवश्यकता है? ",
       "connectNew": "नया कनेक्ट करें",
       "howToGetAppPassword": "अपना ऐप पासवर्ड कैसे प्राप्त करें",
-      "appPasswordInstructions": "1. Bluesky वेब ऐप पर जाएं\n2. सेटिंग्स → ऐप पासवर्ड पर जाएं\n3. एक नया ऐप पासवर्ड बनाएं\n4. उस पासवर्ड का उपयोग यहां करें"
+      "appPasswordInstructions": "1. Bluesky वेब ऐप पर जाएं\n2. सेटिंग्स → ऐप पासवर्ड पर जाएं\n3. एक नया ऐप पासवर्ड बनाएं\n4. उस पासवर्ड का उपयोग यहां करें",
+      "welcomeTitle": "Akari में आपका स्वागत है",
+      "welcomeSubtitle": "चुनें कि आप अपने AT Protocol खाते में कैसे साइन इन करना चाहते हैं.",
+      "oauthChoiceTitle": "atproto से साइन इन करें",
+      "oauthChoiceSubtitle": "हम आपकी सेवा को ब्राउज़र में खोलेंगे. अनुशंसित.",
+      "passwordChoiceTitle": "ऐप पासवर्ड से साइन इन करें",
+      "passwordChoiceSubtitle": "अपने खाता सेटिंग्स से एक handle और एक ऐप पासवर्ड का उपयोग करें.",
+      "oauthSignIn": "atproto से साइन इन करें",
+      "oauthScreenTitle": "atproto से साइन इन करें",
+      "oauthScreenSubtitle": "अपना handle दर्ज करें और हम आपको ब्राउज़र में आपकी सेवा के माध्यम से जोड़ेंगे.",
+      "passwordScreenTitle": "ऐप पासवर्ड से साइन इन करें",
+      "passwordScreenSubtitle": "अपने AT Protocol खाते से एक handle और एक ऐप पासवर्ड दर्ज करें.",
+      "oauthInFlight": "ब्राउज़र खोला जा रहा है…",
+      "continue": "जारी रखें",
+      "invalidHandle": "कृपया एक मान्य handle दर्ज करें.",
+      "oauthSuccessTitle": "साइन इन हो गया",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) को atproto OAuth के माध्यम से प्रमाणित किया गया. इस सत्र को API क्लाइंट से जोड़ना अगला कदम है."
     },
     "navigation": {
       "search": "खोज",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "आपने अभी तक किसी को विश्वसनीय सत्यापक के रूप में चिह्नित नहीं किया है। किसी भी सत्यापन शीट में सत्यापक पर टैप करके उन्हें जोड़ें।",
       "enableAdultContentHint": "वयस्क के रूप में चिह्नित पोस्ट और मीडिया दिखाएँ। डिफ़ॉल्ट रूप से बंद।",
       "requireAltTextHint": "जब तक हर छवि में ऑल्ट-टेक्स्ट विवरण न हो, तब तक छवि पोस्ट भेजने को रोकें।",
-      "displayLargerTextBadgesHint": "एंगेजमेंट गिनती (लाइक, उत्तर, रीपोस्ट) के लिए बड़े और अधिक पठनीय टेक्स्ट आकार का उपयोग करें।"
+      "displayLargerTextBadgesHint": "एंगेजमेंट गिनती (लाइक, उत्तर, रीपोस्ट) के लिए बड़े और अधिक पठनीय टेक्स्ट आकार का उपयोग करें।",
+      "network": {
+        "title": "नेटवर्क",
+        "indexDescription": "चुनें कि कौन-सा AppView और छवि CDN आपके AT Protocol ट्रैफ़िक को संभालेंगे।",
+        "intro": "Akari दो अपस्ट्रीम सेवाओं से बात करता है: एक AppView जो नेटवर्क को आपकी दिखाई देने वाली विउअ (फ़ीड, प्रोफ़ाइल, खोज) में जोड़ता है, और एक छवि CDN जो थंबनेल और अवतार होस्ट करता है। डिफ़ॉल्ट रूप से दोनों Bluesky Social द्वारा संचालित होते हैं — उन्हें बायपास करने के लिए नीचे विकल्प चुनें।"
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "डिफ़ॉल्ट AppView",
+        "customSection": "कस्टम AppView",
+        "customHint": "AppView का HTTPS बेस URL और उसकी service DID दर्ज करें. दोनों AppView ऑपरेटर के `did:web` दस्तावेज़ में `#bsky_appview` सेवा के अंतर्गत प्रकाशित होते हैं.",
+        "customUrlLabel": "बेस URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "सक्रिय AppView",
+        "activeUrl": "हल किया गया URL",
+        "activeDid": "प्रॉक्सी DID",
+        "noProxy": "कोई प्रॉक्सी हेडर नहीं",
+        "perAccountSection": "खाता-अनुसार ओवरराइड",
+        "perAccountHint": "किसी खाते को ऊपर दी गई ऐप-व्यापी सेटिंग के अनुसार रखने के लिए \"डिफ़ॉल्ट का उपयोग करें\" पर छोड़ दें. केवल उन खातों को ओवरराइड करें जिन्हें अलग AppView चाहिए.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — Bluesky Social द्वारा संचालित डिफ़ॉल्ट AppView."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — कस्टम मॉडरेशन के साथ समुदाय-संचालित AppView."
+          },
+          "custom": {
+            "label": "कस्टम",
+            "description": "URL + DID द्वारा किसी भी AppView की ओर इंगित करें."
+          }
+        },
+        "choice": {
+          "default": "डिफ़ॉल्ट का उपयोग करें",
+          "custom": "कस्टम",
+          "defaultSummary": "डिफ़ॉल्ट का अनुसरण कर रहा है ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "छवि CDN",
+        "intro": "AppView द्वारा लौटाए गए छवि URL डिफ़ॉल्ट रूप से Bluesky के CDN की ओर इशारा करते हैं। यहाँ कोई और CDN चुनें और मेल खाते URL (अवतार, बैनर, पोस्ट थंबनेल) उसे उपयोग करने के लिए फिर से लिखे जाएँगे — पाथ लेआउट सभी मिररों पर समान है, इसलिए होस्ट बदलना ही पर्याप्त है।",
+        "customSection": "कस्टम CDN",
+        "customUrlLabel": "कस्टम CDN URL",
+        "activeSection": "सक्रिय CDN",
+        "activeHost": "प्रभावी होस्ट",
+        "noOverride": "कोई ओवरराइड नहीं (सीधे पास हो रहा)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — Bluesky Social द्वारा संचालित डिफ़ॉल्ट CDN।"
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — समुदाय द्वारा संचालित CDN मिरर।"
+          },
+          "custom": {
+            "label": "कस्टम",
+            "description": "URL के माध्यम से किसी भी संगत CDN की ओर इंगित करें।"
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "GIF चुनें",

@@ -1,7 +1,7 @@
-import { BlueskyApi } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
 import { useAccounts } from './useAccounts';
 import { useJwtToken } from './useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Hook to fetch profile data for all accounts (for account switcher UI)
@@ -24,7 +24,7 @@ export function useAccountProfiles() {
             console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
             continue;
           }
-          const api = new BlueskyApi(account.pdsUrl);
+          const api = apiForAccount(account);
           const profile = await api.getProfile(account.jwtToken, account.handle);
 
           if (profile) {

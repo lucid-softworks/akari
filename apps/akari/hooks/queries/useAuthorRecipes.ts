@@ -1,9 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { usePdsUrl } from '@/hooks/queries/usePdsUrl';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching recipe records created by a user
@@ -21,7 +21,7 @@ export function useAuthorRecipes(identifier: string | undefined, limit: number =
       if (!identifier) throw new Error('No identifier provided');
       if (!targetPdsUrl) throw new Error('No PDS URL available for target user');
 
-      const api = new BlueskyApi(targetPdsUrl);
+      const api = apiForPdsUrl(targetPdsUrl);
       const recipes = await api.getActorRecipes(token, identifier, limit, pageParam);
 
       return {

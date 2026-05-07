@@ -66,7 +66,8 @@
       "back": "返回",
       "done": "完成",
       "following": "追蹤中",
-      "reset": "重設"
+      "reset": "重設",
+      "or": "或"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "需要連接不同的帳戶？",
       "connectNew": "連接新的",
       "howToGetAppPassword": "如何取得您的應用程式密碼",
-      "appPasswordInstructions": "1. 前往 Bluesky 網頁應用程式\n2. 導航到設定 → 應用程式密碼\n3. 建立新的應用程式密碼\n4. 在此處使用該密碼"
+      "appPasswordInstructions": "1. 前往 Bluesky 網頁應用程式\n2. 導航到設定 → 應用程式密碼\n3. 建立新的應用程式密碼\n4. 在此處使用該密碼",
+      "welcomeTitle": "歡迎使用 Akari",
+      "welcomeSubtitle": "選擇登入 AT Protocol 帳號的方式。",
+      "oauthChoiceTitle": "透過 atproto 登入",
+      "oauthChoiceSubtitle": "我們會在瀏覽器中開啟你的服務。建議使用。",
+      "passwordChoiceTitle": "使用應用程式密碼登入",
+      "passwordChoiceSubtitle": "使用帳號設定中的 handle 與應用程式密碼。",
+      "oauthSignIn": "透過 atproto 登入",
+      "oauthScreenTitle": "透過 atproto 登入",
+      "oauthScreenSubtitle": "輸入 handle，我們會在瀏覽器中透過你的服務連接你。",
+      "passwordScreenTitle": "使用應用程式密碼登入",
+      "passwordScreenSubtitle": "輸入 AT Protocol 帳號的 handle 與應用程式密碼。",
+      "oauthInFlight": "正在開啟瀏覽器…",
+      "continue": "繼續",
+      "invalidHandle": "請輸入有效的 handle。",
+      "oauthSuccessTitle": "已登入",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) 已透過 atproto OAuth 認證。下一步是將這個工作階段接到 API 用戶端。"
     },
     "navigation": {
       "search": "搜尋",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "你尚未將任何人標記為可信認證者。在任何認證面板中點擊認證者即可加入。",
       "enableAdultContentHint": "顯示標示為成人內容的貼文與媒體。預設為關閉。",
       "requireAltTextHint": "除非每張圖片都有替代文字說明，否則禁止傳送圖片貼文。",
-      "displayLargerTextBadgesHint": "在互動數量（按讚、回覆、轉發）中使用更大、更清晰的字級。"
+      "displayLargerTextBadgesHint": "在互動數量（按讚、回覆、轉發）中使用更大、更清晰的字級。",
+      "network": {
+        "title": "網路",
+        "indexDescription": "選擇處理你 AT Protocol 流量的 AppView 與圖片 CDN。",
+        "intro": "Akari 會和兩個上游服務通訊：將網路彙整成你看到的畫面（動態、個人資料、搜尋）的 AppView，以及代管縮圖與頭像的圖片 CDN。預設情況下兩者皆由 Bluesky Social 營運 — 在下方挑選替代方案以繞過它們。"
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "預設 AppView",
+        "customSection": "自訂 AppView",
+        "customHint": "輸入 AppView 的 HTTPS 基礎 URL 及其 service DID。兩者都會在 AppView 營運方的 `did:web` 文件中，於 `#bsky_appview` 服務下公布。",
+        "customUrlLabel": "基礎 URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "目前啟用的 AppView",
+        "activeUrl": "解析後的 URL",
+        "activeDid": "代理 DID",
+        "noProxy": "沒有代理標頭",
+        "perAccountSection": "依帳號覆寫",
+        "perAccountHint": "把帳號保持在「使用預設」就能跟隨上方的全域設定；只有當某個帳號需要不同的 AppView 時，再個別覆寫。",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — 由 Bluesky Social 營運的預設 AppView。"
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — 由社群營運、採用自訂審核的 AppView。"
+          },
+          "custom": {
+            "label": "自訂",
+            "description": "透過 URL 與 DID 指向任何 AppView。"
+          }
+        },
+        "choice": {
+          "default": "使用預設",
+          "custom": "自訂",
+          "defaultSummary": "正在跟隨預設 ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "圖片 CDN",
+        "intro": "AppView 回傳的圖片 URL 預設指向 Bluesky 的 CDN。在這裡選擇其他 CDN，對應的 URL（頭像、橫幅、貼文縮圖）將被改寫為使用該 CDN — 路徑配置在各鏡像間一致，因此只需更換主機即可。",
+        "customSection": "自訂 CDN",
+        "customUrlLabel": "自訂 CDN URL",
+        "activeSection": "目前啟用的 CDN",
+        "activeHost": "實際主機",
+        "noOverride": "無覆寫（直接通過）",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — Bluesky Social 營運的預設 CDN。"
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — 社群營運的 CDN 鏡像。"
+          },
+          "custom": {
+            "label": "自訂",
+            "description": "透過 URL 指向任何相容的 CDN。"
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "選擇GIF",

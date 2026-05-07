@@ -66,7 +66,8 @@
       "back": "Tilbage",
       "done": "Færdig",
       "following": "Følger",
-      "reset": "Nulstil"
+      "reset": "Nulstil",
+      "or": "eller"
     },
     "auth": {
       "fillAllFields": "Udfyld venligst alle felter",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Brug for at forbinde en anden konto?",
       "connectNew": "Tilslut ny",
       "howToGetAppPassword": "Sådan får du din appadgangskode",
-      "appPasswordInstructions": "1. Gå til Bluesky Web App\n2. Navigér til Indstillinger → Appadgangskoder\n3. Opret en ny appadgangskode\n4. Brug denne adgangskode her"
+      "appPasswordInstructions": "1. Gå til Bluesky Web App\n2. Navigér til Indstillinger → Appadgangskoder\n3. Opret en ny appadgangskode\n4. Brug denne adgangskode her",
+      "welcomeTitle": "Velkommen til Akari",
+      "welcomeSubtitle": "Vælg, hvordan du vil logge ind på din AT Protocol-konto.",
+      "oauthChoiceTitle": "Log ind med atproto",
+      "oauthChoiceSubtitle": "Vi åbner din tjeneste i browseren. Anbefales.",
+      "passwordChoiceTitle": "Log ind med app-adgangskode",
+      "passwordChoiceSubtitle": "Brug et handle og en app-adgangskode fra dine kontoindstillinger.",
+      "oauthSignIn": "Log ind med atproto",
+      "oauthScreenTitle": "Log ind med atproto",
+      "oauthScreenSubtitle": "Indtast dit handle, så forbinder vi dig via din tjeneste i browseren.",
+      "passwordScreenTitle": "Log ind med app-adgangskode",
+      "passwordScreenSubtitle": "Indtast et handle og en app-adgangskode fra din AT Protocol-konto.",
+      "oauthInFlight": "Åbner browser…",
+      "continue": "Fortsæt",
+      "invalidHandle": "Indtast venligst et gyldigt handle.",
+      "oauthSuccessTitle": "Logget ind",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) er godkendt via atproto OAuth. At forbinde denne session til API-klienten er næste skridt."
     },
     "navigation": {
       "search": "Søg",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Du har endnu ikke markeret nogen som betroet verifikator. Tryk på en verifikator i en verifikationsoversigt for at tilføje vedkommende.",
       "enableAdultContentHint": "Viser opslag og medier mærket som indhold for voksne. Slået fra som standard.",
       "requireAltTextHint": "Blokerer afsendelse af et opslag med billeder, medmindre hvert billede har en alt-tekstbeskrivelse.",
-      "displayLargerTextBadgesHint": "Brug en større, mere læsbar tekststørrelse til interaktionstal (likes, svar, genopslag)."
+      "displayLargerTextBadgesHint": "Brug en større, mere læsbar tekststørrelse til interaktionstal (likes, svar, genopslag).",
+      "network": {
+        "title": "Netværk",
+        "indexDescription": "Vælg hvilken AppView og billed-CDN der håndterer din AT Protocol-trafik.",
+        "intro": "Akari taler med to upstream-tjenester: en AppView, der aggregerer netværket til de visninger, du ser (feeds, profiler, søgning), og et billed-CDN, der hoster miniaturer og avatarer. Som standard drives begge af Bluesky Social — vælg alternativer nedenfor for at omgå dem."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Standard-AppView",
+        "customSection": "Brugerdefineret AppView",
+        "customHint": "Indtast AppView'ens HTTPS-basis-URL og dens service-DID. Begge er offentliggjort i AppView-operatørens `did:web`-dokument under tjenesten `#bsky_appview`.",
+        "customUrlLabel": "Basis-URL",
+        "customDidLabel": "Service-DID",
+        "activeSection": "Aktiv AppView",
+        "activeUrl": "Opløst URL",
+        "activeDid": "Proxy-DID",
+        "noProxy": "Ingen proxy-header",
+        "perAccountSection": "Tilsidesættelser pr. konto",
+        "perAccountHint": "Lad en konto stå på \"Brug standard\" for at følge app-indstillingen ovenfor. Tilsidesæt enkelte konti, når én skal bruge en anden AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — standard-AppView'en drevet af Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — fællesskabsdrevet AppView med brugerdefineret moderation."
+          },
+          "custom": {
+            "label": "Brugerdefineret",
+            "description": "Peg på en hvilken som helst AppView via URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Brug standard",
+          "custom": "Brugerdefineret",
+          "defaultSummary": "Følger standard ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Billed-CDN",
+        "intro": "Billed-URL'er, som AppView returnerer, peger som standard på Blueskys CDN. Vælg et andet CDN her, så bliver de matchende URL'er (avatarer, bannere, post-miniaturer) skrevet om til at bruge det — stilayout er ens på tværs af spejle, så et hostskifte er nok.",
+        "customSection": "Tilpasset CDN",
+        "customUrlLabel": "URL til tilpasset CDN",
+        "activeSection": "Aktivt CDN",
+        "activeHost": "Faktisk vært",
+        "noOverride": "Ingen tilsidesættelse (sendes direkte igennem)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — det standard-CDN, der drives af Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — fællesskabsdrevet CDN-spejl."
+          },
+          "custom": {
+            "label": "Tilpasset",
+            "description": "Peg på et hvilket som helst kompatibelt CDN via URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Gemte posts og tråde vises her.",

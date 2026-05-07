@@ -1,8 +1,8 @@
-import { Image } from 'expo-image';
 import React, { useCallback } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
+import { AvatarOrInitial } from '@/components/AvatarOrInitial';
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -70,12 +70,10 @@ export const PostHeader = React.memo(function PostHeader({
             onPointerEnter={handleAvatarPointerEnter}
             onPointerLeave={handleAvatarPointerLeave}
           >
-            <Image
-              source={{
-                uri: author.avatar || 'https://bsky.app/static/default-avatar.png',
-              }}
-              style={styles.authorAvatar}
-              contentFit="cover"
+            <AvatarOrInitial
+              uri={author.avatar}
+              seed={author.displayName || author.handle}
+              size={layout.avatarMedium}
             />
             {isLive && (
               <View style={styles.liveBadge}>

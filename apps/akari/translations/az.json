@@ -66,7 +66,8 @@
       "back": "Geri",
       "done": "Hazır",
       "following": "İzlənir",
-      "reset": "Sıfırla"
+      "reset": "Sıfırla",
+      "or": "və ya"
     },
     "auth": {
       "fillAllFields": "Xahiş edirəm bütün sahələri doldurun",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Fərqli bir hesabı bağlamaq lazımdır?",
       "connectNew": "Yeni qoşun",
       "howToGetAppPassword": "Tətbiq şifrənizi necə əldə etmək olar",
-      "appPasswordInstructions": "1. Bluesky veb tətbiqinə gedin\n2. Parametrlərə gedin → Tətbiq Şifrələri\n3. Yeni bir tətbiq şifrəsi yaradın\n4. Bu şifrəni burada istifadə edin"
+      "appPasswordInstructions": "1. Bluesky veb tətbiqinə gedin\n2. Parametrlərə gedin → Tətbiq Şifrələri\n3. Yeni bir tətbiq şifrəsi yaradın\n4. Bu şifrəni burada istifadə edin",
+      "welcomeTitle": "Akari-yə xoş gəldin",
+      "welcomeSubtitle": "AT Protocol hesabına necə giriş etmək istədiyini seç.",
+      "oauthChoiceTitle": "atproto ilə daxil ol",
+      "oauthChoiceSubtitle": "Xidmətini brauzerdə açacağıq. Tövsiyə olunur.",
+      "passwordChoiceTitle": "Tətbiq parolu ilə daxil ol",
+      "passwordChoiceSubtitle": "Hesab parametrlərindən bir istifadəçi adı və tətbiq parolu istifadə et.",
+      "oauthSignIn": "atproto ilə daxil ol",
+      "oauthScreenTitle": "atproto ilə daxil ol",
+      "oauthScreenSubtitle": "İstifadəçi adını daxil et — səni brauzerdə xidmətin vasitəsilə bağlayacağıq.",
+      "passwordScreenTitle": "Tətbiq parolu ilə daxil ol",
+      "passwordScreenSubtitle": "İstifadəçi adını və AT Protocol hesabından bir tətbiq parolunu daxil et.",
+      "oauthInFlight": "Brauzer açılır…",
+      "continue": "Davam et",
+      "invalidHandle": "Zəhmət olmasa düzgün istifadəçi adı daxil et.",
+      "oauthSuccessTitle": "Daxil olundu",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ilə təsdiqləndi. Bu sessiyanı API müştərisinə bağlamaq növbəti addımdır."
     },
     "navigation": {
       "search": "Axtarış",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Hələ heç kimi etibarlı təsdiqləyici kimi qeyd etməmisən. Əlavə etmək üçün hər hansı təsdiqləmə vərəqindəki bir təsdiqləyiciyə toxun.",
       "enableAdultContentHint": "Yetkinlər üçün etiketlənmiş paylaşımları və medianı göstər. Susmaqla söndürülmüş olur.",
       "requireAltTextHint": "Hər şəklin alt-mətn təsviri olmadıqca şəkilli paylaşımın göndərilməsini blokla.",
-      "displayLargerTextBadgesHint": "Qarşılıqlı təsir sayları (bəyəni, cavab, yenidən paylaşım) üçün daha böyük və daha aydın oxunan mətn ölçüsü istifadə et."
+      "displayLargerTextBadgesHint": "Qarşılıqlı təsir sayları (bəyəni, cavab, yenidən paylaşım) üçün daha böyük və daha aydın oxunan mətn ölçüsü istifadə et.",
+      "network": {
+        "title": "Şəbəkə",
+        "indexDescription": "AT Protocol trafikinizi hansı AppView və şəkil CDN-i emal edəcəyini seçin.",
+        "intro": "Akari iki yuxarı xidmətlə əlaqə saxlayır: gördüyünüz görünüşləri (lentlər, profillər, axtarış) toplayan AppView və miniatürləri ilə avatarları saxlayan şəkil CDN. Standart olaraq hər ikisini Bluesky Social idarə edir — onları keçmək üçün aşağıdan alternativlər seçin."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Varsayılan AppView",
+        "customSection": "Özəl AppView",
+        "customHint": "AppView-in HTTPS əsas URL-ini və xidmət DID-ini daxil edin. Hər ikisi AppView operatorunun `did:web` sənədində `#bsky_appview` xidməti altında dərc olunur.",
+        "customUrlLabel": "Əsas URL",
+        "customDidLabel": "Xidmət DID",
+        "activeSection": "Aktiv AppView",
+        "activeUrl": "Həll edilmiş URL",
+        "activeDid": "Proksi DID",
+        "noProxy": "Proksi başlığı yoxdur",
+        "perAccountSection": "Hesaba görə üst-yazmalar",
+        "perAccountHint": "Bir hesabı yuxarıdakı tətbiq səviyyəli ayarı izləməsi üçün \"Varsayılanı istifadə et\" seçimində saxlayın. Yalnız fərqli AppView lazım olduqda fərdi hesabları üst-yazın.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — Bluesky Social tərəfindən idarə olunan varsayılan AppView."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — özəl moderasiyalı, icma tərəfindən idarə olunan AppView."
+          },
+          "custom": {
+            "label": "Özəl",
+            "description": "URL və DID ilə istənilən AppView-ə yönləndirin."
+          }
+        },
+        "choice": {
+          "default": "Varsayılanı istifadə et",
+          "custom": "Özəl",
+          "defaultSummary": "Varsayılanı izləyir ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Şəkil CDN",
+        "intro": "AppView-in qaytardığı şəkil URL-ləri standart olaraq Bluesky-ın CDN-inə yönəlir. Burada başqa CDN seçsəniz, uyğun URL-lər (avatarlar, bannerlər, post miniatürləri) ona uyğun yenidən yazılacaq — yol strukturu aynalar arasında eynidir, host dəyişikliyi kifayətdir.",
+        "customSection": "Xüsusi CDN",
+        "customUrlLabel": "Xüsusi CDN URL",
+        "activeSection": "Aktiv CDN",
+        "activeHost": "Effektiv host",
+        "noOverride": "Üst-üstə düşmə yoxdur (ötürülür)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — Bluesky Social tərəfindən idarə olunan standart CDN."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — icma tərəfindən idarə olunan CDN aynası."
+          },
+          "custom": {
+            "label": "Xüsusi",
+            "description": "URL ilə hər hansı uyğun CDN-i göstərin."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Burada xilas edilmiş yazılar və mövzular görünəcək.",

@@ -66,7 +66,8 @@
       "back": "戻る",
       "done": "完了",
       "following": "フォロー中",
-      "reset": "リセット"
+      "reset": "リセット",
+      "or": "または"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "別のアカウントを接続する必要がありますか？ ",
       "connectNew": "新規接続",
       "howToGetAppPassword": "アプリパスワードの取得方法",
-      "appPasswordInstructions": "1. Blueskyウェブアプリに移動\n2. 設定 → アプリパスワードに移動\n3. 新しいアプリパスワードを作成\n4. そのパスワードをここで使用"
+      "appPasswordInstructions": "1. Blueskyウェブアプリに移動\n2. 設定 → アプリパスワードに移動\n3. 新しいアプリパスワードを作成\n4. そのパスワードをここで使用",
+      "welcomeTitle": "Akari へようこそ",
+      "welcomeSubtitle": "AT プロトコルのアカウントにどのようにサインインするか選んでください。",
+      "oauthChoiceTitle": "atproto でサインイン",
+      "oauthChoiceSubtitle": "ブラウザでサービスを開きます。おすすめです。",
+      "passwordChoiceTitle": "アプリパスワードでサインイン",
+      "passwordChoiceSubtitle": "アカウント設定の handle とアプリパスワードを使ってください。",
+      "oauthSignIn": "atproto でサインイン",
+      "oauthScreenTitle": "atproto でサインイン",
+      "oauthScreenSubtitle": "handle を入力すると、ブラウザでサービスを介して接続します。",
+      "passwordScreenTitle": "アプリパスワードでサインイン",
+      "passwordScreenSubtitle": "AT プロトコルのアカウントから handle とアプリパスワードを入力してください。",
+      "oauthInFlight": "ブラウザを開いています…",
+      "continue": "続行",
+      "invalidHandle": "有効な handle を入力してください。",
+      "oauthSuccessTitle": "サインインしました",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) を atproto OAuth で認証しました。次のステップはこのセッションを API クライアントに接続することです。"
     },
     "navigation": {
       "search": "検索",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "まだ信頼できる認証者を指定していません。認証シート内の認証者をタップして追加してください。",
       "enableAdultContentHint": "アダルト指定された投稿やメディアを表示します。デフォルトはオフです。",
       "requireAltTextHint": "すべての画像に代替テキストの説明がない限り、画像付き投稿の送信をブロックします。",
-      "displayLargerTextBadgesHint": "エンゲージメント数（いいね、返信、リポスト）に、より大きく読みやすい文字サイズを使用します。"
+      "displayLargerTextBadgesHint": "エンゲージメント数（いいね、返信、リポスト）に、より大きく読みやすい文字サイズを使用します。",
+      "network": {
+        "title": "ネットワーク",
+        "indexDescription": "AT Protocol の通信を処理する AppView と画像 CDN を選びます。",
+        "intro": "Akari は 2 つの上流サービスと通信します。フィード・プロフィール・検索などの表示を組み立てる AppView と、サムネイルやアバターを配信する画像 CDN です。既定ではどちらも Bluesky Social が運用しています — 迂回したい場合は下から代替を選んでください。"
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "既定の AppView",
+        "customSection": "カスタム AppView",
+        "customHint": "AppView の HTTPS ベース URL とサービス DID を入力してください。どちらも AppView 運用者の `did:web` ドキュメントの `#bsky_appview` サービスの下で公開されています。",
+        "customUrlLabel": "ベース URL",
+        "customDidLabel": "サービス DID",
+        "activeSection": "現在有効な AppView",
+        "activeUrl": "解決済み URL",
+        "activeDid": "プロキシ DID",
+        "noProxy": "プロキシヘッダーなし",
+        "perAccountSection": "アカウント別のオーバーライド",
+        "perAccountHint": "上のアプリ全体の設定に従わせるには、アカウントを「既定を使用」のままにします。個別のアカウントで別の AppView が必要な場合のみオーバーライドしてください。",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — Bluesky Social が運用する既定の AppView です。"
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — 独自モデレーションを行うコミュニティ運営の AppView。"
+          },
+          "custom": {
+            "label": "カスタム",
+            "description": "URL と DID で任意の AppView を指定します。"
+          }
+        },
+        "choice": {
+          "default": "既定を使用",
+          "custom": "カスタム",
+          "defaultSummary": "既定に従っています ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "画像 CDN",
+        "intro": "AppView が返す画像 URL は既定で Bluesky の CDN を指します。ここで別の CDN を選ぶと、対応する URL（アバター・バナー・投稿サムネイル）はその CDN を使うように書き換えられます — パス構造はミラー間で共通なので、ホストの差し替えだけで十分です。",
+        "customSection": "カスタム CDN",
+        "customUrlLabel": "カスタム CDN の URL",
+        "activeSection": "現在有効な CDN",
+        "activeHost": "実際のホスト",
+        "noOverride": "上書きなし（そのまま通過）",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — Bluesky Social が運用する既定の CDN。"
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — コミュニティ運営の CDN ミラー。"
+          },
+          "custom": {
+            "label": "カスタム",
+            "description": "URL で任意の互換 CDN を指定できます。"
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "GIFを選択",

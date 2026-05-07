@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { useState } from 'react';
 import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';

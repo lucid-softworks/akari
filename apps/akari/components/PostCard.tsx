@@ -393,7 +393,7 @@ const LivePreview = React.memo(function LivePreview({
   onAvatarHoverChange: (hovered: boolean) => void;
   onWatchLive: () => void;
 }) {
-  const { Image } = require('expo-image');
+  const { Image } = require('@/components/Image');
   const { t } = useTranslation();
   const { useNavigateToProfile } = require('@/utils/navigation');
   const navigateToProfile = useNavigateToProfile();

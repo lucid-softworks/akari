@@ -2,8 +2,7 @@ import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 type ConversationError = {
   type: 'permission' | 'network' | 'unknown';
   message: string;
@@ -33,7 +32,7 @@ export function useConversations(
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = apiForAccount(currentAccount);
         const response = await api.listConversations(
           token,
           limit,

@@ -1,9 +1,10 @@
-import { BlueskyApi, type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFeedsPref } from '@/bluesky-api';
+import { type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFeedsPref } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SavedFeedWithMetadata } from '@/types/savedFeed';
 import { feedGeneratorsQueryOptions } from './useFeedGenerators';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
@@ -13,7 +14,7 @@ export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
     if (!token) throw new Error('No access token');
     if (!pdsUrl) throw new Error('No PDS URL available');
 
-    const api = new BlueskyApi(pdsUrl);
+    const api = apiForPdsUrl(pdsUrl);
     return await api.getPreferences(token);
   },
   staleTime: PREFERENCES_STALE_TIME,

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Fetch a single conversation by id directly via `chat.bsky.convo.getConvo`.
@@ -27,7 +27,7 @@ export function useConvo(convoId: string | undefined | null) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!convoId) throw new Error('No convoId');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const { convo } = await api.getConvo(token, convoId);
 
       const otherMembers = convo.members.filter((m) => m.did !== currentUserDid);

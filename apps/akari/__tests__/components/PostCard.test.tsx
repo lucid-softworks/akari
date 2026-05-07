@@ -309,7 +309,10 @@ describe('PostCard', () => {
     const { UNSAFE_getAllByType } = render(<PostCard post={post} />);
 
     act(() => {
-      ImageMock.mock.calls[1][0].onLoad({ source: { width: 100, height: 50 } });
+      // basePost author has no avatar — AvatarOrInitial renders a fallback
+      // <View> rather than an <Image>, so the first ImageMock call is the
+      // post's embed image, not the avatar.
+      ImageMock.mock.calls[0][0].onLoad({ source: { width: 100, height: 50 } });
     });
 
     const touchables = UNSAFE_getAllByType(TouchableOpacity);
@@ -638,6 +641,9 @@ describe('PostCard', () => {
     mockUseLikePost.mockReturnValue({ mutate: jest.fn() });
     const post: Post = { ...basePost, embed: { $type: 'unknown' } };
     render(<PostCard post={post} />);
-    expect(ImageMock.mock.calls.length).toBe(1);
+    // basePost has no avatar URL — AvatarOrInitial falls back to a coloured
+    // <View>, and an unknown embed renders no images either, so no Image
+    // mock should have been called.
+    expect(ImageMock.mock.calls.length).toBe(0);
   });
 });

@@ -1,5 +1,4 @@
-import { BlueskyApi } from '@/bluesky-api';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -24,6 +23,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
 import { oauthSignIn } from '@/utils/oauth/signIn';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
 
@@ -111,7 +111,7 @@ export default function OauthSignInScreen() {
       // record is still valid without it.
       let profile: { displayName?: string; avatar?: string } = {};
       try {
-        const api = new BlueskyApi(result.pdsUrl);
+        const api = apiForPdsUrl(result.pdsUrl);
         const fetched = await api.getProfile(result.accessJwt, result.did);
         profile = {
           displayName: fetched.displayName ?? undefined,

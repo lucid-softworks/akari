@@ -66,7 +66,8 @@
       "back": "رجوع",
       "done": "تم",
       "following": "متابع",
-      "reset": "إعادة تعيين"
+      "reset": "إعادة تعيين",
+      "or": "أو"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "تحتاج لربط حساب مختلف؟ ",
       "connectNew": "ربط جديد",
       "howToGetAppPassword": "كيفية الحصول على كلمة مرور التطبيق",
-      "appPasswordInstructions": "1. اذهب إلى تطبيق Bluesky على الويب\n2. انتقل إلى الإعدادات → كلمات مرور التطبيق\n3. أنشئ كلمة مرور تطبيق جديدة\n4. استخدم تلك كلمة المرور هنا"
+      "appPasswordInstructions": "1. اذهب إلى تطبيق Bluesky على الويب\n2. انتقل إلى الإعدادات → كلمات مرور التطبيق\n3. أنشئ كلمة مرور تطبيق جديدة\n4. استخدم تلك كلمة المرور هنا",
+      "welcomeTitle": "مرحبًا بك في Akari",
+      "welcomeSubtitle": "اختر كيف تريد تسجيل الدخول إلى حساب AT Protocol الخاص بك.",
+      "oauthChoiceTitle": "تسجيل الدخول عبر atproto",
+      "oauthChoiceSubtitle": "سنفتح خدمتك في المتصفح. موصى به.",
+      "passwordChoiceTitle": "تسجيل الدخول بكلمة مرور التطبيق",
+      "passwordChoiceSubtitle": "استخدم اسم المستخدم وكلمة مرور تطبيق من إعدادات حسابك.",
+      "oauthSignIn": "تسجيل الدخول عبر atproto",
+      "oauthScreenTitle": "تسجيل الدخول عبر atproto",
+      "oauthScreenSubtitle": "أدخل اسم المستخدم وسنوصلك من خلال خدمتك في المتصفح.",
+      "passwordScreenTitle": "تسجيل الدخول بكلمة مرور التطبيق",
+      "passwordScreenSubtitle": "أدخل اسم المستخدم وكلمة مرور تطبيق من حساب AT Protocol الخاص بك.",
+      "oauthInFlight": "جارٍ فتح المتصفح…",
+      "continue": "متابعة",
+      "invalidHandle": "يرجى إدخال اسم مستخدم صالح.",
+      "oauthSuccessTitle": "تم تسجيل الدخول",
+      "oauthSuccessMessage": "تم التحقق من @{{handle}} ({{did}}) عبر atproto OAuth. ربط هذه الجلسة بعميل الـ API هو الخطوة التالية."
     },
     "navigation": {
       "search": "البحث",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "لم تحدّد أي مُوثِّق موثوق بعد. انقر على مُوثِّق في أي ورقة توثيق لإضافته.",
       "enableAdultContentHint": "عرض المنشورات والوسائط المصنّفة للبالغين. معطّل افتراضيًا.",
       "requireAltTextHint": "منع إرسال منشور يحتوي على صور ما لم يكن لكل صورة وصف نص بديل.",
-      "displayLargerTextBadgesHint": "استخدم حجم نص أكبر وأوضح لأعداد التفاعل (الإعجابات، الردود، إعادات النشر)."
+      "displayLargerTextBadgesHint": "استخدم حجم نص أكبر وأوضح لأعداد التفاعل (الإعجابات، الردود، إعادات النشر).",
+      "network": {
+        "title": "الشبكة",
+        "indexDescription": "اختر AppView وCDN الصور المسؤولين عن حركة AT Protocol لديك.",
+        "intro": "يتواصل Akari مع خدمتين أعلى البنية التحتية: AppView يجمّع الشبكة في الواجهات التي تراها (الخلاصات، الملفات الشخصية، البحث) وCDN صور يستضيف الصور المصغّرة وصور الملف الشخصي. يدير Bluesky Social كليهما افتراضيًا — اختر بدائل أدناه لتجاوزهما."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView الافتراضي",
+        "customSection": "AppView مخصّص",
+        "customHint": "أدخل عنوان HTTPS الأساسي للـ AppView و DID الخاص بخدمته. كلاهما مُعلَن في مستند `did:web` الخاص بمشغّل الـ AppView ضمن خدمة `#bsky_appview`.",
+        "customUrlLabel": "العنوان الأساسي",
+        "customDidLabel": "DID الخدمة",
+        "activeSection": "AppView النشط",
+        "activeUrl": "العنوان المُحلَّل",
+        "activeDid": "DID الوسيط",
+        "noProxy": "لا توجد ترويسة وسيط",
+        "perAccountSection": "تجاوزات لكل حساب",
+        "perAccountHint": "اترك الحساب على \"استخدام الافتراضي\" ليتبع الإعداد العام أعلاه. تجاوز الحسابات الفردية عندما يحتاج أحدها إلى AppView مختلف.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — الـ AppView الافتراضي الذي تُشغِّله Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView يديره المجتمع مع إشراف مخصّص."
+          },
+          "custom": {
+            "label": "مخصّص",
+            "description": "وجِّه إلى أي AppView عبر العنوان والـ DID."
+          }
+        },
+        "choice": {
+          "default": "استخدام الافتراضي",
+          "custom": "مخصّص",
+          "defaultSummary": "يتبع الافتراضي ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN الصور",
+        "intro": "تشير عناوين الصور التي يعيدها AppView إلى CDN الخاص بـ Bluesky افتراضيًا. اختر CDN مختلفًا هنا وستُعاد كتابة العناوين المطابقة (الصور الرمزية، اللافتات، الصور المصغّرة للمنشورات) لاستخدامه — تخطيط المسارات متطابق بين النسخ، فيكفي تبديل المضيف.",
+        "customSection": "CDN مخصّص",
+        "customUrlLabel": "URL الخاص بـ CDN المخصّص",
+        "activeSection": "CDN النشط",
+        "activeHost": "المضيف الفعّال",
+        "noOverride": "بدون تجاوز (تمرير مباشر)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — الـ CDN الافتراضي الذي تشغّله Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — نسخة CDN يديرها المجتمع."
+          },
+          "custom": {
+            "label": "مخصّص",
+            "description": "وجّه إلى أي CDN متوافق عبر URL."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "اختر GIF",

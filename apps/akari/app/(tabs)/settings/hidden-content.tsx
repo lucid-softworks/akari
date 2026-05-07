@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 

@@ -66,7 +66,8 @@
       "back": "Späť",
       "done": "Hotovo",
       "following": "Sledujete",
-      "reset": "Obnoviť"
+      "reset": "Obnoviť",
+      "or": "alebo"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všetky polia",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Potrebujete pripojiť iný účet?",
       "connectNew": "Pripojiť",
       "howToGetAppPassword": "Ako získať heslo vašej aplikácie",
-      "appPasswordInstructions": "1. Prejdite na webovú aplikáciu Bluesky\n2. Prejdite na nastavenia → Heslá aplikácií\n3. Vytvorte nové heslo aplikácie\n4. Tu použite toto heslo"
+      "appPasswordInstructions": "1. Prejdite na webovú aplikáciu Bluesky\n2. Prejdite na nastavenia → Heslá aplikácií\n3. Vytvorte nové heslo aplikácie\n4. Tu použite toto heslo",
+      "welcomeTitle": "Vitaj v Akari",
+      "welcomeSubtitle": "Vyber si, ako sa chceš prihlásiť do svojho účtu na AT Protocol.",
+      "oauthChoiceTitle": "Prihlásiť sa cez atproto",
+      "oauthChoiceSubtitle": "Otvoríme tvoju službu v prehliadači. Odporúčané.",
+      "passwordChoiceTitle": "Prihlásiť sa cez app password",
+      "passwordChoiceSubtitle": "Použi handle a app password z nastavení svojho účtu.",
+      "oauthSignIn": "Prihlásiť sa cez atproto",
+      "oauthScreenTitle": "Prihlásiť sa cez atproto",
+      "oauthScreenSubtitle": "Zadaj handle a prepojíme ťa cez tvoju službu v prehliadači.",
+      "passwordScreenTitle": "Prihlásiť sa cez app password",
+      "passwordScreenSubtitle": "Zadaj handle a app password zo svojho účtu na AT Protocol.",
+      "oauthInFlight": "Otvára sa prehliadač…",
+      "continue": "Pokračovať",
+      "invalidHandle": "Zadaj platný handle.",
+      "oauthSuccessTitle": "Prihlásené",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) bol overený cez atproto OAuth. Ďalším krokom je prepojenie tejto relácie s klientom API."
     },
     "navigation": {
       "search": "Prehliadka",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Zatiaľ ste nikoho neoznačili ako dôveryhodného overovateľa. Klepnite na overovateľa v ľubovoľnom okne overenia, aby ste ho pridali.",
       "enableAdultContentHint": "Zobrazovať príspevky a médiá označené ako pre dospelých. V predvolenom nastavení vypnuté.",
       "requireAltTextHint": "Blokovať odoslanie príspevku s obrázkom, ak každý obrázok nemá popis alt-text.",
-      "displayLargerTextBadgesHint": "Používať väčšiu, čitateľnejšiu veľkosť textu pre počty reakcií (páči sa, odpovede, zdieľania)."
+      "displayLargerTextBadgesHint": "Používať väčšiu, čitateľnejšiu veľkosť textu pre počty reakcií (páči sa, odpovede, zdieľania).",
+      "network": {
+        "title": "Sieť",
+        "indexDescription": "Vyber, ktorý AppView a CDN obrázkov spracúvajú tvoj AT Protocol prenos.",
+        "intro": "Akari komunikuje s dvoma upstream službami: AppView, ktorý zhromažďuje sieť do pohľadov, ktoré vidíš (kanály, profily, vyhľadávanie), a CDN obrázkov, ktoré hostí miniatúry a avatary. Štandardne oba prevádzkuje Bluesky Social — nižšie vyber alternatívy na ich obídenie."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Predvolený AppView",
+        "customSection": "Vlastný AppView",
+        "customHint": "Zadaj HTTPS základnú URL AppView a jeho service DID. Obe sú zverejnené v dokumente `did:web` prevádzkovateľa AppView pod službou `#bsky_appview`.",
+        "customUrlLabel": "Základná URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Aktívny AppView",
+        "activeUrl": "Vyriešená URL",
+        "activeDid": "DID proxy",
+        "noProxy": "Bez proxy hlavičky",
+        "perAccountSection": "Prepisy podľa účtu",
+        "perAccountHint": "Nechaj účet na „Použiť predvolené“, aby sledoval nastavenie celej aplikácie vyššie. Jednotlivé účty prepíš, keď niektorý potrebuje iný AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — predvolený AppView prevádzkovaný spoločnosťou Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — komunitne prevádzkovaný AppView s vlastnou moderáciou."
+          },
+          "custom": {
+            "label": "Vlastný",
+            "description": "Nasmeruj na ľubovoľný AppView pomocou URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Použiť predvolené",
+          "custom": "Vlastný",
+          "defaultSummary": "Riadi sa predvoleným ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN obrázkov",
+        "intro": "URL obrázkov vrátené AppView štandardne smerujú na CDN spoločnosti Bluesky. Tu zvoľ iný CDN a zodpovedajúce URL (avatary, bannery, miniatúry príspevkov) budú prepísané, aby ho používali — rozloženie ciest je medzi zrkadlami rovnaké, takže stačí výmena hostiteľa.",
+        "customSection": "Vlastný CDN",
+        "customUrlLabel": "URL vlastného CDN",
+        "activeSection": "Aktívny CDN",
+        "activeHost": "Skutočný hostiteľ",
+        "noOverride": "Bez prepisovania (priamo prechádza)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — predvolený CDN prevádzkovaný Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — komunitné zrkadlo CDN."
+          },
+          "custom": {
+            "label": "Vlastný",
+            "description": "Ukáž na ľubovoľný kompatibilný CDN cez URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Tu sa zobrazia uložené príspevky a vlákna.",

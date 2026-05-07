@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Mutation hook for updating user profile information
  */
@@ -28,7 +27,7 @@ export function useUpdateProfile() {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return await api.updateProfile(token, {
         displayName,
         description,

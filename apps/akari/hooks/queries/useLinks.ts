@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { BlueskyApi, getPdsUrlFromDid } from '@/bluesky-api';
+import { getPdsUrlFromDid } from '@/bluesky-api';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
  * Infinite query hook for fetching a user's blue.linkat.board records
@@ -27,7 +28,7 @@ export function useLinks(identifier: string | undefined, limit: number = 20) {
         throw new Error('Could not determine PDS URL for user');
       }
 
-      const api = new BlueskyApi(targetPdsUrl);
+      const api = apiForPdsUrl(targetPdsUrl);
       const response = await api.getActorLinkatBoards(token, profile.did, limit, pageParam);
 
       return {

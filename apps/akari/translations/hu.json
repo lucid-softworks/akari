@@ -66,7 +66,8 @@
       "back": "Vissza",
       "done": "Kész",
       "following": "Követed",
-      "reset": "Visszaállítás"
+      "reset": "Visszaállítás",
+      "or": "vagy"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Más fiókot kell csatlakoztatni?",
       "connectNew": "Csatlakoztassa az újat",
       "howToGetAppPassword": "Hogyan lehet megszerezni az alkalmazás jelszavát",
-      "appPasswordInstructions": "1. Lépjen a Bluesky Web alkalmazásba\n2. Keresse meg a Beállítások → Alkalmazás jelszavakat\n3. Hozzon létre egy új alkalmazás jelszavát\n4. Használja itt ezt a jelszót"
+      "appPasswordInstructions": "1. Lépjen a Bluesky Web alkalmazásba\n2. Keresse meg a Beállítások → Alkalmazás jelszavakat\n3. Hozzon létre egy új alkalmazás jelszavát\n4. Használja itt ezt a jelszót",
+      "welcomeTitle": "Üdv az Akariban",
+      "welcomeSubtitle": "Válaszd ki, hogyan szeretnél bejelentkezni az AT Protocol fiókodba.",
+      "oauthChoiceTitle": "Bejelentkezés atprotóval",
+      "oauthChoiceSubtitle": "Megnyitjuk a szolgáltatásodat a böngészőben. Javasolt.",
+      "passwordChoiceTitle": "Bejelentkezés app password-del",
+      "passwordChoiceSubtitle": "Használj egy handle-t és egy app password-öt a fiókod beállításaiból.",
+      "oauthSignIn": "Bejelentkezés atprotóval",
+      "oauthScreenTitle": "Bejelentkezés atprotóval",
+      "oauthScreenSubtitle": "Add meg a handle-d, és összekapcsolunk a szolgáltatásodon keresztül a böngészőben.",
+      "passwordScreenTitle": "Bejelentkezés app password-del",
+      "passwordScreenSubtitle": "Add meg az AT Protocol fiókod handle-jét és app password-jét.",
+      "oauthInFlight": "Böngésző megnyitása…",
+      "continue": "Tovább",
+      "invalidHandle": "Adj meg egy érvényes handle-t.",
+      "oauthSuccessTitle": "Bejelentkezve",
+      "oauthSuccessMessage": "A(z) @{{handle}} ({{did}}) atproto OAuth-on keresztül hitelesítve. A következő lépés ennek a munkamenetnek az API klienshez kapcsolása."
     },
     "navigation": {
       "search": "Keresés",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Még nem jelöltél meg senkit megbízható hitelesítőként. Érints meg egy hitelesítőt bármely hitelesítési lapon, hogy hozzáadd.",
       "enableAdultContentHint": "Felnőtt tartalomként jelölt bejegyzések és médiák megjelenítése. Alapértelmezés szerint kikapcsolva.",
       "requireAltTextHint": "Képet tartalmazó bejegyzés küldésének tiltása, amíg minden képhez nem tartozik alt-text leírás.",
-      "displayLargerTextBadgesHint": "Nagyobb, olvashatóbb szövegméret használata a reakciószámlálókhoz (kedvelések, válaszok, újraposztolások)."
+      "displayLargerTextBadgesHint": "Nagyobb, olvashatóbb szövegméret használata a reakciószámlálókhoz (kedvelések, válaszok, újraposztolások).",
+      "network": {
+        "title": "Hálózat",
+        "indexDescription": "Válaszd ki, melyik AppView és kép-CDN kezeli az AT Protocol forgalmadat.",
+        "intro": "Az Akari két upstream szolgáltatással beszélget: egy AppView-val, amely a hálózatot a látott nézetekké (hírfolyamok, profilok, keresés) aggregálja, és egy kép-CDN-nel, amely a bélyegképeket és avatárokat szolgálja ki. Alapértelmezés szerint mindkettőt a Bluesky Social üzemelteti — válassz alább alternatívákat a megkerülésükhöz."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Alapértelmezett AppView",
+        "customSection": "Egyéni AppView",
+        "customHint": "Add meg az AppView HTTPS alap-URL-jét és a service DID-jét. Mindkettőt az AppView üzemeltetőjének `did:web` dokumentuma teszi közzé a `#bsky_appview` szolgáltatás alatt.",
+        "customUrlLabel": "Alap-URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Aktív AppView",
+        "activeUrl": "Feloldott URL",
+        "activeDid": "Proxy DID",
+        "noProxy": "Nincs proxy fejléc",
+        "perAccountSection": "Fiókonkénti felülbírálások",
+        "perAccountHint": "Hagyd a fiókot „Alapértelmezett használata” állapotban, hogy a fenti, alkalmazás szintű beállítást kövesse. Egyenként bíráld felül azokat a fiókokat, amelyeknek más AppView kell.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — a Bluesky Social által üzemeltetett alapértelmezett AppView."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — közösség által üzemeltetett AppView egyedi moderálással."
+          },
+          "custom": {
+            "label": "Egyéni",
+            "description": "Mutass bármelyik AppView-ra URL + DID alapján."
+          }
+        },
+        "choice": {
+          "default": "Alapértelmezett használata",
+          "custom": "Egyéni",
+          "defaultSummary": "Az alapértelmezettet követi ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Kép-CDN",
+        "intro": "Az AppView által visszaadott kép-URL-ek alapértelmezésben a Bluesky CDN-jére mutatnak. Válassz itt másik CDN-t, és a megfelelő URL-eket (avatárok, bannerek, bejegyzés-bélyegképek) átírjuk, hogy azt használják — az útvonal szerkezete megegyezik a tükrök között, ezért elég a hosztot lecserélni.",
+        "customSection": "Egyéni CDN",
+        "customUrlLabel": "Egyéni CDN URL",
+        "activeSection": "Aktív CDN",
+        "activeHost": "Tényleges hoszt",
+        "noOverride": "Nincs felülírás (átengedve)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — a Bluesky Social által üzemeltetett alapértelmezett CDN."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — közösség által működtetett CDN-tükör."
+          },
+          "custom": {
+            "label": "Egyéni",
+            "description": "Mutass bármely kompatibilis CDN-re URL alapján."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "A mentett hozzászólások és szálak itt jelennek meg.",

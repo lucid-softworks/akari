@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 export function useMuteUser() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
@@ -14,7 +13,7 @@ export function useMuteUser() {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       if (action === 'mute') {
         return await api.muteUser(token, actor);

@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi } from '@/bluesky-api';
 import { buildLinkFacets } from '@/utils/textFacets';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Mutation hook for sending messages in conversations
@@ -32,7 +32,7 @@ export function useSendMessage() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       // Auto-detect URLs in the message and attach link facets so any
       // conformant client linkifies them — not just clients that run their
       // own URL detection on plaintext.

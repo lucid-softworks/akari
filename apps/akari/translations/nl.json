@@ -66,7 +66,8 @@
       "back": "Terug",
       "done": "Klaar",
       "following": "Volgend",
-      "reset": "Resetten"
+      "reset": "Resetten",
+      "or": "of"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Moet u een ander account verbinden? ",
       "connectNew": "Nieuwe verbinden",
       "howToGetAppPassword": "Hoe u uw app-wachtwoord krijgt",
-      "appPasswordInstructions": "1. Ga naar de Bluesky web-app\n2. Navigeer naar Instellingen → App-wachtwoorden\n3. Maak een nieuw app-wachtwoord aan\n4. Gebruik dat wachtwoord hier"
+      "appPasswordInstructions": "1. Ga naar de Bluesky web-app\n2. Navigeer naar Instellingen → App-wachtwoorden\n3. Maak een nieuw app-wachtwoord aan\n4. Gebruik dat wachtwoord hier",
+      "welcomeTitle": "Welkom bij Akari",
+      "welcomeSubtitle": "Kies hoe je wilt inloggen op je AT Protocol-account.",
+      "oauthChoiceTitle": "Inloggen met atproto",
+      "oauthChoiceSubtitle": "We openen je service in de browser. Aanbevolen.",
+      "passwordChoiceTitle": "Inloggen met app-wachtwoord",
+      "passwordChoiceSubtitle": "Gebruik een handle en een app-wachtwoord uit je accountinstellingen.",
+      "oauthSignIn": "Inloggen met atproto",
+      "oauthScreenTitle": "Inloggen met atproto",
+      "oauthScreenSubtitle": "Voer je handle in en we verbinden je via je service in de browser.",
+      "passwordScreenTitle": "Inloggen met app-wachtwoord",
+      "passwordScreenSubtitle": "Voer een handle en een app-wachtwoord van je AT Protocol-account in.",
+      "oauthInFlight": "Browser openen…",
+      "continue": "Doorgaan",
+      "invalidHandle": "Voer een geldige handle in.",
+      "oauthSuccessTitle": "Ingelogd",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) is geverifieerd via atproto OAuth. Deze sessie aan de API-client koppelen is de volgende stap."
     },
     "navigation": {
       "search": "Zoeken",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "Je hebt nog niemand aangemerkt als vertrouwde verificateur. Tik op een verificateur in een verificatievenster om hem toe te voegen.",
       "enableAdultContentHint": "Toont berichten en media die als volwassen zijn gemarkeerd. Standaard uitgeschakeld.",
       "requireAltTextHint": "Voorkomt het verzenden van een bericht met afbeeldingen tenzij elke afbeelding een alt-tekstbeschrijving heeft.",
-      "displayLargerTextBadgesHint": "Gebruik een grotere, beter leesbare tekstgrootte voor de interactietellers (likes, reacties, reposts)."
+      "displayLargerTextBadgesHint": "Gebruik een grotere, beter leesbare tekstgrootte voor de interactietellers (likes, reacties, reposts).",
+      "network": {
+        "title": "Netwerk",
+        "indexDescription": "Kies welke AppView en afbeeldings-CDN je AT Protocol-verkeer afhandelen.",
+        "intro": "Akari praat met twee upstream-diensten: een AppView die het netwerk samenvoegt tot de weergaven die je ziet (feeds, profielen, zoeken) en een afbeeldings-CDN dat miniaturen en avatars host. Standaard worden beide beheerd door Bluesky Social — kies hieronder alternatieven om ze te omzeilen."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Standaard-AppView",
+        "customSection": "Aangepaste AppView",
+        "customHint": "Voer de HTTPS-basis-URL van de AppView en zijn service-DID in. Beide worden gepubliceerd in het `did:web`-document van de AppView-beheerder onder de service `#bsky_appview`.",
+        "customUrlLabel": "Basis-URL",
+        "customDidLabel": "Service-DID",
+        "activeSection": "Actieve AppView",
+        "activeUrl": "Opgeloste URL",
+        "activeDid": "Proxy-DID",
+        "noProxy": "Geen proxy-header",
+        "perAccountSection": "Overschrijvingen per account",
+        "perAccountHint": "Laat een account op \"Standaard gebruiken\" staan om de app-brede instelling hierboven te volgen. Overschrijf afzonderlijke accounts wanneer er één een andere AppView nodig heeft.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — de standaard-AppView, beheerd door Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — door de community beheerde AppView met aangepaste moderatie."
+          },
+          "custom": {
+            "label": "Aangepast",
+            "description": "Wijs naar een willekeurige AppView via URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Standaard gebruiken",
+          "custom": "Aangepast",
+          "defaultSummary": "Volgt standaard ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Afbeeldings-CDN",
+        "intro": "Afbeeldings-URL's die de AppView teruggeeft, wijzen standaard naar het CDN van Bluesky. Kies hier een ander CDN en de bijbehorende URL's (avatars, banners, postminiaturen) worden herschreven om dat te gebruiken — de pad-indeling is gelijk tussen mirrors, dus een hostwissel volstaat.",
+        "customSection": "Aangepast CDN",
+        "customUrlLabel": "URL van aangepast CDN",
+        "activeSection": "Actief CDN",
+        "activeHost": "Effectieve host",
+        "noOverride": "Geen overschrijving (gaat direct door)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — het standaard-CDN dat door Bluesky Social wordt beheerd."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — door de community beheerd CDN-mirror."
+          },
+          "custom": {
+            "label": "Aangepast",
+            "description": "Verwijs via URL naar een willekeurig compatibel CDN."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "GIF selecteren",

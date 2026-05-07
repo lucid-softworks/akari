@@ -1,4 +1,5 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
+import { AvatarOrInitial } from '@/components/AvatarOrInitial';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -511,12 +512,10 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         <ThemedView style={styles.header}>
           {authorInfo ? (
             <PressableLink href={authorHref} onPress={handleAuthorPress} style={styles.authorSection}>
-              <Image
-                source={{
-                  uri: authorInfo.avatar || 'https://bsky.app/static/default-avatar.png',
-                }}
-                style={styles.authorAvatar}
-                contentFit="cover"
+              <AvatarOrInitial
+                uri={authorInfo.avatar}
+                seed={authorInfo.displayName || authorInfo.handle}
+                size={28}
               />
               <ThemedView style={styles.authorInfo}>
                 <ThemedView style={styles.displayNameRow}>
@@ -537,13 +536,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
             </PressableLink>
           ) : (
             <ThemedView style={styles.authorSection}>
-              <Image
-                source={{
-                  uri: 'https://bsky.app/static/default-avatar.png',
-                }}
-                style={styles.authorAvatar}
-                contentFit="cover"
-              />
+              <AvatarOrInitial uri={undefined} seed="?" size={28} />
               <ThemedView style={styles.authorInfo}>
                 <ThemedText style={[styles.displayName, { color: textColor }]}>{blockingMessage}</ThemedText>
                 <ThemedText style={[styles.handle, { color: secondaryTextColor }]}>{t('common.block')}</ThemedText>

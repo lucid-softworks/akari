@@ -1,11 +1,11 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { BlueskyApi, BlueskyEmbed } from '@/bluesky-api';
+import { BlueskyEmbed } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -32,6 +32,7 @@ import { showAlert } from '@/utils/alert';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 
 
@@ -342,7 +343,7 @@ export default function ConversationScreen() {
   // Mark conversation as read when opened
   useEffect(() => {
     if (!conversation?.convoId || !token || !currentAccount?.pdsUrl) return;
-    const api = new BlueskyApi(currentAccount.pdsUrl);
+    const api = apiForAccount(currentAccount);
     void api.markConversationRead(token, conversation.convoId).then(() => {
       void queryClient.invalidateQueries({ queryKey: ['unreadMessagesCount'] });
       void queryClient.invalidateQueries({ queryKey: ['conversations'] });

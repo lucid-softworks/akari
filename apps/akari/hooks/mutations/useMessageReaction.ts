@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 type ReactionArgs = {
   convoId: string;
@@ -48,7 +48,7 @@ export function useMessageReaction() {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       if (action === 'add') {
         return api.addReaction(token, convoId, messageId, value);
       }

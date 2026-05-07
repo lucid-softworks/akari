@@ -1,6 +1,6 @@
 import { usePathname, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

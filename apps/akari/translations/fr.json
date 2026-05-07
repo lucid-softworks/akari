@@ -66,7 +66,8 @@
       "back": "Retour",
       "done": "Terminé",
       "following": "Abonné",
-      "reset": "Réinitialiser"
+      "reset": "Réinitialiser",
+      "or": "ou"
     },
     "auth": {
       "fillAllFields": "Veuillez remplir tous les champs",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Besoin de connecter un compte différent ? ",
       "connectNew": "Connecter un nouveau",
       "howToGetAppPassword": "Comment obtenir votre mot de passe d'application",
-      "appPasswordInstructions": "1. Allez sur l'application web Bluesky\n2. Naviguez vers Paramètres → Mots de passe d'application\n3. Créez un nouveau mot de passe d'application\n4. Utilisez ce mot de passe ici"
+      "appPasswordInstructions": "1. Allez sur l'application web Bluesky\n2. Naviguez vers Paramètres → Mots de passe d'application\n3. Créez un nouveau mot de passe d'application\n4. Utilisez ce mot de passe ici",
+      "welcomeTitle": "Bienvenue sur Akari",
+      "welcomeSubtitle": "Choisis comment te connecter à ton compte AT Protocol.",
+      "oauthChoiceTitle": "Se connecter avec atproto",
+      "oauthChoiceSubtitle": "Nous ouvrirons ton service dans le navigateur. Recommandé.",
+      "passwordChoiceTitle": "Se connecter avec un app password",
+      "passwordChoiceSubtitle": "Utilise un handle et un app password depuis les paramètres de ton compte.",
+      "oauthSignIn": "Se connecter avec atproto",
+      "oauthScreenTitle": "Se connecter avec atproto",
+      "oauthScreenSubtitle": "Saisis ton handle, nous te connecterons via ton service dans le navigateur.",
+      "passwordScreenTitle": "Se connecter avec un app password",
+      "passwordScreenSubtitle": "Saisis un handle et un app password de ton compte AT Protocol.",
+      "oauthInFlight": "Ouverture du navigateur…",
+      "continue": "Continuer",
+      "invalidHandle": "Saisis un handle valide.",
+      "oauthSuccessTitle": "Connecté",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) authentifié via atproto OAuth. La prochaine étape est de relier cette session au client de l’API."
     },
     "navigation": {
       "search": "Recherche",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Vous n'avez encore désigné aucun vérificateur de confiance. Appuyez sur un vérificateur dans une fiche de vérification pour l'ajouter.",
       "enableAdultContentHint": "Affiche les posts et médias marqués pour adultes. Désactivé par défaut.",
       "requireAltTextHint": "Empêche l'envoi d'un post avec image tant que chaque image n'a pas de description en texte alternatif.",
-      "displayLargerTextBadgesHint": "Utilise une taille de texte plus grande et plus lisible pour les compteurs d'engagement (j'aime, réponses, repartages)."
+      "displayLargerTextBadgesHint": "Utilise une taille de texte plus grande et plus lisible pour les compteurs d'engagement (j'aime, réponses, repartages).",
+      "network": {
+        "title": "Réseau",
+        "indexDescription": "Choisissez quels AppView et CDN d'images traitent votre trafic AT Protocol.",
+        "intro": "Akari communique avec deux services en amont : un AppView qui agrège le réseau pour produire les vues que vous voyez (fils, profils, recherche) et un CDN d'images qui héberge les miniatures et les avatars. Par défaut, les deux sont opérés par Bluesky Social — choisissez des alternatives ci-dessous pour les contourner."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView par défaut",
+        "customSection": "AppView personnalisé",
+        "customHint": "Saisissez l’URL de base HTTPS de l’AppView et son service DID. Les deux sont publiés dans le document `did:web` de l’opérateur de l’AppView, sous le service `#bsky_appview`.",
+        "customUrlLabel": "URL de base",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView actif",
+        "activeUrl": "URL résolue",
+        "activeDid": "DID du proxy",
+        "noProxy": "Aucun en-tête de proxy",
+        "perAccountSection": "Remplacements par compte",
+        "perAccountHint": "Laissez un compte sur « Utiliser le défaut » pour suivre le réglage global de l’application ci-dessus. Remplacez ponctuellement les comptes qui ont besoin d’un AppView différent.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — l’AppView par défaut exploité par Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView géré par la communauté avec une modération personnalisée."
+          },
+          "custom": {
+            "label": "Personnalisé",
+            "description": "Pointez vers n’importe quel AppView via URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Utiliser le défaut",
+          "custom": "Personnalisé",
+          "defaultSummary": "Suit le défaut ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN d'images",
+        "intro": "Les URL d'images renvoyées par l'AppView pointent par défaut vers le CDN de Bluesky. Choisissez ici un CDN différent et les URL correspondantes (avatars, bannières, miniatures de publications) seront réécrites pour l'utiliser — l'arborescence des chemins est identique entre les miroirs, donc un changement d'hôte suffit.",
+        "customSection": "CDN personnalisé",
+        "customUrlLabel": "URL du CDN personnalisé",
+        "activeSection": "CDN actif",
+        "activeHost": "Hôte effectif",
+        "noOverride": "Aucun remplacement (passage direct)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — le CDN par défaut exploité par Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — miroir de CDN géré par la communauté."
+          },
+          "custom": {
+            "label": "Personnalisé",
+            "description": "Pointez vers n'importe quel CDN compatible via une URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Les publications et fils enregistrés apparaîtront ici.",

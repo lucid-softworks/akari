@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 
 import {
-  BlueskyApi,
   getVideoJobStatus,
   uploadVideoToService,
 } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 export type VideoUploadStatus =
   | { kind: 'idle' }
@@ -54,7 +54,7 @@ export function useUploadVideo() {
 
       try {
         setStatus({ kind: 'authorizing' });
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = apiForAccount(currentAccount);
         const { token: serviceJwt } = await api.getServiceAuth(
           token,
           VIDEO_SERVICE_AUDIENCE,

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Mutes notifications and feed surfacing for a whole thread, keyed off
@@ -19,7 +19,7 @@ export function useMuteThread() {
     mutationFn: async ({ root, action }: { root: string; action: 'mute' | 'unmute' }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       if (action === 'mute') {
         return await api.muteThread(token, root);
       }

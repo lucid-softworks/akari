@@ -66,7 +66,8 @@
       "back": "Quay lại",
       "done": "Xong",
       "following": "Đang theo dõi",
-      "reset": "Đặt lại"
+      "reset": "Đặt lại",
+      "or": "hoặc"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Cần kết nối tài khoản khác? ",
       "connectNew": "Kết nối mới",
       "howToGetAppPassword": "Cách lấy mật khẩu ứng dụng",
-      "appPasswordInstructions": "1. Truy cập ứng dụng web Bluesky\n2. Đi đến Cài đặt → Mật khẩu ứng dụng\n3. Tạo mật khẩu ứng dụng mới\n4. Sử dụng mật khẩu đó ở đây"
+      "appPasswordInstructions": "1. Truy cập ứng dụng web Bluesky\n2. Đi đến Cài đặt → Mật khẩu ứng dụng\n3. Tạo mật khẩu ứng dụng mới\n4. Sử dụng mật khẩu đó ở đây",
+      "welcomeTitle": "Chào mừng đến với Akari",
+      "welcomeSubtitle": "Chọn cách bạn muốn đăng nhập vào tài khoản AT Protocol của mình.",
+      "oauthChoiceTitle": "Đăng nhập bằng atproto",
+      "oauthChoiceSubtitle": "Chúng tôi sẽ mở dịch vụ của bạn trong trình duyệt. Khuyến nghị.",
+      "passwordChoiceTitle": "Đăng nhập bằng app password",
+      "passwordChoiceSubtitle": "Sử dụng handle và app password từ cài đặt tài khoản của bạn.",
+      "oauthSignIn": "Đăng nhập bằng atproto",
+      "oauthScreenTitle": "Đăng nhập bằng atproto",
+      "oauthScreenSubtitle": "Nhập handle của bạn, chúng tôi sẽ kết nối bạn qua dịch vụ của bạn trong trình duyệt.",
+      "passwordScreenTitle": "Đăng nhập bằng app password",
+      "passwordScreenSubtitle": "Nhập handle và app password từ tài khoản AT Protocol của bạn.",
+      "oauthInFlight": "Đang mở trình duyệt…",
+      "continue": "Tiếp tục",
+      "invalidHandle": "Vui lòng nhập một handle hợp lệ.",
+      "oauthSuccessTitle": "Đã đăng nhập",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) đã được xác thực qua atproto OAuth. Bước tiếp theo là kết nối phiên này vào client API."
     },
     "navigation": {
       "search": "Tìm kiếm",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "Bạn chưa đánh dấu ai là người xác minh đáng tin cậy. Chạm vào một người xác minh trong bảng xác minh bất kỳ để thêm.",
       "enableAdultContentHint": "Hiển thị các bài viết và phương tiện được gắn nhãn người lớn. Mặc định là tắt.",
       "requireAltTextHint": "Chặn việc gửi bài viết có hình ảnh trừ khi mỗi hình ảnh đều có mô tả văn bản thay thế.",
-      "displayLargerTextBadgesHint": "Sử dụng cỡ chữ lớn hơn, dễ đọc hơn cho số lượng tương tác (lượt thích, trả lời, đăng lại)."
+      "displayLargerTextBadgesHint": "Sử dụng cỡ chữ lớn hơn, dễ đọc hơn cho số lượng tương tác (lượt thích, trả lời, đăng lại).",
+      "network": {
+        "title": "Mạng",
+        "indexDescription": "Chọn AppView và CDN ảnh nào sẽ xử lý lưu lượng AT Protocol của bạn.",
+        "intro": "Akari nói chuyện với hai dịch vụ ngược dòng: một AppView tổng hợp mạng thành các khung nhìn bạn thấy (bảng tin, hồ sơ, tìm kiếm) và một CDN ảnh lưu trữ ảnh thu nhỏ và ảnh đại diện. Theo mặc định cả hai do Bluesky Social vận hành — chọn các lựa chọn thay thế bên dưới để đi vòng qua chúng."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView mặc định",
+        "customSection": "AppView tùy chỉnh",
+        "customHint": "Nhập URL gốc HTTPS của AppView và service DID của nó. Cả hai đều được công bố trong tài liệu `did:web` của nhà vận hành AppView dưới dịch vụ `#bsky_appview`.",
+        "customUrlLabel": "URL gốc",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView đang hoạt động",
+        "activeUrl": "URL đã phân giải",
+        "activeDid": "DID proxy",
+        "noProxy": "Không có header proxy",
+        "perAccountSection": "Ghi đè theo từng tài khoản",
+        "perAccountHint": "Để tài khoản ở chế độ \"Dùng mặc định\" để theo cài đặt toàn ứng dụng ở trên. Ghi đè từng tài khoản khi tài khoản đó cần một AppView khác.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView mặc định do Bluesky Social vận hành."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView do cộng đồng vận hành với kiểm duyệt tùy chỉnh."
+          },
+          "custom": {
+            "label": "Tùy chỉnh",
+            "description": "Trỏ đến bất kỳ AppView nào bằng URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Dùng mặc định",
+          "custom": "Tùy chỉnh",
+          "defaultSummary": "Đang theo mặc định ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN ảnh",
+        "intro": "URL ảnh do AppView trả về mặc định trỏ tới CDN của Bluesky. Chọn CDN khác ở đây và các URL tương ứng (ảnh đại diện, biểu ngữ, ảnh thu nhỏ bài đăng) sẽ được viết lại để dùng nó — bố cục đường dẫn giống nhau giữa các bản sao, nên chỉ cần đổi host là đủ.",
+        "customSection": "CDN tùy chỉnh",
+        "customUrlLabel": "URL CDN tùy chỉnh",
+        "activeSection": "CDN đang hoạt động",
+        "activeHost": "Host hiệu lực",
+        "noOverride": "Không ghi đè (đi thẳng qua)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN mặc định do Bluesky Social vận hành."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — bản sao CDN do cộng đồng vận hành."
+          },
+          "custom": {
+            "label": "Tùy chỉnh",
+            "description": "Trỏ tới bất kỳ CDN tương thích nào qua URL."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "Chọn GIF",

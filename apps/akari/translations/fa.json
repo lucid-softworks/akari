@@ -66,7 +66,8 @@
       "back": "بازگشت",
       "done": "انجام شد",
       "following": "دنبال می‌شود",
-      "reset": "بازنشانی"
+      "reset": "بازنشانی",
+      "or": "یا"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "آیا نیاز به اتصال یک حساب متفاوت دارید؟",
       "connectNew": "اتصال جدید",
       "howToGetAppPassword": "چگونه رمز ورود برنامه خود را دریافت کنیم",
-      "appPasswordInstructions": "1. به برنامه وب Bluesky بروید\n2. به تنظیمات → برنامه های کاربردی برنامه بروید\n3. یک رمز ورود برنامه جدید ایجاد کنید\n4. از آن رمز عبور استفاده کنید"
+      "appPasswordInstructions": "1. به برنامه وب Bluesky بروید\n2. به تنظیمات → برنامه های کاربردی برنامه بروید\n3. یک رمز ورود برنامه جدید ایجاد کنید\n4. از آن رمز عبور استفاده کنید",
+      "welcomeTitle": "به Akari خوش آمدید",
+      "welcomeSubtitle": "انتخاب کنید چگونه می‌خواهید به حساب AT Protocol خود وارد شوید.",
+      "oauthChoiceTitle": "ورود با atproto",
+      "oauthChoiceSubtitle": "خدمت شما را در مرورگر باز می‌کنیم. توصیه می‌شود.",
+      "passwordChoiceTitle": "ورود با گذرواژهٔ برنامه",
+      "passwordChoiceSubtitle": "از تنظیمات حساب خود از یک handle و یک app password استفاده کنید.",
+      "oauthSignIn": "ورود با atproto",
+      "oauthScreenTitle": "ورود با atproto",
+      "oauthScreenSubtitle": "handle خود را وارد کنید تا از طریق خدمتتان در مرورگر متصلتان کنیم.",
+      "passwordScreenTitle": "ورود با گذرواژهٔ برنامه",
+      "passwordScreenSubtitle": "یک handle و یک app password از حساب AT Protocol خود وارد کنید.",
+      "oauthInFlight": "در حال باز کردن مرورگر…",
+      "continue": "ادامه",
+      "invalidHandle": "لطفاً یک handle معتبر وارد کنید.",
+      "oauthSuccessTitle": "وارد شدید",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) از طریق atproto OAuth احراز هویت شد. اتصال این نشست به کلاینت API گام بعدی است."
     },
     "navigation": {
       "search": "جستجو",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "هنوز کسی را به‌عنوان تأییدکنندهٔ مورد اعتماد علامت‌گذاری نکرده‌اید. در هر صفحهٔ تأیید روی یک تأییدکننده ضربه بزنید تا اضافه شود.",
       "enableAdultContentHint": "پست‌ها و رسانه‌های دارای برچسب بزرگسالان را نمایش بده. به‌طور پیش‌فرض خاموش است.",
       "requireAltTextHint": "از ارسال پست تصویری جلوگیری می‌کند مگر اینکه هر تصویر توضیح متن جایگزین داشته باشد.",
-      "displayLargerTextBadgesHint": "از اندازهٔ متن بزرگ‌تر و خواناتر برای شمارش تعامل (لایک‌ها، پاسخ‌ها، بازنشرها) استفاده کن."
+      "displayLargerTextBadgesHint": "از اندازهٔ متن بزرگ‌تر و خواناتر برای شمارش تعامل (لایک‌ها، پاسخ‌ها، بازنشرها) استفاده کن.",
+      "network": {
+        "title": "شبکه",
+        "indexDescription": "انتخاب کنید کدام AppView و CDN تصاویر ترافیک AT Protocol شما را مدیریت کنند.",
+        "intro": "Akari با دو سرویس بالادست در تماس است: یک AppView که شبکه را به نماهایی که می‌بینید (فیدها، پروفایل‌ها، جست‌وجو) جمع می‌کند و یک CDN تصاویر که میزبان تصاویر کوچک و آواتارها است. به‌طور پیش‌فرض هر دو توسط Bluesky Social اداره می‌شوند — برای دور زدن آن‌ها از گزینه‌های زیر استفاده کنید."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView پیش‌فرض",
+        "customSection": "AppView سفارشی",
+        "customHint": "نشانی پایهٔ HTTPS و service DID این AppView را وارد کنید. هر دو در سند `did:web` گردانندهٔ AppView ذیل سرویس `#bsky_appview` منتشر می‌شوند.",
+        "customUrlLabel": "نشانی پایه",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView فعال",
+        "activeUrl": "نشانی حل‌شده",
+        "activeDid": "DID پراکسی",
+        "noProxy": "بدون سرایند پراکسی",
+        "perAccountSection": "بازنویسی‌ها به‌ازای هر حساب",
+        "perAccountHint": "حساب را روی «استفاده از پیش‌فرض» بگذارید تا از تنظیم کل برنامه در بالا پیروی کند. وقتی یک حساب به AppView متفاوتی نیاز دارد، آن را به‌صورت موردی بازنویسی کنید.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView پیش‌فرض که Bluesky Social آن را اجرا می‌کند."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView با اجرای جامعه و نظارت سفارشی."
+          },
+          "custom": {
+            "label": "سفارشی",
+            "description": "با URL و DID به هر AppView دلخواهی اشاره کنید."
+          }
+        },
+        "choice": {
+          "default": "استفاده از پیش‌فرض",
+          "custom": "سفارشی",
+          "defaultSummary": "پیرو پیش‌فرض ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN تصاویر",
+        "intro": "URLهای تصویر که AppView برمی‌گرداند به‌طور پیش‌فرض به CDN Bluesky اشاره می‌کنند. در اینجا CDN دیگری انتخاب کنید تا URLهای منطبق (آواتارها، بنرها، تصاویر کوچک پست‌ها) برای استفاده از آن بازنویسی شوند — ساختار مسیر بین آینه‌ها یکسان است و فقط تعویض میزبان کافی است.",
+        "customSection": "CDN سفارشی",
+        "customUrlLabel": "URL CDN سفارشی",
+        "activeSection": "CDN فعال",
+        "activeHost": "میزبان مؤثر",
+        "noOverride": "بدون بازنویسی (عبور مستقیم)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN پیش‌فرض اداره‌شده توسط Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — آینه CDN اداره‌شده توسط جامعه."
+          },
+          "custom": {
+            "label": "سفارشی",
+            "description": "با URL به هر CDN سازگار اشاره کنید."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "پست ها و موضوعات ذخیره شده در اینجا ظاهر می شوند.",

@@ -9,8 +9,7 @@ import type {
   BlueskyPostView,
   BlueskyUnlikeResponse,
 } from '@/bluesky-api';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 export function useRepostPost() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
@@ -32,7 +31,7 @@ export function useRepostPost() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       if (action === 'repost') {
         if (!postCid) throw new Error('Post CID is required for repost');

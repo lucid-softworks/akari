@@ -66,7 +66,8 @@
       "back": "Takaisin",
       "done": "Valmis",
       "following": "Seurataan",
-      "reset": "Nollaa"
+      "reset": "Nollaa",
+      "or": "tai"
     },
     "auth": {
       "fillAllFields": "Täytä kaikki kentät",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Tarvitseeko yhdistää toinen tili?",
       "connectNew": "Yhdistää uusi",
       "howToGetAppPassword": "Kuinka saada sovelluksen salasana",
-      "appPasswordInstructions": "1. Siirry Bluesky Web -sovellukseen\n2. Siirry kohtaan Asetukset → Sovelluksen salasanat\n3. Luo uusi sovelluksen salasana\n4. Käytä tätä salasanaa täällä"
+      "appPasswordInstructions": "1. Siirry Bluesky Web -sovellukseen\n2. Siirry kohtaan Asetukset → Sovelluksen salasanat\n3. Luo uusi sovelluksen salasana\n4. Käytä tätä salasanaa täällä",
+      "welcomeTitle": "Tervetuloa Akariin",
+      "welcomeSubtitle": "Valitse, miten haluat kirjautua AT Protocol -tiliisi.",
+      "oauthChoiceTitle": "Kirjaudu atproto-tunnuksilla",
+      "oauthChoiceSubtitle": "Avaamme palvelusi selaimessa. Suositeltu vaihtoehto.",
+      "passwordChoiceTitle": "Kirjaudu sovellussalasanalla",
+      "passwordChoiceSubtitle": "Käytä handle-tunnusta ja sovellussalasanaa tilisi asetuksista.",
+      "oauthSignIn": "Kirjaudu atproto-tunnuksilla",
+      "oauthScreenTitle": "Kirjaudu atproto-tunnuksilla",
+      "oauthScreenSubtitle": "Anna handle-tunnuksesi, niin yhdistämme sinut palvelusi kautta selaimessa.",
+      "passwordScreenTitle": "Kirjaudu sovellussalasanalla",
+      "passwordScreenSubtitle": "Anna handle ja sovellussalasana AT Protocol -tililtäsi.",
+      "oauthInFlight": "Avataan selainta…",
+      "continue": "Jatka",
+      "invalidHandle": "Anna kelvollinen handle.",
+      "oauthSuccessTitle": "Kirjautuminen onnistui",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) tunnistettiin atproto OAuth -valtuutuksen kautta. Tämän istunnon liittäminen API-asiakkaaseen on seuraava vaihe."
     },
     "navigation": {
       "search": "Haku",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Et ole vielä merkinnyt ketään luotetuksi vahvistajaksi. Lisää vahvistaja napauttamalla häntä missä tahansa vahvistusnäkymässä.",
       "enableAdultContentHint": "Näyttää aikuisille merkityt julkaisut ja sisällöt. Oletuksena pois käytöstä.",
       "requireAltTextHint": "Estää kuvajulkaisun lähettämisen, ellei jokaisessa kuvassa ole vaihtoehtoista tekstikuvausta.",
-      "displayLargerTextBadgesHint": "Käytä suurempaa ja luettavampaa tekstikokoa vuorovaikutuslukemille (tykkäykset, vastaukset, uudelleenjaot)."
+      "displayLargerTextBadgesHint": "Käytä suurempaa ja luettavampaa tekstikokoa vuorovaikutuslukemille (tykkäykset, vastaukset, uudelleenjaot).",
+      "network": {
+        "title": "Verkko",
+        "indexDescription": "Valitse, mikä AppView ja kuvien CDN käsittelevät AT Protocol -liikenteesi.",
+        "intro": "Akari keskustelee kahden ylävirran palvelun kanssa: AppView, joka kokoaa verkon näkymiksi, jotka näet (syötteet, profiilit, haku), ja kuvien CDN, joka isännöi pikkukuvia ja avatareita. Oletuksena molempia operoi Bluesky Social — valitse alta vaihtoehtoja kiertääksesi ne."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Oletus-AppView",
+        "customSection": "Mukautettu AppView",
+        "customHint": "Anna AppView’n HTTPS-perus-URL ja sen palvelu-DID. Molemmat julkaistaan AppView’n ylläpitäjän `did:web`-asiakirjassa palvelun `#bsky_appview` alla.",
+        "customUrlLabel": "Perus-URL",
+        "customDidLabel": "Palvelun DID",
+        "activeSection": "Aktiivinen AppView",
+        "activeUrl": "Selvitetty URL",
+        "activeDid": "Välityksen DID",
+        "noProxy": "Ei välitysotsaketta",
+        "perAccountSection": "Tiliä koskevat korvaukset",
+        "perAccountHint": "Jätä tili kohtaan ”Käytä oletusta” seuraamaan yllä olevaa sovelluksen yleistä asetusta. Korvaa yksittäiset tilit, kun joku tarvitsee erilaista AppView’ta.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — oletus-AppView, jota ylläpitää Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — yhteisön ylläpitämä AppView mukautetulla moderoinnilla."
+          },
+          "custom": {
+            "label": "Mukautettu",
+            "description": "Osoita mihin tahansa AppView’hun URL:n ja DID:n avulla."
+          }
+        },
+        "choice": {
+          "default": "Käytä oletusta",
+          "custom": "Mukautettu",
+          "defaultSummary": "Seuraa oletusta ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Kuvien CDN",
+        "intro": "AppView’n palauttamat kuvien URL-osoitteet osoittavat oletuksena Blueskyn CDN:ään. Valitse tästä eri CDN, ja vastaavat URL-osoitteet (avatarit, bannerit, julkaisujen pikkukuvat) kirjoitetaan uudelleen käyttämään sitä — polkurakenne on sama peilien välillä, joten isännän vaihto riittää.",
+        "customSection": "Mukautettu CDN",
+        "customUrlLabel": "Mukautettu CDN-URL",
+        "activeSection": "Aktiivinen CDN",
+        "activeHost": "Tehollinen isäntä",
+        "noOverride": "Ei korvausta (välittyy sellaisenaan)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — Bluesky Socialin operoima oletus-CDN."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — yhteisön ylläpitämä CDN-peili."
+          },
+          "custom": {
+            "label": "Mukautettu",
+            "description": "Osoita mihin tahansa yhteensopivaan CDN:ään URL:n kautta."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Tallennetut viestit ja ketjut ilmestyvät täällä.",

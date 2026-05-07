@@ -11,8 +11,7 @@ import type {
   BlueskyPostView,
   BlueskyUnlikeResponse,
 } from '@/bluesky-api';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 type FeedPagesQueryData = { pages: BlueskyFeedResponse[] };
 type LikesPagesQueryData = { pages: { likes?: BlueskyPostView[]; cursor?: string }[] };
 type ThreadQueryData = { thread: { post: BlueskyPostView; replies?: any[] } };
@@ -69,7 +68,7 @@ export function useLikePost() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       if (action === 'like') {
         if (!postCid) throw new Error('Post CID is required for like');

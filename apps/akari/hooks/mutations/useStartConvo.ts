@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Resolves or creates a conversation for the given member DIDs and returns
@@ -24,7 +24,7 @@ export function useStartConvo() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (memberDids.length === 0) throw new Error('At least one member is required');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const result = await api.getConvoForMembers(token, memberDids);
       return result.convo;
     },

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-const PUBLIC_APPVIEW = 'https://public.api.bsky.app';
+import { useAppViewSettings } from '@/hooks/useAppViewSettings';
+import { resolveAppView } from '@/utils/appView';
+
 const TYPEAHEAD_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
@@ -27,6 +29,8 @@ export function useTypeaheadActors(rawQuery: string): {
 } {
   const trimmed = rawQuery.replace(/^@/, '').trim();
   const [debounced, setDebounced] = useState(trimmed);
+  const { config } = useAppViewSettings();
+  const appViewUrl = resolveAppView(config).url;
 
   useEffect(() => {
     if (trimmed.length < 2) {
@@ -38,9 +42,9 @@ export function useTypeaheadActors(rawQuery: string): {
   }, [trimmed]);
 
   const query = useQuery({
-    queryKey: ['typeaheadActors', debounced],
+    queryKey: ['typeaheadActors', debounced, appViewUrl],
     queryFn: async (): Promise<TypeaheadActor[]> => {
-      const url = new URL(`${PUBLIC_APPVIEW}/xrpc/app.bsky.actor.searchActorsTypeahead`);
+      const url = new URL(`${appViewUrl}/xrpc/app.bsky.actor.searchActorsTypeahead`);
       url.searchParams.set('q', debounced);
       url.searchParams.set('limit', String(TYPEAHEAD_LIMIT));
       const res = await fetch(url, { headers: { Accept: 'application/json' } });

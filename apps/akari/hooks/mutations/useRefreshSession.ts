@@ -1,7 +1,7 @@
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { BlueskyApi } from '@/bluesky-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Mutation hook for refreshing the Bluesky session
@@ -22,7 +22,7 @@ export function useRefreshSession() {
       if (!currentAccount?.pdsUrl) {
         throw new Error('No PDS URL available for this account');
       }
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return await api.refreshSession(refreshToken);
     },
     onSuccess: (session) => {

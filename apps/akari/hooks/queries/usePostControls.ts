@@ -5,6 +5,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import type { PostControls, ReplyAllow } from '@/utils/postControls';
 import { DEFAULT_POST_CONTROLS } from '@/utils/postControls';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 const TG_RULE = {
   mention: 'app.bsky.feed.threadgate#mentionRule',
@@ -46,7 +47,7 @@ export function useExistingPostControls(postUri: string | undefined) {
       const repo = postUri.split('/')[2];
       if (!rkey || !repo) return DEFAULT_POST_CONTROLS;
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       // Fetch both records in parallel; either can be missing (404).
       const [threadgateRes, postgateRes] = await Promise.allSettled([

@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import type { PostControls } from '@/utils/postControls';
 import { DEFAULT_POST_CONTROLS } from '@/utils/postControls';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Writes threadgate + postgate records for a freshly-created post. The
@@ -23,7 +23,7 @@ export function usePostControls() {
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       const isReplyDefault =
         controls.replyAllow.type === DEFAULT_POST_CONTROLS.replyAllow.type;

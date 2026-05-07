@@ -5,10 +5,10 @@ import type { BlueskyNotificationsResponse, BlueskyUnreadNotificationCount } fro
  * Bluesky notifications API client
  */
 export class BlueskyNotifications extends BlueskyApiClient {
-  constructor(pdsUrl: string = 'https://bsky.social') {
+  constructor(pdsUrl: string = 'https://bsky.social', appViewProxyDid?: string | null) {
     // Strip a trailing /xrpc — `makeRequest` re-appends `/xrpc${endpoint}`,
     // so a baseUrl ending in `/xrpc` would double up.
-    super(pdsUrl.endsWith('/xrpc') ? pdsUrl.slice(0, -5) : pdsUrl);
+    super(pdsUrl.endsWith('/xrpc') ? pdsUrl.slice(0, -5) : pdsUrl, appViewProxyDid);
   }
 
   /**

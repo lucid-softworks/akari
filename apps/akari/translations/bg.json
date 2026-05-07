@@ -66,7 +66,8 @@
       "back": "Назад",
       "done": "Готово",
       "following": "Следва се",
-      "reset": "Нулиране"
+      "reset": "Нулиране",
+      "or": "или"
     },
     "auth": {
       "fillAllFields": "Моля, попълнете всички полета",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Трябва да свържете различен акаунт?",
       "connectNew": "Свържете ново",
       "howToGetAppPassword": "Как да получите паролата си за приложението",
-      "appPasswordInstructions": "1. Отидете в уеб приложението Bluesky\n2. Отворете Настройки → Пароли за приложения\n3. Създайте нова парола за приложението\n4. Използвайте тази парола тук"
+      "appPasswordInstructions": "1. Отидете в уеб приложението Bluesky\n2. Отворете Настройки → Пароли за приложения\n3. Създайте нова парола за приложението\n4. Използвайте тази парола тук",
+      "welcomeTitle": "Добре дошли в Akari",
+      "welcomeSubtitle": "Изберете как искате да влезете в своя AT Protocol акаунт.",
+      "oauthChoiceTitle": "Влез чрез atproto",
+      "oauthChoiceSubtitle": "Ще отворим услугата ви в браузъра. Препоръчително.",
+      "passwordChoiceTitle": "Влез с парола за приложение",
+      "passwordChoiceSubtitle": "Използвайте handle и парола за приложение от настройките на акаунта си.",
+      "oauthSignIn": "Влез чрез atproto",
+      "oauthScreenTitle": "Влез чрез atproto",
+      "oauthScreenSubtitle": "Въведете handle-а си и ще ви свържем през услугата ви в браузъра.",
+      "passwordScreenTitle": "Влез с парола за приложение",
+      "passwordScreenSubtitle": "Въведете handle и парола за приложение от своя AT Protocol акаунт.",
+      "oauthInFlight": "Отваряне на браузъра…",
+      "continue": "Продължи",
+      "invalidHandle": "Моля, въведете валиден handle.",
+      "oauthSuccessTitle": "Влязохте",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) е удостоверен чрез atproto OAuth. Свързването на тази сесия с API клиента е следващата стъпка."
     },
     "navigation": {
       "search": "Търсене",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Все още не сте отбелязали никого като доверен верификатор. Докоснете верификатор в който и да е лист за потвърждение, за да го добавите.",
       "enableAdultContentHint": "Показвай публикации и медии, обозначени като за възрастни. По подразбиране изключено.",
       "requireAltTextHint": "Блокирай изпращането на публикация с изображение, ако всяко изображение няма описание alt-text.",
-      "displayLargerTextBadgesHint": "Използвай по-голям и по-четлив размер на шрифта за броячите на реакции (харесвания, отговори, повторни публикации)."
+      "displayLargerTextBadgesHint": "Използвай по-голям и по-четлив размер на шрифта за броячите на реакции (харесвания, отговори, повторни публикации).",
+      "network": {
+        "title": "Мрежа",
+        "indexDescription": "Изберете кой AppView и CDN за изображения обработват вашия AT Protocol трафик.",
+        "intro": "Akari комуникира с две услуги нагоре по веригата: AppView, който агрегира мрежата във изгледите, които виждате (емисии, профили, търсене), и CDN за изображения, който хоства миниатюри и аватари. По подразбиране и двете се управляват от Bluesky Social — изберете алтернативи по-долу, за да ги заобиколите."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView по подразбиране",
+        "customSection": "Персонализиран AppView",
+        "customHint": "Въведете HTTPS базовия URL на AppView и неговия service DID. И двата са публикувани в `did:web` документа на оператора на AppView под услугата `#bsky_appview`.",
+        "customUrlLabel": "Базов URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Активен AppView",
+        "activeUrl": "Разрешен URL",
+        "activeDid": "Прокси DID",
+        "noProxy": "Без прокси хедър",
+        "perAccountSection": "Замествания по акаунт",
+        "perAccountHint": "Оставете акаунт на „Използвай по подразбиране“, за да следва общата настройка по-горе. Заместете отделни акаунти, когато един от тях има нужда от различен AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView по подразбиране, управляван от Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — управляван от общността AppView с персонализирана модерация."
+          },
+          "custom": {
+            "label": "Персонализиран",
+            "description": "Насочете към произволен AppView чрез URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Използвай по подразбиране",
+          "custom": "Персонализиран",
+          "defaultSummary": "Следва по подразбиране ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN за изображения",
+        "intro": "URL адресите на изображения, връщани от AppView, по подразбиране сочат към CDN на Bluesky. Изберете различен CDN тук и съответните URL адреси (аватари, банери, миниатюри на публикации) ще бъдат пренаписани да го използват — оформлението на пътищата е едно и също между огледалата, така че смяна на хоста е достатъчна.",
+        "customSection": "Персонализиран CDN",
+        "customUrlLabel": "URL на персонализиран CDN",
+        "activeSection": "Активен CDN",
+        "activeHost": "Действителен хост",
+        "noOverride": "Без замяна (преминава директно)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN по подразбиране, управляван от Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — CDN огледало, управлявано от общността."
+          },
+          "custom": {
+            "label": "Персонализиран",
+            "description": "Насочете към съвместим CDN чрез URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Запазените публикации и нишки ще се появят тук.",

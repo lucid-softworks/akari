@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import React, { useState } from 'react';
 import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 

@@ -18,7 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import en from '@/translations/en.json';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { useResponsive } from '@/hooks/useResponsive';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 

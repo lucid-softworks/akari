@@ -66,7 +66,8 @@
       "back": "Nazaj",
       "done": "Končano",
       "following": "Sledite",
-      "reset": "Ponastavi"
+      "reset": "Ponastavi",
+      "or": "ali"
     },
     "auth": {
       "fillAllFields": "Prosimo, izpolnite vsa polja",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Ali morate povezati drug račun?",
       "connectNew": "Povežite novo",
       "howToGetAppPassword": "Kako dobiti geslo za aplikacijo",
-      "appPasswordInstructions": "1. pojdite v Bluessky spletna aplikacija\n2. Pomaknite se do nastavitev → Gesla za aplikacijo\n3. Ustvari novo geslo za aplikacijo\n4. Uporabite to geslo tukaj"
+      "appPasswordInstructions": "1. pojdite v Bluessky spletna aplikacija\n2. Pomaknite se do nastavitev → Gesla za aplikacijo\n3. Ustvari novo geslo za aplikacijo\n4. Uporabite to geslo tukaj",
+      "welcomeTitle": "Dobrodošli v Akari",
+      "welcomeSubtitle": "Izberi, kako se želiš prijaviti v svoj račun na AT Protocol.",
+      "oauthChoiceTitle": "Prijava prek atproto",
+      "oauthChoiceSubtitle": "Tvojo storitev bomo odprli v brskalniku. Priporočeno.",
+      "passwordChoiceTitle": "Prijava z app password",
+      "passwordChoiceSubtitle": "Uporabi handle in app password iz nastavitev računa.",
+      "oauthSignIn": "Prijava prek atproto",
+      "oauthScreenTitle": "Prijava prek atproto",
+      "oauthScreenSubtitle": "Vnesi svoj handle in povezali te bomo prek tvoje storitve v brskalniku.",
+      "passwordScreenTitle": "Prijava z app password",
+      "passwordScreenSubtitle": "Vnesi handle in app password iz svojega računa AT Protocol.",
+      "oauthInFlight": "Odpiranje brskalnika…",
+      "continue": "Naprej",
+      "invalidHandle": "Vnesi veljaven handle.",
+      "oauthSuccessTitle": "Prijavljeno",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) je bil overjen prek atproto OAuth. Naslednji korak je povezava te seje s klientom API."
     },
     "navigation": {
       "search": "Iskanje",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Še niste označili nikogar kot zaupanja vrednega preveritelja. Tapnite preveritelja v katerem koli oknu preverjanja, da ga dodate.",
       "enableAdultContentHint": "Prikaži objave in medije, označene kot za odrasle. Privzeto izklopljeno.",
       "requireAltTextHint": "Prepreči pošiljanje objave s sliko, če vsaka slika nima opisa alt-text.",
-      "displayLargerTextBadgesHint": "Uporabi večjo, bolj berljivo velikost pisave za števce reakcij (všečki, odgovori, ponovne objave)."
+      "displayLargerTextBadgesHint": "Uporabi večjo, bolj berljivo velikost pisave za števce reakcij (všečki, odgovori, ponovne objave).",
+      "network": {
+        "title": "Omrežje",
+        "indexDescription": "Izberi, kateri AppView in CDN za slike obdelujeta tvoj AT Protocol promet.",
+        "intro": "Akari govori z dvema upstream storitvama: AppView, ki združuje omrežje v poglede, ki jih vidiš (viri, profili, iskanje), in CDN za slike, ki gosti sličice in avatarje. Privzeto oba upravlja Bluesky Social — spodaj izberi alternative, da ju zaobideš."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Privzeti AppView",
+        "customSection": "AppView po meri",
+        "customHint": "Vnesi osnovni HTTPS URL AppView-a in njegov service DID. Oba sta objavljena v dokumentu `did:web` upravljavca AppView-a pod storitvijo `#bsky_appview`.",
+        "customUrlLabel": "Osnovni URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Aktivni AppView",
+        "activeUrl": "Razrešeni URL",
+        "activeDid": "Proxy DID",
+        "noProxy": "Brez glave proxyja",
+        "perAccountSection": "Preglasitve po računu",
+        "perAccountHint": "Pusti račun na »Uporabi privzeto«, da sledi nastavitvi za celotno aplikacijo zgoraj. Preglasi posamezne račune, kadar kateri potrebuje drug AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — privzeti AppView, ki ga upravlja Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — skupnostno voden AppView z lastno moderacijo."
+          },
+          "custom": {
+            "label": "Po meri",
+            "description": "Usmeri na poljuben AppView prek URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Uporabi privzeto",
+          "custom": "Po meri",
+          "defaultSummary": "Sledi privzetemu ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN za slike",
+        "intro": "URL-ji slik, ki jih vrne AppView, privzeto kažejo na Blueskyjev CDN. Tu izberi drug CDN in ustrezni URL-ji (avatarji, pasice, sličice objav) bodo prepisani tako, da ga bodo uporabljali — postavitev poti je enaka med zrcali, zato zadošča zamenjava gostitelja.",
+        "customSection": "Lasten CDN",
+        "customUrlLabel": "URL lastnega CDN",
+        "activeSection": "Aktivni CDN",
+        "activeHost": "Dejanski gostitelj",
+        "noOverride": "Brez preglasitve (gre neposredno)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — privzeti CDN, ki ga upravlja Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — CDN zrcalo, ki ga vodi skupnost."
+          },
+          "custom": {
+            "label": "Po meri",
+            "description": "Pokaži na poljuben združljiv CDN prek URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { draftViewToComposerState, type ComposerDraftState } from '@/utils/draftMapper';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
  * Loads the current user's composer drafts from the appview's private
@@ -22,7 +22,7 @@ export function useDrafts(enabled: boolean = true) {
     staleTime: 30 * 1000,
     queryFn: async () => {
       if (!token || !pdsUrl) return [];
-      const api = new BlueskyApi(pdsUrl);
+      const api = apiForPdsUrl(pdsUrl);
       const res = await api.getDrafts(token, { limit: 100 });
       return res.drafts
         .map(draftViewToComposerState)

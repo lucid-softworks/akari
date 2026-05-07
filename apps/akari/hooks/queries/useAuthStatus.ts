@@ -1,4 +1,3 @@
-import { BlueskyApi } from '@/bluesky-api';
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
 import type { Account } from '@/types/account';
@@ -9,6 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount } from './useCurrentAccount';
 import { useJwtToken } from './useJwtToken';
 import { useRefreshToken } from './useRefreshToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /** Refresh the access token whenever it's within this window of expiry. */
 const REFRESH_LEEWAY_SECONDS = 5 * 60;
@@ -101,7 +101,7 @@ export function useAuthStatus() {
       }
 
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = apiForAccount(currentAccount);
         const session = await api.refreshSession(refreshToken);
 
         setAuthMutation.mutate({

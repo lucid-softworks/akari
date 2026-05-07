@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi, type BlueskyLabelerView, type BlueskyLabelersPref } from '@/bluesky-api';
+import { type BlueskyLabelerView, type BlueskyLabelersPref } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { usePreferences } from '@/hooks/queries/usePreferences';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /** Bluesky's default moderation labeler — always included so a fresh account
  * still sees a labeler in the picker even before subscribing to anything. */
@@ -34,7 +35,7 @@ export function useLabelers() {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const result = await api.getLabelerServices(token, dids);
       return result.views;
     },

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Modal,

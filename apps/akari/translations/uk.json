@@ -66,7 +66,8 @@
       "back": "Назад",
       "done": "Готово",
       "following": "Підписані",
-      "reset": "Скинути"
+      "reset": "Скинути",
+      "or": "або"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Потрібно підключити інший рахунок?",
       "connectNew": "Підключити нове",
       "howToGetAppPassword": "Як отримати пароль програми",
-      "appPasswordInstructions": "1. Перейдіть у веб -додаток Bluesky\n2. Перейдіть до налаштувань → Паролі додатків\n3. Створіть новий пароль програми\n4. Використовуйте цей пароль тут"
+      "appPasswordInstructions": "1. Перейдіть у веб -додаток Bluesky\n2. Перейдіть до налаштувань → Паролі додатків\n3. Створіть новий пароль програми\n4. Використовуйте цей пароль тут",
+      "welcomeTitle": "Ласкаво просимо до Akari",
+      "welcomeSubtitle": "Оберіть, як увійти до свого облікового запису на AT Protocol.",
+      "oauthChoiceTitle": "Увійти через atproto",
+      "oauthChoiceSubtitle": "Відкриємо ваш сервіс у браузері. Рекомендовано.",
+      "passwordChoiceTitle": "Увійти з app password",
+      "passwordChoiceSubtitle": "Використовуйте handle і app password з налаштувань облікового запису.",
+      "oauthSignIn": "Увійти через atproto",
+      "oauthScreenTitle": "Увійти через atproto",
+      "oauthScreenSubtitle": "Введіть свій handle — підключимо вас через ваш сервіс у браузері.",
+      "passwordScreenTitle": "Увійти з app password",
+      "passwordScreenSubtitle": "Введіть handle і app password з вашого облікового запису AT Protocol.",
+      "oauthInFlight": "Відкривається браузер…",
+      "continue": "Продовжити",
+      "invalidHandle": "Будь ласка, введіть коректний handle.",
+      "oauthSuccessTitle": "Виконано вхід",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) автентифікований через atproto OAuth. Наступний крок — підключення цієї сесії до клієнта API."
     },
     "navigation": {
       "search": "Пошук",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Ви ще не позначили нікого як довіреного верифікатора. Натисніть на верифікатора у будь-якому вікні верифікації, щоб додати його.",
       "enableAdultContentHint": "Показувати дописи та медіа, позначені як для дорослих. За замовчуванням вимкнено.",
       "requireAltTextHint": "Блокувати надсилання допису із зображеннями, якщо у кожного зображення немає опису alt-text.",
-      "displayLargerTextBadgesHint": "Використовувати більший і читабельніший шрифт для лічильників реакцій (вподобання, відповіді, репости)."
+      "displayLargerTextBadgesHint": "Використовувати більший і читабельніший шрифт для лічильників реакцій (вподобання, відповіді, репости).",
+      "network": {
+        "title": "Мережа",
+        "indexDescription": "Оберіть, які AppView і CDN зображень обробляють ваш трафік AT Protocol.",
+        "intro": "Akari спілкується з двома висхідними сервісами: AppView, який агрегує мережу у вигляди, які ви бачите (стрічки, профілі, пошук), і CDN зображень, який розміщує мініатюри та аватари. За замовчуванням обидва обслуговуються Bluesky Social — оберіть альтернативи нижче, щоб обійти їх."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView за замовчуванням",
+        "customSection": "Користувацький AppView",
+        "customHint": "Введіть базову HTTPS-URL цього AppView та його service DID. Обидва значення публікуються в документі `did:web` оператора AppView у складі сервісу `#bsky_appview`.",
+        "customUrlLabel": "Базова URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Активний AppView",
+        "activeUrl": "Розв'язана URL",
+        "activeDid": "DID проксі",
+        "noProxy": "Без заголовка проксі",
+        "perAccountSection": "Перевизначення для кожного облікового запису",
+        "perAccountHint": "Залиште обліковий запис у режимі «Використати за замовчуванням», щоб він слідував загальному налаштуванню застосунку вище. Перевизначайте окремі облікові записи, коли якомусь потрібен інший AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView за замовчуванням, який обслуговує Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — спільнотний AppView із власною модерацією."
+          },
+          "custom": {
+            "label": "Користувацький",
+            "description": "Спрямуйте на будь-який AppView через URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Використати за замовчуванням",
+          "custom": "Користувацький",
+          "defaultSummary": "Слідує за замовчуванням ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN зображень",
+        "intro": "URL зображень, які повертає AppView, за замовчуванням ведуть на CDN Bluesky. Оберіть тут інший CDN, і відповідні URL (аватари, банери, мініатюри дописів) будуть переписані для його використання — структура шляхів однакова між дзеркалами, тож достатньо замінити хост.",
+        "customSection": "Власний CDN",
+        "customUrlLabel": "URL власного CDN",
+        "activeSection": "Активний CDN",
+        "activeHost": "Фактичний хост",
+        "noOverride": "Без перекриття (проходить як є)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — типовий CDN, який обслуговує Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — CDN-дзеркало, кероване спільнотою."
+          },
+          "custom": {
+            "label": "Власний",
+            "description": "Вкажіть будь-який сумісний CDN через URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Збережені повідомлення та теми з'являться тут.",

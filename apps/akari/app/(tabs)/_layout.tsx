@@ -1,5 +1,5 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';

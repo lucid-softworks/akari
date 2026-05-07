@@ -528,7 +528,68 @@
       "hiddenPosts": "Hidden posts",
       "noHiddenAccounts": "No hidden accounts",
       "noHiddenPosts": "No hidden posts",
-      "unhide": "Unhide"
+      "unhide": "Unhide",
+      "network": {
+        "title": "Network",
+        "indexDescription": "Pick which AppView and image CDN handle your AT Protocol traffic.",
+        "intro": "Akari talks to two upstream services: an AppView that aggregates the network into the views you see (feeds, profiles, search) and an image CDN that hosts thumbnails and avatars. By default both are operated by Bluesky Social — pick alternatives below to route around them."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Default AppView",
+        "customSection": "Custom AppView",
+        "customHint": "Enter the AppView's HTTPS base URL and its service DID. Both are published in the AppView operator's `did:web` document under the `#bsky_appview` service.",
+        "customUrlLabel": "Base URL",
+        "customDidLabel": "Service DID",
+        "activeSection": "Active AppView",
+        "activeUrl": "Resolved URL",
+        "activeDid": "Proxy DID",
+        "noProxy": "No proxy header",
+        "perAccountSection": "Per-account overrides",
+        "perAccountHint": "Leave an account on \"Use default\" to follow the app-wide setting above. Override individual accounts when one needs a different AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — the default AppView operated by Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — community-run AppView with custom moderation."
+          },
+          "custom": {
+            "label": "Custom",
+            "description": "Point at any AppView by URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Use default",
+          "custom": "Custom",
+          "defaultSummary": "Following default ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Image CDN",
+        "intro": "Image URLs returned by the AppView point at Bluesky's CDN by default. Pick a different CDN here and matching URLs (avatars, banners, post thumbnails) will be rewritten to use it — the path layout matches across mirrors, so a host swap is enough.",
+        "customSection": "Custom CDN",
+        "customUrlLabel": "Custom CDN URL",
+        "activeSection": "Active CDN",
+        "activeHost": "Effective host",
+        "noOverride": "No override (passing through)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — the default CDN operated by Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — community-run CDN mirror."
+          },
+          "custom": {
+            "label": "Custom",
+            "description": "Point at any compatible CDN by URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Saved posts and threads will appear here.",

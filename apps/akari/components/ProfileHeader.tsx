@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';

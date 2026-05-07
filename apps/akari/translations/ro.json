@@ -66,7 +66,8 @@
       "back": "Înapoi",
       "done": "Gata",
       "following": "Urmăriți",
-      "reset": "Resetare"
+      "reset": "Resetare",
+      "or": "sau"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Trebuie să conectați un alt cont?",
       "connectNew": "Conectați -vă nou",
       "howToGetAppPassword": "Cum să obțineți parola aplicației",
-      "appPasswordInstructions": "1. Accesați aplicația web Bluesky\n2. Navigați la Setări → Parole pentru aplicație\n3. Creați o nouă parolă a aplicației\n4. Folosiți acea parolă aici"
+      "appPasswordInstructions": "1. Accesați aplicația web Bluesky\n2. Navigați la Setări → Parole pentru aplicație\n3. Creați o nouă parolă a aplicației\n4. Folosiți acea parolă aici",
+      "welcomeTitle": "Bun venit pe Akari",
+      "welcomeSubtitle": "Alege cum vrei să te autentifici la contul tău AT Protocol.",
+      "oauthChoiceTitle": "Autentifică-te cu atproto",
+      "oauthChoiceSubtitle": "Vom deschide serviciul tău în browser. Recomandat.",
+      "passwordChoiceTitle": "Autentifică-te cu app password",
+      "passwordChoiceSubtitle": "Folosește un handle și un app password din setările contului tău.",
+      "oauthSignIn": "Autentifică-te cu atproto",
+      "oauthScreenTitle": "Autentifică-te cu atproto",
+      "oauthScreenSubtitle": "Introdu handle-ul și te vom conecta prin serviciul tău în browser.",
+      "passwordScreenTitle": "Autentifică-te cu app password",
+      "passwordScreenSubtitle": "Introdu un handle și un app password de la contul tău AT Protocol.",
+      "oauthInFlight": "Se deschide browserul…",
+      "continue": "Continuă",
+      "invalidHandle": "Introdu un handle valid.",
+      "oauthSuccessTitle": "Autentificat",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) a fost autentificat prin atproto OAuth. Conectarea acestei sesiuni la clientul API este pasul următor."
     },
     "navigation": {
       "search": "Căutare",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Nu ai marcat încă pe nimeni drept verificator de încredere. Atinge un verificator în orice fereastră de verificare pentru a-l adăuga.",
       "enableAdultContentHint": "Afișează postările și conținutul marcate ca pentru adulți. Dezactivat în mod implicit.",
       "requireAltTextHint": "Blochează trimiterea unei postări cu imagini dacă fiecare imagine nu are o descriere de text alternativ.",
-      "displayLargerTextBadgesHint": "Folosește un text mai mare și mai lizibil pentru contoarele de interacțiune (aprecieri, răspunsuri, repostări)."
+      "displayLargerTextBadgesHint": "Folosește un text mai mare și mai lizibil pentru contoarele de interacțiune (aprecieri, răspunsuri, repostări).",
+      "network": {
+        "title": "Rețea",
+        "indexDescription": "Alege care AppView și CDN de imagini gestionează traficul tău AT Protocol.",
+        "intro": "Akari comunică cu două servicii din amonte: un AppView care agregă rețeaua în vizualizările pe care le vezi (fluxuri, profiluri, căutare) și un CDN de imagini care găzduiește miniaturile și avatarurile. În mod implicit, ambele sunt operate de Bluesky Social — alege alternative mai jos pentru a le ocoli."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView implicit",
+        "customSection": "AppView personalizat",
+        "customHint": "Introdu URL-ul de bază HTTPS al AppView-ului și service DID-ul său. Ambele sunt publicate în documentul `did:web` al operatorului AppView, sub serviciul `#bsky_appview`.",
+        "customUrlLabel": "URL de bază",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView activ",
+        "activeUrl": "URL rezolvat",
+        "activeDid": "DID-ul proxy-ului",
+        "noProxy": "Fără antet proxy",
+        "perAccountSection": "Suprascrieri pe cont",
+        "perAccountHint": "Lasă un cont pe „Folosește implicit” pentru a urma setarea globală a aplicației de mai sus. Suprascrie conturi individuale doar când unul dintre ele are nevoie de un AppView diferit.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView-ul implicit operat de Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView administrat de comunitate, cu moderare personalizată."
+          },
+          "custom": {
+            "label": "Personalizat",
+            "description": "Indică orice AppView prin URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Folosește implicit",
+          "custom": "Personalizat",
+          "defaultSummary": "Urmează implicitul ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN de imagini",
+        "intro": "URL-urile de imagini returnate de AppView indică implicit către CDN-ul Bluesky. Alege aici un alt CDN și URL-urile corespunzătoare (avataruri, bannere, miniaturi de postări) vor fi rescrise pentru a-l folosi — structura căilor este identică între oglinzi, așa că schimbarea gazdei este suficientă.",
+        "customSection": "CDN personalizat",
+        "customUrlLabel": "URL CDN personalizat",
+        "activeSection": "CDN activ",
+        "activeHost": "Gazdă efectivă",
+        "noOverride": "Fără suprascriere (trece direct)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN-ul implicit operat de Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — oglindă CDN administrată de comunitate."
+          },
+          "custom": {
+            "label": "Personalizat",
+            "description": "Indică orice CDN compatibil prin URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Aici vor apărea postări și fire salvate.",

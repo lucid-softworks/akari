@@ -1,7 +1,8 @@
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi, type BlueskyFeedsResponse } from '@/bluesky-api';
+import { type BlueskyFeedsResponse } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Query hook for fetching feed generators created by an actor
@@ -20,7 +21,7 @@ export function useFeeds(actor: string | undefined, limit: number = 50, cursor?:
       if (!actor) throw new Error('No actor provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return await api.getFeeds(token, actor, limit, cursor);
     },
     enabled: !!actor && !!token,

@@ -1,7 +1,8 @@
-import { BlueskyApi, type BlueskyFeed } from '@/bluesky-api';
+import { type BlueskyFeed } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useQuery } from '@tanstack/react-query';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const FEED_GENERATORS_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
@@ -12,7 +13,7 @@ export const feedGeneratorsQueryOptions = (feedUris: string[], token: string, pd
     if (!pdsUrl) throw new Error('No PDS URL available');
     if (feedUris.length === 0) return { feeds: [] };
 
-    const api = new BlueskyApi(pdsUrl);
+    const api = apiForPdsUrl(pdsUrl);
     return await api.getFeedGenerators(token, feedUris);
   },
   staleTime: FEED_GENERATORS_STALE_TIME,

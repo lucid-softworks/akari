@@ -66,7 +66,8 @@
       "back": "חזור",
       "done": "סיום",
       "following": "עוקב",
-      "reset": "איפוס"
+      "reset": "איפוס",
+      "or": "או"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "צריך לחבר חשבון אחר?",
       "connectNew": "חבר חדש",
       "howToGetAppPassword": "כיצד להשיג את סיסמת האפליקציה שלך",
-      "appPasswordInstructions": "1. עבור לאפליקציית האינטרנט של Bluesky\n2. נווט להגדרות → סיסמאות אפליקציה\n3. צור סיסמת אפליקציה חדשה\n4. השתמש בסיסמה זו כאן"
+      "appPasswordInstructions": "1. עבור לאפליקציית האינטרנט של Bluesky\n2. נווט להגדרות → סיסמאות אפליקציה\n3. צור סיסמת אפליקציה חדשה\n4. השתמש בסיסמה זו כאן",
+      "welcomeTitle": "ברוכים הבאים ל־Akari",
+      "welcomeSubtitle": "בחרו כיצד תרצו להתחבר לחשבון ה־AT Protocol שלכם.",
+      "oauthChoiceTitle": "התחבר באמצעות atproto",
+      "oauthChoiceSubtitle": "נפתח את השירות שלכם בדפדפן. מומלץ.",
+      "passwordChoiceTitle": "התחבר באמצעות app password",
+      "passwordChoiceSubtitle": "השתמשו ב־handle וב־app password מתוך הגדרות החשבון.",
+      "oauthSignIn": "התחבר באמצעות atproto",
+      "oauthScreenTitle": "התחבר באמצעות atproto",
+      "oauthScreenSubtitle": "הזינו את ה־handle שלכם ונחבר אתכם דרך השירות שלכם בדפדפן.",
+      "passwordScreenTitle": "התחבר באמצעות app password",
+      "passwordScreenSubtitle": "הזינו handle ו־app password מחשבון ה־AT Protocol שלכם.",
+      "oauthInFlight": "פותח את הדפדפן…",
+      "continue": "המשך",
+      "invalidHandle": "אנא הזינו handle תקין.",
+      "oauthSuccessTitle": "התחברת",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) אומת דרך atproto OAuth. חיבור הסשן הזה ללקוח ה־API הוא השלב הבא."
     },
     "navigation": {
       "search": "לְחַפֵּשׂ",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "עדיין לא סימנת אף אחד כמאמת מהימן. הקש על מאמת בכל גיליון אימות כדי להוסיף אותו.",
       "enableAdultContentHint": "הצג פוסטים ומדיה המסומנים למבוגרים. כבוי כברירת מחדל.",
       "requireAltTextHint": "חסום שליחה של פוסט תמונה אלא אם לכל תמונה יש תיאור טקסט חלופי.",
-      "displayLargerTextBadgesHint": "השתמש בגודל טקסט גדול וקריא יותר עבור ספירת מעורבות (לייקים, תגובות, פרסומים מחדש)."
+      "displayLargerTextBadgesHint": "השתמש בגודל טקסט גדול וקריא יותר עבור ספירת מעורבות (לייקים, תגובות, פרסומים מחדש).",
+      "network": {
+        "title": "רשת",
+        "indexDescription": "בחרו איזה AppView ואיזה CDN לתמונות יטפלו בתעבורת AT Protocol שלכם.",
+        "intro": "Akari מדבר עם שני שירותים במעלה הזרם: AppView שמאגד את הרשת לתצוגות שאתם רואים (פידים, פרופילים, חיפוש), ו-CDN תמונות שמארח תמונות ממוזערות ואווטרים. כברירת מחדל שניהם מופעלים על ידי Bluesky Social — בחרו חלופות למטה כדי לעקוף אותם."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView ברירת מחדל",
+        "customSection": "AppView מותאם אישית",
+        "customHint": "הזינו את כתובת ה־HTTPS הבסיסית של ה־AppView ואת ה־service DID שלו. שניהם מתפרסמים במסמך `did:web` של מפעיל ה־AppView תחת השירות `#bsky_appview`.",
+        "customUrlLabel": "כתובת בסיסית",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView פעיל",
+        "activeUrl": "כתובת שנפתרה",
+        "activeDid": "DID של ה־proxy",
+        "noProxy": "ללא כותרת proxy",
+        "perAccountSection": "עקיפות לפי חשבון",
+        "perAccountHint": "השאירו חשבון על \"השתמש בברירת המחדל\" כדי שיעקוב אחר ההגדרה הכלל־אפליקטיבית למעלה. עקיפו חשבונות בודדים כשאחד מהם צריך AppView אחר.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — ה־AppView ברירת המחדל, מופעל על ידי Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView בניהול קהילתי עם מיתון מותאם."
+          },
+          "custom": {
+            "label": "מותאם אישית",
+            "description": "הפנו לכל AppView לפי URL ו־DID."
+          }
+        },
+        "choice": {
+          "default": "השתמש בברירת המחדל",
+          "custom": "מותאם אישית",
+          "defaultSummary": "פועל לפי ברירת המחדל ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN לתמונות",
+        "intro": "כתובות URL של תמונות שה-AppView מחזיר מצביעות כברירת מחדל ל-CDN של Bluesky. בחרו כאן CDN אחר וכתובות תואמות (אווטרים, באנרים, תמונות ממוזערות של פוסטים) ייכתבו מחדש כדי להשתמש בו — מבנה הנתיב זהה בין המראות, כך שהחלפת מארח מספיקה.",
+        "customSection": "CDN מותאם אישית",
+        "customUrlLabel": "URL של CDN מותאם",
+        "activeSection": "CDN פעיל",
+        "activeHost": "מארח אפקטיבי",
+        "noOverride": "ללא דריסה (מועבר ישירות)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — ה-CDN ברירת המחדל שמופעל על ידי Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — מראת CDN שמופעלת על ידי הקהילה."
+          },
+          "custom": {
+            "label": "מותאם אישית",
+            "description": "הצביעו על כל CDN תואם לפי URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "פוסטים ושרשור שנשמרו יופיעו כאן.",

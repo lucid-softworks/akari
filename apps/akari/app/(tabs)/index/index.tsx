@@ -165,7 +165,40 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [refetchFeed, refetchFeeds, refetchTimeline, selectedFeed]);
 
+  // FlashList on web fires `onEndReached` repeatedly during initial layout
+  // (the rendered cells haven't been measured yet, so it thinks the bottom
+  // is in view and re-fires on each pass). Without a gate that ends up
+  // chaining `fetchNextPage` calls back-to-back — one cursor advance per
+  // layout pass — and you can rack up dozens of getFeed requests on a
+  // page the user hasn't even scrolled.
+  //
+  // Layered gate, all three must hold before pagination is allowed:
+  //   1. `hasScrolledRef` — the ScrollView reported a non-trivial offset
+  //      from the top. Threshold is high enough to not trip on FlashList's
+  //      synthetic mid-layout scroll events.
+  //   2. `userInteractedRef` — flipped on `onScrollBeginDrag`, the
+  //      explicit "user grabbed the list" signal that synthetic scroll
+  //      events don't emit.
+  //   3. Time gate — refuse pagination within 1.5s of mount. Belt-and-
+  //      braces against either of the above being defeated by FlashList
+  //      web's measurement quirks.
+  const mountedAtRef = useRef(Date.now());
+  const hasScrolledRef = useRef(false);
+  const userInteractedRef = useRef(false);
+
+  const handleListScroll = useCallback((event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    if (event.nativeEvent.contentOffset.y > 256) {
+      hasScrolledRef.current = true;
+    }
+  }, []);
+
+  const handleScrollBeginDrag = useCallback(() => {
+    userInteractedRef.current = true;
+  }, []);
+
   const loadMorePosts = useCallback(() => {
+    if (Date.now() - mountedAtRef.current < 1500) return;
+    if (!hasScrolledRef.current && !userInteractedRef.current) return;
     if (hasNextPage && !isFetchingNextPage) {
       void fetchNextPage();
     }
@@ -373,6 +406,9 @@ export default function HomeScreen() {
         contentContainerStyle={styles.listContent}
         onEndReached={loadMorePosts}
         onEndReachedThreshold={0.4}
+        onScroll={handleListScroll}
+        onScrollBeginDrag={handleScrollBeginDrag}
+        scrollEventThrottle={250}
         refreshing={refreshing}
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}

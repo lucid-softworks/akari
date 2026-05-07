@@ -59,18 +59,21 @@ export class BlueskyApi extends BlueskyApiClient {
   /**
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
    * @param pdsUrl - Personal data server URL that hosts the AT Protocol endpoints.
+   * @param appViewProxyDid - Optional AppView DID. When present, app.bsky.* / chat.bsky.* calls
+   *   carry an `atproto-proxy: <did>#bsky_appview` header so the PDS forwards them to the named
+   *   AppView. Without it, the PDS routes to its default AppView.
    */
-  constructor(pdsUrl: string) {
-    super(pdsUrl);
-    this.actors = new BlueskyActors(pdsUrl);
-    this.auth = new BlueskyAuth(pdsUrl);
-    this.conversations = new BlueskyConversations(pdsUrl);
-    this.drafts = new BlueskyDrafts(pdsUrl);
-    this.feeds = new BlueskyFeeds(pdsUrl);
-    this.graph = new BlueskyGraph(pdsUrl);
-    this.notifications = new BlueskyNotifications(pdsUrl);
-    this.search = new BlueskySearch(pdsUrl);
-    this.repos = new BlueskyRepos(pdsUrl);
+  constructor(pdsUrl: string, appViewProxyDid?: string | null) {
+    super(pdsUrl, appViewProxyDid);
+    this.actors = new BlueskyActors(pdsUrl, appViewProxyDid);
+    this.auth = new BlueskyAuth(pdsUrl, appViewProxyDid);
+    this.conversations = new BlueskyConversations(pdsUrl, appViewProxyDid);
+    this.drafts = new BlueskyDrafts(pdsUrl, appViewProxyDid);
+    this.feeds = new BlueskyFeeds(pdsUrl, appViewProxyDid);
+    this.graph = new BlueskyGraph(pdsUrl, appViewProxyDid);
+    this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
+    this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
+    this.repos = new BlueskyRepos(pdsUrl, appViewProxyDid);
   }
 
   /**
@@ -818,9 +821,10 @@ export class BlueskyApi extends BlueskyApiClient {
   /**
    * Convenience constructor that mirrors the standard constructor for parity with previous usage.
    * @param pdsUrl - Personal data server URL that hosts the AT Protocol endpoints.
+   * @param appViewProxyDid - See {@link BlueskyApi} constructor.
    * @returns Instantiated {@link BlueskyApi} for the supplied PDS.
    */
-  static createWithPDS(pdsUrl: string): BlueskyApi {
-    return new BlueskyApi(pdsUrl);
+  static createWithPDS(pdsUrl: string, appViewProxyDid?: string | null): BlueskyApi {
+    return new BlueskyApi(pdsUrl, appViewProxyDid);
   }
 }

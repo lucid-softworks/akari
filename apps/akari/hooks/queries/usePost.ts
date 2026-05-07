@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
   const { data: token } = useJwtToken();
@@ -17,7 +17,7 @@ export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
       if (!actor || !rKey) throw new Error('No actor or rKey provided');
 
       const constructedUri = `at://${actor}/app.bsky.feed.post/${rKey}`;
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return await api.getPost(token, constructedUri);
     },
     enabled: !!(token && currentAccount?.pdsUrl && actor && rKey),
@@ -38,7 +38,7 @@ export function useParentPost(parentUri: string | null) {
       if (!parentUri) return null;
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const result = await api.getPost(token, parentUri);
       return result;
     },
@@ -59,7 +59,7 @@ export function useRootPost(rootUri: string | null) {
       if (!rootUri) return null;
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const result = await api.getPost(token, rootUri);
       return result;
     },

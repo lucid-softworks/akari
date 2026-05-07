@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { useEffect, useRef, useState } from 'react';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';

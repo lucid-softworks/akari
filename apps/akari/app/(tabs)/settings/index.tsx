@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -138,6 +138,13 @@ export default function SettingsScreen() {
         icon: 'globe',
         label: t('settings.language'),
         onPress: () => router.push('/(tabs)/settings/languages'),
+      },
+      {
+        key: 'network',
+        icon: 'server.rack',
+        label: t('settings.network.title'),
+        description: t('settings.network.indexDescription'),
+        onPress: () => router.push('/(tabs)/settings/network'),
       },
       {
         key: 'accessibility',

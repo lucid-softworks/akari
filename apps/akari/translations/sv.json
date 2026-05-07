@@ -66,7 +66,8 @@
       "back": "Tillbaka",
       "done": "Klar",
       "following": "Följer",
-      "reset": "Återställ"
+      "reset": "Återställ",
+      "or": "eller"
     },
     "auth": {
       "fillAllFields": "Fyll i alla fält",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Behöver du ansluta ett annat konto?",
       "connectNew": "Anslut ny",
       "howToGetAppPassword": "Hur du får ditt applösenord",
-      "appPasswordInstructions": "1. Gå till bluessky webbapp\n2. Navigera till Inställningar → Applösenord\n3. Skapa ett nytt applösenord\n4. Använd det lösenordet här"
+      "appPasswordInstructions": "1. Gå till bluessky webbapp\n2. Navigera till Inställningar → Applösenord\n3. Skapa ett nytt applösenord\n4. Använd det lösenordet här",
+      "welcomeTitle": "Välkommen till Akari",
+      "welcomeSubtitle": "Välj hur du vill logga in på ditt AT Protocol-konto.",
+      "oauthChoiceTitle": "Logga in med atproto",
+      "oauthChoiceSubtitle": "Vi öppnar din tjänst i webbläsaren. Rekommenderas.",
+      "passwordChoiceTitle": "Logga in med app-lösenord",
+      "passwordChoiceSubtitle": "Använd ett handle och ett app-lösenord från dina kontoinställningar.",
+      "oauthSignIn": "Logga in med atproto",
+      "oauthScreenTitle": "Logga in med atproto",
+      "oauthScreenSubtitle": "Ange ditt handle, så ansluter vi dig via din tjänst i webbläsaren.",
+      "passwordScreenTitle": "Logga in med app-lösenord",
+      "passwordScreenSubtitle": "Ange ett handle och ett app-lösenord från ditt AT Protocol-konto.",
+      "oauthInFlight": "Öppnar webbläsaren…",
+      "continue": "Fortsätt",
+      "invalidHandle": "Ange ett giltigt handle.",
+      "oauthSuccessTitle": "Inloggad",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) har autentiserats via atproto OAuth. Nästa steg är att koppla den här sessionen till API-klienten."
     },
     "navigation": {
       "search": "Söka",
@@ -495,7 +512,68 @@
       "trustedVerifiersEmpty": "Du har ännu inte markerat någon som betrodd verifierare. Tryck på en verifierare i en verifieringsruta för att lägga till denne.",
       "enableAdultContentHint": "Visar inlägg och media märkta som vuxeninnehåll. Avstängt som standard.",
       "requireAltTextHint": "Blockerar att skicka ett bildinlägg om inte varje bild har en alt-textbeskrivning.",
-      "displayLargerTextBadgesHint": "Använd en större, mer läsbar textstorlek för interaktionsräknare (gillningar, svar, ompubliceringar)."
+      "displayLargerTextBadgesHint": "Använd en större, mer läsbar textstorlek för interaktionsräknare (gillningar, svar, ompubliceringar).",
+      "network": {
+        "title": "Nätverk",
+        "indexDescription": "Välj vilken AppView och bild-CDN som hanterar din AT Protocol-trafik.",
+        "intro": "Akari pratar med två uppströmstjänster: en AppView som aggregerar nätverket till de vyer du ser (flöden, profiler, sökning) och en bild-CDN som lagrar miniatyrer och avatarer. Som standard drivs båda av Bluesky Social — välj alternativ nedan för att gå runt dem."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "Standard-AppView",
+        "customSection": "Anpassad AppView",
+        "customHint": "Ange AppView:ns HTTPS-bas-URL och dess service-DID. Båda publiceras i AppView-operatörens `did:web`-dokument under tjänsten `#bsky_appview`.",
+        "customUrlLabel": "Bas-URL",
+        "customDidLabel": "Service-DID",
+        "activeSection": "Aktiv AppView",
+        "activeUrl": "Upplöst URL",
+        "activeDid": "Proxy-DID",
+        "noProxy": "Ingen proxy-header",
+        "perAccountSection": "Åsidosättningar per konto",
+        "perAccountHint": "Lämna ett konto på \"Använd standard\" för att följa appens övergripande inställning ovan. Åsidosätt enskilda konton när ett behöver en annan AppView.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — standard-AppView som drivs av Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — community-driven AppView med anpassad moderering."
+          },
+          "custom": {
+            "label": "Anpassad",
+            "description": "Peka mot vilken AppView som helst med URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Använd standard",
+          "custom": "Anpassad",
+          "defaultSummary": "Följer standard ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "Bild-CDN",
+        "intro": "Bild-URL:er som AppView returnerar pekar som standard på Blueskys CDN. Välj en annan CDN här så skrivs matchande URL:er (avatarer, banners, inläggsminiatyrer) om till att använda den — sökvägslayouten är samma mellan speglar, så ett byte av värd räcker.",
+        "customSection": "Anpassad CDN",
+        "customUrlLabel": "URL för anpassad CDN",
+        "activeSection": "Aktiv CDN",
+        "activeHost": "Faktisk värd",
+        "noOverride": "Ingen åsidosättning (skickas vidare)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — den standard-CDN som drivs av Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — communitydriven CDN-spegel."
+          },
+          "custom": {
+            "label": "Anpassad",
+            "description": "Peka på valfri kompatibel CDN via URL."
+          }
+        }
+      }
     },
     "bookmarks": {
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",

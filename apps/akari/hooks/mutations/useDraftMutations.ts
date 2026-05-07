@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { draftsQueryKey } from '@/hooks/queries/useDrafts';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
@@ -10,6 +9,7 @@ import {
   type DraftPostEntry,
 } from '@/utils/draftMapper';
 import type { PostControls } from '@/utils/postControls';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 type DraftPayload = {
   posts: DraftPostEntry[];
@@ -24,7 +24,7 @@ function useApi() {
     ready,
     token,
     did: currentAccount?.did,
-    api: ready && currentAccount?.pdsUrl ? new BlueskyApi(currentAccount.pdsUrl) : null,
+    api: ready && currentAccount?.pdsUrl ? apiForAccount(currentAccount) : null,
   };
 }
 

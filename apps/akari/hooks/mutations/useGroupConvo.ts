@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 const invalidateConvoQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: ['conversations'] });
@@ -21,7 +21,7 @@ export function useAddConvoMembers() {
     mutationFn: async ({ convoId, dids }: { convoId: string; dids: string[] }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.addConvoMembers(token, convoId, dids);
     },
     onSuccess: () => invalidateConvoQueries(queryClient),
@@ -40,7 +40,7 @@ export function useRemoveConvoMembers() {
     mutationFn: async ({ convoId, dids }: { convoId: string; dids: string[] }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.removeConvoMembers(token, convoId, dids);
     },
     onSuccess: () => invalidateConvoQueries(queryClient),
@@ -59,7 +59,7 @@ export function useUpdateConvoName() {
     mutationFn: async ({ convoId, name }: { convoId: string; name: string }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.updateConvoName(token, convoId, name);
     },
     onSuccess: () => invalidateConvoQueries(queryClient),
@@ -78,7 +78,7 @@ export function useMuteConvo() {
     mutationFn: async ({ convoId, action }: { convoId: string; action: 'mute' | 'unmute' }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return action === 'mute'
         ? api.muteConvo(token, convoId)
         : api.unmuteConvo(token, convoId);
@@ -100,7 +100,7 @@ export function useLeaveConvo() {
     mutationFn: async ({ convoId }: { convoId: string }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.leaveConvo(token, convoId);
     },
     onSuccess: () => invalidateConvoQueries(queryClient),

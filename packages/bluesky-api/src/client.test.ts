@@ -7,8 +7,8 @@ describe('BlueskyApiClient', () => {
   const server = setupServer();
 
   class TestClient extends BlueskyApiClient {
-    constructor() {
-      super('https://pds.example');
+    constructor(appViewProxyDid?: string | null) {
+      super('https://pds.example', appViewProxyDid);
     }
 
     async callMakeRequest<T>(endpoint: string, options?: {
@@ -226,5 +226,104 @@ describe('BlueskyApiClient', () => {
     expect(client.lastCall?.options.headers).toEqual({ 'Content-Type': 'image/png' });
     expect(client.lastCall?.options.body).toBeInstanceOf(Blob);
     expect(client.lastCall?.options.body?.type).toBe('image/png');
+  });
+
+  describe('atproto-proxy header', () => {
+    it('injects the proxy header on app.bsky.* requests when configured', async () => {
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.get('https://pds.example/xrpc/app.bsky.feed.getTimeline', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient('did:web:api.blacksky.community');
+      await client.callMakeRequest('/app.bsky.feed.getTimeline');
+
+      expect(capturedHeaders!['atproto-proxy']).toBe('did:web:api.blacksky.community#bsky_appview');
+    });
+
+    it('does NOT inject the proxy header on chat.bsky.* requests', async () => {
+      // Chat is served by a separate `#bsky_chat` service rather than `#bsky_appview`,
+      // so reusing the AppView proxy DID would point chat calls at the wrong endpoint.
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.get('https://pds.example/xrpc/chat.bsky.convo.listConvos', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient('did:web:api.blacksky.community');
+      await client.callMakeAuthenticatedRequest('/chat.bsky.convo.listConvos', 'token');
+
+      expect(capturedHeaders!['atproto-proxy']).toBeUndefined();
+    });
+
+    it('does NOT inject the proxy header on PDS-served app.bsky.actor.getPreferences', async () => {
+      // Preferences live on the user's repo (PDS), not on the AppView. Alt-AppViews
+      // like Blacksky return 404 for this endpoint, so the rule must skip it.
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.get('https://pds.example/xrpc/app.bsky.actor.getPreferences', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient('did:web:api.blacksky.community');
+      await client.callMakeAuthenticatedRequest('/app.bsky.actor.getPreferences', 'token');
+
+      expect(capturedHeaders!['atproto-proxy']).toBeUndefined();
+    });
+
+    it('does NOT inject the proxy header on PDS-served app.bsky.actor.putPreferences', async () => {
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.post('https://pds.example/xrpc/app.bsky.actor.putPreferences', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient('did:web:api.blacksky.community');
+      await client.callMakeAuthenticatedRequest('/app.bsky.actor.putPreferences', 'token', {
+        method: 'POST',
+        body: { preferences: [] },
+      });
+
+      expect(capturedHeaders!['atproto-proxy']).toBeUndefined();
+    });
+
+    it('does NOT inject the proxy header on com.atproto.* requests', async () => {
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.get('https://pds.example/xrpc/com.atproto.identity.resolveHandle', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient('did:web:api.blacksky.community');
+      await client.callMakeRequest('/com.atproto.identity.resolveHandle');
+
+      expect(capturedHeaders!['atproto-proxy']).toBeUndefined();
+    });
+
+    it('does NOT inject the proxy header when no appViewProxyDid is configured', async () => {
+      let capturedHeaders: Record<string, string> | null = null;
+      server.use(
+        http.get('https://pds.example/xrpc/app.bsky.feed.getTimeline', async ({ request }) => {
+          capturedHeaders = Object.fromEntries(request.headers.entries());
+          return HttpResponse.json({});
+        }),
+      );
+
+      const client = new TestClient();
+      await client.callMakeRequest('/app.bsky.feed.getTimeline');
+
+      expect(capturedHeaders!['atproto-proxy']).toBeUndefined();
+    });
   });
 });

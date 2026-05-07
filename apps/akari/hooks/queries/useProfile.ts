@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
-import { BlueskyApi } from "@/bluesky-api";
 import { useCurrentAccount } from "./useCurrentAccount";
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Query hook for fetching a user's profile information
@@ -19,7 +19,7 @@ export function useProfile(identifier: string | undefined) {
       if (!identifier) throw new Error("No identifier provided");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const profile = await api.getProfile(token, identifier);
 
       return profile;

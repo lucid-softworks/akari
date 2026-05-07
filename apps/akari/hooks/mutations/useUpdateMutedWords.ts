@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
-  BlueskyApi,
   type BlueskyMutedWord,
   type BlueskyMutedWordsPref,
   type BlueskyPreference,
 } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 const MUTED_WORDS_PREF_TYPE = 'app.bsky.actor.defs#mutedWordsPref';
 
@@ -31,7 +31,7 @@ export function useUpdateMutedWords() {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const current = await api.getPreferences(token);
 
       const existing = current.preferences.find(

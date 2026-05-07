@@ -66,7 +66,8 @@
       "back": "Yn ôl",
       "done": "Iawn",
       "following": "Dilyn",
-      "reset": "Ailosod"
+      "reset": "Ailosod",
+      "or": "neu"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Angen cysylltu cyfrif gwahanol? ",
       "connectNew": "Cysylltu Newydd",
       "howToGetAppPassword": "Sut i gael eich cyfrinair ap",
-      "appPasswordInstructions": "1. Ewch i ap gwe Bluesky\n2. Ewch i Gosodiadau → Cyfrineiriau Ap\n3. Creu cyfrinair ap newydd\n4. Defnyddiwch y cyfrinair hwnnw yma"
+      "appPasswordInstructions": "1. Ewch i ap gwe Bluesky\n2. Ewch i Gosodiadau → Cyfrineiriau Ap\n3. Creu cyfrinair ap newydd\n4. Defnyddiwch y cyfrinair hwnnw yma",
+      "welcomeTitle": "Croeso i Akari",
+      "welcomeSubtitle": "Dewiswch sut hoffech fewngofnodi i'ch cyfrif AT Protocol.",
+      "oauthChoiceTitle": "Mewngofnodi gydag atproto",
+      "oauthChoiceSubtitle": "Byddwn yn agor eich gwasanaeth yn y porwr. Argymhellir hyn.",
+      "passwordChoiceTitle": "Mewngofnodi gyda chyfrinair ap",
+      "passwordChoiceSubtitle": "Defnyddiwch handle a chyfrinair ap o osodiadau eich cyfrif.",
+      "oauthSignIn": "Mewngofnodi gydag atproto",
+      "oauthScreenTitle": "Mewngofnodi gydag atproto",
+      "oauthScreenSubtitle": "Rhowch eich handle a byddwn yn eich cysylltu trwy eich gwasanaeth yn y porwr.",
+      "passwordScreenTitle": "Mewngofnodi gyda chyfrinair ap",
+      "passwordScreenSubtitle": "Rhowch handle a chyfrinair ap o'ch cyfrif AT Protocol.",
+      "oauthInFlight": "Yn agor y porwr…",
+      "continue": "Parhau",
+      "invalidHandle": "Rhowch handle dilys.",
+      "oauthSuccessTitle": "Wedi mewngofnodi",
+      "oauthSuccessMessage": "Mae @{{handle}} ({{did}}) wedi'i ddilysu trwy atproto OAuth. Y cam nesaf yw cysylltu'r sesiwn hon â chleient yr API."
     },
     "navigation": {
       "search": "Chwilio",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "Dydych chi heb nodi neb fel dilyswr dibynadwy eto. Tapiwch ddilyswr mewn unrhyw daflen ddilysu i'w ychwanegu.",
       "enableAdultContentHint": "Dangoswch bostiadau a chyfryngau wedi'u labelu fel rhai i oedolion. I ffwrdd yn ddiofyn.",
       "requireAltTextHint": "Atal anfon postiad delwedd oni bai bod gan bob delwedd ddisgrifiad testun amgen.",
-      "displayLargerTextBadgesHint": "Defnyddiwch faint testun mwy a mwy darllenadwy ar gyfer cyfrifau ymgysylltu (hoffiadau, atebion, ailbostiadau)."
+      "displayLargerTextBadgesHint": "Defnyddiwch faint testun mwy a mwy darllenadwy ar gyfer cyfrifau ymgysylltu (hoffiadau, atebion, ailbostiadau).",
+      "network": {
+        "title": "Rhwydwaith",
+        "indexDescription": "Dewiswch pa AppView a CDN delweddau sy'n trin eich traffig AT Protocol.",
+        "intro": "Mae Akari'n siarad â dau wasanaeth uwchradd: AppView sy'n cyfuno'r rhwydwaith yn y golygfeydd a welwch (ffrydiau, proffiliau, chwilio) a CDN delweddau sy'n cynnal mân-luniau ac afatariaid. Yn ddiofyn, gweithredir y ddau gan Bluesky Social — dewiswch ddewisiadau eraill isod i'w hosgoi."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView diofyn",
+        "customSection": "AppView cyfaddas",
+        "customHint": "Rhowch URL sylfaen HTTPS yr AppView a'i DID gwasanaeth. Cyhoeddir y ddau yn nogfen `did:web` y gweithredwr AppView o dan y gwasanaeth `#bsky_appview`.",
+        "customUrlLabel": "URL sylfaen",
+        "customDidLabel": "DID gwasanaeth",
+        "activeSection": "AppView gweithredol",
+        "activeUrl": "URL wedi'i ddatrys",
+        "activeDid": "DID procsi",
+        "noProxy": "Dim pennyn procsi",
+        "perAccountSection": "Diystyriadau fesul cyfrif",
+        "perAccountHint": "Gadewch gyfrif ar \"Defnyddio'r diofyn\" i ddilyn y gosodiad ledled yr ap uchod. Diystyrwch gyfrifon unigol pan fo angen AppView gwahanol ar un ohonynt.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — yr AppView diofyn a weithredir gan Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView a redir gan y gymuned gyda chymedroli cyfaddas."
+          },
+          "custom": {
+            "label": "Cyfaddas",
+            "description": "Pwyntiwch at unrhyw AppView trwy URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Defnyddio'r diofyn",
+          "custom": "Cyfaddas",
+          "defaultSummary": "Yn dilyn y diofyn ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN delweddau",
+        "intro": "Mae URLau delweddau a ddychwelir gan yr AppView yn pwyntio at CDN Bluesky yn ddiofyn. Dewiswch CDN gwahanol yma ac fe gaiff yr URLau cyfatebol (afatariaid, baneri, mân-luniau postiadau) eu hailysgrifennu i'w ddefnyddio — mae cynllun y llwybrau yr un fath ar draws yr adlewyrchiadau, felly mae newid gwesteiwr yn ddigon.",
+        "customSection": "CDN personol",
+        "customUrlLabel": "URL CDN personol",
+        "activeSection": "CDN gweithredol",
+        "activeHost": "Gwesteiwr effeithiol",
+        "noOverride": "Dim newid (yn pasio drwodd)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — y CDN diofyn a weithredir gan Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — adlewyrchiad CDN a weithredir gan y gymuned."
+          },
+          "custom": {
+            "label": "Personol",
+            "description": "Pwyntiwch at unrhyw CDN cydnaws gan ddefnyddio URL."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "Dewis GIF",

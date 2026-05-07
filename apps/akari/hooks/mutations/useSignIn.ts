@@ -1,8 +1,8 @@
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
-import { BlueskyApi } from '@/bluesky-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { BlueskyProfileResponse, BlueskySession } from '@/bluesky-api';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
  * Mutation hook for signing in to Bluesky
@@ -28,7 +28,7 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: async ({ identifier, password, pdsUrl }: SignInVariables): Promise<SignInResult> => {
-      const api = new BlueskyApi(pdsUrl);
+      const api = apiForPdsUrl(pdsUrl);
       const session = await api.createSession(identifier, password);
 
       let profile: BlueskyProfileResponse | null = null;

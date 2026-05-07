@@ -3,8 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { BlueskyEmbed } from '@/bluesky-api';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 type NotificationError = {
   type: 'permission' | 'network' | 'unknown';
   message: string;
@@ -29,7 +28,7 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = apiForAccount(currentAccount);
         const response = await api.listNotifications(
           token,
           limit,

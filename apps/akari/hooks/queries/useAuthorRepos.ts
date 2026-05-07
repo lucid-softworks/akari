@@ -3,8 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching Tangled repos created by a user
  * @param identifier - The user's handle or DID
@@ -21,7 +20,7 @@ export function useAuthorRepos(identifier: string | undefined, limit: number = 5
       if (!identifier) throw new Error('No identifier provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       const repos = await api.getActorRepos(token, identifier, limit, pageParam);
 
       return {

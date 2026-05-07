@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, StyleSheet, TextInput, TouchableOpacity } from 'react-native';

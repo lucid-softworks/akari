@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -20,7 +20,7 @@ import {
   FileSystemUploadType,
 } from 'expo-file-system/legacy';
 
-import { BlueskyApi, getVideoJobStatus, type BlueskyEmbed, type VideoJobStatus } from '@/bluesky-api';
+import { getVideoJobStatus, type BlueskyEmbed, type VideoJobStatus } from '@/bluesky-api';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { DraftsSheet } from '@/components/DraftsSheet';
 import { EmojiPicker } from '@/components/EmojiPicker';
@@ -51,6 +51,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { getLanguageLabel } from '@/utils/bcp47';
 import type { ComposerDraftState } from '@/utils/draftMapper';
 import { DEFAULT_POST_CONTROLS, describePostControls, type PostControls } from '@/utils/postControls';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 type PostFacet = {
   index: { byteStart: number; byteEnd: number };
@@ -684,7 +685,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         ),
       );
       try {
-        const api = new BlueskyApi(currentAccount.pdsUrl);
+        const api = apiForAccount(currentAccount);
         // The video service expects the JWT's audience to be the
         // user's PDS DID (did:web:<pds-hostname>) and the lxm to be
         // `com.atproto.repo.uploadBlob` — *not* the obvious

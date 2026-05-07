@@ -41,6 +41,12 @@ export type Account = {
   refreshToken: string;
   pdsUrl?: string;
   /**
+   * Per-account AppView override. When absent (or `preset === 'default'`)
+   * the API client falls back to the app-wide AppView setting. See
+   * `utils/appView.ts` for the resolution logic.
+   */
+  appView?: import('@/utils/appView').AccountAppViewOverride;
+  /**
    * Present when the account was created via atproto OAuth. Tells the API
    * client to send `Authorization: DPoP …` with a per-request proof JWT
    * instead of the default `Bearer` header. Absent for handle/app-password

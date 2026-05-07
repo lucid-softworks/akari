@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Resolves a pinned-post URI to its full post view. Used by PostsTab to
@@ -21,7 +21,7 @@ export function usePinnedPost(uri: string | undefined) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!uri) throw new Error('No URI provided');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
       return api.getPost(token, uri);
     },
   });

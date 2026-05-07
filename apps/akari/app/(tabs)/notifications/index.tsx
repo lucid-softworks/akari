@@ -1,5 +1,6 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import { Image } from 'expo-image';
+import { cdnImageUrl } from '@/utils/cdn';
+import { Image } from '@/components/Image';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +15,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useQueryClient } from '@tanstack/react-query';
-import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useNotifications } from '@/hooks/queries/useNotifications';
@@ -25,6 +25,7 @@ import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity, semanticColors } from '@/constants/tokens';
+import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
  * Grouped notification type
@@ -259,7 +260,13 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
           images.push(url);
         } else if (img.image?.ref?.$link) {
           // Construct CDN URL from blob ref
-          images.push(`https://cdn.bsky.app/img/feed_thumbnail/plain/${authorDid}/${img.image.ref.$link}@jpeg`);
+          images.push(
+            cdnImageUrl({
+              size: 'feed_thumbnail',
+              did: authorDid,
+              blobRef: img.image.ref.$link,
+            }),
+          );
         }
       }
     }
@@ -438,7 +445,7 @@ export default function NotificationsScreen() {
   // Mark notifications as seen when the screen is viewed
   useEffect(() => {
     if (!token || !currentAccount?.pdsUrl) return;
-    const api = new BlueskyApi(currentAccount.pdsUrl);
+    const api = apiForAccount(currentAccount);
     void api.markNotificationsSeen(token).then(() => {
       // Reset the unread count in the cache
       queryClient.setQueryData(['unreadNotificationsCount'], { count: 0 });

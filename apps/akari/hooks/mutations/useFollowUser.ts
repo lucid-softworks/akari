@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { BlueskyApi } from '@/bluesky-api';
-
+import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Mutation hook for following and unfollowing users
  */
@@ -30,7 +29,7 @@ export function useFollowUser() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!currentAccount?.did) throw new Error('No user DID available');
 
-      const api = new BlueskyApi(currentAccount.pdsUrl);
+      const api = apiForAccount(currentAccount);
 
       if (action === 'follow') {
         return await api.followUser(token, currentAccount.did, did);

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import { Redirect } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {

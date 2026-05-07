@@ -66,7 +66,8 @@
       "back": "ย้อนกลับ",
       "done": "เสร็จ",
       "following": "กำลังติดตาม",
-      "reset": "รีเซ็ต"
+      "reset": "รีเซ็ต",
+      "or": "หรือ"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "ต้องการเชื่อมต่อบัญชีอื่น? ",
       "connectNew": "เชื่อมต่อใหม่",
       "howToGetAppPassword": "วิธีรับรหัสผ่านแอป",
-      "appPasswordInstructions": "1. ไปที่แอปเว็บ Bluesky\n2. ไปที่การตั้งค่า → รหัสผ่านแอป\n3. สร้างรหัสผ่านแอปใหม่\n4. ใช้รหัสผ่านนั้นที่นี่"
+      "appPasswordInstructions": "1. ไปที่แอปเว็บ Bluesky\n2. ไปที่การตั้งค่า → รหัสผ่านแอป\n3. สร้างรหัสผ่านแอปใหม่\n4. ใช้รหัสผ่านนั้นที่นี่",
+      "welcomeTitle": "ยินดีต้อนรับสู่ Akari",
+      "welcomeSubtitle": "เลือกวิธีเข้าสู่ระบบบัญชี AT Protocol ของคุณ",
+      "oauthChoiceTitle": "เข้าสู่ระบบด้วย atproto",
+      "oauthChoiceSubtitle": "เราจะเปิดบริการของคุณในเบราว์เซอร์ แนะนำให้ใช้",
+      "passwordChoiceTitle": "เข้าสู่ระบบด้วย app password",
+      "passwordChoiceSubtitle": "ใช้ handle และ app password จากการตั้งค่าบัญชีของคุณ",
+      "oauthSignIn": "เข้าสู่ระบบด้วย atproto",
+      "oauthScreenTitle": "เข้าสู่ระบบด้วย atproto",
+      "oauthScreenSubtitle": "กรอก handle ของคุณ แล้วเราจะเชื่อมต่อคุณผ่านบริการของคุณในเบราว์เซอร์",
+      "passwordScreenTitle": "เข้าสู่ระบบด้วย app password",
+      "passwordScreenSubtitle": "กรอก handle และ app password จากบัญชี AT Protocol ของคุณ",
+      "oauthInFlight": "กำลังเปิดเบราว์เซอร์…",
+      "continue": "ดำเนินการต่อ",
+      "invalidHandle": "กรุณากรอก handle ที่ถูกต้อง",
+      "oauthSuccessTitle": "เข้าสู่ระบบแล้ว",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) ได้รับการยืนยันผ่าน atproto OAuth แล้ว ขั้นตอนต่อไปคือการเชื่อมเซสชันนี้เข้ากับไคลเอนต์ API"
     },
     "navigation": {
       "search": "ค้นหา",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "คุณยังไม่ได้ทำเครื่องหมายใครเป็นผู้ยืนยันที่เชื่อถือได้ แตะที่ผู้ยืนยันในแผ่นการยืนยันใด ๆ เพื่อเพิ่มเข้าไป",
       "enableAdultContentHint": "แสดงโพสต์และสื่อที่ถูกระบุว่าเป็นเนื้อหาสำหรับผู้ใหญ่ ปิดอยู่ตามค่าเริ่มต้น",
       "requireAltTextHint": "ปิดกั้นการส่งโพสต์รูปภาพ ยกเว้นเมื่อทุกรูปมีคำอธิบายข้อความทางเลือก",
-      "displayLargerTextBadgesHint": "ใช้ขนาดข้อความที่ใหญ่ขึ้นและอ่านง่ายขึ้นสำหรับจำนวนการมีส่วนร่วม (ถูกใจ ตอบกลับ รีโพสต์)"
+      "displayLargerTextBadgesHint": "ใช้ขนาดข้อความที่ใหญ่ขึ้นและอ่านง่ายขึ้นสำหรับจำนวนการมีส่วนร่วม (ถูกใจ ตอบกลับ รีโพสต์)",
+      "network": {
+        "title": "เครือข่าย",
+        "indexDescription": "เลือก AppView และ CDN ของรูปภาพที่จะดูแลทราฟฟิก AT Protocol ของคุณ",
+        "intro": "Akari สื่อสารกับบริการต้นทางสองแห่ง: AppView ที่รวบรวมเครือข่ายให้เป็นมุมมองที่คุณเห็น (ฟีด โปรไฟล์ การค้นหา) และ CDN ของรูปภาพที่ให้บริการภาพย่อและอวาตาร์ ตามค่าเริ่มต้นทั้งสองดำเนินการโดย Bluesky Social — เลือกทางเลือกด้านล่างเพื่อเลี่ยงผ่านพวกมัน"
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView เริ่มต้น",
+        "customSection": "AppView กำหนดเอง",
+        "customHint": "กรอก URL ฐาน HTTPS ของ AppView และ service DID ของมัน ทั้งสองค่านี้เผยแพร่อยู่ในเอกสาร `did:web` ของผู้ให้บริการ AppView ภายใต้บริการ `#bsky_appview`",
+        "customUrlLabel": "URL ฐาน",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView ที่ใช้งานอยู่",
+        "activeUrl": "URL ที่แก้ไขแล้ว",
+        "activeDid": "DID ของพร็อกซี",
+        "noProxy": "ไม่มีส่วนหัวพร็อกซี",
+        "perAccountSection": "การแทนที่ต่อบัญชี",
+        "perAccountHint": "ปล่อยให้บัญชีอยู่ที่ \"ใช้ค่าเริ่มต้น\" เพื่อให้ทำตามการตั้งค่าทั้งแอปด้านบน แทนที่บัญชีรายตัวเมื่อบัญชีนั้นต้องการ AppView ที่ต่างออกไป",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — AppView เริ่มต้นที่ดำเนินการโดย Bluesky Social"
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView ที่ดำเนินการโดยชุมชน พร้อมการกลั่นกรองแบบกำหนดเอง"
+          },
+          "custom": {
+            "label": "กำหนดเอง",
+            "description": "ชี้ไปยัง AppView ใดก็ได้ผ่าน URL + DID"
+          }
+        },
+        "choice": {
+          "default": "ใช้ค่าเริ่มต้น",
+          "custom": "กำหนดเอง",
+          "defaultSummary": "กำลังตามค่าเริ่มต้น ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN ของรูปภาพ",
+        "intro": "URL ของรูปภาพที่ AppView ส่งกลับจะชี้ไปยัง CDN ของ Bluesky โดยค่าเริ่มต้น เลือก CDN อื่นที่นี่ และ URL ที่ตรงกัน (อวาตาร์ แบนเนอร์ ภาพย่อโพสต์) จะถูกเขียนใหม่ให้ใช้ CDN ที่เลือก — โครงสร้างพาธเหมือนกันในทุกมิเรอร์ จึงเปลี่ยนแค่โฮสต์ก็เพียงพอ",
+        "customSection": "CDN กำหนดเอง",
+        "customUrlLabel": "URL ของ CDN กำหนดเอง",
+        "activeSection": "CDN ที่ใช้งานอยู่",
+        "activeHost": "โฮสต์จริง",
+        "noOverride": "ไม่มีการแทนที่ (ส่งผ่านโดยตรง)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — CDN เริ่มต้นที่ Bluesky Social ดูแล"
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — มิเรอร์ CDN ที่ชุมชนดูแล"
+          },
+          "custom": {
+            "label": "กำหนดเอง",
+            "description": "ชี้ไปยัง CDN ที่เข้ากันได้ใด ๆ ด้วย URL"
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "เลือก GIF",

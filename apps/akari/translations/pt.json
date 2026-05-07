@@ -66,7 +66,8 @@
       "back": "Voltar",
       "done": "Concluído",
       "following": "A seguir",
-      "reset": "Redefinir"
+      "reset": "Redefinir",
+      "or": "ou"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",
@@ -87,7 +88,23 @@
       "needDifferentAccount": "Precisa conectar uma conta diferente? ",
       "connectNew": "Conectar novo",
       "howToGetAppPassword": "Como obter sua senha do aplicativo",
-      "appPasswordInstructions": "1. Vá para o aplicativo web do Bluesky\n2. Navegue para Configurações → Senhas de aplicativo\n3. Crie uma nova senha de aplicativo\n4. Use essa senha aqui"
+      "appPasswordInstructions": "1. Vá para o aplicativo web do Bluesky\n2. Navegue para Configurações → Senhas de aplicativo\n3. Crie uma nova senha de aplicativo\n4. Use essa senha aqui",
+      "welcomeTitle": "Bem-vinda ao Akari",
+      "welcomeSubtitle": "Escolha como deseja entrar na sua conta no AT Protocol.",
+      "oauthChoiceTitle": "Entrar com atproto",
+      "oauthChoiceSubtitle": "Vamos abrir o seu serviço no navegador. Recomendado.",
+      "passwordChoiceTitle": "Entrar com app password",
+      "passwordChoiceSubtitle": "Use um handle e uma app password das configurações da sua conta.",
+      "oauthSignIn": "Entrar com atproto",
+      "oauthScreenTitle": "Entrar com atproto",
+      "oauthScreenSubtitle": "Digite seu handle e nós o conectaremos por meio do seu serviço no navegador.",
+      "passwordScreenTitle": "Entrar com app password",
+      "passwordScreenSubtitle": "Digite um handle e uma app password da sua conta no AT Protocol.",
+      "oauthInFlight": "Abrindo o navegador…",
+      "continue": "Continuar",
+      "invalidHandle": "Digite um handle válido.",
+      "oauthSuccessTitle": "Sessão iniciada",
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) autenticado via atproto OAuth. Conectar esta sessão ao cliente da API é o próximo passo."
     },
     "navigation": {
       "search": "Pesquisar",
@@ -486,7 +503,68 @@
       "trustedVerifiersEmpty": "Você ainda não marcou ninguém como verificador confiável. Toque em um verificador em qualquer painel de verificação para adicioná-lo.",
       "enableAdultContentHint": "Mostra publicações e mídia marcadas como adulto. Desativado por padrão.",
       "requireAltTextHint": "Impede o envio de uma publicação com imagens a menos que cada imagem tenha uma descrição de texto alternativo.",
-      "displayLargerTextBadgesHint": "Usa um tamanho de texto maior e mais legível para os contadores de interação (curtidas, respostas, reposts)."
+      "displayLargerTextBadgesHint": "Usa um tamanho de texto maior e mais legível para os contadores de interação (curtidas, respostas, reposts).",
+      "network": {
+        "title": "Rede",
+        "indexDescription": "Escolha qual AppView e CDN de imagens cuidam do seu tráfego AT Protocol.",
+        "intro": "O Akari fala com dois serviços upstream: um AppView que agrega a rede nas visualizações que você vê (feeds, perfis, busca) e um CDN de imagens que hospeda miniaturas e avatares. Por padrão ambos são operados pela Bluesky Social — escolha alternativas abaixo para contorná-los."
+      },
+      "appView": {
+        "title": "AppView",
+        "defaultSection": "AppView padrão",
+        "customSection": "AppView personalizado",
+        "customHint": "Insira a URL base HTTPS do AppView e seu service DID. Ambos são publicados no documento `did:web` do operador do AppView, sob o serviço `#bsky_appview`.",
+        "customUrlLabel": "URL base",
+        "customDidLabel": "Service DID",
+        "activeSection": "AppView ativo",
+        "activeUrl": "URL resolvida",
+        "activeDid": "DID do proxy",
+        "noProxy": "Sem cabeçalho de proxy",
+        "perAccountSection": "Substituições por conta",
+        "perAccountHint": "Deixe uma conta em \"Usar padrão\" para seguir a configuração global do app acima. Substitua contas individualmente quando alguma precisar de um AppView diferente.",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "public.api.bsky.app — o AppView padrão operado pela Bluesky Social."
+          },
+          "blacksky": {
+            "label": "Blacksky",
+            "description": "api.blacksky.community — AppView mantido pela comunidade com moderação personalizada."
+          },
+          "custom": {
+            "label": "Personalizado",
+            "description": "Aponte para qualquer AppView por URL + DID."
+          }
+        },
+        "choice": {
+          "default": "Usar padrão",
+          "custom": "Personalizado",
+          "defaultSummary": "Seguindo o padrão ({{url}})"
+        }
+      },
+      "cdn": {
+        "section": "CDN de imagens",
+        "intro": "As URLs de imagem devolvidas pelo AppView apontam para o CDN do Bluesky por padrão. Escolha um CDN diferente aqui e as URLs correspondentes (avatares, banners, miniaturas de posts) serão reescritas para usá-lo — o layout dos caminhos é igual entre os espelhos, então basta trocar o host.",
+        "customSection": "CDN personalizado",
+        "customUrlLabel": "URL do CDN personalizado",
+        "activeSection": "CDN ativo",
+        "activeHost": "Host efetivo",
+        "noOverride": "Sem substituição (passando direto)",
+        "preset": {
+          "bsky": {
+            "label": "Bluesky",
+            "description": "cdn.bsky.app — o CDN padrão operado pela Bluesky Social."
+          },
+          "blueat": {
+            "label": "Blueat",
+            "description": "cdn.blueat.net — espelho de CDN mantido pela comunidade."
+          },
+          "custom": {
+            "label": "Personalizado",
+            "description": "Aponte para qualquer CDN compatível via URL."
+          }
+        }
+      }
     },
     "gif": {
       "selectGif": "Selecionar GIF",

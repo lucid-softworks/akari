@@ -71,6 +71,46 @@ const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Trim every persisted infinite query down to its first page before handing
+ * the cache back to React Query. Without this, a stale infinite query
+ * rehydrates with N pages and React Query refetches every one on the first
+ * subscribe — so a feed that accumulated 30 pages last session would fire
+ * 30 getFeed requests on cold load. Persisting only the first page keeps
+ * the offline-reopen-shows-content win without the cascade: subsequent
+ * pages are fetched on demand as the user scrolls.
+ */
+function trimPersistedInfinitePages<T>(client: T): T {
+  const root = client as { clientState?: { queries?: unknown[] } } | null | undefined;
+  const queries = root?.clientState?.queries;
+  if (!Array.isArray(queries)) return client;
+
+  const trimmed = queries.map((entry) => {
+    const q = entry as { state?: { data?: { pages?: unknown[]; pageParams?: unknown[] } } };
+    const data = q.state?.data;
+    if (!data || !Array.isArray(data.pages) || data.pages.length <= 1) return entry;
+    return {
+      ...q,
+      state: {
+        ...q.state,
+        data: {
+          ...data,
+          pages: data.pages.slice(0, 1),
+          pageParams: Array.isArray(data.pageParams) ? data.pageParams.slice(0, 1) : data.pageParams,
+        },
+      },
+    };
+  });
+
+  return {
+    ...(root as object),
+    clientState: {
+      ...(root!.clientState as object),
+      queries: trimmed,
+    },
+  } as T;
+}
+
 const queryCachePersister: Persister = {
   persistClient: async (client) => {
     try {
@@ -82,7 +122,8 @@ const queryCachePersister: Persister = {
   restoreClient: async () => {
     try {
       const cache = storage.getItem(REACT_QUERY_CACHE_STORAGE_KEY);
-      return cache ?? undefined;
+      if (!cache) return undefined;
+      return trimPersistedInfinitePages(cache);
     } catch (error) {
       if (__DEV__) console.error('Failed to restore React Query cache', error);
       storage.removeItem(REACT_QUERY_CACHE_STORAGE_KEY);

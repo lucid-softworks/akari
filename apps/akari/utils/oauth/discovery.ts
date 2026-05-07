@@ -13,8 +13,19 @@
  * Each step does a single GET; no auth required.
  */
 
-const PUBLIC_APPVIEW = 'https://public.api.bsky.app';
+import { readAppViewSettings } from '@/hooks/useAppViewSettings';
+import { resolveAppView } from '@/utils/appView';
+
 const PLC_DIRECTORY = 'https://plc.directory';
+
+/**
+ * Snapshot the configured public AppView at call time so the pre-auth flow
+ * (resolveHandle → DID) honours the user's AppView pick. Pre-auth means we
+ * have no PDS to proxy through, so we hit the AppView's HTTPS base directly.
+ */
+function publicAppViewUrl(): string {
+  return resolveAppView(readAppViewSettings()).url;
+}
 
 export type AuthorizationServerMetadata = {
   issuer: string;
@@ -39,7 +50,7 @@ export type ResolvedIdentity = {
  */
 export async function resolveHandleToDid(handle: string): Promise<string> {
   const cleaned = handle.replace(/^@/, '').trim();
-  const url = new URL(`${PUBLIC_APPVIEW}/xrpc/com.atproto.identity.resolveHandle`);
+  const url = new URL(`${publicAppViewUrl()}/xrpc/com.atproto.identity.resolveHandle`);
   url.searchParams.set('handle', cleaned);
   const res = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!res.ok) {

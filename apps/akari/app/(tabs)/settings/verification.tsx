@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/Image';
 import React from 'react';
 import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 

@@ -65,17 +65,64 @@ async function bodyIsUseDpopNonce(response: Response): Promise<boolean> {
 }
 
 /**
+ * Endpoints under `app.bsky.*` that are served by the user's PDS rather than
+ * by an AppView. These must skip the `atproto-proxy` header — proxying them
+ * to an alternative AppView returns 404 because the data lives on the repo.
+ */
+const PDS_SERVED_APP_BSKY_ENDPOINTS = new Set<string>([
+  '/app.bsky.actor.getPreferences',
+  '/app.bsky.actor.putPreferences',
+]);
+
+/**
  * Bluesky API client for interacting with Bluesky Personal Data Servers (PDS)
  */
 export class BlueskyApiClient {
   protected baseUrl: string;
+  /**
+   * Optional AppView proxy target. When set, `app.bsky.*` and `chat.bsky.*`
+   * XRPC calls are sent with `atproto-proxy: <did>#bsky_appview` so the user's
+   * PDS forwards them to the named AppView (with a service-auth token) instead
+   * of its default. PDS-native `com.atproto.*` calls are unaffected — those
+   * always serve from the PDS itself. Stored without the `#bsky_appview`
+   * fragment; the request path appends it.
+   */
+  protected appViewProxyDid?: string;
 
   /**
    * Creates a new BlueskyApiClient instance
    * @param pdsUrl - The PDS URL to use (required)
+   * @param appViewProxyDid - DID of the AppView to proxy app.bsky.* requests through (without #service suffix)
    */
-  constructor(pdsUrl: string) {
+  constructor(pdsUrl: string, appViewProxyDid?: string | null) {
     this.baseUrl = pdsUrl;
+    this.appViewProxyDid = appViewProxyDid ? appViewProxyDid : undefined;
+  }
+
+  /**
+   * `app.bsky.*` lexicons are normally served by the AppView, so we proxy
+   * them through the user's PDS. A few exceptions live in the same namespace
+   * but are served by the PDS itself — most importantly
+   * `app.bsky.actor.getPreferences` / `putPreferences`, where the preference
+   * blob is stored on the user's repo. Sending those through an alternative
+   * AppView (e.g. Blacksky) yields 404, since alt-AppViews don't store
+   * per-user preferences.
+   *
+   * `chat.bsky.*` is intentionally not proxied here either — chat is a
+   * separate service (`#bsky_chat`, not `#bsky_appview`) and reusing the
+   * AppView proxy DID would point requests at the wrong endpoint.
+   */
+  private shouldProxyToAppView(endpoint: string): boolean {
+    if (!this.appViewProxyDid) return false;
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    if (!path.startsWith('/app.bsky.')) return false;
+    if (PDS_SERVED_APP_BSKY_ENDPOINTS.has(path)) return false;
+    return true;
+  }
+
+  private appViewProxyHeader(endpoint: string): Record<string, string> {
+    if (!this.shouldProxyToAppView(endpoint)) return {};
+    return { 'atproto-proxy': `${this.appViewProxyDid}#bsky_appview` };
   }
 
   /**
@@ -128,6 +175,7 @@ export class BlueskyApiClient {
     const requestOptions: RequestInit = {
       method,
       headers: {
+        ...this.appViewProxyHeader(endpoint),
         ...headers,
         // Only set Content-Type for JSON, let browser handle FormData and Blob
         ...(body && !(body instanceof FormData) && !(body instanceof Blob) && { 'Content-Type': 'application/json' }),
@@ -198,6 +246,7 @@ export class BlueskyApiClient {
     const sendOnce = async (nonce: string | undefined): Promise<Response> => {
       const proof = await signer({ method, url, nonce });
       const headers: Record<string, string> = {
+        ...this.appViewProxyHeader(endpoint),
         ...callerHeaders,
         Authorization: `DPoP ${accessJwt}`,
         DPoP: proof,
