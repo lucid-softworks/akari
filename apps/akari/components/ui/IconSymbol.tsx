@@ -109,6 +109,7 @@ const MAPPING = {
   'waveform.path': 'timeline',
   'key.fill': 'vpn-key',
   'eye.slash.fill': 'visibility-off',
+  'speaker.slash': 'volume-off',
   'speaker.slash.fill': 'volume-off',
   'hand.raised.fill': 'back-hand',
   'eye.fill': 'visibility',
