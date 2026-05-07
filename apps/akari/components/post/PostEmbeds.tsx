@@ -184,8 +184,14 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       )}
 
       {imageData.urls.length > 0 && (
-        <View style={styles.imagesContainer}>
+        <View
+          style={[
+            styles.imagesContainer,
+            imageData.urls.length > 1 && styles.imagesGrid,
+          ]}
+        >
           {imageData.urls.map((imageUrl: string, index: number) => {
+            const isGrid = imageData.urls.length > 1;
             const dimensions = imageDimensions[imageUrl];
             const aspectRatio =
               imageData.ratios[index] ??
@@ -197,10 +203,14 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
                 key={`${postId}-image-${index}`}
                 onPress={() => handleImagePress(index)}
                 activeOpacity={activeOpacity.subtle}
+                style={isGrid ? styles.gridCell : undefined}
               >
                 <Image
                   source={{ uri: imageUrl }}
-                  style={[styles.image, { aspectRatio }]}
+                  style={[
+                    styles.image,
+                    isGrid ? styles.gridImage : { aspectRatio },
+                  ]}
                   contentFit="cover"
                   onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                 />
@@ -280,10 +290,28 @@ const styles = StyleSheet.create({
   imagesContainer: {
     gap: spacing.xs,
   },
+  // For 2+ image posts, lay the images out as a wrapping 2-up grid instead
+  // of a stacked column of full-width images. Two images become a side-by-
+  // side row; three become 2-up + 1 full-width on the next row; four
+  // become a 2x2. Single-image posts keep their original aspect ratio.
+  imagesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridCell: {
+    // ~50% minus half the container gap so two cells fit a row with
+    // breathing room. RN can't compute `calc(50% - gap/2)`, but a hair
+    // under 50% lands cleanly on every viewport we ship to.
+    flexBasis: '49.5%',
+    flexGrow: 1,
+  },
   image: {
     width: '100%',
     borderRadius: radius.sm,
     borderWidth: layout.border,
     borderColor: 'transparent',
+  },
+  gridImage: {
+    aspectRatio: 1,
   },
 });
