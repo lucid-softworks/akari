@@ -21,7 +21,7 @@ export default function ProfileLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
-        name="[handle]"
+        name="[handle]/index"
         options={({ route }) => ({
           headerShown: SHOW_STACK_HEADER,
           headerBackVisible: true,

@@ -22,15 +22,9 @@ export default function IndexLayout() {
         }}
         dangerouslySingular
       />
-      <Stack.Screen
-        name="user-profile/[handle]/post/[rkey]"
-        options={{
-          title: 'Post',
-          headerShown: isLargeNative,
-          headerBackVisible: true,
-        }}
-        dangerouslySingular
-      />
+      {/* The post-detail route is owned by user-profile/[handle]/_layout.tsx;
+          declaring it again here as a sibling triggers expo-router's
+          "Too many screens defined" warning. */}
     </Stack>
   );
 }

@@ -32,11 +32,13 @@ describe('MessagesLayout', () => {
       headerBackButtonDisplayMode: 'minimal',
       gestureEnabled: true,
     });
-    expect(Stack.Screen).toHaveBeenCalledTimes(7);
+    expect(Stack.Screen).toHaveBeenCalledTimes(6);
     const names: string[] = [];
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
+    // `user-profile/[handle]/post/[rkey]` is owned by the nested
+    // `user-profile/[handle]/_layout.tsx`, not declared at this level.
     expect(names).toEqual([
       'index',
       'pending',
@@ -44,7 +46,6 @@ describe('MessagesLayout', () => {
       '[convoId]/index',
       '[convoId]/settings',
       'user-profile/[handle]',
-      'user-profile/[handle]/post/[rkey]',
     ]);
   });
 

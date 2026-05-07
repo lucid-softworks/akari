@@ -22,15 +22,8 @@ export default function SearchLayout() {
         }}
         dangerouslySingular
       />
-      <Stack.Screen
-        name="user-profile/[handle]/post/[rkey]"
-        options={{
-          title: 'Post',
-          headerShown: isLargeNative,
-          headerBackVisible: true,
-        }}
-        dangerouslySingular
-      />
+      {/* `user-profile/[handle]/_layout.tsx` owns the post-detail screen;
+          re-declaring it here triggers "Too many screens defined". */}
     </Stack>
   );
 }
