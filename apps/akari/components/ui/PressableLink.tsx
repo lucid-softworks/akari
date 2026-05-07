@@ -1,8 +1,16 @@
 import { router, usePathname } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
 
 const stripQueryAndHash = (url: string) => url.split('?')[0].split('#')[0];
+
+// Tracks "are we already inside a PressableLink's <a>?" so that nested
+// PressableLinks (e.g. an avatar PressableLink inside a PostCard
+// PressableLink) can render as a click-only Pressable on web instead of a
+// nested <a>. HTML doesn't allow <a> inside <a>; browsers respond by closing
+// the outer anchor early or by dispatching the click against a synthesised
+// second anchor, both of which double-fire pushState and pollute history.
+const NestedAnchorContext = React.createContext(false);
 
 // Min interval between accepted presses anywhere in the app. Guards against
 // fast double-taps and any RN/expo-router edge case where a single touch
@@ -46,13 +54,16 @@ export function PressableLink({
       const now = Date.now();
       if (now - lastPressAt < PRESS_DEBOUNCE_MS) return;
       lastPressAt = now;
-      if (onPress) {
-        onPress();
+      // Same-route short-circuit before *any* handler runs — clicking a link
+      // pointing at the URL we're already on must always be a no-op, even if
+      // the caller passed a custom onPress (sidebars, account headers, etc.
+      // wire side-effects through onPress that would otherwise smuggle a
+      // duplicate router.push past the dedupe).
+      if (stripQueryAndHash(href) === stripQueryAndHash(pathname)) {
         return;
       }
-      // Skip pushing if we're already on this exact route — otherwise the
-      // user has to press back once for every redundant push.
-      if (stripQueryAndHash(href) === stripQueryAndHash(pathname)) {
+      if (onPress) {
+        onPress();
         return;
       }
       router.push(href as any);
@@ -60,37 +71,71 @@ export function PressableLink({
     [href, onPress, pathname],
   );
 
+  const insideAnchor = useContext(NestedAnchorContext);
+
   if (Platform.OS === 'web') {
     const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false }) : style;
     const flatStyle = StyleSheet.flatten(resolved);
 
-    return (
-      <a
-        href={href}
-        ref={(aRef) => {
-          if (!aRef) return;
-          aRef.onclick = (e: MouseEvent) => {
-            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-            e.preventDefault();
-            const now = Date.now();
-            if (now - lastPressAt < PRESS_DEBOUNCE_MS) return;
-            lastPressAt = now;
-            router.push(href as any);
-          };
-        }}
-        style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
-        aria-label={accessibilityLabel}
-      >
+    const handleWebClick = (e: { metaKey?: boolean; ctrlKey?: boolean; shiftKey?: boolean; preventDefault?: () => void; stopPropagation?: () => void }) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault?.();
+      e.stopPropagation?.();
+      const now = Date.now();
+      if (now - lastPressAt < PRESS_DEBOUNCE_MS) return;
+      lastPressAt = now;
+      if (stripQueryAndHash(href) === stripQueryAndHash(pathname)) {
+        return;
+      }
+      if (onPress) {
+        onPress();
+        return;
+      }
+      router.push(href as any);
+    };
+
+    // When already inside a parent PressableLink's <a>, fall back to a
+    // click-only Pressable. We forfeit the middle-click-opens-in-new-tab
+    // affordance for the inner control (the outer anchor still has it),
+    // but avoid the nested-<a> hydration bug + double pushState.
+    if (insideAnchor) {
+      return (
         <Pressable
           style={[flatStyle, hovered && hoverStyle]}
           accessibilityRole={accessibilityRole ?? 'link'}
+          accessibilityLabel={accessibilityLabel}
           accessibilityState={accessibilityState}
           onPointerEnter={() => setHovered(true)}
           onPointerLeave={() => setHovered(false)}
+          onPress={(event) => handleWebClick(event?.nativeEvent ?? {})}
         >
           {children}
         </Pressable>
-      </a>
+      );
+    }
+
+    return (
+      <NestedAnchorContext.Provider value={true}>
+        <a
+          href={href}
+          ref={(aRef) => {
+            if (!aRef) return;
+            aRef.onclick = handleWebClick as unknown as (e: MouseEvent) => void;
+          }}
+          style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
+          aria-label={accessibilityLabel}
+        >
+          <Pressable
+            style={[flatStyle, hovered && hoverStyle]}
+            accessibilityRole={accessibilityRole ?? 'link'}
+            accessibilityState={accessibilityState}
+            onPointerEnter={() => setHovered(true)}
+            onPointerLeave={() => setHovered(false)}
+          >
+            {children}
+          </Pressable>
+        </a>
+      </NestedAnchorContext.Provider>
     );
   }
 

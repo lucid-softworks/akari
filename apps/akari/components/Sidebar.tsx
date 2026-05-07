@@ -83,8 +83,33 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
     return pathname === item.route;
   };
 
+  // Same-path guard so clicking a sidebar item that points at the URL we're
+  // already on doesn't queue up a duplicate browser-history entry — otherwise
+  // every "Home" press from inside a profile or post lands a redundant entry
+  // and the back button has to walk through them all to make progress.
+  //
+  // Both sides are normalised: the runtime `pathname` from expo-router omits
+  // the `(tabs)` route group (so `/(tabs)/profile` shows as `/profile`), and
+  // we treat empty / trailing-slash variants of `/` as equivalent.
+  const samePath = (target: string) => {
+    const normalize = (p: string) =>
+      p
+        .replace(/\(tabs\)\//g, '')
+        .replace(/\/?\(tabs\)\/?$/, '/')
+        .replace(/\/+$/, '') || '/';
+    return normalize(pathname) === normalize(target);
+  };
+
+  const pushIfDifferent = (route: string) => {
+    if (samePath(route)) return;
+    router.push(route as any);
+  };
+
   const handleNavigate = (item: NavigationItem) => {
-    router.push(item.route as any);
+    const target = Platform.OS === 'web' ? item.webRoute : item.route;
+    if (!samePath(target)) {
+      router.push(target as any);
+    }
     onNavigate?.();
   };
 
@@ -93,7 +118,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       {/* Account header */}
       <PressableLink
         href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
-        onPress={() => router.push('/(tabs)/profile' as any)}
+        onPress={() => pushIfDifferent('/(tabs)/profile')}
         accessibilityLabel="Account"
         style={[styles.accountSection, { borderBottomColor: borderColor }]}
       >
@@ -169,7 +194,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
           href={Platform.OS === 'web' ? '/settings' : '/(tabs)/settings'}
           accessibilityLabel={t('navigation.settings')}
           onPress={() => {
-            router.push('/(tabs)/settings' as any);
+            pushIfDifferent('/(tabs)/settings');
             onNavigate?.();
           }}
           style={[

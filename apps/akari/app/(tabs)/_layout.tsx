@@ -537,6 +537,7 @@ export default function TabLayout() {
             screenOptions={{
               headerShown: false,
             }}
+            backBehavior={Platform.OS === 'web' ? 'history' : undefined}
             tabBar={(props) => (
               <HardcodedTabBar
                 {...props}
