@@ -847,7 +847,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   messageBubble: {
-    maxWidth: '80%',
+    // Native (Yoga) resolves `'80%'` against the parent column's measured
+    // width. RN-Web's CSS pipeline can't always resolve a % maxWidth here —
+    // the bubble's TouchableOpacity wrapper has no definite width, so the
+    // percentage falls back near min-content and the bubble collapses to
+    // one or two characters per line. Pin the web cap to a comfortable
+    // chat-line dp; native keeps the original percentage behaviour.
+    maxWidth: Platform.OS === 'web' ? 520 : '80%',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     borderRadius: radius.xl,
