@@ -10,7 +10,11 @@ const stripQueryAndHash = (url: string) => url.split('?')[0].split('#')[0];
 // nested <a>. HTML doesn't allow <a> inside <a>; browsers respond by closing
 // the outer anchor early or by dispatching the click against a synthesised
 // second anchor, both of which double-fire pushState and pollute history.
-const NestedAnchorContext = React.createContext(false);
+//
+// Exported so other inline-link components (RichTextWithFacets, etc.) that
+// don't use PressableLink directly can still detect "we're already inside an
+// anchor" and avoid rendering a nested <a>.
+export const NestedAnchorContext = React.createContext(false);
 
 // Min interval between accepted presses anywhere in the app. Guards against
 // fast double-taps and any RN/expo-router edge case where a single touch

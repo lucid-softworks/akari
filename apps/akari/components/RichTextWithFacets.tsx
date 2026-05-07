@@ -1,9 +1,49 @@
-import { Link } from 'expo-router';
-import { ViewStyle } from 'react-native';
+import { Link, router } from 'expo-router';
+import React, { useContext } from 'react';
+import { Platform, ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
+import { NestedAnchorContext } from '@/components/ui/PressableLink';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useProfileHref } from '@/utils/navigation';
+
+type InlineFacetLinkProps = {
+  href: string;
+  push?: boolean;
+  insideAnchor: boolean;
+  textStyle: { color: string };
+  children: React.ReactNode;
+};
+
+/**
+ * Inline link wrapper used by `RichTextWithFacets` for mentions, links, and
+ * hashtags. On native — and on web when the rich text isn't inside another
+ * anchor — defer to expo-router's `<Link>` so middle-click and right-click
+ * still open in a new tab. When nested inside a parent `<a>` on web (which
+ * HTML forbids and browsers respond to by double-firing pushState), render
+ * the segment as a `Text` with `onPress` and call `router.push` directly.
+ */
+function InlineFacetLink({ href, push, insideAnchor, textStyle, children }: InlineFacetLinkProps) {
+  if (Platform.OS === 'web' && insideAnchor) {
+    return (
+      <ThemedText
+        accessibilityRole="link"
+        style={textStyle}
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          router.push(href as never);
+        }}
+      >
+        {children}
+      </ThemedText>
+    );
+  }
+  return (
+    <Link push={push} href={href as never}>
+      <ThemedText style={textStyle}>{children}</ThemedText>
+    </Link>
+  );
+}
 
 type Facet = {
   index: {
@@ -40,6 +80,7 @@ type TextSegment = {
 };
 
 export function RichTextWithFacets({ text, facets, style, containerStyle, onPress, disableLinks }: RichTextWithFacetsProps) {
+  const insideAnchor = useContext(NestedAnchorContext);
   const linkColor = useThemeColor(
     {
       light: '#007AFF',
@@ -213,9 +254,15 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
                 );
               }
               return (
-                <Link key={index} push href={profileHref(handle) as any}>
-                  <ThemedText style={[{ color: mentionColor }]}>{segment.text}</ThemedText>
-                </Link>
+                <InlineFacetLink
+                  key={index}
+                  push
+                  href={profileHref(handle)}
+                  insideAnchor={insideAnchor}
+                  textStyle={{ color: mentionColor }}
+                >
+                  {segment.text}
+                </InlineFacetLink>
               );
             }
             return segment.text;
@@ -230,9 +277,14 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
                 );
               }
               return (
-                <Link key={index} href={segment.uri as any}>
-                  <ThemedText style={[{ color: linkColor }]}>{segment.text || toShortUrl(segment.uri)}</ThemedText>
-                </Link>
+                <InlineFacetLink
+                  key={index}
+                  href={segment.uri}
+                  insideAnchor={insideAnchor}
+                  textStyle={{ color: linkColor }}
+                >
+                  {segment.text || toShortUrl(segment.uri)}
+                </InlineFacetLink>
               );
             }
             return segment.text;
@@ -248,9 +300,14 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               );
             }
             return (
-              <Link key={index} href={`/search?query=${encodeURIComponent(hashtagQuery)}`}>
-                <ThemedText style={[{ color: tagColor }]}>{segment.text}</ThemedText>
-              </Link>
+              <InlineFacetLink
+                key={index}
+                href={`/search?query=${encodeURIComponent(hashtagQuery)}`}
+                insideAnchor={insideAnchor}
+                textStyle={{ color: tagColor }}
+              >
+                {segment.text}
+              </InlineFacetLink>
             );
           }
 
