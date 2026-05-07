@@ -219,15 +219,13 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     if (embed.record.embed?.external) {
       return {
         $type: 'app.bsky.embed.external#view' as const,
-        external: {
-          ...embed.record.embed.external,
-          thumb: embed.record.embed.external.thumb
-            ? {
-                $type: 'blob' as const,
-                ...embed.record.embed.external.thumb,
-              }
-            : undefined,
-        },
+        // Pass `thumb` through verbatim — `resolveExternalThumb` handles
+        // both view-shape (string URL) and record-shape (blob ref) inputs.
+        // Re-wrapping a URL string as `{ $type: 'blob', ...string }`
+        // spreads the characters and yields a useless empty object, which
+        // is why the embed thumbnail was vanishing on quote posts whose
+        // inner record carries an `embed.external#view` from the AppView.
+        external: { ...embed.record.embed.external },
       };
     }
     if (embed.record.embeds) {
@@ -235,15 +233,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         if (embedItem.external) {
           return {
             $type: 'app.bsky.embed.external#view' as const,
-            external: {
-              ...embedItem.external,
-              thumb: embedItem.external.thumb
-                ? {
-                    $type: 'blob' as const,
-                    ...embedItem.external.thumb,
-                  }
-                : undefined,
-            },
+            external: { ...embedItem.external },
           };
         }
       }
@@ -265,15 +255,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
     if (embed.record.embed?.external) {
       return {
         $type: 'app.bsky.embed.external#view' as const,
-        external: {
-          ...embed.record.embed.external,
-          thumb: embed.record.embed.external.thumb
-            ? {
-                $type: 'blob' as const,
-                ...embed.record.embed.external.thumb,
-              }
-            : undefined,
-        },
+        external: { ...embed.record.embed.external },
       };
     }
     if (embed.record.embeds) {
@@ -281,15 +263,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
         if (embedItem.external) {
           return {
             $type: 'app.bsky.embed.external#view' as const,
-            external: {
-              ...embedItem.external,
-              thumb: embedItem.external.thumb
-                ? {
-                    $type: 'blob' as const,
-                    ...embedItem.external.thumb,
-                  }
-                : undefined,
-            },
+            external: { ...embedItem.external },
           };
         }
       }
@@ -318,7 +292,22 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
   const isExternalVideoEmbed = () => {
     const embedData = getVideoEmbedData();
-    return embedData && !isYouTubeEmbed();
+    if (!embedData || isYouTubeEmbed()) return false;
+    const uri = embedData.external?.uri ?? '';
+    // Only treat the external as a video when the URL actually points at
+    // one. The previous check returned true for *any* non-YouTube external
+    // embed, so a plain article-link card (e.g. nationalobserver.com)
+    // rendered as an empty video player labelled "External Video".
+    return (
+      uri.includes('vimeo.com') ||
+      uri.includes('dailymotion.com') ||
+      uri.includes('twitch.tv') ||
+      uri.includes('tiktok.com') ||
+      uri.includes('.mp4') ||
+      uri.includes('.mov') ||
+      uri.includes('.avi') ||
+      uri.includes('.webm')
+    );
   };
 
   const imageData = getImageData();
