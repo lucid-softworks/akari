@@ -1,5 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { Animated, View, type DimensionValue, type ViewProps } from 'react-native';
+import { Animated, Platform, View, type DimensionValue, type ViewProps } from 'react-native';
+
+// `useNativeDriver` is a no-op on web (no native animated module) and logs a
+// warning whenever an animation tries to use it. Map to false on web; native
+// keeps the UI-thread driver.
+const NATIVE_DRIVER = Platform.OS !== 'web';
 
 import { radius } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -36,12 +41,12 @@ export function Skeleton({
         Animated.timing(animatedValue, {
           toValue: 1,
           duration: 1000,
-          useNativeDriver: true,
+          useNativeDriver: NATIVE_DRIVER,
         }),
         Animated.timing(animatedValue, {
           toValue: 0,
           duration: 1000,
-          useNativeDriver: true,
+          useNativeDriver: NATIVE_DRIVER,
         }),
       ]),
     );

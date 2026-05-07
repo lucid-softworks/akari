@@ -1,5 +1,10 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+
+// `useNativeDriver` is a no-op on web (no native animated module) and logs a
+// warning whenever an animation tries to use it. Map to false on web; native
+// keeps the perf benefit of the UI-thread driver.
+const NATIVE_DRIVER = Platform.OS !== 'web';
 import { useSafeAreaInsets, type EdgeInsets } from 'react-native-safe-area-context';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -197,13 +202,13 @@ function ToastItem({ toast, onDismiss, style }: ToastItemProps) {
       Animated.timing(opacity, {
         toValue: 1,
         duration: 180,
-        useNativeDriver: true,
+        useNativeDriver: NATIVE_DRIVER,
       }),
       Animated.timing(translateY, {
         toValue: 0,
         duration: 220,
         easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
+        useNativeDriver: NATIVE_DRIVER,
       }),
     ]).start();
 

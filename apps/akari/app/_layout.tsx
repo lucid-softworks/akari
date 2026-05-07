@@ -1,5 +1,6 @@
 import '@/utils/polyfills/getRandomValues'; // Polyfills globalThis.crypto.getRandomValues via expo-crypto so @noble can sign DPoP proofs on Hermes
 import '@/utils/intl-polyfills'; // Initialize Intl polyfills
+import '@/utils/polyfills/silenceWebWarnings'; // Drop cosmetic-only RN warnings that flood the web console
 
 import { DevPerformanceOverlay } from '@/components/DevPerformanceOverlay';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
