@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 
 import { MediaTab } from '@/components/profile/MediaTab';
 import { useAuthorMedia } from '@/hooks/queries/useAuthorMedia';
@@ -79,10 +79,10 @@ describe('MediaTab', () => {
     expect(getByText('profile.noMedia')).toBeTruthy();
   });
 
-  it('renders posts and navigates to post on press', () => {
+  it('renders a 2-up grid and navigates to a post when its tile is pressed', () => {
     const media: MediaItem[] = [
       {
-        uri: 'at://post1',
+        uri: 'at://did:plc:user1/app.bsky.feed.post/post1',
         indexedAt: '2024-01-01T00:00:00Z',
         record: { text: 'hello' },
         author: { handle: 'user1', displayName: 'User 1', avatar: 'a' },
@@ -90,8 +90,14 @@ describe('MediaTab', () => {
       {
         uri: undefined,
         indexedAt: '2024-01-02T00:00:00Z',
-        record: { text: 'skip' },
+        record: { text: 'skip — no uri, filtered out' },
         author: { handle: 'user2' },
+      },
+      {
+        uri: 'at://did:plc:user3/app.bsky.feed.post/post3',
+        indexedAt: '2024-01-03T00:00:00Z',
+        record: { text: 'world' },
+        author: { handle: 'user3' },
       },
     ];
 
@@ -100,58 +106,34 @@ describe('MediaTab', () => {
       isLoading: false,
     });
 
-    render(<MediaTab handle="alice" />);
+    const { getAllByRole } = render(<MediaTab handle="alice" />);
 
-    expect(PostCardMock).toHaveBeenCalledTimes(1);
-    const press = PostCardMock.mock.calls[0][0].onPress;
-    press();
+    // Two valid posts → two tiles (the placeholder for the trailing odd row
+    // is a plain View, not a button).
+    const tiles = getAllByRole('button');
+    expect(tiles).toHaveLength(2);
+
+    fireEvent.press(tiles[0]);
     expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/user1/post/post1');
+
+    fireEvent.press(tiles[1]);
+    expect(router.push).toHaveBeenCalledWith('/(tabs)/index/user-profile/user3/post/post3');
   });
 
-  it('formats reply data and uses unknown handle when missing', () => {
-    const media: MediaItem[] = [
-      {
-        uri: 'at://p1',
-        indexedAt: '2024-01-01T00:00:00Z',
-        record: { text: 'with handle' },
-        author: { handle: 'user1', displayName: 'User 1' },
-        reply: {
-          parent: {
-            author: { handle: 'bob', displayName: 'Bob' },
-            record: { text: 'parent' },
-          },
-        },
-      } as any,
-      {
-        uri: 'at://p2',
-        indexedAt: '2024-01-02T00:00:00Z',
-        record: { text: 'without handle' },
-        author: { handle: 'user2', displayName: 'User 2' },
-        reply: {
-          parent: {
-            author: { displayName: 'Anon' },
-            record: { text: 'mystery' },
-          },
-        },
-      } as any,
-    ];
-
+  it('does not render PostCard — media tiles render their own UI', () => {
     mockUseAuthorMedia.mockReturnValue({
-      data: media,
+      data: [
+        {
+          uri: 'at://post1',
+          indexedAt: '2024-01-01T00:00:00Z',
+          record: { text: 'hello' },
+          author: { handle: 'user1', displayName: 'User 1' },
+        } as MediaItem,
+      ],
       isLoading: false,
     });
 
     render(<MediaTab handle="alice" />);
-    expect(PostCardMock).toHaveBeenCalledTimes(2);
-    const first = PostCardMock.mock.calls[0][0].post.replyTo;
-    const second = PostCardMock.mock.calls[1][0].post.replyTo;
-    expect(first).toEqual({
-      author: { handle: 'bob', displayName: 'Bob' },
-      text: 'parent',
-    });
-    expect(second).toEqual({
-      author: { handle: 'unknown', displayName: 'Anon' },
-      text: 'mystery',
-    });
+    expect(PostCardMock).not.toHaveBeenCalled();
   });
 });
