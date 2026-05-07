@@ -1,11 +1,20 @@
 import NetInfo from '@react-native-community/netinfo';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
+
+// On web, NetInfo's default `reachabilityUrl` is `/` with `HEAD` — which
+// against Metro / a static SPA host produces a steady stream of 404s in the
+// console (every 60s when online, every 5s when offline). `navigator.onLine`
+// is enough for offline detection in the browser, so disable the active
+// reachability probe on web. Native keeps the default behaviour.
+if (Platform.OS === 'web') {
+  NetInfo.configure({ reachabilityShouldRun: () => false });
+}
 
 export function OfflineBanner() {
   const { t } = useTranslation();
