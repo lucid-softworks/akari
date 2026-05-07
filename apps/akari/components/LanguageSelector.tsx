@@ -88,7 +88,7 @@ export const LanguageSelector = () => {
       <Modal
         visible={isModalVisible}
         animationType="slide"
-        presentationStyle="fullScreen"
+        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         onRequestClose={() => setIsModalVisible(false)}
       >
           <ThemedView
