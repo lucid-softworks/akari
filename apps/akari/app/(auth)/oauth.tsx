@@ -3,6 +3,7 @@ import { Redirect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -14,7 +15,7 @@ import {
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors, shadows } from '@/constants/tokens';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
@@ -74,6 +75,39 @@ export default function OauthSignInScreen() {
     setHandle(value);
     setSuggestionsDismissed(false);
   }, []);
+
+  // Render the typeahead dropdown as a sibling of ScrollView — see
+  // password.tsx for the same pattern + rationale (incl. the per-platform
+  // coordinate math: web uses position:fixed against the viewport, native
+  // uses position:absolute inside the container so we subtract the
+  // container's window offset).
+  const inputAnchorRef = useRef<View>(null);
+  // KeyboardAvoidingView doesn't expose measureInWindow, so wrap its
+  // children in a plain View we can ref + measure.
+  const containerRef = useRef<View>(null);
+  const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+
+  const measureAnchor = useCallback(() => {
+    if (!inputAnchorRef.current) return;
+    inputAnchorRef.current.measureInWindow((inputX, inputY, width, height) => {
+      if (Platform.OS === 'web' || !containerRef.current) {
+        setAnchorRect({ x: inputX, y: inputY, width, height });
+        return;
+      }
+      containerRef.current.measureInWindow((containerX, containerY) => {
+        setAnchorRect({
+          x: inputX - containerX,
+          y: inputY - containerY,
+          width,
+          height,
+        });
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (showSuggestions) measureAnchor();
+  }, [showSuggestions, measureAnchor, typeaheadResults.length]);
 
   const handleContinue = useCallback(async () => {
     if (!canSubmit || signInInFlight) return;
@@ -147,6 +181,7 @@ export default function OauthSignInScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={[styles.container, { backgroundColor: screenBackground }]}
     >
+      <View ref={containerRef} style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
@@ -168,7 +203,7 @@ export default function OauthSignInScreen() {
 
           <View style={styles.inputContainer}>
             <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
-            <View style={styles.inputAnchor}>
+            <View ref={inputAnchorRef} style={styles.inputAnchor} onLayout={measureAnchor}>
               <TextInput
                 ref={inputRef}
                 style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
@@ -182,50 +217,6 @@ export default function OauthSignInScreen() {
                 returnKeyType="go"
                 onSubmitEditing={handleContinue}
               />
-
-              {showSuggestions ? (
-                <ThemedView style={[styles.suggestions, { backgroundColor: suggestionBackground, borderColor }]}>
-                  <ScrollView
-                  style={styles.suggestionsScroll}
-                  keyboardShouldPersistTaps="handled"
-                  nestedScrollEnabled
-                >
-                    {typeaheadResults.map((actor, index) => {
-                      const isLast = index === typeaheadResults.length - 1;
-                      return (
-                        <TouchableOpacity
-                          key={actor.did}
-                          onPress={() => handleSelectSuggestion(actor.handle)}
-                          activeOpacity={0.7}
-                          style={[
-                            styles.suggestion,
-                            !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-                          ]}
-                        >
-                          {actor.avatar ? (
-                            <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
-                          ) : (
-                            <View style={[styles.suggestionAvatar, styles.suggestionAvatarPlaceholder, { borderColor }]} />
-                          )}
-                          <View style={styles.suggestionText}>
-                            {actor.displayName ? (
-                              <ThemedText style={styles.suggestionName} numberOfLines={1}>
-                                {actor.displayName}
-                              </ThemedText>
-                            ) : null}
-                            <ThemedText
-                              style={[styles.suggestionHandle, { color: helperColor }]}
-                              numberOfLines={1}
-                            >
-                              @{actor.handle}
-                            </ThemedText>
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </ScrollView>
-                </ThemedView>
-              ) : null}
             </View>
           </View>
 
@@ -244,6 +235,75 @@ export default function OauthSignInScreen() {
           </Pressable>
         </View>
       </ScrollView>
+
+      {/*
+        Typeahead dropdown rendered as a sibling of the ScrollView with
+        `pointerEvents="box-none"` on the overlay so the input keeps focus
+        while typing. See password.tsx for the full rationale; same pattern
+        applied here for parity.
+      */}
+      {showSuggestions && anchorRect ? (
+        <View
+          pointerEvents="auto"
+          style={{
+            // `position: fixed` on web pins the dropdown to the viewport,
+            // matching `measureInWindow`'s reference frame exactly. See
+            // password.tsx for the full rationale.
+            position: (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute',
+            top: anchorRect.y + anchorRect.height + spacing.xs,
+            left: anchorRect.x,
+            width: anchorRect.width,
+            maxHeight: 220,
+            borderWidth: layout.hairline,
+            borderRadius: radius.sm,
+            overflow: 'hidden',
+            backgroundColor: suggestionBackground,
+            borderColor,
+            ...shadows.md,
+          }}
+        >
+            <ScrollView
+              style={styles.suggestionsScroll}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
+            >
+              {typeaheadResults.map((actor, index) => {
+                const isLast = index === typeaheadResults.length - 1;
+                return (
+                  <TouchableOpacity
+                    key={actor.did}
+                    onPress={() => handleSelectSuggestion(actor.handle)}
+                    activeOpacity={0.7}
+                    style={[
+                      styles.suggestion,
+                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
+                    ]}
+                  >
+                    {actor.avatar ? (
+                      <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
+                    ) : (
+                      <View style={[styles.suggestionAvatar, styles.suggestionAvatarPlaceholder, { borderColor }]} />
+                    )}
+                    <View style={styles.suggestionText}>
+                      {actor.displayName ? (
+                        <ThemedText style={styles.suggestionName} numberOfLines={1}>
+                          {actor.displayName}
+                        </ThemedText>
+                      ) : null}
+                      <ThemedText
+                        style={[styles.suggestionHandle, { color: helperColor }]}
+                        numberOfLines={1}
+                      >
+                        @{actor.handle}
+                      </ThemedText>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
+      ) : null}
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -301,7 +361,15 @@ const styles = StyleSheet.create({
     // so adding suggestions doesn't push the Continue button around. The
     // dropdown overlays whatever sits beneath it (which is fine — the user
     // is interacting with the suggestion list, not the button).
+    //
+    // The transform + zIndex combo is what actually wins on web: zIndex
+    // alone is unreliable because RN-Web's atomic CSS hashes the property
+    // value into a class name that HMR can leave stale rules for. A
+    // no-op `translateY: 0` forces the browser to create a fresh stacking
+    // context here. Native just respects the child zIndex.
     position: 'relative',
+    zIndex: 9999,
+    transform: [{ translateY: 0 }],
   },
   suggestions: {
     position: 'absolute',
@@ -314,8 +382,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // Cap so big result sets don't grow off-screen; the rest scroll inside.
     maxHeight: 220,
-    zIndex: 100,
-    elevation: 8,
+    zIndex: 9999,
+    // Without an elevation/shadow the panel ends up white-on-white in light
+    // mode (page bg and suggestionBackground are both `#fff`) and almost
+    // matches in dark mode too — looks like the dropdown has no background
+    // at all. `shadows.md` is the dropdown/popover token: a subtle drop
+    // shadow that translates to box-shadow on web and proper RN shadow* +
+    // elevation on native.
+    ...shadows.md,
   },
   suggestionsScroll: {
     flexGrow: 0,

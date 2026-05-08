@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { Redirect } from 'expo-router';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
-import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout, hitSlop, shadows } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -72,6 +72,43 @@ export default function AuthScreen() {
     setHandle(value);
     setSuggestionsDismissed(false);
   }, []);
+
+  // Render the typeahead dropdown as a sibling of ScrollView so it escapes
+  // the form's stacking context (RN-Web's atomic CSS made the in-flow +
+  // zIndex approach unreliable — the App Password input kept painting on
+  // top despite a computed z-index of 9999). On web we use `position:
+  // fixed` so coordinates match `measureInWindow`'s viewport reference; on
+  // native we fall back to `position: absolute` *inside* the container,
+  // which means we have to subtract the container's window offset (status
+  // bar / nav header push the container down on iOS) so the dropdown
+  // actually lands directly under the input.
+  const inputAnchorRef = useRef<View>(null);
+  // KeyboardAvoidingView doesn't expose measureInWindow, so wrap its
+  // children in a plain View we can ref + measure.
+  const containerRef = useRef<View>(null);
+  const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+
+  const measureAnchor = useCallback(() => {
+    if (!inputAnchorRef.current) return;
+    inputAnchorRef.current.measureInWindow((inputX, inputY, width, height) => {
+      if (Platform.OS === 'web' || !containerRef.current) {
+        setAnchorRect({ x: inputX, y: inputY, width, height });
+        return;
+      }
+      containerRef.current.measureInWindow((containerX, containerY) => {
+        setAnchorRect({
+          x: inputX - containerX,
+          y: inputY - containerY,
+          width,
+          height,
+        });
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (showSuggestions) measureAnchor();
+  }, [showSuggestions, measureAnchor, typeaheadResults.length]);
 
   const validateHandle = (value: string) => {
     const handleRegex = /^@?[a-zA-Z0-9._-]+$/;
@@ -239,6 +276,7 @@ export default function AuthScreen() {
 
   return (
     <KeyboardAvoidingView style={[styles.container, { backgroundColor: screenBackground }]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View ref={containerRef} style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
@@ -260,7 +298,7 @@ export default function AuthScreen() {
             <View style={styles.form}>
               <View style={styles.inputContainer}>
                 <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
-                <View style={styles.inputAnchor}>
+                <View ref={inputAnchorRef} style={styles.inputAnchor} onLayout={measureAnchor}>
                   <TextInput
                     ref={handleInputRef}
                     style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
@@ -274,50 +312,6 @@ export default function AuthScreen() {
                     returnKeyType="next"
                     onSubmitEditing={() => passwordInputRef.current?.focus()}
                   />
-
-                  {showSuggestions ? (
-                    <ThemedView style={[styles.suggestions, { backgroundColor: suggestionBackground, borderColor }]}>
-                      <ScrollView
-                        style={styles.suggestionsScroll}
-                        keyboardShouldPersistTaps="handled"
-                        nestedScrollEnabled
-                      >
-                        {typeaheadResults.map((actor, index) => {
-                          const isLast = index === typeaheadResults.length - 1;
-                          return (
-                            <TouchableOpacity
-                              key={actor.did}
-                              onPress={() => handleSelectSuggestion(actor.handle)}
-                              activeOpacity={0.7}
-                              style={[
-                                styles.suggestion,
-                                !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-                              ]}
-                            >
-                              {actor.avatar ? (
-                                <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
-                              ) : (
-                                <View style={[styles.suggestionAvatar, styles.suggestionAvatarPlaceholder, { borderColor }]} />
-                              )}
-                              <View style={styles.suggestionText}>
-                                {actor.displayName ? (
-                                  <ThemedText style={styles.suggestionName} numberOfLines={1}>
-                                    {actor.displayName}
-                                  </ThemedText>
-                                ) : null}
-                                <ThemedText
-                                  style={[styles.suggestionHandle, { color: helperColor }]}
-                                  numberOfLines={1}
-                                >
-                                  @{actor.handle}
-                                </ThemedText>
-                              </View>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </ScrollView>
-                    </ThemedView>
-                  ) : null}
                 </View>
                 <ThemedText style={[styles.helperText, { color: helperColor }]}>
                   {t('auth.handleHelperText')}
@@ -400,6 +394,82 @@ export default function AuthScreen() {
           </Pressable>
         </Pressable>
       </Modal>
+
+      {/*
+        Typeahead dropdown rendered as a sibling of the ScrollView (not inside
+        a Modal) so it sits at the screen root in the same stacking context as
+        the form, but with `pointerEvents="box-none"` on the overlay layer so
+        clicks fall through to the form input behind it (otherwise typing
+        would defocus the input on web). Using a Modal instead steals focus
+        via aria-modal and breaks typing. The anchor rect is measured from
+        `inputAnchorRef` and used to absolutely position the dropdown
+        directly under the input.
+      */}
+      {showSuggestions && anchorRect ? (
+        <View
+          pointerEvents="auto"
+          style={{
+            // `position: fixed` on web pins the dropdown to the viewport,
+            // matching `measureInWindow`'s reference frame exactly. On
+            // native, fall back to absolute (the screen root is the
+            // positioned ancestor and uses the same coord space). Cast is
+            // needed because RN's TS types only enumerate 'absolute' /
+            // 'relative', but RN-Web accepts every CSS position value.
+            position: (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute',
+            top: anchorRect.y + anchorRect.height + spacing.xs,
+            left: anchorRect.x,
+            width: anchorRect.width,
+            maxHeight: 220,
+            borderWidth: layout.hairline,
+            borderRadius: radius.sm,
+            overflow: 'hidden',
+            backgroundColor: suggestionBackground,
+            borderColor,
+            ...shadows.md,
+          }}
+        >
+            <ScrollView
+              style={styles.suggestionsScroll}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
+            >
+              {typeaheadResults.map((actor, index) => {
+                const isLast = index === typeaheadResults.length - 1;
+                return (
+                  <TouchableOpacity
+                    key={actor.did}
+                    onPress={() => handleSelectSuggestion(actor.handle)}
+                    activeOpacity={0.7}
+                    style={[
+                      styles.suggestion,
+                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
+                    ]}
+                  >
+                    {actor.avatar ? (
+                      <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
+                    ) : (
+                      <View style={[styles.suggestionAvatar, styles.suggestionAvatarPlaceholder, { borderColor }]} />
+                    )}
+                    <View style={styles.suggestionText}>
+                      {actor.displayName ? (
+                        <ThemedText style={styles.suggestionName} numberOfLines={1}>
+                          {actor.displayName}
+                        </ThemedText>
+                      ) : null}
+                      <ThemedText
+                        style={[styles.suggestionHandle, { color: helperColor }]}
+                        numberOfLines={1}
+                      >
+                        @{actor.handle}
+                      </ThemedText>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
+      ) : null}
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -505,7 +575,17 @@ const styles = StyleSheet.create({
     // Anchors the absolutely-positioned suggestions list below the input so
     // the dropdown overlays the helper text and password field instead of
     // pushing the layout around as the user types.
+    //
+    // The transform + zIndex combo is what actually wins on web: zIndex
+    // alone is unreliable because RN-Web's atomic CSS hashes the property
+    // value into a class name that HMR can leave stale rules for. A
+    // no-op `translateY: 0` forces the browser to create a fresh stacking
+    // context here regardless, so the absolute-positioned dropdown
+    // descendant always paints above sibling form sections (App Password
+    // input etc). Native just respects the child zIndex.
     position: 'relative',
+    zIndex: 9999,
+    transform: [{ translateY: 0 }],
   },
   suggestions: {
     position: 'absolute',
@@ -517,8 +597,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     overflow: 'hidden',
     maxHeight: 220,
-    zIndex: 100,
-    elevation: 8,
+    zIndex: 9999,
+    ...shadows.md,
   },
   suggestionsScroll: {
     flexGrow: 0,
