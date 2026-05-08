@@ -245,6 +245,7 @@
       "hideReplies": "返信を非表示",
       "hideReposts": "リポストを非表示",
       "hideQuotes": "引用投稿を非表示",
+      "hideEngaged": "反応した投稿を非表示",
       "onlyFollowing": "フォロー中の人のみ",
       "onlyMutuals": "相互フォローのみ",
       "countLikes": "いいね",
@@ -254,7 +255,8 @@
       "filterMin": "最小",
       "filterMax": "最大",
       "filterMinLabel": "最小 {{metric}}",
-      "filterMaxLabel": "最大 {{metric}}"
+      "filterMaxLabel": "最大 {{metric}}",
+      "feed": "フィード"
     },
     "post": {
       "postNotFound": "投稿が見つかりません",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "エンゲージメント数（いいね、返信、リポスト）に、より大きく読みやすい文字サイズを使用します。",
       "network": {
         "title": "ネットワーク",
-        "indexDescription": "AT Protocol の通信を処理する AppView と画像 CDN を選びます。",
         "intro": "Akari は 2 つの上流サービスと通信します。フィード・プロフィール・検索などの表示を組み立てる AppView と、サムネイルやアバターを配信する画像 CDN です。既定ではどちらも Bluesky Social が運用しています — 迂回したい場合は下から代替を選んでください。"
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "カスタム",
             "description": "URL で任意の互換 CDN を指定できます。"
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "AT Protocol 上のあなたのデータは公開されています — これらの設定は、AI サービスがそのデータをどのように利用してよいかを伝えるものです。Akari はあなたの選択を尊重し、それを他のサービスに共有します。各サービスはそれを尊重するかどうかを選択できます。悪意のある第三者がこれらの信号を無視する可能性もありますが、それは私たちの管理外です。設定はアカウント全体に適用されます。スパムやボット検出などの安全機能には影響しません。",
+        "section": "AI があなたのデータをどう利用してよいか",
+        "training": {
+          "label": "学習を許可",
+          "hint": "あなたの投稿を AI モデルの構築や学習に使用します。一度データがモデルの一部になると、後でアカウントを削除しても、そのデータはモデル内に残り続けます。"
+        },
+        "inference": {
+          "label": "推論を許可",
+          "hint": "誰かの質問に答える際に、AI があなたの投稿を参照することを許可します。AI はあなたのデータを保持しませんが、リアルタイムで引用したり参照したりすることがあります。"
+        },
+        "embedding": {
+          "label": "埋め込みを許可",
+          "hint": "AI の検索・レコメンドシステムがあなたの投稿を利用することを許可します — 類似アカウントの発見、興味によるユーザーのグルーピング、Discover や For You のようなフィードに何を表示するかの判断などに使われます。"
+        },
+        "syntheticContent": {
+          "label": "合成コンテンツを許可",
+          "hint": "あなたのデータをモデルとした新しいコンテンツの生成を AI に許可します — あなたの文体の模倣、写真や音声の AI による再現、またはあなたらしく振る舞うように設計されたボットなど。"
         }
       }
     },

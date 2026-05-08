@@ -245,6 +245,7 @@
       "hideReplies": "Reacties verbergen",
       "hideReposts": "Reposts verbergen",
       "hideQuotes": "Citaatberichten verbergen",
+      "hideEngaged": "Verberg berichten waarop ik heb gereageerd",
       "onlyFollowing": "Alleen mensen die ik volg",
       "onlyMutuals": "Alleen wederzijdse volgers",
       "countLikes": "Vind-ik-leuks",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Bericht niet gevonden",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Gebruik een grotere, beter leesbare tekstgrootte voor de interactietellers (likes, reacties, reposts).",
       "network": {
         "title": "Netwerk",
-        "indexDescription": "Kies welke AppView en afbeeldings-CDN je AT Protocol-verkeer afhandelen.",
         "intro": "Akari praat met twee upstream-diensten: een AppView die het netwerk samenvoegt tot de weergaven die je ziet (feeds, profielen, zoeken) en een afbeeldings-CDN dat miniaturen en avatars host. Standaard worden beide beheerd door Bluesky Social — kies hieronder alternatieven om ze te omzeilen."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Aangepast",
             "description": "Verwijs via URL naar een willekeurig compatibel CDN."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Je gegevens op AT Protocol zijn openbaar — deze instellingen vertellen AI-services hoe ze die mogen gebruiken. Akari respecteert je keuzes en deelt ze met andere services, die ervoor kunnen kiezen om ze te respecteren. Kwaadwillenden kunnen deze signalen negeren; dat ligt buiten onze controle. De voorkeuren gelden voor je hele account. Veiligheidstools zoals spam- en bot-detectie worden niet beïnvloed.",
+        "section": "Hoe AI je gegevens mag gebruiken",
+        "training": {
+          "label": "Training toestaan",
+          "hint": "Gebruik je posts om AI-modellen te bouwen of te trainen. Zodra je gegevens deel uitmaken van een model, blijven ze daar, ook als je je account later verwijdert."
+        },
+        "inference": {
+          "label": "Inferentie toestaan",
+          "hint": "Laat AI je posts opzoeken bij het beantwoorden van iemands vraag. De AI bewaart je gegevens niet, maar kan ze in realtime citeren of ernaar verwijzen."
+        },
+        "embedding": {
+          "label": "Embeddings toestaan",
+          "hint": "Laat AI-zoek- en aanbevelingssystemen je posts gebruiken — voor het vinden van vergelijkbare accounts, het groeperen van gebruikers op basis van interesses, en het bepalen wat er getoond wordt in feeds zoals Discover of For You."
+        },
+        "syntheticContent": {
+          "label": "Synthetische content toestaan",
+          "hint": "Laat AI nieuwe content genereren gemodelleerd op je gegevens — imitaties van je schrijfstijl, AI-versies van je foto's of audio, of bots die zo zijn ontworpen dat ze als jou klinken."
         }
       }
     },

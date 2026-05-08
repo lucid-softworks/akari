@@ -94,7 +94,6 @@ export default function SettingsScreen() {
         key: 'account',
         icon: 'person.crop.circle',
         label: t('settings.account'),
-        description: t('settings.accountDescription'),
         onPress: () => router.push('/(tabs)/settings/account'),
       },
       {
@@ -143,8 +142,13 @@ export default function SettingsScreen() {
         key: 'network',
         icon: 'server.rack',
         label: t('settings.network.title'),
-        description: t('settings.network.indexDescription'),
         onPress: () => router.push('/(tabs)/settings/network'),
+      },
+      {
+        key: 'ai',
+        icon: 'brain.head.profile',
+        label: t('settings.ai.title'),
+        onPress: () => router.push('/(tabs)/settings/ai'),
       },
       {
         key: 'accessibility',

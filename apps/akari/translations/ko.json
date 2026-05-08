@@ -245,6 +245,7 @@
       "hideReplies": "답글 숨기기",
       "hideReposts": "리포스트 숨기기",
       "hideQuotes": "인용 게시물 숨기기",
+      "hideEngaged": "반응한 게시물 숨기기",
       "onlyFollowing": "내가 팔로우하는 사람만",
       "onlyMutuals": "맞팔로우만",
       "countLikes": "좋아요",
@@ -254,7 +255,8 @@
       "filterMin": "최소",
       "filterMax": "최대",
       "filterMinLabel": "최소 {{metric}}",
-      "filterMaxLabel": "최대 {{metric}}"
+      "filterMaxLabel": "최대 {{metric}}",
+      "feed": "피드"
     },
     "post": {
       "postNotFound": "게시물을 찾을 수 없습니다",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "참여 수(좋아요, 답글, 리포스트)에 더 크고 읽기 쉬운 글자 크기를 사용합니다.",
       "network": {
         "title": "네트워크",
-        "indexDescription": "AT Protocol 트래픽을 처리할 AppView와 이미지 CDN을 선택하세요.",
         "intro": "Akari는 두 개의 업스트림 서비스와 통신합니다. 피드, 프로필, 검색과 같이 보이는 화면을 만들어 주는 AppView, 그리고 썸네일과 아바타를 호스팅하는 이미지 CDN입니다. 기본적으로 둘 다 Bluesky Social이 운영하며, 우회하려면 아래에서 대안을 선택하세요."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "사용자 정의",
             "description": "URL로 호환되는 CDN을 지정합니다."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "AT Protocol에 있는 당신의 데이터는 공개되어 있습니다 — 이 설정은 AI 서비스가 데이터를 어떻게 사용할 수 있는지 알려줍니다. Akari는 당신의 선택을 존중하고 이를 다른 서비스와 공유하며, 다른 서비스는 이를 존중하기로 선택할 수 있습니다. 악의적인 행위자는 이러한 신호를 무시할 수 있으며, 이는 우리의 통제 밖입니다. 이 설정은 계정 전체에 적용됩니다. 스팸 및 봇 탐지와 같은 안전 도구에는 영향을 미치지 않습니다.",
+        "section": "AI가 데이터를 사용할 수 있는 방식",
+        "training": {
+          "label": "학습 허용",
+          "hint": "당신의 게시물을 사용해 AI 모델을 만들거나 학습합니다. 데이터가 모델의 일부가 되면, 나중에 계정을 삭제하더라도 데이터는 그 안에 남아 있습니다."
+        },
+        "inference": {
+          "label": "추론 허용",
+          "hint": "AI가 누군가의 질문에 답할 때 당신의 게시물을 조회할 수 있도록 허용합니다. AI는 데이터를 저장하지 않지만, 실시간으로 인용하거나 참조할 수 있습니다."
+        },
+        "embedding": {
+          "label": "임베딩 허용",
+          "hint": "AI 검색 및 추천 시스템이 당신의 게시물을 사용하도록 허용합니다 — 비슷한 계정 찾기, 관심사별 사용자 그룹화, Discover나 For You 같은 피드에 무엇을 노출할지 결정하는 데 사용됩니다."
+        },
+        "syntheticContent": {
+          "label": "합성 콘텐츠 허용",
+          "hint": "AI가 당신의 데이터를 모방한 새로운 콘텐츠를 생성하도록 허용합니다 — 글쓰기 모방, 사진이나 오디오의 AI 버전, 또는 당신처럼 들리도록 설계된 봇 등."
         }
       }
     },

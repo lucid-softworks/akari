@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { type LayoutChangeEvent, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
@@ -162,31 +162,80 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
   const scrollViewRef = useRef<ScrollView>(null);
+  // Tracks the y-offset of the focused post inside the scroll content. We
+  // want the focused post at the *top* of the viewport on initial open
+  // (parents above are scrollable up; replies below sit in view) — see
+  // bsky's notification-tap behavior. Async parent/root queries push the
+  // focused post down as they resolve, so we re-scroll on every layout
+  // change up until the user has interacted with the scroller.
+  const focusedPostYRef = useRef(0);
+  const hasUserScrolledRef = useRef(false);
+  // Heights tracked per-section so the bottom padding can be exactly
+  // `windowHeight - lastPostHeight` — just enough headroom to scroll the
+  // last post (focused if no replies; otherwise the last reply) up to
+  // sit at the top of the viewport, no extra empty space.
+  const [focusedPostHeight, setFocusedPostHeight] = useState(0);
+  const [lastReplyHeight, setLastReplyHeight] = useState(0);
+
+  const handleFocusedPostLayout = useCallback((event: LayoutChangeEvent) => {
+    const { y, height } = event.nativeEvent.layout;
+    focusedPostYRef.current = y;
+    setFocusedPostHeight(height);
+    if (hasUserScrolledRef.current) return;
+    scrollViewRef.current?.scrollTo({ y, animated: false });
+  }, []);
+
+  const handleLastReplyLayout = useCallback((event: LayoutChangeEvent) => {
+    setLastReplyHeight(event.nativeEvent.layout.height);
+  }, []);
+
+  const handleScrollBeginDrag = useCallback(() => {
+    hasUserScrolledRef.current = true;
+  }, []);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({}, 'tint');
   const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const insets = useSafeAreaInsets();
+  const { height: windowHeight } = useWindowDimensions();
 
   // Get the post data
   const { data: post, isLoading: postLoading, error: postError } = usePost({ actor, rKey });
 
-  // Get parent post if this is a reply
-  const { data: parentPost } = useParentPost(post?.uri || null);
+  // The focused post's atproto record carries `reply.parent.uri` and
+  // `reply.root.uri` when it's a reply — pull those off and feed them to
+  // the parent / root post queries. Previously this passed `post.uri`,
+  // which made both hooks fetch the focused post itself and the parent /
+  // grandparent rows silently no-op'd via the `=== post.uri` guard, so
+  // tapping a reply notification landed on the reply with no thread
+  // context above it at all.
+  const replyRefs =
+    post?.record && typeof post.record === 'object' && 'reply' in post.record
+      ? (post.record as { reply?: { parent?: { uri?: string }; root?: { uri?: string } } }).reply
+      : undefined;
+  const parentUri = replyRefs?.parent?.uri ?? null;
+  const rootUri = replyRefs?.root?.uri ?? null;
 
-  // Get root post if this is a reply to a reply
-  const { data: rootPost } = useRootPost(post?.uri || null);
+  // Always fetch + render the thread root when this is a reply, so the
+  // user can always see what conversation they're in. The parent is
+  // skipped when it's the same post as the root (one-deep reply: the
+  // root IS the parent), otherwise we'd render the same card twice.
+  const { data: rootPost } = useRootPost(rootUri);
+  const { data: parentPost } = useParentPost(parentUri && parentUri !== rootUri ? parentUri : null);
 
 
   // Get the full thread (replies)
   const { data: threadData, isLoading: threadLoading } = usePostThread(post?.uri || null);
 
-  // Scroll to top when post changes
+  // Reset per-thread state when navigating to a different post: the
+  // "user has scrolled" gate so the new focused post gets snapped to
+  // the top once its layout fires, and the cached reply height so the
+  // bottom padding doesn't stay tuned for the previous thread's last
+  // reply when this one has none / a different last reply.
   useEffect(() => {
-    if (post && scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: 0, animated: false });
-    }
-  }, [post]);
+    hasUserScrolledRef.current = false;
+    setLastReplyHeight(0);
+  }, [post?.uri]);
 
   if (postLoading) {
     return (
@@ -208,9 +257,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
     if (!rootPost || rootPost.uri === post.uri) return null;
 
     return (
-      <View style={styles.threadContext}>
-        <ThemedText style={styles.threadContextLabel}>{t('common.replies')}</ThemedText>
-        <PostCard
+      <PostCard
           post={{
             id: rootPost.uri,
             text:
@@ -244,7 +291,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             navigateToPost({ actor: rootPost.author.handle, rKey });
           }}
         />
-      </View>
     );
   };
 
@@ -252,9 +298,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
     if (!parentPost || parentPost.uri === post.uri) return null;
 
     return (
-      <View style={styles.threadContext}>
-        <ThemedText style={styles.threadContextLabel}>{t('post.replyingTo')}</ThemedText>
-        <PostCard
+      <PostCard
           post={{
             id: parentPost.uri,
             text:
@@ -288,7 +332,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
             navigateToPost({ actor: parentPost.author.handle, rKey });
           }}
         />
-      </View>
     );
   };
 
@@ -297,8 +340,22 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
+        // Pad just enough to let the *last* post (focused if no replies,
+        // otherwise the last reply) scroll up to sit at the top of the
+        // viewport — `windowHeight - lastPostHeight`. Without it,
+        // scrollTo gets clamped by `contentHeight - viewportHeight` and
+        // we can't get the focused post to the top on short threads.
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          {
+            paddingBottom: Math.max(
+              0,
+              windowHeight - (lastReplyHeight || focusedPostHeight),
+            ),
+          },
+        ]}
         showsVerticalScrollIndicator={false}
+        onScrollBeginDrag={handleScrollBeginDrag}
       >
         {/* Thread Context - Root Post (if this is a reply to a reply) */}
         {renderGrandparentPost()}
@@ -306,35 +363,38 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
         {/* Thread Context - Parent Post */}
         {renderParentPost()}
 
-        {/* Main Post */}
-        <PostCard
-          post={{
-            id: post.uri,
-            text:
-              typeof post.record === 'object' && post.record && 'text' in post.record
-                ? (post.record as { text: string }).text
-                : undefined,
-            author: {
-              did: post.author.did,
-              handle: post.author.handle,
-              displayName: post.author.displayName,
-              avatar: post.author.avatar,
-              verification: post.author.verification,
-            },
-            createdAt: formatRelativeTime(post.indexedAt),
-            likeCount: post.likeCount || 0,
-            commentCount: post.replyCount || 0,
-            repostCount: post.repostCount || 0,
-            embed: post.embed,
-            embeds: post.embeds,
-            labels: post.labels,
-            viewer: post.viewer,
-            facets: (post.record as any)?.facets,
-            uri: post.uri,
-            cid: post.cid,
-            threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
-          }}
-        />
+        {/* Main Post — wrapped so we can capture its y-offset and snap the
+            scroll position to it on initial open / async parent loads. */}
+        <View onLayout={handleFocusedPostLayout}>
+          <PostCard
+            post={{
+              id: post.uri,
+              text:
+                typeof post.record === 'object' && post.record && 'text' in post.record
+                  ? (post.record as { text: string }).text
+                  : undefined,
+              author: {
+                did: post.author.did,
+                handle: post.author.handle,
+                displayName: post.author.displayName,
+                avatar: post.author.avatar,
+                verification: post.author.verification,
+              },
+              createdAt: formatRelativeTime(post.indexedAt),
+              likeCount: post.likeCount || 0,
+              commentCount: post.replyCount || 0,
+              repostCount: post.repostCount || 0,
+              embed: post.embed,
+              embeds: post.embeds,
+              labels: post.labels,
+              viewer: post.viewer,
+              facets: (post.record as any)?.facets,
+              uri: post.uri,
+              cid: post.cid,
+              threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
+            }}
+          />
+        </View>
 
         {/* Replies */}
         {threadLoading ? (
@@ -342,11 +402,19 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
         ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
           <View style={styles.repliesContainer}>
             <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
-            {threadData.thread.replies.map((reply, index) => (
-              <View key={'post' in reply ? reply.post.uri : `reply-${index}`}>
-                {renderComment(reply, navigateToPost)}
-              </View>
-            ))}
+            {threadData.thread.replies.map((reply, index) => {
+              const isLast = index === threadData.thread!.replies!.length - 1;
+              return (
+                <View
+                  key={'post' in reply ? reply.post.uri : `reply-${index}`}
+                  // The last reply's height drives the scroll-to-top
+                  // bottom-padding calculation up at the ScrollView level.
+                  onLayout={isLast ? handleLastReplyLayout : undefined}
+                >
+                  {renderComment(reply, navigateToPost)}
+                </View>
+              );
+            })}
           </View>
         ) : null}
       </ScrollView>
@@ -413,18 +481,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingBottom: spacing.xl,
-  },
-  threadContext: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderBottomWidth: layout.border,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  threadContextLabel: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
-    marginBottom: spacing.sm,
-    opacity: opacity.secondary,
   },
   repliesContainer: {
     marginTop: spacing.lg,

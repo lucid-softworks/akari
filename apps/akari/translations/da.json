@@ -245,6 +245,7 @@
       "hideReplies": "Skjul svar",
       "hideReposts": "Skjul reposts",
       "hideQuotes": "Skjul citerede opslag",
+      "hideEngaged": "Skjul opslag, jeg har interageret med",
       "onlyFollowing": "Kun personer jeg følger",
       "onlyMutuals": "Kun gensidige følgere",
       "countLikes": "Likes",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maksimum {{metric}}"
+      "filterMaxLabel": "Maksimum {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Post ikke fundet",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Brug en større, mere læsbar tekststørrelse til interaktionstal (likes, svar, genopslag).",
       "network": {
         "title": "Netværk",
-        "indexDescription": "Vælg hvilken AppView og billed-CDN der håndterer din AT Protocol-trafik.",
         "intro": "Akari taler med to upstream-tjenester: en AppView, der aggregerer netværket til de visninger, du ser (feeds, profiler, søgning), og et billed-CDN, der hoster miniaturer og avatarer. Som standard drives begge af Bluesky Social — vælg alternativer nedenfor for at omgå dem."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Tilpasset",
             "description": "Peg på et hvilket som helst kompatibelt CDN via URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Dine data på AT Protocol er offentlige — disse indstillinger fortæller AI-tjenester, hvordan de må bruge dem. Akari respekterer dine valg og deler dem med andre tjenester, som kan vælge at respektere dem. Dårlige aktører kan ignorere disse signaler; det er uden for vores kontrol. Indstillingerne gælder for hele din konto. Sikkerhedsværktøjer som spam- og bot-detektion påvirkes ikke.",
+        "section": "Hvordan AI må bruge dine data",
+        "training": {
+          "label": "Tillad træning",
+          "hint": "Brug dine indlæg til at bygge eller træne AI-modeller. Når dine data først er en del af en model, bliver de der, selv hvis du senere sletter din konto."
+        },
+        "inference": {
+          "label": "Tillad inferens",
+          "hint": "Lad AI slå dine indlæg op, når den besvarer nogens spørgsmål. AI'en gemmer ikke dine data, men kan citere eller referere til dem i realtid."
+        },
+        "embedding": {
+          "label": "Tillad embeddings",
+          "hint": "Lad AI-søge- og anbefalingssystemer bruge dine indlæg — til at finde lignende konti, gruppere brugere efter interesser, beslutte hvad der skal vises i feeds som Discover eller For You."
+        },
+        "syntheticContent": {
+          "label": "Tillad syntetisk indhold",
+          "hint": "Lad AI generere nyt indhold modelleret efter dine data — efterligninger af din skrivestil, AI-versioner af dine fotos eller lyd, eller bots designet til at lyde som dig."
         }
       }
     },

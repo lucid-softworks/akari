@@ -14,6 +14,16 @@ export default function UserProfileLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen
+        name="feed/[rkey]"
+        options={{
+          title: 'Feed',
+          headerShown: isLargeNative,
+          headerBackVisible: true,
+          headerBackButtonDisplayMode: 'minimal',
+        }}
+        dangerouslySingular
+      />
+      <Stack.Screen
         name="post/[rkey]"
         options={{
           title: 'Post',

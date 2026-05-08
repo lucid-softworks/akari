@@ -245,6 +245,7 @@
       "hideReplies": "Cuddio atebion",
       "hideReposts": "Cuddio rhannu",
       "hideQuotes": "Cuddio postiadau dyfynnu",
+      "hideEngaged": "Cuddio postiadau dwi wedi ymgysylltu â nhw",
       "onlyFollowing": "Pobl rwyn eu dilyn yn unig",
       "onlyMutuals": "Dilynwyr ar y cyd yn unig",
       "countLikes": "Hoffwyd",
@@ -254,7 +255,8 @@
       "filterMin": "Lleiaf",
       "filterMax": "Mwyaf",
       "filterMinLabel": "Lleiaf {{metric}}",
-      "filterMaxLabel": "Mwyaf {{metric}}"
+      "filterMaxLabel": "Mwyaf {{metric}}",
+      "feed": "Ffrwd"
     },
     "post": {
       "postNotFound": "Heb ddod o hyd i'r post",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Defnyddiwch faint testun mwy a mwy darllenadwy ar gyfer cyfrifau ymgysylltu (hoffiadau, atebion, ailbostiadau).",
       "network": {
         "title": "Rhwydwaith",
-        "indexDescription": "Dewiswch pa AppView a CDN delweddau sy'n trin eich traffig AT Protocol.",
         "intro": "Mae Akari'n siarad â dau wasanaeth uwchradd: AppView sy'n cyfuno'r rhwydwaith yn y golygfeydd a welwch (ffrydiau, proffiliau, chwilio) a CDN delweddau sy'n cynnal mân-luniau ac afatariaid. Yn ddiofyn, gweithredir y ddau gan Bluesky Social — dewiswch ddewisiadau eraill isod i'w hosgoi."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Personol",
             "description": "Pwyntiwch at unrhyw CDN cydnaws gan ddefnyddio URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Mae dy ddata ar AT Protocol yn gyhoeddus — mae'r gosodiadau hyn yn dweud wrth wasanaethau AI sut y gallant ei ddefnyddio. Mae Akari yn parchu dy ddewisiadau ac yn eu rhannu â gwasanaethau eraill, sy'n gallu dewis eu parchu. Gall actorion drwg anwybyddu'r signalau hyn; mae hynny y tu hwnt i'n rheolaeth. Mae'r dewisiadau'n berthnasol ar draws dy gyfrif cyfan. Nid yw offer diogelwch fel canfod sbam a botiau yn cael eu heffeithio.",
+        "section": "Sut y gall AI ddefnyddio dy ddata",
+        "training": {
+          "label": "Caniatáu hyfforddi",
+          "hint": "Defnyddio dy bostiadau i adeiladu neu hyfforddi modelau AI. Unwaith y bydd dy ddata yn rhan o fodel, mae'n aros yno hyd yn oed os byddi'n dileu dy gyfrif yn ddiweddarach."
+        },
+        "inference": {
+          "label": "Caniatáu casglu",
+          "hint": "Gad i AI chwilio dy bostiadau wrth ateb cwestiwn rhywun. Nid yw'r AI yn cadw dy ddata, ond gall ei ddyfynnu neu gyfeirio ato mewn amser real."
+        },
+        "embedding": {
+          "label": "Caniatáu mewnblannu",
+          "hint": "Gad i systemau chwilio ac argymell AI ddefnyddio dy bostiadau — i ddod o hyd i gyfrifon tebyg, grwpio defnyddwyr yn ôl diddordebau, penderfynu beth i'w ddangos mewn ffrydiau fel Discover neu For You."
+        },
+        "syntheticContent": {
+          "label": "Caniatáu cynnwys synthetig",
+          "hint": "Gad i AI gynhyrchu cynnwys newydd wedi'i fodelu ar dy ddata — efelychiadau o dy ysgrifennu, fersiynau AI o dy luniau neu sain, neu botiau wedi'u dylunio i swnio fel ti."
         }
       }
     },

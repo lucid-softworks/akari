@@ -54,6 +54,14 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
 
           return {
             id: notification.uri,
+            // Notification's own record URI — distinct from
+            // `reasonSubject` (which is the URI of the thing the action
+            // targets, e.g. the *parent* post for a reply). Tapping a
+            // reply / quote / mention notification should land on
+            // `uri`, not `reasonSubject`. Previously this field was
+            // dropped during the transform and downstream code silently
+            // fell back to reasonSubject, sending taps to the parent.
+            uri: notification.uri,
             author: {
               did: notification.author.did,
               handle: notification.author.handle,

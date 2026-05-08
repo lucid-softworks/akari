@@ -245,6 +245,7 @@
       "hideReplies": "Cavabları gizlət",
       "hideReposts": "Yenidən paylaşımları gizlət",
       "hideQuotes": "Sitatları gizlət",
+      "hideEngaged": "Qarşılıqlı təsir göstərdiyim postları gizlət",
       "onlyFollowing": "Yalnız izlədiyim insanlar",
       "onlyMutuals": "Yalnız qarşılıqlı izləyicilər",
       "countLikes": "Bəyənmələr",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maksimum {{metric}}"
+      "filterMaxLabel": "Maksimum {{metric}}",
+      "feed": "Lent"
     },
     "post": {
       "postNotFound": "Post tapılmadı",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Qarşılıqlı təsir sayları (bəyəni, cavab, yenidən paylaşım) üçün daha böyük və daha aydın oxunan mətn ölçüsü istifadə et.",
       "network": {
         "title": "Şəbəkə",
-        "indexDescription": "AT Protocol trafikinizi hansı AppView və şəkil CDN-i emal edəcəyini seçin.",
         "intro": "Akari iki yuxarı xidmətlə əlaqə saxlayır: gördüyünüz görünüşləri (lentlər, profillər, axtarış) toplayan AppView və miniatürləri ilə avatarları saxlayan şəkil CDN. Standart olaraq hər ikisini Bluesky Social idarə edir — onları keçmək üçün aşağıdan alternativlər seçin."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Xüsusi",
             "description": "URL ilə hər hansı uyğun CDN-i göstərin."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "AT Protocol-dakı məlumatlarınız açıqdır — bu parametrlər AI xidmətlərinə onları necə istifadə edə biləcəklərini bildirir. Akari seçimlərinizə hörmət edir və onları digər xidmətlərlə paylaşır, onlar da hörmət etməyi seçə bilərlər. Pis niyyətli şəxslər bu siqnalları nəzərə almaya bilərlər; bu bizim nəzarətimizdən kənardadır. Tərcihlər bütün hesabınıza tətbiq olunur. Spam və bot aşkarlanması kimi təhlükəsizlik alətlərinə təsir etmir.",
+        "section": "AI məlumatlarınızı necə istifadə edə bilər",
+        "training": {
+          "label": "Təlimə icazə ver",
+          "hint": "Postlarınızı AI modelləri qurmaq və ya öyrətmək üçün istifadə et. Məlumatlarınız bir modelin parçası olduqdan sonra, hətta hesabınızı sonradan silsəniz belə, orada qalır."
+        },
+        "inference": {
+          "label": "Nəticə çıxarmağa icazə ver",
+          "hint": "Kiminsə sualına cavab verərkən AI-yə postlarınızı axtarmağa icazə verin. AI məlumatlarınızı saxlamır, lakin onları real vaxtda sitat gətirə və ya istinad edə bilər."
+        },
+        "embedding": {
+          "label": "Embedding-ə icazə ver",
+          "hint": "AI axtarış və tövsiyə sistemlərinə postlarınızı istifadə etməyə icazə verin — oxşar hesabları tapmaq, istifadəçiləri maraqlara görə qruplaşdırmaq, Discover və ya For You kimi lentlərdə nəyin görsənəcəyinə qərar vermək."
+        },
+        "syntheticContent": {
+          "label": "Sintetik məzmuna icazə ver",
+          "hint": "AI-yə məlumatlarınız əsasında yeni məzmun yaratmağa icazə verin — yazınızın təqlidləri, fotolarınızın və ya audionuzun AI versiyaları, və ya sizin kimi səslənmək üçün dizayn edilmiş botlar."
         }
       }
     },

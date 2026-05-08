@@ -245,6 +245,7 @@
       "hideReplies": "Antworten ausblenden",
       "hideReposts": "Reposts ausblenden",
       "hideQuotes": "Zitierte Beiträge ausblenden",
+      "hideEngaged": "Beiträge ausblenden, mit denen ich interagiert habe",
       "onlyFollowing": "Nur Personen, denen ich folge",
       "onlyMutuals": "Nur gegenseitig folgend",
       "countLikes": "Likes",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Beitrag nicht gefunden",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Verwendet eine größere, besser lesbare Schriftgröße für Interaktionszahlen (Likes, Antworten, Reposts).",
       "network": {
         "title": "Netzwerk",
-        "indexDescription": "Wähle, welche AppView und welches Bild-CDN deinen AT-Protocol-Datenverkehr abwickeln.",
         "intro": "Akari spricht mit zwei Upstream-Diensten: einer AppView, die das Netzwerk zu den Ansichten aggregiert, die du siehst (Feeds, Profile, Suche), und einem Bild-CDN, das Vorschaubilder und Avatare hostet. Standardmäßig werden beide von Bluesky Social betrieben — wähle unten Alternativen, um sie zu umgehen."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Benutzerdefiniert",
             "description": "Verweise auf ein beliebiges kompatibles CDN per URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Deine Daten auf AT Protocol sind öffentlich — diese Einstellungen sagen AI-Diensten, wie sie sie verwenden dürfen. Akari respektiert deine Entscheidungen und teilt sie mit anderen Diensten, die sich entscheiden können, sie zu respektieren. Böswillige Akteure können diese Signale ignorieren; das liegt außerhalb unserer Kontrolle. Die Einstellungen gelten für dein gesamtes Konto. Sicherheitswerkzeuge wie Spam- und Bot-Erkennung sind nicht betroffen.",
+        "section": "Wie AI deine Daten verwenden darf",
+        "training": {
+          "label": "Training erlauben",
+          "hint": "Verwende deine Beiträge, um AI-Modelle zu erstellen oder zu trainieren. Sobald deine Daten Teil eines Modells sind, bleiben sie dort, selbst wenn du dein Konto später löschst."
+        },
+        "inference": {
+          "label": "Inferenz erlauben",
+          "hint": "Lass AI deine Beiträge nachschlagen, wenn sie eine Frage von jemandem beantwortet. Die AI behält deine Daten nicht, kann sie aber in Echtzeit zitieren oder referenzieren."
+        },
+        "embedding": {
+          "label": "Embeddings erlauben",
+          "hint": "Lass AI-Such- und Empfehlungssysteme deine Beiträge nutzen — um ähnliche Konten zu finden, Nutzer nach Interessen zu gruppieren und zu entscheiden, was in Feeds wie Discover oder For You angezeigt wird."
+        },
+        "syntheticContent": {
+          "label": "Synthetische Inhalte erlauben",
+          "hint": "Lass AI neue Inhalte generieren, die nach deinen Daten modelliert sind — Imitationen deines Schreibstils, AI-Versionen deiner Fotos oder Audios, oder Bots, die so klingen sollen wie du."
         }
       }
     },

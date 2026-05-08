@@ -245,6 +245,7 @@
       "hideReplies": "Yanıtları gizle",
       "hideReposts": "Yeniden paylaşımları gizle",
       "hideQuotes": "Alıntı gönderileri gizle",
+      "hideEngaged": "Etkileşime girdiğim gönderileri gizle",
       "onlyFollowing": "Yalnızca takip ettiklerim",
       "onlyMutuals": "Yalnızca karşılıklı takipler",
       "countLikes": "Beğeniler",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maksimum {{metric}}"
+      "filterMaxLabel": "Maksimum {{metric}}",
+      "feed": "Akış"
     },
     "post": {
       "postNotFound": "Gönderi bulunamadı",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Etkileşim sayıları (beğeni, yanıt, yeniden paylaşım) için daha büyük ve okunaklı bir metin boyutu kullan.",
       "network": {
         "title": "Ağ",
-        "indexDescription": "AT Protocol trafiğinizi hangi AppView ve görsel CDN'in işleyeceğini seçin.",
         "intro": "Akari iki yukarı akış hizmetiyle konuşur: gördüğünüz görünümleri (akışlar, profiller, arama) bir araya getiren bir AppView ve küçük resimleri ile avatarları barındıran bir görsel CDN. Varsayılan olarak ikisini de Bluesky Social işletir — onları atlamak için aşağıdan alternatifleri seçin."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Özel",
             "description": "URL üzerinden uyumlu herhangi bir CDN'e yönlendirin."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Hesabının `community.lexicon.preference.ai` kaydını ayarlar. Uyumlu istemciler ve tarayıcılar, gönderilerini AI/ML amaçlı kullanıp kullanamayacaklarına karar vermek için bunu okur. Aşağıdaki anahtarlar bu PDS'teki hesabının tamamına genel olarak uygulanır.",
+        "section": "AI/ML kullanımları",
+        "training": {
+          "label": "Eğitime izin ver",
+          "hint": "Üçüncü tarafların gönderilerin üzerinde AI/ML modelleri eğitmesine izin ver."
+        },
+        "inference": {
+          "label": "Çıkarıma izin ver",
+          "hint": "Hizmetlerin istek anında gönderilerin üzerinde AI çıkarımı (özetleme, sınıflandırma, benzer gönderi arama) yürütmesine izin ver."
+        },
+        "embedding": {
+          "label": "Embedding'e izin ver",
+          "hint": "Hizmetlerin anlamsal arama ve öneriler için gönderilerinin vektör embedding'lerini hesaplamasına ve saklamasına izin ver."
+        },
+        "syntheticContent": {
+          "label": "Sentetik içeriğe izin ver",
+          "hint": "Hizmetlerin gönderilerinden AI ile türetilmiş metin, görsel veya diğer medyayı oluşturmasına izin ver."
         }
       }
     },

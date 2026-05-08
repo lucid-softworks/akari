@@ -10,6 +10,18 @@ function postIsReply(post: BlueskyPostView): boolean {
   return Boolean((post.record as { reply?: unknown } | undefined)?.reply);
 }
 
+/**
+ * Has the viewer engaged with this post? Counts likes, reposts, and replies
+ * — anything where the AppView is reporting back a viewer-side reference
+ * URI for that interaction. Bookmarks could go in here later if we ever
+ * need to drop them from "show me what's new" passes.
+ */
+function viewerEngagedWith(post: BlueskyPostView): boolean {
+  const viewer = post.author && (post as BlueskyPostView).viewer;
+  if (!viewer) return false;
+  return Boolean(viewer.like || viewer.repost || viewer.reply);
+}
+
 function postIsQuote(post: BlueskyPostView): boolean {
   const embedType = (post.embed as { $type?: string } | undefined)?.$type;
   return (
@@ -66,6 +78,7 @@ export function shouldHideFeedItem(
   if (filters.hideReposts && item.reason) return true;
   if (applyHideReplies && filters.hideReplies && postIsReply(item.post)) return true;
   if (filters.hideQuotes && postIsQuote(item.post)) return true;
+  if (filters.hideEngaged && viewerEngagedWith(item.post)) return true;
   if (authorFails(item.post, filters)) return true;
   if (postFailsCounts(item.post, filters)) return true;
 
@@ -87,6 +100,7 @@ export function shouldHidePost(
 
   if (applyHideReplies && filters.hideReplies && postIsReply(post)) return true;
   if (filters.hideQuotes && postIsQuote(post)) return true;
+  if (filters.hideEngaged && viewerEngagedWith(post)) return true;
   if (authorFails(post, filters)) return true;
   if (postFailsCounts(post, filters)) return true;
 

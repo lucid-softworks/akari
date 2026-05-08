@@ -245,6 +245,7 @@
       "hideReplies": "Ẩn phản hồi",
       "hideReposts": "Ẩn repost",
       "hideQuotes": "Ẩn bài trích dẫn",
+      "hideEngaged": "Ẩn bài viết tôi đã tương tác",
       "onlyFollowing": "Chỉ người tôi theo dõi",
       "onlyMutuals": "Chỉ theo dõi qua lại",
       "countLikes": "Lượt thích",
@@ -254,7 +255,8 @@
       "filterMin": "Tối thiểu",
       "filterMax": "Tối đa",
       "filterMinLabel": "Tối thiểu {{metric}}",
-      "filterMaxLabel": "Tối đa {{metric}}"
+      "filterMaxLabel": "Tối đa {{metric}}",
+      "feed": "Bảng tin"
     },
     "post": {
       "postNotFound": "Không tìm thấy bài viết",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Sử dụng cỡ chữ lớn hơn, dễ đọc hơn cho số lượng tương tác (lượt thích, trả lời, đăng lại).",
       "network": {
         "title": "Mạng",
-        "indexDescription": "Chọn AppView và CDN ảnh nào sẽ xử lý lưu lượng AT Protocol của bạn.",
         "intro": "Akari nói chuyện với hai dịch vụ ngược dòng: một AppView tổng hợp mạng thành các khung nhìn bạn thấy (bảng tin, hồ sơ, tìm kiếm) và một CDN ảnh lưu trữ ảnh thu nhỏ và ảnh đại diện. Theo mặc định cả hai do Bluesky Social vận hành — chọn các lựa chọn thay thế bên dưới để đi vòng qua chúng."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Tùy chỉnh",
             "description": "Trỏ tới bất kỳ CDN tương thích nào qua URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Thiết lập bản ghi `community.lexicon.preference.ai` của tài khoản bạn. Các client và crawler tuân thủ sẽ đọc giá trị này để quyết định có thể dùng bài đăng của bạn cho mục đích AI/ML hay không. Các công tắc bên dưới áp dụng toàn cục cho tài khoản của bạn trên PDS này.",
+        "section": "Cách dùng AI/ML",
+        "training": {
+          "label": "Cho phép huấn luyện",
+          "hint": "Cho phép bên thứ ba huấn luyện mô hình AI/ML trên bài đăng của bạn."
+        },
+        "inference": {
+          "label": "Cho phép suy luận",
+          "hint": "Cho phép các dịch vụ chạy suy luận AI (tóm tắt, phân loại, tìm bài đăng tương tự) trên bài đăng của bạn vào thời điểm yêu cầu."
+        },
+        "embedding": {
+          "label": "Cho phép embedding",
+          "hint": "Cho phép các dịch vụ tính toán và lưu trữ embedding vector của bài đăng để phục vụ tìm kiếm ngữ nghĩa và gợi ý."
+        },
+        "syntheticContent": {
+          "label": "Cho phép nội dung tổng hợp",
+          "hint": "Cho phép các dịch vụ tạo văn bản, hình ảnh hoặc phương tiện khác do AI sinh ra từ bài đăng của bạn."
         }
       }
     },

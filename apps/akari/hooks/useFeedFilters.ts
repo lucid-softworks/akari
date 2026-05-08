@@ -12,6 +12,11 @@ export type FeedFilters = {
   hideReposts: boolean;
   /** Drop entries whose post quotes another post (record / recordWithMedia embed). */
   hideQuotes: boolean;
+  /**
+   * Drop entries the viewer has already interacted with — liked, reposted,
+   * or replied to. Useful for "show me what's new" passes through a feed.
+   */
+  hideEngaged: boolean;
   /** Restrict to authors the viewer follows (`viewer.following` is set). */
   onlyFollowing: boolean;
   /** Restrict to mutuals — viewer follows AND is followed back. */
@@ -32,6 +37,7 @@ export const DEFAULT_FILTERS: FeedFilters = {
   hideReplies: false,
   hideReposts: false,
   hideQuotes: false,
+  hideEngaged: false,
   onlyFollowing: false,
   onlyMutuals: false,
 };
@@ -76,6 +82,7 @@ function isFilterActive(filters: FeedFilters): boolean {
     filters.hideReplies ||
     filters.hideReposts ||
     filters.hideQuotes ||
+    filters.hideEngaged ||
     filters.onlyFollowing ||
     filters.onlyMutuals ||
     filters.minLikes !== undefined ||

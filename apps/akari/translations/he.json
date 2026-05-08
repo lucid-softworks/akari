@@ -245,6 +245,7 @@
       "hideReplies": "הסתר תגובות",
       "hideReposts": "הסתר שיתופים",
       "hideQuotes": "הסתר ציטוטים",
+      "hideEngaged": "הסתר פוסטים שהגבתי עליהם",
       "onlyFollowing": "רק אנשים שאני עוקב אחריהם",
       "onlyMutuals": "רק עוקבים הדדיים",
       "countLikes": "לייקים",
@@ -254,7 +255,8 @@
       "filterMin": "מינ.",
       "filterMax": "מקס.",
       "filterMinLabel": "מינימום {{metric}}",
-      "filterMaxLabel": "מקסימום {{metric}}"
+      "filterMaxLabel": "מקסימום {{metric}}",
+      "feed": "פיד"
     },
     "post": {
       "postNotFound": "פוסט לא נמצא",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "השתמש בגודל טקסט גדול וקריא יותר עבור ספירת מעורבות (לייקים, תגובות, פרסומים מחדש).",
       "network": {
         "title": "רשת",
-        "indexDescription": "בחרו איזה AppView ואיזה CDN לתמונות יטפלו בתעבורת AT Protocol שלכם.",
         "intro": "Akari מדבר עם שני שירותים במעלה הזרם: AppView שמאגד את הרשת לתצוגות שאתם רואים (פידים, פרופילים, חיפוש), ו-CDN תמונות שמארח תמונות ממוזערות ואווטרים. כברירת מחדל שניהם מופעלים על ידי Bluesky Social — בחרו חלופות למטה כדי לעקוף אותם."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "מותאם אישית",
             "description": "הצביעו על כל CDN תואם לפי URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "הנתונים שלך ב-AT Protocol הם ציבוריים — ההגדרות האלה אומרות לשירותי AI כיצד הם רשאים להשתמש בהם. Akari מכבד את הבחירות שלך ומשתף אותן עם שירותים אחרים, שיכולים לבחור לכבד אותן. גורמים זדוניים עשויים להתעלם מהאותות האלה; זה מחוץ לשליטה שלנו. ההעדפות חלות על כל החשבון שלך. כלי בטיחות כמו זיהוי ספאם ובוטים אינם מושפעים.",
+        "section": "כיצד AI רשאי להשתמש בנתונים שלך",
+        "training": {
+          "label": "אפשר אימון",
+          "hint": "השתמש בפוסטים שלך כדי לבנות או לאמן מודלים של AI. ברגע שהנתונים שלך הופכים לחלק ממודל, הם נשארים שם גם אם תמחק את חשבונך מאוחר יותר."
+        },
+        "inference": {
+          "label": "אפשר היסק",
+          "hint": "תן ל-AI לחפש את הפוסטים שלך בעת מענה על שאלה של מישהו. ה-AI לא שומר את הנתונים שלך, אך עשוי לצטט או להפנות אליהם בזמן אמת."
+        },
+        "embedding": {
+          "label": "אפשר embedding",
+          "hint": "תן למערכות חיפוש והמלצות מבוססות AI להשתמש בפוסטים שלך — למצוא חשבונות דומים, לקבץ משתמשים לפי תחומי עניין, להחליט מה להציג בפיד כמו Discover או For You."
+        },
+        "syntheticContent": {
+          "label": "אפשר תוכן סינתטי",
+          "hint": "תן ל-AI ליצור תוכן חדש המבוסס על הנתונים שלך — חיקויים של הכתיבה שלך, גרסאות AI של התמונות או האודיו שלך, או בוטים המתוכננים להישמע כמוך."
         }
       }
     },

@@ -40,6 +40,16 @@ export default function ProfileLayout() {
         }}
         dangerouslySingular
       />
+      <Stack.Screen
+        name="[handle]/feed/[rkey]"
+        options={{
+          title: 'Feed',
+          headerShown: SHOW_STACK_HEADER,
+          headerBackVisible: true,
+          headerBackButtonDisplayMode: 'minimal',
+        }}
+        dangerouslySingular
+      />
     </Stack>
   );
 }

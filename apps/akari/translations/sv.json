@@ -245,6 +245,7 @@
       "hideReplies": "Dölj svar",
       "hideReposts": "Dölj reposts",
       "hideQuotes": "Dölj citatinlägg",
+      "hideEngaged": "Dölj inlägg jag har interagerat med",
       "onlyFollowing": "Endast personer jag följer",
       "onlyMutuals": "Endast ömsesidiga",
       "countLikes": "Gillningar",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minst {{metric}}",
-      "filterMaxLabel": "Högst {{metric}}"
+      "filterMaxLabel": "Högst {{metric}}",
+      "feed": "Flöde"
     },
     "post": {
       "postNotFound": "Post hittades inte",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Använd en större, mer läsbar textstorlek för interaktionsräknare (gillningar, svar, ompubliceringar).",
       "network": {
         "title": "Nätverk",
-        "indexDescription": "Välj vilken AppView och bild-CDN som hanterar din AT Protocol-trafik.",
         "intro": "Akari pratar med två uppströmstjänster: en AppView som aggregerar nätverket till de vyer du ser (flöden, profiler, sökning) och en bild-CDN som lagrar miniatyrer och avatarer. Som standard drivs båda av Bluesky Social — välj alternativ nedan för att gå runt dem."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Anpassad",
             "description": "Peka på valfri kompatibel CDN via URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Sätter ditt kontos `community.lexicon.preference.ai`-post. Klienter och sökspindlar som följer standarden läser den för att avgöra om de får använda dina inlägg för AI/ML-ändamål. Reglagen nedan gäller globalt för ditt konto på den här PDS:en.",
+        "section": "AI/ML-användning",
+        "training": {
+          "label": "Tillåt träning",
+          "hint": "Låt tredje parter träna AI/ML-modeller på dina inlägg."
+        },
+        "inference": {
+          "label": "Tillåt inferens",
+          "hint": "Låt tjänster köra AI-inferens (sammanfattning, klassificering, sökning efter liknande inlägg) över dina inlägg vid förfrågan."
+        },
+        "embedding": {
+          "label": "Tillåt embeddings",
+          "hint": "Låt tjänster beräkna och spara vektor-embeddings av dina inlägg för semantisk sökning och rekommendationer."
+        },
+        "syntheticContent": {
+          "label": "Tillåt syntetiskt innehåll",
+          "hint": "Låt tjänster generera AI-härledd text, bilder eller andra medier från dina inlägg."
         }
       }
     },

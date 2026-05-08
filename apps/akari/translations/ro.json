@@ -245,6 +245,7 @@
       "hideReplies": "Ascunde răspunsurile",
       "hideReposts": "Ascunde repostările",
       "hideQuotes": "Ascunde citările",
+      "hideEngaged": "Ascunde postările cu care am interacționat",
       "onlyFollowing": "Doar persoane pe care le urmăresc",
       "onlyMutuals": "Doar urmărire reciprocă",
       "countLikes": "Aprecieri",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minim {{metric}}",
-      "filterMaxLabel": "Maxim {{metric}}"
+      "filterMaxLabel": "Maxim {{metric}}",
+      "feed": "Flux"
     },
     "post": {
       "postNotFound": "Post nu a fost găsit",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Folosește un text mai mare și mai lizibil pentru contoarele de interacțiune (aprecieri, răspunsuri, repostări).",
       "network": {
         "title": "Rețea",
-        "indexDescription": "Alege care AppView și CDN de imagini gestionează traficul tău AT Protocol.",
         "intro": "Akari comunică cu două servicii din amonte: un AppView care agregă rețeaua în vizualizările pe care le vezi (fluxuri, profiluri, căutare) și un CDN de imagini care găzduiește miniaturile și avatarurile. În mod implicit, ambele sunt operate de Bluesky Social — alege alternative mai jos pentru a le ocoli."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Personalizat",
             "description": "Indică orice CDN compatibil prin URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Datele tale pe AT Protocol sunt publice — aceste setări le spun serviciilor AI cum le pot folosi. Akari îți respectă alegerile și le împărtășește cu alte servicii, care pot alege să le respecte. Actorii rău intenționați pot ignora aceste semnale; acest lucru este în afara controlului nostru. Preferințele se aplică întregului tău cont. Instrumentele de siguranță, precum detectarea spamului și a boților, nu sunt afectate.",
+        "section": "Cum poate AI să-ți folosească datele",
+        "training": {
+          "label": "Permite antrenarea",
+          "hint": "Folosește postările tale pentru a construi sau antrena modele AI. Odată ce datele tale fac parte dintr-un model, rămân acolo chiar dacă îți ștergi ulterior contul."
+        },
+        "inference": {
+          "label": "Permite inferența",
+          "hint": "Lasă AI să-ți caute postările atunci când răspunde la întrebarea cuiva. AI nu îți păstrează datele, dar le poate cita sau face referire la ele în timp real."
+        },
+        "embedding": {
+          "label": "Permite embedding",
+          "hint": "Lasă sistemele de căutare și recomandare AI să folosească postările tale — pentru a găsi conturi similare, a grupa utilizatorii după interese, a decide ce să afișeze în feeduri precum Discover sau For You."
+        },
+        "syntheticContent": {
+          "label": "Permite conținut sintetic",
+          "hint": "Lasă AI să genereze conținut nou modelat după datele tale — imitații ale scrisului tău, versiuni AI ale fotografiilor sau audio-ului tău, sau boți concepuți să sune ca tine."
         }
       }
     },

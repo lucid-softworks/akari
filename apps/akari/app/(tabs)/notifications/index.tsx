@@ -324,6 +324,14 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
  */
 type NotificationData = {
   id: string;
+  /**
+   * URI of the notification's own record (e.g. the reply / quote / mention
+   * post). Distinct from `reasonSubject`, which is the URI of the thing
+   * the action targets — for a reply that's the parent post, for a like
+   * it's your post. Tapping a reply notification should land on the
+   * reply itself, so we route via `uri` for reply/mention/quote.
+   */
+  uri?: string;
   author: {
     did: string;
     handle: string;
@@ -338,6 +346,24 @@ type NotificationData = {
   postContent?: string;
   embed?: BlueskyEmbed;
 };
+
+/**
+ * The URI a tap on this notification should navigate to. For likes and
+ * reposts the user wants to revisit *their* post (the subject). For
+ * replies, mentions, and quotes the user wants to read the new post that
+ * triggered the notification — that's `notification.uri`. Falls back to
+ * `reasonSubject` when `uri` is unavailable so we never break a tap.
+ */
+function notificationTargetUri(notification: { reason: string; uri?: string; reasonSubject?: string }): string | undefined {
+  switch (notification.reason) {
+    case 'reply':
+    case 'mention':
+    case 'quote':
+      return notification.uri ?? notification.reasonSubject;
+    default:
+      return notification.reasonSubject;
+  }
+}
 
 function groupNotifications(notifications: NotificationData[]): GroupedNotification[] {
   const groups = new Map<string, GroupedNotification>();
@@ -377,7 +403,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
         groups.set(groupKey, {
           id: groupKey,
           type: notification.reason as GroupedNotification['type'],
-          subject: notification.reasonSubject,
+          subject: notificationTargetUri(notification),
           postContent: notification.postContent,
           embed: notification.embed,
           authors: [
@@ -399,7 +425,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
       individualNotifications.push({
         id: notification.id || `${notification.author.did}_${notification.indexedAt}`,
         type: notification.reason as GroupedNotification['type'],
-        subject: notification.reasonSubject,
+        subject: notificationTargetUri(notification),
         postContent: notification.postContent,
         embed: notification.embed,
         authors: [

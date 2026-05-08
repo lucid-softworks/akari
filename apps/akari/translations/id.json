@@ -245,6 +245,7 @@
       "hideReplies": "Sembunyikan balasan",
       "hideReposts": "Sembunyikan repost",
       "hideQuotes": "Sembunyikan kutipan",
+      "hideEngaged": "Sembunyikan postingan yang sudah saya respons",
       "onlyFollowing": "Hanya orang yang saya ikuti",
       "onlyMutuals": "Hanya yang saling mengikuti",
       "countLikes": "Suka",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maksimum {{metric}}"
+      "filterMaxLabel": "Maksimum {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Postingan tidak ditemukan",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Gunakan ukuran teks yang lebih besar dan mudah dibaca untuk jumlah interaksi (suka, balasan, postingan ulang).",
       "network": {
         "title": "Jaringan",
-        "indexDescription": "Pilih AppView dan CDN gambar mana yang menangani lalu lintas AT Protocol Anda.",
         "intro": "Akari berbicara dengan dua layanan upstream: AppView yang mengagregasi jaringan menjadi tampilan yang Anda lihat (umpan, profil, pencarian) dan CDN gambar yang menampung thumbnail dan avatar. Secara default keduanya dioperasikan oleh Bluesky Social — pilih alternatif di bawah untuk melewati keduanya."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Khusus",
             "description": "Arahkan ke CDN kompatibel mana pun via URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Datamu di AT Protocol bersifat publik — pengaturan ini memberi tahu layanan AI bagaimana mereka boleh menggunakannya. Akari menghormati pilihanmu dan membagikannya kepada layanan lain, yang dapat memilih untuk menghormatinya. Pelaku jahat mungkin mengabaikan sinyal ini; itu di luar kendali kami. Preferensi berlaku untuk seluruh akunmu. Alat keamanan seperti deteksi spam dan bot tidak terpengaruh.",
+        "section": "Bagaimana AI boleh menggunakan datamu",
+        "training": {
+          "label": "Izinkan pelatihan",
+          "hint": "Gunakan postinganmu untuk membangun atau melatih model AI. Setelah datamu menjadi bagian dari sebuah model, data tersebut akan tetap di sana meskipun nanti kamu menghapus akunmu."
+        },
+        "inference": {
+          "label": "Izinkan inferensi",
+          "hint": "Biarkan AI mencari postinganmu saat menjawab pertanyaan seseorang. AI tidak menyimpan datamu, tetapi dapat mengutip atau merujuknya secara real time."
+        },
+        "embedding": {
+          "label": "Izinkan embedding",
+          "hint": "Biarkan sistem pencarian dan rekomendasi AI menggunakan postinganmu — menemukan akun serupa, mengelompokkan pengguna berdasarkan minat, memutuskan apa yang ditampilkan di feed seperti Discover atau For You."
+        },
+        "syntheticContent": {
+          "label": "Izinkan konten sintetis",
+          "hint": "Biarkan AI menghasilkan konten baru yang dimodelkan dari datamu — tiruan dari tulisanmu, versi AI dari foto atau audiomu, atau bot yang dirancang untuk terdengar seperti kamu."
         }
       }
     },

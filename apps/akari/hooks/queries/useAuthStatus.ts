@@ -145,5 +145,18 @@ export function useAuthStatus() {
     staleTime: 2 * 60 * 1000, // 2 minutes - don't check too frequently
     gcTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
+    // Without this, the query runs once on mount, returns
+    // `isAuthenticated: true` while the JWT is fresh, and then never
+    // re-runs during the session — staleness alone doesn't trigger a
+    // refetch in React Query, only mount/focus/reconnect events do.
+    // Result: the proactive refresh inside `queryFn` (which runs when
+    // the access token is within REFRESH_LEEWAY_SECONDS of expiry)
+    // never gets a chance to fire, the access token aged out, every
+    // authenticated call started returning ExpiredToken, and only an
+    // app close+reopen (which remounts the consumer in
+    // `(tabs)/_layout.tsx`) restored things. Polling every minute lets
+    // the leeway-driven refresh path actually run mid-session.
+    refetchInterval: 60 * 1000,
+    refetchIntervalInBackground: false,
   });
 }

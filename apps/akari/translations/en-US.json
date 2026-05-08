@@ -245,6 +245,7 @@
       "hideReplies": "Hide replies",
       "hideReposts": "Hide reposts",
       "hideQuotes": "Hide quote posts",
+      "hideEngaged": "Hide posts I've engaged with",
       "onlyFollowing": "Only people I follow",
       "onlyMutuals": "Only mutuals",
       "countLikes": "Likes",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Post not found",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Use a larger, more legible text size for engagement counts (likes, replies, reposts).",
       "network": {
         "title": "Network",
-        "indexDescription": "Pick which AppView and image CDN handle your AT Protocol traffic.",
         "intro": "Akari talks to two upstream services: an AppView that aggregates the network into the views you see (feeds, profiles, search) and an image CDN that hosts thumbnails and avatars. By default both are operated by Bluesky Social — pick alternatives below to route around them."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Custom",
             "description": "Point at any compatible CDN by URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Your data on AT Protocol is public — these settings tell AI services how they may use it. Akari respects your choices and shares them with other services, who can choose to respect them. Bad actors may ignore these signals; that's outside our control. The preferences apply across your entire account. Safety tools like spam and bot detection aren't affected.",
+        "section": "How AI may use your data",
+        "training": {
+          "label": "Allow training",
+          "hint": "Use your posts to build or train AI models. Once your data is part of a model, it stays there even if you later delete your account."
+        },
+        "inference": {
+          "label": "Allow inference",
+          "hint": "Let AI look up your posts when answering someone's question. The AI doesn't keep your data, but may quote or reference it in real time."
+        },
+        "embedding": {
+          "label": "Allow embedding",
+          "hint": "Let AI search and recommendation systems use your posts — finding similar accounts, grouping users by interests, deciding what to surface in feeds like Discover or For You."
+        },
+        "syntheticContent": {
+          "label": "Allow synthetic content",
+          "hint": "Let AI generate new content modeled on your data — imitations of your writing, AI versions of your photos or audio, or bots designed to sound like you."
         }
       }
     },

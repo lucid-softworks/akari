@@ -245,6 +245,7 @@
       "hideReplies": "Masquer les réponses",
       "hideReposts": "Masquer les reposts",
       "hideQuotes": "Masquer les citations",
+      "hideEngaged": "Masquer les posts avec lesquels j'ai interagi",
       "onlyFollowing": "Uniquement les personnes que je suis",
       "onlyMutuals": "Uniquement les abonnements mutuels",
       "countLikes": "Jaime",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Flux"
     },
     "post": {
       "postNotFound": "Publication introuvable",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Utilise une taille de texte plus grande et plus lisible pour les compteurs d'engagement (j'aime, réponses, repartages).",
       "network": {
         "title": "Réseau",
-        "indexDescription": "Choisissez quels AppView et CDN d'images traitent votre trafic AT Protocol.",
         "intro": "Akari communique avec deux services en amont : un AppView qui agrège le réseau pour produire les vues que vous voyez (fils, profils, recherche) et un CDN d'images qui héberge les miniatures et les avatars. Par défaut, les deux sont opérés par Bluesky Social — choisissez des alternatives ci-dessous pour les contourner."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Personnalisé",
             "description": "Pointez vers n'importe quel CDN compatible via une URL."
           }
+        }
+      },
+      "ai": {
+        "title": "IA",
+        "intro": "Vos données sur AT Protocol sont publiques — ces paramètres indiquent aux services d'IA comment ils peuvent les utiliser. Akari respecte vos choix et les partage avec d'autres services, qui peuvent choisir de les respecter. Des acteurs malveillants peuvent ignorer ces signaux ; cela échappe à notre contrôle. Les préférences s'appliquent à l'ensemble de votre compte. Les outils de sécurité comme la détection du spam et des bots ne sont pas affectés.",
+        "section": "Comment l'IA peut utiliser vos données",
+        "training": {
+          "label": "Autoriser l'entraînement",
+          "hint": "Utiliser vos publications pour construire ou entraîner des modèles d'IA. Une fois que vos données font partie d'un modèle, elles y restent même si vous supprimez ensuite votre compte."
+        },
+        "inference": {
+          "label": "Autoriser l'inférence",
+          "hint": "Laissez l'IA consulter vos publications pour répondre à la question de quelqu'un. L'IA ne conserve pas vos données, mais peut les citer ou y faire référence en temps réel."
+        },
+        "embedding": {
+          "label": "Autoriser les embeddings",
+          "hint": "Laissez les systèmes de recherche et de recommandation par IA utiliser vos publications — pour trouver des comptes similaires, regrouper les utilisateurs par centres d'intérêt, décider de ce qui sera mis en avant dans des fils comme Discover ou For You."
+        },
+        "syntheticContent": {
+          "label": "Autoriser le contenu synthétique",
+          "hint": "Laissez l'IA générer du nouveau contenu modélisé à partir de vos données — imitations de votre écriture, versions par IA de vos photos ou audios, ou bots conçus pour vous ressembler."
         }
       }
     },

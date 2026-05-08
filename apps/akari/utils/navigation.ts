@@ -120,5 +120,42 @@ export function useProfileHref() {
   };
 }
 
+type FeedNavigationArgs = {
+  /** Handle or DID of the feed-generator's owner. */
+  actor: string;
+  /** Record-key of the `app.bsky.feed.generator` record. */
+  rKey: string;
+};
+
+/**
+ * Navigate to a feed-generator detail screen — same tab-aware shape as
+ * post / profile navigation. Web uses `/profile/<actor>/feed/<rKey>`;
+ * native picks the per-tab variant so the back-swipe lands inside the
+ * tab the user came from.
+ */
+export function useNavigateToFeed() {
+  const pathname = usePathname() as string;
+
+  return ({ actor, rKey }: FeedNavigationArgs) => {
+    let target: string;
+    if (Platform.OS === 'web') {
+      target = `/profile/${encodeURIComponent(actor)}/feed/${encodeURIComponent(rKey)}`;
+    } else {
+      const targetTabRoute = getTabRouteFromPathname(pathname);
+      if (targetTabRoute === 'profile') {
+        target = `/profile/${encodeURIComponent(actor)}/feed/${encodeURIComponent(rKey)}`;
+      } else if (targetTabRoute === 'index') {
+        target = `/user-profile/${encodeURIComponent(actor)}/feed/${encodeURIComponent(rKey)}`;
+      } else {
+        target = `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/feed/${encodeURIComponent(rKey)}`;
+      }
+    }
+
+    if (isSamePath(target, pathname)) return;
+    // @ts-expect-error collapsed-index-segment URL not in generated types
+    router.push(target);
+  };
+}
+
 // Export the TabRoute type for use in other files
 export type { TabRoute };

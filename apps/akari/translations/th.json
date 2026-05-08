@@ -245,6 +245,7 @@
       "hideReplies": "ซ่อนการตอบกลับ",
       "hideReposts": "ซ่อนการรีโพสต์",
       "hideQuotes": "ซ่อนโพสต์อ้างอิง",
+      "hideEngaged": "ซ่อนโพสต์ที่ฉันมีปฏิสัมพันธ์ด้วย",
       "onlyFollowing": "เฉพาะคนที่ฉันติดตาม",
       "onlyMutuals": "เฉพาะการติดตามแบบสองทาง",
       "countLikes": "ถูกใจ",
@@ -254,7 +255,8 @@
       "filterMin": "ต่ำสุด",
       "filterMax": "สูงสุด",
       "filterMinLabel": "ขั้นต่ำ {{metric}}",
-      "filterMaxLabel": "สูงสุด {{metric}}"
+      "filterMaxLabel": "สูงสุด {{metric}}",
+      "feed": "ฟีด"
     },
     "post": {
       "postNotFound": "ไม่พบโพสต์",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "ใช้ขนาดข้อความที่ใหญ่ขึ้นและอ่านง่ายขึ้นสำหรับจำนวนการมีส่วนร่วม (ถูกใจ ตอบกลับ รีโพสต์)",
       "network": {
         "title": "เครือข่าย",
-        "indexDescription": "เลือก AppView และ CDN ของรูปภาพที่จะดูแลทราฟฟิก AT Protocol ของคุณ",
         "intro": "Akari สื่อสารกับบริการต้นทางสองแห่ง: AppView ที่รวบรวมเครือข่ายให้เป็นมุมมองที่คุณเห็น (ฟีด โปรไฟล์ การค้นหา) และ CDN ของรูปภาพที่ให้บริการภาพย่อและอวาตาร์ ตามค่าเริ่มต้นทั้งสองดำเนินการโดย Bluesky Social — เลือกทางเลือกด้านล่างเพื่อเลี่ยงผ่านพวกมัน"
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "กำหนดเอง",
             "description": "ชี้ไปยัง CDN ที่เข้ากันได้ใด ๆ ด้วย URL"
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "ตั้งค่าเรกคอร์ด `community.lexicon.preference.ai` ของบัญชีคุณ ไคลเอ็นต์และครอว์เลอร์ที่ปฏิบัติตามมาตรฐานจะอ่านค่านี้เพื่อตัดสินว่าจะใช้โพสต์ของคุณเพื่อจุดประสงค์ AI/ML ได้หรือไม่ สวิตช์ด้านล่างมีผลกับบัญชีของคุณทั้งบัญชีบน PDS นี้",
+        "section": "การใช้งาน AI/ML",
+        "training": {
+          "label": "อนุญาตการฝึก",
+          "hint": "ให้บุคคลภายนอกฝึกโมเดล AI/ML จากโพสต์ของคุณได้"
+        },
+        "inference": {
+          "label": "อนุญาตการอนุมาน",
+          "hint": "ให้บริการต่าง ๆ ทำการอนุมาน AI (สรุป การจัดประเภท การค้นหาโพสต์ที่คล้ายกัน) บนโพสต์ของคุณในเวลาที่ร้องขอได้"
+        },
+        "embedding": {
+          "label": "อนุญาตการฝัง",
+          "hint": "ให้บริการต่าง ๆ คำนวณและจัดเก็บเวกเตอร์ embedding ของโพสต์คุณเพื่อการค้นหาเชิงความหมายและคำแนะนำ"
+        },
+        "syntheticContent": {
+          "label": "อนุญาตเนื้อหาสังเคราะห์",
+          "hint": "ให้บริการต่าง ๆ สร้างข้อความ ภาพ หรือสื่ออื่นที่ AI สังเคราะห์ขึ้นจากโพสต์ของคุณ"
         }
       }
     },

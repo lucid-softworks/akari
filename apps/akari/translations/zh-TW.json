@@ -245,6 +245,7 @@
       "hideReplies": "隱藏回覆",
       "hideReposts": "隱藏轉發",
       "hideQuotes": "隱藏引用貼文",
+      "hideEngaged": "隱藏我互動過的貼文",
       "onlyFollowing": "只看我追蹤的人",
       "onlyMutuals": "只看互相追蹤",
       "countLikes": "喜歡",
@@ -254,7 +255,8 @@
       "filterMin": "最小",
       "filterMax": "最大",
       "filterMinLabel": "最小 {{metric}}",
-      "filterMaxLabel": "最大 {{metric}}"
+      "filterMaxLabel": "最大 {{metric}}",
+      "feed": "資訊流"
     },
     "post": {
       "postNotFound": "找不到貼文",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "在互動數量（按讚、回覆、轉發）中使用更大、更清晰的字級。",
       "network": {
         "title": "網路",
-        "indexDescription": "選擇處理你 AT Protocol 流量的 AppView 與圖片 CDN。",
         "intro": "Akari 會和兩個上游服務通訊：將網路彙整成你看到的畫面（動態、個人資料、搜尋）的 AppView，以及代管縮圖與頭像的圖片 CDN。預設情況下兩者皆由 Bluesky Social 營運 — 在下方挑選替代方案以繞過它們。"
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "自訂",
             "description": "透過 URL 指向任何相容的 CDN。"
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "設定你帳號的 `community.lexicon.preference.ai` 紀錄。遵循規範的客戶端與爬蟲會讀取此紀錄，以決定是否可將你的貼文用於 AI/ML 用途。下方開關會全域套用至此 PDS 上的整個帳號。",
+        "section": "AI/ML 用途",
+        "training": {
+          "label": "允許訓練",
+          "hint": "允許第三方使用你的貼文訓練 AI/ML 模型。"
+        },
+        "inference": {
+          "label": "允許推論",
+          "hint": "允許服務在請求時對你的貼文執行 AI 推論（摘要、分類、相似貼文搜尋等）。"
+        },
+        "embedding": {
+          "label": "允許嵌入",
+          "hint": "允許服務計算並儲存你貼文的向量嵌入，用於語意搜尋與推薦。"
+        },
+        "syntheticContent": {
+          "label": "允許合成內容",
+          "hint": "允許服務根據你的貼文產生由 AI 衍生的文字、圖片或其他媒體。"
         }
       }
     },

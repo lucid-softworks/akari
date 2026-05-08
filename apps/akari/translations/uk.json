@@ -245,6 +245,7 @@
       "hideReplies": "Сховати відповіді",
       "hideReposts": "Сховати репости",
       "hideQuotes": "Сховати цитати",
+      "hideEngaged": "Сховати дописи, з якими я взаємодіяв",
       "onlyFollowing": "Лише ті, кого я читаю",
       "onlyMutuals": "Лише взаємні",
       "countLikes": "Уподобання",
@@ -254,7 +255,8 @@
       "filterMin": "Мін",
       "filterMax": "Макс",
       "filterMinLabel": "Мінімум {{metric}}",
-      "filterMaxLabel": "Максимум {{metric}}"
+      "filterMaxLabel": "Максимум {{metric}}",
+      "feed": "Стрічка"
     },
     "post": {
       "postNotFound": "Повідомлення не знайдено",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Використовувати більший і читабельніший шрифт для лічильників реакцій (вподобання, відповіді, репости).",
       "network": {
         "title": "Мережа",
-        "indexDescription": "Оберіть, які AppView і CDN зображень обробляють ваш трафік AT Protocol.",
         "intro": "Akari спілкується з двома висхідними сервісами: AppView, який агрегує мережу у вигляди, які ви бачите (стрічки, профілі, пошук), і CDN зображень, який розміщує мініатюри та аватари. За замовчуванням обидва обслуговуються Bluesky Social — оберіть альтернативи нижче, щоб обійти їх."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Власний",
             "description": "Вкажіть будь-який сумісний CDN через URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Задає запис `community.lexicon.preference.ai` твого акаунта. Сумісні клієнти та краулери читають його, щоб вирішити, чи можуть використовувати твої дописи для цілей AI/ML. Перемикачі нижче діють глобально на твій акаунт у цьому PDS.",
+        "section": "Використання AI/ML",
+        "training": {
+          "label": "Дозволити навчання",
+          "hint": "Дозволь третім сторонам навчати моделі AI/ML на твоїх дописах."
+        },
+        "inference": {
+          "label": "Дозволити інференс",
+          "hint": "Дозволь сервісам виконувати AI-інференс (підсумування, класифікація, пошук схожих дописів) над твоїми дописами на момент запиту."
+        },
+        "embedding": {
+          "label": "Дозволити ембедінги",
+          "hint": "Дозволь сервісам обчислювати й зберігати векторні ембедінги твоїх дописів для семантичного пошуку та рекомендацій."
+        },
+        "syntheticContent": {
+          "label": "Дозволити синтетичний контент",
+          "hint": "Дозволь сервісам генерувати з твоїх дописів текст, зображення чи інші медіа, створені за допомогою AI."
         }
       }
     },

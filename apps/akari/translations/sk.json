@@ -245,6 +245,7 @@
       "hideReplies": "Skryť odpovede",
       "hideReposts": "Skryť zdieľania",
       "hideQuotes": "Skryť citované príspevky",
+      "hideEngaged": "Skryť príspevky, s ktorými som interagoval",
       "onlyFollowing": "Iba ľudia, ktorých sledujem",
       "onlyMutuals": "Iba vzájomní",
       "countLikes": "Páči sa mi",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Kanál"
     },
     "post": {
       "postNotFound": "Príspevok sa nenašiel",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Používať väčšiu, čitateľnejšiu veľkosť textu pre počty reakcií (páči sa, odpovede, zdieľania).",
       "network": {
         "title": "Sieť",
-        "indexDescription": "Vyber, ktorý AppView a CDN obrázkov spracúvajú tvoj AT Protocol prenos.",
         "intro": "Akari komunikuje s dvoma upstream službami: AppView, ktorý zhromažďuje sieť do pohľadov, ktoré vidíš (kanály, profily, vyhľadávanie), a CDN obrázkov, ktoré hostí miniatúry a avatary. Štandardne oba prevádzkuje Bluesky Social — nižšie vyber alternatívy na ich obídenie."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Vlastný",
             "description": "Ukáž na ľubovoľný kompatibilný CDN cez URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Nastavuje záznam `community.lexicon.preference.ai` tvojho účtu. Kompatibilní klienti a crawlery ho čítajú, aby rozhodli, či môžu tvoje príspevky využiť na účely AI/ML. Prepínače nižšie platia globálne pre tvoj účet na tomto PDS.",
+        "section": "Využitie AI/ML",
+        "training": {
+          "label": "Povoliť trénovanie",
+          "hint": "Umožni tretím stranám trénovať modely AI/ML na tvojich príspevkoch."
+        },
+        "inference": {
+          "label": "Povoliť inferenciu",
+          "hint": "Umožni službám spúšťať AI inferenciu (sumarizácia, klasifikácia, vyhľadávanie podobných príspevkov) nad tvojimi príspevkami v čase dopytu."
+        },
+        "embedding": {
+          "label": "Povoliť embeddingy",
+          "hint": "Umožni službám počítať a ukladať vektorové embeddingy tvojich príspevkov pre sémantické vyhľadávanie a odporúčania."
+        },
+        "syntheticContent": {
+          "label": "Povoliť syntetický obsah",
+          "hint": "Umožni službám vygenerovať z tvojich príspevkov text, obrázky alebo iné médiá odvodené pomocou AI."
         }
       }
     },

@@ -245,6 +245,7 @@
       "hideReplies": "Скрыть ответы",
       "hideReposts": "Скрыть репосты",
       "hideQuotes": "Скрыть цитаты",
+      "hideEngaged": "Скрыть посты, с которыми я взаимодействовал",
       "onlyFollowing": "Только подписки",
       "onlyMutuals": "Только взаимные подписки",
       "countLikes": "Лайки",
@@ -254,7 +255,8 @@
       "filterMin": "Мин",
       "filterMax": "Макс",
       "filterMinLabel": "Минимум {{metric}}",
-      "filterMaxLabel": "Максимум {{metric}}"
+      "filterMaxLabel": "Максимум {{metric}}",
+      "feed": "Лента"
     },
     "post": {
       "postNotFound": "Пост не найден",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Использовать более крупный и читаемый шрифт для счётчиков реакций (лайки, ответы, репосты).",
       "network": {
         "title": "Сеть",
-        "indexDescription": "Выберите, какие AppView и CDN изображений обрабатывают ваш трафик AT Protocol.",
         "intro": "Akari общается с двумя апстрим-сервисами: AppView, который агрегирует сеть во вьюхи, которые вы видите (ленты, профили, поиск), и CDN изображений, который хостит превью и аватары. По умолчанию оба обслуживаются Bluesky Social — выберите альтернативы ниже, чтобы обойти их."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Свой",
             "description": "Укажите любой совместимый CDN по URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Задаёт запись `community.lexicon.preference.ai` вашего аккаунта. Совместимые клиенты и поисковые роботы читают её, чтобы решить, можно ли использовать ваши публикации в целях AI/ML. Переключатели ниже применяются глобально к вашему аккаунту на этом PDS.",
+        "section": "Использование AI/ML",
+        "training": {
+          "label": "Разрешить обучение",
+          "hint": "Разрешите третьим сторонам обучать модели AI/ML на ваших публикациях."
+        },
+        "inference": {
+          "label": "Разрешить инференс",
+          "hint": "Разрешите сервисам выполнять AI-инференс (суммаризация, классификация, поиск похожих публикаций) над вашими публикациями во время запроса."
+        },
+        "embedding": {
+          "label": "Разрешить эмбеддинги",
+          "hint": "Разрешите сервисам вычислять и сохранять векторные эмбеддинги ваших публикаций для семантического поиска и рекомендаций."
+        },
+        "syntheticContent": {
+          "label": "Разрешить синтетический контент",
+          "hint": "Разрешите сервисам создавать на основе ваших публикаций текст, изображения или другие медиа, сгенерированные AI."
         }
       }
     },

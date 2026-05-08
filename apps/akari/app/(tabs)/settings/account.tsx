@@ -18,6 +18,7 @@ import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
@@ -34,6 +35,7 @@ export default function AccountSettingsScreen() {
   const removeAccountMutation = useRemoveAccount();
   const wipeAllDataMutation = useWipeAllData();
   const showNotImplemented = useNotImplementedToast();
+  const confirm = useConfirm();
   // After wiping all auth, render <Redirect> rather than calling router
   // imperatively — the imperative router doesn't strip group syntax
   // (`(auth)` ends up as a literal URL segment), but <Redirect> handles
@@ -46,7 +48,7 @@ export default function AccountSettingsScreen() {
         return;
       }
 
-      showAlert({
+      confirm({
         title: t('common.switchAccount'),
         message: t('profile.switchToAccount', { handle: account.handle }),
         buttons: [
@@ -63,7 +65,7 @@ export default function AccountSettingsScreen() {
         ],
       });
     },
-    [currentAccount, switchAccountMutation, t],
+    [confirm, currentAccount, switchAccountMutation, t],
   );
 
   const handleRemoveAccount = useCallback(

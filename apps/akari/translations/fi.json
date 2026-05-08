@@ -245,6 +245,7 @@
       "hideReplies": "Piilota vastaukset",
       "hideReposts": "Piilota uudelleenjulkaisut",
       "hideQuotes": "Piilota lainausjulkaisut",
+      "hideEngaged": "Piilota julkaisut, joihin olen reagoinut",
       "onlyFollowing": "Vain seuraamani henkilöt",
       "onlyMutuals": "Vain molemminpuoliset",
       "countLikes": "Tykkäykset",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Vähintään {{metric}}",
-      "filterMaxLabel": "Enintään {{metric}}"
+      "filterMaxLabel": "Enintään {{metric}}",
+      "feed": "Syöte"
     },
     "post": {
       "postNotFound": "Viesti ei löydy",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Käytä suurempaa ja luettavampaa tekstikokoa vuorovaikutuslukemille (tykkäykset, vastaukset, uudelleenjaot).",
       "network": {
         "title": "Verkko",
-        "indexDescription": "Valitse, mikä AppView ja kuvien CDN käsittelevät AT Protocol -liikenteesi.",
         "intro": "Akari keskustelee kahden ylävirran palvelun kanssa: AppView, joka kokoaa verkon näkymiksi, jotka näet (syötteet, profiilit, haku), ja kuvien CDN, joka isännöi pikkukuvia ja avatareita. Oletuksena molempia operoi Bluesky Social — valitse alta vaihtoehtoja kiertääksesi ne."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Mukautettu",
             "description": "Osoita mihin tahansa yhteensopivaan CDN:ään URL:n kautta."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Tietosi AT Protocolissa ovat julkisia — nämä asetukset kertovat AI-palveluille, miten ne saavat käyttää niitä. Akari kunnioittaa valintojasi ja jakaa ne muille palveluille, jotka voivat valita kunnioittaa niitä. Pahantahtoiset toimijat voivat jättää nämä signaalit huomiotta; se on hallintamme ulkopuolella. Asetukset koskevat koko tiliäsi. Turvatyökalut, kuten roskaposti- ja botinhavaitseminen, eivät vaikutu.",
+        "section": "Miten AI saa käyttää tietojasi",
+        "training": {
+          "label": "Salli koulutus",
+          "hint": "Käytä julkaisujasi AI-mallien rakentamiseen tai kouluttamiseen. Kun tietosi ovat osa mallia, ne pysyvät siellä, vaikka poistaisit tilisi myöhemmin."
+        },
+        "inference": {
+          "label": "Salli inferenssi",
+          "hint": "Anna AI:n hakea julkaisujasi vastatessaan jonkun kysymykseen. AI ei säilytä tietojasi, mutta voi lainata tai viitata niihin reaaliaikaisesti."
+        },
+        "embedding": {
+          "label": "Salli embeddingit",
+          "hint": "Anna AI-haku- ja suositusjärjestelmien käyttää julkaisujasi — samankaltaisten tilien etsimiseen, käyttäjien ryhmittelyyn kiinnostusten mukaan, sen päättämiseen, mitä näytetään syötteissä kuten Discover tai For You."
+        },
+        "syntheticContent": {
+          "label": "Salli synteettinen sisältö",
+          "hint": "Anna AI:n luoda uutta sisältöä, joka on mallinnettu tietojesi pohjalta — kirjoitustyyliäsi jäljitteleviä tekstejä, AI-versioita kuvistasi tai äänestäsi tai botteja, jotka on suunniteltu kuulostamaan sinulta."
         }
       }
     },

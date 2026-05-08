@@ -152,6 +152,7 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
           {renderToggleRow('hideReplies', t('feed.hideReplies'))}
           {renderToggleRow('hideReposts', t('feed.hideReposts'))}
           {renderToggleRow('hideQuotes', t('feed.hideQuotes'))}
+          {renderToggleRow('hideEngaged', t('feed.hideEngaged'))}
 
           <SectionHeader label={t('feed.filterSectionAuthor')} subduedColor={subduedColor} />
           {renderToggleRow('onlyFollowing', t('feed.onlyFollowing'))}

@@ -236,6 +236,7 @@
       "noPostsInFeed": "No posts in this feed yet.",
       "selectFeedToView": "Select a feed to view posts",
       "loadingFeeds": "Loading your feeds...",
+      "feed": "Feed",
       "trending": "Trending",
       "filters": "Filters",
       "filterSheetTitle": "Filter posts",
@@ -245,6 +246,7 @@
       "hideReplies": "Hide replies",
       "hideReposts": "Hide reposts",
       "hideQuotes": "Hide quote posts",
+      "hideEngaged": "Hide posts I've engaged with",
       "onlyFollowing": "Only people I follow",
       "onlyMutuals": "Only mutuals",
       "countLikes": "Likes",
@@ -422,7 +424,6 @@
     },
     "settings": {
       "account": "Account",
-      "accountDescription": "Manage accounts, sign out",
       "accountDetails": "Account details",
       "accountSecurity": "Account security",
       "language": "Language",
@@ -531,8 +532,7 @@
       "unhide": "Unhide",
       "network": {
         "title": "Network",
-        "indexDescription": "Pick which AppView and image CDN handle your AT Protocol traffic.",
-        "intro": "Akari talks to two upstream services: an AppView that aggregates the network into the views you see (feeds, profiles, search) and an image CDN that hosts thumbnails and avatars. By default both are operated by Bluesky Social — pick alternatives below to route around them."
+        "intro": "Akari talks to two upstream services: an AppView that aggregates the network into the views you see (feeds, profiles, search) and an image CDN that hosts thumbnails and avatars. By default both are operated by Bluesky Social. Pick alternatives below to route around them."
       },
       "appView": {
         "title": "AppView",
@@ -550,11 +550,11 @@
         "preset": {
           "bsky": {
             "label": "Bluesky",
-            "description": "public.api.bsky.app — the default AppView operated by Bluesky Social."
+            "description": "public.api.bsky.app, the default AppView operated by Bluesky Social."
           },
           "blacksky": {
             "label": "Blacksky",
-            "description": "api.blacksky.community — community-run AppView with custom moderation."
+            "description": "api.blacksky.community, a community-run AppView with custom moderation."
           },
           "custom": {
             "label": "Custom",
@@ -567,9 +567,30 @@
           "defaultSummary": "Following default ({{url}})"
         }
       },
+      "ai": {
+        "title": "AI",
+        "intro": "Your data on AT Protocol is public, so these settings tell AI services how they may use it. Akari respects your choices and shares them with other services, who can choose to respect them. Bad actors may ignore these signals, which is outside our control. The preferences apply across your entire account. Safety tools like spam and bot detection aren't affected.",
+        "section": "How AI may use your data",
+        "training": {
+          "label": "Allow training",
+          "hint": "Use your posts to build or train AI models. Once your data is part of a model, it stays there even if you later delete your account."
+        },
+        "inference": {
+          "label": "Allow inference",
+          "hint": "Let AI look up your posts when answering someone's question. The AI doesn't keep your data, but may quote or reference it in real time."
+        },
+        "embedding": {
+          "label": "Allow embedding",
+          "hint": "Let AI search and recommendation systems use your posts. This is how AI finds similar accounts, groups users by interests, and decides what to surface in feeds like Discover or For You."
+        },
+        "syntheticContent": {
+          "label": "Allow synthetic content",
+          "hint": "Let AI generate new content modelled on your data, like imitations of your writing, AI versions of your photos or audio, or bots designed to sound like you."
+        }
+      },
       "cdn": {
         "section": "Image CDN",
-        "intro": "Image URLs returned by the AppView point at Bluesky's CDN by default. Pick a different CDN here and matching URLs (avatars, banners, post thumbnails) will be rewritten to use it — the path layout matches across mirrors, so a host swap is enough.",
+        "intro": "Image URLs returned by the AppView point at Bluesky's CDN by default. Pick a different CDN here and matching URLs (avatars, banners, post thumbnails) will be rewritten to use it. The path layout matches across mirrors, so a host swap is enough.",
         "customSection": "Custom CDN",
         "customUrlLabel": "Custom CDN URL",
         "activeSection": "Active CDN",
@@ -578,11 +599,11 @@
         "preset": {
           "bsky": {
             "label": "Bluesky",
-            "description": "cdn.bsky.app — the default CDN operated by Bluesky Social."
+            "description": "cdn.bsky.app, the default CDN operated by Bluesky Social."
           },
           "blueat": {
             "label": "Blueat",
-            "description": "cdn.blueat.net — community-run CDN mirror."
+            "description": "cdn.blueat.net, a community-run CDN mirror."
           },
           "custom": {
             "label": "Custom",

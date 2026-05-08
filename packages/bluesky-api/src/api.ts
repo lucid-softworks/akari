@@ -426,6 +426,20 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.repos.createReview(accessJwt, userDid, review);
   }
 
+  /** Reads the user's `community.lexicon.preference.ai` record (or null). */
+  async getAiPreferences(accessJwt: string, userDid: string) {
+    return this.repos.getAiPreferences(accessJwt, userDid);
+  }
+
+  /** Writes the user's AI preferences record (replaces, not merges). */
+  async putAiPreferences(
+    accessJwt: string,
+    userDid: string,
+    record: import('./repos').AiPreferencesRecord,
+  ) {
+    return this.repos.putAiPreferences(accessJwt, userDid, record);
+  }
+
   /**
    * Uploads a binary blob (image or GIF) to Bluesky and returns the blob reference for embedding.
    * @param accessJwt - Valid session token authorised to upload media.

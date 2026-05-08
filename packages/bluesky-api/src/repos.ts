@@ -162,4 +162,75 @@ export class BlueskyRepos extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Reads the user's `community.lexicon.preference.ai` record (the
+   * community-defined AI/ML opt-in lexicon — distinct from
+   * `app.bsky.actor.preferences#postInteractionSettingsPref` etc).
+   * Returns null if the user has never set one.
+   */
+  async getAiPreferences(
+    accessJwt: string,
+    userDid: string,
+  ): Promise<AiPreferencesRecord | null> {
+    try {
+      const response = await this.makeAuthenticatedRequest<{
+        uri: string;
+        cid: string;
+        value: AiPreferencesRecord;
+      }>('/com.atproto.repo.getRecord', accessJwt, {
+        params: {
+          repo: userDid,
+          collection: 'community.lexicon.preference.ai',
+          rkey: 'self',
+        },
+      });
+      return response.value;
+    } catch (error) {
+      // The PDS returns 400 RecordNotFound for users without a record.
+      const e = error as { errorCode?: string; status?: number };
+      if (e.errorCode === 'RecordNotFound' || e.status === 404) return null;
+      throw error;
+    }
+  }
+
+  /**
+   * Writes the user's AI preferences record at rkey `self`. The full
+   * record is sent — atproto's putRecord replaces, not merges.
+   */
+  async putAiPreferences(
+    accessJwt: string,
+    userDid: string,
+    record: AiPreferencesRecord,
+  ): Promise<{ uri: string; cid: string }> {
+    return this.makeAuthenticatedRequest<{ uri: string; cid: string }>(
+      '/com.atproto.repo.putRecord',
+      accessJwt,
+      {
+        method: 'POST',
+        body: {
+          repo: userDid,
+          collection: 'community.lexicon.preference.ai',
+          rkey: 'self',
+          record,
+        },
+      },
+    );
+  }
 }
+
+/** Per-category opt-in flag for AI preferences. */
+export type AiPreferenceFlag = {
+  allow: boolean;
+  updatedAt: string;
+};
+
+/** Categories defined by `community.lexicon.preference.ai`. */
+export type AiPreferenceCategory = 'embedding' | 'inference' | 'syntheticContent' | 'training';
+
+export type AiPreferencesRecord = {
+  $type: 'community.lexicon.preference.ai';
+  preferences: Record<AiPreferenceCategory, AiPreferenceFlag>;
+  scope: { $type: 'community.lexicon.preference.ai#globalScope' };
+  updatedAt: string;
+};

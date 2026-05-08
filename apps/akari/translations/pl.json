@@ -245,6 +245,7 @@
       "hideReplies": "Ukryj odpowiedzi",
       "hideReposts": "Ukryj udostępnienia",
       "hideQuotes": "Ukryj cytowane posty",
+      "hideEngaged": "Ukryj posty, z którymi wszedłem w interakcję",
       "onlyFollowing": "Tylko obserwowane osoby",
       "onlyMutuals": "Tylko wzajemni",
       "countLikes": "Polubienia",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Maks",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maksimum {{metric}}"
+      "filterMaxLabel": "Maksimum {{metric}}",
+      "feed": "Kanał"
     },
     "post": {
       "postNotFound": "Nie znaleziono posta",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Używaj większego, bardziej czytelnego rozmiaru tekstu dla liczników reakcji (polubień, odpowiedzi, repostów).",
       "network": {
         "title": "Sieć",
-        "indexDescription": "Wybierz, który AppView i CDN obrazów obsługują Twój ruch AT Protocol.",
         "intro": "Akari komunikuje się z dwoma usługami upstream: AppView, który agreguje sieć do widoków, które widzisz (kanały, profile, wyszukiwanie), oraz CDN obrazów, który hostuje miniaturki i awatary. Domyślnie oba są obsługiwane przez Bluesky Social — wybierz alternatywy poniżej, aby je ominąć."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Niestandardowy",
             "description": "Wskaż dowolny zgodny CDN przez URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Twoje dane w AT Protocol są publiczne — te ustawienia mówią usługom AI, jak mogą z nich korzystać. Akari szanuje Twoje wybory i udostępnia je innym usługom, które mogą zdecydować się je uszanować. Złośliwi aktorzy mogą zignorować te sygnały; to jest poza naszą kontrolą. Preferencje obowiązują na całym Twoim koncie. Narzędzia bezpieczeństwa, takie jak wykrywanie spamu i botów, nie są przez nie objęte.",
+        "section": "Jak AI może wykorzystywać Twoje dane",
+        "training": {
+          "label": "Zezwól na trening",
+          "hint": "Wykorzystuj Twoje posty do budowy lub trenowania modeli AI. Gdy Twoje dane staną się częścią modelu, pozostaną tam nawet jeśli później usuniesz konto."
+        },
+        "inference": {
+          "label": "Zezwól na inferencję",
+          "hint": "Pozwól AI przeszukiwać Twoje posty podczas odpowiadania na czyjeś pytanie. AI nie przechowuje Twoich danych, ale może je cytować lub odwoływać się do nich w czasie rzeczywistym."
+        },
+        "embedding": {
+          "label": "Zezwól na embeddingi",
+          "hint": "Pozwól systemom wyszukiwania i rekomendacji opartym na AI używać Twoich postów — do znajdowania podobnych kont, grupowania użytkowników według zainteresowań, decydowania, co pokazać w feedach takich jak Discover czy For You."
+        },
+        "syntheticContent": {
+          "label": "Zezwól na treści syntetyczne",
+          "hint": "Pozwól AI tworzyć nowe treści wzorowane na Twoich danych — imitacje Twojego pisarstwa, wersje AI Twoich zdjęć lub nagrań, albo boty zaprojektowane tak, by brzmieć jak Ty."
         }
       }
     },

@@ -3,8 +3,8 @@ import React, { useCallback, useMemo } from 'react';
 import {
   Modal,
   Platform,
+  Pressable,
   ScrollView,
-  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -39,7 +39,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
   const switchAccountMutation = useSwitchAccount();
   const dialogManager = useDialogManager();
 
-  const sheetBackground = useThemeColor({ light: '#FFFFFF', dark: '#0F172A' }, 'background');
+  const sheetBackground = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const secondaryTextColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const avatarBackground = useThemeColor({ light: '#E0E7FF', dark: '#1E2537' }, 'background');
@@ -86,37 +86,32 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
       id: ADD_ACCOUNT_PANEL_ID,
       component: (
         <DialogModal onRequestClose={closePanel}>
-          <AddAccountForm />
+          {/* Wrap the form in a themed card — DialogModal only paints
+              the dim backdrop, and AddAccountForm has no surface of its
+              own, so without a wrapper the inputs float on the backdrop
+              with no panel behind them. */}
+          <ThemedView style={[styles.addAccountCard, { backgroundColor: sheetBackground, borderColor }]}>
+            <AddAccountForm />
+          </ThemedView>
         </DialogModal>
       ),
     });
-  }, [dialogManager, onClose]);
+  }, [borderColor, dialogManager, onClose, sheetBackground]);
 
   if (!visible) {
     return null;
   }
 
   return (
-    <Modal
-      visible
-      animationType="slide"
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
-      onRequestClose={onClose}
-    >
-      <ThemedView
-        style={[
-          styles.nativeSheet,
-          {
-            backgroundColor: sheetBackground,
-            // Android Modal `presentationStyle='fullScreen'` draws under the
-            // status bar; iOS pageSheet auto-respects the top safe area.
-            // `useSafeAreaInsets` returns 0 inside a Modal (separate native
-            // window) — `StatusBar.currentHeight` works without any provider.
-            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0,
-            paddingBottom: bottom + 16,
-          },
-        ]}
-      >
+    <Modal visible transparent animationType="fade" onRequestClose={onClose}>
+      <Pressable style={styles.backdrop} onPress={onClose}>
+        <Pressable
+          style={[styles.sheetWrapper, { paddingBottom: bottom + 16 }]}
+          onPress={(e) => e.stopPropagation()}
+        >
+          <ThemedView
+            style={[styles.sheet, { backgroundColor: sheetBackground, borderColor }]}
+          >
           <View style={styles.header}>
             <ThemedText type="defaultSemiBold">{t('common.switchAccount')}</ThemedText>
             <ThemedText style={[styles.subtitle, { color: secondaryTextColor }]}>
@@ -198,16 +193,33 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
               {t('common.addAccount')}
             </ThemedText>
           </TouchableOpacity>
-      </ThemedView>
+          </ThemedView>
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  nativeSheet: {
+  // Bottom-sheet pattern matching PostControlsSheet / DraftsSheet so the
+  // account switcher feels like the same family of overlays instead of
+  // taking over the whole screen.
+  backdrop: {
     flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  sheetWrapper: { paddingHorizontal: 16 },
+  sheet: {
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    overflow: 'hidden',
     paddingHorizontal: 20,
     paddingTop: 16,
+    ...Platform.select({
+      web: { maxWidth: 480, alignSelf: 'center', width: '100%' },
+      default: {},
+    }),
   },
   header: {
     gap: 2,
@@ -290,5 +302,12 @@ const styles = StyleSheet.create({
   addAccountText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  addAccountCard: {
+    width: '100%',
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
   },
 });

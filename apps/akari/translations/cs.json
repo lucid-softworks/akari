@@ -245,6 +245,7 @@
       "hideReplies": "Skrýt odpovědi",
       "hideReposts": "Skrýt sdílení",
       "hideQuotes": "Skrýt citované příspěvky",
+      "hideEngaged": "Skrýt příspěvky, se kterými jsem interagoval",
       "onlyFollowing": "Pouze lidé, které sleduji",
       "onlyMutuals": "Pouze vzájemné kontakty",
       "countLikes": "To se mi líbí",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimum {{metric}}",
-      "filterMaxLabel": "Maximum {{metric}}"
+      "filterMaxLabel": "Maximum {{metric}}",
+      "feed": "Kanál"
     },
     "post": {
       "postNotFound": "Příspěvek není nalezen",
@@ -475,7 +477,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -515,7 +516,6 @@
       "displayLargerTextBadgesHint": "Používat větší, čitelnější velikost textu pro počty reakcí (lajky, odpovědi, sdílení).",
       "network": {
         "title": "Síť",
-        "indexDescription": "Vyberte, který AppView a CDN obrázků obsluhují váš AT Protocol provoz.",
         "intro": "Akari komunikuje se dvěma upstream službami: AppView, který agreguje síť do pohledů, které vidíte (kanály, profily, vyhledávání), a CDN obrázků, který hostuje miniatury a avatary. Ve výchozím nastavení obě provozuje Bluesky Social — níže vyberte alternativy, abyste je obešli."
       },
       "appView": {
@@ -572,6 +572,27 @@
             "label": "Vlastní",
             "description": "Nasměrujte na libovolný kompatibilní CDN pomocí URL."
           }
+        }
+      },
+      "ai": {
+        "title": "AI",
+        "intro": "Tvá data na AT Protocol jsou veřejná — tato nastavení říkají AI službám, jak je mohou používat. Akari respektuje tvá rozhodnutí a sdílí je s ostatními službami, které je mohou respektovat. Špatní aktéři mohou tyto signály ignorovat; to je mimo naši kontrolu. Předvolby platí pro celý tvůj účet. Nástroje bezpečnosti jako detekce spamu a botů nejsou ovlivněny.",
+        "section": "Jak AI může používat tvá data",
+        "training": {
+          "label": "Povolit trénování",
+          "hint": "Použít tvé příspěvky k vytváření nebo trénování AI modelů. Jakmile jsou tvá data součástí modelu, zůstávají tam i poté, co později smažeš svůj účet."
+        },
+        "inference": {
+          "label": "Povolit inferenci",
+          "hint": "Umožnit AI vyhledávat tvé příspěvky při odpovídání na něčí otázku. AI tvá data neuchovává, ale může je v reálném čase citovat nebo na ně odkazovat."
+        },
+        "embedding": {
+          "label": "Povolit embeddingy",
+          "hint": "Umožnit AI vyhledávacím a doporučovacím systémům používat tvé příspěvky — k nalezení podobných účtů, seskupování uživatelů podle zájmů, rozhodování, co zobrazit ve feedech jako Discover nebo For You."
+        },
+        "syntheticContent": {
+          "label": "Povolit syntetický obsah",
+          "hint": "Umožnit AI generovat nový obsah modelovaný podle tvých dat — imitace tvého psaní, AI verze tvých fotografií nebo zvuku, nebo boty navržené tak, aby zněli jako ty."
         }
       }
     },

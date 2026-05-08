@@ -245,6 +245,7 @@
       "hideReplies": "Nascondi risposte",
       "hideReposts": "Nascondi ripubblicazioni",
       "hideQuotes": "Nascondi citazioni",
+      "hideEngaged": "Nascondi i post con cui ho interagito",
       "onlyFollowing": "Solo persone che seguo",
       "onlyMutuals": "Solo follow reciproci",
       "countLikes": "Mi piace",
@@ -254,7 +255,8 @@
       "filterMin": "Min",
       "filterMax": "Max",
       "filterMinLabel": "Minimo {{metric}}",
-      "filterMaxLabel": "Massimo {{metric}}"
+      "filterMaxLabel": "Massimo {{metric}}",
+      "feed": "Feed"
     },
     "post": {
       "postNotFound": "Post non trovato",
@@ -466,7 +468,6 @@
       "icons": "Icons",
       "borders": "Borders",
       "colors": "Colors",
-      "accountDescription": "Manage accounts, sign out",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
       "visibleTabs": "Visible Tabs",
@@ -506,7 +507,6 @@
       "displayLargerTextBadgesHint": "Usa una dimensione del testo più grande e leggibile per i conteggi di interazione (mi piace, risposte, repost).",
       "network": {
         "title": "Rete",
-        "indexDescription": "Scegli quale AppView e CDN immagini gestiscono il tuo traffico AT Protocol.",
         "intro": "Akari comunica con due servizi a monte: un AppView che aggrega la rete nelle viste che vedi (feed, profili, ricerca) e un CDN immagini che ospita miniature e avatar. Per impostazione predefinita entrambi sono gestiti da Bluesky Social — scegli alternative qui sotto per aggirarli."
       },
       "appView": {
@@ -563,6 +563,27 @@
             "label": "Personalizzato",
             "description": "Punta a qualsiasi CDN compatibile tramite URL."
           }
+        }
+      },
+      "ai": {
+        "title": "IA",
+        "intro": "I tuoi dati su AT Protocol sono pubblici — queste impostazioni indicano ai servizi di IA come possono utilizzarli. Akari rispetta le tue scelte e le condivide con altri servizi, che possono scegliere di rispettarle. Soggetti malevoli potrebbero ignorare questi segnali; questo è al di fuori del nostro controllo. Le preferenze si applicano all'intero account. Gli strumenti di sicurezza come il rilevamento di spam e bot non sono interessati.",
+        "section": "Come l'IA può usare i tuoi dati",
+        "training": {
+          "label": "Consenti l'addestramento",
+          "hint": "Usa i tuoi post per costruire o addestrare modelli di IA. Una volta che i tuoi dati fanno parte di un modello, restano lì anche se in seguito elimini il tuo account."
+        },
+        "inference": {
+          "label": "Consenti l'inferenza",
+          "hint": "Lascia che l'IA consulti i tuoi post quando risponde alla domanda di qualcuno. L'IA non conserva i tuoi dati, ma può citarli o farvi riferimento in tempo reale."
+        },
+        "embedding": {
+          "label": "Consenti gli embedding",
+          "hint": "Lascia che i sistemi di ricerca e raccomandazione basati su IA usino i tuoi post — per trovare account simili, raggruppare gli utenti per interessi, decidere cosa mostrare in feed come Discover o For You."
+        },
+        "syntheticContent": {
+          "label": "Consenti contenuti sintetici",
+          "hint": "Lascia che l'IA generi nuovi contenuti modellati sui tuoi dati — imitazioni della tua scrittura, versioni IA delle tue foto o audio, o bot progettati per somigliarti."
         }
       }
     },
