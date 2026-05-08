@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { BlueskyApiClient } from './client';
+import { BlueskyApiClient, setAuthRefreshHandler } from './client';
 
 describe('BlueskyApiClient', () => {
   const server = setupServer();
@@ -76,6 +76,7 @@ describe('BlueskyApiClient', () => {
   afterEach(() => {
     server.resetHandlers();
     jest.restoreAllMocks();
+    setAuthRefreshHandler(null);
   });
 
   afterAll(() => server.close());
@@ -226,6 +227,186 @@ describe('BlueskyApiClient', () => {
     expect(client.lastCall?.options.headers).toEqual({ 'Content-Type': 'image/png' });
     expect(client.lastCall?.options.body).toBeInstanceOf(Blob);
     expect(client.lastCall?.options.body?.type).toBe('image/png');
+  });
+
+  describe('auth refresh interceptor', () => {
+    it('refreshes the token and retries once when the response is 401 ExpiredToken', async () => {
+      let callCount = 0;
+      const seenTokens: string[] = [];
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async ({ request }) => {
+          callCount += 1;
+          const auth = request.headers.get('authorization') ?? '';
+          seenTokens.push(auth);
+          if (callCount === 1) {
+            return HttpResponse.json(
+              { error: 'ExpiredToken', message: 'Token has expired' },
+              { status: 401 },
+            );
+          }
+          return HttpResponse.json({ ok: true });
+        }),
+      );
+
+      const handler = jest.fn().mockResolvedValue('rotated-token');
+      setAuthRefreshHandler(handler);
+
+      const client = new TestClient();
+      const result = await client.callMakeAuthenticatedRequest<{ ok: boolean }>(
+        '/secure',
+        'expired-token',
+      );
+
+      expect(result).toEqual({ ok: true });
+      expect(callCount).toBe(2);
+      expect(seenTokens).toEqual(['Bearer expired-token', 'Bearer rotated-token']);
+      expect(handler).toHaveBeenCalledWith('expired-token');
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it('refreshes on 401 InvalidToken', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return HttpResponse.json(
+              { error: 'InvalidToken', message: 'invalid' },
+              { status: 401 },
+            );
+          }
+          return HttpResponse.json({ ok: true });
+        }),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue('rotated'));
+      const client = new TestClient();
+
+      await expect(client.callMakeAuthenticatedRequest('/secure', 'old')).resolves.toEqual({
+        ok: true,
+      });
+    });
+
+    it('refreshes on 401 with no errorCode at all (PDS shape variants)', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          if (callCount === 1) return new HttpResponse(null, { status: 401 });
+          return HttpResponse.json({ ok: true });
+        }),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue('rotated'));
+      const client = new TestClient();
+
+      await expect(client.callMakeAuthenticatedRequest('/secure', 'old')).resolves.toEqual({
+        ok: true,
+      });
+    });
+
+    it('does NOT refresh on 403 (forbidden, not auth-expired)', async () => {
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () =>
+          HttpResponse.json({ error: 'Forbidden' }, { status: 403 }),
+        ),
+      );
+
+      const handler = jest.fn();
+      setAuthRefreshHandler(handler);
+
+      const client = new TestClient();
+      await expect(
+        client.callMakeAuthenticatedRequest('/secure', 'old'),
+      ).rejects.toMatchObject({ status: 403 });
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('does NOT refresh on a non-auth 401 errorCode (e.g. RateLimitExceeded mistaken for 401)', async () => {
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () =>
+          HttpResponse.json({ error: 'RateLimitExceeded' }, { status: 401 }),
+        ),
+      );
+
+      const handler = jest.fn();
+      setAuthRefreshHandler(handler);
+
+      const client = new TestClient();
+      await expect(client.callMakeAuthenticatedRequest('/secure', 'old')).rejects.toMatchObject({
+        status: 401,
+      });
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('surfaces the original 401 when the refresh handler returns null', async () => {
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () =>
+          HttpResponse.json({ error: 'ExpiredToken' }, { status: 401 }),
+        ),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue(null));
+
+      const client = new TestClient();
+      await expect(
+        client.callMakeAuthenticatedRequest('/secure', 'old'),
+      ).rejects.toMatchObject({ status: 401, errorCode: 'ExpiredToken' });
+    });
+
+    it('surfaces the original 401 when the refresh handler returns the same token (no infinite retry)', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          return HttpResponse.json({ error: 'ExpiredToken' }, { status: 401 });
+        }),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue('same-token'));
+
+      const client = new TestClient();
+      await expect(
+        client.callMakeAuthenticatedRequest('/secure', 'same-token'),
+      ).rejects.toMatchObject({ status: 401 });
+      expect(callCount).toBe(1);
+    });
+
+    it('does not retry a second time when the rotated token also gets 401', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          return HttpResponse.json({ error: 'ExpiredToken' }, { status: 401 });
+        }),
+      );
+
+      const handler = jest.fn().mockResolvedValue('rotated');
+      setAuthRefreshHandler(handler);
+
+      const client = new TestClient();
+      await expect(
+        client.callMakeAuthenticatedRequest('/secure', 'old'),
+      ).rejects.toMatchObject({ status: 401 });
+      expect(callCount).toBe(2);
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it('surfaces the original 401 when no handler is installed', async () => {
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () =>
+          HttpResponse.json({ error: 'ExpiredToken' }, { status: 401 }),
+        ),
+      );
+
+      // Explicitly clear the handler to be sure.
+      setAuthRefreshHandler(null);
+
+      const client = new TestClient();
+      await expect(
+        client.callMakeAuthenticatedRequest('/secure', 'old'),
+      ).rejects.toMatchObject({ status: 401 });
+    });
   });
 
   describe('atproto-proxy header', () => {

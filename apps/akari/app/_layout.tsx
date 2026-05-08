@@ -4,7 +4,7 @@ import '@/utils/polyfills/silenceWebWarnings'; // Drop cosmetic-only RN warnings
 
 import { DevPerformanceOverlay } from '@/components/DevPerformanceOverlay';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { QueryClient, useIsRestoring } from '@tanstack/react-query';
+import { useIsRestoring } from '@tanstack/react-query';
 import {
   PersistQueryClientProvider,
   type PersistQueryClientProviderProps,
@@ -28,6 +28,11 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
 import { restoreOAuthBindingFromStorage } from '@/utils/oauth/clientBinding';
+import {
+  queryClient,
+  REACT_QUERY_CACHE_BUSTER,
+  REACT_QUERY_CACHE_MAX_AGE,
+} from '@/utils/queryClient';
 import { REACT_QUERY_CACHE_STORAGE_KEY, storage } from '@/utils/secureStorage';
 import { bootstrapSecureStorage } from '@/utils/secureStorageBootstrap';
 import '@/utils/i18n';
@@ -49,26 +54,6 @@ Sentry.init({
 
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: __DEV__,
-});
-
-const REACT_QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
-const REACT_QUERY_CACHE_BUSTER = 'akari@1';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: REACT_QUERY_CACHE_MAX_AGE,
-      retry: 2,
-    },
-    dehydrate: {
-      shouldDehydrateQuery: (query) => {
-        // Never persist pending queries -- they cause hundreds of
-        // "Uncaught (in promise) Error: redacted" on next hydration
-        // because the original fetch promise is gone.
-        return query.state.status === 'success';
-      },
-    },
-  },
 });
 
 /**

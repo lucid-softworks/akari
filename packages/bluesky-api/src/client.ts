@@ -27,6 +27,35 @@ const dpopSignersByAccessToken = new Map<string, DpopSigner>();
 const dpopNoncesByOrigin = new Map<string, string>();
 
 /**
+ * App-supplied callback that exchanges an expired access JWT for a fresh one.
+ *
+ * Returns the new access JWT on success, or `null` when the refresh itself
+ * fails (refresh token expired, network error during refresh, account no
+ * longer present in storage). On `null` the client surfaces the original
+ * 401 to the caller; the handler is expected to clear auth state itself
+ * before returning.
+ *
+ * The handler is responsible for re-registering any DPoP signer under the
+ * new access token before returning, so the retry's signer lookup hits.
+ */
+export type AuthRefreshHandler = (oldAccessJwt: string) => Promise<string | null>;
+
+let authRefreshHandler: AuthRefreshHandler | null = null;
+
+/**
+ * Install a global handler that the API client invokes when an authenticated
+ * request returns 401 with `ExpiredToken` / `InvalidToken` /
+ * `AuthenticationRequired`. The client retries the request once with the
+ * returned access JWT; if the handler returns `null` the original 401 is
+ * thrown.
+ *
+ * Pass `null` to remove the handler.
+ */
+export function setAuthRefreshHandler(handler: AuthRefreshHandler | null): void {
+  authRefreshHandler = handler;
+}
+
+/**
  * Register a DPoP signer for `accessJwt`. Subsequent authenticated requests
  * carrying that token will be DPoP-bound. Idempotent — re-registering the
  * same token replaces the prior signer.
@@ -50,6 +79,23 @@ function cacheDpopNonce(url: string, nonce: string): void {
 
 function originOf(url: string): string {
   return new URL(url).origin;
+}
+
+/**
+ * Match the 401 shapes that mean "this access token won't work anymore" so
+ * the auth refresh path fires for them and only them. Network errors,
+ * malformed responses, and per-endpoint authorisation failures (403) keep
+ * surfacing as the original error to the caller.
+ */
+function isExpiredTokenError(err: unknown): boolean {
+  const e = err as { status?: number; errorCode?: string } | null | undefined;
+  if (!e || e.status !== 401) return false;
+  return (
+    e.errorCode === 'ExpiredToken' ||
+    e.errorCode === 'InvalidToken' ||
+    e.errorCode === 'AuthenticationRequired' ||
+    e.errorCode === undefined
+  );
 }
 
 async function bodyIsUseDpopNonce(response: Response): Promise<boolean> {
@@ -214,6 +260,12 @@ export class BlueskyApiClient {
    * Otherwise we fall back to the existing `Authorization: Bearer …`
    * shape used by handle/app-password sessions.
    *
+   * If the request fails with an expired-token 401 and an
+   * `AuthRefreshHandler` is installed, the request is retried exactly once
+   * with the rotated access JWT. The retry skips the refresh path so a
+   * still-failing request surfaces the 401 to the caller instead of
+   * looping.
+   *
    * @param endpoint - The API endpoint path
    * @param accessJwt - Valid access JWT token
    * @param options - Request options
@@ -228,6 +280,26 @@ export class BlueskyApiClient {
       params?: Record<string, string | string[]>;
       headers?: Record<string, string>;
     } = {},
+  ): Promise<T> {
+    try {
+      return await this.makeAuthenticatedRequestRaw<T>(endpoint, accessJwt, options);
+    } catch (err) {
+      if (!authRefreshHandler || !isExpiredTokenError(err)) throw err;
+      const newAccessJwt = await authRefreshHandler(accessJwt);
+      if (!newAccessJwt || newAccessJwt === accessJwt) throw err;
+      return this.makeAuthenticatedRequestRaw<T>(endpoint, newAccessJwt, options);
+    }
+  }
+
+  private async makeAuthenticatedRequestRaw<T>(
+    endpoint: string,
+    accessJwt: string,
+    options: {
+      method?: 'GET' | 'POST';
+      body?: Record<string, unknown> | FormData | Blob;
+      params?: Record<string, string | string[]>;
+      headers?: Record<string, string>;
+    },
   ): Promise<T> {
     const signer = dpopSignersByAccessToken.get(accessJwt);
     if (!signer) {
