@@ -195,22 +195,6 @@ const sendCrashReport = async (
 };
 
 const DefaultFallbackComponent = ({ crashId, onReset }: FallbackComponentProps) => {
-  if (Platform.OS === 'web') {
-    return (
-      <div style={webStyles.container}>
-        <h1 style={webStyles.title}>Oops! Something went wrong</h1>
-        <p style={webStyles.subtitle}>We've logged this error with code:</p>
-        <div style={webStyles.crashId}>{crashId}</div>
-        <p style={webStyles.message}>Please share this code with support if you need assistance.</p>
-        {onReset && (
-          <button style={webStyles.button} onClick={onReset}>
-            Try Again
-          </button>
-        )}
-      </div>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Oops! Something went wrong</Text>
@@ -398,52 +382,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-const webStyles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '20px',
-    minHeight: '100vh',
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginBottom: '10px',
-    color: '#333',
-  },
-  subtitle: {
-    fontSize: '16px',
-    marginBottom: '10px',
-    color: '#666',
-  },
-  crashId: {
-    fontSize: '32px',
-    fontWeight: 'bold',
-    color: '#ff4444',
-    letterSpacing: '4px',
-    margin: '20px 0',
-  },
-  message: {
-    fontSize: '14px',
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: '30px',
-  },
-  button: {
-    backgroundColor: '#007bff',
-    padding: '12px 30px',
-    border: 'none',
-    borderRadius: '8px',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-};
 
 export type { AxiomConfig, CrashData, CrashProviderProps, FallbackComponentProps };
 export { CrashProvider, createUniqueId, sendCrashReport };
