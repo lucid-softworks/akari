@@ -1,7 +1,7 @@
 import { Image } from '@/components/Image';
 import { router } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -57,10 +57,10 @@ export default function SignInScreen() {
           </View>
 
           <View style={styles.choices}>
-            <TouchableOpacity
-              style={[styles.choicePrimary, { backgroundColor: accentColor }]}
+            <Pressable
+              style={({ pressed }) => [styles.choicePrimary, { backgroundColor: accentColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={goToOauth}
-              activeOpacity={activeOpacity.default}
+              
               accessibilityRole="button"
             >
               <View style={styles.choiceText}>
@@ -70,12 +70,12 @@ export default function SignInScreen() {
                 </ThemedText>
               </View>
               <IconSymbol name="chevron.right" size={20} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
-              style={[styles.choiceSecondary, { borderColor }]}
+            <Pressable
+              style={({ pressed }) => [styles.choiceSecondary, { borderColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={goToPassword}
-              activeOpacity={activeOpacity.default}
+              
               accessibilityRole="button"
             >
               <View style={styles.choiceText}>
@@ -87,7 +87,7 @@ export default function SignInScreen() {
                 </ThemedText>
               </View>
               <IconSymbol name="chevron.right" size={20} color={helperColor} />
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           {currentAccount ? (
@@ -95,11 +95,11 @@ export default function SignInScreen() {
               <ThemedText style={[styles.footerText, { color: helperColor }]}>
                 {t('auth.needDifferentAccount')}
               </ThemedText>
-              <TouchableOpacity onPress={goToPassword} accessibilityRole="button">
+              <Pressable onPress={goToPassword} accessibilityRole="button" style={({ pressed }) => pressed && { opacity: 0.7 }}>
                 <ThemedText style={styles.footerLinkText}>
                   {t('auth.connectNew')}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ) : null}
         </View>

@@ -3,7 +3,7 @@ import { Image } from '@/components/Image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -200,10 +200,10 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Card */}
-        <TouchableOpacity
-          style={[styles.profileCard, { backgroundColor: cardBackground, borderColor }]}
+        <Pressable
+          style={({ pressed }) => [styles.profileCard, { backgroundColor: cardBackground, borderColor }, pressed && { opacity: activeOpacity.subtle }]}
           onPress={() => router.push('/(tabs)/settings/account')}
-          activeOpacity={activeOpacity.subtle}
+          
         >
           <View style={styles.profileRow}>
             {avatar ? (
@@ -229,17 +229,17 @@ export default function SettingsScreen() {
               </ThemedText>
             </View>
           ) : null}
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Add Account */}
-        <TouchableOpacity
-          style={[styles.addAccountButton, { borderColor }]}
+        <Pressable
+          style={({ pressed }) => [styles.addAccountButton, { borderColor }, pressed && { opacity: activeOpacity.default }]}
           onPress={handleAddAccount}
-          activeOpacity={activeOpacity.default}
+          
         >
           <IconSymbol name="plus.circle.fill" size={20} color={accentColor} />
           <ThemedText style={[styles.addAccountText, { color: accentColor }]}>{t('common.addAccount')}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Settings */}
         <SettingsSection isFirst title={t('navigation.settings')}>

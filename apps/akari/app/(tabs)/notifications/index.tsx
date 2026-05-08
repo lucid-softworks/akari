@@ -2,7 +2,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { cdnImageUrl } from '@/utils/cdn';
 import { Image } from '@/components/Image';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, type ImageStyle } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
@@ -275,8 +275,8 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
 
     return (
       <View style={styles.embedImagesContainer}>
-        {images.slice(0, 4).map((url, index) => (
-          <NotificationImage key={index} uri={url} />
+        {images.slice(0, 4).map((url) => (
+          <NotificationImage key={url} uri={url} />
         ))}
       </View>
     );

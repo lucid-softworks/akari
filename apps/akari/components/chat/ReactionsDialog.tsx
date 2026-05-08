@@ -6,7 +6,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -99,16 +98,16 @@ export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: Rea
                     const reactor = directory.get(r.sender.did);
                     const name = reactor?.displayName || reactor?.handle || r.sender.did;
                     return (
-                      <TouchableOpacity
+                      <Pressable
                         key={`${r.sender.did}-${r.createdAt}`}
-                        style={styles.row}
+                        style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                         onPress={() => {
                           if (reactor?.handle) {
                             navigateToProfile({ actor: reactor.handle });
                             onDismiss();
                           }
                         }}
-                        activeOpacity={activeOpacity.default}
+                        
                         disabled={!reactor?.handle}
                       >
                         {reactor?.avatar ? (
@@ -129,20 +128,20 @@ export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: Rea
                             </ThemedText>
                           ) : null}
                         </View>
-                      </TouchableOpacity>
+                      </Pressable>
                     );
                   })}
                 </View>
               ))}
             </ScrollView>
 
-            <TouchableOpacity
-              style={[styles.doneButton, { borderTopColor: borderColor }]}
+            <Pressable
+              style={({ pressed }) => [styles.doneButton, { borderTopColor: borderColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={onDismiss}
-              activeOpacity={activeOpacity.default}
+              
             >
               <ThemedText style={[styles.doneText, { color: textColor }]}>{t('common.done')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </ThemedView>
         </Pressable>
       </Pressable>

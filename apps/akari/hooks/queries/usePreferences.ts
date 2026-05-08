@@ -8,7 +8,7 @@ import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
-export const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
+const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
   queryKey: ['preferences', pdsUrl] as const,
   queryFn: async (): Promise<BlueskyPreferencesResponse> => {
     if (!token) throw new Error('No access token');
@@ -63,7 +63,7 @@ export function useSavedFeeds() {
         return [];
       }
 
-      const feedUris = savedFeeds.filter((feed) => feed.type === 'feed').map((feed) => feed.value);
+      const feedUris = savedFeeds.flatMap((feed) => (feed.type === 'feed' ? [feed.value] : []));
 
       if (feedUris.length === 0) {
         return savedFeeds.map((savedFeed) => ({

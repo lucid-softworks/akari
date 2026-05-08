@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { VerifiersSheet } from '@/components/VerifiersSheet';
@@ -82,9 +82,7 @@ export function VerificationBadge({
   const { data: constellationDids } = useVerifiersForDid(badgesEnabled ? subjectDid : undefined);
 
   const allVerifierDids = useMemo(() => {
-    const appviewDids = (verification?.verifications ?? [])
-      .filter((v) => v.isValid)
-      .map((v) => v.issuer);
+    const appviewDids = (verification?.verifications ?? []).flatMap((v) => (v.isValid ? [v.issuer] : []));
     return Array.from(new Set([...appviewDids, ...(constellationDids ?? [])]));
   }, [verification, constellationDids]);
 
@@ -115,16 +113,16 @@ export function VerificationBadge({
 
   return (
     <>
-      <TouchableOpacity
+      <Pressable
         onPress={() => setSheetVisible(true)}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={t('ui.verifiedBadgeHint')}
         hitSlop={hitSlop}
-        style={styles.wrapper}
+        style={({ pressed }) => [styles.wrapper, pressed && { opacity: 0.7 }]}
       >
         {icon}
-      </TouchableOpacity>
+      </Pressable>
       <VerifiersSheet
         visible={sheetVisible}
         onClose={() => setSheetVisible(false)}

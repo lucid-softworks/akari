@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useCallback, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
 import { RecipeModal } from '@/components/RecipeModal';
@@ -81,7 +81,7 @@ function RecipeItem({ recipe, onPress }: RecipeItemProps) {
     recipeImage && pdsUrl ? `${pdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${recipeImage.image.ref.$link}` : null;
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <Pressable onPress={onPress} style={({ pressed }) => pressed && { opacity: 0.7 }}>
       <ThemedCard style={styles.recipeCard}>
         <View style={styles.headerRow}>
           {imageUrl ? (
@@ -138,7 +138,7 @@ function RecipeItem({ recipe, onPress }: RecipeItemProps) {
           </ThemedText>
         ) : null}
       </ThemedCard>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

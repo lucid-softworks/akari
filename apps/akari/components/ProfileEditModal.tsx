@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Modal, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, StatusBar, StyleSheet, TextInput, View } from 'react-native';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
@@ -74,26 +74,26 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
         <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity
+            <Pressable
               accessibilityRole="button"
               onPress={handleCancel}
-              style={styles.headerButton}
+              style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
             >
               <ThemedText style={[styles.headerButtonText, { color: '#007AFF' }]}>{t('common.cancel')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
 
             <ThemedText style={[styles.headerTitle, { color: textColor }]}>{t('profile.editProfile')}</ThemedText>
 
-            <TouchableOpacity
+            <Pressable
               accessibilityRole="button"
               onPress={handleSave}
-              style={[styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null]}
+              style={({ pressed }) => [styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null, pressed && { opacity: 0.7 }]}
               disabled={!isFormChanged || isLoading}
             >
               <ThemedText style={[styles.headerButtonText, { color: isFormChanged && !isLoading ? '#007AFF' : '#8E8E93' }]}>
                 {isLoading ? t('common.saving') : t('common.save')}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           {/* Banner Section */}
@@ -108,9 +108,9 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
                   </ThemedText>
                 </View>
               )}
-              <TouchableOpacity accessibilityRole="button" style={styles.cameraButton} onPress={() => {}}>
+              <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
                 <IconSymbol name="camera" size={16} color="#ffffff" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
 
@@ -124,9 +124,9 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
                   <ThemedText style={styles.avatarFallbackText}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
                 </View>
               )}
-              <TouchableOpacity accessibilityRole="button" style={styles.cameraButton} onPress={() => {}}>
+              <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
                 <IconSymbol name="camera" size={16} color="#ffffff" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
 

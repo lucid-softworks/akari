@@ -8,7 +8,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -140,55 +139,56 @@ export function ListPickerSheet({ visible, onDismiss, subjectDid }: ListPickerSh
                   maxLength={300}
                 />
                 <View style={styles.createActions}>
-                  <TouchableOpacity
-                    style={[styles.createSecondaryButton, { borderColor }]}
+                  <Pressable
+                    style={({ pressed }) => [
+                      styles.createSecondaryButton,
+                      { borderColor },
+                      pressed && { opacity: activeOpacity.default },
+                    ]}
                     onPress={resetCreateForm}
                     disabled={createList.isPending}
-                    activeOpacity={activeOpacity.default}
                   >
                     <ThemedText style={[styles.createSecondaryText, { color: textColor }]}>
                       {t('common.cancel')}
                     </ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
+                  </Pressable>
+                  <Pressable
+                    style={({ pressed }) => [
                       styles.createPrimaryButton,
                       { backgroundColor: tintColor },
                       (!newName.trim() || createList.isPending) && styles.createPrimaryDisabled,
+                      pressed && { opacity: activeOpacity.default },
                     ]}
                     onPress={handleCreateList}
                     disabled={!newName.trim() || createList.isPending}
-                    activeOpacity={activeOpacity.default}
                   >
                     {createList.isPending ? (
                       <ActivityIndicator color="#000000" />
                     ) : (
                       <ThemedText style={styles.createPrimaryText}>{t('lists.create')}</ThemedText>
                     )}
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
             ) : (
               <View style={[styles.footerRow, { borderTopColor: borderColor }]}>
-                <TouchableOpacity
-                  style={styles.footerButton}
+                <Pressable
+                  style={({ pressed }) => [styles.footerButton, pressed && { opacity: activeOpacity.default }]}
                   onPress={() => setCreating(true)}
-                  activeOpacity={activeOpacity.default}
                 >
                   <IconSymbol name="plus" size={18} color={tintColor} />
                   <ThemedText style={[styles.footerButtonText, { color: tintColor }]}>
                     {t('lists.newList')}
                   </ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.footerButton}
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [styles.footerButton, pressed && { opacity: activeOpacity.default }]}
                   onPress={onDismiss}
-                  activeOpacity={activeOpacity.default}
                 >
                   <ThemedText style={[styles.footerButtonText, { color: textColor }]}>
                     {t('common.done')}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             )}
           </ThemedView>
@@ -227,11 +227,10 @@ function ListRow({ list, subjectDid, isFirst, borderColor, iconColor, textColor,
   return (
     <>
       {!isFirst ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-      <TouchableOpacity
-        style={styles.row}
+      <Pressable
+        style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
         onPress={handleToggle}
         disabled={!subjectDid || mutation.isPending}
-        activeOpacity={activeOpacity.default}
       >
         {list.avatar ? (
           <Image source={{ uri: list.avatar }} style={styles.avatar} contentFit="cover" />
@@ -257,7 +256,7 @@ function ListRow({ list, subjectDid, isFirst, borderColor, iconColor, textColor,
         ) : (
           <IconSymbol name="circle" size={22} color={iconColor} />
         )}
-      </TouchableOpacity>
+      </Pressable>
     </>
   );
 }

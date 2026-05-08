@@ -5,9 +5,9 @@ import {
   FlatList,
   Modal,
   Platform,
+  Pressable,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -152,10 +152,10 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
       const year = getYear(item);
 
       return (
-        <TouchableOpacity
-          style={[styles.resultItem, { borderBottomColor: borderColor }]}
+        <Pressable
+          style={({ pressed }) => [styles.resultItem, { borderBottomColor: borderColor }, pressed && { opacity: activeOpacity.subtle }]}
           onPress={() => handleSelect(item)}
-          activeOpacity={activeOpacity.subtle}
+          
         >
           {posterUrl ? (
             <Image source={{ uri: posterUrl }} style={styles.poster} contentFit="cover" />
@@ -172,7 +172,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
               <ThemedText style={[styles.resultYear, { color: iconColor }]}>{year}</ThemedText>
             ) : null}
           </View>
-        </TouchableOpacity>
+        </Pressable>
       );
     },
     [borderColor, iconColor, textColor, handleSelect, mediaType],
@@ -203,9 +203,9 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
       <ThemedView style={[styles.container, { backgroundColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         {/* Header */}
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <TouchableOpacity onPress={onClose} style={styles.headerButton}>
+          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
             <IconSymbol name="xmark" size={20} color={iconColor} />
-          </TouchableOpacity>
+          </Pressable>
 
           <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
             {mediaType === 'movie' ? 'Search Movies' : 'Search TV Shows'}

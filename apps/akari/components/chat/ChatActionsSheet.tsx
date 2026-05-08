@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -170,11 +170,11 @@ export function ChatActionsSheet({
             {items.map((item, idx) => (
               <React.Fragment key={item.key}>
                 {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                <TouchableOpacity
-                  style={[styles.item, item.disabled && styles.itemDisabled]}
+                <Pressable
+                  style={({ pressed }) => [styles.item, item.disabled && styles.itemDisabled, pressed && { opacity: item.disabled ? 1 : activeOpacity.default }]}
                   onPress={item.disabled ? undefined : item.onPress}
                   disabled={item.disabled}
-                  activeOpacity={item.disabled ? 1 : activeOpacity.default}
+                  
                   accessibilityRole="button"
                 >
                   <IconSymbol
@@ -190,7 +190,7 @@ export function ChatActionsSheet({
                   >
                     {item.label}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </React.Fragment>
             ))}
           </ThemedView>

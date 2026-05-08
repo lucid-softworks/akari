@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   SettingsRow,
@@ -63,16 +63,16 @@ export default function AppearanceSettingsScreen() {
               const active = colorMode === mode;
               const label = mode === 'light' ? t('settings.lightMode') : mode === 'dark' ? t('settings.darkMode') : t('settings.autoMode');
               return (
-                <TouchableOpacity
+                <Pressable
                   key={mode}
-                  style={[styles.modeOption, active && { backgroundColor: accentColor }]}
+                  style={({ pressed }) => [styles.modeOption, active && { backgroundColor: accentColor }, pressed && { opacity: 0.7 }]}
                   onPress={() => setColorMode(mode)}
                 >
                   <IconSymbol name={MODE_ICONS[mode]} size={16} color={active ? '#fff' : borderColor} />
                   <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
                     {label}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               );
             })}
           </ThemedView>
@@ -110,12 +110,12 @@ export default function AppearanceSettingsScreen() {
         {/* Reset */}
         {hasCustomizations ? (
           <SettingsSection>
-            <TouchableOpacity
-              style={[styles.resetButton, { borderColor }]}
+            <Pressable
+              style={({ pressed }) => [styles.resetButton, { borderColor }, pressed && { opacity: 0.7 }]}
               onPress={resetToDefaults}
             >
               <ThemedText style={styles.resetText}>{t('settings.resetToDefaults')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </SettingsSection>
         ) : null}
       </ScrollView>

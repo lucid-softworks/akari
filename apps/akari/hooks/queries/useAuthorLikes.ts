@@ -24,12 +24,7 @@ export function useAuthorLikes(identifier: string | undefined, limit: number = 2
       const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
 
       // Filter to only show posts that the user has liked
-      const likes = feed.feed
-        .filter((item) => {
-          // Only include posts that the user has liked
-          return item.post.viewer?.like;
-        })
-        .map((item) => item.post);
+      const likes = feed.feed.flatMap((item) => (item.post.viewer?.like ? [item.post] : []));
 
       // Deduplicate posts by URI to prevent duplicate keys
       const uniqueLikes = likes.filter((post, index, self) => index === self.findIndex((p) => p.uri === post.uri));

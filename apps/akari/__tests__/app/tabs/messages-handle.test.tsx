@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[convoId]';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -250,12 +250,15 @@ describe('ConversationScreen', () => {
     const mutateAsync = jest.fn();
     mockUseSendMessage.mockReturnValue({ mutateAsync, isPending: false });
 
-    const { getByText, UNSAFE_getAllByType } = render(<ConversationScreen />);
+    const { getByText, UNSAFE_root } = render(<ConversationScreen />);
 
     act(() => {
-      const sendButton = UNSAFE_getAllByType(TouchableOpacity).find(
-        (button) => button.props.onPress && button.props.disabled !== undefined,
-      ) as any;
+      const sendButton = UNSAFE_root.findAll((node: any) => {
+        if (typeof node.props?.onPress !== 'function') return false;
+        const t = node.type;
+        const name = typeof t === 'string' ? t : ((t as any)?.displayName ?? (t as any)?.name);
+        return name === 'Pressable' && node.props.disabled !== undefined;
+      })[0] as any;
       sendButton.props.onPress();
     });
 

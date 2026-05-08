@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import type { BlueskyMutedWord } from '@/bluesky-api';
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -118,17 +118,15 @@ export default function MutedWordsScreen() {
                 {TARGET_OPTIONS.map((option) => {
                   const selected = draftTarget === option;
                   return (
-                    <TouchableOpacity
+                    <Pressable
                       key={option}
                       onPress={() => setDraftTarget(option)}
-                      activeOpacity={activeOpacity.default}
-                      style={[
-                        styles.segment,
+                      
+                      style={({ pressed }) => [styles.segment,
                         {
                           borderColor,
                           backgroundColor: selected ? accentColor : 'transparent',
-                        },
-                      ]}
+                        }, pressed && { opacity: activeOpacity.default }]}
                       accessibilityRole="button"
                     >
                       <ThemedText
@@ -136,25 +134,23 @@ export default function MutedWordsScreen() {
                       >
                         {t(`settings.mutedWordTarget.${option}`)}
                       </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                   );
                 })}
               </View>
-              <TouchableOpacity
+              <Pressable
                 onPress={handleAdd}
                 disabled={isSaving || !draftValue.trim()}
-                activeOpacity={activeOpacity.default}
-                style={[
-                  styles.addButton,
+                
+                style={({ pressed }) => [styles.addButton,
                   {
                     backgroundColor: accentColor,
                     opacity: isSaving || !draftValue.trim() ? 0.5 : 1,
-                  },
-                ]}
+                  }, pressed && { opacity: activeOpacity.default }]}
                 accessibilityRole="button"
               >
                 <ThemedText style={styles.addButtonText}>{t('settings.mutedWordAdd')}</ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </ThemedView>
         </SettingsSection>
@@ -181,7 +177,7 @@ export default function MutedWordsScreen() {
             ) : (
               mutedWords.map((entry, index) => (
                 <View
-                  key={`${entry.value}-${index}`}
+                  key={entry.value}
                   style={[
                     styles.listRow,
                     index < mutedWords.length - 1 && {
@@ -198,16 +194,16 @@ export default function MutedWordsScreen() {
                       {t(`settings.mutedWordTargetLabel.${optionForTargets(entry.targets)}`)}
                     </ThemedText>
                   </View>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => handleRemove(entry.value)}
                     accessibilityRole="button"
                     accessibilityLabel={t('settings.mutedWordRemove')}
                     hitSlop={hitSlop}
-                    style={styles.removeButton}
+                    style={({ pressed }) => [styles.removeButton, pressed && { opacity: 0.7 }]}
                     disabled={isSaving}
                   >
                     <IconSymbol name="minus.circle.fill" size={22} color={subduedColor} />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ))
             )}

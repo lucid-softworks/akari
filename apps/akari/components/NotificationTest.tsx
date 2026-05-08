@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -80,8 +80,8 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
       <ThemedText style={styles.description}>{t('notifications.testNotificationsDescription')}</ThemedText>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.testButton, { backgroundColor: backgroundColor, borderColor }]}
+        <Pressable
+          style={({ pressed }) => [styles.testButton, { backgroundColor: backgroundColor, borderColor }, pressed && { opacity: 0.7 }]}
           onPress={handleTestNotification}
           disabled={isSending}
         >
@@ -89,10 +89,10 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
           <ThemedText style={[styles.buttonText, { color: textColor }]}>
             {isSending ? t('notifications.sending') : t('notifications.sendTest')}
           </ThemedText>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
-          style={[styles.testButton, { backgroundColor: backgroundColor, borderColor }]}
+        <Pressable
+          style={({ pressed }) => [styles.testButton, { backgroundColor: backgroundColor, borderColor }, pressed && { opacity: 0.7 }]}
           onPress={handleTestDelayedNotification}
           disabled={isSending}
         >
@@ -100,7 +100,7 @@ export function NotificationTest({ onNotificationSent }: NotificationTestProps) 
           <ThemedText style={[styles.buttonText, { color: textColor }]}>
             {isSending ? t('notifications.scheduling') : t('notifications.scheduleTest')}
           </ThemedText>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </ThemedView>
   );

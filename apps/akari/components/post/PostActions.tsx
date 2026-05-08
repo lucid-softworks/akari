@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { SharePostSheet } from '@/components/SharePostSheet';
 import { ShareToChatSheet } from '@/components/ShareToChatSheet';
@@ -142,11 +142,11 @@ export const PostActions = React.memo(function PostActions({
   return (
     <>
     <View style={styles.interactions}>
-      <TouchableOpacity
-        style={[styles.interactionItem, replyDisabled && styles.interactionDisabled]}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, replyDisabled && styles.interactionDisabled, pressed && { opacity: replyDisabled ? 1 : activeOpacity.default }]}
         onPress={replyDisabled ? undefined : onReplyPress}
         disabled={replyDisabled}
-        activeOpacity={replyDisabled ? 1 : activeOpacity.default}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityState={{ disabled: !!replyDisabled }}
@@ -164,12 +164,12 @@ export const PostActions = React.memo(function PostActions({
         <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
           {formatCompactNumber(commentCount)}
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.interactionItem}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
         onPress={handleRepostButtonPress}
-        activeOpacity={activeOpacity.default}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost or quote post by ${authorName}`}
@@ -178,12 +178,12 @@ export const PostActions = React.memo(function PostActions({
         <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
           {formatCompactNumber(repostCount)}
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.interactionItem}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
         onPress={handleLikePress}
-        activeOpacity={activeOpacity.default}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityLabel={isLiked ? `Unlike post by ${authorName}` : `Like post by ${authorName}`}
@@ -196,40 +196,40 @@ export const PostActions = React.memo(function PostActions({
         <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
           {formatCompactNumber(likeCount)}
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.interactionItem}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
         onPress={handleBookmarkPress}
-        activeOpacity={activeOpacity.default}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityLabel="Save post"
       >
         <IconSymbol name="bookmark" size={20} color={iconColor} />
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.interactionItem}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
         onPress={handleSharePress}
-        activeOpacity={activeOpacity.default}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityLabel="Share post"
       >
         <IconSymbol name="square.and.arrow.up" size={20} color={iconColor} />
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.interactionItem}
+      <Pressable
+        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.strong }]}
         onPress={onMorePress}
-        activeOpacity={activeOpacity.strong}
+        
         hitSlop={hitSlop}
         accessibilityRole="button"
         accessibilityLabel={`More actions for post by ${authorName}`}
       >
         <IconSymbol name="ellipsis" size={20} color={iconColor} />
-      </TouchableOpacity>
+      </Pressable>
     </View>
     <RepostSheet
       visible={repostSheetVisible}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { radius, spacing } from '@/constants/tokens';
 import { useDevSettings } from '@/hooks/useDevSettings';
@@ -83,13 +83,13 @@ export function DevPerformanceOverlay() {
 
   if (!visible) {
     return (
-      <TouchableOpacity
-        style={styles.toggleButton}
+      <Pressable
+        style={({ pressed }) => [styles.toggleButton, pressed && { opacity: 0.8 }]}
         onPress={() => setVisible(true)}
-        activeOpacity={0.8}
+        
       >
         <Text style={styles.toggleText}>FPS</Text>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 
@@ -97,7 +97,7 @@ export function DevPerformanceOverlay() {
 
   return (
     <View style={styles.overlay} pointerEvents="box-none">
-      <TouchableOpacity style={styles.panel} onPress={() => setVisible(false)} activeOpacity={0.9}>
+      <Pressable style={({ pressed }) => [styles.panel, pressed && { opacity: 0.9 }]} onPress={() => setVisible(false)} >
         <View style={styles.row}>
           <Text style={[styles.value, { color: fpsColor }]}>{stats.fps}</Text>
           <Text style={styles.label}>FPS</Text>
@@ -125,7 +125,7 @@ export function DevPerformanceOverlay() {
         )}
         <View style={styles.divider} />
         <Text style={styles.label}>{Platform.OS}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import { Modal, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -74,9 +74,9 @@ export function HandleHistoryModal({ visible, onClose, did, currentHandle }: Han
         <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <TouchableOpacity onPress={onClose} style={styles.headerButton}>
+            <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
               <ThemedText style={[styles.headerButtonText, { color: '#007AFF' }]}>{t('common.cancel')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
 
             <ThemedText style={[styles.headerTitle, { color: textColor }]}>{t('profile.handleHistory')}</ThemedText>
 

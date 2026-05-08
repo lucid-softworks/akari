@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { PostInlineCard } from '@/components/PostInlineCard';
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -97,15 +97,15 @@ export default function HiddenContentScreen() {
                           </ThemedText>
                         )}
                       </View>
-                      <TouchableOpacity
+                      <Pressable
                         onPress={() => unhidePost(uri)}
-                        style={[styles.unhideButton, { borderColor: tintColor }]}
+                        style={({ pressed }) => [styles.unhideButton, { borderColor: tintColor }, pressed && { opacity: 0.7 }]}
                         accessibilityLabel={t('settings.unhide')}
                       >
                         <ThemedText style={[styles.unhideText, { color: tintColor }]}>
                           {t('settings.unhide')}
                         </ThemedText>
-                      </TouchableOpacity>
+                      </Pressable>
                     </View>
                   </View>
                 );
@@ -131,7 +131,7 @@ function HiddenAccountRow({ did, onUnhide, iconColor, tintColor, borderColor }: 
   const { data: profile } = useProfile(did);
   const textColor = useThemeColor({}, 'text');
   return (
-    <View style={[styles.accountRow]}>
+    <View style={styles.accountRow}>
       {profile?.avatar ? (
         <Image source={{ uri: profile.avatar }} style={styles.accountAvatar} />
       ) : (
@@ -153,15 +153,15 @@ function HiddenAccountRow({ did, onUnhide, iconColor, tintColor, borderColor }: 
           @{profile?.handle ?? did}
         </ThemedText>
       </View>
-      <TouchableOpacity
+      <Pressable
         onPress={onUnhide}
-        style={[styles.unhideButton, { borderColor: tintColor }]}
+        style={({ pressed }) => [styles.unhideButton, { borderColor: tintColor }, pressed && { opacity: 0.7 }]}
         accessibilityLabel={t('settings.unhide')}
       >
         <ThemedText style={[styles.unhideText, { color: tintColor }]}>
           {t('settings.unhide')}
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

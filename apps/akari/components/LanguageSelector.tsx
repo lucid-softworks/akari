@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Platform, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -69,10 +69,10 @@ export const LanguageSelector = () => {
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>{t('settings.language')}</ThemedText>
 
-      <TouchableOpacity
+      <Pressable
         accessibilityLabel={t('settings.language')}
         accessibilityRole="button"
-        style={styles.selector}
+        style={({ pressed }) => [styles.selector, pressed && { opacity: 0.7 }]}
         onPress={() => setIsModalVisible(true)}
       >
         <View style={styles.selectorContent}>
@@ -83,7 +83,7 @@ export const LanguageSelector = () => {
           </View>
         </View>
         <IconSymbol name="chevron.down" size={12} color="rgba(0, 0, 0, 0.6)" />
-      </TouchableOpacity>
+      </Pressable>
 
       <Modal
         visible={isModalVisible}
@@ -98,27 +98,27 @@ export const LanguageSelector = () => {
             style={[styles.nativeSheet, { paddingTop: containerTopPadding }]}
           >
             <View style={styles.modalHeader}>
-              <TouchableOpacity
+              <Pressable
                 onPress={() => setIsModalVisible(false)}
                 accessibilityRole="button"
                 accessibilityLabel={t('common.back')}
-                style={styles.modalBackButton}
+                style={({ pressed }) => [styles.modalBackButton, pressed && { opacity: 0.7 }]}
                 hitSlop={8}
               >
                 <IconSymbol name="chevron.left" size={20} color="#007AFF" />
-              </TouchableOpacity>
+              </Pressable>
               <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
               <View style={styles.modalBackButton} />
             </View>
             <ScrollView style={styles.languageList} contentContainerStyle={styles.languageListContent}>
               {languages.map((language) => (
-                <TouchableOpacity
+                <Pressable
                   key={language.code}
                   accessibilityRole="menuitem"
                   accessibilityState={{
                     selected: currentLocale === language.code,
                   }}
-                  style={[styles.languageOption, currentLocale === language.code && styles.selectedLanguage]}
+                  style={({ pressed }) => [styles.languageOption, currentLocale === language.code && styles.selectedLanguage, pressed && { opacity: 0.7 }]}
                   onPress={() => handleLanguageChange(language.code)}
                 >
                   <View style={styles.languageInfo}>
@@ -133,7 +133,7 @@ export const LanguageSelector = () => {
                       <IconSymbol name="checkmark.circle.fill" size={12} color="white" />
                     </View>
                   )}
-                </TouchableOpacity>
+                </Pressable>
               ))}
             </ScrollView>
           </ThemedView>
@@ -257,5 +257,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default LanguageSelector;

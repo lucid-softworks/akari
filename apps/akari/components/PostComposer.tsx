@@ -6,11 +6,11 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -1004,9 +1004,9 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               },
             ]}
           >
-            <TouchableOpacity onPress={handleClose} style={styles.headerButton}>
+            <Pressable onPress={handleClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
               <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
 
             <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
               {replyTo
@@ -1016,19 +1016,17 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 : t('post.newPost')}
             </ThemedText>
 
-            <TouchableOpacity
+            <Pressable
               onPress={handlePost}
-              style={[
-                styles.postButton,
+              style={({ pressed }) => [styles.postButton,
                 isPostDisabled ? styles.postButtonDisabled : styles.postButtonEnabled,
-                { backgroundColor: isPostDisabled ? borderColor : tintColor },
-              ]}
+                { backgroundColor: isPostDisabled ? borderColor : tintColor }, pressed && { opacity: 0.7 }]}
               disabled={isPostDisabled}
             >
               <ThemedText style={[styles.postButtonText, { color: isPostDisabled ? textColor : '#000000' }]}>
                 {createPostMutation.isPending ? t('post.posting') : t('post.post')}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           {/* Reply Context */}
@@ -1065,8 +1063,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
             {draftsApply && drafts.length > 0 ? (
               <View style={styles.draftsBar}>
-                <TouchableOpacity
-                  style={[styles.draftsPill, { borderColor }]}
+                <Pressable
+                  style={({ pressed }) => [styles.draftsPill, { borderColor }, pressed && { opacity: 0.7 }]}
                   onPress={() => {
                     draftsQuery.refetch();
                     setDraftsSheetVisible(true);
@@ -1077,7 +1075,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                   <ThemedText style={[styles.draftsPillText, { color: tintColor }]}>
                     {t('post.draft.openButton', { count: drafts.length })}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             ) : null}
 
@@ -1129,14 +1127,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                       cursorColor={tintColor}
                     />
                     {!isFirst ? (
-                      <TouchableOpacity
-                        style={styles.removePostButton}
+                      <Pressable
+                        style={({ pressed }) => [styles.removePostButton, pressed && { opacity: 0.7 }]}
                         onPress={() => removePost(postIdx)}
                         accessibilityLabel={t('post.removePostFromThread')}
                         hitSlop={10}
                       >
                         <IconSymbol name="xmark.circle.fill" size={18} color={iconColor} />
-                      </TouchableOpacity>
+                      </Pressable>
                     ) : null}
                   </View>
 
@@ -1155,13 +1153,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                         <View key={imgIdx} style={styles.imageItem}>
                           <View style={styles.imageContainer}>
                             <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
-                            <TouchableOpacity
-                              style={styles.removeImageButton}
+                            <Pressable
+                              style={({ pressed }) => [styles.removeImageButton, pressed && { opacity: 0.7 }]}
                               onPress={() => handleRemoveImage(postIdx, imgIdx)}
                               testID={`remove-image-${postIdx}-${imgIdx}`}
                             >
                               <IconSymbol name="xmark" size={16} color="#ffffff" />
-                            </TouchableOpacity>
+                            </Pressable>
                           </View>
                           <TextInput
                             style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
@@ -1250,8 +1248,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                               </View>
                             ) : null}
                           </View>
-                          <TouchableOpacity
-                            style={styles.removeImageButton}
+                          <Pressable
+                            style={({ pressed }) => [styles.removeImageButton, pressed && { opacity: 0.7 }]}
                             onPress={() =>
                               setPosts((prev) =>
                                 prev.map((p, i) =>
@@ -1262,7 +1260,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                             testID={`remove-video-${postIdx}`}
                           >
                             <IconSymbol name="xmark" size={16} color="#ffffff" />
-                          </TouchableOpacity>
+                          </Pressable>
                         </View>
                         <TextInput
                           style={[
@@ -1288,8 +1286,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                   ) : null}
 
                   {isLast ? (
-                    <TouchableOpacity
-                      style={[styles.addPostButton, { borderColor }]}
+                    <Pressable
+                      style={({ pressed }) => [styles.addPostButton, { borderColor }, pressed && { opacity: 0.7 }]}
                       onPress={addPost}
                       accessibilityLabel={t('post.addPostToThread')}
                     >
@@ -1297,7 +1295,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                       <ThemedText style={[styles.addPostText, { color: tintColor }]}>
                         {t('post.addPostToThread')}
                       </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                 </View>
               );
@@ -1320,39 +1318,39 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 const gifDisabled = attachedImages.length >= 4 || !!attachedVideo;
                 return (
                   <>
-                    <TouchableOpacity
-                      style={[styles.actionButton, photoDisabled && styles.actionButtonDisabled]}
+                    <Pressable
+                      style={({ pressed }) => [styles.actionButton, photoDisabled && styles.actionButtonDisabled, pressed && { opacity: 0.7 }]}
                       onPress={handleAddImage}
                       disabled={photoDisabled}
                       accessibilityLabel={t('post.addPhoto')}
                       accessibilityHint={t('post.selectPhoto')}
                     >
                       <IconSymbol name="photo" size={20} color={photoDisabled ? iconColor : tintColor} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.actionButton, videoDisabled && styles.actionButtonDisabled]}
+                    </Pressable>
+                    <Pressable
+                      style={({ pressed }) => [styles.actionButton, videoDisabled && styles.actionButtonDisabled, pressed && { opacity: 0.7 }]}
                       onPress={handleAddVideo}
                       disabled={videoDisabled}
                       accessibilityLabel={t('post.addVideo')}
                     >
                       <IconSymbol name="video" size={20} color={videoDisabled ? iconColor : tintColor} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.actionButton}
+                    </Pressable>
+                    <Pressable
+                      style={({ pressed }) => [styles.actionButton, pressed && { opacity: 0.7 }]}
                       onPress={() => setEmojiPickerVisible(true)}
                       accessibilityLabel={t('post.addEmoji')}
                     >
                       <IconSymbol name="face.smiling" size={20} color={tintColor} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.actionButton, gifDisabled && styles.actionButtonDisabled]}
+                    </Pressable>
+                    <Pressable
+                      style={({ pressed }) => [styles.actionButton, gifDisabled && styles.actionButtonDisabled, pressed && { opacity: 0.7 }]}
                       onPress={handleAddGif}
                       disabled={gifDisabled}
                       accessibilityLabel={t('gif.addGif')}
                       accessibilityHint={t('gif.selectGif')}
                     >
                       <IconSymbol name="gif" size={20} color={gifDisabled ? iconColor : tintColor} />
-                    </TouchableOpacity>
+                    </Pressable>
                   </>
                 );
               })()}
@@ -1360,8 +1358,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
             <View style={styles.footerCenter} pointerEvents="box-none">
               {!replyTo ? (
-                <TouchableOpacity
-                  style={styles.controlsButton}
+                <Pressable
+                  style={({ pressed }) => [styles.controlsButton, pressed && { opacity: 0.7 }]}
                   onPress={() => setControlsSheetVisible(true)}
                   accessibilityLabel={t('post.controls.title')}
                 >
@@ -1372,13 +1370,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                   >
                     {describePostControls(postControls, t as any)}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               ) : null}
             </View>
 
             <View style={styles.footerRight}>
-              <TouchableOpacity
-                style={[styles.langChip, { borderColor: iconColor }]}
+              <Pressable
+                style={({ pressed }) => [styles.langChip, { borderColor: iconColor }, pressed && { opacity: 0.7 }]}
                 onPress={() => setLanguagesSheetVisible(true)}
                 accessibilityRole="button"
                 accessibilityLabel={t('composer.postLanguageA11y', { value: postLangsLabel })}
@@ -1387,7 +1385,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 <ThemedText style={[styles.langChipText, { color: iconColor }]} numberOfLines={1}>
                   {postLangs.length === 1 ? postLangs[0].toUpperCase() : `${postLangs.length}`}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
               <View style={styles.characterCountContainer}>
                 <ThemedText
                   style={[
@@ -1528,7 +1526,7 @@ function PostPreviewCard({ post, borderColor, textColor, iconColor }: PostPrevie
           <View style={styles.quoteImagesRow}>
             {media.images.map((img, idx) => (
               <Image
-                key={`${img.url}-${idx}`}
+                key={img.url}
                 source={{ uri: img.url }}
                 style={styles.quoteImageThumb}
                 contentFit="cover"

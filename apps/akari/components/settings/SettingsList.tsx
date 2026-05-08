@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -90,9 +90,9 @@ export function SettingsRow({
 
   if (onPress) {
     return (
-      <TouchableOpacity accessibilityRole="button" activeOpacity={0.7} onPress={onPress} style={rowStyle}>
+      <Pressable accessibilityRole="button"  onPress={onPress} style={({ pressed }) => [rowStyle, pressed && { opacity: 0.7 }]}>
         {rowContent}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

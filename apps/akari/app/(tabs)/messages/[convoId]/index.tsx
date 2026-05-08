@@ -1,7 +1,7 @@
 import { Image } from '@/components/Image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -396,7 +396,7 @@ export default function ConversationScreen() {
 
             return (
               <Image
-                key={`${messageId}-image-${index}`}
+                key={`${messageId}-${image.url}`}
                 source={{ uri: image.url }}
                 style={[styles.messageImage, { width: imageWidth, height: imageHeight }]}
                 contentFit="cover"
@@ -478,35 +478,34 @@ export default function ConversationScreen() {
             ]}
           >
             {QUICK_REACTIONS.map((emoji) => (
-              <TouchableOpacity
+              <Pressable
                 key={emoji}
                 onPress={() => handleToggleReaction(item.id, emoji)}
                 hitSlop={6}
-                style={styles.reactionPickerSlot}
+                style={({ pressed }) => [styles.reactionPickerSlot, pressed && { opacity: 0.7 }]}
               >
                 <ThemedText style={styles.reactionPickerEmoji}>{emoji}</ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             ))}
-            <TouchableOpacity
+            <Pressable
               onPress={() => {
                 setReactionPickerFor(null);
                 setEmojiPickerFor(item.id);
               }}
               hitSlop={6}
-              style={styles.reactionPickerSlot}
+              style={({ pressed }) => [styles.reactionPickerSlot, pressed && { opacity: 0.7 }]}
               accessibilityLabel={t('messages.moreEmoji')}
             >
               <IconSymbol name="plus.circle" size={24} color={iconColor} />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         ) : null}
 
         {(hasText || inlineMedia || !item.embed) && (
-          <TouchableOpacity
-            activeOpacity={0.85}
+          <Pressable
+            
             onLongPress={() => handleLongPressMessage(item.id)}
-            delayLongPress={250}
-          >
+            delayLongPress={250} style={({ pressed }) => pressed && { opacity: 0.85 }}>
             <ThemedView
               style={[
                 styles.messageBubble,
@@ -535,7 +534,7 @@ export default function ConversationScreen() {
                 />
               ) : null}
             </ThemedView>
-          </TouchableOpacity>
+          </Pressable>
         )}
 
         {item.embed && (
@@ -554,23 +553,21 @@ export default function ConversationScreen() {
             ]}
           >
             {Array.from(reactionGroups.entries()).map(([emoji, { count, mine }]) => (
-              <TouchableOpacity
+              <Pressable
                 key={emoji}
                 onPress={() => handleToggleReaction(item.id, emoji)}
                 onLongPress={() => setReactionsDialogFor(item.id)}
                 delayLongPress={250}
-                style={[
-                  styles.reactionChip,
+                style={({ pressed }) => [styles.reactionChip,
                   { borderColor },
-                  mine && { backgroundColor: incomingMessageBackground, borderColor: outgoingMessageBackground },
-                ]}
-                activeOpacity={0.7}
+                  mine && { backgroundColor: incomingMessageBackground, borderColor: outgoingMessageBackground }, pressed && { opacity: 0.7 }]}
+                
               >
                 <ThemedText style={styles.reactionChipEmoji}>{emoji}</ThemedText>
                 {count > 1 ? (
                   <ThemedText style={[styles.reactionChipCount, { color: iconColor }]}>{count}</ThemedText>
                 ) : null}
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
         ) : null}
@@ -641,22 +638,22 @@ export default function ConversationScreen() {
 
   const inputBar = (
     <ThemedView style={[styles.inputContainer, { borderTopColor: borderColor }]}>
-      <TouchableOpacity
-        style={styles.inputBarAction}
+      <Pressable
+        style={({ pressed }) => [styles.inputBarAction, pressed && { opacity: 0.7 }]}
         onPress={() => setComposerEmojiPickerVisible(true)}
         accessibilityLabel={t('post.addEmoji')}
         hitSlop={8}
       >
         <IconSymbol name="face.smiling" size={26} color={iconColor} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.inputBarAction}
+      </Pressable>
+      <Pressable
+        style={({ pressed }) => [styles.inputBarAction, pressed && { opacity: 0.7 }]}
         onPress={() => setComposerGifPickerVisible(true)}
         accessibilityLabel={t('gif.addGif')}
         hitSlop={8}
       >
         <IconSymbol name="photo.on.rectangle.angled" size={24} color={iconColor} />
-      </TouchableOpacity>
+      </Pressable>
       <TextInput
         style={[styles.textInput, { backgroundColor, borderColor, color: textColor }]}
         value={messageText}
@@ -667,8 +664,8 @@ export default function ConversationScreen() {
         multiline
         maxLength={500}
       />
-      <TouchableOpacity
-        style={[styles.sendButton, !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null]}
+      <Pressable
+        style={({ pressed }) => [styles.sendButton, !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null, pressed && { opacity: 0.7 }]}
         onPress={handleSendMessage}
         disabled={!messageText.trim() || sendMessageMutation.isPending}
       >
@@ -677,7 +674,7 @@ export default function ConversationScreen() {
           size={32}
           color={messageText.trim() && !sendMessageMutation.isPending ? '#007AFF' : '#C7C7CC'}
         />
-      </TouchableOpacity>
+      </Pressable>
     </ThemedView>
   );
 
@@ -850,7 +847,7 @@ const styles = StyleSheet.create({
   messageBubble: {
     // Native (Yoga) resolves `'80%'` against the parent column's measured
     // width. RN-Web's CSS pipeline can't always resolve a % maxWidth here —
-    // the bubble's TouchableOpacity wrapper has no definite width, so the
+    // the bubble's Pressable wrapper has no definite width, so the
     // percentage falls back near min-content and the bubble collapses to
     // one or two characters per line. Pin the web cap to a comfortable
     // chat-line dp; native keeps the original percentage behaviour.

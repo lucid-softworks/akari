@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ListPickerSheet } from '@/components/ListPickerSheet';
@@ -282,14 +282,14 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     : (handler: (() => void) | undefined) => handler;
 
   const menuItems = menuActions.map((item) => (
-    <TouchableOpacity
+    <Pressable
       key={item.key}
-      style={styles.menuItem}
+      style={({ pressed }) => [styles.menuItem, pressed && { opacity: item.disabled ? 1 : activeOpacity.default }]}
       onPress={item.disabled ? undefined : wrapPress(item.onPress)}
       disabled={item.disabled}
       accessibilityRole="menuitem"
       accessibilityState={{ disabled: item.disabled }}
-      activeOpacity={item.disabled ? 1 : activeOpacity.default}
+      
     >
       <IconSymbol
         name={item.icon as any}
@@ -306,7 +306,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       >
         {item.label}
       </ThemedText>
-    </TouchableOpacity>
+    </Pressable>
   ));
 
   return (
@@ -338,13 +338,13 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
                   {index > 0 ? (
                     <View style={[styles.divider, { backgroundColor: borderColor }]} />
                   ) : null}
-                  <TouchableOpacity
-                    style={[styles.sheetItem, item.disabled && styles.menuItemDisabled]}
+                  <Pressable
+                    style={({ pressed }) => [styles.sheetItem, item.disabled && styles.menuItemDisabled, pressed && { opacity: item.disabled ? 1 : activeOpacity.default }]}
                     onPress={item.disabled ? undefined : item.onPress}
                     disabled={item.disabled}
                     accessibilityRole="menuitem"
                     accessibilityState={{ disabled: item.disabled }}
-                    activeOpacity={item.disabled ? 1 : activeOpacity.default}
+                    
                   >
                     <IconSymbol
                       name={item.icon as any}
@@ -359,7 +359,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
                     >
                       {item.label}
                     </ThemedText>
-                  </TouchableOpacity>
+                  </Pressable>
                 </React.Fragment>
               ))}
             </ThemedView>
@@ -457,10 +457,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.sm,
     minWidth: 200,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
   },
 });

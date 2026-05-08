@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -117,9 +117,9 @@ export default function ConvoSettingsScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+        <Pressable onPress={() => router.back()} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
           <ThemedText style={[styles.headerAction, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
         <ThemedText style={[styles.title, { color: textColor }]}>
           {isGroup ? t('messages.groupSettings') : t('messages.chatSettings')}
         </ThemedText>
@@ -142,24 +142,22 @@ export default function ConvoSettingsScreen() {
                   placeholder={t('messages.groupName')}
                   placeholderTextColor={iconColor}
                 />
-                <TouchableOpacity
-                  style={[
-                    styles.saveButton,
+                <Pressable
+                  style={({ pressed }) => [styles.saveButton,
                     { backgroundColor: tintColor },
                     (!nameDraft.trim() || nameDraft.trim() === initialName || updateName.isPending) && {
                       opacity: 0.5,
-                    },
-                  ]}
+                    }, pressed && { opacity: activeOpacity.default }]}
                   onPress={handleSaveName}
                   disabled={!nameDraft.trim() || nameDraft.trim() === initialName || updateName.isPending}
-                  activeOpacity={activeOpacity.default}
+                  
                 >
                   {updateName.isPending ? (
                     <ActivityIndicator color="#000000" />
                   ) : (
                     <ThemedText style={styles.saveButtonText}>{t('common.save')}</ThemedText>
                   )}
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
 
@@ -172,10 +170,10 @@ export default function ConvoSettingsScreen() {
                   <View key={member.did}>
                     {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
                     <View style={styles.memberRow}>
-                      <TouchableOpacity
-                        style={styles.memberPress}
+                      <Pressable
+                        style={({ pressed }) => [styles.memberPress, pressed && { opacity: activeOpacity.default }]}
                         onPress={() => navigateToProfile({ actor: member.handle })}
-                        activeOpacity={activeOpacity.default}
+                        
                       >
                         {member.avatar ? (
                           <Image source={{ uri: member.avatar }} style={styles.memberAvatar} />
@@ -198,14 +196,13 @@ export default function ConvoSettingsScreen() {
                             @{member.handle}
                           </ThemedText>
                         </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity
+                      </Pressable>
+                      <Pressable
                         onPress={() => handleRemoveMember(member.did, member.displayName || member.handle)}
                         hitSlop={12}
-                        accessibilityLabel={t('messages.removeMember')}
-                      >
+                        accessibilityLabel={t('messages.removeMember')} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                         <IconSymbol name="minus.circle" size={22} color={semanticColors.danger} />
-                      </TouchableOpacity>
+                      </Pressable>
                     </View>
                   </View>
                 ))}
@@ -215,11 +212,11 @@ export default function ConvoSettingsScreen() {
         ) : null}
 
         <View style={styles.section}>
-          <TouchableOpacity
-            style={[styles.dangerButton, { borderColor: semanticColors.danger }]}
+          <Pressable
+            style={({ pressed }) => [styles.dangerButton, { borderColor: semanticColors.danger }, pressed && { opacity: activeOpacity.default }]}
             onPress={handleLeave}
             disabled={leaveConvo.isPending}
-            activeOpacity={activeOpacity.default}
+            
           >
             {leaveConvo.isPending ? (
               <ActivityIndicator color={semanticColors.danger} />
@@ -228,7 +225,7 @@ export default function ConvoSettingsScreen() {
                 {isGroup ? t('messages.leaveChat') : t('messages.deleteChat')}
               </ThemedText>
             )}
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </ScrollView>
     </ThemedView>

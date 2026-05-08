@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
@@ -136,9 +136,9 @@ export function PostInlineCard({ handle, rkey, onPress, style }: PostInlineCardP
 
   if (onPress) {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
+      <Pressable onPress={onPress} style={({ pressed }) => pressed && { opacity: 0.85 }}>
         {inner}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
   return inner;

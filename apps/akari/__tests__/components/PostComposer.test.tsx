@@ -1,5 +1,5 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import * as ReactNative from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as ImagePicker from 'expo-image-picker';
@@ -307,10 +307,13 @@ describe('PostComposer', () => {
     mockUseCreatePost.mockReturnValue({ mutateAsync, isPending: false });
     const onClose = jest.fn();
 
-    const { UNSAFE_getAllByType } = render(<PostComposer visible onClose={onClose} />);
-    const disabledButton = UNSAFE_getAllByType(TouchableOpacity).find(
-      (touchable) => touchable.props.disabled,
-    ) as { props: { onPress?: () => void } };
+    const { UNSAFE_root } = render(<PostComposer visible onClose={onClose} />);
+    const disabledButton = UNSAFE_root.findAll((node: any) => {
+      if (typeof node.props?.onPress !== 'function') return false;
+      const t = node.type;
+      const name = typeof t === 'string' ? t : ((t as any)?.displayName ?? (t as any)?.name);
+      return name === 'Pressable' && node.props.disabled;
+    })[0] as { props: { onPress?: () => void } };
 
     act(() => {
       disabledButton.props.onPress?.();

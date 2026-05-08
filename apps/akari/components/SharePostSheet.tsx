@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import React from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -97,16 +97,16 @@ export function SharePostSheet({
                 {idx > 0 ? (
                   <View style={[styles.divider, { backgroundColor: borderColor }]} />
                 ) : null}
-                <TouchableOpacity
-                  style={styles.row}
+                <Pressable
+                  style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                   onPress={row.onPress}
-                  activeOpacity={activeOpacity.default}
+                  
                 >
                   <IconSymbol name={row.icon} size={20} color={iconColor} />
                   <ThemedText style={[styles.rowText, { color: textColor }]}>
                     {row.label}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             ))}
           </ThemedView>

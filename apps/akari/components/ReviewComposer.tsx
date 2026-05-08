@@ -5,11 +5,11 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -110,18 +110,18 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
     const stars = [];
     for (let i = 1; i <= 10; i++) {
       stars.push(
-        <TouchableOpacity
-          key={i}
+        <Pressable
+          key={`star-${i}`}
           onPress={() => setRating(i)}
-          activeOpacity={activeOpacity.strong}
-          style={styles.starButton}
+          
+          style={({ pressed }) => [styles.starButton, pressed && { opacity: activeOpacity.strong }]}
         >
           <IconSymbol
             name={i <= rating ? 'star.fill' : 'star'}
             size={28}
             color={i <= rating ? '#FFB800' : iconColor}
           />
-        </TouchableOpacity>,
+        </Pressable>,
       );
     }
     return stars;
@@ -149,27 +149,25 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
               },
             ]}
           >
-            <TouchableOpacity onPress={handleClose} style={styles.headerButton}>
+            <Pressable onPress={handleClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
               <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>Cancel</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
 
             <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
               New Review
             </ThemedText>
 
-            <TouchableOpacity
+            <Pressable
               onPress={handlePostReview}
-              style={[
-                styles.postButton,
+              style={({ pressed }) => [styles.postButton,
                 isPostDisabled ? styles.postButtonDisabled : styles.postButtonEnabled,
-                { backgroundColor: isPostDisabled ? borderColor : tintColor },
-              ]}
+                { backgroundColor: isPostDisabled ? borderColor : tintColor }, pressed && { opacity: 0.7 }]}
               disabled={isPostDisabled}
             >
               <ThemedText style={[styles.postButtonText, { color: isPostDisabled ? textColor : '#000000' }]}>
                 {createReviewMutation.isPending ? 'Posting...' : 'Post Review'}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           <ScrollView
@@ -182,15 +180,13 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
             <View style={styles.section}>
               <ThemedText style={[styles.sectionLabel, { color: textColor }]}>Type</ThemedText>
               <View style={[styles.toggleRow, { borderColor }]}>
-                <TouchableOpacity
-                  style={[
-                    styles.toggleButton,
+                <Pressable
+                  style={({ pressed }) => [styles.toggleButton,
                     styles.toggleButtonLeft,
                     mediaType === 'movie' && [styles.toggleButtonActive, { backgroundColor: tintColor }],
-                    { borderColor },
-                  ]}
+                    { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                   onPress={() => handleMediaTypeChange('movie')}
-                  activeOpacity={activeOpacity.subtle}
+                  
                 >
                   <ThemedText
                     style={[
@@ -200,16 +196,14 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                   >
                     Movie
                   </ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.toggleButton,
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [styles.toggleButton,
                     styles.toggleButtonRight,
                     mediaType === 'tv_show' && [styles.toggleButtonActive, { backgroundColor: tintColor }],
-                    { borderColor },
-                  ]}
+                    { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                   onPress={() => handleMediaTypeChange('tv_show')}
-                  activeOpacity={activeOpacity.subtle}
+                  
                 >
                   <ThemedText
                     style={[
@@ -219,7 +213,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                   >
                     TV Show
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
 
@@ -258,25 +252,25 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                       ) : null}
                     </View>
                   </View>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => setTmdbPickerVisible(true)}
-                    style={[styles.changeButton, { borderColor }]}
-                    activeOpacity={activeOpacity.subtle}
+                    style={({ pressed }) => [styles.changeButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
+                    
                   >
                     <ThemedText style={[styles.changeButtonText, { color: tintColor }]}>Change</ThemedText>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ) : (
-                <TouchableOpacity
-                  style={[styles.searchButton, { borderColor }]}
+                <Pressable
+                  style={({ pressed }) => [styles.searchButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                   onPress={() => setTmdbPickerVisible(true)}
-                  activeOpacity={activeOpacity.subtle}
+                  
                 >
                   <IconSymbol name="magnifyingglass" size={18} color={iconColor} />
                   <ThemedText style={[styles.searchButtonText, { color: iconColor }]}>
                     {mediaType === 'movie' ? 'Search for a movie...' : 'Search for a TV show...'}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               )}
             </View>
 

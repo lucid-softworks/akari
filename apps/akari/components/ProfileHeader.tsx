@@ -2,7 +2,7 @@ import * as Haptics from 'expo-haptics';
 import { Image } from '@/components/Image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
@@ -378,10 +378,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
               />
             </View>
             <View style={styles.handleRow}>
-              <TouchableOpacity style={styles.handleContainer} onPress={() => setShowHandleHistory(true)} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+              <Pressable style={({ pressed }) => [styles.handleContainer, pressed && { opacity: activeOpacity.default }]} onPress={() => setShowHandleHistory(true)}  hitSlop={hitSlop}>
                 <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
                 <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
-              </TouchableOpacity>
+              </Pressable>
               {profile.pronouns ? (
                 <>
                   <ThemedText style={styles.pronounsSeparator}>·</ThemedText>
@@ -395,56 +395,56 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           <View style={styles.actionButtons}>
             {isOwnProfile ? (
               <>
-                <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+                <Pressable style={({ pressed }) => [styles.editButton, pressed && { opacity: 0.7 }]} onPress={handleEditProfile}>
                   <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
-                </TouchableOpacity>
+                </Pressable>
                 {onSettingsPress ? (
-                  <TouchableOpacity style={styles.iconButton} onPress={onSettingsPress} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                  <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={onSettingsPress}  hitSlop={hitSlop}>
                     <IconSymbol name="gearshape" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                  <TouchableOpacity style={styles.moreButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                  <Pressable style={({ pressed }) => [styles.moreButton, pressed && { opacity: activeOpacity.default }]} onPress={handleDropdownToggle}  hitSlop={hitSlop}>
                     <IconSymbol name="ellipsis" size={fontSize.xxl} color="#ffffff" />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </>
             ) : (
               <>
                 {!isBlockedBy && !profile.viewer?.blocking ? (
-                  <TouchableOpacity
-                    style={isFollowing ? styles.followingButton : styles.followButton}
+                  <Pressable
+                    style={({ pressed }) => [isFollowing ? styles.followingButton : styles.followButton, pressed && { opacity: activeOpacity.default }]}
                     onPress={handleFollowPress}
                     disabled={followMutation.isPending}
-                    activeOpacity={activeOpacity.default}
+                    
                   >
                     <ThemedText
                       style={isFollowing ? styles.followingButtonText : styles.followButtonText}
                     >
                       {isFollowing ? t('common.following') : t('common.follow')}
                     </ThemedText>
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
-                <TouchableOpacity style={styles.iconButton} onPress={handleSearchPosts} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={handleSearchPosts}  hitSlop={hitSlop}>
                   <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                </TouchableOpacity>
+                </Pressable>
                 {showBskyMessageButton ? (
-                  <TouchableOpacity
-                    style={styles.iconButton}
+                  <Pressable
+                    style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]}
                     onPress={handleBskyMessage}
-                    activeOpacity={activeOpacity.default}
+                    
                     hitSlop={hitSlop}
                     disabled={startConvoMutation.isPending}
                     accessibilityRole="button"
                     accessibilityLabel={t('profile.sendMessage')}
                   >
                     <IconSymbol name="bubble.left" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </TouchableOpacity>
+                  </Pressable>
                 ) : null}
                 <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                  <TouchableOpacity style={styles.iconButton} onPress={handleDropdownToggle} activeOpacity={activeOpacity.default} hitSlop={hitSlop}>
+                  <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={handleDropdownToggle}  hitSlop={hitSlop}>
                     <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </>
             )}
@@ -471,17 +471,17 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
         {/* Website */}
         {profile.website ? (
           <View style={styles.metaRow}>
-            <TouchableOpacity
-              style={styles.metaItem}
+            <Pressable
+              style={({ pressed }) => [styles.metaItem, pressed && { opacity: activeOpacity.default }]}
               onPress={() => void Linking.openURL(profile.website!)}
-              activeOpacity={activeOpacity.default}
+              
               hitSlop={hitSlop}
             >
               <IconSymbol name="link" size={fontSize.base} color={mutedTextColor} />
               <ThemedText style={[styles.metaLink, { color: semanticColors.systemBlue }]} numberOfLines={1}>
                 {formatWebsiteLabel(profile.website)}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         ) : null}
 

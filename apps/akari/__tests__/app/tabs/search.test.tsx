@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Text, View } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
@@ -45,13 +45,13 @@ jest.mock('@/components/PostCard', () => {
 
 jest.mock('@/components/SearchTabs', () => {
   const React = require('react');
-  const { Text, TouchableOpacity, View } = require('react-native');
+  const { Pressable, Text, View } = require('react-native');
   return {
     SearchTabs: ({ onTabChange }: { onTabChange: (t: string) => void }) => (
       <View>
-        <TouchableOpacity onPress={() => onTabChange('all')}><Text>All</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => onTabChange('users')}><Text>Users</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => onTabChange('posts')}><Text>Posts</Text></TouchableOpacity>
+        <Pressable onPress={() => onTabChange('all')}><Text>All</Text></Pressable>
+        <Pressable onPress={() => onTabChange('users')}><Text>Users</Text></Pressable>
+        <Pressable onPress={() => onTabChange('posts')}><Text>Posts</Text></Pressable>
       </View>
     ),
   };

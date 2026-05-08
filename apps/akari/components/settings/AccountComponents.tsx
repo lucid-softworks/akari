@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React from 'react';
-import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -60,24 +60,24 @@ export function AccountRow({
 
       <ThemedView style={styles.accountActions}>
         {onSwitch ? (
-          <TouchableOpacity
+          <Pressable
             accessibilityRole="button"
-            activeOpacity={0.7}
+            
             onPress={onSwitch}
-            style={[styles.accountActionButton, styles.accountActionButtonPrimary]}
+            style={({ pressed }) => [styles.accountActionButton, styles.accountActionButtonPrimary, pressed && { opacity: 0.7 }]}
           >
             <ThemedText style={[styles.accountActionText, styles.accountActionPrimary]}>{switchLabel}</ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
 
-        <TouchableOpacity
+        <Pressable
           accessibilityRole="button"
-          activeOpacity={0.7}
+          
           onPress={onRemove}
-          style={[styles.accountActionButton, !onSwitch && styles.accountActionButtonPrimary]}
+          style={({ pressed }) => [styles.accountActionButton, !onSwitch && styles.accountActionButtonPrimary, pressed && { opacity: 0.7 }]}
         >
           <ThemedText style={[styles.accountActionText, styles.accountActionDestructive]}>{removeLabel}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
       </ThemedView>
     </ThemedView>
   );

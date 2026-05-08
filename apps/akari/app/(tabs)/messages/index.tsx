@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyVerification } from '@/bluesky-api';
@@ -149,8 +149,8 @@ export function MessagesListScreen({
         ? t('messages.deletedAccount')
         : item.displayName;
       return (
-      <TouchableOpacity
-        style={[styles.conversationItem, { borderBottomColor: borderColor }]}
+      <Pressable
+        style={({ pressed }) => [styles.conversationItem, { borderBottomColor: borderColor }, pressed && { opacity: 0.7 }]}
         onPress={() => {
           router.push(
             `/(tabs)/messages/${encodeURIComponent(item.convoId)}?handle=${encodeURIComponent(item.handle)}` as any,
@@ -158,13 +158,13 @@ export function MessagesListScreen({
         }}
       >
         <ThemedView style={styles.conversationContent}>
-          <TouchableOpacity
-            style={styles.avatarContainer}
+          <Pressable
+            style={({ pressed }) => [styles.avatarContainer, pressed && { opacity: activeOpacity.default }]}
             onPress={() => {
               if (isDeleted || item.isGroup) return;
               navigateToProfile({ actor: item.handle });
             }}
-            activeOpacity={activeOpacity.default}
+            
           >
             {item.isGroup ? (
               <View style={styles.groupAvatar}>
@@ -196,7 +196,7 @@ export function MessagesListScreen({
                 <ThemedText style={styles.avatarFallback}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
               </ThemedView>
             )}
-          </TouchableOpacity>
+          </Pressable>
 
           <ThemedView style={styles.conversationInfo}>
             <ThemedView style={styles.conversationHeader}>
@@ -235,7 +235,7 @@ export function MessagesListScreen({
             )}
           </ThemedView>
         </ThemedView>
-      </TouchableOpacity>
+      </Pressable>
     );
     },
     [borderColor, navigateToProfile, t],
@@ -274,26 +274,26 @@ export function MessagesListScreen({
           <ThemedView style={[styles.header, { borderBottomColor: borderColor }]}> 
             <ThemedView style={styles.headerTitleContainer}> 
               {onBackPress ? ( 
-                <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={activeOpacity.default}> 
+                <Pressable style={({ pressed }) => [styles.backButton, pressed && { opacity: activeOpacity.default }]} onPress={onBackPress} > 
                   <IconSymbol name="chevron.left" size={24} color="#007AFF" /> 
-                </TouchableOpacity> 
+                </Pressable> 
               ) : null} 
               <ThemedText style={styles.title}>{t(titleKey)}</ThemedText> 
             </ThemedView> 
             <View style={styles.headerActions}>
               {pendingButtonConfig ? (
                 <>
-                  <TouchableOpacity style={styles.pendingButton} onPress={pendingButtonConfig.onPress} activeOpacity={activeOpacity.default}>
+                  <Pressable style={({ pressed }) => [styles.pendingButton, pressed && { opacity: activeOpacity.default }]} onPress={pendingButtonConfig.onPress} >
                     <ThemedText style={styles.pendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.newChatButton}
+                  </Pressable>
+                  <Pressable
+                    style={({ pressed }) => [styles.newChatButton, pressed && { opacity: activeOpacity.default }]}
                     onPress={() => router.push('/(tabs)/messages/new' as any)}
                     accessibilityLabel={t('messages.newChat')}
-                    activeOpacity={activeOpacity.default}
+                    
                   >
                     <IconSymbol name="square.and.pencil" size={22} color={tintColor} />
-                  </TouchableOpacity>
+                  </Pressable>
                 </>
               ) : null}
             </View>
@@ -321,21 +321,21 @@ export function MessagesListScreen({
             <View style={styles.headerActions}>
               {pendingButtonConfig ? (
                 <>
-                  <TouchableOpacity
-                    style={styles.mobilePendingButton}
+                  <Pressable
+                    style={({ pressed }) => [styles.mobilePendingButton, pressed && { opacity: activeOpacity.default }]}
                     onPress={pendingButtonConfig.onPress}
-                    activeOpacity={activeOpacity.default}
+                    
                   >
                     <ThemedText style={styles.mobilePendingButtonText}>{t(pendingButtonConfig.labelKey)}</ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.newChatButton}
+                  </Pressable>
+                  <Pressable
+                    style={({ pressed }) => [styles.newChatButton, pressed && { opacity: activeOpacity.default }]}
                     onPress={() => router.push('/(tabs)/messages/new' as any)}
                     accessibilityLabel={t('messages.newChat')}
-                    activeOpacity={activeOpacity.default}
+                    
                   >
                     <IconSymbol name="square.and.pencil" size={22} color={tintColor} />
-                  </TouchableOpacity>
+                  </Pressable>
                 </>
               ) : null}
             </View>

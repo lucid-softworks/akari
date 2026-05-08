@@ -246,16 +246,17 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
               // For mentions, we need to extract the handle from the text since the did is just the DID
               // The text should contain the actual handle (e.g., "@miragreen.bsky.social")
               const handle = segment.text.replace(/^@/, ''); // Remove the @ symbol
+              const mentionKey = `mention-${segment.start}-${segment.end}`;
               if (disableLinks) {
                 return (
-                  <ThemedText key={index} style={[{ color: mentionColor }]}>
+                  <ThemedText key={mentionKey} style={{ color: mentionColor }}>
                     {segment.text}
                   </ThemedText>
                 );
               }
               return (
                 <InlineFacetLink
-                  key={index}
+                  key={mentionKey}
                   push
                   href={profileHref(handle)}
                   insideAnchor={insideAnchor}
@@ -269,16 +270,17 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
 
           case 'link':
             if (segment.uri) {
+              const linkKey = `link-${segment.start}-${segment.end}`;
               if (disableLinks) {
                 return (
-                  <ThemedText key={index} style={[{ color: linkColor }]}>
+                  <ThemedText key={linkKey} style={{ color: linkColor }}>
                     {segment.text || toShortUrl(segment.uri)}
                   </ThemedText>
                 );
               }
               return (
                 <InlineFacetLink
-                  key={index}
+                  key={linkKey}
                   href={segment.uri}
                   insideAnchor={insideAnchor}
                   textStyle={{ color: linkColor }}
@@ -292,16 +294,17 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
           case 'tag': {
             const tagValue = segment.tag ?? segment.text.replace(/^#/, '');
             const hashtagQuery = `#${tagValue}`;
+            const tagKey = `tag-${segment.start}-${segment.end}`;
             if (disableLinks) {
               return (
-                <ThemedText key={index} style={[{ color: tagColor }]}>
+                <ThemedText key={tagKey} style={{ color: tagColor }}>
                   {segment.text}
                 </ThemedText>
               );
             }
             return (
               <InlineFacetLink
-                key={index}
+                key={tagKey}
                 href={`/search?query=${encodeURIComponent(hashtagQuery)}`}
                 insideAnchor={insideAnchor}
                 textStyle={{ color: tagColor }}

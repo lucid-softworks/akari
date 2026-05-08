@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React from 'react';
-import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
@@ -123,15 +123,15 @@ function TrustedVerifierRow({
           </ThemedText>
         ) : null}
       </View>
-      <TouchableOpacity
+      <Pressable
         onPress={onRemove}
         accessibilityRole="button"
         accessibilityLabel={t('ui.untrustVerifier')}
         hitSlop={hitSlop}
-        style={styles.removeButton}
+        style={({ pressed }) => [styles.removeButton, pressed && { opacity: 0.7 }]}
       >
         <IconSymbol name="minus.circle.fill" size={22} color={subduedColor} />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

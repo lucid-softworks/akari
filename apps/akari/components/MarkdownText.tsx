@@ -93,7 +93,7 @@ function InlineRenderer({
   return (
     <>
       {inline.map((node, index) => (
-        <InlineNode key={index} node={node} codeBackground={codeBackground} />
+        <InlineNode key={`${node.type}-${index}`} node={node} codeBackground={codeBackground} />
       ))}
     </>
   );

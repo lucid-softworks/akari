@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { type LayoutChangeEvent, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
@@ -18,7 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
-export const renderComment = (
+const renderComment = (
   item:
     | BlueskyFeedItem
     | {
@@ -420,16 +420,16 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
       </ScrollView>
 
       {/* Reply Bar */}
-      <TouchableOpacity
-        style={[styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom - spacing.lg, spacing.xs) }]}
+      <Pressable
+        style={({ pressed }) => [styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom - spacing.lg, spacing.xs) }, pressed && { opacity: 0.7 }]}
         onPress={() => setShowReplyComposer(true)}
-        activeOpacity={0.7}
+        
       >
         <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
         <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
           {t('post.reply')}...
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
       {/* Reply Composer */}
       <PostComposer

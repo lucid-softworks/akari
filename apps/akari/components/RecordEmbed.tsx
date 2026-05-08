@@ -602,7 +602,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
 
                   return (
                     <Image
-                      key={`${embed.record.uri}-image-${index}`}
+                      key={`${embed.record.uri}-${imageUrl}`}
                       source={{ uri: imageUrl }}
                       style={[styles.image, { height: imageHeight }]}
                       contentFit="contain"

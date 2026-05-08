@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
@@ -110,10 +110,11 @@ export function VideoPlayer({
   // Auto-play when player becomes ready and should show video
   useEffect(() => {
     if (shouldShowVideo && playerStatus === 'readyToPlay' && videoRef.current) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         videoRef.current?.seek(0);
         setIsPlaying(true);
       }, 100); // Small delay to ensure player is ready
+      return () => clearTimeout(timeoutId);
     }
   }, [shouldShowVideo, playerStatus]);
 
@@ -269,21 +270,20 @@ export function VideoPlayer({
             },
           ]}
         >
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               // Reset and retry
               setPlayerStatus('idle');
               setPlayerError(null);
               setShouldShowVideo(false);
-            }}
-          >
+            }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <ThemedView style={styles.errorContainer}>
               <ThemedText style={[styles.errorText, { color: textColor }]}>
                 {playerError && playerError.trim() ? playerError : 'Failed to load video'}
               </ThemedText>
               <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
             </ThemedView>
-          </TouchableOpacity>
+          </Pressable>
         </ThemedView>
       </ThemedCard>
     );
@@ -355,7 +355,7 @@ export function VideoPlayer({
   // Fallback: thumbnail with play button
   const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} disabled={isResolvingUrl}>
+    <Pressable onPress={handlePress}  disabled={isResolvingUrl} style={({ pressed }) => pressed && { opacity: 0.8 }}>
       <ThemedCard style={styles.container}>
         <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
           {thumbnailUrl ? (
@@ -399,7 +399,7 @@ export function VideoPlayer({
           );
         })()}
       </ThemedCard>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

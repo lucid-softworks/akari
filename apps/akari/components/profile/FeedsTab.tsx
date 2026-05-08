@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -44,9 +44,9 @@ function FeedItem({ feed }: FeedItemProps) {
             <ThemedText style={[styles.feedCreator, { color: secondaryTextColor }]}>{t('ui.byCreator', { handle: feed.creator.handle })}</ThemedText>
           </ThemedView>
 
-          <TouchableOpacity style={styles.pinButton} onPress={handlePinPress} activeOpacity={0.6}>
+          <Pressable style={({ pressed }) => [styles.pinButton, pressed && { opacity: 0.6 }]} onPress={handlePinPress} >
             <IconSymbol name="pin" size={18} color={iconColor} />
-          </TouchableOpacity>
+          </Pressable>
         </ThemedView>
 
         {feed.description && (
@@ -121,11 +121,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
     overflow: 'hidden',
   },
   feedContent: {

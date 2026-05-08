@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -56,20 +56,18 @@ export function ConfirmDialog({ title, message, buttons, onClose }: ConfirmDialo
             const isDestructive = button.style === 'destructive';
             const color = isDestructive ? destructiveColor : isCancel ? subduedColor : accentColor;
             return (
-              <TouchableOpacity
-                key={`${button.text}-${index}`}
+              <Pressable
+                key={button.text}
                 accessibilityRole="button"
-                activeOpacity={0.7}
+                
                 onPress={() => handlePress(button)}
-                style={[
-                  styles.button,
-                  !isLast && { borderRightColor: borderColor, borderRightWidth: layout.hairline },
-                ]}
+                style={({ pressed }) => [styles.button,
+                  !isLast && { borderRightColor: borderColor, borderRightWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
               >
                 <ThemedText style={[styles.buttonText, { color }, isCancel ? styles.cancelText : null]}>
                   {button.text}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </View>

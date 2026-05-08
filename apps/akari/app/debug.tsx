@@ -6,7 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type ThemeName = keyof typeof Colors;
@@ -39,9 +39,9 @@ function CrashReporterTestSection(): React.JSX.Element {
       <ThemedText style={styles.crashDescription}>
         {t('debug.crashDescription')}
       </ThemedText>
-      <TouchableOpacity style={[styles.button, styles.crashButton]} onPress={triggerCrash}>
+      <Pressable style={({ pressed }) => [styles.button, styles.crashButton, pressed && { opacity: 0.7 }]} onPress={triggerCrash}>
         <ThemedText style={styles.buttonText}>{t('debug.triggerCrash')}</ThemedText>
-      </TouchableOpacity>
+      </Pressable>
       <ThemedText style={[styles.crashHint, { color: palette.icon }]}>
         {t('debug.crashHint')}
       </ThemedText>
@@ -139,12 +139,12 @@ export default function DebugScreen() {
         <View style={[styles.header, { borderBottomColor: Colors[theme].icon }]}>
           <ThemedText style={styles.title}>{t('debug.queryCacheDebug')}</ThemedText>
           <View style={styles.headerButtons}>
-            <TouchableOpacity style={[styles.button, styles.invalidateButton]} onPress={invalidateAllQueries}>
+            <Pressable style={({ pressed }) => [styles.button, styles.invalidateButton, pressed && { opacity: 0.7 }]} onPress={invalidateAllQueries}>
               <ThemedText style={styles.buttonText}>{t('debug.invalidateAll')}</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.clearButton]} onPress={clearAllQueries}>
+            </Pressable>
+            <Pressable style={({ pressed }) => [styles.button, styles.clearButton, pressed && { opacity: 0.7 }]} onPress={clearAllQueries}>
               <ThemedText style={styles.buttonText}>{t('debug.clearAll')}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
 
@@ -176,14 +176,12 @@ export default function DebugScreen() {
               const statusText = getQueryStatusText(query);
 
               return (
-                <View key={index} style={[styles.queryContainer, { borderColor: Colors[theme].icon }]}>
-                  <TouchableOpacity
-                    style={[
-                      styles.queryHeader,
+                <View key={queryKeyString} style={[styles.queryContainer, { borderColor: Colors[theme].icon }]}>
+                  <Pressable
+                    style={({ pressed }) => [styles.queryHeader,
                       {
                         backgroundColor: Colors[theme].background,
-                      },
-                    ]}
+                      }, pressed && { opacity: 0.7 }]}
                     onPress={() => toggleQueryExpansion(queryKeyString)}
                   >
                     <View style={styles.queryHeaderLeft}>
@@ -196,7 +194,7 @@ export default function DebugScreen() {
                       <ThemedText style={styles.statusText}>{statusText}</ThemedText>
                       <ThemedText style={styles.expandIcon}>{isExpanded ? '▼' : '▶'}</ThemedText>
                     </View>
-                  </TouchableOpacity>
+                  </Pressable>
 
                   {isExpanded && (
                     <View
@@ -319,8 +317,8 @@ export default function DebugScreen() {
                       )}
 
                       <View style={styles.queryActions}>
-                        <TouchableOpacity
-                          style={[styles.actionButton, styles.refetchButton]}
+                        <Pressable
+                          style={({ pressed }) => [styles.actionButton, styles.refetchButton, pressed && { opacity: 0.7 }]}
                           onPress={() =>
                             queryClient.invalidateQueries({
                               queryKey: query.queryKey,
@@ -328,9 +326,9 @@ export default function DebugScreen() {
                           }
                         >
                           <ThemedText style={styles.actionButtonText}>{t('debug.refetch')}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={[styles.actionButton, styles.removeButton]}
+                        </Pressable>
+                        <Pressable
+                          style={({ pressed }) => [styles.actionButton, styles.removeButton, pressed && { opacity: 0.7 }]}
                           onPress={() =>
                             queryClient.removeQueries({
                               queryKey: query.queryKey,
@@ -338,7 +336,7 @@ export default function DebugScreen() {
                           }
                         >
                           <ThemedText style={styles.actionButtonText}>{t('debug.remove')}</ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                       </View>
                     </View>
                   )}

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -128,19 +128,19 @@ export function PostControlsSheet({
         >
           <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
             <View style={[styles.header, { borderBottomColor: borderColor }]}>
-              <TouchableOpacity onPress={onDismiss} hitSlop={12}>
+              <Pressable onPress={onDismiss} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                 <ThemedText style={[styles.headerAction, { color: iconColor }]}>
                   {t('common.cancel')}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
               <ThemedText style={[styles.headerTitle, { color: textColor }]}>
                 {t('post.controls.title')}
               </ThemedText>
-              <TouchableOpacity onPress={() => onSave(draft)} hitSlop={12}>
+              <Pressable onPress={() => onSave(draft)} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                 <ThemedText style={[styles.headerAction, { color: tintColor, fontWeight: fontWeight.semibold }]}>
                   {t('common.save')}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
@@ -150,16 +150,16 @@ export function PostControlsSheet({
               {replyOptions.map((opt, idx) => (
                 <View key={opt.key}>
                   {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                  <TouchableOpacity
-                    style={styles.row}
+                  <Pressable
+                    style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                     onPress={() => setReplyType(opt.key)}
-                    activeOpacity={activeOpacity.default}
+                    
                   >
                     <ThemedText style={[styles.rowText, { color: textColor }]}>{opt.label}</ThemedText>
                     {replyType === opt.key ? (
                       <IconSymbol name="checkmark" size={20} color={tintColor} />
                     ) : null}
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ))}
 
@@ -183,10 +183,10 @@ export function PostControlsSheet({
                         return (
                           <View key={key}>
                             {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                            <TouchableOpacity
-                              style={styles.row}
+                            <Pressable
+                              style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                               onPress={() => toggleLimitedRule(key)}
-                              activeOpacity={activeOpacity.default}
+                              
                             >
                               <ThemedText style={[styles.rowText, { color: textColor }]}>{t(labelKey)}</ThemedText>
                               <IconSymbol
@@ -194,7 +194,7 @@ export function PostControlsSheet({
                                 size={20}
                                 color={checked ? tintColor : iconColor}
                               />
-                            </TouchableOpacity>
+                            </Pressable>
                           </View>
                         );
                       })}
@@ -213,10 +213,10 @@ export function PostControlsSheet({
                           return (
                             <View key={list.uri}>
                               {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                              <TouchableOpacity
-                                style={styles.row}
+                              <Pressable
+                                style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                                 onPress={() => toggleListUri(list.uri)}
-                                activeOpacity={activeOpacity.default}
+                                
                               >
                                 <ThemedText
                                   style={[styles.rowText, { color: textColor }]}
@@ -229,7 +229,7 @@ export function PostControlsSheet({
                                   size={20}
                                   color={checked ? tintColor : iconColor}
                                 />
-                              </TouchableOpacity>
+                              </Pressable>
                             </View>
                           );
                         })}
@@ -242,10 +242,10 @@ export function PostControlsSheet({
               <ThemedText style={[styles.sectionLabel, styles.sectionLabelSpaced, { color: iconColor }]}>
                 {t('post.controls.embedding')}
               </ThemedText>
-              <TouchableOpacity
-                style={styles.row}
+              <Pressable
+                style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                 onPress={() => setDraft((d) => ({ ...d, allowQuote: !d.allowQuote }))}
-                activeOpacity={activeOpacity.default}
+                
               >
                 <ThemedText style={[styles.rowText, { color: textColor }]}>
                   {t('post.controls.allowQuote')}
@@ -255,17 +255,17 @@ export function PostControlsSheet({
                   size={20}
                   color={draft.allowQuote ? tintColor : iconColor}
                 />
-              </TouchableOpacity>
+              </Pressable>
 
-              <TouchableOpacity
-                style={styles.resetButton}
+              <Pressable
+                style={({ pressed }) => [styles.resetButton, pressed && { opacity: activeOpacity.default }]}
                 onPress={handleReset}
-                activeOpacity={activeOpacity.default}
+                
               >
                 <ThemedText style={[styles.resetText, { color: iconColor }]}>
                   {t('post.controls.reset')}
                 </ThemedText>
-              </TouchableOpacity>
+              </Pressable>
             </ScrollView>
           </ThemedView>
         </Pressable>

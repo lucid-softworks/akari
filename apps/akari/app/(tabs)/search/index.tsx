@@ -1,7 +1,7 @@
 import { Image } from '@/components/Image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Keyboard, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, TextInput, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -122,26 +122,26 @@ const SearchListHeader = React.memo(
               autoCorrect={false}
             />
             {query.length > 0 ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={onClearQuery}
                 accessibilityRole="button"
                 accessibilityLabel={clearLabel}
                 hitSlop={8}
-                style={styles.clearButton}
+                style={({ pressed }) => [styles.clearButton, pressed && { opacity: 0.7 }]}
               >
                 <IconSymbol name="xmark.circle.fill" size={18} color={placeholderColor} />
-              </TouchableOpacity>
+              </Pressable>
             ) : null}
           </ThemedView>
-          <TouchableOpacity
-            style={[styles.searchButton, { backgroundColor: borderColor }]}
+          <Pressable
+            style={({ pressed }) => [styles.searchButton, { backgroundColor: borderColor }, pressed && { opacity: 0.7 }]}
             onPress={onSearch}
             disabled={isLoading}
           >
             <ThemedText style={[styles.searchButtonText, { color: textColor }]}>
               {isLoading ? searchingLabel : searchLabel}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         </ThemedView>
 
         {showTabs ? <SearchTabs activeTab={activeTab} onTabChange={onTabChange} /> : null}
@@ -151,17 +151,15 @@ const SearchListHeader = React.memo(
             {(['top', 'latest'] as const).map((option) => {
               const isActive = sort === option;
               return (
-                <TouchableOpacity
+                <Pressable
                   key={option}
-                  style={[
-                    styles.sortChip,
+                  style={({ pressed }) => [styles.sortChip,
                     {
                       backgroundColor: isActive ? textColor : 'transparent',
                       borderColor,
-                    },
-                  ]}
+                    }, pressed && { opacity: activeOpacity.default }]}
                   onPress={() => onSortChange(option)}
-                  activeOpacity={activeOpacity.default}
+                  
                 >
                   <ThemedText
                     style={[
@@ -171,7 +169,7 @@ const SearchListHeader = React.memo(
                   >
                     {option === 'top' ? topLabel : latestLabel}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               );
             })}
           </ThemedView>
@@ -348,10 +346,10 @@ export default function SearchScreen() {
 
     const profile = item.data;
     return (
-      <TouchableOpacity
-        style={[styles.resultItem, { borderBottomColor: borderColor }]}
+      <Pressable
+        style={({ pressed }) => [styles.resultItem, { borderBottomColor: borderColor }, pressed && { opacity: activeOpacity.default }]}
         onPress={() => navigateToProfile({ actor: profile.handle })}
-        activeOpacity={activeOpacity.default}
+        
       >
         <ThemedView style={styles.profileContainer}>
           {profile.avatar ? (
@@ -382,7 +380,7 @@ export default function SearchScreen() {
             <Labels labels={profile.labels} maxLabels={3} />
           </ThemedView>
         </ThemedView>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 

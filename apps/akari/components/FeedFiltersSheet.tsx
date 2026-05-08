@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import {
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   Switch,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -132,19 +132,19 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
     >
       <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <TouchableOpacity onPress={reset} style={styles.headerButton} accessibilityRole="button">
+          <Pressable onPress={reset} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
             <ThemedText style={[styles.headerButtonText, { color: subduedColor }]}>
               {t('common.reset')}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
           <ThemedText style={[styles.headerTitle, { color: textColor }]}>
             {t('feed.filterSheetTitle')}
           </ThemedText>
-          <TouchableOpacity onPress={onClose} style={styles.headerButton} accessibilityRole="button">
+          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
             <ThemedText style={[styles.headerButtonText, { color: ACCENT, fontWeight: fontWeight.semibold }]}>
               {t('common.done')}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">

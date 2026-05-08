@@ -3,9 +3,9 @@ import React, { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -154,14 +154,14 @@ export function AddAccountForm() {
           </ThemedText>
         </View>
 
-        <TouchableOpacity
+        <Pressable
           accessibilityRole="button"
           onPress={handleSubmit}
           disabled={isSubmitting}
-          style={[styles.primaryButton, isSubmitting ? styles.disabledPrimary : null]}
+          style={({ pressed }) => [styles.primaryButton, isSubmitting ? styles.disabledPrimary : null, pressed && { opacity: 0.7 }]}
         >
           <ThemedText style={styles.primaryButtonText}>{primaryActionLabel}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );

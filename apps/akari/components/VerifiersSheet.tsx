@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React, { useMemo } from 'react';
-import { Modal, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
@@ -126,11 +126,11 @@ export function VerifiersSheet({
     >
       <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <TouchableOpacity onPress={onClose} style={styles.headerButton} accessibilityRole="button">
+          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
             <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
               {t('common.done')}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
           <ThemedText style={[styles.headerTitle, { color: textColor }]}>
             {t('ui.verifiersSheetTitle')}
           </ThemedText>
@@ -218,10 +218,10 @@ function VerifierRow({ row, onClose, borderColor, subduedColor }: VerifierRowPro
 
   return (
     <View style={[styles.row, { borderBottomColor: borderColor }]}>
-      <TouchableOpacity
+      <Pressable
         onPress={handlePress}
-        activeOpacity={activeOpacity.default}
-        style={styles.rowMain}
+        
+        style={({ pressed }) => [styles.rowMain, pressed && { opacity: activeOpacity.default }]}
         accessibilityRole="button"
       >
         {profile?.avatar ? (
@@ -244,21 +244,21 @@ function VerifierRow({ row, onClose, borderColor, subduedColor }: VerifierRowPro
             </ThemedText>
           ) : null}
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         onPress={handleToggleTrusted}
         accessibilityRole="button"
         accessibilityLabel={
           isTrusted ? t('ui.untrustVerifier') : t('ui.trustVerifier')
         }
-        style={styles.trustToggle}
+        style={({ pressed }) => [styles.trustToggle, pressed && { opacity: 0.7 }]}
       >
         <IconSymbol
           name={isTrusted ? 'checkmark.seal.fill' : 'checkmark.seal'}
           size={20}
           color={isTrusted ? VERIFIED_GOLD : subduedColor}
         />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

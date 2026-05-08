@@ -6,7 +6,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -138,13 +137,13 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
                 });
 
                 return (
-                  <TouchableOpacity
+                  <Pressable
                     key={account.did}
                     accessibilityRole="button"
                     accessibilityState={{ selected }}
                     accessibilityLabel={accessibilityLabel}
                     onPress={() => handleAccountSelect(account)}
-                    style={styles.accountOption}
+                    style={({ pressed }) => [styles.accountOption, pressed && { opacity: 0.7 }]}
                   >
                     <View style={[styles.avatar, { backgroundColor: avatarBackground }]}>
                       {account.avatar ? (
@@ -177,22 +176,22 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
                     ) : (
                       <IconSymbol name="circle" size={22} color={handleColor} />
                     )}
-                  </TouchableOpacity>
+                  </Pressable>
                 );
               })
             )}
           </ScrollView>
 
-          <TouchableOpacity
+          <Pressable
             accessibilityRole="button"
             onPress={handleAddAccount}
-            style={[styles.addAccountButton, { borderColor }]}
+            style={({ pressed }) => [styles.addAccountButton, { borderColor }, pressed && { opacity: 0.7 }]}
           >
             <IconSymbol name="plus" size={18} color={accentColor} style={styles.addAccountIcon} />
             <ThemedText style={[styles.addAccountText, { color: accentColor }]}>
               {t('common.addAccount')}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
           </ThemedView>
         </Pressable>
       </Pressable>

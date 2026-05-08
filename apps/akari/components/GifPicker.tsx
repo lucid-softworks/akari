@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Modal, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Modal, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -164,19 +164,19 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       }
 
       return (
-        <TouchableOpacity
+        <Pressable
           accessibilityRole="button"
           accessibilityLabel={item.content_description || item.title || 'GIF'}
-          style={styles.gifItem}
+          style={({ pressed }) => [styles.gifItem, pressed && { opacity: activeOpacity.subtle }]}
           onPress={() => handleSelectGif(item)}
-          activeOpacity={activeOpacity.subtle}
+          
         >
           <Image
             source={{ uri: gifUrl }}
             style={styles.gifImage}
             contentFit="cover"
           />
-        </TouchableOpacity>
+        </Pressable>
       );
     },
     [handleSelectGif],
@@ -219,9 +219,9 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
     <ThemedView style={[styles.container, { backgroundColor }, isWeb && styles.webContainer]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
-        <TouchableOpacity accessibilityRole="button" onPress={onClose} style={styles.headerButton}>
+        <Pressable accessibilityRole="button" onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
           <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
 
         <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
           {t('gif.selectGif')}

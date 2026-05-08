@@ -1,6 +1,6 @@
 import Hls, { Events } from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 import { ThemedCard } from '@/components/ThemedCard';
@@ -253,22 +253,21 @@ export function VideoPlayer({
         <ThemedView
           style={[styles.videoContainer, { aspectRatio: aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9 }]}
         >
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               setPlayerStatus('idle');
               setPlayerError(null);
               setShouldShowVideo(false);
               setPlaybackUrl(null);
               setIsResolvingUrl(false);
-            }}
-          >
+            }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <ThemedView style={styles.errorContainer}>
               <ThemedText style={[styles.errorText, { color: textColor }]}>
                 {playerError && playerError.trim() ? playerError : 'Failed to load video'}
               </ThemedText>
               <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
             </ThemedView>
-          </TouchableOpacity>
+          </Pressable>
         </ThemedView>
       </ThemedCard>
     );
@@ -324,7 +323,7 @@ export function VideoPlayer({
   const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} disabled={isResolvingUrl}>
+    <Pressable onPress={handlePress}  disabled={isResolvingUrl} style={({ pressed }) => pressed && { opacity: 0.8 }}>
       <ThemedCard style={styles.container}>
         <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
           {thumbnailUrl ? (
@@ -363,7 +362,7 @@ export function VideoPlayer({
           );
         })()}
       </ThemedCard>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

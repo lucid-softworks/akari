@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedText } from '@/components/ThemedText';
@@ -89,14 +89,14 @@ export default function CustomizeTabsScreen() {
                 </View>
                 <View style={styles.rowRight}>
                   {!meta.alwaysVisible ? (
-                    <TouchableOpacity onPress={() => handleMoveUp(key)} activeOpacity={activeOpacity.default} style={styles.arrowButton} disabled={index === 0}>
+                    <Pressable onPress={() => handleMoveUp(key)}  style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]} disabled={index === 0}>
                       <IconSymbol name="chevron.up" size={16} color={index === 0 ? borderColor : iconColor} />
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                   {!meta.alwaysVisible ? (
-                    <TouchableOpacity onPress={() => handleMoveDown(key)} activeOpacity={activeOpacity.default} style={styles.arrowButton} disabled={index === localTabs.length - 1}>
+                    <Pressable onPress={() => handleMoveDown(key)}  style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]} disabled={index === localTabs.length - 1}>
                       <IconSymbol name="chevron.down" size={16} color={index === localTabs.length - 1 ? borderColor : iconColor} />
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                   {!meta.alwaysVisible ? (
                     <Switch
@@ -114,11 +114,15 @@ export default function CustomizeTabsScreen() {
         </ThemedView>
 
         {/* Hidden tabs */}
-        {ALL_TABS.filter((tab) => !localTabs.includes(tab.key)).length > 0 ? (
+        {(() => {
+          const localTabSet = new Set(localTabs);
+          const hiddenTabs = ALL_TABS.filter((tab) => !localTabSet.has(tab.key));
+          if (hiddenTabs.length === 0) return null;
+          return (
           <>
             <ThemedText style={styles.sectionTitle}>{t('settings.hiddenTabs')}</ThemedText>
             <ThemedView style={[styles.card, { borderColor, backgroundColor: cardBg }]}>
-              {ALL_TABS.filter((tab) => !localTabs.includes(tab.key)).map((meta, index, arr) => (
+              {hiddenTabs.map((meta, index, arr) => (
                 <View key={meta.key} style={[styles.row, index < arr.length - 1 && { borderBottomWidth: layout.hairline, borderBottomColor: borderColor }]}>
                   <View style={styles.rowLeft}>
                     <IconSymbol name={meta.icon as any} size={20} color={iconColor} />
@@ -133,12 +137,13 @@ export default function CustomizeTabsScreen() {
               ))}
             </ThemedView>
           </>
-        ) : null}
+          );
+        })()}
 
         {/* Reset */}
-        <TouchableOpacity style={styles.resetButton} onPress={handleReset} activeOpacity={activeOpacity.default}>
+        <Pressable style={({ pressed }) => [styles.resetButton, pressed && { opacity: activeOpacity.default }]} onPress={handleReset} >
           <ThemedText style={[styles.resetText, { color: accentColor }]}>{t('settings.resetToDefault')}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
       </ScrollView>
     </SettingsSubpageLayout>
   );

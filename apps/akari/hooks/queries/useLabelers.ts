@@ -21,9 +21,11 @@ export function useLabelers() {
   const { data: preferences } = usePreferences();
 
   const subscribedDids =
-    preferences?.preferences
-      .filter((p): p is BlueskyLabelersPref => p.$type === 'app.bsky.actor.defs#labelersPref')
-      .flatMap((p) => p.labelers.map((l) => l.did)) ?? [];
+    preferences?.preferences.flatMap((p) =>
+      p.$type === 'app.bsky.actor.defs#labelersPref'
+        ? (p as BlueskyLabelersPref).labelers.map((l) => l.did)
+        : [],
+    ) ?? [];
 
   const dids = Array.from(new Set([BSKY_DEFAULT_LABELER_DID, ...subscribedDids]));
 

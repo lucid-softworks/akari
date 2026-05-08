@@ -2,10 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -329,15 +329,13 @@ function PresetRow({
   secondaryText: string;
 }) {
   return (
-    <TouchableOpacity
+    <Pressable
       accessibilityRole="radio"
       accessibilityState={{ selected: active }}
-      activeOpacity={0.7}
+      
       onPress={onPress}
-      style={[
-        styles.presetRow,
-        !last && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-      ]}
+      style={({ pressed }) => [styles.presetRow,
+        !last && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
     >
       <ThemedView style={styles.presetText}>
         <ThemedText style={styles.presetLabel}>{label}</ThemedText>
@@ -350,7 +348,7 @@ function PresetRow({
       ) : (
         <ThemedView style={[styles.radioOutline, { borderColor: secondaryText }]} />
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -400,11 +398,11 @@ function PerAccountRow({
         showDivider && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
       ]}
     >
-      <TouchableOpacity
+      <Pressable
         accessibilityRole="button"
-        activeOpacity={0.7}
+        
         onPress={() => setExpanded((v) => !v)}
-        style={styles.perAccountHeader}
+        style={({ pressed }) => [styles.perAccountHeader, pressed && { opacity: 0.7 }]}
       >
         <ThemedView style={styles.presetText}>
           <ThemedText style={styles.presetLabel}>@{account.handle}</ThemedText>
@@ -417,22 +415,20 @@ function PerAccountRow({
           name={expanded ? 'chevron.up' : 'chevron.down'}
           size={18}
         />
-      </TouchableOpacity>
+      </Pressable>
       {expanded ? (
         <ThemedView style={styles.perAccountChoices}>
           {choices.map((choice, idx) => {
             const active = current === choice.id;
             return (
-              <TouchableOpacity
+              <Pressable
                 key={choice.id}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: active }}
-                activeOpacity={0.7}
+                
                 onPress={() => onChange(choice.id)}
-                style={[
-                  styles.perAccountChoice,
-                  idx < choices.length - 1 && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-                ]}
+                style={({ pressed }) => [styles.perAccountChoice,
+                  idx < choices.length - 1 && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
               >
                 <ThemedText style={styles.presetLabel}>{choice.label}</ThemedText>
                 {active ? (
@@ -440,7 +436,7 @@ function PerAccountRow({
                 ) : (
                   <ThemedView style={[styles.radioOutline, { borderColor: secondaryText }]} />
                 )}
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </ThemedView>

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyLabel, BlueskyVerification } from '@/bluesky-api';
 import { Labels } from '@/components/Labels';
@@ -420,12 +420,12 @@ const LivePreview = React.memo(function LivePreview({
         )}
         <ThemedText style={styles.livePreviewDomain}>{liveStreamInfo.domain}</ThemedText>
         <View style={styles.livePreviewActions}>
-          <TouchableOpacity style={styles.livePreviewPrimaryButton} onPress={onWatchLive} activeOpacity={activeOpacity.subtle}>
+          <Pressable style={({ pressed }) => [styles.livePreviewPrimaryButton, pressed && { opacity: activeOpacity.subtle }]} onPress={onWatchLive} >
             <ThemedText style={styles.livePreviewPrimaryButtonText}>{t('common.watchNow')}</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.livePreviewSecondaryButton, { borderColor }]} onPress={() => navigateToProfile({})} activeOpacity={activeOpacity.subtle}>
+          </Pressable>
+          <Pressable style={({ pressed }) => [styles.livePreviewSecondaryButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]} onPress={() => navigateToProfile({})} >
             <ThemedText style={styles.livePreviewSecondaryButtonText}>{t('common.openProfile')}</ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </ThemedView>
     </View>

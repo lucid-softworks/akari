@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { PostInlineCard } from '@/components/PostInlineCard';
@@ -156,14 +156,12 @@ function YouTubeChatEmbed({ videoId, alignment }: YouTubeChatEmbedProps) {
 
   if (errored) {
     return (
-      <TouchableOpacity
-        style={[
-          styles.container,
+      <Pressable
+        style={({ pressed }) => [styles.container,
           styles.youtube,
-          alignment === 'right' ? styles.alignRight : styles.alignLeft,
-        ]}
+          alignment === 'right' ? styles.alignRight : styles.alignLeft, pressed && { opacity: 0.85 }]}
         onPress={() => Linking.openURL(watchUrl)}
-        activeOpacity={0.85}
+        
       >
         <Image
           source={{ uri: youtubeThumbnailUrl(videoId) }}
@@ -178,7 +176,7 @@ function YouTubeChatEmbed({ videoId, alignment }: YouTubeChatEmbedProps) {
             Open in YouTube
           </ThemedText>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -76,7 +76,7 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
   );
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
+    <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
           {thumbUrl && (
@@ -98,7 +98,7 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
           </ThemedView>
         </ThemedView>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

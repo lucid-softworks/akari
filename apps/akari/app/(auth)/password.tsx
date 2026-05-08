@@ -9,7 +9,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -321,14 +320,13 @@ export default function AuthScreen() {
               <View style={styles.inputContainer}>
                 <View style={styles.labelRow}>
                   <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.appPassword')}</ThemedText>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => setShowAppPasswordHelp(true)}
                     accessibilityRole="button"
                     accessibilityLabel={t('auth.howToGetAppPassword')}
-                    hitSlop={hitSlop}
-                  >
+                    hitSlop={hitSlop} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                     <IconSymbol name="questionmark.circle" size={18} color={helperColor} />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
                 <TextInput
                   ref={passwordInputRef}
@@ -351,13 +349,13 @@ export default function AuthScreen() {
               </View>
             </View>
 
-            <TouchableOpacity
-              style={[styles.primaryButton, isLoading ? styles.buttonDisabled : null]}
+            <Pressable
+              style={({ pressed }) => [styles.primaryButton, isLoading ? styles.buttonDisabled : null, pressed && { opacity: 0.7 }]}
               onPress={handleSignIn}
               disabled={isLoading}
             >
               <ThemedText style={styles.primaryButtonText}>{primaryButtonLabel}</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
 
         </View>
       </ScrollView>
@@ -378,14 +376,13 @@ export default function AuthScreen() {
             >
               <View style={styles.helpSheetHeader}>
                 <ThemedText style={styles.helpSheetTitle}>{t('auth.howToGetAppPassword')}</ThemedText>
-                <TouchableOpacity
+                <Pressable
                   onPress={() => setShowAppPasswordHelp(false)}
                   accessibilityRole="button"
                   accessibilityLabel={t('common.done')}
-                  hitSlop={hitSlop}
-                >
+                  hitSlop={hitSlop} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                   <IconSymbol name="xmark" size={20} color={helperColor} />
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <ThemedText style={[styles.helpSheetBody, { color: helperColor }]}>
                 {t('auth.appPasswordInstructions')}
@@ -436,14 +433,12 @@ export default function AuthScreen() {
               {typeaheadResults.map((actor, index) => {
                 const isLast = index === typeaheadResults.length - 1;
                 return (
-                  <TouchableOpacity
+                  <Pressable
                     key={actor.did}
                     onPress={() => handleSelectSuggestion(actor.handle)}
-                    activeOpacity={0.7}
-                    style={[
-                      styles.suggestion,
-                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-                    ]}
+                    
+                    style={({ pressed }) => [styles.suggestion,
+                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
                   >
                     {actor.avatar ? (
                       <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
@@ -463,7 +458,7 @@ export default function AuthScreen() {
                         @{actor.handle}
                       </ThemedText>
                     </View>
-                  </TouchableOpacity>
+                  </Pressable>
                 );
               })}
           </ScrollView>

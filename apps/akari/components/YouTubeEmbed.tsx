@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -84,7 +84,7 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
   );
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
+    <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.thumbnailContainer}>
           {thumbnailUrl && (
@@ -109,7 +109,7 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
           <ThemedText style={[styles.source, { color: secondaryTextColor }]}>{t('ui.youtube')}</ThemedText>
         </ThemedView>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

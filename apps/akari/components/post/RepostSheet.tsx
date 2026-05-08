@@ -4,7 +4,6 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -60,8 +59,8 @@ export function RepostSheet({
           onPress={(event) => event.stopPropagation()}
         >
           <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
-            <TouchableOpacity
-              style={styles.option}
+            <Pressable
+              style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
               onPress={handleRepost}
               accessibilityRole="button"
               accessibilityLabel={isReposted ? t('post.undoRepost') : t('post.repostAction')}
@@ -74,10 +73,10 @@ export function RepostSheet({
               <ThemedText style={[styles.optionText, { color: textColor }]}>
                 {isReposted ? t('post.undoRepost') : t('post.repostAction')}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
             <View style={[styles.divider, { backgroundColor: borderColor }]} />
-            <TouchableOpacity
-              style={styles.option}
+            <Pressable
+              style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
               onPress={handleQuote}
               accessibilityRole="button"
               accessibilityLabel={t('post.quoteAction')}
@@ -86,7 +85,7 @@ export function RepostSheet({
               <ThemedText style={[styles.optionText, { color: textColor }]}>
                 {t('post.quoteAction')}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </ThemedView>
         </Pressable>
       </Pressable>

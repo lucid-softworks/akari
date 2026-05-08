@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
 
 import PendingMessagesScreen from '@/app/(tabs)/messages/pending';
 import { router } from 'expo-router';
@@ -92,7 +91,7 @@ describe('PendingMessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { getByText, queryByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(
+    const { getByText, queryByText, UNSAFE_root, UNSAFE_getByType } = render(
       <PendingMessagesScreen />,
     );
 
@@ -110,10 +109,16 @@ describe('PendingMessagesScreen', () => {
     fireEvent.press(getByText('Pending Pal'));
     expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/undefined?handle=pending-pal');
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[2]);
+    const pendingPressables = UNSAFE_root.findAll((node: any) => {
+      if (typeof node.props?.onPress !== 'function') return false;
+      const t = node.type;
+      const name = typeof t === 'string' ? t : ((t as any)?.displayName ?? (t as any)?.name);
+      return name === 'Pressable';
+    });
+    fireEvent.press(pendingPressables[2]);
     expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/index/user-profile/pending-pal');
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[0]);
+    fireEvent.press(pendingPressables[0]);
     expect(mockRouterBack).toHaveBeenCalledTimes(1);
   });
 });

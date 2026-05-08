@@ -1,5 +1,4 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
 
 import { PostCard } from '@/components/PostCard';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
@@ -306,7 +305,7 @@ describe('PostCard', () => {
       },
     };
 
-    const { UNSAFE_getAllByType } = render(<PostCard post={post} />);
+    const { UNSAFE_root } = render(<PostCard post={post} />);
 
     act(() => {
       // basePost author has no avatar — AvatarOrInitial renders a fallback
@@ -315,7 +314,12 @@ describe('PostCard', () => {
       ImageMock.mock.calls[0][0].onLoad({ source: { width: 100, height: 50 } });
     });
 
-    const touchables = UNSAFE_getAllByType(TouchableOpacity);
+    const touchables = UNSAFE_root.findAll((node: any) => {
+      if (typeof node.props?.onPress !== 'function') return false;
+      const t = node.type;
+      const name = typeof t === 'string' ? t : ((t as any)?.displayName ?? (t as any)?.name);
+      return name === 'Pressable';
+    });
     const imageButton = touchables.find((t: any) => !t.props.accessibilityLabel);
     expect(imageButton).toBeDefined();
     fireEvent.press(imageButton!);

@@ -10,7 +10,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -171,10 +170,10 @@ export function ShareToChatSheet({
           renderItem={({ item }) => {
             const checked = isSelected(item.convoId);
             return (
-              <TouchableOpacity
-                style={styles.row}
+              <Pressable
+                style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                 onPress={() => toggleSelect(item)}
-                activeOpacity={activeOpacity.default}
+                
               >
                 {item.avatar ? (
                   <Image source={{ uri: item.avatar }} style={styles.avatar} />
@@ -197,21 +196,21 @@ export function ShareToChatSheet({
                   size={22}
                   color={checked ? tintColor : iconColor}
                 />
-              </TouchableOpacity>
+              </Pressable>
             );
           }}
         />
         {selected.length > 0 ? (
           <View style={[styles.nextBar, { borderTopColor: borderColor }]}>
-            <TouchableOpacity
-              style={[styles.nextButton, { backgroundColor: tintColor }]}
+            <Pressable
+              style={({ pressed }) => [styles.nextButton, { backgroundColor: tintColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={() => setStep('compose')}
-              activeOpacity={activeOpacity.default}
+              
             >
               <ThemedText style={styles.nextButtonText}>
                 {t('post.share.nextWithCount', { count: selected.length })}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         ) : null}
       </>
@@ -242,9 +241,9 @@ export function ShareToChatSheet({
               >
                 {c.displayName}
               </ThemedText>
-              <TouchableOpacity onPress={() => toggleSelect(c)} hitSlop={6}>
+              <Pressable onPress={() => toggleSelect(c)} hitSlop={6} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                 <IconSymbol name="xmark" size={12} color={iconColor} />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ))}
         </ScrollView>
@@ -282,20 +281,18 @@ export function ShareToChatSheet({
         );
       })()}
 
-      <TouchableOpacity
-        style={[
-          styles.sendButton,
+      <Pressable
+        style={({ pressed }) => [styles.sendButton,
           { backgroundColor: tintColor },
-          (sending || selected.length === 0) && styles.sendButtonDisabled,
-        ]}
+          (sending || selected.length === 0) && styles.sendButtonDisabled, pressed && { opacity: activeOpacity.default }]}
         onPress={handleSend}
         disabled={sending || selected.length === 0}
-        activeOpacity={activeOpacity.default}
+        
       >
         <ThemedText style={styles.sendButtonText}>
           {sending ? t('common.saving') : t('post.share.send')}
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 
@@ -313,22 +310,22 @@ export function ShareToChatSheet({
               <View style={[styles.header, { borderBottomColor: borderColor }]}>
                 <View style={styles.headerSide}>
                   {step === 'compose' ? (
-                    <TouchableOpacity onPress={() => setStep('pick')} hitSlop={12}>
+                    <Pressable onPress={() => setStep('pick')} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                       <ThemedText style={[styles.headerAction, { color: iconColor }]}>
                         {t('common.back')}
                       </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                   ) : null}
                 </View>
                 <ThemedText style={[styles.headerTitle, { color: textColor }]}>
                   {t('post.share.sendToChat')}
                 </ThemedText>
                 <View style={styles.headerSide}>
-                  <TouchableOpacity onPress={onDismiss} hitSlop={12}>
+                  <Pressable onPress={onDismiss} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                     <ThemedText style={[styles.headerAction, { color: iconColor }]}>
                       {t('common.cancel')}
                     </ThemedText>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
 

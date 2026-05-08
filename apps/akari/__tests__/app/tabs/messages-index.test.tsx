@@ -1,6 +1,5 @@
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
 
 import MessagesScreen from '@/app/(tabs)/messages';
 import { router } from 'expo-router';
@@ -108,7 +107,7 @@ describe('MessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { getByText, queryByText, UNSAFE_getAllByType, UNSAFE_getByType } = render(<MessagesScreen />);
+    const { getByText, queryByText, UNSAFE_root, UNSAFE_getByType } = render(<MessagesScreen />);
 
     expect(mockUseConversations).toHaveBeenCalled();
     const [limitArg, , statusArg] = mockUseConversations.mock.calls[0];
@@ -130,7 +129,13 @@ describe('MessagesScreen', () => {
     fireEvent.press(getByText('Alice'));
     expect(mockRouterPush).toHaveBeenNthCalledWith(2, '/(tabs)/messages/undefined?handle=alice');
 
-    fireEvent.press(UNSAFE_getAllByType(TouchableOpacity)[3]);
+    const messageIndexPressables = UNSAFE_root.findAll((node: any) => {
+      if (typeof node.props?.onPress !== 'function') return false;
+      const t = node.type;
+      const name = typeof t === 'string' ? t : ((t as any)?.displayName ?? (t as any)?.name);
+      return name === 'Pressable';
+    });
+    fireEvent.press(messageIndexPressables[3]);
     expect(mockRouterPush).toHaveBeenNthCalledWith(3, '/(tabs)/index/user-profile/alice');
   });
 

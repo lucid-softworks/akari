@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -45,15 +45,15 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
       </View>
       <View style={styles.claims}>
         {data.map((claim) => (
-          <TouchableOpacity
+          <Pressable
             key={claim.rkey}
-            style={[styles.chip, { backgroundColor: chipBg, borderColor: chipBorder }]}
+            style={({ pressed }) => [styles.chip, { backgroundColor: chipBg, borderColor: chipBorder }, pressed && { opacity: activeOpacity.default }]}
             onPress={() => {
               if (claim.claimUri) {
                 void Linking.openURL(claim.claimUri);
               }
             }}
-            activeOpacity={activeOpacity.default}
+            
           >
             <IconSymbol
               name={CLAIM_ICONS[claim.type] ?? 'link'}
@@ -63,7 +63,7 @@ export function KeytraceClaims({ handle }: KeytraceClaimsProps) {
             <ThemedText style={styles.claimText} numberOfLines={1}>
               {claim.identity.displayName || claim.identity.subject}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </View>
     </View>

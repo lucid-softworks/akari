@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -207,7 +207,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
     const thumbnailAspectRatio = embed.aspectRatio ? embed.aspectRatio.width / embed.aspectRatio.height : 16 / 9;
 
     return (
-      <TouchableOpacity onPress={handlePress} activeOpacity={activeOpacity.subtle}>
+      <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
         <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
           <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
             {thumbnailUrl ? (
@@ -238,7 +238,7 @@ export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
             <ThemedText style={[styles.source, { color: secondaryTextColor }]}>{t('ui.externalVideo')}</ThemedText>
           </ThemedView>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

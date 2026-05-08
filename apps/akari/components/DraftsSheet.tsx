@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React from 'react';
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -43,11 +43,11 @@ export function DraftsSheet({ visible, drafts, onDismiss, onSelect, onDelete }: 
                 {t('post.draft.title')}
               </ThemedText>
               <View style={styles.headerSide}>
-                <TouchableOpacity onPress={onDismiss} hitSlop={12}>
+                <Pressable onPress={onDismiss} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
                   <ThemedText style={[styles.headerAction, { color: iconColor }]}>
                     {t('common.cancel')}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
 
@@ -71,10 +71,10 @@ export function DraftsSheet({ visible, drafts, onDismiss, onSelect, onDelete }: 
                   return (
                     <View key={draft.id}>
                       {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                      <TouchableOpacity
-                        style={styles.row}
+                      <Pressable
+                        style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
                         onPress={() => onSelect(draft)}
-                        activeOpacity={activeOpacity.default}
+                        
                       >
                         <View style={styles.rowMain}>
                           <ThemedText
@@ -112,15 +112,15 @@ export function DraftsSheet({ visible, drafts, onDismiss, onSelect, onDelete }: 
                             contentFit="cover"
                           />
                         ) : null}
-                        <TouchableOpacity
+                        <Pressable
                           onPress={() => onDelete(draft)}
                           hitSlop={10}
-                          style={styles.deleteButton}
+                          style={({ pressed }) => [styles.deleteButton, pressed && { opacity: 0.7 }]}
                           accessibilityLabel={t('post.draft.delete')}
                         >
                           <IconSymbol name="trash" size={18} color={iconColor} />
-                        </TouchableOpacity>
-                      </TouchableOpacity>
+                        </Pressable>
+                      </Pressable>
                     </View>
                   );
                 })}

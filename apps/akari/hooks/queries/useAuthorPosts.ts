@@ -24,12 +24,7 @@ export function useAuthorPosts(identifier: string | undefined, limit: number = 5
       const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
 
       // Filter to only show original posts (not reposts or replies)
-      const originalPosts = feed.feed
-        .filter((item) => {
-          // Only include posts that are not reposts and not replies
-          return !item.reason && !item.reply;
-        })
-        .map((item) => item.post);
+      const originalPosts = feed.feed.flatMap((item) => (!item.reason && !item.reply ? [item.post] : []));
 
       // Deduplicate posts by URI to prevent duplicate keys
       const uniqueOriginalPosts = originalPosts.filter(

@@ -9,7 +9,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -270,14 +269,12 @@ export default function OauthSignInScreen() {
               {typeaheadResults.map((actor, index) => {
                 const isLast = index === typeaheadResults.length - 1;
                 return (
-                  <TouchableOpacity
+                  <Pressable
                     key={actor.did}
                     onPress={() => handleSelectSuggestion(actor.handle)}
-                    activeOpacity={0.7}
-                    style={[
-                      styles.suggestion,
-                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
-                    ]}
+                    
+                    style={({ pressed }) => [styles.suggestion,
+                      !isLast && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
                   >
                     {actor.avatar ? (
                       <Image source={{ uri: actor.avatar }} style={styles.suggestionAvatar} contentFit="cover" />
@@ -297,7 +294,7 @@ export default function OauthSignInScreen() {
                         @{actor.handle}
                       </ThemedText>
                     </View>
-                  </TouchableOpacity>
+                  </Pressable>
                 );
               })}
           </ScrollView>

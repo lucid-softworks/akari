@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -207,15 +207,13 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                         const isSelected = selectedLabelerDids.has(labeler.creator.did);
                         const name = labeler.creator.displayName || labeler.creator.handle;
                         return (
-                          <TouchableOpacity
+                          <Pressable
                             key={labeler.creator.did}
-                            style={[
-                              styles.labelerChip,
+                            style={({ pressed }) => [styles.labelerChip,
                               { borderColor },
-                              isSelected && { backgroundColor: inputBg, borderColor: semanticColors.danger },
-                            ]}
+                              isSelected && { backgroundColor: inputBg, borderColor: semanticColors.danger }, pressed && { opacity: activeOpacity.default }]}
                             onPress={() => toggleLabeler(labeler.creator.did)}
-                            activeOpacity={activeOpacity.default}
+                            
                           >
                             {labeler.creator.avatar ? (
                               <Image
@@ -238,7 +236,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                                 color={semanticColors.danger}
                               />
                             ) : null}
-                          </TouchableOpacity>
+                          </Pressable>
                         );
                       })}
                     </View>
@@ -248,14 +246,12 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                 {reasons.map((reason) => {
                   const isSelected = selectedReason === reason.key;
                   return (
-                    <TouchableOpacity
+                    <Pressable
                       key={reason.key}
-                      style={[
-                        styles.reasonItem,
-                        isSelected && { backgroundColor: inputBg },
-                      ]}
+                      style={({ pressed }) => [styles.reasonItem,
+                        isSelected && { backgroundColor: inputBg }, pressed && { opacity: activeOpacity.default }]}
                       onPress={() => setSelectedReason(reason.key)}
-                      activeOpacity={activeOpacity.default}
+                      
                     >
                       <IconSymbol
                         name={reason.icon as any}
@@ -268,7 +264,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                       {isSelected ? (
                         <IconSymbol name="checkmark.circle.fill" size={20} color={semanticColors.danger} />
                       ) : null}
-                    </TouchableOpacity>
+                    </Pressable>
                   );
                 })}
 
@@ -292,18 +288,18 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
               </ScrollView>
 
               <View style={styles.actions}>
-                <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
+                <Pressable style={({ pressed }) => [styles.cancelButton, pressed && { opacity: 0.7 }]} onPress={handleClose}>
                   <ThemedText style={styles.cancelText}>{t('common.cancel')}</ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.submitButton, (!selectedReason || isSubmitting) && styles.submitDisabled]}
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [styles.submitButton, (!selectedReason || isSubmitting) && styles.submitDisabled, pressed && { opacity: 0.7 }]}
                   onPress={handleSubmit}
                   disabled={!selectedReason || isSubmitting}
                 >
                   <ThemedText style={styles.submitText}>
                     {isSubmitting ? t('report.submitting') : t('report.submitReport')}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
       </ThemedView>
     </Modal>

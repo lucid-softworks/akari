@@ -92,7 +92,7 @@ export function Labels({ labels, maxLabels = 5 }: LabelsProps) {
     <View style={styles.container}>
       {displayLabels.map((label, index) => (
         <Label
-          key={`${label.uri || label.cid || index}-${index}`}
+          key={label.uri || label.cid || `${label.src ?? 'src'}-${label.val}-${index}`}
           {...getLabelProps(label)}
         />
       ))}

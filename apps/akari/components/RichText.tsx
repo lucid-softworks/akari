@@ -90,22 +90,22 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'link':
             return (
-              <Link key={index} href={token.url as any}>
-                <ThemedText style={[{ color: linkColor }]}>{token.text || toShortUrl(token.url)}</ThemedText>
+              <Link key={`link-${index}-${token.url}`} href={token.url as any}>
+                <ThemedText style={{ color: linkColor }}>{token.text || toShortUrl(token.url)}</ThemedText>
               </Link>
             );
 
           case 'autolink':
             return (
-              <Link key={index} href={token.url as any}>
-                <ThemedText style={[{ color: linkColor }]}>{toShortUrl(token.url)}</ThemedText>
+              <Link key={`autolink-${index}-${token.url}`} href={token.url as any}>
+                <ThemedText style={{ color: linkColor }}>{toShortUrl(token.url)}</ThemedText>
               </Link>
             );
 
           case 'mention':
             return (
-              <Link key={index} push href={profileHref(token.handle) as any}>
-                <ThemedText style={[{ color: mentionColor }]}>@{token.handle}</ThemedText>
+              <Link key={`mention-${index}-${token.handle}`} push href={profileHref(token.handle) as any}>
+                <ThemedText style={{ color: mentionColor }}>@{token.handle}</ThemedText>
               </Link>
             );
 

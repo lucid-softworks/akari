@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -60,18 +60,16 @@ export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChang
           const isLast = index === tabs.length - 1;
 
           return (
-            <TouchableOpacity
+            <Pressable
               key={tab.key}
               testID={`tab-${tab.key}`}
               accessibilityRole="button"
               accessibilityState={{ selected: isActive }}
-              activeOpacity={activeOpacity.subtle}
+              
               onPress={() => onTabChange(tab.key)}
-              style={[
-                styles.tab,
+              style={({ pressed }) => [styles.tab,
                 !isLast ? styles.tabSpacing : undefined,
-                { borderBottomColor: isActive ? accentColor : 'transparent' },
-              ]}
+                { borderBottomColor: isActive ? accentColor : 'transparent' }, pressed && { opacity: activeOpacity.subtle }]}
             >
               <ThemedText
                 style={[
@@ -84,7 +82,7 @@ export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChang
               >
                 {tab.label}
               </ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </ScrollView>

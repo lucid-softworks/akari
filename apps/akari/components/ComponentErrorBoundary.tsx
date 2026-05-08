@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, lineHeight, opacity } from '@/constants/tokens';
@@ -48,13 +48,13 @@ const DefaultFallback: React.FC<ErrorBoundaryFallbackProps> = ({ error, reset })
           {error.message}
         </Text>
       ) : null}
-      <TouchableOpacity
+      <Pressable
         accessibilityRole="button"
         onPress={reset}
-        style={[styles.action, { borderColor: tintColor }]}
+        style={({ pressed }) => [styles.action, { borderColor: tintColor }, pressed && { opacity: 0.7 }]}
       >
         <Text style={[styles.actionLabel, { color: tintColor }]}>{t('common.tryAgain')}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

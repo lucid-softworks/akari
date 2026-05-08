@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Modal, Platform, Share, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, Share, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -139,24 +139,24 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
       <View style={[styles.container, { backgroundColor }]}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose} style={styles.closeButton} testID="close-button">
+          <Pressable onPress={handleClose} style={({ pressed }) => [styles.closeButton, pressed && { opacity: 0.7 }]} testID="close-button">
             <IconSymbol name="xmark" size={24} color={textColor} />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity onPress={handleDownload} style={styles.downloadButton} testID="download-button">
+          <Pressable onPress={handleDownload} style={({ pressed }) => [styles.downloadButton, pressed && { opacity: 0.7 }]} testID="download-button">
             <IconSymbol name="square.and.arrow.up" size={20} color={textColor} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {/* Image Container */}
         <View style={styles.imageContainer}>
           <GestureDetector gesture={gesture}>
             <Animated.View style={[styles.imageWrapper, animatedStyle]}>
-              <TouchableOpacity
+              <Pressable
                 onPress={handleClose}
                 onLongPress={handleDoubleTap}
-                activeOpacity={1}
-                style={styles.imageTouchable}
+                testID="image-touchable"
+                style={({ pressed }) => [styles.imageTouchable, pressed && { opacity: 1 }]}
               >
                 <Image
                   source={{ uri: imageUrl }}
@@ -165,7 +165,7 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                 />
-              </TouchableOpacity>
+              </Pressable>
             </Animated.View>
           </GestureDetector>
         </View>

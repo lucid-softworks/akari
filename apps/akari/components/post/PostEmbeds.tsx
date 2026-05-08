@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
@@ -199,11 +199,11 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
               4 / 3;
 
             return (
-              <TouchableOpacity
-                key={`${postId}-image-${index}`}
+              <Pressable
+                key={`${postId}-${imageUrl}`}
                 onPress={() => handleImagePress(index)}
-                activeOpacity={activeOpacity.subtle}
-                style={isGrid ? styles.gridCell : undefined}
+                
+                style={({ pressed }) => [isGrid ? styles.gridCell : undefined, pressed && { opacity: activeOpacity.subtle }]}
               >
                 <Image
                   source={{ uri: imageUrl }}
@@ -214,7 +214,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
                   contentFit="cover"
                   onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
                 />
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </View>
@@ -224,13 +224,14 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       {additionalEmbeds.map((extra, i) => {
         if (extra.$type?.includes('app.bsky.embed.external') && extra.external) {
           const uri = extra.external.uri || '';
+          const extraKey = `extra-${i}-${uri}`;
           if (uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif')) {
-            return <GifEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+            return <GifEmbed key={extraKey} embed={extra as ExternalEmbedData} />;
           }
           if (uri.includes('youtube.com') || uri.includes('youtu.be')) {
-            return <YouTubeEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+            return <YouTubeEmbed key={extraKey} embed={extra as ExternalEmbedData} />;
           }
-          return <ExternalEmbed key={`extra-${i}`} embed={extra as ExternalEmbedData} />;
+          return <ExternalEmbed key={extraKey} embed={extra as ExternalEmbedData} />;
         }
         return null;
       })}

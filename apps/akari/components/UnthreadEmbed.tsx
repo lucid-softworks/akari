@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { MarkdownText } from '@/components/MarkdownText';
 import { ThemedText } from '@/components/ThemedText';
@@ -86,13 +86,13 @@ export function UnthreadEmbed({ unthread, fallbackText }: UnthreadEmbedProps) {
       ) : null}
 
       {isTruncatable ? (
-        <TouchableOpacity
+        <Pressable
           onPress={handleToggle}
-          activeOpacity={activeOpacity.default}
+          
           accessibilityRole="button"
           accessibilityState={{ expanded }}
           accessibilityLabel={expanded ? t('unthread.collapse') : t('unthread.readMore')}
-          style={styles.toggleRow}
+          style={({ pressed }) => [styles.toggleRow, pressed && { opacity: activeOpacity.default }]}
         >
           <ThemedText style={[styles.toggleLabel, { color: semanticColors.systemBlue }]}>
             {expanded ? t('unthread.collapse') : t('unthread.readMore')}
@@ -102,7 +102,7 @@ export function UnthreadEmbed({ unthread, fallbackText }: UnthreadEmbedProps) {
             size={fontSize.sm}
             color={semanticColors.systemBlue}
           />
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
     </View>
   );

@@ -3,10 +3,10 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -50,10 +50,15 @@ export default function NewChatScreen() {
   const { data: searchData, isLoading } = useSearch(submittedQuery.trim() || undefined, 'users', 20, 'top');
   const profiles = useMemo(() => {
     const all = searchData?.pages.flatMap((p) => p.results) ?? [];
-    return all
-      .filter((r): r is { type: 'profile'; data: BlueskyProfile } => r.type === 'profile')
-      .map((r) => r.data)
-      .filter((p) => !selected.some((s) => s.did === p.did));
+    const selectedDids = new Set(selected.map((s) => s.did));
+    const result: BlueskyProfile[] = [];
+    for (const r of all) {
+      if (r.type !== 'profile') continue;
+      const profile = r.data as BlueskyProfile;
+      if (selectedDids.has(profile.did)) continue;
+      result.push(profile);
+    }
+    return result;
   }, [searchData, selected]);
 
   // Debounce the query into submittedQuery so the search fires as the user
@@ -113,13 +118,13 @@ export default function NewChatScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+        <Pressable onPress={() => router.back()} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
           <ThemedText style={[styles.headerAction, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
         <ThemedText style={[styles.title, { color: textColor }]}>
           {t('messages.newChat')}
         </ThemedText>
-        <TouchableOpacity onPress={handleStart} disabled={!canStart} hitSlop={12}>
+        <Pressable onPress={handleStart} disabled={!canStart} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.7 }}>
           {startConvo.isPending ? (
             <ActivityIndicator size="small" />
           ) : (
@@ -132,17 +137,17 @@ export default function NewChatScreen() {
               {t('messages.start')}
             </ThemedText>
           )}
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {selected.length > 0 ? (
         <View style={[styles.chipsRow, { borderBottomColor: borderColor }]}>
           {selected.map((profile) => (
-            <TouchableOpacity
+            <Pressable
               key={profile.did}
               onPress={() => handleRemoveMember(profile.did)}
-              style={[styles.chip, { backgroundColor: inputBg, borderColor }]}
-              activeOpacity={activeOpacity.default}
+              style={({ pressed }) => [styles.chip, { backgroundColor: inputBg, borderColor }, pressed && { opacity: activeOpacity.default }]}
+              
             >
               {profile.avatar ? (
                 <Image source={{ uri: profile.avatar }} style={styles.chipAvatar} />
@@ -153,7 +158,7 @@ export default function NewChatScreen() {
                 {profile.displayName || profile.handle}
               </ThemedText>
               <IconSymbol name="xmark.circle.fill" size={16} color={iconColor} />
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       ) : null}
@@ -172,15 +177,14 @@ export default function NewChatScreen() {
           autoFocus
         />
         {query.length > 0 ? (
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               setQuery('');
               setSubmittedQuery('');
             }}
-            hitSlop={8}
-          >
+            hitSlop={8} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <IconSymbol name="xmark.circle.fill" size={18} color={iconColor} />
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
       </View>
 
@@ -203,11 +207,11 @@ export default function NewChatScreen() {
           </View>
         ) : (
           profiles.map((profile) => (
-            <TouchableOpacity
+            <Pressable
               key={profile.did}
-              style={[styles.row, { borderBottomColor: borderColor }]}
+              style={({ pressed }) => [styles.row, { borderBottomColor: borderColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={() => handleAddMember(profile)}
-              activeOpacity={activeOpacity.default}
+              
               disabled={selected.length >= MAX_MEMBERS}
             >
               {profile.avatar ? (
@@ -232,7 +236,7 @@ export default function NewChatScreen() {
                 </ThemedText>
               </View>
               <IconSymbol name="plus" size={18} color={tintColor} />
-            </TouchableOpacity>
+            </Pressable>
           ))
         )}
       </ScrollView>

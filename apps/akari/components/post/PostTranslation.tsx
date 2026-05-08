@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, type StyleProp, type TextStyle } from 'react-native';
+import { Pressable, StyleSheet, View, type StyleProp, type TextStyle } from 'react-native';
 
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
@@ -178,9 +178,9 @@ export const PostTranslation = React.memo(function PostTranslation({
           <ThemedText style={[styles.headerText, { color: secondaryColor }]}>
             {languageName ? `${t('post.translation.translatedFrom', { language: languageName })} · ` : `${t('post.translation.title')} · `}
           </ThemedText>
-          <TouchableOpacity onPress={handleShowOriginal} activeOpacity={activeOpacity.default}>
+          <Pressable onPress={handleShowOriginal} style={({ pressed }) => pressed && { opacity: activeOpacity.default }}>
             <ThemedText style={[styles.showOriginal, { color: linkColor }]}>{t('post.translation.showOriginal')}</ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <RichTextWithFacets text={translatedText} facets={translatedFacets} style={textStyle} />
       </View>

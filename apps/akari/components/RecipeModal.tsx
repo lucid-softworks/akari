@@ -209,7 +209,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   <ThemedText style={styles.sectionTitle}>{t('recipe.dietaryRestrictions')}</ThemedText>
                   <View style={styles.keywordsContainer}>
                     {resolveDietaryRestrictions(recipe.value.suitableForDiet).map((diet, index) => (
-                      <View key={index} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
+                      <View key={`diet-${diet}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                         <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{diet}</ThemedText>
                       </View>
                     ))}
@@ -223,7 +223,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <ThemedText style={styles.sectionTitle}>{t('recipe.ingredients')}</ThemedText>
               <View style={styles.ingredientsList}>
                 {recipe.value.ingredients.map((ingredient, index) => (
-                  <View key={index} style={styles.ingredientItem}>
+                  <View key={`ingredient-${ingredient}-${index}`} style={styles.ingredientItem}>
                     <View style={[styles.ingredientBullet, { backgroundColor: accentColor }]} />
                     <ThemedText style={styles.ingredientText}>{ingredient}</ThemedText>
                   </View>
@@ -236,7 +236,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <ThemedText style={styles.sectionTitle}>{t('recipe.instructions')}</ThemedText>
               <View style={styles.instructionsList}>
                 {recipe.value.instructions.map((instruction, index) => (
-                  <View key={`instruction-${index}`} style={styles.instructionItem}>
+                  <View key={`instruction-${index}-${instruction.slice(0, 24)}`} style={styles.instructionItem}>
                     <ThemedText style={[styles.instructionNumber, { color: accentColor }]}>{index + 1}.</ThemedText>
                     <ThemedText style={styles.instructionText}>{instruction}</ThemedText>
                   </View>
@@ -250,7 +250,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                 <ThemedText style={styles.sectionTitle}>{t('recipe.tags')}</ThemedText>
                 <View style={styles.keywordsContainer}>
                   {recipe.value.keywords.map((keyword, index) => (
-                    <View key={index} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
+                    <View key={`keyword-${keyword}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                       <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{keyword}</ThemedText>
                     </View>
                   ))}

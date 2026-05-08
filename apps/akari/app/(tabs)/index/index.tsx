@@ -1,7 +1,7 @@
 import { spacing, radius, fontSize, fontWeight, opacity, shadows, layout, semanticColors, activeOpacity } from '@/constants/tokens';
 import { useResponsive } from '@/hooks/useResponsive';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
@@ -256,12 +256,12 @@ export default function HomeScreen() {
             <ThemedView style={styles.tabBarSlot}>
               <TabBar tabs={feedTabs} activeTab={selectedFeed || ''} onTabChange={handleFeedSelection} />
             </ThemedView>
-            <TouchableOpacity
-              style={styles.filterButton}
+            <Pressable
+              style={({ pressed }) => [styles.filterButton, pressed && { opacity: activeOpacity.default }]}
               onPress={() => setShowFiltersSheet(true)}
               accessibilityRole="button"
               accessibilityLabel={t('feed.filters')}
-              activeOpacity={activeOpacity.default}
+              
               disabled={!selectedFeed}
             >
               <IconSymbol
@@ -269,7 +269,7 @@ export default function HomeScreen() {
                 size={fontSize.xxl}
                 color={anyFilterActive ? semanticColors.systemBlue : filterIconColor}
               />
-            </TouchableOpacity>
+            </Pressable>
           </ThemedView>
           <TrendingBar />
         </ThemedView>
@@ -417,36 +417,36 @@ export default function HomeScreen() {
 
       {/* FAB Menu */}
       {showFabMenu && (
-        <TouchableOpacity style={styles.fabOverlay} activeOpacity={1} onPress={() => setShowFabMenu(false)}>
+        <Pressable style={({ pressed }) => [styles.fabOverlay, pressed && { opacity: 1 }]}  onPress={() => setShowFabMenu(false)}>
           <View style={[styles.fabMenu, { bottom: 90 }]}>
-            <TouchableOpacity
-              style={styles.fabMenuItem}
-              activeOpacity={activeOpacity.default}
+            <Pressable
+              style={({ pressed }) => [styles.fabMenuItem, pressed && { opacity: activeOpacity.default }]}
+              
               onPress={() => { setShowFabMenu(false); setShowPostComposer(true); }}
             >
               <IconSymbol name="square.and.pencil" size={18} color="white" />
               <ThemedText style={styles.fabMenuText}>Post</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.fabMenuItem}
-              activeOpacity={activeOpacity.default}
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [styles.fabMenuItem, pressed && { opacity: activeOpacity.default }]}
+              
               onPress={() => { setShowFabMenu(false); setShowReviewComposer(true); }}
             >
               <IconSymbol name="star.fill" size={18} color="white" />
               <ThemedText style={styles.fabMenuText}>Review</ThemedText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       )}
 
       {/* FAB */}
-      <TouchableOpacity
-        style={[styles.fab, { bottom: 20 }]}
+      <Pressable
+        style={({ pressed }) => [styles.fab, { bottom: 20 }, pressed && { opacity: activeOpacity.subtle }]}
         onPress={() => setShowFabMenu((prev) => !prev)}
-        activeOpacity={activeOpacity.subtle}
+        
       >
         <IconSymbol name="plus" size={24} color="white" />
-      </TouchableOpacity>
+      </Pressable>
 
       <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />
       <ReviewComposer visible={showReviewComposer} onClose={() => setShowReviewComposer(false)} />

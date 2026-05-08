@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -32,34 +32,34 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
 
   return (
     <View style={styles.swatchGrid}>
-      <TouchableOpacity
-        style={[styles.swatchButton, isDefault && styles.swatchSelected, { borderColor: isDefault ? defaultColor : 'transparent' }]}
+      <Pressable
+        style={({ pressed }) => [styles.swatchButton, isDefault && styles.swatchSelected, { borderColor: isDefault ? defaultColor : 'transparent' }, pressed && { opacity: 0.7 }]}
         onPress={() => { onSelect(null); setShowCustom(false); }}
       >
         <View style={[styles.swatch, { backgroundColor: defaultColor }]}>
           {isDefault ? <IconSymbol name="checkmark" size={14} color={isLightColor(defaultColor) ? '#000' : '#fff'} /> : null}
         </View>
         <ThemedText style={styles.swatchLabel}>{t('settings.default')}</ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
       {presets.map((preset) => {
         const selected = currentColor === preset.color;
         return (
-          <TouchableOpacity
+          <Pressable
             key={preset.color}
-            style={[styles.swatchButton, selected && styles.swatchSelected, { borderColor: selected ? preset.color : 'transparent' }]}
+            style={({ pressed }) => [styles.swatchButton, selected && styles.swatchSelected, { borderColor: selected ? preset.color : 'transparent' }, pressed && { opacity: 0.7 }]}
             onPress={() => { onSelect(preset.color); setShowCustom(false); }}
           >
             <View style={[styles.swatch, { backgroundColor: preset.color }]}>
               {selected ? <IconSymbol name="checkmark" size={14} color={isLightColor(preset.color) ? '#000' : '#fff'} /> : null}
             </View>
             <ThemedText style={styles.swatchLabel}>{preset.label}</ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         );
       })}
 
-      <TouchableOpacity
-        style={[styles.swatchButton, (showCustom || isCustom) && styles.swatchSelected, { borderColor: isCustom ? currentColor : showCustom ? borderColor : 'transparent' }]}
+      <Pressable
+        style={({ pressed }) => [styles.swatchButton, (showCustom || isCustom) && styles.swatchSelected, { borderColor: isCustom ? currentColor : showCustom ? borderColor : 'transparent' }, pressed && { opacity: 0.7 }]}
         onPress={() => {
           setCustomHex(isCustom && currentColor ? currentColor : '');
           setShowCustom(true);
@@ -73,7 +73,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
           )}
         </View>
         <ThemedText style={styles.swatchLabel}>{t('settings.custom')}</ThemedText>
-      </TouchableOpacity>
+      </Pressable>
 
       {showCustom ? (
         <View style={styles.customInputRow}>
@@ -94,8 +94,8 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
             placeholder="#RRGGBB"
             placeholderTextColor="#999"
           />
-          <TouchableOpacity
-            style={[styles.customApply, { backgroundColor: HEX_REGEX.test(customHex) ? (customHex || '#999') : '#ccc' }]}
+          <Pressable
+            style={({ pressed }) => [styles.customApply, { backgroundColor: HEX_REGEX.test(customHex) ? (customHex || '#999') : '#ccc' }, pressed && { opacity: 0.7 }]}
             onPress={() => {
               if (HEX_REGEX.test(customHex)) {
                 onSelect(customHex);
@@ -104,7 +104,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
             }}
           >
             <ThemedText style={styles.customApplyText}>{t('settings.apply')}</ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       ) : null}
     </View>

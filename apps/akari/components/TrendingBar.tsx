@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -65,10 +65,10 @@ export function TrendingBar() {
         contentContainerStyle={styles.scrollContent}
       >
         {topics.map((topic) => (
-          <TouchableOpacity
+          <Pressable
             key={topic.link}
-            style={[styles.pill, { borderColor }]}
-            activeOpacity={activeOpacity.default}
+            style={({ pressed }) => [styles.pill, { borderColor }, pressed && { opacity: activeOpacity.default }]}
+            
             onPress={() => handleTopicPress(topic)}
           >
             <ThemedText
@@ -77,7 +77,7 @@ export function TrendingBar() {
             >
               {topic.topic}
             </ThemedText>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </ScrollView>
     </View>

@@ -5,7 +5,7 @@ import { Animated, Easing, Platform, StyleSheet, Text, View, type StyleProp, typ
 // warning whenever an animation tries to use it. Map to false on web; native
 // keeps the perf benefit of the UI-thread driver.
 const NATIVE_DRIVER = Platform.OS !== 'web';
-import { useSafeAreaInsets, type EdgeInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -155,7 +155,7 @@ type ToastViewportProps = {
 };
 
 function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
-  const insets = useOptionalSafeAreaInsets();
+  const insets = useSafeAreaInsets();
 
   if (toasts.length === 0) {
     return null;
@@ -173,16 +173,6 @@ function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
       </View>
     </View>
   );
-}
-
-const defaultInsets: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
-
-function useOptionalSafeAreaInsets(): EdgeInsets {
-  try {
-    return useSafeAreaInsets();
-  } catch {
-    return defaultInsets;
-  }
 }
 
 type ToastItemProps = {
@@ -278,11 +268,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: 'rgba(15, 23, 42, 0.25)',
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 20,
-    elevation: 8,
+    boxShadow: '0 8px 20px rgba(15, 23, 42, 0.1)',
     zIndex: 1,
   },
   toastContent: {

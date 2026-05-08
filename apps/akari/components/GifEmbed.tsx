@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/constants/tokens';
@@ -34,10 +34,8 @@ export function GifEmbed({ embed }: GifEmbedProps) {
   const [aspectRatio, setAspectRatio] = useState(1);
 
   return (
-    <TouchableOpacity
-      onPress={() => Linking.openURL(embed.external.uri)}
-      activeOpacity={activeOpacity.subtle}
-    >
+    <Pressable
+      onPress={() => Linking.openURL(embed.external.uri)} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
       <View style={[styles.container, { borderColor }]}>
         <Image
           source={{ uri: embed.external.uri }}
@@ -54,7 +52,7 @@ export function GifEmbed({ embed }: GifEmbedProps) {
           <ThemedText style={styles.badgeText}>{t('ui.gif')}</ThemedText>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

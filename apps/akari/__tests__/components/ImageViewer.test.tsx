@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Platform, Share, TouchableOpacity } from 'react-native';
+import { Platform, Pressable, Share } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 
 import { ImageViewer } from '@/components/ImageViewer';
@@ -318,18 +318,17 @@ describe('ImageViewer', () => {
   });
 
   it('toggles zoom with double taps and recenters the image', () => {
-    const { UNSAFE_getAllByType } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
+    const { getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     const gestureStore = getGestureStore();
     const pan = gestureStore?.pan;
     const sharedValuesMap = getSharedValueMap();
-    const touchables = UNSAFE_getAllByType(TouchableOpacity);
-    const imageTouchable = touchables.find((touchable) => touchable.props.activeOpacity === 1);
+    const imageTouchable = getByTestId('image-touchable');
 
     expect(imageTouchable).toBeDefined();
 
     act(() => {
-      imageTouchable?.props.onLongPress?.();
+      fireEvent(imageTouchable, 'longPress');
     });
 
     expect(sharedValuesMap.scale.value).toBe(2);
@@ -344,7 +343,7 @@ describe('ImageViewer', () => {
     expect(sharedValuesMap.translateY.value).toBe(-15);
 
     act(() => {
-      imageTouchable?.props.onLongPress?.();
+      fireEvent(imageTouchable, 'longPress');
     });
 
     expect(sharedValuesMap.scale.value).toBe(1);

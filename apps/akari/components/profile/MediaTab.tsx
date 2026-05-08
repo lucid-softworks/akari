@@ -1,6 +1,6 @@
 import { Image } from '@/components/Image';
 import { useCallback, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
@@ -106,17 +106,17 @@ export function MediaTab({
       }
       const thumb = getMediaThumb(post);
       return (
-        <TouchableOpacity
-          style={[styles.tile, { backgroundColor: tileBg }]}
+        <Pressable
+          style={({ pressed }) => [styles.tile, { backgroundColor: tileBg }, pressed && { opacity: activeOpacity.subtle }]}
           onPress={() => handleTilePress(post)}
-          activeOpacity={activeOpacity.subtle}
+          
           accessibilityRole="button"
           accessibilityLabel={`Open post ${post.uri}`}
         >
           {thumb ? (
             <Image source={{ uri: thumb }} style={styles.tileImage} contentFit="cover" />
           ) : null}
-        </TouchableOpacity>
+        </Pressable>
       );
     },
     [handleTilePress, tileBg],

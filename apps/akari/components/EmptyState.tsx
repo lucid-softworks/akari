@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -31,13 +31,13 @@ export function EmptyState({ title, subtitle, icon, action, testID }: EmptyState
         <ThemedText style={[styles.subtitle, { color: textColor }]}>{subtitle}</ThemedText>
       ) : null}
       {action ? (
-        <TouchableOpacity
+        <Pressable
           accessibilityRole="button"
           onPress={action.onPress}
-          style={[styles.action, { borderColor: tintColor }]}
+          style={({ pressed }) => [styles.action, { borderColor: tintColor }, pressed && { opacity: 0.7 }]}
         >
           <ThemedText style={[styles.actionLabel, { color: tintColor }]}>{action.label}</ThemedText>
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
     </ThemedView>
   );

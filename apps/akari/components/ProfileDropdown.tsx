@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import * as Haptics from 'expo-haptics';
-import { Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -98,8 +98,8 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
             {menuItems.map((item, index) => (
               <React.Fragment key={item.key}>
                 {index > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                <TouchableOpacity
-                  style={styles.item}
+                <Pressable
+                  style={({ pressed }) => [styles.item, pressed && { opacity: activeOpacity.default }]}
                   onPress={() => {
                     void Haptics.impactAsync(
                       item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
@@ -107,7 +107,6 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
                     item.onPress();
                   }}
                   accessibilityRole="menuitem"
-                  activeOpacity={activeOpacity.default}
                 >
                   <IconSymbol
                     name={item.icon as any}
@@ -122,7 +121,7 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
                   >
                     {item.label}
                   </ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </React.Fragment>
             ))}
           </ThemedView>

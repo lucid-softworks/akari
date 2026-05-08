@@ -2,11 +2,11 @@ import React, { useMemo, useState } from 'react';
 import {
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -89,9 +89,9 @@ export function PostLanguagesSheet({ visible, onClose, selected, onChange }: Pos
     >
       <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <TouchableOpacity onPress={onClose} style={styles.headerButton} accessibilityRole="button" hitSlop={8}>
+          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button" hitSlop={8}>
             <IconSymbol name="chevron.left" size={20} color={semanticColors.systemBlue} />
-          </TouchableOpacity>
+          </Pressable>
           <ThemedText style={[styles.headerTitle, { color: textColor }]}>
             {t('composer.postLanguageTitle')}
           </ThemedText>
@@ -119,17 +119,15 @@ export function PostLanguagesSheet({ visible, onClose, selected, onChange }: Pos
           {filtered.map((option) => {
             const isSelected = selected.includes(option.tag);
             return (
-              <TouchableOpacity
+              <Pressable
                 key={option.tag}
                 onPress={() => toggle(option.tag)}
-                activeOpacity={activeOpacity.default}
+                
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: isSelected }}
-                style={[
-                  styles.row,
+                style={({ pressed }) => [styles.row,
                   { borderBottomColor: borderColor },
-                  isSelected ? { backgroundColor: selectedRowBg } : null,
-                ]}
+                  isSelected ? { backgroundColor: selectedRowBg } : null, pressed && { opacity: activeOpacity.default }]}
               >
                 <View style={styles.rowText}>
                   <ThemedText style={[styles.rowLabel, { color: textColor }]}>{option.label}</ThemedText>
@@ -148,7 +146,7 @@ export function PostLanguagesSheet({ visible, onClose, selected, onChange }: Pos
                     color={semanticColors.systemBlue}
                   />
                 ) : null}
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </ScrollView>
