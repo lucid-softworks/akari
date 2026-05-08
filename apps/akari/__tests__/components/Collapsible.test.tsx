@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
@@ -21,21 +22,31 @@ describe('Collapsible Component - Comprehensive Tests', () => {
 
   describe('Rendering Tests', () => {
     it('should render without crashing', () => {
-      const { getByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Test Title')).toBeTruthy();
     });
 
     it('should render with children', () => {
       const { getByText } = render(
         <Collapsible title="Test Title">
-          <Collapsible title="Child Title">Child content</Collapsible>
+          <Collapsible title="Child Title">
+            <Text>Child content</Text>
+          </Collapsible>
         </Collapsible>,
       );
       expect(getByText('Test Title')).toBeTruthy();
     });
 
     it('should render with text children', () => {
-      const { getByText } = render(<Collapsible title="Test Title">Simple text content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Simple text content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Test Title')).toBeTruthy();
     });
 
@@ -47,12 +58,20 @@ describe('Collapsible Component - Comprehensive Tests', () => {
 
   describe('Toggle Functionality Tests', () => {
     it('should start collapsed by default', () => {
-      const { queryByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { queryByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(queryByText('Content')).toBeNull();
     });
 
     it('should expand when clicked', () => {
-      const { getByText, getByRole } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText, getByRole } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
 
       const button = getByRole('button');
       fireEvent.press(button);
@@ -61,7 +80,11 @@ describe('Collapsible Component - Comprehensive Tests', () => {
     });
 
     it('should collapse when clicked again', () => {
-      const { getByText, getByRole, queryByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText, getByRole, queryByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
 
       const button = getByRole('button');
 
@@ -75,7 +98,11 @@ describe('Collapsible Component - Comprehensive Tests', () => {
     });
 
     it('should toggle multiple times', () => {
-      const { getByText, getByRole, queryByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText, getByRole, queryByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
 
       const button = getByRole('button');
 
@@ -96,32 +123,52 @@ describe('Collapsible Component - Comprehensive Tests', () => {
   describe('Theme Support Tests', () => {
     it('should use light theme colors', () => {
       mockUseColorScheme.mockReturnValue('light');
-      const { getByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Test Title')).toBeTruthy();
     });
 
     it('should use dark theme colors', () => {
       mockUseColorScheme.mockReturnValue('dark');
-      const { getByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Test Title')).toBeTruthy();
     });
 
     it('should handle undefined theme', () => {
       mockUseColorScheme.mockReturnValue(undefined);
-      const { getByText } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Test Title')).toBeTruthy();
     });
   });
 
   describe('Accessibility Tests', () => {
     it('should have proper accessibility role', () => {
-      const { getByRole } = render(<Collapsible title="Test Title">Content</Collapsible>);
+      const { getByRole } = render(
+        <Collapsible title="Test Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       const button = getByRole('button');
       expect(button).toBeTruthy();
     });
 
     it('should be accessible by title text', () => {
-      const { getByText } = render(<Collapsible title="Accessible Title">Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title="Accessible Title">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText('Accessible Title')).toBeTruthy();
     });
   });
@@ -129,18 +176,30 @@ describe('Collapsible Component - Comprehensive Tests', () => {
   describe('Edge Cases Tests', () => {
     it('should handle long titles', () => {
       const longTitle = 'This is a very long title that might cause layout issues';
-      const { getByText } = render(<Collapsible title={longTitle}>Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title={longTitle}>
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText(longTitle)).toBeTruthy();
     });
 
     it('should handle special characters in title', () => {
       const specialTitle = 'Title with @#$%^&*() characters';
-      const { getByText } = render(<Collapsible title={specialTitle}>Content</Collapsible>);
+      const { getByText } = render(
+        <Collapsible title={specialTitle}>
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       expect(getByText(specialTitle)).toBeTruthy();
     });
 
     it('should handle empty title', () => {
-      const { getByRole } = render(<Collapsible title="">Content</Collapsible>);
+      const { getByRole } = render(
+        <Collapsible title="">
+          <Text>Content</Text>
+        </Collapsible>,
+      );
       const button = getByRole('button');
       expect(button).toBeTruthy();
     });
@@ -148,8 +207,12 @@ describe('Collapsible Component - Comprehensive Tests', () => {
     it('should handle complex nested children', () => {
       const { getByText, getByRole } = render(
         <Collapsible title="Parent">
-          <Collapsible title="Child 1">Child 1 Content</Collapsible>
-          <Collapsible title="Child 2">Child 2 Content</Collapsible>
+          <Collapsible title="Child 1">
+            <Text>Child 1 Content</Text>
+          </Collapsible>
+          <Collapsible title="Child 2">
+            <Text>Child 2 Content</Text>
+          </Collapsible>
         </Collapsible>,
       );
 

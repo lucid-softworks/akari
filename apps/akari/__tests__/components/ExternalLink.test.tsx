@@ -1,5 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { openBrowserAsync } from 'expo-web-browser';
 import { ExternalLink } from '@/components/ExternalLink';
 
@@ -30,7 +30,9 @@ afterEach(() => {
 
 it('should render external link', () => {
   const { getByRole } = render(
-    <ExternalLink href="https://example.com">Test Link</ExternalLink>,
+    <ExternalLink href="https://example.com">
+      <Text>Test Link</Text>
+    </ExternalLink>,
   );
   expect(getByRole('link', { name: /test link/i })).toBeTruthy();
 });
@@ -39,7 +41,9 @@ it('opens in an in-app browser on native platforms', async () => {
   Platform.OS = 'ios';
 
   const { getByRole } = render(
-    <ExternalLink href="https://example.com">Native Link</ExternalLink>,
+    <ExternalLink href="https://example.com">
+      <Text>Native Link</Text>
+    </ExternalLink>,
   );
 
   const link = getByRole('link', { name: /native link/i });
@@ -57,7 +61,9 @@ it('uses default browser on web without preventing default', async () => {
   Platform.OS = 'web';
 
   const { getByRole } = render(
-    <ExternalLink href="https://example.com">Web Link</ExternalLink>,
+    <ExternalLink href="https://example.com">
+      <Text>Web Link</Text>
+    </ExternalLink>,
   );
 
   const link = getByRole('link', { name: /web link/i });

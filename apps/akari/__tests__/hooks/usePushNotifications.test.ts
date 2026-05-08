@@ -19,20 +19,23 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
 }));
 
-jest.mock('@/utils/navigation', () => ({
-  useNavigateToPost: () =>
-    jest.fn(({ actor, rKey }) => {
-      const { useRouter } = require('expo-router');
-      const { push } = useRouter();
-      push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
-    }),
-  useNavigateToProfile: () =>
-    jest.fn(({ actor }) => {
-      const { useRouter } = require('expo-router');
-      const { push } = useRouter();
-      push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}`);
-    }),
-}));
+jest.mock('@/utils/navigation', () => {
+  const { useRouter: useRouterMock } = require('expo-router');
+  return {
+    useNavigateToPost: () => {
+      const { push } = useRouterMock();
+      return jest.fn(({ actor, rKey }) => {
+        push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}/post/${encodeURIComponent(rKey)}`);
+      });
+    },
+    useNavigateToProfile: () => {
+      const { push } = useRouterMock();
+      return jest.fn(({ actor }) => {
+        push(`/(tabs)/index/user-profile/${encodeURIComponent(actor)}`);
+      });
+    },
+  };
+});
 
 jest.mock('expo-notifications', () => ({
   addNotificationReceivedListener: jest.fn(),
