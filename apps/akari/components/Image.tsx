@@ -38,4 +38,4 @@ export function Image(props: ImageProps) {
   return <ExpoImage {...props} source={transformed} />;
 }
 
-export type { ImageProps, ImageSource } from 'expo-image';
+export type { ImageProps } from 'expo-image';

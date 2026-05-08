@@ -24,7 +24,7 @@ const CDN_HOSTS_TO_REWRITE = new Set([
  * Returns the user's effective CDN base URL, or `undefined` when no
  * override is active (URLs flow through unchanged in that case).
  */
-export function readCdnHost(): string | undefined {
+function readCdnHost(): string | undefined {
   return resolveCdnHost(readAppViewSettings());
 }
 

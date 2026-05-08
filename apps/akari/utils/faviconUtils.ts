@@ -18,14 +18,14 @@ export function getDomainFromUrl(url: string): string {
  * Generates a favicon URL for a given domain
  * Uses Google's favicon service as a fallback
  */
-export function getFaviconUrl(domain: string): string {
+function getFaviconUrl(domain: string): string {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
 }
 
 /**
  * Alternative favicon services for better coverage
  */
-export function getAlternativeFaviconUrl(domain: string): string {
+function getAlternativeFaviconUrl(domain: string): string {
   return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
 }
 

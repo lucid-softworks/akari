@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getClaimsForHandle, type ClaimVerificationResult } from '@keytrace/claims';
-
-export type { ClaimVerificationResult };
+import { getClaimsForHandle } from '@keytrace/claims';
 
 export function useKeytraceClaims(handle?: string) {
   return useQuery({

@@ -153,5 +153,3 @@ export const getTranslationData = (locale: string) => {
   ];
 };
 
-// Type for translation keys
-export type TranslationKey = keyof typeof translations.en;

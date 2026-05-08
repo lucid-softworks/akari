@@ -17,7 +17,7 @@ export function SettingsSubpageLayout({ children, title }: SettingsSubpageLayout
 
   if (!isLargeScreen) {
     // On mobile, the parent tab layout already renders a header with
-    // back navigation, so we skip SettingsHeader to avoid a double header.
+    // back navigation, so we skip the inline header to avoid duplication.
     return (
       <ThemedView style={styles.mobileContainer}>
         {children}

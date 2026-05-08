@@ -14,7 +14,7 @@ export type PushedAuthorizationRequestInput = {
   keypair: DpopKeypair;
 };
 
-export type PushedAuthorizationResponse = {
+type PushedAuthorizationResponse = {
   request_uri: string;
   expires_in: number;
 };

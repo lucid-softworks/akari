@@ -6,7 +6,7 @@
  * The pattern intentionally keeps each flag as a `const` boolean so dead
  * code elimination can drop disabled branches at build time.
  */
-export const featureFlags = {
+const featureFlags = {
   /**
    * Group chats. Enable once the Bluesky chat service rolls out groups for
    * non-employee accounts. Today, only @bsky.app team accounts can create

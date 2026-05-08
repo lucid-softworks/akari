@@ -6,9 +6,8 @@ import type {
   BlueskyDraftView,
 } from '@/bluesky-api';
 import type { PostControls, ReplyAllow } from '@/utils/postControls';
-import { DEFAULT_POST_CONTROLS } from '@/utils/postControls';
 
-export type DraftAttachedImage = {
+type DraftAttachedImage = {
   uri: string;
   alt: string;
   mimeType: string;
@@ -160,5 +159,3 @@ export function draftViewToComposerState(view: BlueskyDraftView): ComposerDraftS
   };
 }
 
-/** Default that callers can spread when nothing has been edited yet. */
-export const DEFAULT_DRAFT_CONTROLS = DEFAULT_POST_CONTROLS;

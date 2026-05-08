@@ -85,24 +85,3 @@ export function shouldHideFeedItem(
   return false;
 }
 
-/**
- * Apply the user's filter toggles to a bare post (search results, bookmarks —
- * surfaces without the feed-item wrapper). Reposts can't be detected at the
- * post level (no `reason` from a feed generator), so `hideReposts` is a no-op
- * here by design.
- */
-export function shouldHidePost(
-  post: BlueskyPostView,
-  filters: FeedFilters,
-  options: { applyHideReplies?: boolean } = {},
-): boolean {
-  const { applyHideReplies = true } = options;
-
-  if (applyHideReplies && filters.hideReplies && postIsReply(post)) return true;
-  if (filters.hideQuotes && postIsQuote(post)) return true;
-  if (filters.hideEngaged && viewerEngagedWith(post)) return true;
-  if (authorFails(post, filters)) return true;
-  if (postFailsCounts(post, filters)) return true;
-
-  return false;
-}

@@ -15,6 +15,3 @@ export const getLibreTranslateClient = () => {
   return client;
 };
 
-export const resetLibreTranslateClient = () => {
-  client = null;
-};

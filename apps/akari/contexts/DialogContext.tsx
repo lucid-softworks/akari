@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-export type DialogComponent = React.ReactNode;
+type DialogComponent = React.ReactNode;
 
 export type DialogOpenOptions = {
   id: string;

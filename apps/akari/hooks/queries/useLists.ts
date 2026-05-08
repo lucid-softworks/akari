@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { type BlueskyListResponse, type BlueskyListsResponse } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -33,7 +33,7 @@ export function useLists(actor?: string) {
 /**
  * Members of a single list, paginated.
  */
-export function useList(listUri?: string) {
+function useList(listUri?: string) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
@@ -85,24 +85,3 @@ export function useListMembership(listUri: string | undefined, subjectDid: strin
   };
 }
 
-/**
- * Snapshot of a single list (one page only). Convenience for places that
- * just need the list metadata + first page of members.
- */
-export function useListSnapshot(listUri?: string) {
-  const { data: token } = useJwtToken();
-  const { data: currentAccount } = useCurrentAccount();
-
-  return useQuery<BlueskyListResponse>({
-    queryKey: ['listSnapshot', currentAccount?.pdsUrl, listUri] as const,
-    enabled: !!token && !!currentAccount?.pdsUrl && !!listUri,
-    queryFn: async () => {
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      if (!listUri) throw new Error('No list URI');
-
-      const api = apiForAccount(currentAccount);
-      return api.getList(token, listUri, 100);
-    },
-  });
-}

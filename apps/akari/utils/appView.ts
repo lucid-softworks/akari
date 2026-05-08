@@ -36,7 +36,7 @@ export type AppViewConfig = {
 
 export type CdnPresetId = 'bsky' | 'blueat' | 'custom';
 
-export type CdnPreset = {
+type CdnPreset = {
   id: CdnPresetId;
   label: string;
   description: string;
@@ -47,7 +47,7 @@ export type CdnPreset = {
   url: string | undefined;
 };
 
-export const CDN_PRESETS: Record<Exclude<CdnPresetId, 'custom'>, CdnPreset> = {
+const CDN_PRESETS: Record<Exclude<CdnPresetId, 'custom'>, CdnPreset> = {
   bsky: {
     id: 'bsky',
     label: 'Bluesky',
@@ -180,11 +180,3 @@ export function resolveAccountAppView(
   });
 }
 
-/**
- * The proxy header value sent on `app.bsky.*` / `chat.bsky.*` requests when an
- * AppView is configured. Append `#bsky_appview` to the unsuffixed DID — that's
- * the service-id every BskyAppView publishes in its DID document.
- */
-export function appViewProxyHeader(did: string): string {
-  return `${did}#bsky_appview`;
-}

@@ -33,7 +33,7 @@ export type FeedFilters = {
   maxBookmarks?: number;
 };
 
-export const DEFAULT_FILTERS: FeedFilters = {
+const DEFAULT_FILTERS: FeedFilters = {
   hideReplies: false,
   hideReposts: false,
   hideQuotes: false,

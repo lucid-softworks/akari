@@ -86,7 +86,7 @@ export function getLanguageLabel(tag: string, uiLocale: string): string {
   }
 }
 
-export function getNativeLanguageLabel(tag: string): string {
+function getNativeLanguageLabel(tag: string): string {
   const dn = getDisplayNames(tag);
   if (!dn) return tag;
   try {

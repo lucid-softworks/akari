@@ -14,7 +14,7 @@ import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificati
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
-export const SIDEBAR_WIDTH = 260;
+const SIDEBAR_WIDTH = 260;
 
 type NavigationItem = {
   id: string;

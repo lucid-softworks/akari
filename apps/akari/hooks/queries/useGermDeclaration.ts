@@ -5,7 +5,7 @@ import { resolveDidToPds } from '@/utils/oauth/discovery';
 const COLLECTION = 'com.germnetwork.declaration';
 const RKEY = 'self';
 
-export type GermShowButtonTo =
+type GermShowButtonTo =
   | 'everyone'
   | 'all'
   | 'anyone'
@@ -14,7 +14,7 @@ export type GermShowButtonTo =
   | 'none'
   | 'noOne';
 
-export type GermDeclaration = {
+type GermDeclaration = {
   /** Base URL for the Germ landing page; the per-conversation route is
    *  appended client-side as `/web/#{otherDid}+{myDid}`. */
   messageMeUrl?: string;

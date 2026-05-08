@@ -4,7 +4,7 @@
  */
 
 // Cooking methods
-export const COOKING_METHODS: Record<string, string> = {
+const COOKING_METHODS: Record<string, string> = {
   'exchange.recipe.defs#cookingMethodAirFrying': 'Air Frying',
   'exchange.recipe.defs#cookingMethodBaking': 'Baking',
   'exchange.recipe.defs#cookingMethodBroiling': 'Broiling',
@@ -19,7 +19,7 @@ export const COOKING_METHODS: Record<string, string> = {
 };
 
 // Recipe categories
-export const RECIPE_CATEGORIES: Record<string, string> = {
+const RECIPE_CATEGORIES: Record<string, string> = {
   'exchange.recipe.defs#categoryAppetizer': 'Appetizer',
   'exchange.recipe.defs#categoryBeverage': 'Beverage',
   'exchange.recipe.defs#categoryBreakfast': 'Breakfast',
@@ -38,7 +38,7 @@ export const RECIPE_CATEGORIES: Record<string, string> = {
 };
 
 // Cuisines
-export const CUISINES: Record<string, string> = {
+const CUISINES: Record<string, string> = {
   'exchange.recipe.defs#cuisineAfrican': 'African',
   'exchange.recipe.defs#cuisineAmerican': 'American',
   'exchange.recipe.defs#cuisineAustralian': 'Australian',
@@ -75,7 +75,7 @@ export const CUISINES: Record<string, string> = {
 };
 
 // Dietary restrictions
-export const DIETARY_RESTRICTIONS: Record<string, string> = {
+const DIETARY_RESTRICTIONS: Record<string, string> = {
   'exchange.recipe.defs#dietLowFat': 'Low Fat',
   'exchange.recipe.defs#dietLowCalorie': 'Low Calorie',
   'exchange.recipe.defs#dietLowCarb': 'Low Carb',
@@ -90,7 +90,7 @@ export const DIETARY_RESTRICTIONS: Record<string, string> = {
 };
 
 // Attribution types
-export const ATTRIBUTION_TYPES: Record<string, string> = {
+const ATTRIBUTION_TYPES: Record<string, string> = {
   'exchange.recipe.defs#attributionTypeOriginal': 'Original',
   'exchange.recipe.defs#attributionTypePerson': 'Person',
   'exchange.recipe.defs#attributionTypePublication': 'Publication',
@@ -100,13 +100,13 @@ export const ATTRIBUTION_TYPES: Record<string, string> = {
 };
 
 // Publication types
-export const PUBLICATION_TYPES: Record<string, string> = {
+const PUBLICATION_TYPES: Record<string, string> = {
   'exchange.recipe.defs#publicationTypeBook': 'Book',
   'exchange.recipe.defs#publicationTypeMagazine': 'Magazine',
 };
 
 // Licenses
-export const LICENSES: Record<string, string> = {
+const LICENSES: Record<string, string> = {
   'exchange.recipe.defs#licenseAllRights': 'All Rights Reserved',
   'exchange.recipe.defs#licenseCreativeCommonsBy': 'CC BY 4.0',
   'exchange.recipe.defs#licenseCreativeCommonsBySa': 'CC BY-SA 4.0',

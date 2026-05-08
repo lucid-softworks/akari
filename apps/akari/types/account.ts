@@ -4,7 +4,7 @@
  * because losing the private key strands the user — the auth server bound
  * their tokens to it.
  */
-export type OAuthAccountAuth = {
+type OAuthAccountAuth = {
   /** P-256 private scalar in lowercase hex. Long-lived per account. */
   dpopPrivateKeyHex: string;
   /** Public half of the DPoP keypair, embedded into every proof header. */

@@ -23,7 +23,7 @@ export function usePdsUrlFromDid(did: string | undefined) {
  * Hook to resolve PDS URL from a handle
  * @param handle - The handle to resolve (with or without @)
  */
-export function usePdsUrlFromHandle(handle: string | undefined) {
+function usePdsUrlFromHandle(handle: string | undefined) {
   return useQuery({
     queryKey: ['pdsUrl', 'handle', handle],
     queryFn: async () => {
