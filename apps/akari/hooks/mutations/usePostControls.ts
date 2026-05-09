@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import type { PostControls } from '@/utils/postControls';
 import { DEFAULT_POST_CONTROLS } from '@/utils/postControls';
 import { apiForAccount } from '@/utils/blueskyApi';
@@ -41,7 +42,7 @@ export function usePostControls() {
     onSuccess: () => {
       // Invalidate the thread cache for this post so subsequent loads see
       // the new gate state.
-      queryClient.invalidateQueries({ queryKey: ['postThread'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.postThread.all });
     },
   });
 }

@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { BlueskyEmbed } from '@/bluesky-api';
 import { apiForAccount } from '@/utils/blueskyApi';
 type NotificationError = {
@@ -22,7 +23,7 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
-    queryKey: ['notifications', limit, reasons, priority, currentUserDid],
+    queryKey: queryKeys.notifications.list({ limit, reasons, priority, did: currentUserDid }),
     queryFn: async ({ pageParam }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

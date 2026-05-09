@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 type CreateListArgs = {
@@ -35,7 +36,7 @@ export function useCreateList() {
     },
     onSuccess: () => {
       // Force the lists query to refetch so the new list shows up immediately.
-      queryClient.invalidateQueries({ queryKey: ['lists', currentAccount?.pdsUrl, currentAccount?.did] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.lists(currentAccount?.pdsUrl, currentAccount?.did) });
     },
   });
 }

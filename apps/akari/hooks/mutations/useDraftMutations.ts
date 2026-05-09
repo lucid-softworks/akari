@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { draftsQueryKey } from '@/hooks/queries/useDrafts';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import {
   composerStateToDraft,
   type ComposerDraftState,
@@ -51,7 +51,7 @@ export function useCreateDraft() {
       };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: draftsQueryKey(did) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.drafts(did) });
     },
   });
 }
@@ -66,7 +66,7 @@ export function useUpdateDraft() {
       await api.updateDraft(token, id, draft);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: draftsQueryKey(did) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.drafts(did) });
     },
   });
 }
@@ -81,11 +81,11 @@ export function useDeleteDraft() {
     },
     onMutate: async ({ id }) => {
       // Optimistic removal so the drafts sheet feels instant.
-      await queryClient.cancelQueries({ queryKey: draftsQueryKey(did) });
-      const prev = queryClient.getQueryData<ComposerDraftState[]>(draftsQueryKey(did));
+      await queryClient.cancelQueries({ queryKey: queryKeys.drafts(did) });
+      const prev = queryClient.getQueryData<ComposerDraftState[]>(queryKeys.drafts(did));
       if (prev) {
         queryClient.setQueryData<ComposerDraftState[]>(
-          draftsQueryKey(did),
+          queryKeys.drafts(did),
           prev.filter((d) => d.id !== id),
         );
       }
@@ -93,10 +93,10 @@ export function useDeleteDraft() {
     },
     onError: (_err, _vars, ctx) => {
       const snapshot = (ctx as { prev?: ComposerDraftState[] } | undefined)?.prev;
-      if (snapshot) queryClient.setQueryData(draftsQueryKey(did), snapshot);
+      if (snapshot) queryClient.setQueryData(queryKeys.drafts(did), snapshot);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: draftsQueryKey(did) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.drafts(did) });
     },
   });
 }

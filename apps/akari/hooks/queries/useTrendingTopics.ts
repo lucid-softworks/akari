@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewSettings } from '@/hooks/useAppViewSettings';
 import { resolveAppView } from '@/utils/appView';
 import { apiForPublicAppView } from '@/utils/blueskyApi';
@@ -14,7 +15,7 @@ export function useTrendingTopics(limit: number = 12, enabled: boolean = true) {
   const { config } = useAppViewSettings();
   const appViewUrl = resolveAppView(config).url;
   return useQuery({
-    queryKey: ['trendingTopics', limit, appViewUrl] as const,
+    queryKey: queryKeys.trendingTopics(limit, appViewUrl),
     staleTime: 5 * 60 * 1000,
     enabled,
     queryFn: async () => {

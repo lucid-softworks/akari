@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
+
 type HandleHistoryEntry = {
   handle: string;
   changedAt: string; // ISO timestamp
@@ -38,7 +40,7 @@ type PlcAuditEntry = {
  */
 export function useHandleHistory(identifier: string | undefined) {
   return useQuery({
-    queryKey: ['handleHistory', 'plc', identifier],
+    queryKey: queryKeys.handleHistory.plc(identifier),
     queryFn: async (): Promise<HandleHistoryEntry[]> => {
       if (!identifier) throw new Error('No identifier provided');
       if (!identifier.startsWith('did:plc:')) {

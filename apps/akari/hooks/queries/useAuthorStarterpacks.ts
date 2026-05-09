@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching starterpacks created by a user
@@ -14,7 +15,7 @@ export function useAuthorStarterpacks(identifier: string | undefined, limit: num
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorStarterpacks', identifier, limit, currentAccount?.pdsUrl],
+    queryKey: queryKeys.author.starterpacks(identifier, limit, currentAccount?.pdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');

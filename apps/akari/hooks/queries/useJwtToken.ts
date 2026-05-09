@@ -1,13 +1,15 @@
 import { storage } from '@/utils/secureStorage';
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
+
 /**
  * Query hook for JWT tokens
  * Provides access to the current JWT token
  */
 export function useJwtToken() {
   return useQuery({
-    queryKey: ['jwtToken'],
+    queryKey: queryKeys.jwtToken(),
     queryFn: () => {
       return storage.getItem('jwtToken');
     },

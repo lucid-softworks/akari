@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { buildLinkFacets } from '@/utils/textFacets';
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -45,10 +46,10 @@ export function useSendMessage() {
     },
     onMutate: async ({ convoId, text }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['messages', convoId] });
+      await queryClient.cancelQueries({ queryKey: queryKeys.messages.forConvo(convoId) });
 
       // Snapshot the previous values
-      const previousMessages = queryClient.getQueryData(['messages', convoId]);
+      const previousMessages = queryClient.getQueryData(queryKeys.messages.forConvo(convoId));
 
       // Create optimistic message data
       const optimisticMessage = {
@@ -66,7 +67,7 @@ export function useSendMessage() {
 
       // Optimistically update messages
       if (previousMessages) {
-        queryClient.setQueryData(['messages', convoId], (old: any) => {
+        queryClient.setQueryData(queryKeys.messages.forConvo(convoId), (old: any) => {
           if (!old?.pages?.[0]?.messages) return old;
           return {
             ...old,
@@ -90,12 +91,12 @@ export function useSendMessage() {
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousMessages) {
-        queryClient.setQueryData(['messages', variables.convoId], context.previousMessages);
+        queryClient.setQueryData(queryKeys.messages.forConvo(variables.convoId), context.previousMessages);
       }
     },
     onSettled: (data, error, variables) => {
       // Always refetch after error or success to ensure data consistency
-      queryClient.invalidateQueries({ queryKey: ['messages', variables.convoId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.forConvo(variables.convoId) });
     },
   });
 }

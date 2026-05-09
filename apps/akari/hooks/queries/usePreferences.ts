@@ -1,6 +1,7 @@
 import { type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFeedsPref } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SavedFeedWithMetadata } from '@/types/savedFeed';
 import { feedGeneratorsQueryOptions } from './useFeedGenerators';
@@ -9,7 +10,7 @@ import { apiForPdsUrl } from '@/utils/blueskyApi';
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
 const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
-  queryKey: ['preferences', pdsUrl] as const,
+  queryKey: queryKeys.preferences.forPds(pdsUrl),
   queryFn: async (): Promise<BlueskyPreferencesResponse> => {
     if (!token) throw new Error('No access token');
     if (!pdsUrl) throw new Error('No PDS URL available');
@@ -42,7 +43,7 @@ export function useSavedFeeds() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['savedFeeds', currentAccount?.did] as const,
+    queryKey: queryKeys.savedFeeds(currentAccount?.did),
     enabled: !!token && !!currentAccount?.did && !!currentAccount?.pdsUrl,
     staleTime: PREFERENCES_STALE_TIME,
     queryFn: async (): Promise<SavedFeedWithMetadata[]> => {

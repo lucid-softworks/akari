@@ -1,5 +1,6 @@
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useQuery } from '@tanstack/react-query';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
@@ -13,7 +14,7 @@ export function useTimeline(limit: number = 20, enabled: boolean = true) {
   const currentUserDid = currentAccount?.did;
 
   return useQuery({
-    queryKey: ['timeline', limit, currentUserDid],
+    queryKey: queryKeys.timeline.list(limit, currentUserDid),
     queryFn: async () => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

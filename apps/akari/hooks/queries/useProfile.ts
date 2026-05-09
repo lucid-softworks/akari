@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
+import { queryKeys } from '@/hooks/queryKeys';
 import { useCurrentAccount } from "./useCurrentAccount";
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -13,7 +14,7 @@ export function useProfile(identifier: string | undefined) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ["profile", identifier, currentAccount?.pdsUrl],
+    queryKey: queryKeys.profile.detail(identifier, currentAccount?.pdsUrl),
     queryFn: async () => {
       if (!token) throw new Error("No access token");
       if (!identifier) throw new Error("No identifier provided");

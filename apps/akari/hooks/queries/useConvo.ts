@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -21,7 +22,7 @@ export function useConvo(convoId: string | undefined | null) {
   const currentUserDid = currentAccount?.did;
 
   return useQuery({
-    queryKey: ['convo', convoId, currentUserDid],
+    queryKey: queryKeys.convo(convoId, currentUserDid),
     queryFn: async () => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

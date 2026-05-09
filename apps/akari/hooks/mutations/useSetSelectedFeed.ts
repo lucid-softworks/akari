@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +13,7 @@ export function useSetSelectedFeed() {
       return feedUri;
     },
     onSuccess: (feedUri) => {
-      queryClient.setQueryData(['selectedFeed'], feedUri);
+      queryClient.setQueryData(queryKeys.selectedFeed(), feedUri);
 
       // Manually persist the updated selected feed query
       storage.setItem('selectedFeed', feedUri);

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import type { Account } from '@/types/account';
 import type { AccountAppViewOverride } from '@/utils/appView';
 import { storage } from '@/utils/secureStorage';
@@ -30,13 +31,13 @@ export function useUpdateAccountAppView() {
           : account,
       );
       storage.setItem('accounts', updated);
-      queryClient.setQueryData(['accounts'], updated);
+      queryClient.setQueryData(queryKeys.accounts(), updated);
 
       const current = storage.getItem('currentAccount') as Account | null;
       if (current?.did === did) {
         const next: Account = { ...current, appView: override };
         storage.setItem('currentAccount', next);
-        queryClient.setQueryData(['currentAccount'], next);
+        queryClient.setQueryData(queryKeys.currentAccount(), next);
       }
 
       // Account-derived queries (timeline, profile, etc.) build their

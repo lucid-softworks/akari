@@ -107,6 +107,7 @@ describe('useNotifications', () => {
     await waitFor(() => {
       expect(result.current.data?.pages[0].notifications[0]).toEqual({
         id: 'notif1',
+        uri: 'notif1',
         author: {
           did: 'did:alice',
           handle: 'alice',
@@ -223,7 +224,7 @@ describe('useNotifications', () => {
     const { unmount } = renderHook(() => useNotifications(), { wrapper });
 
     const query = queryClient.getQueryCache().find({
-      queryKey: ['notifications', 50, undefined, undefined, 'did:me'],
+      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me'],
     });
     expect(query).toBeDefined();
     await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(
@@ -245,7 +246,7 @@ describe('useNotifications', () => {
     });
 
     const query = queryClient.getQueryCache().find({
-      queryKey: ['notifications', 50, undefined, undefined, 'did:me'],
+      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me'],
     });
     expect(query).toBeDefined();
     await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(

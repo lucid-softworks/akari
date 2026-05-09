@@ -4,6 +4,7 @@ import { type BlueskyLabelerView, type BlueskyLabelersPref } from '@/bluesky-api
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { usePreferences } from '@/hooks/queries/usePreferences';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /** Bluesky's default moderation labeler — always included so a fresh account
@@ -30,7 +31,7 @@ export function useLabelers() {
   const dids = Array.from(new Set([BSKY_DEFAULT_LABELER_DID, ...subscribedDids]));
 
   return useQuery<BlueskyLabelerView[]>({
-    queryKey: ['labelers', currentAccount?.pdsUrl, dids.join(',')],
+    queryKey: queryKeys.labelers(currentAccount?.pdsUrl, dids.join(',')),
     enabled: !!token && !!currentAccount?.pdsUrl && dids.length > 0,
     staleTime: 10 * 60 * 1000,
     queryFn: async () => {

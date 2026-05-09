@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { Account } from '@/types/account';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,7 +14,7 @@ export function useAddAccount() {
       return account;
     },
     onSuccess: async (newAccount) => {
-      const cachedAccounts = queryClient.getQueryData<Account[]>(['accounts']) ?? [];
+      const cachedAccounts = queryClient.getQueryData<Account[]>(queryKeys.accounts()) ?? [];
       const storedAccounts = storage.getItem('accounts') ?? [];
 
       const accountsByDid = new Map<string, Account>();
@@ -34,7 +35,7 @@ export function useAddAccount() {
 
       const mergedAccounts = Array.from(accountsByDid.values());
 
-      queryClient.setQueryData(['accounts'], mergedAccounts);
+      queryClient.setQueryData(queryKeys.accounts(), mergedAccounts);
 
       // Manually persist the updated accounts query
       storage.setItem('accounts', mergedAccounts);

@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +13,7 @@ export function useSetRefreshToken() {
       return token;
     },
     onSuccess: async (token) => {
-      queryClient.setQueryData(['refreshToken'], token);
+      queryClient.setQueryData(queryKeys.refreshToken(), token);
 
       // Manually persist the updated refresh token query
       storage.setItem('refreshToken', token);

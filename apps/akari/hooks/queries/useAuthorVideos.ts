@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching a user's posts with videos
@@ -14,7 +15,7 @@ export function useAuthorVideos(identifier: string | undefined, limit: number = 
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['authorVideos', identifier, limit, currentAccount?.pdsUrl],
+    queryKey: queryKeys.author.videos(identifier, limit, currentAccount?.pdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');

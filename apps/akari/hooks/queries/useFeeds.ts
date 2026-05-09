@@ -1,5 +1,6 @@
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { type BlueskyFeedsResponse } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
 import { apiForAccount } from '@/utils/blueskyApi';
@@ -15,7 +16,7 @@ export function useFeeds(actor: string | undefined, limit: number = 50, cursor?:
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['feeds', actor, limit, cursor, currentAccount?.pdsUrl],
+    queryKey: queryKeys.feeds({ actor, limit, cursor, pdsUrl: currentAccount?.pdsUrl }),
     queryFn: async (): Promise<BlueskyFeedsResponse> => {
       if (!token) throw new Error('No access token');
       if (!actor) throw new Error('No actor provided');

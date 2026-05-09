@@ -29,6 +29,7 @@ import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { germButtonVisibleFor, useGermDeclaration } from '@/hooks/queries/useGermDeclaration';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
 import { showAlert } from '@/utils/alert';
@@ -103,7 +104,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     const refreshed = await refetchProfile();
     const did = refreshed.data?.did ?? profile?.did;
     if (did) {
-      await queryClient.invalidateQueries({ queryKey: ['verifiersForDid', did] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.verifiersForDid(did) });
     }
   }, [refetchProfile, queryClient, profile?.did]);
 

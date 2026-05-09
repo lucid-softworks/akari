@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -14,7 +15,7 @@ export function useBookmarks(limit: number = 20) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['bookmarks', limit, currentAccount?.did],
+    queryKey: queryKeys.bookmarks.list(limit, currentAccount?.did),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

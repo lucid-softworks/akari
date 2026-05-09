@@ -1,5 +1,6 @@
 import { useClearAuthentication } from '@/hooks/mutations/useClearAuthentication';
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
+import { queryKeys } from '@/hooks/queryKeys';
 import type { Account } from '@/types/account';
 import { readJwtExpiry } from '@/utils/jwt';
 import { refreshOAuthSession } from '@/utils/oauth/refresh';
@@ -28,7 +29,7 @@ export function useAuthStatus() {
   const currentUserDid = currentAccount?.did || null;
 
   return useQuery({
-    queryKey: ['auth', currentUserDid],
+    queryKey: queryKeys.auth.forDid(currentUserDid),
     queryFn: async () => {
       if (!token || !refreshToken) {
         return { isAuthenticated: false };
@@ -57,18 +58,18 @@ export function useAuthStatus() {
         try {
           const refreshed = await refreshOAuthSession(currentAccount);
 
-          queryClient.setQueryData(['jwtToken'], refreshed.jwtToken);
-          queryClient.setQueryData(['refreshToken'], refreshed.refreshToken);
-          queryClient.setQueryData(['currentAccount'], refreshed);
+          queryClient.setQueryData(queryKeys.jwtToken(), refreshed.jwtToken);
+          queryClient.setQueryData(queryKeys.refreshToken(), refreshed.refreshToken);
+          queryClient.setQueryData(queryKeys.currentAccount(), refreshed);
 
           const accountsList =
-            queryClient.getQueryData<Account[]>(['accounts']) ??
+            queryClient.getQueryData<Account[]>(queryKeys.accounts()) ??
             storage.getItem('accounts') ??
             [];
           const updatedAccounts = accountsList.map((a) =>
             a.did === refreshed.did ? refreshed : a,
           );
-          queryClient.setQueryData(['accounts'], updatedAccounts);
+          queryClient.setQueryData(queryKeys.accounts(), updatedAccounts);
 
           storage.setItem('jwtToken', refreshed.jwtToken);
           storage.setItem('refreshToken', refreshed.refreshToken);

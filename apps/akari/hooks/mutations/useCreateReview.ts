@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type CreateReviewInput } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 export function useCreateReview() {
@@ -21,8 +22,8 @@ export function useCreateReview() {
       return api.createReview(token, currentAccount.did, review);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['authorPosts'] });
-      void queryClient.invalidateQueries({ queryKey: ['timeline'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.author.posts.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.timeline.all });
     },
   });
 }

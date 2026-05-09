@@ -7,6 +7,7 @@ import {
 } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 const MUTED_WORDS_PREF_TYPE = 'app.bsky.actor.defs#mutedWordsPref';
@@ -56,7 +57,7 @@ export function useUpdateMutedWords() {
       // The preferences query is the source of truth for `useMutedWords`;
       // invalidate so any consumer (settings screen, feed filters) sees the
       // change.
-      queryClient.invalidateQueries({ queryKey: ['preferences'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.preferences.all });
     },
   });
 }

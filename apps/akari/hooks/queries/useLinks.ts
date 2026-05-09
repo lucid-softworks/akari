@@ -4,6 +4,7 @@ import { getPdsUrlFromDid } from '@/bluesky-api';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
@@ -16,7 +17,7 @@ export function useLinks(identifier: string | undefined, limit: number = 20) {
   const { data: profile } = useProfile(identifier);
 
   return useInfiniteQuery({
-    queryKey: ['links', identifier, limit, profile?.did],
+    queryKey: queryKeys.links(identifier, limit, profile?.did),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');

@@ -8,6 +8,7 @@ import type {
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -65,17 +66,17 @@ export function useBookmarkPost() {
       }
     },
     onMutate: async ({ postUri, action }) => {
-      await queryClient.cancelQueries({ queryKey: ['timeline'] });
-      await queryClient.cancelQueries({ queryKey: ['feed'] });
-      await queryClient.cancelQueries({ queryKey: ['authorFeed'] });
-      await queryClient.cancelQueries({ queryKey: ['post'] });
-      await queryClient.cancelQueries({ queryKey: ['postThread'] });
+      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.post.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.postThread.all });
 
-      const timelineSnapshots = snapshotByPrefix<BlueskyFeedResponse>(queryClient, ['timeline']);
-      const feedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['feed']);
-      const authorFeedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['authorFeed']);
-      const postSnapshots = snapshotByPrefix<BlueskyPostView>(queryClient, ['post']);
-      const postThreadSnapshots = snapshotByPrefix<ThreadQueryData>(queryClient, ['postThread']);
+      const timelineSnapshots = snapshotByPrefix<BlueskyFeedResponse>(queryClient, queryKeys.timeline.all);
+      const feedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, queryKeys.feed.all);
+      const authorFeedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, queryKeys.author.feed.all);
+      const postSnapshots = snapshotByPrefix<BlueskyPostView>(queryClient, queryKeys.post.all);
+      const postThreadSnapshots = snapshotByPrefix<ThreadQueryData>(queryClient, queryKeys.postThread.all);
 
       const updatePost = (post: BlueskyPostView): BlueskyPostView => ({
         ...post,
@@ -179,7 +180,7 @@ export function useBookmarkPost() {
       });
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.bookmarks.all });
     },
   });
 }

@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 export function usePostThread(postUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ["postThread", postUri, currentAccount?.pdsUrl],
+    queryKey: queryKeys.postThread.detail(postUri, currentAccount?.pdsUrl),
     queryFn: async () => {
       if (!token || !postUri) throw new Error("No access token or post URI");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import type {
   BlueskyFeedItem,
   BlueskyFeedResponse,
@@ -42,13 +43,13 @@ export function useRepostPost() {
       }
     },
     onMutate: async ({ postUri, action }) => {
-      await queryClient.cancelQueries({ queryKey: ['timeline'] });
-      await queryClient.cancelQueries({ queryKey: ['feed'] });
-      await queryClient.cancelQueries({ queryKey: ['authorFeed'] });
-      await queryClient.cancelQueries({ queryKey: ['post'] });
-      await queryClient.cancelQueries({ queryKey: ['postThread'] });
+      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.post.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.postThread.all });
 
-      const previousTimeline = queryClient.getQueryData<BlueskyFeedResponse>(['timeline']);
+      const previousTimeline = queryClient.getQueryData<BlueskyFeedResponse>(queryKeys.timeline.all);
 
       const updatePostRepostStatus = (post: BlueskyPostView): BlueskyPostView => ({
         ...post,
@@ -65,7 +66,7 @@ export function useRepostPost() {
       });
 
       // Update timeline
-      queryClient.setQueryData<BlueskyFeedResponse>(['timeline'], (old) => {
+      queryClient.setQueryData<BlueskyFeedResponse>(queryKeys.timeline.all, (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -74,7 +75,7 @@ export function useRepostPost() {
       });
 
       // Update all feed queries
-      const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['feed'] });
+      const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.feed.all });
       for (const [queryKey, data] of feedQueries) {
         if (data && Array.isArray(data.pages)) {
           queryClient.setQueryData(queryKey, {
@@ -88,7 +89,7 @@ export function useRepostPost() {
       }
 
       // Update all authorFeed queries
-      const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['authorFeed'] });
+      const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.author.feed.all });
       for (const [queryKey, data] of authorFeedQueries) {
         if (data && Array.isArray(data.pages)) {
           queryClient.setQueryData(queryKey, {
@@ -102,7 +103,7 @@ export function useRepostPost() {
       }
 
       // Update all individual post queries
-      const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
+      const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: queryKeys.post.all });
       for (const [queryKey, data] of postQueries) {
         if (data && data.uri === postUri) {
           queryClient.setQueryData(queryKey, updatePostRepostStatus(data));
@@ -110,7 +111,7 @@ export function useRepostPost() {
       }
 
       // Update all post thread queries
-      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+      const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: queryKeys.postThread.all });
       for (const [queryKey, data] of threadQueries) {
         if (data?.thread?.post?.uri === postUri) {
           queryClient.setQueryData(queryKey, {
@@ -124,12 +125,12 @@ export function useRepostPost() {
     },
     onError: (_err, _variables, context) => {
       if (context?.previousTimeline) {
-        queryClient.setQueryData(['timeline'], context.previousTimeline);
+        queryClient.setQueryData(queryKeys.timeline.all, context.previousTimeline);
       }
-      void queryClient.invalidateQueries({ queryKey: ['feed'] });
-      void queryClient.invalidateQueries({ queryKey: ['authorFeed'] });
-      void queryClient.invalidateQueries({ queryKey: ['post'] });
-      void queryClient.invalidateQueries({ queryKey: ['postThread'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.feed.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.author.feed.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.post.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.postThread.all });
     },
     onSuccess: (data: BlueskyLikeResponse | BlueskyUnlikeResponse, variables) => {
       if (variables.action === 'repost' && 'uri' in data) {
@@ -143,7 +144,7 @@ export function useRepostPost() {
           post: updateRepostUri(item.post),
         });
 
-        queryClient.setQueryData<BlueskyFeedResponse>(['timeline'], (old) => {
+        queryClient.setQueryData<BlueskyFeedResponse>(queryKeys.timeline.all, (old) => {
           if (!old) return old;
           return {
             ...old,
@@ -151,7 +152,7 @@ export function useRepostPost() {
           };
         });
 
-        const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['feed'] });
+        const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.feed.all });
         for (const [queryKey, feedData] of feedQueries) {
           if (feedData && Array.isArray(feedData.pages)) {
             queryClient.setQueryData(queryKey, {
@@ -164,14 +165,14 @@ export function useRepostPost() {
           }
         }
 
-        const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
+        const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: queryKeys.post.all });
         for (const [queryKey, postData] of postQueries) {
           if (postData && postData.uri === variables.postUri) {
             queryClient.setQueryData(queryKey, updateRepostUri(postData));
           }
         }
 
-        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: ['postThread'] });
+        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView } }>({ queryKey: queryKeys.postThread.all });
         for (const [queryKey, threadData] of threadQueries) {
           if (threadData?.thread?.post?.uri === variables.postUri) {
             queryClient.setQueryData(queryKey, {

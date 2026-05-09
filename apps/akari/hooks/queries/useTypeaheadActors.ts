@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewSettings } from '@/hooks/useAppViewSettings';
 import { resolveAppView } from '@/utils/appView';
 
@@ -42,7 +43,7 @@ export function useTypeaheadActors(rawQuery: string): {
   }, [trimmed]);
 
   const query = useQuery({
-    queryKey: ['typeaheadActors', debounced, appViewUrl],
+    queryKey: queryKeys.typeaheadActors(debounced, appViewUrl),
     queryFn: async (): Promise<TypeaheadActor[]> => {
       const url = new URL(`${appViewUrl}/xrpc/app.bsky.actor.searchActorsTypeahead`);
       url.searchParams.set('q', debounced);

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 type AddArgs = {
@@ -44,8 +45,8 @@ export function useListMembership() {
     },
     onSuccess: (_data, args) => {
       // Force a refetch of the list snapshot so the membership state updates.
-      queryClient.invalidateQueries({ queryKey: ['listSnapshot', currentAccount?.pdsUrl, args.listUri] });
-      queryClient.invalidateQueries({ queryKey: ['list', currentAccount?.pdsUrl, args.listUri] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listSnapshot(currentAccount?.pdsUrl, args.listUri) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.list(currentAccount?.pdsUrl, args.listUri) });
     },
   });
 }

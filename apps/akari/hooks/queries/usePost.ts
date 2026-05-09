@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
@@ -9,7 +10,7 @@ export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['post', { actor, rKey }, currentAccount?.pdsUrl],
+    queryKey: queryKeys.post.detail({ actor, rKey, pdsUrl: currentAccount?.pdsUrl }),
     queryFn: async () => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -33,7 +34,7 @@ export function useParentPost(parentUri: string | null) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['parentPost', parentUri, currentAccount?.pdsUrl],
+    queryKey: queryKeys.parentPost(parentUri, currentAccount?.pdsUrl),
     queryFn: async () => {
       if (!parentUri) return null;
       if (!token) throw new Error('No access token');
@@ -54,7 +55,7 @@ export function useRootPost(rootUri: string | null) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['rootPost', rootUri, currentAccount?.pdsUrl],
+    queryKey: queryKeys.rootPost(rootUri, currentAccount?.pdsUrl),
     queryFn: async () => {
       if (!rootUri) return null;
       if (!token) throw new Error('No access token');

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -13,7 +14,7 @@ export function usePinnedPost(uri: string | undefined) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery({
-    queryKey: ['pinnedPost', currentAccount?.pdsUrl, uri] as const,
+    queryKey: queryKeys.pinnedPost.detail(currentAccount?.pdsUrl, uri),
     enabled: !!token && !!currentAccount?.pdsUrl && !!uri,
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {

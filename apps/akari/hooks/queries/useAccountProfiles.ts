@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAccounts } from './useAccounts';
 import { useJwtToken } from './useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -11,7 +12,7 @@ export function useAccountProfiles() {
   const { data: token } = useJwtToken();
 
   return useQuery({
-    queryKey: ['accountProfiles', accounts?.map((a) => a.did)],
+    queryKey: queryKeys.accountProfiles(accounts?.map((a) => a.did)),
     queryFn: async () => {
       if (!accounts || accounts.length === 0) return {};
 

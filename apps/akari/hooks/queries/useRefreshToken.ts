@@ -1,13 +1,15 @@
 import { storage } from '@/utils/secureStorage';
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
+
 /**
  * Query hook for refresh tokens
  * Provides access to the current refresh token
  */
 export function useRefreshToken() {
   return useQuery({
-    queryKey: ['refreshToken'],
+    queryKey: queryKeys.refreshToken(),
     queryFn: () => {
       return storage.getItem('refreshToken');
     },

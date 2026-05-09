@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { Account } from '@/types/account';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,7 +14,7 @@ export function useSetCurrentAccount() {
       return account;
     },
     onSuccess: async (account) => {
-      queryClient.setQueryData(['currentAccount'], account);
+      queryClient.setQueryData(queryKeys.currentAccount(), account);
 
       // Manually persist the updated current account query
       storage.setItem('currentAccount', account);

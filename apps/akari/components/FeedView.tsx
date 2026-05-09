@@ -14,6 +14,7 @@ import { fontSize, fontWeight, layout, spacing } from '@/constants/tokens';
 import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { resolveHandleToDid } from '@/utils/oauth/discovery';
@@ -49,7 +50,7 @@ export default function FeedView({ actor, rKey }: FeedViewProps) {
   // the actor (handle or DID) to a DID first so we can build it. Cached
   // for 24h via React Query — handle→did mappings rarely change.
   const { data: resolvedDid } = useQuery({
-    queryKey: ['handleToDid', actor] as const,
+    queryKey: queryKeys.handleToDid(actor),
     queryFn: () => resolveHandleToDid(actor),
     enabled: !!actor && !actor.startsWith('did:'),
     staleTime: 24 * 60 * 60 * 1000,

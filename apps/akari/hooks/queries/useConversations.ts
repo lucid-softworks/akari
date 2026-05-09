@@ -2,6 +2,7 @@ import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 type ConversationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -26,7 +27,7 @@ export function useConversations(
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
-    queryKey: ['conversations', limit, readState, status, currentUserDid],
+    queryKey: queryKeys.conversations.list({ limit, readState, status, did: currentUserDid }),
     queryFn: async ({ pageParam }) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

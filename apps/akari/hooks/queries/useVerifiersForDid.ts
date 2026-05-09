@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { createConstellationApi } from '@/constellation-api';
+import { queryKeys } from '@/hooks/queryKeys';
 
 const VERIFICATION_COLLECTION = 'app.bsky.graph.verification';
 const VERIFICATION_PATH = '.subject';
@@ -16,7 +17,7 @@ const VERIFICATION_PATH = '.subject';
  */
 export function useVerifiersForDid(subjectDid: string | undefined) {
   return useQuery({
-    queryKey: ['verifiersForDid', subjectDid],
+    queryKey: queryKeys.verifiersForDid(subjectDid),
     queryFn: async () => {
       if (!subjectDid) return [];
       const api = createConstellationApi();

@@ -4,6 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { type BlueskyListResponse, type BlueskyListsResponse } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -15,7 +16,7 @@ export function useLists(actor?: string) {
   const target = actor ?? currentAccount?.did ?? '';
 
   return useInfiniteQuery<BlueskyListsResponse>({
-    queryKey: ['lists', currentAccount?.pdsUrl, target] as const,
+    queryKey: queryKeys.lists(currentAccount?.pdsUrl, target),
     enabled: !!token && !!currentAccount?.pdsUrl && !!target,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
@@ -38,7 +39,7 @@ function useList(listUri?: string) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery<BlueskyListResponse>({
-    queryKey: ['list', currentAccount?.pdsUrl, listUri] as const,
+    queryKey: queryKeys.list(currentAccount?.pdsUrl, listUri),
     enabled: !!token && !!currentAccount?.pdsUrl && !!listUri,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {

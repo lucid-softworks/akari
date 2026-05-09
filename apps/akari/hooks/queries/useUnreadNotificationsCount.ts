@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Hook to get the count of unread notifications
@@ -13,7 +14,7 @@ export function useUnreadNotificationsCount(enabled: boolean = true) {
   const currentUserDid = currentAccount?.did;
 
   return useQuery({
-    queryKey: ['unreadNotificationsCount', currentUserDid],
+    queryKey: queryKeys.notifications.unread(currentUserDid),
     queryFn: async () => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

@@ -23,6 +23,7 @@ import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
@@ -57,7 +58,7 @@ export default function ProfileScreen() {
     const refreshed = await refetchProfile();
     const did = refreshed.data?.did ?? profile?.did;
     if (did) {
-      await queryClient.invalidateQueries({ queryKey: ['verifiersForDid', did] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.verifiersForDid(did) });
     }
   }, [refetchProfile, queryClient, profile?.did]);
 

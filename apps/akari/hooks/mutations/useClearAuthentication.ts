@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -12,15 +13,15 @@ export function useClearAuthentication() {
       return true;
     },
     onSuccess: async () => {
-      queryClient.setQueryData(['jwtToken'], null);
-      queryClient.setQueryData(['refreshToken'], null);
+      queryClient.setQueryData(queryKeys.jwtToken(), null);
+      queryClient.setQueryData(queryKeys.refreshToken(), null);
 
       // Manually persist the cleared authentication queries
       storage.removeItem('jwtToken');
       storage.removeItem('refreshToken');
 
       // Invalidate all auth-related queries
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.all });
     },
   });
 }

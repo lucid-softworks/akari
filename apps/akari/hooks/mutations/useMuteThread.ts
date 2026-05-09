@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -26,8 +27,8 @@ export function useMuteThread() {
       return await api.unmuteThread(token, root);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['postThread'] });
-      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.postThread.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
   });
 }

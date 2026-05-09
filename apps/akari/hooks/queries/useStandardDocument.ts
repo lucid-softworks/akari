@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import { resolveDidToPds } from '@/utils/oauth/discovery';
 
 /**
@@ -50,7 +51,7 @@ async function fetchStandardDocument(did: string, rkey: string): Promise<Standar
  */
 export function useStandardDocument(ref: { did: string; rkey: string } | null | undefined) {
   return useQuery({
-    queryKey: ['standardDocument', ref?.did, ref?.rkey],
+    queryKey: queryKeys.standardDocument(ref?.did, ref?.rkey),
     queryFn: () => fetchStandardDocument(ref!.did, ref!.rkey),
     enabled: !!ref?.did && !!ref?.rkey,
     staleTime: 5 * 60 * 1000,

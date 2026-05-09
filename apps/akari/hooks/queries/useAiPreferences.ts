@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { AiPreferencesRecord } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -16,7 +17,7 @@ export function useAiPreferences() {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery<AiPreferencesRecord | null>({
-    queryKey: ['aiPreferences', currentAccount?.did, currentAccount?.pdsUrl] as const,
+    queryKey: queryKeys.aiPreferences(currentAccount?.did, currentAccount?.pdsUrl),
     queryFn: async () => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

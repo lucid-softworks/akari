@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import { resolveDidToPds } from '@/utils/oauth/discovery';
 
 const COLLECTION = 'com.germnetwork.declaration';
@@ -89,7 +90,7 @@ export function germButtonVisibleFor(
  */
 export function useGermDeclaration(did: string | undefined | null) {
   return useQuery({
-    queryKey: ['germDeclaration', did],
+    queryKey: queryKeys.germDeclaration(did),
     queryFn: () => fetchGermDeclaration(did!),
     enabled: !!did,
     staleTime: 5 * 60 * 1000,

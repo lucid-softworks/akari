@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching feed posts
@@ -14,7 +15,7 @@ export function useFeed(feedUri: string | null, limit: number = 20) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ['feed', feedUri, currentAccount?.pdsUrl],
+    queryKey: queryKeys.feed.detail(feedUri, currentAccount?.pdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!feedUri) throw new Error('No feed URI provided');

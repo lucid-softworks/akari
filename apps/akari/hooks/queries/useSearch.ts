@@ -1,6 +1,7 @@
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { CursorPageParam } from "@/hooks/queries/types";
+import { queryKeys } from '@/hooks/queryKeys';
 import { type BlueskyPostView, type BlueskyProfile } from "@/bluesky-api";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { apiForAccount } from '@/utils/blueskyApi';
@@ -35,7 +36,7 @@ export function useSearch(
   const { data: currentAccount } = useCurrentAccount();
 
   return useInfiniteQuery({
-    queryKey: ["search", query, activeTab, limit, sort, currentAccount?.pdsUrl],
+    queryKey: queryKeys.search({ query, activeTab, limit, sort, pdsUrl: currentAccount?.pdsUrl }),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");

@@ -19,6 +19,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useNotifications } from '@/hooks/queries/useNotifications';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -478,7 +479,7 @@ export default function NotificationsScreen() {
       const did = currentAccount.did;
       const api = apiForAccount(currentAccount);
       void api.markNotificationsSeen(token).then(() => {
-        queryClient.setQueryData(['unreadNotificationsCount', did], 0);
+        queryClient.setQueryData(queryKeys.notifications.unread(did), 0);
       });
     }, [token, currentAccount, queryClient]),
   );

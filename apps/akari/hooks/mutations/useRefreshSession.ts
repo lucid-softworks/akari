@@ -1,5 +1,6 @@
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -35,7 +36,7 @@ export function useRefreshSession() {
       });
 
       // Invalidate auth queries with the new user-specific key
-      queryClient.invalidateQueries({ queryKey: ['auth', session.did] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.forDid(session.did) });
     },
   });
 }

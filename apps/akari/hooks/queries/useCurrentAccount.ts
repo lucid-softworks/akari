@@ -1,12 +1,14 @@
 import { storage } from '@/utils/secureStorage';
 import { useQuery } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
+
 /**
  * Query hook for getting the current account
  */
 export function useCurrentAccount() {
   return useQuery({
-    queryKey: ['currentAccount'],
+    queryKey: queryKeys.currentAccount(),
     queryFn: () => {
       return storage.getItem('currentAccount');
     },

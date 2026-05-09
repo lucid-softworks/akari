@@ -1,4 +1,5 @@
 import { useSetAuthentication } from '@/hooks/mutations/useSetAuthentication';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { BlueskyProfileResponse, BlueskySession } from '@/bluesky-api';
@@ -54,8 +55,8 @@ export function useSignIn() {
       });
 
       // Invalidate all auth-related queries to ensure fresh data
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
     },
   });
 }

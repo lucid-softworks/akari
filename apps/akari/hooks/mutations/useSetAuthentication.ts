@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { queryKeys } from '@/hooks/queryKeys';
 import { Account } from '@/types/account';
 import { storage } from '@/utils/secureStorage';
 
@@ -39,11 +40,11 @@ export function useSetAuthentication() {
       displayName,
       avatar,
     }) => {
-      queryClient.setQueryData(['jwtToken'], token);
-      queryClient.setQueryData(['refreshToken'], refreshToken);
+      queryClient.setQueryData(queryKeys.jwtToken(), token);
+      queryClient.setQueryData(queryKeys.refreshToken(), refreshToken);
 
       const cachedAccount =
-        (queryClient.getQueryData<Account | null>(['currentAccount']) ?? null) ||
+        (queryClient.getQueryData<Account | null>(queryKeys.currentAccount()) ?? null) ||
         storage.getItem('currentAccount');
 
       const mergedAccount: Account = {
@@ -57,10 +58,10 @@ export function useSetAuthentication() {
         avatar: resolveAvatar(avatar, cachedAccount?.avatar),
       };
 
-      queryClient.setQueryData(['currentAccount'], mergedAccount);
+      queryClient.setQueryData(queryKeys.currentAccount(), mergedAccount);
 
       const cachedAccounts =
-        queryClient.getQueryData<Account[]>(['accounts']) ?? storage.getItem('accounts');
+        queryClient.getQueryData<Account[]>(queryKeys.accounts()) ?? storage.getItem('accounts');
 
       const accountsList = cachedAccounts ?? [];
       let accountFound = false;
@@ -77,7 +78,7 @@ export function useSetAuthentication() {
         updatedAccounts.push(mergedAccount);
       }
 
-      queryClient.setQueryData(['accounts'], updatedAccounts);
+      queryClient.setQueryData(queryKeys.accounts(), updatedAccounts);
 
       // Manually persist the updated queries
       storage.setItem('jwtToken', token);

@@ -25,6 +25,7 @@ import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConvo } from '@/hooks/queries/useConvo';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -345,8 +346,8 @@ export default function ConversationScreen() {
     if (!conversation?.convoId || !token || !currentAccount?.pdsUrl) return;
     const api = apiForAccount(currentAccount);
     void api.markConversationRead(token, conversation.convoId).then(() => {
-      void queryClient.invalidateQueries({ queryKey: ['unreadMessagesCount'] });
-      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
     });
   }, [conversation?.convoId, token, currentAccount?.pdsUrl, queryClient]);
 

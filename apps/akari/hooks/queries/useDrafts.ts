@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { draftViewToComposerState, type ComposerDraftState } from '@/utils/draftMapper';
 import { apiForPdsUrl } from '@/utils/blueskyApi';
 
@@ -17,7 +18,7 @@ export function useDrafts(enabled: boolean = true) {
   const pdsUrl = currentAccount?.pdsUrl;
 
   return useQuery<ComposerDraftState[]>({
-    queryKey: ['drafts', did] as const,
+    queryKey: queryKeys.drafts(did),
     enabled: !!token && !!pdsUrl && !!did && enabled,
     staleTime: 30 * 1000,
     queryFn: async () => {
@@ -30,5 +31,3 @@ export function useDrafts(enabled: boolean = true) {
     },
   });
 }
-
-export const draftsQueryKey = (did: string | undefined) => ['drafts', did] as const;

@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 type MessageError = {
   type: 'permission' | 'network' | 'unknown';
@@ -19,7 +20,7 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
   const currentUserDid = currentAccount?.did;
 
   return useInfiniteQuery({
-    queryKey: ['messages', convoId, limit, currentUserDid],
+    queryKey: queryKeys.messages.list({ convoId, limit, did: currentUserDid }),
     queryFn: async ({ pageParam }) => {
       if (!token) throw new Error('No access token');
       if (!convoId) throw new Error('No conversation ID provided');

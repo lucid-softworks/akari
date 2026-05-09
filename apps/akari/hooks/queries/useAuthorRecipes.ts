@@ -3,6 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { usePdsUrl } from '@/hooks/queries/usePdsUrl';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 /**
@@ -15,7 +16,7 @@ export function useAuthorRecipes(identifier: string | undefined, limit: number =
   const { data: targetPdsUrl, isLoading: isPdsLoading } = usePdsUrl(identifier);
 
   return useInfiniteQuery({
-    queryKey: ['authorRecipes', identifier, limit, targetPdsUrl],
+    queryKey: queryKeys.author.recipes(identifier, limit, targetPdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');

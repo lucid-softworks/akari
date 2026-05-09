@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 export function useMuteUser() {
   const queryClient = useQueryClient();
@@ -22,9 +23,9 @@ export function useMuteUser() {
       }
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['timeline'] });
-      void queryClient.invalidateQueries({ queryKey: ['feed'] });
-      void queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.timeline.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.feed.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
     },
   });
 }

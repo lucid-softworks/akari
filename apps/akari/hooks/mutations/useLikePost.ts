@@ -3,6 +3,7 @@ import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-quer
 import { useToast } from '@/contexts/ToastContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
 import type {
   BlueskyFeedItem,
@@ -80,12 +81,12 @@ export function useLikePost() {
     },
     onMutate: async ({ postUri, action }) => {
       // Cancel any outgoing refetches across all the prefixes we'll touch.
-      await queryClient.cancelQueries({ queryKey: ['timeline'] });
-      await queryClient.cancelQueries({ queryKey: ['feed'] });
-      await queryClient.cancelQueries({ queryKey: ['authorFeed'] });
-      await queryClient.cancelQueries({ queryKey: ['authorLikes'] });
-      await queryClient.cancelQueries({ queryKey: ['post'] });
-      await queryClient.cancelQueries({ queryKey: ['postThread'] });
+      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.likes.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.post.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.postThread.all });
 
       // Snapshot every matching query (prefix-matched) so onError can roll
       // each one back. The previous implementation snapshotted by exact key
@@ -93,12 +94,12 @@ export function useLikePost() {
       // (`['timeline', limit, did]`, `['feed', feedUri]`, …) and so silently
       // no-op'd on rollback — leaving optimistic likes pinned to the UI even
       // when the create-record call failed.
-      const timelineSnapshots = snapshotByPrefix<BlueskyFeedResponse>(queryClient, ['timeline']);
-      const feedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['feed']);
-      const authorFeedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, ['authorFeed']);
-      const authorLikesSnapshots = snapshotByPrefix<LikesPagesQueryData>(queryClient, ['authorLikes']);
-      const postSnapshots = snapshotByPrefix<BlueskyPostView>(queryClient, ['post']);
-      const postThreadSnapshots = snapshotByPrefix<ThreadQueryData>(queryClient, ['postThread']);
+      const timelineSnapshots = snapshotByPrefix<BlueskyFeedResponse>(queryClient, queryKeys.timeline.all);
+      const feedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, queryKeys.feed.all);
+      const authorFeedSnapshots = snapshotByPrefix<FeedPagesQueryData>(queryClient, queryKeys.author.feed.all);
+      const authorLikesSnapshots = snapshotByPrefix<LikesPagesQueryData>(queryClient, queryKeys.author.likes.all);
+      const postSnapshots = snapshotByPrefix<BlueskyPostView>(queryClient, queryKeys.post.all);
+      const postThreadSnapshots = snapshotByPrefix<ThreadQueryData>(queryClient, queryKeys.postThread.all);
 
       const updatePostLikeStatus = (post: BlueskyPostView): BlueskyPostView => ({
         ...post,
@@ -251,7 +252,7 @@ export function useLikePost() {
         });
 
         // Update timeline (prefix-matched).
-        const timelineQueries = queryClient.getQueriesData<BlueskyFeedResponse>({ queryKey: ['timeline'] });
+        const timelineQueries = queryClient.getQueriesData<BlueskyFeedResponse>({ queryKey: queryKeys.timeline.all });
         for (const [queryKey, data] of timelineQueries) {
           if (!data) continue;
           queryClient.setQueryData(queryKey, {
@@ -263,7 +264,7 @@ export function useLikePost() {
         }
 
         // Update all feed queries (they have the format ['feed', feedUri])
-        const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['feed'] });
+        const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.feed.all });
         for (const [queryKey, data] of feedQueries) {
           if (data && Array.isArray(data.pages)) {
             queryClient.setQueryData(queryKey, {
@@ -277,7 +278,7 @@ export function useLikePost() {
         }
 
         // Update all authorFeed queries (they have the format ['authorFeed', identifier, limit])
-        const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: ['authorFeed'] });
+        const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.author.feed.all });
         for (const [queryKey, data] of authorFeedQueries) {
           if (data && Array.isArray(data.pages)) {
             queryClient.setQueryData(queryKey, {
@@ -293,7 +294,7 @@ export function useLikePost() {
         // Update all authorLikes queries — pages here are
         // `{ likes: BlueskyPostView[] }`, not `{ feed: BlueskyFeedItem[] }`.
         const authorLikesQueries = queryClient.getQueriesData<LikesPagesQueryData>({
-          queryKey: ['authorLikes'],
+          queryKey: queryKeys.author.likes.all,
         });
         for (const [queryKey, data] of authorLikesQueries) {
           if (!data || !Array.isArray(data.pages)) continue;
@@ -312,7 +313,7 @@ export function useLikePost() {
         }
 
         // Update all individual post queries
-        const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: ['post'] });
+        const postQueries = queryClient.getQueriesData<BlueskyPostView>({ queryKey: queryKeys.post.all });
         for (const [queryKey, postData] of postQueries) {
           if (postData && postData.uri === variables.postUri) {
             queryClient.setQueryData(queryKey, updateLikeUri(postData));
@@ -320,7 +321,7 @@ export function useLikePost() {
         }
 
         // Update all post thread queries (main post + replies)
-        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView; replies?: any[] } }>({ queryKey: ['postThread'] });
+        const threadQueries = queryClient.getQueriesData<{ thread: { post: BlueskyPostView; replies?: any[] } }>({ queryKey: queryKeys.postThread.all });
         for (const [queryKey, threadData] of threadQueries) {
           if (!threadData?.thread) continue;
 

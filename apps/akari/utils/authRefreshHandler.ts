@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 
 import { setAuthRefreshHandler } from '@/bluesky-api';
+import { queryKeys } from '@/hooks/queryKeys';
 import type { Account } from '@/types/account';
 
 import { apiForAccount } from './blueskyApi';
@@ -74,23 +75,23 @@ export function installAuthRefreshHandler(qc: QueryClient): void {
 
 function findAccountByAccessToken(qc: QueryClient, token: string): Account | null {
   const current =
-    qc.getQueryData<Account>(['currentAccount']) ?? storage.getItem('currentAccount');
+    qc.getQueryData<Account>(queryKeys.currentAccount()) ?? storage.getItem('currentAccount');
   if (current?.jwtToken === token) return current;
 
   const accounts =
-    qc.getQueryData<Account[]>(['accounts']) ?? storage.getItem('accounts') ?? [];
+    qc.getQueryData<Account[]>(queryKeys.accounts()) ?? storage.getItem('accounts') ?? [];
   return accounts.find((a) => a.jwtToken === token) ?? null;
 }
 
 function persistRefreshedAccount(qc: QueryClient, refreshed: Account): void {
-  qc.setQueryData(['jwtToken'], refreshed.jwtToken);
-  qc.setQueryData(['refreshToken'], refreshed.refreshToken);
-  qc.setQueryData(['currentAccount'], refreshed);
+  qc.setQueryData(queryKeys.jwtToken(), refreshed.jwtToken);
+  qc.setQueryData(queryKeys.refreshToken(), refreshed.refreshToken);
+  qc.setQueryData(queryKeys.currentAccount(), refreshed);
 
   const accountsList =
-    qc.getQueryData<Account[]>(['accounts']) ?? storage.getItem('accounts') ?? [];
+    qc.getQueryData<Account[]>(queryKeys.accounts()) ?? storage.getItem('accounts') ?? [];
   const updatedAccounts = accountsList.map((a) => (a.did === refreshed.did ? refreshed : a));
-  qc.setQueryData(['accounts'], updatedAccounts);
+  qc.setQueryData(queryKeys.accounts(), updatedAccounts);
 
   storage.setItem('jwtToken', refreshed.jwtToken);
   storage.setItem('refreshToken', refreshed.refreshToken);
@@ -99,9 +100,9 @@ function persistRefreshedAccount(qc: QueryClient, refreshed: Account): void {
 }
 
 function clearAuth(qc: QueryClient): void {
-  qc.setQueryData(['jwtToken'], null);
-  qc.setQueryData(['refreshToken'], null);
-  qc.setQueryData(['currentAccount'], null);
+  qc.setQueryData(queryKeys.jwtToken(), null);
+  qc.setQueryData(queryKeys.refreshToken(), null);
+  qc.setQueryData(queryKeys.currentAccount(), null);
   storage.removeItem('jwtToken');
   storage.removeItem('refreshToken');
   storage.removeItem('currentAccount');

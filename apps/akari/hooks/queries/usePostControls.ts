@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { BlueskyApi } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import type { PostControls, ReplyAllow } from '@/utils/postControls';
 import { DEFAULT_POST_CONTROLS } from '@/utils/postControls';
 import { apiForAccount } from '@/utils/blueskyApi';
@@ -36,7 +37,7 @@ export function useExistingPostControls(postUri: string | undefined) {
   const { data: currentAccount } = useCurrentAccount();
 
   return useQuery<PostControls>({
-    queryKey: ['existingPostControls', currentAccount?.pdsUrl, postUri] as const,
+    queryKey: queryKeys.postControls(currentAccount?.pdsUrl, postUri),
     enabled: !!token && !!currentAccount?.pdsUrl && !!postUri,
     staleTime: 60 * 1000,
     queryFn: async () => {

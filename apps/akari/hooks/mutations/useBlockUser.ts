@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Mutation hook for blocking and unblocking users
@@ -38,8 +39,8 @@ export function useBlockUser() {
     },
     onSuccess: (_, variables) => {
       // Invalidate profile queries to refresh block status
-      queryClient.invalidateQueries({ queryKey: ['profile', variables.did] });
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.forDid(variables.did) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
     },
   });
 }

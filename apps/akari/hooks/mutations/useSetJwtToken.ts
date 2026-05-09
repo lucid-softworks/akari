@@ -1,3 +1,4 @@
+import { queryKeys } from '@/hooks/queryKeys';
 import { storage } from '@/utils/secureStorage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +13,7 @@ export function useSetJwtToken() {
       return token;
     },
     onSuccess: async (token) => {
-      queryClient.setQueryData(['jwtToken'], token);
+      queryClient.setQueryData(queryKeys.jwtToken(), token);
 
       // Manually persist the updated JWT token query
       storage.setItem('jwtToken', token);

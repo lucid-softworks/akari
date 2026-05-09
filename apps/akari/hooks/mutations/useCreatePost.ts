@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 import { detectFacets } from '@/utils/textFacets';
 /**
@@ -67,16 +68,16 @@ export function useCreatePost() {
     },
     onMutate: async ({ text, replyTo, images }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['timeline'] });
-      await queryClient.cancelQueries({ queryKey: ['feed'] });
-      await queryClient.cancelQueries({ queryKey: ['authorFeed', currentAccount?.did] });
-      await queryClient.cancelQueries({ queryKey: ['authorPosts', currentAccount?.did] });
+      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.forDid(currentAccount?.did) });
+      await queryClient.cancelQueries({ queryKey: queryKeys.author.posts.forDid(currentAccount?.did) });
 
       // Snapshot the previous values
-      const previousTimeline = queryClient.getQueryData(['timeline']);
-      const previousFeed = queryClient.getQueryData(['feed']);
-      const previousAuthorFeed = queryClient.getQueryData(['authorFeed', currentAccount?.did]);
-      const previousAuthorPosts = queryClient.getQueryData(['authorPosts', currentAccount?.did]);
+      const previousTimeline = queryClient.getQueryData(queryKeys.timeline.all);
+      const previousFeed = queryClient.getQueryData(queryKeys.feed.all);
+      const previousAuthorFeed = queryClient.getQueryData(queryKeys.author.feed.forDid(currentAccount?.did));
+      const previousAuthorPosts = queryClient.getQueryData(queryKeys.author.posts.forDid(currentAccount?.did));
 
       // Create optimistic post data
       const optimisticPost = {
@@ -140,7 +141,7 @@ export function useCreatePost() {
 
       // Optimistically update timeline
       if (previousTimeline) {
-        queryClient.setQueryData(['timeline'], (old: any) => {
+        queryClient.setQueryData(queryKeys.timeline.all, (old: any) => {
           if (!old?.pages?.[0]?.feed) return old;
           return {
             ...old,
@@ -157,7 +158,7 @@ export function useCreatePost() {
 
       // Optimistically update feed
       if (previousFeed) {
-        queryClient.setQueryData(['feed'], (old: any) => {
+        queryClient.setQueryData(queryKeys.feed.all, (old: any) => {
           if (!old?.pages?.[0]?.feed) return old;
           return {
             ...old,
@@ -174,7 +175,7 @@ export function useCreatePost() {
 
       // Optimistically update author feed
       if (previousAuthorFeed) {
-        queryClient.setQueryData(['authorFeed', currentAccount?.did], (old: any) => {
+        queryClient.setQueryData(queryKeys.author.feed.forDid(currentAccount?.did), (old: any) => {
           if (!old?.pages?.[0]?.feed) return old;
           return {
             ...old,
@@ -191,7 +192,7 @@ export function useCreatePost() {
 
       // Optimistically update author posts
       if (previousAuthorPosts) {
-        queryClient.setQueryData(['authorPosts', currentAccount?.did], (old: any) => {
+        queryClient.setQueryData(queryKeys.author.posts.forDid(currentAccount?.did), (old: any) => {
           if (!old?.pages?.[0]?.feed) return old;
           return {
             ...old,
@@ -218,24 +219,24 @@ export function useCreatePost() {
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousTimeline) {
-        queryClient.setQueryData(['timeline'], context.previousTimeline);
+        queryClient.setQueryData(queryKeys.timeline.all, context.previousTimeline);
       }
       if (context?.previousFeed) {
-        queryClient.setQueryData(['feed'], context.previousFeed);
+        queryClient.setQueryData(queryKeys.feed.all, context.previousFeed);
       }
       if (context?.previousAuthorFeed) {
-        queryClient.setQueryData(['authorFeed', currentAccount?.did], context.previousAuthorFeed);
+        queryClient.setQueryData(queryKeys.author.feed.forDid(currentAccount?.did), context.previousAuthorFeed);
       }
       if (context?.previousAuthorPosts) {
-        queryClient.setQueryData(['authorPosts', currentAccount?.did], context.previousAuthorPosts);
+        queryClient.setQueryData(queryKeys.author.posts.forDid(currentAccount?.did), context.previousAuthorPosts);
       }
     },
     onSettled: () => {
       // Always refetch after error or success to ensure data consistency
-      queryClient.invalidateQueries({ queryKey: ['timeline'] });
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
-      queryClient.invalidateQueries({ queryKey: ['authorFeed', currentAccount?.did] });
-      queryClient.invalidateQueries({ queryKey: ['authorPosts', currentAccount?.did] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.timeline.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.feed.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.author.feed.forDid(currentAccount?.did) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.author.posts.forDid(currentAccount?.did) });
     },
   });
 }

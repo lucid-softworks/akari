@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -34,7 +35,7 @@ export function useStartConvo() {
     // freshly-created convo with no messages may not appear at all. Trigger
     // a refetch so the route can find the new convo when it mounts.
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
     },
   });
 }

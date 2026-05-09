@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 type PinPostArgs = {
@@ -38,8 +39,8 @@ export function usePinPost() {
     onSuccess: () => {
       // Refetch the profile so the new pinnedPost ref is reflected and
       // PostsTab pulls in the (un)pinned post.
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['pinnedPost'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pinnedPost.all });
     },
   });
 }

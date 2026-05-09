@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getPdsUrlFromDid, getPdsUrlFromHandle } from '@/bluesky-api';
+import { queryKeys } from '@/hooks/queryKeys';
 
 /**
  * Hook to resolve PDS URL from a DID
@@ -8,7 +9,7 @@ import { getPdsUrlFromDid, getPdsUrlFromHandle } from '@/bluesky-api';
  */
 export function usePdsUrlFromDid(did: string | undefined) {
   return useQuery({
-    queryKey: ['pdsUrl', 'did', did],
+    queryKey: queryKeys.pdsUrl.forDid(did),
     queryFn: async () => {
       if (!did) throw new Error('No DID provided');
       return await getPdsUrlFromDid(did);
@@ -25,7 +26,7 @@ export function usePdsUrlFromDid(did: string | undefined) {
  */
 function usePdsUrlFromHandle(handle: string | undefined) {
   return useQuery({
-    queryKey: ['pdsUrl', 'handle', handle],
+    queryKey: queryKeys.pdsUrl.forHandle(handle),
     queryFn: async () => {
       if (!handle) throw new Error('No handle provided');
       return await getPdsUrlFromHandle(handle);
