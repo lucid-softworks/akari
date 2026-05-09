@@ -903,6 +903,8 @@
       "noVerifiers": "Brez preveriteljev",
       "verifiedOn": "Preverjeno {{date}}",
       "gif": "GIF",
+      "play": "Predvajaj",
+      "pause": "Ustavi",
       "verifiedBadgeSilver": "Preverjen s strani nekoga, ki mu zaupate",
       "verifiedBadgeGold": "Preverjen s strani vseh, ki jim zaupate",
       "verifiersSheetIntroTitleSilver": "{{name}} je preverjen s strani nekoga, ki mu zaupate",

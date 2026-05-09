@@ -12,11 +12,14 @@ import {
   type ImageProps,
   type ImageSource,
 } from 'expo-image';
-import React, { useMemo } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 
 import { rewriteCdnUrl } from '@/utils/cdn';
 
 type SourceInput = ImageProps['source'];
+
+/** Imperative handle exposed by `expo-image` — animation control etc. */
+export type ImageHandle = ExpoImage;
 
 function rewriteSource(source: SourceInput): SourceInput {
   if (source == null) return source;
@@ -33,9 +36,9 @@ function rewriteSource(source: SourceInput): SourceInput {
   return source;
 }
 
-export function Image(props: ImageProps) {
+export const Image = forwardRef<ImageHandle, ImageProps>(function Image(props, ref) {
   const transformed = useMemo(() => rewriteSource(props.source), [props.source]);
-  return <ExpoImage {...props} source={transformed} />;
-}
+  return <ExpoImage {...props} source={transformed} ref={ref} />;
+});
 
 export type { ImageProps } from 'expo-image';

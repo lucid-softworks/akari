@@ -903,6 +903,8 @@
       "noVerifiers": "Nincsenek hitelesítők",
       "verifiedOn": "Hitelesítve {{date}}",
       "gif": "GIF",
+      "play": "Lejátszás",
+      "pause": "Szünet",
       "verifiedBadgeSilver": "Hitelesítve egy általad megbízhatónak tartott személy által",
       "verifiedBadgeGold": "Hitelesítve mindenki által, akiben megbízol",
       "verifiersSheetIntroTitleSilver": "{{name}} hitelesítve van egy általad megbízhatónak tartott személy által",

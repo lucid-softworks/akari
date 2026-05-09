@@ -903,6 +903,8 @@
       "noVerifiers": "لا يوجد مُوثِّقون",
       "verifiedOn": "تم التوثيق {{date}}",
       "gif": "GIF",
+      "play": "تشغيل",
+      "pause": "إيقاف مؤقت",
       "verifiedBadgeSilver": "موثَّق من قِبَل شخص تثق به",
       "verifiedBadgeGold": "موثَّق من قِبَل جميع من تثق بهم",
       "verifiersSheetIntroTitleSilver": "{{name}} موثَّق من قِبَل شخص تثق به",

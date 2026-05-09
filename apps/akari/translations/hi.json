@@ -903,6 +903,8 @@
       "noVerifiers": "कोई सत्यापक नहीं",
       "verifiedOn": "{{date}} को सत्यापित",
       "gif": "GIF",
+      "play": "चलाएँ",
+      "pause": "रोकें",
       "verifiedBadgeSilver": "किसी ऐसे व्यक्ति द्वारा सत्यापित जिस पर आप भरोसा करते हैं",
       "verifiedBadgeGold": "उन सभी द्वारा सत्यापित जिन पर आप भरोसा करते हैं",
       "verifiersSheetIntroTitleSilver": "{{name}} किसी ऐसे व्यक्ति द्वारा सत्यापित है जिस पर आप भरोसा करते हैं",

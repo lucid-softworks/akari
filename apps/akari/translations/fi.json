@@ -903,6 +903,8 @@
       "noVerifiers": "Ei vahvistajia",
       "verifiedOn": "Vahvistettu {{date}}",
       "gif": "GIF",
+      "play": "Toista",
+      "pause": "Tauko",
       "verifiedBadgeSilver": "Vahvistanut joku, johon luotat",
       "verifiedBadgeGold": "Vahvistanut kaikki, joihin luotat",
       "verifiersSheetIntroTitleSilver": "{{name}}:n on vahvistanut joku, johon luotat",

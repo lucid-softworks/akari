@@ -903,6 +903,8 @@
       "noVerifiers": "Tidak ada verifikator",
       "verifiedOn": "Diverifikasi {{date}}",
       "gif": "GIF",
+      "play": "Mainkan",
+      "pause": "Jeda",
       "verifiedBadgeSilver": "Diverifikasi oleh seseorang yang Anda percayai",
       "verifiedBadgeGold": "Diverifikasi oleh semua orang yang Anda percayai",
       "verifiersSheetIntroTitleSilver": "{{name}} diverifikasi oleh seseorang yang Anda percayai",

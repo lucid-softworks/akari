@@ -8,6 +8,7 @@ import { PressableLink } from '@/components/ui/PressableLink';
 import { BlueskyEmbed, BlueskyRecord } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
+import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -246,9 +247,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
   const isGifEmbed = () => {
     const embedData = getEmbedData();
     if (!embedData) return false;
-
-    const uri = embedData.external?.uri || '';
-    return uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif');
+    return isGifEmbedUri(embedData.external?.uri);
   };
 
   // Check for video embeds

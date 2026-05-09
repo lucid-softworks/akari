@@ -903,6 +903,8 @@
       "noVerifiers": "Ingen verifikatorer",
       "verifiedOn": "Verificeret {{date}}",
       "gif": "GIF",
+      "play": "Afspil",
+      "pause": "Pause",
       "verifiedBadgeSilver": "Verificeret af nogen, du har tillid til",
       "verifiedBadgeGold": "Verificeret af alle, du har tillid til",
       "verifiersSheetIntroTitleSilver": "{{name}} er verificeret af nogen, du har tillid til",

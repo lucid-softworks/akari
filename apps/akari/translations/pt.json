@@ -903,6 +903,8 @@
       "noVerifiers": "Sem verificadores",
       "verifiedOn": "Verificado {{date}}",
       "gif": "GIF",
+      "play": "Reproduzir",
+      "pause": "Pausar",
       "verifiedBadgeSilver": "Verificado por alguém em quem você confia",
       "verifiedBadgeGold": "Verificado por todos em quem você confia",
       "verifiersSheetIntroTitleSilver": "{{name}} é verificado por alguém em quem você confia",

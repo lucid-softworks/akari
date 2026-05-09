@@ -903,6 +903,8 @@
       "noVerifiers": "ไม่มีผู้ยืนยัน",
       "verifiedOn": "ยืนยันเมื่อ {{date}}",
       "gif": "GIF",
+      "play": "เล่น",
+      "pause": "หยุดชั่วคราว",
       "verifiedBadgeSilver": "ยืนยันโดยคนที่คุณเชื่อถือ",
       "verifiedBadgeGold": "ยืนยันโดยทุกคนที่คุณเชื่อถือ",
       "verifiersSheetIntroTitleSilver": "{{name}} ได้รับการยืนยันโดยคนที่คุณเชื่อถือ",

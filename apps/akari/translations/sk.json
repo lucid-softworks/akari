@@ -903,6 +903,8 @@
       "noVerifiers": "Žiadni overovatelia",
       "verifiedOn": "Overené {{date}}",
       "gif": "GIF",
+      "play": "Prehrať",
+      "pause": "Pozastaviť",
       "verifiedBadgeSilver": "Overené niekým, komu dôverujete",
       "verifiedBadgeGold": "Overené všetkými, ktorým dôverujete",
       "verifiersSheetIntroTitleSilver": "{{name}} je overený niekým, komu dôverujete",

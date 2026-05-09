@@ -903,6 +903,8 @@
       "noVerifiers": "אין מאמתים",
       "verifiedOn": "אומת {{date}}",
       "gif": "GIF",
+      "play": "הפעל",
+      "pause": "השהה",
       "verifiedBadgeSilver": "מאומת על ידי מישהו שאתה בוטח בו",
       "verifiedBadgeGold": "מאומת על ידי כל מי שאתה בוטח בו",
       "verifiersSheetIntroTitleSilver": "{{name}} מאומת על ידי מישהו שאתה בוטח בו",

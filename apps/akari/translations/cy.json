@@ -903,6 +903,8 @@
       "noVerifiers": "Dim dilyswyr",
       "verifiedOn": "Wedi'i ddilysu {{date}}",
       "gif": "GIF",
+      "play": "Chwarae",
+      "pause": "Oedi",
       "verifiedBadgeSilver": "Wedi'i ddilysu gan rywun rydych yn ymddiried ynddo",
       "verifiedBadgeGold": "Wedi'i ddilysu gan bawb rydych yn ymddiried ynddo",
       "verifiersSheetIntroTitleSilver": "Mae {{name}} wedi'i ddilysu gan rywun rydych yn ymddiried ynddo",

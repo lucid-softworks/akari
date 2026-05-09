@@ -903,6 +903,8 @@
       "noVerifiers": "Doğrulayıcı yok",
       "verifiedOn": "{{date}} tarihinde doğrulandı",
       "gif": "GIF",
+      "play": "Oynat",
+      "pause": "Duraklat",
       "verifiedBadgeSilver": "Güvendiğin biri tarafından doğrulandı",
       "verifiedBadgeGold": "Güvendiğin herkes tarafından doğrulandı",
       "verifiersSheetIntroTitleSilver": "{{name}}, güvendiğin biri tarafından doğrulandı",

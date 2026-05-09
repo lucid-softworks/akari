@@ -903,6 +903,8 @@
       "noVerifiers": "Niciun verificator",
       "verifiedOn": "Verificat {{date}}",
       "gif": "GIF",
+      "play": "Redă",
+      "pause": "Pauză",
       "verifiedBadgeSilver": "Verificat de cineva în care ai încredere",
       "verifiedBadgeGold": "Verificat de toți cei în care ai încredere",
       "verifiersSheetIntroTitleSilver": "{{name}} este verificat de cineva în care ai încredere",

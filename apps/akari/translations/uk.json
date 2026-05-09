@@ -903,6 +903,8 @@
       "noVerifiers": "Немає верифікаторів",
       "verifiedOn": "Підтверджено {{date}}",
       "gif": "GIF",
+      "play": "Відтворити",
+      "pause": "Пауза",
       "verifiedBadgeSilver": "Підтверджений тими, кому ви довіряєте",
       "verifiedBadgeGold": "Підтверджений усіма, кому ви довіряєте",
       "verifiersSheetIntroTitleSilver": "{{name}} підтверджений кимось, кому ви довіряєте",

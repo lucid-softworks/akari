@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
+import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedView } from '@/components/ThemedView';
@@ -139,7 +140,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       if (uri.includes('youtube.com') || uri.includes('youtu.be') || uri.includes('music.youtube.com')) {
         return 'youtube';
       }
-      if (uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif')) {
+      if (isGifEmbedUri(uri)) {
         return 'gif';
       }
       const isVideoLink =
@@ -225,7 +226,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         if (extra.$type?.includes('app.bsky.embed.external') && extra.external) {
           const uri = extra.external.uri || '';
           const extraKey = `extra-${i}-${uri}`;
-          if (uri.includes('tenor.com') || uri.includes('media.tenor.com') || uri.endsWith('.gif')) {
+          if (isGifEmbedUri(uri)) {
             return <GifEmbed key={extraKey} embed={extra as ExternalEmbedData} />;
           }
           if (uri.includes('youtube.com') || uri.includes('youtu.be')) {
@@ -240,7 +241,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         const media = embedData.media as any;
         const mediaUri = media?.external?.uri || '';
         const isMediaExt = media?.$type?.includes('app.bsky.embed.external');
-        if (isMediaExt && (mediaUri.includes('tenor.com') || mediaUri.includes('media.tenor.com') || mediaUri.endsWith('.gif'))) {
+        if (isMediaExt && isGifEmbedUri(mediaUri)) {
           return <GifEmbed embed={media} />;
         }
         if (isMediaExt) {

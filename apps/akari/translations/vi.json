@@ -903,6 +903,8 @@
       "noVerifiers": "Không có người xác minh",
       "verifiedOn": "Đã xác minh {{date}}",
       "gif": "GIF",
+      "play": "Phát",
+      "pause": "Tạm dừng",
       "verifiedBadgeSilver": "Được xác minh bởi người bạn tin tưởng",
       "verifiedBadgeGold": "Được xác minh bởi tất cả những người bạn tin tưởng",
       "verifiersSheetIntroTitleSilver": "{{name}} được xác minh bởi người bạn tin tưởng",

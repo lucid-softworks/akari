@@ -903,6 +903,8 @@
       "noVerifiers": "Geen verificateurs",
       "verifiedOn": "Geverifieerd {{date}}",
       "gif": "GIF",
+      "play": "Afspelen",
+      "pause": "Pauzeren",
       "verifiedBadgeSilver": "Geverifieerd door iemand die je vertrouwt",
       "verifiedBadgeGold": "Geverifieerd door iedereen die je vertrouwt",
       "verifiersSheetIntroTitleSilver": "{{name}} is geverifieerd door iemand die je vertrouwt",

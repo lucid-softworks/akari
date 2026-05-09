@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import { Linking } from 'react-native';
 
 import { GifEmbed } from '@/components/GifEmbed';
+import { useFeedSettings } from '@/hooks/useFeedSettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -14,14 +14,17 @@ jest.mock('react-native-reanimated', () => {
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useFeedSettings');
 
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseFeedSettings = useFeedSettings as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseThemeColor.mockReturnValue('#000');
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
+  mockUseFeedSettings.mockReturnValue({ videoAutoplayEnabled: true });
 });
 
 type Embed = {
@@ -43,23 +46,42 @@ const createEmbed = (description: string = ''): Embed => ({
 });
 
 describe('GifEmbed', () => {
-  it('renders the GIF badge and opens link on press', () => {
+  it('renders the GIF badge and starts autoplaying', () => {
     const embed = createEmbed('A cool gif');
-    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     const { getByText } = render(<GifEmbed embed={embed} />);
 
-    // Component currently only renders the GIF image and a translated "ui.gif"
+    // Component renders the inline GIF image and a translated "ui.gif"
     // badge. Title/description aren't shown — the bsky GifEmbed deliberately
     // keeps the chrome minimal.
     expect(getByText('ui.gif')).toBeTruthy();
 
-    fireEvent.press(getByText('ui.gif'));
-
-    expect(openUrl).toHaveBeenCalledWith('https://example.com/gif.gif');
-
     const Image = require('expo-image').Image as jest.Mock;
     const props = Image.mock.calls[0][0];
     expect(props.source).toEqual({ uri: 'https://example.com/gif.gif' });
+    expect(props.autoplay).toBe(true);
+  });
+
+  it('toggles autoplay (pause/play) on press instead of opening the URL', () => {
+    const embed = createEmbed('A cool gif');
+    const { getByText, getByLabelText, UNSAFE_getAllByType } = render(<GifEmbed embed={embed} />);
+
+    // Tap to pause.
+    fireEvent.press(getByText('ui.gif'));
+
+    // The accessibility label should now flip to "play" because the gif is paused.
+    expect(getByLabelText('ui.play')).toBeTruthy();
+
+    // Tap again to resume.
+    fireEvent.press(getByLabelText('ui.play'));
+    expect(getByLabelText('ui.pause')).toBeTruthy();
+
+    // Sanity check — the same `<Image>` instance keeps mounting; we never
+    // navigate away, just flip the autoplay prop on it.
+    const Image = require('expo-image').Image as jest.Mock;
+    const lastProps = Image.mock.calls[Image.mock.calls.length - 1][0];
+    expect(lastProps.source).toEqual({ uri: 'https://example.com/gif.gif' });
+    // Quiet the unused destructure warning.
+    expect(UNSAFE_getAllByType).toBeTruthy();
   });
 
   it('renders even without a description', () => {

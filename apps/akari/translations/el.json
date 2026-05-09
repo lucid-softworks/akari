@@ -903,6 +903,8 @@
       "noVerifiers": "Καμία επαλήθευση",
       "verifiedOn": "Επαληθεύτηκε {{date}}",
       "gif": "GIF",
+      "play": "Αναπαραγωγή",
+      "pause": "Παύση",
       "verifiedBadgeSilver": "Επαληθευμένος από κάποιον που εμπιστεύεστε",
       "verifiedBadgeGold": "Επαληθευμένος από όλους όσους εμπιστεύεστε",
       "verifiersSheetIntroTitleSilver": "Ο/Η {{name}} είναι επαληθευμένος από κάποιον που εμπιστεύεστε",

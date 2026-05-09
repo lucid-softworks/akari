@@ -903,6 +903,8 @@
       "noVerifiers": "Žádní ověřovatelé",
       "verifiedOn": "Ověřeno {{date}}",
       "gif": "GIF",
+      "play": "Přehrát",
+      "pause": "Pozastavit",
       "verifiedBadgeSilver": "Ověřeno někým, komu důvěřujete",
       "verifiedBadgeGold": "Ověřeno všemi, kterým důvěřujete",
       "verifiersSheetIntroTitleSilver": "{{name}} je ověřen někým, komu důvěřujete",

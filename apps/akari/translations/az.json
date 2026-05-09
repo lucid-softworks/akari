@@ -903,6 +903,8 @@
       "noVerifiers": "Təsdiqləyici yoxdur",
       "verifiedOn": "{{date}} təsdiqlənib",
       "gif": "GIF",
+      "play": "Oynat",
+      "pause": "Dayandır",
       "verifiedBadgeSilver": "Etibar etdiyin biri tərəfindən təsdiqlənib",
       "verifiedBadgeGold": "Etibar etdiyin hər kəs tərəfindən təsdiqlənib",
       "verifiersSheetIntroTitleSilver": "{{name}} etibar etdiyin biri tərəfindən təsdiqlənib",

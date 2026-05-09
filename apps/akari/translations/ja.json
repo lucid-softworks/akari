@@ -903,6 +903,8 @@
       "noVerifiers": "認証者なし",
       "verifiedOn": "{{date}}に認証",
       "gif": "GIF",
+      "play": "再生",
+      "pause": "一時停止",
       "verifiedBadgeSilver": "あなたが信頼する人によって認証済み",
       "verifiedBadgeGold": "あなたが信頼するすべての人によって認証済み",
       "verifiersSheetIntroTitleSilver": "{{name}}はあなたが信頼する人によって認証されています",

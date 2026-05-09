@@ -903,6 +903,8 @@
       "noVerifiers": "無認證者",
       "verifiedOn": "{{date}} 認證",
       "gif": "GIF",
+      "play": "播放",
+      "pause": "暫停",
       "verifiedBadgeSilver": "由你信任的人認證",
       "verifiedBadgeGold": "由你信任的所有人認證",
       "verifiersSheetIntroTitleSilver": "{{name}} 已由你信任的人認證",

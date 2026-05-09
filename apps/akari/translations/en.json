@@ -931,6 +931,8 @@
       "noVerifiers": "No verifiers",
       "verifiedOn": "Verified {{date}}",
       "gif": "GIF",
+      "play": "Play",
+      "pause": "Pause",
       "byCreator": "by @{{handle}}",
       "likes": "{{count}} likes",
       "interactive": "Interactive",
