@@ -121,9 +121,25 @@
           "label": "Identity",
           "description": "Confirm who you are on atproto. Always required."
         },
+        "generic": {
+          "label": "Bluesky-flavored access",
+          "description": "Legacy umbrella scope covering posting, liking, follows, and most write actions. Currently required by the auth server for chat to work."
+        },
         "chat": {
           "label": "Direct messages",
           "description": "Read and send chat messages on your behalf."
+        },
+        "bskyAppview": {
+          "label": "Bluesky AppView reads",
+          "description": "Per-procedure access to feeds, profiles, notifications, search, and graph queries on the Bluesky AppView."
+        },
+        "bskyChatRpc": {
+          "label": "Bluesky chat service",
+          "description": "Per-procedure access to the Bluesky chat service for sending and managing direct messages."
+        },
+        "bskyVideoRpc": {
+          "label": "Bluesky video service",
+          "description": "Per-procedure access to upload videos and read upload status on the Bluesky video service."
         },
         "profile": {
           "label": "Profile",

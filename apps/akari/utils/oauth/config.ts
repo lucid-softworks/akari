@@ -77,6 +77,10 @@ export type RepoAction = 'create' | 'update' | 'delete';
 
 export type OAuthFlatScope = {
   id: string;
+  /** Optional list of literal scope tokens this row maps to. When
+   *  omitted the scope token is just `id`. Used to group large families
+   *  of `rpc:*` per-procedure scopes under one picker row. */
+  tokens?: string[];
   required: boolean;
   defaultEnabled: boolean;
   labelKey: string;
@@ -113,7 +117,8 @@ export function buildSelectedScopeString(selection: ScopeSelection): string {
   const tokens: string[] = [];
   for (const flat of OAUTH_FLAT_SCOPES) {
     if (flat.required || selection.flat[flat.id]) {
-      tokens.push(flat.id);
+      if (flat.tokens) tokens.push(...flat.tokens);
+      else tokens.push(flat.id);
     }
   }
   for (const repo of OAUTH_REPO_SCOPES) {
