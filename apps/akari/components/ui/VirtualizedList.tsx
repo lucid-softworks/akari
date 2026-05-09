@@ -1,8 +1,10 @@
 import React from 'react';
 import { FlashList } from '@shopify/flash-list';
 import type { FlashListProps, FlashListRef } from '@shopify/flash-list';
+import { Platform, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary';
+import { WebPullToRefresh } from '@/components/ui/WebPullToRefresh';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 240;
 const DEFAULT_OVERSCAN = 2;
@@ -31,7 +33,23 @@ export function VirtualizedList<T>({
   const estimatedItemSize = incomingEstimatedItemSize ?? DEFAULT_ESTIMATED_ITEM_SIZE;
   const typedData = data as T[];
 
-  const { drawDistance, ...flashListProps } = rest;
+  const { drawDistance, onScroll: incomingOnScroll, onRefresh, ...flashListProps } = rest;
+
+  // The web pull-to-refresh wrapper must only fire when the list is
+  // at scrollTop=0; otherwise pulling-down-to-scroll-up would trigger
+  // a refresh.
+  const [atTop, setAtTop] = React.useState(true);
+  const handleScroll = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const y = event.nativeEvent.contentOffset.y;
+      setAtTop((prev) => {
+        const next = y <= 0;
+        return prev === next ? prev : next;
+      });
+      incomingOnScroll?.(event);
+    },
+    [incomingOnScroll],
+  );
   const shouldAutoStickHeader = stickyHeaderIndices === undefined && Boolean(ListHeaderComponent);
   const computedStickyHeaderIndices =
     stickyHeaderIndices !== undefined
@@ -71,11 +89,26 @@ export function VirtualizedList<T>({
     ListHeaderComponent,
     ListHeaderComponentStyle,
     stickyHeaderIndices: computedStickyHeaderIndices,
+    onScroll: handleScroll,
+    // FlashList's web build no-ops onRefresh, so route it through the
+    // PullToRefresh wrapper below on web only. On native, FlashList
+    // handles the refresh control natively.
+    onRefresh: Platform.OS === 'web' ? undefined : onRefresh,
   } as React.ComponentProps<typeof FlashList<T>>;
 
-  return (
+  const list = (
     <ComponentErrorBoundary>
       <FlashList {...flashListPassthrough} />
     </ComponentErrorBoundary>
   );
+
+  if (Platform.OS === 'web' && onRefresh) {
+    return (
+      <WebPullToRefresh onRefresh={onRefresh} isPullable={atTop}>
+        {list}
+      </WebPullToRefresh>
+    );
+  }
+
+  return list;
 }
