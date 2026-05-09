@@ -17,6 +17,7 @@ import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
+import { resolveExternalThumb } from '@/utils/embedThumb';
 import { findUnthreadFacet, parseUnthreadUrl, stripUnthreadFromPost } from '@/utils/unthread';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
@@ -143,7 +144,15 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
     const inspectEmbed = (embed?: BlueskyEmbed | null): { uri: string; title?: string; description?: string; thumb?: string } | null => {
       if (!embed) return null;
       if (embed.$type?.includes('app.bsky.embed.external') && embed.external?.uri) {
-        return { uri: embed.external.uri, title: embed.external.title, description: embed.external.description, thumb: embed.external.thumb?.ref?.$link };
+        // The AppView returns the `#view` shape where `thumb` is already
+        // a fully-resolved string URL; the underlying record shape gives
+        // a `{ ref: { $link } }` blob ref. resolveExternalThumb folds both.
+        return {
+          uri: embed.external.uri,
+          title: embed.external.title,
+          description: embed.external.description,
+          thumb: resolveExternalThumb(embed.external.thumb),
+        };
       }
       if (embed.media) {
         const r = inspectEmbed(embed.media as unknown as BlueskyEmbed);
