@@ -24,7 +24,10 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isStreamPlaceUri } from '@/utils/streamPlace';
 
-import { StreamPlaceWebRTCPlayer } from './StreamPlaceWebRTCPlayer';
+import {
+  isStreamPlaceWebRTCAvailable,
+  StreamPlaceWebRTCPlayer,
+} from './StreamPlaceWebRTCPlayer';
 
 export type LiveStreamInfo = {
   uri: string;
@@ -62,7 +65,15 @@ export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [playing, setPlaying] = useState(false);
   const [webviewLoaded, setWebviewLoaded] = useState(false);
-  const useWebRTC = Platform.OS !== 'web' && isStreamPlaceUri(info.uri) && !!streamerDid;
+  const useWebRTC =
+    Platform.OS !== 'web' &&
+    isStreamPlaceUri(info.uri) &&
+    !!streamerDid &&
+    // The native WebRTC module isn't always available (e.g. when
+    // running under New Arch bridgeless on a build that hasn't
+    // linked react-native-webrtc, or Expo Go). Fall back to the
+    // WebView path when it isn't.
+    isStreamPlaceWebRTCAvailable();
 
   const handleOpenExternal = useCallback(() => {
     void Linking.openURL(info.uri).catch((error) => {

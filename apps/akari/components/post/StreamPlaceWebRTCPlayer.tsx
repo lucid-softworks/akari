@@ -1,7 +1,10 @@
 /**
  * Web stub. Web posts render stream.place inline via the LiveStreamEmbed
- * iframe, so this file is only here to keep imports compiling on web.
- * `StreamPlaceWebRTCPlayer.native.tsx` carries the real implementation.
+ * iframe; the WebRTC player only exists on native.
+ *
+ * `isStreamPlaceWebRTCAvailable` is false here so LiveStreamEmbed
+ * never tries to mount the player on web. The native variant of
+ * this file (`.native.tsx`) does the real availability probe.
  */
 export type StreamPlaceWebRTCPlayerProps = {
   streamerDid: string;
@@ -9,4 +12,8 @@ export type StreamPlaceWebRTCPlayerProps = {
 
 export function StreamPlaceWebRTCPlayer(_props: StreamPlaceWebRTCPlayerProps) {
   return null;
+}
+
+export function isStreamPlaceWebRTCAvailable(): boolean {
+  return false;
 }
