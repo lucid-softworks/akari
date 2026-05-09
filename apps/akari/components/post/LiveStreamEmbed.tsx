@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import { Image } from '@/components/Image';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,6 +9,7 @@ import {
   activeOpacity,
   fontSize,
   fontWeight,
+  hitSlop,
   layout,
   radius,
   spacing,
@@ -29,11 +31,10 @@ type LiveStreamEmbedProps = {
 
 /**
  * Inline player for live streams flagged by the bsky live-now config
- * (stream.place, twitch, etc.). On web we drop in an iframe pointed at
- * the stream's watch page — most live platforms serve a chromeless
- * player from that URL when embedded — and on native we keep the
- * existing thumbnail card with a "Watch live" CTA, since RN can't
- * iframe and adding a WebView dependency just for posts is too heavy.
+ * (stream.place, twitch, etc.). Web drops in an iframe pointed at the
+ * stream's watch page; native does the same via react-native-webview,
+ * but only after the user taps Play — every feed card mounting a
+ * WebView at scroll-time would be brutal on memory and battery.
  *
  * The 16:9 aspect ratio matches every major streaming service. Posts
  * still render the link card below this player so the title and
@@ -42,12 +43,24 @@ type LiveStreamEmbedProps = {
 export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
   const { t } = useTranslation();
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
+  const [playing, setPlaying] = useState(false);
 
-  const handleOpen = useCallback(() => {
+  const handleOpenExternal = useCallback(() => {
     void Linking.openURL(info.uri).catch((error) => {
       if (__DEV__) console.warn('Failed to open live stream', error);
     });
   }, [info.uri]);
+
+  const handlePlay = useCallback(() => {
+    setPlaying(true);
+  }, []);
+
+  const liveBadge = (
+    <View style={styles.liveBadge}>
+      <View style={styles.liveDot} />
+      <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
+    </View>
+  );
 
   if (Platform.OS === 'web') {
     return (
@@ -67,17 +80,46 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
             title: info.title ?? info.domain,
           })}
         </View>
-        <View style={styles.liveBadge}>
-          <View style={styles.liveDot} />
-          <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
+        {liveBadge}
+      </View>
+    );
+  }
+
+  // Native: tap to swap the thumbnail for a WebView so we don't mount
+  // a full-page WebView on every live card in the timeline.
+  if (playing) {
+    return (
+      <View style={[styles.container, { borderColor }]}>
+        <View style={styles.playerWrap}>
+          <WebView
+            source={{ uri: info.uri }}
+            style={styles.webview}
+            allowsInlineMediaPlayback
+            mediaPlaybackRequiresUserAction={false}
+            javaScriptEnabled
+            domStorageEnabled
+          />
         </View>
+        {liveBadge}
+        <Pressable
+          onPress={handleOpenExternal}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.externalLink')}
+          hitSlop={hitSlop}
+          style={({ pressed }) => [
+            styles.openExternalButton,
+            pressed && { opacity: activeOpacity.default },
+          ]}
+        >
+          <IconSymbol name="arrow.up.right.square" size={16} color="#FFFFFF" />
+        </Pressable>
       </View>
     );
   }
 
   return (
     <Pressable
-      onPress={handleOpen}
+      onPress={handlePlay}
       accessibilityRole="button"
       accessibilityLabel={t('common.watchNow')}
       style={({ pressed }) => [
@@ -98,10 +140,7 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
           </View>
         </View>
       </View>
-      <View style={styles.liveBadge}>
-        <View style={styles.liveDot} />
-        <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
-      </View>
+      {liveBadge}
       <View style={styles.watchBar}>
         <ThemedText style={styles.watchBarLabel} numberOfLines={1}>
           {info.title ?? info.domain}
@@ -124,6 +163,11 @@ const styles = StyleSheet.create({
   playerWrap: {
     width: '100%',
     aspectRatio: 16 / 9,
+  },
+  webview: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000',
   },
   thumbnail: {
     width: '100%',
@@ -192,5 +236,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: fontSize.sm,
     fontWeight: fontWeight.bold,
+  },
+  openExternalButton: {
+    position: 'absolute',
+    top: spacing.sm,
+    right: spacing.sm,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
