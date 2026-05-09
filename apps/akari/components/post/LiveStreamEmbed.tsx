@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { Image } from '@/components/Image';
@@ -9,7 +16,6 @@ import {
   activeOpacity,
   fontSize,
   fontWeight,
-  hitSlop,
   layout,
   radius,
   spacing,
@@ -36,14 +42,16 @@ type LiveStreamEmbedProps = {
  * but only after the user taps Play — every feed card mounting a
  * WebView at scroll-time would be brutal on memory and battery.
  *
- * The 16:9 aspect ratio matches every major streaming service. Posts
- * still render the link card below this player so the title and
- * description stay visible.
+ * Layout stays consistent across the play / not-playing transition:
+ * only the inner 16:9 player surface swaps. The bottom watch bar
+ * (title + "Open externally" link) and the LIVE pill always stay
+ * mounted so the user keeps the link card metadata at hand.
  */
 export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
   const { t } = useTranslation();
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [playing, setPlaying] = useState(false);
+  const [webviewLoaded, setWebviewLoaded] = useState(false);
 
   const handleOpenExternal = useCallback(() => {
     void Linking.openURL(info.uri).catch((error) => {
@@ -55,80 +63,49 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
     setPlaying(true);
   }, []);
 
-  const liveBadge = (
-    <View style={styles.liveBadge}>
-      <View style={styles.liveDot} />
-      <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
-    </View>
-  );
+  const isWeb = Platform.OS === 'web';
+  // On web the iframe streams in immediately; on native we have to
+  // wait for a full-page WebView load before the player shows up, so
+  // surface a spinner while that happens.
+  const showSpinner = playing && !isWeb && !webviewLoaded;
 
-  if (Platform.OS === 'web') {
-    return (
-      <View style={[styles.container, { borderColor }]}>
-        <View style={styles.playerWrap}>
-          {/* eslint-disable-next-line react/forbid-elements */}
-          {React.createElement('iframe', {
-            src: info.uri,
-            allow: 'autoplay; fullscreen; picture-in-picture; encrypted-media',
-            allowFullScreen: true,
-            referrerPolicy: 'no-referrer-when-downgrade',
-            style: {
-              width: '100%',
-              height: '100%',
-              border: 0,
-            },
-            title: info.title ?? info.domain,
-          })}
-        </View>
-        {liveBadge}
-      </View>
+  let playerSurface: React.ReactNode;
+  if (playing && isWeb) {
+    playerSurface = React.createElement('iframe', {
+      src: info.uri,
+      allow: 'autoplay; fullscreen; picture-in-picture; encrypted-media',
+      allowFullScreen: true,
+      referrerPolicy: 'no-referrer-when-downgrade',
+      style: {
+        width: '100%',
+        height: '100%',
+        border: 0,
+      },
+      title: info.title ?? info.domain,
+    });
+  } else if (playing) {
+    playerSurface = (
+      <WebView
+        source={{ uri: info.uri }}
+        style={styles.webview}
+        allowsInlineMediaPlayback
+        mediaPlaybackRequiresUserAction={false}
+        javaScriptEnabled
+        domStorageEnabled
+        onLoadEnd={() => setWebviewLoaded(true)}
+      />
     );
-  }
-
-  // Native: tap to swap the thumbnail for a WebView so we don't mount
-  // a full-page WebView on every live card in the timeline.
-  if (playing) {
-    return (
-      <View style={[styles.container, { borderColor }]}>
-        <View style={styles.playerWrap}>
-          <WebView
-            source={{ uri: info.uri }}
-            style={styles.webview}
-            allowsInlineMediaPlayback
-            mediaPlaybackRequiresUserAction={false}
-            javaScriptEnabled
-            domStorageEnabled
-          />
-        </View>
-        {liveBadge}
-        <Pressable
-          onPress={handleOpenExternal}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.externalLink')}
-          hitSlop={hitSlop}
-          style={({ pressed }) => [
-            styles.openExternalButton,
-            pressed && { opacity: activeOpacity.default },
-          ]}
-        >
-          <IconSymbol name="arrow.up.right.square" size={16} color="#FFFFFF" />
-        </Pressable>
-      </View>
-    );
-  }
-
-  return (
-    <Pressable
-      onPress={handlePlay}
-      accessibilityRole="button"
-      accessibilityLabel={t('common.watchNow')}
-      style={({ pressed }) => [
-        styles.container,
-        { borderColor },
-        pressed && { opacity: activeOpacity.subtle },
-      ]}
-    >
-      <View style={styles.playerWrap}>
+  } else {
+    playerSurface = (
+      <Pressable
+        onPress={handlePlay}
+        accessibilityRole="button"
+        accessibilityLabel={t('common.watchNow')}
+        style={({ pressed }) => [
+          styles.playSurface,
+          pressed && { opacity: activeOpacity.subtle },
+        ]}
+      >
         {info.thumbnail ? (
           <Image source={{ uri: info.thumbnail }} style={styles.thumbnail} contentFit="cover" />
         ) : (
@@ -139,15 +116,41 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
             <IconSymbol name="play.fill" size={28} color="#FFFFFF" />
           </View>
         </View>
+      </Pressable>
+    );
+  }
+
+  return (
+    <View style={[styles.container, { borderColor }]}>
+      <View style={styles.playerWrap}>
+        {playerSurface}
+        {showSpinner ? (
+          <View pointerEvents="none" style={styles.spinnerOverlay}>
+            <ActivityIndicator color="#FFFFFF" size="large" />
+          </View>
+        ) : null}
       </View>
-      {liveBadge}
-      <View style={styles.watchBar}>
+
+      <View style={styles.liveBadge} pointerEvents="none">
+        <View style={styles.liveDot} />
+        <ThemedText style={styles.liveBadgeText}>{t('common.live')}</ThemedText>
+      </View>
+
+      <Pressable
+        onPress={handleOpenExternal}
+        accessibilityRole="link"
+        accessibilityLabel={t('common.openProfile')}
+        style={({ pressed }) => [styles.watchBar, pressed && { opacity: activeOpacity.default }]}
+      >
         <ThemedText style={styles.watchBarLabel} numberOfLines={1}>
           {info.title ?? info.domain}
         </ThemedText>
-        <ThemedText style={styles.watchBarCta}>{t('common.watchNow')}</ThemedText>
-      </View>
-    </Pressable>
+        <View style={styles.watchBarCtaRow}>
+          <ThemedText style={styles.watchBarCta}>{t('common.externalLink')}</ThemedText>
+          <IconSymbol name="arrow.up.right.square" size={14} color="#FFFFFF" />
+        </View>
+      </Pressable>
+    </View>
   );
 }
 
@@ -163,6 +166,11 @@ const styles = StyleSheet.create({
   playerWrap: {
     width: '100%',
     aspectRatio: 16 / 9,
+    position: 'relative',
+  },
+  playSurface: {
+    width: '100%',
+    height: '100%',
   },
   webview: {
     width: '100%',
@@ -192,6 +200,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  spinnerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
   },
   liveBadge: {
     position: 'absolute',
@@ -232,20 +250,14 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
   },
+  watchBarCtaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   watchBarCta: {
     color: '#FFFFFF',
     fontSize: fontSize.sm,
     fontWeight: fontWeight.bold,
-  },
-  openExternalButton: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
