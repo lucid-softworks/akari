@@ -133,4 +133,104 @@ export class BlueskyActors extends BlueskyApiClient {
       },
     });
   }
+
+  /**
+   * Reads the user's `app.bsky.actor.profile` record at rkey `self`.
+   * Returns `null` when the record doesn't exist (new accounts that have
+   * never set a display name).
+   */
+  async getProfileRecord(
+    accessJwt: string,
+    userDid: string,
+  ): Promise<{ uri: string; cid: string; value: Record<string, unknown> } | null> {
+    try {
+      return await this.makeAuthenticatedRequest<{
+        uri: string;
+        cid: string;
+        value: Record<string, unknown>;
+      }>('/com.atproto.repo.getRecord', accessJwt, {
+        params: {
+          repo: userDid,
+          collection: 'app.bsky.actor.profile',
+          rkey: 'self',
+        },
+      });
+    } catch (error) {
+      const e = error as { errorCode?: string; status?: number };
+      if (e.errorCode === 'RecordNotFound' || e.status === 404) return null;
+      throw error;
+    }
+  }
+
+  /**
+   * Toggles a self-label on the user's profile record. Reads the
+   * current profile so other fields (display name, avatar blob,
+   * banner blob, pinnedPost, etc.) are preserved when we put the
+   * record back.
+   *
+   * Generic so multiple self-label features can share the round-trip
+   * (`!no-unauthenticated` for logged-out visibility, `automated`
+   * for the bot/automation badge, etc.).
+   */
+  async setProfileSelfLabel(
+    accessJwt: string,
+    userDid: string,
+    label: string,
+    present: boolean,
+  ) {
+    const existing = await this.getProfileRecord(accessJwt, userDid);
+    const record: Record<string, unknown> = { ...(existing?.value ?? {}) };
+
+    type SelfLabelValue = { val: string };
+    type SelfLabels = { $type: string; values: SelfLabelValue[] };
+
+    const currentLabels = record.labels as SelfLabels | undefined;
+    const currentValues = Array.isArray(currentLabels?.values) ? currentLabels.values : [];
+    const filtered = currentValues.filter((entry) => entry?.val !== label);
+
+    const nextValues: SelfLabelValue[] = present
+      ? [...filtered, { val: label }]
+      : filtered;
+
+    if (nextValues.length === 0) {
+      delete record.labels;
+    } else {
+      record.labels = {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: nextValues,
+      } satisfies SelfLabels;
+    }
+
+    return this.makeAuthenticatedRequest('/com.atproto.repo.putRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.actor.profile',
+        rkey: 'self',
+        record,
+      },
+    });
+  }
+
+  /**
+   * Toggles the `!no-unauthenticated` self-label. atproto's labelers and
+   * AppView both honour this label by suppressing the profile from
+   * logged-out viewers.
+   */
+  async setLoggedOutVisibilityDiscouraged(
+    accessJwt: string,
+    userDid: string,
+    discouraged: boolean,
+  ) {
+    return this.setProfileSelfLabel(accessJwt, userDid, '!no-unauthenticated', discouraged);
+  }
+
+  /**
+   * Toggles the `automated` self-label, marking the account as a bot
+   * or other automated poster. Other clients can show or hide
+   * accordingly.
+   */
+  async setAccountAutomated(accessJwt: string, userDid: string, automated: boolean) {
+    return this.setProfileSelfLabel(accessJwt, userDid, 'automated', automated);
+  }
 }

@@ -1,9 +1,13 @@
 import { BlueskyApiClient } from './client';
 import type {
+  BlueskyBlocksResponse,
+  BlueskyCreateRecordResponse,
+  BlueskyListBlocksResponse,
+  BlueskyListMutesResponse,
+  BlueskyListResponse,
   BlueskyListView,
   BlueskyListsResponse,
-  BlueskyListResponse,
-  BlueskyCreateRecordResponse,
+  BlueskyMutesResponse,
 } from './types';
 
 /**
@@ -114,6 +118,82 @@ export class BlueskyGraph extends BlueskyApiClient {
         list,
       },
     });
+  }
+
+  /**
+   * Unmutes a previously muted actor list.
+   */
+  async unmuteActorList(accessJwt: string, list: string) {
+    return this.makeAuthenticatedRequest('/app.bsky.graph.unmuteActorList', accessJwt, {
+      method: 'POST',
+      body: {
+        list,
+      },
+    });
+  }
+
+  /**
+   * Subscribes-as-block to an actor list by creating a `listblock` record on
+   * the user's repo. Returns the new listblock's AT URI/CID.
+   */
+  async blockActorList(
+    accessJwt: string,
+    userDid: string,
+    list: string,
+  ): Promise<BlueskyCreateRecordResponse> {
+    return this.makeAuthenticatedRequest<BlueskyCreateRecordResponse>('/com.atproto.repo.createRecord', accessJwt, {
+      method: 'POST',
+      body: {
+        repo: userDid,
+        collection: 'app.bsky.graph.listblock',
+        record: {
+          $type: 'app.bsky.graph.listblock',
+          subject: list,
+          createdAt: new Date().toISOString(),
+        },
+      },
+    });
+  }
+
+  /**
+   * Unsubscribe from a list-block by deleting the listblock record.
+   * `listblockUri` is the AT URI returned in the list view's
+   * `viewer.blocked` field.
+   */
+  async unblockActorList(accessJwt: string, listblockUri: string) {
+    const { repo, collection, rkey } = parseAtUri(listblockUri);
+    return this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+      method: 'POST',
+      body: { repo, collection, rkey },
+    });
+  }
+
+  /** Fetch the viewer's muted accounts. */
+  async getMutes(accessJwt: string, limit = 50, cursor?: string): Promise<BlueskyMutesResponse> {
+    const params: Record<string, string> = { limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyMutesResponse>('/app.bsky.graph.getMutes', accessJwt, { params });
+  }
+
+  /** Fetch the viewer's blocked accounts. */
+  async getBlocks(accessJwt: string, limit = 50, cursor?: string): Promise<BlueskyBlocksResponse> {
+    const params: Record<string, string> = { limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyBlocksResponse>('/app.bsky.graph.getBlocks', accessJwt, { params });
+  }
+
+  /** Fetch the viewer's muted moderation lists. */
+  async getListMutes(accessJwt: string, limit = 50, cursor?: string): Promise<BlueskyListMutesResponse> {
+    const params: Record<string, string> = { limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyListMutesResponse>('/app.bsky.graph.getListMutes', accessJwt, { params });
+  }
+
+  /** Fetch the viewer's blocked moderation lists. */
+  async getListBlocks(accessJwt: string, limit = 50, cursor?: string): Promise<BlueskyListBlocksResponse> {
+    const params: Record<string, string> = { limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyListBlocksResponse>('/app.bsky.graph.getListBlocks', accessJwt, { params });
   }
 
   /**

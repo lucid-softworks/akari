@@ -28,6 +28,7 @@ import type {
   BlueskyGetDraftsResponse,
   BlueskyLinkatBoardResponse,
   BlueskyMessagesResponse,
+  BlueskyNotificationPreferences,
   BlueskyNotificationsResponse,
   BlueskyPostView,
   BlueskyPreference,
@@ -113,6 +114,66 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.auth.getServiceAuth(accessJwt, aud, lxm, expSeconds);
   }
 
+  /** Read the current session — handle, did, email, confirmation flags. */
+  async getSession(accessJwt: string) {
+    return this.auth.getSession(accessJwt);
+  }
+
+  /** Update the user's handle. */
+  async updateHandle(accessJwt: string, handle: string): Promise<void> {
+    return this.auth.updateHandle(accessJwt, handle);
+  }
+
+  /** Send a verification token to the user's existing email. */
+  async requestEmailUpdate(accessJwt: string) {
+    return this.auth.requestEmailUpdate(accessJwt);
+  }
+
+  /** Update the user's email address. Token is required when the request endpoint asked for one. */
+  async updateEmail(accessJwt: string, email: string, token?: string): Promise<void> {
+    return this.auth.updateEmail(accessJwt, email, token);
+  }
+
+  /** Kick off a password reset by emailing the user a token. */
+  async requestPasswordReset(email: string): Promise<void> {
+    return this.auth.requestPasswordReset(email);
+  }
+
+  /** Deactivate the account. Pass `deleteAfter` to schedule a hard delete. */
+  async deactivateAccount(accessJwt: string, deleteAfter?: string): Promise<void> {
+    return this.auth.deactivateAccount(accessJwt, deleteAfter);
+  }
+
+  /** Email an account-delete confirmation token. */
+  async requestAccountDelete(accessJwt: string): Promise<void> {
+    return this.auth.requestAccountDelete(accessJwt);
+  }
+
+  /** Permanently delete the account using the emailed token + password. */
+  async deleteAccount(did: string, password: string, token: string): Promise<void> {
+    return this.auth.deleteAccount(did, password, token);
+  }
+
+  /** Download the user's repo as a CAR-format Blob. */
+  async exportRepo(accessJwt: string, did: string): Promise<Blob> {
+    return this.auth.exportRepo(accessJwt, did);
+  }
+
+  /** List the user's app passwords. */
+  async listAppPasswords(accessJwt: string) {
+    return this.auth.listAppPasswords(accessJwt);
+  }
+
+  /** Create a new app password. The plaintext is only returned once. */
+  async createAppPassword(accessJwt: string, name: string, privileged = false) {
+    return this.auth.createAppPassword(accessJwt, name, privileged);
+  }
+
+  /** Revoke an existing app password by display name. */
+  async revokeAppPassword(accessJwt: string, name: string): Promise<void> {
+    return this.auth.revokeAppPassword(accessJwt, name);
+  }
+
   /**
    * Loads profile metadata and viewer state for the requested DID.
    * @param accessJwt - Valid session token used to authorise the profile lookup.
@@ -167,6 +228,25 @@ export class BlueskyApi extends BlueskyApiClient {
     pinned: { uri: string; cid: string } | null,
   ) {
     return this.actors.setPinnedPost(accessJwt, userDid, pinned);
+  }
+
+  /** Read the current user's `app.bsky.actor.profile/self` record. */
+  async getProfileRecord(accessJwt: string, userDid: string) {
+    return this.actors.getProfileRecord(accessJwt, userDid);
+  }
+
+  /** Toggle the `!no-unauthenticated` self-label on the user's profile. */
+  async setLoggedOutVisibilityDiscouraged(
+    accessJwt: string,
+    userDid: string,
+    discouraged: boolean,
+  ) {
+    return this.actors.setLoggedOutVisibilityDiscouraged(accessJwt, userDid, discouraged);
+  }
+
+  /** Toggle the `automated` self-label on the user's profile. */
+  async setAccountAutomated(accessJwt: string, userDid: string, automated: boolean) {
+    return this.actors.setAccountAutomated(accessJwt, userDid, automated);
   }
 
   /**
@@ -695,6 +775,41 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.graph.muteActorList(accessJwt, list);
   }
 
+  /** Unmute a previously-muted actor list. */
+  async unmuteActorList(accessJwt: string, list: string) {
+    return this.graph.unmuteActorList(accessJwt, list);
+  }
+
+  /** Subscribe-as-block to an actor list (creates a `listblock` record). */
+  async blockActorList(accessJwt: string, userDid: string, list: string) {
+    return this.graph.blockActorList(accessJwt, userDid, list);
+  }
+
+  /** Delete the `listblock` record returned by `viewer.blocked`. */
+  async unblockActorList(accessJwt: string, listblockUri: string) {
+    return this.graph.unblockActorList(accessJwt, listblockUri);
+  }
+
+  /** Fetch the viewer's muted accounts. */
+  async getMutes(accessJwt: string, limit = 50, cursor?: string) {
+    return this.graph.getMutes(accessJwt, limit, cursor);
+  }
+
+  /** Fetch the viewer's blocked accounts. */
+  async getBlocks(accessJwt: string, limit = 50, cursor?: string) {
+    return this.graph.getBlocks(accessJwt, limit, cursor);
+  }
+
+  /** Fetch the viewer's muted moderation lists. */
+  async getListMutes(accessJwt: string, limit = 50, cursor?: string) {
+    return this.graph.getListMutes(accessJwt, limit, cursor);
+  }
+
+  /** Fetch the viewer's blocked moderation lists. */
+  async getListBlocks(accessJwt: string, limit = 50, cursor?: string) {
+    return this.graph.getListBlocks(accessJwt, limit, cursor);
+  }
+
   /**
    * Mutes a thread so future replies no longer surface in the user's notifications.
    * @param accessJwt - Valid session token for the actor muting the thread.
@@ -812,6 +927,19 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async markNotificationsSeen(accessJwt: string): Promise<void> {
     return this.notifications.updateSeen(accessJwt);
+  }
+
+  /** Read the user's per-category notification preferences. */
+  async getNotificationPreferences(accessJwt: string) {
+    return this.notifications.getNotificationPreferences(accessJwt);
+  }
+
+  /** Write per-category notification preferences via the v2 endpoint. */
+  async putNotificationPreferencesV2(
+    accessJwt: string,
+    prefs: BlueskyNotificationPreferences,
+  ): Promise<void> {
+    return this.notifications.putNotificationPreferencesV2(accessJwt, prefs);
   }
 
   /** Lists composer drafts stored in the user's private stash. */

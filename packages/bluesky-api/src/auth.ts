@@ -64,4 +64,192 @@ export class BlueskyAuth extends BlueskyApiClient {
       },
     );
   }
+
+  /**
+   * Reads the current session's account info — handle, did, email, and
+   * email-confirmation/auth-factor flags. Useful for surfacing the user's
+   * email address (which isn't returned by `app.bsky.actor.getProfile`)
+   * in account settings.
+   */
+  async getSession(accessJwt: string): Promise<{
+    handle: string;
+    did: string;
+    email?: string;
+    emailConfirmed?: boolean;
+    emailAuthFactor?: boolean;
+    didDoc?: Record<string, unknown>;
+    active?: boolean;
+  }> {
+    return this.makeAuthenticatedRequest('/com.atproto.server.getSession', accessJwt);
+  }
+
+  /**
+   * Updates the user's handle. atproto rejects the change if the handle
+   * is already taken or doesn't satisfy the host's policies — callers
+   * should surface the server error directly so the user can correct it.
+   */
+  async updateHandle(accessJwt: string, handle: string): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      '/com.atproto.identity.updateHandle',
+      accessJwt,
+      {
+        method: 'POST',
+        body: { handle },
+      },
+    );
+  }
+
+  /**
+   * Sends a verification token to the user's currently-registered email
+   * so they can confirm an upcoming email change. The token has to be
+   * passed back to `updateEmail` to complete the change.
+   */
+  async requestEmailUpdate(accessJwt: string): Promise<{ tokenRequired: boolean }> {
+    return this.makeAuthenticatedRequest<{ tokenRequired: boolean }>(
+      '/com.atproto.server.requestEmailUpdate',
+      accessJwt,
+      { method: 'POST' },
+    );
+  }
+
+  /**
+   * Updates the user's email address. `token` is required when the prior
+   * `requestEmailUpdate` returned `tokenRequired: true` — the PDS sends
+   * it to the existing email and the user has to copy it into the form.
+   */
+  async updateEmail(
+    accessJwt: string,
+    email: string,
+    token?: string,
+  ): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      '/com.atproto.server.updateEmail',
+      accessJwt,
+      {
+        method: 'POST',
+        body: token ? { email, token } : { email },
+      },
+    );
+  }
+
+  /**
+   * Kicks off the password-reset flow. Bluesky emails the user a token
+   * which they paste into `resetPassword`. Unauthenticated — the email
+   * is keyed by the address, not the access JWT, so this works even
+   * when the user is signed out.
+   */
+  async requestPasswordReset(email: string): Promise<void> {
+    await this.makeRequest<unknown>(
+      '/com.atproto.server.requestPasswordReset',
+      {
+        method: 'POST',
+        body: { email },
+      },
+    );
+  }
+
+  /**
+   * Deactivates the account. `deleteAfter` is an optional ISO 8601
+   * datetime — when present, the account is hard-deleted at that
+   * point unless the user logs back in to revive it.
+   */
+  async deactivateAccount(accessJwt: string, deleteAfter?: string): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      '/com.atproto.server.deactivateAccount',
+      accessJwt,
+      {
+        method: 'POST',
+        body: deleteAfter ? { deleteAfter } : {},
+      },
+    );
+  }
+
+  /**
+   * Sends an account-deletion confirmation token to the user's email.
+   * The token is passed back to `deleteAccount` together with the
+   * account password to actually destroy the account.
+   */
+  async requestAccountDelete(accessJwt: string): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      '/com.atproto.server.requestAccountDelete',
+      accessJwt,
+      { method: 'POST' },
+    );
+  }
+
+  /**
+   * Permanently deletes the account. Requires the email-issued token
+   * from `requestAccountDelete` and the account password as a final
+   * proof-of-ownership check. The PDS revokes all sessions on success
+   * — every other client signed in to this account will start
+   * returning auth errors.
+   */
+  async deleteAccount(
+    did: string,
+    password: string,
+    token: string,
+  ): Promise<void> {
+    await this.makeRequest<unknown>('/com.atproto.server.deleteAccount', {
+      method: 'POST',
+      body: { did, password, token },
+    });
+  }
+
+  /**
+   * Downloads the user's repo as a CAR file (binary). Returns a Blob
+   * the caller can hand to a share sheet or `expo-file-system`.
+   */
+  async exportRepo(accessJwt: string, did: string): Promise<Blob> {
+    const url = this.buildXrpcUrl('/com.atproto.sync.getRepo', { did });
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${accessJwt}` },
+    });
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      throw new Error(`Failed to export repo: ${response.status} ${text}`);
+    }
+    return response.blob();
+  }
+
+  /** Lists every app password (name + creation timestamp) on the user's account. */
+  async listAppPasswords(accessJwt: string): Promise<{
+    passwords: { name: string; createdAt: string; privileged?: boolean }[];
+  }> {
+    return this.makeAuthenticatedRequest<{
+      passwords: { name: string; createdAt: string; privileged?: boolean }[];
+    }>('/com.atproto.server.listAppPasswords', accessJwt);
+  }
+
+  /**
+   * Creates a new app password. The plaintext password is only returned in
+   * this response — it can never be retrieved again, so the caller must
+   * surface it to the user immediately.
+   */
+  async createAppPassword(
+    accessJwt: string,
+    name: string,
+    privileged = false,
+  ): Promise<{ name: string; password: string; createdAt: string; privileged?: boolean }> {
+    return this.makeAuthenticatedRequest<{
+      name: string;
+      password: string;
+      createdAt: string;
+      privileged?: boolean;
+    }>('/com.atproto.server.createAppPassword', accessJwt, {
+      method: 'POST',
+      body: { name, privileged },
+    });
+  }
+
+  /** Revokes a previously-created app password by its display name. */
+  async revokeAppPassword(accessJwt: string, name: string): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      '/com.atproto.server.revokeAppPassword',
+      accessJwt,
+      {
+        method: 'POST',
+        body: { name },
+      },
+    );
+  }
 }

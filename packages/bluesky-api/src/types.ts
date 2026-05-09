@@ -316,6 +316,40 @@ export type BlueskyListResponse = {
   }[];
 };
 
+/**
+ * Response from `app.bsky.graph.getMutes` — actor's muted accounts.
+ * Forward-declared as a type alias so this file does not need to be
+ * structurally aware of `BlueskyProfile` (which is declared below).
+ */
+export type BlueskyMutesResponse = {
+  cursor?: string;
+  mutes: BlueskyProfile[];
+};
+
+/**
+ * Response from `app.bsky.graph.getBlocks` — actor's blocked accounts.
+ */
+export type BlueskyBlocksResponse = {
+  cursor?: string;
+  blocks: BlueskyProfile[];
+};
+
+/**
+ * Response from `app.bsky.graph.getListMutes` — lists the user has muted.
+ */
+export type BlueskyListMutesResponse = {
+  cursor?: string;
+  lists: BlueskyListView[];
+};
+
+/**
+ * Response from `app.bsky.graph.getListBlocks` — lists the user has blocked.
+ */
+export type BlueskyListBlocksResponse = {
+  cursor?: string;
+  lists: BlueskyListView[];
+};
+
 export type BlueskySendMessageInput = {
   text: string;
   /**
@@ -1142,6 +1176,63 @@ export type BlueskyInterestsPref = {
   $type: 'app.bsky.actor.defs#interestsPref';
   /** Array of interest tags */
   tags: string[];
+};
+
+/**
+ * Per-category filter that supports an `include` selector — applies to
+ * categories where the user can scope to "everyone" vs. "only people I
+ * follow" (follow / like / mention / quote / reply / repost variants).
+ *
+ * The `list` knob controls in-app inbox visibility; `push` controls
+ * device push notifications. To silence a category entirely, set both
+ * to false — there is no separate "off" enum.
+ */
+export type BlueskyNotificationFilter = {
+  include: 'all' | 'follows';
+  list: boolean;
+  push: boolean;
+};
+
+/**
+ * Categories without an audience selector (starterpackJoined,
+ * subscribedPost, unverified, verified). Same list/push semantics as
+ * `BlueskyNotificationFilter`, just no `include`.
+ */
+export type BlueskyNotificationListPushPref = {
+  list: boolean;
+  push: boolean;
+};
+
+/**
+ * Chat preference uses a different `include` enum — either every message
+ * generates a notification, or only those in already-accepted convos.
+ * There is no separate `list` flag (chat notifications always show in
+ * the inbox; only push is independently configurable).
+ */
+export type BlueskyChatNotificationFilter = {
+  include: 'all' | 'accepted';
+  push: boolean;
+};
+
+/**
+ * Response from `app.bsky.notification.getPreferences` and the input shape
+ * for `app.bsky.notification.putPreferencesV2`. atproto returns the full
+ * preferences object; the v2 put accepts the same shape.
+ */
+export type BlueskyNotificationPreferences = {
+  chat?: BlueskyChatNotificationFilter;
+  follow?: BlueskyNotificationFilter;
+  like?: BlueskyNotificationFilter;
+  likeViaRepost?: BlueskyNotificationFilter;
+  mention?: BlueskyNotificationFilter;
+  quote?: BlueskyNotificationFilter;
+  reply?: BlueskyNotificationFilter;
+  repost?: BlueskyNotificationFilter;
+  repostViaRepost?: BlueskyNotificationFilter;
+  starterpackJoined?: BlueskyNotificationListPushPref;
+  subscribedPost?: BlueskyNotificationListPushPref;
+  unverified?: BlueskyNotificationListPushPref;
+  verified?: BlueskyNotificationListPushPref;
 };
 
 /**
