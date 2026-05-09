@@ -20,6 +20,7 @@ jest.mock('expo-image', () => {
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   usePathname: jest.fn(() => '/notifications'),
+  useFocusEffect: jest.fn(),
 }));
 
 jest.mock('react-native-safe-area-context', () => ({

@@ -1,6 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { cdnImageUrl } from '@/utils/cdn';
 import { Image } from '@/components/Image';
+import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -468,15 +469,19 @@ export default function NotificationsScreen() {
 
   const queryClient = useQueryClient();
 
-  // Mark notifications as seen when the screen is viewed
-  useEffect(() => {
-    if (!token || !currentAccount?.pdsUrl) return;
-    const api = apiForAccount(currentAccount);
-    void api.markNotificationsSeen(token).then(() => {
-      // Reset the unread count in the cache
-      queryClient.setQueryData(['unreadNotificationsCount'], { count: 0 });
-    });
-  }, [token, currentAccount?.pdsUrl, queryClient]);
+  // Mark notifications as seen each time the tab is focused. Tabs stay
+  // mounted in expo-router, so a plain useEffect would only fire on first
+  // mount and the badge would persist when revisiting with new arrivals.
+  useFocusEffect(
+    useCallback(() => {
+      if (!token || !currentAccount?.pdsUrl || !currentAccount.did) return;
+      const did = currentAccount.did;
+      const api = apiForAccount(currentAccount);
+      void api.markNotificationsSeen(token).then(() => {
+        queryClient.setQueryData(['unreadNotificationsCount', did], 0);
+      });
+    }, [token, currentAccount, queryClient]),
+  );
 
   const tabs = useMemo(
     () => [
