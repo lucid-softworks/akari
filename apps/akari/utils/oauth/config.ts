@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 import {
@@ -31,29 +30,13 @@ import {
  * scope in lock-step.
  */
 
-// All variants use the production-hosted client metadata (preview
-// origin isn't deployed). The native callback scheme still has to
-// match the running app's registered scheme so Android/iOS can route
-// the redirect back to us, so we pick a variant-specific scheme and
-// list all three in the production metadata's redirect_uris.
+// atproto OAuth requires the native redirect scheme to be the
+// reverse-DNS of the client_id host, so every variant must use the
+// same scheme regardless of bundle id. The dev/preview variants
+// register this scheme as an extra deep-link entry in app.config.ts
+// so the OS can still route the redirect to the running app.
 const host = 'https://akari.lucidsoft.works';
-
-const NATIVE_SCHEMES: Record<'production' | 'preview' | 'development', string> = {
-  production: 'works.lucidsoft.akari',
-  preview: 'works.lucidsoft.akari.preview',
-  development: 'works.lucidsoft.akari.dev',
-};
-
-function resolveNativeScheme(): string {
-  const raw =
-    typeof Constants.expoConfig?.extra?.variant === 'string'
-      ? (Constants.expoConfig.extra.variant as string)
-      : 'production';
-  if (raw === 'preview' || raw === 'development') return NATIVE_SCHEMES[raw];
-  return NATIVE_SCHEMES.production;
-}
-
-const nativeScheme = resolveNativeScheme();
+const nativeScheme = 'works.lucidsoft.akari';
 
 export const OAUTH_CLIENT_ID =
   Platform.OS === 'web'

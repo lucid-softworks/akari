@@ -23,13 +23,17 @@ const DEFAULT_VARIANT: AppVariant = 'development';
 const VARIANT_DEFINITIONS: Record<AppVariant, VariantDefinition> = {
   development: {
     appName: 'akari.blue Dev',
-    schemes: ['akari.blue-dev', 'works.lucidsoft.akari.dev'],
+    // works.lucidsoft.akari is the OAuth callback scheme for every
+    // variant (atproto OAuth pins it to the production client_id's
+    // reverse-DNS), so the dev app has to claim it too or Android/iOS
+    // can't route the redirect back to the running app.
+    schemes: ['akari.blue-dev', 'works.lucidsoft.akari.dev', 'works.lucidsoft.akari'],
     iosBundleIdentifier: 'works.lucidsoft.akari.dev',
     androidPackage: 'works.lucidsoft.akari.dev',
   },
   preview: {
     appName: 'akari.blue Preview',
-    schemes: ['akari.blue-preview', 'works.lucidsoft.akari.preview'],
+    schemes: ['akari.blue-preview', 'works.lucidsoft.akari.preview', 'works.lucidsoft.akari'],
     iosBundleIdentifier: 'works.lucidsoft.akari.preview',
     androidPackage: 'works.lucidsoft.akari.preview',
   },
