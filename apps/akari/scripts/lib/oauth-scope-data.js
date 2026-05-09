@@ -130,16 +130,19 @@ const flatScopes = [
     labelKey: 'oauth.scopes.atproto.label',
     descriptionKey: 'oauth.scopes.atproto.description',
   },
-  // RPC scopes are enforced literally per-procedure. The atproto OAuth
-  // permissions proposal specifies `rpc:<NSID>?aud=<DID>#<service-id>`
-  // — the service-id fragment IS part of the scope token, even though
-  // some auth-server error messages render it URL-decoded or truncated.
-  // One picker row per audience, many underlying tokens.
+  // RPC scopes are enforced literally per-procedure. atproto's OAuth
+  // permissions proposal specifies `rpc:<NSID>?aud=<DID>#<service-id>`,
+  // but auth-server error messages have surfaced both with- and
+  // without-fragment forms in practice. Register BOTH for every
+  // procedure — costs a bit of metadata size, but means a stale client
+  // bundle (cached web tab, older TestFlight binary) keeps working
+  // when only one form ends up in the request.
   {
     id: 'bskyAppview',
-    tokens: bskyAppviewProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app#bsky_appview`,
-    ),
+    tokens: bskyAppviewProcedures.flatMap((proc) => [
+      `rpc:${proc}?aud=did:web:api.bsky.app#bsky_appview`,
+      `rpc:${proc}?aud=did:web:api.bsky.app`,
+    ]),
     required: false,
     defaultEnabled: true,
     labelKey: 'oauth.scopes.bskyAppview.label',
@@ -147,9 +150,10 @@ const flatScopes = [
   },
   {
     id: 'bskyChatRpc',
-    tokens: bskyChatProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat#bsky_chat`,
-    ),
+    tokens: bskyChatProcedures.flatMap((proc) => [
+      `rpc:${proc}?aud=did:web:api.bsky.chat#bsky_chat`,
+      `rpc:${proc}?aud=did:web:api.bsky.chat`,
+    ]),
     required: false,
     defaultEnabled: true,
     labelKey: 'oauth.scopes.bskyChatRpc.label',
@@ -159,8 +163,11 @@ const flatScopes = [
     id: 'bskyVideoRpc',
     tokens: [
       'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app',
       'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app',
       'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app',
     ],
     required: false,
     defaultEnabled: true,
