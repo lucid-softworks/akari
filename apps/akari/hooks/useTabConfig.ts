@@ -22,7 +22,7 @@ export const ALL_TABS: { key: TabKey; label: string; icon: string; alwaysVisible
   { key: 'settings', label: 'Settings', icon: 'gearshape.fill', alwaysVisible: true },
 ];
 
-const DEFAULT_VISIBLE: TabKey[] = ['index', 'search', 'notifications', 'bookmarks', 'profile', 'settings'];
+const DEFAULT_VISIBLE: TabKey[] = ['index', 'search', 'notifications', 'messages', 'bookmarks', 'profile', 'settings'];
 const DEFAULT_CONFIG: TabConfig = { visibleTabs: DEFAULT_VISIBLE };
 
 // Cached snapshot -- useSyncExternalStore compares by reference,
