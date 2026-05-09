@@ -193,6 +193,12 @@ function HardcodedTabBar({
 
   const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
 
+  // iOS Safari standalone PWAs have been seen to over-report
+  // safe-area-inset-bottom (sometimes by 100px+), leaving a tall
+  // empty band below the nav. The home indicator is at most ~34dp
+  // anywhere, so cap web's bottom inset.
+  const bottomInset = Platform.OS === 'web' ? Math.min(insets.bottom, 32) : insets.bottom;
+
   return (
     <View
       style={[
@@ -202,7 +208,7 @@ function HardcodedTabBar({
           backgroundColor: Platform.OS === 'ios' ? 'transparent' : tabBarSurface,
           paddingLeft: Math.max(spacing.lg, insets.left + spacing.sm),
           paddingRight: Math.max(spacing.lg, insets.right + spacing.sm),
-          paddingBottom: spacing.sm + insets.bottom,
+          paddingBottom: spacing.sm + bottomInset,
         },
       ]}
     >
