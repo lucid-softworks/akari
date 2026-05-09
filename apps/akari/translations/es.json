@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Sesión iniciada",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) se autenticó mediante atproto OAuth. Conectar esta sesión con el cliente de la API es el siguiente paso."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Iniciar sesión como @{{handle}}",
+        "subtitle": "Elige lo que akari puede hacer en tu cuenta. Los permisos obligatorios no pueden desmarcarse porque la aplicación los necesita para iniciar tu sesión y ejecutar los flujos principales.",
+        "continue": "Continuar",
+        "required": "Obligatorio",
+        "action": {
+          "create": "Crear",
+          "update": "Actualizar",
+          "delete": "Eliminar"
+        },
+        "atproto": {
+          "label": "Identidad",
+          "description": "Confirma quién eres en atproto. Siempre obligatorio."
+        },
+        "chat": {
+          "label": "Mensajes directos",
+          "description": "Leer y enviar mensajes de chat en tu nombre."
+        },
+        "profile": {
+          "label": "Perfil",
+          "description": "Edita tu nombre visible, biografía, avatar y banner."
+        },
+        "post": {
+          "label": "Publicaciones",
+          "description": "Publica nuevas entradas, edítalas y elimina las tuyas."
+        },
+        "threadgate": {
+          "label": "Control de respuestas",
+          "description": "Decide quién puede responder a un hilo que iniciaste."
+        },
+        "postgate": {
+          "label": "Control de citas",
+          "description": "Decide quién puede citar una publicación que hiciste."
+        },
+        "like": {
+          "label": "Me gusta",
+          "description": "Da y quita me gusta a publicaciones."
+        },
+        "repost": {
+          "label": "Republicaciones",
+          "description": "Republica y deshaz republicaciones."
+        },
+        "follow": {
+          "label": "Seguidos",
+          "description": "Sigue y deja de seguir cuentas."
+        },
+        "block": {
+          "label": "Bloqueos",
+          "description": "Bloquea y desbloquea cuentas."
+        },
+        "list": {
+          "label": "Listas",
+          "description": "Crea, renombra y elimina listas de moderación o curaduría."
+        },
+        "listitem": {
+          "label": "Pertenencia a listas",
+          "description": "Añade y elimina cuentas de tus listas."
+        },
+        "leafletPublication": {
+          "label": "Publicaciones de Leaflet",
+          "description": "Gestiona publicaciones de formato largo en leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Documentos de Leaflet",
+          "description": "Publica y edita documentos de formato largo en leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Preferencias de IA",
+          "description": "Guarda tus preferencias de entrenamiento de IA según community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "Reseñas de Popfeed",
+          "description": "Publica reseñas en la red de reseñas de medios Popfeed."
+        },
+        "recipe": {
+          "label": "Recetas",
+          "description": "Guarda recetas mediante el léxico abierto exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Tablero Linkat",
+          "description": "Gestiona tu tablero link-in-bio de Linkat."
+        }
+      }
+    },
     "navigation": {
       "search": "Buscar",
       "notifications": "Notificaciones",

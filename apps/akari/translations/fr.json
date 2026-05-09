@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Connecté",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) authentifié via atproto OAuth. La prochaine étape est de relier cette session au client de l’API."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Se connecter en tant que @{{handle}}",
+        "subtitle": "Choisis ce qu'akari peut faire sur ton compte. Les autorisations requises ne peuvent pas être décochées car l'application en a besoin pour te connecter et exécuter ses fonctions principales.",
+        "continue": "Continuer",
+        "required": "Obligatoire",
+        "action": {
+          "create": "Créer",
+          "update": "Mettre à jour",
+          "delete": "Supprimer"
+        },
+        "atproto": {
+          "label": "Identité",
+          "description": "Confirmer qui tu es sur atproto. Toujours obligatoire."
+        },
+        "chat": {
+          "label": "Messages privés",
+          "description": "Lire et envoyer des messages de discussion en ton nom."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Modifier ton nom affiché, ta bio, ton avatar et ta bannière."
+        },
+        "post": {
+          "label": "Publications",
+          "description": "Publier de nouvelles publications, les modifier et supprimer les tiennes."
+        },
+        "threadgate": {
+          "label": "Contrôle des réponses",
+          "description": "Définis qui peut répondre à un fil que tu as lancé."
+        },
+        "postgate": {
+          "label": "Contrôle des citations",
+          "description": "Définis qui peut citer une publication que tu as faite."
+        },
+        "like": {
+          "label": "J'aime",
+          "description": "Aimer et retirer les j'aime sur des publications."
+        },
+        "repost": {
+          "label": "Republications",
+          "description": "Republier et annuler des republications."
+        },
+        "follow": {
+          "label": "Abonnements",
+          "description": "Suivre et ne plus suivre des comptes."
+        },
+        "block": {
+          "label": "Blocages",
+          "description": "Bloquer et débloquer des comptes."
+        },
+        "list": {
+          "label": "Listes",
+          "description": "Créer, renommer et supprimer des listes de modération ou de curation."
+        },
+        "listitem": {
+          "label": "Appartenance aux listes",
+          "description": "Ajouter et retirer des comptes de tes listes."
+        },
+        "leafletPublication": {
+          "label": "Publications Leaflet",
+          "description": "Gère les publications de format long sur leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Documents Leaflet",
+          "description": "Publier et modifier des documents de format long sur leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Préférences IA",
+          "description": "Stocker tes préférences d'entraînement IA selon community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "Avis Popfeed",
+          "description": "Publier des avis sur le réseau de critiques médias Popfeed."
+        },
+        "recipe": {
+          "label": "Recettes",
+          "description": "Enregistrer des recettes via le lexique ouvert exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Tableau Linkat",
+          "description": "Gérer ton tableau de liens Linkat link-in-bio."
+        }
+      }
+    },
     "navigation": {
       "search": "Recherche",
       "notifications": "Notifications",

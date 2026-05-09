@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Inloggad",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) har autentiserats via atproto OAuth. Nästa steg är att koppla den här sessionen till API-klienten."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Logga in som @{{handle}}",
+        "subtitle": "Välj vad akari får göra på ditt konto. Obligatoriska behörigheter går inte att kryssa ur eftersom appen behöver dem för att logga in dig och köra grundflödena.",
+        "continue": "Fortsätt",
+        "required": "Obligatorisk",
+        "action": {
+          "create": "Skapa",
+          "update": "Uppdatera",
+          "delete": "Ta bort"
+        },
+        "atproto": {
+          "label": "Identitet",
+          "description": "Bekräfta vem du är på atproto. Alltid obligatorisk."
+        },
+        "chat": {
+          "label": "Direktmeddelanden",
+          "description": "Läs och skicka chattmeddelanden i ditt namn."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Redigera ditt visningsnamn, bio, avatar och banner."
+        },
+        "post": {
+          "label": "Inlägg",
+          "description": "Publicera nya inlägg, redigera dem och radera dina egna."
+        },
+        "threadgate": {
+          "label": "Svarskontroll",
+          "description": "Bestäm vem som får svara i en tråd du startat."
+        },
+        "postgate": {
+          "label": "Citatkontroll",
+          "description": "Bestäm vem som får citera ett inlägg du gjort."
+        },
+        "like": {
+          "label": "Gillamarkeringar",
+          "description": "Gilla och ta bort gillamarkeringar på inlägg."
+        },
+        "repost": {
+          "label": "Återinlägg",
+          "description": "Återinlägg och ångra återinlägg."
+        },
+        "follow": {
+          "label": "Följer",
+          "description": "Följ och sluta följa konton."
+        },
+        "block": {
+          "label": "Blockeringar",
+          "description": "Blockera och avblockera konton."
+        },
+        "list": {
+          "label": "Listor",
+          "description": "Skapa, byt namn på och radera modererings- eller kureringslistor."
+        },
+        "listitem": {
+          "label": "Listmedlemskap",
+          "description": "Lägg till och ta bort konton från dina listor."
+        },
+        "leafletPublication": {
+          "label": "Leaflet-publikationer",
+          "description": "Hantera långa publikationer på leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Leaflet-dokument",
+          "description": "Publicera och redigera långa dokument på leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "AI-inställningar",
+          "description": "Spara dina community-lexicon AI-träningsinställningar."
+        },
+        "popfeedReview": {
+          "label": "Popfeed-recensioner",
+          "description": "Publicera recensioner på Popfeed-medienätverket för recensioner."
+        },
+        "recipe": {
+          "label": "Recept",
+          "description": "Spara recept via det öppna exchange.recipe-lexikonet."
+        },
+        "linkatBoard": {
+          "label": "Linkat-tavla",
+          "description": "Hantera din Linkat link-in-bio-tavla."
+        }
+      }
+    },
     "navigation": {
       "search": "Söka",
       "notifications": "Meddelanden",

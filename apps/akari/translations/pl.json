@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Zalogowano",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) został uwierzytelniony przez atproto OAuth. Połączenie tej sesji z klientem API to kolejny krok."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Zaloguj się jako @{{handle}}",
+        "subtitle": "Wybierz, co akari może robić na twoim koncie. Wymaganych uprawnień nie można odznaczyć, ponieważ aplikacja potrzebuje ich do zalogowania cię i obsługi podstawowych funkcji.",
+        "continue": "Kontynuuj",
+        "required": "Wymagane",
+        "action": {
+          "create": "Utwórz",
+          "update": "Zaktualizuj",
+          "delete": "Usuń"
+        },
+        "atproto": {
+          "label": "Tożsamość",
+          "description": "Potwierdź, kim jesteś w atproto. Zawsze wymagane."
+        },
+        "chat": {
+          "label": "Wiadomości bezpośrednie",
+          "description": "Czyta i wysyła wiadomości czatu w twoim imieniu."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Edytuj swoją nazwę wyświetlaną, bio, awatar i baner."
+        },
+        "post": {
+          "label": "Posty",
+          "description": "Publikuj nowe posty, edytuj je i usuwaj własne."
+        },
+        "threadgate": {
+          "label": "Kontrola odpowiedzi",
+          "description": "Określ, kto może odpowiadać w wątku, który rozpocząłeś."
+        },
+        "postgate": {
+          "label": "Kontrola cytowania",
+          "description": "Określ, kto może cytować twojego posta."
+        },
+        "like": {
+          "label": "Polubienia",
+          "description": "Polubienie i cofanie polubienia postów."
+        },
+        "repost": {
+          "label": "Podawanie dalej",
+          "description": "Podawaj dalej i cofaj podawanie dalej."
+        },
+        "follow": {
+          "label": "Obserwowani",
+          "description": "Obserwuj i przestań obserwować konta."
+        },
+        "block": {
+          "label": "Blokady",
+          "description": "Blokuj i odblokowuj konta."
+        },
+        "list": {
+          "label": "Listy",
+          "description": "Twórz, zmieniaj nazwy i usuwaj listy moderacyjne lub kuratorskie."
+        },
+        "listitem": {
+          "label": "Członkostwo na liście",
+          "description": "Dodawaj i usuwaj konta z twoich list."
+        },
+        "leafletPublication": {
+          "label": "Publikacje Leaflet",
+          "description": "Zarządzaj długimi publikacjami w leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Dokumenty Leaflet",
+          "description": "Publikuj i edytuj długie dokumenty w leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Preferencje AI",
+          "description": "Przechowuj swoje preferencje treningu AI według community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "Recenzje Popfeed",
+          "description": "Publikuj recenzje w sieci recenzji mediów Popfeed."
+        },
+        "recipe": {
+          "label": "Przepisy",
+          "description": "Zapisuj przepisy poprzez otwarty leksykon exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Tablica Linkat",
+          "description": "Zarządzaj swoją tablicą Linkat link-in-bio."
+        }
+      }
+    },
     "navigation": {
       "search": "Szukaj",
       "notifications": "Powiadomienia",

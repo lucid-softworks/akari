@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "साइन इन हो गया",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) को atproto OAuth के माध्यम से प्रमाणित किया गया. इस सत्र को API क्लाइंट से जोड़ना अगला कदम है."
     },
+    "oauth": {
+      "scopes": {
+        "title": "@{{handle}} के रूप में साइन इन करें",
+        "subtitle": "चुनें कि akari आपके खाते पर क्या कर सकता है. आवश्यक अनुमतियों को अनचेक नहीं किया जा सकता क्योंकि ऐप को आपको साइन इन करने और मुख्य प्रवाह चलाने के लिए उनकी ज़रूरत है.",
+        "continue": "जारी रखें",
+        "required": "आवश्यक",
+        "action": {
+          "create": "बनाएँ",
+          "update": "अपडेट करें",
+          "delete": "हटाएँ"
+        },
+        "atproto": {
+          "label": "पहचान",
+          "description": "atproto पर आप कौन हैं इसकी पुष्टि करें. हमेशा आवश्यक."
+        },
+        "chat": {
+          "label": "सीधा संदेश",
+          "description": "आपकी ओर से चैट संदेश पढ़ता और भेजता है."
+        },
+        "profile": {
+          "label": "प्रोफ़ाइल",
+          "description": "अपना प्रदर्शन नाम, बायो, अवतार और बैनर संपादित करें."
+        },
+        "post": {
+          "label": "पोस्ट",
+          "description": "नई पोस्ट प्रकाशित करें, उन्हें संपादित करें और अपनी पोस्ट हटाएँ."
+        },
+        "threadgate": {
+          "label": "उत्तर नियंत्रण",
+          "description": "तय करें कि आपके शुरू किए थ्रेड पर कौन उत्तर दे सकता है."
+        },
+        "postgate": {
+          "label": "उद्धरण नियंत्रण",
+          "description": "तय करें कि आपकी पोस्ट को कौन उद्धृत कर सकता है."
+        },
+        "like": {
+          "label": "पसंद",
+          "description": "पोस्ट को पसंद करें और पसंद हटाएँ."
+        },
+        "repost": {
+          "label": "पुनः पोस्ट",
+          "description": "पुनः पोस्ट करें और पुनः पोस्ट पूर्ववत करें."
+        },
+        "follow": {
+          "label": "अनुसरण",
+          "description": "खातों का अनुसरण करें और अनुसरण रद्द करें."
+        },
+        "block": {
+          "label": "ब्लॉक",
+          "description": "खातों को ब्लॉक और अनब्लॉक करें."
+        },
+        "list": {
+          "label": "सूचियाँ",
+          "description": "मॉडरेशन या क्यूरेशन सूचियाँ बनाएँ, नाम बदलें और हटाएँ."
+        },
+        "listitem": {
+          "label": "सूची सदस्यता",
+          "description": "अपनी सूचियों में खाते जोड़ें और हटाएँ."
+        },
+        "leafletPublication": {
+          "label": "Leaflet प्रकाशन",
+          "description": "leaflet.pub पर लंबे प्रकाशन प्रबंधित करें."
+        },
+        "leafletDocument": {
+          "label": "Leaflet दस्तावेज़",
+          "description": "leaflet.pub पर लंबे दस्तावेज़ प्रकाशित और संपादित करें."
+        },
+        "aiPreference": {
+          "label": "AI प्राथमिकताएँ",
+          "description": "अपनी community-lexicon AI प्रशिक्षण प्राथमिकताएँ संग्रहीत करें."
+        },
+        "popfeedReview": {
+          "label": "Popfeed समीक्षाएँ",
+          "description": "Popfeed मीडिया समीक्षा नेटवर्क पर समीक्षाएँ पोस्ट करें."
+        },
+        "recipe": {
+          "label": "व्यंजनविधि",
+          "description": "खुले exchange.recipe लेक्सिकन के माध्यम से व्यंजनविधि सहेजें."
+        },
+        "linkatBoard": {
+          "label": "Linkat बोर्ड",
+          "description": "अपना Linkat link-in-bio बोर्ड प्रबंधित करें."
+        }
+      }
+    },
     "navigation": {
       "search": "खोज",
       "notifications": "सूचनाएं",

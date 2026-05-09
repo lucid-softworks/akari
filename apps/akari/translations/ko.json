@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "로그인됨",
       "oauthSuccessMessage": "@{{handle}} ({{did}})이(가) atproto OAuth로 인증되었습니다. 다음 단계는 이 세션을 API 클라이언트에 연결하는 것입니다."
     },
+    "oauth": {
+      "scopes": {
+        "title": "@{{handle}}(으)로 로그인",
+        "subtitle": "akari가 계정에서 무엇을 할 수 있는지 선택하세요. 필수 권한은 로그인과 핵심 기능에 필요하기 때문에 해제할 수 없습니다.",
+        "continue": "계속",
+        "required": "필수",
+        "action": {
+          "create": "생성",
+          "update": "업데이트",
+          "delete": "삭제"
+        },
+        "atproto": {
+          "label": "신원",
+          "description": "atproto에서 본인이 누구인지 확인합니다. 항상 필수입니다."
+        },
+        "chat": {
+          "label": "다이렉트 메시지",
+          "description": "본인을 대신해 채팅 메시지를 읽고 보냅니다."
+        },
+        "profile": {
+          "label": "프로필",
+          "description": "표시 이름, 소개, 아바타, 배너를 편집합니다."
+        },
+        "post": {
+          "label": "게시물",
+          "description": "새 게시물을 작성하고 편집하며 본인의 게시물을 삭제합니다."
+        },
+        "threadgate": {
+          "label": "답글 제어",
+          "description": "본인이 시작한 스레드에 누가 답글을 달 수 있는지 설정합니다."
+        },
+        "postgate": {
+          "label": "인용 제어",
+          "description": "본인이 작성한 게시물을 누가 인용할 수 있는지 설정합니다."
+        },
+        "like": {
+          "label": "좋아요",
+          "description": "게시물에 좋아요를 누르거나 취소합니다."
+        },
+        "repost": {
+          "label": "리포스트",
+          "description": "리포스트하거나 리포스트를 취소합니다."
+        },
+        "follow": {
+          "label": "팔로우",
+          "description": "계정을 팔로우하거나 팔로우를 취소합니다."
+        },
+        "block": {
+          "label": "차단",
+          "description": "계정을 차단하거나 차단을 해제합니다."
+        },
+        "list": {
+          "label": "목록",
+          "description": "모더레이션 또는 큐레이션 목록을 만들고, 이름을 바꾸고, 삭제합니다."
+        },
+        "listitem": {
+          "label": "목록 멤버십",
+          "description": "본인의 목록에 계정을 추가하거나 제거합니다."
+        },
+        "leafletPublication": {
+          "label": "Leaflet 출판물",
+          "description": "leaflet.pub에서 장문 출판물을 관리합니다."
+        },
+        "leafletDocument": {
+          "label": "Leaflet 문서",
+          "description": "leaflet.pub에서 장문 문서를 게시하고 편집합니다."
+        },
+        "aiPreference": {
+          "label": "AI 환경설정",
+          "description": "community-lexicon AI 학습 환경설정을 저장합니다."
+        },
+        "popfeedReview": {
+          "label": "Popfeed 리뷰",
+          "description": "Popfeed 미디어 리뷰 네트워크에 리뷰를 게시합니다."
+        },
+        "recipe": {
+          "label": "레시피",
+          "description": "공개된 exchange.recipe 렉시콘을 통해 레시피를 저장합니다."
+        },
+        "linkatBoard": {
+          "label": "Linkat 보드",
+          "description": "본인의 Linkat link-in-bio 보드를 관리합니다."
+        }
+      }
+    },
     "navigation": {
       "search": "검색",
       "notifications": "알림",

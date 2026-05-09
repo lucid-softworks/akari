@@ -1,0 +1,108 @@
+name: deploy-preview
+
+# Deploys the akari web build to EAS Hosting on every push to main and
+# pins the deployment to the `preview` alias. The custom domain
+# `preview.akari.lucidsoft.works` is configured in the EAS dashboard
+# to follow that alias, so it always reflects the latest mainline commit.
+#
+# PR-flavoured previews (per-PR aliases like `pr-123`) live in
+# `preview.yml` — kept separate so they don't fight over the same alias.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.mdx'
+      - 'docs/**'
+      - '**/docs/**'
+
+jobs:
+  deploy:
+    name: Deploy mainline preview to EAS Hosting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "Missing EXPO_TOKEN secret. See https://docs.expo.dev/eas-update/github-actions" >&2
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Record commit metadata
+        # Surfaces the short SHA in the BuildWatermark on screenshots
+        # and in the settings/about screen.
+        run: echo "EXPO_PUBLIC_COMMIT_SHA=${{ github.sha }}" >> "$GITHUB_ENV"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.9.0
+          cache: npm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ClearSky API package
+        run: npm --workspace clearsky-api run build
+
+      - name: Sync OAuth client metadata
+        working-directory: apps/akari
+        env:
+          APP_VARIANT: preview
+        run: npm run sync-oauth-meta
+
+      - name: Export web bundle
+        working-directory: apps/akari
+        env:
+          APP_VARIANT: preview
+        run: npx expo export -p web
+
+      - name: Deploy to EAS Hosting
+        id: deploy
+        working-directory: apps/akari
+        env:
+          APP_VARIANT: preview
+          EXPO_CLI_NO_PROMPT: 1
+          EXPO_NO_TELEMETRY: 1
+        run: |
+          set -euo pipefail
+          tmpfile="$(mktemp)"
+          trap 'rm -f "$tmpfile"' EXIT
+          eas deploy \
+            --environment preview \
+            --alias preview \
+            --export-dir dist \
+            --non-interactive \
+            --json | tee "$tmpfile"
+          url=$(jq -r '
+            if type == "array" then
+              (.[0].deployment.url // .[0].deploymentUrl // .[0].url // empty)
+            else
+              (.deployment.url // .deploymentUrl // .url // empty)
+            end
+          ' "$tmpfile")
+          if [ -n "$url" ]; then
+            echo "url=$url" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Summarise deploy
+        if: steps.deploy.outputs.url != ''
+        run: |
+          {
+            echo "## EAS Hosting preview deployed"
+            echo ""
+            echo "- Alias: \`preview\` → https://preview.akari.lucidsoft.works"
+            echo "- Direct deployment URL: ${{ steps.deploy.outputs.url }}"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

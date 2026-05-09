@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Akari — Child Safety Standards</title>
+  <meta name="description" content="Standards against child sexual abuse and exploitation (CSAE) for Akari, an AT Protocol client by Lucid Softworks." />
+  <link rel="icon" type="image/png" href="/icon.png" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --fg: #111;
+      --fg-muted: #555;
+      --bg: #fafafa;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --accent: #0085ff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #f3f4f6;
+        --fg-muted: #9ca3af;
+        --bg: #0b0d0f;
+        --card-bg: #15181c;
+        --border: #2a2d33;
+        --accent: #5eb1ff;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 32px 16px 64px;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.02em; }
+    h2 { font-size: 18px; margin: 32px 0 8px; }
+    .meta { color: var(--fg-muted); font-size: 13px; margin: 0 0 32px; }
+    p { margin: 0 0 12px; font-size: 15px; }
+    ul { margin: 0 0 12px; padding-left: 20px; }
+    li { margin-bottom: 6px; font-size: 15px; }
+    a { color: var(--accent); }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+    .nav { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="nav"><a href="/">← Akari</a></p>
+    <h1>Child Safety Standards</h1>
+    <p class="meta">Last updated: <time datetime="2026-05-05">5 May 2026</time></p>
+
+    <p>
+      Akari is an <a href="https://atproto.com">AT Protocol</a> client
+      published by Lucid Softworks. Child sexual abuse material (CSAM) and
+      any other form of child sexual abuse and exploitation (CSAE) is
+      strictly prohibited in any context surfaced through the app. This
+      page describes our position, who handles moderation, and how to
+      report CSAE.
+    </p>
+
+    <h2>What Akari is — and isn't</h2>
+    <p>
+      Akari is a <strong>client</strong>. It does not host user content,
+      does not store posts or media on Lucid Softworks infrastructure, and
+      does not run a moderation service. Every record you see in Akari
+      lives on a Personal Data Server (PDS) operated by a third party, is
+      assembled by a third-party AppView, and is filtered by third-party
+      labelers and moderation services that the network or the user has
+      subscribed to.
+    </p>
+    <p>
+      Removal of content, suspension of accounts, takedown of media, and
+      forwarding of CSAM to law enforcement are responsibilities of those
+      services — not Akari. The information below explains where reports
+      need to go for action to be taken.
+    </p>
+
+    <h2>How users report CSAE in Akari</h2>
+    <p>
+      Akari exposes the AT Protocol report flow on every post, profile,
+      and message:
+    </p>
+    <ul>
+      <li>Open the post, profile, or conversation.</li>
+      <li>Tap the overflow (⋯) menu and choose <strong>Report</strong>.</li>
+      <li>Select a reason. For child-safety concerns, choose
+        <em>Illegal and urgent</em> (or the closest equivalent your
+        moderation service offers) and add details.</li>
+      <li>The report is delivered to the moderation service responsible
+        for the content via
+        <code>com.atproto.moderation.createReport</code>. Akari does not
+        receive a copy and is not in the response loop.</li>
+    </ul>
+
+    <h2>Where to report CSAM directly</h2>
+    <p>
+      Because Akari does not host content or run moderation, the
+      authoritative places to report CSAM are the operators of the
+      services that hold the record. For accounts on the public Bluesky
+      network that is Bluesky Social PBC; for accounts on a self-hosted
+      or third-party PDS that is the PDS operator. To report directly:
+    </p>
+    <ul>
+      <li><strong>Bluesky moderation</strong> (for content on the public
+        Bluesky network):
+        <a href="https://bsky.social/about/support">bsky.social/about/support</a>
+        and the contact information published in
+        <a href="https://bsky.social/about/support/community-guidelines">Bluesky's
+        Community Guidelines</a> and
+        <a href="https://bsky.social/about/support/copyright">copyright /
+        report channels</a>.</li>
+      <li><strong>The PDS that hosts the account</strong> if it is not
+        bsky.social. Each PDS operator publishes its own abuse contact
+        and takedown procedure.</li>
+      <li><strong>NCMEC CyberTipline</strong> (United States):
+        <a href="https://report.cybertip.org">report.cybertip.org</a>.
+        This is the correct channel for any U.S.-nexus CSAM report and
+        accepts reports from anywhere in the world.</li>
+      <li><strong>INHOPE network</strong> (international hotlines):
+        <a href="https://www.inhope.org/EN/articles/child-helplines">inhope.org</a>
+        — for example the Internet Watch Foundation (UK), eSafety
+        Commissioner (Australia), or your country's equivalent.</li>
+      <li><strong>Local law enforcement</strong> if a child is in
+        immediate danger.</li>
+    </ul>
+
+    <h2>What Lucid Softworks does</h2>
+    <p>
+      Lucid Softworks publishes the Akari app. Our role is limited to:
+    </p>
+    <ul>
+      <li>Surfacing the AT Protocol report flow on every post, profile,
+        and message so users can route reports to the moderation service
+        responsible for the content.</li>
+      <li>Honouring labeler and moderation-service decisions delivered
+        through the AT Protocol — for example, hiding or warning on
+        content the network's moderation service has labelled.</li>
+      <li>Cooperating with valid legal process directed at Lucid
+        Softworks. We do not hold the user records, post content, or
+        media you see in the app, so we generally cannot produce or
+        remove that content. We can identify Akari as the client used,
+        and route requesters to the PDS or moderation operator that
+        does hold the data.</li>
+      <li>Forwarding CSAE reports we receive directly (e.g., by email)
+        to the relevant moderation service, PDS operator, and where
+        appropriate to NCMEC or the corresponding regional authority.</li>
+    </ul>
+
+    <h2>Compliance</h2>
+    <p>
+      Akari complies with applicable child-safety laws in the
+      jurisdictions in which it is distributed. Statutory reporting of
+      CSAM under United States
+      <a href="https://www.law.cornell.edu/uscode/text/18/2258A">18 U.S.C.
+      § 2258A</a>, the EU Digital Services Act, the UK Online Safety Act,
+      and equivalent regional regimes is the responsibility of the
+      hosting provider — that is the PDS or moderation service operating
+      on the AT Protocol network. Lucid Softworks reports CSAM that is
+      received directly to NCMEC and cooperates with referrals from law
+      enforcement.
+    </p>
+
+    <h2>Designated point of contact</h2>
+    <p>
+      The designated point of contact for child-safety questions, law
+      enforcement requests, and CSAM/CSAE matters at Lucid Softworks is:
+    </p>
+    <ul>
+      <li><strong>Lucid Softworks</strong> (publisher of Akari)</li>
+      <li>Email:
+        <a href="mailto:luna@lucidsoft.works">luna@lucidsoft.works</a></li>
+    </ul>
+    <p>
+      This contact is able to discuss Akari's CSAM/CSAE prevention
+      practices and compliance posture, and to route requests to the
+      appropriate AT Protocol service operator. For action on specific
+      content or accounts, please use the direct channels listed under
+      "Where to report CSAM directly".
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      This page may change as Akari's tooling, the AT Protocol moderation
+      ecosystem, and applicable law evolve. The "last updated" date at
+      the top reflects the most recent revision.
+    </p>
+
+    <hr />
+    <p class="nav"><a href="/privacy">Privacy policy →</a></p>
+  </main>
+</body>
+</html>

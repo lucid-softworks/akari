@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Accesso effettuato",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) autenticato tramite atproto OAuth. Collegare questa sessione al client API è il prossimo passo."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Accedi come @{{handle}}",
+        "subtitle": "Scegli cosa può fare akari sul tuo account. I permessi obbligatori non possono essere deselezionati perché l'app ne ha bisogno per accedere e per i flussi principali.",
+        "continue": "Continua",
+        "required": "Obbligatorio",
+        "action": {
+          "create": "Crea",
+          "update": "Aggiorna",
+          "delete": "Elimina"
+        },
+        "atproto": {
+          "label": "Identità",
+          "description": "Conferma chi sei su atproto. Sempre obbligatorio."
+        },
+        "chat": {
+          "label": "Messaggi diretti",
+          "description": "Leggere e inviare messaggi di chat per tuo conto."
+        },
+        "profile": {
+          "label": "Profilo",
+          "description": "Modifica nome visualizzato, biografia, avatar e banner."
+        },
+        "post": {
+          "label": "Post",
+          "description": "Pubblica nuovi post, modificali ed elimina i tuoi."
+        },
+        "threadgate": {
+          "label": "Controllo risposte",
+          "description": "Imposta chi può rispondere a un thread che hai aperto."
+        },
+        "postgate": {
+          "label": "Controllo citazioni",
+          "description": "Imposta chi può citare un post che hai pubblicato."
+        },
+        "like": {
+          "label": "Mi piace",
+          "description": "Aggiungi e rimuovi i mi piace dai post."
+        },
+        "repost": {
+          "label": "Ripubblicazioni",
+          "description": "Ripubblica e annulla le ripubblicazioni."
+        },
+        "follow": {
+          "label": "Seguiti",
+          "description": "Segui e smetti di seguire account."
+        },
+        "block": {
+          "label": "Blocchi",
+          "description": "Blocca e sblocca account."
+        },
+        "list": {
+          "label": "Elenchi",
+          "description": "Crea, rinomina ed elimina elenchi di moderazione o curation."
+        },
+        "listitem": {
+          "label": "Appartenenza agli elenchi",
+          "description": "Aggiungi e rimuovi account dai tuoi elenchi."
+        },
+        "leafletPublication": {
+          "label": "Pubblicazioni Leaflet",
+          "description": "Gestisci pubblicazioni in formato lungo su leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Documenti Leaflet",
+          "description": "Pubblica e modifica documenti in formato lungo su leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Preferenze IA",
+          "description": "Memorizza le tue preferenze di addestramento IA secondo community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "Recensioni Popfeed",
+          "description": "Pubblica recensioni sulla rete di recensioni media Popfeed."
+        },
+        "recipe": {
+          "label": "Ricette",
+          "description": "Salva ricette tramite il lessico aperto exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Bacheca Linkat",
+          "description": "Gestisci la tua bacheca Linkat link-in-bio."
+        }
+      }
+    },
     "navigation": {
       "search": "Cerca",
       "notifications": "Notifiche",

@@ -1,0 +1,14 @@
+/* TEAM */
+Studio: Lucid Softworks
+Site: https://lucidsoft.works
+Contact: luna [at] lucidsoft.works
+Location: The internet
+
+/* SITE */
+Last update: 2026/05/09
+Standards: HTML5, CSS3, atproto OAuth
+Components: Expo, React Native, expo-router
+Software: VS Code, Claude Code
+
+/* THANKS */
+The atproto and Bluesky communities, and everyone building on the network.

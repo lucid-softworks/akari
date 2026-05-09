@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Autentificat",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) a fost autentificat prin atproto OAuth. Conectarea acestei sesiuni la clientul API este pasul următor."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Autentifică-te ca @{{handle}}",
+        "subtitle": "Alege ce poate face akari pe contul tău. Permisiunile obligatorii nu pot fi debifate pentru că aplicația are nevoie de ele ca să te autentifice și să ruleze fluxurile principale.",
+        "continue": "Continuă",
+        "required": "Obligatoriu",
+        "action": {
+          "create": "Creează",
+          "update": "Actualizează",
+          "delete": "Șterge"
+        },
+        "atproto": {
+          "label": "Identitate",
+          "description": "Confirmă cine ești pe atproto. Întotdeauna obligatoriu."
+        },
+        "chat": {
+          "label": "Mesaje directe",
+          "description": "Citește și trimite mesaje de chat în numele tău."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Editează numele afișat, biografia, avatarul și bannerul."
+        },
+        "post": {
+          "label": "Postări",
+          "description": "Publică postări noi, editează-le și șterge-le pe ale tale."
+        },
+        "threadgate": {
+          "label": "Control răspunsuri",
+          "description": "Stabilește cine poate răspunde într-un fir pornit de tine."
+        },
+        "postgate": {
+          "label": "Control citări",
+          "description": "Stabilește cine poate cita o postare făcută de tine."
+        },
+        "like": {
+          "label": "Aprecieri",
+          "description": "Apreciază și retrage aprecieri pentru postări."
+        },
+        "repost": {
+          "label": "Repostări",
+          "description": "Repostează și anulează repostări."
+        },
+        "follow": {
+          "label": "Urmăriri",
+          "description": "Urmărește și încetează să urmărești conturi."
+        },
+        "block": {
+          "label": "Blocări",
+          "description": "Blochează și deblochează conturi."
+        },
+        "list": {
+          "label": "Liste",
+          "description": "Creează, redenumește și șterge liste de moderare sau curatoriere."
+        },
+        "listitem": {
+          "label": "Apartenență la liste",
+          "description": "Adaugă și elimină conturi din listele tale."
+        },
+        "leafletPublication": {
+          "label": "Publicații Leaflet",
+          "description": "Gestionează publicații lungi pe leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Documente Leaflet",
+          "description": "Publică și editează documente lungi pe leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Preferințe AI",
+          "description": "Stochează preferințele tale de antrenament AI după community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "Recenzii Popfeed",
+          "description": "Postează recenzii pe rețeaua de recenzii media Popfeed."
+        },
+        "recipe": {
+          "label": "Rețete",
+          "description": "Salvează rețete prin lexiconul deschis exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Tablou Linkat",
+          "description": "Gestionează tabloul tău Linkat link-in-bio."
+        }
+      }
+    },
     "navigation": {
       "search": "Căutare",
       "notifications": "Notificări",

@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "تم تسجيل الدخول",
       "oauthSuccessMessage": "تم التحقق من @{{handle}} ({{did}}) عبر atproto OAuth. ربط هذه الجلسة بعميل الـ API هو الخطوة التالية."
     },
+    "oauth": {
+      "scopes": {
+        "title": "تسجيل الدخول باسم @{{handle}}",
+        "subtitle": "اختر ما يمكن لـ akari فعله في حسابك. لا يمكن إلغاء تحديد الأذونات المطلوبة لأن التطبيق يحتاجها لتسجيل دخولك وتشغيل التدفقات الأساسية.",
+        "continue": "متابعة",
+        "required": "مطلوب",
+        "action": {
+          "create": "إنشاء",
+          "update": "تحديث",
+          "delete": "حذف"
+        },
+        "atproto": {
+          "label": "الهوية",
+          "description": "تأكيد هويتك على atproto. مطلوب دائمًا."
+        },
+        "chat": {
+          "label": "الرسائل المباشرة",
+          "description": "قراءة وإرسال رسائل الدردشة بالنيابة عنك."
+        },
+        "profile": {
+          "label": "الملف الشخصي",
+          "description": "تعديل اسمك المعروض، والسيرة الذاتية، والصورة الرمزية، والبانر."
+        },
+        "post": {
+          "label": "المنشورات",
+          "description": "نشر منشورات جديدة، وتعديلها، وحذف منشوراتك."
+        },
+        "threadgate": {
+          "label": "ضوابط الردود",
+          "description": "تحديد من يمكنه الرد على سلسلة بدأتها."
+        },
+        "postgate": {
+          "label": "ضوابط الاقتباس",
+          "description": "تحديد من يمكنه اقتباس منشور نشرته."
+        },
+        "like": {
+          "label": "الإعجابات",
+          "description": "الإعجاب بالمنشورات وإلغاء الإعجاب."
+        },
+        "repost": {
+          "label": "إعادة النشر",
+          "description": "إعادة نشر المنشورات والتراجع عن إعادة النشر."
+        },
+        "follow": {
+          "label": "المتابعات",
+          "description": "متابعة الحسابات وإلغاء متابعتها."
+        },
+        "block": {
+          "label": "الحظر",
+          "description": "حظر الحسابات وإلغاء حظرها."
+        },
+        "list": {
+          "label": "القوائم",
+          "description": "إنشاء قوائم الإشراف أو التنظيم وإعادة تسميتها وحذفها."
+        },
+        "listitem": {
+          "label": "عضوية القائمة",
+          "description": "إضافة الحسابات إلى قوائمك وإزالتها."
+        },
+        "leafletPublication": {
+          "label": "منشورات Leaflet",
+          "description": "إدارة المنشورات الطويلة على leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "مستندات Leaflet",
+          "description": "نشر وتعديل المستندات الطويلة على leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "تفضيلات الذكاء الاصطناعي",
+          "description": "تخزين تفضيلات تدريب الذكاء الاصطناعي الخاصة بـ community-lexicon."
+        },
+        "popfeedReview": {
+          "label": "مراجعات Popfeed",
+          "description": "نشر المراجعات على شبكة مراجعة الوسائط Popfeed."
+        },
+        "recipe": {
+          "label": "الوصفات",
+          "description": "حفظ الوصفات عبر معجم exchange.recipe المفتوح."
+        },
+        "linkatBoard": {
+          "label": "لوحة Linkat",
+          "description": "إدارة لوحة الروابط الخاصة بك على Linkat."
+        }
+      }
+    },
     "navigation": {
       "search": "البحث",
       "notifications": "الإشعارات",

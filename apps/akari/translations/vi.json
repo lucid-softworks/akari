@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Đã đăng nhập",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) đã được xác thực qua atproto OAuth. Bước tiếp theo là kết nối phiên này vào client API."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Đăng nhập với tư cách @{{handle}}",
+        "subtitle": "Chọn những gì akari có thể làm trên tài khoản của bạn. Các quyền bắt buộc không thể bỏ chọn vì ứng dụng cần chúng để đăng nhập và chạy các luồng cốt lõi.",
+        "continue": "Tiếp tục",
+        "required": "Bắt buộc",
+        "action": {
+          "create": "Tạo",
+          "update": "Cập nhật",
+          "delete": "Xóa"
+        },
+        "atproto": {
+          "label": "Danh tính",
+          "description": "Xác nhận bạn là ai trên atproto. Luôn bắt buộc."
+        },
+        "chat": {
+          "label": "Tin nhắn trực tiếp",
+          "description": "Đọc và gửi tin nhắn trò chuyện thay cho bạn."
+        },
+        "profile": {
+          "label": "Hồ sơ",
+          "description": "Chỉnh sửa tên hiển thị, tiểu sử, ảnh đại diện và biểu ngữ của bạn."
+        },
+        "post": {
+          "label": "Bài đăng",
+          "description": "Đăng bài mới, chỉnh sửa và xóa bài của bạn."
+        },
+        "threadgate": {
+          "label": "Kiểm soát trả lời",
+          "description": "Đặt ai có thể trả lời trong chuỗi bạn đã bắt đầu."
+        },
+        "postgate": {
+          "label": "Kiểm soát trích dẫn",
+          "description": "Đặt ai có thể trích dẫn bài bạn đã đăng."
+        },
+        "like": {
+          "label": "Thích",
+          "description": "Thích và bỏ thích bài đăng."
+        },
+        "repost": {
+          "label": "Đăng lại",
+          "description": "Đăng lại và hủy đăng lại."
+        },
+        "follow": {
+          "label": "Theo dõi",
+          "description": "Theo dõi và bỏ theo dõi tài khoản."
+        },
+        "block": {
+          "label": "Chặn",
+          "description": "Chặn và bỏ chặn tài khoản."
+        },
+        "list": {
+          "label": "Danh sách",
+          "description": "Tạo, đổi tên và xóa danh sách kiểm duyệt hoặc tuyển chọn."
+        },
+        "listitem": {
+          "label": "Thành viên danh sách",
+          "description": "Thêm và xóa tài khoản khỏi danh sách của bạn."
+        },
+        "leafletPublication": {
+          "label": "Ấn phẩm Leaflet",
+          "description": "Quản lý ấn phẩm dài trên leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Tài liệu Leaflet",
+          "description": "Đăng và chỉnh sửa tài liệu dài trên leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Tùy chọn AI",
+          "description": "Lưu trữ tùy chọn huấn luyện AI community-lexicon của bạn."
+        },
+        "popfeedReview": {
+          "label": "Đánh giá Popfeed",
+          "description": "Đăng đánh giá trên mạng đánh giá truyền thông Popfeed."
+        },
+        "recipe": {
+          "label": "Công thức",
+          "description": "Lưu công thức qua từ điển mở exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Bảng Linkat",
+          "description": "Quản lý bảng link-in-bio Linkat của bạn."
+        }
+      }
+    },
     "navigation": {
       "search": "Tìm kiếm",
       "notifications": "Thông báo",

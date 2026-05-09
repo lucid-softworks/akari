@@ -43,7 +43,13 @@ export type OAuthSignInResult = {
  * error, server rejection, etc.). Caller is responsible for persisting the
  * returned tokens and keypair.
  */
-export async function oauthSignIn(handle: string): Promise<OAuthSignInResult> {
+export async function oauthSignIn(
+  handle: string,
+  /** Space-separated scope string. Defaults to the maximum scope set
+   *  declared in the hosted client metadata. The picker passes the
+   *  subset the user ticked. */
+  scope: string = OAUTH_SCOPE,
+): Promise<OAuthSignInResult> {
   const identity = await resolveIdentity(handle);
   const authServer = await getAuthorizationServer(identity.pdsUrl);
 
@@ -56,7 +62,7 @@ export async function oauthSignIn(handle: string): Promise<OAuthSignInResult> {
     authServer,
     clientId: OAUTH_CLIENT_ID,
     redirectUri: OAUTH_REDIRECT_URI,
-    scope: OAUTH_SCOPE,
+    scope,
     state,
     codeChallenge,
     loginHint: handle,

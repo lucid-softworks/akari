@@ -1,0 +1,15 @@
+{
+  "client_id": "https://akari.lucidsoft.works/.well-known/oauth-client.json",
+  "client_name": "Akari",
+  "client_uri": "https://akari.lucidsoft.works",
+  "logo_uri": "https://akari.lucidsoft.works/icon.png",
+  "tos_uri": "https://akari.lucidsoft.works/terms",
+  "policy_uri": "https://akari.lucidsoft.works/privacy",
+  "application_type": "native",
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "scope": "atproto transition:generic transition:chat.bsky",
+  "redirect_uris": ["works.lucidsoft.akari:/oauth/callback"],
+  "token_endpoint_auth_method": "none",
+  "dpop_bound_access_tokens": true
+}

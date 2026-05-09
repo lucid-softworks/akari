@@ -207,6 +207,13 @@ export type BlueskyCreatePostInput = {
    *  Drives the AppView's per-language feeds and moderation. Defaults to
    *  ['en'] on the server side when omitted. */
   langs?: string[];
+  /** Optional richtext facets (links, mentions, tags). Indices are UTF-8
+   *  byte offsets into `text`. Without these, links / mentions / hashtags
+   *  in the body render as plain text instead of being clickable. */
+  facets?: {
+    index: { byteStart: number; byteEnd: number };
+    features: { $type: string; uri?: string; tag?: string; did?: string }[];
+  }[];
 };
 
 export type CreateReviewInput = {

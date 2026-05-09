@@ -8,3 +8,8 @@ android/
 # @end expo-cli
 
 .env.local
+
+# OAuth client metadata is generated per-variant by scripts/sync-oauth-meta.js
+# from oauth-clients/. Don't commit the generated copy.
+public/.well-known/oauth-client.json
+public/.well-known/oauth-client-web.json

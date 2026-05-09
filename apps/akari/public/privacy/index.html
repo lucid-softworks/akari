@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Akari — Privacy Policy</title>
+  <meta name="description" content="Privacy policy for Akari, an AT Protocol client by Lucid Softworks." />
+  <link rel="icon" type="image/png" href="/icon.png" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --fg: #111;
+      --fg-muted: #555;
+      --bg: #fafafa;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --accent: #0085ff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #f3f4f6;
+        --fg-muted: #9ca3af;
+        --bg: #0b0d0f;
+        --card-bg: #15181c;
+        --border: #2a2d33;
+        --accent: #5eb1ff;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 32px 16px 64px;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.02em; }
+    h2 { font-size: 18px; margin: 32px 0 8px; }
+    .meta { color: var(--fg-muted); font-size: 13px; margin: 0 0 32px; }
+    p { margin: 0 0 12px; font-size: 15px; }
+    ul { margin: 0 0 12px; padding-left: 20px; }
+    li { margin-bottom: 6px; font-size: 15px; }
+    a { color: var(--accent); }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+    .nav { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="nav"><a href="/">← Akari</a></p>
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated: <time datetime="2026-05-04">4 May 2026</time></p>
+
+    <p>
+      Akari is an <a href="https://atproto.com">AT Protocol</a> client. This
+      policy explains what data the app handles, where it goes, and what
+      stays on your device.
+    </p>
+
+    <h2>What stays on your device</h2>
+    <ul>
+      <li>Your authentication credentials — JWTs and refresh tokens for
+        app-password sessions, or DPoP-bound access/refresh tokens plus the
+        per-account DPoP keypair for OAuth sessions. All stored encrypted
+        in the device's secure storage.</li>
+      <li>Cached feed, profile, and conversation data, so the app can render
+        immediately on launch instead of round-tripping every screen.</li>
+      <li>Local preferences — theme, language, accessibility toggles, muted
+        words, your trusted-verifier list, and similar settings.</li>
+    </ul>
+
+    <h2>What goes to the AT Protocol services you sign into</h2>
+    <p>
+      Akari is a client. Posts, likes, follows, mutes, blocks, messages, and
+      every other record you create are written to the AT Protocol services
+      you have authenticated against (your Personal Data Server, AppView,
+      labelers, etc.). Lucid Softworks does not operate those services and
+      does not see those records.
+    </p>
+
+    <h2>What goes to Lucid Softworks</h2>
+    <p>
+      Akari sends crash reports and limited diagnostic logs to a Lucid
+      Softworks-operated telemetry endpoint when crash reporting is enabled
+      in your build, in order to debug stability issues. Reports include
+      the crash stack, app version, OS version, and device model. They do
+      not include your post content, message content, or authentication
+      credentials. You can opt out by uninstalling the app.
+    </p>
+
+    <h2>Third-party services</h2>
+    <p>
+      Akari may render content from third parties (image hosts, video
+      services, link previews, GIF providers, etc.). Loading that content
+      involves a network request to the third party, which may log standard
+      HTTP metadata. Akari does not share your account identifier with
+      third parties beyond what's already public in the AT Protocol record
+      being rendered.
+    </p>
+
+    <h2>Children</h2>
+    <p>
+      Akari is not directed at children under 13. We do not knowingly
+      collect data from children. Account-eligibility rules are enforced by
+      the AT Protocol service you sign into, not by Akari.
+    </p>
+
+    <h2 id="account-deletion">Account deletion</h2>
+    <p>
+      Akari does not host your account — your AT Protocol identity is owned
+      by your Personal Data Server (PDS). Account deletion has two parts:
+    </p>
+    <ul>
+      <li><strong>Delete your AT Protocol account</strong> at the PDS that
+        hosts it. For Bluesky-hosted accounts that's
+        <a href="https://bsky.app/settings/account">bsky.app/settings/account</a>;
+        for self-hosted or third-party PDSes, follow that PDS's own deletion
+        flow. Deleting at the PDS is what removes your records (posts, likes,
+        follows, etc.) from the network.</li>
+      <li><strong>Remove Akari's local data</strong> from the device. Open
+        Akari → Settings → Account → <em>Wipe all data</em>. This clears
+        your stored credentials (JWTs / OAuth tokens / DPoP keys), cached
+        feed and profile data, and local preferences. You can also achieve
+        the same outcome by uninstalling the app.</li>
+    </ul>
+    <p>
+      Crash reports and diagnostic logs already sent to Lucid Softworks
+      telemetry (see "What goes to Lucid Softworks") do not contain account
+      identifiers tied to you personally and are aged out automatically. If
+      you want them removed sooner, email
+      <a href="mailto:luna@lucidsoft.works">luna@lucidsoft.works</a> with
+      the approximate dates you used the app.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      This policy may change. The "last updated" date at the top reflects
+      the most recent revision.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      For privacy questions, contact us at
+      <a href="https://github.com/lucid-softworks/akari/issues">github.com/lucid-softworks/akari/issues</a>.
+    </p>
+
+    <hr />
+    <p class="nav"><a href="/terms">← Terms of service</a></p>
+  </main>
+</body>
+</html>

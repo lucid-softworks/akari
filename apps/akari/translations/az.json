@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Daxil olundu",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ilə təsdiqləndi. Bu sessiyanı API müştərisinə bağlamaq növbəti addımdır."
     },
+    "oauth": {
+      "scopes": {
+        "title": "@{{handle}} olaraq daxil olun",
+        "subtitle": "Akari-nin hesabınızda nə edə biləcəyini seçin. Tələb olunan icazələrin işarəsini götürmək olmaz, çünki tətbiqin daxil olmaq və əsas axınları işlətmək üçün onlara ehtiyacı var.",
+        "continue": "Davam et",
+        "required": "Tələb olunur",
+        "action": {
+          "create": "Yarat",
+          "update": "Yenilə",
+          "delete": "Sil"
+        },
+        "atproto": {
+          "label": "Şəxsiyyət",
+          "description": "Atproto üzərində kim olduğunuzu təsdiqləyin. Həmişə tələb olunur."
+        },
+        "chat": {
+          "label": "Birbaşa mesajlar",
+          "description": "Sizin adınızdan söhbət mesajlarını oxuyur və göndərir."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Görünən adınızı, bioqrafiyanızı, avatarınızı və bannerinizi redaktə edin."
+        },
+        "post": {
+          "label": "Paylaşımlar",
+          "description": "Yeni paylaşımlar dərc edin, onları redaktə edin və öz paylaşımlarınızı silin."
+        },
+        "threadgate": {
+          "label": "Cavab idarəsi",
+          "description": "Başlatdığınız mövzuya kimlərin cavab verə biləcəyini təyin edin."
+        },
+        "postgate": {
+          "label": "Sitat idarəsi",
+          "description": "Paylaşdığınız bir paylaşımı kimlərin sitat gətirə biləcəyini təyin edin."
+        },
+        "like": {
+          "label": "Bəyənmələr",
+          "description": "Paylaşımları bəyənin və bəyənməni geri alın."
+        },
+        "repost": {
+          "label": "Yenidən paylaşımlar",
+          "description": "Yenidən paylaşın və yenidən paylaşımı geri alın."
+        },
+        "follow": {
+          "label": "İzləmələr",
+          "description": "Hesabları izləyin və izləməni dayandırın."
+        },
+        "block": {
+          "label": "Bloklamalar",
+          "description": "Hesabları bloklayın və blokdan çıxarın."
+        },
+        "list": {
+          "label": "Siyahılar",
+          "description": "Moderasiya və ya kuratorluq siyahılarını yaradın, adını dəyişdirin və silin."
+        },
+        "listitem": {
+          "label": "Siyahı üzvlüyü",
+          "description": "Hesabları siyahılarınıza əlavə edin və oradan çıxarın."
+        },
+        "leafletPublication": {
+          "label": "Leaflet nəşrləri",
+          "description": "leaflet.pub üzərindəki uzun formatlı nəşrləri idarə edin."
+        },
+        "leafletDocument": {
+          "label": "Leaflet sənədləri",
+          "description": "leaflet.pub üzərində uzun formatlı sənədlər dərc edin və redaktə edin."
+        },
+        "aiPreference": {
+          "label": "Süni intellekt tərcihləri",
+          "description": "community-lexicon süni intellekt təlim tərcihlərinizi saxlayın."
+        },
+        "popfeedReview": {
+          "label": "Popfeed rəyləri",
+          "description": "Popfeed media rəy şəbəkəsində rəylər paylaşın."
+        },
+        "recipe": {
+          "label": "Reseptlər",
+          "description": "Açıq exchange.recipe leksikonu vasitəsilə reseptləri saxlayın."
+        },
+        "linkatBoard": {
+          "label": "Linkat lövhəsi",
+          "description": "Linkat link-in-bio lövhənizi idarə edin."
+        }
+      }
+    },
     "navigation": {
       "search": "Axtarış",
       "notifications": "Bildirişlər",

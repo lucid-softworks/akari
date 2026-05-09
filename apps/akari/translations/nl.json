@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Ingelogd",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) is geverifieerd via atproto OAuth. Deze sessie aan de API-client koppelen is de volgende stap."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Inloggen als @{{handle}}",
+        "subtitle": "Kies wat akari op je account mag doen. Vereiste machtigingen kunnen niet worden uitgevinkt, want de app heeft ze nodig om je in te loggen en de kernfuncties uit te voeren.",
+        "continue": "Doorgaan",
+        "required": "Vereist",
+        "action": {
+          "create": "Aanmaken",
+          "update": "Bijwerken",
+          "delete": "Verwijderen"
+        },
+        "atproto": {
+          "label": "Identiteit",
+          "description": "Bevestig wie je bent op atproto. Altijd vereist."
+        },
+        "chat": {
+          "label": "Directe berichten",
+          "description": "Chatberichten lezen en versturen namens jou."
+        },
+        "profile": {
+          "label": "Profiel",
+          "description": "Je weergavenaam, bio, avatar en banner bewerken."
+        },
+        "post": {
+          "label": "Berichten",
+          "description": "Nieuwe berichten plaatsen, bewerken en eigen berichten verwijderen."
+        },
+        "threadgate": {
+          "label": "Reactiebeheer",
+          "description": "Bepaal wie kan reageren op een thread die jij bent begonnen."
+        },
+        "postgate": {
+          "label": "Citeerbeheer",
+          "description": "Bepaal wie een door jou geplaatst bericht mag citeren."
+        },
+        "like": {
+          "label": "Likes",
+          "description": "Berichten leuk vinden en likes verwijderen."
+        },
+        "repost": {
+          "label": "Reposts",
+          "description": "Reposten en reposts ongedaan maken."
+        },
+        "follow": {
+          "label": "Volgen",
+          "description": "Accounts volgen en ontvolgen."
+        },
+        "block": {
+          "label": "Blokkeringen",
+          "description": "Accounts blokkeren en deblokkeren."
+        },
+        "list": {
+          "label": "Lijsten",
+          "description": "Moderatie- of curatielijsten aanmaken, hernoemen en verwijderen."
+        },
+        "listitem": {
+          "label": "Lijstlidmaatschap",
+          "description": "Accounts toevoegen aan en verwijderen uit je lijsten."
+        },
+        "leafletPublication": {
+          "label": "Leaflet-publicaties",
+          "description": "Beheer langere publicaties op leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Leaflet-documenten",
+          "description": "Publiceer en bewerk langere documenten op leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "AI-voorkeuren",
+          "description": "Sla je community-lexicon AI-trainingsvoorkeuren op."
+        },
+        "popfeedReview": {
+          "label": "Popfeed-recensies",
+          "description": "Plaats recensies op het Popfeed-media-recensienetwerk."
+        },
+        "recipe": {
+          "label": "Recepten",
+          "description": "Sla recepten op via het open exchange.recipe-lexicon."
+        },
+        "linkatBoard": {
+          "label": "Linkat-bord",
+          "description": "Beheer je Linkat link-in-bio-bord."
+        }
+      }
+    },
     "navigation": {
       "search": "Zoeken",
       "notifications": "Meldingen",

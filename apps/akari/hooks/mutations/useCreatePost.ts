@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { apiForAccount } from '@/utils/blueskyApi';
+import { detectFacets } from '@/utils/textFacets';
 /**
  * Mutation hook for creating posts
  */
@@ -49,6 +50,11 @@ export function useCreatePost() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
+      // Detect links / mentions / hashtags so they ride along as facets;
+      // without them clients render the post body as inert plain text.
+      // Mention DIDs are resolved in parallel; failures are dropped so a
+      // typo'd handle doesn't poison the whole post.
+      const facets = await detectFacets(text);
       return await api.createPost(token, currentAccount.did, {
         text,
         replyTo,
@@ -56,6 +62,7 @@ export function useCreatePost() {
         video,
         quote,
         langs,
+        facets: facets.length > 0 ? facets : undefined,
       });
     },
     onMutate: async ({ text, replyTo, images }) => {

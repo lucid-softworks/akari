@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /oauth/
+
+Sitemap: https://akari.lucidsoft.works/sitemap.xml

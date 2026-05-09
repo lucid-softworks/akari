@@ -1,9 +1,8 @@
 import { Image } from '@/components/Image';
-import { Redirect, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -13,17 +12,10 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors, shadows } from '@/constants/tokens';
-import { useAddAccount } from '@/hooks/mutations/useAddAccount';
-import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
-import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
-import { oauthSignIn } from '@/utils/oauth/signIn';
-import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
 
@@ -33,15 +25,11 @@ export default function OauthSignInScreen() {
   const initialHandle = typeof params.handle === 'string' ? params.handle : '';
 
   const [handle, setHandle] = useState(initialHandle);
-  const [signInInFlight, setSignInInFlight] = useState(false);
-  const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
   // Closes the typeahead dropdown after the user picks a suggestion. Selecting
   // a result fills the handle field with the full handle, which would otherwise
   // re-trigger the query and immediately re-show the same list.
   const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
   const inputRef = useRef<TextInput>(null);
-  const addAccountMutation = useAddAccount();
-  const switchAccountMutation = useSwitchAccount();
 
   const trimmed = handle.replace(/^@/, '').trim();
   const canSubmit = trimmed.length > 0 && HANDLE_PATTERN.test(trimmed);
@@ -108,72 +96,17 @@ export default function OauthSignInScreen() {
     if (showSuggestions) measureAnchor();
   }, [showSuggestions, measureAnchor, typeaheadResults.length]);
 
-  const handleContinue = useCallback(async () => {
-    if (!canSubmit || signInInFlight) return;
-    setSignInInFlight(true);
-    try {
-      const result = await oauthSignIn(trimmed);
-
-      const baseAccount = {
-        did: result.did,
-        handle: result.handle,
-        pdsUrl: result.pdsUrl,
-        jwtToken: result.accessJwt,
-        refreshToken: result.refreshJwt,
-        oauth: {
-          dpopPrivateKeyHex: result.keypair.privateKeyHex,
-          dpopPublicJwk: result.keypair.publicJwk,
-          authServer: {
-            issuer: result.authServer.issuer,
-            token_endpoint: result.authServer.token_endpoint,
-          },
-          authServerNonce: result.nonce,
-          expiresAt: result.expiresAt,
-          scope: result.scope,
-        },
-      };
-
-      // Bind the DPoP signer synchronously, before any XRPC call: the
-      // profile fetch below + the home tab's first request race the
-      // OAuthAccountBinder's `useEffect` and would otherwise hit the
-      // PDS as plain Bearer.
-      bindOAuthAccount(baseAccount);
-
-      // Backfill displayName + avatar so the navbar / account switcher
-      // render the user's identity. Failure is non-fatal — the account
-      // record is still valid without it.
-      let profile: { displayName?: string; avatar?: string } = {};
-      try {
-        const api = apiForPdsUrl(result.pdsUrl);
-        const fetched = await api.getProfile(result.accessJwt, result.did);
-        profile = {
-          displayName: fetched.displayName ?? undefined,
-          avatar: fetched.avatar ?? undefined,
-        };
-      } catch (profileError) {
-        if (__DEV__) {
-          console.warn('OAuth profile backfill failed:', profileError);
-        }
-      }
-
-      const newAccount = await addAccountMutation.mutateAsync({ ...baseAccount, ...profile });
-
-      await switchAccountMutation.mutateAsync(newAccount);
-
-      setRedirectAfterAuth('/');
-    } catch (error) {
-      showAlert({
-        title: t('common.error'),
-        message: error instanceof Error ? error.message : t('auth.signInFailed'),
-      });
-    } finally {
-      setSignInInFlight(false);
-    }
-  }, [addAccountMutation, canSubmit, signInInFlight, switchAccountMutation, t, trimmed]);
-
-  if (redirectAfterAuth) {
-    return <Redirect href={redirectAfterAuth as never} />;
-  }
+  const handleContinue = useCallback(() => {
+    if (!canSubmit) return;
+    inputRef.current?.blur();
+    // Hand off to the dedicated full-page scope picker. It owns the
+    // scope selection state, runs the actual `oauthSignIn` call, and
+    // does the post-auth account-add / switch / redirect.
+    router.push({
+      pathname: '/(auth)/oauth-scopes',
+      params: { handle: trimmed },
+    } as never);
+  }, [canSubmit, trimmed]);
 
   return (
     <KeyboardAvoidingView
@@ -222,14 +155,14 @@ export default function OauthSignInScreen() {
           <Pressable
             style={[
               styles.primaryButton,
-              (!canSubmit || signInInFlight) ? styles.buttonDisabled : null,
+              !canSubmit ? styles.buttonDisabled : null,
             ]}
             onPress={handleContinue}
-            disabled={!canSubmit || signInInFlight}
+            disabled={!canSubmit}
             accessibilityRole="button"
           >
             <ThemedText style={styles.primaryButtonText}>
-              {signInInFlight ? t('auth.oauthInFlight') : t('auth.continue')}
+              {t('auth.continue')}
             </ThemedText>
           </Pressable>
         </View>

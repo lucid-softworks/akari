@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Signed in",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) authenticated via atproto OAuth. Wiring this session into the API client is the next step."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Sign in as @{{handle}}",
+        "subtitle": "Choose what akari can do on your account. Required permissions can't be unticked because the app needs them to sign you in and run core flows.",
+        "continue": "Continue",
+        "required": "Required",
+        "action": {
+          "create": "Create",
+          "update": "Update",
+          "delete": "Delete"
+        },
+        "atproto": {
+          "label": "Identity",
+          "description": "Confirm who you are on atproto. Always required."
+        },
+        "chat": {
+          "label": "Direct messages",
+          "description": "Read and send chat messages on your behalf."
+        },
+        "profile": {
+          "label": "Profile",
+          "description": "Edit your display name, bio, avatar, and banner."
+        },
+        "post": {
+          "label": "Posts",
+          "description": "Publish new posts, edit them, and delete your own."
+        },
+        "threadgate": {
+          "label": "Reply controls",
+          "description": "Set who can reply to a thread you started."
+        },
+        "postgate": {
+          "label": "Quote controls",
+          "description": "Set who can quote a post you made."
+        },
+        "like": {
+          "label": "Likes",
+          "description": "Like and unlike posts."
+        },
+        "repost": {
+          "label": "Reposts",
+          "description": "Repost and undo reposts."
+        },
+        "follow": {
+          "label": "Follows",
+          "description": "Follow and unfollow accounts."
+        },
+        "block": {
+          "label": "Blocks",
+          "description": "Block and unblock accounts."
+        },
+        "list": {
+          "label": "Lists",
+          "description": "Create, rename, and delete moderation or curation lists."
+        },
+        "listitem": {
+          "label": "List membership",
+          "description": "Add and remove accounts from your lists."
+        },
+        "leafletPublication": {
+          "label": "Leaflet publications",
+          "description": "Manage long-form publications on leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Leaflet documents",
+          "description": "Publish and edit long-form documents on leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "AI preferences",
+          "description": "Store your community-lexicon AI training preferences."
+        },
+        "popfeedReview": {
+          "label": "Popfeed reviews",
+          "description": "Post reviews on the Popfeed media review network."
+        },
+        "recipe": {
+          "label": "Recipes",
+          "description": "Save recipes via the open exchange.recipe lexicon."
+        },
+        "linkatBoard": {
+          "label": "Linkat board",
+          "description": "Manage your Linkat link-in-bio board."
+        }
+      }
+    },
     "navigation": {
       "search": "Search",
       "notifications": "Notifications",

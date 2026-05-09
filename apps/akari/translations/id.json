@@ -106,6 +106,91 @@
       "oauthSuccessTitle": "Masuk berhasil",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) berhasil diautentikasi lewat atproto OAuth. Menyambungkan sesi ini ke klien API adalah langkah berikutnya."
     },
+    "oauth": {
+      "scopes": {
+        "title": "Masuk sebagai @{{handle}}",
+        "subtitle": "Pilih apa yang dapat dilakukan akari di akunmu. Izin yang wajib tidak bisa dilepas centangnya karena aplikasi membutuhkannya untuk memasukkanmu dan menjalankan alur inti.",
+        "continue": "Lanjutkan",
+        "required": "Wajib",
+        "action": {
+          "create": "Buat",
+          "update": "Perbarui",
+          "delete": "Hapus"
+        },
+        "atproto": {
+          "label": "Identitas",
+          "description": "Konfirmasikan siapa kamu di atproto. Selalu wajib."
+        },
+        "chat": {
+          "label": "Pesan langsung",
+          "description": "Membaca dan mengirim pesan obrolan atas namamu."
+        },
+        "profile": {
+          "label": "Profil",
+          "description": "Ubah nama tampilan, bio, avatar, dan banner kamu."
+        },
+        "post": {
+          "label": "Postingan",
+          "description": "Publikasikan postingan baru, ubah, dan hapus milikmu."
+        },
+        "threadgate": {
+          "label": "Kontrol balasan",
+          "description": "Tentukan siapa yang dapat membalas utas yang kamu mulai."
+        },
+        "postgate": {
+          "label": "Kontrol kutipan",
+          "description": "Tentukan siapa yang dapat mengutip postingan yang kamu buat."
+        },
+        "like": {
+          "label": "Suka",
+          "description": "Menyukai dan membatalkan suka pada postingan."
+        },
+        "repost": {
+          "label": "Posting ulang",
+          "description": "Posting ulang dan batalkan posting ulang."
+        },
+        "follow": {
+          "label": "Mengikuti",
+          "description": "Mengikuti dan berhenti mengikuti akun."
+        },
+        "block": {
+          "label": "Pemblokiran",
+          "description": "Memblokir dan membuka blokir akun."
+        },
+        "list": {
+          "label": "Daftar",
+          "description": "Buat, ganti nama, dan hapus daftar moderasi atau kurasi."
+        },
+        "listitem": {
+          "label": "Keanggotaan daftar",
+          "description": "Tambahkan dan keluarkan akun dari daftarmu."
+        },
+        "leafletPublication": {
+          "label": "Publikasi Leaflet",
+          "description": "Kelola publikasi panjang di leaflet.pub."
+        },
+        "leafletDocument": {
+          "label": "Dokumen Leaflet",
+          "description": "Publikasikan dan edit dokumen panjang di leaflet.pub."
+        },
+        "aiPreference": {
+          "label": "Preferensi AI",
+          "description": "Simpan preferensi pelatihan AI community-lexicon kamu."
+        },
+        "popfeedReview": {
+          "label": "Ulasan Popfeed",
+          "description": "Posting ulasan di jaringan ulasan media Popfeed."
+        },
+        "recipe": {
+          "label": "Resep",
+          "description": "Simpan resep melalui leksikon terbuka exchange.recipe."
+        },
+        "linkatBoard": {
+          "label": "Papan Linkat",
+          "description": "Kelola papan link-in-bio Linkat kamu."
+        }
+      }
+    },
     "navigation": {
       "search": "Cari",
       "notifications": "Notifikasi",

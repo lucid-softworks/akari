@@ -10,6 +10,7 @@ import {
   type PersistQueryClientProviderProps,
   type Persister,
 } from '@tanstack/react-query-persist-client';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -19,6 +20,7 @@ import 'react-native-reanimated';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { CrashProvider } from '@/axiom-crash-reporter';
+import { BuildWatermark } from '@/components/BuildWatermark';
 import { DevServerBanner } from '@/components/DevServerBanner';
 import { OAuthAccountBinder } from '@/components/OAuthAccountBinder';
 import { OfflineBanner } from '@/components/OfflineBanner';
@@ -220,18 +222,34 @@ export default Sentry.wrap(function RootLayout() {
   }
 
   const isDevelopment = process.env.NODE_ENV !== 'production';
+  // Stamp build info on screenshots for any non-dev variant so we can
+  // identify which build a TestFlight tester was on from a screenshot.
+  // We skip dev runs entirely (`__DEV__`) because expo-watermark's native
+  // module isn't always linked into the dev client — without it,
+  // requireNativeView falls back to expo-modules-core's "unimplemented"
+  // placeholder and visibly paints "unimplemented" in the corner.
+  const appVariant =
+    typeof Constants.expoConfig?.extra?.variant === 'string'
+      ? (Constants.expoConfig.extra.variant as string)
+      : undefined;
+  const showBuildWatermark =
+    !__DEV__ && (appVariant === 'preview' || appVariant === 'production');
+
+  const innerTree = (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
+        <AppProviders colorScheme={colorScheme} />
+        {Platform.OS === 'web' ? (
+          <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
+        ) : null}
+        {__DEV__ ? <DevPerformanceOverlay /> : null}
+      </PersistQueryClientProvider>
+    </SafeAreaProvider>
+  );
 
   const appTree = (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-          <AppProviders colorScheme={colorScheme} />
-          {Platform.OS === 'web' ? (
-            <ReactQueryDevtools initialIsOpen={false} position="left" buttonPosition="bottom-left" />
-          ) : null}
-          {__DEV__ ? <DevPerformanceOverlay /> : null}
-        </PersistQueryClientProvider>
-      </SafeAreaProvider>
+      {showBuildWatermark ? <BuildWatermark>{innerTree}</BuildWatermark> : innerTree}
     </GestureHandlerRootView>
   );
 
