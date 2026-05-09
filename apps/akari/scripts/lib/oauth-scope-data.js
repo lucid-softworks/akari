@@ -53,11 +53,19 @@ const flatScopes = [
   // string short and avoids drift as bsky adds new endpoints.
   {
     id: 'bskyAppview',
-    tokens: ['include:app.bsky.authFullClient?aud=did:web:api.bsky.app#bsky_appview'],
+    tokens: ['include:app.bsky.authFullApp?aud=did:web:api.bsky.app#bsky_appview'],
     required: false,
     defaultEnabled: true,
     labelKey: 'oauth.scopes.bskyAppview.label',
     descriptionKey: 'oauth.scopes.bskyAppview.description',
+  },
+  {
+    id: 'bskyChat',
+    tokens: ['include:chat.bsky.authFullChatClient?aud=did:web:api.bsky.chat#bsky_chat'],
+    required: false,
+    defaultEnabled: true,
+    labelKey: 'oauth.scopes.bskyChat.label',
+    descriptionKey: 'oauth.scopes.bskyChat.description',
   },
   // Blob upload scope — needed for posting images and videos. The
   // `accept` parameters narrow the MIME types the token can upload;
