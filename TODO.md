@@ -47,41 +47,79 @@ those out together.
 a Switch.
 - `content-and-media.tsx`: `threadPreferences` (sort order picker,
   prioritise-followed-replies toggle), `externalMedia` (per-provider
-  on/off list — YouTube, Twitter/X, Tenor, Spotify, etc.)
-- `languages.tsx`: `contentLanguages` (multi-select language list,
-  also writes to `app.bsky.actor.preferences#contentLanguagesPref`)
+  on/off list — YouTube, Twitter/X, Tenor, Spotify, etc.),
+  `followingFeedPreferences` (relation/recency weights),
+  `yourInterests` (interest tag picker)
+- `languages.tsx`: `primaryLanguage` (translation target picker — UI
+  exists as a stub dropdown), `contentLanguages` (multi-select; UI
+  exists as a stub empty state, also writes to
+  `app.bsky.actor.preferences#contentLanguagesPref`)
+- `appearance.tsx`: `darkVariant` (Dim/Dark) — stored, but a Dim
+  palette doesn't exist yet; need to fork `Colors.dark` into a
+  dimmed variant. `font` (System/Theme) and `fontSize`
+  (Smaller/Default/Larger) — stored, but no app-wide
+  font-family / text-scaling pass is wired up yet.
+- `accessibility.tsx`: `largerAltTextBadges` — stored, but the
+  ALT-indicator on the image overlay component still uses the same
+  badge size regardless.
 
 **Behaviour gating for prefs that already persist** — the toggles are
 saved but don't yet drive a label-filtering pass.
-- `enableAdultContent` (moderation.tsx) — persists locally but no
-  feed pass exists yet. Need to identify Bluesky's adult labels
-  (`porn`, `sexual`, `nudity`, `graphic-media`), add a filter pass to
-  every feed renderer, and wire a blur/warning overlay on individual
-  posts. Should also round-trip to
-  `app.bsky.actor.preferences#adultContentPref` so the choice
-  follows the user across clients.
+- `enableAdultContent` (moderation.tsx) — fully wired. Preference
+  round-trips via `app.bsky.actor.defs#adultContentPref` and PostCard
+  applies a feed-level decision: posts carrying any of `porn`,
+  `sexual`, `nudity`, `graphic-media` are hidden when the toggle is
+  off, or rendered behind a "Show post" warn overlay when on. Future
+  work: per-label `contentLabelPref` (show / warn / hide) overrides
+  on top of the global toggle.
 
-**List views over existing data** — Bluesky already returns these
-via `getPreferences` / `getMutes` / `getBlocks`; just need a list UI.
-- `moderation.tsx`: `mutedAccounts`, `blockedAccounts`
+**List views over existing data** — all the major list pages now
+read from atproto. Add-flows (search for a labeler / list to subscribe
+to) still need building, but the read + remove path is wired.
 
 **Cross-feature with TODO**
-- `notifications.tsx`: `notificationCategories` => TODO
-  "Notification settings categories"
 - `content-and-media.tsx`: `manageSavedFeeds` => TODO "Custom feed
   pins"
+- `content-and-media.tsx`: `enableTrendingTopics` and
+  `enableTrendingVideos` are persisted toggles, but neither drives
+  feed rendering yet — `trendingBarEnabled` already gates the home
+  trending bar; `trendingVideosEnabled` would gate a Discover-feed
+  video filter that doesn't exist.
 
-**Account / security flows** — require Bluesky API integration;
-several are destructive and need confirmation flows.
-- `account.tsx`: `email`, `updateEmail`, `password`, `birthday`,
-  `exportData`, `deactivateAccount`, `deleteAccount`
-- `privacy-and-security.tsx`: `twoFactor`, `appPasswords`,
-  `notifyOthers`, `loggedOutVisibility`
+**Account / security flows** — Bluesky API integration. Most flows
+are now wired:
+- `email` row reads from `com.atproto.server.getSession` and shows
+  the address with an "Email not confirmed" subtitle when applicable.
+- `handle` opens a real edit page that calls
+  `com.atproto.identity.updateHandle` and invalidates session/profile
+  caches on success.
+- `automationLabel` toggles the `automated` self-label on the user's
+  profile via the shared `setProfileSelfLabel` helper.
+- `exportData` calls `com.atproto.sync.getRepo` and downloads the
+  resulting CAR blob (web only — native shows a placeholder toast
+  until expo-file-system / expo-sharing land).
+- `deactivateAccount` and `deleteAccount` have full confirm flows:
+  deactivate is one call after a confirm dialog; delete uses
+  `requestAccountDelete` + `deleteAccount` with a token-and-password
+  modal.
+
+Still pending:
+- `updateEmail`, `password` (request reset email), `birthday`
+- `privacy-and-security.tsx`: `twoFactor`, `notifyOthers` (subtitle
+  currently shows "Anyone who follows me" hard-coded).
+  `loggedOutVisibility` is now wired to the `!no-unauthenticated`
+  self-label on the user's profile record via `getRecord` /
+  `putRecord` against `app.bsky.actor.profile/self`.
+  `appPasswords` is fully wired: list + create + revoke via
+  `com.atproto.server.{listAppPasswords,createAppPassword,revokeAppPassword}`,
+  with the count rendered as a badge on the row.
 
 **Skippable / niche**
 - `about.tsx`: `systemLog`
-- `moderation.tsx`: `interactionSettings` (overlaps with
-  PostComposer's reply-controls)
+- `moderation.tsx`: `interactionSettings` — stub page at
+  `settings/interaction` with who-can-reply / quote-posts UI; Save is
+  not wired. Eventually overlaps with PostComposer's reply-controls;
+  needs to round-trip to `app.bsky.actor.preferences#postInteractionSettingsPref`.
 
 ## P1 — original task list (still pending)
 

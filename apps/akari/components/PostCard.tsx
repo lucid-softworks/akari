@@ -10,6 +10,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { UnthreadEmbed } from '@/components/UnthreadEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
+import { AdultContentGate } from '@/components/post/AdultContentGate';
 import { PostActions } from '@/components/post/PostActions';
 import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
@@ -18,6 +19,7 @@ import { PostTranslation } from '@/components/post/PostTranslation';
 import { findUnthreadFacet, parseUnthreadUrl, stripUnthreadFromPost } from '@/utils/unthread';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
+import { useAdultContentDecision } from '@/hooks/useAdultContentDecision';
 import { useHiddenContent } from '@/hooks/useHiddenContent';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -126,6 +128,13 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   const { isHidden } = useHiddenContent();
   const hideThisCard = isHidden(post.uri, post.author.did);
 
+  // Adult-content gate. Reads `adultContentPref` and the post's labels
+  // to decide between showing normally, blurring with a reveal button,
+  // or suppressing the post entirely. Suppression matches Bluesky's
+  // behaviour when adult content is off — the post just disappears
+  // from the feed.
+  const adultDecision = useAdultContentDecision(post.labels);
+
   // Live stream detection
   const { data: liveNowEntries = [] } = useLiveNow();
 
@@ -225,6 +234,26 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
 
   const menuBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
 
+  const postBody = (
+    <View style={hasText || hasEmbed || unthreadRef ? styles.content : undefined}>
+      {unthreadRef ? (
+        <UnthreadEmbed unthread={unthreadRef} fallbackText={displayText} />
+      ) : hasText ? (
+        <PostTranslation
+          text={displayText!}
+          visible={isTranslationVisible}
+          onHide={handleHideTranslation}
+          facets={displayFacets}
+          textStyle={[styles.text, !hasEmbed && styles.textOnly]}
+          embedText={post.embed?.external ? { title: post.embed.external.title, description: post.embed.external.description } : undefined}
+          onEmbedTranslated={setTranslatedEmbed}
+        />
+      ) : null}
+
+      {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} translatedEmbed={translatedEmbed} /> : null}
+    </View>
+  );
+
   const postContent = (
     <>
       {/* Reply Context */}
@@ -256,23 +285,11 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <View style={hasText || hasEmbed || unthreadRef ? styles.content : undefined}>
-        {unthreadRef ? (
-          <UnthreadEmbed unthread={unthreadRef} fallbackText={displayText} />
-        ) : hasText ? (
-          <PostTranslation
-            text={displayText!}
-            visible={isTranslationVisible}
-            onHide={handleHideTranslation}
-            facets={displayFacets}
-            textStyle={[styles.text, !hasEmbed && styles.textOnly]}
-            embedText={post.embed?.external ? { title: post.embed.external.title, description: post.embed.external.description } : undefined}
-            onEmbedTranslated={setTranslatedEmbed}
-          />
-        ) : null}
-
-        {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} translatedEmbed={translatedEmbed} /> : null}
-      </View>
+      {adultDecision.action === 'warn' ? (
+        <AdultContentGate matchedLabels={adultDecision.matchedLabels}>{postBody}</AdultContentGate>
+      ) : (
+        postBody
+      )}
 
       <Labels labels={post.labels} maxLabels={3} />
     </>
@@ -312,6 +329,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   );
 
   if (hideThisCard) return null;
+  if (adultDecision.action === 'hide') return null;
 
   return (
     <>

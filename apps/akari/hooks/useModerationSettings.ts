@@ -1,63 +1,41 @@
-import { useCallback, useSyncExternalStore } from 'react';
-import { MMKV } from 'react-native-mmkv';
+import { useCallback } from 'react';
 
-const storage = new MMKV({ id: 'moderation-settings' });
-const ADULT_CONTENT_KEY = 'adult_content_enabled';
+import { type BlueskyAdultContentPref } from '@/bluesky-api';
+import { useUpdateAdultContentPref } from '@/hooks/mutations/useUpdateAdultContentPref';
+import { usePreferences } from '@/hooks/queries/usePreferences';
 
-type ModerationSnapshot = {
-  /**
-   * Show content labelled as adult. Stored locally for now; eventually this
-   * should round-trip to Bluesky's `app.bsky.actor.preferences#adultContentPref`
-   * via `getPreferences` / `putPreferences` so it follows the user across
-   * clients.
-   */
-  adultContentEnabled: boolean;
-};
+const ADULT_CONTENT_PREF_TYPE = 'app.bsky.actor.defs#adultContentPref';
 
-let cached: ModerationSnapshot | null = null;
-const listeners = new Set<() => void>();
-
-function readBool(key: string, fallback: boolean): boolean {
-  try {
-    return storage.getBoolean(key) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function readAll(): ModerationSnapshot {
-  return {
-    adultContentEnabled: readBool(ADULT_CONTENT_KEY, false),
-  };
-}
-
-function getSnapshot(): ModerationSnapshot {
-  if (cached === null) cached = readAll();
-  return cached;
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
-
-function notify() {
-  cached = readAll();
-  for (const l of listeners) l();
-}
-
+/**
+ * Reads the user's adult-content preference from atproto preferences
+ * (`app.bsky.actor.defs#adultContentPref`) and exposes a setter that
+ * round-trips through `putPreferences`. The choice now follows the user
+ * across clients — there is no separate local MMKV cache.
+ *
+ * Returns `false` while the preferences query is loading or if the user
+ * has never explicitly set the preference, matching atproto's
+ * "off by default" behaviour.
+ */
 export function useModerationSettings() {
-  const value = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  const prefs = usePreferences();
+  const update = useUpdateAdultContentPref();
 
-  const setAdultContentEnabled = useCallback((enabled: boolean) => {
-    storage.set(ADULT_CONTENT_KEY, enabled);
-    notify();
-  }, []);
+  const adultContentEnabled =
+    prefs.data?.preferences.find(
+      (p): p is BlueskyAdultContentPref => p.$type === ADULT_CONTENT_PREF_TYPE,
+    )?.enabled ?? false;
+
+  const setAdultContentEnabled = useCallback(
+    (enabled: boolean) => {
+      update.mutate(enabled);
+    },
+    [update],
+  );
 
   return {
-    adultContentEnabled: value.adultContentEnabled,
+    adultContentEnabled,
     setAdultContentEnabled,
+    isLoading: prefs.isLoading,
+    isSaving: update.isPending,
   };
 }

@@ -9,12 +9,18 @@ const STORAGE_KEY = 'theme_config';
 type ColorKeys = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export type ColorMode = 'light' | 'dark' | 'auto';
+export type DarkVariant = 'dim' | 'dark';
+export type FontFamily = 'system' | 'theme';
+export type FontSize = 'smaller' | 'default' | 'larger';
 
 export type ThemeColorOverrides = {
   light?: Partial<Record<ColorKeys, string>>;
   dark?: Partial<Record<ColorKeys, string>>;
   accentColor?: string;
   colorMode?: ColorMode;
+  darkVariant?: DarkVariant;
+  font?: FontFamily;
+  fontSize?: FontSize;
 };
 
 const DEFAULT_CONFIG: ThemeColorOverrides = {};
@@ -86,10 +92,34 @@ export function useThemeConfig() {
     save({ ...current, colorMode: mode === 'auto' ? undefined : mode });
   }, []);
 
+  const setDarkVariant = useCallback((variant: DarkVariant) => {
+    const current = getSnapshot();
+    save({ ...current, darkVariant: variant === 'dark' ? undefined : variant });
+  }, []);
+
+  const setFont = useCallback((font: FontFamily) => {
+    const current = getSnapshot();
+    save({ ...current, font: font === 'theme' ? undefined : font });
+  }, []);
+
+  const setFontSize = useCallback((size: FontSize) => {
+    const current = getSnapshot();
+    save({ ...current, fontSize: size === 'default' ? undefined : size });
+  }, []);
+
   const resetToDefaults = useCallback(() => {
     storage.delete(STORAGE_KEY);
     notify();
   }, []);
 
-  return { config, setAccentColor, setModeColor, setColorMode, resetToDefaults };
+  return {
+    config,
+    setAccentColor,
+    setModeColor,
+    setColorMode,
+    setDarkVariant,
+    setFont,
+    setFontSize,
+    resetToDefaults,
+  };
 }

@@ -16,8 +16,14 @@ export default function AccessibilitySettingsScreen() {
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { t } = useTranslation();
-  const { requireAltText, setRequireAltText, largerTextBadges, setLargerTextBadges } =
-    useAccessibilitySettings();
+  const {
+    requireAltText,
+    setRequireAltText,
+    largerTextBadges,
+    setLargerTextBadges,
+    largerAltTextBadges,
+    setLargerAltTextBadges,
+  } = useAccessibilitySettings();
 
   return (
     <SettingsSubpageLayout title={t('settings.accessibility')}>
@@ -26,9 +32,9 @@ export default function AccessibilitySettingsScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <SettingsSection isFirst>
+        <SettingsSection isFirst title={t('settings.altText')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
               <IconSymbol
                 color={iconColor}
                 name="text.bubble"
@@ -45,6 +51,28 @@ export default function AccessibilitySettingsScreen() {
               </View>
               <Switch value={requireAltText} onValueChange={setRequireAltText} />
             </ThemedView>
+            <ThemedView style={styles.toggleRow}>
+              <IconSymbol
+                color={iconColor}
+                name="eye.fill"
+                size={20}
+                style={styles.toggleIcon}
+              />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.displayLargerAltTextBadges')}
+                </ThemedText>
+                <ThemedText style={[styles.toggleHint, { color: subduedColor }]}>
+                  {t('settings.displayLargerAltTextBadgesHint')}
+                </ThemedText>
+              </View>
+              <Switch value={largerAltTextBadges} onValueChange={setLargerAltTextBadges} />
+            </ThemedView>
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <ThemedView style={styles.toggleRow}>
               <IconSymbol
                 color={iconColor}
@@ -87,7 +115,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderBottomWidth: 0,
   },
   toggleIcon: {
     marginRight: 12,

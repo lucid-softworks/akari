@@ -26,6 +26,7 @@ export function useMuteUser() {
       void queryClient.invalidateQueries({ queryKey: queryKeys.timeline.all });
       void queryClient.invalidateQueries({ queryKey: queryKeys.feed.all });
       void queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.mutes.all });
     },
   });
 }

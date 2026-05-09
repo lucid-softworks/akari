@@ -13,7 +13,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useModerationSettings } from '@/hooks/useModerationSettings';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -21,7 +20,6 @@ export default function ModerationSettingsScreen() {
   const borderColor = useBorderColor();
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
   const { adultContentEnabled, setAdultContentEnabled } = useModerationSettings();
 
@@ -31,7 +29,7 @@ export default function ModerationSettingsScreen() {
         key: 'interaction-settings',
         icon: 'person.crop.circle.badge.checkmark',
         label: t('settings.interactionSettings'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/interaction'),
       },
       {
         key: 'muted-words',
@@ -40,16 +38,22 @@ export default function ModerationSettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/muted-words'),
       },
       {
+        key: 'moderation-lists',
+        icon: 'person.3.fill',
+        label: t('settings.moderationLists'),
+        onPress: () => router.push('/(tabs)/settings/moderation-lists'),
+      },
+      {
         key: 'muted-accounts',
         icon: 'speaker.slash.fill',
         label: t('settings.mutedAccounts'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/muted-accounts'),
       },
       {
         key: 'blocked-accounts',
         icon: 'hand.raised.fill',
         label: t('settings.blockedAccounts'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/blocked-accounts'),
       },
       {
         key: 'verification',
@@ -58,7 +62,7 @@ export default function ModerationSettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/verification'),
       },
     ],
-    [showNotImplemented, t],
+    [t],
   );
 
   return (
@@ -70,7 +74,7 @@ export default function ModerationSettingsScreen() {
       >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            {moderationRows.map((item) => (
+            {moderationRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
                 borderColor={borderColor}
@@ -78,9 +82,14 @@ export default function ModerationSettingsScreen() {
                 icon={item.icon}
                 label={item.label}
                 onPress={item.onPress}
-                showDivider
+                showDivider={index < moderationRows.length - 1}
               />
             ))}
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <ThemedView style={styles.toggleRow}>
               <IconSymbol
                 color={iconColor}
@@ -101,10 +110,18 @@ export default function ModerationSettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
-        <ThemedView style={[styles.noticeCard, { borderColor }]}>
-          <ThemedText style={styles.noticeTitle}>{t('settings.moderationServices')}</ThemedText>
-          <ThemedText style={styles.noticeBody}>{t('settings.notImplemented')}</ThemedText>
-        </ThemedView>
+        <SettingsSection title={t('settings.moderationServices')}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <SettingsRow
+              borderColor={borderColor}
+              icon="shield.checkered"
+              label={t('settings.moderationServices')}
+              description={t('settings.moderationServicesIntro')}
+              onPress={() => router.push('/(tabs)/settings/moderation-services')}
+              showDivider={false}
+            />
+          </ThemedView>
+        </SettingsSection>
       </ScrollView>
     </SettingsSubpageLayout>
   );
@@ -143,21 +160,5 @@ const styles = StyleSheet.create({
   toggleHint: {
     fontSize: 12,
     marginTop: 2,
-  },
-  noticeCard: {
-    marginHorizontal: 16,
-    marginTop: 24,
-    padding: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-  noticeTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  noticeBody: {
-    fontSize: 14,
-    opacity: 0.75,
-    lineHeight: 20,
   },
 });

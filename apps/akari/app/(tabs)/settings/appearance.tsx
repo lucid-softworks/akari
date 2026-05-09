@@ -13,25 +13,43 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { SwatchPicker, PRESETS } from '@/components/settings/ColorSwatchPicker';
 import { Colors } from '@/constants/Colors';
-import { spacing, radius, fontSize, fontWeight, semanticColors } from '@/constants/tokens';
+import { spacing, radius, fontSize as fontSizeTokens, fontWeight, semanticColors } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useThemeConfig, type ColorMode } from '@/hooks/useThemeConfig';
+import {
+  useThemeConfig,
+  type ColorMode,
+  type DarkVariant,
+  type FontFamily,
+  type FontSize,
+} from '@/hooks/useThemeConfig';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const MODE_ICONS: Record<ColorMode, React.ComponentProps<typeof IconSymbol>['name']> = {
   light: 'sun.max.fill',
-  auto: 'circle.lefthalf.filled',
+  auto: 'iphone',
   dark: 'moon.fill',
 };
 
 export default function AppearanceSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
-  const { config, setAccentColor, setColorMode, resetToDefaults } = useThemeConfig();
+  const { config, setAccentColor, setColorMode, setDarkVariant, setFont, setFontSize, resetToDefaults } =
+    useThemeConfig();
 
   const colorMode: ColorMode = config.colorMode ?? 'auto';
+  const darkVariant: DarkVariant = config.darkVariant ?? 'dark';
+  const font: FontFamily = config.font ?? 'theme';
+  const fontSize: FontSize = config.fontSize ?? 'default';
   const accentColor = config.accentColor ?? Colors.light.tint;
-  const hasCustomizations = !!(config.accentColor || config.light || config.dark || config.colorMode);
+  const hasCustomizations = !!(
+    config.accentColor ||
+    config.light ||
+    config.dark ||
+    config.colorMode ||
+    config.darkVariant ||
+    config.font ||
+    config.fontSize
+  );
 
   const colorRows: SettingsRowDescriptor[] = [
     {
@@ -57,15 +75,24 @@ export default function AppearanceSettingsScreen() {
         keyboardShouldPersistTaps="handled"
       >
         {/* Color Mode */}
-        <SettingsSection isFirst title={t("settings.colorMode")}>
+        <SettingsSection isFirst title={t('settings.colorMode')}>
           <ThemedView style={[styles.modeSelector, { borderColor }]}>
-            {(['light', 'auto', 'dark'] as ColorMode[]).map((mode) => {
+            {(['auto', 'light', 'dark'] as ColorMode[]).map((mode) => {
               const active = colorMode === mode;
-              const label = mode === 'light' ? t('settings.lightMode') : mode === 'dark' ? t('settings.darkMode') : t('settings.autoMode');
+              const label =
+                mode === 'light'
+                  ? t('settings.lightMode')
+                  : mode === 'dark'
+                    ? t('settings.darkMode')
+                    : t('settings.systemMode');
               return (
                 <Pressable
                   key={mode}
-                  style={({ pressed }) => [styles.modeOption, active && { backgroundColor: accentColor }, pressed && { opacity: 0.7 }]}
+                  style={({ pressed }) => [
+                    styles.modeOption,
+                    active && { backgroundColor: accentColor },
+                    pressed && { opacity: 0.7 },
+                  ]}
                   onPress={() => setColorMode(mode)}
                 >
                   <IconSymbol name={MODE_ICONS[mode]} size={16} color={active ? '#fff' : borderColor} />
@@ -78,8 +105,89 @@ export default function AppearanceSettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
+        {/* Dark theme variant */}
+        <SettingsSection title={t('settings.darkTheme')}>
+          <ThemedView style={[styles.modeSelector, { borderColor }]}>
+            {(['dim', 'dark'] as DarkVariant[]).map((variant) => {
+              const active = darkVariant === variant;
+              const label = variant === 'dim' ? t('settings.darkThemeDim') : t('settings.darkThemeDark');
+              return (
+                <Pressable
+                  key={variant}
+                  style={({ pressed }) => [
+                    styles.modeOption,
+                    active && { backgroundColor: accentColor },
+                    pressed && { opacity: 0.7 },
+                  ]}
+                  onPress={() => setDarkVariant(variant)}
+                >
+                  <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
+                    {label}
+                  </ThemedText>
+                </Pressable>
+              );
+            })}
+          </ThemedView>
+        </SettingsSection>
+
+        {/* Font */}
+        <SettingsSection title={t('settings.font')}>
+          <ThemedText style={styles.fontHint}>{t('settings.fontHint')}</ThemedText>
+          <ThemedView style={[styles.modeSelector, { borderColor }]}>
+            {(['system', 'theme'] as FontFamily[]).map((option) => {
+              const active = font === option;
+              const label = option === 'system' ? t('settings.fontSystem') : t('settings.fontTheme');
+              return (
+                <Pressable
+                  key={option}
+                  style={({ pressed }) => [
+                    styles.modeOption,
+                    active && { backgroundColor: accentColor },
+                    pressed && { opacity: 0.7 },
+                  ]}
+                  onPress={() => setFont(option)}
+                >
+                  <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
+                    {label}
+                  </ThemedText>
+                </Pressable>
+              );
+            })}
+          </ThemedView>
+        </SettingsSection>
+
+        {/* Font size */}
+        <SettingsSection title={t('settings.fontSize')}>
+          <ThemedView style={[styles.modeSelector, { borderColor }]}>
+            {(['smaller', 'default', 'larger'] as FontSize[]).map((option) => {
+              const active = fontSize === option;
+              const label =
+                option === 'smaller'
+                  ? t('settings.fontSizeSmaller')
+                  : option === 'larger'
+                    ? t('settings.fontSizeLarger')
+                    : t('settings.fontSizeDefault');
+              return (
+                <Pressable
+                  key={option}
+                  style={({ pressed }) => [
+                    styles.modeOption,
+                    active && { backgroundColor: accentColor },
+                    pressed && { opacity: 0.7 },
+                  ]}
+                  onPress={() => setFontSize(option)}
+                >
+                  <ThemedText style={[styles.modeOptionText, active && styles.modeOptionTextActive]}>
+                    {label}
+                  </ThemedText>
+                </Pressable>
+              );
+            })}
+          </ThemedView>
+        </SettingsSection>
+
         {/* Accent Color */}
-        <SettingsSection title={t("settings.accentColor")}>
+        <SettingsSection title={t('settings.accentColor')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <SwatchPicker
               presets={PRESETS.accent}
@@ -92,7 +200,7 @@ export default function AppearanceSettingsScreen() {
         </SettingsSection>
 
         {/* Mode Color Links */}
-        <SettingsSection title={t("settings.colors")}>
+        <SettingsSection title={t('settings.colors')}>
           <ThemedView style={[styles.linkCard, { borderColor }]}>
             {colorRows.map((item, index) => (
               <SettingsRow
@@ -147,12 +255,18 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   modeOptionText: {
-    fontSize: fontSize.base,
+    fontSize: fontSizeTokens.base,
     fontWeight: fontWeight.medium,
   },
   modeOptionTextActive: {
     color: '#fff',
     fontWeight: fontWeight.semibold,
+  },
+  fontHint: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xs,
+    fontSize: fontSizeTokens.sm,
+    opacity: 0.7,
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
@@ -176,7 +290,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
   resetText: {
-    fontSize: fontSize.base,
+    fontSize: fontSizeTokens.base,
     color: semanticColors.danger,
     fontWeight: fontWeight.semibold,
   },

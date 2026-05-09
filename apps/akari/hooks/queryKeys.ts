@@ -23,6 +23,14 @@ export const queryKeys = {
     all: ['auth'] as const,
     forDid: (did: Maybe<string>) => ['auth', did] as const,
   },
+  appPasswords: {
+    all: ['appPasswords'] as const,
+    forDid: (did: Maybe<string>) => ['appPasswords', did] as const,
+  },
+  session: {
+    all: ['session'] as const,
+    forDid: (did: Maybe<string>) => ['session', did] as const,
+  },
   jwtToken: () => ['jwtToken'] as const,
   refreshToken: () => ['refreshToken'] as const,
   currentAccount: () => ['currentAccount'] as const,
@@ -39,6 +47,8 @@ export const queryKeys = {
       did: string | undefined;
     }) => ['notifications', 'list', params.limit, params.reasons, params.priority, params.did] as const,
     unread: (did: string | undefined) => ['notifications', 'unread', did] as const,
+    preferences: (did: string | undefined) =>
+      ['notifications', 'preferences', did] as const,
   },
 
   // ---- Messages / conversations ----
@@ -125,12 +135,28 @@ export const queryKeys = {
     all: ['profile'] as const,
     forDid: (did: Maybe<string>) => ['profile', did] as const,
     detail: (identifier: Maybe<string>, pdsUrl: Maybe<string>) => ['profile', identifier, pdsUrl] as const,
+    record: (did: Maybe<string>, pdsUrl: Maybe<string>) =>
+      ['profile', 'record', did, pdsUrl] as const,
   },
 
   // ---- Lists ----
   lists: (pdsUrl: Maybe<string>, target: Maybe<string>) => ['lists', pdsUrl, target] as const,
   list: (pdsUrl: Maybe<string>, listUri: Maybe<string>) => ['list', pdsUrl, listUri] as const,
   listSnapshot: (pdsUrl: Maybe<string>, listUri: Maybe<string>) => ['listSnapshot', pdsUrl, listUri] as const,
+
+  // ---- Mutes / blocks (account-level moderation graph) ----
+  mutes: {
+    all: ['mutes'] as const,
+    list: (did: Maybe<string>) => ['mutes', 'list', did] as const,
+  },
+  blocks: {
+    all: ['blocks'] as const,
+    list: (did: Maybe<string>) => ['blocks', 'list', did] as const,
+  },
+  moderationLists: {
+    all: ['moderationLists'] as const,
+    forDid: (did: Maybe<string>) => ['moderationLists', did] as const,
+  },
 
   // ---- Preferences ----
   preferences: {

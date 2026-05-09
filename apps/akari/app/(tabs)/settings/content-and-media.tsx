@@ -25,6 +25,8 @@ export default function ContentAndMediaScreen() {
   const {
     trendingBarEnabled,
     setTrendingBarEnabled,
+    trendingVideosEnabled,
+    setTrendingVideosEnabled,
     videoAutoplayEnabled,
     setVideoAutoplayEnabled,
   } = useFeedSettings();
@@ -44,9 +46,21 @@ export default function ContentAndMediaScreen() {
         onPress: showNotImplemented,
       },
       {
+        key: 'following-feed-preferences',
+        icon: 'house.fill',
+        label: t('settings.followingFeedPreferences'),
+        onPress: showNotImplemented,
+      },
+      {
         key: 'external-media',
         icon: 'rectangle.stack.fill',
         label: t('settings.externalMedia'),
+        onPress: showNotImplemented,
+      },
+      {
+        key: 'your-interests',
+        icon: 'info.circle.fill',
+        label: t('settings.yourInterests'),
         onPress: showNotImplemented,
       },
       {
@@ -68,26 +82,6 @@ export default function ContentAndMediaScreen() {
       >
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
-              <IconSymbol color={iconColor} name="flame" size={20} style={styles.toggleIcon} />
-              <ThemedText style={styles.toggleLabel}>{t('settings.trendingBar')}</ThemedText>
-              <Switch value={trendingBarEnabled} onValueChange={setTrendingBarEnabled} />
-            </ThemedView>
-            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
-              <IconSymbol
-                color={iconColor}
-                name="play.circle.fill"
-                size={20}
-                style={styles.toggleIcon}
-              />
-              <ThemedText style={styles.toggleLabel}>
-                {t('settings.autoplayVideos')}
-              </ThemedText>
-              <Switch
-                value={videoAutoplayEnabled}
-                onValueChange={setVideoAutoplayEnabled}
-              />
-            </ThemedView>
             {contentRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
@@ -98,6 +92,36 @@ export default function ContentAndMediaScreen() {
                 showDivider={index < contentRows.length - 1}
               />
             ))}
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+              <IconSymbol
+                color={iconColor}
+                name="play.circle.fill"
+                size={20}
+                style={styles.toggleIcon}
+              />
+              <ThemedText style={styles.toggleLabel}>{t('settings.autoplayVideos')}</ThemedText>
+              <Switch value={videoAutoplayEnabled} onValueChange={setVideoAutoplayEnabled} />
+            </ThemedView>
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor }]}>
+              <IconSymbol color={iconColor} name="flame" size={20} style={styles.toggleIcon} />
+              <ThemedText style={styles.toggleLabel}>{t('settings.enableTrendingTopics')}</ThemedText>
+              <Switch value={trendingBarEnabled} onValueChange={setTrendingBarEnabled} />
+            </ThemedView>
+            <ThemedView style={styles.toggleRow}>
+              <IconSymbol color={iconColor} name="play.rectangle.fill" size={20} style={styles.toggleIcon} />
+              <ThemedText style={styles.toggleLabel}>{t('settings.enableTrendingVideos')}</ThemedText>
+              <Switch value={trendingVideosEnabled} onValueChange={setTrendingVideosEnabled} />
+            </ThemedView>
           </ThemedView>
         </SettingsSection>
       </ScrollView>
@@ -123,7 +147,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   toggleIcon: {
     marginRight: 12,
@@ -134,4 +157,3 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-

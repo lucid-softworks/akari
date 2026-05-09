@@ -18,14 +18,55 @@ export default function SettingsLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
+      <Stack.Screen name="handle" options={{ title: t('settings.handle') }} />
+      <Stack.Screen
+        name="automation-label"
+        options={{ title: t('settings.automationLabel') }}
+      />
+      <Stack.Screen
+        name="export-data"
+        options={{ title: t('settings.exportData') }}
+      />
+      <Stack.Screen
+        name="deactivate-account"
+        options={{ title: t('settings.deactivateAccount') }}
+      />
+      <Stack.Screen
+        name="delete-account"
+        options={{ title: t('settings.deleteAccount') }}
+      />
       <Stack.Screen
         name="privacy-and-security"
         options={{ title: t('settings.privacyAndSecurity') }}
       />
+      <Stack.Screen
+        name="app-passwords"
+        options={{ title: t('settings.appPasswords') }}
+      />
       <Stack.Screen name="moderation" options={{ title: t('settings.moderation') }} />
+      <Stack.Screen
+        name="moderation-lists"
+        options={{ title: t('settings.moderationLists') }}
+      />
+      <Stack.Screen
+        name="moderation-services"
+        options={{ title: t('settings.moderationServices') }}
+      />
       <Stack.Screen
         name="muted-words"
         options={{ title: t('settings.mutedWordsTags') }}
+      />
+      <Stack.Screen
+        name="muted-accounts"
+        options={{ title: t('settings.mutedAccounts') }}
+      />
+      <Stack.Screen
+        name="blocked-accounts"
+        options={{ title: t('settings.blockedAccounts') }}
+      />
+      <Stack.Screen
+        name="interaction"
+        options={{ title: t('settings.interactionSettings') }}
       />
       <Stack.Screen
         name="verification"
@@ -33,6 +74,10 @@ export default function SettingsLayout() {
       />
       <Stack.Screen
         name="notifications"
+        options={{ title: t('settings.notifications') }}
+      />
+      <Stack.Screen
+        name="notification-category"
         options={{ title: t('settings.notifications') }}
       />
       <Stack.Screen

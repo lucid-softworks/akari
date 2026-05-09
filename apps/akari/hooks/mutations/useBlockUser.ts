@@ -41,6 +41,7 @@ export function useBlockUser() {
       // Invalidate profile queries to refresh block status
       queryClient.invalidateQueries({ queryKey: queryKeys.profile.forDid(variables.did) });
       queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.blocks.all });
     },
   });
 }

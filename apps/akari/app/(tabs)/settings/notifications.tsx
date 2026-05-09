@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -9,27 +10,85 @@ import {
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { ThemedView } from '@/components/ThemedView';
+import { useNotificationPreferences } from '@/hooks/queries/useNotificationPreferences';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
+
+import {
+  CATEGORY_DEFS,
+  type CategoryKey,
+} from './_notificationCategories';
+
+const CATEGORY_ORDER: CategoryKey[] = [
+  'likes',
+  'newFollowers',
+  'replies',
+  'mentions',
+  'quotes',
+  'reposts',
+  'activityFromOthers',
+  'likesOfYourReposts',
+  'repostsOfYourReposts',
+  'everythingElse',
+];
+
+const ICON_FOR_CATEGORY: Record<CategoryKey, React.ComponentProps<typeof SettingsRow>['icon']> = {
+  likes: 'heart.fill',
+  newFollowers: 'person.badge.plus',
+  replies: 'text.bubble.fill',
+  mentions: 'at',
+  quotes: 'quote.bubble.fill',
+  reposts: 'arrow.2.squarepath',
+  activityFromOthers: 'bell.fill',
+  likesOfYourReposts: 'heart.circle.fill',
+  repostsOfYourReposts: 'arrow.triangle.2.circlepath',
+  everythingElse: 'ellipsis.circle.fill',
+};
 
 export default function NotificationSettingsScreen() {
   const borderColor = useBorderColor();
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
+  const prefsQuery = useNotificationPreferences();
 
-  const stubRows = useMemo<SettingsRowDescriptor[]>(
-    () => [
-      {
-        key: 'notification-categories',
-        icon: 'bell.badge',
-        label: t('settings.notificationCategories'),
-        description: t('settings.notImplemented'),
-        onPress: showNotImplemented,
-      },
-    ],
-    [showNotImplemented, t],
-  );
+  const categoryRows = useMemo<SettingsRowDescriptor[]>(() => {
+    return CATEGORY_ORDER.map((key) => {
+      const def = CATEGORY_DEFS[key];
+      const pref = prefsQuery.data?.[def.lexiconKey] as
+        | { include?: 'all' | 'follows' | 'accepted'; list?: boolean; push?: boolean }
+        | undefined;
+
+      // Default to "everything on" when no pref is set yet — matches
+      // atproto's behaviour of treating unset categories as fully enabled.
+      const list = pref?.list ?? (def.kind === 'chat' ? true : true);
+      const push = pref?.push ?? true;
+      const include = pref?.include ?? 'all';
+
+      const parts: string[] = [];
+      if (def.kind !== 'chat' && list) parts.push(t('settings.notificationChannel.inApp'));
+      if (push) parts.push(t('settings.notificationChannel.push'));
+      if (def.kind === 'filterable') {
+        parts.push(
+          include === 'follows'
+            ? t('settings.notificationFilterFollows')
+            : t('settings.notificationRecipient.everyone'),
+        );
+      } else if (def.kind === 'chat') {
+        parts.push(
+          include === 'accepted'
+            ? t('settings.notificationFilterAccepted')
+            : t('settings.notificationRecipient.everyone'),
+        );
+      }
+
+      return {
+        key: `notif-${key}`,
+        icon: ICON_FOR_CATEGORY[key],
+        label: t(`settings.notificationCategory.${key}` as const),
+        description: parts.join(', '),
+        onPress: () => router.push({ pathname: '/(tabs)/settings/notification-category', params: { category: key } }),
+      };
+    });
+  }, [prefsQuery.data, t]);
 
   return (
     <SettingsSubpageLayout title={t('settings.notifications')}>
@@ -39,14 +98,8 @@ export default function NotificationSettingsScreen() {
         style={styles.scrollView}
       >
         <SettingsSection isFirst>
-          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}>
-            <NotificationSettings />
-          </ThemedView>
-        </SettingsSection>
-
-        <SettingsSection title={t('common.actions')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            {stubRows.map((item, index) => (
+            {categoryRows.map((item, index) => (
               <SettingsRow
                 key={item.key}
                 borderColor={borderColor}
@@ -54,9 +107,15 @@ export default function NotificationSettingsScreen() {
                 icon={item.icon}
                 label={item.label}
                 onPress={item.onPress}
-                showDivider={index < stubRows.length - 1}
+                showDivider={index < categoryRows.length - 1}
               />
             ))}
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection>
+          <ThemedView style={[styles.sectionCard, { borderColor, overflow: 'hidden' }]}>
+            <NotificationSettings />
           </ThemedView>
         </SettingsSection>
       </ScrollView>
@@ -65,12 +124,8 @@ export default function NotificationSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingBottom: 32,
-  },
+  scrollView: { flex: 1 },
+  contentContainer: { paddingBottom: 32 },
   sectionCard: {
     marginHorizontal: 16,
     marginTop: 12,
@@ -78,4 +133,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
-

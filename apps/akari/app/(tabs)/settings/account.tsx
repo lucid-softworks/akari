@@ -17,6 +17,11 @@ import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useSession } from '@/hooks/queries/useSession';
+import {
+  isAccountAutomated,
+  useProfileRecord,
+} from '@/hooks/queries/useProfileRecord';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
@@ -36,6 +41,9 @@ export default function AccountSettingsScreen() {
   const wipeAllDataMutation = useWipeAllData();
   const showNotImplemented = useNotImplementedToast();
   const confirm = useConfirm();
+  const sessionQuery = useSession();
+  const profileRecord = useProfileRecord();
+  const automated = isAccountAutomated(profileRecord.data);
   // After wiping all auth, render <Redirect> rather than calling router
   // imperatively — the imperative router doesn't strip group syntax
   // (`(auth)` ends up as a literal URL segment), but <Redirect> handles
@@ -117,7 +125,10 @@ export default function AccountSettingsScreen() {
         key: 'email',
         icon: 'envelope.fill',
         label: t('settings.email'),
-        onPress: showNotImplemented,
+        value: sessionQuery.data?.email,
+        description: sessionQuery.data && sessionQuery.data.emailConfirmed === false
+          ? t('settings.emailNotConfirmed')
+          : undefined,
       },
       {
         key: 'update-email',
@@ -132,19 +143,39 @@ export default function AccountSettingsScreen() {
         onPress: showNotImplemented,
       },
       {
+        key: 'handle',
+        icon: 'at',
+        label: t('settings.handle'),
+        value: currentAccount?.handle ? `@${currentAccount.handle}` : undefined,
+        onPress: () => router.push('/(tabs)/settings/handle'),
+      },
+      {
         key: 'birthday',
         icon: 'calendar',
         label: t('settings.birthday'),
         onPress: showNotImplemented,
       },
       {
+        key: 'automation-label',
+        icon: 'cpu',
+        label: t('settings.automationLabel'),
+        value: automated ? t('settings.automationLabelOn') : t('settings.automationLabelOff'),
+        onPress: () => router.push('/(tabs)/settings/automation-label'),
+      },
+      {
         key: 'export-data',
         icon: 'square.and.arrow.up',
         label: t('settings.exportData'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/export-data'),
       },
     ],
-    [showNotImplemented, t],
+    [
+      automated,
+      currentAccount?.handle,
+      sessionQuery.data,
+      showNotImplemented,
+      t,
+    ],
   );
 
   const dangerRows = useMemo<SettingsRowDescriptor[]>(
@@ -153,18 +184,18 @@ export default function AccountSettingsScreen() {
         key: 'deactivate',
         icon: 'moon.zzz.fill',
         label: t('settings.deactivateAccount'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/deactivate-account'),
         destructive: true,
       },
       {
         key: 'delete',
         icon: 'trash.fill',
         label: t('settings.deleteAccount'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/delete-account'),
         destructive: true,
       },
     ],
-    [showNotImplemented, t],
+    [t],
   );
 
   const actionRows = useMemo<SettingsRowDescriptor[]>(

@@ -4,12 +4,15 @@ import { MMKV } from 'react-native-mmkv';
 const storage = new MMKV({ id: 'accessibility-settings' });
 const REQUIRE_ALT_TEXT_KEY = 'require_alt_text';
 const LARGER_TEXT_BADGES_KEY = 'larger_text_badges';
+const LARGER_ALT_TEXT_BADGES_KEY = 'larger_alt_text_badges';
 
 type AccessibilitySnapshot = {
   /** Block sending an image post without alt text. */
   requireAltText: boolean;
   /** Render engagement counts in a larger, more legible text size. */
   largerTextBadges: boolean;
+  /** Make the "ALT" indicator on images with descriptions more prominent. */
+  largerAltTextBadges: boolean;
 };
 
 let cached: AccessibilitySnapshot | null = null;
@@ -27,6 +30,7 @@ function readAll(): AccessibilitySnapshot {
   return {
     requireAltText: readBool(REQUIRE_ALT_TEXT_KEY, false),
     largerTextBadges: readBool(LARGER_TEXT_BADGES_KEY, false),
+    largerAltTextBadges: readBool(LARGER_ALT_TEXT_BADGES_KEY, false),
   };
 }
 
@@ -60,10 +64,17 @@ export function useAccessibilitySettings() {
     notify();
   }, []);
 
+  const setLargerAltTextBadges = useCallback((enabled: boolean) => {
+    storage.set(LARGER_ALT_TEXT_BADGES_KEY, enabled);
+    notify();
+  }, []);
+
   return {
     requireAltText: value.requireAltText,
     setRequireAltText,
     largerTextBadges: value.largerTextBadges,
     setLargerTextBadges,
+    largerAltTextBadges: value.largerAltTextBadges,
+    setLargerAltTextBadges,
   };
 }
