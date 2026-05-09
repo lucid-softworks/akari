@@ -10,7 +10,11 @@ import {
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
-import { negotiateStreamPlaceWhep } from '@/utils/streamPlace';
+import {
+  fetchStreamPlacePlaybackServers,
+  negotiateStreamPlaceWhep,
+  STREAM_PLACE_DEFAULT_HOST,
+} from '@/utils/streamPlace';
 
 export type StreamPlaceWebRTCPlayerProps = {
   /** atproto DID of the account currently broadcasting. */
@@ -83,6 +87,20 @@ export function StreamPlaceWebRTCPlayer({ streamerDid }: StreamPlaceWebRTCPlayer
 
     const negotiate = async () => {
       try {
+        // Resolve the closest playback host first. stream.place
+        // returns hosts ordered by edge proximity; using the first
+        // one shaves WebRTC handshake latency on every play. A
+        // failed lookup is non-fatal — fall back to the default
+        // host so playback still tries.
+        let playbackHost = STREAM_PLACE_DEFAULT_HOST;
+        try {
+          const lookup = await fetchStreamPlacePlaybackServers(streamerDid);
+          if (cancelled) return;
+          if (lookup.servers[0]) playbackHost = lookup.servers[0];
+        } catch (lookupError) {
+          if (__DEV__) console.warn('stream.place getPlaybackServer failed', lookupError);
+        }
+
         const offer = await peer.createOffer({});
         await peer.setLocalDescription(offer);
         // Wait up to 1s for ICE gathering. atproto WHEP doesn't
@@ -94,7 +112,9 @@ export function StreamPlaceWebRTCPlayer({ streamerDid }: StreamPlaceWebRTCPlayer
         if (!local?.sdp) {
           throw new Error('Empty local SDP after ICE gathering');
         }
-        const result = await negotiateStreamPlaceWhep(streamerDid, local.sdp);
+        const result = await negotiateStreamPlaceWhep(streamerDid, local.sdp, {
+          playbackHost,
+        });
         if (cancelled) return;
         await peer.setRemoteDescription(
           new RTCSessionDescription({ type: 'answer', sdp: result.sdp }),

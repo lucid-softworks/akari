@@ -20,6 +20,9 @@ const STREAMPLACE_HOSTS = new Set<string>([
 
 const STREAMPLACE_DEFAULT_PLAYBACK_HOST = 'https://stream.place';
 
+/** Public default — exported so callers can build "preferred host or default" fallbacks. */
+export const STREAM_PLACE_DEFAULT_HOST = STREAMPLACE_DEFAULT_PLAYBACK_HOST;
+
 function tryParse(uri: string): URL | null {
   try {
     return new URL(uri);
@@ -84,4 +87,44 @@ export async function negotiateStreamPlaceWhep(
     throw new Error('WHEP negotiation returned an empty SDP answer');
   }
   return { sdp: answer };
+}
+
+export type PlaybackServerLookupResult = {
+  /** Ordered list of playback host base URLs. The first entry is
+   *  preferred — stream.place returns them sorted by edge proximity. */
+  servers: string[];
+};
+
+/**
+ * Asks stream.place which playback host should serve the given
+ * streamer. Streamplace runs a fleet of edge nodes and the lookup
+ * routes you to the closest one; without this we hit a fixed
+ * default and pay the cross-region latency on every WHEP exchange.
+ *
+ * Failure is non-fatal — callers should fall back to the default
+ * `https://stream.place` host on any error rather than refuse to
+ * play.
+ */
+export async function fetchStreamPlacePlaybackServers(
+  streamerDid: string,
+  options: { lookupHost?: string; signal?: AbortSignal } = {},
+): Promise<PlaybackServerLookupResult> {
+  const host = options.lookupHost ?? STREAMPLACE_DEFAULT_PLAYBACK_HOST;
+  const url = `${host}/xrpc/place.stream.playback.getPlaybackServer?stream=${encodeURIComponent(streamerDid)}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    signal: options.signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`getPlaybackServer failed (${response.status})`);
+  }
+
+  const data = (await response.json()) as { servers?: unknown };
+  const servers = Array.isArray(data.servers)
+    ? data.servers.filter((entry): entry is string => typeof entry === 'string')
+    : [];
+  return { servers };
 }
