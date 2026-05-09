@@ -117,6 +117,13 @@
           "project": "react-native",
           "organization": "lucid-softworks"
         }
+      ],
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera so you can broadcast video.",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone so you can broadcast audio."
+        }
       ]
     ],
     "experiments": {

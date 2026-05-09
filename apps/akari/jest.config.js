@@ -34,6 +34,9 @@ module.exports = {
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
     '^@/tmdb-api$': '<rootDir>/../../packages/tmdb-api/src',
+    // react-native-webrtc is a native-only module that tests can't
+    // load; the WebRTC stream player only mounts on real devices.
+    '^react-native-webrtc$': '<rootDir>/__mocks__/react-native-webrtc.js',
   },
   ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
 };

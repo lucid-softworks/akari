@@ -22,6 +22,9 @@ import {
 } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isStreamPlaceUri } from '@/utils/streamPlace';
+
+import { StreamPlaceWebRTCPlayer } from './StreamPlaceWebRTCPlayer';
 
 export type LiveStreamInfo = {
   uri: string;
@@ -33,6 +36,13 @@ export type LiveStreamInfo = {
 
 type LiveStreamEmbedProps = {
   info: LiveStreamInfo;
+  /**
+   * atproto DID of the post's author. We treat this as the streamer
+   * DID for the WHEP exchange — the bsky live-now config that flagged
+   * this post as live keys off the same value, so they're guaranteed
+   * to match.
+   */
+  streamerDid?: string;
 };
 
 /**
@@ -47,11 +57,12 @@ type LiveStreamEmbedProps = {
  * (title + "Open externally" link) and the LIVE pill always stay
  * mounted so the user keeps the link card metadata at hand.
  */
-export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
+export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
   const { t } = useTranslation();
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [playing, setPlaying] = useState(false);
   const [webviewLoaded, setWebviewLoaded] = useState(false);
+  const useWebRTC = Platform.OS !== 'web' && isStreamPlaceUri(info.uri) && !!streamerDid;
 
   const handleOpenExternal = useCallback(() => {
     void Linking.openURL(info.uri).catch((error) => {
@@ -64,10 +75,11 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
   }, []);
 
   const isWeb = Platform.OS === 'web';
-  // On web the iframe streams in immediately; on native we have to
-  // wait for a full-page WebView load before the player shows up, so
-  // surface a spinner while that happens.
-  const showSpinner = playing && !isWeb && !webviewLoaded;
+  // On web the iframe streams in immediately; on native (WebView
+  // fallback only) we have to wait for a full-page WebView load
+  // before the player shows up, so surface a spinner while that
+  // happens. The native WebRTC player handles its own status.
+  const showSpinner = playing && !isWeb && !useWebRTC && !webviewLoaded;
 
   let playerSurface: React.ReactNode;
   if (playing && isWeb) {
@@ -83,6 +95,8 @@ export function LiveStreamEmbed({ info }: LiveStreamEmbedProps) {
       },
       title: info.title ?? info.domain,
     });
+  } else if (playing && useWebRTC && streamerDid) {
+    playerSurface = <StreamPlaceWebRTCPlayer streamerDid={streamerDid} />;
   } else if (playing) {
     playerSurface = (
       <WebView
