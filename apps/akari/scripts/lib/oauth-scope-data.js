@@ -59,14 +59,6 @@ const flatScopes = [
     labelKey: 'oauth.scopes.bskyAppview.label',
     descriptionKey: 'oauth.scopes.bskyAppview.description',
   },
-  {
-    id: 'bskyChat',
-    tokens: ['include:chat.bsky.authFullClient?aud=did:web:api.bsky.chat#bsky_chat'],
-    required: false,
-    defaultEnabled: true,
-    labelKey: 'oauth.scopes.bskyChat.label',
-    descriptionKey: 'oauth.scopes.bskyChat.description',
-  },
   // Blob upload scope — needed for posting images and videos. The
   // `accept` parameters narrow the MIME types the token can upload;
   // matching what akari actually attaches.

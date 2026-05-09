@@ -125,10 +125,6 @@
           "label": "Bluesky access",
           "description": "Bundle of permissions covering feeds, profiles, notifications, search, follows, blocks, lists, and posts on the Bluesky AppView."
         },
-        "bskyChat": {
-          "label": "Direct messages",
-          "description": "Bundle of permissions covering reading and sending direct messages on the Bluesky chat service."
-        },
         "blobs": {
           "label": "Image and video uploads",
           "description": "Upload image and video blobs to your account so you can attach media to posts."
