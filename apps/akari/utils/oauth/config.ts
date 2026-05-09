@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 import {
@@ -31,34 +30,12 @@ import {
  * scope in lock-step.
  */
 
-type Variant = 'production' | 'preview';
-
-const VARIANT_HOSTS: Record<Variant, string> = {
-  production: 'https://akari.lucidsoft.works',
-  preview: 'https://preview.akari.lucidsoft.works',
-};
-
-const VARIANT_NATIVE_SCHEME: Record<Variant, string> = {
-  production: 'works.lucidsoft.akari',
-  preview: 'works.lucidsoft.akari.preview',
-};
-
-function resolveVariant(): Variant {
-  const raw =
-    typeof Constants.expoConfig?.extra?.variant === 'string'
-      ? (Constants.expoConfig.extra.variant as string)
-      : 'production';
-  // Development piggybacks on the production hosted client because the
-  // preview origin (preview.akari.lucidsoft.works) currently isn't
-  // deployed. Once we have a real preview deploy we can split dev back
-  // out onto preview metadata.
-  if (raw === 'preview') return 'preview';
-  return 'production';
-}
-
-const variant = resolveVariant();
-const host = VARIANT_HOSTS[variant];
-const nativeScheme = VARIANT_NATIVE_SCHEME[variant];
+// preview.akari.lucidsoft.works isn't currently deployed, so every
+// variant (development, preview, production) uses the production
+// hosted client. Bring back per-variant routing once preview hosting
+// is back online.
+const host = 'https://akari.lucidsoft.works';
+const nativeScheme = 'works.lucidsoft.akari';
 
 export const OAUTH_CLIENT_ID =
   Platform.OS === 'web'
