@@ -198,6 +198,38 @@ describe('BlueskyFeeds', () => {
     });
   });
 
+  it('creates a bookmark via app.bsky.bookmark.createBookmark with a flat {uri, cid} body', async () => {
+    const feeds = new TestFeeds();
+    feeds.responses = [undefined];
+
+    await feeds.createBookmark('jwt', 'at://did:plc:abc/app.bsky.feed.post/3lab', 'bafy123');
+
+    expect(feeds.authCalls[0]).toEqual({
+      endpoint: '/app.bsky.bookmark.createBookmark',
+      accessJwt: 'jwt',
+      options: {
+        method: 'POST',
+        body: { uri: 'at://did:plc:abc/app.bsky.feed.post/3lab', cid: 'bafy123' },
+      },
+    });
+  });
+
+  it('deletes a bookmark via app.bsky.bookmark.deleteBookmark with only uri (no cid)', async () => {
+    const feeds = new TestFeeds();
+    feeds.responses = [undefined];
+
+    await feeds.deleteBookmark('jwt', 'at://did:plc:abc/app.bsky.feed.post/3lab');
+
+    expect(feeds.authCalls[0]).toEqual({
+      endpoint: '/app.bsky.bookmark.deleteBookmark',
+      accessJwt: 'jwt',
+      options: {
+        method: 'POST',
+        body: { uri: 'at://did:plc:abc/app.bsky.feed.post/3lab' },
+      },
+    });
+  });
+
   it('returns a post from getPost when the thread is present', async () => {
     const feeds = new TestFeeds();
     const post = { uri: 'at://post/1' } as unknown as BlueskyPostView;

@@ -137,10 +137,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param uri - The post's URI
    * @param cid - The post's CID
    */
-  async addBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
-    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.addBookmark', accessJwt, {
+  async createBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
+    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.createBookmark', accessJwt, {
       method: 'POST',
-      body: { subject: { uri, cid } },
+      body: { uri, cid },
     });
   }
 
@@ -148,12 +148,11 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * Removes a post from the authenticated user's bookmarks
    * @param accessJwt - Valid access JWT token
    * @param uri - The post's URI
-   * @param cid - The post's CID
    */
-  async removeBookmark(accessJwt: string, uri: string, cid: string): Promise<void> {
-    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.removeBookmark', accessJwt, {
+  async deleteBookmark(accessJwt: string, uri: string): Promise<void> {
+    await this.makeAuthenticatedRequest<void>('/app.bsky.bookmark.deleteBookmark', accessJwt, {
       method: 'POST',
-      body: { subject: { uri, cid } },
+      body: { uri },
     });
   }
 

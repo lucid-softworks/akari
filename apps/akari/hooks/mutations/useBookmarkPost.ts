@@ -26,9 +26,9 @@ export function useBookmarkPost() {
       const api = apiForAccount(currentAccount);
 
       if (action === 'bookmark') {
-        await api.addBookmark(token, postUri, postCid);
+        await api.createBookmark(token, postUri, postCid);
       } else {
-        await api.removeBookmark(token, postUri, postCid);
+        await api.deleteBookmark(token, postUri);
       }
     },
     onSuccess: () => {
