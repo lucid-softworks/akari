@@ -15,7 +15,7 @@ type ExternalEmbedProps = {
     external: {
       description: string;
       thumb?: {
-        $type: 'blob';
+        $type?: 'blob';
         ref: {
           $link: string;
         };

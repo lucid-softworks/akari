@@ -2,6 +2,7 @@ import { Image } from '@/components/Image';
 import { useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import type { BlueskyPostView } from '@/bluesky-api';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { activeOpacity, layout, radius, spacing } from '@/constants/tokens';
@@ -16,13 +17,7 @@ type MediaTabProps = ProfileTabContentProps & {
   handle: string;
 };
 
-type MediaPost = {
-  uri: string;
-  cid?: string;
-  indexedAt?: string;
-  author: { handle: string };
-  embed?: any;
-};
+type MediaPost = BlueskyPostView;
 
 type MediaRow = { __row: true; key: string; left: MediaPost; right?: MediaPost };
 

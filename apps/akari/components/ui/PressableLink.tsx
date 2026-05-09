@@ -111,7 +111,9 @@ export function PressableLink({
           accessibilityState={accessibilityState}
           onPointerEnter={() => setHovered(true)}
           onPointerLeave={() => setHovered(false)}
-          onPress={(event) => handleWebClick(event?.nativeEvent ?? {})}
+          onPress={(event) =>
+            handleWebClick((event?.nativeEvent ?? {}) as Parameters<typeof handleWebClick>[0])
+          }
         >
           {children}
         </Pressable>

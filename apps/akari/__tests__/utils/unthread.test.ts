@@ -50,6 +50,7 @@ describe('findUnthreadFacet', () => {
   it('skips non-link features', () => {
     const ref = findUnthreadFacet([
       {
+        index: { byteStart: 0, byteEnd: 5 },
         features: [
           { $type: 'app.bsky.richtext.facet#mention', did: 'did:plc:other' },
         ],
@@ -61,6 +62,7 @@ describe('findUnthreadFacet', () => {
   it('returns null when no facets are unthread links', () => {
     const ref = findUnthreadFacet([
       {
+        index: { byteStart: 0, byteEnd: 5 },
         features: [
           { $type: 'app.bsky.richtext.facet#link', uri: 'https://example.com/post' },
         ],
