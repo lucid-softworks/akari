@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import { Platform } from 'react-native';
 
 import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE } from './config';
 import { type DpopKeypair, generateDpopKeypair } from './dpop';
@@ -10,6 +11,7 @@ import {
 import { pushAuthorizationRequest } from './par';
 import { codeChallengeFromVerifier, generateCodeVerifier } from './pkce';
 import { exchangeCodeForTokens } from './token';
+import { stashOAuthFlow } from './webStash';
 
 export type OAuthSignInResult = {
   did: string;
@@ -72,6 +74,29 @@ export async function oauthSignIn(
   const authorizeUrl = new URL(authServer.authorization_endpoint);
   authorizeUrl.searchParams.set('client_id', OAUTH_CLIENT_ID);
   authorizeUrl.searchParams.set('request_uri', requestUri);
+
+  // Web flow: there's no in-app browser session that can hand a result
+  // back to us — the redirect is a full-page navigation. Stash
+  // everything the callback route needs, then send the user to the auth
+  // server. `app/oauth/callback.tsx` picks up the redirect, exchanges
+  // the code for tokens, and finishes account setup.
+  if (Platform.OS === 'web') {
+    stashOAuthFlow({
+      state,
+      codeVerifier,
+      parNonce,
+      scope,
+      identity,
+      authServer,
+      keypair,
+    });
+    if (typeof window !== 'undefined') {
+      window.location.assign(authorizeUrl.toString());
+    }
+    // The page is leaving — never resolve. The caller's `await`
+    // simply hangs until navigation completes, which is fine.
+    return new Promise<OAuthSignInResult>(() => {});
+  }
 
   const browserResult = await WebBrowser.openAuthSessionAsync(
     authorizeUrl.toString(),
