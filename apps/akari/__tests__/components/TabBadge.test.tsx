@@ -4,6 +4,12 @@ import { StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 jest.mock('@/hooks/useThemeColor');
+// ThemedText reaches through useFontSizeScale -> useSyncExternalStore at
+// render time; the isolateModules wrapper this test uses ends up loading
+// a fresh React copy through expo-image's transitive deps and breaks
+// useSyncExternalStore. Stub the scale to a no-op multiplier so the
+// tests stay focused on the badge layout rather than font scaling.
+jest.mock('@/hooks/useFontSizeScale', () => ({ useFontSizeScale: () => 1 }));
 const mockUseThemeColor = useThemeColor as jest.Mock;
 
 const loadTabBadge = () => {

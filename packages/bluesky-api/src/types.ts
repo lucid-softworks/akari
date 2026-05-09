@@ -1236,6 +1236,26 @@ export type BlueskyNotificationPreferences = {
 };
 
 /**
+ * Default reply / quote restrictions used when the user creates a new
+ * post. atproto's lexicon represents the threadgate allow set as an
+ * array of tagged unions (`mentionRule`, `followerRule`, `followingRule`,
+ * `listRule`), and quotes are gated independently via
+ * `postgateEmbeddingRules`. The shape is intentionally permissive so
+ * callers can keep their own narrower view of what each rule means
+ * without needing to update this type for every new rule the network
+ * adds.
+ */
+export type BlueskyPostInteractionSettingsPref = {
+  $type: 'app.bsky.actor.defs#postInteractionSettingsPref';
+  /** When omitted, the post defaults to "everyone can reply". An empty
+   *  array explicitly means "nobody can reply". */
+  threadgateAllowRules?: { $type: string; list?: string }[];
+  /** Each rule disables a class of embedding (e.g. `disableRule` blocks
+   *  quote posts). */
+  postgateEmbeddingRules?: { $type: string }[];
+};
+
+/**
  * Adult content preference
  */
 export type BlueskyAdultContentPref = {
@@ -1315,6 +1335,7 @@ export type BlueskyPreference =
   | BlueskyPersonalDetailsPref
   | BlueskyInterestsPref
   | BlueskyAdultContentPref
+  | BlueskyPostInteractionSettingsPref
   | BlueskyContentLabelPref
   | BlueskyAppStatePref
   | BlueskyLabelersPref

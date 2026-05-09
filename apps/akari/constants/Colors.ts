@@ -27,4 +27,19 @@ export const Colors = {
     border: '#2A2D2E',
     hover: '#1F2123',
   },
+  /**
+   * "Dim" variant of dark mode — lighter, less stark backgrounds for
+   * users who find pure-black hard on the eyes. Selected via the
+   * Dark theme picker on Settings → Appearance when colorMode is dark.
+   */
+  dim: {
+    text: '#E6E8EA',
+    background: '#1B2026',
+    tint: tintColorDark,
+    icon: '#9BA1A6',
+    tabIconDefault: '#9BA1A6',
+    tabIconSelected: tintColorDark,
+    border: '#323840',
+    hover: '#252B33',
+  },
 };

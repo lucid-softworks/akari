@@ -28,6 +28,10 @@ export function useThemeColor(
   const colorFromProps = props[theme];
   if (colorFromProps) return colorFromProps;
 
-  // 4. Default
+  // 4. Default — for dark mode, swap in the Dim palette when the user
+  // chose it on the Appearance screen. Light mode ignores darkVariant.
+  if (theme === 'dark' && config.darkVariant === 'dim') {
+    return Colors.dim[colorName];
+  }
   return Colors[theme][colorName];
 }

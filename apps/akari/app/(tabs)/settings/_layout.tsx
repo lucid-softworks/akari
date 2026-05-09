@@ -20,6 +20,18 @@ export default function SettingsLayout() {
       <Stack.Screen name="account" options={{ title: t('settings.account') }} />
       <Stack.Screen name="handle" options={{ title: t('settings.handle') }} />
       <Stack.Screen
+        name="update-email"
+        options={{ title: t('settings.updateEmail') }}
+      />
+      <Stack.Screen
+        name="password"
+        options={{ title: t('settings.password') }}
+      />
+      <Stack.Screen
+        name="birthday"
+        options={{ title: t('settings.birthday') }}
+      />
+      <Stack.Screen
         name="automation-label"
         options={{ title: t('settings.automationLabel') }}
       />

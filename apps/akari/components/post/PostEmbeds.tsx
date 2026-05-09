@@ -5,13 +5,15 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
+import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { RecordEmbed } from '@/components/RecordEmbed';
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
-import { spacing, radius, activeOpacity, layout } from '@/constants/tokens';
+import { spacing, radius, activeOpacity, fontWeight, layout } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type PostEmbedsProps = {
@@ -38,6 +40,7 @@ type ExternalEmbedData = {
 
 export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds, translatedEmbed }: PostEmbedsProps) {
   const { t } = useTranslation();
+  const { largerAltTextBadges } = useAccessibilitySettings();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
 
@@ -198,12 +201,14 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
               imageData.ratios[index] ??
               (dimensions ? dimensions.width / dimensions.height : undefined) ??
               4 / 3;
+            const altText = imageData.altTexts[index]?.trim();
+            const hasAlt = !!altText;
 
             return (
               <Pressable
                 key={`${postId}-${imageUrl}`}
                 onPress={() => handleImagePress(index)}
-                
+
                 style={({ pressed }) => [isGrid ? styles.gridCell : undefined, pressed && { opacity: activeOpacity.subtle }]}
               >
                 <Image
@@ -214,7 +219,20 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
                   ]}
                   contentFit="cover"
                   onLoad={(event) => handleImageLoad(imageUrl, event.source.width, event.source.height)}
+                  accessibilityLabel={altText}
                 />
+                {hasAlt ? (
+                  <View
+                    pointerEvents="none"
+                    style={[styles.altBadge, largerAltTextBadges && styles.altBadgeLarge]}
+                  >
+                    <ThemedText
+                      style={[styles.altBadgeText, largerAltTextBadges && styles.altBadgeTextLarge]}
+                    >
+                      ALT
+                    </ThemedText>
+                  </View>
+                ) : null}
               </Pressable>
             );
           })}
@@ -315,5 +333,28 @@ const styles = StyleSheet.create({
   },
   gridImage: {
     aspectRatio: 1,
+  },
+  altBadge: {
+    position: 'absolute',
+    bottom: spacing.sm,
+    left: spacing.sm,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: radius.xs,
+  },
+  altBadgeLarge: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+  },
+  altBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: fontWeight.bold,
+    letterSpacing: 0.5,
+  },
+  altBadgeTextLarge: {
+    fontSize: 14,
   },
 });

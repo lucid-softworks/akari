@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import { router } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -8,6 +9,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { activeOpacity, fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
+import { useUpdatePostInteractionSettings } from '@/hooks/mutations/useUpdatePostInteractionSettings';
+import { usePostInteractionSettings } from '@/hooks/queries/usePostInteractionSettings';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -22,15 +25,42 @@ export default function InteractionSettingsScreen() {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
+  const settings = usePostInteractionSettings();
+  const update = useUpdatePostInteractionSettings();
+
   const [mode, setMode] = useState<ReplyMode>('anyone');
   const [allowFollowers, setAllowFollowers] = useState(false);
   const [allowFollowing, setAllowFollowing] = useState(false);
   const [allowMentioned, setAllowMentioned] = useState(false);
   const [allowQuotes, setAllowQuotes] = useState(true);
 
+  // Pre-fill once preferences land. This effect only seeds the form
+  // from server state; subsequent local edits stick around until Save.
+  useEffect(() => {
+    setMode(settings.data.mode);
+    setAllowFollowers(settings.data.followers);
+    setAllowFollowing(settings.data.following);
+    setAllowMentioned(settings.data.mentioned);
+    setAllowQuotes(settings.data.allowQuotes);
+  }, [settings.data]);
+
   const handleSave = useCallback(() => {
-    showToast({ type: 'info', message: t('settings.notImplemented') });
-  }, [showToast, t]);
+    update.mutate(
+      {
+        mode,
+        followers: allowFollowers,
+        following: allowFollowing,
+        mentioned: allowMentioned,
+        allowQuotes,
+      },
+      {
+        onSuccess: () => router.back(),
+        onError: () => {
+          showToast({ type: 'error', message: t('settings.notificationSaveFailed') });
+        },
+      },
+    );
+  }, [allowFollowers, allowFollowing, allowMentioned, allowQuotes, mode, showToast, t, update]);
 
   const restrictionsDisabled = mode === 'nobody';
 
@@ -129,10 +159,12 @@ export default function InteractionSettingsScreen() {
 
         <Pressable
           onPress={handleSave}
+          disabled={update.isPending}
           style={({ pressed }) => [
             styles.saveButton,
             { backgroundColor: accentColor },
             pressed && { opacity: activeOpacity.default },
+            update.isPending && styles.disabled,
           ]}
           accessibilityRole="button"
         >

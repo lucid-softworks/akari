@@ -134,13 +134,13 @@ export default function AccountSettingsScreen() {
         key: 'update-email',
         icon: 'pencil',
         label: t('settings.updateEmail'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/update-email'),
       },
       {
         key: 'password',
         icon: 'lock.fill',
         label: t('settings.password'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/password'),
       },
       {
         key: 'handle',
@@ -153,7 +153,7 @@ export default function AccountSettingsScreen() {
         key: 'birthday',
         icon: 'calendar',
         label: t('settings.birthday'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/birthday'),
       },
       {
         key: 'automation-label',
