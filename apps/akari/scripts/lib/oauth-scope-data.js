@@ -35,92 +35,6 @@
  * @property {string} descriptionKey
  */
 
-// Bluesky AppView procedures akari calls. atproto OAuth requires one
-// `rpc:<NSID>?aud=<DID>` scope token per procedure; the auth server
-// rejects the flow with "Missing required scope rpc:…" otherwise.
-const bskyAppviewProcedures = [
-  'app.bsky.actor.getPreferences',
-  'app.bsky.actor.getProfile',
-  'app.bsky.actor.getProfiles',
-  'app.bsky.actor.getSuggestions',
-  'app.bsky.actor.putPreferences',
-  'app.bsky.actor.searchActors',
-  'app.bsky.actor.searchActorsTypeahead',
-  'app.bsky.bookmark.createBookmark',
-  'app.bsky.bookmark.deleteBookmark',
-  'app.bsky.bookmark.getBookmarks',
-  'app.bsky.feed.getActorFeeds',
-  'app.bsky.feed.getActorLikes',
-  'app.bsky.feed.getAuthorFeed',
-  'app.bsky.feed.getFeed',
-  'app.bsky.feed.getFeedGenerator',
-  'app.bsky.feed.getFeedGenerators',
-  'app.bsky.feed.getLikes',
-  'app.bsky.feed.getListFeed',
-  'app.bsky.feed.getPostThread',
-  'app.bsky.feed.getPosts',
-  'app.bsky.feed.getQuotes',
-  'app.bsky.feed.getRepostedBy',
-  'app.bsky.feed.getSuggestedFeeds',
-  'app.bsky.feed.getTimeline',
-  'app.bsky.feed.searchPosts',
-  'app.bsky.feed.sendInteractions',
-  'app.bsky.graph.getActorStarterPacks',
-  'app.bsky.graph.getBlocks',
-  'app.bsky.graph.getFollowers',
-  'app.bsky.graph.getFollows',
-  'app.bsky.graph.getKnownFollowers',
-  'app.bsky.graph.getList',
-  'app.bsky.graph.getListBlocks',
-  'app.bsky.graph.getListMutes',
-  'app.bsky.graph.getLists',
-  'app.bsky.graph.getMutes',
-  'app.bsky.graph.getRelationships',
-  'app.bsky.graph.getStarterPack',
-  'app.bsky.graph.getStarterPacks',
-  'app.bsky.graph.getSuggestedFollowsByActor',
-  'app.bsky.graph.muteActor',
-  'app.bsky.graph.muteActorList',
-  'app.bsky.graph.muteThread',
-  'app.bsky.graph.unmuteActor',
-  'app.bsky.graph.unmuteActorList',
-  'app.bsky.graph.unmuteThread',
-  'app.bsky.labeler.getServices',
-  'app.bsky.notification.getUnreadCount',
-  'app.bsky.notification.listNotifications',
-  'app.bsky.notification.putPreferences',
-  'app.bsky.notification.registerPush',
-  'app.bsky.notification.updateSeen',
-  'app.bsky.unspecced.getPopularFeedGenerators',
-  'app.bsky.unspecced.getSuggestedFeeds',
-  'app.bsky.unspecced.getSuggestedUsers',
-  'app.bsky.unspecced.getTrendingTopics',
-  'app.bsky.unspecced.getTrends',
-];
-
-// Chat-service procedures (separate audience).
-const bskyChatProcedures = [
-  'chat.bsky.actor.deleteAccount',
-  'chat.bsky.actor.exportAccountData',
-  'chat.bsky.convo.acceptConvo',
-  'chat.bsky.convo.deleteMessageForSelf',
-  'chat.bsky.convo.getConvo',
-  'chat.bsky.convo.getConvoForMembers',
-  'chat.bsky.convo.getLog',
-  'chat.bsky.convo.getMessages',
-  'chat.bsky.convo.leaveConvo',
-  'chat.bsky.convo.listConvos',
-  'chat.bsky.convo.muteConvo',
-  'chat.bsky.convo.sendMessage',
-  'chat.bsky.convo.sendMessageBatch',
-  'chat.bsky.convo.unmuteConvo',
-  'chat.bsky.convo.updateAllRead',
-  'chat.bsky.convo.updateRead',
-  'chat.bsky.moderation.getActorMetadata',
-  'chat.bsky.moderation.getMessageContext',
-  'chat.bsky.moderation.updateActorAccess',
-];
-
 /** @type {OAuthFlatScope[]} */
 const flatScopes = [
   {
@@ -130,42 +44,39 @@ const flatScopes = [
     labelKey: 'oauth.scopes.atproto.label',
     descriptionKey: 'oauth.scopes.atproto.description',
   },
-  // RPC scopes are enforced literally per-procedure. The AppView's
-  // "Missing required scope" errors quote the no-fragment form, so
-  // that's what the granted token needs to contain — using no fragment
-  // here keeps the registered metadata, the requested scope on
-  // authorize, and the AppView's check format aligned.
+  // atproto OAuth meta-scopes — the AppView and chat services publish
+  // permission *sets* (`app.bsky.authFullClient`, `chat.bsky.authFullClient`)
+  // that bundle every rpc/repo permission akari needs in one token.
+  // Format and identifiers are documented in
+  //   https://github.com/bluesky-social/atproto/discussions/4437
+  // Using these instead of enumerating every procedure keeps the scope
+  // string short and avoids drift as bsky adds new endpoints.
   {
     id: 'bskyAppview',
-    tokens: bskyAppviewProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app`,
-    ),
+    tokens: ['include:app.bsky.authFullClient?aud=did:web:api.bsky.app#bsky_appview'],
     required: false,
     defaultEnabled: true,
     labelKey: 'oauth.scopes.bskyAppview.label',
     descriptionKey: 'oauth.scopes.bskyAppview.description',
   },
   {
-    id: 'bskyChatRpc',
-    tokens: bskyChatProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat`,
-    ),
+    id: 'bskyChat',
+    tokens: ['include:chat.bsky.authFullClient?aud=did:web:api.bsky.chat#bsky_chat'],
     required: false,
     defaultEnabled: true,
-    labelKey: 'oauth.scopes.bskyChatRpc.label',
-    descriptionKey: 'oauth.scopes.bskyChatRpc.description',
+    labelKey: 'oauth.scopes.bskyChat.label',
+    descriptionKey: 'oauth.scopes.bskyChat.description',
   },
+  // Blob upload scope — needed for posting images and videos. The
+  // `accept` parameters narrow the MIME types the token can upload;
+  // matching what akari actually attaches.
   {
-    id: 'bskyVideoRpc',
-    tokens: [
-      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app',
-      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app',
-      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app',
-    ],
+    id: 'blobs',
+    tokens: ['blobs?accept=image/*&accept=video/*'],
     required: false,
     defaultEnabled: true,
-    labelKey: 'oauth.scopes.bskyVideoRpc.label',
-    descriptionKey: 'oauth.scopes.bskyVideoRpc.description',
+    labelKey: 'oauth.scopes.blobs.label',
+    descriptionKey: 'oauth.scopes.blobs.description',
   },
 ];
 

@@ -122,16 +122,16 @@
           "description": "Confirm who you are on atproto. Always required."
         },
         "bskyAppview": {
-          "label": "Bluesky AppView reads",
-          "description": "Per-procedure access to feeds, profiles, notifications, search, and graph queries on the Bluesky AppView."
+          "label": "Bluesky access",
+          "description": "Bundle of permissions covering feeds, profiles, notifications, search, follows, blocks, lists, and posts on the Bluesky AppView."
         },
-        "bskyChatRpc": {
-          "label": "Bluesky chat service",
-          "description": "Per-procedure access to the Bluesky chat service for sending and managing direct messages."
+        "bskyChat": {
+          "label": "Direct messages",
+          "description": "Bundle of permissions covering reading and sending direct messages on the Bluesky chat service."
         },
-        "bskyVideoRpc": {
-          "label": "Bluesky video service",
-          "description": "Per-procedure access to upload videos and read upload status on the Bluesky video service."
+        "blobs": {
+          "label": "Image and video uploads",
+          "description": "Upload image and video blobs to your account so you can attach media to posts."
         },
         "profile": {
           "label": "Profile",
