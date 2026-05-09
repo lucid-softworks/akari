@@ -336,6 +336,25 @@
       "addPostToThread": "Aggiungi post",
       "removePostFromThread": "Rimuovi post",
       "continueThreadPlaceholder": "Continua il thread…",
+      "mode": {
+        "single": "Singolo",
+        "autothread": "Thread automatico",
+        "longform": "Formato lungo"
+      },
+      "autothread": {
+        "placeholder": "Scrivi un post lungo. Sarà suddiviso in un thread al momento della pubblicazione.",
+        "singlePart": "1 parte",
+        "parts": "{{count}} parti"
+      },
+      "longform": {
+        "titlePlaceholder": "Titolo",
+        "placeholder": "Scrivi il tuo post in formato lungo…",
+        "banner": "Pubblica un documento Leaflet sul tuo PDS. Al primo utilizzo creiamo per te una pubblicazione predefinita; puoi rinominarla su leaflet.pub.",
+        "publishButton": "Pubblica",
+        "publishing": "Pubblicazione…",
+        "publishedToast": "Pubblicato su Leaflet",
+        "publishFailed": "Impossibile pubblicare su Leaflet."
+      },
       "blockedPost": "Post da un account bloccato",
       "deletedPost": "Post eliminato",
       "detachedPost": "L’autore ha rimosso questa citazione",

@@ -336,6 +336,25 @@
       "addPostToThread": "Добави публикация",
       "removePostFromThread": "Премахни публикацията",
       "continueThreadPlaceholder": "Продължи темата...",
+      "mode": {
+        "single": "Единична",
+        "autothread": "Автоматична нишка",
+        "longform": "Дългоформатна"
+      },
+      "autothread": {
+        "placeholder": "Напиши дълга публикация. Ще се раздели на нишка при публикуване.",
+        "singlePart": "1 част",
+        "parts": "{{count}} части"
+      },
+      "longform": {
+        "titlePlaceholder": "Заглавие",
+        "placeholder": "Напиши дългоформатната си публикация…",
+        "banner": "Публикува документ в Leaflet на твоя PDS. При първа употреба ще създадем стандартна публикация за теб; можеш да я преименуваш в leaflet.pub.",
+        "publishButton": "Публикувай",
+        "publishing": "Публикуване…",
+        "publishedToast": "Публикувано в Leaflet",
+        "publishFailed": "Публикуването в Leaflet не бе успешно."
+      },
       "blockedPost": "Публикация от блокиран профил",
       "deletedPost": "Публикацията е изтрита",
       "detachedPost": "Авторът премахна цитата",

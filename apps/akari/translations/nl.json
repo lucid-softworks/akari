@@ -336,6 +336,25 @@
       "addPostToThread": "Bericht toevoegen",
       "removePostFromThread": "Bericht verwijderen",
       "continueThreadPlaceholder": "Vervolg de thread…",
+      "mode": {
+        "single": "Enkel",
+        "autothread": "Auto-thread",
+        "longform": "Lang formaat"
+      },
+      "autothread": {
+        "placeholder": "Schrijf een lang bericht. Het wordt bij publicatie opgesplitst in een thread.",
+        "singlePart": "1 deel",
+        "parts": "{{count}} delen"
+      },
+      "longform": {
+        "titlePlaceholder": "Titel",
+        "placeholder": "Schrijf je lange bericht…",
+        "banner": "Publiceert een Leaflet-document op je PDS. Bij het eerste gebruik maken we een standaardpublicatie voor je aan; je kunt deze hernoemen op leaflet.pub.",
+        "publishButton": "Publiceren",
+        "publishing": "Bezig met publiceren…",
+        "publishedToast": "Gepubliceerd op Leaflet",
+        "publishFailed": "Kon niet publiceren op Leaflet."
+      },
       "blockedPost": "Bericht van een geblokkeerd account",
       "deletedPost": "Bericht verwijderd",
       "detachedPost": "De auteur heeft dit citaat verwijderd",

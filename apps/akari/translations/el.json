@@ -336,6 +336,25 @@
       "addPostToThread": "Προσθήκη ανάρτησης",
       "removePostFromThread": "Αφαίρεση ανάρτησης",
       "continueThreadPlaceholder": "Συνεχίστε το νήμα...",
+      "mode": {
+        "single": "Μονή",
+        "autothread": "Αυτόματο νήμα",
+        "longform": "Εκτενής"
+      },
+      "autothread": {
+        "placeholder": "Γράψε μια μεγάλη ανάρτηση. Θα χωριστεί σε νήμα όταν τη δημοσιεύσεις.",
+        "singlePart": "1 μέρος",
+        "parts": "{{count}} μέρη"
+      },
+      "longform": {
+        "titlePlaceholder": "Τίτλος",
+        "placeholder": "Γράψε την εκτενή σου ανάρτηση…",
+        "banner": "Δημοσιεύει ένα έγγραφο Leaflet στο PDS σου. Στην πρώτη χρήση θα δημιουργήσουμε μια προεπιλεγμένη έκδοση για σένα· μπορείς να τη μετονομάσεις στο leaflet.pub.",
+        "publishButton": "Δημοσίευση",
+        "publishing": "Δημοσίευση…",
+        "publishedToast": "Δημοσιεύτηκε στο Leaflet",
+        "publishFailed": "Δεν ήταν δυνατή η δημοσίευση στο Leaflet."
+      },
       "blockedPost": "Ανάρτηση από αποκλεισμένο λογαριασμό",
       "deletedPost": "Η ανάρτηση διαγράφηκε",
       "detachedPost": "Ο συντάκτης αποσύνδεσε την αναφορά",

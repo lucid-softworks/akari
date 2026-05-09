@@ -336,6 +336,25 @@
       "addPostToThread": "افزودن پست",
       "removePostFromThread": "حذف پست",
       "continueThreadPlaceholder": "رشته را ادامه دهید...",
+      "mode": {
+        "single": "تکی",
+        "autothread": "رشته خودکار",
+        "longform": "متن بلند"
+      },
+      "autothread": {
+        "placeholder": "یک پست بلند بنویسید. هنگام انتشار به یک رشته تقسیم می‌شود.",
+        "singlePart": "۱ بخش",
+        "parts": "{{count}} بخش"
+      },
+      "longform": {
+        "titlePlaceholder": "عنوان",
+        "placeholder": "پست بلند خود را بنویسید…",
+        "banner": "یک سند Leaflet را روی PDS شما منتشر می‌کند. در اولین استفاده یک نشریه پیش‌فرض برای شما می‌سازیم؛ می‌توانید آن را در leaflet.pub تغییر نام دهید.",
+        "publishButton": "انتشار",
+        "publishing": "در حال انتشار…",
+        "publishedToast": "در Leaflet منتشر شد",
+        "publishFailed": "انتشار در Leaflet ممکن نشد."
+      },
       "blockedPost": "پست از یک حساب مسدود شده",
       "deletedPost": "پست حذف شده است",
       "detachedPost": "نویسنده این نقل‌قول را برداشت",

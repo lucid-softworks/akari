@@ -336,6 +336,25 @@
       "addPostToThread": "添加帖子",
       "removePostFromThread": "删除帖子",
       "continueThreadPlaceholder": "继续这个串…",
+      "mode": {
+        "single": "单条",
+        "autothread": "自动串",
+        "longform": "长文"
+      },
+      "autothread": {
+        "placeholder": "写一篇长帖。发布时会自动拆分为串。",
+        "singlePart": "1 部分",
+        "parts": "{{count}} 部分"
+      },
+      "longform": {
+        "titlePlaceholder": "标题",
+        "placeholder": "写你的长文…",
+        "banner": "在你的 PDS 上发布一篇 Leaflet 文档。首次使用时我们会为你创建一个默认发布物，你可以在 leaflet.pub 上重命名。",
+        "publishButton": "发布",
+        "publishing": "发布中…",
+        "publishedToast": "已发布到 Leaflet",
+        "publishFailed": "无法发布到 Leaflet。"
+      },
       "blockedPost": "来自已屏蔽账号的帖子",
       "deletedPost": "帖子已删除",
       "detachedPost": "作者已撤回该引用",

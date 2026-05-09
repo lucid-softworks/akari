@@ -336,6 +336,25 @@
       "addPostToThread": "Додати допис",
       "removePostFromThread": "Видалити допис",
       "continueThreadPlaceholder": "Продовжіть гілку…",
+      "mode": {
+        "single": "Одиничний",
+        "autothread": "Автогілка",
+        "longform": "Довгий формат"
+      },
+      "autothread": {
+        "placeholder": "Напишіть довгий допис. Під час публікації він розділиться на гілку.",
+        "singlePart": "1 частина",
+        "parts": "{{count}} частин"
+      },
+      "longform": {
+        "titlePlaceholder": "Заголовок",
+        "placeholder": "Напишіть свій довгий допис…",
+        "banner": "Публікує документ Leaflet на вашому PDS. Під час першого використання ми створимо для вас типову публікацію; перейменувати її можна на leaflet.pub.",
+        "publishButton": "Опублікувати",
+        "publishing": "Публікація…",
+        "publishedToast": "Опубліковано в Leaflet",
+        "publishFailed": "Не вдалося опублікувати в Leaflet."
+      },
       "blockedPost": "Допис від заблокованого облікового запису",
       "deletedPost": "Допис видалено",
       "detachedPost": "Автор від’єднав цю цитату",

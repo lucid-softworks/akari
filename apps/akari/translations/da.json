@@ -336,6 +336,25 @@
       "addPostToThread": "Tilføj indlæg",
       "removePostFromThread": "Fjern indlæg",
       "continueThreadPlaceholder": "Fortsæt tråden...",
+      "mode": {
+        "single": "Enkelt",
+        "autothread": "Auto-tråd",
+        "longform": "Langt format"
+      },
+      "autothread": {
+        "placeholder": "Skriv et langt indlæg. Det opdeles i en tråd, når du udgiver det.",
+        "singlePart": "1 del",
+        "parts": "{{count}} dele"
+      },
+      "longform": {
+        "titlePlaceholder": "Titel",
+        "placeholder": "Skriv dit lange indlæg…",
+        "banner": "Udgiver et Leaflet-dokument på din PDS. Vi opretter en standardpublikation til dig første gang; du kan omdøbe den på leaflet.pub.",
+        "publishButton": "Udgiv",
+        "publishing": "Udgiver…",
+        "publishedToast": "Udgivet til Leaflet",
+        "publishFailed": "Kunne ikke udgive til Leaflet."
+      },
       "blockedPost": "Indlæg fra blokeret konto",
       "deletedPost": "Indlæg slettet",
       "detachedPost": "Forfatteren fjernede citatet",

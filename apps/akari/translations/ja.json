@@ -336,6 +336,25 @@
       "addPostToThread": "投稿を追加",
       "removePostFromThread": "投稿を削除",
       "continueThreadPlaceholder": "スレッドを続ける…",
+      "mode": {
+        "single": "単一投稿",
+        "autothread": "自動スレッド",
+        "longform": "長文"
+      },
+      "autothread": {
+        "placeholder": "長い投稿を書いてください。公開時にスレッドへ分割されます。",
+        "singlePart": "1パート",
+        "parts": "{{count}}パート"
+      },
+      "longform": {
+        "titlePlaceholder": "タイトル",
+        "placeholder": "長文投稿を書いてください…",
+        "banner": "あなたの PDS に Leaflet ドキュメントを公開します。初回利用時にデフォルトの出版物を作成します。leaflet.pub で名前を変更できます。",
+        "publishButton": "公開",
+        "publishing": "公開中…",
+        "publishedToast": "Leaflet に公開しました",
+        "publishFailed": "Leaflet に公開できませんでした。"
+      },
       "blockedPost": "ブロックされたアカウントの投稿",
       "deletedPost": "投稿は削除されました",
       "detachedPost": "作者がこの引用を解除しました",

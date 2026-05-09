@@ -336,6 +336,25 @@
       "addPostToThread": "Új bejegyzés",
       "removePostFromThread": "Bejegyzés törlése",
       "continueThreadPlaceholder": "Folytasd a szálat…",
+      "mode": {
+        "single": "Egyszeri",
+        "autothread": "Automatikus szál",
+        "longform": "Hosszú forma"
+      },
+      "autothread": {
+        "placeholder": "Írj egy hosszú bejegyzést. Közzétételkor szálra bomlik.",
+        "singlePart": "1 rész",
+        "parts": "{{count}} rész"
+      },
+      "longform": {
+        "titlePlaceholder": "Cím",
+        "placeholder": "Írd meg a hosszú bejegyzésed…",
+        "banner": "Leaflet-dokumentumot tesz közzé a PDS-eden. Az első használatkor létrehozunk neked egy alapértelmezett kiadványt; a leaflet.pub oldalon átnevezheted.",
+        "publishButton": "Közzététel",
+        "publishing": "Közzététel…",
+        "publishedToast": "Közzétéve a Leafleten",
+        "publishFailed": "A Leafletre való közzététel sikertelen."
+      },
       "blockedPost": "Bejegyzés letiltott fiókból",
       "deletedPost": "A bejegyzést törölték",
       "detachedPost": "A szerző eltávolította ezt az idézetet",

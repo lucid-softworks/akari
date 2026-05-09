@@ -336,6 +336,25 @@
       "addPostToThread": "Přidat příspěvek",
       "removePostFromThread": "Odebrat příspěvek",
       "continueThreadPlaceholder": "Pokračovat ve vlákně...",
+      "mode": {
+        "single": "Jeden",
+        "autothread": "Automatické vlákno",
+        "longform": "Dlouhý text"
+      },
+      "autothread": {
+        "placeholder": "Napiš dlouhý příspěvek. Při publikování se rozdělí na vlákno.",
+        "singlePart": "1 část",
+        "parts": "{{count}} částí"
+      },
+      "longform": {
+        "titlePlaceholder": "Název",
+        "placeholder": "Napiš svůj dlouhý příspěvek…",
+        "banner": "Publikuje dokument Leaflet na tvém PDS. Při prvním použití pro tebe vytvoříme výchozí publikaci; přejmenovat ji můžeš na leaflet.pub.",
+        "publishButton": "Publikovat",
+        "publishing": "Publikování…",
+        "publishedToast": "Publikováno do Leafletu",
+        "publishFailed": "Publikování do Leafletu se nezdařilo."
+      },
       "blockedPost": "Příspěvek od zablokovaného účtu",
       "deletedPost": "Příspěvek byl smazán",
       "detachedPost": "Autor odpojil citaci",

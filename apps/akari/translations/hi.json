@@ -336,6 +336,25 @@
       "addPostToThread": "पोस्ट जोड़ें",
       "removePostFromThread": "पोस्ट हटाएँ",
       "continueThreadPlaceholder": "थ्रेड जारी रखें…",
+      "mode": {
+        "single": "एकल",
+        "autothread": "ऑटो-थ्रेड",
+        "longform": "लंबा रूप"
+      },
+      "autothread": {
+        "placeholder": "एक लंबी पोस्ट लिखें। प्रकाशित करते समय यह एक थ्रेड में विभाजित हो जाएगी।",
+        "singlePart": "1 भाग",
+        "parts": "{{count}} भाग"
+      },
+      "longform": {
+        "titlePlaceholder": "शीर्षक",
+        "placeholder": "अपनी लंबी पोस्ट लिखें…",
+        "banner": "आपके PDS पर एक Leaflet दस्तावेज़ प्रकाशित करता है। पहले उपयोग पर हम आपके लिए एक डिफ़ॉल्ट प्रकाशन बना देंगे; आप इसका नाम leaflet.pub पर बदल सकते हैं।",
+        "publishButton": "प्रकाशित करें",
+        "publishing": "प्रकाशित हो रहा है…",
+        "publishedToast": "Leaflet पर प्रकाशित किया गया",
+        "publishFailed": "Leaflet पर प्रकाशित नहीं किया जा सका।"
+      },
       "blockedPost": "अवरुद्ध खाते से पोस्ट",
       "deletedPost": "पोस्ट हटा दी गई",
       "detachedPost": "लेखक ने इस उद्धरण को हटा दिया",

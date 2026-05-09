@@ -336,6 +336,25 @@
       "addPostToThread": "เพิ่มโพสต์",
       "removePostFromThread": "ลบโพสต์",
       "continueThreadPlaceholder": "เขียนต่อในเธรด…",
+      "mode": {
+        "single": "เดี่ยว",
+        "autothread": "เธรดอัตโนมัติ",
+        "longform": "รูปแบบยาว"
+      },
+      "autothread": {
+        "placeholder": "เขียนโพสต์ยาว ๆ จะถูกแยกเป็นเธรดเมื่อคุณเผยแพร่",
+        "singlePart": "1 ส่วน",
+        "parts": "{{count}} ส่วน"
+      },
+      "longform": {
+        "titlePlaceholder": "ชื่อเรื่อง",
+        "placeholder": "เขียนโพสต์รูปแบบยาวของคุณ…",
+        "banner": "เผยแพร่เอกสาร Leaflet ไปยัง PDS ของคุณ เมื่อใช้ครั้งแรกเราจะสร้างสิ่งพิมพ์เริ่มต้นให้ คุณเปลี่ยนชื่อได้ที่ leaflet.pub",
+        "publishButton": "เผยแพร่",
+        "publishing": "กำลังเผยแพร่…",
+        "publishedToast": "เผยแพร่ไปยัง Leaflet แล้ว",
+        "publishFailed": "เผยแพร่ไปยัง Leaflet ไม่สำเร็จ"
+      },
       "blockedPost": "โพสต์จากบัญชีที่ถูกบล็อก",
       "deletedPost": "โพสต์ถูกลบแล้ว",
       "detachedPost": "ผู้เขียนยกเลิกการอ้างถึงนี้",

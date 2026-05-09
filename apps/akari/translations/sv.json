@@ -336,6 +336,25 @@
       "addPostToThread": "Lägg till inlägg",
       "removePostFromThread": "Ta bort inlägg",
       "continueThreadPlaceholder": "Fortsätt tråden…",
+      "mode": {
+        "single": "Enskilt",
+        "autothread": "Auto-tråd",
+        "longform": "Långt format"
+      },
+      "autothread": {
+        "placeholder": "Skriv ett långt inlägg. Det delas upp i en tråd när du publicerar.",
+        "singlePart": "1 del",
+        "parts": "{{count}} delar"
+      },
+      "longform": {
+        "titlePlaceholder": "Titel",
+        "placeholder": "Skriv ditt långa inlägg…",
+        "banner": "Publicerar ett Leaflet-dokument på din PDS. Vid första användningen skapar vi en standardpublikation åt dig; du kan byta namn på den på leaflet.pub.",
+        "publishButton": "Publicera",
+        "publishing": "Publicerar…",
+        "publishedToast": "Publicerat på Leaflet",
+        "publishFailed": "Det gick inte att publicera till Leaflet."
+      },
       "blockedPost": "Inlägg från ett blockerat konto",
       "deletedPost": "Inlägg borttaget",
       "detachedPost": "Författaren tog bort citatet",

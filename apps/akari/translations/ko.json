@@ -336,6 +336,25 @@
       "addPostToThread": "게시물 추가",
       "removePostFromThread": "게시물 삭제",
       "continueThreadPlaceholder": "스레드 이어가기…",
+      "mode": {
+        "single": "단일",
+        "autothread": "자동 스레드",
+        "longform": "장문"
+      },
+      "autothread": {
+        "placeholder": "긴 게시물을 작성하세요. 게시할 때 스레드로 나뉩니다.",
+        "singlePart": "1부",
+        "parts": "{{count}}부"
+      },
+      "longform": {
+        "titlePlaceholder": "제목",
+        "placeholder": "장문 게시물을 작성하세요…",
+        "banner": "PDS에 Leaflet 문서를 게시합니다. 처음 사용할 때 기본 발행물을 만들어 드리며, leaflet.pub에서 이름을 바꿀 수 있습니다.",
+        "publishButton": "게시",
+        "publishing": "게시 중…",
+        "publishedToast": "Leaflet에 게시됨",
+        "publishFailed": "Leaflet에 게시하지 못했습니다."
+      },
       "blockedPost": "차단된 계정의 게시물",
       "deletedPost": "게시물이 삭제됨",
       "detachedPost": "작성자가 이 인용을 분리했습니다",

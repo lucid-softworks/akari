@@ -7,6 +7,7 @@ export * from './conversations';
 export * from './draft';
 export * from './feeds';
 export * from './graph';
+export * from './leaflet';
 export * from './notifications';
 export * from './pds';
 export * from './search';

@@ -336,6 +336,25 @@
       "addPostToThread": "Ychwanegu post",
       "removePostFromThread": "Tynnu'r post",
       "continueThreadPlaceholder": "Parhau'r edefyn...",
+      "mode": {
+        "single": "Sengl",
+        "autothread": "Edefyn awtomatig",
+        "longform": "Ffurf hir"
+      },
+      "autothread": {
+        "placeholder": "Ysgrifenna bost hir. Bydd yn cael ei rannu'n edefyn pan fyddi'n cyhoeddi.",
+        "singlePart": "1 rhan",
+        "parts": "{{count}} o rannau"
+      },
+      "longform": {
+        "titlePlaceholder": "Teitl",
+        "placeholder": "Ysgrifenna dy bost ffurf hir…",
+        "banner": "Cyhoeddi dogfen Leaflet ar dy PDS. Byddwn yn creu cyhoeddiad rhagosodedig i ti y tro cyntaf; gelli ei ailenwi ar leaflet.pub.",
+        "publishButton": "Cyhoeddi",
+        "publishing": "Cyhoeddi…",
+        "publishedToast": "Cyhoeddwyd i Leaflet",
+        "publishFailed": "Methu cyhoeddi i Leaflet."
+      },
       "blockedPost": "Post o gyfrif sydd wedi ei rwystro",
       "deletedPost": "Cafodd y post ei ddileu",
       "detachedPost": "Mae'r awdur wedi tynnu'r dyfyniad",

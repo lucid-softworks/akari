@@ -356,6 +356,25 @@
       "addPostToThread": "Add post",
       "removePostFromThread": "Remove post",
       "continueThreadPlaceholder": "Continue the thread…",
+      "mode": {
+        "single": "Single",
+        "autothread": "Auto-thread",
+        "longform": "Long-form"
+      },
+      "autothread": {
+        "placeholder": "Write a long post. It'll split into a thread when you publish.",
+        "singlePart": "1 part",
+        "parts": "{{count}} parts"
+      },
+      "longform": {
+        "titlePlaceholder": "Title",
+        "placeholder": "Write your long-form post…",
+        "banner": "Publishes a Leaflet document on your PDS. We'll create a default publication for you on first use; you can rename it on leaflet.pub.",
+        "publishButton": "Publish",
+        "publishing": "Publishing…",
+        "publishedToast": "Published to Leaflet",
+        "publishFailed": "Couldn't publish to Leaflet."
+      },
       "blockedPost": "Post from a blocked account",
       "deletedPost": "Post was deleted",
       "detachedPost": "Author removed this quote",

@@ -336,6 +336,25 @@
       "addPostToThread": "הוסף פוסט",
       "removePostFromThread": "הסר פוסט",
       "continueThreadPlaceholder": "המשך את השרשור…",
+      "mode": {
+        "single": "בודד",
+        "autothread": "שרשור אוטומטי",
+        "longform": "טקסט ארוך"
+      },
+      "autothread": {
+        "placeholder": "כתבו פוסט ארוך. הוא יתפצל לשרשור בעת הפרסום.",
+        "singlePart": "חלק 1",
+        "parts": "{{count}} חלקים"
+      },
+      "longform": {
+        "titlePlaceholder": "כותרת",
+        "placeholder": "כתבו את הפוסט הארוך שלכם…",
+        "banner": "מפרסם מסמך Leaflet ב-PDS שלכם. בשימוש הראשון ניצור עבורכם פרסום ברירת מחדל; תוכלו לשנות את שמו ב-leaflet.pub.",
+        "publishButton": "פרסם",
+        "publishing": "מפרסם…",
+        "publishedToast": "פורסם ב-Leaflet",
+        "publishFailed": "לא ניתן לפרסם ב-Leaflet."
+      },
       "blockedPost": "פוסט מחשבון חסום",
       "deletedPost": "הפוסט נמחק",
       "detachedPost": "הכותב הסיר את הציטוט הזה",

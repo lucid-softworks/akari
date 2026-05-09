@@ -336,6 +336,25 @@
       "addPostToThread": "Dodaj objavo",
       "removePostFromThread": "Odstrani objavo",
       "continueThreadPlaceholder": "Nadaljuj nit…",
+      "mode": {
+        "single": "Posamezna",
+        "autothread": "Samodejna nit",
+        "longform": "Dolga oblika"
+      },
+      "autothread": {
+        "placeholder": "Napiši dolgo objavo. Pri objavi se bo razdelila v nit.",
+        "singlePart": "1 del",
+        "parts": "{{count}} delov"
+      },
+      "longform": {
+        "titlePlaceholder": "Naslov",
+        "placeholder": "Napiši svojo dolgo objavo…",
+        "banner": "Objavi dokument Leaflet na tvojem PDS-ju. Ob prvi uporabi ti bomo ustvarili privzeto publikacijo; preimenuješ jo lahko na leaflet.pub.",
+        "publishButton": "Objavi",
+        "publishing": "Objavljanje…",
+        "publishedToast": "Objavljeno v Leafletu",
+        "publishFailed": "Objava v Leafletu ni uspela."
+      },
       "blockedPost": "Objava z blokiranega računa",
       "deletedPost": "Objava je bila izbrisana",
       "detachedPost": "Avtor je odstranil ta citat",

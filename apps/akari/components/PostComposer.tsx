@@ -1,9 +1,10 @@
 import { Image } from '@/components/Image';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -34,6 +35,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, shadows } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
+import { useCreateLeaflet } from '@/hooks/mutations/useCreateLeaflet';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import {
   useCreateDraft,
@@ -52,6 +54,19 @@ import { getLanguageLabel } from '@/utils/bcp47';
 import type { ComposerDraftState } from '@/utils/draftMapper';
 import { DEFAULT_POST_CONTROLS, describePostControls, type PostControls } from '@/utils/postControls';
 import { apiForAccount } from '@/utils/blueskyApi';
+import { splitForThread } from '@/utils/threadSplitter';
+
+/**
+ * What the composer is going to publish:
+ *   - 'standard'   : manual single post or hand-built thread (current behavior).
+ *   - 'autothread' : one big text body that we auto-split into a thread when
+ *                    the user posts; chars beyond the per-post limit roll over
+ *                    into the next chunk.
+ *   - 'longform'   : hand the body off to leaflet.pub instead of posting to
+ *                    atproto's feed lexicon — for posts that don't belong
+ *                    chopped into 300-char pieces at all.
+ */
+type ComposeMode = 'standard' | 'autothread' | 'longform';
 
 type PostFacet = {
   index: { byteStart: number; byteEnd: number };
@@ -201,6 +216,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   // target the right entry).
   const [posts, setPosts] = useState<ThreadPost[]>([{ ...EMPTY_THREAD_POST }]);
   const [activeIndex, setActiveIndex] = useState(0);
+  // Auto-thread / long-form modes share a single big text body that
+  // doesn't map cleanly onto the per-post `posts` array. We keep it in
+  // its own state slot so `posts` can stay the source of truth for
+  // standard mode (and for media, which always rides on `posts[0]`).
+  const [composeMode, setComposeMode] = useState<ComposeMode>('standard');
+  const [longText, setLongText] = useState('');
+  const [longTitle, setLongTitle] = useState('');
+  const [longTextSelection, setLongTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [controlsSheetVisible, setControlsSheetVisible] = useState(false);
@@ -254,6 +277,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setActiveIndex((prev) => (index <= prev ? Math.max(0, prev - 1) : prev));
   }, []);
   const createPostMutation = useCreatePost();
+  const createLeafletMutation = useCreateLeaflet();
   const postControlsMutation = usePostControls();
   const { showToast } = useToast();
   const { bottom, top } = useSafeAreaInsets();
@@ -272,7 +296,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
 
   // Drafts only apply to plain new posts — re-opening a stale reply/quote
   // composer with mismatched context is more confusing than helpful.
-  const draftsApply = !replyTo && !quote;
+  // Drafts also only support standard mode (the on-server schema is
+  // posts[]/images[], not a single body); auto-thread/long-form bodies
+  // skip the autosave path until the user switches back to standard.
+  const draftsApply = !replyTo && !quote && composeMode === 'standard';
 
   // Server-side drafts via app.bsky.draft.*. Only fetched when the
   // composer is visible and we're in plain-post mode.
@@ -315,6 +342,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     pendingPayloadRef.current = null;
     setPosts([{ ...EMPTY_THREAD_POST }]);
     setActiveIndex(0);
+    setComposeMode('standard');
+    setLongText('');
+    setLongTitle('');
+    setLongTextSelection({ start: 0, end: 0 });
     hydratedRef.current = true;
   }, [visible]);
 
@@ -443,8 +474,78 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const tintColor = useThemeColor({}, 'tint');
 
   const handlePost = async () => {
-    // Trim trailing empty posts the user added but didn't fill in.
+    // Long-form: publish a `pub.leaflet.document` to the user's PDS via
+    // the Leaflet lexicons. Auto-creates a default `pub.leaflet.publication`
+    // for them if they don't have one yet.
+    if (composeMode === 'longform') {
+      const title = longTitle.trim();
+      const body = longText.trim();
+      if (title.length === 0 || body.length === 0) return;
+      try {
+        const result = await createLeafletMutation.mutateAsync({ title, body });
+        showToast({
+          type: 'success',
+          message: t('post.longform.publishedToast'),
+        });
+        // Open the published doc on leaflet.pub so the user can read /
+        // share it. If linking fails (e.g. in-app web), the toast still
+        // confirms the publish landed.
+        Linking.openURL(result.url).catch(() => {
+          /* silently swallow — the document is already published */
+        });
+      } catch (err) {
+        if (__DEV__) console.warn('Failed to publish leaflet', err);
+        showToast({
+          type: 'error',
+          title: t('post.longform.publishButton'),
+          message: t('post.longform.publishFailed'),
+        });
+        return;
+      }
+      // The user may have loaded a draft in standard mode and then
+      // switched to longform — clean it up if so.
+      if (currentDraftId) {
+        deleteDraftMutation.mutate({ id: currentDraftId });
+      }
+      setPosts([{ ...EMPTY_THREAD_POST }]);
+      setActiveIndex(0);
+      setLongText('');
+      setLongTitle('');
+      setComposeMode('standard');
+      setPostControls(DEFAULT_POST_CONTROLS);
+      setCurrentDraftId(null);
+      draftIdRef.current = null;
+      onClose();
+      return;
+    }
+
+    // Auto-thread: split the long body into chunks here, then post the
+    // chunks just like a manually-built thread (media still rides on
+    // the first chunk).
     const trimmed = (() => {
+      if (composeMode === 'autothread') {
+        const chunks = splitForThread(longText, maxCharacters);
+        const media = posts[0] ?? EMPTY_THREAD_POST;
+        if (chunks.length === 0) {
+          // Empty body, but media is attached — post a single media
+          // post (matches what a media-only post looks like in standard
+          // mode).
+          if (media.attachedImages.length > 0 || media.attachedVideo) {
+            return [{ ...media, text: '' }];
+          }
+          return [];
+        }
+        return chunks.map<ThreadPost>((chunkText, i) =>
+          i === 0
+            ? {
+                text: chunkText,
+                attachedImages: media.attachedImages,
+                attachedVideo: media.attachedVideo,
+              }
+            : { text: chunkText, attachedImages: [], attachedVideo: null },
+        );
+      }
+      // Trim trailing empty posts the user added but didn't fill in.
       const out = posts.slice();
       while (
         out.length > 1 &&
@@ -455,13 +556,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       }
       return out;
     })();
-    const root = trimmed[0];
-    const rootHasContent =
-      root.text.trim().length > 0 ||
-      root.attachedImages.length > 0 ||
-      !!root.attachedVideo ||
+    if (trimmed.length === 0) return;
+    const rootPost = trimmed[0];
+    const rootPostHasContent =
+      rootPost.text.trim().length > 0 ||
+      rootPost.attachedImages.length > 0 ||
+      !!rootPost.attachedVideo ||
       !!quote;
-    if (!rootHasContent) return;
+    if (!rootPostHasContent) return;
 
     try {
       // For replies, the conversation root is the upstream post. For
@@ -519,13 +621,19 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       }
 
       // Drop the in-progress draft now that the thread is up.
-      if (draftsApply && currentDraftId) {
+      // The user may have loaded a draft in standard mode and then
+      // switched to autothread / longform — `draftsApply` is now false
+      // but we still want to clean up the underlying draft record.
+      if (currentDraftId) {
         deleteDraftMutation.mutate({ id: currentDraftId });
       }
 
       // Reset form and close
       setPosts([{ ...EMPTY_THREAD_POST }]);
       setActiveIndex(0);
+      setLongText('');
+      setLongTitle('');
+      setComposeMode('standard');
       setPostControls(DEFAULT_POST_CONTROLS);
       setCurrentDraftId(null);
       draftIdRef.current = null;
@@ -543,6 +651,9 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const resetAndClose = useCallback(() => {
     setPosts([{ ...EMPTY_THREAD_POST }]);
     setActiveIndex(0);
+    setLongText('');
+    setLongTitle('');
+    setComposeMode('standard');
     setPostControls(DEFAULT_POST_CONTROLS);
     setCurrentDraftId(null);
     draftIdRef.current = null;
@@ -551,12 +662,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   }, [onClose]);
 
   const handleClose = useCallback(() => {
-    const hasContent = posts.some(
-      (p) =>
-        p.text.trim().length > 0 ||
-        p.attachedImages.length > 0 ||
-        !!p.attachedVideo,
-    );
+    const hasContent =
+      longText.trim().length > 0 ||
+      longTitle.trim().length > 0 ||
+      posts.some(
+        (p) =>
+          p.text.trim().length > 0 ||
+          p.attachedImages.length > 0 ||
+          !!p.attachedVideo,
+      );
     if (draftsApply && did && hasContent) {
       Alert.alert(t('post.draft.discardTitle'), undefined, [
         { text: t('common.cancel'), style: 'cancel' },
@@ -587,6 +701,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     draftsApply,
     did,
     posts,
+    longText,
+    longTitle,
     postControls,
     currentDraftId,
     deleteDraftMutation,
@@ -904,9 +1020,76 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setGifPickerVisible(true);
   };
 
+  const maxCharacters = 300;
+
+  // Map state across mode switches so the user doesn't lose their text:
+  //   - standard → autothread/longform: glue all post texts into longText.
+  //   - autothread/longform → standard: split longText back into a thread.
+  //   - autothread ↔ longform: longText carries straight across.
+  // Media (images/video) only makes sense in standard/autothread, so we
+  // drop it on entry to longform.
+  const switchMode = useCallback(
+    (next: ComposeMode) => {
+      if (next === composeMode) return;
+      if (next === 'standard' && composeMode !== 'standard') {
+        const chunks = splitForThread(longText, maxCharacters);
+        const media = posts[0] ?? EMPTY_THREAD_POST;
+        if (chunks.length === 0) {
+          setPosts([{ ...media, text: '' }]);
+        } else {
+          setPosts(
+            chunks.map((chunkText, i) =>
+              i === 0
+                ? {
+                    text: chunkText,
+                    attachedImages: media.attachedImages,
+                    attachedVideo: media.attachedVideo,
+                  }
+                : { text: chunkText, attachedImages: [], attachedVideo: null },
+            ),
+          );
+        }
+        setActiveIndex(0);
+      } else if (next !== 'standard' && composeMode === 'standard') {
+        const concatenated = posts
+          .map((p) => p.text)
+          .filter((t) => t.trim().length > 0)
+          .join('\n\n');
+        setLongText((prev) => (concatenated.length > 0 ? concatenated : prev));
+        const first = posts[0] ?? EMPTY_THREAD_POST;
+        setPosts([
+          next === 'longform'
+            ? { ...EMPTY_THREAD_POST }
+            : { ...first, text: '' },
+        ]);
+        setActiveIndex(0);
+      } else if (next === 'longform') {
+        // autothread → longform: drop any media that was attached to the
+        // first post — Leaflet handles its own embeds.
+        setPosts([{ ...EMPTY_THREAD_POST }]);
+        setActiveIndex(0);
+      }
+      setComposeMode(next);
+    },
+    [composeMode, posts, longText],
+  );
+
+  const isLongMode = composeMode !== 'standard';
+
   const handleInsertEmoji = (emoji: string) => {
     // Insert the emoji at the current cursor position. Falls back to
     // appending to the end when the user hasn't selected anywhere yet.
+    if (isLongMode) {
+      const { start, end } = longTextSelection;
+      const safeStart = Math.min(Math.max(start, 0), longText.length);
+      const safeEnd = Math.min(Math.max(end, safeStart), longText.length);
+      const nextText = longText.slice(0, safeStart) + emoji + longText.slice(safeEnd);
+      setLongText(nextText);
+      const cursor = safeStart + emoji.length;
+      setLongTextSelection({ start: cursor, end: cursor });
+      setEmojiPickerVisible(false);
+      return;
+    }
     const { start, end } = textSelection;
     const safeStart = Math.min(Math.max(start, 0), text.length);
     const safeEnd = Math.min(Math.max(end, safeStart), text.length);
@@ -922,16 +1105,37 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     }
   };
 
-  const maxCharacters = 300;
+  // Auto-thread previews — recomputed each keystroke. Each chunk is one
+  // post in the published thread.
+  const autoThreadChunks = useMemo(() => {
+    if (composeMode !== 'autothread') return [] as string[];
+    return splitForThread(longText, maxCharacters);
+  }, [composeMode, longText]);
+
   // Disable post when the root has no content, OR when any post in the
   // thread blew the character limit (we'd reject silently otherwise).
   const root = posts[0];
-  const rootHasContent =
+  const standardRootHasContent =
     root.text.trim().length > 0 ||
     root.attachedImages.length > 0 ||
     !!root.attachedVideo ||
     !!quote;
-  const anyPostOverLimit = posts.some((p) => p.text.length > maxCharacters);
+  // In long-form, the lexicon requires a title — both fields must have
+  // content. In auto-thread, body alone (or media) is enough.
+  const longformReady =
+    longTitle.trim().length > 0 && longText.trim().length > 0;
+  const autothreadReady =
+    longText.trim().length > 0 ||
+    root.attachedImages.length > 0 ||
+    !!root.attachedVideo ||
+    !!quote;
+  const longRootHasContent =
+    composeMode === 'longform' ? longformReady : autothreadReady;
+  const rootHasContent = isLongMode ? longRootHasContent : standardRootHasContent;
+  // Standard-mode posts must each fit. Auto-thread always re-splits to fit.
+  // Long-form has no atproto-side limit.
+  const anyPostOverLimit =
+    composeMode === 'standard' && posts.some((p) => p.text.length > maxCharacters);
   // Block sending while any video is still uploading or transcoding.
   // An attached video without a `blob` ref isn't ready to embed.
   const anyVideoPending = posts.some(
@@ -952,11 +1156,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     anyPostOverLimit ||
     anyVideoPending ||
     anyMediaMissingAlt ||
-    createPostMutation.isPending;
+    createPostMutation.isPending ||
+    createLeafletMutation.isPending;
   const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
-  const characterCount = text.length;
-  const isNearLimit = characterCount > maxCharacters * 0.8;
-  const isOverLimit = characterCount > maxCharacters;
+  const standardCharacterCount = text.length;
+  const longCharacterCount = longText.length;
+  const characterCount = isLongMode ? longCharacterCount : standardCharacterCount;
+  const isNearLimit = !isLongMode && standardCharacterCount > maxCharacters * 0.8;
+  const isOverLimit = !isLongMode && standardCharacterCount > maxCharacters;
 
   return (
     <Modal
@@ -1024,7 +1231,13 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               disabled={isPostDisabled}
             >
               <ThemedText style={[styles.postButtonText, { color: isPostDisabled ? textColor : '#000000' }]}>
-                {createPostMutation.isPending ? t('post.posting') : t('post.post')}
+                {composeMode === 'longform'
+                  ? createLeafletMutation.isPending
+                    ? t('post.longform.publishing')
+                    : t('post.longform.publishButton')
+                  : createPostMutation.isPending
+                  ? t('post.posting')
+                  : t('post.post')}
               </ThemedText>
             </Pressable>
           </View>
@@ -1061,7 +1274,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               />
             ) : null}
 
-            {draftsApply && drafts.length > 0 ? (
+            {composeMode === 'standard' && !replyTo && drafts.length > 0 ? (
               <View style={styles.draftsBar}>
                 <Pressable
                   style={({ pressed }) => [styles.draftsPill, { borderColor }, pressed && { opacity: 0.7 }]}
@@ -1079,7 +1292,179 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               </View>
             ) : null}
 
-            {posts.map((post, postIdx) => {
+            {/*
+             * Mode picker. Replies / quotes can still opt into auto-thread —
+             * a long reply can be a thread reply chain. Long-form is hidden
+             * in those contexts because Leaflet documents aren't replies.
+             */}
+            {!quote ? (
+              <View style={styles.modePickerRow}>
+                <ModeChip
+                  label={t('post.mode.single')}
+                  active={composeMode === 'standard'}
+                  onPress={() => switchMode('standard')}
+                  borderColor={borderColor}
+                  tintColor={tintColor}
+                  textColor={textColor}
+                />
+                <ModeChip
+                  label={t('post.mode.autothread')}
+                  active={composeMode === 'autothread'}
+                  onPress={() => switchMode('autothread')}
+                  borderColor={borderColor}
+                  tintColor={tintColor}
+                  textColor={textColor}
+                />
+                {!replyTo ? (
+                  <ModeChip
+                    label={t('post.mode.longform')}
+                    active={composeMode === 'longform'}
+                    onPress={() => switchMode('longform')}
+                    borderColor={borderColor}
+                    tintColor={tintColor}
+                    textColor={textColor}
+                  />
+                ) : null}
+              </View>
+            ) : null}
+
+            {composeMode === 'longform' ? (
+              <ThemedText style={[styles.modeBanner, { color: iconColor }]}>
+                {t('post.longform.banner')}
+              </ThemedText>
+            ) : null}
+
+            {isLongMode ? (
+              <View style={styles.threadPostBlock}>
+                {composeMode === 'longform' ? (
+                  <View style={[styles.inputContainer, styles.titleInputContainer]}>
+                    <TextInput
+                      style={[
+                        styles.titleInput,
+                        { color: textColor, borderBottomColor: borderColor },
+                        isWeb && { outline: 'none' },
+                      ]}
+                      value={longTitle}
+                      onChangeText={setLongTitle}
+                      placeholder={t('post.longform.titlePlaceholder')}
+                      placeholderTextColor={iconColor}
+                      autoCapitalize="sentences"
+                      autoFocus
+                      maxLength={500}
+                      selectionColor={tintColor}
+                      cursorColor={tintColor}
+                      testID="longform-title-input"
+                    />
+                  </View>
+                ) : null}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      styles.longTextInput,
+                      { color: textColor },
+                      isWeb && { outline: 'none' },
+                    ]}
+                    value={longText}
+                    onChangeText={setLongText}
+                    onSelectionChange={(e) => setLongTextSelection(e.nativeEvent.selection)}
+                    placeholder={
+                      composeMode === 'longform'
+                        ? t('post.longform.placeholder')
+                        : t('post.autothread.placeholder')
+                    }
+                    placeholderTextColor={iconColor}
+                    multiline
+                    autoFocus={composeMode !== 'longform'}
+                    autoCapitalize="none"
+                    textAlignVertical="top"
+                    selectionColor={tintColor}
+                    cursorColor={tintColor}
+                    testID={composeMode === 'longform' ? 'longform-input' : 'autothread-input'}
+                  />
+                </View>
+
+                {composeMode === 'autothread' ? (
+                  <View style={styles.autoThreadPreview}>
+                    <ThemedText style={[styles.autoThreadHeader, { color: iconColor }]}>
+                      {autoThreadChunks.length <= 1
+                        ? t('post.autothread.singlePart')
+                        : t('post.autothread.parts', { count: autoThreadChunks.length })}
+                    </ThemedText>
+                    {autoThreadChunks.length > 1
+                      ? autoThreadChunks.map((chunk, idx) => (
+                          <View
+                            key={idx}
+                            style={[styles.autoThreadChunk, { borderColor }]}
+                          >
+                            <ThemedText
+                              style={[styles.autoThreadChunkLabel, { color: iconColor }]}
+                            >
+                              {`${idx + 1}/${autoThreadChunks.length}`}
+                              <ThemedText
+                                style={[
+                                  styles.autoThreadChunkCount,
+                                  {
+                                    color:
+                                      chunk.length > maxCharacters ? '#FF3B30' : iconColor,
+                                  },
+                                ]}
+                              >
+                                {`  ·  ${chunk.length}/${maxCharacters}`}
+                              </ThemedText>
+                            </ThemedText>
+                            <ThemedText
+                              style={[styles.autoThreadChunkText, { color: textColor }]}
+                              numberOfLines={4}
+                            >
+                              {chunk}
+                            </ThemedText>
+                          </View>
+                        ))
+                      : null}
+                  </View>
+                ) : null}
+
+                {composeMode === 'autothread' && root.attachedImages.length > 0 ? (
+                  <View style={styles.imagesContainer}>
+                    {root.attachedImages.map((image, imgIdx) => (
+                      <View key={imgIdx} style={styles.imageItem}>
+                        <View style={styles.imageContainer}>
+                          <Image
+                            source={{ uri: image.uri }}
+                            style={styles.attachedImage}
+                            contentFit="contain"
+                          />
+                          <Pressable
+                            style={({ pressed }) => [
+                              styles.removeImageButton,
+                              pressed && { opacity: 0.7 },
+                            ]}
+                            onPress={() => handleRemoveImage(0, imgIdx)}
+                            testID={`remove-image-0-${imgIdx}`}
+                          >
+                            <IconSymbol name="xmark" size={16} color="#ffffff" />
+                          </Pressable>
+                        </View>
+                        <TextInput
+                          style={[
+                            styles.altTextInput,
+                            { color: textColor, borderColor, backgroundColor },
+                          ]}
+                          value={image.alt}
+                          onChangeText={(alt) => handleUpdateImageAlt(0, imgIdx, alt)}
+                          placeholder={t('post.imageAltTextPlaceholder')}
+                          placeholderTextColor={iconColor}
+                          maxLength={1000}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                ) : null}
+              </View>
+            ) : null}
+
+            {!isLongMode && posts.map((post, postIdx) => {
               const isFirst = postIdx === 0;
               const isLast = postIdx === posts.length - 1;
               const isActive = postIdx === activeIndex;
@@ -1313,9 +1698,19 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           >
             <View style={styles.footerLeft}>
               {(() => {
-                const photoDisabled = attachedImages.length >= 4 || !!attachedVideo;
-                const videoDisabled = attachedImages.length > 0 || !!attachedVideo;
-                const gifDisabled = attachedImages.length >= 4 || !!attachedVideo;
+                // Long-form hands content off to Leaflet — Bluesky-flavored
+                // image/video/GIF embeds don't ride along.
+                const isLongform = composeMode === 'longform';
+                // Auto-thread / standard share the same media model: media
+                // lives on `posts[0]` and (for auto-thread) attaches to the
+                // first chunk.
+                const mediaHost = isLongMode ? root : { attachedImages, attachedVideo };
+                const photoDisabled =
+                  isLongform || mediaHost.attachedImages.length >= 4 || !!mediaHost.attachedVideo;
+                const videoDisabled =
+                  isLongform || mediaHost.attachedImages.length > 0 || !!mediaHost.attachedVideo;
+                const gifDisabled =
+                  isLongform || mediaHost.attachedImages.length >= 4 || !!mediaHost.attachedVideo;
                 return (
                   <>
                     <Pressable
@@ -1397,7 +1792,19 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 >
                   {characterCount}
                 </ThemedText>
-                <ThemedText style={[styles.characterCount, { color: iconColor }]}>/{maxCharacters}</ThemedText>
+                {composeMode === 'standard' ? (
+                  <ThemedText style={[styles.characterCount, { color: iconColor }]}>
+                    /{maxCharacters}
+                  </ThemedText>
+                ) : composeMode === 'autothread' ? (
+                  <ThemedText style={[styles.characterCount, { color: iconColor }]}>
+                    {` · ${
+                      autoThreadChunks.length <= 1
+                        ? t('post.autothread.singlePart')
+                        : t('post.autothread.parts', { count: autoThreadChunks.length })
+                    }`}
+                  </ThemedText>
+                ) : null}
               </View>
             </View>
           </View>
@@ -1435,6 +1842,42 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         onDelete={handleDeleteDraft}
       />
     </Modal>
+  );
+}
+
+type ModeChipProps = {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+  borderColor: string;
+  tintColor: string;
+  textColor: string;
+};
+
+function ModeChip({ label, active, onPress, borderColor, tintColor, textColor }: ModeChipProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.modeChip,
+        {
+          borderColor: active ? tintColor : borderColor,
+          backgroundColor: active ? tintColor : 'transparent',
+        },
+        pressed && { opacity: 0.7 },
+      ]}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+    >
+      <ThemedText
+        style={[
+          styles.modeChipText,
+          { color: active ? '#000000' : textColor },
+        ]}
+      >
+        {label}
+      </ThemedText>
+    </Pressable>
   );
 }
 
@@ -1669,6 +2112,68 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
     flexDirection: 'row',
+  },
+  modePickerRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    flexWrap: 'wrap',
+  },
+  modeChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: radius.full,
+    borderWidth: layout.border,
+  },
+  modeChipText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  modeBanner: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    fontSize: fontSize.sm,
+    lineHeight: 18,
+  },
+  longTextInput: {
+    minHeight: 220,
+  },
+  titleInputContainer: {
+    paddingBottom: spacing.md,
+  },
+  titleInput: {
+    fontSize: 24,
+    fontWeight: fontWeight.semibold,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: layout.hairline,
+  },
+  autoThreadPreview: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
+    gap: spacing.sm,
+  },
+  autoThreadHeader: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  autoThreadChunk: {
+    borderWidth: layout.hairline,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  autoThreadChunkLabel: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.semibold,
+  },
+  autoThreadChunkCount: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+  },
+  autoThreadChunkText: {
+    fontSize: fontSize.base,
+    lineHeight: 20,
   },
   draftsPill: {
     flexDirection: 'row',

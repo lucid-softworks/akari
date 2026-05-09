@@ -5,6 +5,12 @@ import { BlueskyConversations } from './conversations';
 import { BlueskyDrafts } from './draft';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
+import {
+  BlueskyLeaflet,
+  type CreateLeafletDocumentInput,
+  type CreateLeafletDocumentResponse,
+  type CreateLeafletPublicationInput,
+} from './leaflet';
 import { BlueskyNotifications } from './notifications';
 import { BlueskyRepos } from './repos';
 import { BlueskySearch } from './search';
@@ -52,6 +58,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private drafts: BlueskyDrafts;
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
+  private leaflet: BlueskyLeaflet;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
   private repos: BlueskyRepos;
@@ -71,6 +78,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.drafts = new BlueskyDrafts(pdsUrl, appViewProxyDid);
     this.feeds = new BlueskyFeeds(pdsUrl, appViewProxyDid);
     this.graph = new BlueskyGraph(pdsUrl, appViewProxyDid);
+    this.leaflet = new BlueskyLeaflet(pdsUrl, appViewProxyDid);
     this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
     this.repos = new BlueskyRepos(pdsUrl, appViewProxyDid);
@@ -829,6 +837,27 @@ export class BlueskyApi extends BlueskyApiClient {
 
   async deleteDraft(accessJwt: string, id: string): Promise<void> {
     return this.drafts.deleteDraft(accessJwt, id);
+  }
+
+  /**
+   * Returns the user's first existing `pub.leaflet.publication` record,
+   * creating one with the supplied defaults if they don't have any yet.
+   */
+  async findOrCreateLeafletPublication(
+    accessJwt: string,
+    userDid: string,
+    defaults: CreateLeafletPublicationInput,
+  ): Promise<{ uri: string; cid: string; rkey: string }> {
+    return this.leaflet.findOrCreatePublication(accessJwt, userDid, defaults);
+  }
+
+  /** Creates a `pub.leaflet.document` under an existing publication. */
+  async createLeafletDocument(
+    accessJwt: string,
+    userDid: string,
+    input: CreateLeafletDocumentInput,
+  ): Promise<CreateLeafletDocumentResponse> {
+    return this.leaflet.createDocument(accessJwt, userDid, input);
   }
 
   /**

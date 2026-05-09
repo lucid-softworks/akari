@@ -336,6 +336,25 @@
       "addPostToThread": "Paylaşım əlavə et",
       "removePostFromThread": "Paylaşımı sil",
       "continueThreadPlaceholder": "Mövzunu davam etdir...",
+      "mode": {
+        "single": "Tək",
+        "autothread": "Avtomatik mövzu",
+        "longform": "Uzun yazı"
+      },
+      "autothread": {
+        "placeholder": "Uzun yazı yazın. Dərc edəndə avtomatik olaraq mövzuya bölünəcək.",
+        "singlePart": "1 hissə",
+        "parts": "{{count}} hissə"
+      },
+      "longform": {
+        "titlePlaceholder": "Başlıq",
+        "placeholder": "Uzun yazınızı yazın…",
+        "banner": "PDS-də Leaflet sənədi dərc edir. İlk istifadə zamanı sizin üçün standart nəşr yaradacağıq; onu leaflet.pub saytında adlandıra bilərsiniz.",
+        "publishButton": "Dərc et",
+        "publishing": "Dərc olunur…",
+        "publishedToast": "Leaflet-ə dərc edildi",
+        "publishFailed": "Leaflet-ə dərc edilə bilmədi."
+      },
       "blockedPost": "Bloklanmış hesabdan paylaşım",
       "deletedPost": "Paylaşım silinib",
       "detachedPost": "Müəllif sitatı çıxarıb",

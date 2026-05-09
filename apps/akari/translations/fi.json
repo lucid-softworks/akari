@@ -336,6 +336,25 @@
       "addPostToThread": "Lisää julkaisu",
       "removePostFromThread": "Poista julkaisu",
       "continueThreadPlaceholder": "Jatka ketjua…",
+      "mode": {
+        "single": "Yksittäinen",
+        "autothread": "Automaattiketju",
+        "longform": "Pitkä muoto"
+      },
+      "autothread": {
+        "placeholder": "Kirjoita pitkä julkaisu. Se jaetaan ketjuksi, kun julkaiset sen.",
+        "singlePart": "1 osa",
+        "parts": "{{count}} osaa"
+      },
+      "longform": {
+        "titlePlaceholder": "Otsikko",
+        "placeholder": "Kirjoita pitkä julkaisusi…",
+        "banner": "Julkaisee Leaflet-dokumentin PDS:lläsi. Luomme sinulle oletusjulkaisun ensimmäisellä käyttökerralla; voit nimetä sen uudelleen osoitteessa leaflet.pub.",
+        "publishButton": "Julkaise",
+        "publishing": "Julkaistaan…",
+        "publishedToast": "Julkaistu Leafletiin",
+        "publishFailed": "Leafletiin julkaiseminen ei onnistunut."
+      },
       "blockedPost": "Julkaisu estetyltä tililtä",
       "deletedPost": "Julkaisu poistettu",
       "detachedPost": "Tekijä irrotti lainauksen",

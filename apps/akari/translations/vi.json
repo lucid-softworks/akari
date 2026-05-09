@@ -336,6 +336,25 @@
       "addPostToThread": "Thêm bài",
       "removePostFromThread": "Xóa bài",
       "continueThreadPlaceholder": "Tiếp tục chuỗi bài…",
+      "mode": {
+        "single": "Đơn lẻ",
+        "autothread": "Chuỗi tự động",
+        "longform": "Bài dài"
+      },
+      "autothread": {
+        "placeholder": "Viết một bài dài. Bài sẽ được chia thành chuỗi khi bạn đăng.",
+        "singlePart": "1 phần",
+        "parts": "{{count}} phần"
+      },
+      "longform": {
+        "titlePlaceholder": "Tiêu đề",
+        "placeholder": "Viết bài dài của bạn…",
+        "banner": "Đăng một tài liệu Leaflet trên PDS của bạn. Lần đầu sử dụng chúng tôi sẽ tạo một ấn phẩm mặc định cho bạn; bạn có thể đổi tên trên leaflet.pub.",
+        "publishButton": "Đăng",
+        "publishing": "Đang đăng…",
+        "publishedToast": "Đã đăng lên Leaflet",
+        "publishFailed": "Không thể đăng lên Leaflet."
+      },
       "blockedPost": "Bài đăng từ tài khoản bị chặn",
       "deletedPost": "Bài đăng đã bị xóa",
       "detachedPost": "Tác giả đã gỡ trích dẫn này",

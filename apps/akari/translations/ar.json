@@ -336,6 +336,25 @@
       "addPostToThread": "إضافة منشور",
       "removePostFromThread": "إزالة المنشور",
       "continueThreadPlaceholder": "تابع السلسلة...",
+      "mode": {
+        "single": "منشور واحد",
+        "autothread": "سلسلة تلقائية",
+        "longform": "نص مطوّل"
+      },
+      "autothread": {
+        "placeholder": "اكتب منشورًا طويلًا. سيتم تقسيمه إلى سلسلة عند النشر.",
+        "singlePart": "جزء واحد",
+        "parts": "{{count}} أجزاء"
+      },
+      "longform": {
+        "titlePlaceholder": "العنوان",
+        "placeholder": "اكتب منشورك المطوّل…",
+        "banner": "ينشر مستند Leaflet على PDS الخاص بك. سننشئ لك نشرة افتراضية عند أول استخدام، ويمكنك إعادة تسميتها على leaflet.pub.",
+        "publishButton": "نشر",
+        "publishing": "جارٍ النشر…",
+        "publishedToast": "تم النشر إلى Leaflet",
+        "publishFailed": "تعذر النشر إلى Leaflet."
+      },
       "blockedPost": "منشور من حساب محظور",
       "deletedPost": "تم حذف المنشور",
       "detachedPost": "تم فصل الاقتباس بواسطة الكاتب",

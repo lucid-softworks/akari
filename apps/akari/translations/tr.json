@@ -336,6 +336,25 @@
       "addPostToThread": "Gönderi ekle",
       "removePostFromThread": "Gönderiyi sil",
       "continueThreadPlaceholder": "Konuya devam et…",
+      "mode": {
+        "single": "Tekli",
+        "autothread": "Otomatik konu",
+        "longform": "Uzun biçim"
+      },
+      "autothread": {
+        "placeholder": "Uzun bir gönderi yaz. Yayımladığında bir konuya bölünür.",
+        "singlePart": "1 parça",
+        "parts": "{{count}} parça"
+      },
+      "longform": {
+        "titlePlaceholder": "Başlık",
+        "placeholder": "Uzun biçimli gönderini yaz…",
+        "banner": "PDS'inde bir Leaflet belgesi yayımlar. İlk kullanımda senin için varsayılan bir yayın oluştururuz; leaflet.pub'da adını değiştirebilirsin.",
+        "publishButton": "Yayımla",
+        "publishing": "Yayımlanıyor…",
+        "publishedToast": "Leaflet'e yayımlandı",
+        "publishFailed": "Leaflet'e yayımlanamadı."
+      },
       "blockedPost": "Engellenmiş hesaptan gönderi",
       "deletedPost": "Gönderi silinmiş",
       "detachedPost": "Yazar bu alıntıyı kaldırdı",

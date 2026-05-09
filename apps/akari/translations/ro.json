@@ -336,6 +336,25 @@
       "addPostToThread": "Adaugă postare",
       "removePostFromThread": "Elimină postarea",
       "continueThreadPlaceholder": "Continuă firul…",
+      "mode": {
+        "single": "Simplă",
+        "autothread": "Fir automat",
+        "longform": "Format lung"
+      },
+      "autothread": {
+        "placeholder": "Scrie o postare lungă. Va fi împărțită într-un fir când o publici.",
+        "singlePart": "1 parte",
+        "parts": "{{count}} părți"
+      },
+      "longform": {
+        "titlePlaceholder": "Titlu",
+        "placeholder": "Scrie postarea ta în format lung…",
+        "banner": "Publică un document Leaflet pe PDS-ul tău. La prima utilizare îți vom crea o publicație implicită; o poți redenumi pe leaflet.pub.",
+        "publishButton": "Publică",
+        "publishing": "Se publică…",
+        "publishedToast": "Publicat pe Leaflet",
+        "publishFailed": "Publicarea pe Leaflet a eșuat."
+      },
       "blockedPost": "Postare de la un cont blocat",
       "deletedPost": "Postare ștearsă",
       "detachedPost": "Autorul a detașat acest citat",

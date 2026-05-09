@@ -336,6 +336,25 @@
       "addPostToThread": "Tambah post",
       "removePostFromThread": "Hapus post",
       "continueThreadPlaceholder": "Lanjutkan utas…",
+      "mode": {
+        "single": "Tunggal",
+        "autothread": "Utas otomatis",
+        "longform": "Bentuk panjang"
+      },
+      "autothread": {
+        "placeholder": "Tulis post panjang. Akan terpecah menjadi utas saat kamu menerbitkannya.",
+        "singlePart": "1 bagian",
+        "parts": "{{count}} bagian"
+      },
+      "longform": {
+        "titlePlaceholder": "Judul",
+        "placeholder": "Tulis post bentuk panjangmu…",
+        "banner": "Menerbitkan dokumen Leaflet di PDS milikmu. Saat penggunaan pertama, kami akan membuatkan publikasi default untukmu; kamu bisa menggantinya di leaflet.pub.",
+        "publishButton": "Terbitkan",
+        "publishing": "Menerbitkan…",
+        "publishedToast": "Diterbitkan ke Leaflet",
+        "publishFailed": "Tidak dapat menerbitkan ke Leaflet."
+      },
       "blockedPost": "Post dari akun yang diblokir",
       "deletedPost": "Post telah dihapus",
       "detachedPost": "Penulis menghapus kutipan ini",

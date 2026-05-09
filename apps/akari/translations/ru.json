@@ -336,6 +336,25 @@
       "addPostToThread": "Добавить пост",
       "removePostFromThread": "Удалить пост",
       "continueThreadPlaceholder": "Продолжите тред…",
+      "mode": {
+        "single": "Одиночный",
+        "autothread": "Автотред",
+        "longform": "Длинный формат"
+      },
+      "autothread": {
+        "placeholder": "Напишите длинный пост. При публикации он разобьётся на тред.",
+        "singlePart": "1 часть",
+        "parts": "{{count}} частей"
+      },
+      "longform": {
+        "titlePlaceholder": "Заголовок",
+        "placeholder": "Напишите длинный пост…",
+        "banner": "Публикует документ Leaflet на вашем PDS. При первом использовании мы создадим для вас публикацию по умолчанию; переименовать её можно на leaflet.pub.",
+        "publishButton": "Опубликовать",
+        "publishing": "Публикация…",
+        "publishedToast": "Опубликовано в Leaflet",
+        "publishFailed": "Не удалось опубликовать в Leaflet."
+      },
       "blockedPost": "Пост из заблокированного аккаунта",
       "deletedPost": "Пост удалён",
       "detachedPost": "Автор отсоединил эту цитату",
