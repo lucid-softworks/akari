@@ -11,6 +11,7 @@ export default function Root({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
         />
+        <meta name="color-scheme" content="dark light" />
         <meta name="theme-color" content="#151718" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -19,6 +20,15 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-title" content="akari" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* iOS Safari's bottom URL bar is partly translucent and samples the
+            page color under it — without an html background the bar looks
+            white even when theme-color is set. */}
+        <style>{`
+          html { color-scheme: dark light; background-color: #151718; }
+          @media (prefers-color-scheme: light) {
+            html { background-color: #ffffff; }
+          }
+        `}</style>
         <ScrollViewStyleReset />
       </head>
       <body>{children}</body>
