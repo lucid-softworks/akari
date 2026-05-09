@@ -27,11 +27,11 @@ describe('IconSymbol', () => {
       name: 'home',
       color: 'blue',
       size: 24,
-      style: undefined,
     });
 
     const tree = toJSON() as any;
-    expect(tree.props.style).toMatchObject({
+    // Wrapper style is an array: [{ width, height, ... }, style]
+    expect(tree.props.style[0]).toMatchObject({
       width: 24,
       height: 24,
       alignItems: 'center',
@@ -39,7 +39,7 @@ describe('IconSymbol', () => {
     });
   });
 
-  it('forwards custom size and style to MaterialIcons and wrapper', () => {
+  it('forwards custom size to MaterialIcons and applies style to wrapper', () => {
     const style: TextStyle = { opacity: 0.5 };
     const { toJSON } = render(
       <IconSymbol name="camera" color="red" size={32} style={style} />
@@ -50,15 +50,16 @@ describe('IconSymbol', () => {
       name: 'camera-alt',
       color: 'red',
       size: 32,
-      style,
     });
 
     const tree = toJSON() as any;
-    expect(tree.props.style).toMatchObject({
+    // Wrapper style is an array; the user-provided style is the second entry.
+    expect(tree.props.style[0]).toMatchObject({
       width: 32,
       height: 32,
       alignItems: 'center',
       justifyContent: 'center',
     });
+    expect(tree.props.style[1]).toEqual(style);
   });
 });

@@ -42,6 +42,8 @@ describe('NotFoundScreen', () => {
 
     const { Screen } = require('expo-router').Stack;
     expect(Screen).toHaveBeenCalled();
-    expect(Screen.mock.calls[0][0]).toEqual(expect.objectContaining({ options: { title: 'Oops!' } }));
+    expect(Screen.mock.calls[0][0]).toEqual(
+      expect.objectContaining({ options: { title: '404', headerShown: false } }),
+    );
   });
 });

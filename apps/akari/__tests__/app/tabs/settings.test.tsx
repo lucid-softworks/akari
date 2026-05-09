@@ -199,13 +199,17 @@ describe('AccountSettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: accounts[0] });
     mockUseSwitchAccount.mockReturnValue({ mutate });
 
-    const { getByText } = renderAccountSettings();
+    const { getByText, getAllByText } = renderAccountSettings();
 
+    // Press the Switch button on the non-current account row.
     fireEvent.press(getByText('common.switch'));
 
-    const alertConfig = mockShowAlert.mock.calls[0][0];
-    const confirmButton = alertConfig.buttons?.find((button: any) => button.text === 'common.switch');
-    confirmButton?.onPress?.();
+    // The implementation now renders a ConfirmDialog (via useConfirm) instead
+    // of calling showAlert. The dialog shows two buttons; press the Switch
+    // confirmation, which is the second 'common.switch' text in the tree
+    // (the first being the row's Switch button still rendered behind it).
+    const switchTexts = getAllByText('common.switch');
+    fireEvent.press(switchTexts[switchTexts.length - 1]);
 
     expect(mutate).toHaveBeenCalledWith(accounts[1]);
   });

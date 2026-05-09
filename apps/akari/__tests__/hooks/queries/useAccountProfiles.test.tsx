@@ -81,8 +81,8 @@ describe('useAccountProfiles', () => {
     });
 
     expect(mockBlueskyApi).toHaveBeenCalledTimes(2);
-    expect(mockBlueskyApi).toHaveBeenNthCalledWith(1, 'https://pds1');
-    expect(mockBlueskyApi).toHaveBeenNthCalledWith(2, 'https://pds2');
+    expect(mockBlueskyApi).toHaveBeenNthCalledWith(1, 'https://pds1', 'did:web:api.bsky.app');
+    expect(mockBlueskyApi).toHaveBeenNthCalledWith(2, 'https://pds2', 'did:web:api.bsky.app');
     expect(mockGetProfile).toHaveBeenNthCalledWith(1, 'token1', 'alice');
     expect(mockGetProfile).toHaveBeenNthCalledWith(2, 'token2', 'bob');
   });

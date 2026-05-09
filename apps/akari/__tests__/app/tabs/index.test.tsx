@@ -80,6 +80,29 @@ jest.mock('@/components/FeedFiltersSheet', () => ({
   FeedFiltersSheet: () => null,
 }));
 
+jest.mock('@/components/TrendingBar', () => ({
+  TrendingBar: () => null,
+}));
+
+jest.mock('@/hooks/queries/useMutedWords', () => ({
+  useMutedWords: () => ({ data: [] }),
+}));
+
+jest.mock('@/hooks/useFeedFilters', () => ({
+  useFeedFilters: () => ({ filters: {}, anyFilterActive: false }),
+}));
+
+jest.mock('@/hooks/useThemeColor', () => ({
+  useThemeColor: () => '#000',
+}));
+
+jest.mock('@/utils/navigation', () => ({
+  useNavigateToPost: () => jest.fn(),
+  useNavigateToProfile: () => jest.fn(),
+  useNavigateToFeed: () => jest.fn(),
+  useProfileHref: () => () => '/profile/test',
+}));
+
 jest.mock('@/hooks/mutations/useSetSelectedFeed');
 jest.mock('@/hooks/queries/useFeeds');
 jest.mock('@/hooks/queries/usePreferences');
