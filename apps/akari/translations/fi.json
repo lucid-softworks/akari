@@ -363,7 +363,9 @@
         "ready": "Valmis julkaistavaksi"
       },
       "likeFailed": "Julkaisusta ei voitu tykätä. Yritä uudelleen.",
-      "unlikeFailed": "Tykkäystä ei voitu poistaa. Yritä uudelleen."
+      "unlikeFailed": "Tykkäystä ei voitu poistaa. Yritä uudelleen.",
+      "bookmarkFailed": "Julkaisua ei voitu tallentaa. Yritä uudelleen.",
+      "unbookmarkFailed": "Kirjanmerkkiä ei voitu poistaa. Yritä uudelleen."
     },
     "gif": {
       "selectGif": "Valitse GIF",

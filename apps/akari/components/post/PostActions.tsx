@@ -20,6 +20,7 @@ type PostActionsProps = {
   cid?: string;
   likeUri?: string;
   repostUri?: string;
+  isBookmarked?: boolean;
   authorHandle: string;
   authorName: string;
   commentCount: number;
@@ -38,6 +39,7 @@ export const PostActions = React.memo(function PostActions({
   cid,
   likeUri,
   repostUri,
+  isBookmarked,
   authorHandle,
   authorName,
   commentCount,
@@ -121,9 +123,9 @@ export const PostActions = React.memo(function PostActions({
     bookmarkMutation.mutate({
       postUri: uri,
       postCid: cid,
-      action: 'bookmark',
+      action: isBookmarked ? 'unbookmark' : 'bookmark',
     });
-  }, [uri, cid, bookmarkMutation]);
+  }, [uri, cid, isBookmarked, bookmarkMutation]);
 
   const postUrl = uri
     ? `https://bsky.app/profile/${authorHandle}/post/${uri.split('/').pop()}`
@@ -201,12 +203,16 @@ export const PostActions = React.memo(function PostActions({
       <Pressable
         style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
         onPress={handleBookmarkPress}
-        
+
         hitSlop={hitSlop}
         accessibilityRole="button"
-        accessibilityLabel="Save post"
+        accessibilityLabel={isBookmarked ? `Remove bookmark on post by ${authorName}` : `Bookmark post by ${authorName}`}
       >
-        <IconSymbol name="bookmark" size={20} color={iconColor} />
+        <IconSymbol
+          name={isBookmarked ? 'bookmark.fill' : 'bookmark'}
+          size={20}
+          color={isBookmarked ? semanticColors.bookmark : iconColor}
+        />
       </Pressable>
 
       <Pressable

@@ -53,6 +53,7 @@ export type PostCardProps = {
       reply?: string;
       replyDisabled?: boolean;
       embeddingDisabled?: boolean;
+      bookmarked?: boolean;
     };
     facets?: {
       index: { byteStart: number; byteEnd: number };
@@ -284,6 +285,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         cid={post.cid}
         likeUri={post.viewer?.like}
         repostUri={post.viewer?.repost}
+        isBookmarked={post.viewer?.bookmarked}
         replyDisabled={post.viewer?.replyDisabled}
         authorHandle={post.author.handle}
         authorName={authorName}

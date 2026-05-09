@@ -363,7 +363,9 @@
         "ready": "Gotowe do opublikowania"
       },
       "likeFailed": "Nie udało się polubić posta. Spróbuj ponownie.",
-      "unlikeFailed": "Nie udało się cofnąć polubienia. Spróbuj ponownie."
+      "unlikeFailed": "Nie udało się cofnąć polubienia. Spróbuj ponownie.",
+      "bookmarkFailed": "Nie udało się dodać posta do zakładek. Spróbuj ponownie.",
+      "unbookmarkFailed": "Nie udało się usunąć zakładki. Spróbuj ponownie."
     },
     "messages": {
       "typeMessage": "Wpisz wiadomość...",

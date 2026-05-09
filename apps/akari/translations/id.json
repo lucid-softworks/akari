@@ -363,7 +363,9 @@
         "ready": "Siap dikirim"
       },
       "likeFailed": "Tidak dapat menyukai postingan. Coba lagi.",
-      "unlikeFailed": "Tidak dapat membatalkan suka. Coba lagi."
+      "unlikeFailed": "Tidak dapat membatalkan suka. Coba lagi.",
+      "bookmarkFailed": "Tidak dapat menandai postingan. Coba lagi.",
+      "unbookmarkFailed": "Tidak dapat menghapus penanda. Coba lagi."
     },
     "messages": {
       "typeMessage": "Ketik pesan...",

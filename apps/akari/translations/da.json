@@ -363,7 +363,9 @@
         "ready": "Klar til at sende"
       },
       "likeFailed": "Kunne ikke like opslag. Prøv igen.",
-      "unlikeFailed": "Kunne ikke fjerne like. Prøv igen."
+      "unlikeFailed": "Kunne ikke fjerne like. Prøv igen.",
+      "bookmarkFailed": "Kunne ikke gemme bogmærke. Prøv igen.",
+      "unbookmarkFailed": "Kunne ikke fjerne bogmærke. Prøv igen."
     },
     "gif": {
       "selectGif": "Vælg GIF",

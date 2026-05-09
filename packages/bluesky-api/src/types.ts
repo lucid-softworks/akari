@@ -433,6 +433,10 @@ export type BlueskyPostView = {
     replyDisabled?: boolean;
     /** Whether quoting this post is currently allowed for the viewer. */
     embeddingDisabled?: boolean;
+    /** Whether the requesting account has bookmarked this post via
+     * `app.bsky.bookmark.createBookmark`. Boolean rather than a URI
+     * because bookmarks are private AppView state, not a public record. */
+    bookmarked?: boolean;
   };
   /** The post's thread data */
   thread?: {

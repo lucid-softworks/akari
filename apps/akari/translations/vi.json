@@ -363,7 +363,9 @@
         "ready": "Sẵn sàng đăng"
       },
       "likeFailed": "Không thể thích bài viết. Vui lòng thử lại.",
-      "unlikeFailed": "Không thể bỏ thích bài viết. Vui lòng thử lại."
+      "unlikeFailed": "Không thể bỏ thích bài viết. Vui lòng thử lại.",
+      "bookmarkFailed": "Không thể đánh dấu bài viết. Vui lòng thử lại.",
+      "unbookmarkFailed": "Không thể bỏ đánh dấu bài viết. Vui lòng thử lại."
     },
     "messages": {
       "typeMessage": "Nhập tin nhắn...",

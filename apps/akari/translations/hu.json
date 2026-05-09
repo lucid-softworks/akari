@@ -363,7 +363,9 @@
         "ready": "Készen áll a közzétételre"
       },
       "likeFailed": "Nem sikerült kedvelni a bejegyzést. Próbáld újra.",
-      "unlikeFailed": "Nem sikerült visszavonni a kedvelést. Próbáld újra."
+      "unlikeFailed": "Nem sikerült visszavonni a kedvelést. Próbáld újra.",
+      "bookmarkFailed": "Nem sikerült könyvjelzőzni a bejegyzést. Próbáld újra.",
+      "unbookmarkFailed": "Nem sikerült eltávolítani a könyvjelzőt. Próbáld újra."
     },
     "gif": {
       "selectGif": "Válassza ki a GIF -et",

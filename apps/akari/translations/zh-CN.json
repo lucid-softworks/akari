@@ -363,7 +363,9 @@
         "ready": "可以发布了"
       },
       "likeFailed": "无法为帖子点赞。请重试。",
-      "unlikeFailed": "无法取消点赞。请重试。"
+      "unlikeFailed": "无法取消点赞。请重试。",
+      "bookmarkFailed": "无法收藏帖子。请重试。",
+      "unbookmarkFailed": "无法取消收藏。请重试。"
     },
     "messages": {
       "typeMessage": "输入消息...",

@@ -363,7 +363,9 @@
         "ready": "게시 준비 완료"
       },
       "likeFailed": "게시물에 좋아요를 표시할 수 없습니다. 다시 시도해 주세요.",
-      "unlikeFailed": "좋아요를 취소할 수 없습니다. 다시 시도해 주세요."
+      "unlikeFailed": "좋아요를 취소할 수 없습니다. 다시 시도해 주세요.",
+      "bookmarkFailed": "게시물을 북마크할 수 없습니다. 다시 시도해 주세요.",
+      "unbookmarkFailed": "북마크를 해제할 수 없습니다. 다시 시도해 주세요."
     },
     "messages": {
       "typeMessage": "메시지를 입력하세요...",

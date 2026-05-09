@@ -363,7 +363,9 @@
         "ready": "Paylaşmağa hazırdır"
       },
       "likeFailed": "Paylaşımı bəyənmək alınmadı. Yenidən cəhd et.",
-      "unlikeFailed": "Bəyənməni geri almaq alınmadı. Yenidən cəhd et."
+      "unlikeFailed": "Bəyənməni geri almaq alınmadı. Yenidən cəhd et.",
+      "bookmarkFailed": "Paylaşımı yer əlaməti etmək alınmadı. Yenidən cəhd et.",
+      "unbookmarkFailed": "Yer əlamətini silmək alınmadı. Yenidən cəhd et."
     },
     "gif": {
       "selectGif": "Gif seçin",

@@ -363,7 +363,9 @@
         "ready": "Pronto per la pubblicazione"
       },
       "likeFailed": "Impossibile mettere mi piace al post. Riprova.",
-      "unlikeFailed": "Impossibile rimuovere il mi piace. Riprova."
+      "unlikeFailed": "Impossibile rimuovere il mi piace. Riprova.",
+      "bookmarkFailed": "Impossibile salvare il post. Riprova.",
+      "unbookmarkFailed": "Impossibile rimuovere il segnalibro. Riprova."
     },
     "messages": {
       "typeMessage": "Scrivi un messaggio...",

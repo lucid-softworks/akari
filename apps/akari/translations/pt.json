@@ -363,7 +363,9 @@
         "ready": "Pronto para postar"
       },
       "likeFailed": "Não foi possível curtir a publicação. Tente novamente.",
-      "unlikeFailed": "Não foi possível remover a curtida. Tente novamente."
+      "unlikeFailed": "Não foi possível remover a curtida. Tente novamente.",
+      "bookmarkFailed": "Não foi possível salvar a publicação. Tente novamente.",
+      "unbookmarkFailed": "Não foi possível remover o favorito. Tente novamente."
     },
     "messages": {
       "typeMessage": "Digite uma mensagem...",

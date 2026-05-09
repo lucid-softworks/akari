@@ -184,6 +184,8 @@ export const semanticColors = {
   like: '#ff3b30',
   /** Repost / boost */
   repost: '#34c759',
+  /** Bookmark fill */
+  bookmark: '#ff9500',
   /** Live streaming accent */
   live: '#ff274c',
   /** iOS system blue (use sparingly -- prefer theme accent) */

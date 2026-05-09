@@ -363,7 +363,9 @@
         "ready": "Klaar om te plaatsen"
       },
       "likeFailed": "Kon bericht niet liken. Probeer het opnieuw.",
-      "unlikeFailed": "Kon like niet verwijderen. Probeer het opnieuw."
+      "unlikeFailed": "Kon like niet verwijderen. Probeer het opnieuw.",
+      "bookmarkFailed": "Kon bericht niet opslaan. Probeer het opnieuw.",
+      "unbookmarkFailed": "Kon bladwijzer niet verwijderen. Probeer het opnieuw."
     },
     "messages": {
       "typeMessage": "Typ een bericht...",

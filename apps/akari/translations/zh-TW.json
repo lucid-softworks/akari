@@ -363,7 +363,9 @@
         "ready": "可以發佈了"
       },
       "likeFailed": "無法為貼文按讚。請重試。",
-      "unlikeFailed": "無法取消按讚。請重試。"
+      "unlikeFailed": "無法取消按讚。請重試。",
+      "bookmarkFailed": "無法收藏貼文。請重試。",
+      "unbookmarkFailed": "無法取消收藏。請重試。"
     },
     "messages": {
       "typeMessage": "輸入訊息...",

@@ -363,7 +363,9 @@
         "ready": "Pripravené na uverejnenie"
       },
       "likeFailed": "Nepodarilo sa dať „páči sa mi“. Skúste to znova.",
-      "unlikeFailed": "Nepodarilo sa odobrať „páči sa mi“. Skúste to znova."
+      "unlikeFailed": "Nepodarilo sa odobrať „páči sa mi“. Skúste to znova.",
+      "bookmarkFailed": "Nepodarilo sa uložiť záložku. Skúste to znova.",
+      "unbookmarkFailed": "Nepodarilo sa odobrať záložku. Skúste to znova."
     },
     "gif": {
       "selectGif": "Vyberte GIF",

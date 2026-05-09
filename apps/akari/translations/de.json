@@ -363,7 +363,9 @@
         "ready": "Bereit zum Posten"
       },
       "likeFailed": "Beitrag konnte nicht geliked werden. Versuche es erneut.",
-      "unlikeFailed": "Like konnte nicht entfernt werden. Versuche es erneut."
+      "unlikeFailed": "Like konnte nicht entfernt werden. Versuche es erneut.",
+      "bookmarkFailed": "Lesezeichen konnte nicht hinzugefügt werden. Versuche es erneut.",
+      "unbookmarkFailed": "Lesezeichen konnte nicht entfernt werden. Versuche es erneut."
     },
     "messages": {
       "typeMessage": "Nachricht eingeben...",

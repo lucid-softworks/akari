@@ -363,7 +363,9 @@
         "ready": "Pripravljeno za objavo"
       },
       "likeFailed": "Objave ni bilo mogoče označiti z všečkom. Poskusite znova.",
-      "unlikeFailed": "Všečka ni bilo mogoče odstraniti. Poskusite znova."
+      "unlikeFailed": "Všečka ni bilo mogoče odstraniti. Poskusite znova.",
+      "bookmarkFailed": "Objave ni bilo mogoče dodati med zaznamke. Poskusite znova.",
+      "unbookmarkFailed": "Zaznamka ni bilo mogoče odstraniti. Poskusite znova."
     },
     "gif": {
       "selectGif": "Izberite GIF",

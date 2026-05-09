@@ -363,7 +363,9 @@
         "ready": "Prêt à publier"
       },
       "likeFailed": "Impossible d'aimer le post. Réessayez.",
-      "unlikeFailed": "Impossible de retirer le j'aime. Réessayez."
+      "unlikeFailed": "Impossible de retirer le j'aime. Réessayez.",
+      "bookmarkFailed": "Impossible d'enregistrer le post. Réessayez.",
+      "unbookmarkFailed": "Impossible de retirer le favori. Réessayez."
     },
     "gif": {
       "selectGif": "Sélectionner GIF",
