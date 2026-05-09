@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -13,9 +13,15 @@ import {
 
 import { ThemedText } from '@/components/ThemedText';
 import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors, shadows } from '@/constants/tokens';
+import { useAddAccount } from '@/hooks/mutations/useAddAccount';
+import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { showAlert } from '@/utils/alert';
+import { apiForPdsUrl } from '@/utils/blueskyApi';
+import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
+import { oauthSignIn } from '@/utils/oauth/signIn';
 
 const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
 
@@ -25,11 +31,15 @@ export default function OauthSignInScreen() {
   const initialHandle = typeof params.handle === 'string' ? params.handle : '';
 
   const [handle, setHandle] = useState(initialHandle);
+  const [signInInFlight, setSignInInFlight] = useState(false);
+  const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
   // Closes the typeahead dropdown after the user picks a suggestion. Selecting
   // a result fills the handle field with the full handle, which would otherwise
   // re-trigger the query and immediately re-show the same list.
   const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
   const inputRef = useRef<TextInput>(null);
+  const addAccountMutation = useAddAccount();
+  const switchAccountMutation = useSwitchAccount();
 
   const trimmed = handle.replace(/^@/, '').trim();
   const canSubmit = trimmed.length > 0 && HANDLE_PATTERN.test(trimmed);
@@ -96,17 +106,64 @@ export default function OauthSignInScreen() {
     if (showSuggestions) measureAnchor();
   }, [showSuggestions, measureAnchor, typeaheadResults.length]);
 
-  const handleContinue = useCallback(() => {
-    if (!canSubmit) return;
+  const handleContinue = useCallback(async () => {
+    if (!canSubmit || signInInFlight) return;
     inputRef.current?.blur();
-    // Hand off to the dedicated full-page scope picker. It owns the
-    // scope selection state, runs the actual `oauthSignIn` call, and
-    // does the post-auth account-add / switch / redirect.
-    router.push({
-      pathname: '/(auth)/oauth-scopes',
-      params: { handle: trimmed },
-    } as never);
-  }, [canSubmit, trimmed]);
+    setSignInInFlight(true);
+    try {
+      const result = await oauthSignIn(trimmed);
+
+      const baseAccount = {
+        did: result.did,
+        handle: result.handle,
+        pdsUrl: result.pdsUrl,
+        jwtToken: result.accessJwt,
+        refreshToken: result.refreshJwt,
+        oauth: {
+          dpopPrivateKeyHex: result.keypair.privateKeyHex,
+          dpopPublicJwk: result.keypair.publicJwk,
+          authServer: {
+            issuer: result.authServer.issuer,
+            token_endpoint: result.authServer.token_endpoint,
+          },
+          authServerNonce: result.nonce,
+          expiresAt: result.expiresAt,
+          scope: result.scope,
+        },
+      };
+
+      // Bind DPoP synchronously before any XRPC call so the profile
+      // fetch and the home tab's first request go out signed.
+      bindOAuthAccount(baseAccount);
+
+      let profile: { displayName?: string; avatar?: string } = {};
+      try {
+        const api = apiForPdsUrl(result.pdsUrl);
+        const fetched = await api.getProfile(result.accessJwt, result.did);
+        profile = {
+          displayName: fetched.displayName ?? undefined,
+          avatar: fetched.avatar ?? undefined,
+        };
+      } catch (profileError) {
+        if (__DEV__) console.warn('OAuth profile backfill failed:', profileError);
+      }
+
+      const newAccount = await addAccountMutation.mutateAsync({ ...baseAccount, ...profile });
+      await switchAccountMutation.mutateAsync(newAccount);
+      setRedirectAfterAuth('/');
+    } catch (error) {
+      showAlert({
+        title: t('common.error'),
+        message: error instanceof Error ? error.message : t('auth.signInFailed'),
+      });
+    } finally {
+      setSignInInFlight(false);
+    }
+  }, [addAccountMutation, canSubmit, signInInFlight, switchAccountMutation, t, trimmed]);
+
+  if (redirectAfterAuth) {
+    return <Redirect href={redirectAfterAuth as never} />;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -155,14 +212,14 @@ export default function OauthSignInScreen() {
           <Pressable
             style={[
               styles.primaryButton,
-              !canSubmit ? styles.buttonDisabled : null,
+              (!canSubmit || signInInFlight) ? styles.buttonDisabled : null,
             ]}
             onPress={handleContinue}
-            disabled={!canSubmit}
+            disabled={!canSubmit || signInInFlight}
             accessibilityRole="button"
           >
             <ThemedText style={styles.primaryButtonText}>
-              {t('auth.continue')}
+              {signInInFlight ? t('auth.oauthInFlight') : t('auth.continue')}
             </ThemedText>
           </Pressable>
         </View>
