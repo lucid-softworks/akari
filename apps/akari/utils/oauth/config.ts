@@ -48,11 +48,12 @@ function resolveVariant(): Variant {
     typeof Constants.expoConfig?.extra?.variant === 'string'
       ? (Constants.expoConfig.extra.variant as string)
       : 'production';
-  // Development builds piggyback on the preview metadata so we don't
-  // need a third hosted client. Once we wire up local-loopback OAuth
-  // we can split it back out.
-  if (raw === 'production') return 'production';
-  return 'preview';
+  // Development piggybacks on the production hosted client because the
+  // preview origin (preview.akari.lucidsoft.works) currently isn't
+  // deployed. Once we have a real preview deploy we can split dev back
+  // out onto preview metadata.
+  if (raw === 'preview') return 'preview';
+  return 'production';
 }
 
 const variant = resolveVariant();
