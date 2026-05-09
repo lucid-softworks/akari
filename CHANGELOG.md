@@ -1,5 +1,54 @@
 # Changelog
 
+## [1.9.0](https://github.com/lucid-softworks/akari/compare/v1.8.1...v1.9.0) (2026-05-09)
+
+
+### Features
+
+* **akari:** expand unthread.at posts inline with markdown body ([f257fd8](https://github.com/lucid-softworks/akari/commit/f257fd89da8bce2b5ea617f88eecddc78418068b))
+* **akari:** gate Bearer refresh on JWT exp + cover refresh paths in tests ([2693bb6](https://github.com/lucid-softworks/akari/commit/2693bb6bf517221c6233625f96bd18f61676b4ac))
+* **akari:** make OAuth sign-in functional end-to-end ([5ac7dfa](https://github.com/lucid-softworks/akari/commit/5ac7dfa06e466e30211d372a49a06f7459c550b2))
+* **akari:** muted words & tags ([5abf7cc](https://github.com/lucid-softworks/akari/commit/5abf7ccfb22608e47e407db230bea0a85edc4a9c))
+* **akari:** notification routing, feed-detail screen, AI preferences, polish ([34a99f0](https://github.com/lucid-softworks/akari/commit/34a99f0b0abfce6ca899e2aa33f091d5690b92e0))
+* **akari:** per-feed filter sheet on the home tab ([cc44fc8](https://github.com/lucid-softworks/akari/commit/cc44fc8309edb6261c972a72445496c7aebbb9ac))
+* **akari:** per-post BCP-47 language picker in the composer ([b8fc4ea](https://github.com/lucid-softworks/akari/commit/b8fc4ea00f7d6a7e59fed9712d9dcb0cd6576cfd))
+* **akari:** profile DM via Bluesky + Germ Network message-me ([27c3613](https://github.com/lucid-softworks/akari/commit/27c36136ae801f6d28f092fa9fc1497971882b75))
+* **akari:** refresh OAuth tokens proactively in useAuthStatus ([42de707](https://github.com/lucid-softworks/akari/commit/42de7073b779eb80df67bfdac65e291590c94203))
+* **akari:** render profile media tab as a 2-wide thumbnail grid ([dbe08b6](https://github.com/lucid-softworks/akari/commit/dbe08b698b09212835e9952048c63d4e2c7e58be))
+* **akari:** split sign-in into atproto OAuth + app-password screens ([7c36b16](https://github.com/lucid-softworks/akari/commit/7c36b16c4cfe2d417dbfa266d5f9ad4ca55d2f02))
+* **akari:** surface profile pronouns, website, and joined date ([67fa7b8](https://github.com/lucid-softworks/akari/commit/67fa7b89e635a8cf0350c519c6e2732d2cf647bb))
+* **akari:** tiered verification using Constellation back-references ([a32bd09](https://github.com/lucid-softworks/akari/commit/a32bd09b1e731514553f2b7660771a2f0cc80e14))
+* **akari:** user-pickable AppView and CDN with per-account overrides ([5dc9c46](https://github.com/lucid-softworks/akari/commit/5dc9c46d0130dfa33d880bbaa23904979aca18ca))
+* **akari:** wire accessibility + adult-content prefs and surface unreachable settings ([fc5a9ac](https://github.com/lucid-softworks/akari/commit/fc5a9aca4b02af4283177a24cce62cbb71380676))
+
+
+### Bug Fixes
+
+* **akari:** Android Modal safe-area + lucide outline seal + store-submit scripts ([091763e](https://github.com/lucid-softworks/akari/commit/091763efe59048b63a5e6a35580940b54c7a505d))
+* **akari:** bookmark icon now flips when you tap it ([252777f](https://github.com/lucid-softworks/akari/commit/252777f4aeb3ae69d155a35401885e8fd8636a63))
+* **akari:** clean up extraneous Stack.Screen / Tabs.Screen warnings ([8378918](https://github.com/lucid-softworks/akari/commit/83789187953cb4444a935557c3081fcd82bf7711))
+* **akari:** drop nested &lt;a&gt; from rich-text mentions, links, hashtags ([28f805e](https://github.com/lucid-softworks/akari/commit/28f805ef27efa45cd99c1ccd847f248b0bb5bad8))
+* **akari:** full-screen language picker with a back button ([5f4b3c1](https://github.com/lucid-softworks/akari/commit/5f4b3c16a06696674510d9dcb4cdd3bac51d2363))
+* **akari:** hide profile-tab Stack headers on web ([84f8e07](https://github.com/lucid-softworks/akari/commit/84f8e078bd0cd0bf4b64c91e56131f048b1aec9c))
+* **akari:** icon margins now apply to the wrapper, not the glyph ([daa62c4](https://github.com/lucid-softworks/akari/commit/daa62c42f3a78baa6659ea4c941c631718708564))
+* **akari:** keep MMKV singleton on globalThis to survive Fast Refresh ([8f6b366](https://github.com/lucid-softworks/akari/commit/8f6b366050e86802661b81810e1f85a3bad8a017))
+* **akari:** keep settings language picker back button in safe area on iOS ([b613816](https://github.com/lucid-softworks/akari/commit/b6138162c0c69174e2b383558d629a0bc32e9db0))
+* **akari:** keep typeahead dropdown above the form on web and iOS ([fc1456d](https://github.com/lucid-softworks/akari/commit/fc1456d899371bf611833a1f7706d0c8e5799698))
+* **akari:** keep web back-button history truthful ([ed2a223](https://github.com/lucid-softworks/akari/commit/ed2a223b04787258f828157d5083b02ccef1c76a))
+* **akari:** lay multi-image posts out as a 2-up grid ([2643f31](https://github.com/lucid-softworks/akari/commit/2643f310f82f6c8ed986684a84cb29bd054bed93))
+* **akari:** map outline speaker.slash icon for Android ([8ded406](https://github.com/lucid-softworks/akari/commit/8ded406aba637b879dd1f5f57a0afe45f08e0591))
+* **akari:** post composer Android safe-area + bottom white flash ([686d280](https://github.com/lucid-softworks/akari/commit/686d280fe21813ce6082c75110810b9e4c33c535))
+* **akari:** preserve thread root in reply records ([bb80b7d](https://github.com/lucid-softworks/akari/commit/bb80b7d8295d94cb617ebffa2c48957b040048de))
+* **akari:** refresh access tokens on 401 instead of dumping the user out ([d4fec83](https://github.com/lucid-softworks/akari/commit/d4fec8345bc1ca0d8ffa0e946b7f3efbd5b538ba))
+* **akari:** repair like rollback + backfill missing translations ([2554a0e](https://github.com/lucid-softworks/akari/commit/2554a0e33886413e880caddf1304b33c6dad919c))
+* **akari:** show Top/Latest sort only on the Posts search tab ([c525828](https://github.com/lucid-softworks/akari/commit/c525828a5aaa389f47ebeb2dde58441285c967ef))
+* **akari:** silence cosmetic useNativeDriver warning on web ([d6be614](https://github.com/lucid-softworks/akari/commit/d6be614f955d8131159383f1184dc784c2fd9f32))
+* **akari:** stop mis-rendering quoted external links as videos ([c66ad1c](https://github.com/lucid-softworks/akari/commit/c66ad1cc30cda85b69f64c3143846ded60cac429))
+* **akari:** trim Android post-header top padding ([6d4e8be](https://github.com/lucid-softworks/akari/commit/6d4e8be1b6bc90a93bfc3fe85709fa3d82a1165f))
+* **akari:** use group-prefixed paths for post-login redirects ([9c1399f](https://github.com/lucid-softworks/akari/commit/9c1399f28d4476b9158a281b74af3ba809bbc273))
+* **akari:** use the official bookmark lexicon names ([b375d66](https://github.com/lucid-softworks/akari/commit/b375d66cb7a07fdd3ddf30ad80aad0f0156be698))
+* **akari:** widen chat bubbles on web ([234aaf9](https://github.com/lucid-softworks/akari/commit/234aaf9bddf4cf0f6d2b4b44028bb2d7db141f51))
+
 ## [1.8.1](https://github.com/lucid-softworks/akari/compare/v1.8.0...v1.8.1) (2026-05-04)
 
 
