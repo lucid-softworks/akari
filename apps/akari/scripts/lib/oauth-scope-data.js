@@ -130,34 +130,16 @@ const flatScopes = [
     labelKey: 'oauth.scopes.atproto.label',
     descriptionKey: 'oauth.scopes.atproto.description',
   },
-  // bsky.social's auth server treats `transition:chat.bsky` as a strict
-  // subset of `transition:generic` and rejects the request when chat is
-  // asked for without generic also being requested + registered. We
-  // keep generic as a coarse legacy scope alongside the fine-grained
-  // `repo:*` ones; the user can untick it in the picker if they want.
-  {
-    id: 'transition:generic',
-    required: false,
-    defaultEnabled: true,
-    labelKey: 'oauth.scopes.generic.label',
-    descriptionKey: 'oauth.scopes.generic.description',
-  },
-  {
-    id: 'transition:chat.bsky',
-    required: false,
-    defaultEnabled: true,
-    labelKey: 'oauth.scopes.chat.label',
-    descriptionKey: 'oauth.scopes.chat.description',
-  },
-  // Bluesky AppView RPC scopes. The auth server enforces these
-  // per-procedure — wildcards aren't honored at the moment — so we
-  // enumerate every endpoint akari calls. One picker row, many tokens.
-  // When the list grows, add the new procedure here AND the URL is
-  // already covered by the same audience-specific aud parameter.
+  // RPC scopes are enforced literally per-procedure. The token format
+  // is `rpc:<NSID>?aud=<DID>` — no service-id fragment (we tried the
+  // `#bsky_appview` form initially and the auth server treated it as a
+  // distinct, unmatched scope). One picker row per audience, many
+  // underlying tokens. Add new procedures to the lists at the top of
+  // this file as akari starts calling them.
   {
     id: 'bskyAppview',
     tokens: bskyAppviewProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app#bsky_appview`,
+      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app`,
     ),
     required: false,
     defaultEnabled: true,
@@ -167,7 +149,7 @@ const flatScopes = [
   {
     id: 'bskyChatRpc',
     tokens: bskyChatProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat#bsky_chat`,
+      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat`,
     ),
     required: false,
     defaultEnabled: true,
@@ -177,9 +159,9 @@ const flatScopes = [
   {
     id: 'bskyVideoRpc',
     tokens: [
-      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app#bsky_video',
-      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app#bsky_video',
-      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app',
+      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app',
+      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app',
     ],
     required: false,
     defaultEnabled: true,
