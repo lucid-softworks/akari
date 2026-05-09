@@ -135,18 +135,11 @@ jobs:
         working-directory: apps/akari
         run: |
           set -euo pipefail
-          mkdir -p dist
-          ios_path="dist/akari-${RELEASE_TAG}-ios.ipa"
-          android_path="dist/akari-${RELEASE_TAG}-android.aab"
+          mkdir -p release-artifacts
+          ios_path="release-artifacts/akari-${RELEASE_TAG}-ios.ipa"
+          android_path="release-artifacts/akari-${RELEASE_TAG}-android.aab"
           eas build:download --latest --platform ios --profile production --non-interactive --path "$ios_path"
           eas build:download --latest --platform android --profile production --non-interactive --path "$android_path"
-
-      - name: Build production web bundle
-        working-directory: apps/akari
-        run: |
-          set -euo pipefail
-          npm run build:production -- --platform web --output-dir dist/web
-          tar -czf "dist/akari-${RELEASE_TAG}-web.tar.gz" -C dist/web .
 
       - name: Publish EAS update for native apps
         working-directory: apps/akari
@@ -159,7 +152,7 @@ jobs:
           set -euo pipefail
           eas update --branch production --platform all --message "Release ${RELEASE_TAG}" --non-interactive
 
-      - name: Deploy web bundle to Expo Hosting
+      - name: Deploy production web bundle
         working-directory: apps/akari
         env:
           APP_VARIANT: production
@@ -167,7 +160,13 @@ jobs:
           EXPO_NO_TELEMETRY: 1
         run: |
           set -euo pipefail
-          eas deploy --prod --export-dir dist/web --non-interactive
+          npm run deploy:prod -- --non-interactive
+
+      - name: Package web bundle for release
+        working-directory: apps/akari
+        run: |
+          set -euo pipefail
+          tar -czf "release-artifacts/akari-${RELEASE_TAG}-web.tar.gz" -C dist .
 
       - name: Publish Android build to Play Store
         working-directory: apps/akari
@@ -186,7 +185,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/dist/akari-${{ env.RELEASE_TAG }}-android.aab
+          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-android.aab
           asset_name: akari-${{ env.RELEASE_TAG }}-android.aab
           asset_content_type: application/vnd.android.package-archive
 
@@ -197,7 +196,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/dist/akari-${{ env.RELEASE_TAG }}-ios.ipa
+          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-ios.ipa
           asset_name: akari-${{ env.RELEASE_TAG }}-ios.ipa
           asset_content_type: application/octet-stream
 
@@ -208,7 +207,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/dist/akari-${{ env.RELEASE_TAG }}-web.tar.gz
+          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-web.tar.gz
           asset_name: akari-${{ env.RELEASE_TAG }}-web.tar.gz
           asset_content_type: application/gzip
 
