@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 import {
@@ -30,12 +31,29 @@ import {
  * scope in lock-step.
  */
 
-// preview.akari.lucidsoft.works isn't currently deployed, so every
-// variant (development, preview, production) uses the production
-// hosted client. Bring back per-variant routing once preview hosting
-// is back online.
+// All variants use the production-hosted client metadata (preview
+// origin isn't deployed). The native callback scheme still has to
+// match the running app's registered scheme so Android/iOS can route
+// the redirect back to us, so we pick a variant-specific scheme and
+// list all three in the production metadata's redirect_uris.
 const host = 'https://akari.lucidsoft.works';
-const nativeScheme = 'works.lucidsoft.akari';
+
+const NATIVE_SCHEMES: Record<'production' | 'preview' | 'development', string> = {
+  production: 'works.lucidsoft.akari',
+  preview: 'works.lucidsoft.akari.preview',
+  development: 'works.lucidsoft.akari.dev',
+};
+
+function resolveNativeScheme(): string {
+  const raw =
+    typeof Constants.expoConfig?.extra?.variant === 'string'
+      ? (Constants.expoConfig.extra.variant as string)
+      : 'production';
+  if (raw === 'preview' || raw === 'development') return NATIVE_SCHEMES[raw];
+  return NATIVE_SCHEMES.production;
+}
+
+const nativeScheme = resolveNativeScheme();
 
 export const OAUTH_CLIENT_ID =
   Platform.OS === 'web'
