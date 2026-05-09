@@ -130,16 +130,15 @@ const flatScopes = [
     labelKey: 'oauth.scopes.atproto.label',
     descriptionKey: 'oauth.scopes.atproto.description',
   },
-  // RPC scopes are enforced literally per-procedure. The token format
-  // is `rpc:<NSID>?aud=<DID>` — no service-id fragment (we tried the
-  // `#bsky_appview` form initially and the auth server treated it as a
-  // distinct, unmatched scope). One picker row per audience, many
-  // underlying tokens. Add new procedures to the lists at the top of
-  // this file as akari starts calling them.
+  // RPC scopes are enforced literally per-procedure. The atproto OAuth
+  // permissions proposal specifies `rpc:<NSID>?aud=<DID>#<service-id>`
+  // — the service-id fragment IS part of the scope token, even though
+  // some auth-server error messages render it URL-decoded or truncated.
+  // One picker row per audience, many underlying tokens.
   {
     id: 'bskyAppview',
     tokens: bskyAppviewProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app`,
+      (proc) => `rpc:${proc}?aud=did:web:api.bsky.app#bsky_appview`,
     ),
     required: false,
     defaultEnabled: true,
@@ -149,7 +148,7 @@ const flatScopes = [
   {
     id: 'bskyChatRpc',
     tokens: bskyChatProcedures.map(
-      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat`,
+      (proc) => `rpc:${proc}?aud=did:web:api.bsky.chat#bsky_chat`,
     ),
     required: false,
     defaultEnabled: true,
@@ -159,9 +158,9 @@ const flatScopes = [
   {
     id: 'bskyVideoRpc',
     tokens: [
-      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app',
-      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app',
-      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app',
+      'rpc:app.bsky.video.getJobStatus?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.getUploadLimits?aud=did:web:video.bsky.app#bsky_video',
+      'rpc:app.bsky.video.uploadVideo?aud=did:web:video.bsky.app#bsky_video',
     ],
     required: false,
     defaultEnabled: true,
