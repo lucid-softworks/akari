@@ -11,6 +11,7 @@ import { UnthreadEmbed } from '@/components/UnthreadEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { AdultContentGate } from '@/components/post/AdultContentGate';
+import { LiveStreamEmbed } from '@/components/post/LiveStreamEmbed';
 import { PostActions } from '@/components/post/PostActions';
 import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
@@ -249,6 +250,12 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
           onEmbedTranslated={setTranslatedEmbed}
         />
       ) : null}
+
+      {/* Inline live-stream player. The bsky live-now config flags certain
+          accounts as currently broadcasting; when their post embeds a link
+          to one of their registered domains we lift it into a full inline
+          player above the link card. */}
+      {isLive && liveStreamInfo ? <LiveStreamEmbed info={liveStreamInfo} /> : null}
 
       {hasEmbed ? <PostEmbeds postId={post.id} embed={post.embed} embeds={post.embeds} translatedEmbed={translatedEmbed} /> : null}
     </View>
