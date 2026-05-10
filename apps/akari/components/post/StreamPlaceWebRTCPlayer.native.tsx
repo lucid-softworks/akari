@@ -1,5 +1,5 @@
 import React, { type ComponentType } from 'react';
-import { NativeModules } from 'react-native';
+import { NativeModules, TurboModuleRegistry } from 'react-native';
 
 import type { StreamPlaceWebRTCPlayerProps } from './StreamPlaceWebRTCPlayer';
 export type { StreamPlaceWebRTCPlayerProps };
@@ -27,12 +27,24 @@ export type { StreamPlaceWebRTCPlayerProps };
 
 let cachedImpl: ComponentType<StreamPlaceWebRTCPlayerProps> | null | undefined;
 
+function isWebRTCModuleRegistered(): boolean {
+  // Bridge mode (legacy + new arch) surfaces native modules here.
+  if (NativeModules.WebRTCModule) return true;
+  // Bridgeless mode (new arch default in SDK 54) only surfaces them
+  // through the TurboModuleRegistry — `NativeModules.X` returns null
+  // for legacy modules. Our patch to react-native-webrtc's
+  // EventEmitter mirrors this fallback so the JS-side import doesn't
+  // crash when only the TurboModule path is wired.
+  try {
+    return TurboModuleRegistry.get('WebRTCModule') != null;
+  } catch {
+    return false;
+  }
+}
+
 function loadImpl(): ComponentType<StreamPlaceWebRTCPlayerProps> | null {
   if (cachedImpl !== undefined) return cachedImpl;
-  // Bridgeless mode hides legacy native modules from `NativeModules`;
-  // when WebRTCModule is absent we know the C++ side won't be ready
-  // and importing the JS package would crash.
-  if (!NativeModules.WebRTCModule) {
+  if (!isWebRTCModuleRegistered()) {
     cachedImpl = null;
     return null;
   }

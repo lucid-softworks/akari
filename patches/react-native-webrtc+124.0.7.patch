@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-webrtc/lib/commonjs/EventEmitter.js b/node_modules/react-native-webrtc/lib/commonjs/EventEmitter.js
+index e81bb46..2308d78 100644
+--- a/node_modules/react-native-webrtc/lib/commonjs/EventEmitter.js
++++ b/node_modules/react-native-webrtc/lib/commonjs/EventEmitter.js
+@@ -11,9 +11,11 @@ var _EventEmitter = _interopRequireDefault(require("react-native/Libraries/vendo
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ // @ts-ignore
+ 
+-const {
+-  WebRTCModule
+-} = _reactNative.NativeModules;
++// Bridgeless mode (Expo SDK 54 / RN 0.81 with new architecture) hides
++// legacy native modules from `NativeModules`. Fall back to the
++// TurboModuleRegistry lookup so `new NativeEventEmitter(...)` below
++// gets a non-null argument.
++const WebRTCModule = _reactNative.NativeModules.WebRTCModule ?? _reactNative.TurboModuleRegistry.get('WebRTCModule');
+ 
+ // This emitter is going to be used to listen to all the native events (once) and then
+ // re-emit them on a JS-only emitter.
+diff --git a/node_modules/react-native-webrtc/lib/module/EventEmitter.js b/node_modules/react-native-webrtc/lib/module/EventEmitter.js
+index f522af2..a07b4e3 100644
+--- a/node_modules/react-native-webrtc/lib/module/EventEmitter.js
++++ b/node_modules/react-native-webrtc/lib/module/EventEmitter.js
+@@ -1,9 +1,11 @@
+-import { NativeModules, NativeEventEmitter } from 'react-native';
++import { NativeModules, NativeEventEmitter, TurboModuleRegistry } from 'react-native';
+ // @ts-ignore
+ import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
+-const {
+-  WebRTCModule
+-} = NativeModules;
++// Bridgeless mode (Expo SDK 54 / RN 0.81 with new architecture) hides
++// legacy native modules from `NativeModules`. Fall back to the
++// TurboModuleRegistry lookup so `new NativeEventEmitter(...)` below
++// gets a non-null argument.
++const WebRTCModule = NativeModules.WebRTCModule ?? TurboModuleRegistry.get('WebRTCModule');
+ 
+ // This emitter is going to be used to listen to all the native events (once) and then
+ // re-emit them on a JS-only emitter.
