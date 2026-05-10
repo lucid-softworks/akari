@@ -28,6 +28,7 @@ import { DialogProvider } from '@/contexts/DialogContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { PlausibleAutoPageview, PlausibleProvider } from '@/utils/plausible';
 import { setupBackgroundUpdates } from '@/utils/backgroundUpdates';
 import { restoreOAuthBindingFromStorage } from '@/utils/oauth/clientBinding';
 import {
@@ -143,6 +144,20 @@ const rawAxiomToken = process.env.EXPO_PUBLIC_AXIOM_TOKEN?.trim();
 const rawAxiomOrgId = process.env.EXPO_PUBLIC_AXIOM_ORG_ID?.trim();
 const rawAxiomDataset = process.env.EXPO_PUBLIC_AXIOM_DATASET?.trim();
 
+const rawPlausibleDomain = process.env.EXPO_PUBLIC_PLAUSIBLE_DOMAIN?.trim();
+const rawPlausibleApiHost = process.env.EXPO_PUBLIC_PLAUSIBLE_API_HOST?.trim();
+const plausibleDomain =
+  rawPlausibleDomain && rawPlausibleDomain.length > 0 ? rawPlausibleDomain : 'akari.blue';
+const plausibleApiHost =
+  rawPlausibleApiHost && rawPlausibleApiHost.length > 0 ? rawPlausibleApiHost : undefined;
+// Restrict tracking to the production variant so dev/preview/TestFlight
+// traffic doesn't pollute the dashboard. Set
+// EXPO_PUBLIC_PLAUSIBLE_DEV_TRACKING=1 in .env.local to force-enable
+// from any variant when smoke-testing the integration.
+const plausibleDevTracking = process.env.EXPO_PUBLIC_PLAUSIBLE_DEV_TRACKING?.trim() === '1';
+const plausibleEnabled =
+  Constants.expoConfig?.extra?.variant === 'production' || plausibleDevTracking;
+
 const crashReporterConfig: CrashReporterConfig | null = rawAxiomToken
   ? {
       token: rawAxiomToken,
@@ -162,23 +177,30 @@ function AppProviders({ colorScheme }: ProvidersProps) {
 
   return (
     <LanguageProvider>
-      <ToastProvider>
-        <DialogProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <OAuthAccountBinder />
-            <DevServerBanner />
-            <OfflineBanner />
-            <Stack>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="debug" options={{ headerShown: false }} />
-              <Stack.Screen name="oauth/callback" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </DialogProvider>
-      </ToastProvider>
+      <PlausibleProvider
+        domain={plausibleDomain}
+        apiHost={plausibleApiHost}
+        enabled={plausibleEnabled}
+      >
+        <ToastProvider>
+          <DialogProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <OAuthAccountBinder />
+              <DevServerBanner />
+              <OfflineBanner />
+              <PlausibleAutoPageview />
+              <Stack>
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="debug" options={{ headerShown: false }} />
+                <Stack.Screen name="oauth/callback" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style="auto" />
+            </ThemeProvider>
+          </DialogProvider>
+        </ToastProvider>
+      </PlausibleProvider>
     </LanguageProvider>
   );
 }

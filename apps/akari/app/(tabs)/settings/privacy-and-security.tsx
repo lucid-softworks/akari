@@ -22,6 +22,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAnalyticsOptOut } from '@/utils/plausible';
 
 export default function PrivacyAndSecurityScreen() {
   const borderColor = useBorderColor();
@@ -36,6 +37,7 @@ export default function PrivacyAndSecurityScreen() {
   const discourageLoggedOut = isLoggedOutVisibilityDiscouraged(profileRecordQuery.data);
   const appPasswordsQuery = useAppPasswords();
   const appPasswordsCount = appPasswordsQuery.data?.length;
+  const { optedOut: analyticsOptedOut, setOptedOut: setAnalyticsOptedOut } = useAnalyticsOptOut();
 
   const handleToggleDiscourage = (next: boolean) => {
     updateLoggedOutVisibility.mutate(next, {
@@ -124,6 +126,35 @@ export default function PrivacyAndSecurityScreen() {
 
         <ThemedView style={[styles.noticeCard, { borderColor }]}>
           <ThemedText style={styles.noticeBody}>{t('settings.loggedOutVisibilityNotice')}</ThemedText>
+        </ThemedView>
+
+        <SettingsSection title={t('settings.analytics')}>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <ThemedView style={styles.toggleRow}>
+              <IconSymbol
+                color={iconColor}
+                name="chart.bar.fill"
+                size={20}
+                style={styles.toggleIcon}
+              />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.analyticsToggle')}
+                </ThemedText>
+                <ThemedText style={[styles.toggleHint, { color: subduedColor }]}>
+                  {t('settings.analyticsDescription')}
+                </ThemedText>
+              </View>
+              <Switch
+                value={!analyticsOptedOut}
+                onValueChange={(next) => setAnalyticsOptedOut(!next)}
+              />
+            </ThemedView>
+          </ThemedView>
+        </SettingsSection>
+
+        <ThemedView style={[styles.noticeCard, { borderColor }]}>
+          <ThemedText style={styles.noticeBody}>{t('settings.analyticsNotice')}</ThemedText>
         </ThemedView>
       </ScrollView>
     </SettingsSubpageLayout>
