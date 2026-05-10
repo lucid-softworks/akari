@@ -1179,6 +1179,29 @@ export type BlueskyInterestsPref = {
 };
 
 /**
+ * Content languages the user wants their feeds filtered to. Empty
+ * array (or missing pref) means "show every language".
+ *
+ * @see https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/actor/defs.json
+ */
+export type BlueskyContentLanguagesPref = {
+  $type: 'app.bsky.actor.defs#contentLanguagesPref';
+  /** BCP-47 language codes (e.g. 'en', 'ja', 'pt-BR'). */
+  languages: string[];
+};
+
+/**
+ * Default sort + ranking choices applied to thread views (the post
+ * detail screen). atproto exposes a few preset sort orders plus a
+ * boolean to bubble replies from accounts the viewer follows.
+ */
+export type BlueskyThreadViewPref = {
+  $type: 'app.bsky.actor.defs#threadViewPref';
+  sort?: 'oldest' | 'newest' | 'most-likes' | 'random' | 'hotness';
+  prioritizeFollowedUsers?: boolean;
+};
+
+/**
  * Per-category filter that supports an `include` selector — applies to
  * categories where the user can scope to "everyone" vs. "only people I
  * follow" (follow / like / mention / quote / reply / repost variants).
@@ -1337,6 +1360,8 @@ export type BlueskyPreference =
   | BlueskyAdultContentPref
   | BlueskyPostInteractionSettingsPref
   | BlueskyContentLabelPref
+  | BlueskyContentLanguagesPref
+  | BlueskyThreadViewPref
   | BlueskyAppStatePref
   | BlueskyLabelersPref
   | BlueskyMutedWordsPref;

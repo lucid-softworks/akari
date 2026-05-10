@@ -43,7 +43,7 @@ export default function ContentAndMediaScreen() {
         key: 'thread-preferences',
         icon: 'text.bubble.fill',
         label: t('settings.threadPreferences'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/thread-preferences'),
       },
       {
         key: 'following-feed-preferences',
@@ -61,7 +61,7 @@ export default function ContentAndMediaScreen() {
         key: 'your-interests',
         icon: 'info.circle.fill',
         label: t('settings.yourInterests'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/your-interests'),
       },
       {
         key: 'hidden-content',

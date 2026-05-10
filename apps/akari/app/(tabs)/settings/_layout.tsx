@@ -105,6 +105,18 @@ export default function SettingsLayout() {
         options={{ title: t('settings.accessibility') }}
       />
       <Stack.Screen name="languages" options={{ title: t('settings.language') }} />
+      <Stack.Screen
+        name="content-languages"
+        options={{ title: t('settings.contentLanguages') }}
+      />
+      <Stack.Screen
+        name="your-interests"
+        options={{ title: t('settings.yourInterests') }}
+      />
+      <Stack.Screen
+        name="thread-preferences"
+        options={{ title: t('settings.threadPreferences') }}
+      />
       <Stack.Screen name="about" options={{ title: t('settings.about') }} />
       <Stack.Screen name="add-account" options={{ title: t('common.addAccount') }} />
       <Stack.Screen name="customize-tabs" options={{ title: t('settings.customizeTabs') }} />
