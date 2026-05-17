@@ -357,12 +357,12 @@ export default function SearchScreen() {
       setSearchQuery(query.trim());
       Keyboard.dismiss();
     }
-  }, [query]);
+  }, [query, setSearchQuery]);
 
   const handleClearQuery = useCallback(() => {
     setQuery('');
     setSearchQuery('');
-  }, []);
+  }, [setQuery, setSearchQuery]);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -561,6 +561,7 @@ export default function SearchScreen() {
       sort,
       setActiveTab,
       setQuery,
+      setSort,
       shouldShowTabs,
       t,
       textColor,

@@ -155,14 +155,14 @@ export function ShareToChatSheet({
     },
     [],
   );
-  const setStep = useCallback((step: 'pick' | 'compose') => {
-    setState((prev) => ({ ...prev, step }));
+  const setStep = useCallback((nextStep: 'pick' | 'compose') => {
+    setState((prev) => ({ ...prev, step: nextStep }));
   }, []);
-  const setDraft = useCallback((draft: string) => {
-    setState((prev) => ({ ...prev, draft }));
+  const setDraft = useCallback((nextDraft: string) => {
+    setState((prev) => ({ ...prev, draft: nextDraft }));
   }, []);
-  const setSending = useCallback((sending: boolean) => {
-    setState((prev) => ({ ...prev, sending }));
+  const setSending = useCallback((nextSending: boolean) => {
+    setState((prev) => ({ ...prev, sending: nextSending }));
   }, []);
 
   useEffect(() => {
@@ -180,7 +180,7 @@ export function ShareToChatSheet({
         ? prev.filter((c) => c.convoId !== convo.convoId)
         : [...prev, convo],
     );
-  }, []);
+  }, [setSelected]);
 
   const selectedIds = useMemo(
     () => new Set(selected.map((c) => c.convoId)),

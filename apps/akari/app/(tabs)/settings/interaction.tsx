@@ -48,7 +48,7 @@ export default function InteractionSettingsScreen() {
     allowQuotes: settings.data.allowQuotes,
   }));
   const { mode, allowFollowers, allowFollowing, allowMentioned, allowQuotes } = form;
-  const setMode = useCallback((mode: ReplyMode) => setForm((p) => ({ ...p, mode })), []);
+  const setMode = useCallback((nextMode: ReplyMode) => setForm((p) => ({ ...p, mode: nextMode })), []);
   const setAllowFollowers = useCallback(
     (next: boolean | ((prev: boolean) => boolean)) =>
       setForm((p) => ({
