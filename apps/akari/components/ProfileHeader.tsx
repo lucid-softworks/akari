@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import { Image } from '@/components/Image';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
@@ -9,14 +8,18 @@ import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { ReportSheet } from '@/components/ReportSheet';
 import { Labels } from '@/components/Labels';
-import { VerificationBadge } from '@/components/VerificationBadge';
+import { ProfileActionButtons } from '@/components/ProfileHeader/ProfileActionButtons';
+import { ProfileAvatar } from '@/components/ProfileHeader/ProfileAvatar';
+import { ProfileBanner } from '@/components/ProfileHeader/ProfileBanner';
+import { ProfileBlockedNotice } from '@/components/ProfileHeader/ProfileBlockedNotice';
+import { ProfileIdentity } from '@/components/ProfileHeader/ProfileIdentity';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
 import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
+import { activeOpacity, fontSize, hitSlop, layout, semanticColors, spacing } from '@/constants/tokens';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
@@ -115,12 +118,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const borderColor = useBorderColor();
-  const avatarBorderColor = useThemeColor({}, 'background');
-  const bannerPlaceholderColor = useThemeColor({ light: '#e0e0e0', dark: '#2A2D2E' }, 'background');
-  const mutedTextColor = useThemeColor(
-    { light: '#687076', dark: '#9BA1A6' },
-    'text',
-  );
+  const mutedTextColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
   const followMutation = useFollowUser();
   const startConvoMutation = useStartConvo();
   const updateProfileMutation = useUpdateProfile();
@@ -147,7 +145,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
 
-  // Bluesky DM action — visible whenever we're looking at someone else who
+  // Bluesky DM action is visible whenever we're looking at someone else who
   // we aren't blocking (and who isn't blocking us). The Bluesky chat service
   // gates incoming based on the target's own preference, so a tap that
   // hits a "user only allows DMs from people they follow"-style refusal
@@ -241,122 +239,39 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
 
   return (
     <>
-      {/* Banner */}
-      <ThemedView style={styles.banner}>
-        {profile.banner ? (
-          <Image source={{ uri: profile.banner }} style={styles.bannerImage} contentFit="cover" />
-        ) : (
-          <View style={[styles.bannerPlaceholder, { backgroundColor: bannerPlaceholderColor }]}>
-            <ThemedText style={styles.bannerPlaceholderText}>{t('ui.noBanner')}</ThemedText>
-          </View>
-        )}
-      </ThemedView>
+      <ProfileBanner banner={profile.banner} />
 
-      {/* Profile Header */}
       <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
-        {/* Avatar */}
-        <View style={styles.avatarContainer}>
-          {profile.avatar ? (
-            <View style={[styles.avatar, { borderColor: avatarBorderColor }]}>
-              <Image source={{ uri: profile.avatar }} style={styles.avatarImage} contentFit="cover" />
-            </View>
-          ) : (
-            <View style={[styles.avatar, { borderColor: avatarBorderColor }]}>
-              <View style={styles.avatarFallbackContainer}>
-                <ThemedText style={styles.avatarFallback}>
-                  {(profile.displayName || profile.handle || 'U')[0].toUpperCase()}
-                </ThemedText>
-              </View>
-            </View>
-          )}
-        </View>
+        <ProfileAvatar avatar={profile.avatar} displayName={profile.displayName} handle={profile.handle} />
 
-        {/* Profile Info Section */}
         <View style={styles.profileInfoSection}>
-          {/* Name and Handle */}
-          <View style={styles.nameHandleSection}>
-            <View style={styles.displayNameRow}>
-              <ThemedText style={styles.displayName}>{profile.displayName || profile.handle}</ThemedText>
-              <VerificationBadge
-                subjectDid={profile.did}
-                verification={profile.verification}
-                subjectHandle={profile.handle}
-                subjectDisplayName={profile.displayName}
-                size={20}
-              />
-            </View>
-            <View style={styles.handleRow}>
-              <Pressable style={({ pressed }) => [styles.handleContainer, pressed && { opacity: activeOpacity.default }]} onPress={() => setShowHandleHistory(true)}  hitSlop={hitSlop}>
-                <ThemedText style={styles.handle}>@{profile.handle}</ThemedText>
-                <IconSymbol name="clock" size={fontSize.base} color="#666" style={styles.handleHistoryIcon} />
-              </Pressable>
-              {profile.pronouns ? (
-                <>
-                  <ThemedText style={styles.pronounsSeparator}>·</ThemedText>
-                  <ThemedText style={styles.pronouns} numberOfLines={1}>{profile.pronouns}</ThemedText>
-                </>
-              ) : null}
-            </View>
-          </View>
+          <ProfileIdentity
+            displayName={profile.displayName}
+            handle={profile.handle}
+            did={profile.did}
+            verification={profile.verification}
+            pronouns={profile.pronouns}
+            onHandlePress={() => setShowHandleHistory(true)}
+          />
 
-          {/* Action Buttons */}
-          <View style={styles.actionButtons}>
-            {isOwnProfile ? (
-              <>
-                <Pressable style={({ pressed }) => [styles.editButton, pressed && { opacity: 0.7 }]} onPress={handleEditProfile}>
-                  <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
-                </Pressable>
-                {onSettingsPress ? (
-                  <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={onSettingsPress}  hitSlop={hitSlop}>
-                    <IconSymbol name="gearshape" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </Pressable>
-                ) : null}
-                <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                  <Pressable style={({ pressed }) => [styles.moreButton, pressed && { opacity: activeOpacity.default }]} onPress={handleDropdownToggle}  hitSlop={hitSlop}>
-                    <IconSymbol name="ellipsis" size={fontSize.xxl} color="#ffffff" />
-                  </Pressable>
-                </View>
-              </>
-            ) : (
-              <>
-                {!isBlockedBy && !profile.viewer?.blocking ? (
-                  <Pressable
-                    style={({ pressed }) => [isFollowing ? styles.followingButton : styles.followButton, pressed && { opacity: activeOpacity.default }]}
-                    onPress={handleFollowPress}
-                    disabled={followMutation.isPending}
-                    
-                  >
-                    <ThemedText
-                      style={isFollowing ? styles.followingButtonText : styles.followButtonText}
-                    >
-                      {isFollowing ? t('common.following') : t('common.follow')}
-                    </ThemedText>
-                  </Pressable>
-                ) : null}
-                <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={handleSearchPosts}  hitSlop={hitSlop}>
-                  <IconSymbol name="magnifyingglass" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                </Pressable>
-                {showBskyMessageButton ? (
-                  <Pressable
-                    style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]}
-                    onPress={handleBskyMessage}
-                    
-                    hitSlop={hitSlop}
-                    disabled={startConvoMutation.isPending}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('profile.sendMessage')}
-                  >
-                    <IconSymbol name="bubble.left" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </Pressable>
-                ) : null}
-                <View style={styles.moreButtonContainer} ref={dropdownRef}>
-                  <Pressable style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]} onPress={handleDropdownToggle}  hitSlop={hitSlop}>
-                    <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />
-                  </Pressable>
-                </View>
-              </>
-            )}
-          </View>
+          <ProfileActionButtons
+            state={{
+              isOwnProfile,
+              isFollowing,
+              isBlocking,
+              isBlockedBy,
+              showBskyMessageButton,
+              followPending: followMutation.isPending,
+              startConvoPending: startConvoMutation.isPending,
+            }}
+            dropdownRef={dropdownRef}
+            onEditProfile={handleEditProfile}
+            onSettingsPress={onSettingsPress}
+            onDropdownToggle={handleDropdownToggle}
+            onFollowPress={handleFollowPress}
+            onSearchPosts={handleSearchPosts}
+            onBskyMessage={handleBskyMessage}
+          />
         </View>
 
         {/* Stats */}
@@ -382,7 +297,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             <Pressable
               style={({ pressed }) => [styles.metaItem, pressed && { opacity: activeOpacity.default }]}
               onPress={() => void Linking.openURL(profile.website!)}
-              
               hitSlop={hitSlop}
             >
               <IconSymbol name="link" size={fontSize.base} color={mutedTextColor} />
@@ -420,18 +334,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
         {/* Labels */}
         <Labels labels={profile.labels} />
 
-        {(isBlockedBy || isBlocking) ? (
-          <View style={[styles.blockedMessage, { borderColor }]}>
-            <IconSymbol name="hand.raised.fill" size={16} color={mutedTextColor} />
-            <ThemedText style={[styles.blockedText, { color: mutedTextColor }]}>
-              {isBlockedBy && isBlocking
-                ? t('profile.mutualBlock')
-                : isBlockedBy
-                ? t('profile.youAreBlockedByUser')
-                : t('profile.youHaveBlockedUser')}
-            </ThemedText>
-          </View>
-        ) : null}
+        <ProfileBlockedNotice isBlockedBy={isBlockedBy} isBlocking={isBlocking} borderColor={borderColor} />
       </ThemedView>
 
       {/* Profile Edit Modal */}
@@ -470,64 +373,12 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   );
 }
 
-const AVATAR_INNER = layout.avatarLarge - 6; // 74px (80 - 2*3 border)
-
 const styles = StyleSheet.create({
-  banner: {
-    height: 150,
-    backgroundColor: '#f0f0f0',
-  },
-  bannerImage: {
-    flex: 1,
-  },
-  bannerPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // backgroundColor applied dynamically via useThemeColor
-  },
-  bannerPlaceholderText: {
-    fontSize: fontSize.lg,
-    opacity: opacity.tertiary + 0.1,
-  },
   profileHeader: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     borderBottomWidth: layout.hairline,
     position: 'relative',
-  },
-  avatarContainer: {
-    marginTop: -50,
-    marginBottom: spacing.sm,
-  },
-  avatar: {
-    width: layout.avatarLarge,
-    height: layout.avatarLarge,
-    borderRadius: layout.avatarLarge / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    // borderColor applied dynamically via useThemeColor
-    overflow: 'hidden',
-    backgroundColor: 'transparent',
-  },
-  avatarImage: {
-    width: AVATAR_INNER,
-    height: AVATAR_INNER,
-    borderRadius: AVATAR_INNER / 2,
-  },
-  avatarFallbackContainer: {
-    width: AVATAR_INNER,
-    height: AVATAR_INNER,
-    borderRadius: AVATAR_INNER / 2,
-    backgroundColor: semanticColors.systemBlue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarFallback: {
-    fontSize: fontSize.xxxl,
-    fontWeight: fontWeight.bold,
-    color: '#fff',
   },
   profileInfoSection: {
     flexDirection: 'row',
@@ -535,130 +386,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: spacing.sm,
   },
-  nameHandleSection: {
-    flex: 1,
-    marginRight: spacing.sm + spacing.xxs,
-  },
-  displayNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    marginBottom: spacing.xxs,
-  },
-  displayName: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-    flexShrink: 1,
-  },
-  handle: {
-    fontSize: 15,
-    opacity: opacity.secondary,
-  },
-  handleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  handleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  pronounsSeparator: {
-    fontSize: 15,
-    opacity: opacity.tertiary,
-  },
-  pronouns: {
-    fontSize: 15,
-    opacity: opacity.secondary,
-    flexShrink: 1,
-  },
-  handleHistoryIcon: {
-    marginLeft: spacing.sm - spacing.xxs,
-    opacity: opacity.tertiary,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  iconButton: {
-    width: layout.avatarMedium,
-    height: layout.avatarMedium,
-    borderRadius: layout.avatarMedium / 2,
-    borderWidth: layout.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
-  },
-  editButton: {
-    height: layout.avatarSmall,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
-    borderWidth: layout.border,
-    borderColor: semanticColors.systemBlue,
-    backgroundColor: semanticColors.systemBlue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  followButton: {
-    height: layout.avatarSmall,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
-    borderWidth: layout.border,
-    borderColor: semanticColors.systemBlue,
-    backgroundColor: semanticColors.systemBlue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  followButtonText: {
-    color: '#fff',
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  followingButton: {
-    height: layout.avatarSmall,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
-    borderWidth: layout.border,
-    borderColor: semanticColors.systemBlue,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  followingButtonText: {
-    color: semanticColors.systemBlue,
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  moreButtonContainer: {
-    position: 'relative',
-    zIndex: 999999,
-  },
-  moreButton: {
-    width: layout.avatarSmall,
-    height: layout.avatarSmall,
-    borderRadius: radius.lg,
-    borderWidth: layout.border,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   statsContainer: {
     marginBottom: spacing.sm,
   },
   statText: {
     fontSize: 15,
     lineHeight: 20,
-  },
-  statNumber: {
-    fontWeight: fontWeight.bold,
   },
   description: {
     fontSize: fontSize.base,
@@ -691,21 +424,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: spacing.sm,
-  },
-
-  blockedMessage: {
-    marginTop: spacing.lg,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderWidth: layout.hairline,
-    borderRadius: radius.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-  },
-  blockedText: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.medium,
   },
 });

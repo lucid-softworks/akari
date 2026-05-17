@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 
-import { MessagesListScreen } from './index';
+import { MessagesListScreen } from '@/components/messages/MessagesListScreen';
 
 export default function PendingMessagesScreen() {
   const handleBackPress = React.useCallback(() => {

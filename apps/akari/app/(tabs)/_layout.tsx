@@ -1,20 +1,16 @@
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Image } from '@/components/Image';
 import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing, radius, fontSize, fontWeight, shadows, layout, touchTarget } from '@/constants/tokens';
+import { layout, spacing } from '@/constants/tokens';
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
-import { HapticTab } from '@/components/HapticTab';
 import { ReportSheet } from '@/components/ReportSheet';
 import { Sidebar } from '@/components/Sidebar';
-import { TabBadge } from '@/components/TabBadge';
 import { ThemedView } from '@/components/ThemedView';
 import { ChatActionsSheet } from '@/components/chat/ChatActionsSheet';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
+import { HardcodedTabBar } from '@/components/tabs/HardcodedTabBar';
+import { MobileTabHeader } from '@/components/tabs/MobileTabHeader';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
@@ -22,10 +18,9 @@ import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificati
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useTabConfig, type TabKey } from '@/hooks/useTabConfig';
+import { useTabConfig } from '@/hooks/useTabConfig';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const headerTitles: Record<string, string> = {
   index: 'Home',
@@ -51,202 +46,6 @@ const headerTitles: Record<string, string> = {
   about: 'About',
   development: 'Development',
 };
-
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: { name: React.ComponentProps<typeof IconSymbol>['name']; color: string }) {
-  return <IconSymbol size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-type ProfileTabIconProps = {
-  color: string;
-  focused: boolean;
-  avatarUri?: string;
-};
-
-function ProfileTabIcon({ color, focused, avatarUri }: ProfileTabIconProps) {
-  const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F2937' }, 'border');
-  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const placeholderColor = useThemeColor({ light: '#D1D5DB', dark: '#1F2937' }, 'background');
-
-  const resolvedBorderColor = focused ? accentColor : borderColor;
-  const resolvedBackgroundColor = avatarUri ? 'transparent' : focused ? accentColor : placeholderColor;
-  const resolvedIconColor = !avatarUri && focused ? '#FFFFFF' : color;
-
-  return (
-    <View
-      style={[
-        profileTabIconStyles.container,
-        {
-          borderColor: resolvedBorderColor,
-          backgroundColor: resolvedBackgroundColor,
-        },
-      ]}
-    >
-      {avatarUri ? (
-        <Image source={{ uri: avatarUri }} style={profileTabIconStyles.image} contentFit="cover" />
-      ) : (
-        <IconSymbol name="person.fill" color={resolvedIconColor} size={18} />
-      )}
-    </View>
-  );
-}
-
-type HardcodedTabBarProps = BottomTabBarProps & {
-  unreadMessagesCount: number;
-  unreadNotificationsCount: number;
-  avatarUri?: string;
-  visibleTabs: TabKey[];
-};
-
-const TAB_ICONS: Record<TabKey, string> = {
-  index: 'house',
-  search: 'magnifyingglass',
-  messages: 'message.fill',
-  notifications: 'bell',
-  bookmarks: 'bookmark.fill',
-  profile: 'person.fill',
-  settings: 'gearshape.fill',
-};
-
-const TabButton = React.memo(function TabButton({
-  tabKey,
-  route,
-  isFocused,
-  color,
-  badgeCount,
-  avatarUri,
-  navigation,
-}: {
-  tabKey: TabKey;
-  route: { key: string; name: string };
-  isFocused: boolean;
-  color: string;
-  badgeCount: number;
-  avatarUri?: string;
-  navigation: HardcodedTabBarProps['navigation'];
-}) {
-  const handlePress = useCallback(() => {
-    const event = navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-      canPreventDefault: true,
-    });
-
-    if (isFocused) {
-      tabScrollRegistry.handleTabPress(tabKey);
-    }
-
-    if (!isFocused && !event.defaultPrevented) {
-      navigation.navigate(route.name);
-    }
-  }, [navigation, route.key, route.name, isFocused, tabKey]);
-
-  const handleLongPress = useCallback(() => {
-    navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
-    });
-  }, [navigation, route.key]);
-
-  return (
-    <HapticTab
-      accessibilityRole="button"
-      accessibilityState={{ selected: isFocused }}
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      style={hardcodedTabStyles.tabButton}
-    >
-      <View style={hardcodedTabStyles.iconContainer}>
-        {tabKey === 'profile' ? (
-          <ProfileTabIcon color={color} focused={isFocused} avatarUri={avatarUri} />
-        ) : badgeCount > 0 ? (
-          <View style={hardcodedTabStyles.badgeWrapper}>
-            <TabBarIcon name={TAB_ICONS[tabKey] as any} color={color} />
-            <TabBadge count={badgeCount} size="small" />
-          </View>
-        ) : (
-          <TabBarIcon name={TAB_ICONS[tabKey] as any} color={color} />
-        )}
-      </View>
-    </HapticTab>
-  );
-});
-
-function HardcodedTabBar({
-  state,
-  navigation,
-  unreadMessagesCount,
-  unreadNotificationsCount,
-  avatarUri,
-  visibleTabs,
-}: HardcodedTabBarProps) {
-  const borderColor = useBorderColor();
-  const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const inactiveTint = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const tabBarSurface = useThemeColor({}, 'background');
-  const insets = useSafeAreaInsets();
-
-  const TabBarBackgroundComponent = TabBarBackground as React.ComponentType | undefined;
-
-  // iOS Safari standalone PWAs have been seen to over-report
-  // safe-area-inset-bottom (sometimes by 100px+), leaving a tall
-  // empty band below the nav. The home indicator is at most ~34dp
-  // anywhere, so cap web's bottom inset.
-  const bottomInset = Platform.OS === 'web' ? Math.min(insets.bottom, 32) : insets.bottom;
-
-  return (
-    <View
-      style={[
-        hardcodedTabStyles.container,
-        {
-          borderColor,
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : tabBarSurface,
-          paddingLeft: Math.max(spacing.lg, insets.left + spacing.sm),
-          paddingRight: Math.max(spacing.lg, insets.right + spacing.sm),
-          paddingBottom: spacing.sm + bottomInset,
-        },
-      ]}
-    >
-      {Platform.OS === 'ios' && TabBarBackgroundComponent ? (
-        <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          <TabBarBackgroundComponent />
-        </View>
-      ) : null}
-      <View style={hardcodedTabStyles.content}>
-        <View style={hardcodedTabStyles.tabList}>
-          {visibleTabs.map((tabKey) => {
-            const routeIndex = state.routes.findIndex((route) => route.name === tabKey);
-            if (routeIndex === -1) {
-              return null;
-            }
-
-            const route = state.routes[routeIndex];
-            const isFocused = state.index === routeIndex;
-            const color = isFocused ? accentColor : inactiveTint;
-            const badgeCount =
-              tabKey === 'messages' ? unreadMessagesCount : tabKey === 'notifications' ? unreadNotificationsCount : 0;
-
-            return (
-              <TabButton
-                key={tabKey}
-                tabKey={tabKey}
-                route={route}
-                isFocused={isFocused}
-                color={color}
-                badgeCount={badgeCount}
-                avatarUri={avatarUri}
-                navigation={navigation}
-              />
-            );
-          })}
-        </View>
-      </View>
-    </View>
-  );
-}
 
 export default function TabLayout() {
   const { isLargeScreen } = useResponsive();
@@ -436,83 +235,26 @@ export default function TabLayout() {
       <SafeAreaInsetsContext.Provider value={contentSafeAreaInsets}>
         <View
           style={[
-            mobileDrawerStyles.contentContainer,
+            { flex: 1 },
             shouldShowMobileHeader
               ? null
               : { paddingTop: safeAreaInsets.top },
           ]}
         >
           {shouldShowMobileHeader ? (
-            <View
-              style={[
-                mobileDrawerStyles.header,
-                {
-                  // The `+6` here used to give a touch of extra breathing room
-                  // above the title row, but on Android with edge-to-edge +
-                  // display cutout `safeAreaInsets.top` already covers both
-                  // the status bar AND the cutout, so the extra dp pile up
-                  // visibly. The button row has its own ~44dp height — that's
-                  // plenty of vertical space without padding past the inset.
-                  paddingTop: safeAreaInsets.top,
-                  backgroundColor: headerBackground,
-                  borderBottomColor: headerBorderColor,
-                },
-              ]}
-            >
-              {isNestedRoute ? (
-                <HapticTab
-                  accessibilityRole="button"
-                  accessibilityLabel="Go back"
-                  onPress={() => back()}
-                  style={mobileDrawerStyles.headerButton}
-                >
-                  <IconSymbol name="chevron.left" color={headerIconColor} size={22} />
-                </HapticTab>
-              ) : (
-                <View style={mobileDrawerStyles.headerButton} />
-              )}
-              <View style={mobileDrawerStyles.headerContent}>
-                {isMessageThread && messageThreadConvo ? (
-                  <>
-                    {messageThreadConvo.avatar ? (
-                      <Image source={{ uri: messageThreadConvo.avatar }} style={mobileDrawerStyles.headerConvoAvatar} />
-                    ) : null}
-                    <View style={mobileDrawerStyles.headerConvoInfo}>
-                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                        {messageThreadConvo.isGroup
-                          ? messageThreadConvo.members.map((m) => m.displayName || m.handle).join(', ')
-                          : messageThreadConvo.displayName || messageThreadConvo.handle}
-                      </Text>
-                      {!messageThreadConvo.isGroup ? (
-                        <Text style={[mobileDrawerStyles.headerConvoHandle, { color: headerTextColor }]} numberOfLines={1}>
-                          @{messageThreadConvo.handle}
-                        </Text>
-                      ) : null}
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    {headerTitle ? (
-                      <Text style={[mobileDrawerStyles.headerTitle, { color: headerTextColor }]} numberOfLines={1}>
-                        {headerTitle}
-                      </Text>
-                    ) : null}
-                  </>
-                )}
-              </View>
-              {isMessageThread && messageThreadConvo ? (
-                <HapticTab
-                  accessibilityRole="button"
-                  accessibilityLabel="Chat options"
-                  onPress={() => setChatActionsSheetVisible(true)}
-                  style={mobileDrawerStyles.headerButton}
-                >
-                  <IconSymbol name="ellipsis" color={headerIconColor} size={22} />
-                </HapticTab>
-              ) : (
-                <View style={mobileDrawerStyles.headerSpacer} />
-              )}
-            </View>
+            <MobileTabHeader
+              headerTitle={headerTitle}
+              isNestedRoute={isNestedRoute}
+              isMessageThread={isMessageThread}
+              messageThreadConvo={messageThreadConvo}
+              safeAreaTop={safeAreaInsets.top}
+              headerBackground={headerBackground}
+              headerBorderColor={headerBorderColor}
+              headerIconColor={headerIconColor}
+              headerTextColor={headerTextColor}
+              onBackPress={() => back()}
+              onChatOptionsPress={() => setChatActionsSheetVisible(true)}
+            />
           ) : null}
 
           {messageThreadConvo ? (
@@ -572,109 +314,3 @@ export default function TabLayout() {
     </>
   );
 }
-
-const profileTabIconStyles = StyleSheet.create({
-  container: {
-    width: 28,
-    height: 28,
-    borderRadius: radius.full,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    marginBottom: -3,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-});
-
-const hardcodedTabStyles = StyleSheet.create({
-  container: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: spacing.sm,
-    ...shadows.top,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    alignSelf: 'stretch',
-    width: '100%',
-  },
-  tabButton: {
-    marginHorizontal: spacing.xs,
-    marginVertical: 0,
-    paddingVertical: 0,
-  },
-  tabList: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeWrapper: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-const mobileDrawerStyles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: 0,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerButton: {
-    width: touchTarget.min,
-    height: touchTarget.min,
-    borderRadius: radius.full,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerLogo: {
-    width: 28,
-    height: 28,
-    borderRadius: radius.xs,
-    marginRight: spacing.sm,
-  },
-  headerConvoAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    marginRight: spacing.sm,
-  },
-  headerConvoInfo: {
-    flex: 1,
-  },
-  headerConvoHandle: {
-    fontSize: fontSize.sm,
-    opacity: 0.5,
-  },
-  headerTitle: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.semibold,
-  },
-  headerSpacer: {
-    width: touchTarget.min,
-    height: touchTarget.min,
-  },
-});
