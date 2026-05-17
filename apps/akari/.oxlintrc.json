@@ -9,7 +9,7 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-key": "error",
     "react/jsx-no-target-blank": "error",
-    "react/no-array-index-key": "warn"
+    "react/no-array-index-key": "error"
   },
   "overrides": [
     {

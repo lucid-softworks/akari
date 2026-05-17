@@ -2,8 +2,8 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["eslint", "typescript", "import", "unicorn", "oxc", "promise"],
   "categories": {
-    "correctness": "warn",
-    "suspicious": "warn",
+    "correctness": "error",
+    "suspicious": "error",
     "perf": "off",
     "restriction": "off",
     "pedantic": "off",
@@ -12,7 +12,7 @@
   },
   "rules": {
     "no-unused-vars": "off",
-    "typescript/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "typescript/no-explicit-any": "off",
     "no-underscore-dangle": "off",
     "import/no-unassigned-import": "off",
