@@ -68,10 +68,12 @@ export function useCreatePost() {
     },
     onMutate: async ({ text, replyTo, images }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.forDid(currentAccount?.did) });
-      await queryClient.cancelQueries({ queryKey: queryKeys.author.posts.forDid(currentAccount?.did) });
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: queryKeys.timeline.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.feed.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.author.feed.forDid(currentAccount?.did) }),
+        queryClient.cancelQueries({ queryKey: queryKeys.author.posts.forDid(currentAccount?.did) }),
+      ]);
 
       // Snapshot the previous values
       const previousTimeline = queryClient.getQueryData(queryKeys.timeline.all);

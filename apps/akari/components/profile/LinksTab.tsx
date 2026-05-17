@@ -8,7 +8,8 @@ import { useLinks } from '@/hooks/queries/useLinks';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Image, Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Image } from 'expo-image';
 import type { ProfileTabContentProps } from '@/components/profile/types';
 
 type LinksTabProps = ProfileTabContentProps & {
@@ -44,7 +45,7 @@ function LinkItem({ card }: LinkItemProps) {
 
     // If favicon is available, use it
     if (faviconUrl) {
-      return <Image source={{ uri: faviconUrl }} style={styles.favicon} resizeMode="contain" />;
+      return <Image source={{ uri: faviconUrl }} style={styles.favicon} contentFit="contain" />;
     }
 
     // Fallback to a default link icon

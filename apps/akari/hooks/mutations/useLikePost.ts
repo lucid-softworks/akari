@@ -81,12 +81,14 @@ export function useLikePost() {
     },
     onMutate: async ({ postUri, action }) => {
       // Cancel any outgoing refetches across all the prefixes we'll touch.
-      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.author.likes.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.post.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.postThread.all });
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: queryKeys.timeline.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.feed.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.author.likes.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.post.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.postThread.all }),
+      ]);
 
       // Snapshot every matching query (prefix-matched) so onError can roll
       // each one back. The previous implementation snapshotted by exact key

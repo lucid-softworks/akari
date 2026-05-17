@@ -246,6 +246,7 @@ export default function DebugScreen() {
                             },
                           ]}
                         >
+                          {/* oxlint-disable-next-line react-doctor/rendering-hydration-mismatch-time -- Expo Router runs client-side, no SSR hydration in this build. */}
                           {query.state.dataUpdatedAt ? new Date(query.state.dataUpdatedAt).toLocaleString() : 'Never'}
                         </ThemedText>
                       </View>
@@ -261,9 +262,8 @@ export default function DebugScreen() {
                             },
                           ]}
                         >
-                          {query.state.errorUpdatedAt
-                            ? new Date(query.state.errorUpdatedAt).toLocaleString()
-                            : 'Never'}
+                          {/* oxlint-disable-next-line react-doctor/rendering-hydration-mismatch-time -- Expo Router runs client-side, no SSR hydration in this build. */}
+                          {query.state.errorUpdatedAt ? new Date(query.state.errorUpdatedAt).toLocaleString() : 'Never'}
                         </ThemedText>
                       </View>
 

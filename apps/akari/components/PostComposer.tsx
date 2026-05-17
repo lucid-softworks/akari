@@ -1043,8 +1043,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         setActiveIndex(0);
       } else if (next !== 'standard' && composeMode === 'standard') {
         const concatenated = posts
-          .map((p) => p.text)
-          .filter((chunk) => chunk.trim().length > 0)
+          .flatMap((p) => (p.text.trim().length > 0 ? [p.text] : []))
           .join('\n\n');
         setLongText((prev) => (concatenated.length > 0 ? concatenated : prev));
         const first = posts[0] ?? EMPTY_THREAD_POST;

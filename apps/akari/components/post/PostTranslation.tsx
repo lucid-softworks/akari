@@ -79,6 +79,7 @@ export const PostTranslation = React.memo(function PostTranslation({
       const bytes = encoder.encode(textToTranslate);
 
       for (const facet of sortedFacets) {
+        // oxlint-disable-next-line react-doctor/js-index-maps -- features array differs per facet; no shared lookup table to build
         const linkFeature = facet.features.find((f: any) =>
           f.$type === 'app.bsky.richtext.facet#link' && f.uri
         );

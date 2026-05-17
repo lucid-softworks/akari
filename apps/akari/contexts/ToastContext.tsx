@@ -249,8 +249,10 @@ export function useToast(): ToastContextValue {
 }
 
 const styles = StyleSheet.create({
+  // oxlint-disable-next-line react-doctor/rn-no-legacy-shadow-styles -- elevation drives Android stacking order for the toast overlay, not shadow
   viewportOverlay: {
     zIndex: 1000,
+    // oxlint-disable-next-line react-doctor/rn-style-prefer-boxshadow -- elevation drives Android stacking order for the toast overlay, not shadow
     elevation: 1000,
   },
   viewport: {

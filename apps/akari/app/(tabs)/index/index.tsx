@@ -69,6 +69,7 @@ export default function HomeScreen() {
 
   // Create feeds array from saved preferences
   const allFeeds = useMemo(() => {
+    // oxlint-disable-next-line react-doctor/js-combine-iterations -- .filter() uses a type predicate to narrow the union; flattening would break inference
     return (savedFeeds ?? [])
       .map((savedFeed) => {
         if (savedFeed.type === 'timeline' && savedFeed.value === 'following') {

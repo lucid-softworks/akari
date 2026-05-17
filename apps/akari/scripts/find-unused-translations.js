@@ -25,6 +25,8 @@ function extractKeys(obj, prefix = "") {
 
 // Function to recursively remove keys from an object based on a list of keys to remove
 function removeKeysFromObject(obj, keysToRemove, prefix = "") {
+  const keysToRemoveSet =
+    keysToRemove instanceof Set ? keysToRemove : new Set(keysToRemove);
   const result = { ...obj };
 
   for (const [key, value] of Object.entries(result)) {
@@ -32,7 +34,7 @@ function removeKeysFromObject(obj, keysToRemove, prefix = "") {
 
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       // Recursively process nested objects
-      result[key] = removeKeysFromObject(value, keysToRemove, fullKey);
+      result[key] = removeKeysFromObject(value, keysToRemoveSet, fullKey);
 
       // Remove the key if it's empty after processing
       if (Object.keys(result[key]).length === 0) {
@@ -40,7 +42,7 @@ function removeKeysFromObject(obj, keysToRemove, prefix = "") {
       }
     } else {
       // This is a leaf node - remove if it's in the keysToRemove list
-      if (keysToRemove.includes(fullKey)) {
+      if (keysToRemoveSet.has(fullKey)) {
         delete result[key];
       }
     }

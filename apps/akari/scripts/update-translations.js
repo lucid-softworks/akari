@@ -9,16 +9,20 @@ const translationsDir = path.join(process.cwd(), 'translations');
 function getTranslationFiles() {
   return fs
     .readdirSync(translationsDir)
-    .filter((file) => file.endsWith('.json') && file !== 'en.json')
-    .map((file) => file.replace('.json', ''));
+    .flatMap((file) =>
+      file.endsWith('.json') && file !== 'en.json'
+        ? [file.replace('.json', '')]
+        : [],
+    );
 }
 
 // Get all translation files including English
 function getAllTranslationFiles() {
   return fs
     .readdirSync(translationsDir)
-    .filter((file) => file.endsWith('.json'))
-    .map((file) => file.replace('.json', ''));
+    .flatMap((file) =>
+      file.endsWith('.json') ? [file.replace('.json', '')] : [],
+    );
 }
 
 // Read a translation file
@@ -156,6 +160,7 @@ function parseArgs() {
     const arg = args[i];
     if (arg.startsWith('--')) {
       // Handle --key=value format
+      // oxlint-disable-next-line react-doctor/js-set-map-lookups -- substring search on a string; Set lookup doesn't apply
       if (arg.includes('=')) {
         const [key, value] = arg.slice(2).split('=');
         options[key] = value;

@@ -43,11 +43,13 @@ export function useRepostPost() {
       }
     },
     onMutate: async ({ postUri, action }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.timeline.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.feed.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.post.all });
-      await queryClient.cancelQueries({ queryKey: queryKeys.postThread.all });
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: queryKeys.timeline.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.feed.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.author.feed.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.post.all }),
+        queryClient.cancelQueries({ queryKey: queryKeys.postThread.all }),
+      ]);
 
       const previousTimeline = queryClient.getQueryData<BlueskyFeedResponse>(queryKeys.timeline.all);
 

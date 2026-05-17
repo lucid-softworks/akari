@@ -30,19 +30,21 @@ function validateTranslationFile(filePath, referenceKeys) {
     const translation = JSON.parse(content);
 
     const fileKeys = getAllKeys(translation);
+    const fileKeySet = new Set(fileKeys);
+    const referenceKeySet = new Set(referenceKeys);
     const missingKeys = [];
     const extraKeys = [];
 
     // Check for missing keys
     for (const refKey of referenceKeys) {
-      if (!fileKeys.includes(refKey)) {
+      if (!fileKeySet.has(refKey)) {
         missingKeys.push(refKey);
       }
     }
 
     // Check for extra keys
     for (const fileKey of fileKeys) {
-      if (!referenceKeys.includes(fileKey)) {
+      if (!referenceKeySet.has(fileKey)) {
         extraKeys.push(fileKey);
       }
     }
@@ -92,8 +94,11 @@ function main() {
   // Get all JSON files in translations directory
   const files = fs
     .readdirSync(translationsDir)
-    .filter((file) => file.endsWith(".json") && file !== "en.json")
-    .map((file) => path.join(translationsDir, file));
+    .flatMap((file) =>
+      file.endsWith(".json") && file !== "en.json"
+        ? [path.join(translationsDir, file)]
+        : [],
+    );
 
   if (files.length === 0) {
     console.log("ℹ️  No translation files found to validate");

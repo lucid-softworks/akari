@@ -1,3 +1,14 @@
+const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+
+function getRelativeTimeFormatter(locale: string): Intl.RelativeTimeFormat {
+  let rtf = relativeTimeFormatters.get(locale);
+  if (!rtf) {
+    rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    relativeTimeFormatters.set(locale, rtf);
+  }
+  return rtf;
+}
+
 /**
  * Formats a timestamp as a relative time string using Intl.RelativeTimeFormat
  * @param timestamp - ISO string or Date object
@@ -13,7 +24,7 @@ export function formatRelativeTime(timestamp: string | Date, locale: string = 'e
   const diffInHours = Math.floor(diffInMinutes / 60);
   const diffInDays = Math.floor(diffInHours / 24);
 
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+  const rtf = getRelativeTimeFormatter(locale);
 
   if (diffInDays > 0) {
     return rtf.format(-diffInDays, 'day');

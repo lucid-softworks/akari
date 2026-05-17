@@ -69,21 +69,33 @@ type ProfileHeaderProps = {
   dropdownRef?: React.RefObject<View | null>;
 };
 
+const numberFormatters = new Map<string, Intl.NumberFormat>();
+const joinedDateFormatters = new Map<string, Intl.DateTimeFormat>();
+
 const formatNumber = (num: number, locale: string): string => {
-  const formatter = new Intl.NumberFormat(locale, {
-    notation: 'compact',
-    compactDisplay: 'short',
-  });
+  let formatter = numberFormatters.get(locale);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, {
+      notation: 'compact',
+      compactDisplay: 'short',
+    });
+    numberFormatters.set(locale, formatter);
+  }
   return formatter.format(num);
 };
 
 const formatJoinedDate = (iso: string, locale: string): string | null => {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return null;
-  return new Intl.DateTimeFormat(locale, {
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
+  let formatter = joinedDateFormatters.get(locale);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, {
+      month: 'long',
+      year: 'numeric',
+    });
+    joinedDateFormatters.set(locale, formatter);
+  }
+  return formatter.format(date);
 };
 
 const formatWebsiteLabel = (url: string): string => {

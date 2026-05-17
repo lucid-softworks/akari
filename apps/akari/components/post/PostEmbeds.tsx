@@ -77,7 +77,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         (img) => !img.image?.mimeType || !img.image.mimeType.startsWith('video/'),
       );
       return {
-        urls: filtered.map((img) => img.fullsize).filter(Boolean),
+        urls: filtered.flatMap((img) => (img.fullsize ? [img.fullsize] : [])),
         altTexts: filtered.map((img) => img.alt),
         ratios: filtered.map((img) =>
           img.aspectRatio && img.aspectRatio.width > 0 && img.aspectRatio.height > 0

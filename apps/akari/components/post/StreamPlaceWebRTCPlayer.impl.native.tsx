@@ -99,6 +99,7 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
           if (__DEV__) console.warn('stream.place getPlaybackServer failed', lookupError);
         }
 
+        // oxlint-disable-next-line react-doctor/async-parallel, react-doctor/async-defer-await -- createOffer -> setLocalDescription -> waitForIceGathering form a strict chain; each depends on the previous
         const offer = await peer.createOffer({});
         await peer.setLocalDescription(offer);
         // Wait up to 1s for ICE gathering. atproto WHEP doesn't

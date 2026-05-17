@@ -8,28 +8,37 @@ export const pseudoLocalizeString = (text: string): string => {
   return `[${text}]`;
 };
 
+// Character mapping for pseudo-localization
+const PSEUDO_CHAR_MAP: { [key: string]: string } = {
+  a: "à",
+  e: "é",
+  i: "ì",
+  o: "ò",
+  u: "ù",
+  A: "À",
+  E: "É",
+  I: "Ì",
+  O: "Ò",
+  U: "Ù",
+  n: "ñ",
+  N: "Ñ",
+  c: "ç",
+  C: "Ç",
+};
+
+const PSEUDO_CHAR_REPLACEMENTS: { regex: RegExp; replacement: string }[] = Object.entries(
+  PSEUDO_CHAR_MAP,
+).map(([original, replacement]) => ({
+  regex: new RegExp(original, "g"),
+  replacement,
+}));
+
+const PSEUDO_PLACEHOLDER_SPLIT_RE = /(\{\{[^}]+\}\})/;
+
 // Enhanced pseudo-localization with character transformations
 export const enhancedPseudoLocalizeString = (text: string): string => {
-  // Character mapping for pseudo-localization
-  const charMap: { [key: string]: string } = {
-    a: "à",
-    e: "é",
-    i: "ì",
-    o: "ò",
-    u: "ù",
-    A: "À",
-    E: "É",
-    I: "Ì",
-    O: "Ò",
-    U: "Ù",
-    n: "ñ",
-    N: "Ñ",
-    c: "ç",
-    C: "Ç",
-  };
-
   // Split the text by {{}} placeholders to preserve them exactly
-  const parts = text.split(/(\{\{[^}]+\}\})/);
+  const parts = text.split(PSEUDO_PLACEHOLDER_SPLIT_RE);
 
   const result = parts
     .map((part, index) => {
@@ -40,11 +49,8 @@ export const enhancedPseudoLocalizeString = (text: string): string => {
 
       // Otherwise, apply pseudo-localization to this part
       let transformed = part;
-      for (const [original, replacement] of Object.entries(charMap)) {
-        transformed = transformed.replace(
-          new RegExp(original, "g"),
-          replacement
-        );
+      for (const { regex, replacement } of PSEUDO_CHAR_REPLACEMENTS) {
+        transformed = transformed.replace(regex, replacement);
       }
       return transformed;
     })
