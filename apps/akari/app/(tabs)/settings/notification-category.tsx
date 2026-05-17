@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -46,12 +46,29 @@ export default function NotificationCategoryScreen() {
   // the user has never explicitly set this category.
   const currentPref = lexiconKey ? prefsQuery.data?.[lexiconKey] : undefined;
 
-  const [include, setInclude] = useState<'all' | 'follows' | 'accepted'>(() => {
-    if (def?.kind === 'chat') return 'all';
-    return 'all';
-  });
-  const [listOn, setListOn] = useState(true);
-  const [pushOn, setPushOn] = useState(true);
+  type FormState = {
+    include: 'all' | 'follows' | 'accepted';
+    listOn: boolean;
+    pushOn: boolean;
+  };
+  type FormAction = Partial<FormState>;
+  const [form, updateForm] = useReducer(
+    (state: FormState, patch: FormAction): FormState => ({ ...state, ...patch }),
+    { include: 'all', listOn: true, pushOn: true },
+  );
+  const { include, listOn, pushOn } = form;
+  const setInclude = useCallback(
+    (next: FormState['include']) => updateForm({ include: next }),
+    [],
+  );
+  const setListOn = useCallback(
+    (next: boolean) => updateForm({ listOn: next }),
+    [],
+  );
+  const setPushOn = useCallback(
+    (next: boolean) => updateForm({ pushOn: next }),
+    [],
+  );
 
   useEffect(() => {
     if (!def || !currentPref) return;
@@ -59,15 +76,21 @@ export default function NotificationCategoryScreen() {
     // since the discriminated union doesn't survive the lookup table.
     const raw = currentPref as { include?: string; list?: boolean; push?: boolean };
     if (def.kind === 'filterable') {
-      setInclude((raw.include === 'follows' ? 'follows' : 'all') as 'all' | 'follows');
-      setListOn(raw.list ?? true);
-      setPushOn(raw.push ?? true);
+      updateForm({
+        include: raw.include === 'follows' ? 'follows' : 'all',
+        listOn: raw.list ?? true,
+        pushOn: raw.push ?? true,
+      });
     } else if (def.kind === 'chat') {
-      setInclude((raw.include === 'accepted' ? 'accepted' : 'all') as 'all' | 'accepted');
-      setPushOn(raw.push ?? true);
+      updateForm({
+        include: raw.include === 'accepted' ? 'accepted' : 'all',
+        pushOn: raw.push ?? true,
+      });
     } else {
-      setListOn(raw.list ?? true);
-      setPushOn(raw.push ?? true);
+      updateForm({
+        listOn: raw.list ?? true,
+        pushOn: raw.push ?? true,
+      });
     }
   }, [currentPref, def]);
 

@@ -1,6 +1,6 @@
 import { getAvailableLocales, setLocale } from "@/utils/i18n";
 import { getLocales } from "expo-localization";
-import React, { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
+import React, { createContext, use, useCallback, useMemo, useState } from "react";
 import { MMKV } from "react-native-mmkv";
 
 type LanguageContextType = {
@@ -21,39 +21,34 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 const storage = new MMKV();
 const LANGUAGE_KEY = "app_language";
 
+/**
+ * Resolve the initial locale synchronously so the provider renders with
+ * the right language on first paint. We previously did this in a
+ * useEffect after mount, which both flashed English for a tick and
+ * cascaded a second render via setCurrentLocale.
+ */
+const resolveInitialLocale = (availableLocales: string[]): string => {
+  const savedLanguage = storage.getString(LANGUAGE_KEY);
+  if (savedLanguage && availableLocales.includes(savedLanguage)) {
+    setLocale(savedLanguage);
+    return savedLanguage;
+  }
+  const deviceLanguage = getLocales()[0]?.languageCode;
+  const language = availableLocales.includes(deviceLanguage || "")
+    ? deviceLanguage || "en"
+    : "en";
+  setLocale(language);
+  storage.set(LANGUAGE_KEY, language);
+  return language;
+};
+
 export const LanguageProvider = ({
   children,
 }: LanguageProviderProps) => {
-  const [currentLocale, setCurrentLocale] = useState<string>("en");
   const availableLocales = getAvailableLocales();
-
-  // Initialize language on app start
-  useEffect(() => {
-    const initializeLanguage = () => {
-      // Try to get saved language preference
-      const savedLanguage = storage.getString(LANGUAGE_KEY);
-
-      if (savedLanguage && availableLocales.includes(savedLanguage)) {
-        // Use saved language
-        setCurrentLocale(savedLanguage);
-        setLocale(savedLanguage);
-      } else {
-        // Use device language or fallback to English
-        const deviceLanguage = getLocales()[0].languageCode;
-        const language = availableLocales.includes(deviceLanguage || "")
-          ? deviceLanguage || "en"
-          : "en";
-
-        setCurrentLocale(language);
-        setLocale(language);
-
-        // Save the language preference
-        storage.set(LANGUAGE_KEY, language);
-      }
-    };
-
-    initializeLanguage();
-  }, [availableLocales]);
+  const [currentLocale, setCurrentLocale] = useState<string>(() =>
+    resolveInitialLocale(availableLocales),
+  );
 
   const changeLanguage = useCallback((locale: string) => {
     if (availableLocales.includes(locale)) {

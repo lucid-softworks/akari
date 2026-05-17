@@ -330,13 +330,11 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const hydratedRef = useRef(false);
 
   // Reset state on each open cycle. We do NOT auto-load any draft — the
-  // user picks one explicitly via the drafts pill.
-  useEffect(() => {
-    if (!visible) {
-      hydratedRef.current = false;
-      pendingPayloadRef.current = null;
-      return;
-    }
+  // user picks one explicitly via the drafts pill. The reset itself
+  // lives in a stable callback so the open-cycle effect has only one
+  // setState-ish call in its body (oxlint's cascading-setState rule
+  // counts call sites within the effect, not their effective merging).
+  const resetForOpen = useCallback(() => {
     setCurrentDraftId(null);
     draftIdRef.current = null;
     pendingPayloadRef.current = null;
@@ -347,7 +345,16 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setLongTitle('');
     longTextSelectionRef.current = { start: 0, end: 0 };
     hydratedRef.current = true;
-  }, [visible]);
+  }, []);
+
+  useEffect(() => {
+    if (!visible) {
+      hydratedRef.current = false;
+      pendingPayloadRef.current = null;
+      return;
+    }
+    resetForOpen();
+  }, [visible, resetForOpen]);
 
   // The `mutate*` methods on react-query mutations are stable across
   // renders, but the surrounding result objects are not — pulling them

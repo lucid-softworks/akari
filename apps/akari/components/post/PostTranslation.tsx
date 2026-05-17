@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type TextStyle } from 'react-native';
 
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
@@ -28,6 +28,46 @@ type PostTranslationProps = {
   onEmbedTranslated?: (translated: TranslatedEmbed | null) => void;
 };
 
+type TranslationState = {
+  translatedText: string | null;
+  translatedFacets: any[] | undefined;
+  detectedLanguage: string | null;
+  error: boolean;
+};
+
+type TranslationAction =
+  | { type: 'attempt' }
+  | {
+      type: 'success';
+      translatedText: string;
+      translatedFacets: any[] | undefined;
+      detectedLanguage: string | null;
+    }
+  | { type: 'failure' };
+
+const INITIAL_TRANSLATION: TranslationState = {
+  translatedText: null,
+  translatedFacets: undefined,
+  detectedLanguage: null,
+  error: false,
+};
+
+function translationReducer(state: TranslationState, action: TranslationAction): TranslationState {
+  switch (action.type) {
+    case 'attempt':
+      return { ...state, error: false };
+    case 'success':
+      return {
+        translatedText: action.translatedText,
+        translatedFacets: action.translatedFacets,
+        detectedLanguage: action.detectedLanguage,
+        error: false,
+      };
+    case 'failure':
+      return { ...state, error: true };
+  }
+}
+
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian',
   pt: 'Portuguese', nl: 'Dutch', pl: 'Polish', ru: 'Russian', ja: 'Japanese',
@@ -50,10 +90,8 @@ export const PostTranslation = React.memo(function PostTranslation({
 }: PostTranslationProps) {
   const { t, currentLocale } = useTranslation();
   const translationMutation = usePostTranslation();
-  const [translatedText, setTranslatedText] = useState<string | null>(null);
-  const [translatedFacets, setTranslatedFacets] = useState<any[] | undefined>(undefined);
-  const [detectedLanguage, setDetectedLanguage] = useState<string | null>(null);
-  const [error, setError] = useState(false);
+  const [translation, dispatchTranslation] = useReducer(translationReducer, INITIAL_TRANSLATION);
+  const { translatedText, translatedFacets, detectedLanguage, error } = translation;
 
   const linkColor = useThemeColor({}, 'tint');
   const secondaryColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
@@ -63,7 +101,7 @@ export const PostTranslation = React.memo(function PostTranslation({
   useEffect(() => {
     if (!visible || !text.trim() || translatedText) return;
 
-    setError(false);
+    dispatchTranslation({ type: 'attempt' });
 
     // Extract links from facets and replace with placeholders before translating
     // so the translation API doesn't mangle URLs
@@ -134,9 +172,12 @@ export const PostTranslation = React.memo(function PostTranslation({
         });
       }
 
-      setTranslatedText(translated);
-      setTranslatedFacets(newFacets.length > 0 ? newFacets : undefined);
-      setDetectedLanguage(postResult.detectedLanguage ?? null);
+      dispatchTranslation({
+        type: 'success',
+        translatedText: translated,
+        translatedFacets: newFacets.length > 0 ? newFacets : undefined,
+        detectedLanguage: postResult.detectedLanguage ?? null,
+      });
 
       if (onEmbedTranslated && embedResult?.translatedText) {
         const lines = embedResult.translatedText.split('\n\n');
@@ -150,7 +191,7 @@ export const PostTranslation = React.memo(function PostTranslation({
       }
       return undefined;
     }).catch(() => {
-      setError(true);
+      dispatchTranslation({ type: 'failure' });
     });
   }, [
     visible,

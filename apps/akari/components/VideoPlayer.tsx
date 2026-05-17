@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 
@@ -11,6 +11,63 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 import { VideoPlayer as WebVideoPlayer } from './VideoPlayer.web';
+
+type PlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
+
+type PlayerState = {
+  playerStatus: PlayerStatus;
+  playerError: string | null;
+  shouldShowVideo: boolean;
+  isPlaying: boolean;
+  playbackUrl: string | null;
+  isResolvingUrl: boolean;
+};
+
+type PlayerAction =
+  | { type: 'press' }
+  | { type: 'resolveCleared' }
+  | { type: 'resolveSettled'; playbackUrl: string | null }
+  | { type: 'resolveStart' }
+  | { type: 'loadStart' }
+  | { type: 'loaded' }
+  | { type: 'playing' }
+  | { type: 'ended' }
+  | { type: 'error'; message: string }
+  | { type: 'reset' };
+
+const INITIAL_PLAYER_STATE: PlayerState = {
+  playerStatus: 'idle',
+  playerError: null,
+  shouldShowVideo: false,
+  isPlaying: false,
+  playbackUrl: null,
+  isResolvingUrl: false,
+};
+
+function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
+  switch (action.type) {
+    case 'press':
+      return { ...state, shouldShowVideo: true, playerStatus: 'loading' };
+    case 'resolveCleared':
+      return { ...state, playbackUrl: null };
+    case 'resolveSettled':
+      return { ...state, playbackUrl: action.playbackUrl, isResolvingUrl: false };
+    case 'resolveStart':
+      return { ...state, isResolvingUrl: true };
+    case 'loadStart':
+      return { ...state, playerStatus: 'loading', playerError: null };
+    case 'loaded':
+      return { ...state, playerStatus: 'readyToPlay', playerError: null };
+    case 'playing':
+      return { ...state, isPlaying: true };
+    case 'ended':
+      return { ...state, isPlaying: false };
+    case 'error':
+      return { ...state, playerStatus: 'error', playerError: action.message };
+    case 'reset':
+      return INITIAL_PLAYER_STATE;
+  }
+}
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -53,12 +110,19 @@ export function VideoPlayer({
   aspectRatio,
 }: VideoPlayerProps) {
   const { t } = useTranslation();
-  const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
-  const [playerError, setPlayerError] = useState<string | null>(null);
-  const [shouldShowVideo, setShouldShowVideo] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackUrl, setPlaybackUrl] = useState<string | null>(null);
-  const [isResolvingUrl, setIsResolvingUrl] = useState(false);
+  // Co-locate player lifecycle fields. Every transition (press, resolve,
+  // load, error, end) touches more than one of these, so per-field
+  // setters were both noisy and cascading. A reducer keeps each
+  // transition to a single dispatch call.
+  const [playerState, dispatch] = useReducer(playerReducer, INITIAL_PLAYER_STATE);
+  const {
+    playerStatus,
+    playerError,
+    shouldShowVideo,
+    isPlaying,
+    playbackUrl,
+    isResolvingUrl,
+  } = playerState;
   const videoRef = useRef<any>(null);
 
   const textColor = useThemeColor(
@@ -113,7 +177,7 @@ export function VideoPlayer({
     if (shouldShowVideo && playerStatus === 'readyToPlay' && videoRef.current) {
       const timeoutId = setTimeout(() => {
         videoRef.current?.seek(0);
-        setIsPlaying(true);
+        dispatch({ type: 'playing' });
       }, 100); // Small delay to ensure player is ready
       return () => clearTimeout(timeoutId);
     }
@@ -123,8 +187,7 @@ export function VideoPlayer({
   useEffect(() => {
     if (shouldShowVideo && playerStatus === 'loading' && videoSource) {
       const timeoutId = setTimeout(() => {
-        setPlayerStatus('error');
-        setPlayerError('Video loading timeout');
+        dispatch({ type: 'error', message: 'Video loading timeout' });
       }, 15000); // 15 second timeout
 
       return () => clearTimeout(timeoutId);
@@ -133,8 +196,7 @@ export function VideoPlayer({
 
   const handlePress = () => {
     // Show the video player when clicking the thumbnail
-    setShouldShowVideo(true);
-    setPlayerStatus('loading'); // Set loading state immediately
+    dispatch({ type: 'press' });
   };
 
   // Resetting on videoUrl change is handled by the parent passing `key={videoUrl}`
@@ -147,42 +209,30 @@ export function VideoPlayer({
     }
 
     if (!videoUrl || videoUrl.trim() === '') {
-      setPlaybackUrl(null);
+      dispatch({ type: 'resolveCleared' });
       return;
     }
 
     const needsResolution = videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
 
     if (!needsResolution) {
-      setPlaybackUrl(videoUrl);
-      setIsResolvingUrl(false);
+      dispatch({ type: 'resolveSettled', playbackUrl: videoUrl });
       return;
     }
 
     let isCancelled = false;
 
-    setIsResolvingUrl(true);
+    dispatch({ type: 'resolveStart' });
 
     resolveBlueskyVideoUrl(videoUrl)
       .then((resolvedUrl) => {
-        if (isCancelled) {
-          return undefined;
-        }
-
-        setPlaybackUrl(resolvedUrl || videoUrl);
+        if (isCancelled) return undefined;
+        dispatch({ type: 'resolveSettled', playbackUrl: resolvedUrl || videoUrl });
         return undefined;
       })
       .catch(() => {
-        if (isCancelled) {
-          return;
-        }
-
-        setPlaybackUrl(videoUrl);
-      })
-      .finally(() => {
-        if (!isCancelled) {
-          setIsResolvingUrl(false);
-        }
+        if (isCancelled) return;
+        dispatch({ type: 'resolveSettled', playbackUrl: videoUrl });
       });
 
     return () => {
@@ -191,13 +241,11 @@ export function VideoPlayer({
   }, [shouldShowVideo, videoUrl]);
 
   const handleLoadStart = () => {
-    setPlayerStatus('loading');
-    setPlayerError(null);
+    dispatch({ type: 'loadStart' });
   };
 
   const handleLoad = (_data: any) => {
-    setPlayerStatus('readyToPlay');
-    setPlayerError(null);
+    dispatch({ type: 'loaded' });
   };
 
   const handleProgress = (_data: any) => {
@@ -209,7 +257,6 @@ export function VideoPlayer({
   };
 
   const handleError = (error: any) => {
-    setPlayerStatus('error');
     let errorMessage = 'Unknown error';
 
     try {
@@ -222,18 +269,16 @@ export function VideoPlayer({
       errorMessage = 'Unknown error';
     }
 
-    setPlayerError(`Failed to load video: ${errorMessage}`);
+    dispatch({ type: 'error', message: `Failed to load video: ${errorMessage}` });
 
     // Reset to thumbnail view on error after delay
     setTimeout(() => {
-      setShouldShowVideo(false);
-      setPlayerStatus('idle');
-      setPlayerError(null);
+      dispatch({ type: 'reset' });
     }, 5000); // Increased timeout to 5 seconds
   };
 
   const handleEnd = () => {
-    setIsPlaying(false);
+    dispatch({ type: 'ended' });
   };
 
   // On web platform, use web-specific implementation
@@ -268,9 +313,7 @@ export function VideoPlayer({
           <Pressable
             onPress={() => {
               // Reset and retry
-              setPlayerStatus('idle');
-              setPlayerError(null);
-              setShouldShowVideo(false);
+              dispatch({ type: 'reset' });
             }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <ThemedView style={styles.errorContainer}>
               <ThemedText style={[styles.errorText, { color: textColor }]}>

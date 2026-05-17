@@ -66,21 +66,25 @@ describe('VideoPlayer.web', () => {
   });
 
   it('shows error state and resets on tap', () => {
-    const setStatus = jest.fn();
-    const setError = jest.fn();
-    const useStateSpy = jest
-      .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['error', setStatus])
-      .mockImplementationOnce(() => ['Test failure', setError]);
+    const dispatch = jest.fn();
+    const errorState = {
+      playerStatus: 'error',
+      playerError: 'Test failure',
+      shouldShowVideo: false,
+      playbackUrl: null,
+      isResolvingUrl: false,
+    };
+    const useReducerSpy = jest
+      .spyOn(React, 'useReducer')
+      .mockImplementationOnce(() => [errorState, dispatch] as any);
 
     const { getByText } = render(<VideoPlayer videoUrl="https://example.com/video.mp4" />);
     expect(getByText('Test failure')).toBeTruthy();
 
     fireEvent.press(getByText('ui.tapToRetry'));
-    expect(setStatus).toHaveBeenCalledWith('idle');
-    expect(setError).toHaveBeenCalledWith(null);
+    expect(dispatch).toHaveBeenCalledWith({ type: 'reset' });
 
-    useStateSpy.mockRestore();
+    useReducerSpy.mockRestore();
   });
 
   it('resolves Bluesky playlist URLs on demand', async () => {

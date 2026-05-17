@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import {
   MediaStream,
@@ -24,6 +24,26 @@ type Status =
   | { kind: 'playing' }
   | { kind: 'error'; message: string };
 
+type PlayerState = { stream: MediaStream | null; status: Status };
+
+type PlayerAction =
+  | { type: 'streamReady'; stream: MediaStream }
+  | { type: 'status'; status: Status };
+
+const INITIAL_PLAYER_STATE: PlayerState = {
+  stream: null,
+  status: { kind: 'connecting' },
+};
+
+function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
+  switch (action.type) {
+    case 'streamReady':
+      return { ...state, stream: action.stream };
+    case 'status':
+      return { ...state, status: action.status };
+  }
+}
+
 /**
  * Native-only WebRTC player for stream.place broadcasts. Reproduces
  * the WHEP exchange the upstream `streamplace` JS player runs:
@@ -43,8 +63,11 @@ type Status =
  */
 export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPlayerProps) {
   const { t } = useTranslation();
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [status, setStatus] = useState<Status>({ kind: 'connecting' });
+  // Stream and status both belong to the WebRTC session lifecycle, so we
+  // co-locate them in one reducer-backed state bag. Each handler emits
+  // exactly one dispatch instead of a setStream + setStatus pair.
+  const [playerState, dispatch] = useReducer(playerReducer, INITIAL_PLAYER_STATE);
+  const { stream, status } = playerState;
   const peerRef = useRef<RTCPeerConnection | null>(null);
 
   useEffect(() => {
@@ -68,7 +91,7 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
       if (cancelled) return;
       const streams = (event as { streams?: MediaStream[] }).streams;
       const incoming = streams?.[0];
-      if (incoming) setStream(incoming);
+      if (incoming) dispatch({ type: 'streamReady', stream: incoming });
     };
     peer.addEventListener('track', onTrack);
 
@@ -76,9 +99,9 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
       if (cancelled) return;
       const state = peer.connectionState;
       if (state === 'connected') {
-        setStatus({ kind: 'playing' });
+        dispatch({ type: 'status', status: { kind: 'playing' } });
       } else if (state === 'failed' || state === 'closed' || state === 'disconnected') {
-        setStatus({ kind: 'error', message: state });
+        dispatch({ type: 'status', status: { kind: 'error', message: state } });
       }
     };
     peer.addEventListener('connectionstatechange', onConnectionStateChange);
@@ -121,7 +144,7 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
       } catch (error) {
         if (cancelled) return;
         const message = error instanceof Error ? error.message : 'unknown';
-        setStatus({ kind: 'error', message });
+        dispatch({ type: 'status', status: { kind: 'error', message } });
         if (__DEV__) console.warn('stream.place WHEP failed', error);
       }
     };

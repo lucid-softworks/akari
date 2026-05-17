@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -42,9 +42,30 @@ type TmdbSearchPickerProps = {
 
 export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: TmdbSearchPickerProps) {
   const { t } = useTranslation();
+  type SearchState = {
+    results: (TmdbMovie | TmdbTvShow)[];
+    loading: boolean;
+  };
+  type SearchAction =
+    | { type: 'idle' }
+    | { type: 'loading' }
+    | { type: 'results'; results: (TmdbMovie | TmdbTvShow)[] };
+  const EMPTY_SEARCH_STATE: SearchState = { results: [], loading: false };
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState<(TmdbMovie | TmdbTvShow)[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [searchState, dispatchSearch] = useReducer(
+    (state: SearchState, action: SearchAction): SearchState => {
+      switch (action.type) {
+        case 'idle':
+          return EMPTY_SEARCH_STATE;
+        case 'loading':
+          return { ...state, loading: true };
+        case 'results':
+          return { results: action.results, loading: false };
+      }
+    },
+    EMPTY_SEARCH_STATE,
+  );
+  const { results, loading } = searchState;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const insets = useSafeAreaInsets();
@@ -58,20 +79,18 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
   useEffect(() => {
     if (!visible) {
       setSearchQuery('');
-      setResults([]);
-      setLoading(false);
+      dispatchSearch({ type: 'idle' });
     }
   }, [visible]);
 
   // Debounced search
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setResults([]);
-      setLoading(false);
+      dispatchSearch({ type: 'idle' });
       return;
     }
 
-    setLoading(true);
+    dispatchSearch({ type: 'loading' });
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -79,18 +98,14 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
 
     debounceRef.current = setTimeout(async () => {
       try {
-        if (mediaType === 'movie') {
-          const response = await tmdbApi.searchMovies(searchQuery);
-          setResults(response.results);
-        } else {
-          const response = await tmdbApi.searchTvShows(searchQuery);
-          setResults(response.results);
-        }
+        const response =
+          mediaType === 'movie'
+            ? await tmdbApi.searchMovies(searchQuery)
+            : await tmdbApi.searchTvShows(searchQuery);
+        dispatchSearch({ type: 'results', results: response.results });
       } catch (error) {
         console.error('TMDB search failed:', error);
-        setResults([]);
-      } finally {
-        setLoading(false);
+        dispatchSearch({ type: 'results', results: [] });
       }
     }, 300);
 

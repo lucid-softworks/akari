@@ -1,5 +1,5 @@
 import Hls, { Events, isSupported } from 'hls.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
@@ -8,6 +8,55 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+
+type PlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
+
+type WebPlayerState = {
+  playerStatus: PlayerStatus;
+  playerError: string | null;
+  shouldShowVideo: boolean;
+  playbackUrl: string | null;
+  isResolvingUrl: boolean;
+};
+
+type WebPlayerAction =
+  | { type: 'press' }
+  | { type: 'resolveCleared' }
+  | { type: 'resolveSettled'; playbackUrl: string | null }
+  | { type: 'resolveStart' }
+  | { type: 'initStart' }
+  | { type: 'loaded' }
+  | { type: 'error'; message: string }
+  | { type: 'reset' };
+
+const INITIAL_WEB_PLAYER_STATE: WebPlayerState = {
+  playerStatus: 'idle',
+  playerError: null,
+  shouldShowVideo: false,
+  playbackUrl: null,
+  isResolvingUrl: false,
+};
+
+function webPlayerReducer(state: WebPlayerState, action: WebPlayerAction): WebPlayerState {
+  switch (action.type) {
+    case 'press':
+      return { ...state, shouldShowVideo: true, playerStatus: 'loading', playerError: null };
+    case 'resolveCleared':
+      return { ...state, playbackUrl: null };
+    case 'resolveSettled':
+      return { ...state, playbackUrl: action.playbackUrl, isResolvingUrl: false };
+    case 'resolveStart':
+      return { ...state, isResolvingUrl: true };
+    case 'initStart':
+      return { ...state, playerStatus: 'loading', playerError: null };
+    case 'loaded':
+      return { ...state, playerStatus: 'readyToPlay' };
+    case 'error':
+      return { ...state, playerStatus: 'error', playerError: action.message };
+    case 'reset':
+      return INITIAL_WEB_PLAYER_STATE;
+  }
+}
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -49,11 +98,8 @@ export function VideoPlayer({
   aspectRatio,
 }: VideoPlayerProps) {
   const { t } = useTranslation();
-  const [playerStatus, setPlayerStatus] = useState<'idle' | 'loading' | 'readyToPlay' | 'error'>('idle');
-  const [playerError, setPlayerError] = useState<string | null>(null);
-  const [shouldShowVideo, setShouldShowVideo] = useState(false);
-  const [playbackUrl, setPlaybackUrl] = useState<string | null>(null);
-  const [isResolvingUrl, setIsResolvingUrl] = useState(false);
+  const [state, dispatch] = useReducer(webPlayerReducer, INITIAL_WEB_PLAYER_STATE);
+  const { playerStatus, playerError, shouldShowVideo, playbackUrl, isResolvingUrl } = state;
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
@@ -74,9 +120,7 @@ export function VideoPlayer({
   );
 
   const handlePress = () => {
-    setShouldShowVideo(true);
-    setPlayerStatus('loading');
-    setPlayerError(null);
+    dispatch({ type: 'press' });
   };
 
   // Add global error handler for abort errors
@@ -109,8 +153,7 @@ export function VideoPlayer({
 
     const initializeVideo = () => {
       try {
-        setPlayerStatus('loading');
-        setPlayerError(null);
+        dispatch({ type: 'initStart' });
 
         if (isHLS) {
           // Use hls.js for HLS streams
@@ -124,19 +167,18 @@ export function VideoPlayer({
             hlsRef.current.attachMedia(video);
 
             hlsRef.current.on(Events.MANIFEST_PARSED, () => {
-              setPlayerStatus('readyToPlay');
+              dispatch({ type: 'loaded' });
             });
 
             hlsRef.current.on(Events.ERROR, (event, data) => {
               console.error('HLS Error:', data);
-              setPlayerStatus('error');
-              setPlayerError(`HLS Error: ${data.details}`);
+              dispatch({ type: 'error', message: `HLS Error: ${data.details}` });
             });
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Native HLS support (Safari)
             video.src = playbackUrl;
             video.addEventListener('loadedmetadata', () => {
-              setPlayerStatus('readyToPlay');
+              dispatch({ type: 'loaded' });
             });
           } else {
             throw new Error('HLS is not supported in this browser');
@@ -153,12 +195,11 @@ export function VideoPlayer({
             return;
           }
           console.error('Video error:', event);
-          setPlayerStatus('error');
-          setPlayerError('Failed to load video');
+          dispatch({ type: 'error', message: 'Failed to load video' });
         };
 
         const handleLoadedMetadata = () => {
-          setPlayerStatus('readyToPlay');
+          dispatch({ type: 'loaded' });
         };
 
         video.addEventListener('error', handleVideoError);
@@ -169,8 +210,10 @@ export function VideoPlayer({
           video.removeEventListener('loadedmetadata', handleLoadedMetadata);
         };
       } catch (error) {
-        setPlayerStatus('error');
-        setPlayerError(`Failed to initialize video: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        dispatch({
+          type: 'error',
+          message: `Failed to initialize video: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        });
       }
     };
 
@@ -198,42 +241,30 @@ export function VideoPlayer({
     }
 
     if (!videoUrl || videoUrl.trim() === '') {
-      setPlaybackUrl(null);
+      dispatch({ type: 'resolveCleared' });
       return;
     }
 
     const needsResolution = videoUrl.includes('video.bsky.app') && videoUrl.includes('playlist.m3u8');
 
     if (!needsResolution) {
-      setPlaybackUrl(videoUrl);
-      setIsResolvingUrl(false);
+      dispatch({ type: 'resolveSettled', playbackUrl: videoUrl });
       return;
     }
 
     let isCancelled = false;
 
-    setIsResolvingUrl(true);
+    dispatch({ type: 'resolveStart' });
 
     resolveBlueskyVideoUrl(videoUrl)
       .then((resolvedUrl) => {
-        if (isCancelled) {
-          return undefined;
-        }
-
-        setPlaybackUrl(resolvedUrl || videoUrl);
+        if (isCancelled) return undefined;
+        dispatch({ type: 'resolveSettled', playbackUrl: resolvedUrl || videoUrl });
         return undefined;
       })
       .catch(() => {
-        if (isCancelled) {
-          return;
-        }
-
-        setPlaybackUrl(videoUrl);
-      })
-      .finally(() => {
-        if (!isCancelled) {
-          setIsResolvingUrl(false);
-        }
+        if (isCancelled) return;
+        dispatch({ type: 'resolveSettled', playbackUrl: videoUrl });
       });
 
     return () => {
@@ -250,11 +281,7 @@ export function VideoPlayer({
         >
           <Pressable
             onPress={() => {
-              setPlayerStatus('idle');
-              setPlayerError(null);
-              setShouldShowVideo(false);
-              setPlaybackUrl(null);
-              setIsResolvingUrl(false);
+              dispatch({ type: 'reset' });
             }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <ThemedView style={styles.errorContainer}>
               <ThemedText style={[styles.errorText, { color: textColor }]}>

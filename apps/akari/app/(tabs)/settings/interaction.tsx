@@ -28,20 +28,64 @@ export default function InteractionSettingsScreen() {
   const settings = usePostInteractionSettings();
   const update = useUpdatePostInteractionSettings();
 
-  const [mode, setMode] = useState<ReplyMode>('anyone');
-  const [allowFollowers, setAllowFollowers] = useState(false);
-  const [allowFollowing, setAllowFollowing] = useState(false);
-  const [allowMentioned, setAllowMentioned] = useState(false);
-  const [allowQuotes, setAllowQuotes] = useState(true);
+  type FormState = {
+    mode: ReplyMode;
+    allowFollowers: boolean;
+    allowFollowing: boolean;
+    allowMentioned: boolean;
+    allowQuotes: boolean;
+  };
 
   // Pre-fill once preferences land. This effect only seeds the form
   // from server state; subsequent local edits stick around until Save.
+  // We hold all five form fields in a single state bag so the seed
+  // happens in one render rather than cascading per-field.
+  const [form, setForm] = useState<FormState>(() => ({
+    mode: settings.data.mode,
+    allowFollowers: settings.data.followers,
+    allowFollowing: settings.data.following,
+    allowMentioned: settings.data.mentioned,
+    allowQuotes: settings.data.allowQuotes,
+  }));
+  const { mode, allowFollowers, allowFollowing, allowMentioned, allowQuotes } = form;
+  const setMode = useCallback((mode: ReplyMode) => setForm((p) => ({ ...p, mode })), []);
+  const setAllowFollowers = useCallback(
+    (next: boolean | ((prev: boolean) => boolean)) =>
+      setForm((p) => ({
+        ...p,
+        allowFollowers: typeof next === 'function' ? next(p.allowFollowers) : next,
+      })),
+    [],
+  );
+  const setAllowFollowing = useCallback(
+    (next: boolean | ((prev: boolean) => boolean)) =>
+      setForm((p) => ({
+        ...p,
+        allowFollowing: typeof next === 'function' ? next(p.allowFollowing) : next,
+      })),
+    [],
+  );
+  const setAllowMentioned = useCallback(
+    (next: boolean | ((prev: boolean) => boolean)) =>
+      setForm((p) => ({
+        ...p,
+        allowMentioned: typeof next === 'function' ? next(p.allowMentioned) : next,
+      })),
+    [],
+  );
+  const setAllowQuotes = useCallback(
+    (next: boolean) => setForm((p) => ({ ...p, allowQuotes: next })),
+    [],
+  );
+
   useEffect(() => {
-    setMode(settings.data.mode);
-    setAllowFollowers(settings.data.followers);
-    setAllowFollowing(settings.data.following);
-    setAllowMentioned(settings.data.mentioned);
-    setAllowQuotes(settings.data.allowQuotes);
+    setForm({
+      mode: settings.data.mode,
+      allowFollowers: settings.data.followers,
+      allowFollowing: settings.data.following,
+      allowMentioned: settings.data.mentioned,
+      allowQuotes: settings.data.allowQuotes,
+    });
   }, [settings.data]);
 
   const handleSave = useCallback(() => {

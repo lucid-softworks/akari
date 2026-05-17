@@ -34,11 +34,11 @@ export function useTypeaheadActors(rawQuery: string): {
   const appViewUrl = resolveAppView(config).url;
 
   useEffect(() => {
-    if (trimmed.length < 2) {
-      setDebounced(trimmed);
-      return;
-    }
-    const t = setTimeout(() => setDebounced(trimmed), DEBOUNCE_MS);
+    // Below-threshold inputs flush immediately so the dropdown clears
+    // without waiting for the debounce; otherwise delay the commit so we
+    // don't fire one XRPC call per keystroke.
+    const delay = trimmed.length < 2 ? 0 : DEBOUNCE_MS;
+    const t = setTimeout(() => setDebounced(trimmed), delay);
     return () => clearTimeout(t);
   }, [trimmed]);
 

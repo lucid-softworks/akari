@@ -129,19 +129,49 @@ export function ShareToChatSheet({
 
   // Multi-recipient flow: tap to add/remove a conversation, then "Next"
   // moves into the compose step where the user can attach an optional
-  // message before sending to all selected recipients in parallel.
-  const [selected, setSelected] = useState<ConversationRow[]>([]);
-  const [step, setStep] = useState<'pick' | 'compose'>('pick');
-  const [draft, setDraft] = useState('');
-  const [sending, setSending] = useState(false);
+  // message before sending to all selected recipients in parallel. All
+  // four fields reset atomically on close, so we keep them as a single
+  // state object (the rule flagged the per-field setter pile-up).
+  type ShareState = {
+    selected: ConversationRow[];
+    step: 'pick' | 'compose';
+    draft: string;
+    sending: boolean;
+  };
+  const INITIAL_STATE: ShareState = {
+    selected: [],
+    step: 'pick',
+    draft: '',
+    sending: false,
+  };
+  const [state, setState] = useState<ShareState>(INITIAL_STATE);
+  const { selected, step, draft, sending } = state;
+  const setSelected = useCallback(
+    (updater: ConversationRow[] | ((prev: ConversationRow[]) => ConversationRow[])) => {
+      setState((prev) => ({
+        ...prev,
+        selected: typeof updater === 'function' ? updater(prev.selected) : updater,
+      }));
+    },
+    [],
+  );
+  const setStep = useCallback((step: 'pick' | 'compose') => {
+    setState((prev) => ({ ...prev, step }));
+  }, []);
+  const setDraft = useCallback((draft: string) => {
+    setState((prev) => ({ ...prev, draft }));
+  }, []);
+  const setSending = useCallback((sending: boolean) => {
+    setState((prev) => ({ ...prev, sending }));
+  }, []);
 
   useEffect(() => {
     if (!visible) {
-      setSelected([]);
-      setStep('pick');
-      setDraft('');
-      setSending(false);
+      setState(INITIAL_STATE);
     }
+    // INITIAL_STATE is a stable module-ish literal; depending on it would
+    // require useMemo and add noise. Tracking only `visible` is correct.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const toggleSelect = useCallback((convo: ConversationRow) => {

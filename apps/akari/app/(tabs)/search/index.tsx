@@ -187,12 +187,44 @@ const DEFAULT_HEADER_HEIGHT = 140;
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
   const isHashtagQuery = (value: string) => value.trim().startsWith('#');
-  const [query, setQuery] = useState(initialQuery || '');
-  const [searchQuery, setSearchQuery] = useState(initialQuery || '');
-  const [activeTab, setActiveTab] = useState<SearchTabType>(
-    initialQuery && isHashtagQuery(initialQuery) ? 'posts' : 'all',
+  // The deep-linked `?query=` param seeds four pieces of form state on
+  // first mount and whenever the URL param flips to a new value. Holding
+  // them in a single bag lets the URL sync effect commit atomically
+  // (one render, not four) instead of cascading setState calls.
+  type SearchForm = {
+    query: string;
+    searchQuery: string;
+    activeTab: SearchTabType;
+    sort: SearchSort;
+  };
+  const buildInitialForm = (raw: string | undefined): SearchForm => {
+    const initial = raw ?? '';
+    const isHashtag = initial && isHashtagQuery(initial);
+    return {
+      query: initial,
+      searchQuery: initial,
+      activeTab: isHashtag ? 'posts' : 'all',
+      sort: 'top',
+    };
+  };
+  const [form, setForm] = useState<SearchForm>(() => buildInitialForm(initialQuery));
+  const { query, searchQuery, activeTab, sort } = form;
+  const setQuery = useCallback(
+    (next: string) => setForm((p) => ({ ...p, query: next })),
+    [],
   );
-  const [sort, setSort] = useState<SearchSort>('top');
+  const setSearchQuery = useCallback(
+    (next: string) => setForm((p) => ({ ...p, searchQuery: next })),
+    [],
+  );
+  const setActiveTab = useCallback(
+    (next: SearchTabType) => setForm((p) => ({ ...p, activeTab: next })),
+    [],
+  );
+  const setSort = useCallback(
+    (next: SearchSort) => setForm((p) => ({ ...p, sort: next })),
+    [],
+  );
   const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
   const headerHeightSv = useSharedValue(DEFAULT_HEADER_HEIGHT);
   const headerTranslateY = useSharedValue(0);
@@ -309,12 +341,15 @@ export default function SearchScreen() {
     if (initialQuery === undefined || initialQuery === searchQuery) {
       return;
     }
-    setQuery(initialQuery);
-    setSearchQuery(initialQuery);
-    if (isHashtagQuery(initialQuery)) {
-      setActiveTab('posts');
-      setSort('top');
-    }
+    setForm((prev) => {
+      const isHashtag = isHashtagQuery(initialQuery);
+      return {
+        query: initialQuery,
+        searchQuery: initialQuery,
+        activeTab: isHashtag ? 'posts' : prev.activeTab,
+        sort: isHashtag ? 'top' : prev.sort,
+      };
+    });
   }, [initialQuery, searchQuery]);
 
   const handleSearch = useCallback(() => {

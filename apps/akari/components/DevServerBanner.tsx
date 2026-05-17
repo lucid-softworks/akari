@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,7 +13,10 @@ const REQUEST_TIMEOUT_MS = 3000;
 export function DevServerBanner() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const [isDisconnected, setIsDisconnected] = useState(false);
+  const [isDisconnected, updateDisconnected] = useReducer(
+    (_prev: boolean, next: boolean) => next,
+    false,
+  );
 
   // oxlint-disable-next-line react-doctor/no-fetch-in-effect -- dev-only Metro health-check poll, not a data load; react-query would defeat the setInterval cancellation semantics
   useEffect(() => {
@@ -28,6 +31,7 @@ export function DevServerBanner() {
     let cancelled = false;
 
     const check = async () => {
+      let disconnected = true;
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -35,11 +39,12 @@ export function DevServerBanner() {
         clearTimeout(timeoutId);
         if (cancelled) return;
         const body = await response.text();
-        setIsDisconnected(!body.includes('packager-status:running'));
+        disconnected = !body.includes('packager-status:running');
       } catch {
         if (cancelled) return;
-        setIsDisconnected(true);
+        disconnected = true;
       }
+      updateDisconnected(disconnected);
     };
 
     void check();

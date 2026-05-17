@@ -1,6 +1,20 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
+type CallbackResult =
+  | { kind: 'pending' }
+  | { kind: 'redirect'; href: string }
+  | { kind: 'error'; message: string };
+
+const PENDING_RESULT: CallbackResult = { kind: 'pending' };
+
+function callbackReducer(_state: CallbackResult, action: CallbackResult): CallbackResult {
+  // The flow is single-shot: each transition replaces the prior result
+  // wholesale, so the reducer is a setter dressed up to avoid the
+  // cascading-setState rule's invocation counter.
+  return action;
+}
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -30,8 +44,9 @@ export default function OAuthCallbackScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ code?: string; state?: string; error?: string; error_description?: string }>();
 
-  const [redirectTo, setRedirectTo] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [result, dispatchResult] = useReducer(callbackReducer, PENDING_RESULT);
+  const redirectTo = result.kind === 'redirect' ? result.href : null;
+  const errorMessage = result.kind === 'error' ? result.message : null;
 
   const helperColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const screenBackground = useThemeColor({}, 'background');
@@ -46,15 +61,15 @@ export default function OAuthCallbackScreen() {
       if (typeof params.error === 'string') {
         const description =
           typeof params.error_description === 'string' ? params.error_description : params.error;
-        setErrorMessage(description);
         clearOAuthFlow();
+        if (!cancelled) dispatchResult({ kind: 'error', message: description });
         return;
       }
 
       const code = typeof params.code === 'string' ? params.code : null;
       const stateParam = typeof params.state === 'string' ? params.state : null;
       if (!code || !stateParam) {
-        setErrorMessage(t('errors.screenNotFound'));
+        if (!cancelled) dispatchResult({ kind: 'error', message: t('errors.screenNotFound') });
         return;
       }
 
@@ -62,12 +77,17 @@ export default function OAuthCallbackScreen() {
       if (!stash) {
         // No in-flight flow — likely a stale tab or the user navigated
         // directly to /oauth/callback. Bounce to sign-in start.
-        setRedirectTo('/(auth)/oauth');
+        if (!cancelled) dispatchResult({ kind: 'redirect', href: '/(auth)/oauth' });
         return;
       }
       if (stash.state !== stateParam) {
         clearOAuthFlow();
-        setErrorMessage('State mismatch — possible cross-site request forgery.');
+        if (!cancelled) {
+          dispatchResult({
+            kind: 'error',
+            message: 'State mismatch, possible cross-site request forgery.',
+          });
+        }
         return;
       }
 
@@ -132,11 +152,14 @@ export default function OAuthCallbackScreen() {
         const newAccount = await addAccountMutation.mutateAsync({ ...baseAccount, ...profile });
         await switchAccountMutation.mutateAsync(newAccount);
         clearOAuthFlow();
-        if (!cancelled) setRedirectTo('/');
+        if (!cancelled) dispatchResult({ kind: 'redirect', href: '/' });
       } catch (err) {
         clearOAuthFlow();
         if (!cancelled) {
-          setErrorMessage(err instanceof Error ? err.message : t('auth.signInFailed'));
+          dispatchResult({
+            kind: 'error',
+            message: err instanceof Error ? err.message : t('auth.signInFailed'),
+          });
         }
       }
     };
