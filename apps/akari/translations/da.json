@@ -222,6 +222,8 @@
       "quotedYourPost": "citerede din post",
       "andOneOther": "og 1 anden {{action}}",
       "andOthers": "og {{count}} andre {{action}}",
+      "andSecondName": " og {{name}}",
+      "andOthersCount": " og {{count}} andre",
       "noNotificationsYet": "Ingen notifikationer endnu",
       "notificationsWillAppearHere": "Når du får notifikationer, vises de her",
       "errorLoadingNotifications": "Indlæsningsfejl-notifikationer",
@@ -527,6 +529,7 @@
       "privacy": "Privatliv",
       "terms": "Brugsbetingelser",
       "version": "Version",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Build-nummer",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Vælg op til {{max}} sprog for dit opslag.",
       "postLanguageSearch": "Søg sprog",
       "postLanguageA11y": "Opslagets sprog: {{value}}"
+    },
+    "home": {
+      "fabPost": "Opslag",
+      "fabReview": "Anmeldelse"
+    },
+    "chat": {
+      "openInYouTube": "Åbn i YouTube"
+    },
+    "reviews": {
+      "newReview": "Ny anmeldelse",
+      "type": "Type",
+      "movie": "Film",
+      "tvShow": "Tv-serie",
+      "change": "Skift",
+      "rating": "Bedømmelse",
+      "ratingWithValue": "Bedømmelse ({{rating}}/{{max}})",
+      "review": "Anmeldelse",
+      "thisIsRevisit": "Dette er et gensyn",
+      "containsSpoilers": "Indeholder spoilere"
     }
   }
 }

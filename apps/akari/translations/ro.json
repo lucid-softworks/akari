@@ -222,6 +222,8 @@
       "quotedYourPost": "a citat postarea ta",
       "andOneOther": "și alți 1 {{action}}",
       "andOthers": "și {{count}} alții {{action}}",
+      "andSecondName": " și {{name}}",
+      "andOthersCount": " și alți {{count}}",
       "noNotificationsYet": "Nu există încă notificări",
       "notificationsWillAppearHere": "Când veți primi notificări, vor apărea aici",
       "errorLoadingNotifications": "Notificări de încărcare a erorilor",
@@ -527,6 +529,7 @@
       "privacy": "Confidențialitate",
       "terms": "Termeni",
       "version": "Versiune",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Numărul de construire",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "Aici vor apărea postări și fire salvate.",
       "emptyState": "Încă nu ați salvat nicio postare.",
       "error": "Nu am putut încărca postările dvs. salvate."
+    },
+    "home": {
+      "fabPost": "Postare",
+      "fabReview": "Recenzie"
+    },
+    "chat": {
+      "openInYouTube": "Deschide în YouTube"
+    },
+    "reviews": {
+      "newReview": "Recenzie nouă",
+      "type": "Tip",
+      "movie": "Film",
+      "tvShow": "Serial TV",
+      "change": "Schimbă",
+      "rating": "Notă",
+      "ratingWithValue": "Notă ({{rating}}/{{max}})",
+      "review": "Recenzie",
+      "thisIsRevisit": "Aceasta este o revizionare",
+      "containsSpoilers": "Conține spoilere"
     },
     "debug": {
       "crashReporter": "Raportor de Erori",

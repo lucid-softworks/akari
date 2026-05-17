@@ -261,7 +261,9 @@
       "sending": "Invio...",
       "scheduling": "Programmazione...",
       "all": "Tutti",
-      "mentions": "Menzioni"
+      "mentions": "Menzioni",
+      "andSecondName": " e {{name}}",
+      "andOthersCount": " e altri {{count}}"
     },
     "profile": {
       "media": "Contenuti",
@@ -518,6 +520,7 @@
       "privacy": "Privacy",
       "terms": "Termini",
       "version": "Versione",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Numero build",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "Non hai ancora salvato alcun post.",
       "error": "Non siamo riusciti a caricare i tuoi post salvati."
     },
+    "chat": {
+      "openInYouTube": "Apri su YouTube"
+    },
     "debug": {
       "crashReporter": "Segnalatore di Errori",
       "crashDescription": "Usa questo pulsante per generare un errore di test e confermare che la segnalazione degli errori è configurata correttamente. Assicurati che le tue credenziali Axiom siano configurate in modo che il rapporto venga consegnato.",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Messaggio su Germ"
     },
+    "home": {
+      "fabPost": "Post",
+      "fabReview": "Recensione"
+    },
     "composer": {
       "postLanguageTitle": "Lingua del post",
       "postLanguageHint": "Scegli fino a {{max}} lingue per il tuo post.",
       "postLanguageSearch": "Cerca lingue",
       "postLanguageA11y": "Lingua del post: {{value}}"
+    },
+    "reviews": {
+      "newReview": "Nuova recensione",
+      "type": "Tipo",
+      "movie": "Film",
+      "tvShow": "Serie TV",
+      "change": "Cambia",
+      "rating": "Voto",
+      "ratingWithValue": "Voto ({{rating}}/{{max}})",
+      "review": "Recensione",
+      "thisIsRevisit": "Questa è una rivisitazione",
+      "containsSpoilers": "Contiene spoiler"
     }
   }
 }

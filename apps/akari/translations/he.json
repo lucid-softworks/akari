@@ -222,6 +222,8 @@
       "quotedYourPost": "ציטט את ההודעה שלך",
       "andOneOther": "ועוד {{action}} אחר",
       "andOthers": "ו- {{count}} אחרים {{action}}",
+      "andSecondName": " ו{{name}}",
+      "andOthersCount": " ועוד {{count}} אנשים",
       "noNotificationsYet": "עדיין אין התראות",
       "notificationsWillAppearHere": "כשאתה מקבל התראות, הם יופיעו כאן",
       "errorLoadingNotifications": "טעינת שגיאה בהודעות",
@@ -527,6 +529,7 @@
       "privacy": "פְּרָטִיוּת",
       "terms": "מונחים",
       "version": "גִרְסָה",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "בנה מספר",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "בחרו עד {{max}} שפות לפוסט שלכם.",
       "postLanguageSearch": "חפש שפות",
       "postLanguageA11y": "שפת הפוסט: {{value}}"
+    },
+    "home": {
+      "fabPost": "פרסם",
+      "fabReview": "ביקורת"
+    },
+    "chat": {
+      "openInYouTube": "פתח ב-YouTube"
+    },
+    "reviews": {
+      "newReview": "ביקורת חדשה",
+      "type": "סוג",
+      "movie": "סרט",
+      "tvShow": "סדרת טלוויזיה",
+      "change": "שנה",
+      "rating": "דירוג",
+      "ratingWithValue": "דירוג ({{rating}}/{{max}})",
+      "review": "ביקורת",
+      "thisIsRevisit": "זוהי צפייה חוזרת",
+      "containsSpoilers": "מכיל ספוילרים"
     }
   }
 }

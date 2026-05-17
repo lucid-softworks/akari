@@ -222,6 +222,8 @@
       "quotedYourPost": "引用您的帖子",
       "andOneOther": "和其他1个{{action}}",
       "andOthers": "和{{count}}其他",
+      "andSecondName": "和 {{name}}",
+      "andOthersCount": "和另外 {{count}} 人",
       "noNotificationsYet": "尚未通知",
       "notificationsWillAppearHere": "当您收到通知时，它们会出现在这里",
       "errorLoadingNotifications": "错误加载通知",
@@ -527,6 +529,7 @@
       "privacy": "隐私",
       "terms": "术语",
       "version": "版本",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "构建号码",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "为你的帖子选择最多 {{max}} 种语言。",
       "postLanguageSearch": "搜索语言",
       "postLanguageA11y": "帖子语言：{{value}}"
+    },
+    "home": {
+      "fabPost": "发帖",
+      "fabReview": "影评"
+    },
+    "chat": {
+      "openInYouTube": "在 YouTube 中打开"
+    },
+    "reviews": {
+      "newReview": "新影评",
+      "type": "类型",
+      "movie": "电影",
+      "tvShow": "电视剧",
+      "change": "更改",
+      "rating": "评分",
+      "ratingWithValue": "评分 ({{rating}}/{{max}})",
+      "review": "影评",
+      "thisIsRevisit": "这是重温",
+      "containsSpoilers": "包含剧透"
     }
   }
 }

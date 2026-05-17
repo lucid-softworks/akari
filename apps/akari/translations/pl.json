@@ -222,6 +222,8 @@
       "quotedYourPost": "zacytował Twój post",
       "andOneOther": "i 1 inny {{action}}",
       "andOthers": "i {{count}} innych {{action}}",
+      "andSecondName": " i {{name}}",
+      "andOthersCount": " i {{count}} innych",
       "noNotificationsYet": "Brak powiadomień",
       "notificationsWillAppearHere": "Gdy otrzymasz powiadomienia, pojawią się tutaj",
       "errorLoadingNotifications": "Błąd ładowania powiadomień",
@@ -518,6 +520,7 @@
       "privacy": "Prywatność",
       "terms": "Warunki",
       "version": "Wersja",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Numer kompilacji",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "Zapisane posty i wątki pojawią się tutaj.",
       "emptyState": "Nie zapisałeś jeszcze żadnych postów.",
       "error": "Nie udało nam się wczytać zapisanych postów."
+    },
+    "home": {
+      "fabPost": "Post",
+      "fabReview": "Recenzja"
+    },
+    "chat": {
+      "openInYouTube": "Otwórz w YouTube"
+    },
+    "reviews": {
+      "newReview": "Nowa recenzja",
+      "type": "Typ",
+      "movie": "Film",
+      "tvShow": "Serial",
+      "change": "Zmień",
+      "rating": "Ocena",
+      "ratingWithValue": "Ocena ({{rating}}/{{max}})",
+      "review": "Recenzja",
+      "thisIsRevisit": "To powtórne obejrzenie",
+      "containsSpoilers": "Zawiera spoilery"
     },
     "debug": {
       "crashReporter": "Raportowanie Awarii",

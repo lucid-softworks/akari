@@ -137,7 +137,7 @@ describe('NotificationsScreen', () => {
 
     expect(mockRegister).toHaveBeenCalledWith('notifications', expect.any(Function));
     expect(getByText('alice')).toBeTruthy();
-    expect(getByText(/and\s*bob/)).toBeTruthy();
+    expect(getByText('notifications.andSecondName')).toBeTruthy();
     expect(getByText('notifications.andOneOther')).toBeTruthy();
     expect(getByText('Carol')).toBeTruthy();
     expect(getByText('notifications.startedFollowingYou')).toBeTruthy();
@@ -273,7 +273,7 @@ describe('NotificationsScreen', () => {
     const { getByText, UNSAFE_getAllByType } = render(<NotificationsScreen />, { wrapper: createWrapper().wrapper });
 
     expect(getByText('alice')).toBeTruthy();
-    expect(getByText(/and\s*4\s*others/)).toBeTruthy();
+    expect(getByText('notifications.andOthersCount')).toBeTruthy();
     expect(getByText('notifications.andOthers')).toBeTruthy();
     expect(getByText(/\+\s*1/)).toBeTruthy();
     expect(getByText('ui.replyToYou')).toBeTruthy();

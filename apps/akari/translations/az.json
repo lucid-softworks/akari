@@ -222,6 +222,8 @@
       "quotedYourPost": "Yazınıza sitat gətirdi",
       "andOneOther": "və 1 digər {{action}}",
       "andOthers": "və {{count}} Digərləri {{action}}",
+      "andSecondName": " və {{name}}",
+      "andOthersCount": " və daha {{count}} nəfər",
       "noNotificationsYet": "Hələ bildiriş yoxdur",
       "notificationsWillAppearHere": "Bildiriş aldığınız zaman burada görünəcəklər",
       "errorLoadingNotifications": "Bildirişlərin yüklənməsi səhv",
@@ -527,6 +529,7 @@
       "privacy": "Gizlilik",
       "terms": "Şərt",
       "version": "Versiya",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Qiymətləndirmək",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Paylaşımınız üçün {{max}}-yə qədər dil seçin.",
       "postLanguageSearch": "Dilləri axtar",
       "postLanguageA11y": "Paylaşım dili: {{value}}"
+    },
+    "home": {
+      "fabPost": "Paylaş",
+      "fabReview": "Rəy"
+    },
+    "chat": {
+      "openInYouTube": "YouTube-da aç"
+    },
+    "reviews": {
+      "newReview": "Yeni rəy",
+      "type": "Növ",
+      "movie": "Film",
+      "tvShow": "TV serialı",
+      "change": "Dəyişdir",
+      "rating": "Qiymət",
+      "ratingWithValue": "Qiymət ({{rating}}/{{max}})",
+      "review": "Rəy",
+      "thisIsRevisit": "Bu, təkrar baxışdır",
+      "containsSpoilers": "Spoyler var"
     }
   }
 }

@@ -261,7 +261,9 @@
       "sending": "Mengirim...",
       "scheduling": "Menjadwalkan...",
       "all": "Semua",
-      "mentions": "Sebutan"
+      "mentions": "Sebutan",
+      "andSecondName": " dan {{name}}",
+      "andOthersCount": " dan {{count}} lainnya"
     },
     "profile": {
       "media": "Media",
@@ -518,6 +520,7 @@
       "privacy": "Privasi",
       "terms": "Ketentuan",
       "version": "Versi",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Nomor build",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "Anda belum menyimpan postingan apa pun.",
       "error": "Kami tidak dapat memuat postingan tersimpan Anda."
     },
+    "chat": {
+      "openInYouTube": "Buka di YouTube"
+    },
     "debug": {
       "crashReporter": "Pelapor Crash",
       "crashDescription": "Gunakan tombol ini untuk menghasilkan error pengujian dan mengonfirmasi bahwa pelaporan crash dikonfigurasi dengan benar. Pastikan kredensial Axiom Anda dikonfigurasi untuk mengirimkan laporan.",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Pesan di Germ"
     },
+    "home": {
+      "fabPost": "Postingan",
+      "fabReview": "Ulasan"
+    },
     "composer": {
       "postLanguageTitle": "Bahasa postingan",
       "postLanguageHint": "Pilih hingga {{max}} bahasa untuk postingan Anda.",
       "postLanguageSearch": "Cari bahasa",
       "postLanguageA11y": "Bahasa postingan: {{value}}"
+    },
+    "reviews": {
+      "newReview": "Ulasan Baru",
+      "type": "Jenis",
+      "movie": "Film",
+      "tvShow": "Serial TV",
+      "change": "Ubah",
+      "rating": "Peringkat",
+      "ratingWithValue": "Peringkat ({{rating}}/{{max}})",
+      "review": "Ulasan",
+      "thisIsRevisit": "Ini adalah tontonan ulang",
+      "containsSpoilers": "Mengandung spoiler"
     }
   }
 }

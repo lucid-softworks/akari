@@ -222,6 +222,8 @@
       "quotedYourPost": "quoted your post",
       "andOneOther": "and 1 other {{action}}",
       "andOthers": "and {{count}} others {{action}}",
+      "andSecondName": " and {{name}}",
+      "andOthersCount": " and {{count}} others",
       "noNotificationsYet": "No notifications yet",
       "notificationsWillAppearHere": "When you get notifications, they'll appear here",
       "errorLoadingNotifications": "Error loading notifications",
@@ -518,6 +520,7 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "version": "Version",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Build number",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Pick up to {{max}} languages your post is in.",
       "postLanguageSearch": "Search languages",
       "postLanguageA11y": "Post language: {{value}}"
+    },
+    "home": {
+      "fabPost": "Post",
+      "fabReview": "Review"
+    },
+    "chat": {
+      "openInYouTube": "Open in YouTube"
+    },
+    "reviews": {
+      "newReview": "New Review",
+      "type": "Type",
+      "movie": "Movie",
+      "tvShow": "TV Show",
+      "change": "Change",
+      "rating": "Rating",
+      "ratingWithValue": "Rating ({{rating}}/{{max}})",
+      "review": "Review",
+      "thisIsRevisit": "This is a revisit",
+      "containsSpoilers": "Contains spoilers"
     }
   }
 }

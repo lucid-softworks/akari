@@ -222,6 +222,8 @@
       "quotedYourPost": "引用了您的貼文",
       "andOneOther": "和 1 個其他{{action}}",
       "andOthers": "和 {{count}} 個其他{{action}}",
+      "andSecondName": "和 {{name}}",
+      "andOthersCount": "和另外 {{count}} 人",
       "noNotificationsYet": "還沒有通知",
       "notificationsWillAppearHere": "當您收到通知時，它們會顯示在這裡",
       "errorLoadingNotifications": "載入通知時發生錯誤",
@@ -518,6 +520,7 @@
       "privacy": "隱私",
       "terms": "條款",
       "version": "版本",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "建置號碼",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "為你的貼文選擇最多 {{max}} 種語言。",
       "postLanguageSearch": "搜尋語言",
       "postLanguageA11y": "貼文語言：{{value}}"
+    },
+    "home": {
+      "fabPost": "發文",
+      "fabReview": "影評"
+    },
+    "chat": {
+      "openInYouTube": "在 YouTube 中開啟"
+    },
+    "reviews": {
+      "newReview": "新影評",
+      "type": "類型",
+      "movie": "電影",
+      "tvShow": "電視節目",
+      "change": "變更",
+      "rating": "評分",
+      "ratingWithValue": "評分 ({{rating}}/{{max}})",
+      "review": "影評",
+      "thisIsRevisit": "這是重溫",
+      "containsSpoilers": "含有劇透"
     }
   }
 }

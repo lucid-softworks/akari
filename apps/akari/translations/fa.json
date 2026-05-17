@@ -222,6 +222,8 @@
       "quotedYourPost": "به نقل از پست شما",
       "andOneOther": "و 1 {{action}} دیگر",
       "andOthers": "و {{count}} دیگران {{action}}",
+      "andSecondName": " و {{name}}",
+      "andOthersCount": " و {{count}} نفر دیگر",
       "noNotificationsYet": "هنوز اعلان ها وجود ندارد",
       "notificationsWillAppearHere": "وقتی اعلان ها را دریافت می کنید ، آنها در اینجا ظاهر می شوند",
       "errorLoadingNotifications": "اعلان های بارگذاری خطا",
@@ -527,6 +529,7 @@
       "privacy": "خلوت",
       "terms": "عناصر",
       "version": "نسخه",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "شماره ساخت",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "حداکثر {{max}} زبان برای پست خود انتخاب کنید.",
       "postLanguageSearch": "جستجوی زبان‌ها",
       "postLanguageA11y": "زبان پست: {{value}}"
+    },
+    "home": {
+      "fabPost": "ارسال",
+      "fabReview": "نقد"
+    },
+    "chat": {
+      "openInYouTube": "باز کردن در یوتیوب"
+    },
+    "reviews": {
+      "newReview": "نقد جدید",
+      "type": "نوع",
+      "movie": "فیلم",
+      "tvShow": "سریال",
+      "change": "تغییر",
+      "rating": "امتیاز",
+      "ratingWithValue": "امتیاز ({{rating}}/{{max}})",
+      "review": "نقد",
+      "thisIsRevisit": "این بازبینی مجدد است",
+      "containsSpoilers": "حاوی اسپویل است"
     }
   }
 }

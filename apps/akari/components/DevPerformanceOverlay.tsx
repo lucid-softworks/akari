@@ -104,7 +104,9 @@ export function DevPerformanceOverlay() {
         </View>
         <View style={styles.divider} />
         <View style={styles.row}>
+          {/* oxlint-disable-next-line i18next/no-literal-string -- dev-only performance overlay, not user-facing */}
           <Text style={styles.value}>{stats.avgFrameTime}ms</Text>
+          {/* oxlint-disable-next-line i18next/no-literal-string -- dev-only performance overlay, not user-facing */}
           <Text style={styles.label}>Frame</Text>
         </View>
         <View style={styles.divider} />
@@ -112,6 +114,7 @@ export function DevPerformanceOverlay() {
           <Text style={[styles.value, stats.droppedFrames > 5 ? styles.valueWarn : null]}>
             {stats.droppedFrames}
           </Text>
+          {/* oxlint-disable-next-line i18next/no-literal-string -- dev-only performance overlay, not user-facing */}
           <Text style={styles.label}>Drops</Text>
         </View>
         {stats.jsHeap !== null && (
@@ -119,6 +122,7 @@ export function DevPerformanceOverlay() {
             <View style={styles.divider} />
             <View style={styles.row}>
               <Text style={styles.value}>{stats.jsHeap}MB</Text>
+              {/* oxlint-disable-next-line i18next/no-literal-string -- dev-only performance overlay, not user-facing */}
               <Text style={styles.label}>Heap</Text>
             </View>
           </>

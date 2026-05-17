@@ -261,7 +261,9 @@
       "sending": "Küldés ...",
       "scheduling": "Ütemezés ...",
       "all": "Minden",
-      "mentions": "Megemlít"
+      "mentions": "Megemlít",
+      "andSecondName": " és {{name}}",
+      "andOthersCount": " és további {{count}}"
     },
     "profile": {
       "media": "Média",
@@ -527,6 +529,7 @@
       "privacy": "Magánélet",
       "terms": "Kifejezés",
       "version": "Változat",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Építési szám",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "Még nem mentettél be hozzászólásokat.",
       "error": "Nem tudtuk betölteni a mentett hozzászólásait."
     },
+    "chat": {
+      "openInYouTube": "Megnyitás a YouTube-on"
+    },
     "debug": {
       "crashReporter": "Összeomlás Jelentő",
       "crashDescription": "Használd ezt a gombot egy teszt hiba generálásához és az összeomlás jelentés megfelelő konfigurálásának megerősítéséhez. Győződj meg róla, hogy az Axiom hitelesítő adataid konfigurálva vannak a jelentés kézbesítéséhez.",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Üzenet a Germen"
     },
+    "home": {
+      "fabPost": "Bejegyzés",
+      "fabReview": "Értékelés"
+    },
     "composer": {
       "postLanguageTitle": "Bejegyzés nyelve",
       "postLanguageHint": "Válassz legfeljebb {{max}} nyelvet a bejegyzésedhez.",
       "postLanguageSearch": "Nyelvek keresése",
       "postLanguageA11y": "Bejegyzés nyelve: {{value}}"
+    },
+    "reviews": {
+      "newReview": "Új értékelés",
+      "type": "Típus",
+      "movie": "Film",
+      "tvShow": "Tévésorozat",
+      "change": "Módosítás",
+      "rating": "Értékelés",
+      "ratingWithValue": "Értékelés ({{rating}}/{{max}})",
+      "review": "Vélemény",
+      "thisIsRevisit": "Ez egy újranézés",
+      "containsSpoilers": "Cselekménybeli részleteket tartalmaz"
     }
   }
 }

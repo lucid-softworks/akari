@@ -222,6 +222,8 @@
       "quotedYourPost": "citoval svoj príspevok",
       "andOneOther": "a 1 ďalšie {{action}}",
       "andOthers": "a {{count}} Ostatné {{action}}",
+      "andSecondName": " a {{name}}",
+      "andOthersCount": " a ďalších {{count}}",
       "noNotificationsYet": "Zatiaľ žiadne upozornenia",
       "notificationsWillAppearHere": "Keď dostanete oznámenia, objavia sa tu",
       "errorLoadingNotifications": "Upozornenia na načítanie chýb",
@@ -527,6 +529,7 @@
       "privacy": "Súkromie",
       "terms": "Podmienky",
       "version": "Verzia",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Zostavenie",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "Tu sa zobrazia uložené príspevky a vlákna.",
       "emptyState": "Zatiaľ ste neuložili žiadne príspevky.",
       "error": "Nemohli sme načítať vaše uložené príspevky."
+    },
+    "home": {
+      "fabPost": "Príspevok",
+      "fabReview": "Recenzia"
+    },
+    "chat": {
+      "openInYouTube": "Otvoriť v YouTube"
+    },
+    "reviews": {
+      "newReview": "Nová recenzia",
+      "type": "Typ",
+      "movie": "Film",
+      "tvShow": "Seriál",
+      "change": "Zmeniť",
+      "rating": "Hodnotenie",
+      "ratingWithValue": "Hodnotenie ({{rating}}/{{max}})",
+      "review": "Recenzia",
+      "thisIsRevisit": "Toto je opätovné pozretie",
+      "containsSpoilers": "Obsahuje spojlery"
     },
     "debug": {
       "crashReporter": "Hlásenie Chýb",

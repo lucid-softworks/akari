@@ -222,6 +222,8 @@
       "quotedYourPost": "a cité votre publication",
       "andOneOther": "et 1 autre {{action}}",
       "andOthers": "et {{count}} autres {{action}}",
+      "andSecondName": " et {{name}}",
+      "andOthersCount": " et {{count}} autres",
       "noNotificationsYet": "Aucune notification pour le moment",
       "notificationsWillAppearHere": "Lorsque vous recevrez des notifications, elles apparaîtront ici",
       "errorLoadingNotifications": "Erreur lors du chargement des notifications",
@@ -527,6 +529,7 @@
       "privacy": "Confidentialité",
       "terms": "Conditions",
       "version": "Version",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Numéro de build",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Choisissez jusquà {{max}} langues pour votre publication.",
       "postLanguageSearch": "Rechercher des langues",
       "postLanguageA11y": "Langue de la publication : {{value}}"
+    },
+    "home": {
+      "fabPost": "Publier",
+      "fabReview": "Critique"
+    },
+    "chat": {
+      "openInYouTube": "Ouvrir dans YouTube"
+    },
+    "reviews": {
+      "newReview": "Nouvelle critique",
+      "type": "Type",
+      "movie": "Film",
+      "tvShow": "Série TV",
+      "change": "Modifier",
+      "rating": "Note",
+      "ratingWithValue": "Note ({{rating}}/{{max}})",
+      "review": "Critique",
+      "thisIsRevisit": "Cest un revisionnage",
+      "containsSpoilers": "Contient des spoilers"
     }
   }
 }

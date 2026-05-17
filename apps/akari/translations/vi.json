@@ -222,6 +222,8 @@
       "quotedYourPost": "đã trích dẫn bài đăng của bạn",
       "andOneOther": "và 1 người khác {{action}}",
       "andOthers": "và {{count}} người khác {{action}}",
+      "andSecondName": " và {{name}}",
+      "andOthersCount": " và {{count}} người khác",
       "noNotificationsYet": "Chưa có thông báo",
       "notificationsWillAppearHere": "Khi bạn nhận được thông báo, chúng sẽ xuất hiện ở đây",
       "errorLoadingNotifications": "Lỗi tải thông báo",
@@ -518,6 +520,7 @@
       "privacy": "Quyền riêng tư",
       "terms": "Điều khoản",
       "version": "Phiên bản",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Số bản dựng",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Chọn tối đa {{max}} ngôn ngữ cho bài viết của bạn.",
       "postLanguageSearch": "Tìm ngôn ngữ",
       "postLanguageA11y": "Ngôn ngữ bài viết: {{value}}"
+    },
+    "home": {
+      "fabPost": "Đăng",
+      "fabReview": "Đánh giá"
+    },
+    "chat": {
+      "openInYouTube": "Mở trong YouTube"
+    },
+    "reviews": {
+      "newReview": "Đánh giá mới",
+      "type": "Loại",
+      "movie": "Phim",
+      "tvShow": "Chương trình TV",
+      "change": "Thay đổi",
+      "rating": "Điểm",
+      "ratingWithValue": "Điểm ({{rating}}/{{max}})",
+      "review": "Đánh giá",
+      "thisIsRevisit": "Đây là lần xem lại",
+      "containsSpoilers": "Chứa tiết lộ nội dung"
     }
   }
 }

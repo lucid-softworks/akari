@@ -230,6 +230,8 @@
       "quotedYourPost": "quoted your post",
       "andOneOther": "and 1 other {{action}}",
       "andOthers": "and {{count}} others {{action}}",
+      "andSecondName": " and {{name}}",
+      "andOthersCount": " and {{count}} others",
       "noNotificationsYet": "No notifications yet",
       "notificationsWillAppearHere": "When you get notifications, they'll appear here",
       "errorLoadingNotifications": "Error loading notifications",
@@ -360,6 +362,10 @@
     },
     "germ": {
       "messageOnGerm": "Message on Germ"
+    },
+    "home": {
+      "fabPost": "Post",
+      "fabReview": "Review"
     },
     "composer": {
       "postLanguageTitle": "Post language",
@@ -551,6 +557,7 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "version": "Version",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Build number",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -976,6 +983,9 @@
       "emptyState": "You haven't saved any posts yet.",
       "error": "We couldn't load your saved posts."
     },
+    "chat": {
+      "openInYouTube": "Open in YouTube"
+    },
     "debug": {
       "crashReporter": "Crash Reporter",
       "crashDescription": "Use this button to throw a test error and confirm crash reporting is wired up correctly. Make sure your Axiom credentials are configured so the report is delivered.",
@@ -1060,6 +1070,18 @@
       "reasonViolation": "Illegal or harmful",
       "reasonOther": "Other",
       "sendTo": "Send to"
+    },
+    "reviews": {
+      "newReview": "New Review",
+      "type": "Type",
+      "movie": "Movie",
+      "tvShow": "TV Show",
+      "change": "Change",
+      "rating": "Rating",
+      "ratingWithValue": "Rating ({{rating}}/{{max}})",
+      "review": "Review",
+      "thisIsRevisit": "This is a revisit",
+      "containsSpoilers": "Contains spoilers"
     },
     "recipe": {
       "title": "Recipe",

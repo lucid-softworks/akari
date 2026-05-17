@@ -261,7 +261,9 @@
       "sending": "送信中...",
       "scheduling": "予約中...",
       "all": "すべて",
-      "mentions": "メンション"
+      "mentions": "メンション",
+      "andSecondName": "と{{name}}",
+      "andOthersCount": "と他{{count}}人"
     },
     "profile": {
       "media": "メディア",
@@ -518,6 +520,7 @@
       "privacy": "プライバシー",
       "terms": "利用規約",
       "version": "バージョン",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "ビルド番号",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "まだ投稿を保存していません。",
       "error": "保存した投稿を読み込めませんでした。"
     },
+    "chat": {
+      "openInYouTube": "YouTubeで開く"
+    },
     "debug": {
       "crashReporter": "クラッシュレポーター",
       "crashDescription": "このボタンを使用してテストエラーを発生させ、クラッシュレポートが正しく設定されていることを確認してください。レポートが配信されるようにAxiomの認証情報が設定されていることを確認してください。",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Germ でメッセージ"
     },
+    "home": {
+      "fabPost": "投稿",
+      "fabReview": "レビュー"
+    },
     "composer": {
       "postLanguageTitle": "投稿の言語",
       "postLanguageHint": "投稿の言語を最大{{max}}個まで選択してください。",
       "postLanguageSearch": "言語を検索",
       "postLanguageA11y": "投稿の言語: {{value}}"
+    },
+    "reviews": {
+      "newReview": "新規レビュー",
+      "type": "タイプ",
+      "movie": "映画",
+      "tvShow": "テレビ番組",
+      "change": "変更",
+      "rating": "評価",
+      "ratingWithValue": "評価 ({{rating}}/{{max}})",
+      "review": "レビュー",
+      "thisIsRevisit": "再視聴です",
+      "containsSpoilers": "ネタバレを含みます"
     }
   }
 }

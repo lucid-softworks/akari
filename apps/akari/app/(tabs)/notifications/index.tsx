@@ -176,7 +176,7 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
         <>
           <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
           {firstBadge}
-          <ThemedText style={styles.authorNames} numberOfLines={1}> and {secondName}</ThemedText>
+          <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andSecondName', { name: secondName })}</ThemedText>
           <VerificationBadge
             verification={second.verification}
             subjectHandle={second.handle}
@@ -191,7 +191,7 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
       <>
         <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
         {firstBadge}
-        <ThemedText style={styles.authorNames} numberOfLines={1}> and {authors.length - 1} others</ThemedText>
+        <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andOthersCount', { count: authors.length - 1 })}</ThemedText>
       </>
     );
   };

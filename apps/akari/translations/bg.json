@@ -222,6 +222,8 @@
       "quotedYourPost": "цитиран публикацията ви",
       "andOneOther": "и 1 други {{action}}",
       "andOthers": "и {{count}} други {{action}}",
+      "andSecondName": " и {{name}}",
+      "andOthersCount": " и още {{count}} души",
       "noNotificationsYet": "Все още няма известия",
       "notificationsWillAppearHere": "Когато получите известия, те ще се появят тук",
       "errorLoadingNotifications": "Грешка за зареждане на известия",
@@ -527,6 +529,7 @@
       "privacy": "Поверителност",
       "terms": "Условия",
       "version": "Версия",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Номер на изграждане",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Изберете до {{max}} езика за вашата публикация.",
       "postLanguageSearch": "Търси езици",
       "postLanguageA11y": "Език на публикацията: {{value}}"
+    },
+    "home": {
+      "fabPost": "Публикувай",
+      "fabReview": "Рецензия"
+    },
+    "chat": {
+      "openInYouTube": "Отвори в YouTube"
+    },
+    "reviews": {
+      "newReview": "Нова рецензия",
+      "type": "Тип",
+      "movie": "Филм",
+      "tvShow": "Сериал",
+      "change": "Промени",
+      "rating": "Оценка",
+      "ratingWithValue": "Оценка ({{rating}}/{{max}})",
+      "review": "Рецензия",
+      "thisIsRevisit": "Това е повторно гледане",
+      "containsSpoilers": "Съдържа спойлери"
     }
   }
 }

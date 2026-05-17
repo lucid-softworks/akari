@@ -406,7 +406,7 @@ describe('HomeScreen', () => {
     expect(queryByText('composer')).toBeNull();
     // FAB opens a menu first, then select "Post"
     fireEvent.press(getByText('icon-plus'));
-    fireEvent.press(getByText('Post'));
+    fireEvent.press(getByText('home.fabPost'));
     expect(getByText('composer')).toBeTruthy();
   });
 });

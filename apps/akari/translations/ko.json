@@ -261,7 +261,9 @@
       "sending": "보내는 중...",
       "scheduling": "예약 중...",
       "all": "전체",
-      "mentions": "멘션"
+      "mentions": "멘션",
+      "andSecondName": " 및 {{name}}",
+      "andOthersCount": " 외 {{count}}명"
     },
     "profile": {
       "media": "미디어",
@@ -518,6 +520,7 @@
       "privacy": "개인정보 보호",
       "terms": "이용 약관",
       "version": "버전",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "빌드 번호",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "아직 저장한 게시물이 없습니다.",
       "error": "저장한 게시물을 불러오지 못했습니다."
     },
+    "chat": {
+      "openInYouTube": "YouTube에서 열기"
+    },
     "debug": {
       "crashReporter": "크래시 리포터",
       "crashDescription": "이 버튼을 사용하여 테스트 오류를 발생시키고 크래시 리포팅이 올바르게 설정되었는지 확인하세요. 보고서가 전달되도록 Axiom 자격 증명이 구성되어 있는지 확인하세요.",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Germ에서 메시지"
     },
+    "home": {
+      "fabPost": "게시",
+      "fabReview": "리뷰"
+    },
     "composer": {
       "postLanguageTitle": "게시물 언어",
       "postLanguageHint": "게시물에 사용할 언어를 최대 {{max}}개까지 선택하세요.",
       "postLanguageSearch": "언어 검색",
       "postLanguageA11y": "게시물 언어: {{value}}"
+    },
+    "reviews": {
+      "newReview": "새 리뷰",
+      "type": "유형",
+      "movie": "영화",
+      "tvShow": "TV 프로그램",
+      "change": "변경",
+      "rating": "평점",
+      "ratingWithValue": "평점 ({{rating}}/{{max}})",
+      "review": "리뷰",
+      "thisIsRevisit": "다시 보기입니다",
+      "containsSpoilers": "스포일러가 포함되어 있습니다"
     }
   }
 }

@@ -261,7 +261,9 @@
       "sending": "भेज रहा है...",
       "scheduling": "शेड्यूलिंग...",
       "all": "सभी",
-      "mentions": "उल्लेख"
+      "mentions": "उल्लेख",
+      "andSecondName": " और {{name}}",
+      "andOthersCount": " और {{count}} अन्य"
     },
     "profile": {
       "media": "मीडिया",
@@ -518,6 +520,7 @@
       "privacy": "गोपनीयता",
       "terms": "नियम और शर्तें",
       "version": "संस्करण",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "बिल्ड संख्या",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "आपने अभी तक कोई पोस्ट सहेजी नहीं है।",
       "error": "हम आपकी सहेजी गई पोस्ट लोड नहीं कर पाए।"
     },
+    "chat": {
+      "openInYouTube": "YouTube में खोलें"
+    },
     "debug": {
       "crashReporter": "क्रैश रिपोर्टर",
       "crashDescription": "टेस्ट त्रुटि उत्पन्न करने और क्रैश रिपोर्टिंग सही तरीके से कॉन्फ़िगर है यह पुष्टि करने के लिए इस बटन का उपयोग करें। सुनिश्चित करें कि आपके Axiom क्रेडेंशियल कॉन्फ़िगर हैं ताकि रिपोर्ट डिलीवर हो सके।",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Germ पर संदेश"
     },
+    "home": {
+      "fabPost": "पोस्ट",
+      "fabReview": "समीक्षा"
+    },
     "composer": {
       "postLanguageTitle": "पोस्ट की भाषा",
       "postLanguageHint": "अपनी पोस्ट के लिए अधिकतम {{max}} भाषाएँ चुनें।",
       "postLanguageSearch": "भाषाएँ खोजें",
       "postLanguageA11y": "पोस्ट की भाषा: {{value}}"
+    },
+    "reviews": {
+      "newReview": "नई समीक्षा",
+      "type": "प्रकार",
+      "movie": "फ़िल्म",
+      "tvShow": "टीवी शो",
+      "change": "बदलें",
+      "rating": "रेटिंग",
+      "ratingWithValue": "रेटिंग ({{rating}}/{{max}})",
+      "review": "समीक्षा",
+      "thisIsRevisit": "यह दोबारा देखना है",
+      "containsSpoilers": "स्पॉइलर शामिल हैं"
     }
   }
 }

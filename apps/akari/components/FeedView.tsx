@@ -17,6 +17,7 @@ import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { resolveHandleToDid } from '@/utils/oauth/discovery';
 import { shouldHideFeedItem } from '@/utils/feedFilters';
 import { isPostMuted } from '@/utils/mutedWordsFilter';
@@ -40,6 +41,7 @@ type FeedListItem = { type: 'empty'; state: 'loading' | 'empty' } | { type: 'pos
  * applied so the global toggles still take effect.
  */
 export default function FeedView({ actor, rKey }: FeedViewProps) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const borderColor = useThemeColor({}, 'border');
   const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
@@ -121,12 +123,12 @@ export default function FeedView({ actor, rKey }: FeedViewProps) {
       if (item.state === 'loading') return <FeedSkeleton count={6} />;
       return (
         <ThemedView style={styles.empty}>
-          <ThemedText style={[styles.emptyText, { color: secondaryText }]}>This feed has no posts yet.</ThemedText>
+          <ThemedText style={[styles.emptyText, { color: secondaryText }]}>{t('feed.noPostsInFeed')}</ThemedText>
         </ThemedView>
       );
     }
     return <PostCard post={postCardFromFeedItem(item.item)} />;
-  }, [secondaryText]);
+  }, [secondaryText, t]);
 
   const keyExtractor = useCallback((item: FeedListItem, index: number) => {
     if (item.type === 'empty') return `empty-${index}`;
@@ -143,7 +145,7 @@ export default function FeedView({ actor, rKey }: FeedViewProps) {
         <ThemedView style={styles.headerText}>
           <ThemedText style={styles.title}>{feedMeta.displayName}</ThemedText>
           <ThemedText style={[styles.subtitle, { color: secondaryText }]} numberOfLines={1}>
-            by @{feedMeta.creator?.handle ?? actor}
+            {t('ui.byCreator', { handle: feedMeta.creator?.handle ?? actor })}
           </ThemedText>
           {feedMeta.description ? (
             <ThemedText style={[styles.description, { color: secondaryText }]}>{feedMeta.description}</ThemedText>
@@ -151,7 +153,7 @@ export default function FeedView({ actor, rKey }: FeedViewProps) {
         </ThemedView>
       </ThemedView>
     );
-  }, [actor, borderColor, feedMeta, insets.top, secondaryText]);
+  }, [actor, borderColor, feedMeta, insets.top, secondaryText, t]);
 
   const listFooter = isFetchingNextPage ? (
     <ThemedView style={styles.footer}>

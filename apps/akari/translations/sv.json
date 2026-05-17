@@ -222,6 +222,8 @@
       "quotedYourPost": "citerade ditt inlägg",
       "andOneOther": "och 1 annan {{action}}",
       "andOthers": "och {{count}} andra {{action}}",
+      "andSecondName": " och {{name}}",
+      "andOthersCount": " och {{count}} andra",
       "noNotificationsYet": "Inga aviseringar än",
       "notificationsWillAppearHere": "När du får aviseringar kommer de att visas här",
       "errorLoadingNotifications": "Felbelastningsmeddelanden",
@@ -527,6 +529,7 @@
       "privacy": "Privatliv",
       "terms": "Villkor",
       "version": "Version",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Byggnummer",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "Sparade inlägg och trådar kommer att visas här.",
       "emptyState": "Du har inte sparat några inlägg än.",
       "error": "Vi kunde inte ladda dina sparade inlägg."
+    },
+    "home": {
+      "fabPost": "Inlägg",
+      "fabReview": "Recension"
+    },
+    "chat": {
+      "openInYouTube": "Öppna i YouTube"
+    },
+    "reviews": {
+      "newReview": "Ny recension",
+      "type": "Typ",
+      "movie": "Film",
+      "tvShow": "TV-serie",
+      "change": "Ändra",
+      "rating": "Betyg",
+      "ratingWithValue": "Betyg ({{rating}}/{{max}})",
+      "review": "Recension",
+      "thisIsRevisit": "Det här är en omvisning",
+      "containsSpoilers": "Innehåller spoilers"
     },
     "debug": {
       "crashReporter": "Kraschrapporterare",

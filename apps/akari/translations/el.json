@@ -222,6 +222,8 @@
       "quotedYourPost": "Αναφέρεται η ανάρτησή σας",
       "andOneOther": "και 1 άλλο {{action}}",
       "andOthers": "και {{count}} άλλοι {{action}}",
+      "andSecondName": " και {{name}}",
+      "andOthersCount": " και {{count}} άλλοι",
       "noNotificationsYet": "Δεν υπάρχουν ακόμη ειδοποιήσεις",
       "notificationsWillAppearHere": "Όταν λαμβάνετε ειδοποιήσεις, θα εμφανιστούν εδώ",
       "errorLoadingNotifications": "Ειδοποιήσεις φόρτωσης σφαλμάτων",
@@ -527,6 +529,7 @@
       "privacy": "Μυστικότητα",
       "terms": "Οροι",
       "version": "Εκδοχή",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Αριθμός κατασκευής",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Επιλέξτε έως {{max}} γλώσσες για τη δημοσίευσή σας.",
       "postLanguageSearch": "Αναζήτηση γλωσσών",
       "postLanguageA11y": "Γλώσσα δημοσίευσης: {{value}}"
+    },
+    "home": {
+      "fabPost": "Ανάρτηση",
+      "fabReview": "Κριτική"
+    },
+    "chat": {
+      "openInYouTube": "Άνοιγμα στο YouTube"
+    },
+    "reviews": {
+      "newReview": "Νέα κριτική",
+      "type": "Τύπος",
+      "movie": "Ταινία",
+      "tvShow": "Τηλεοπτική σειρά",
+      "change": "Αλλαγή",
+      "rating": "Βαθμολογία",
+      "ratingWithValue": "Βαθμολογία ({{rating}}/{{max}})",
+      "review": "Κριτική",
+      "thisIsRevisit": "Αυτό είναι επανεξέταση",
+      "containsSpoilers": "Περιέχει spoilers"
     }
   }
 }

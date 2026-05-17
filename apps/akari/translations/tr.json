@@ -222,6 +222,8 @@
       "quotedYourPost": "gönderinizi alıntıladı",
       "andOneOther": "ve 1 kişi daha {{action}}",
       "andOthers": "ve {{count}} kişi daha {{action}}",
+      "andSecondName": " ve {{name}}",
+      "andOthersCount": " ve {{count}} kişi daha",
       "noNotificationsYet": "Henüz bildirim yok",
       "notificationsWillAppearHere": "Bildirim aldığınızda burada görünecekler",
       "errorLoadingNotifications": "Bildirimler yüklenirken hata",
@@ -518,6 +520,7 @@
       "privacy": "Gizlilik",
       "terms": "Koşullar",
       "version": "Sürüm",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Derleme numarası",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Gönderiniz için en fazla {{max}} dil seçin.",
       "postLanguageSearch": "Dilleri ara",
       "postLanguageA11y": "Gönderi dili: {{value}}"
+    },
+    "home": {
+      "fabPost": "Gönderi",
+      "fabReview": "İnceleme"
+    },
+    "chat": {
+      "openInYouTube": "YouTube'da aç"
+    },
+    "reviews": {
+      "newReview": "Yeni İnceleme",
+      "type": "Tür",
+      "movie": "Film",
+      "tvShow": "TV Dizisi",
+      "change": "Değiştir",
+      "rating": "Puan",
+      "ratingWithValue": "Puan ({{rating}}/{{max}})",
+      "review": "İnceleme",
+      "thisIsRevisit": "Bu bir tekrar izleme",
+      "containsSpoilers": "Spoiler içerir"
     }
   }
 }

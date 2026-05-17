@@ -222,6 +222,8 @@
       "quotedYourPost": "citou sua publicação",
       "andOneOther": "e mais 1 {{action}}",
       "andOthers": "e mais {{count}} {{action}}",
+      "andSecondName": " e {{name}}",
+      "andOthersCount": " e mais {{count}}",
       "noNotificationsYet": "Ainda não há notificações",
       "notificationsWillAppearHere": "Quando você receber notificações, elas aparecerão aqui",
       "errorLoadingNotifications": "Erro ao carregar notificações",
@@ -518,6 +520,7 @@
       "privacy": "Privacidade",
       "terms": "Termos",
       "version": "Versão",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Número da compilação",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "As postagens e tópicos salvos aparecerão aqui.",
       "emptyState": "Você ainda não salvou nenhuma postagem.",
       "error": "Não foi possível carregar suas postagens salvas."
+    },
+    "home": {
+      "fabPost": "Postar",
+      "fabReview": "Avaliar"
+    },
+    "chat": {
+      "openInYouTube": "Abrir no YouTube"
+    },
+    "reviews": {
+      "newReview": "Nova avaliação",
+      "type": "Tipo",
+      "movie": "Filme",
+      "tvShow": "Série",
+      "change": "Alterar",
+      "rating": "Nota",
+      "ratingWithValue": "Nota ({{rating}}/{{max}})",
+      "review": "Avaliação",
+      "thisIsRevisit": "Esta é uma revisita",
+      "containsSpoilers": "Contém spoilers"
     },
     "debug": {
       "crashReporter": "Relatório de Falhas",

@@ -261,7 +261,9 @@
       "sending": "Verzenden...",
       "scheduling": "Plannen...",
       "all": "Alles",
-      "mentions": "Vermeldingen"
+      "mentions": "Vermeldingen",
+      "andSecondName": " en {{name}}",
+      "andOthersCount": " en {{count}} anderen"
     },
     "profile": {
       "media": "Media",
@@ -518,6 +520,7 @@
       "privacy": "Privacy",
       "terms": "Voorwaarden",
       "version": "Versie",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Buildnummer",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -952,6 +955,9 @@
       "emptyState": "Je hebt nog geen berichten opgeslagen.",
       "error": "We konden je opgeslagen berichten niet laden."
     },
+    "chat": {
+      "openInYouTube": "Openen in YouTube"
+    },
     "debug": {
       "crashReporter": "Crash Reporter",
       "crashDescription": "Gebruik deze knop om een testfout te genereren en te bevestigen dat crash reporting correct is ingesteld. Zorg ervoor dat je Axiom-referenties zijn geconfigureerd zodat het rapport wordt afgeleverd.",
@@ -1068,11 +1074,27 @@
     "germ": {
       "messageOnGerm": "Bericht via Germ"
     },
+    "home": {
+      "fabPost": "Posten",
+      "fabReview": "Recensie"
+    },
     "composer": {
       "postLanguageTitle": "Berichttaal",
       "postLanguageHint": "Kies maximaal {{max}} talen voor je bericht.",
       "postLanguageSearch": "Zoek talen",
       "postLanguageA11y": "Berichttaal: {{value}}"
+    },
+    "reviews": {
+      "newReview": "Nieuwe recensie",
+      "type": "Type",
+      "movie": "Film",
+      "tvShow": "Tv-serie",
+      "change": "Wijzigen",
+      "rating": "Beoordeling",
+      "ratingWithValue": "Beoordeling ({{rating}}/{{max}})",
+      "review": "Recensie",
+      "thisIsRevisit": "Dit is een herbezoek",
+      "containsSpoilers": "Bevat spoilers"
     }
   }
 }

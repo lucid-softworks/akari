@@ -425,15 +425,15 @@ export default function HomeScreen() {
               onPress={() => { setShowFabMenu(false); setShowPostComposer(true); }}
             >
               <IconSymbol name="square.and.pencil" size={18} color="white" />
-              <ThemedText style={styles.fabMenuText}>Post</ThemedText>
+              <ThemedText style={styles.fabMenuText}>{t('home.fabPost')}</ThemedText>
             </Pressable>
             <Pressable
               style={({ pressed }) => [styles.fabMenuItem, pressed && { opacity: activeOpacity.default }]}
-              
+
               onPress={() => { setShowFabMenu(false); setShowReviewComposer(true); }}
             >
               <IconSymbol name="star.fill" size={18} color="white" />
-              <ThemedText style={styles.fabMenuText}>Review</ThemedText>
+              <ThemedText style={styles.fabMenuText}>{t('home.fabReview')}</ThemedText>
             </Pressable>
           </View>
         </Pressable>

@@ -222,6 +222,8 @@
       "quotedYourPost": "dyfynnu eich swydd",
       "andOneOther": "ac 1 arall {{action}}",
       "andOthers": "ac {{count}} eraill {{action}}",
+      "andSecondName": " a {{name}}",
+      "andOthersCount": " a {{count}} arall",
       "noNotificationsYet": "Dim hysbysiadau eto",
       "notificationsWillAppearHere": "Pan fyddwch yn cael hysbysiadau, byddant yn ymddangos yma",
       "errorLoadingNotifications": "Gwall wrth lwytho hysbysiadau",
@@ -518,6 +520,7 @@
       "privacy": "Preifatrwydd",
       "terms": "Telerau",
       "version": "Fersiwn",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Rhif adeiladu",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Dewiswch hyd at {{max}} iaith ar gyfer eich postiad.",
       "postLanguageSearch": "Chwilio ieithoedd",
       "postLanguageA11y": "Iaith y postiad: {{value}}"
+    },
+    "home": {
+      "fabPost": "Postio",
+      "fabReview": "Adolygu"
+    },
+    "chat": {
+      "openInYouTube": "Agor yn YouTube"
+    },
+    "reviews": {
+      "newReview": "Adolygiad newydd",
+      "type": "Math",
+      "movie": "Ffilm",
+      "tvShow": "Cyfres deledu",
+      "change": "Newid",
+      "rating": "Sgôr",
+      "ratingWithValue": "Sgôr ({{rating}}/{{max}})",
+      "review": "Adolygiad",
+      "thisIsRevisit": "Mae hwn yn ail ymweliad",
+      "containsSpoilers": "Yn cynnwys datgeliadau"
     }
   }
 }

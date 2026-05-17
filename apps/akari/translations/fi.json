@@ -222,6 +222,8 @@
       "quotedYourPost": "lainasi viestisi",
       "andOneOther": "ja 1 muuta {{action}}",
       "andOthers": "ja {{count}} muut {{action}}",
+      "andSecondName": " ja {{name}}",
+      "andOthersCount": " ja {{count}} muuta",
       "noNotificationsYet": "Ei vielä ilmoituksia",
       "notificationsWillAppearHere": "Kun saat ilmoituksia, ne ilmestyvät tänne",
       "errorLoadingNotifications": "Virheen latausilmoitukset",
@@ -527,6 +529,7 @@
       "privacy": "Yksityisyys",
       "terms": "Sanat",
       "version": "Versio",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Rakennusnumero",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Valitse enintään {{max}} kieltä julkaisullesi.",
       "postLanguageSearch": "Hae kieliä",
       "postLanguageA11y": "Julkaisun kieli: {{value}}"
+    },
+    "home": {
+      "fabPost": "Julkaise",
+      "fabReview": "Arvostelu"
+    },
+    "chat": {
+      "openInYouTube": "Avaa YouTubessa"
+    },
+    "reviews": {
+      "newReview": "Uusi arvostelu",
+      "type": "Tyyppi",
+      "movie": "Elokuva",
+      "tvShow": "TV-sarja",
+      "change": "Vaihda",
+      "rating": "Arvosana",
+      "ratingWithValue": "Arvosana ({{rating}}/{{max}})",
+      "review": "Arvostelu",
+      "thisIsRevisit": "Tämä on uusintakatselu",
+      "containsSpoilers": "Sisältää juonipaljastuksia"
     }
   }
 }

@@ -17,6 +17,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { TmdbAPI, type TmdbMovie, type TmdbTvShow } from '@/tmdb-api';
 
 const TMDB_API_KEY = process.env.EXPO_PUBLIC_TMDB_API_KEY?.trim() ?? '';
@@ -40,6 +41,7 @@ type TmdbSearchPickerProps = {
 };
 
 export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: TmdbSearchPickerProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<(TmdbMovie | TmdbTvShow)[]>([]);
   const [loading, setLoading] = useState(false);
@@ -199,10 +201,10 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
     return (
       <View style={styles.emptyContainer}>
         <IconSymbol name="photo" size={48} color={iconColor} />
-        <ThemedText style={[styles.emptyText, { color: iconColor }]}>No results found</ThemedText>
+        <ThemedText style={[styles.emptyText, { color: iconColor }]}>{t('search.noResultsFound')}</ThemedText>
       </View>
     );
-  }, [loading, searchQuery, iconColor, mediaType]);
+  }, [loading, searchQuery, iconColor, mediaType, t]);
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'} onRequestClose={onClose}>

@@ -222,6 +222,8 @@
       "quotedYourPost": "อ้างอิงโพสต์ของคุณ",
       "andOneOther": "และอีก 1 คน {{action}}",
       "andOthers": "และอีก {{count}} คน {{action}}",
+      "andSecondName": " และ {{name}}",
+      "andOthersCount": " และอีก {{count}} คน",
       "noNotificationsYet": "ยังไม่มีการแจ้งเตือน",
       "notificationsWillAppearHere": "เมื่อคุณได้รับการแจ้งเตือน พวกเขาจะปรากฏที่นี่",
       "errorLoadingNotifications": "ข้อผิดพลาดในการโหลดการแจ้งเตือน",
@@ -518,6 +520,7 @@
       "privacy": "ความเป็นส่วนตัว",
       "terms": "ข้อกำหนด",
       "version": "เวอร์ชัน",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "หมายเลขบิลด์",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "เลือกได้สูงสุด {{max}} ภาษาสำหรับโพสต์ของคุณ",
       "postLanguageSearch": "ค้นหาภาษา",
       "postLanguageA11y": "ภาษาของโพสต์: {{value}}"
+    },
+    "home": {
+      "fabPost": "โพสต์",
+      "fabReview": "รีวิว"
+    },
+    "chat": {
+      "openInYouTube": "เปิดใน YouTube"
+    },
+    "reviews": {
+      "newReview": "รีวิวใหม่",
+      "type": "ประเภท",
+      "movie": "ภาพยนตร์",
+      "tvShow": "รายการทีวี",
+      "change": "เปลี่ยน",
+      "rating": "คะแนน",
+      "ratingWithValue": "คะแนน ({{rating}}/{{max}})",
+      "review": "รีวิว",
+      "thisIsRevisit": "นี่คือการดูซ้ำ",
+      "containsSpoilers": "มีการสปอยล์"
     }
   }
 }

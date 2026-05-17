@@ -301,7 +301,7 @@ export default function SettingsScreen() {
         {/* Version footer */}
         <View style={styles.versionFooter}>
           <ThemedText style={[styles.versionText, { color: secondaryText }]}>
-            Akari {versionDisplay}
+            {t('settings.versionFooter', { version: versionDisplay })}
           </ThemedText>
         </View>
       </ScrollView>

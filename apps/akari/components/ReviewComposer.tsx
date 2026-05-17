@@ -22,6 +22,7 @@ import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity }
 import { useToast } from '@/contexts/ToastContext';
 import { useCreateReview } from '@/hooks/mutations/useCreateReview';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type ReviewComposerProps = {
   visible: boolean;
@@ -29,6 +30,7 @@ type ReviewComposerProps = {
 };
 
 export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
+  const { t } = useTranslation();
   const [mediaType, setMediaType] = useState<'movie' | 'tv_show'>('movie');
   const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null);
   const [rating, setRating] = useState(0);
@@ -150,11 +152,11 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
             ]}
           >
             <Pressable onPress={handleClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}>
-              <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>Cancel</ThemedText>
+              <ThemedText style={[styles.headerButtonText, { color: iconColor }]}>{t('common.cancel')}</ThemedText>
             </Pressable>
 
             <ThemedText type="defaultSemiBold" style={[styles.headerTitle, { color: textColor }]}>
-              New Review
+              {t('reviews.newReview')}
             </ThemedText>
 
             <Pressable
@@ -178,7 +180,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
           >
             {/* Media Type Toggle */}
             <View style={styles.section}>
-              <ThemedText style={[styles.sectionLabel, { color: textColor }]}>Type</ThemedText>
+              <ThemedText style={[styles.sectionLabel, { color: textColor }]}>{t('reviews.type')}</ThemedText>
               <View style={[styles.toggleRow, { borderColor }]}>
                 <Pressable
                   style={({ pressed }) => [styles.toggleButton,
@@ -194,7 +196,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                       { color: mediaType === 'movie' ? '#000000' : textColor },
                     ]}
                   >
-                    Movie
+                    {t('reviews.movie')}
                   </ThemedText>
                 </Pressable>
                 <Pressable
@@ -211,7 +213,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                       { color: mediaType === 'tv_show' ? '#000000' : textColor },
                     ]}
                   >
-                    TV Show
+                    {t('reviews.tvShow')}
                   </ThemedText>
                 </Pressable>
               </View>
@@ -257,7 +259,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                     style={({ pressed }) => [styles.changeButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                     
                   >
-                    <ThemedText style={[styles.changeButtonText, { color: tintColor }]}>Change</ThemedText>
+                    <ThemedText style={[styles.changeButtonText, { color: tintColor }]}>{t('reviews.change')}</ThemedText>
                   </Pressable>
                 </View>
               ) : (
@@ -277,14 +279,14 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
             {/* Rating */}
             <View style={styles.section}>
               <ThemedText style={[styles.sectionLabel, { color: textColor }]}>
-                Rating {rating > 0 ? `(${rating}/10)` : ''}
+                {rating > 0 ? t('reviews.ratingWithValue', { rating, max: 10 }) : t('reviews.rating')}
               </ThemedText>
               <View style={styles.starsRow}>{renderStars()}</View>
             </View>
 
             {/* Review Text */}
             <View style={styles.section}>
-              <ThemedText style={[styles.sectionLabel, { color: textColor }]}>Review</ThemedText>
+              <ThemedText style={[styles.sectionLabel, { color: textColor }]}>{t('reviews.review')}</ThemedText>
               <TextInput
                 style={[
                   styles.reviewInput,
@@ -308,7 +310,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
             {/* Toggles */}
             <View style={styles.section}>
               <View style={[styles.toggleItem, { borderColor }]}>
-                <ThemedText style={[styles.toggleLabel, { color: textColor }]}>This is a revisit</ThemedText>
+                <ThemedText style={[styles.toggleLabel, { color: textColor }]}>{t('reviews.thisIsRevisit')}</ThemedText>
                 <Switch
                   value={isRevisit}
                   onValueChange={setIsRevisit}
@@ -317,7 +319,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                 />
               </View>
               <View style={[styles.toggleItem, styles.toggleItemLast, { borderColor }]}>
-                <ThemedText style={[styles.toggleLabel, { color: textColor }]}>Contains spoilers</ThemedText>
+                <ThemedText style={[styles.toggleLabel, { color: textColor }]}>{t('reviews.containsSpoilers')}</ThemedText>
                 <Switch
                   value={containsSpoilers}
                   onValueChange={setContainsSpoilers}

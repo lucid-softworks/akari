@@ -222,6 +222,8 @@
       "quotedYourPost": "Цитується про свою публікацію",
       "andOneOther": "та 1 інший {{action}}",
       "andOthers": "та {{count}} інші {{action}}",
+      "andSecondName": " та {{name}}",
+      "andOthersCount": " та ще {{count}}",
       "noNotificationsYet": "Ще немає сповіщень",
       "notificationsWillAppearHere": "Коли ви отримаєте сповіщення, вони з’являться тут",
       "errorLoadingNotifications": "Повідомлення про завантаження помилок",
@@ -527,6 +529,7 @@
       "privacy": "Приватність",
       "terms": "Умови",
       "version": "Версія",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Номер побудови",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Виберіть до {{max}} мов для свого допису.",
       "postLanguageSearch": "Пошук мов",
       "postLanguageA11y": "Мова допису: {{value}}"
+    },
+    "home": {
+      "fabPost": "Допис",
+      "fabReview": "Огляд"
+    },
+    "chat": {
+      "openInYouTube": "Відкрити в YouTube"
+    },
+    "reviews": {
+      "newReview": "Новий огляд",
+      "type": "Тип",
+      "movie": "Фільм",
+      "tvShow": "Серіал",
+      "change": "Змінити",
+      "rating": "Оцінка",
+      "ratingWithValue": "Оцінка ({{rating}}/{{max}})",
+      "review": "Огляд",
+      "thisIsRevisit": "Це повторний перегляд",
+      "containsSpoilers": "Містить спойлери"
     }
   }
 }

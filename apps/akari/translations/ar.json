@@ -222,6 +222,8 @@
       "quotedYourPost": "اقتبس منشورك",
       "andOneOther": "وشخص آخر {{action}}",
       "andOthers": "و{{count}} آخرين {{action}}",
+      "andSecondName": " و{{name}}",
+      "andOthersCount": " و{{count}} آخرين",
       "noNotificationsYet": "لا توجد إشعارات بعد",
       "notificationsWillAppearHere": "عندما تتلقى إشعارات، ستظهر هنا",
       "errorLoadingNotifications": "خطأ في تحميل الإشعارات",
@@ -518,6 +520,7 @@
       "privacy": "الخصوصية",
       "terms": "الشروط",
       "version": "الإصدار",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "رقم البناء",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "اختر حتى {{max}} لغات لمنشورك.",
       "postLanguageSearch": "ابحث عن لغة",
       "postLanguageA11y": "لغة المنشور: {{value}}"
+    },
+    "home": {
+      "fabPost": "نشر",
+      "fabReview": "مراجعة"
+    },
+    "chat": {
+      "openInYouTube": "فتح في YouTube"
+    },
+    "reviews": {
+      "newReview": "مراجعة جديدة",
+      "type": "النوع",
+      "movie": "فيلم",
+      "tvShow": "مسلسل",
+      "change": "تغيير",
+      "rating": "التقييم",
+      "ratingWithValue": "التقييم ({{rating}}/{{max}})",
+      "review": "المراجعة",
+      "thisIsRevisit": "هذه مشاهدة متكررة",
+      "containsSpoilers": "يحتوي على حرق للأحداث"
     }
   }
 }

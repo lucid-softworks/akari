@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { useFeedSettings } from '@/hooks/useFeedSettings';
+import { useTranslation } from '@/hooks/useTranslation';
 import { matchYouTubeId, youtubeThumbnailUrl } from '@/utils/embedThumb';
 import { useNavigateToPost } from '@/utils/navigation';
 
@@ -133,6 +134,7 @@ type YouTubeChatEmbedProps = {
 };
 
 function YouTubeChatEmbed({ videoId, alignment }: YouTubeChatEmbedProps) {
+  const { t } = useTranslation();
   const [errored, setErrored] = useState(false);
   const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
@@ -173,7 +175,7 @@ function YouTubeChatEmbed({ videoId, alignment }: YouTubeChatEmbedProps) {
             <IconSymbol name="play.fill" size={20} color="#ffffff" />
           </View>
           <ThemedText style={styles.youtubeFallbackText} lightColor="#ffffff" darkColor="#ffffff">
-            Open in YouTube
+            {t('chat.openInYouTube')}
           </ThemedText>
         </View>
       </Pressable>

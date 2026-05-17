@@ -222,6 +222,8 @@
       "quotedYourPost": "citiral vašo objavo",
       "andOneOther": "in 1 drugi {{action}}",
       "andOthers": "in {{count}} drugi {{action}}",
+      "andSecondName": " in {{name}}",
+      "andOthersCount": " in še {{count}} drugih",
       "noNotificationsYet": "Še ni obvestil",
       "notificationsWillAppearHere": "Ko boste dobili obvestila, se bodo pojavili tukaj",
       "errorLoadingNotifications": "Obvestila o nalaganju napak",
@@ -527,6 +529,7 @@
       "privacy": "Zasebnost",
       "terms": "Izrazi",
       "version": "Različica",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Številka za gradnjo",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -951,6 +954,25 @@
       "subtitle": "Tu bodo prikazane shranjene objave in niti.",
       "emptyState": "Nisi še shranil nobenih objav.",
       "error": "Nismo mogli naložiti vaših shranjenih objav."
+    },
+    "home": {
+      "fabPost": "Objava",
+      "fabReview": "Ocena"
+    },
+    "chat": {
+      "openInYouTube": "Odpri v YouTube"
+    },
+    "reviews": {
+      "newReview": "Nova ocena",
+      "type": "Vrsta",
+      "movie": "Film",
+      "tvShow": "TV-serija",
+      "change": "Spremeni",
+      "rating": "Ocena",
+      "ratingWithValue": "Ocena ({{rating}}/{{max}})",
+      "review": "Ocena",
+      "thisIsRevisit": "To je ponovni ogled",
+      "containsSpoilers": "Vsebuje spojlerje"
     },
     "debug": {
       "crashReporter": "Poročevalec Napak",

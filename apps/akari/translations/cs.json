@@ -222,6 +222,8 @@
       "quotedYourPost": "citoval váš příspěvek",
       "andOneOther": "a 1 další {{action}}",
       "andOthers": "a {{count}} další {{action}}",
+      "andSecondName": " a {{name}}",
+      "andOthersCount": " a dalších {{count}}",
       "noNotificationsYet": "Zatím žádná oznámení",
       "notificationsWillAppearHere": "Když dostanete oznámení, objeví se zde",
       "errorLoadingNotifications": "Oznámení o načítání chyb",
@@ -527,6 +529,7 @@
       "privacy": "Soukromí",
       "terms": "Podmínky",
       "version": "Verze",
+      "versionFooter": "Akari {{version}}",
       "buildNumber": "Sestavit číslo",
       "customizeTabs": "Customize Tabs",
       "customizeTabsDescription": "Choose which tabs appear in your bottom navigation bar and arrange them in your preferred order.",
@@ -1073,6 +1076,25 @@
       "postLanguageHint": "Vyberte až {{max}} jazyky vašeho příspěvku.",
       "postLanguageSearch": "Hledat jazyky",
       "postLanguageA11y": "Jazyk příspěvku: {{value}}"
+    },
+    "home": {
+      "fabPost": "Příspěvek",
+      "fabReview": "Recenze"
+    },
+    "chat": {
+      "openInYouTube": "Otevřít v YouTube"
+    },
+    "reviews": {
+      "newReview": "Nová recenze",
+      "type": "Typ",
+      "movie": "Film",
+      "tvShow": "Seriál",
+      "change": "Změnit",
+      "rating": "Hodnocení",
+      "ratingWithValue": "Hodnocení ({{rating}}/{{max}})",
+      "review": "Recenze",
+      "thisIsRevisit": "Toto je opětovné zhlédnutí",
+      "containsSpoilers": "Obsahuje spoilery"
     }
   }
 }
