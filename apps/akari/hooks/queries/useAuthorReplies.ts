@@ -32,9 +32,9 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
         // Microcosm path: only return actual replies (records with a `reply` field)
         // since the AppView's `posts_with_replies` includes original posts too but
         // the consumer here filters to replies-only via select.
-        const replies = page.feed
-          .map((item) => item.post)
-          .filter((p) => Boolean((p.record as { reply?: unknown } | undefined)?.reply));
+        const replies = page.feed.flatMap((item) =>
+          (item.post.record as { reply?: unknown } | undefined)?.reply ? [item.post] : [],
+        );
         return { replies, cursor: page.cursor };
       }
 

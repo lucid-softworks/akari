@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,6 +33,13 @@ const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
 const DEFAULT_HEADER_HEIGHT = 140;
 
 const isHashtagQuery = (value: string) => value.trim().startsWith('#');
+
+// Memo'd at module scope so the parent's `!appViewEnabled` early return
+// can bail without React reconciling the header subtree, and the header
+// only re-renders when its own props change. react-doctor's
+// rerender-memo-before-early-return rule was previously flagging a
+// `useMemo` returning this JSX inside the parent.
+const MemoizedSearchListHeader = memo(SearchListHeader);
 
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
@@ -211,54 +218,6 @@ export default function SearchScreen() {
     [activeTab, isLargeScreen, trimmedSearchQuery],
   );
 
-  const listHeaderComponent = useMemo(
-    () => (
-      <SearchListHeader
-        query={query}
-        onQueryChange={setQuery}
-        onClearQuery={handleClearQuery}
-        onSearch={handleSearch}
-        isLoading={isLoading}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        sort={sort}
-        onSortChange={setSort}
-        show={show}
-        topInset={isLargeScreen ? insets.top : 0}
-        backgroundColor={backgroundColor}
-        borderColor={borderColor}
-        textColor={textColor}
-        placeholderColor={placeholderColor}
-        title={t('navigation.search')}
-        inputPlaceholder={t('search.searchInputPlaceholder')}
-        searchLabel={t('common.search')}
-        searchingLabel={t('search.searching')}
-        topLabel={t('search.sortTop')}
-        latestLabel={t('search.sortLatest')}
-        clearLabel={t('search.clearSearch')}
-      />
-    ),
-    [
-      activeTab,
-      backgroundColor,
-      borderColor,
-      handleClearQuery,
-      handleSearch,
-      insets.top,
-      isLargeScreen,
-      isLoading,
-      placeholderColor,
-      query,
-      show,
-      sort,
-      setActiveTab,
-      setQuery,
-      setSort,
-      t,
-      textColor,
-    ],
-  );
-
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (
       <ThemedView style={styles.container}>
@@ -301,7 +260,30 @@ export default function SearchScreen() {
         onLayout={handleHeaderLayout}
         style={[styles.headerOverlay, { backgroundColor }, headerAnimatedStyle]}
       >
-        {listHeaderComponent}
+        <MemoizedSearchListHeader
+          query={query}
+          onQueryChange={setQuery}
+          onClearQuery={handleClearQuery}
+          onSearch={handleSearch}
+          isLoading={isLoading}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          sort={sort}
+          onSortChange={setSort}
+          show={show}
+          topInset={isLargeScreen ? insets.top : 0}
+          backgroundColor={backgroundColor}
+          borderColor={borderColor}
+          textColor={textColor}
+          placeholderColor={placeholderColor}
+          title={t('navigation.search')}
+          inputPlaceholder={t('search.searchInputPlaceholder')}
+          searchLabel={t('common.search')}
+          searchingLabel={t('search.searching')}
+          topLabel={t('search.sortTop')}
+          latestLabel={t('search.sortLatest')}
+          clearLabel={t('search.clearSearch')}
+        />
       </Animated.View>
     </ThemedView>
   );
