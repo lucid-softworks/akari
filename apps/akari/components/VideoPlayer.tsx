@@ -83,9 +83,10 @@ export function VideoPlayer({
       return null;
     }
 
-    // Validate URL format
+    // Validate URL format (constructor throws on invalid input)
     try {
-      new URL(playbackUrl);
+      const _validated = new URL(playbackUrl);
+      void _validated;
     } catch {
       return null;
     }
@@ -172,10 +173,11 @@ export function VideoPlayer({
     resolveBlueskyVideoUrl(videoUrl)
       .then((resolvedUrl) => {
         if (isCancelled) {
-          return;
+          return undefined;
         }
 
         setPlaybackUrl(resolvedUrl || videoUrl);
+        return undefined;
       })
       .catch(() => {
         if (isCancelled) {

@@ -60,14 +60,14 @@ export function uploadVideoToService(
     xhr.responseType = 'text';
 
     if (options.onProgress && xhr.upload) {
-      xhr.upload.onprogress = (e: ProgressEvent) => {
+      xhr.upload.addEventListener('progress', (e: ProgressEvent) => {
         if (e.lengthComputable && e.total > 0) {
           options.onProgress!(e.loaded / e.total);
         }
-      };
+      });
     }
 
-    xhr.onload = () => {
+    xhr.addEventListener('load', () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
           const parsed = JSON.parse(xhr.responseText);
@@ -94,9 +94,9 @@ export function uploadVideoToService(
         if (body.error) err.errorCode = body.error;
         reject(err);
       }
-    };
-    xhr.onerror = () => reject(new Error('Network error during video upload'));
-    xhr.onabort = () => reject(new Error('Video upload aborted'));
+    });
+    xhr.addEventListener('error', () => reject(new Error('Network error during video upload')));
+    xhr.addEventListener('abort', () => reject(new Error('Video upload aborted')));
 
     if (options.signal) {
       if (options.signal.aborted) {

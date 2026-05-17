@@ -145,6 +145,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     if (postText) {
       void Clipboard.setStringAsync(postText).then(() => {
         showToast({ message: t('common.copiedToClipboard'), type: 'success' });
+        return undefined;
       });
     }
     onDismiss();

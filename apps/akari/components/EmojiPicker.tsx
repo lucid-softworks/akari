@@ -1,5 +1,7 @@
 import { useColorScheme } from 'react-native';
-import EmojiKeyboard from 'rn-emoji-keyboard';
+// The library's default export is named `EmojiPicker` (a modal wrapper with
+// open/onClose); rename on import to avoid shadowing our own component.
+import EmojiPickerLib from 'rn-emoji-keyboard';
 
 import { Colors } from '@/constants/Colors';
 
@@ -23,7 +25,7 @@ export function EmojiPicker({ visible, onClose, onSelectEmoji }: EmojiPickerProp
   const palette = Colors[scheme];
 
   return (
-    <EmojiKeyboard
+    <EmojiPickerLib
       open={visible}
       onClose={onClose}
       onEmojiSelected={(emoji) => onSelectEmoji(emoji.emoji)}
@@ -60,3 +62,4 @@ export function EmojiPicker({ visible, onClose, onSelectEmoji }: EmojiPickerProp
     />
   );
 }
+

@@ -87,6 +87,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
                 setShowCustom(false);
               }
             }}
+            // oxlint-disable-next-line jsx-a11y/no-autofocus -- custom-color picker opens specifically to capture a hex code, focus prevents an extra tap
             autoFocus
             autoCapitalize="none"
             autoCorrect={false}

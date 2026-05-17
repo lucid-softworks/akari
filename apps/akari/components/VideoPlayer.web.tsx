@@ -1,4 +1,4 @@
-import Hls, { Events } from 'hls.js';
+import Hls, { Events, isSupported } from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
@@ -114,7 +114,7 @@ export function VideoPlayer({
 
         if (isHLS) {
           // Use hls.js for HLS streams
-          if (Hls.isSupported()) {
+          if (isSupported()) {
             hlsRef.current = new Hls({
               enableWorker: true,
               lowLatencyMode: true,
@@ -223,10 +223,11 @@ export function VideoPlayer({
     resolveBlueskyVideoUrl(videoUrl)
       .then((resolvedUrl) => {
         if (isCancelled) {
-          return;
+          return undefined;
         }
 
         setPlaybackUrl(resolvedUrl || videoUrl);
+        return undefined;
       })
       .catch(() => {
         if (isCancelled) {
@@ -279,6 +280,7 @@ export function VideoPlayer({
     return (
       <ThemedCard style={styles.container}>
         <ThemedView style={[styles.videoContainer, { aspectRatio: videoAspectRatio }]}>
+          {/* oxlint-disable-next-line jsx-a11y/media-has-caption -- user-uploaded atproto video has no caption track in the lexicon */}
           <video
             ref={videoRef}
             style={styles.video}
@@ -288,6 +290,7 @@ export function VideoPlayer({
             autoPlay={autoplay}
             poster={thumbnailUrl || ''}
             src={!playbackUrl.includes('.m3u8') ? playbackUrl : undefined}
+            aria-label={title && typeof title === 'string' && title.trim().length > 0 ? title : 'Video'}
           />
         </ThemedView>
 

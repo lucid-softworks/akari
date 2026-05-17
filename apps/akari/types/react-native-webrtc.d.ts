@@ -22,6 +22,7 @@ declare module 'react-native-webrtc' {
     sdp: string;
   }
 
+  // oxlint-disable-next-line typescript/no-extraneous-class -- mirrors react-native-webrtc's exported class shape so consumers can `new RTCIceCandidate(...)`
   export class RTCIceCandidate {
     constructor(init: { sdpMid?: string | null; sdpMLineIndex?: number | null; candidate: string });
   }

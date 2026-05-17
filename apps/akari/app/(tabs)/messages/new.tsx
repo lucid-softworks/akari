@@ -174,6 +174,7 @@ export default function NewChatScreen() {
           returnKeyType="search"
           autoCapitalize="none"
           autoCorrect={false}
+          // oxlint-disable-next-line jsx-a11y/no-autofocus -- new-message screen opens to search for a recipient, keyboard should appear immediately
           autoFocus
         />
         {query.length > 0 ? (

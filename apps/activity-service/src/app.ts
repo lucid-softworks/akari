@@ -306,12 +306,14 @@ function generateAllBuckets(start: Date, end: Date, monthly: boolean): string[] 
 
   if (monthly) {
     cursor.setUTCDate(1);
+    // oxlint-disable-next-line eslint/no-unmodified-loop-condition -- `cursor` is mutated via Date setter (setUTCMonth) each iteration; `end` is the fixed upper bound
     while (cursor <= end) {
       keys.push(formatMonthKey(cursor));
       cursor.setUTCMonth(cursor.getUTCMonth() + 1, 1);
     }
   } else {
     cursor.setUTCMonth(0, 1);
+    // oxlint-disable-next-line eslint/no-unmodified-loop-condition -- `cursor` is mutated via Date setter (setUTCFullYear) each iteration; `end` is the fixed upper bound
     while (cursor <= end) {
       keys.push(formatYearKey(cursor));
       cursor.setUTCFullYear(cursor.getUTCFullYear() + 1, 0, 1);

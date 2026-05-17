@@ -154,6 +154,7 @@ export const PostTranslation = React.memo(function PostTranslation({
           onEmbedTranslated({ description: embedResult.translatedText });
         }
       }
+      return undefined;
     }).catch(() => {
       setError(true);
     });

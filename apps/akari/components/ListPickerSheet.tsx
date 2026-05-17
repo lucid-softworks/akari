@@ -126,6 +126,7 @@ export function ListPickerSheet({ visible, onDismiss, subjectDid }: ListPickerSh
                   placeholderTextColor={iconColor}
                   value={newName}
                   onChangeText={setNewName}
+                  // oxlint-disable-next-line jsx-a11y/no-autofocus -- create-list form opens inside the picker sheet specifically to capture the new name
                   autoFocus
                   maxLength={64}
                 />

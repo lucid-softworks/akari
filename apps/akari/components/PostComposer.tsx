@@ -1349,6 +1349,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                       placeholder={t('post.longform.titlePlaceholder')}
                       placeholderTextColor={iconColor}
                       autoCapitalize="sentences"
+                      // oxlint-disable-next-line jsx-a11y/no-autofocus -- composer modal opens specifically to capture the title, user expects the cursor here
                       autoFocus
                       maxLength={500}
                       selectionColor={tintColor}
@@ -1375,6 +1376,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                     }
                     placeholderTextColor={iconColor}
                     multiline
+                    // oxlint-disable-next-line jsx-a11y/no-autofocus -- composer modal opens to immediately capture post body text
                     autoFocus={composeMode !== 'longform'}
                     autoCapitalize="none"
                     textAlignVertical="top"
@@ -1504,6 +1506,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                       }
                       placeholderTextColor={iconColor}
                       multiline
+                      // oxlint-disable-next-line jsx-a11y/no-autofocus -- composer modal opens with the first post focused so the user can type immediately
                       autoFocus={isFirst}
                       autoCapitalize="none"
                       maxLength={maxCharacters}

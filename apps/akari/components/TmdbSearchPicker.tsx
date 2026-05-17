@@ -231,6 +231,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
               returnKeyType="search"
               autoCapitalize="none"
               autoCorrect={false}
+              // oxlint-disable-next-line jsx-a11y/no-autofocus -- TMDB search modal opens to take a query immediately, focus avoids an extra tap
               autoFocus
             />
             {loading && <ActivityIndicator size="small" color={tintColor} style={styles.searchLoading} />}

@@ -256,6 +256,7 @@ export function ShareToChatSheet({
         placeholder={t('post.share.addMessagePlaceholder')}
         placeholderTextColor={iconColor}
         multiline
+        // oxlint-disable-next-line jsx-a11y/no-autofocus -- share sheet opens to let the user immediately type a message alongside the shared post
         autoFocus
         maxLength={1000}
         textAlignVertical="top"

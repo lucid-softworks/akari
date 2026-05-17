@@ -194,6 +194,8 @@ function YouTubeChatEmbed({ videoId, alignment }: YouTubeChatEmbedProps) {
           style={{ width: '100%', height: '100%', border: 0 }}
           allow="accelerometer; encrypted-media; picture-in-picture; web-share"
           allowFullScreen
+          title="YouTube video player"
+          sandbox="allow-scripts allow-presentation allow-popups"
         />
       ) : (
         <WebView

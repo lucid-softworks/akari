@@ -9,6 +9,7 @@ class StubMediaStream {
   }
 }
 
+// oxlint-disable-next-line typescript/no-extraneous-class -- mirrors react-native-webrtc's exported class for jest mocks (consumers call `new RTCSessionDescription(...)`)
 class StubRTCSessionDescription {
   constructor(init) {
     this.type = init.type;

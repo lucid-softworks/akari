@@ -125,8 +125,10 @@ export function PressableLink({
         <a
           href={href}
           ref={(aRef) => {
-            if (!aRef) return;
-            aRef.onclick = handleWebClick as unknown as (e: MouseEvent) => void;
+            if (!aRef) return undefined;
+            const listener = handleWebClick as unknown as (e: MouseEvent) => void;
+            aRef.addEventListener('click', listener);
+            return () => aRef.removeEventListener('click', listener);
           }}
           style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
           aria-label={accessibilityLabel}

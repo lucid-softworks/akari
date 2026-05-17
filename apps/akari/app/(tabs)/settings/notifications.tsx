@@ -59,7 +59,7 @@ export default function NotificationSettingsScreen() {
 
       // Default to "everything on" when no pref is set yet — matches
       // atproto's behaviour of treating unset categories as fully enabled.
-      const list = pref?.list ?? (def.kind === 'chat' ? true : true);
+      const list = pref?.list ?? true;
       const push = pref?.push ?? true;
       const include = pref?.include ?? 'all';
 

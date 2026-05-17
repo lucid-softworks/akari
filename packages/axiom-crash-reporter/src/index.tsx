@@ -276,7 +276,7 @@ const CrashProvider = ({
 
     void loadNativeExceptionHandler().then((module) => {
       if (!module) {
-        return;
+        return undefined;
       }
 
       module.setJSExceptionHandler((error, isFatal) => {
@@ -298,6 +298,7 @@ const CrashProvider = ({
           enableConsoleLogging,
         );
       }, false);
+      return undefined;
     });
 
     return undefined;

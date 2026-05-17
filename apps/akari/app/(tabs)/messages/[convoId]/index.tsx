@@ -348,6 +348,7 @@ export default function ConversationScreen() {
     void api.markConversationRead(token, conversation.convoId).then(() => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
       void queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      return undefined;
     });
   }, [conversation?.convoId, token, currentAccount?.pdsUrl, queryClient]);
 

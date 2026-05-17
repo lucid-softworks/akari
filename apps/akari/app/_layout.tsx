@@ -196,6 +196,7 @@ function AppProviders({ colorScheme }: ProvidersProps) {
                 <Stack.Screen name="oauth/callback" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
+              {/* oxlint-disable-next-line react/style-prop-object -- expo-status-bar's `style` prop is a string variant ("auto" | "light" | "dark"), not a React DOM style object */}
               <StatusBar style="auto" />
             </ThemeProvider>
           </DialogProvider>
@@ -227,6 +228,7 @@ export default Sentry.wrap(function RootLayout() {
         // call sees the registry already populated.
         restoreOAuthBindingFromStorage();
         if (!cancelled) setSecureStorageReady(true);
+        return undefined;
       })
       .catch((error) => {
         // Without secure storage we can't read/write JWTs or restore the

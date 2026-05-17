@@ -168,16 +168,29 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
  */
 function waitForIceGathering(peer: RTCPeerConnection): Promise<void> {
   if (peer.iceGatheringState === 'complete') return Promise.resolve();
-  return new Promise<void>((resolve) => {
-    const timeout = setTimeout(() => resolve(), 1000);
+  // Race a 1s deadline against the `icegatheringstatechange` event firing
+  // with `complete`. Each branch resolves its own inner promise, then
+  // Promise.race exposes the first; the other branch is harmless because
+  // the listener / timeout it owns is detached either way.
+  let detachHandler: () => void = () => {};
+  let cancelTimeout: () => void = () => {};
+  const fromEvent = new Promise<void>((resolve) => {
     const handler = () => {
       if (peer.iceGatheringState === 'complete') {
-        clearTimeout(timeout);
-        peer.removeEventListener('icegatheringstatechange', handler);
         resolve();
       }
     };
     peer.addEventListener('icegatheringstatechange', handler);
+    detachHandler = () => peer.removeEventListener('icegatheringstatechange', handler);
+  });
+  const fromTimeout = new Promise<void>((resolve) => {
+    const timeout = setTimeout(resolve, 1000);
+    cancelTimeout = () => clearTimeout(timeout);
+  });
+  return Promise.race([fromEvent, fromTimeout]).then(() => {
+    detachHandler();
+    cancelTimeout();
+    return undefined;
   });
 }
 

@@ -98,11 +98,7 @@ class WorkspaceReportNode extends BaseNode {
   }
 }
 
-class WorkspaceReportTree extends BaseTree {
-  constructor(root) {
-    super(root);
-  }
-}
+class WorkspaceReportTree extends BaseTree {}
 
 function walk(currentDir) {
   const entries = fs.readdirSync(currentDir, { withFileTypes: true });

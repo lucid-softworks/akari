@@ -99,6 +99,8 @@ export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
       allow: 'autoplay; fullscreen; picture-in-picture; encrypted-media',
       allowFullScreen: true,
       referrerPolicy: 'no-referrer-when-downgrade',
+      // oxlint-disable-next-line react/iframe-missing-sandbox -- third-party stream players (stream.place, etc.) need both allow-scripts and allow-same-origin to authenticate and persist player state; dropping either breaks legitimate providers
+      sandbox: 'allow-scripts allow-same-origin allow-presentation allow-popups',
       style: {
         width: '100%',
         height: '100%',

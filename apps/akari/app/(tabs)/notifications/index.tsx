@@ -480,6 +480,7 @@ export default function NotificationsScreen() {
       const api = apiForAccount(currentAccount);
       void api.markNotificationsSeen(token).then(() => {
         queryClient.setQueryData(queryKeys.notifications.unread(did), 0);
+        return undefined;
       });
     }, [token, currentAccount, queryClient]),
   );

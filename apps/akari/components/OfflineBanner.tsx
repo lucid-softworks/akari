@@ -1,4 +1,4 @@
-import NetInfo from '@react-native-community/netinfo';
+import { addEventListener, configure } from '@react-native-community/netinfo';
 import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 // is enough for offline detection in the browser, so disable the active
 // reachability probe on web. Native keeps the default behaviour.
 if (Platform.OS === 'web') {
-  NetInfo.configure({ reachabilityShouldRun: () => false });
+  configure({ reachabilityShouldRun: () => false });
 }
 
 export function OfflineBanner() {
@@ -22,7 +22,7 @@ export function OfflineBanner() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
+    const unsubscribe = addEventListener((state) => {
       setIsOffline(state.isConnected === false);
     });
     return unsubscribe;
