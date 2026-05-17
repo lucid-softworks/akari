@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, use, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -237,7 +237,7 @@ function ToastItem({ toast, onDismiss, style }: ToastItemProps) {
 }
 
 export function useToast(): ToastContextValue {
-  const context = useContext(ToastContext);
+  const context = use(ToastContext);
 
   if (!context) {
     throw new Error('useToast must be used within a ToastProvider');

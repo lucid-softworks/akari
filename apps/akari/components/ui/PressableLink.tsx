@@ -1,5 +1,5 @@
 import { router, usePathname } from 'expo-router';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { use, useCallback, useState } from 'react';
 import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
 
 const stripQueryAndHash = (url: string) => url.split('?')[0].split('#')[0];
@@ -75,7 +75,7 @@ export function PressableLink({
     [href, onPress, pathname],
   );
 
-  const insideAnchor = useContext(NestedAnchorContext);
+  const insideAnchor = use(NestedAnchorContext);
 
   if (Platform.OS === 'web') {
     const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false }) : style;

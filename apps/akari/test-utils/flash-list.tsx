@@ -28,7 +28,7 @@ function renderSupplemental(component: SupplementalComponent) {
   return <Component />;
 }
 
-export const FlashList = React.forwardRef<any, any>((props, ref) => {
+export function FlashList(props: any) {
   const {
     data = [],
     renderItem,
@@ -37,6 +37,7 @@ export const FlashList = React.forwardRef<any, any>((props, ref) => {
     ListHeaderComponent,
     keyExtractor,
     style,
+    ref,
   } = props;
 
   React.useImperativeHandle(ref, () => ({
@@ -64,6 +65,6 @@ export const FlashList = React.forwardRef<any, any>((props, ref) => {
       {renderSupplemental(ListFooterComponent)}
     </View>
   );
-});
+}
 
 FlashList.displayName = 'FlashList';

@@ -53,22 +53,25 @@ const moveDirectories = async (userInput) => {
       console.log(`📁 /${exampleDir} directory created.`);
     }
 
-    // Move old directories to new app-example directory or delete them
-    for (const dir of oldDirs) {
-      const oldDirPath = path.join(root, dir);
-      if (fs.existsSync(oldDirPath)) {
-        if (userInput === "y") {
-          const newDirPath = path.join(root, exampleDir, dir);
-          await fs.promises.rename(oldDirPath, newDirPath);
-          console.log(`➡️ /${dir} moved to /${exampleDir}/${dir}.`);
+    // Move old directories to new app-example directory or delete them.
+    // Each dir is independent, so run the renames/removes in parallel.
+    await Promise.all(
+      oldDirs.map(async (dir) => {
+        const oldDirPath = path.join(root, dir);
+        if (fs.existsSync(oldDirPath)) {
+          if (userInput === "y") {
+            const newDirPath = path.join(root, exampleDir, dir);
+            await fs.promises.rename(oldDirPath, newDirPath);
+            console.log(`➡️ /${dir} moved to /${exampleDir}/${dir}.`);
+          } else {
+            await fs.promises.rm(oldDirPath, { recursive: true, force: true });
+            console.log(`❌ /${dir} deleted.`);
+          }
         } else {
-          await fs.promises.rm(oldDirPath, { recursive: true, force: true });
-          console.log(`❌ /${dir} deleted.`);
+          console.log(`➡️ /${dir} does not exist, skipping.`);
         }
-      } else {
-        console.log(`➡️ /${dir} does not exist, skipping.`);
-      }
-    }
+      }),
+    );
 
     // Create new /app directory
     const newAppDirPath = path.join(root, newAppDir);

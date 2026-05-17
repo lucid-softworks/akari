@@ -223,12 +223,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const [composeMode, setComposeMode] = useState<ComposeMode>('standard');
   const [longText, setLongText] = useState('');
   const [longTitle, setLongTitle] = useState('');
-  const [longTextSelection, setLongTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  // Selection state lives in refs — it's only read inside event handlers
+  // (emoji insertion etc.) and updating it on every keystroke shouldn't
+  // re-render the whole composer.
+  const longTextSelectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
   const [gifPickerVisible, setGifPickerVisible] = useState(false);
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [controlsSheetVisible, setControlsSheetVisible] = useState(false);
   const [postControls, setPostControls] = useState<PostControls>(DEFAULT_POST_CONTROLS);
-  const [textSelection, setTextSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const textSelectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
 
   const activePost = posts[activeIndex] ?? EMPTY_THREAD_POST;
   const text = activePost.text;
@@ -245,9 +248,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   );
 
   const setAttachedImages = useCallback(
-    (next: AttachedImage[]) => {
-      setPosts((prev) =>
-        prev.map((p, i) => (i === activeIndex ? { ...p, attachedImages: next } : p)),
+    (next: AttachedImage[] | ((prev: AttachedImage[]) => AttachedImage[])) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((p, i) => {
+          if (i !== activeIndex) return p;
+          const resolved =
+            typeof next === 'function' ? next(p.attachedImages) : next;
+          return { ...p, attachedImages: resolved };
+        }),
       );
     },
     [activeIndex],
@@ -257,7 +265,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setPosts((prev) => [...prev, { ...EMPTY_THREAD_POST }]);
     // Focus moves to the new (last) post.
     setActiveIndex((prev) => prev + 1);
-    setTextSelection({ start: 0, end: 0 });
+    textSelectionRef.current = { start: 0, end: 0 };
   }, []);
 
   const removePost = useCallback((index: number) => {
@@ -300,6 +308,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const updateDraftMutation = useUpdateDraft();
   const deleteDraftMutation = useDeleteDraft();
 
+  // oxlint-disable-next-line react-doctor/rerender-state-only-in-handlers -- Drives the autosave useEffect's dep array (transitioning null -> id schedules the debounce timer); a plain ref wouldn't re-run the effect.
   const [currentDraftId, setCurrentDraftId] = useState<string | null>(null);
   const [draftsSheetVisible, setDraftsSheetVisible] = useState(false);
 
@@ -336,7 +345,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setComposeMode('standard');
     setLongText('');
     setLongTitle('');
-    setLongTextSelection({ start: 0, end: 0 });
+    longTextSelectionRef.current = { start: 0, end: 0 };
     hydratedRef.current = true;
   }, [visible]);
 
@@ -455,6 +464,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       runSave({ posts, controls: postControls });
     }, 800);
     return () => clearTimeout(timeout);
+    // oxlint-disable-next-line react-doctor/prefer-use-effect-event -- useEffectEvent is React 19 experimental, not in 19.1 stable runtime.
   }, [visible, draftsApply, did, currentDraftId, posts, postControls, runSave]);
 
   // Theme colors
@@ -751,13 +761,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         mimeType: asset.mimeType || 'image/jpeg',
       }));
 
-      const totalImages = attachedImages.length + newImages.length;
-      if (totalImages <= 4) {
-        setAttachedImages([...attachedImages, ...newImages]);
-      } else {
-        const remainingSlots = 4 - attachedImages.length;
-        setAttachedImages([...attachedImages, ...newImages.slice(0, remainingSlots)]);
-      }
+      setAttachedImages((prev) => {
+        const remainingSlots = Math.max(0, 4 - prev.length);
+        return [...prev, ...newImages.slice(0, remainingSlots)];
+      });
     }
   };
 
@@ -1070,29 +1077,27 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     // Insert the emoji at the current cursor position. Falls back to
     // appending to the end when the user hasn't selected anywhere yet.
     if (isLongMode) {
-      const { start, end } = longTextSelection;
+      const { start, end } = longTextSelectionRef.current;
       const safeStart = Math.min(Math.max(start, 0), longText.length);
       const safeEnd = Math.min(Math.max(end, safeStart), longText.length);
       const nextText = longText.slice(0, safeStart) + emoji + longText.slice(safeEnd);
       setLongText(nextText);
       const cursor = safeStart + emoji.length;
-      setLongTextSelection({ start: cursor, end: cursor });
+      longTextSelectionRef.current = { start: cursor, end: cursor };
       setEmojiPickerVisible(false);
       return;
     }
-    const { start, end } = textSelection;
+    const { start, end } = textSelectionRef.current;
     const safeStart = Math.min(Math.max(start, 0), text.length);
     const safeEnd = Math.min(Math.max(end, safeStart), text.length);
     setText(text.slice(0, safeStart) + emoji + text.slice(safeEnd));
     const next = safeStart + emoji.length;
-    setTextSelection({ start: next, end: next });
+    textSelectionRef.current = { start: next, end: next };
     setEmojiPickerVisible(false);
   };
 
   const handleSelectGif = (gif: AttachedImage) => {
-    if (attachedImages.length < 4) {
-      setAttachedImages([...attachedImages, gif]);
-    }
+    setAttachedImages((prev) => (prev.length < 4 ? [...prev, gif] : prev));
   };
 
   // Auto-thread previews — recomputed each keystroke. Each chunk is one
@@ -1358,7 +1363,9 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                     ]}
                     value={longText}
                     onChangeText={setLongText}
-                    onSelectionChange={(e) => setLongTextSelection(e.nativeEvent.selection)}
+                    onSelectionChange={(e) => {
+                      longTextSelectionRef.current = e.nativeEvent.selection;
+                    }}
                     placeholder={
                       composeMode === 'longform'
                         ? t('post.longform.placeholder')
@@ -1487,7 +1494,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                       onFocus={() => setActiveIndex(postIdx)}
                       onSelectionChange={(e) => {
                         if (postIdx === activeIndex) {
-                          setTextSelection(e.nativeEvent.selection);
+                          textSelectionRef.current = e.nativeEvent.selection;
                         }
                       }}
                       placeholder={

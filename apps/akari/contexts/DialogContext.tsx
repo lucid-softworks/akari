@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, use, useCallback, useMemo, useState } from 'react';
 
 type DialogComponent = React.ReactNode;
 
@@ -76,7 +76,7 @@ export function DialogProvider({ children }: DialogProviderProps) {
 }
 
 export function useDialogManager(): DialogManager {
-  const context = useContext(DialogContext);
+  const context = use(DialogContext);
 
   if (!context) {
     throw new Error('useDialogManager must be used within a DialogProvider');

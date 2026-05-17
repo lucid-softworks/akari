@@ -1,5 +1,5 @@
 import { Link, router } from 'expo-router';
-import React, { useContext } from 'react';
+import React, { use } from 'react';
 import { Platform, ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -80,7 +80,7 @@ type TextSegment = {
 };
 
 export function RichTextWithFacets({ text, facets, style, containerStyle, disableLinks }: RichTextWithFacetsProps) {
-  const insideAnchor = useContext(NestedAnchorContext);
+  const insideAnchor = use(NestedAnchorContext);
   const linkColor = useThemeColor(
     {
       light: '#007AFF',

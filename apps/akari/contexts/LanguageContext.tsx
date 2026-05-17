@@ -1,6 +1,6 @@
 import { getAvailableLocales, setLocale } from "@/utils/i18n";
 import { getLocales } from "expo-localization";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 import { MMKV } from "react-native-mmkv";
 
 type LanguageContextType = {
@@ -76,7 +76,7 @@ export const LanguageProvider = ({
 };
 
 export const useLanguage = () => {
-  const context = useContext(LanguageContext);
+  const context = use(LanguageContext);
   if (context === undefined) {
     throw new Error("useLanguage must be used within a LanguageProvider");
   }

@@ -99,16 +99,19 @@ export async function registerForPushNotifications(): Promise<PushNotificationTo
 export async function createNotificationChannels(channels: NotificationChannel[]): Promise<void> {
   if (Platform.OS !== 'android') return;
 
-  for (const channel of channels) {
-    await Notifications.setNotificationChannelAsync(channel.id, {
-      name: channel.name,
-      description: channel.description,
-      importance: channel.importance,
-      sound: channel.sound,
-      vibrationPattern: channel.vibrationPattern,
-      lightColor: channel.lightColor,
-    });
-  }
+  // Channels are independent — register them concurrently.
+  await Promise.all(
+    channels.map((channel) =>
+      Notifications.setNotificationChannelAsync(channel.id, {
+        name: channel.name,
+        description: channel.description,
+        importance: channel.importance,
+        sound: channel.sound,
+        vibrationPattern: channel.vibrationPattern,
+        lightColor: channel.lightColor,
+      }),
+    ),
+  );
 }
 
 /**

@@ -44,7 +44,7 @@
     "react/jsx-no-target-blank": "error",
     "react/no-array-index-key": "error",
     "react-doctor/advanced-event-handler-refs": "warn",
-    "react-doctor/async-await-in-loop": "warn",
+    "react-doctor/async-await-in-loop": "off",
     "react-doctor/async-defer-await": "off",
     "react-doctor/async-parallel": "warn",
     "react-doctor/client-passive-event-listeners": "warn",

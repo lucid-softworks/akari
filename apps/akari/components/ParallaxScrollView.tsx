@@ -50,6 +50,7 @@ export default function ParallaxScrollView({
         ref={scrollRef}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
+        // oxlint-disable-next-line react-doctor/rn-scrollview-dynamic-padding -- Bottom tab overflow handled by explicit useBottomTabOverflow paddingBottom, not contentInset.
         contentContainerStyle={{ paddingBottom: bottom }}>
         <Animated.View
           style={[

@@ -18,22 +18,26 @@ export function useAccountProfiles() {
 
       const profiles: Record<string, any> = {};
 
-      for (const account of accounts) {
-        try {
-          // For other accounts, fetch profile data using their PDS
-          if (!account.pdsUrl) {
-            console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
-            continue;
+      // Each account hits its own PDS — fetch concurrently rather than serially.
+      const fetched = await Promise.all(
+        accounts.map(async (account) => {
+          try {
+            if (!account.pdsUrl) {
+              console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
+              return null;
+            }
+            const api = apiForAccount(account);
+            const profile = await api.getProfile(account.jwtToken, account.handle);
+            return profile ? ([account.did, profile] as const) : null;
+          } catch (error) {
+            console.error(`Error fetching profile for ${account.handle}:`, error);
+            return null;
           }
-          const api = apiForAccount(account);
-          const profile = await api.getProfile(account.jwtToken, account.handle);
+        }),
+      );
 
-          if (profile) {
-            profiles[account.did] = profile;
-          }
-        } catch (error) {
-          console.error(`Error fetching profile for ${account.handle}:`, error);
-        }
+      for (const entry of fetched) {
+        if (entry) profiles[entry[0]] = entry[1];
       }
 
       return profiles;

@@ -1,8 +1,8 @@
 import { useSegments } from 'expo-router';
 import {
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   type ReactNode,
@@ -108,7 +108,7 @@ export function PlausibleProvider({
 }
 
 function usePlausibleContext(): PlausibleContextValue {
-  const ctx = useContext(PlausibleContext);
+  const ctx = use(PlausibleContext);
   if (!ctx) {
     throw new Error('usePlausible must be used inside a PlausibleProvider');
   }
