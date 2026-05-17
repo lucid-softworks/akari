@@ -3,14 +3,11 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Redirect, router } from 'expo-router';
 
 import { spacing } from '@/constants/tokens';
-import { AccountRow, InfoRow } from '@/components/settings/AccountComponents';
-import {
-  SettingsRow,
-  SettingsSection,
-  type SettingsRowDescriptor,
-} from '@/components/settings/SettingsList';
+import { AccountDetailsSection } from '@/components/settings/account/AccountDetailsSection';
+import { AccountsListSection } from '@/components/settings/account/AccountsListSection';
+import { SettingsRowsSection } from '@/components/settings/account/SettingsRowsSection';
+import { type SettingsRowDescriptor } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
-import { ThemedView } from '@/components/ThemedView';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -124,9 +121,10 @@ export default function AccountSettingsScreen() {
         icon: 'envelope.fill',
         label: t('settings.email'),
         value: sessionQuery.data?.email,
-        description: sessionQuery.data && sessionQuery.data.emailConfirmed === false
-          ? t('settings.emailNotConfirmed')
-          : undefined,
+        description:
+          sessionQuery.data && sessionQuery.data.emailConfirmed === false
+            ? t('settings.emailNotConfirmed')
+            : undefined,
       },
       {
         key: 'update-email',
@@ -167,12 +165,7 @@ export default function AccountSettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/export-data'),
       },
     ],
-    [
-      automated,
-      currentAccount?.handle,
-      sessionQuery.data,
-      t,
-    ],
+    [automated, currentAccount?.handle, sessionQuery.data, t],
   );
 
   const dangerRows = useMemo<SettingsRowDescriptor[]>(
@@ -227,105 +220,36 @@ export default function AccountSettingsScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <SettingsSection isFirst title={t('common.accounts')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {accounts.length === 0 ? (
-              <ThemedView style={styles.emptyState}> 
-                <SettingsRow
-                  borderColor={borderColor}
-                  description={t('common.noAccounts')}
-                  icon="person.crop.circle.badge.xmark"
-                  label={t('common.accounts')}
-                  showDivider={false}
-                />
-              </ThemedView>
-            ) : (
-              accounts.map((account) => {
-                const profile = accountProfiles?.[account.did];
-                const avatar = profile?.avatar || account.avatar;
-                const displayName = profile?.displayName || account.displayName;
-                const isCurrent = account.did === currentAccount?.did;
-
-                return (
-                  <AccountRow
-                    key={account.did}
-                    account={account}
-                    avatar={avatar}
-                    borderColor={borderColor}
-                    currentLabel={t('common.current')}
-                    displayName={displayName}
-                    isCurrent={isCurrent}
-                    onRemove={() => handleRemoveAccount(account)}
-                    onSwitch={
-                      isCurrent
-                        ? undefined
-                        : () => handleSwitchAccount(account)
-                    }
-                    removeLabel={t('common.remove')}
-                    switchLabel={t('common.switch')}
-                  />
-                );
-              })
-            )}
-          </ThemedView>
-        </SettingsSection>
+        <AccountsListSection
+          accounts={accounts}
+          accountProfiles={accountProfiles}
+          currentDid={currentAccount?.did}
+          borderColor={borderColor}
+          onSwitch={handleSwitchAccount}
+          onRemove={handleRemoveAccount}
+        />
 
         {currentAccount ? (
-          <SettingsSection title={t('settings.accountDetails')}>
-            <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-              <InfoRow borderColor={borderColor} label={t('common.handle')} value={`@${currentAccount.handle}`} />
-              <InfoRow borderColor={borderColor} label="DID" monospace value={currentAccount.did} />
-            </ThemedView>
-          </SettingsSection>
+          <AccountDetailsSection
+            handle={currentAccount.handle}
+            did={currentAccount.did}
+            borderColor={borderColor}
+          />
         ) : null}
 
-        <SettingsSection title={t('common.actions')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {actionRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                description={item.description}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                destructive={item.destructive}
-                showDivider={index < actionRows.length - 1}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
+        <SettingsRowsSection title={t('common.actions')} rows={actionRows} borderColor={borderColor} />
 
-        <SettingsSection title={t('settings.accountDetails')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {accountManagementRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                showDivider={index < accountManagementRows.length - 1}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
+        <SettingsRowsSection
+          title={t('settings.accountDetails')}
+          rows={accountManagementRows}
+          borderColor={borderColor}
+        />
 
-        <SettingsSection title={t('settings.accountSecurity')}>
-          <ThemedView style={[styles.sectionCard, { borderColor }]}> 
-            {dangerRows.map((item, index) => (
-              <SettingsRow
-                key={item.key}
-                borderColor={borderColor}
-                icon={item.icon}
-                label={item.label}
-                onPress={item.onPress}
-                destructive={item.destructive}
-                showDivider={index < dangerRows.length - 1}
-              />
-            ))}
-          </ThemedView>
-        </SettingsSection>
+        <SettingsRowsSection
+          title={t('settings.accountSecurity')}
+          rows={dangerRows}
+          borderColor={borderColor}
+        />
       </ScrollView>
     </SettingsSubpageLayout>
   );
@@ -338,14 +262,4 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: spacing.xxxl,
   },
-  sectionCard: {
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    backgroundColor: 'transparent',
-  },
-  emptyState: {
-    borderBottomWidth: 0,
-  },
 });
-

@@ -1,73 +1,20 @@
-import { Image } from '@/components/Image';
 import { useEffect, useReducer, useRef } from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 import { ThemedCard } from '@/components/ThemedCard';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useTranslation } from '@/hooks/useTranslation';
 
 import { VideoPlayer as WebVideoPlayer } from './VideoPlayer.web';
-
-type PlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
-
-type PlayerState = {
-  playerStatus: PlayerStatus;
-  playerError: string | null;
-  shouldShowVideo: boolean;
-  isPlaying: boolean;
-  playbackUrl: string | null;
-  isResolvingUrl: boolean;
-};
-
-type PlayerAction =
-  | { type: 'press' }
-  | { type: 'resolveCleared' }
-  | { type: 'resolveSettled'; playbackUrl: string | null }
-  | { type: 'resolveStart' }
-  | { type: 'loadStart' }
-  | { type: 'loaded' }
-  | { type: 'playing' }
-  | { type: 'ended' }
-  | { type: 'error'; message: string }
-  | { type: 'reset' };
-
-const INITIAL_PLAYER_STATE: PlayerState = {
-  playerStatus: 'idle',
-  playerError: null,
-  shouldShowVideo: false,
-  isPlaying: false,
-  playbackUrl: null,
-  isResolvingUrl: false,
-};
-
-function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
-  switch (action.type) {
-    case 'press':
-      return { ...state, shouldShowVideo: true, playerStatus: 'loading' };
-    case 'resolveCleared':
-      return { ...state, playbackUrl: null };
-    case 'resolveSettled':
-      return { ...state, playbackUrl: action.playbackUrl, isResolvingUrl: false };
-    case 'resolveStart':
-      return { ...state, isResolvingUrl: true };
-    case 'loadStart':
-      return { ...state, playerStatus: 'loading', playerError: null };
-    case 'loaded':
-      return { ...state, playerStatus: 'readyToPlay', playerError: null };
-    case 'playing':
-      return { ...state, isPlaying: true };
-    case 'ended':
-      return { ...state, isPlaying: false };
-    case 'error':
-      return { ...state, playerStatus: 'error', playerError: action.message };
-    case 'reset':
-      return INITIAL_PLAYER_STATE;
-  }
-}
+import { ErrorOverlay } from './VideoPlayer/ErrorOverlay';
+import { ThumbnailView } from './VideoPlayer/ThumbnailView';
+import { VideoCaption } from './VideoPlayer/VideoCaption';
+import { getNativeVideoSource } from './VideoPlayer/getNativeVideoSource';
+import {
+  INITIAL_NATIVE_PLAYER_STATE,
+  nativePlayerReducer,
+} from './VideoPlayer/nativePlayerReducer';
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -109,12 +56,11 @@ export function VideoPlayer({
   loop = false,
   aspectRatio,
 }: VideoPlayerProps) {
-  const { t } = useTranslation();
   // Co-locate player lifecycle fields. Every transition (press, resolve,
   // load, error, end) touches more than one of these, so per-field
   // setters were both noisy and cascading. A reducer keeps each
   // transition to a single dispatch call.
-  const [playerState, dispatch] = useReducer(playerReducer, INITIAL_PLAYER_STATE);
+  const [playerState, dispatch] = useReducer(nativePlayerReducer, INITIAL_NATIVE_PLAYER_STATE);
   const {
     playerStatus,
     playerError,
@@ -125,52 +71,9 @@ export function VideoPlayer({
   } = playerState;
   const videoRef = useRef<any>(null);
 
-  const textColor = useThemeColor(
-    {
-      light: '#000000',
-      dark: '#ffffff',
-    },
-    'text',
-  );
-
-  const secondaryTextColor = useThemeColor(
-    {
-      light: '#666666',
-      dark: '#999999',
-    },
-    'text',
-  );
-
-  // Determine content type for HLS streams
-  const getVideoSource = () => {
-    if (!playbackUrl || playbackUrl.trim() === '') {
-      return null;
-    }
-
-    // Validate URL format (constructor throws on invalid input)
-    try {
-      const _validated = new URL(playbackUrl);
-      void _validated;
-    } catch {
-      return null;
-    }
-
-    // Check if it's an HLS stream
-    if (playbackUrl.includes('.m3u8')) {
-      return {
-        uri: playbackUrl,
-        // Try without explicit type to let react-native-video auto-detect
-      };
-    }
-
-    // For other video formats, let react-native-video auto-detect
-    return {
-      uri: playbackUrl,
-    };
-  };
-
-  // Calculate video source
-  const videoSource = getVideoSource();
+  // Calculate video source. react-native-video auto-detects the type
+  // for both HLS and other formats, so we just hand it the URI.
+  const videoSource = getNativeVideoSource(playbackUrl);
 
   // Auto-play when player becomes ready and should show video
   useEffect(() => {
@@ -301,29 +204,11 @@ export function VideoPlayer({
   // Show error state
   if (playerStatus === 'error') {
     return (
-      <ThemedCard style={styles.container}>
-        <ThemedView
-          style={[
-            styles.videoContainer,
-            {
-              aspectRatio: aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9,
-            },
-          ]}
-        >
-          <Pressable
-            onPress={() => {
-              // Reset and retry
-              dispatch({ type: 'reset' });
-            }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
-            <ThemedView style={styles.errorContainer}>
-              <ThemedText style={[styles.errorText, { color: textColor }]}>
-                {playerError && playerError.trim() ? playerError : 'Failed to load video'}
-              </ThemedText>
-              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
-            </ThemedView>
-          </Pressable>
-        </ThemedView>
-      </ThemedCard>
+      <ErrorOverlay
+        message={playerError}
+        aspectRatio={aspectRatio}
+        onRetry={() => dispatch({ type: 'reset' })}
+      />
     );
   }
 
@@ -362,82 +247,20 @@ export function VideoPlayer({
           />
         </ThemedView>
 
-        {showControls &&
-          (() => {
-            const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
-            const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
-
-            if (!hasTitle && !hasDescription) {
-              return null;
-            }
-
-            return (
-              <ThemedView style={styles.content}>
-                {hasTitle && (
-                  <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
-                    {title}
-                  </ThemedText>
-                )}
-                {hasDescription && (
-                  <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
-                    {description}
-                  </ThemedText>
-                )}
-              </ThemedView>
-            );
-          })()}
+        {showControls ? <VideoCaption title={title} description={description} /> : null}
       </ThemedCard>
     );
   }
 
-  // Fallback: thumbnail with play button
-  const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
   return (
-    <Pressable onPress={handlePress}  disabled={isResolvingUrl} style={({ pressed }) => pressed && { opacity: 0.8 }}>
-      <ThemedCard style={styles.container}>
-        <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
-          {thumbnailUrl ? (
-            <Image
-              source={{ uri: thumbnailUrl }}
-              style={styles.thumbnail}
-              contentFit="cover"
-              transition={200}
-            />
-          ) : (
-            <ThemedView style={styles.placeholderContainer}>
-              <ThemedText style={styles.placeholderIcon}>📹</ThemedText>
-            </ThemedView>
-          )}
-          <ThemedView style={styles.playButton}>
-            <ThemedText style={styles.playIcon}>▶</ThemedText>
-          </ThemedView>
-        </ThemedView>
-
-        {(() => {
-          const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
-          const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
-
-          if (!hasTitle && !hasDescription) {
-            return null;
-          }
-
-          return (
-            <ThemedView style={styles.content}>
-              {hasTitle ? (
-                <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
-                  {title}
-                </ThemedText>
-              ) : null}
-              {hasDescription ? (
-                <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
-                  {description}
-                </ThemedText>
-              ) : null}
-            </ThemedView>
-          );
-        })()}
-      </ThemedCard>
-    </Pressable>
+    <ThumbnailView
+      thumbnailUrl={thumbnailUrl}
+      title={title}
+      description={description}
+      aspectRatio={aspectRatio}
+      disabled={isResolvingUrl}
+      onPress={handlePress}
+    />
   );
 }
 
@@ -453,85 +276,5 @@ const styles = StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
-  },
-  thumbnailContainer: {
-    position: 'relative',
-    width: '100%',
-    aspectRatio: 16 / 9,
-  },
-  thumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholderContainer: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderIcon: {
-    fontSize: 48,
-    opacity: 0.5,
-  },
-  playButton: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -20 }, { translateY: -20 }],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playIcon: {
-    fontSize: 16,
-    color: 'white',
-  },
-  content: {
-    gap: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 20,
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  source: {
-    fontSize: 12,
-    marginTop: 4,
-  },
-  loadingContainer: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  errorContainer: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-  },
-  errorText: {
-    fontSize: 14,
-    textAlign: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  retryText: {
-    fontSize: 12,
-    textAlign: 'center',
-    fontStyle: 'italic',
   },
 });

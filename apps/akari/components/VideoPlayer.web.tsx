@@ -1,62 +1,15 @@
 import Hls, { Events, isSupported } from 'hls.js';
 import { useEffect, useReducer, useRef } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { resolveBlueskyVideoUrl } from '@/bluesky-api';
 import { ThemedCard } from '@/components/ThemedCard';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useTranslation } from '@/hooks/useTranslation';
 
-type PlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
-
-type WebPlayerState = {
-  playerStatus: PlayerStatus;
-  playerError: string | null;
-  shouldShowVideo: boolean;
-  playbackUrl: string | null;
-  isResolvingUrl: boolean;
-};
-
-type WebPlayerAction =
-  | { type: 'press' }
-  | { type: 'resolveCleared' }
-  | { type: 'resolveSettled'; playbackUrl: string | null }
-  | { type: 'resolveStart' }
-  | { type: 'initStart' }
-  | { type: 'loaded' }
-  | { type: 'error'; message: string }
-  | { type: 'reset' };
-
-const INITIAL_WEB_PLAYER_STATE: WebPlayerState = {
-  playerStatus: 'idle',
-  playerError: null,
-  shouldShowVideo: false,
-  playbackUrl: null,
-  isResolvingUrl: false,
-};
-
-function webPlayerReducer(state: WebPlayerState, action: WebPlayerAction): WebPlayerState {
-  switch (action.type) {
-    case 'press':
-      return { ...state, shouldShowVideo: true, playerStatus: 'loading', playerError: null };
-    case 'resolveCleared':
-      return { ...state, playbackUrl: null };
-    case 'resolveSettled':
-      return { ...state, playbackUrl: action.playbackUrl, isResolvingUrl: false };
-    case 'resolveStart':
-      return { ...state, isResolvingUrl: true };
-    case 'initStart':
-      return { ...state, playerStatus: 'loading', playerError: null };
-    case 'loaded':
-      return { ...state, playerStatus: 'readyToPlay' };
-    case 'error':
-      return { ...state, playerStatus: 'error', playerError: action.message };
-    case 'reset':
-      return INITIAL_WEB_PLAYER_STATE;
-  }
-}
+import { ErrorOverlay } from './VideoPlayer/ErrorOverlay.web';
+import { ThumbnailView } from './VideoPlayer/ThumbnailView.web';
+import { VideoCaption } from './VideoPlayer/VideoCaption.web';
+import { INITIAL_WEB_PLAYER_STATE, webPlayerReducer } from './VideoPlayer/webPlayerReducer';
 
 type VideoPlayerProps = {
   /** Video URL to play */
@@ -97,27 +50,10 @@ export function VideoPlayer({
   loop = false,
   aspectRatio,
 }: VideoPlayerProps) {
-  const { t } = useTranslation();
   const [state, dispatch] = useReducer(webPlayerReducer, INITIAL_WEB_PLAYER_STATE);
   const { playerStatus, playerError, shouldShowVideo, playbackUrl, isResolvingUrl } = state;
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
-
-  const textColor = useThemeColor(
-    {
-      light: '#000000',
-      dark: '#ffffff',
-    },
-    'text',
-  );
-
-  const secondaryTextColor = useThemeColor(
-    {
-      light: '#666666',
-      dark: '#999999',
-    },
-    'text',
-  );
 
   const handlePress = () => {
     dispatch({ type: 'press' });
@@ -275,23 +211,11 @@ export function VideoPlayer({
   // Show error state
   if (playerStatus === 'error') {
     return (
-      <ThemedCard style={styles.container}>
-        <ThemedView
-          style={[styles.videoContainer, { aspectRatio: aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9 }]}
-        >
-          <Pressable
-            onPress={() => {
-              dispatch({ type: 'reset' });
-            }} style={({ pressed }) => pressed && { opacity: 0.7 }}>
-            <ThemedView style={styles.errorContainer}>
-              <ThemedText style={[styles.errorText, { color: textColor }]}>
-                {playerError && playerError.trim() ? playerError : 'Failed to load video'}
-              </ThemedText>
-              <ThemedText style={[styles.retryText, { color: secondaryTextColor }]}>{t('ui.tapToRetry')}</ThemedText>
-            </ThemedView>
-          </Pressable>
-        </ThemedView>
-      </ThemedCard>
+      <ErrorOverlay
+        message={playerError}
+        aspectRatio={aspectRatio}
+        onRetry={() => dispatch({ type: 'reset' })}
+      />
     );
   }
 
@@ -315,78 +239,20 @@ export function VideoPlayer({
           />
         </ThemedView>
 
-        {showControls &&
-          (() => {
-            const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
-            const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
-
-            if (!hasTitle && !hasDescription) {
-              return null;
-            }
-
-            return (
-              <ThemedView style={styles.content}>
-                {hasTitle && (
-                  <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
-                    {title}
-                  </ThemedText>
-                )}
-                {hasDescription && (
-                  <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
-                    {description}
-                  </ThemedText>
-                )}
-              </ThemedView>
-            );
-          })()}
+        {showControls ? <VideoCaption title={title} description={description} /> : null}
       </ThemedCard>
     );
   }
 
-  // Fallback thumbnail with play button
-  const thumbnailAspectRatio = aspectRatio ? aspectRatio.width / aspectRatio.height : 16 / 9;
-
   return (
-    <Pressable onPress={handlePress}  disabled={isResolvingUrl} style={({ pressed }) => pressed && { opacity: 0.8 }}>
-      <ThemedCard style={styles.container}>
-        <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
-          {thumbnailUrl ? (
-            <img src={thumbnailUrl} alt={title || 'Video thumbnail'} style={styles.thumbnail as any} />
-          ) : (
-            <ThemedView style={styles.placeholderContainer}>
-              <ThemedText style={styles.placeholderIcon}>📹</ThemedText>
-            </ThemedView>
-          )}
-          <ThemedView style={styles.playButton}>
-            <ThemedText style={styles.playIcon}>▶</ThemedText>
-          </ThemedView>
-        </ThemedView>
-
-        {(() => {
-          const hasTitle = title && typeof title === 'string' && title.trim().length > 0;
-          const hasDescription = description && typeof description === 'string' && description.trim().length > 0;
-
-          if (!hasTitle && !hasDescription) {
-            return null;
-          }
-
-          return (
-            <ThemedView style={styles.content}>
-              {hasTitle ? (
-                <ThemedText style={[styles.title, { color: textColor }]} numberOfLines={2}>
-                  {title}
-                </ThemedText>
-              ) : null}
-              {hasDescription ? (
-                <ThemedText style={[styles.description, { color: secondaryTextColor }]} numberOfLines={2}>
-                  {description}
-                </ThemedText>
-              ) : null}
-            </ThemedView>
-          );
-        })()}
-      </ThemedCard>
-    </Pressable>
+    <ThumbnailView
+      thumbnailUrl={thumbnailUrl}
+      title={title}
+      description={description}
+      aspectRatio={aspectRatio}
+      disabled={isResolvingUrl}
+      onPress={handlePress}
+    />
   );
 }
 
@@ -403,71 +269,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     objectFit: 'contain',
-  },
-  thumbnailContainer: {
-    position: 'relative',
-    width: '100%',
-    aspectRatio: 16 / 9,
-  },
-  thumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholderContainer: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderIcon: {
-    fontSize: 48,
-    opacity: 0.5,
-  },
-  playButton: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -20 }, { translateY: -20 }],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playIcon: {
-    fontSize: 16,
-    color: 'white',
-  },
-  content: {
-    gap: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 20,
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  errorContainer: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-  },
-  errorText: {
-    fontSize: 14,
-    textAlign: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  retryText: {
-    fontSize: 12,
-    textAlign: 'center',
-    fontStyle: 'italic',
   },
 });
