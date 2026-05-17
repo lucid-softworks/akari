@@ -73,7 +73,7 @@ export const PostTranslation = React.memo(function PostTranslation({
 
     if (facets) {
       // Process facets in reverse order so byte offsets stay valid
-      const sortedFacets = [...facets].sort((a, b) => b.index.byteStart - a.index.byteStart);
+      const sortedFacets = [...facets].toSorted((a, b) => b.index.byteStart - a.index.byteStart);
       const encoder = new TextEncoder();
       const decoder = new TextDecoder();
       const bytes = encoder.encode(textToTranslate);

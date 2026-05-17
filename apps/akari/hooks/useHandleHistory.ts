@@ -74,7 +74,7 @@ export function useHandleHistory(identifier: string | undefined) {
 
       // Newest first so the modal can render the current handle at the top
       // and walk back through history below it.
-      return entries.reverse();
+      return entries.toReversed();
     },
     enabled: !!identifier,
     staleTime: 5 * 60 * 1000,

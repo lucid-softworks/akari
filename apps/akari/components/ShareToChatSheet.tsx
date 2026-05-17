@@ -26,7 +26,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const BSKY_POST_URL_RX =
-  /https?:\/\/(?:www\.)?bsky\.app\/profile\/([^\/\s]+)\/post\/([^\/\s?#]+)/i;
+  /https?:\/\/(?:www\.)?bsky\.app\/profile\/([^/\s]+)\/post\/([^/\s?#]+)/i;
 
 type ShareToChatSheetProps = {
   visible: boolean;

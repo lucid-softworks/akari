@@ -229,7 +229,7 @@ function bucketise(notifications: BlueskyNotification[], config: AggregationConf
     buckets.set(key, bucket);
   }
 
-  return Array.from(buckets.values()).sort((a, b) => a.date.localeCompare(b.date));
+  return Array.from(buckets.values()).toSorted((a, b) => a.date.localeCompare(b.date));
 }
 
 function bucketiseAll(notifications: BlueskyNotification[], accountCreationDate: Date): ActivityBucket[] {
@@ -272,7 +272,7 @@ function bucketiseAll(notifications: BlueskyNotification[], accountCreationDate:
     incrementCounts(bucket, notification.reason);
   }
 
-  return Array.from(buckets.values()).sort((a, b) => a.date.localeCompare(b.date));
+  return Array.from(buckets.values()).toSorted((a, b) => a.date.localeCompare(b.date));
 }
 
 function generateBuckets(config: AggregationConfig): string[] {

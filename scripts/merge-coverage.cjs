@@ -417,7 +417,7 @@ function createFileCoverageFromRecord(record) {
   const fileCoverage = createFileCoverage(record.path);
   const { statementMap, fnMap, branchMap, s, f, b } = fileCoverage.data;
 
-  const sortedLines = Array.from(record.lines.entries()).sort((a, b) => a[0] - b[0]);
+  const sortedLines = Array.from(record.lines.entries()).toSorted((a, b) => a[0] - b[0]);
   let statementIndex = 0;
   for (const [lineNumber, hitCount] of sortedLines) {
     const id = String(statementIndex++);
@@ -523,7 +523,7 @@ function normalizeCoverageJson(coverageJsonPath, prefix) {
   try {
     data = JSON.parse(content);
   } catch (error) {
-    throw new Error(`Failed to parse coverage JSON at ${coverageJsonPath}: ${error.message}`);
+    throw new Error(`Failed to parse coverage JSON at ${coverageJsonPath}: ${error.message}`, { cause: error });
   }
 
   const normalized = {};
@@ -548,8 +548,8 @@ function cloneFileCoverageData(fileData, normalizedPath, prefix) {
     statementMap: cloneStatementMap(fileData.statementMap),
     fnMap: cloneFunctionMap(fileData.fnMap),
     branchMap: cloneBranchMap(fileData.branchMap),
-    s: { ...(fileData.s || {}) },
-    f: { ...(fileData.f || {}) },
+    s: { ...fileData.s },
+    f: { ...fileData.f },
     b: cloneBranchHits(fileData.b),
   };
 

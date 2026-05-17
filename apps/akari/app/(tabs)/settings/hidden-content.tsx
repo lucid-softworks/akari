@@ -19,7 +19,7 @@ import { useTranslation } from '@/hooks/useTranslation';
  *  them to the inline post card hook (which keys off the public-handle
  *  shape that getPost accepts). */
 function parsePostUri(uri: string): { actor: string; rkey: string } | null {
-  const match = uri.match(/^at:\/\/([^\/]+)\/app\.bsky\.feed\.post\/(.+)$/);
+  const match = uri.match(/^at:\/\/([^/]+)\/app\.bsky\.feed\.post\/(.+)$/);
   if (!match) return null;
   return { actor: match[1], rkey: match[2] };
 }

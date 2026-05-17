@@ -27,7 +27,7 @@ export function useDrafts(enabled: boolean = true) {
       const res = await api.getDrafts(token, { limit: 100 });
       return res.drafts
         .map(draftViewToComposerState)
-        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+        .toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt));
     },
   });
 }

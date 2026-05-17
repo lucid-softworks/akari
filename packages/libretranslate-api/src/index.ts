@@ -203,7 +203,7 @@ export class LibreTranslateClient {
         throw error;
       }
 
-      throw new Error('Failed to load languages');
+      throw new Error('Failed to load languages', { cause: error });
     }
   }
 

@@ -82,7 +82,7 @@ export function PlausibleProvider({
         name: input.name,
         url,
         domain: config.domain,
-        props: { ...getAppProps(), ...(input.props ?? {}) },
+        props: { ...getAppProps(), ...input.props },
       };
 
       try {

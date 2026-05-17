@@ -6,6 +6,7 @@
   "rules": {
     "i18next/no-literal-string": ["error", { "markupOnly": true, "ignoreAttribute": ["testID", "accessibilityLabel", "accessibilityHint", "accessibilityRole", "name", "icon", "key", "id"] }],
     "react/no-unescaped-entities": "off",
+    "react/react-in-jsx-scope": "off",
     "react/jsx-key": "error",
     "react/jsx-no-target-blank": "error",
     "react/no-array-index-key": "warn"

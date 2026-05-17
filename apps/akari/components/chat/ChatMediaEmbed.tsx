@@ -21,7 +21,7 @@ export type ChatMedia =
 const YT_URL_RX =
   /(https?:\/\/(?:www\.|music\.|m\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[^\s]+)/i;
 const BSKY_POST_RX =
-  /(https?:\/\/(?:www\.)?bsky\.app\/profile\/([^\/\s]+)\/post\/([^\/\s?#]+))/i;
+  /(https?:\/\/(?:www\.)?bsky\.app\/profile\/([^/\s]+)\/post\/([^/\s?#]+))/i;
 
 /**
  * Scans a chat message's text for the first inline-media URL we know how

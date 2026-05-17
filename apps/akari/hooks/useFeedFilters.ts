@@ -111,7 +111,7 @@ export function useFeedFilters(feedKey: string | null | undefined) {
 
   const filters = useMemo<FeedFilters>(() => {
     if (!feedKey) return DEFAULT_FILTERS;
-    return { ...DEFAULT_FILTERS, ...(map[feedKey] ?? {}) };
+    return { ...DEFAULT_FILTERS, ...map[feedKey] };
   }, [feedKey, map]);
 
   const update = useCallback(

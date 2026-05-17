@@ -46,7 +46,7 @@ const getLanguages = (): LanguageOption[] => {
   });
 
   // Sort languages alphabetically by English name
-  return languages.sort((a, b) => a.name.localeCompare(b.name));
+  return languages.toSorted((a, b) => a.name.localeCompare(b.name));
 };
 
 export const LanguageSelector = () => {

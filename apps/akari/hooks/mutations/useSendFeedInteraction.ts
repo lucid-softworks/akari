@@ -42,7 +42,7 @@ export function useSendFeedInteraction() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       // Feed gen URIs look like `at://<did>/app.bsky.feed.generator/<rkey>`.
-      const match = feedUri.match(/^at:\/\/([^\/]+)\/app\.bsky\.feed\.generator\//);
+      const match = feedUri.match(/^at:\/\/([^/]+)\/app\.bsky\.feed\.generator\//);
       if (!match) {
         // Not a feed generator (e.g., 'following' for the timeline) —
         // nothing to send.

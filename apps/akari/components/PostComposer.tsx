@@ -808,7 +808,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         // `app.bsky.video.uploadVideo` lxm. That uses the PDS-issued
         // service-auth as a stand-in for an uploadBlob credential
         // (the video service stores the resulting blob on the PDS).
-        const pdsHostMatch = currentAccount.pdsUrl.match(/^https?:\/\/([^\/?#]+)/i);
+        const pdsHostMatch = currentAccount.pdsUrl.match(/^https?:\/\/([^/?#]+)/i);
         const pdsHost = pdsHostMatch?.[1];
         if (!pdsHost) throw new Error('Invalid PDS URL');
         const auth = await api.getServiceAuth(

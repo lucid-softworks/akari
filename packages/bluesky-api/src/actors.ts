@@ -196,7 +196,7 @@ export class BlueskyActors extends BlueskyApiClient {
     present: boolean,
   ) {
     const existing = await this.getProfileRecord(accessJwt, userDid);
-    const record: Record<string, unknown> = { ...(existing?.value ?? {}) };
+    const record: Record<string, unknown> = { ...existing?.value };
 
     type SelfLabelValue = { val: string };
     type SelfLabels = { $type: string; values: SelfLabelValue[] };

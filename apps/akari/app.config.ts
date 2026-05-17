@@ -76,17 +76,17 @@ const createConfigForVariant = (variant: AppVariant, baseConfig: ExpoConfig): Pa
     slug,
     scheme: variantDefinition.schemes,
     ios: {
-      ...(baseConfig.ios ?? {}),
+      ...baseConfig.ios,
       bundleIdentifier: variantDefinition.iosBundleIdentifier,
     },
     android: {
-      ...(baseConfig.android ?? {}),
+      ...baseConfig.android,
       package: variantDefinition.androidPackage,
     },
     extra: {
-      ...(baseConfig.extra ?? {}),
+      ...baseConfig.extra,
       eas: {
-        ...(baseConfig.extra?.eas ?? {}),
+        ...baseConfig.extra?.eas,
         projectId,
       },
       variant,
@@ -110,16 +110,16 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
     ...variantConfig,
     version: packageVersion,
     ios: {
-      ...(config.ios ?? {}),
-      ...(variantConfig.ios ?? {}),
+      ...config.ios,
+      ...variantConfig.ios,
     },
     android: {
-      ...(config.android ?? {}),
-      ...(variantConfig.android ?? {}),
+      ...config.android,
+      ...variantConfig.android,
     },
     web: {
-      ...(config.web ?? {}),
-      ...(variantConfig.web ?? {}),
+      ...config.web,
+      ...variantConfig.web,
     },
     plugins: [
       ...(Array.isArray(variantConfig.plugins)
@@ -136,12 +136,12 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
       'expo-web-browser',
     ],
     experiments: {
-      ...(config.experiments ?? {}),
-      ...(variantConfig.experiments ?? {}),
+      ...config.experiments,
+      ...variantConfig.experiments,
     },
     extra: {
-      ...(config.extra ?? {}),
-      ...(variantConfig.extra ?? {}),
+      ...config.extra,
+      ...variantConfig.extra,
       buildMetadata: {
         ...configBuildMetadata,
         ...variantBuildMetadata,
@@ -149,8 +149,8 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
       },
     },
     updates: {
-      ...(config.updates ?? {}),
-      ...(variantConfig.updates ?? {}),
+      ...config.updates,
+      ...variantConfig.updates,
     },
   } satisfies Partial<ExpoConfig>;
 };

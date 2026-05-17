@@ -449,7 +449,7 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
   // Combine grouped and individual notifications
   const allNotifications = [...Array.from(groups.values()), ...individualNotifications];
 
-  return allNotifications.sort((a, b) => new Date(b.latestTimestamp).getTime() - new Date(a.latestTimestamp).getTime());
+  return allNotifications.toSorted((a, b) => new Date(b.latestTimestamp).getTime() - new Date(a.latestTimestamp).getTime());
 }
 
 /**

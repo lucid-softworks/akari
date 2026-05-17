@@ -132,7 +132,7 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
     let currentPos = 0;
 
     // Sort facets by start position
-    const sortedFacets = [...facets].sort((a, b) => a.index.byteStart - b.index.byteStart);
+    const sortedFacets = [...facets].toSorted((a, b) => a.index.byteStart - b.index.byteStart);
 
     for (const facet of sortedFacets) {
       const feature = facet.features[0];

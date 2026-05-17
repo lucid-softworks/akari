@@ -95,7 +95,7 @@ if (Array.isArray(files) && files.length > 0) {
     });
   }
 
-  const sortedDirectories = [...filesByDirectory.keys()].sort((a, b) => a.localeCompare(b));
+  const sortedDirectories = [...filesByDirectory.keys()].toSorted((a, b) => a.localeCompare(b));
 
   for (const directory of sortedDirectories) {
     const directoryLabel = formatDirectoryLabel(directory);
@@ -258,7 +258,7 @@ function deriveCoverageFromLcov(lcov) {
       if (currentFile.uncoveredLines instanceof Set) {
         currentFile.uncoveredLines = Array.from(currentFile.uncoveredLines)
           .filter((value) => typeof value === 'number' && Number.isFinite(value))
-          .sort((a, b) => a - b);
+          .toSorted((a, b) => a - b);
       } else if (!Array.isArray(currentFile.uncoveredLines)) {
         currentFile.uncoveredLines = [];
       }
@@ -412,7 +412,7 @@ function formatUncoveredLines(uncovered) {
     return '';
   }
 
-  const sorted = [...new Set(uncovered.filter((value) => typeof value === 'number' && Number.isFinite(value)))].sort(
+  const sorted = [...new Set(uncovered.filter((value) => typeof value === 'number' && Number.isFinite(value)))].toSorted(
     (a, b) => a - b,
   );
 
@@ -570,7 +570,7 @@ async function request(url, options) {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      ...(options?.headers ?? {}),
+      ...options?.headers,
     },
   });
 

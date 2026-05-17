@@ -26,7 +26,7 @@ const readBody = async (req: IncomingMessage): Promise<unknown> => {
     return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invalid JSON payload.';
-    throw new Error(`Failed to parse request body: ${message}`);
+    throw new Error(`Failed to parse request body: ${message}`, { cause: error });
   }
 };
 

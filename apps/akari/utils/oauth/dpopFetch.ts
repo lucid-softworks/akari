@@ -43,7 +43,7 @@ export async function dpopFetch<T = unknown>(
     const headers: Record<string, string> = {
       DPoP: proof,
       Accept: 'application/json',
-      ...(init.headers ?? {}),
+      ...init.headers,
     };
     let body: string | undefined;
     if (init.body) {

@@ -109,5 +109,5 @@ export function buildLanguageOptions(uiLocale: string, extras: string[] = []): L
       label: getLanguageLabel(tag, uiLocale),
       nativeLabel: getNativeLanguageLabel(tag),
     }))
-    .sort((a, b) => a.label.localeCompare(b.label, uiLocale));
+    .toSorted((a, b) => a.label.localeCompare(b.label, uiLocale));
 }

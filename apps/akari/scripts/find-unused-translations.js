@@ -237,7 +237,7 @@ function generateReport(unusedKeys, missingKeys, keyUsageCount, allKeys) {
   if (unusedKeys.length > 0) {
     report += `❌ Unused Translation Keys (${unusedKeys.length}):\n`;
     report += `----------------------------------------\n`;
-    unusedKeys.sort().forEach((key) => {
+    unusedKeys.toSorted().forEach((key) => {
       report += `• ${key}\n`;
     });
     report += `\n`;
@@ -249,7 +249,7 @@ function generateReport(unusedKeys, missingKeys, keyUsageCount, allKeys) {
   if (missingKeys.length > 0) {
     report += `⚠️  Missing Translation Keys (${missingKeys.length}):\n`;
     report += `----------------------------------------\n`;
-    missingKeys.sort().forEach((key) => {
+    missingKeys.toSorted().forEach((key) => {
       report += `• ${key}\n`;
     });
     report += `\n`;
@@ -257,7 +257,7 @@ function generateReport(unusedKeys, missingKeys, keyUsageCount, allKeys) {
 
   // Most used keys
   const sortedUsage = Object.entries(keyUsageCount)
-    .sort(([, a], [, b]) => b - a)
+    .toSorted(([, a], [, b]) => b - a)
     .slice(0, 10);
 
   if (sortedUsage.length > 0) {

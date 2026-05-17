@@ -85,7 +85,7 @@ export class SubscriptionStore {
       logger.info('Loaded subscriptions from disk.', { count: this.records.size });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to load subscription data: ${message}`);
+      throw new Error(`Failed to load subscription data: ${message}`, { cause: error });
     }
   }
 
@@ -143,7 +143,7 @@ export class SubscriptionStore {
 
   getAll(): SubscriptionRecord[] {
     return [...this.records.entries()]
-      .sort(([aDid], [bDid]) => aDid.localeCompare(bDid))
+      .toSorted(([aDid], [bDid]) => aDid.localeCompare(bDid))
       .map(([did, tokens]) => ({ did, tokens: [...tokens] }));
   }
 

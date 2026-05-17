@@ -44,7 +44,7 @@ function buildLanguageList(): LanguageOption[] {
       flag: meta.flag ?? '',
     });
   }
-  return list.sort((a, b) => a.englishName.localeCompare(b.englishName));
+  return list.toSorted((a, b) => a.englishName.localeCompare(b.englishName));
 }
 
 export default function ContentLanguagesScreen() {

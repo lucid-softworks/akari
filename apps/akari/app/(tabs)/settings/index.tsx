@@ -73,7 +73,7 @@ export default function SettingsScreen() {
 
   const handleAddAccount = useCallback(() => {
     router.push('/(tabs)/settings/add-account');
-  }, [router]);
+  }, []);
 
   // Version info
   const version = Constants.expoConfig?.version ?? t('common.unknown');

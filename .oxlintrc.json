@@ -14,9 +14,12 @@
     "no-unused-vars": "off",
     "typescript/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "typescript/no-explicit-any": "off",
+    "no-underscore-dangle": "off",
+    "import/no-unassigned-import": "off",
     "unicorn/prefer-node-protocol": "off",
     "unicorn/no-null": "off",
-    "unicorn/filename-case": "off"
+    "unicorn/filename-case": "off",
+    "unicorn/consistent-function-scoping": "off"
   },
   "ignorePatterns": [
     "**/dist/**",

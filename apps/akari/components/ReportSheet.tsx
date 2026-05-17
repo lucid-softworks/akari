@@ -63,7 +63,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
     const def = labelers.find((l) => l.creator.did === BSKY_DEFAULT_LABELER_DID);
     const rest = labelers
       .filter((l) => l.creator.did !== BSKY_DEFAULT_LABELER_DID)
-      .sort((a, b) =>
+      .toSorted((a, b) =>
         (a.creator.displayName ?? a.creator.handle).localeCompare(b.creator.displayName ?? b.creator.handle),
       );
     return def ? [def, ...rest] : rest;
