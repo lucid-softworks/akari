@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "import", "unicorn", "oxc", "promise"],
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "warn",
+    "perf": "off",
+    "restriction": "off",
+    "pedantic": "off",
+    "style": "off",
+    "nursery": "off"
+  },
+  "rules": {
+    "no-unused-vars": "off",
+    "typescript/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/no-explicit-any": "off",
+    "unicorn/prefer-node-protocol": "off",
+    "unicorn/no-null": "off",
+    "unicorn/filename-case": "off"
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/build/**",
+    "**/.expo/**",
+    "**/node_modules/**",
+    "**/coverage/**",
+    "**/android/**",
+    "**/ios/**",
+    "**/*.config.js",
+    "**/*.config.cjs"
+  ]
+}

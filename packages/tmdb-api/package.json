@@ -10,7 +10,7 @@
     "test": "jest --config ./jest.config.cjs",
     "test:run": "jest --config ./jest.config.cjs",
     "test:coverage": "jest --config ./jest.config.cjs --coverage",
-    "lint": "eslint src --ext .ts"
+    "lint": "oxlint src"
   },
   "keywords": ["tmdb", "api", "movies", "tv"],
   "author": "",
@@ -19,13 +19,9 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "jest": "~29.7.0",
+    "msw": "^2.4.9",
     "ts-jest": "^29.4.1",
-    "typescript": "~5.8.3",
-    "eslint": "^9.25.0",
-    "eslint-config-expo": "~9.2.0",
-    "@eslint/eslintrc": "^3.0.0",
-    "@eslint/js": "^9.25.0",
-    "msw": "^2.4.9"
+    "typescript": "~5.8.3"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

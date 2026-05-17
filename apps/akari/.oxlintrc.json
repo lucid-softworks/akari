@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": ["eslint", "typescript", "import", "unicorn", "oxc", "promise", "react", "react-perf", "jsx-a11y"],
+  "jsPlugins": ["eslint-plugin-i18next"],
+  "rules": {
+    "i18next/no-literal-string": ["error", { "markupOnly": true, "ignoreAttribute": ["testID", "accessibilityLabel", "accessibilityHint", "accessibilityRole", "name", "icon", "key", "id"] }],
+    "react/no-unescaped-entities": "off",
+    "react/jsx-key": "error",
+    "react/jsx-no-target-blank": "error",
+    "react/no-array-index-key": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "rules": {
+        "i18next/no-literal-string": "off"
+      }
+    }
+  ]
+}
