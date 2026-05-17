@@ -253,11 +253,11 @@ export function useLikePost() {
 
         // Update timeline (prefix-matched).
         const timelineQueries = queryClient.getQueriesData<BlueskyFeedResponse>({ queryKey: queryKeys.timeline.all });
-        for (const [queryKey, data] of timelineQueries) {
-          if (!data) continue;
+        for (const [queryKey, timelineData] of timelineQueries) {
+          if (!timelineData) continue;
           queryClient.setQueryData(queryKey, {
-            ...data,
-            feed: data.feed?.map((item) =>
+            ...timelineData,
+            feed: timelineData.feed?.map((item) =>
               item.post.uri === variables.postUri ? updateFeedItemPost(item) : item,
             ),
           });
@@ -265,11 +265,11 @@ export function useLikePost() {
 
         // Update all feed queries (they have the format ['feed', feedUri])
         const feedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.feed.all });
-        for (const [queryKey, data] of feedQueries) {
-          if (data && Array.isArray(data.pages)) {
+        for (const [queryKey, feedData] of feedQueries) {
+          if (feedData && Array.isArray(feedData.pages)) {
             queryClient.setQueryData(queryKey, {
-              ...data,
-              pages: data.pages.map((page) => ({
+              ...feedData,
+              pages: feedData.pages.map((page) => ({
                 ...page,
                 feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
               })),
@@ -279,11 +279,11 @@ export function useLikePost() {
 
         // Update all authorFeed queries (they have the format ['authorFeed', identifier, limit])
         const authorFeedQueries = queryClient.getQueriesData<{ pages: BlueskyFeedResponse[] }>({ queryKey: queryKeys.author.feed.all });
-        for (const [queryKey, data] of authorFeedQueries) {
-          if (data && Array.isArray(data.pages)) {
+        for (const [queryKey, authorFeedData] of authorFeedQueries) {
+          if (authorFeedData && Array.isArray(authorFeedData.pages)) {
             queryClient.setQueryData(queryKey, {
-              ...data,
-              pages: data.pages.map((page) => ({
+              ...authorFeedData,
+              pages: authorFeedData.pages.map((page) => ({
                 ...page,
                 feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
               })),
@@ -296,11 +296,11 @@ export function useLikePost() {
         const authorLikesQueries = queryClient.getQueriesData<LikesPagesQueryData>({
           queryKey: queryKeys.author.likes.all,
         });
-        for (const [queryKey, data] of authorLikesQueries) {
-          if (!data || !Array.isArray(data.pages)) continue;
+        for (const [queryKey, likesData] of authorLikesQueries) {
+          if (!likesData || !Array.isArray(likesData.pages)) continue;
           queryClient.setQueryData(queryKey, {
-            ...data,
-            pages: data.pages.map((page) => {
+            ...likesData,
+            pages: likesData.pages.map((page) => {
               if (!Array.isArray(page.likes)) return page;
               return {
                 ...page,

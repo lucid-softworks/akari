@@ -11,7 +11,7 @@ describe('Label Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Default mock implementation
-    mockUseThemeColor.mockImplementation((colors, colorScheme) => {
+    mockUseThemeColor.mockImplementation((colors, _colorScheme) => {
       // Return light theme colors by default
       return colors.light;
     });
@@ -73,7 +73,7 @@ describe('Label Component', () => {
   });
 
   it('should handle dark theme colors', () => {
-    mockUseThemeColor.mockImplementation((colors, colorScheme) => {
+    mockUseThemeColor.mockImplementation((colors, _colorScheme) => {
       // Return dark theme colors
       return colors.dark;
     });

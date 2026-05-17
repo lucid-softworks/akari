@@ -58,7 +58,7 @@ const toShortUrl = (href: string): string => {
 // Whitespace trimming regex
 const WHITESPACE_TRIM_RE = /^\s+|\s+$| +(?=\n)|\n(?=(?: *\n){2}) */g;
 
-export function RichText({ text, style, containerStyle, onPress }: RichTextProps) {
+export function RichText({ text, style, containerStyle }: RichTextProps) {
   const linkColor = useThemeColor(
     {
       light: '#007AFF',
@@ -90,6 +90,7 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'link':
             return (
+              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same URL can legitimately appear twice so order is the only safe disambiguator
               <Link key={`link-${index}-${token.url}`} href={token.url as any}>
                 <ThemedText style={{ color: linkColor }}>{token.text || toShortUrl(token.url)}</ThemedText>
               </Link>
@@ -97,6 +98,7 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'autolink':
             return (
+              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same URL can legitimately appear twice so order is the only safe disambiguator
               <Link key={`autolink-${index}-${token.url}`} href={token.url as any}>
                 <ThemedText style={{ color: linkColor }}>{toShortUrl(token.url)}</ThemedText>
               </Link>
@@ -104,6 +106,7 @@ export function RichText({ text, style, containerStyle, onPress }: RichTextProps
 
           case 'mention':
             return (
+              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same handle can legitimately appear twice so order is the only safe disambiguator
               <Link key={`mention-${index}-${token.handle}`} push href={profileHref(token.handle) as any}>
                 <ThemedText style={{ color: mentionColor }}>@{token.handle}</ThemedText>
               </Link>

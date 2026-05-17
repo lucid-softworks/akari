@@ -5,7 +5,6 @@ import MessagesLayout from '@/app/(tabs)/messages/_layout';
 import { useResponsive } from '@/hooks/useResponsive';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const Screen = jest.fn(() => null);
   const Stack = jest.fn(({ children }: { children: React.ReactNode }) => <>{children}</>);
   // @ts-ignore

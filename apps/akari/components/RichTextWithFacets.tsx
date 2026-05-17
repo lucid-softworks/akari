@@ -79,7 +79,7 @@ type TextSegment = {
   did?: string;
 };
 
-export function RichTextWithFacets({ text, facets, style, containerStyle, onPress, disableLinks }: RichTextWithFacetsProps) {
+export function RichTextWithFacets({ text, facets, style, containerStyle, disableLinks }: RichTextWithFacetsProps) {
   const insideAnchor = useContext(NestedAnchorContext);
   const linkColor = useThemeColor(
     {
@@ -108,11 +108,11 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
   const profileHref = useProfileHref();
 
   // Convert UTF-8 byte index to UTF-16 character index
-  const byteToCharIndex = (text: string, byteIndex: number): number => {
+  const byteToCharIndex = (source: string, byteIndex: number): number => {
     const encoder = new TextEncoder();
-    const bytes = encoder.encode(text);
+    const bytes = encoder.encode(source);
 
-    if (byteIndex >= bytes.length) return text.length;
+    if (byteIndex >= bytes.length) return source.length;
 
     // Use TextDecoder to convert bytes back to string up to the byte index
     const decoder = new TextDecoder();
@@ -236,7 +236,7 @@ export function RichTextWithFacets({ text, facets, style, containerStyle, onPres
 
   return (
     <ThemedText style={[style, containerStyle]}>
-      {segments.map((segment, index) => {
+      {segments.map((segment) => {
         switch (segment.type) {
           case 'text':
             return segment.text;

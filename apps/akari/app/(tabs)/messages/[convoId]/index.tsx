@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,9 +30,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { useResponsive } from '@/hooks/useResponsive';
-import { useNavigateToProfile } from '@/utils/navigation';
-import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 
@@ -271,8 +269,6 @@ export default function ConversationScreen() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const queryClient = useQueryClient();
-  const navigateToProfile = useNavigateToProfile();
-  const { isLargeScreen } = useResponsive();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -280,7 +276,6 @@ export default function ConversationScreen() {
   const iconColor = useThemeColor({}, 'icon');
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
-  const tintColor = useThemeColor({}, 'tint');
 
 
   // Get the conversation ID from the conversations list. Prefer the
@@ -350,7 +345,7 @@ export default function ConversationScreen() {
       void queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
       return undefined;
     });
-  }, [conversation?.convoId, token, currentAccount?.pdsUrl, queryClient]);
+  }, [conversation?.convoId, token, currentAccount, queryClient]);
 
   const handleMessageImageLoad = (imageUrl: string, width: number, height: number) => {
     if (width > 0 && height > 0 && Number.isFinite(width) && Number.isFinite(height)) {
@@ -391,7 +386,7 @@ export default function ConversationScreen() {
     if (imageData.length > 0) {
       return (
         <ThemedView style={styles.messageImagesContainer}>
-          {imageData.map((image, index) => {
+          {imageData.map((image) => {
             const dimensions = imageDimensions[image.url];
             const imageWidth = 260;
             const imageHeight = dimensions ? (dimensions.height / dimensions.width) * imageWidth : 220;

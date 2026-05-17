@@ -65,7 +65,8 @@ export function PostDetailSkeleton() {
 
       {/* Comments Skeletons */}
       {Array.from({ length: 5 }).map((_, index) => (
-        <ThemedView key={index} style={[styles.commentContainer, { borderBottomColor: borderColor }]}>
+        // oxlint-disable-next-line react/no-array-index-key -- placeholder comment skeletons; the array is a fixed-length [0..4] with no identity beyond position
+        <ThemedView key={`comment-skeleton-${index}`} style={[styles.commentContainer, { borderBottomColor: borderColor }]}>
           <View style={styles.commentHeader}>
             <View style={styles.commentAuthorInfo}>
               <Skeleton width={32} height={32} borderRadius={16} />

@@ -19,9 +19,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hitSlop } from '@/constants/tokens';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
-import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
-import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import { useStartConvo } from '@/hooks/mutations/useStartConvo';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -112,8 +110,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
     'text',
   );
   const followMutation = useFollowUser();
-  const blockMutation = useBlockUser();
-  const muteMutation = useMuteUser();
   const startConvoMutation = useStartConvo();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
@@ -175,78 +171,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
     }
   };
 
-  const handleBlock = async () => {
-    if (!profile.did) return;
-
-    try {
-      if (isBlocking) {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          blockUri: profile.viewer?.blocking,
-          action: 'unblock',
-        });
-      } else {
-        await blockMutation.mutateAsync({
-          did: profile.did,
-          action: 'block',
-        });
-      }
-      setShowDropdown(false);
-    } catch (error) {
-      console.error('Block error:', error);
-      showToast({
-        type: 'error',
-        title: isBlocking ? t('common.unblock') : t('common.block'),
-        message: t('common.somethingWentWrong'),
-      });
-    }
-  };
-
   const handleSearchPosts = () => {
     searchProfilePosts({ handle: profile.handle });
-  };
-
-  const handleAddToLists = () => {
-    // TODO: Implement add to lists functionality
-    // This would typically open a modal or navigate to a lists management screen
-    showAlert({
-      title: t('profile.addToLists'),
-      message: 'Lists functionality coming soon!',
-      buttons: [{ text: t('common.ok') }],
-    });
-    setShowDropdown(false);
-  };
-
-  const handleMuteAccount = () => {
-    if (!profile.did) return;
-    const isMuted = profile.viewer?.muted;
-    const message = isMuted
-      ? t('profile.unmuteConfirmation', { handle: profile.handle })
-      : t('profile.muteConfirmation', { handle: profile.handle });
-
-    showAlert({
-      title: isMuted ? t('common.unmute') : t('common.mute'),
-      message,
-      buttons: [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: isMuted ? t('common.unmute') : t('common.mute'),
-          style: 'destructive',
-          onPress: () => {
-            muteMutation.mutate({
-              actor: profile.did!,
-              action: isMuted ? 'unmute' : 'mute',
-            });
-          },
-        },
-      ],
-    });
-    setShowDropdown(false);
-  };
-
-  const handleReportAccount = () => {
-    setShowDropdown(false);
-    setShowReportSheet(true);
   };
 
   const handleDropdownToggle = () => {
@@ -271,36 +197,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
       });
     } else {
       handleFollow();
-    }
-  };
-
-  const handleBlockPress = () => {
-    if (isBlocking) {
-      showAlert({
-        title: t('common.unblock'),
-        message: t('profile.unblockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.unblock'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
-    } else {
-      showAlert({
-        title: t('common.block'),
-        message: t('profile.blockConfirmation', { handle: profile.handle }),
-        buttons: [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('common.block'),
-            style: 'destructive',
-            onPress: handleBlock,
-          },
-        ],
-      });
     }
   };
 

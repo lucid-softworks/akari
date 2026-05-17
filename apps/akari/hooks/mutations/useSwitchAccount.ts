@@ -1,5 +1,5 @@
 import { Account } from '@/types/account';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useSetAuthentication } from './useSetAuthentication';
 import { useSetCurrentAccount } from './useSetCurrentAccount';
 
@@ -7,7 +7,6 @@ import { useSetCurrentAccount } from './useSetCurrentAccount';
  * Mutation hook for switching accounts
  */
 export function useSwitchAccount() {
-  const queryClient = useQueryClient();
   const setAuthMutation = useSetAuthentication();
   const setCurrentAccountMutation = useSetCurrentAccount();
 

@@ -18,6 +18,6 @@ export function OAuthAccountBinder() {
     if (!currentAccount?.oauth) return;
     bindOAuthAccount(currentAccount);
     return () => unbindOAuthAccount(currentAccount);
-  }, [currentAccount?.did, currentAccount?.jwtToken]);
+  }, [currentAccount]);
   return null;
 }

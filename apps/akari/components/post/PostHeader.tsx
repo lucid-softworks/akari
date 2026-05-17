@@ -5,10 +5,8 @@ import type { BlueskyVerification } from '@/bluesky-api';
 import { AvatarOrInitial } from '@/components/AvatarOrInitial';
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
-import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { spacing, fontSize, fontWeight, opacity, semanticColors, layout } from '@/constants/tokens';
 import { useNavigateToProfile, useProfileHref } from '@/utils/navigation';
 
 type PostHeaderProps = {
@@ -32,11 +30,6 @@ export const PostHeader = React.memo(function PostHeader({
 }: PostHeaderProps) {
   const navigateToProfile = useNavigateToProfile();
   const profileHref = useProfileHref();
-
-  const iconColor = useThemeColor(
-    { light: '#687076', dark: '#9BA1A6' },
-    'text',
-  );
 
   const authorName = author.displayName || author.handle;
 

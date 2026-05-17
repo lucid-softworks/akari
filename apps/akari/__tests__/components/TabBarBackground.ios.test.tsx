@@ -4,7 +4,6 @@ import TabBarBackground, { useBottomTabOverflow } from '@/components/ui/TabBarBa
 import { BlurView } from 'expo-blur';
 
 jest.mock('expo-blur', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return {
     BlurView: ({ children, ...props }: any) => <View {...props}>{children}</View>,

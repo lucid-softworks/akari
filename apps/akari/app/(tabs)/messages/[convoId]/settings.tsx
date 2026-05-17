@@ -19,7 +19,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, layout, activeOpacity, semanticColors } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import {
-  useAddConvoMembers,
   useLeaveConvo,
   useRemoveConvoMembers,
   useUpdateConvoName,

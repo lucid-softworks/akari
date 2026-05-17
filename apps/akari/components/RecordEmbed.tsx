@@ -19,7 +19,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { spacing, radius, fontSize, fontWeight, activeOpacity, layout } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, layout } from '@/constants/tokens';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
@@ -594,7 +594,7 @@ export function RecordEmbed({ embed }: RecordEmbedProps) {
             {/* Render images if present */}
             {imageUrls.length > 0 && (
               <ThemedView style={styles.imagesContainer}>
-                {imageUrls.map((imageUrl: string, index: number) => {
+                {imageUrls.map((imageUrl: string) => {
                   const dimensions = imageDimensions[imageUrl];
                   const screenWidth = 300; // Smaller width for quoted posts
                   const imageHeight = dimensions ? (dimensions.height / dimensions.width) * screenWidth : 200;

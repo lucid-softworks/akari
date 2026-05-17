@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { Keyboard, Text, View } from 'react-native';
+import { Keyboard } from 'react-native';
 
 import SearchScreen from '@/app/(tabs)/search';
 import { useLocalSearchParams } from 'expo-router';
@@ -23,7 +23,6 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return {
     SafeAreaView: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
@@ -44,7 +43,6 @@ jest.mock('@/components/PostCard', () => {
 });
 
 jest.mock('@/components/SearchTabs', () => {
-  const React = require('react');
   const { Pressable, Text, View } = require('react-native');
   return {
     SearchTabs: ({ onTabChange }: { onTabChange: (t: string) => void }) => (

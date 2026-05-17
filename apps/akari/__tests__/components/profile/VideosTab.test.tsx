@@ -18,7 +18,6 @@ jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list')
 let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
   mockPostCard = jest.fn(({ post, onPress }: any) => {
-    const React = require('react');
     const { Text } = require('react-native');
     return <Text onPress={onPress}>{post.id}</Text>;
   });

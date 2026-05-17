@@ -25,12 +25,10 @@ jest.mock('@/hooks/useColorScheme');
 const mockUseColorScheme = useColorScheme as unknown as jest.Mock;
 
 jest.mock('react-native-gesture-handler', () => {
-  const React = require('react');
   return { GestureHandlerRootView: ({ children }: { children: React.ReactNode }) => <>{children}</> };
 });
 
 jest.mock('@tanstack/react-query-devtools', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { ReactQueryDevtools: () => <Text>Devtools</Text> };
 });
@@ -68,7 +66,6 @@ jest.mock('@/utils/secureStorage', () => ({
 }));
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const Screen = jest.fn(() => null);
   const Stack = ({ children }: { children: React.ReactNode }) => <>{children}</>;
   // @ts-ignore

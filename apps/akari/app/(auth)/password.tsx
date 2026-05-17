@@ -32,7 +32,7 @@ export default function AuthScreen() {
   const { data: currentAccount } = useCurrentAccount();
   const { t } = useTranslation();
 
-  const [mode, setMode] = useState<AuthMode>('signin');
+  const [mode] = useState<AuthMode>('signin');
   const [handle, setHandle] = useState('');
   const [appPassword, setAppPassword] = useState('');
   const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
@@ -42,7 +42,6 @@ export default function AuthScreen() {
   const switchAccountMutation = useSwitchAccount();
   const handleInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
-  const trimmedHandle = handle.replace(/^@/, '').trim();
   const [showAppPasswordHelp, setShowAppPasswordHelp] = useState(false);
   // Closes the typeahead dropdown after the user picks a suggestion. Selecting
   // a result fills the handle field with the full handle, which would otherwise
@@ -226,12 +225,6 @@ export default function AuthScreen() {
         message: error instanceof Error ? error.message : t('auth.connectionFailed'),
       });
     }
-  };
-
-  const toggleMode = () => {
-    setMode(mode === 'signin' ? 'signup' : 'signin');
-    setHandle('');
-    setAppPassword('');
   };
 
   const isSignUp = mode === 'signup';

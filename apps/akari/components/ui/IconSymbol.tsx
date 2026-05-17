@@ -1,7 +1,7 @@
 // Fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
+import { SymbolWeight } from 'expo-symbols';
 import { BadgeCheck, type LucideProps } from 'lucide-react-native';
 import { ComponentProps, ComponentType } from 'react';
 import { OpaqueColorValue, type StyleProp, type ViewStyle, View } from 'react-native';

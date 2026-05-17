@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Platform, Pressable, Share } from 'react-native';
+import type React from 'react';
+import { Platform, Share } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 
 import { ImageViewer } from '@/components/ImageViewer';
@@ -12,8 +13,6 @@ jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/utils/alert');
 jest.mock('react-native-gesture-handler', () => {
-  const React = require('react');
-
   const handlerStore = {
     pinch: undefined as
       | {
@@ -177,7 +176,7 @@ describe('ImageViewer', () => {
   });
 
   it('displays error text when image fails to load', () => {
-    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
+    const { getByText } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     const Image = require('expo-image').Image as jest.Mock;
     act(() => {
@@ -192,7 +191,7 @@ describe('ImageViewer', () => {
     Platform.OS = 'ios';
     const shareMock = jest.spyOn(Share, 'share').mockResolvedValue({} as any);
 
-    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
+    const { getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     await act(async () => {
       fireEvent.press(getByTestId('download-button'));
@@ -220,7 +219,7 @@ describe('ImageViewer', () => {
       body: { appendChild, removeChild },
     } as unknown as Document;
 
-    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
+    const { getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     fireEvent.press(getByTestId('download-button'));
 
@@ -240,7 +239,7 @@ describe('ImageViewer', () => {
     Platform.OS = 'ios';
     jest.spyOn(Share, 'share').mockRejectedValue(new Error('fail'));
 
-    const { getByText, getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
+    const { getByTestId } = render(<ImageViewer visible onClose={() => {}} imageUrl="url" />);
 
     await act(async () => {
       fireEvent.press(getByTestId('download-button'));

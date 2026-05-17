@@ -343,13 +343,13 @@ export class BlueskyApiClient {
     }
 
     if (!response.ok) {
-      const body: Partial<BlueskyError> = await response.json().catch(() => ({}));
-      const err = new Error(body.message || `Request failed with status ${response.status}`) as Error & {
+      const errBody: Partial<BlueskyError> = await response.json().catch(() => ({}));
+      const err = new Error(errBody.message || `Request failed with status ${response.status}`) as Error & {
         status: number;
         errorCode?: string;
       };
       err.status = response.status;
-      if (body.error) err.errorCode = body.error;
+      if (errBody.error) err.errorCode = errBody.error;
       throw err;
     }
 

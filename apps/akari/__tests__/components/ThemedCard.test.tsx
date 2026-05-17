@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ThemedCard } from '@/components/ThemedCard';
 import { useThemeColor } from '@/hooks/useThemeColor';

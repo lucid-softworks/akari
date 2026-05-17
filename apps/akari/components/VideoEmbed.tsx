@@ -83,7 +83,7 @@ type VideoEmbedProps = {
  * Component to display video embeds
  * Supports both native Bluesky videos and external video links
  */
-export function VideoEmbed({ embed, onClose }: VideoEmbedProps) {
+export function VideoEmbed({ embed }: VideoEmbedProps) {
   const { t } = useTranslation();
   const textColor = useThemeColor(
     {

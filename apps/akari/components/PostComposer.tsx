@@ -253,15 +253,6 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     [activeIndex],
   );
 
-  const setAttachedVideo = useCallback(
-    (next: AttachedVideo | null) => {
-      setPosts((prev) =>
-        prev.map((p, i) => (i === activeIndex ? { ...p, attachedVideo: next } : p)),
-      );
-    },
-    [activeIndex],
-  );
-
   const addPost = useCallback(() => {
     setPosts((prev) => [...prev, { ...EMPTY_THREAD_POST }]);
     // Focus moves to the new (last) post.
@@ -945,7 +936,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         updateVideoOnPost(postIdx, { upload: { phase: 'error', message } });
       }
     },
-    [jwtToken, currentAccount?.did, currentAccount?.pdsUrl, updateVideoOnPost],
+    [jwtToken, currentAccount, updateVideoOnPost],
   );
 
   const handleAddVideo = async () => {
@@ -1053,7 +1044,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       } else if (next !== 'standard' && composeMode === 'standard') {
         const concatenated = posts
           .map((p) => p.text)
-          .filter((t) => t.trim().length > 0)
+          .filter((chunk) => chunk.trim().length > 0)
           .join('\n\n');
         setLongText((prev) => (concatenated.length > 0 ? concatenated : prev));
         const first = posts[0] ?? EMPTY_THREAD_POST;
@@ -1396,7 +1387,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                     {autoThreadChunks.length > 1
                       ? autoThreadChunks.map((chunk, idx) => (
                           <View
-                            key={idx}
+                            // oxlint-disable-next-line react/no-array-index-key -- chunks are recomputed from text every render and their position IS the part number shown to the user
+                            key={`autothread-chunk-${idx}`}
                             style={[styles.autoThreadChunk, { borderColor }]}
                           >
                             <ThemedText
@@ -1430,7 +1422,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                 {composeMode === 'autothread' && root.attachedImages.length > 0 ? (
                   <View style={styles.imagesContainer}>
                     {root.attachedImages.map((image, imgIdx) => (
-                      <View key={imgIdx} style={styles.imageItem}>
+                      // oxlint-disable-next-line react/no-array-index-key -- attached images have no stable id; image.uri can be a freshly-picked file:// uri that's unique enough but the surrounding mutation handlers (handleRemoveImage / handleUpdateImageAlt) are already keyed by positional index
+                      <View key={`autothread-image-${imgIdx}-${image.uri}`} style={styles.imageItem}>
                         <View style={styles.imageContainer}>
                           <Image
                             source={{ uri: image.uri }}
@@ -1471,7 +1464,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
               const isLast = postIdx === posts.length - 1;
               const isActive = postIdx === activeIndex;
               return (
-                <View key={postIdx} style={styles.threadPostBlock}>
+                // oxlint-disable-next-line react/no-array-index-key -- ThreadPost has no stable id; the composer treats posts positionally (every mutation, removePost, and the rendered "1/N" label is keyed by index)
+                <View key={`thread-post-${postIdx}`} style={styles.threadPostBlock}>
                   {!isFirst ? (
                     <View
                       style={[styles.threadDivider, { backgroundColor: borderColor }]}
@@ -1538,7 +1532,8 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                   {post.attachedImages.length > 0 ? (
                     <View style={styles.imagesContainer}>
                       {post.attachedImages.map((image, imgIdx) => (
-                        <View key={imgIdx} style={styles.imageItem}>
+                        // oxlint-disable-next-line react/no-array-index-key -- attached images have no stable id; handleRemoveImage / handleUpdateImageAlt are already keyed by positional index
+                        <View key={`post-${postIdx}-image-${imgIdx}-${image.uri}`} style={styles.imageItem}>
                           <View style={styles.imageContainer}>
                             <Image source={{ uri: image.uri }} style={styles.attachedImage} contentFit="contain" />
                             <Pressable
@@ -1970,7 +1965,7 @@ function PostPreviewCard({ post, borderColor, textColor, iconColor }: PostPrevie
 
         {!hasVideo && hasImages && media.images.length > 1 && (
           <View style={styles.quoteImagesRow}>
-            {media.images.map((img, idx) => (
+            {media.images.map((img) => (
               <Image
                 key={img.url}
                 source={{ uri: img.url }}

@@ -3,7 +3,6 @@ import React from 'react';
 import AuthLayout from '@/app/(auth)/_layout';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const Screen = jest.fn(() => null);
   const Stack = jest.fn(({ children }: { children: React.ReactNode }) => <>{children}</>);
   // @ts-ignore

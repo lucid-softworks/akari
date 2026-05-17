@@ -29,20 +29,20 @@ jest.mock('expo-web-browser', () => ({
 }));
 
 jest.mock('expo-image', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { Image } = require('react-native');
-  return { Image: React.forwardRef((props: any, ref: any) => <Image ref={ref} {...props} />) };
+  return { Image: ReactLib.forwardRef((props: any, ref: any) => ReactLib.createElement(Image, { ref, ...props })) };
 });
 
 jest.mock('expo-router', () => {
   const push = jest.fn();
   const replace = jest.fn();
-  const usePathname = jest.fn(() => '/(tabs)/settings/account');
+  const mockUsePathname = jest.fn(() => '/(tabs)/settings/account');
 
   return {
     router: { push, replace },
     useRouter: () => ({ push, replace }),
-    usePathname,
+    usePathname: mockUsePathname,
   };
 });
 
@@ -51,25 +51,21 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('@/components/LanguageSelector', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { LanguageSelector: () => <Text>language</Text> };
 });
 
 jest.mock('@/components/NotificationSettings', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { NotificationSettings: () => <Text>notifications</Text> };
 });
 
 jest.mock('@/components/ThemedText', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { ThemedText: (props: any) => <Text {...props} /> };
 });
 
 jest.mock('@/components/ThemedView', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });

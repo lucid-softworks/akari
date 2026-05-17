@@ -29,10 +29,10 @@ jest.mock('@/components/KeytraceClaims', () => ({ KeytraceClaims: jest.fn(() => 
 jest.mock('@/components/VerificationBadge', () => ({ VerificationBadge: jest.fn(() => null) }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 jest.mock('@/components/ui/IconSymbol', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { Text } = require('react-native');
   return {
-    IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text>,
+    IconSymbol: ({ name }: { name: string }) => ReactLib.createElement(Text, null, name),
   };
 });
 

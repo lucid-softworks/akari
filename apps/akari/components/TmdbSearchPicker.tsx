@@ -137,13 +137,19 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
     [mediaType, onSelect, onClose],
   );
 
-  const getTitle = (item: TmdbMovie | TmdbTvShow): string =>
-    mediaType === 'movie' ? (item as TmdbMovie).title : (item as TmdbTvShow).name;
+  const getTitle = useCallback(
+    (item: TmdbMovie | TmdbTvShow): string =>
+      mediaType === 'movie' ? (item as TmdbMovie).title : (item as TmdbTvShow).name,
+    [mediaType],
+  );
 
-  const getYear = (item: TmdbMovie | TmdbTvShow): string => {
-    const date = mediaType === 'movie' ? (item as TmdbMovie).release_date : (item as TmdbTvShow).first_air_date;
-    return date?.substring(0, 4) ?? '';
-  };
+  const getYear = useCallback(
+    (item: TmdbMovie | TmdbTvShow): string => {
+      const date = mediaType === 'movie' ? (item as TmdbMovie).release_date : (item as TmdbTvShow).first_air_date;
+      return date?.substring(0, 4) ?? '';
+    },
+    [mediaType],
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: TmdbMovie | TmdbTvShow }) => {
@@ -175,7 +181,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
         </Pressable>
       );
     },
-    [borderColor, iconColor, textColor, handleSelect, mediaType],
+    [borderColor, iconColor, textColor, handleSelect, getTitle, getYear],
   );
 
   const renderEmpty = useCallback(() => {

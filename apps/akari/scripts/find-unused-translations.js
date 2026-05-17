@@ -151,7 +151,7 @@ function getTranslationKeys() {
 }
 
 // Function to search for translation key usage in files
-function findTranslationUsage(keys) {
+function findTranslationUsage(_keys) {
   const usedKeys = new Set();
   const keyUsageCount = {};
 

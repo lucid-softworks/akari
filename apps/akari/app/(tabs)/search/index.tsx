@@ -315,7 +315,7 @@ export default function SearchScreen() {
       setActiveTab('posts');
       setSort('top');
     }
-  }, [initialQuery]);
+  }, [initialQuery, searchQuery]);
 
   const handleSearch = useCallback(() => {
     if (query.trim()) {
@@ -552,7 +552,8 @@ export default function SearchScreen() {
           isLoading ? (
             <ThemedView style={styles.emptyState}>
               {Array.from({ length: 5 }).map((_, index) => (
-                <SearchResultSkeleton key={index} />
+                // oxlint-disable-next-line react/no-array-index-key -- placeholder skeletons; fixed-length [0..4] with no identity beyond position
+                <SearchResultSkeleton key={`search-skeleton-${index}`} />
               ))}
             </ThemedView>
           ) : (

@@ -2,7 +2,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Image } from '@/components/Image';
 import { Redirect, Tabs, usePathname, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, radius, fontSize, fontWeight, shadows, layout, touchTarget } from '@/constants/tokens';
@@ -26,8 +26,6 @@ import { useTabConfig, type TabKey } from '@/hooks/useTabConfig';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
-
-const mobileHeaderLogo = require('@/assets/images/icon.png');
 
 const headerTitles: Record<string, string> = {
   index: 'Home',

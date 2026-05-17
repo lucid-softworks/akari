@@ -58,8 +58,8 @@ export default function OauthSignInScreen() {
 
   // Auto-focus the input on mount; users come here specifically to type a handle.
   useEffect(() => {
-    const t = setTimeout(() => inputRef.current?.focus(), 250);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => inputRef.current?.focus(), 250);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSelectSuggestion = useCallback((suggestedHandle: string) => {

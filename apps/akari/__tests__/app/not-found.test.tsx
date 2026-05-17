@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react-native';
+import type React from 'react';
 
 import NotFoundScreen from '@/app/+not-found';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     Link: ({ children, href }: { children: React.ReactNode; href: string }) => (

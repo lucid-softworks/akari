@@ -23,7 +23,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 import {
   CATEGORY_DEFS,
-  type CategoryKey,
   isCategoryKey,
 } from './_notificationCategories';
 

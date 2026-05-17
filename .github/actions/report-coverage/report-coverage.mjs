@@ -147,8 +147,8 @@ async function loadCoverage() {
       const summaryContent = await readFile(summaryPath, 'utf8');
       const summaryJson = JSON.parse(summaryContent);
       if (summaryJson && typeof summaryJson === 'object') {
-        const totals = summaryJson?.total && typeof summaryJson.total === 'object' ? normalizeCoverageSummary(summaryJson.total) : {};
-        const files = [];
+        const summaryTotals = summaryJson?.total && typeof summaryJson.total === 'object' ? normalizeCoverageSummary(summaryJson.total) : {};
+        const summaryFiles = [];
 
         for (const [filePath, data] of Object.entries(summaryJson)) {
           if (filePath === 'total' || !data || typeof data !== 'object') {
@@ -158,18 +158,18 @@ async function loadCoverage() {
           const normalized = normalizeCoverageSummary(data);
 
           if (Object.keys(normalized).length > 0) {
-            files.push({ path: normalizeFilePath(filePath), ...normalized, uncoveredLines: [] });
+            summaryFiles.push({ path: normalizeFilePath(filePath), ...normalized, uncoveredLines: [] });
           }
         }
 
-        if (Object.keys(totals).length > 0) {
-          finalizeCoverageMetrics(totals);
+        if (Object.keys(summaryTotals).length > 0) {
+          finalizeCoverageMetrics(summaryTotals);
 
           const uncoveredByPath = new Map(
             lcovCoverage.files.map((file) => [file.path, Array.isArray(file.uncoveredLines) ? file.uncoveredLines : []]),
           );
 
-          const mergedFiles = files.map((file) => ({
+          const mergedFiles = summaryFiles.map((file) => ({
             ...file,
             uncoveredLines: uncoveredByPath.get(file.path) ?? [],
           }));
@@ -182,7 +182,7 @@ async function loadCoverage() {
             }
           }
 
-          return { totals, files: mergedFiles };
+          return { totals: summaryTotals, files: mergedFiles };
         }
       }
     } catch (error) {
@@ -217,12 +217,12 @@ function deriveCoverageFromCoverageMap(coverageMap) {
   }
 
   const totalsSummary = coverageMap.getCoverageSummary();
-  const totals = normalizeCoverageSummary(
+  const mapTotals = normalizeCoverageSummary(
     typeof totalsSummary?.toJSON === 'function' ? totalsSummary.toJSON() : totalsSummary?.data,
   );
-  finalizeCoverageMetrics(totals);
+  finalizeCoverageMetrics(mapTotals);
 
-  const files = [];
+  const mapFiles = [];
   for (const filePath of coverageMap.files()) {
     const fileCoverage = coverageMap.fileCoverageFor(filePath);
     if (!fileCoverage) {
@@ -235,21 +235,21 @@ function deriveCoverageFromCoverageMap(coverageMap) {
     );
     finalizeCoverageMetrics(normalizedSummary);
 
-    files.push({
+    mapFiles.push({
       path: normalizeFilePath(filePath),
       ...normalizedSummary,
       uncoveredLines: extractUncoveredLines(fileCoverage),
     });
   }
 
-  files.sort((a, b) => a.path.localeCompare(b.path));
+  mapFiles.sort((a, b) => a.path.localeCompare(b.path));
 
-  return { totals, files };
+  return { totals: mapTotals, files: mapFiles };
 }
 
 function deriveCoverageFromLcov(lcov) {
-  const totals = createEmptyCoverageMetrics();
-  const files = [];
+  const lcovTotals = createEmptyCoverageMetrics();
+  const lcovFiles = [];
   let currentFile = null;
 
   const pushCurrentFile = () => {
@@ -262,7 +262,7 @@ function deriveCoverageFromLcov(lcov) {
       } else if (!Array.isArray(currentFile.uncoveredLines)) {
         currentFile.uncoveredLines = [];
       }
-      files.push(currentFile);
+      lcovFiles.push(currentFile);
       currentFile = null;
     }
   };
@@ -277,8 +277,8 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('LH:')) {
       const value = Number.parseInt(line.slice(3), 10);
       if (!Number.isNaN(value)) {
-        totals.lines.covered += value;
-        totals.statements.covered += value;
+        lcovTotals.lines.covered += value;
+        lcovTotals.statements.covered += value;
         if (currentFile) {
           currentFile.lines.covered += value;
           currentFile.statements.covered += value;
@@ -287,8 +287,8 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('LF:')) {
       const value = Number.parseInt(line.slice(3), 10);
       if (!Number.isNaN(value)) {
-        totals.lines.total += value;
-        totals.statements.total += value;
+        lcovTotals.lines.total += value;
+        lcovTotals.statements.total += value;
         if (currentFile) {
           currentFile.lines.total += value;
           currentFile.statements.total += value;
@@ -297,7 +297,7 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('BRH:')) {
       const value = Number.parseInt(line.slice(4), 10);
       if (!Number.isNaN(value)) {
-        totals.branches.covered += value;
+        lcovTotals.branches.covered += value;
         if (currentFile) {
           currentFile.branches.covered += value;
         }
@@ -305,7 +305,7 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('BRF:')) {
       const value = Number.parseInt(line.slice(4), 10);
       if (!Number.isNaN(value)) {
-        totals.branches.total += value;
+        lcovTotals.branches.total += value;
         if (currentFile) {
           currentFile.branches.total += value;
         }
@@ -313,7 +313,7 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('FNH:')) {
       const value = Number.parseInt(line.slice(4), 10);
       if (!Number.isNaN(value)) {
-        totals.functions.covered += value;
+        lcovTotals.functions.covered += value;
         if (currentFile) {
           currentFile.functions.covered += value;
         }
@@ -321,7 +321,7 @@ function deriveCoverageFromLcov(lcov) {
     } else if (line.startsWith('FNF:')) {
       const value = Number.parseInt(line.slice(4), 10);
       if (!Number.isNaN(value)) {
-        totals.functions.total += value;
+        lcovTotals.functions.total += value;
         if (currentFile) {
           currentFile.functions.total += value;
         }
@@ -340,9 +340,9 @@ function deriveCoverageFromLcov(lcov) {
 
   pushCurrentFile();
 
-  finalizeCoverageMetrics(totals);
+  finalizeCoverageMetrics(lcovTotals);
 
-  return { totals, files };
+  return { totals: lcovTotals, files: lcovFiles };
 }
 
 function computePercent(covered, total) {

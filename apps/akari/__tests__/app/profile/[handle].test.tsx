@@ -1,5 +1,4 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { Text } from 'react-native';
 
 import ProfileScreen from '@/app/(tabs)/profile/[handle]';
 import { useLocalSearchParams } from 'expo-router';
@@ -10,7 +9,6 @@ import { useToast } from '@/contexts/ToastContext';
 import * as Clipboard from 'expo-clipboard';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const Screen = jest.fn(() => null);
   const Stack: any = jest.fn(({ children }: any) => <>{children}</>);
   Stack.Screen = Screen;
@@ -30,7 +28,6 @@ jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
 jest.mock('@/components/ProfileHeader', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   const mock = jest.fn(({ onDropdownToggle, dropdownRef }: any) => {
     dropdownRef.current = {
@@ -46,7 +43,6 @@ jest.mock('@/components/ProfileHeader', () => {
 });
 
 jest.mock('@/components/ProfileTabs', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     ProfileTabs: ({ onTabChange }: any) => (
@@ -64,7 +60,6 @@ jest.mock('@/components/ProfileTabs', () => {
 });
 
 jest.mock('@/components/ProfileDropdown', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     ProfileDropdown: ({

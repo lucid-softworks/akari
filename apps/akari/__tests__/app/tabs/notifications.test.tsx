@@ -13,8 +13,8 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { router } from 'expo-router';
 
 jest.mock('expo-image', () => {
-  const { Image } = require('react-native');
-  return { Image };
+  const { Image: RNImage } = require('react-native');
+  return { Image: RNImage };
 });
 
 jest.mock('expo-router', () => ({
@@ -28,13 +28,11 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('@/components/ThemedText', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { ThemedText: (props: any) => <Text {...props} /> };
 });
 
 jest.mock('@/components/ThemedView', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });

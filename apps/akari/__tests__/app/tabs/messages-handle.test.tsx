@@ -3,7 +3,7 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 
 import ConversationScreen from '@/app/(tabs)/messages/[convoId]';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
@@ -11,7 +11,6 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -26,7 +25,6 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return {
     SafeAreaView: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
@@ -65,14 +63,13 @@ const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
-const mockRouterPush = router.push as jest.Mock;
 let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
   mockUseBorderColor.mockReturnValue('#ccc');
-  mockUseThemeColor.mockImplementation((c: any, t?: any) => {
+  mockUseThemeColor.mockImplementation((c: any) => {
     if (typeof c === 'string') return c;
     return c.light ?? '#000';
   });
@@ -250,7 +247,7 @@ describe('ConversationScreen', () => {
     const mutateAsync = jest.fn();
     mockUseSendMessage.mockReturnValue({ mutateAsync, isPending: false });
 
-    const { getByText, UNSAFE_root } = render(<ConversationScreen />);
+    const { UNSAFE_root } = render(<ConversationScreen />);
 
     act(() => {
       const sendButton = UNSAFE_root.findAll((node: any) => {

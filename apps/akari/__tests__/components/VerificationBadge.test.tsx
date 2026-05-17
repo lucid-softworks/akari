@@ -9,21 +9,20 @@ jest.mock('@/hooks/useTranslation', () => ({
 }));
 
 jest.mock('@/components/ui/IconSymbol', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
+  const ReactLib = require('react');
+  const { Text: RNText } = require('react-native');
   return {
-    IconSymbol: ({ name, color }: { name: string; color: string }) => (
-      <Text testID={`icon-${name}`}>{`${name}:${color}`}</Text>
-    ),
+    IconSymbol: ({ name, color }: { name: string; color: string }) =>
+      ReactLib.createElement(RNText, { testID: `icon-${name}` }, `${name}:${color}`),
   };
 });
 
 jest.mock('@/components/VerifiersSheet', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
+  const ReactLib = require('react');
+  const { Text: RNText } = require('react-native');
   return {
     VerifiersSheet: jest.fn(({ visible }: { visible: boolean }) =>
-      visible ? <Text testID="verifiers-sheet-open">open</Text> : null,
+      visible ? ReactLib.createElement(RNText, { testID: 'verifiers-sheet-open' }, 'open') : null,
     ),
   };
 });

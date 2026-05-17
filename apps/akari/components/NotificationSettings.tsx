@@ -54,8 +54,8 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
             { text: 'Settings', onPress: () => openAppSettings() },
           ]);
         }
-      } catch (error) {
-        console.error('Failed to initialize notifications:', error);
+      } catch (err) {
+        console.error('Failed to initialize notifications:', err);
         Alert.alert(t('notifications.error'), t('notifications.failedToEnable'), [{ text: 'OK' }]);
       }
     }
@@ -81,8 +81,8 @@ export function NotificationSettings({ onSettingsChange }: NotificationSettingsP
     try {
       await clearBadge();
       Alert.alert(t('notifications.badgeCleared'), t('notifications.badgeClearedMessage'), [{ text: 'OK' }]);
-    } catch (error) {
-      console.error('Failed to clear badge:', error);
+    } catch (err) {
+      console.error('Failed to clear badge:', err);
       showToast({
         type: 'error',
         title: t('notifications.clearBadge'),

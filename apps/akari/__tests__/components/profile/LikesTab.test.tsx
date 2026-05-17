@@ -15,14 +15,12 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 jest.mock('@/components/skeletons', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     FeedSkeleton: () => <Text>loading skeleton</Text>,
   };
 });
 jest.mock('@/components/PostCard', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     PostCard: jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => (

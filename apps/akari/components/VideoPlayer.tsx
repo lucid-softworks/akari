@@ -202,16 +202,16 @@ export function VideoPlayer({
     setPlayerError(null);
   };
 
-  const handleLoad = (data: any) => {
+  const handleLoad = (_data: any) => {
     setPlayerStatus('readyToPlay');
     setPlayerError(null);
   };
 
-  const handleProgress = (data: any) => {
+  const handleProgress = (_data: any) => {
     // Progress updates handled silently
   };
 
-  const handleBuffer = (data: any) => {
+  const handleBuffer = (_data: any) => {
     // Buffer updates handled silently
   };
 

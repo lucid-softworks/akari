@@ -40,7 +40,6 @@ jest.mock('@/components/ReviewComposer', () => ({
 }));
 
 jest.mock('@/components/TabBar', () => {
-  const React = require('react');
   const { Text, TouchableOpacity, View } = require('react-native');
   return {
     TabBar: ({ tabs, activeTab, onTabChange }: any) => (

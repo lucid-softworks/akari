@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native';
+import type React from 'react';
 
 import { RichText } from '@/components/RichText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -7,7 +8,6 @@ import { tokenize } from '@atcute/bluesky-richtext-parser';
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     Link: ({ children, ...props }: { children: React.ReactNode }) => (

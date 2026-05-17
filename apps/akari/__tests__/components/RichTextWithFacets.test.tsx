@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react-native';
+import type React from 'react';
 
 import { RichTextWithFacets } from '@/components/RichTextWithFacets';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -6,7 +7,6 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return {
     Link: ({ children, ...props }: { children: React.ReactNode }) => (

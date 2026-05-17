@@ -15,7 +15,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   const Tabs = jest.fn(({ children }: { children: React.ReactNode }) => <>{children}</>);
   const Screen = jest.fn(() => null);
@@ -29,7 +28,6 @@ jest.mock('expo-router', () => {
 const safeAreaProviderValues: Array<{ top: number; right: number; bottom: number; left: number }> = [];
 
 jest.mock('react-native-safe-area-context', () => {
-  const React = require('react');
   return {
     useSafeAreaInsets: jest.fn(),
     SafeAreaInsetsContext: {
@@ -66,42 +64,35 @@ jest.mock('@/hooks/useTabConfig', () => ({
 }));
 
 jest.mock('@/components/HapticTab', () => {
-  const React = require('react');
   const MockHapticTab = jest.fn(({ children }: { children?: React.ReactNode }) => <>{children}</>);
   return { HapticTab: MockHapticTab };
 });
 
 jest.mock('@/components/AccountSwitcherSheet', () => {
-  const React = require('react');
   return { AccountSwitcherSheet: jest.fn(() => null) };
 });
 
 jest.mock('@/components/Sidebar', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { Sidebar: () => <Text>Sidebar</Text>, SIDEBAR_WIDTH: 264 };
 });
 
 jest.mock('@/components/TabBadge', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { TabBadge: jest.fn(({ count }: { count: number }) => <Text>badge{count}</Text>) };
 });
 
 jest.mock('@/components/ThemedView', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });
 
 jest.mock('@/components/ui/IconSymbol', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text> };
 });
 
 jest.mock('@/components/ui/TabBarBackground', () => {
-  const React = require('react');
   return () => <></>;
 });
 

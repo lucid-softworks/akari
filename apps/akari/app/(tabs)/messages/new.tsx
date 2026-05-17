@@ -64,8 +64,8 @@ export default function NewChatScreen() {
   // Debounce the query into submittedQuery so the search fires as the user
   // types instead of only on Enter.
   useEffect(() => {
-    const t = setTimeout(() => setSubmittedQuery(query.trim()), 200);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setSubmittedQuery(query.trim()), 200);
+    return () => clearTimeout(timer);
   }, [query]);
 
   const handleAddMember = useCallback(

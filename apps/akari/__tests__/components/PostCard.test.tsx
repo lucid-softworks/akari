@@ -1,4 +1,5 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import type React from 'react';
 
 import { PostCard } from '@/components/PostCard';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
@@ -9,8 +10,6 @@ import { useLiveNow } from '@/hooks/queries/useLiveNow';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
-
-const actualReact = jest.requireActual('react');
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
@@ -32,8 +31,6 @@ jest.mock('@/hooks/useTranslation');
 jest.mock('expo-router', () => ({ router: { push: jest.fn() }, usePathname: jest.fn(() => '/index') }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('react-native/Libraries/Modal/Modal', () => {
-  const React = require('react');
-
   const MockModal = ({ children, visible }: { children?: React.ReactNode; visible?: boolean }) =>
     visible ? <>{children}</> : null;
 

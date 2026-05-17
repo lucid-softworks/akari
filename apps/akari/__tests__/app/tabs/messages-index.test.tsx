@@ -161,7 +161,7 @@ describe('MessagesScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const { UNSAFE_getByType } = render(<MessagesScreen />);
+    render(<MessagesScreen />);
 
     const scrollToTop = mockRegister.mock.calls[0][1];
 

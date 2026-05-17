@@ -413,7 +413,7 @@ function createFileCoverageFromRecord(record) {
   const fileCoverage = createFileCoverage(record.path);
   const { statementMap, fnMap, branchMap, s, f, b } = fileCoverage.data;
 
-  const sortedLines = Array.from(record.lines.entries()).toSorted((a, b) => a[0] - b[0]);
+  const sortedLines = Array.from(record.lines.entries()).toSorted((left, right) => left[0] - right[0]);
   let statementIndex = 0;
   for (const [lineNumber, hitCount] of sortedLines) {
     const id = String(statementIndex++);

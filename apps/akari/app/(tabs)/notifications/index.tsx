@@ -3,7 +3,7 @@ import { cdnImageUrl } from '@/utils/cdn';
 import { Image } from '@/components/Image';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View, type ImageStyle } from 'react-native';
+import { StyleSheet, Text, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
@@ -26,7 +26,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
-import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity, semanticColors } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, layout, semanticColors } from '@/constants/tokens';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -605,7 +605,8 @@ export default function NotificationsScreen() {
       return (
         <ThemedView style={styles.skeletonContainer}>
           {Array.from({ length: 12 }).map((_, index) => (
-            <NotificationSkeleton key={index} />
+            // oxlint-disable-next-line react/no-array-index-key -- placeholder skeletons; fixed-length [0..11] with no identity beyond position
+            <NotificationSkeleton key={`notification-skeleton-${index}`} />
           ))}
         </ThemedView>
       );
@@ -638,8 +639,8 @@ export default function NotificationsScreen() {
     setRefreshing(true);
     try {
       await refetch();
-    } catch (error) {
-      console.error('[NotificationsScreen] Refresh failed', error);
+    } catch (err) {
+      console.error('[NotificationsScreen] Refresh failed', err);
     } finally {
       setRefreshing(false);
     }

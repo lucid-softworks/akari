@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
+import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
@@ -287,8 +287,8 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           onPress={() => {
             // Navigate to root post in current tab
             const uriParts = rootPost.uri.split('/');
-            const rKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: rootPost.author.handle, rKey });
+            const rootRKey = uriParts[uriParts.length - 1];
+            navigateToPost({ actor: rootPost.author.handle, rKey: rootRKey });
           }}
         />
     );
@@ -328,8 +328,8 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           onPress={() => {
             // Navigate to parent post in current tab
             const uriParts = parentPost.uri.split('/');
-            const rKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: parentPost.author.handle, rKey });
+            const parentRKey = uriParts[uriParts.length - 1];
+            navigateToPost({ actor: parentPost.author.handle, rKey: parentRKey });
           }}
         />
     );

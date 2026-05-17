@@ -73,7 +73,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
       { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
     ],
-    [unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
+    [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
 
   const isActiveRoute = (item: NavigationItem) => {

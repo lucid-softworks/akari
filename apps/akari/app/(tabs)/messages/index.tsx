@@ -351,6 +351,7 @@ export function MessagesListScreen({
       pendingButtonConfig,
       previewAvatars,
       t,
+      tintColor,
       titleKey,
     ],
   );
@@ -375,7 +376,8 @@ export function MessagesListScreen({
           conversationsLoading && !conversationsData ? (
             <ThemedView style={styles.skeletonContainer}>
               {Array.from({ length: 10 }).map((_, index) => (
-                <ConversationSkeleton key={index} />
+                // oxlint-disable-next-line react/no-array-index-key -- placeholder skeletons; fixed-length [0..9] with no identity beyond position
+                <ConversationSkeleton key={`conversation-skeleton-${index}`} />
               ))}
             </ThemedView>
           ) : error ? (

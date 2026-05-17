@@ -7,7 +7,6 @@ import { showAlert } from '@/utils/alert';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 jest.mock('react-native-safe-area-context', () => {
-  const React = require('react');
   return { SafeAreaView: ({ children }: { children: React.ReactNode }) => <>{children}</> };
 });
 

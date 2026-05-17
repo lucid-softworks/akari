@@ -41,23 +41,24 @@ jest.mock('@/utils/timeUtils', () => ({
 }));
 jest.mock('expo-image', () => ({ Image: () => null }));
 jest.mock('@/components/ui/IconSymbol', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { Text } = require('react-native');
   return {
-    IconSymbol: ({ name }: { name: string }) => <Text>{name}</Text>,
+    IconSymbol: ({ name }: { name: string }) => ReactLib.createElement(Text, null, name),
   };
 });
 jest.mock('@/components/ui/VirtualizedList', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { View } = require('react-native');
   return {
-    VirtualizedList: ({ data, renderItem, keyExtractor }: any) => (
-      <View>
-        {data.map((item: any, index: number) => (
-          <View key={keyExtractor(item, index)}>{renderItem({ item })}</View>
-        ))}
-      </View>
-    ),
+    VirtualizedList: ({ data, renderItem, keyExtractor }: any) =>
+      ReactLib.createElement(
+        View,
+        null,
+        data.map((item: any, index: number) =>
+          ReactLib.createElement(View, { key: keyExtractor(item, index) }, renderItem({ item })),
+        ),
+      ),
   };
 });
 

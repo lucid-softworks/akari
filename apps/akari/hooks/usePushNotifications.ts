@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { useRegisterPushSubscription } from '@/hooks/mutations/useRegisterPushSubscription';
@@ -81,7 +81,7 @@ export function usePushNotifications() {
     };
 
     // Listen for incoming notifications when app is in foreground
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+    notificationListener.current = Notifications.addNotificationReceivedListener((_notification) => {
       // You can handle foreground notifications here
       // For example, update badge count, show in-app notification, etc.
     });
@@ -183,7 +183,7 @@ export function usePushNotifications() {
   };
 
   // Check current permission status
-  const checkPermissionStatus = async (): Promise<void> => {
+  const checkPermissionStatus = useCallback(async (): Promise<void> => {
     if (isWeb) {
       setState((prev) => ({ ...prev, permissionStatus: null }));
       return;
@@ -195,7 +195,7 @@ export function usePushNotifications() {
     } catch (error) {
       console.error('Failed to check permission status:', error);
     }
-  };
+  }, [isWeb]);
 
   // Get current badge count
   const getBadgeCount = async (): Promise<number> => {
@@ -245,7 +245,7 @@ export function usePushNotifications() {
     }
 
     checkPermissionStatus();
-  }, [isWeb]);
+  }, [isWeb, checkPermissionStatus]);
 
   return {
     ...state,

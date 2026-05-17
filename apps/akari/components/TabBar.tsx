@@ -2,7 +2,7 @@ import { Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { spacing, fontSize, fontWeight, activeOpacity, shadows } from '@/constants/tokens';
+import { spacing, fontSize, fontWeight, activeOpacity } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 

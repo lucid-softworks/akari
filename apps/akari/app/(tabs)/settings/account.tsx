@@ -24,7 +24,6 @@ import {
 } from '@/hooks/queries/useProfileRecord';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useConfirm } from '@/hooks/useConfirm';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
 import { showAlert } from '@/utils/alert';
@@ -39,7 +38,6 @@ export default function AccountSettingsScreen() {
   const switchAccountMutation = useSwitchAccount();
   const removeAccountMutation = useRemoveAccount();
   const wipeAllDataMutation = useWipeAllData();
-  const showNotImplemented = useNotImplementedToast();
   const confirm = useConfirm();
   const sessionQuery = useSession();
   const profileRecord = useProfileRecord();
@@ -173,7 +171,6 @@ export default function AccountSettingsScreen() {
       automated,
       currentAccount?.handle,
       sessionQuery.data,
-      showNotImplemented,
       t,
     ],
   );

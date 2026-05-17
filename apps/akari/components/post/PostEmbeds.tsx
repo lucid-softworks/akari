@@ -10,7 +10,6 @@ import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { ImageViewer } from '@/components/ImageViewer';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { VideoEmbed } from '@/components/VideoEmbed';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { spacing, radius, activeOpacity, fontWeight, layout } from '@/constants/tokens';
@@ -61,8 +60,13 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
 
   const embedData = embed || (embeds && embeds[0]);
 
-  // Also check for additional embeds (e.g. images + external link as separate items)
-  const additionalEmbeds = embeds && embeds.length > 1 ? embeds.slice(1) : [];
+  // Also check for additional embeds (e.g. images + external link as separate items).
+  // Memoized so it has a stable identity per `embeds` change rather than every render
+  // (downstream `useMemo`s depend on it).
+  const additionalEmbeds = useMemo(
+    () => (embeds && embeds.length > 1 ? embeds.slice(1) : []),
+    [embeds],
+  );
 
   const imageData = useMemo(() => {
     const empty = { urls: [] as string[], altTexts: [] as string[], ratios: [] as (number | undefined)[] };

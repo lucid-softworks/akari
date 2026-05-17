@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { SettingsSection } from '@/components/settings/SettingsList';

@@ -13,7 +13,7 @@ import {
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useFeedFilters, type FeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';

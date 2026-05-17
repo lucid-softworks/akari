@@ -70,7 +70,7 @@ export class SubscriptionStore {
 
     try {
       await access(this.dataFile, fsConstants.F_OK);
-    } catch (error) {
+    } catch {
       logger.info('Subscription data file not found, starting with an empty registry.', {
         dataFile: this.dataFile,
       });

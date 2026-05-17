@@ -1,5 +1,5 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
-import { KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import * as ReactNative from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as ImagePicker from 'expo-image-picker';
@@ -61,14 +61,6 @@ const extractColor = (style: unknown): string | undefined => {
   }
 
   return undefined;
-};
-
-const hasOutlineNone = (style: unknown): boolean => {
-  if (Array.isArray(style)) {
-    return style.some((entry) => hasOutlineNone(entry));
-  }
-
-  return Boolean(style && typeof style === 'object' && (style as { outline?: string }).outline === 'none');
 };
 
 const findAccessibilityState = (
@@ -257,7 +249,7 @@ describe('PostComposer', () => {
         ],
       });
 
-    const { getByLabelText, getAllByPlaceholderText, getAllByText, getByTestId } = render(
+    const { getByLabelText, getAllByPlaceholderText, getByTestId } = render(
       <PostComposer visible onClose={jest.fn()} />,
     );
 

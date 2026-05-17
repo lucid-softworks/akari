@@ -15,21 +15,21 @@ jest.mock('expo-router', () => ({
 let mockPostCard: jest.Mock;
 jest.mock('@/components/PostCard', () => {
   mockPostCard = jest.fn(({ post, onPress }: { post: any; onPress: () => void }) => {
-    const React = require('react');
+    const ReactLib = require('react');
     const { Pressable, Text } = require('react-native');
-    return (
-      <Pressable onPress={onPress} accessibilityRole="button">
-        <Text>{post.text}</Text>
-      </Pressable>
+    return ReactLib.createElement(
+      Pressable,
+      { onPress, accessibilityRole: 'button' },
+      ReactLib.createElement(Text, null, post.text),
     );
   });
   return { PostCard: mockPostCard };
 });
 jest.mock('@/components/skeletons', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { Text } = require('react-native');
   return {
-    FeedSkeleton: () => <Text>FeedSkeleton</Text>,
+    FeedSkeleton: () => ReactLib.createElement(Text, null, 'FeedSkeleton'),
   };
 });
 

@@ -120,12 +120,6 @@ export const PostTranslation = React.memo(function PostTranslation({
         const idx = translated.indexOf(placeholder);
         if (idx === -1) continue;
 
-        // Calculate byte offsets in the translated text
-        const beforeBytes = enc.encode(translated.slice(0, idx));
-        const placeholderBytes = enc.encode(placeholder);
-        const byteStart = beforeBytes.length;
-        const byteEnd = byteStart + placeholderBytes.length;
-
         // Replace placeholder with the original URL text
         const displayUrl = uri.replace(/^https?:\/\//, '').replace(/\/$/, '');
         translated = translated.slice(0, idx) + displayUrl + translated.slice(idx + placeholder.length);
@@ -158,7 +152,17 @@ export const PostTranslation = React.memo(function PostTranslation({
     }).catch(() => {
       setError(true);
     });
-  }, [visible, text, targetLanguage]);
+  }, [
+    visible,
+    text,
+    targetLanguage,
+    translatedText,
+    translationMutation,
+    onEmbedTranslated,
+    embedText?.title,
+    embedText?.description,
+    facets,
+  ]);
 
   const handleShowOriginal = useCallback(() => {
     onEmbedTranslated?.(null);

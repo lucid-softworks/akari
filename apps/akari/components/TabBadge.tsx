@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize, fontWeight } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
 
 type TabBadgeProps = {
   count: number;

@@ -22,9 +22,6 @@ export default function CustomizeTabsScreen() {
   const { visibleTabs, setVisibleTabs, resetToDefault } = useTabConfig();
   const [localTabs, setLocalTabs] = useState<TabKey[]>(visibleTabs);
 
-  const isTabEnabled = (key: TabKey) => localTabs.includes(key);
-  const tabMeta = ALL_TABS.find.bind(ALL_TABS);
-
   const handleToggle = useCallback((key: TabKey, enabled: boolean) => {
     setLocalTabs((prev) => {
       let next: TabKey[];

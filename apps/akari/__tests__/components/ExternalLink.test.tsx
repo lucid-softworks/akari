@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import type React from 'react';
 import { Platform, Text } from 'react-native';
 import { openBrowserAsync } from 'expo-web-browser';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -6,13 +7,12 @@ import { ExternalLink } from '@/components/ExternalLink';
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
 
 jest.mock('expo-router', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
+  const { Text: RNText } = require('react-native');
   return {
     Link: ({ children, ...props }: { children: React.ReactNode }) => (
-      <Text accessibilityRole="link" {...props}>
+      <RNText accessibilityRole="link" {...props}>
         {children}
-      </Text>
+      </RNText>
     ),
   };
 });

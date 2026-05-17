@@ -169,7 +169,7 @@ export default function DebugScreen() {
               <ThemedText style={styles.emptyStateText}>{t('debug.noQueriesInCache')}</ThemedText>
             </View>
           ) : (
-            queries.map((query, index) => {
+            queries.map((query) => {
               const queryKeyString = formatQueryKey(query.queryKey);
               const isExpanded = expandedQueries.has(queryKeyString);
               const statusColor = getQueryStatusColor(query);

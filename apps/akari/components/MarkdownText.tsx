@@ -41,6 +41,7 @@ export function MarkdownText({ source, maxVisibleChars }: MarkdownTextProps) {
     <>
       {blocks.map((block, blockIndex) => (
         <BlockRenderer
+          // oxlint-disable-next-line react/no-array-index-key -- markdown blocks have no stable id; the AST is rebuilt from `source` each render and order is deterministic
           key={blockIndex}
           block={block}
           isFirst={blockIndex === 0}
@@ -93,6 +94,7 @@ function InlineRenderer({
   return (
     <>
       {inline.map((node, index) => (
+        // oxlint-disable-next-line react/no-array-index-key -- inline markdown nodes have no stable id; the AST is rebuilt deterministically each render
         <InlineNode key={`${node.type}-${index}`} node={node} codeBackground={codeBackground} />
       ))}
     </>

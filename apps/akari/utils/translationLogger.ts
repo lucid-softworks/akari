@@ -32,7 +32,7 @@ class TranslationLogger {
     }
   }
 
-  logUsage(key: string, locale: string) {
+  logUsage(_key: string, _locale: string) {
     if (!this.isEnabled) return;
 
     // In development, you can uncomment this to log all translation usage

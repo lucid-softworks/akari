@@ -11,23 +11,23 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { showAlert } from '@/utils/alert';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 jest.mock('expo-router', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   return {
     Redirect: ({ href }: { href: string }) =>
-      React.createElement('Redirect', { 'data-href': href, testID: `redirect-${href}` }),
+      ReactLib.createElement('Redirect', { 'data-href': href, testID: `redirect-${href}` }),
   };
 });
 
 jest.mock('@/components/ThemedText', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { Text } = require('react-native');
-  return { ThemedText: (props: any) => <Text {...props} /> };
+  return { ThemedText: (props: any) => ReactLib.createElement(Text, props) };
 });
 
 jest.mock('@/components/ThemedView', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { View } = require('react-native');
-  return { ThemedView: (props: any) => <View {...props} /> };
+  return { ThemedView: (props: any) => ReactLib.createElement(View, props) };
 });
 
 jest.mock('@/hooks/useTranslation', () => ({

@@ -7,7 +7,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
-import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { useToast } from '@/contexts/ToastContext';
 import * as Clipboard from 'expo-clipboard';
 
@@ -36,20 +35,16 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 }));
 
 jest.mock('react-native/Libraries/Components/ScrollView/ScrollView', () => {
-  const React = require('react');
+  const ReactLib = require('react');
   const { View } = jest.requireActual('react-native');
   const scrollToMock = jest.fn();
 
-  const ScrollViewMock = React.forwardRef((props: any, ref: any) => {
-    React.useImperativeHandle(ref, () => ({
+  const ScrollViewMock = ReactLib.forwardRef((props: any, ref: any) => {
+    ReactLib.useImperativeHandle(ref, () => ({
       scrollTo: scrollToMock,
     }));
 
-    return (
-      <View {...props}>
-        {props.children}
-      </View>
-    );
+    return ReactLib.createElement(View, props, props.children);
   });
 
   return {
@@ -65,7 +60,6 @@ const { scrollToMock } = require('react-native/Libraries/Components/ScrollView/S
 };
 
 jest.mock('@/components/ProfileHeader', () => {
-  const React = require('react');
   const { Text, TouchableOpacity } = require('react-native');
   return {
     ProfileHeader: ({ onDropdownToggle, dropdownRef }: any) => {
@@ -86,7 +80,6 @@ jest.mock('@/components/ProfileHeader', () => {
 });
 
 jest.mock('@/components/ProfileDropdown', () => {
-  const React = require('react');
   const { Text, TouchableOpacity, View } = require('react-native');
   return {
     ProfileDropdown: ({
@@ -128,7 +121,6 @@ jest.mock('@/components/ProfileDropdown', () => {
 });
 
 jest.mock('@/components/ProfileTabs', () => {
-  const React = require('react');
   const { Text, TouchableOpacity, View } = require('react-native');
   return {
     ProfileTabs: ({ onTabChange }: any) => (
@@ -166,7 +158,6 @@ jest.mock('@/components/ProfileTabs', () => {
 });
 
 jest.mock('@/components/profile/PostsTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     PostsTab: ({ handle, ListHeaderComponent, StickyTabComponent }: any) => (
@@ -179,15 +170,7 @@ jest.mock('@/components/profile/PostsTab', () => {
   };
 });
 
-const renderSticky = (StickyTabComponent: any) =>
-  StickyTabComponent
-    ? typeof StickyTabComponent === 'function'
-      ? <StickyTabComponent />
-      : StickyTabComponent
-    : null;
-
 jest.mock('@/components/profile/LikesTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     LikesTab: ({ handle, StickyTabComponent }: any) => (
@@ -200,7 +183,6 @@ jest.mock('@/components/profile/LikesTab', () => {
 });
 
 jest.mock('@/components/profile/RepliesTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     RepliesTab: ({ handle, StickyTabComponent }: any) => (
@@ -213,7 +195,6 @@ jest.mock('@/components/profile/RepliesTab', () => {
 });
 
 jest.mock('@/components/profile/MediaTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     MediaTab: ({ handle, StickyTabComponent }: any) => (
@@ -226,7 +207,6 @@ jest.mock('@/components/profile/MediaTab', () => {
 });
 
 jest.mock('@/components/profile/VideosTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     VideosTab: ({ handle, StickyTabComponent }: any) => (
@@ -239,7 +219,6 @@ jest.mock('@/components/profile/VideosTab', () => {
 });
 
 jest.mock('@/components/profile/FeedsTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     FeedsTab: ({ handle, StickyTabComponent }: any) => (
@@ -252,7 +231,6 @@ jest.mock('@/components/profile/FeedsTab', () => {
 });
 
 jest.mock('@/components/profile/StarterpacksTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     StarterpacksTab: ({ handle, StickyTabComponent }: any) => (
@@ -265,7 +243,6 @@ jest.mock('@/components/profile/StarterpacksTab', () => {
 });
 
 jest.mock('@/components/profile/ReposTab', () => {
-  const React = require('react');
   const { Text, View } = require('react-native');
   return {
     ReposTab: ({ handle, StickyTabComponent }: any) => (
@@ -278,13 +255,11 @@ jest.mock('@/components/profile/ReposTab', () => {
 });
 
 jest.mock('@/components/ThemedView', () => {
-  const React = require('react');
   const { View } = require('react-native');
   return { ThemedView: ({ children, ...props }: any) => <View {...props}>{children}</View> };
 });
 
 jest.mock('@/components/ThemedText', () => {
-  const React = require('react');
   const { Text } = require('react-native');
   return { ThemedText: ({ children, ...props }: any) => <Text {...props}>{children}</Text> };
 });
@@ -297,7 +272,6 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
 const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
-const mockRegister = tabScrollRegistry.register as jest.Mock;
 const { router } = require('expo-router');
 const mockRouterPush = router.push as jest.Mock;
 

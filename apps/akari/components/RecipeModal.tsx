@@ -209,6 +209,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   <ThemedText style={styles.sectionTitle}>{t('recipe.dietaryRestrictions')}</ThemedText>
                   <View style={styles.keywordsContainer}>
                     {resolveDietaryRestrictions(recipe.value.suitableForDiet).map((diet, index) => (
+                      // oxlint-disable-next-line react/no-array-index-key -- dietary tags are user-supplied strings; duplicates would collide without the index disambiguator
                       <View key={`diet-${diet}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                         <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{diet}</ThemedText>
                       </View>
@@ -223,6 +224,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <ThemedText style={styles.sectionTitle}>{t('recipe.ingredients')}</ThemedText>
               <View style={styles.ingredientsList}>
                 {recipe.value.ingredients.map((ingredient, index) => (
+                  // oxlint-disable-next-line react/no-array-index-key -- ingredients are user-supplied strings; duplicates (e.g. "salt to taste" listed twice) need the index disambiguator
                   <View key={`ingredient-${ingredient}-${index}`} style={styles.ingredientItem}>
                     <View style={[styles.ingredientBullet, { backgroundColor: accentColor }]} />
                     <ThemedText style={styles.ingredientText}>{ingredient}</ThemedText>
@@ -236,6 +238,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <ThemedText style={styles.sectionTitle}>{t('recipe.instructions')}</ThemedText>
               <View style={styles.instructionsList}>
                 {recipe.value.instructions.map((instruction, index) => (
+                  // oxlint-disable-next-line react/no-array-index-key -- instructions are ordered steps; their numeric position IS their identity (step 1, step 2, etc.)
                   <View key={`instruction-${index}-${instruction.slice(0, 24)}`} style={styles.instructionItem}>
                     <ThemedText style={[styles.instructionNumber, { color: accentColor }]}>{index + 1}.</ThemedText>
                     <ThemedText style={styles.instructionText}>{instruction}</ThemedText>
@@ -250,6 +253,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                 <ThemedText style={styles.sectionTitle}>{t('recipe.tags')}</ThemedText>
                 <View style={styles.keywordsContainer}>
                   {recipe.value.keywords.map((keyword, index) => (
+                    // oxlint-disable-next-line react/no-array-index-key -- keywords are user-supplied strings; duplicates need the index disambiguator
                     <View key={`keyword-${keyword}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                       <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{keyword}</ThemedText>
                     </View>
@@ -266,8 +270,6 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                   style={styles.attributionContainer}
                   onPress={() => {
                     // TODO: Open external link
-                    const url = 'url' in recipe.value.attribution! ? recipe.value.attribution.url : undefined;
-                    // TODO: open external link
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={`Open source: ${getAttributionName(recipe.value.attribution)}`}

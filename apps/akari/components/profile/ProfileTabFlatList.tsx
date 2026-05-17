@@ -49,7 +49,7 @@ export function ProfileTabFlatList<T>({
   onHeaderHeightChange,
 }: ProfileTabFlatListProps<T>) {
   const listRef = useRef<FlatList<T | SpecialItem>>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [, setHeaderHeight] = useState(0);
 
   const hasHeader = !!ListHeaderComponent;
   const hasStickyTab = !!StickyTabComponent;
