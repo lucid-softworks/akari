@@ -117,6 +117,10 @@ export default function SettingsLayout() {
         name="thread-preferences"
         options={{ title: t('settings.threadPreferences') }}
       />
+      <Stack.Screen
+        name="following-cleanup"
+        options={{ title: t('settings.followingCleanup.title') }}
+      />
       <Stack.Screen name="about" options={{ title: t('settings.about') }} />
       <Stack.Screen name="add-account" options={{ title: t('common.addAccount') }} />
       <Stack.Screen name="customize-tabs" options={{ title: t('settings.customizeTabs') }} />

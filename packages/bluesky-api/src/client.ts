@@ -98,6 +98,88 @@ function isExpiredTokenError(err: unknown): boolean {
   );
 }
 
+/**
+ * Per-base-URL rate-limit cooldown bookkeeping. Two sources feed this:
+ *
+ *  - A 429 response (the explicit case). atproto returns `RateLimit-Reset`
+ *    as a unix-seconds timestamp telling us exactly when the window opens.
+ *  - A fetch rejection that *looks* like a hidden 429. atproto's PDS rate
+ *    limiter blocks the CORS preflight OPTIONS too, and the rate-limited
+ *    error response is missing `Access-Control-Allow-Origin`, so the
+ *    browser surfaces it to JS as a CORS error with no readable status.
+ *    We can't tell those apart from genuine network errors, so when we
+ *    see one during a stream of authenticated calls we apply a
+ *    conservative fallback cooldown rather than retrying immediately.
+ */
+const FALLBACK_COOLDOWN_MS = 30_000;
+
+type RateLimitState = {
+  cooldownUntil: number;
+  cooldownPromise: Promise<void> | null;
+};
+
+const rateLimitStates = new Map<string, RateLimitState>();
+
+function getRateLimitState(baseUrl: string): RateLimitState {
+  let s = rateLimitStates.get(baseUrl);
+  if (!s) {
+    s = { cooldownUntil: 0, cooldownPromise: null };
+    rateLimitStates.set(baseUrl, s);
+  }
+  return s;
+}
+
+function setRateLimitCooldown(baseUrl: string, untilMs: number): void {
+  const s = getRateLimitState(baseUrl);
+  const now = Date.now();
+  if (untilMs <= now) return;
+  if (s.cooldownUntil >= untilMs) return;
+  s.cooldownUntil = untilMs;
+  // Replace any prior shorter cooldown promise with a new one whose
+  // resolver clears state once the window expires. Concurrent callers
+  // all `await s.cooldownPromise` and resume together on resolve.
+  s.cooldownPromise = new Promise<void>((resolve) => {
+    setTimeout(() => {
+      if (s.cooldownUntil === untilMs) {
+        s.cooldownUntil = 0;
+        s.cooldownPromise = null;
+      }
+      resolve();
+    }, untilMs - now);
+  });
+}
+
+/**
+ * Returns `0` when no cooldown is active, otherwise the unix-millis
+ * timestamp the cooldown lifts at. Exposed so call sites that want to
+ * show "scan paused for rate limit, X seconds remaining" UI can read it.
+ */
+export function getRateLimitCooldownUntil(baseUrl: string): number {
+  return getRateLimitState(baseUrl).cooldownUntil;
+}
+
+async function awaitRateLimit(baseUrl: string): Promise<void> {
+  const s = getRateLimitState(baseUrl);
+  if (s.cooldownPromise) await s.cooldownPromise;
+}
+
+function parseRateLimitReset(response: Response): number | null {
+  const reset = response.headers.get('ratelimit-reset');
+  if (!reset) return null;
+  const n = Number.parseInt(reset, 10);
+  if (!Number.isFinite(n)) return null;
+  // atproto sends seconds-since-epoch; normalize to millis.
+  return n * 1000;
+}
+
+/**
+ * Detects the error shape thrown by this client for HTTP 429 responses.
+ * Callers can branch on this to retry-with-backoff vs. surface-to-user.
+ */
+export function isRateLimitError(err: unknown): err is Error & { status: 429; retryAfterMs?: number } {
+  return !!err && (err as { status?: number }).status === 429;
+}
+
 async function bodyIsUseDpopNonce(response: Response): Promise<boolean> {
   try {
     const cloned = response.clone();
@@ -232,7 +314,33 @@ export class BlueskyApiClient {
       requestOptions.body = body instanceof FormData || body instanceof Blob ? body : JSON.stringify(body);
     }
 
-    const response = await fetch(url, requestOptions);
+    await awaitRateLimit(this.baseUrl);
+
+    let response: Response;
+    try {
+      response = await fetch(url, requestOptions);
+    } catch (err) {
+      // CORS-disguised 429s and genuine network failures look identical
+      // from JS. Apply a conservative cooldown so the next call doesn't
+      // hammer the same wall, then re-throw for the caller.
+      setRateLimitCooldown(this.baseUrl, Date.now() + FALLBACK_COOLDOWN_MS);
+      throw err;
+    }
+
+    if (response.status === 429) {
+      const resetMs = parseRateLimitReset(response);
+      setRateLimitCooldown(this.baseUrl, resetMs ?? Date.now() + FALLBACK_COOLDOWN_MS);
+      const errBody: Partial<BlueskyError> = await response.json().catch(() => ({}));
+      const err = new Error(errBody.message || 'Rate limited') as Error & {
+        status: 429;
+        errorCode?: string;
+        retryAfterMs?: number;
+      };
+      err.status = 429;
+      if (errBody.error) err.errorCode = errBody.error;
+      if (resetMs) err.retryAfterMs = Math.max(0, resetMs - Date.now());
+      throw err;
+    }
 
     if (!response.ok) {
       const body: Partial<BlueskyError> = await response.json().catch(() => ({}));
@@ -334,14 +442,43 @@ export class BlueskyApiClient {
       return fetch(url, requestOptions);
     };
 
-    let response = await sendOnce(getCachedDpopNonce(url));
+    await awaitRateLimit(this.baseUrl);
+
+    let response: Response;
+    try {
+      response = await sendOnce(getCachedDpopNonce(url));
+    } catch (err) {
+      // CORS-disguised 429 / network failure — back off conservatively.
+      setRateLimitCooldown(this.baseUrl, Date.now() + FALLBACK_COOLDOWN_MS);
+      throw err;
+    }
     const firstResponseNonce = response.headers.get('DPoP-Nonce');
     if (firstResponseNonce) cacheDpopNonce(url, firstResponseNonce);
 
     if (!response.ok && firstResponseNonce && (await bodyIsUseDpopNonce(response))) {
-      response = await sendOnce(firstResponseNonce);
+      try {
+        response = await sendOnce(firstResponseNonce);
+      } catch (err) {
+        setRateLimitCooldown(this.baseUrl, Date.now() + FALLBACK_COOLDOWN_MS);
+        throw err;
+      }
       const retryNonce = response.headers.get('DPoP-Nonce');
       if (retryNonce) cacheDpopNonce(url, retryNonce);
+    }
+
+    if (response.status === 429) {
+      const resetMs = parseRateLimitReset(response);
+      setRateLimitCooldown(this.baseUrl, resetMs ?? Date.now() + FALLBACK_COOLDOWN_MS);
+      const errBody: Partial<BlueskyError> = await response.json().catch(() => ({}));
+      const err = new Error(errBody.message || 'Rate limited') as Error & {
+        status: 429;
+        errorCode?: string;
+        retryAfterMs?: number;
+      };
+      err.status = 429;
+      if (errBody.error) err.errorCode = errBody.error;
+      if (resetMs) err.retryAfterMs = Math.max(0, resetMs - Date.now());
+      throw err;
     }
 
     if (!response.ok) {

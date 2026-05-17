@@ -24,6 +24,23 @@ export class BlueskyActors extends BlueskyApiClient {
   }
 
   /**
+   * Batch profile lookup. atproto's `app.bsky.actor.getProfiles` accepts
+   * up to 25 actors per call and returns the detailed view (with the
+   * follower / following / posts counts that the lightweight `profileView`
+   * variants don't carry).
+   */
+  async getProfiles(
+    accessJwt: string,
+    actors: string[],
+  ): Promise<{ profiles: BlueskyProfileResponse[] }> {
+    return this.makeAuthenticatedRequest<{ profiles: BlueskyProfileResponse[] }>(
+      '/app.bsky.actor.getProfiles',
+      accessJwt,
+      { params: { actors } },
+    );
+  }
+
+  /**
    * Updates a user's profile information
    * @param accessJwt - Valid access JWT token
    * @param profileData - Profile data to update

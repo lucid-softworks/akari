@@ -335,6 +335,38 @@ export type BlueskyBlocksResponse = {
 };
 
 /**
+ * Response from `app.bsky.graph.getFollows` — the supplied actor's follows.
+ * `subject` is the actor whose follow list is being viewed; `follows` are the
+ * accounts they follow.
+ */
+export type BlueskyFollowsResponse = {
+  cursor?: string;
+  subject: BlueskyProfile;
+  follows: BlueskyProfile[];
+};
+
+/**
+ * A single `app.bsky.graph.follow` record as returned by `listRecords`.
+ * The record's `subject` is the followed actor's DID; `createdAt` is when
+ * the follow record was written, which is the only way to recover "when
+ * did I follow this person" since getFollows doesn't carry that field.
+ */
+export type BlueskyFollowRecord = {
+  uri: string;
+  cid: string;
+  value: {
+    $type?: string;
+    subject: string;
+    createdAt: string;
+  };
+};
+
+export type BlueskyFollowRecordsResponse = {
+  cursor?: string;
+  records: BlueskyFollowRecord[];
+};
+
+/**
  * Response from `app.bsky.graph.getListMutes` — lists the user has muted.
  */
 export type BlueskyListMutesResponse = {

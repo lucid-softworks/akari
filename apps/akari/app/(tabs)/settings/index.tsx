@@ -127,6 +127,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/moderation'),
       },
       {
+        key: 'following-cleanup',
+        icon: 'sparkles',
+        label: t('settings.followingCleanup.title'),
+        onPress: () => router.push('/(tabs)/settings/following-cleanup'),
+      },
+      {
         key: 'appearance',
         icon: 'paintbrush.fill',
         label: t('settings.appearance'),

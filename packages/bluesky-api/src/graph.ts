@@ -2,6 +2,8 @@ import { BlueskyApiClient } from './client';
 import type {
   BlueskyBlocksResponse,
   BlueskyCreateRecordResponse,
+  BlueskyFollowRecordsResponse,
+  BlueskyFollowsResponse,
   BlueskyListBlocksResponse,
   BlueskyListMutesResponse,
   BlueskyListResponse,
@@ -180,6 +182,42 @@ export class BlueskyGraph extends BlueskyApiClient {
     const params: Record<string, string> = { limit: limit.toString() };
     if (cursor) params.cursor = cursor;
     return this.makeAuthenticatedRequest<BlueskyBlocksResponse>('/app.bsky.graph.getBlocks', accessJwt, { params });
+  }
+
+  /** Fetch accounts followed by the supplied actor. */
+  async getFollows(
+    accessJwt: string,
+    actor: string,
+    limit = 100,
+    cursor?: string,
+  ): Promise<BlueskyFollowsResponse> {
+    const params: Record<string, string> = { actor, limit: limit.toString() };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyFollowsResponse>('/app.bsky.graph.getFollows', accessJwt, { params });
+  }
+
+  /**
+   * List the raw `app.bsky.graph.follow` records owned by `repo`. Unlike
+   * getFollows this returns the record's `createdAt` so callers can
+   * recover when the follow was written. Pages are 100 max per atproto.
+   */
+  async listFollowRecords(
+    accessJwt: string,
+    repo: string,
+    limit = 100,
+    cursor?: string,
+  ): Promise<BlueskyFollowRecordsResponse> {
+    const params: Record<string, string> = {
+      repo,
+      collection: 'app.bsky.graph.follow',
+      limit: limit.toString(),
+    };
+    if (cursor) params.cursor = cursor;
+    return this.makeAuthenticatedRequest<BlueskyFollowRecordsResponse>(
+      '/com.atproto.repo.listRecords',
+      accessJwt,
+      { params },
+    );
   }
 
   /** Fetch the viewer's muted moderation lists. */

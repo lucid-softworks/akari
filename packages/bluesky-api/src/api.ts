@@ -184,6 +184,11 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.actors.getProfile(accessJwt, did);
   }
 
+  /** Batch profile lookup (up to 25 actors per call). */
+  async getProfiles(accessJwt: string, actors: string[]) {
+    return this.actors.getProfiles(accessJwt, actors);
+  }
+
   /**
    * Updates profile metadata such as display name, description, avatar or banner in the actor record.
    * @param accessJwt - Valid session token authorised to modify the actor profile.
@@ -798,6 +803,16 @@ export class BlueskyApi extends BlueskyApiClient {
   /** Fetch the viewer's blocked accounts. */
   async getBlocks(accessJwt: string, limit = 50, cursor?: string) {
     return this.graph.getBlocks(accessJwt, limit, cursor);
+  }
+
+  /** Fetch the accounts followed by the supplied actor. */
+  async getFollows(accessJwt: string, actor: string, limit = 100, cursor?: string) {
+    return this.graph.getFollows(accessJwt, actor, limit, cursor);
+  }
+
+  /** List the raw follow records owned by `repo` (includes `createdAt`). */
+  async listFollowRecords(accessJwt: string, repo: string, limit = 100, cursor?: string) {
+    return this.graph.listFollowRecords(accessJwt, repo, limit, cursor);
   }
 
   /** Fetch the viewer's muted moderation lists. */
