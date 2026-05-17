@@ -47,6 +47,32 @@ function getMediaThumb(post: MediaPost): string | null {
   return null;
 }
 
+type MediaTileProps = {
+  post: MediaPost | undefined;
+  tileBg: string;
+  onPress: (post: MediaPost) => void;
+};
+
+function MediaTile({ post, tileBg, onPress }: MediaTileProps) {
+  if (!post) {
+    // Placeholder so the trailing odd row's left tile keeps half-width.
+    return <View style={[styles.tile, styles.tilePlaceholder]} />;
+  }
+  const thumb = getMediaThumb(post);
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.tile, { backgroundColor: tileBg }, pressed && { opacity: activeOpacity.subtle }]}
+      onPress={() => onPress(post)}
+      accessibilityRole="button"
+      accessibilityLabel={`Open post ${post.uri}`}
+    >
+      {thumb ? (
+        <Image source={{ uri: thumb }} style={styles.tileImage} contentFit="cover" />
+      ) : null}
+    </Pressable>
+  );
+}
+
 export function MediaTab({
   handle,
   ListHeaderComponent,
@@ -93,38 +119,14 @@ export function MediaTab({
     [navigateToPost],
   );
 
-  const renderTile = useCallback(
-    (post: MediaPost | undefined) => {
-      if (!post) {
-        // Placeholder so the trailing odd row's left tile keeps half-width.
-        return <View style={[styles.tile, styles.tilePlaceholder]} />;
-      }
-      const thumb = getMediaThumb(post);
-      return (
-        <Pressable
-          style={({ pressed }) => [styles.tile, { backgroundColor: tileBg }, pressed && { opacity: activeOpacity.subtle }]}
-          onPress={() => handleTilePress(post)}
-          
-          accessibilityRole="button"
-          accessibilityLabel={`Open post ${post.uri}`}
-        >
-          {thumb ? (
-            <Image source={{ uri: thumb }} style={styles.tileImage} contentFit="cover" />
-          ) : null}
-        </Pressable>
-      );
-    },
-    [handleTilePress, tileBg],
-  );
-
   const renderItem = useCallback(
     (row: MediaRow) => (
       <View style={styles.row}>
-        {renderTile(row.left)}
-        {renderTile(row.right)}
+        <MediaTile post={row.left} tileBg={tileBg} onPress={handleTilePress} />
+        <MediaTile post={row.right} tileBg={tileBg} onPress={handleTilePress} />
       </View>
     ),
-    [renderTile],
+    [handleTilePress, tileBg],
   );
 
   return (

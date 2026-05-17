@@ -29,6 +29,36 @@ type ReviewComposerProps = {
   onClose: () => void;
 };
 
+// 10-star rating scale. The value (1..10) doubles as the React key — order
+// is fixed and the value is the star's identity, not an array index.
+const STAR_RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+
+type StarRatingRowProps = {
+  rating: number;
+  setRating: (value: number) => void;
+  iconColor: string;
+};
+
+function StarRatingRow({ rating, setRating, iconColor }: StarRatingRowProps) {
+  return (
+    <>
+      {STAR_RATINGS.map((ratingValue) => (
+        <Pressable
+          key={`star-${ratingValue}`}
+          onPress={() => setRating(ratingValue)}
+          style={({ pressed }) => [styles.starButton, pressed && { opacity: activeOpacity.strong }]}
+        >
+          <IconSymbol
+            name={ratingValue <= rating ? 'star.fill' : 'star'}
+            size={28}
+            color={ratingValue <= rating ? '#FFB800' : iconColor}
+          />
+        </Pressable>
+      ))}
+    </>
+  );
+}
+
 export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
   const { t } = useTranslation();
   const [mediaType, setMediaType] = useState<'movie' | 'tv_show'>('movie');
@@ -108,26 +138,6 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
     setSelectedMedia(null);
   };
 
-  const renderStars = () => {
-    const stars = [];
-    for (let i = 1; i <= 10; i++) {
-      stars.push(
-        <Pressable
-          key={`star-${i}`}
-          onPress={() => setRating(i)}
-          
-          style={({ pressed }) => [styles.starButton, pressed && { opacity: activeOpacity.strong }]}
-        >
-          <IconSymbol
-            name={i <= rating ? 'star.fill' : 'star'}
-            size={28}
-            color={i <= rating ? '#FFB800' : iconColor}
-          />
-        </Pressable>,
-      );
-    }
-    return stars;
-  };
 
   return (
     <Modal
@@ -281,7 +291,9 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
               <ThemedText style={[styles.sectionLabel, { color: textColor }]}>
                 {rating > 0 ? t('reviews.ratingWithValue', { rating, max: 10 }) : t('reviews.rating')}
               </ThemedText>
-              <View style={styles.starsRow}>{renderStars()}</View>
+              <View style={styles.starsRow}>
+                <StarRatingRow rating={rating} setRating={setRating} iconColor={iconColor} />
+              </View>
             </View>
 
             {/* Review Text */}

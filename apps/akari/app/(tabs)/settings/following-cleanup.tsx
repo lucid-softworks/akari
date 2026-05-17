@@ -249,7 +249,7 @@ export default function FollowingCleanupScreen() {
   const isCompleted = state.runState === 'completed';
   const hasAnyData = state.totalDiscovered > 0;
 
-  const renderLastActivity = (entry: FollowingCleanupEntry) => {
+  const getLastActivityLabel = (entry: FollowingCleanupEntry) => {
     if (entry.lastActivityAt === null) {
       // getProfiles enrichment lands postsCount; if the account actually
       // has posts but the author feed came back empty, that's an AppView
@@ -266,7 +266,7 @@ export default function FollowingCleanupScreen() {
     return t('settings.followingCleanup.lastSeenDays', { count: ageDays });
   };
 
-  const renderFollowedAt = (entry: FollowingCleanupEntry) => {
+  const getFollowedAtLabel = (entry: FollowingCleanupEntry) => {
     if (!entry.followedAt) return null;
     const ageDays = Math.floor((nowMs - new Date(entry.followedAt).getTime()) / DAY_MS);
     if (ageDays < 1) return t('settings.followingCleanup.followedToday');
@@ -278,7 +278,7 @@ export default function FollowingCleanupScreen() {
     return t('settings.followingCleanup.followedYears', { count: ageYears });
   };
 
-  const renderStats = (entry: FollowingCleanupEntry) => {
+  const getStatsLabel = (entry: FollowingCleanupEntry) => {
     const { followersCount, followsCount, postsCount } = entry.profile;
     // Counts arrive via the getProfiles enrichment pass, which trails
     // the initial getFollows discovery. Hide the line until at least
@@ -523,9 +523,9 @@ export default function FollowingCleanupScreen() {
                   dangerColor={dangerColor}
                   unfollowLabel={t('common.unfollow')}
                   skipLabel={t('settings.followingCleanup.skip')}
-                  lastActivityLabel={renderLastActivity(entry)}
-                  followedAtLabel={renderFollowedAt(entry)}
-                  statsLabel={renderStats(entry)}
+                  lastActivityLabel={getLastActivityLabel(entry)}
+                  followedAtLabel={getFollowedAtLabel(entry)}
+                  statsLabel={getStatsLabel(entry)}
                 />
               ))
             )}

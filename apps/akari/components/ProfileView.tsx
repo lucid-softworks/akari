@@ -92,6 +92,39 @@ const TAB_ORDER: ProfileTabType[] = [
   'links',
 ];
 
+type SharedTabProps = {
+  handle: string;
+  ListHeaderComponent: React.ReactElement | null;
+  StickyTabComponent: React.ReactElement | null;
+  pinScrollY: number;
+  onProfileRefresh: () => Promise<void>;
+  onScrollY: (y: number) => void;
+  onHeaderHeightChange: (h: number) => void;
+};
+
+type ProfileTabPaneProps = {
+  tab: ProfileTabType;
+  isActive: boolean;
+  sharedProps: SharedTabProps;
+};
+
+function ProfileTabPane({ tab, isActive, sharedProps }: ProfileTabPaneProps) {
+  const props = { ...sharedProps, isActive };
+  switch (tab) {
+    case 'posts': return <PostsTab {...props} />;
+    case 'replies': return <RepliesTab {...props} />;
+    case 'likes': return <LikesTab {...props} />;
+    case 'media': return <MediaTab {...props} />;
+    case 'videos': return <VideosTab {...props} />;
+    case 'feeds': return <FeedsTab {...props} />;
+    case 'repos': return <ReposTab {...props} />;
+    case 'starterpacks': return <StarterpacksTab {...props} />;
+    case 'recipes': return <RecipesTab {...props} />;
+    case 'links': return <LinksTab {...props} />;
+    default: return null;
+  }
+}
+
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
@@ -325,48 +358,14 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     setShowReportSheet(true);
   };
 
-  const renderTab = (tab: ProfileTabType) => {
-    if (!handle) return null;
-    const sharedProps = {
-      handle,
-      ListHeaderComponent: headerComponent,
-      StickyTabComponent: tabsComponent,
-      pinScrollY: nextTabPinScrollYRef.current,
-      isActive: tab === activeTab,
-      onProfileRefresh: handleProfileRefresh,
-      onScrollY: handleScrollY,
-      onHeaderHeightChange: handleHeaderHeightChange,
-    };
-    switch (tab) {
-      case 'posts': return <PostsTab {...sharedProps} />;
-      case 'replies': return <RepliesTab {...sharedProps} />;
-      case 'likes': return <LikesTab {...sharedProps} />;
-      case 'media': return <MediaTab {...sharedProps} />;
-      case 'videos': return <VideosTab {...sharedProps} />;
-      case 'feeds': return <FeedsTab {...sharedProps} />;
-      case 'repos': return <ReposTab {...sharedProps} />;
-      case 'starterpacks': return <StarterpacksTab {...sharedProps} />;
-      case 'recipes': return <RecipesTab {...sharedProps} />;
-      case 'links': return <LinksTab {...sharedProps} />;
-      default: return null;
-    }
-  };
-
-  const renderTabContent = () => {
-    if (!handle) return null;
-    return TAB_ORDER.map((tab) => {
-      if (!visitedTabs.has(tab)) return null;
-      const isActive = tab === activeTab;
-      return (
-        <View
-          key={tab}
-          style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
-          pointerEvents={isActive ? 'auto' : 'none'}
-        >
-          {renderTab(tab)}
-        </View>
-      );
-    });
+  const sharedTabProps = {
+    handle,
+    ListHeaderComponent: headerComponent,
+    StickyTabComponent: tabsComponent,
+    pinScrollY: nextTabPinScrollYRef.current,
+    onProfileRefresh: handleProfileRefresh,
+    onScrollY: handleScrollY,
+    onHeaderHeightChange: handleHeaderHeightChange,
   };
 
   // When the relationship is blocked in either direction, the post-feed
@@ -410,7 +409,21 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
   return (
     <ThemedView style={styles.container}>
-      {renderTabContent()}
+      {handle
+        ? TAB_ORDER.map((tab) => {
+            if (!visitedTabs.has(tab)) return null;
+            const isActive = tab === activeTab;
+            return (
+              <View
+                key={tab}
+                style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
+                pointerEvents={isActive ? 'auto' : 'none'}
+              >
+                <ProfileTabPane tab={tab} isActive={isActive} sharedProps={sharedTabProps} />
+              </View>
+            );
+          })
+        : null}
 
       <ProfileDropdown
         isVisible={showDropdown}

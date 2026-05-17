@@ -24,6 +24,27 @@ type LinkItemProps = {
   };
 };
 
+type LinkIconProps = {
+  emoji: string;
+  faviconUrl: string | null;
+  metaTextColor: string;
+};
+
+function LinkIcon({ emoji, faviconUrl, metaTextColor }: LinkIconProps) {
+  // If emoji is provided, use it
+  if (emoji && emoji.trim()) {
+    return <ThemedText style={styles.linkEmoji}>{emoji}</ThemedText>;
+  }
+
+  // If favicon is available, use it
+  if (faviconUrl) {
+    return <Image source={{ uri: faviconUrl }} style={styles.favicon} contentFit="contain" />;
+  }
+
+  // Fallback to a default link icon
+  return <IconSymbol name="link" size={20} color={metaTextColor} />;
+}
+
 function LinkItem({ card }: LinkItemProps) {
   const borderColor = useThemeColor({}, 'border');
   const metaTextColor = useThemeColor({ light: '#4f5b62', dark: '#9BA1A6' }, 'icon');
@@ -37,25 +58,12 @@ function LinkItem({ card }: LinkItemProps) {
     }
   };
 
-  const renderIcon = () => {
-    // If emoji is provided, use it
-    if (card.emoji && card.emoji.trim()) {
-      return <ThemedText style={styles.linkEmoji}>{card.emoji}</ThemedText>;
-    }
-
-    // If favicon is available, use it
-    if (faviconUrl) {
-      return <Image source={{ uri: faviconUrl }} style={styles.favicon} contentFit="contain" />;
-    }
-
-    // Fallback to a default link icon
-    return <IconSymbol name="link" size={20} color={metaTextColor} />;
-  };
-
   const linkContent = (
     <ThemedCard style={styles.linkCard}>
       <View style={styles.linkRow}>
-        <View style={[styles.linkIcon, { borderColor }]}>{renderIcon()}</View>
+        <View style={[styles.linkIcon, { borderColor }]}>
+          <LinkIcon emoji={card.emoji} faviconUrl={faviconUrl} metaTextColor={metaTextColor} />
+        </View>
         <View style={styles.linkContent}>
           <ThemedText style={styles.linkText} numberOfLines={1}>
             {card.text}

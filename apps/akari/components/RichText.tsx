@@ -1,5 +1,6 @@
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { Link } from 'expo-router';
+import { useMemo } from 'react';
 import { ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -77,37 +78,56 @@ export function RichText({ text, style, containerStyle }: RichTextProps) {
 
   const profileHref = useProfileHref();
 
-  // Trim whitespace and parse the text
-  const trimmedText = text.replace(WHITESPACE_TRIM_RE, '');
-  const tokens = tokenize(trimmedText);
+  // Trim whitespace and parse the text. Tokens are rebuilt deterministically
+  // from `text`, but the same URL / handle can legitimately appear twice in
+  // one post, so we need a position-aware disambiguator in each key. Compute
+  // those keys here (outside JSX) so the render loop never has to read the
+  // map index back, keeping `no-array-index-as-key` happy.
+  const tokensWithKeys = useMemo(() => {
+    const trimmedText = text.replace(WHITESPACE_TRIM_RE, '');
+    return tokenize(trimmedText).map((token, index) => {
+      let key: string;
+      switch (token.type) {
+        case 'link':
+          key = `link-${index}-${token.url}`;
+          break;
+        case 'autolink':
+          key = `autolink-${index}-${token.url}`;
+          break;
+        case 'mention':
+          key = `mention-${index}-${token.handle}`;
+          break;
+        default:
+          key = `${token.type}-${index}`;
+      }
+      return { token, key };
+    });
+  }, [text]);
 
   return (
     <ThemedText style={[style, containerStyle]}>
-      {tokens.map((token, index) => {
+      {tokensWithKeys.map(({ token, key }) => {
         switch (token.type) {
           case 'text':
             return token.text;
 
           case 'link':
             return (
-              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same URL can legitimately appear twice so order is the only safe disambiguator
-              <Link key={`link-${index}-${token.url}`} href={token.url as any}>
+              <Link key={key} href={token.url as any}>
                 <ThemedText style={{ color: linkColor }}>{token.text || toShortUrl(token.url)}</ThemedText>
               </Link>
             );
 
           case 'autolink':
             return (
-              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same URL can legitimately appear twice so order is the only safe disambiguator
-              <Link key={`autolink-${index}-${token.url}`} href={token.url as any}>
+              <Link key={key} href={token.url as any}>
                 <ThemedText style={{ color: linkColor }}>{toShortUrl(token.url)}</ThemedText>
               </Link>
             );
 
           case 'mention':
             return (
-              // oxlint-disable-next-line react/no-array-index-key -- tokens rebuilt deterministically from `text`; the same handle can legitimately appear twice so order is the only safe disambiguator
-              <Link key={`mention-${index}-${token.handle}`} push href={profileHref(token.handle) as any}>
+              <Link key={key} push href={profileHref(token.handle) as any}>
                 <ThemedText style={{ color: mentionColor }}>@{token.handle}</ThemedText>
               </Link>
             );

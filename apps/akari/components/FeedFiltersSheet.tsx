@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Modal,
   Platform,
@@ -18,6 +18,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useFeedFilters, type FeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+
 
 const ACCENT = '#0085ff';
 
@@ -62,67 +63,6 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
   // already insets correctly. Same trick used in VerifiersSheet.
   const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
-  const renderToggleRow = useCallback(
-    (key: keyof FeedFilters, label: string) => {
-      const value = filters[key] as boolean;
-      return (
-        <View key={String(key)} style={[styles.row, { borderBottomColor: borderColor }]}>
-          <ThemedText style={[styles.rowLabel, { color: textColor }]}>{label}</ThemedText>
-          <Switch
-            value={value}
-            onValueChange={(next) => update({ [key]: next } as Partial<FeedFilters>)}
-            trackColor={{ true: ACCENT, false: borderColor }}
-          />
-        </View>
-      );
-    },
-    [borderColor, filters, textColor, update],
-  );
-
-  const renderCountRow = useCallback(
-    (key: CountKey, label: string) => {
-      const min = getMin(filters, key);
-      const max = getMax(filters, key);
-      const minPatch: Partial<FeedFilters> = {
-        [`min${key}`]: undefined,
-      };
-      const maxPatch: Partial<FeedFilters> = {
-        [`max${key}`]: undefined,
-      };
-      return (
-        <View key={key} style={[styles.row, { borderBottomColor: borderColor }]}>
-          <ThemedText style={[styles.rowLabel, { color: textColor }]}>{label}</ThemedText>
-          <View style={styles.rangeInputs}>
-            <TextInput
-              style={[styles.rangeInput, { backgroundColor: inputBackground, color: textColor }]}
-              value={min !== undefined ? String(min) : ''}
-              onChangeText={(value) =>
-                update({ ...minPatch, [`min${key}`]: parseBound(value) } as Partial<FeedFilters>)
-              }
-              placeholder={t('feed.filterMin')}
-              placeholderTextColor={subduedColor}
-              keyboardType="number-pad"
-              accessibilityLabel={t('feed.filterMinLabel', { metric: label })}
-            />
-            <ThemedText style={[styles.rangeSeparator, { color: subduedColor }]}>–</ThemedText>
-            <TextInput
-              style={[styles.rangeInput, { backgroundColor: inputBackground, color: textColor }]}
-              value={max !== undefined ? String(max) : ''}
-              onChangeText={(value) =>
-                update({ ...maxPatch, [`max${key}`]: parseBound(value) } as Partial<FeedFilters>)
-              }
-              placeholder={t('feed.filterMax')}
-              placeholderTextColor={subduedColor}
-              keyboardType="number-pad"
-              accessibilityLabel={t('feed.filterMaxLabel', { metric: label })}
-            />
-          </View>
-        </View>
-      );
-    },
-    [borderColor, filters, inputBackground, subduedColor, t, textColor, update],
-  );
-
   return (
     <Modal
       visible={visible}
@@ -149,19 +89,29 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
 
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <SectionHeader label={t('feed.filterSectionHide')} subduedColor={subduedColor} />
-          {renderToggleRow('hideReplies', t('feed.hideReplies'))}
-          {renderToggleRow('hideReposts', t('feed.hideReposts'))}
-          {renderToggleRow('hideQuotes', t('feed.hideQuotes'))}
-          {renderToggleRow('hideEngaged', t('feed.hideEngaged'))}
+          <ToggleRow filterKey="hideReplies" label={t('feed.hideReplies')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+          <ToggleRow filterKey="hideReposts" label={t('feed.hideReposts')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+          <ToggleRow filterKey="hideQuotes" label={t('feed.hideQuotes')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+          <ToggleRow filterKey="hideEngaged" label={t('feed.hideEngaged')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
 
           <SectionHeader label={t('feed.filterSectionAuthor')} subduedColor={subduedColor} />
-          {renderToggleRow('onlyFollowing', t('feed.onlyFollowing'))}
-          {renderToggleRow('onlyMutuals', t('feed.onlyMutuals'))}
+          <ToggleRow filterKey="onlyFollowing" label={t('feed.onlyFollowing')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+          <ToggleRow filterKey="onlyMutuals" label={t('feed.onlyMutuals')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
 
           <SectionHeader label={t('feed.filterSectionCounts')} subduedColor={subduedColor} />
-          {COUNT_KEYS.map((key) =>
-            renderCountRow(key, t(`feed.count${key}`)),
-          )}
+          {COUNT_KEYS.map((key) => (
+            <CountRow
+              key={key}
+              countKey={key}
+              label={t(`feed.count${key}`)}
+              filters={filters}
+              update={update}
+              borderColor={borderColor}
+              textColor={textColor}
+              subduedColor={subduedColor}
+              inputBackground={inputBackground}
+            />
+          ))}
         </ScrollView>
       </ThemedView>
     </Modal>
@@ -174,6 +124,91 @@ function SectionHeader({ label, subduedColor }: { label: string; subduedColor: s
       <ThemedText style={[styles.sectionHeaderText, { color: subduedColor }]}>
         {label.toUpperCase()}
       </ThemedText>
+    </View>
+  );
+}
+
+type ToggleRowProps = {
+  filterKey: keyof FeedFilters;
+  label: string;
+  filters: FeedFilters;
+  update: (patch: Partial<FeedFilters>) => void;
+  borderColor: string;
+  textColor: string;
+};
+
+function ToggleRow({ filterKey, label, filters, update, borderColor, textColor }: ToggleRowProps) {
+  const value = filters[filterKey] as boolean;
+  return (
+    <View style={[styles.row, { borderBottomColor: borderColor }]}>
+      <ThemedText style={[styles.rowLabel, { color: textColor }]}>{label}</ThemedText>
+      <Switch
+        value={value}
+        onValueChange={(next) => update({ [filterKey]: next } as Partial<FeedFilters>)}
+        trackColor={{ true: ACCENT, false: borderColor }}
+      />
+    </View>
+  );
+}
+
+type CountRowProps = {
+  countKey: CountKey;
+  label: string;
+  filters: FeedFilters;
+  update: (patch: Partial<FeedFilters>) => void;
+  borderColor: string;
+  textColor: string;
+  subduedColor: string;
+  inputBackground: string;
+};
+
+function CountRow({
+  countKey,
+  label,
+  filters,
+  update,
+  borderColor,
+  textColor,
+  subduedColor,
+  inputBackground,
+}: CountRowProps) {
+  const { t } = useTranslation();
+  const min = getMin(filters, countKey);
+  const max = getMax(filters, countKey);
+  const minPatch: Partial<FeedFilters> = {
+    [`min${countKey}`]: undefined,
+  };
+  const maxPatch: Partial<FeedFilters> = {
+    [`max${countKey}`]: undefined,
+  };
+  return (
+    <View style={[styles.row, { borderBottomColor: borderColor }]}>
+      <ThemedText style={[styles.rowLabel, { color: textColor }]}>{label}</ThemedText>
+      <View style={styles.rangeInputs}>
+        <TextInput
+          style={[styles.rangeInput, { backgroundColor: inputBackground, color: textColor }]}
+          value={min !== undefined ? String(min) : ''}
+          onChangeText={(value) =>
+            update({ ...minPatch, [`min${countKey}`]: parseBound(value) } as Partial<FeedFilters>)
+          }
+          placeholder={t('feed.filterMin')}
+          placeholderTextColor={subduedColor}
+          keyboardType="number-pad"
+          accessibilityLabel={t('feed.filterMinLabel', { metric: label })}
+        />
+        <ThemedText style={[styles.rangeSeparator, { color: subduedColor }]}>–</ThemedText>
+        <TextInput
+          style={[styles.rangeInput, { backgroundColor: inputBackground, color: textColor }]}
+          value={max !== undefined ? String(max) : ''}
+          onChangeText={(value) =>
+            update({ ...maxPatch, [`max${countKey}`]: parseBound(value) } as Partial<FeedFilters>)
+          }
+          placeholder={t('feed.filterMax')}
+          placeholderTextColor={subduedColor}
+          keyboardType="number-pad"
+          accessibilityLabel={t('feed.filterMaxLabel', { metric: label })}
+        />
+      </View>
     </View>
   );
 }

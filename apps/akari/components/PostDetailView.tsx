@@ -18,17 +18,21 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigateToPost } from '@/utils/navigation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
-const renderComment = (
-  item:
-    | BlueskyFeedItem
-    | {
-        uri: string;
-        notFound?: boolean;
-        blocked?: boolean;
-        author?: BlueskyPostView['author'];
-      },
-  navigateToPost: (args: { actor: string; rKey: string }) => void,
-) => {
+type CommentItem =
+  | BlueskyFeedItem
+  | {
+      uri: string;
+      notFound?: boolean;
+      blocked?: boolean;
+      author?: BlueskyPostView['author'];
+    };
+
+type CommentRowProps = {
+  item: CommentItem;
+  navigateToPost: (args: { actor: string; rKey: string }) => void;
+};
+
+function CommentRow({ item, navigateToPost }: CommentRowProps) {
   // Skip null or blocked replies
   if (!item || 'notFound' in item || 'blocked' in item) return null;
 
@@ -151,7 +155,59 @@ const renderComment = (
       }}
     />
   );
+}
+
+type ThreadContextPostProps = {
+  post: BlueskyPostView;
+  focusedUri: string;
+  navigateToPost: (args: { actor: string; rKey: string }) => void;
 };
+
+/**
+ * Render a parent or grandparent post above the focused post in the thread.
+ * Returns `null` when the post is the focused one (so the same card isn't
+ * rendered twice) — the focused PostCard is handled separately in the main
+ * scroll content.
+ */
+function ThreadContextPost({ post: ctxPost, focusedUri, navigateToPost }: ThreadContextPostProps) {
+  if (ctxPost.uri === focusedUri) return null;
+
+  return (
+    <PostCard
+      post={{
+        id: ctxPost.uri,
+        text:
+          typeof ctxPost.record === 'object' && ctxPost.record && 'text' in ctxPost.record
+            ? (ctxPost.record as { text: string }).text
+            : undefined,
+        author: {
+          did: ctxPost.author.did,
+          handle: ctxPost.author.handle,
+          displayName: ctxPost.author.displayName,
+          avatar: ctxPost.author.avatar,
+          verification: ctxPost.author.verification,
+        },
+        createdAt: formatRelativeTime(ctxPost.indexedAt),
+        likeCount: ctxPost.likeCount || 0,
+        commentCount: ctxPost.replyCount || 0,
+        repostCount: ctxPost.repostCount || 0,
+        embed: ctxPost.embed,
+        embeds: ctxPost.embeds,
+        labels: ctxPost.labels,
+        viewer: ctxPost.viewer,
+        facets: (ctxPost.record as any)?.facets,
+        uri: ctxPost.uri,
+        cid: ctxPost.cid,
+        threadRootUri: (ctxPost.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
+      }}
+      onPress={() => {
+        const uriParts = ctxPost.uri.split('/');
+        const ctxRKey = uriParts[uriParts.length - 1];
+        navigateToPost({ actor: ctxPost.author.handle, rKey: ctxRKey });
+      }}
+    />
+  );
+}
 
 type PostDetailViewProps = {
   actor: string;
@@ -253,88 +309,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
     );
   }
 
-  const renderGrandparentPost = () => {
-    if (!rootPost || rootPost.uri === post.uri) return null;
-
-    return (
-      <PostCard
-          post={{
-            id: rootPost.uri,
-            text:
-              typeof rootPost.record === 'object' && rootPost.record && 'text' in rootPost.record
-                ? (rootPost.record as { text: string }).text
-                : undefined,
-            author: {
-              did: rootPost.author.did,
-              handle: rootPost.author.handle,
-              displayName: rootPost.author.displayName,
-              avatar: rootPost.author.avatar,
-              verification: rootPost.author.verification,
-            },
-            createdAt: formatRelativeTime(rootPost.indexedAt),
-            likeCount: rootPost.likeCount || 0,
-            commentCount: rootPost.replyCount || 0,
-            repostCount: rootPost.repostCount || 0,
-            embed: rootPost.embed,
-            embeds: rootPost.embeds,
-            labels: rootPost.labels,
-            viewer: rootPost.viewer,
-            facets: (rootPost.record as any)?.facets,
-            uri: rootPost.uri,
-            cid: rootPost.cid,
-            threadRootUri: (rootPost.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
-          }}
-          onPress={() => {
-            // Navigate to root post in current tab
-            const uriParts = rootPost.uri.split('/');
-            const rootRKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: rootPost.author.handle, rKey: rootRKey });
-          }}
-        />
-    );
-  };
-
-  const renderParentPost = () => {
-    if (!parentPost || parentPost.uri === post.uri) return null;
-
-    return (
-      <PostCard
-          post={{
-            id: parentPost.uri,
-            text:
-              typeof parentPost.record === 'object' && parentPost.record && 'text' in parentPost.record
-                ? (parentPost.record as { text: string }).text
-                : undefined,
-            author: {
-              did: parentPost.author.did,
-              handle: parentPost.author.handle,
-              displayName: parentPost.author.displayName,
-              avatar: parentPost.author.avatar,
-              verification: parentPost.author.verification,
-            },
-            createdAt: formatRelativeTime(parentPost.indexedAt),
-            likeCount: parentPost.likeCount || 0,
-            commentCount: parentPost.replyCount || 0,
-            repostCount: parentPost.repostCount || 0,
-            embed: parentPost.embed,
-            embeds: parentPost.embeds,
-            labels: parentPost.labels,
-            viewer: parentPost.viewer,
-            facets: (parentPost.record as any)?.facets,
-            uri: parentPost.uri,
-            cid: parentPost.cid,
-            threadRootUri: (parentPost.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
-          }}
-          onPress={() => {
-            // Navigate to parent post in current tab
-            const uriParts = parentPost.uri.split('/');
-            const parentRKey = uriParts[uriParts.length - 1];
-            navigateToPost({ actor: parentPost.author.handle, rKey: parentRKey });
-          }}
-        />
-    );
-  };
-
   return (
     <ThemedView style={styles.container}>
       <ScrollView
@@ -358,10 +332,14 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
         onScrollBeginDrag={handleScrollBeginDrag}
       >
         {/* Thread Context - Root Post (if this is a reply to a reply) */}
-        {renderGrandparentPost()}
+        {rootPost ? (
+          <ThreadContextPost post={rootPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
+        ) : null}
 
         {/* Thread Context - Parent Post */}
-        {renderParentPost()}
+        {parentPost ? (
+          <ThreadContextPost post={parentPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
+        ) : null}
 
         {/* Main Post — wrapped so we can capture its y-offset and snap the
             scroll position to it on initial open / async parent loads. */}
@@ -411,7 +389,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
                   // bottom-padding calculation up at the ScrollView level.
                   onLayout={isLast ? handleLastReplyLayout : undefined}
                 >
-                  {renderComment(reply, navigateToPost)}
+                  <CommentRow item={reply} navigateToPost={navigateToPost} />
                 </View>
               );
             })}

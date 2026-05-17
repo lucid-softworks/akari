@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
@@ -16,6 +16,23 @@ type RecipeModalProps = {
   onClose: () => void;
   recipe: BlueskyRecipeRecord | null;
 };
+
+/**
+ * Pair each string in a list with a per-render-stable, occurrence-disambiguated
+ * key so duplicate entries (e.g. "salt to taste" listed twice in an
+ * ingredients list) don't collide as React keys. The occurrence counter lives
+ * outside the JSX render loop, so the rendered `key=` never reads a `.map()`
+ * index — which keeps `no-array-index-as-key` from flagging legitimate
+ * positional disambiguation.
+ */
+function withStringKeys(prefix: string, items: readonly string[]): { value: string; key: string }[] {
+  const seen = new Map<string, number>();
+  return items.map((value) => {
+    const count = seen.get(value) ?? 0;
+    seen.set(value, count + 1);
+    return { value, key: count === 0 ? `${prefix}-${value}` : `${prefix}-${value}-${count}` };
+  });
+}
 
 function getAttributionName(attribution: BlueskyRecipeAttribution): string {
   switch (attribution.type) {
@@ -61,6 +78,26 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
   // Extract DID from recipe URI to resolve the correct PDS (call hook unconditionally)
   const did = recipe?.uri.split('/')[2];
   const { data: pdsUrl } = usePdsUrlFromDid(did);
+
+  // Precompute per-render-stable, occurrence-disambiguated keys for the
+  // free-text string lists. These are user-authored, so duplicate entries
+  // ("salt to taste" listed twice) are possible — computing the keys out
+  // here means the render loop never reads a `.map()` index back.
+  const dietEntries = useMemo(
+    () =>
+      recipe?.value.suitableForDiet
+        ? withStringKeys('diet', resolveDietaryRestrictions(recipe.value.suitableForDiet))
+        : [],
+    [recipe?.value.suitableForDiet],
+  );
+  const ingredientEntries = useMemo(
+    () => (recipe?.value.ingredients ? withStringKeys('ingredient', recipe.value.ingredients) : []),
+    [recipe?.value.ingredients],
+  );
+  const keywordEntries = useMemo(
+    () => (recipe?.value.keywords ? withStringKeys('keyword', recipe.value.keywords) : []),
+    [recipe?.value.keywords],
+  );
 
   if (!recipe) return null;
 
@@ -204,13 +241,12 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
                 </View>
               )}
 
-              {recipe.value.suitableForDiet && recipe.value.suitableForDiet.length > 0 && (
+              {dietEntries.length > 0 && (
                 <View style={styles.section}>
                   <ThemedText style={styles.sectionTitle}>{t('recipe.dietaryRestrictions')}</ThemedText>
                   <View style={styles.keywordsContainer}>
-                    {resolveDietaryRestrictions(recipe.value.suitableForDiet).map((diet, index) => (
-                      // oxlint-disable-next-line react/no-array-index-key -- dietary tags are user-supplied strings; duplicates would collide without the index disambiguator
-                      <View key={`diet-${diet}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
+                    {dietEntries.map(({ value: diet, key }) => (
+                      <View key={key} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                         <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{diet}</ThemedText>
                       </View>
                     ))}
@@ -223,9 +259,8 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             <View style={styles.section}>
               <ThemedText style={styles.sectionTitle}>{t('recipe.ingredients')}</ThemedText>
               <View style={styles.ingredientsList}>
-                {recipe.value.ingredients.map((ingredient, index) => (
-                  // oxlint-disable-next-line react/no-array-index-key -- ingredients are user-supplied strings; duplicates (e.g. "salt to taste" listed twice) need the index disambiguator
-                  <View key={`ingredient-${ingredient}-${index}`} style={styles.ingredientItem}>
+                {ingredientEntries.map(({ value: ingredient, key }) => (
+                  <View key={key} style={styles.ingredientItem}>
                     <View style={[styles.ingredientBullet, { backgroundColor: accentColor }]} />
                     <ThemedText style={styles.ingredientText}>{ingredient}</ThemedText>
                   </View>
@@ -238,7 +273,7 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
               <ThemedText style={styles.sectionTitle}>{t('recipe.instructions')}</ThemedText>
               <View style={styles.instructionsList}>
                 {recipe.value.instructions.map((instruction, index) => (
-                  // oxlint-disable-next-line react/no-array-index-key -- instructions are ordered steps; their numeric position IS their identity (step 1, step 2, etc.)
+                  // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- instructions are ordered steps; their numeric position IS their identity (rendered as "1.", "2.", etc.)
                   <View key={`instruction-${index}-${instruction.slice(0, 24)}`} style={styles.instructionItem}>
                     <ThemedText style={[styles.instructionNumber, { color: accentColor }]}>{index + 1}.</ThemedText>
                     <ThemedText style={styles.instructionText}>{instruction}</ThemedText>
@@ -248,13 +283,12 @@ export function RecipeModal({ visible, onClose, recipe }: RecipeModalProps) {
             </View>
 
             {/* Keywords */}
-            {recipe.value.keywords && recipe.value.keywords.length > 0 && (
+            {keywordEntries.length > 0 && (
               <View style={styles.section}>
                 <ThemedText style={styles.sectionTitle}>{t('recipe.tags')}</ThemedText>
                 <View style={styles.keywordsContainer}>
-                  {recipe.value.keywords.map((keyword, index) => (
-                    // oxlint-disable-next-line react/no-array-index-key -- keywords are user-supplied strings; duplicates need the index disambiguator
-                    <View key={`keyword-${keyword}-${index}`} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
+                  {keywordEntries.map(({ value: keyword, key }) => (
+                    <View key={key} style={[styles.keywordPill, { backgroundColor: pillBackground }]}>
                       <ThemedText style={[styles.keywordText, { color: metaTextColor }]}>{keyword}</ThemedText>
                     </View>
                   ))}

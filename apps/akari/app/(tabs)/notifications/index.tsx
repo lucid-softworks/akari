@@ -90,6 +90,155 @@ function NotificationImage({ uri }: { uri: string }) {
   );
 }
 
+type NotificationAuthors = GroupedNotification['authors'];
+
+type NotificationAuthorNamesProps = {
+  authors: NotificationAuthors;
+};
+
+function NotificationAuthorNames({ authors }: NotificationAuthorNamesProps) {
+  const { t } = useTranslation();
+  const first = authors[0];
+  const firstName = first.displayName || first.handle;
+  const firstBadge = (
+    <VerificationBadge
+      verification={first.verification}
+      subjectHandle={first.handle}
+      subjectDisplayName={first.displayName}
+      size={14}
+    />
+  );
+
+  if (authors.length === 1) {
+    return (
+      <>
+        <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+        {firstBadge}
+      </>
+    );
+  }
+
+  if (authors.length === 2) {
+    const second = authors[1];
+    const secondName = second.displayName || second.handle;
+    return (
+      <>
+        <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+        {firstBadge}
+        <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andSecondName', { name: secondName })}</ThemedText>
+        <VerificationBadge
+          verification={second.verification}
+          subjectHandle={second.handle}
+          subjectDisplayName={second.displayName}
+          size={14}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
+      {firstBadge}
+      <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andOthersCount', { count: authors.length - 1 })}</ThemedText>
+    </>
+  );
+}
+
+type NotificationAvatarsProps = {
+  authors: NotificationAuthors;
+};
+
+function NotificationAvatars({ authors }: NotificationAvatarsProps) {
+  const maxAvatars = 4;
+  const avatarsToShow = authors.slice(0, maxAvatars);
+  const remainingCount = authors.length - maxAvatars;
+
+  return (
+    <View style={styles.avatarsContainer}>
+      {avatarsToShow.map((author, index) => (
+        <View
+          key={author.did}
+          style={[
+            styles.avatarWrapper,
+            {
+              marginLeft: index > 0 ? -6 : 0,
+              zIndex: maxAvatars - index,
+            },
+          ]}
+        >
+          {author.avatar ? (
+            <Image
+              source={{ uri: author.avatar }}
+              style={AVATAR_IMAGE_STYLE}
+              contentFit="cover"
+            />
+          ) : (
+            <View style={[styles.avatar, styles.avatarFallback]}>
+              <Text style={styles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
+            </View>
+          )}
+        </View>
+      ))}
+      {remainingCount > 0 && (
+        <View
+          style={[
+            styles.avatarWrapper,
+            {
+              marginLeft: -6,
+              zIndex: 0,
+            },
+          ]}
+        >
+          <View style={[styles.avatar, styles.avatarOverflow]}>
+            <Text style={styles.avatarOverflowText}>+{remainingCount}</Text>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}
+
+type NotificationEmbedImagesProps = {
+  embed: BlueskyEmbed | undefined;
+  authorDid: string | undefined;
+};
+
+function NotificationEmbedImages({ embed, authorDid }: NotificationEmbedImagesProps) {
+  if (!embed || !authorDid) return null;
+
+  // Extract image URLs - handle both resolved CDN URLs and raw blob refs
+  const images: string[] = [];
+  const embedImages = embed.images ?? embed.media?.images;
+  if (embedImages) {
+    for (const img of embedImages) {
+      const url = img.thumb || img.fullsize;
+      if (url && url.startsWith('http')) {
+        images.push(url);
+      } else if (img.image?.ref?.$link) {
+        // Construct CDN URL from blob ref
+        images.push(
+          cdnImageUrl({
+            size: 'feed_thumbnail',
+            did: authorDid,
+            blobRef: img.image.ref.$link,
+          }),
+        );
+      }
+    }
+  }
+
+  if (images.length === 0) return null;
+
+  return (
+    <View style={styles.embedImagesContainer}>
+      {images.slice(0, 4).map((url) => (
+        <NotificationImage key={url} uri={url} />
+      ))}
+    </View>
+  );
+}
+
 function NotificationItem({ notification, onPress, href, borderColor }: NotificationItemProps) {
   const { t } = useTranslation();
   const iconColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'text');
@@ -148,143 +297,8 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
     }
   };
 
-  const renderAuthorNames = (authors: typeof notification.authors) => {
-    const first = authors[0];
-    const firstName = first.displayName || first.handle;
-    const firstBadge = (
-      <VerificationBadge
-        verification={first.verification}
-        subjectHandle={first.handle}
-        subjectDisplayName={first.displayName}
-        size={14}
-      />
-    );
-
-    if (authors.length === 1) {
-      return (
-        <>
-          <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
-          {firstBadge}
-        </>
-      );
-    }
-
-    if (authors.length === 2) {
-      const second = authors[1];
-      const secondName = second.displayName || second.handle;
-      return (
-        <>
-          <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
-          {firstBadge}
-          <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andSecondName', { name: secondName })}</ThemedText>
-          <VerificationBadge
-            verification={second.verification}
-            subjectHandle={second.handle}
-            subjectDisplayName={second.displayName}
-            size={14}
-          />
-        </>
-      );
-    }
-
-    return (
-      <>
-        <ThemedText style={styles.authorNames} numberOfLines={1}>{firstName}</ThemedText>
-        {firstBadge}
-        <ThemedText style={styles.authorNames} numberOfLines={1}>{t('notifications.andOthersCount', { count: authors.length - 1 })}</ThemedText>
-      </>
-    );
-  };
-
-  const renderAvatars = () => {
-    const maxAvatars = 4;
-    const avatarsToShow = notification.authors.slice(0, maxAvatars);
-    const remainingCount = notification.authors.length - maxAvatars;
-
-    return (
-      <View style={styles.avatarsContainer}>
-        {avatarsToShow.map((author, index) => (
-          <View
-            key={author.did}
-            style={[
-              styles.avatarWrapper,
-              {
-                marginLeft: index > 0 ? -6 : 0,
-                zIndex: maxAvatars - index,
-              },
-            ]}
-          >
-            {author.avatar ? (
-              <Image
-                source={{ uri: author.avatar }}
-                style={AVATAR_IMAGE_STYLE}
-                contentFit="cover"
-              />
-            ) : (
-              <View style={[styles.avatar, styles.avatarFallback]}>
-                <Text style={styles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
-              </View>
-            )}
-          </View>
-        ))}
-        {remainingCount > 0 && (
-          <View
-            style={[
-              styles.avatarWrapper,
-              {
-                marginLeft: -6,
-                zIndex: 0,
-              },
-            ]}
-          >
-            <View style={[styles.avatar, styles.avatarOverflow]}>
-              <Text style={styles.avatarOverflowText}>+{remainingCount}</Text>
-            </View>
-          </View>
-        )}
-      </View>
-    );
-  };
-
-  const renderEmbedImages = () => {
-    if (!notification.embed) return null;
-
-    const authorDid = notification.authors[0]?.did;
-    if (!authorDid) return null;
-
-    // Extract image URLs - handle both resolved CDN URLs and raw blob refs
-    const images: string[] = [];
-    const embedImages = notification.embed.images ?? notification.embed.media?.images;
-    if (embedImages) {
-      for (const img of embedImages) {
-        const url = img.thumb || img.fullsize;
-        if (url && url.startsWith('http')) {
-          images.push(url);
-        } else if (img.image?.ref?.$link) {
-          // Construct CDN URL from blob ref
-          images.push(
-            cdnImageUrl({
-              size: 'feed_thumbnail',
-              did: authorDid,
-              blobRef: img.image.ref.$link,
-            }),
-          );
-        }
-      }
-    }
-
-    if (images.length === 0) return null;
-
-    return (
-      <View style={styles.embedImagesContainer}>
-        {images.slice(0, 4).map((url) => (
-          <NotificationImage key={url} uri={url} />
-        ))}
-      </View>
-    );
-  };
-
   const notificationIcon = getNotificationIcon(notification.type);
+  const authorDid = notification.authors[0]?.did;
 
   return (
     <PressableLink
@@ -296,11 +310,13 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
         <View style={styles.iconContainer}>
           <IconSymbol name={notificationIcon.name} size={18} color={notificationIcon.color} />
         </View>
-        <View style={styles.avatarContainer}>{renderAvatars()}</View>
+        <View style={styles.avatarContainer}>
+          <NotificationAvatars authors={notification.authors} />
+        </View>
         <View style={styles.contentContainer}>
           <View style={styles.headerRow}>
             <View style={styles.authorNamesRow}>
-              {renderAuthorNames(notification.authors)}
+              <NotificationAuthorNames authors={notification.authors} />
             </View>
             <ThemedText style={styles.timestamp}>{formatRelativeTime(notification.latestTimestamp)}</ThemedText>
           </View>
@@ -314,7 +330,7 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
           <ThemedText style={styles.postContent} numberOfLines={2}>
             {notification.postContent}
           </ThemedText>
-          {renderEmbedImages()}
+          <NotificationEmbedImages embed={notification.embed} authorDid={authorDid} />
         </View>
       )}
     </PressableLink>
@@ -466,6 +482,20 @@ const NotificationsLoadingSkeleton = React.memo(function NotificationsLoadingSke
   );
 });
 
+type NotificationsErrorStateProps = {
+  message: string | null;
+};
+
+function NotificationsErrorState({ message }: NotificationsErrorStateProps) {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.emptyState}>
+      <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
+      <ThemedText style={styles.emptyStateSubtitle}>{message || t('notifications.somethingWentWrong')}</ThemedText>
+    </View>
+  );
+}
+
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
@@ -606,16 +636,6 @@ export default function NotificationsScreen() {
     [t],
   );
 
-  const renderErrorState = useCallback(
-    () => (
-      <View style={styles.emptyState}>
-        <ThemedText style={styles.emptyStateTitle}>{t('notifications.errorLoadingNotifications')}</ThemedText>
-        <ThemedText style={styles.emptyStateSubtitle}>{error?.message || t('notifications.somethingWentWrong')}</ThemedText>
-      </View>
-    ),
-    [error?.message, t],
-  );
-
   const listEmptyComponent = isLoading ? (
     <NotificationsLoadingSkeleton />
   ) : (
@@ -672,7 +692,7 @@ export default function NotificationsScreen() {
   if (isError) {
     return (
       <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
-        {renderErrorState()}
+        <NotificationsErrorState message={error?.message ?? null} />
       </ThemedView>
     );
   }

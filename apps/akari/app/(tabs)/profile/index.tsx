@@ -83,6 +83,39 @@ const TAB_ORDER: ProfileTabType[] = [
   'links',
 ];
 
+type SharedTabProps = {
+  handle: string;
+  ListHeaderComponent: React.ReactElement | null;
+  StickyTabComponent: React.ReactElement | null;
+  pinScrollY: number;
+  onProfileRefresh: () => Promise<void>;
+  onScrollY: (y: number) => void;
+  onHeaderHeightChange: (h: number) => void;
+};
+
+type OwnProfileTabPaneProps = {
+  tab: ProfileTabType;
+  isActive: boolean;
+  sharedProps: SharedTabProps;
+};
+
+function OwnProfileTabPane({ tab, isActive, sharedProps }: OwnProfileTabPaneProps) {
+  const props = { ...sharedProps, isActive };
+  switch (tab) {
+    case 'posts': return <PostsTab {...props} />;
+    case 'replies': return <RepliesTab {...props} />;
+    case 'likes': return <LikesTab {...props} />;
+    case 'media': return <MediaTab {...props} />;
+    case 'videos': return <VideosTab {...props} />;
+    case 'feeds': return <FeedsTab {...props} />;
+    case 'repos': return <ReposTab {...props} />;
+    case 'starterpacks': return <StarterpacksTab {...props} />;
+    case 'recipes': return <RecipesTab {...props} />;
+    case 'links': return <LinksTab {...props} />;
+    default: return null;
+  }
+}
+
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
@@ -199,60 +232,39 @@ export default function ProfileScreen() {
     });
   };
 
-  const renderTab = (tab: ProfileTabType) => {
-    if (!currentAccount?.handle) return null;
-    const sharedProps = {
-      handle: currentAccount.handle,
-      ListHeaderComponent: headerComponent,
-      StickyTabComponent: tabsComponent,
-      pinScrollY: nextTabPinScrollYRef.current,
-      isActive: tab === activeTab,
-      onProfileRefresh: handleProfileRefresh,
-      onScrollY: handleScrollY,
-      onHeaderHeightChange: handleHeaderHeightChange,
-    };
-    switch (tab) {
-      case 'posts': return <PostsTab {...sharedProps} />;
-      case 'replies': return <RepliesTab {...sharedProps} />;
-      case 'likes': return <LikesTab {...sharedProps} />;
-      case 'media': return <MediaTab {...sharedProps} />;
-      case 'videos': return <VideosTab {...sharedProps} />;
-      case 'feeds': return <FeedsTab {...sharedProps} />;
-      case 'repos': return <ReposTab {...sharedProps} />;
-      case 'starterpacks': return <StarterpacksTab {...sharedProps} />;
-      case 'recipes': return <RecipesTab {...sharedProps} />;
-      case 'links': return <LinksTab {...sharedProps} />;
-      default: return null;
-    }
-  };
-
-  const renderTabContent = () => {
-    if (!currentAccount?.handle) {
-      return (
-        <ThemedView style={styles.emptyState}>
-          <ThemedText style={styles.emptyStateText}>{t('common.loading')}</ThemedText>
-        </ThemedView>
-      );
-    }
-
-    return TAB_ORDER.map((tab) => {
-      if (!visitedTabs.has(tab)) return null;
-      const isActive = tab === activeTab;
-      return (
-        <View
-          key={tab}
-          style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
-          pointerEvents={isActive ? 'auto' : 'none'}
-        >
-          {renderTab(tab)}
-        </View>
-      );
-    });
-  };
+  const sharedTabProps: SharedTabProps | null = currentAccount?.handle
+    ? {
+        handle: currentAccount.handle,
+        ListHeaderComponent: headerComponent,
+        StickyTabComponent: tabsComponent,
+        pinScrollY: nextTabPinScrollYRef.current,
+        onProfileRefresh: handleProfileRefresh,
+        onScrollY: handleScrollY,
+        onHeaderHeightChange: handleHeaderHeightChange,
+      }
+    : null;
 
   return (
     <ThemedView style={styles.container}>
-      {renderTabContent()}
+      {sharedTabProps == null ? (
+        <ThemedView style={styles.emptyState}>
+          <ThemedText style={styles.emptyStateText}>{t('common.loading')}</ThemedText>
+        </ThemedView>
+      ) : (
+        TAB_ORDER.map((tab) => {
+          if (!visitedTabs.has(tab)) return null;
+          const isActive = tab === activeTab;
+          return (
+            <View
+              key={tab}
+              style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
+              pointerEvents={isActive ? 'auto' : 'none'}
+            >
+              <OwnProfileTabPane tab={tab} isActive={isActive} sharedProps={sharedTabProps} />
+            </View>
+          );
+        })
+      )}
 
       <ProfileDropdown
         isVisible={showDropdown}

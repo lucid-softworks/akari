@@ -1393,7 +1393,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
                     {autoThreadChunks.length > 1
                       ? autoThreadChunks.map((chunk, idx) => (
                           <View
-                            // oxlint-disable-next-line react/no-array-index-key -- chunks are recomputed from text every render and their position IS the part number shown to the user
+                            // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- chunks are recomputed from text every render and their position IS the part number shown to the user (rendered as "1/N", "2/N")
                             key={`autothread-chunk-${idx}`}
                             style={[styles.autoThreadChunk, { borderColor }]}
                           >

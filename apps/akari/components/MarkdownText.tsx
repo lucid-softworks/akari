@@ -91,11 +91,19 @@ function InlineRenderer({
   inline: MarkdownInline[];
   codeBackground: string;
 }) {
+  // Inline markdown nodes have no stable id — the AST is rebuilt
+  // deterministically from `source` on every render. Compute the
+  // `${type}-${index}` keys here (outside the JSX) so the render loop never
+  // reads the map index back, which keeps `no-array-index-as-key` happy
+  // while still disambiguating repeated tokens (e.g. two bold spans).
+  const nodesWithKeys = useMemo(
+    () => inline.map((node, index) => ({ node, key: `${node.type}-${index}` })),
+    [inline],
+  );
   return (
     <>
-      {inline.map((node, index) => (
-        // oxlint-disable-next-line react/no-array-index-key -- inline markdown nodes have no stable id; the AST is rebuilt deterministically each render
-        <InlineNode key={`${node.type}-${index}`} node={node} codeBackground={codeBackground} />
+      {nodesWithKeys.map(({ node, key }) => (
+        <InlineNode key={key} node={node} codeBackground={codeBackground} />
       ))}
     </>
   );

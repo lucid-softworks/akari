@@ -10,7 +10,7 @@ type SupplementalComponent =
   | null
   | undefined;
 
-function renderSupplemental(component: SupplementalComponent) {
+function Supplemental({ component }: { component: SupplementalComponent }) {
   if (!component) {
     return null;
   }
@@ -60,9 +60,9 @@ export function FlashList(props: any) {
 
   return (
     <View style={style}>
-      {renderSupplemental(ListHeaderComponent)}
-      {shouldShowEmpty ? renderSupplemental(ListEmptyComponent) : items}
-      {renderSupplemental(ListFooterComponent)}
+      <Supplemental component={ListHeaderComponent} />
+      {shouldShowEmpty ? <Supplemental component={ListEmptyComponent} /> : items}
+      <Supplemental component={ListFooterComponent} />
     </View>
   );
 }

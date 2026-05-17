@@ -297,7 +297,6 @@ export default function NetworkSettingsScreen() {
                     onChange={(choice) => handlePerAccountChange(account, choice)}
                     secondaryText={secondaryText}
                     showDivider={index < accounts.length - 1}
-                    t={t}
                   />
                 ))}
               </ThemedView>
@@ -361,7 +360,6 @@ type PerAccountRowProps = {
   onChange: (choice: AccountPickValue) => void;
   secondaryText: string;
   showDivider: boolean;
-  t: ReturnType<typeof useTranslation>['t'];
 };
 
 function PerAccountRow({
@@ -373,8 +371,8 @@ function PerAccountRow({
   onChange,
   secondaryText,
   showDivider,
-  t,
 }: PerAccountRowProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const choices: { id: AccountPickValue; label: string }[] = [
     { id: 'default', label: t('settings.appView.choice.default') },
