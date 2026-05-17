@@ -314,7 +314,7 @@ export default function ConversationScreen() {
   const [reactionsDialogFor, setReactionsDialogFor] = useState<string | null>(null);
   const [emojiPickerFor, setEmojiPickerFor] = useState<string | null>(null);
   const [composerEmojiPickerVisible, setComposerEmojiPickerVisible] = useState(false);
-  const [composerSelection, setComposerSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const composerSelectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
   const [composerGifPickerVisible, setComposerGifPickerVisible] = useState(false);
 
   const handleToggleReaction = (messageId: string, value: string) => {
@@ -655,7 +655,9 @@ export default function ConversationScreen() {
         style={[styles.textInput, { backgroundColor, borderColor, color: textColor }]}
         value={messageText}
         onChangeText={setMessageText}
-        onSelectionChange={(e) => setComposerSelection(e.nativeEvent.selection)}
+        onSelectionChange={(e) => {
+          composerSelectionRef.current = e.nativeEvent.selection;
+        }}
         placeholder={t('messages.typeMessage')}
         placeholderTextColor={iconColor}
         multiline
@@ -736,13 +738,13 @@ export default function ConversationScreen() {
         visible={composerEmojiPickerVisible}
         onClose={() => setComposerEmojiPickerVisible(false)}
         onSelectEmoji={(emoji) => {
-          const { start, end } = composerSelection;
+          const { start, end } = composerSelectionRef.current;
           const safeStart = Math.min(Math.max(start, 0), messageText.length);
           const safeEnd = Math.min(Math.max(end, safeStart), messageText.length);
           const next = messageText.slice(0, safeStart) + emoji + messageText.slice(safeEnd);
           setMessageText(next);
           const cursor = safeStart + emoji.length;
-          setComposerSelection({ start: cursor, end: cursor });
+          composerSelectionRef.current = { start: cursor, end: cursor };
           setComposerEmojiPickerVisible(false);
         }}
       />

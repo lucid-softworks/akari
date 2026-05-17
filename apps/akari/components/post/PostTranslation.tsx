@@ -100,15 +100,14 @@ export const PostTranslation = React.memo(function PostTranslation({
       targetLanguage,
     });
 
-    // Translate embed text separately if present
+    // Translate embed text separately if present, via the same mutation so
+    // we share the react-query plumbing instead of a stray fetch in an effect.
     const hasEmbedText = embedText?.title || embedText?.description;
     const embedParts = [embedText?.title, embedText?.description].filter(Boolean).join('\n\n');
-    const embedTranslation = hasEmbedText
-      ? fetch('https://translate.akari.blue/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ q: embedParts, source: 'auto', target: targetLanguage }),
-        }).then((r) => r.json()).catch(() => null)
+    const embedTranslation: Promise<{ translatedText: string } | null> = hasEmbedText
+      ? translationMutation
+          .mutateAsync({ text: embedParts, targetLanguage })
+          .catch(() => null)
       : Promise.resolve(null);
 
     Promise.all([postTranslation, embedTranslation]).then(([postResult, embedResult]) => {

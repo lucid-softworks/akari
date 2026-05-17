@@ -398,25 +398,20 @@ export default function AuthScreen() {
       {showSuggestions && anchorRect ? (
         <View
           pointerEvents="auto"
-          style={{
+          style={[
             // `position: fixed` on web pins the dropdown to the viewport,
             // matching `measureInWindow`'s reference frame exactly. On
             // native, fall back to absolute (the screen root is the
-            // positioned ancestor and uses the same coord space). Cast is
-            // needed because RN's TS types only enumerate 'absolute' /
-            // 'relative', but RN-Web accepts every CSS position value.
-            position: (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute',
-            top: anchorRect.y + anchorRect.height + spacing.xs,
-            left: anchorRect.x,
-            width: anchorRect.width,
-            maxHeight: 220,
-            borderWidth: layout.hairline,
-            borderRadius: radius.sm,
-            overflow: 'hidden',
-            backgroundColor: suggestionBackground,
-            borderColor,
-            ...shadows.md,
-          }}
+            // positioned ancestor and uses the same coord space).
+            Platform.OS === 'web' ? webDropdownBase : nativeDropdownBase,
+            {
+              top: anchorRect.y + anchorRect.height + spacing.xs,
+              left: anchorRect.x,
+              width: anchorRect.width,
+              backgroundColor: suggestionBackground,
+              borderColor,
+            },
+          ]}
         >
             <ScrollView
               style={styles.suggestionsScroll}
@@ -461,6 +456,24 @@ export default function AuthScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const dropdownBaseStatic = {
+  maxHeight: 220,
+  borderWidth: layout.hairline,
+  borderRadius: radius.sm,
+  overflow: 'hidden' as const,
+  ...shadows.md,
+};
+
+const webDropdownBase = {
+  ...dropdownBaseStatic,
+  position: 'fixed' as 'absolute',
+};
+
+const nativeDropdownBase = {
+  ...dropdownBaseStatic,
+  position: 'absolute' as const,
+};
 
 const styles = StyleSheet.create({
   container: {

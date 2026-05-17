@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Modal, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -27,7 +27,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const [gifs, setGifs] = useState<TenorGif[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [nextPos, setNextPos] = useState<string | undefined>();
+  const nextPosRef = useRef<string | undefined>(undefined);
   const [hasMore, setHasMore] = useState(true);
   const { showToast } = useToast();
 
@@ -55,7 +55,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
     try {
       const response = await tenorApi.getTrendingGifs(20);
       setGifs(response.results);
-      setNextPos(response.next);
+      nextPosRef.current = response.next;
       setHasMore(!!response.next);
     } catch (error) {
       console.error('Failed to load trending GIFs:', error);
@@ -90,7 +90,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
       try {
         const response = await tenorApi.searchGifs(query, 20);
         setGifs(response.results);
-        setNextPos(response.next);
+        nextPosRef.current = response.next;
         setHasMore(!!response.next);
       } catch (error) {
         console.error('Failed to search GIFs:', error);
@@ -106,7 +106,8 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   );
 
   const loadMoreGifs = useCallback(async () => {
-    if (!hasMore || loading || searchLoading || !nextPos) return;
+    const cursor = nextPosRef.current;
+    if (!hasMore || loading || searchLoading || !cursor) return;
 
     const currentLoading = searchQuery.trim() ? searchLoading : loading;
     if (currentLoading) return;
@@ -119,11 +120,11 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
 
     try {
       const response = searchQuery.trim()
-        ? await tenorApi.searchGifs(searchQuery, 20, nextPos)
-        : await tenorApi.getTrendingGifs(20, nextPos);
+        ? await tenorApi.searchGifs(searchQuery, 20, cursor)
+        : await tenorApi.getTrendingGifs(20, cursor);
 
       setGifs((prev) => [...prev, ...response.results]);
-      setNextPos(response.next);
+      nextPosRef.current = response.next;
       setHasMore(!!response.next);
     } catch (error) {
       console.error('Failed to load more GIFs:', error);
@@ -135,7 +136,7 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
         setLoading(false);
       }
     }
-  }, [hasMore, loading, searchLoading, nextPos, searchQuery, showGifErrorToast]);
+  }, [hasMore, loading, searchLoading, searchQuery, showGifErrorToast]);
 
   const handleSearch = useCallback(
     (query: string) => {

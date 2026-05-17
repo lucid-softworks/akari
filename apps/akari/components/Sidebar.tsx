@@ -30,7 +30,7 @@ type SidebarProps = {
 };
 
 export function Sidebar({ onNavigate }: SidebarProps = {}) {
-  const router = useRouter();
+  const { push } = useRouter();
   const pathname = usePathname();
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
@@ -102,13 +102,13 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   const pushIfDifferent = (route: string) => {
     if (samePath(route)) return;
-    router.push(route as any);
+    push(route as any);
   };
 
   const handleNavigate = (item: NavigationItem) => {
     const target = Platform.OS === 'web' ? item.webRoute : item.route;
     if (!samePath(target)) {
-      router.push(target as any);
+      push(target as any);
     }
     onNavigate?.();
   };

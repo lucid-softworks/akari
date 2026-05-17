@@ -455,6 +455,17 @@ function groupNotifications(notifications: NotificationData[]): GroupedNotificat
 /**
  * Notifications screen component
  */
+const NotificationsLoadingSkeleton = React.memo(function NotificationsLoadingSkeleton() {
+  return (
+    <ThemedView style={styles.skeletonContainer}>
+      {Array.from({ length: 12 }).map((_, index) => (
+        // oxlint-disable-next-line react/no-array-index-key -- placeholder skeletons; fixed-length [0..11] with no identity beyond position
+        <NotificationSkeleton key={`notification-skeleton-${index}`} />
+      ))}
+    </ThemedView>
+  );
+});
+
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
@@ -578,6 +589,11 @@ export default function NotificationsScreen() {
     [borderColor, handleNotificationPress, getNotificationHref],
   );
 
+  const renderListItem = useCallback(
+    ({ item }: { item: GroupedNotification }) => renderNotificationItem(item),
+    [renderNotificationItem],
+  );
+
   const keyExtractor = useCallback((item: GroupedNotification) => item.id, []);
 
   const renderEmptyState = useCallback(
@@ -600,32 +616,17 @@ export default function NotificationsScreen() {
     [error?.message, t],
   );
 
-  const listEmptyComponent = useMemo(() => {
-    if (isLoading) {
-      return (
-        <ThemedView style={styles.skeletonContainer}>
-          {Array.from({ length: 12 }).map((_, index) => (
-            // oxlint-disable-next-line react/no-array-index-key -- placeholder skeletons; fixed-length [0..11] with no identity beyond position
-            <NotificationSkeleton key={`notification-skeleton-${index}`} />
-          ))}
-        </ThemedView>
-      );
-    }
+  const listEmptyComponent = isLoading ? (
+    <NotificationsLoadingSkeleton />
+  ) : (
+    renderEmptyState()
+  );
 
-    return renderEmptyState();
-  }, [isLoading, renderEmptyState]);
-
-  const listFooterComponent = useMemo(() => {
-    if (!isFetchingNextPage) {
-      return null;
-    }
-
-    return (
-      <ThemedView style={styles.loadingMore}>
-        <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
-      </ThemedView>
-    );
-  }, [isFetchingNextPage, t]);
+  const listFooterComponent = isFetchingNextPage ? (
+    <ThemedView style={styles.loadingMore}>
+      <ThemedText style={styles.loadingMoreText}>{t('notifications.loadingMoreNotifications')}</ThemedText>
+    </ThemedView>
+  ) : null;
 
   const handleEndReached = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) {
@@ -681,7 +682,7 @@ export default function NotificationsScreen() {
       <VirtualizedList
         ref={listRef}
         data={filteredNotifications}
-        renderItem={({ item }) => renderNotificationItem(item)}
+        renderItem={renderListItem}
         keyExtractor={keyExtractor}
         estimatedItemSize={160}
         overscan={2}

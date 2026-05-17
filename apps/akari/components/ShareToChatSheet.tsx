@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,6 +11,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  type ListRenderItem,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -51,6 +52,59 @@ type ConversationRow = {
   isGroup: boolean;
 };
 
+const keyExtractor = (item: ConversationRow) => item.convoId;
+
+type ConversationListRowProps = {
+  item: ConversationRow;
+  checked: boolean;
+  onToggle: (convo: ConversationRow) => void;
+  borderColor: string;
+  textColor: string;
+  iconColor: string;
+  tintColor: string;
+};
+
+const ConversationListRow = memo(function ConversationListRow({
+  item,
+  checked,
+  onToggle,
+  borderColor,
+  textColor,
+  iconColor,
+  tintColor,
+}: ConversationListRowProps) {
+  const avatarSource = useMemo(
+    () => (item.avatar ? { uri: item.avatar } : undefined),
+    [item.avatar],
+  );
+  const handlePress = useCallback(() => onToggle(item), [onToggle, item]);
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
+      onPress={handlePress}
+    >
+      {avatarSource ? (
+        <Image source={avatarSource} style={styles.avatar} />
+      ) : (
+        <View style={[styles.avatar, { backgroundColor: borderColor }]} />
+      )}
+      <View style={styles.rowText}>
+        <ThemedText style={[styles.displayName, { color: textColor }]} numberOfLines={1}>
+          {item.displayName}
+        </ThemedText>
+        <ThemedText style={[styles.handle, { color: iconColor }]} numberOfLines={1}>
+          @{item.handle}
+        </ThemedText>
+      </View>
+      <IconSymbol
+        name={checked ? 'checkmark.circle.fill' : 'circle'}
+        size={22}
+        color={checked ? tintColor : iconColor}
+      />
+    </Pressable>
+  );
+});
+
 export function ShareToChatSheet({
   visible,
   onDismiss,
@@ -90,14 +144,18 @@ export function ShareToChatSheet({
     }
   }, [visible]);
 
-  const isSelected = (id: string) => selected.some((c) => c.convoId === id);
-  const toggleSelect = (convo: ConversationRow) => {
+  const toggleSelect = useCallback((convo: ConversationRow) => {
     setSelected((prev) =>
       prev.some((c) => c.convoId === convo.convoId)
         ? prev.filter((c) => c.convoId !== convo.convoId)
         : [...prev, convo],
     );
-  };
+  }, []);
+
+  const selectedIds = useMemo(
+    () => new Set(selected.map((c) => c.convoId)),
+    [selected],
+  );
 
   // Send the user's optional message as text and the post itself as a
   // proper `app.bsky.embed.record` so any client (including the
@@ -141,6 +199,26 @@ export function ShareToChatSheet({
     }
   };
 
+  const itemSeparator = useCallback(
+    () => <View style={[styles.divider, { backgroundColor: borderColor }]} />,
+    [borderColor],
+  );
+
+  const renderRow = useCallback<ListRenderItem<ConversationRow>>(
+    ({ item }) => (
+      <ConversationListRow
+        item={item}
+        checked={selectedIds.has(item.convoId)}
+        onToggle={toggleSelect}
+        borderColor={borderColor}
+        textColor={textColor}
+        iconColor={iconColor}
+        tintColor={tintColor}
+      />
+    ),
+    [borderColor, iconColor, selectedIds, textColor, tintColor, toggleSelect],
+  );
+
   const renderList = () => {
     if (isLoading && conversations.length === 0) {
       return (
@@ -163,49 +241,16 @@ export function ShareToChatSheet({
         <FlatList
           style={styles.list}
           data={conversations}
-          keyExtractor={(item) => item.convoId}
-          ItemSeparatorComponent={() => (
-            <View style={[styles.divider, { backgroundColor: borderColor }]} />
-          )}
-          renderItem={({ item }) => {
-            const checked = isSelected(item.convoId);
-            return (
-              <Pressable
-                style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
-                onPress={() => toggleSelect(item)}
-                
-              >
-                {item.avatar ? (
-                  <Image source={{ uri: item.avatar }} style={styles.avatar} />
-                ) : (
-                  <View style={[styles.avatar, { backgroundColor: borderColor }]} />
-                )}
-                <View style={styles.rowText}>
-                  <ThemedText
-                    style={[styles.displayName, { color: textColor }]}
-                    numberOfLines={1}
-                  >
-                    {item.displayName}
-                  </ThemedText>
-                  <ThemedText style={[styles.handle, { color: iconColor }]} numberOfLines={1}>
-                    @{item.handle}
-                  </ThemedText>
-                </View>
-                <IconSymbol
-                  name={checked ? 'checkmark.circle.fill' : 'circle'}
-                  size={22}
-                  color={checked ? tintColor : iconColor}
-                />
-              </Pressable>
-            );
-          }}
+          keyExtractor={keyExtractor}
+          ItemSeparatorComponent={itemSeparator}
+          renderItem={renderRow}
         />
         {selected.length > 0 ? (
           <View style={[styles.nextBar, { borderTopColor: borderColor }]}>
             <Pressable
               style={({ pressed }) => [styles.nextButton, { backgroundColor: tintColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={() => setStep('compose')}
-              
+
             >
               <ThemedText style={styles.nextButtonText}>
                 {t('post.share.nextWithCount', { count: selected.length })}

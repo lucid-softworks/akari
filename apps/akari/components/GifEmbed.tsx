@@ -1,5 +1,5 @@
 import { Image, type ImageHandle } from '@/components/Image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -34,15 +34,17 @@ export function GifEmbed({ embed }: GifEmbedProps) {
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const [aspectRatio, setAspectRatio] = useState(1);
   const [playing, setPlaying] = useState(videoAutoplayEnabled);
+  const prevAutoplayRef = useRef(videoAutoplayEnabled);
   const imageRef = useRef<ImageHandle | null>(null);
 
-  // Keep the rendered animation in sync with the user's autoplay
-  // preference when it flips while the GIF is on screen — the initial
-  // mount already honoured it via `autoplay`, but a later toggle in
-  // settings should still apply.
-  useEffect(() => {
+  // Keep the rendered animation in sync with the user's autoplay preference
+  // when it flips while the GIF is on screen. Adjusting state during render
+  // (React docs: Adjusting state while rendering) instead of a useEffect so
+  // the new value lands in the same render.
+  if (prevAutoplayRef.current !== videoAutoplayEnabled) {
+    prevAutoplayRef.current = videoAutoplayEnabled;
     setPlaying(videoAutoplayEnabled);
-  }, [videoAutoplayEnabled]);
+  }
 
   const handleTogglePlay = useCallback(() => {
     setPlaying((prev) => {

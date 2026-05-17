@@ -30,6 +30,7 @@ type ProfileTabFlatListProps<T> = {
   onHeaderHeightChange?: (h: number) => void;
 };
 
+// oxlint-disable-next-line react-doctor/no-many-boolean-props -- isLoading/hasNextPage/isFetchingNextPage/refreshing map 1:1 to react-query's infinite-query state flags; collapsing them into a variant would lose the orthogonality the callers (11 feed tabs) rely on
 export function ProfileTabFlatList<T>({
   data,
   renderItem,

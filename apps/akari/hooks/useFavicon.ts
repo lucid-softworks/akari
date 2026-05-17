@@ -7,6 +7,7 @@ import { fetchFavicon, getDomainFromUrl } from '@/utils/faviconUtils';
  */
 export function useFavicon(url: string, emoji?: string) {
   const [faviconUrl, setFaviconUrl] = useState<string | null>(null);
+  // oxlint-disable-next-line react-doctor/rendering-usetransition-loading -- isLoading guards a real async fetch (fetchFavicon), not a state transition; useTransition does not apply
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

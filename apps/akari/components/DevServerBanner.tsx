@@ -15,6 +15,7 @@ export function DevServerBanner() {
   const insets = useSafeAreaInsets();
   const [isDisconnected, setIsDisconnected] = useState(false);
 
+  // oxlint-disable-next-line react-doctor/no-fetch-in-effect -- dev-only Metro health-check poll, not a data load; react-query would defeat the setInterval cancellation semantics
   useEffect(() => {
     if (!__DEV__) return;
     // Don't poll Metro from jest — the fetch hangs and tests time out.

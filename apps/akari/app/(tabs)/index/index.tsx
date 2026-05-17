@@ -368,17 +368,11 @@ export default function HomeScreen() {
     return `${item.item.post.cid ?? 'unknown'}-${item.item.post.uri}`;
   }, []);
 
-  const listFooterComponent = useMemo(() => {
-    if (!isFetchingNextPage) {
-      return null;
-    }
-
-    return (
-      <ThemedView style={styles.loadingMore}>
-        <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
-      </ThemedView>
-    );
-  }, [isFetchingNextPage, t]);
+  const listFooterComponent = isFetchingNextPage ? (
+    <ThemedView style={styles.loadingMore}>
+      <ThemedText style={styles.loadingMoreText}>{t('feed.loadingMorePosts')}</ThemedText>
+    </ThemedView>
+  ) : null;
 
   if (savedFeedsLoading || feedsLoading) {
     return (

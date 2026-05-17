@@ -260,7 +260,7 @@ export default function TabLayout() {
   const [chatReportSheetVisible, setChatReportSheetVisible] = useState(false);
   const safeAreaInsets = useSafeAreaInsets();
   const pathname = usePathname();
-  const router = useRouter();
+  const { back } = useRouter();
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const headerBackground = useThemeColor({}, 'background');
   const headerIconColor = useThemeColor({ light: '#111827', dark: '#F9FAFB' }, 'text');
@@ -463,7 +463,7 @@ export default function TabLayout() {
                 <HapticTab
                   accessibilityRole="button"
                   accessibilityLabel="Go back"
-                  onPress={() => router.back()}
+                  onPress={() => back()}
                   style={mobileDrawerStyles.headerButton}
                 >
                   <IconSymbol name="chevron.left" color={headerIconColor} size={22} />
@@ -525,7 +525,7 @@ export default function TabLayout() {
                 isGroup={messageThreadConvo.isGroup}
                 peerDid={messageThreadConvo.isGroup ? undefined : messageThreadConvo.members[0]?.did}
                 onReportPress={() => setChatReportSheetVisible(true)}
-                onLeft={() => router.back()}
+                onLeft={() => back()}
               />
               {!messageThreadConvo.isGroup && messageThreadConvo.members[0]?.did ? (
                 <ReportSheet

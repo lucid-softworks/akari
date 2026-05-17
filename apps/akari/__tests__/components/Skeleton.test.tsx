@@ -1,5 +1,3 @@
-import React from 'react';
-import { Animated } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -14,20 +12,11 @@ describe('Skeleton', () => {
     jest.clearAllMocks();
   });
 
-  it('renders default skeleton and handles animation lifecycle', () => {
-    const start = jest.fn();
-    const stop = jest.fn();
-    const loopSpy = jest.spyOn(Animated, 'loop').mockReturnValue({ start, stop } as any);
-    const sequenceSpy = jest
-      .spyOn(Animated, 'sequence')
-      .mockImplementation((anims) => ({ anims } as any));
-    const timingSpy = jest.spyOn(Animated, 'timing').mockReturnValue({} as any);
-
+  it('renders with default dimensions and theme color', () => {
     mockUseThemeColor.mockReturnValue('red');
 
     const { getByTestId, unmount } = render(<Skeleton testID="skeleton" />);
 
-    expect(start).toHaveBeenCalled();
     expect(mockUseThemeColor).toHaveBeenCalledWith(
       { light: '#f0f0f0', dark: '#2a2a2a' },
       'background',
@@ -41,23 +30,10 @@ describe('Skeleton', () => {
       backgroundColor: 'red',
     });
 
-    unmount();
-    expect(stop).toHaveBeenCalled();
-
-    loopSpy.mockRestore();
-    sequenceSpy.mockRestore();
-    timingSpy.mockRestore();
+    expect(() => unmount()).not.toThrow();
   });
 
   it('supports custom colors and dimensions', () => {
-    const start = jest.fn();
-    const stop = jest.fn();
-    const loopSpy = jest.spyOn(Animated, 'loop').mockReturnValue({ start, stop } as any);
-    const sequenceSpy = jest
-      .spyOn(Animated, 'sequence')
-      .mockImplementation((anims) => ({ anims } as any));
-    const timingSpy = jest.spyOn(Animated, 'timing').mockReturnValue({} as any);
-
     mockUseThemeColor.mockReturnValue('blue');
 
     const { getByTestId, unmount } = render(
@@ -72,7 +48,6 @@ describe('Skeleton', () => {
       />,
     );
 
-    expect(start).toHaveBeenCalled();
     expect(mockUseThemeColor).toHaveBeenCalledWith(
       { light: 'pink', dark: 'green' },
       'background',
@@ -91,12 +66,6 @@ describe('Skeleton', () => {
       ]),
     );
 
-    unmount();
-    expect(stop).toHaveBeenCalled();
-
-    loopSpy.mockRestore();
-    sequenceSpy.mockRestore();
-    timingSpy.mockRestore();
+    expect(() => unmount()).not.toThrow();
   });
 });
-

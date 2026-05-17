@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
@@ -28,6 +28,47 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
 
 import type { ProfileTabType } from '@/types/profile';
+
+type OwnProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
+
+type OwnProfileHeaderProps = {
+  profile: OwnProfileShape;
+  accountHandle: string;
+  onDropdownToggle: (isOpen: boolean) => void;
+  dropdownRef: React.RefObject<View | null>;
+};
+
+const OwnProfileHeader = memo(function OwnProfileHeader({
+  profile,
+  accountHandle,
+  onDropdownToggle,
+  dropdownRef,
+}: OwnProfileHeaderProps) {
+  return (
+    <ProfileHeader
+      profile={{
+        avatar: profile.avatar,
+        displayName: profile.displayName || accountHandle,
+        handle: accountHandle,
+        description: profile.description,
+        pronouns: profile.pronouns,
+        website: profile.website,
+        banner: profile.banner,
+        createdAt: profile.createdAt,
+        did: profile.did,
+        followersCount: profile.followersCount,
+        followsCount: profile.followsCount,
+        postsCount: profile.postsCount,
+        viewer: profile.viewer,
+        labels: profile.labels,
+        verification: profile.verification,
+      }}
+      isOwnProfile={true}
+      onDropdownToggle={onDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  );
+});
 
 const TAB_ORDER: ProfileTabType[] = [
   'posts',
@@ -98,37 +139,18 @@ export default function ProfileScreen() {
     });
   }, []);
 
-  const headerComponent = useMemo(() => {
-    if (!profile) return null;
-    return (
-      <ProfileHeader
-        profile={{
-          avatar: profile.avatar,
-          displayName: profile.displayName || currentAccount?.handle || '',
-          handle: currentAccount?.handle || '',
-          description: profile.description,
-          pronouns: profile.pronouns,
-          website: profile.website,
-          banner: profile.banner,
-          createdAt: profile.createdAt,
-          did: profile.did,
-          followersCount: profile.followersCount,
-          followsCount: profile.followsCount,
-          postsCount: profile.postsCount,
-          viewer: profile.viewer,
-          labels: profile.labels,
-          verification: profile.verification,
-        }}
-        isOwnProfile={true}
-        onDropdownToggle={handleDropdownToggle}
-        dropdownRef={dropdownRef}
-      />
-    );
-  }, [profile, currentAccount, handleDropdownToggle, dropdownRef]);
+  const headerComponent = profile ? (
+    <OwnProfileHeader
+      profile={profile}
+      accountHandle={currentAccount?.handle || ''}
+      onDropdownToggle={handleDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  ) : null;
 
-  const tabsComponent = useMemo(() => (
+  const tabsComponent = (
     <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
-  ), [activeTab, handleTabChange, currentAccount?.handle]);
+  );
 
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {

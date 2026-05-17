@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { Image } from '@/components/Image';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
@@ -110,7 +110,7 @@ const formatWebsiteLabel = (url: string): string => {
 export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const showDropdownRef = useRef(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
@@ -172,7 +172,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           action: 'follow',
         });
       }
-      setShowDropdown(false);
+      showDropdownRef.current = false;
     } catch (error) {
       console.error('Follow error:', error);
       showToast({
@@ -188,8 +188,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   const handleDropdownToggle = () => {
-    const newState = !showDropdown;
-    setShowDropdown(newState);
+    const newState = !showDropdownRef.current;
+    showDropdownRef.current = newState;
     onDropdownToggle?.(newState);
   };
 

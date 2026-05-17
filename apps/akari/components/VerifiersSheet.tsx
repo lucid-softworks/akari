@@ -1,5 +1,6 @@
 import { Image } from '@/components/Image';
-import React, { useMemo } from 'react';
+import type { ListRenderItem } from '@shopify/flash-list';
+import React, { useCallback, useMemo } from 'react';
 import { Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
@@ -154,27 +155,51 @@ export function VerifiersSheet({
             </ThemedText>
           </View>
         ) : (
-          <VirtualizedList
-            data={sections}
-            renderItem={({ item }) =>
-              item.type === 'header' ? (
-                <SectionHeader label={item.label} subduedColor={subduedColor} />
-              ) : (
-                <VerifierRow
-                  row={item.row}
-                  onClose={onClose}
-                  borderColor={borderColor}
-                  subduedColor={subduedColor}
-                />
-              )
-            }
-            keyExtractor={(item) => item.key}
-            estimatedItemSize={64}
-            contentContainerStyle={styles.listContent}
+          <VerifiersList
+            sections={sections}
+            onClose={onClose}
+            borderColor={borderColor}
+            subduedColor={subduedColor}
           />
         )}
       </ThemedView>
     </Modal>
+  );
+}
+
+type VerifiersListProps = {
+  sections: SheetSection[];
+  onClose: () => void;
+  borderColor: string;
+  subduedColor: string;
+};
+
+const sectionKeyExtractor = (item: SheetSection) => item.key;
+
+function VerifiersList({ sections, onClose, borderColor, subduedColor }: VerifiersListProps) {
+  const renderItem = useCallback<ListRenderItem<SheetSection>>(
+    ({ item }) =>
+      item.type === 'header' ? (
+        <SectionHeader label={item.label} subduedColor={subduedColor} />
+      ) : (
+        <VerifierRow
+          row={item.row}
+          onClose={onClose}
+          borderColor={borderColor}
+          subduedColor={subduedColor}
+        />
+      ),
+    [borderColor, onClose, subduedColor],
+  );
+
+  return (
+    <VirtualizedList
+      data={sections}
+      renderItem={renderItem}
+      keyExtractor={sectionKeyExtractor}
+      estimatedItemSize={64}
+      contentContainerStyle={styles.listContent}
+    />
   );
 }
 

@@ -14,15 +14,16 @@ type ThemeName = keyof typeof Colors;
 function CrashReporterTestSection(): React.JSX.Element {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
-  const [shouldCrash, setShouldCrash] = useState(false);
+  // Use functional setState that throws to surface the crash through React's
+  // render boundary (so the crash reporter wraps it) without keeping a
+  // throwaway boolean in state.
+  const [, setCrashTrigger] = useState(0);
   const palette = Colors[(colorScheme ?? 'light') as ThemeName];
 
-  if (shouldCrash) {
-    throw new Error('Manual crash triggered from the Akari debug screen.');
-  }
-
   const triggerCrash = () => {
-    setShouldCrash(true);
+    setCrashTrigger(() => {
+      throw new Error('Manual crash triggered from the Akari debug screen.');
+    });
   };
 
   return (

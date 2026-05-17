@@ -1,10 +1,12 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { Animated, Easing, Platform, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-
-// `useNativeDriver` is a no-op on web (no native animated module) and logs a
-// warning whenever an animation tries to use it. Map to false on web; native
-// keeps the perf benefit of the UI-thread driver.
-const NATIVE_DRIVER = Platform.OS !== 'web';
+import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import Animated, {
+  cancelAnimation,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -184,23 +186,12 @@ type ToastItemProps = {
 function ToastItem({ toast, onDismiss, style }: ToastItemProps) {
   const scheme = useColorScheme() ?? 'light';
   const colors = typeStyles[toast.type][scheme];
-  const opacity = React.useRef(new Animated.Value(0)).current;
-  const translateY = React.useRef(new Animated.Value(8)).current;
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(8);
 
   React.useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 180,
-        useNativeDriver: NATIVE_DRIVER,
-      }),
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 220,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: NATIVE_DRIVER,
-      }),
-    ]).start();
+    opacity.value = withTiming(1, { duration: 180 });
+    translateY.value = withTiming(0, { duration: 220, easing: Easing.out(Easing.ease) });
 
     const timeout = setTimeout(() => {
       onDismiss(toast.id);
@@ -208,8 +199,15 @@ function ToastItem({ toast, onDismiss, style }: ToastItemProps) {
 
     return () => {
       clearTimeout(timeout);
+      cancelAnimation(opacity);
+      cancelAnimation(translateY);
     };
   }, [onDismiss, opacity, toast.duration, toast.id, translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   const iconName = React.useMemo(() => {
     switch (toast.type) {
@@ -225,7 +223,7 @@ function ToastItem({ toast, onDismiss, style }: ToastItemProps) {
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={[styles.toast, style, { backgroundColor: colors.background, borderColor: colors.border, opacity, transform: [{ translateY }] }]}
+      style={[styles.toast, style, { backgroundColor: colors.background, borderColor: colors.border }, animatedStyle]}
     >
       <IconSymbol name={iconName} size={20} color={colors.icon} style={styles.toastIcon} />
       <View style={styles.toastContent}>

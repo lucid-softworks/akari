@@ -31,9 +31,7 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
         <ThemedText type="defaultSemiBold">{title}</ThemedText>
       </Pressable>
       {isOpen ? (
-        <ThemedView style={styles.content}>
-          {typeof children === 'string' ? <ThemedText>{children}</ThemedText> : children}
-        </ThemedView>
+        <ThemedView style={styles.content}>{children}</ThemedView>
       ) : null}
     </ThemedView>
   );

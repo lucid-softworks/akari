@@ -137,15 +137,8 @@ export function VideoPlayer({
     setPlayerStatus('loading'); // Set loading state immediately
   };
 
-  // Reset state when a new video URL is provided
-  useEffect(() => {
-    setShouldShowVideo(false);
-    setIsPlaying(false);
-    setPlaybackUrl(null);
-    setPlayerStatus('idle');
-    setPlayerError(null);
-    setIsResolvingUrl(false);
-  }, [videoUrl]);
+  // Resetting on videoUrl change is handled by the parent passing `key={videoUrl}`
+  // to remount this component, which gives us a clean state slate.
 
   // Lazily resolve Bluesky playlist URLs only when the user chooses to play the video
   useEffect(() => {

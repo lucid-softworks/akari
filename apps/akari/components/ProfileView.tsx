@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, fontSize } from '@/constants/tokens';
@@ -37,6 +37,47 @@ import { showAlert } from '@/utils/alert';
 type ProfileViewProps = {
   handle: string;
 };
+
+type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
+
+type ProfileViewHeaderProps = {
+  profile: ProfileShape;
+  isOwnProfile: boolean;
+  onDropdownToggle: (isOpen: boolean) => void;
+  dropdownRef: React.RefObject<View | null>;
+};
+
+const ProfileViewHeader = memo(function ProfileViewHeader({
+  profile,
+  isOwnProfile,
+  onDropdownToggle,
+  dropdownRef,
+}: ProfileViewHeaderProps) {
+  return (
+    <ProfileHeader
+      profile={{
+        avatar: profile.avatar,
+        displayName: profile.displayName,
+        handle: profile.handle,
+        description: profile.description,
+        pronouns: profile.pronouns,
+        website: profile.website,
+        banner: profile.banner,
+        createdAt: profile.createdAt,
+        did: profile.did,
+        followersCount: profile.followersCount,
+        followsCount: profile.followsCount,
+        postsCount: profile.postsCount,
+        viewer: profile.viewer,
+        labels: profile.labels,
+        verification: profile.verification,
+      }}
+      isOwnProfile={isOwnProfile}
+      onDropdownToggle={onDropdownToggle}
+      dropdownRef={dropdownRef}
+    />
+  );
+});
 
 const TAB_ORDER: ProfileTabType[] = [
   'posts',
@@ -134,38 +175,18 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     }
   }, [profile, blockMutation, showToast, t]);
 
-  const headerComponent = useMemo(() => {
-    if (!profile) return null;
-    return (
-      <ProfileHeader
-        profile={{
-          avatar: profile.avatar,
-          displayName: profile.displayName,
-          handle: profile.handle,
-          description: profile.description,
-          pronouns: profile.pronouns,
-          website: profile.website,
-          banner: profile.banner,
-          createdAt: profile.createdAt,
-          did: profile.did,
-          followersCount: profile.followersCount,
-          followsCount: profile.followsCount,
-          postsCount: profile.postsCount,
-          viewer: profile.viewer,
-          labels: profile.labels,
-          verification: profile.verification,
-        }}
-        isOwnProfile={isOwnProfile}
-        onDropdownToggle={(isOpen: boolean) => setShowDropdown(isOpen)}
-        dropdownRef={dropdownRef}
-      />
-    );
-  }, [profile, isOwnProfile, dropdownRef]);
+  const headerComponent = profile ? (
+    <ProfileViewHeader
+      profile={profile}
+      isOwnProfile={isOwnProfile}
+      onDropdownToggle={setShowDropdown}
+      dropdownRef={dropdownRef}
+    />
+  ) : null;
 
-  const tabsComponent = useMemo(() => {
-    if (!profile) return null;
-    return <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />;
-  }, [activeTab, handleTabChange, profile]);
+  const tabsComponent = profile ? (
+    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />
+  ) : null;
 
   // Germ Network message-me — both viewer and target must have published a
   // `com.germnetwork.declaration/self` record, and the target's

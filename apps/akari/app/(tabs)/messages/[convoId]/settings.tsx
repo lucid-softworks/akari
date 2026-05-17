@@ -125,7 +125,10 @@ export default function ConvoSettingsScreen() {
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + spacing.xxl }}>
+      <ScrollView
+        contentInset={{ bottom: insets.bottom + spacing.xxl }}
+        contentInsetAdjustmentBehavior="never"
+      >
         {isGroup ? (
           <>
             <View style={styles.section}>

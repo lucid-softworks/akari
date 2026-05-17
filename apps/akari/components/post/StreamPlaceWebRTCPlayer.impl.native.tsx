@@ -131,6 +131,8 @@ export function StreamPlaceWebRTCPlayerImpl({ streamerDid }: StreamPlaceWebRTCPl
     return () => {
       cancelled = true;
       peerRef.current = null;
+      peer.removeEventListener('track', onTrack);
+      peer.removeEventListener('connectionstatechange', onConnectionStateChange);
       peer.close();
     };
   }, [streamerDid]);

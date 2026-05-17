@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
+// oxlint-disable-next-line react-doctor/rn-prefer-expo-image -- test file mocks expo-image to RN Image; importing RN Image directly here is intentional for jest setup
 import { Image, ScrollView } from 'react-native';
 
 import NotificationsScreen from '@/app/(tabs)/notifications';

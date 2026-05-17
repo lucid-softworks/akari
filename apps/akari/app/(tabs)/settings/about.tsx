@@ -42,10 +42,7 @@ export default function AboutSettingsScreen() {
       ? extra.buildMetadata.commitSha
       : undefined;
   const shortCommitSha = commitSha?.slice(0, 7);
-  const versionDisplay = useMemo(
-    () => (shortCommitSha ? `${version} (${shortCommitSha})` : version),
-    [shortCommitSha, version],
-  );
+  const versionDisplay = shortCommitSha ? `${version} (${shortCommitSha})` : version;
   const buildNumber =
     typeof iosBuildNumber === 'string'
       ? iosBuildNumber

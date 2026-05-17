@@ -234,22 +234,19 @@ export default function OauthSignInScreen() {
       {showSuggestions && anchorRect ? (
         <View
           pointerEvents="auto"
-          style={{
+          style={[
             // `position: fixed` on web pins the dropdown to the viewport,
             // matching `measureInWindow`'s reference frame exactly. See
             // password.tsx for the full rationale.
-            position: (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute',
-            top: anchorRect.y + anchorRect.height + spacing.xs,
-            left: anchorRect.x,
-            width: anchorRect.width,
-            maxHeight: 220,
-            borderWidth: layout.hairline,
-            borderRadius: radius.sm,
-            overflow: 'hidden',
-            backgroundColor: suggestionBackground,
-            borderColor,
-            ...shadows.md,
-          }}
+            Platform.OS === 'web' ? webDropdownBase : nativeDropdownBase,
+            {
+              top: anchorRect.y + anchorRect.height + spacing.xs,
+              left: anchorRect.x,
+              width: anchorRect.width,
+              backgroundColor: suggestionBackground,
+              borderColor,
+            },
+          ]}
         >
             <ScrollView
               style={styles.suggestionsScroll}
@@ -294,6 +291,24 @@ export default function OauthSignInScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const dropdownBaseStatic = {
+  maxHeight: 220,
+  borderWidth: layout.hairline,
+  borderRadius: radius.sm,
+  overflow: 'hidden' as const,
+  ...shadows.md,
+};
+
+const webDropdownBase = {
+  ...dropdownBaseStatic,
+  position: 'fixed' as 'absolute',
+};
+
+const nativeDropdownBase = {
+  ...dropdownBaseStatic,
+  position: 'absolute' as const,
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

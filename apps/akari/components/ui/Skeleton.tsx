@@ -1,10 +1,14 @@
-import { useEffect, useRef } from 'react';
-import { Animated, Platform, View, type DimensionValue, type ViewProps } from 'react-native';
-
-// `useNativeDriver` is a no-op on web (no native animated module) and logs a
-// warning whenever an animation tries to use it. Map to false on web; native
-// keeps the UI-thread driver.
-const NATIVE_DRIVER = Platform.OS !== 'web';
+import { useEffect } from 'react';
+import { View, type DimensionValue, type ViewProps } from 'react-native';
+import Animated, {
+  cancelAnimation,
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { radius } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -26,7 +30,7 @@ export function Skeleton({
   darkColor,
   ...otherProps
 }: SkeletonProps) {
-  const animatedValue = useRef(new Animated.Value(0)).current;
+  const progress = useSharedValue(0);
   const backgroundColor = useThemeColor(
     {
       light: lightColor || '#f0f0f0',
@@ -36,32 +40,20 @@ export function Skeleton({
   );
 
   useEffect(() => {
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: NATIVE_DRIVER,
-        }),
-        Animated.timing(animatedValue, {
-          toValue: 0,
-          duration: 1000,
-          useNativeDriver: NATIVE_DRIVER,
-        }),
-      ]),
+    progress.value = withRepeat(
+      withTiming(1, { duration: 1000, easing: Easing.linear }),
+      -1,
+      true,
     );
 
-    animation.start();
-
     return () => {
-      animation.stop();
+      cancelAnimation(progress);
     };
-  }, [animatedValue]);
+  }, [progress]);
 
-  const opacity = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 0.7],
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(progress.value, [0, 1], [0.3, 0.7]),
+  }));
 
   return (
     <View
@@ -77,15 +69,17 @@ export function Skeleton({
       {...otherProps}
     >
       <Animated.View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor,
-          opacity,
-        }}
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor,
+          },
+          animatedStyle,
+        ]}
       />
     </View>
   );

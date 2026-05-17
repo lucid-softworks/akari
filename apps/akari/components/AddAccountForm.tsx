@@ -24,7 +24,7 @@ const HANDLE_REGEX = /^@?[a-zA-Z0-9._-]+$/;
 
 export function AddAccountForm() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const { replace } = useRouter();
   const { data: currentAccount } = useCurrentAccount();
 
   const [handle, setHandle] = useState('');
@@ -104,7 +104,7 @@ export function AddAccountForm() {
 
       setHandle('');
       setAppPassword('');
-      router.replace((currentAccount ? '/(tabs)/settings' : '/') as never);
+      replace((currentAccount ? '/(tabs)/settings' : '/') as never);
     } catch (error) {
       showAlert({
         title: t('common.error'),

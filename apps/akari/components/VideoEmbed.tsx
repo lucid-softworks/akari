@@ -193,6 +193,10 @@ export function VideoEmbed({ embed }: VideoEmbedProps) {
   if (hasNativeVideo && nativeVideoUrl) {
     return (
       <VideoPlayer
+        // Key on videoUrl so React naturally remounts (and resets all internal
+        // state) when the source URL changes, rather than reconciling and
+        // running a reset effect.
+        key={nativeVideoUrl}
         videoUrl={nativeVideoUrl}
         thumbnailUrl={thumbnailUrl || undefined}
         title={videoTitle}
