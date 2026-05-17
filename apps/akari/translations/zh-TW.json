@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "使用 AppView",
+        "enabledDescription": "AppView 將網路彙整為你看到的時間軸、搜尋、通知和熱門話題。關閉以讓 Akari 僅透過直接 PDS 讀取、slingshot 和 constellation 運作。在該模式下許多功能無法使用。",
+        "disabledWarning": {
+          "title": "AppView 已停用",
+          "body": "沒有 AppView 時，時間軸、搜尋、貼文搜尋、自動建議、熱門話題、標記者、偏好同步和私訊都無法使用。個人資料、單則貼文、互動計數、追蹤者清單和自訂動態仍可使用。"
+        },
+        "unavailable": {
+          "title": "沒有 AppView 無法使用",
+          "titleFor": "{{feature}} 需要 AppView",
+          "body": "你已在網路設定中關閉 AppView。請重新開啟以使用此功能。",
+          "openSettings": "開啟網路設定"
+        },
         "defaultSection": "預設 AppView",
         "customSection": "自訂 AppView",
         "customHint": "輸入 AppView 的 HTTPS 基礎 URL 及其 service DID。兩者都會在 AppView 營運方的 `did:web` 文件中，於 `#bsky_appview` 服務下公布。",

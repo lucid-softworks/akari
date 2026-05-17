@@ -10,13 +10,16 @@ import { SearchPostResult } from '@/components/search/SearchPostResult';
 import { SearchProfileResult } from '@/components/search/SearchProfileResult';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { fontSize, layout, opacity, spacing } from '@/constants/tokens';
 import { useSearch } from '@/hooks/queries/useSearch';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useCollapsibleHeader } from '@/hooks/useCollapsibleHeader';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isAppViewRequiredError } from '@/utils/appView';
 import { useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
@@ -95,6 +98,7 @@ export default function SearchScreen() {
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
   const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
   const placeholderColor = useThemeColor({}, 'icon');
+  const appViewEnabled = useAppViewEnabled();
 
   // Always fetch "all" data; the active tab only filters client-side.
   const {
@@ -254,6 +258,14 @@ export default function SearchScreen() {
       textColor,
     ],
   );
+
+  if (!appViewEnabled || isAppViewRequiredError(error)) {
+    return (
+      <ThemedView style={styles.container}>
+        <UnavailableWithoutAppView feature={t('navigation.search')} />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>

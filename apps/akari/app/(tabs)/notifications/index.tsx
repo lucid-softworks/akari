@@ -10,6 +10,7 @@ import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VerificationBadge } from '@/components/VerificationBadge';
 import { NotificationSkeleton } from '@/components/skeletons';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -20,6 +21,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,6 +29,7 @@ import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, semanticColors } from '@/constants/tokens';
+import { isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -534,6 +537,8 @@ export default function NotificationsScreen() {
     [t],
   );
 
+  const appViewEnabled = useAppViewEnabled();
+
   const scrollToTop = useCallback(() => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
@@ -688,6 +693,14 @@ export default function NotificationsScreen() {
     ),
     [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, t, tabs],
   );
+
+  if (!appViewEnabled || isAppViewRequiredError(error)) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
+        <UnavailableWithoutAppView feature={t('navigation.notifications')} />
+      </ThemedView>
+    );
+  }
 
   if (isError) {
     return (

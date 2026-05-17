@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Brug en AppView",
+        "enabledDescription": "AppViews aggregerer netværket til den tidslinje, søgning, notifikationer og trends, du ser. Slå dette fra for at bruge Akari kun med direkte PDS-læsninger, slingshot og constellation. Mange funktioner bliver utilgængelige i den tilstand.",
+        "disabledWarning": {
+          "title": "AppView deaktiveret",
+          "body": "Tidslinje, søgning, indlægssøgning, autoforslag, trends, etiketteringstjenester, præferencesynkronisering og DMs er utilgængelige uden en AppView. Profiler, enkelte indlæg, interaktionstællere, følgerlister og brugerdefinerede feeds fortsætter med at virke."
+        },
+        "unavailable": {
+          "title": "Utilgængelig uden AppView",
+          "titleFor": "{{feature}} kræver en AppView",
+          "body": "Du har slået AppView fra i Netværksindstillinger. Slå den til igen for at bruge denne funktion.",
+          "openSettings": "Åbn Netværksindstillinger"
+        },
         "defaultSection": "Standard-AppView",
         "customSection": "Brugerdefineret AppView",
         "customHint": "Indtast AppView'ens HTTPS-basis-URL og dens service-DID. Begge er offentliggjort i AppView-operatørens `did:web`-dokument under tjenesten `#bsky_appview`.",

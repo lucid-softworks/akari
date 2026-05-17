@@ -1,6 +1,12 @@
+import {
+  getActorFeedsPage,
+  resolveIdentifierToDid,
+  resolvePdsUrl,
+} from '@/hooks/queries/microcosm';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { type BlueskyFeedsResponse } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
 import { apiForAccount } from '@/utils/blueskyApi';
@@ -14,18 +20,28 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useFeeds(actor: string | undefined, limit: number = 50, cursor?: string) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.feeds({ actor, limit, cursor, pdsUrl: currentAccount?.pdsUrl }),
+    queryKey: queryKeys.feeds({ actor, limit, cursor, pdsUrl: currentAccount?.pdsUrl, appViewEnabled }),
     queryFn: async (): Promise<BlueskyFeedsResponse> => {
-      if (!token) throw new Error('No access token');
       if (!actor) throw new Error('No actor provided');
+
+      if (!appViewEnabled) {
+        const did = await resolveIdentifierToDid(actor);
+        const pdsUrl =
+          currentAccount?.did === did ? currentAccount?.pdsUrl : await resolvePdsUrl(did);
+        if (!pdsUrl) throw new Error(`Couldn't resolve PDS URL for ${did}`);
+        return getActorFeedsPage({ did, pdsUrl, limit, cursor });
+      }
+
+      if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
       return await api.getFeeds(token, actor, limit, cursor);
     },
-    enabled: !!actor && !!token,
+    enabled: !!actor && (appViewEnabled ? !!token : true),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }

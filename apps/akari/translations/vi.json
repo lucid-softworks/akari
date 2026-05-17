@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Sử dụng AppView",
+        "enabledDescription": "AppView tổng hợp mạng thành dòng thời gian, tìm kiếm, thông báo và xu hướng bạn thấy. Tắt nó để sử dụng Akari chỉ với các lần đọc PDS trực tiếp, slingshot và constellation. Trong chế độ này, nhiều tính năng sẽ không khả dụng.",
+        "disabledWarning": {
+          "title": "AppView đã tắt",
+          "body": "Nếu không có AppView, dòng thời gian, tìm kiếm, tìm kiếm bài viết, gợi ý tự động, chủ đề thịnh hành, người gắn nhãn, đồng bộ tùy chọn và DM sẽ không khả dụng. Hồ sơ, bài viết riêng lẻ, bộ đếm tương tác, danh sách người theo dõi và nguồn cấp tùy chỉnh vẫn hoạt động."
+        },
+        "unavailable": {
+          "title": "Không khả dụng khi không có AppView",
+          "titleFor": "{{feature}} cần AppView",
+          "body": "Bạn đã tắt AppView trong cài đặt Mạng. Bật lại để sử dụng tính năng này.",
+          "openSettings": "Mở cài đặt Mạng"
+        },
         "defaultSection": "AppView mặc định",
         "customSection": "AppView tùy chỉnh",
         "customHint": "Nhập URL gốc HTTPS của AppView và service DID của nó. Cả hai đều được công bố trong tài liệu `did:web` của nhà vận hành AppView dưới dịch vụ `#bsky_appview`.",

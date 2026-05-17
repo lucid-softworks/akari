@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Использовать AppView",
+        "enabledDescription": "AppView объединяют сеть в ленту, поиск, уведомления и тренды, которые вы видите. Отключите, чтобы использовать Akari только с прямыми чтениями PDS, slingshot и constellation. В этом режиме многие функции становятся недоступны.",
+        "disabledWarning": {
+          "title": "AppView отключён",
+          "body": "Лента, поиск, поиск постов, автоподсказки, тренды, лейблеры, синхронизация настроек и личные сообщения недоступны без AppView. Профили, отдельные посты, счётчики взаимодействий, списки подписчиков и пользовательские ленты продолжают работать."
+        },
+        "unavailable": {
+          "title": "Недоступно без AppView",
+          "titleFor": "Для {{feature}} нужен AppView",
+          "body": "Вы отключили AppView в настройках сети. Включите его снова, чтобы использовать эту функцию.",
+          "openSettings": "Открыть настройки сети"
+        },
         "defaultSection": "AppView по умолчанию",
         "customSection": "Пользовательский AppView",
         "customHint": "Введите базовый HTTPS-URL AppView и его service DID. Оба значения публикуются в документе `did:web` оператора AppView в составе сервиса `#bsky_appview`.",

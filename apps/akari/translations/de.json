@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Eine AppView verwenden",
+        "enabledDescription": "AppViews aggregieren das Netzwerk zu der Timeline, Suche, den Benachrichtigungen und Trends, die du siehst. Schalte dies aus, um Akari nur mit direkten PDS-Abfragen, Slingshot und Constellation zu nutzen. In diesem Modus sind viele Funktionen nicht verfügbar.",
+        "disabledWarning": {
+          "title": "AppView deaktiviert",
+          "body": "Timeline, Suche, Beitragssuche, Vorschläge, Trending-Themen, Labeler, Einstellungssynchronisation und DMs sind ohne AppView nicht verfügbar. Profile, einzelne Beiträge, Interaktionszähler, Follower-Listen und benutzerdefinierte Feeds funktionieren weiterhin."
+        },
+        "unavailable": {
+          "title": "Ohne AppView nicht verfügbar",
+          "titleFor": "Für {{feature}} ist eine AppView nötig",
+          "body": "Du hast die AppView in den Netzwerkeinstellungen deaktiviert. Aktiviere sie erneut, um diese Funktion zu nutzen.",
+          "openSettings": "Netzwerkeinstellungen öffnen"
+        },
         "defaultSection": "Standard-AppView",
         "customSection": "Benutzerdefinierte AppView",
         "customHint": "Gib die HTTPS-Basis-URL der AppView und ihre Service-DID ein. Beide sind im `did:web`-Dokument des AppView-Betreibers unter dem Dienst `#bsky_appview` veröffentlicht.",

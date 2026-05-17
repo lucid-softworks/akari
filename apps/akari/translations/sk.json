@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Použiť AppView",
+        "enabledDescription": "AppView agregujú sieť do časovej osi, vyhľadávania, oznámení a trendov, ktoré vidíte. Vypnutím použijete Akari iba s priamymi čítaniami PDS, slingshotom a constellation. V tomto režime je veľa funkcií nedostupných.",
+        "disabledWarning": {
+          "title": "AppView je vypnutý",
+          "body": "Bez AppView sú nedostupné: časová os, vyhľadávanie, hľadanie príspevkov, automatické návrhy, trendy, štítkovače, synchronizácia predvolieb a DM. Profily, jednotlivé príspevky, počítadlá interakcií, zoznamy sledujúcich a vlastné kanály naďalej fungujú."
+        },
+        "unavailable": {
+          "title": "Nedostupné bez AppView",
+          "titleFor": "{{feature}} vyžaduje AppView",
+          "body": "V nastaveniach Siete ste AppView vypli. Znova ho zapnite, aby ste mohli použiť túto funkciu.",
+          "openSettings": "Otvoriť nastavenia Siete"
+        },
         "defaultSection": "Predvolený AppView",
         "customSection": "Vlastný AppView",
         "customHint": "Zadaj HTTPS základnú URL AppView a jeho service DID. Obe sú zverejnené v dokumente `did:web` prevádzkovateľa AppView pod službou `#bsky_appview`.",

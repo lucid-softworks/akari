@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Hook to get the total count of unread messages across all conversations
@@ -12,10 +14,15 @@ export function useUnreadMessagesCount(enabled: boolean = true) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.messages.unread(currentUserDid),
+    queryKey: queryKeys.messages.unread(currentUserDid, appViewEnabled),
     queryFn: async () => {
+      // The chat AppView is what aggregates conversation lists. With the
+      // AppView disabled there is no source of truth for unread counts, so
+      // hide the badge entirely rather than show stale data.
+      if (!readAppViewEnabled()) return 0;
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 

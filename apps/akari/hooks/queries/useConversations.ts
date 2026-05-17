@@ -3,6 +3,9 @@ import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError, isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 type ConversationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -25,10 +28,12 @@ export function useConversations(
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useInfiniteQuery({
-    queryKey: queryKeys.conversations.list({ limit, readState, status, did: currentUserDid }),
+    queryKey: queryKeys.conversations.list({ limit, readState, status, did: currentUserDid, appViewEnabled }),
     queryFn: async ({ pageParam }) => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('conversations');
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
@@ -124,12 +129,11 @@ export function useConversations(
     // remount), so we don't flash a skeleton on every back-nav.
     placeholderData: keepPreviousData,
     staleTime: 30 * 1000, // 30 seconds
-    retry: (failureCount, error: ConversationError) => {
-      // Don't retry permission errors
-      if (error?.type === 'permission') {
+    retry: (failureCount, error: ConversationError | Error) => {
+      if (isAppViewRequiredError(error)) return false;
+      if ((error as ConversationError)?.type === 'permission') {
         return false;
       }
-      // Retry network errors up to 3 times
       return failureCount < 3;
     },
   });

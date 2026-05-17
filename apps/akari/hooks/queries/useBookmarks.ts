@@ -4,6 +4,9 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -13,10 +16,12 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useBookmarks(limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useInfiniteQuery({
-    queryKey: queryKeys.bookmarks.list(limit, currentAccount?.did),
+    queryKey: queryKeys.bookmarks.list(limit, currentAccount?.did, appViewEnabled),
     queryFn: async ({ pageParam }: CursorPageParam) => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('bookmarks');
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 

@@ -6,6 +6,7 @@ import {
   type AppViewPresetId,
   type CdnPresetId,
   DEFAULT_APP_VIEW,
+  isAppViewEnabled,
 } from '@/utils/appView';
 
 const storage = new MMKV({ id: 'appview-settings' });
@@ -14,6 +15,7 @@ const CUSTOM_URL_KEY = 'custom_url';
 const CUSTOM_DID_KEY = 'custom_did';
 const CDN_PRESET_KEY = 'cdn_preset';
 const CUSTOM_CDN_URL_KEY = 'custom_cdn_url';
+const APP_VIEW_ENABLED_KEY = 'appview_enabled';
 
 const VALID_PRESETS = new Set<AppViewPresetId>(['bsky', 'blacksky', 'custom']);
 const VALID_CDN_PRESETS = new Set<CdnPresetId>(['bsky', 'blueat', 'custom']);
@@ -49,6 +51,14 @@ function readString(key: string): string | undefined {
   }
 }
 
+function readAppViewEnabledFromStorage(): boolean {
+  try {
+    const raw = storage.getBoolean(APP_VIEW_ENABLED_KEY);
+    if (typeof raw === 'boolean') return raw;
+  } catch {}
+  return DEFAULT_APP_VIEW.appViewEnabled;
+}
+
 function readAll(): AppViewConfig {
   return {
     preset: readPreset(),
@@ -56,6 +66,7 @@ function readAll(): AppViewConfig {
     customDid: readString(CUSTOM_DID_KEY),
     cdnPreset: readCdnPreset(),
     customCdnUrl: readString(CUSTOM_CDN_URL_KEY),
+    appViewEnabled: readAppViewEnabledFromStorage(),
   };
 }
 
@@ -82,6 +93,15 @@ function notify() {
  */
 export function readAppViewSettings(): AppViewConfig {
   return getSnapshot();
+}
+
+/**
+ * Synchronous read of just the `appViewEnabled` flag. Use this from
+ * `queryFn` bodies to short-circuit with `AppViewRequiredError` before
+ * making any network calls.
+ */
+export function readAppViewEnabled(): boolean {
+  return isAppViewEnabled(getSnapshot());
 }
 
 /**
@@ -129,12 +149,18 @@ export function useAppViewSettings() {
     notify();
   }, []);
 
+  const setAppViewEnabled = useCallback((enabled: boolean) => {
+    storage.set(APP_VIEW_ENABLED_KEY, enabled);
+    notify();
+  }, []);
+
   const reset = useCallback(() => {
     storage.delete(PRESET_KEY);
     storage.delete(CUSTOM_URL_KEY);
     storage.delete(CUSTOM_DID_KEY);
     storage.delete(CDN_PRESET_KEY);
     storage.delete(CUSTOM_CDN_URL_KEY);
+    storage.delete(APP_VIEW_ENABLED_KEY);
     notify();
   }, []);
 
@@ -145,6 +171,7 @@ export function useAppViewSettings() {
     setCustomDid,
     setCdnPreset,
     setCustomCdnUrl,
+    setAppViewEnabled,
     reset,
   };
 }

@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView を使う",
+        "enabledDescription": "AppView はネットワークを集約して、タイムライン、検索、通知、トレンドを表示します。これをオフにすると、Akari は PDS の直接読み取り、slingshot、constellation のみを使用します。このモードでは多くの機能が利用できなくなります。",
+        "disabledWarning": {
+          "title": "AppView を無効化",
+          "body": "AppView がないと、タイムライン、検索、投稿検索、入力候補、トレンドのトピック、ラベラー、設定の同期、DM が利用できません。プロフィール、個別の投稿、リアクション数、フォロワー一覧、カスタムフィードは引き続き利用できます。"
+        },
+        "unavailable": {
+          "title": "AppView なしでは利用できません",
+          "titleFor": "{{feature}} には AppView が必要です",
+          "body": "ネットワーク設定で AppView をオフにしました。この機能を使うには再度オンにしてください。",
+          "openSettings": "ネットワーク設定を開く"
+        },
         "defaultSection": "既定の AppView",
         "customSection": "カスタム AppView",
         "customHint": "AppView の HTTPS ベース URL とサービス DID を入力してください。どちらも AppView 運用者の `did:web` ドキュメントの `#bsky_appview` サービスの下で公開されています。",

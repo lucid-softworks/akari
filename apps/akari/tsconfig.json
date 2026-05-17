@@ -11,6 +11,7 @@
       "@/clearsky-api": ["../../packages/clearsky-api"],
       "@/constellation-api": ["../../packages/constellation-api"],
       "@/libretranslate-api": ["../../packages/libretranslate-api"],
+      "@/slingshot-api": ["../../packages/slingshot-api"],
       "@/tenor-api": ["../../packages/tenor-api"],
       "@/tmdb-api": ["../../packages/tmdb-api"]
     }

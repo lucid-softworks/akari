@@ -32,6 +32,14 @@ export type AppViewConfig = {
   cdnPreset: CdnPresetId;
   /** Only consulted when `cdnPreset === 'custom'`. */
   customCdnUrl?: string;
+  /**
+   * When `false`, the user has opted out of using an AppView. Queries route
+   * to microcosm services (slingshot + constellation) or the user's PDS
+   * directly where possible; AppView-only features surface an
+   * `AppViewRequiredError` rather than silently proxying through the PDS's
+   * default AppView. Defaults to `true` (legacy behaviour).
+   */
+  appViewEnabled: boolean;
 };
 
 export type CdnPresetId = 'bsky' | 'blueat' | 'custom';
@@ -94,7 +102,36 @@ export const APP_VIEW_PRESETS: Record<Exclude<AppViewPresetId, 'custom'>, AppVie
   },
 } as const;
 
-export const DEFAULT_APP_VIEW: AppViewConfig = { preset: 'bsky', cdnPreset: 'bsky' };
+export const DEFAULT_APP_VIEW: AppViewConfig = { preset: 'bsky', cdnPreset: 'bsky', appViewEnabled: true };
+
+/**
+ * Read-only convenience: is the AppView feature currently enabled? Returns
+ * `true` for legacy configs that predate the toggle.
+ */
+export function isAppViewEnabled(config: AppViewConfig): boolean {
+  return config.appViewEnabled !== false;
+}
+
+/**
+ * Thrown from query/mutation functions when the user has disabled the AppView
+ * but the requested feature genuinely needs one (search, timeline, notifications,
+ * trending, …). Screens detect this via `isAppViewRequiredError` and render the
+ * `UnavailableWithoutAppView` empty state.
+ */
+export class AppViewRequiredError extends Error {
+  readonly code = 'APP_VIEW_REQUIRED' as const;
+  readonly featureKey: string;
+
+  constructor(featureKey: string) {
+    super(`Feature requires an AppView: ${featureKey}`);
+    this.name = 'AppViewRequiredError';
+    this.featureKey = featureKey;
+  }
+}
+
+export function isAppViewRequiredError(err: unknown): err is AppViewRequiredError {
+  return err instanceof Error && (err as { code?: unknown }).code === 'APP_VIEW_REQUIRED';
+}
 
 /**
  * Resolve the user's CDN choice to a host override. Returns `undefined` when
@@ -177,6 +214,7 @@ export function resolveAccountAppView(
     customUrl: override.customUrl,
     customDid: override.customDid,
     cdnPreset: globalConfig.cdnPreset,
+    appViewEnabled: globalConfig.appViewEnabled,
   });
 }
 

@@ -3,6 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -20,10 +23,12 @@ export function useConvo(convoId: string | undefined | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.convo(convoId, currentUserDid),
+    queryKey: queryKeys.convo(convoId, currentUserDid, appViewEnabled),
     queryFn: async () => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('conversations');
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       if (!convoId) throw new Error('No convoId');

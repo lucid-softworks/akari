@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Folosește un AppView",
+        "enabledDescription": "AppView-urile agregă rețeaua în cronologia, căutarea, notificările și tendințele pe care le vezi. Dezactivează-l pentru a folosi Akari doar cu citiri PDS directe, slingshot și constellation. În acest mod, multe funcții devin indisponibile.",
+        "disabledWarning": {
+          "title": "AppView dezactivat",
+          "body": "Fără AppView, cronologia, căutarea, căutarea de postări, sugestiile automate, subiectele în tendințe, etichetorii, sincronizarea preferințelor și DM-urile sunt indisponibile. Profilurile, postările individuale, contoarele de interacțiuni, listele de urmăritori și fluxurile personalizate continuă să funcționeze."
+        },
+        "unavailable": {
+          "title": "Indisponibil fără AppView",
+          "titleFor": "{{feature}} necesită un AppView",
+          "body": "Ai dezactivat AppView-ul în setările de Rețea. Activează-l din nou pentru a folosi această funcție.",
+          "openSettings": "Deschide setările de Rețea"
+        },
         "defaultSection": "AppView implicit",
         "customSection": "AppView personalizat",
         "customHint": "Introdu URL-ul de bază HTTPS al AppView-ului și service DID-ul său. Ambele sunt publicate în documentul `did:web` al operatorului AppView, sub serviciul `#bsky_appview`.",

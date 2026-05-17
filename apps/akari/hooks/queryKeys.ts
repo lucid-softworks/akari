@@ -35,7 +35,8 @@ export const queryKeys = {
   refreshToken: () => ['refreshToken'] as const,
   currentAccount: () => ['currentAccount'] as const,
   accounts: () => ['accounts'] as const,
-  accountProfiles: (dids: (string | undefined)[] | undefined) => ['accountProfiles', dids] as const,
+  accountProfiles: (dids: (string | undefined)[] | undefined, appViewEnabled?: boolean) =>
+    ['accountProfiles', dids, appViewEnabled] as const,
 
   // ---- Notifications ----
   notifications: {
@@ -45,57 +46,83 @@ export const queryKeys = {
       reasons: string[] | undefined;
       priority: boolean | undefined;
       did: string | undefined;
-    }) => ['notifications', 'list', params.limit, params.reasons, params.priority, params.did] as const,
-    unread: (did: string | undefined) => ['notifications', 'unread', did] as const,
-    preferences: (did: string | undefined) =>
-      ['notifications', 'preferences', did] as const,
+      appViewEnabled?: boolean;
+    }) =>
+      ['notifications', 'list', params.limit, params.reasons, params.priority, params.did, params.appViewEnabled] as const,
+    unread: (did: string | undefined, appViewEnabled?: boolean) =>
+      ['notifications', 'unread', did, appViewEnabled] as const,
+    preferences: (did: string | undefined, appViewEnabled?: boolean) =>
+      ['notifications', 'preferences', did, appViewEnabled] as const,
   },
 
   // ---- Messages / conversations ----
   messages: {
     all: ['messages'] as const,
     forConvo: (convoId: string) => ['messages', convoId] as const,
-    list: (params: { convoId: Maybe<string>; limit: number; did: Maybe<string> }) =>
-      ['messages', params.convoId, params.limit, params.did] as const,
-    unread: (did: Maybe<string>) => ['messages', 'unread', did] as const,
+    list: (params: { convoId: Maybe<string>; limit: number; did: Maybe<string>; appViewEnabled?: boolean }) =>
+      ['messages', params.convoId, params.limit, params.did, params.appViewEnabled] as const,
+    unread: (did: Maybe<string>, appViewEnabled?: boolean) =>
+      ['messages', 'unread', did, appViewEnabled] as const,
   },
   conversations: {
     all: ['conversations'] as const,
-    list: (params: { limit: number; readState: string | undefined; status: string | undefined; did: string | undefined }) =>
-      ['conversations', params.limit, params.readState, params.status, params.did] as const,
+    list: (params: {
+      limit: number;
+      readState: string | undefined;
+      status: string | undefined;
+      did: string | undefined;
+      appViewEnabled?: boolean;
+    }) =>
+      ['conversations', params.limit, params.readState, params.status, params.did, params.appViewEnabled] as const,
   },
-  convo: (convoId: Maybe<string>, did: Maybe<string>) => ['convo', convoId, did] as const,
+  convo: (convoId: Maybe<string>, did: Maybe<string>, appViewEnabled?: boolean) =>
+    ['convo', convoId, did, appViewEnabled] as const,
 
   // ---- Posts ----
   post: {
     all: ['post'] as const,
-    detail: (params: { actor: Maybe<string>; rKey: Maybe<string>; pdsUrl: Maybe<string> }) =>
-      ['post', { actor: params.actor, rKey: params.rKey }, params.pdsUrl] as const,
+    detail: (params: {
+      actor: Maybe<string>;
+      rKey: Maybe<string>;
+      pdsUrl: Maybe<string>;
+      appViewEnabled?: boolean;
+    }) => ['post', { actor: params.actor, rKey: params.rKey }, params.pdsUrl, params.appViewEnabled] as const,
   },
-  parentPost: (parentUri: Maybe<string>, pdsUrl: Maybe<string>) => ['parentPost', parentUri, pdsUrl] as const,
-  rootPost: (rootUri: Maybe<string>, pdsUrl: Maybe<string>) => ['rootPost', rootUri, pdsUrl] as const,
+  parentPost: (parentUri: Maybe<string>, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+    ['parentPost', parentUri, pdsUrl, appViewEnabled] as const,
+  rootPost: (rootUri: Maybe<string>, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+    ['rootPost', rootUri, pdsUrl, appViewEnabled] as const,
   postThread: {
     all: ['postThread'] as const,
-    detail: (postUri: Maybe<string>, pdsUrl: Maybe<string>) => ['postThread', postUri, pdsUrl] as const,
+    detail: (postUri: Maybe<string>, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['postThread', postUri, pdsUrl, appViewEnabled] as const,
   },
   pinnedPost: {
     all: ['pinnedPost'] as const,
-    detail: (pdsUrl: Maybe<string>, uri: Maybe<string>) => ['pinnedPost', pdsUrl, uri] as const,
+    detail: (pdsUrl: Maybe<string>, uri: Maybe<string>, appViewEnabled?: boolean) =>
+      ['pinnedPost', pdsUrl, uri, appViewEnabled] as const,
   },
   postControls: (pdsUrl: Maybe<string>, postUri: Maybe<string>) => ['existingPostControls', pdsUrl, postUri] as const,
 
   // ---- Feeds & timeline ----
   timeline: {
     all: ['timeline'] as const,
-    list: (limit: number, did: string | undefined) => ['timeline', limit, did] as const,
+    list: (limit: number, did: string | undefined, appViewEnabled?: boolean) =>
+      ['timeline', limit, did, appViewEnabled] as const,
   },
   feed: {
     all: ['feed'] as const,
     detail: (feedUri: Maybe<string>, pdsUrl: Maybe<string>) => ['feed', feedUri, pdsUrl] as const,
   },
-  feedGenerators: (feedUris: string[], pdsUrl: Maybe<string>) => ['feedGenerators', feedUris, pdsUrl] as const,
-  feeds: (params: { actor: Maybe<string>; limit: number; cursor: Maybe<string>; pdsUrl: Maybe<string> }) =>
-    ['feeds', params.actor, params.limit, params.cursor, params.pdsUrl] as const,
+  feedGenerators: (feedUris: string[], pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+    ['feedGenerators', feedUris, pdsUrl, appViewEnabled] as const,
+  feeds: (params: {
+    actor: Maybe<string>;
+    limit: number;
+    cursor: Maybe<string>;
+    pdsUrl: Maybe<string>;
+    appViewEnabled?: boolean;
+  }) => ['feeds', params.actor, params.limit, params.cursor, params.pdsUrl, params.appViewEnabled] as const,
 
   // ---- Author content ----
   author: {
@@ -106,19 +133,19 @@ export const queryKeys = {
     posts: {
       all: ['authorPosts'] as const,
       forDid: (did: string | undefined) => ['authorPosts', did] as const,
-      list: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
-        ['authorPosts', identifier, limit, pdsUrl] as const,
+      list: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+        ['authorPosts', identifier, limit, pdsUrl, appViewEnabled] as const,
     },
-    replies: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
-      ['authorReplies', identifier, limit, pdsUrl] as const,
-    media: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
-      ['authorMedia', identifier, limit, pdsUrl] as const,
-    videos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
-      ['authorVideos', identifier, limit, pdsUrl] as const,
+    replies: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['authorReplies', identifier, limit, pdsUrl, appViewEnabled] as const,
+    media: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['authorMedia', identifier, limit, pdsUrl, appViewEnabled] as const,
+    videos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['authorVideos', identifier, limit, pdsUrl, appViewEnabled] as const,
     repos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorRepos', identifier, limit, pdsUrl] as const,
-    starterpacks: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
-      ['authorStarterpacks', identifier, limit, pdsUrl] as const,
+    starterpacks: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['authorStarterpacks', identifier, limit, pdsUrl, appViewEnabled] as const,
     recipes: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorRecipes', identifier, limit, pdsUrl] as const,
     feeds: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
@@ -134,55 +161,71 @@ export const queryKeys = {
   profile: {
     all: ['profile'] as const,
     forDid: (did: Maybe<string>) => ['profile', did] as const,
-    detail: (identifier: Maybe<string>, pdsUrl: Maybe<string>) => ['profile', identifier, pdsUrl] as const,
+    detail: (identifier: Maybe<string>, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['profile', identifier, pdsUrl, appViewEnabled] as const,
     record: (did: Maybe<string>, pdsUrl: Maybe<string>) =>
       ['profile', 'record', did, pdsUrl] as const,
   },
 
   // ---- Lists ----
-  lists: (pdsUrl: Maybe<string>, target: Maybe<string>) => ['lists', pdsUrl, target] as const,
+  lists: (pdsUrl: Maybe<string>, target: Maybe<string>, appViewEnabled?: boolean) =>
+    ['lists', pdsUrl, target, appViewEnabled] as const,
   list: (pdsUrl: Maybe<string>, listUri: Maybe<string>) => ['list', pdsUrl, listUri] as const,
   listSnapshot: (pdsUrl: Maybe<string>, listUri: Maybe<string>) => ['listSnapshot', pdsUrl, listUri] as const,
 
   // ---- Mutes / blocks (account-level moderation graph) ----
   mutes: {
     all: ['mutes'] as const,
-    list: (did: Maybe<string>) => ['mutes', 'list', did] as const,
+    list: (did: Maybe<string>, appViewEnabled?: boolean) =>
+      ['mutes', 'list', did, appViewEnabled] as const,
   },
   blocks: {
     all: ['blocks'] as const,
-    list: (did: Maybe<string>) => ['blocks', 'list', did] as const,
+    list: (did: Maybe<string>, appViewEnabled?: boolean) =>
+      ['blocks', 'list', did, appViewEnabled] as const,
   },
   moderationLists: {
     all: ['moderationLists'] as const,
-    forDid: (did: Maybe<string>) => ['moderationLists', did] as const,
+    forDid: (did: Maybe<string>, appViewEnabled?: boolean) =>
+      ['moderationLists', did, appViewEnabled] as const,
   },
 
   // ---- Preferences ----
   preferences: {
     all: ['preferences'] as const,
-    forPds: (pdsUrl: string | undefined) => ['preferences', pdsUrl] as const,
+    forPds: (pdsUrl: string | undefined, appViewEnabled?: boolean) =>
+      ['preferences', pdsUrl, appViewEnabled] as const,
   },
   savedFeeds: (did: string | undefined) => ['savedFeeds', did] as const,
   aiPreferences: (did: string | undefined, pdsUrl: string | undefined) => ['aiPreferences', did, pdsUrl] as const,
 
   // ---- Search & discovery ----
-  search: (params: { query: Maybe<string>; activeTab: string; limit: number; sort: string; pdsUrl: Maybe<string> }) =>
-    ['search', params.query, params.activeTab, params.limit, params.sort, params.pdsUrl] as const,
+  search: (params: {
+    query: Maybe<string>;
+    activeTab: string;
+    limit: number;
+    sort: string;
+    pdsUrl: Maybe<string>;
+    appViewEnabled?: boolean;
+  }) =>
+    ['search', params.query, params.activeTab, params.limit, params.sort, params.pdsUrl, params.appViewEnabled] as const,
   typeaheadActors: (debounced: string, appViewUrl: string | undefined) =>
     ['typeaheadActors', debounced, appViewUrl] as const,
-  trendingTopics: (limit: number, appViewUrl: string | undefined) => ['trendingTopics', limit, appViewUrl] as const,
+  trendingTopics: (limit: number, appViewUrl: string | undefined, appViewEnabled?: boolean) =>
+    ['trendingTopics', limit, appViewUrl, appViewEnabled] as const,
 
   // ---- Bookmarks ----
   bookmarks: {
     all: ['bookmarks'] as const,
-    list: (limit: number, did: string | undefined) => ['bookmarks', limit, did] as const,
+    list: (limit: number, did: string | undefined, appViewEnabled?: boolean) =>
+      ['bookmarks', limit, did, appViewEnabled] as const,
   },
 
   // ---- Misc per-user data ----
   drafts: (did: string | undefined) => ['drafts', did] as const,
   selectedFeed: () => ['selectedFeed'] as const,
-  labelers: (pdsUrl: string | undefined, didsCsv: string) => ['labelers', pdsUrl, didsCsv] as const,
+  labelers: (pdsUrl: string | undefined, didsCsv: string, appViewEnabled?: boolean) =>
+    ['labelers', pdsUrl, didsCsv, appViewEnabled] as const,
   links: (identifier: Maybe<string>, limit: number, did: Maybe<string>) => ['links', identifier, limit, did] as const,
 
   // ---- Identity / verification ----

@@ -902,6 +902,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Use an AppView",
+        "enabledDescription": "AppViews aggregate the network into the timeline, search, notifications, and trending you see. Turn this off to use Akari with only direct PDS reads, slingshot, and constellation. Many features become unavailable in that mode.",
+        "disabledWarning": {
+          "title": "AppView disabled",
+          "body": "Timeline, search, post search, typeahead, trending topics, labelers, preferences sync, and DMs are unavailable without an AppView. Profiles, individual posts, engagement counts, follower lists, and custom feeds keep working."
+        },
+        "unavailable": {
+          "title": "Unavailable without AppView",
+          "titleFor": "{{feature}} needs an AppView",
+          "body": "You've turned the AppView off in Network settings. Turn it back on to use this feature.",
+          "openSettings": "Open Network settings"
+        },
         "defaultSection": "Default AppView",
         "customSection": "Custom AppView",
         "customHint": "Enter the AppView's HTTPS base URL and its service DID. Both are published in the AppView operator's `did:web` document under the `#bsky_appview` service.",

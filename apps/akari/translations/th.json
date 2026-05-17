@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "ใช้ AppView",
+        "enabledDescription": "AppView รวบรวมเครือข่ายเข้าสู่ไทม์ไลน์ ค้นหา การแจ้งเตือน และเทรนด์ที่คุณเห็น ปิดเพื่อใช้ Akari กับการอ่าน PDS โดยตรง slingshot และ constellation เท่านั้น ในโหมดนี้ฟีเจอร์หลายอย่างจะใช้ไม่ได้",
+        "disabledWarning": {
+          "title": "AppView ถูกปิดใช้งาน",
+          "body": "หากไม่มี AppView ไทม์ไลน์ ค้นหา ค้นหาโพสต์ คำแนะนำอัตโนมัติ หัวข้อยอดนิยม ผู้ติดป้ายกำกับ การซิงค์ค่าที่ตั้ง และ DM จะใช้ไม่ได้ โปรไฟล์ โพสต์เดี่ยว ตัวนับการโต้ตอบ รายชื่อผู้ติดตาม และฟีดที่กำหนดเองยังคงทำงานได้"
+        },
+        "unavailable": {
+          "title": "ใช้ไม่ได้หากไม่มี AppView",
+          "titleFor": "{{feature}} ต้องใช้ AppView",
+          "body": "คุณได้ปิด AppView ในตั้งค่าเครือข่าย เปิดใช้งานอีกครั้งเพื่อใช้ฟีเจอร์นี้",
+          "openSettings": "เปิดตั้งค่าเครือข่าย"
+        },
         "defaultSection": "AppView เริ่มต้น",
         "customSection": "AppView กำหนดเอง",
         "customHint": "กรอก URL ฐาน HTTPS ของ AppView และ service DID ของมัน ทั้งสองค่านี้เผยแพร่อยู่ในเอกสาร `did:web` ของผู้ให้บริการ AppView ภายใต้บริการ `#bsky_appview`",

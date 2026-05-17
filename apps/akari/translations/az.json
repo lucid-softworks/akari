@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView istifadə et",
+        "enabledDescription": "AppView-lər şəbəkəni gördüyünüz xronoloji lent, axtarış, bildirişlər və trendlərə yığır. Akari-ni yalnız birbaşa PDS oxumaları, slingshot və constellation ilə istifadə etmək üçün bunu söndürün. Bu rejimdə bir çox funksiya əlçatmaz olur.",
+        "disabledWarning": {
+          "title": "AppView söndürülüb",
+          "body": "AppView olmadan xronoloji lent, axtarış, paylaşım axtarışı, avtomatik təklif, populyar mövzular, etiketləyicilər, parametr sinxronizasiyası və mesajlar əlçatmazdır. Profillər, ayrı-ayrı paylaşımlar, qarşılıqlı təsir sayğacları, izləyici siyahıları və xüsusi lentlər işləməkdə davam edir."
+        },
+        "unavailable": {
+          "title": "AppView olmadan əlçatmazdır",
+          "titleFor": "{{feature}} üçün AppView lazımdır",
+          "body": "Şəbəkə parametrlərində AppView-i söndürdünüz. Bu funksiyadan istifadə etmək üçün yenidən aktivləşdirin.",
+          "openSettings": "Şəbəkə parametrlərini aç"
+        },
         "defaultSection": "Varsayılan AppView",
         "customSection": "Özəl AppView",
         "customHint": "AppView-in HTTPS əsas URL-ini və xidmət DID-ini daxil edin. Hər ikisi AppView operatorunun `did:web` sənədində `#bsky_appview` xidməti altında dərc olunur.",

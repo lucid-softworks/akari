@@ -5,7 +5,9 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   TextInput,
+  View,
 } from 'react-native';
 
 import {
@@ -30,6 +32,7 @@ import {
   type AccountAppViewOverride,
   type AppViewPresetId,
   type CdnPresetId,
+  isAppViewEnabled,
   resolveAccountAppView,
   resolveAppView,
   resolveCdnHost,
@@ -52,7 +55,12 @@ export default function NetworkSettingsScreen() {
     setCustomDid,
     setCdnPreset,
     setCustomCdnUrl,
+    setAppViewEnabled,
   } = useAppViewSettings();
+  const appViewEnabled = isAppViewEnabled(config);
+  const warningBackground = useThemeColor({ light: '#FEF3C7', dark: '#3F2F0B' }, 'background');
+  const warningBorder = useThemeColor({ light: '#F59E0B', dark: '#92500A' }, 'background');
+  const warningText = useThemeColor({ light: '#7C2D12', dark: '#FCD34D' }, 'text');
   const { data: accounts = [] } = useAccounts();
   const { data: accountProfiles } = useAccountProfiles();
   const updateAccountAppView = useUpdateAccountAppView();
@@ -143,7 +151,41 @@ export default function NetworkSettingsScreen() {
             {t('settings.network.intro')}
           </ThemedText>
 
-          <SettingsSection isFirst title={t('settings.appView.defaultSection')}>
+          <SettingsSection isFirst title={t('settings.appView.enabledSection')}>
+            <ThemedView style={[styles.sectionCard, { borderColor }]}>
+              <View style={styles.toggleRow}>
+                <View style={styles.toggleText}>
+                  <ThemedText style={styles.presetLabel}>
+                    {t('settings.appView.enabledLabel')}
+                  </ThemedText>
+                  <ThemedText style={[styles.presetDescription, { color: secondaryText }]}>
+                    {t('settings.appView.enabledDescription')}
+                  </ThemedText>
+                </View>
+                <Switch
+
+                  value={appViewEnabled}
+                  onValueChange={setAppViewEnabled}
+                  trackColor={{ true: accentColor, false: borderColor }}
+                />
+              </View>
+            </ThemedView>
+            {!appViewEnabled ? (
+              <View
+
+                style={[styles.warningBanner, { backgroundColor: warningBackground, borderColor: warningBorder }]}
+              >
+                <ThemedText style={[styles.warningTitle, { color: warningText }]}>
+                  {t('settings.appView.disabledWarning.title')}
+                </ThemedText>
+                <ThemedText style={[styles.warningBody, { color: warningText }]}>
+                  {t('settings.appView.disabledWarning.body')}
+                </ThemedText>
+              </View>
+            ) : null}
+          </SettingsSection>
+
+          <SettingsSection title={t('settings.appView.defaultSection')}>
             <ThemedView style={[styles.sectionCard, { borderColor }]}>
               {appViewPresets.map((preset, index) => {
                 const active = config.preset === preset.id;
@@ -466,6 +508,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  toggleText: { flex: 1, marginRight: spacing.md },
+  warningBanner: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: layout.hairline,
+    gap: spacing.xs,
+  },
+  warningTitle: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+  },
+  warningBody: {
+    fontSize: fontSize.sm,
+    lineHeight: 20,
   },
   presetText: { flex: 1, marginRight: spacing.md },
   presetLabel: {

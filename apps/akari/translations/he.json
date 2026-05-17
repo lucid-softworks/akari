@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "השתמש ב-AppView",
+        "enabledDescription": "AppViews מצברים את הרשת לציר הזמן, החיפוש, ההתראות והנושאים החמים שאתה רואה. כבה זאת כדי להשתמש ב-Akari רק עם קריאות PDS ישירות, slingshot ו-constellation. במצב זה תכונות רבות אינן זמינות.",
+        "disabledWarning": {
+          "title": "AppView מושבת",
+          "body": "ציר הזמן, חיפוש, חיפוש פוסטים, השלמה אוטומטית, נושאים חמים, מתייגים, סנכרון העדפות והודעות ישירות אינם זמינים ללא AppView. פרופילים, פוסטים בודדים, מוני אינטראקציות, רשימות עוקבים והזנות מותאמות אישית ממשיכים לעבוד."
+        },
+        "unavailable": {
+          "title": "לא זמין ללא AppView",
+          "titleFor": "{{feature}} דורש AppView",
+          "body": "כיבית את ה-AppView בהגדרות הרשת. הפעל אותו שוב כדי להשתמש בתכונה זו.",
+          "openSettings": "פתח את הגדרות הרשת"
+        },
         "defaultSection": "AppView ברירת מחדל",
         "customSection": "AppView מותאם אישית",
         "customHint": "הזינו את כתובת ה־HTTPS הבסיסית של ה־AppView ואת ה־service DID שלו. שניהם מתפרסמים במסמך `did:web` של מפעיל ה־AppView תחת השירות `#bsky_appview`.",

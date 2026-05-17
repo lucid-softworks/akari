@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Gunakan AppView",
+        "enabledDescription": "AppView mengagregasi jaringan menjadi linimasa, pencarian, notifikasi, dan tren yang Anda lihat. Matikan untuk menggunakan Akari hanya dengan pembacaan PDS langsung, slingshot, dan constellation. Banyak fitur menjadi tidak tersedia di mode ini.",
+        "disabledWarning": {
+          "title": "AppView dinonaktifkan",
+          "body": "Linimasa, pencarian, pencarian postingan, saran otomatis, topik tren, pelabel, sinkronisasi preferensi, dan DM tidak tersedia tanpa AppView. Profil, postingan individu, penghitung interaksi, daftar pengikut, dan feed kustom tetap berfungsi."
+        },
+        "unavailable": {
+          "title": "Tidak tersedia tanpa AppView",
+          "titleFor": "{{feature}} memerlukan AppView",
+          "body": "Anda telah mematikan AppView di pengaturan Jaringan. Aktifkan kembali untuk menggunakan fitur ini.",
+          "openSettings": "Buka pengaturan Jaringan"
+        },
         "defaultSection": "AppView bawaan",
         "customSection": "AppView khusus",
         "customHint": "Masukkan URL dasar HTTPS AppView dan service DID-nya. Keduanya dipublikasikan di dokumen `did:web` operator AppView di bawah layanan `#bsky_appview`.",

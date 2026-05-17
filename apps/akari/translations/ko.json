@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView 사용",
+        "enabledDescription": "AppView는 네트워크를 타임라인, 검색, 알림 및 트렌딩으로 집계합니다. 이를 끄면 Akari가 직접 PDS 읽기, slingshot, constellation만 사용합니다. 이 모드에서는 많은 기능을 사용할 수 없습니다.",
+        "disabledWarning": {
+          "title": "AppView 비활성화됨",
+          "body": "AppView 없이는 타임라인, 검색, 게시물 검색, 자동 완성, 트렌딩 주제, 레이블러, 환경설정 동기화, DM을 사용할 수 없습니다. 프로필, 개별 게시물, 상호작용 카운터, 팔로워 목록 및 사용자 정의 피드는 계속 작동합니다."
+        },
+        "unavailable": {
+          "title": "AppView 없이 사용할 수 없음",
+          "titleFor": "{{feature}}에 AppView가 필요합니다",
+          "body": "네트워크 설정에서 AppView를 껐습니다. 이 기능을 사용하려면 다시 켜세요.",
+          "openSettings": "네트워크 설정 열기"
+        },
         "defaultSection": "기본 AppView",
         "customSection": "사용자 지정 AppView",
         "customHint": "AppView의 HTTPS 기본 URL과 service DID를 입력하세요. 둘 다 AppView 운영자의 `did:web` 문서 안 `#bsky_appview` 서비스 아래에 공개되어 있습니다.",

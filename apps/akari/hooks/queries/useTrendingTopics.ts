@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { queryKeys } from '@/hooks/queryKeys';
-import { useAppViewSettings } from '@/hooks/useAppViewSettings';
-import { resolveAppView } from '@/utils/appView';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled, useAppViewSettings } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError, resolveAppView } from '@/utils/appView';
 import { apiForPublicAppView } from '@/utils/blueskyApi';
 
 /**
@@ -13,12 +14,14 @@ import { apiForPublicAppView } from '@/utils/blueskyApi';
  */
 export function useTrendingTopics(limit: number = 12, enabled: boolean = true) {
   const { config } = useAppViewSettings();
+  const appViewEnabled = useAppViewEnabled();
   const appViewUrl = resolveAppView(config).url;
   return useQuery({
-    queryKey: queryKeys.trendingTopics(limit, appViewUrl),
+    queryKey: queryKeys.trendingTopics(limit, appViewUrl, appViewEnabled),
     staleTime: 5 * 60 * 1000,
     enabled,
     queryFn: async () => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('trendingTopics');
       const api = apiForPublicAppView();
       const res = await api.getTrendingTopics(limit);
       return res.topics;

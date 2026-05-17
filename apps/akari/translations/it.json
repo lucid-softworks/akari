@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Usa un AppView",
+        "enabledDescription": "Gli AppView aggregano la rete in cronologia, ricerca, notifiche e tendenze che vedi. Disattivalo per usare Akari solo con letture dirette del PDS, slingshot e constellation. In questa modalità molte funzionalità non sono disponibili.",
+        "disabledWarning": {
+          "title": "AppView disattivato",
+          "body": "Cronologia, ricerca, ricerca dei post, suggerimenti automatici, argomenti di tendenza, etichettatori, sincronizzazione delle preferenze e DM non sono disponibili senza un AppView. Profili, singoli post, contatori di interazione, elenchi di follower e feed personalizzati continuano a funzionare."
+        },
+        "unavailable": {
+          "title": "Non disponibile senza AppView",
+          "titleFor": "{{feature}} richiede un AppView",
+          "body": "Hai disattivato l'AppView nelle impostazioni di Rete. Riattivalo per usare questa funzione.",
+          "openSettings": "Apri impostazioni Rete"
+        },
         "defaultSection": "AppView predefinito",
         "customSection": "AppView personalizzato",
         "customHint": "Inserisci l’URL di base HTTPS dell’AppView e il suo service DID. Entrambi sono pubblicati nel documento `did:web` dell’operatore dell’AppView, sotto il servizio `#bsky_appview`.",

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EmptyState } from '@/components/EmptyState';
 import { ConversationSkeleton } from '@/components/skeletons';
 import { ThemedView } from '@/components/ThemedView';
+import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { ConversationRow } from '@/components/messages/ConversationRow';
 import { MessagesListFooter } from '@/components/messages/MessagesListFooter';
@@ -12,10 +13,12 @@ import { MessagesListHeader } from '@/components/messages/MessagesListHeader';
 import type { CommonTranslationPath, Conversation, PendingButtonConfig } from '@/components/messages/types';
 import { layout, spacing } from '@/constants/tokens';
 import { useConversations } from '@/hooks/queries/useConversations';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isAppViewRequiredError } from '@/utils/appView';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const ESTIMATED_CONVERSATION_HEIGHT = 88;
@@ -41,6 +44,7 @@ export function MessagesListScreen({
   const flatListRef = React.useRef<VirtualizedListHandle<Conversation>>(null);
   const { t } = useTranslation();
   const { isLargeScreen } = useResponsive();
+  const appViewEnabled = useAppViewEnabled();
 
   const scrollToTop = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -138,6 +142,14 @@ export function MessagesListScreen({
       titleKey,
     ],
   );
+
+  if (!appViewEnabled || isAppViewRequiredError(error)) {
+    return (
+      <ThemedView style={styles.container}>
+        <UnavailableWithoutAppView feature={t(titleKey)} />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>

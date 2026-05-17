@@ -2,16 +2,20 @@ import { type BlueskyFeed, type BlueskyPreferencesResponse, type BlueskySavedFee
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SavedFeedWithMetadata } from '@/types/savedFeed';
 import { feedGeneratorsQueryOptions } from './useFeedGenerators';
+import { AppViewRequiredError } from '@/utils/appView';
 import { apiForPdsUrl } from '@/utils/blueskyApi';
 
 const PREFERENCES_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
-const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
-  queryKey: queryKeys.preferences.forPds(pdsUrl),
+const preferencesQueryOptions = (token: string, pdsUrl: string, appViewEnabled = true) => ({
+  queryKey: queryKeys.preferences.forPds(pdsUrl, appViewEnabled),
   queryFn: async (): Promise<BlueskyPreferencesResponse> => {
+    if (!readAppViewEnabled()) throw new AppViewRequiredError('preferences');
     if (!token) throw new Error('No access token');
     if (!pdsUrl) throw new Error('No PDS URL available');
 
@@ -27,9 +31,10 @@ const preferencesQueryOptions = (token: string, pdsUrl: string) => ({
 export function usePreferences() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? ''),
+    ...preferencesQueryOptions(token ?? '', currentAccount?.pdsUrl ?? '', appViewEnabled),
     enabled: !!token && !!currentAccount?.pdsUrl,
   });
 }

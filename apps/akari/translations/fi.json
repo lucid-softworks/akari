@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Käytä AppView:ta",
+        "enabledDescription": "AppView:t kokoavat verkon näkemääsi aikajanaan, hakuun, ilmoituksiin ja trendeihin. Poista käytöstä käyttääksesi Akaria vain suorilla PDS-luennoilla, slingshotilla ja constellationilla. Tässä tilassa monet ominaisuudet eivät ole käytettävissä.",
+        "disabledWarning": {
+          "title": "AppView pois käytöstä",
+          "body": "Aikajana, haku, julkaisuhaku, automaattitäydennys, suositut aiheet, leimaajat, asetusten synkronointi ja yksityisviestit eivät ole käytettävissä ilman AppView:ta. Profiilit, yksittäiset julkaisut, vuorovaikutuslaskurit, seuraajalistat ja mukautetut syötteet toimivat edelleen."
+        },
+        "unavailable": {
+          "title": "Ei käytettävissä ilman AppView:ta",
+          "titleFor": "{{feature}} vaatii AppView:n",
+          "body": "Olet poistanut AppView:n käytöstä verkkoasetuksissa. Ota se uudelleen käyttöön käyttääksesi tätä ominaisuutta.",
+          "openSettings": "Avaa verkkoasetukset"
+        },
         "defaultSection": "Oletus-AppView",
         "customSection": "Mukautettu AppView",
         "customHint": "Anna AppView’n HTTPS-perus-URL ja sen palvelu-DID. Molemmat julkaistaan AppView’n ylläpitäjän `did:web`-asiakirjassa palvelun `#bsky_appview` alla.",

@@ -8,10 +8,13 @@ import { PostCard } from '@/components/PostCard';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isAppViewRequiredError } from '@/utils/appView';
 import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
@@ -33,6 +36,7 @@ export default function BookmarksScreen() {
     tabScrollRegistry.register('bookmarks', scrollToTop);
   }, []);
 
+  const appViewEnabled = useAppViewEnabled();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(20);
   const { data: mutedWords } = useMutedWords();
 
@@ -99,6 +103,14 @@ export default function BookmarksScreen() {
       />
     );
   };
+
+  if (!appViewEnabled || isAppViewRequiredError(error)) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        <UnavailableWithoutAppView feature={t('common.bookmarks')} />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>

@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView का उपयोग करें",
+        "enabledDescription": "AppView नेटवर्क को टाइमलाइन, खोज, सूचनाओं और ट्रेंडिंग में एकत्रित करते हैं जो आप देखते हैं। इसे बंद करें ताकि Akari केवल सीधे PDS रीड्स, slingshot और constellation के साथ काम करे। इस मोड में कई सुविधाएँ उपलब्ध नहीं होतीं।",
+        "disabledWarning": {
+          "title": "AppView अक्षम है",
+          "body": "AppView के बिना टाइमलाइन, खोज, पोस्ट खोज, ऑटोसजेस्ट, ट्रेंडिंग विषय, लेबलर, प्राथमिकता सिंक और DM उपलब्ध नहीं हैं। प्रोफ़ाइल, अलग-अलग पोस्ट, इंटरैक्शन काउंटर, फ़ॉलोअर सूचियाँ और कस्टम फ़ीड काम करते रहते हैं।"
+        },
+        "unavailable": {
+          "title": "AppView के बिना उपलब्ध नहीं",
+          "titleFor": "{{feature}} के लिए AppView चाहिए",
+          "body": "आपने नेटवर्क सेटिंग में AppView बंद कर दिया है। इस सुविधा का उपयोग करने के लिए इसे फिर से चालू करें।",
+          "openSettings": "नेटवर्क सेटिंग खोलें"
+        },
         "defaultSection": "डिफ़ॉल्ट AppView",
         "customSection": "कस्टम AppView",
         "customHint": "AppView का HTTPS बेस URL और उसकी service DID दर्ज करें. दोनों AppView ऑपरेटर के `did:web` दस्तावेज़ में `#bsky_appview` सेवा के अंतर्गत प्रकाशित होते हैं.",

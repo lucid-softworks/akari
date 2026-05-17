@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { type BlueskyListResponse, type BlueskyListsResponse } from '@/bluesky-api';
+import { getActorListsPage, resolveIdentifierToDid, resolvePdsUrl } from '@/hooks/queries/microcosm';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -13,16 +15,28 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useLists(actor?: string) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
   const target = actor ?? currentAccount?.did ?? '';
 
   return useInfiniteQuery<BlueskyListsResponse>({
-    queryKey: queryKeys.lists(currentAccount?.pdsUrl, target),
-    enabled: !!token && !!currentAccount?.pdsUrl && !!target,
+    queryKey: queryKeys.lists(currentAccount?.pdsUrl, target, appViewEnabled),
+    enabled: !!target && (appViewEnabled ? !!token && !!currentAccount?.pdsUrl : true),
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
+      if (!target) throw new Error('No actor');
+
+      if (!appViewEnabled) {
+        const did = await resolveIdentifierToDid(target);
+        // For the current user we already know their PDS; for everyone
+        // else go through the DID document.
+        const pdsUrl =
+          currentAccount?.did === did ? currentAccount?.pdsUrl : await resolvePdsUrl(did);
+        if (!pdsUrl) throw new Error(`Couldn't resolve PDS URL for ${did}`);
+        return getActorListsPage({ did, pdsUrl, limit: 50, cursor: pageParam as string | undefined });
+      }
+
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-      if (!target) throw new Error('No actor');
 
       const api = apiForAccount(currentAccount);
       return api.getLists(token, target, 50, pageParam as string | undefined);

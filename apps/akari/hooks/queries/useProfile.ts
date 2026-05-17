@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { getProfileView } from "@/hooks/queries/microcosm";
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from "@/hooks/useAppViewEnabled";
 import { useCurrentAccount } from "./useCurrentAccount";
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -12,12 +14,18 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useProfile(identifier: string | undefined) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.profile.detail(identifier, currentAccount?.pdsUrl),
+    queryKey: queryKeys.profile.detail(identifier, currentAccount?.pdsUrl, appViewEnabled),
     queryFn: async () => {
-      if (!token) throw new Error("No access token");
       if (!identifier) throw new Error("No identifier provided");
+
+      if (!appViewEnabled) {
+        return getProfileView(identifier);
+      }
+
+      if (!token) throw new Error("No access token");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = apiForAccount(currentAccount);
@@ -25,7 +33,7 @@ export function useProfile(identifier: string | undefined) {
 
       return profile;
     },
-    enabled: !!identifier && !!token,
+    enabled: !!identifier && (appViewEnabled ? !!token : true),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

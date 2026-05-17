@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView kullan",
+        "enabledDescription": "AppView'lar ağı gördüğünüz zaman çizelgesine, aramaya, bildirimlere ve trendlere dönüştürür. Akari'yi yalnızca doğrudan PDS okumaları, slingshot ve constellation ile kullanmak için bunu kapatın. Bu modda birçok özellik kullanılamaz hale gelir.",
+        "disabledWarning": {
+          "title": "AppView devre dışı",
+          "body": "AppView olmadan zaman çizelgesi, arama, gönderi arama, otomatik öneri, trend olan konular, etiketleyiciler, tercih senkronizasyonu ve DM'ler kullanılamaz. Profiller, ayrı gönderiler, etkileşim sayaçları, takipçi listeleri ve özel akışlar çalışmaya devam eder."
+        },
+        "unavailable": {
+          "title": "AppView olmadan kullanılamaz",
+          "titleFor": "{{feature}} bir AppView gerektirir",
+          "body": "Ağ ayarlarında AppView'i kapattınız. Bu özelliği kullanmak için tekrar açın.",
+          "openSettings": "Ağ ayarlarını aç"
+        },
         "defaultSection": "Varsayılan AppView",
         "customSection": "Özel AppView",
         "customHint": "AppView'in HTTPS temel URL'sini ve service DID'sini girin. İkisi de AppView operatörünün `did:web` belgesinde `#bsky_appview` hizmeti altında yayımlanır.",

@@ -3,7 +3,10 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { BlueskyEmbed } from '@/bluesky-api';
+import { AppViewRequiredError, isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 type NotificationError = {
   type: 'permission' | 'network' | 'unknown';
@@ -21,10 +24,17 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useInfiniteQuery({
-    queryKey: queryKeys.notifications.list({ limit, reasons, priority, did: currentUserDid }),
+    queryKey: queryKeys.notifications.list({ limit, reasons, priority, did: currentUserDid, appViewEnabled }),
     queryFn: async ({ pageParam }) => {
+      // Notifications genuinely need an AppView: without it we'd have to
+      // listRecords every one of the user's posts (could be 10k+) and
+      // run a constellation query per post. Constellation has no "all
+      // engagement on anything I've posted" query, so this can't be done
+      // at scale. Honest answer is "this feature needs an AppView."
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('notifications');
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
@@ -122,9 +132,11 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
     getNextPageParam: (lastPage) => lastPage.cursor,
     enabled: enabled && !!token && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
-    retry: (failureCount, error: NotificationError) => {
+    retry: (failureCount, error: NotificationError | Error) => {
+      // AppView disabled — terminal, no point retrying.
+      if (isAppViewRequiredError(error)) return false;
       // Don't retry permission errors
-      if (error?.type === 'permission') {
+      if ((error as NotificationError)?.type === 'permission') {
         return false;
       }
       // Retry network errors up to 3 times

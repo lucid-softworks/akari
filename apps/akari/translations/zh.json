@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "使用 AppView",
+        "enabledDescription": "AppView 将网络聚合为你看到的时间线、搜索、通知和热门话题。关闭以使 Akari 仅通过直接 PDS 读取、slingshot 和 constellation 运行。在该模式下许多功能不可用。",
+        "disabledWarning": {
+          "title": "AppView 已禁用",
+          "body": "没有 AppView，时间线、搜索、帖子搜索、自动建议、热门话题、标记器、偏好同步和私信都不可用。个人资料、单个帖子、互动计数器、关注者列表和自定义信息流仍然可用。"
+        },
+        "unavailable": {
+          "title": "没有 AppView 不可用",
+          "titleFor": "{{feature}} 需要 AppView",
+          "body": "你已在网络设置中关闭 AppView。重新开启以使用此功能。",
+          "openSettings": "打开网络设置"
+        },
         "defaultSection": "默认 AppView",
         "customSection": "自定义 AppView",
         "customHint": "输入 AppView 的 HTTPS 基础 URL 及其 service DID。两者都会在 AppView 运营方的 `did:web` 文档中、`#bsky_appview` 服务下公布。",

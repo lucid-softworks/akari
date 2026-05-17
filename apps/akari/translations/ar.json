@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "استخدام AppView",
+        "enabledDescription": "يقوم AppView بتجميع الشبكة في الجدول الزمني والبحث والإشعارات والمواضيع الرائجة التي تراها. قم بإيقاف تشغيله لاستخدام Akari مع قراءات PDS المباشرة وslingshot وconstellation فقط. تصبح العديد من الميزات غير متاحة في هذا الوضع.",
+        "disabledWarning": {
+          "title": "تم تعطيل AppView",
+          "body": "الجدول الزمني والبحث وبحث المنشورات والاقتراحات والمواضيع الرائجة والمصنفون ومزامنة التفضيلات والرسائل المباشرة غير متاحة بدون AppView. تظل الملفات الشخصية والمنشورات الفردية وعدادات التفاعل وقوائم المتابعين والخلاصات المخصصة تعمل."
+        },
+        "unavailable": {
+          "title": "غير متاح بدون AppView",
+          "titleFor": "{{feature}} يحتاج إلى AppView",
+          "body": "لقد قمت بإيقاف تشغيل AppView في إعدادات الشبكة. قم بتشغيله مرة أخرى لاستخدام هذه الميزة.",
+          "openSettings": "فتح إعدادات الشبكة"
+        },
         "defaultSection": "AppView الافتراضي",
         "customSection": "AppView مخصّص",
         "customHint": "أدخل عنوان HTTPS الأساسي للـ AppView و DID الخاص بخدمته. كلاهما مُعلَن في مستند `did:web` الخاص بمشغّل الـ AppView ضمن خدمة `#bsky_appview`.",

@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Defnyddio AppView",
+        "enabledDescription": "Mae AppView yn cyfuno'r rhwydwaith yn linell amser, chwilio, hysbysiadau a thueddiadau y byddwch yn eu gweld. Diffoddwch hyn i ddefnyddio Akari gyda darlleniadau PDS uniongyrchol, slingshot a constellation yn unig. Daw llawer o nodweddion yn anhygyrch yn y modd hwnnw.",
+        "disabledWarning": {
+          "title": "AppView wedi ei ddiffodd",
+          "body": "Mae'r llinell amser, chwilio, chwilio postiadau, awgrymiadau, pynciau llosg, labelwyr, cysoni dewisiadau, ac DMs yn anhygyrch heb AppView. Mae proffiliau, postiadau unigol, cyfrifau ymgysylltu, rhestrau dilynwyr, a phorthiannau personol yn parhau i weithio."
+        },
+        "unavailable": {
+          "title": "Anhygyrch heb AppView",
+          "titleFor": "Mae angen AppView ar {{feature}}",
+          "body": "Rydych chi wedi diffodd AppView yng ngosodiadau Rhwydwaith. Ailgynnwch ef i ddefnyddio'r nodwedd hon.",
+          "openSettings": "Agor gosodiadau Rhwydwaith"
+        },
         "defaultSection": "AppView diofyn",
         "customSection": "AppView cyfaddas",
         "customHint": "Rhowch URL sylfaen HTTPS yr AppView a'i DID gwasanaeth. Cyhoeddir y ddau yn nogfen `did:web` y gweithredwr AppView o dan y gwasanaeth `#bsky_appview`.",

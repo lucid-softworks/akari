@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Använd en AppView",
+        "enabledDescription": "AppViews aggregerar nätverket till den tidslinje, sökning, notiser och trender du ser. Stäng av detta för att använda Akari endast med direkta PDS-läsningar, slingshot och constellation. I det läget är många funktioner otillgängliga.",
+        "disabledWarning": {
+          "title": "AppView avstängd",
+          "body": "Tidslinje, sökning, postsökning, autoförslag, trendiga ämnen, etiketterare, synkronisering av inställningar och DMs är otillgängliga utan AppView. Profiler, enskilda inlägg, interaktionsräknare, följarlistor och anpassade flöden fortsätter att fungera."
+        },
+        "unavailable": {
+          "title": "Otillgänglig utan AppView",
+          "titleFor": "{{feature}} kräver en AppView",
+          "body": "Du har stängt av AppView i nätverksinställningarna. Sätt på den igen för att använda denna funktion.",
+          "openSettings": "Öppna nätverksinställningar"
+        },
         "defaultSection": "Standard-AppView",
         "customSection": "Anpassad AppView",
         "customHint": "Ange AppView:ns HTTPS-bas-URL och dess service-DID. Båda publiceras i AppView-operatörens `did:web`-dokument under tjänsten `#bsky_appview`.",

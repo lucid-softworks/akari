@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Een AppView gebruiken",
+        "enabledDescription": "AppViews aggregeren het netwerk tot de tijdlijn, zoeken, meldingen en trends die je ziet. Schakel dit uit om Akari alleen met directe PDS-leesoperaties, slingshot en constellation te gebruiken. Veel functies zijn in die modus niet beschikbaar.",
+        "disabledWarning": {
+          "title": "AppView uitgeschakeld",
+          "body": "Tijdlijn, zoeken, berichtenzoeken, suggesties, trending onderwerpen, labelers, voorkeurensynchronisatie en DMs zijn niet beschikbaar zonder een AppView. Profielen, individuele berichten, interactietellers, volgerslijsten en aangepaste feeds blijven werken."
+        },
+        "unavailable": {
+          "title": "Niet beschikbaar zonder AppView",
+          "titleFor": "{{feature}} vereist een AppView",
+          "body": "Je hebt de AppView uitgeschakeld in de Netwerkinstellingen. Schakel hem weer in om deze functie te gebruiken.",
+          "openSettings": "Netwerkinstellingen openen"
+        },
         "defaultSection": "Standaard-AppView",
         "customSection": "Aangepaste AppView",
         "customHint": "Voer de HTTPS-basis-URL van de AppView en zijn service-DID in. Beide worden gepubliceerd in het `did:web`-document van de AppView-beheerder onder de service `#bsky_appview`.",

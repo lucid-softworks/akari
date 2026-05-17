@@ -2,8 +2,11 @@ import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { CursorPageParam } from "@/hooks/queries/types";
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { type BlueskyPostView, type BlueskyProfile } from "@/bluesky-api";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { AppViewRequiredError, isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 type SearchTabType = "all" | "users" | "posts";
@@ -34,10 +37,12 @@ export function useSearch(
 ) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useInfiniteQuery({
-    queryKey: queryKeys.search({ query, activeTab, limit, sort, pdsUrl: currentAccount?.pdsUrl }),
+    queryKey: queryKeys.search({ query, activeTab, limit, sort, pdsUrl: currentAccount?.pdsUrl, appViewEnabled }),
     queryFn: async ({ pageParam }: CursorPageParam) => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError("search");
       if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
@@ -186,12 +191,11 @@ export function useSearch(
     getNextPageParam: (lastPage) => lastPage.cursor,
     placeholderData: keepPreviousData,
     staleTime: 2 * 60 * 1000, // 2 minutes
-    retry: (failureCount, error: SearchError) => {
-      // Don't retry permission errors
-      if (error?.type === "permission") {
+    retry: (failureCount, error: SearchError | Error) => {
+      if (isAppViewRequiredError(error)) return false;
+      if ((error as SearchError)?.type === "permission") {
         return false;
       }
-      // Retry network errors up to 3 times
       return failureCount < 3;
     },
   });

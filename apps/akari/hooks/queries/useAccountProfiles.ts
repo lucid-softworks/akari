@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+
+import { getProfileView } from '@/hooks/queries/microcosm';
 import { useAccounts } from './useAccounts';
 import { useJwtToken } from './useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -10,9 +13,10 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useAccountProfiles() {
   const { data: accounts } = useAccounts();
   const { data: token } = useJwtToken();
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.accountProfiles(accounts?.map((a) => a.did)),
+    queryKey: queryKeys.accountProfiles(accounts?.map((a) => a.did), appViewEnabled),
     queryFn: async () => {
       if (!accounts || accounts.length === 0) return {};
 
@@ -25,6 +29,10 @@ export function useAccountProfiles() {
             if (!account.pdsUrl) {
               console.warn(`No PDS URL for account ${account.handle}, skipping profile fetch`);
               return null;
+            }
+            if (!appViewEnabled) {
+              const profile = await getProfileView(account.handle);
+              return ([account.did, profile] as const);
             }
             const api = apiForAccount(account);
             const profile = await api.getProfile(account.jwtToken, account.handle);
@@ -42,7 +50,7 @@ export function useAccountProfiles() {
 
       return profiles;
     },
-    enabled: !!accounts && accounts.length > 0 && !!token,
+    enabled: !!accounts && accounts.length > 0 && (appViewEnabled ? !!token : true),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

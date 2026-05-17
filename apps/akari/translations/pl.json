@@ -865,6 +865,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Używaj AppView",
+        "enabledDescription": "AppView agregują sieć w widoczną oś czasu, wyszukiwanie, powiadomienia i popularne tematy. Wyłącz, aby używać Akari tylko z bezpośrednimi odczytami z PDS, slingshotem i constellation. W tym trybie wiele funkcji jest niedostępnych.",
+        "disabledWarning": {
+          "title": "AppView wyłączone",
+          "body": "Bez AppView niedostępne są: oś czasu, wyszukiwanie, wyszukiwanie postów, autouzupełnianie, popularne tematy, etykietujący, synchronizacja preferencji i DM. Profile, pojedyncze posty, liczniki interakcji, listy obserwujących i niestandardowe kanały nadal działają."
+        },
+        "unavailable": {
+          "title": "Niedostępne bez AppView",
+          "titleFor": "{{feature}} wymaga AppView",
+          "body": "Wyłączyłeś AppView w ustawieniach Sieci. Włącz je ponownie, aby korzystać z tej funkcji.",
+          "openSettings": "Otwórz ustawienia Sieci"
+        },
         "defaultSection": "Domyślny AppView",
         "customSection": "Niestandardowy AppView",
         "customHint": "Wpisz bazowy adres HTTPS AppView oraz jego service DID. Oba są publikowane w dokumencie `did:web` operatora AppView w ramach usługi `#bsky_appview`.",

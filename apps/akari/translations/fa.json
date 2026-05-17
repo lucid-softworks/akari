@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "استفاده از AppView",
+        "enabledDescription": "AppView شبکه را در خط زمانی، جست‌وجو، اعلان‌ها و موضوعات داغ که می‌بینید جمع‌آوری می‌کند. این را خاموش کنید تا Akari را تنها با خواندن مستقیم از PDS، slingshot و constellation استفاده کنید. در این حالت بسیاری از قابلیت‌ها در دسترس نخواهند بود.",
+        "disabledWarning": {
+          "title": "AppView غیرفعال است",
+          "body": "بدون AppView، خط زمانی، جست‌وجو، جست‌وجوی پست، پیشنهاد خودکار، موضوعات داغ، برچسب‌گذاران، همگام‌سازی ترجیحات و پیام‌های مستقیم در دسترس نیستند. پروفایل‌ها، پست‌های منفرد، شمارنده‌های تعامل، فهرست دنبال‌کنندگان و فیدهای سفارشی همچنان کار می‌کنند."
+        },
+        "unavailable": {
+          "title": "بدون AppView در دسترس نیست",
+          "titleFor": "{{feature}} به AppView نیاز دارد",
+          "body": "شما AppView را در تنظیمات شبکه خاموش کرده‌اید. برای استفاده از این قابلیت آن را روشن کنید.",
+          "openSettings": "باز کردن تنظیمات شبکه"
+        },
         "defaultSection": "AppView پیش‌فرض",
         "customSection": "AppView سفارشی",
         "customHint": "نشانی پایهٔ HTTPS و service DID این AppView را وارد کنید. هر دو در سند `did:web` گردانندهٔ AppView ذیل سرویس `#bsky_appview` منتشر می‌شوند.",

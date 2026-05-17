@@ -3,6 +3,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError, isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 type MessageError = {
   type: 'permission' | 'network' | 'unknown';
@@ -18,10 +21,12 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useInfiniteQuery({
-    queryKey: queryKeys.messages.list({ convoId, limit, did: currentUserDid }),
+    queryKey: queryKeys.messages.list({ convoId, limit, did: currentUserDid, appViewEnabled }),
     queryFn: async ({ pageParam }) => {
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('messages');
       if (!token) throw new Error('No access token');
       if (!convoId) throw new Error('No conversation ID provided');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -99,12 +104,11 @@ export function useMessages(convoId: string | undefined, limit: number = 50) {
     getNextPageParam: (lastPage) => lastPage.cursor,
     enabled: !!token && !!convoId && !!currentUserDid,
     staleTime: 30 * 1000, // 30 seconds
-    retry: (failureCount, error: MessageError) => {
-      // Don't retry permission errors
-      if (error?.type === 'permission') {
+    retry: (failureCount, error: MessageError | Error) => {
+      if (isAppViewRequiredError(error)) return false;
+      if ((error as MessageError)?.type === 'permission') {
         return false;
       }
-      // Retry network errors up to 3 times
       return failureCount < 3;
     },
   });

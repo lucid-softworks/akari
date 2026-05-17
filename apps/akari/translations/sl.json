@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "Uporabi AppView",
+        "enabledDescription": "AppView združujejo omrežje v časovni trak, iskanje, obvestila in trende, ki jih vidite. Izklopite, da Akari uporabljate samo z neposrednim branjem PDS, slingshotom in constellation. V tem načinu mnoge funkcije niso na voljo.",
+        "disabledWarning": {
+          "title": "AppView je onemogočen",
+          "body": "Brez AppView časovni trak, iskanje, iskanje objav, samodejni predlogi, trendi, označevalniki, sinhronizacija nastavitev in DM-ji niso na voljo. Profili, posamezne objave, števci interakcij, seznami sledilcev in prilagojeni viri še naprej delujejo."
+        },
+        "unavailable": {
+          "title": "Brez AppView ni na voljo",
+          "titleFor": "Za {{feature}} potrebujete AppView",
+          "body": "V nastavitvah Omrežje ste izklopili AppView. Ponovno ga vklopite, da uporabite to funkcijo.",
+          "openSettings": "Odpri nastavitve Omrežje"
+        },
         "defaultSection": "Privzeti AppView",
         "customSection": "AppView po meri",
         "customHint": "Vnesi osnovni HTTPS URL AppView-a in njegov service DID. Oba sta objavljena v dokumentu `did:web` upravljavca AppView-a pod storitvijo `#bsky_appview`.",

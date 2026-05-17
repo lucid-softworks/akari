@@ -105,6 +105,8 @@ const MAPPING = {
   'paintbrush.fill': 'brush',
   'figure.stand': 'accessibility',
   globe: 'public',
+  'server.rack': 'dns',
+  'brain.head.profile': 'psychology',
   'hammer.fill': 'gavel',
   'waveform.path': 'timeline',
   'key.fill': 'vpn-key',

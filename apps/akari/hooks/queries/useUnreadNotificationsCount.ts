@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { apiForAccount } from '@/utils/blueskyApi';
 /**
  * Hook to get the count of unread notifications
@@ -12,10 +14,16 @@ export function useUnreadNotificationsCount(enabled: boolean = true) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery({
-    queryKey: queryKeys.notifications.unread(currentUserDid),
+    queryKey: queryKeys.notifications.unread(currentUserDid, appViewEnabled),
     queryFn: async () => {
+      // Notifications can't be reconstructed without an AppView at the
+      // scale of a typical user's post history (see useNotifications).
+      // Hide the badge silently rather than throwing — a missing badge is
+      // friendlier than an error icon in the tab bar.
+      if (!readAppViewEnabled()) return 0;
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 

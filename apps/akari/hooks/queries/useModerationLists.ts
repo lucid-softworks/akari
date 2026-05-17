@@ -4,6 +4,9 @@ import type { BlueskyListView } from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
+import { AppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 export type ModerationListSubscription = {
@@ -22,11 +25,17 @@ export type ModerationListSubscription = {
 export function useModerationLists() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const appViewEnabled = useAppViewEnabled();
 
   return useQuery<ModerationListSubscription[]>({
-    queryKey: queryKeys.moderationLists.forDid(currentAccount?.did),
+    queryKey: queryKeys.moderationLists.forDid(currentAccount?.did, appViewEnabled),
     enabled: !!token && !!currentAccount?.pdsUrl,
     queryFn: async () => {
+      // `getListMutes` is AppView-aggregated and there's no PDS-direct
+      // equivalent. We could still fetch listblock records from the user's
+      // own repo, but the screen needs the merged view to render meaningfully,
+      // so guard the whole hook.
+      if (!readAppViewEnabled()) throw new AppViewRequiredError('moderationLists');
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       const api = apiForAccount(currentAccount);

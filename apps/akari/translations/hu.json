@@ -874,6 +874,19 @@
       },
       "appView": {
         "title": "AppView",
+        "enabledSection": "AppView",
+        "enabledLabel": "AppView használata",
+        "enabledDescription": "Az AppView-k a hálózatot az általad látott idővonalba, keresésbe, értesítésekbe és trendekbe gyűjtik. Kapcsold ki, hogy az Akarit csak közvetlen PDS-olvasásokkal, slingshottal és constellationnel használd. Ebben a módban sok funkció elérhetetlenné válik.",
+        "disabledWarning": {
+          "title": "AppView kikapcsolva",
+          "body": "AppView nélkül az idővonal, a keresés, a bejegyzéskeresés, az automatikus javaslat, a trendek, a címkézők, a beállítások szinkronizálása és a DM-ek nem érhetők el. A profilok, az egyes bejegyzések, az interakciószámlálók, a követőlisták és az egyéni hírfolyamok továbbra is működnek."
+        },
+        "unavailable": {
+          "title": "AppView nélkül nem elérhető",
+          "titleFor": "{{feature}} AppView-t igényel",
+          "body": "A Hálózat beállításokban kikapcsoltad az AppView-t. Kapcsold be újra, hogy használhasd ezt a funkciót.",
+          "openSettings": "Hálózat beállítások megnyitása"
+        },
         "defaultSection": "Alapértelmezett AppView",
         "customSection": "Egyéni AppView",
         "customHint": "Add meg az AppView HTTPS alap-URL-jét és a service DID-jét. Mindkettőt az AppView üzemeltetőjének `did:web` dokumentuma teszi közzé a `#bsky_appview` szolgáltatás alatt.",
