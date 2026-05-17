@@ -253,6 +253,7 @@ export default function OauthSignInScreen() {
               keyboardShouldPersistTaps="handled"
               nestedScrollEnabled
             >
+              {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded typeahead-results dropdown (server returns a small slice, ~5-10 items), virtualization overhead > scan cost */}
               {typeaheadResults.map((actor, index) => {
                 const isLast = index === typeaheadResults.length - 1;
                 return (

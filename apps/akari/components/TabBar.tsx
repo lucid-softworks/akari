@@ -55,6 +55,7 @@ export function TabBar<T extends string>({ tabs: tabsProp, activeTab, onTabChang
       ]}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded N-element list, virtualization overhead > scan cost */}
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.key;
           const isLast = index === tabs.length - 1;

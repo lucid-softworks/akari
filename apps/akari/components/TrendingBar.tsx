@@ -64,6 +64,7 @@ export function TrendingBar() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded list (hook caps at 12 trending topics), virtualization overhead > scan cost */}
         {topics.map((topic) => (
           <Pressable
             key={topic.link}

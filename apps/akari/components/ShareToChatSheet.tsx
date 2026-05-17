@@ -273,6 +273,7 @@ export function ShareToChatSheet({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.recipientsChips}
         >
+          {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded selected-recipients chip row (user picks a handful), virtualization overhead > scan cost */}
           {selected.map((c) => (
             <View key={c.convoId} style={[styles.chip, { borderColor }]}>
               {c.avatar ? (

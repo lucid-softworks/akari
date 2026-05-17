@@ -30,6 +30,7 @@ export default function AppearanceLightScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded 4-element list, virtualization overhead > scan cost */}
         {fields.map((field, index) => (
           <SettingsSection key={field.key} isFirst={index === 0} title={field.label}>
             <ThemedView style={[styles.sectionCard, { borderColor }]}>

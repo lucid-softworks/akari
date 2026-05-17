@@ -243,6 +243,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
                   </View>
                 )}
 
+                {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded fixed report-reason list (~7-10 items), virtualization overhead > scan cost */}
                 {reasons.map((reason) => {
                   const isSelected = selectedReason === reason.key;
                   return (

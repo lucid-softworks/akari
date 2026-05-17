@@ -1,10 +1,11 @@
 import { Image } from '@/components/Image';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
+  FlatList,
+  type ListRenderItem,
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -40,6 +41,15 @@ type ReactionsDialogProps = {
   onDismiss: () => void;
 };
 
+type ReactionRow =
+  | { kind: 'header'; emoji: string; count: number; groupIndex: number }
+  | { kind: 'reaction'; emoji: string; reaction: Reaction };
+
+const rowKeyExtractor = (row: ReactionRow) =>
+  row.kind === 'header'
+    ? `header:${row.emoji}`
+    : `reaction:${row.emoji}:${row.reaction.sender.did}:${row.reaction.createdAt}`;
+
 export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: ReactionsDialogProps) {
   const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
@@ -56,8 +66,10 @@ export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: Rea
     return m;
   }, [reactors]);
 
-  // Group reactions by emoji, preserving original order of first appearance.
-  const grouped = useMemo(() => {
+  // Group reactions by emoji, preserving original order of first appearance,
+  // then flatten into a single row list with header rows so the whole sheet
+  // is one virtualized FlatList instead of nested maps inside a ScrollView.
+  const rows = useMemo<ReactionRow[]>(() => {
     const order: string[] = [];
     const map = new Map<string, Reaction[]>();
     for (const r of reactions) {
@@ -67,8 +79,71 @@ export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: Rea
       }
       map.get(r.value)!.push(r);
     }
-    return order.map((emoji) => ({ emoji, items: map.get(emoji)! }));
+    const out: ReactionRow[] = [];
+    order.forEach((emoji, gi) => {
+      const items = map.get(emoji)!;
+      out.push({ kind: 'header', emoji, count: items.length, groupIndex: gi });
+      for (const item of items) {
+        out.push({ kind: 'reaction', emoji, reaction: item });
+      }
+    });
+    return out;
   }, [reactions]);
+
+  const renderRow = useCallback<ListRenderItem<ReactionRow>>(
+    ({ item: row }) => {
+      if (row.kind === 'header') {
+        return (
+          <View>
+            {row.groupIndex > 0 ? (
+              <View style={[styles.divider, { backgroundColor: borderColor }]} />
+            ) : null}
+            <View style={styles.groupHeader}>
+              <ThemedText style={styles.groupEmoji}>{row.emoji}</ThemedText>
+              <ThemedText style={[styles.groupCount, { color: iconColor }]}>
+                {row.count}
+              </ThemedText>
+            </View>
+          </View>
+        );
+      }
+      const r = row.reaction;
+      const reactor = directory.get(r.sender.did);
+      const name = reactor?.displayName || reactor?.handle || r.sender.did;
+      return (
+        <Pressable
+          style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
+          onPress={() => {
+            if (reactor?.handle) {
+              navigateToProfile({ actor: reactor.handle });
+              onDismiss();
+            }
+          }}
+          disabled={!reactor?.handle}
+        >
+          {reactor?.avatar ? (
+            <Image source={{ uri: reactor.avatar }} style={styles.avatar} />
+          ) : (
+            <View style={[styles.avatar, { backgroundColor: borderColor }]} />
+          )}
+          <View style={styles.rowText}>
+            <ThemedText style={[styles.rowName, { color: textColor }]} numberOfLines={1}>
+              {name}
+            </ThemedText>
+            {reactor?.handle ? (
+              <ThemedText
+                style={[styles.rowHandle, { color: iconColor }]}
+                numberOfLines={1}
+              >
+                @{reactor.handle}
+              </ThemedText>
+            ) : null}
+          </View>
+        </Pressable>
+      );
+    },
+    [borderColor, iconColor, textColor, directory, navigateToProfile, onDismiss],
+  );
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onDismiss}>
@@ -84,56 +159,13 @@ export function ReactionsDialog({ visible, reactions, reactors, onDismiss }: Rea
               </ThemedText>
             </View>
 
-            <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-              {grouped.map(({ emoji, items }, gi) => (
-                <View key={emoji}>
-                  {gi > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                  <View style={styles.groupHeader}>
-                    <ThemedText style={styles.groupEmoji}>{emoji}</ThemedText>
-                    <ThemedText style={[styles.groupCount, { color: iconColor }]}>
-                      {items.length}
-                    </ThemedText>
-                  </View>
-                  {items.map((r) => {
-                    const reactor = directory.get(r.sender.did);
-                    const name = reactor?.displayName || reactor?.handle || r.sender.did;
-                    return (
-                      <Pressable
-                        key={`${r.sender.did}-${r.createdAt}`}
-                        style={({ pressed }) => [styles.row, pressed && { opacity: activeOpacity.default }]}
-                        onPress={() => {
-                          if (reactor?.handle) {
-                            navigateToProfile({ actor: reactor.handle });
-                            onDismiss();
-                          }
-                        }}
-                        
-                        disabled={!reactor?.handle}
-                      >
-                        {reactor?.avatar ? (
-                          <Image source={{ uri: reactor.avatar }} style={styles.avatar} />
-                        ) : (
-                          <View style={[styles.avatar, { backgroundColor: borderColor }]} />
-                        )}
-                        <View style={styles.rowText}>
-                          <ThemedText style={[styles.rowName, { color: textColor }]} numberOfLines={1}>
-                            {name}
-                          </ThemedText>
-                          {reactor?.handle ? (
-                            <ThemedText
-                              style={[styles.rowHandle, { color: iconColor }]}
-                              numberOfLines={1}
-                            >
-                              @{reactor.handle}
-                            </ThemedText>
-                          ) : null}
-                        </View>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              ))}
-            </ScrollView>
+            <FlatList
+              style={styles.scroll}
+              showsVerticalScrollIndicator={false}
+              data={rows}
+              keyExtractor={rowKeyExtractor}
+              renderItem={renderRow}
+            />
 
             <Pressable
               style={({ pressed }) => [styles.doneButton, { borderTopColor: borderColor }, pressed && { opacity: activeOpacity.default }]}

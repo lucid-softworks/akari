@@ -2,10 +2,11 @@ import { Image } from '@/components/Image';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  FlatList,
+  type ListRenderItem,
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -30,6 +31,8 @@ type ListPickerSheetProps = {
   /** DID of the actor being added to lists. */
   subjectDid?: string;
 };
+
+const listKeyExtractor = (list: BlueskyListView) => list.uri;
 
 export function ListPickerSheet({ visible, onDismiss, subjectDid }: ListPickerSheetProps) {
   const { t } = useTranslation();
@@ -77,6 +80,21 @@ export function ListPickerSheet({ visible, onDismiss, subjectDid }: ListPickerSh
     );
   }, [newName, newDescription, createList, resetCreateForm, showToast, t]);
 
+  const renderList = useCallback<ListRenderItem<BlueskyListView>>(
+    ({ item, index }) => (
+      <ListRow
+        list={item}
+        subjectDid={subjectDid}
+        isFirst={index === 0}
+        borderColor={borderColor}
+        iconColor={iconColor}
+        textColor={textColor}
+        onError={() => showToast({ message: t('common.error'), type: 'error' })}
+      />
+    ),
+    [subjectDid, borderColor, iconColor, textColor, showToast, t],
+  );
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onDismiss}>
       <Pressable style={styles.backdrop} onPress={onDismiss}>
@@ -102,20 +120,13 @@ export function ListPickerSheet({ visible, onDismiss, subjectDid }: ListPickerSh
                 </ThemedText>
               </View>
             ) : (
-              <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                {curateLists.map((list, idx) => (
-                  <ListRow
-                    key={list.uri}
-                    list={list}
-                    subjectDid={subjectDid}
-                    isFirst={idx === 0}
-                    borderColor={borderColor}
-                    iconColor={iconColor}
-                    textColor={textColor}
-                    onError={() => showToast({ message: t('common.error'), type: 'error' })}
-                  />
-                ))}
-              </ScrollView>
+              <FlatList
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}
+                data={curateLists}
+                keyExtractor={listKeyExtractor}
+                renderItem={renderList}
+              />
             )}
 
             {creating ? (

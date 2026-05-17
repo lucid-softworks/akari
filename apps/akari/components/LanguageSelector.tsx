@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { FlatList, type ListRenderItem, Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -33,6 +33,8 @@ const getLanguageMetadata = (locale: string): LanguageOption | null => {
   return null;
 };
 
+const languageKeyExtractor = (language: LanguageOption) => language.code;
+
 // Get all available languages with their metadata
 const getLanguages = (): LanguageOption[] => {
   const availableLocales = getAvailableLocales();
@@ -60,10 +62,41 @@ export const LanguageSelector = () => {
   const languages = getLanguages();
   const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0];
 
-  const handleLanguageChange = (languageCode: string) => {
-    changeLanguage(languageCode);
-    setIsModalVisible(false);
-  };
+  const handleLanguageChange = useCallback(
+    (languageCode: string) => {
+      changeLanguage(languageCode);
+      setIsModalVisible(false);
+    },
+    [changeLanguage],
+  );
+
+  const renderLanguage = useCallback<ListRenderItem<LanguageOption>>(
+    ({ item: language }) => {
+      const selected = currentLocale === language.code;
+      return (
+        <Pressable
+          accessibilityRole="menuitem"
+          accessibilityState={{ selected }}
+          style={({ pressed }) => [styles.languageOption, selected && styles.selectedLanguage, pressed && { opacity: 0.7 }]}
+          onPress={() => handleLanguageChange(language.code)}
+        >
+          <View style={styles.languageInfo}>
+            <ThemedText style={styles.flag}>{language.flag}</ThemedText>
+            <View style={styles.languageTextContainer}>
+              <ThemedText style={styles.languageName}>{language.nativeName}</ThemedText>
+              <ThemedText style={styles.languageEnglishName}>{language.name}</ThemedText>
+            </View>
+          </View>
+          {selected && (
+            <View style={styles.checkmark}>
+              <IconSymbol name="checkmark.circle.fill" size={12} color="white" />
+            </View>
+          )}
+        </Pressable>
+      );
+    },
+    [currentLocale, handleLanguageChange],
+  );
 
   return (
     <ThemedView style={styles.container}>
@@ -110,32 +143,14 @@ export const LanguageSelector = () => {
               <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
               <View style={styles.modalBackButton} />
             </View>
-            <ScrollView style={styles.languageList} contentContainerStyle={styles.languageListContent}>
-              {languages.map((language) => (
-                <Pressable
-                  key={language.code}
-                  accessibilityRole="menuitem"
-                  accessibilityState={{
-                    selected: currentLocale === language.code,
-                  }}
-                  style={({ pressed }) => [styles.languageOption, currentLocale === language.code && styles.selectedLanguage, pressed && { opacity: 0.7 }]}
-                  onPress={() => handleLanguageChange(language.code)}
-                >
-                  <View style={styles.languageInfo}>
-                    <ThemedText style={styles.flag}>{language.flag}</ThemedText>
-                    <View style={styles.languageTextContainer}>
-                      <ThemedText style={styles.languageName}>{language.nativeName}</ThemedText>
-                      <ThemedText style={styles.languageEnglishName}>{language.name}</ThemedText>
-                    </View>
-                  </View>
-                  {currentLocale === language.code && (
-                    <View style={styles.checkmark}>
-                      <IconSymbol name="checkmark.circle.fill" size={12} color="white" />
-                    </View>
-                  )}
-                </Pressable>
-              ))}
-            </ScrollView>
+            <FlatList
+              style={styles.languageList}
+              contentContainerStyle={styles.languageListContent}
+              data={languages}
+              keyExtractor={languageKeyExtractor}
+              renderItem={renderLanguage}
+              keyboardShouldPersistTaps="handled"
+            />
           </ThemedView>
       </Modal>
     </ThemedView>

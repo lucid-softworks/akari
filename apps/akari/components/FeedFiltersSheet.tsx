@@ -99,6 +99,7 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
           <ToggleRow filterKey="onlyMutuals" label={t('feed.onlyMutuals')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
 
           <SectionHeader label={t('feed.filterSectionCounts')} subduedColor={subduedColor} />
+          {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded 4-element list (COUNT_KEYS), virtualization overhead > scan cost */}
           {COUNT_KEYS.map((key) => (
             <CountRow
               key={key}

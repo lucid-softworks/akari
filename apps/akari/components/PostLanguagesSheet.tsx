@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
+  FlatList,
+  type ListRenderItem,
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
@@ -18,9 +19,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { buildLanguageOptions } from '@/utils/bcp47';
+import { buildLanguageOptions, type LanguageOption } from '@/utils/bcp47';
 
 const MAX_LANGS = 3;
+
+const optionKeyExtractor = (option: LanguageOption) => option.tag;
 
 type PostLanguagesSheetProps = {
   visible: boolean;
@@ -67,18 +70,56 @@ export function PostLanguagesSheet({ visible, onClose, selected, onChange }: Pos
   // window doesn't inherit the SafeAreaProvider context.)
   const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
-  const toggle = (tag: string) => {
-    if (selected.includes(tag)) {
-      // Don't let the user clear the entire list — at least one language
-      // must stay selected so the post doesn't fall back to the network
-      // default of `en`.
-      if (selected.length === 1) return;
-      onChange(selected.filter((s) => s !== tag));
-      return;
-    }
-    if (selected.length >= MAX_LANGS) return;
-    onChange([...selected, tag]);
-  };
+  const toggle = useCallback(
+    (tag: string) => {
+      if (selected.includes(tag)) {
+        // Don't let the user clear the entire list — at least one language
+        // must stay selected so the post doesn't fall back to the network
+        // default of `en`.
+        if (selected.length === 1) return;
+        onChange(selected.filter((s) => s !== tag));
+        return;
+      }
+      if (selected.length >= MAX_LANGS) return;
+      onChange([...selected, tag]);
+    },
+    [selected, onChange],
+  );
+
+  const renderOption = useCallback<ListRenderItem<LanguageOption>>(
+    ({ item: option }) => {
+      const isSelected = selected.includes(option.tag);
+      return (
+        <Pressable
+          onPress={() => toggle(option.tag)}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: isSelected }}
+          style={({ pressed }) => [styles.row,
+            { borderBottomColor: borderColor },
+            isSelected ? { backgroundColor: selectedRowBg } : null, pressed && { opacity: activeOpacity.default }]}
+        >
+          <View style={styles.rowText}>
+            <ThemedText style={[styles.rowLabel, { color: textColor }]}>{option.label}</ThemedText>
+            {option.nativeLabel && option.nativeLabel !== option.label ? (
+              <ThemedText style={[styles.rowSub, { color: subduedColor }]}>
+                {option.nativeLabel} · {option.tag}
+              </ThemedText>
+            ) : (
+              <ThemedText style={[styles.rowSub, { color: subduedColor }]}>{option.tag}</ThemedText>
+            )}
+          </View>
+          {isSelected ? (
+            <IconSymbol
+              name="checkmark.circle.fill"
+              size={fontSize.xl}
+              color={semanticColors.systemBlue}
+            />
+          ) : null}
+        </Pressable>
+      );
+    },
+    [selected, toggle, borderColor, selectedRowBg, textColor, subduedColor],
+  );
 
   return (
     <Modal
@@ -115,41 +156,13 @@ export function PostLanguagesSheet({ visible, onClose, selected, onChange }: Pos
           />
         </View>
 
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.list}>
-          {filtered.map((option) => {
-            const isSelected = selected.includes(option.tag);
-            return (
-              <Pressable
-                key={option.tag}
-                onPress={() => toggle(option.tag)}
-                
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: isSelected }}
-                style={({ pressed }) => [styles.row,
-                  { borderBottomColor: borderColor },
-                  isSelected ? { backgroundColor: selectedRowBg } : null, pressed && { opacity: activeOpacity.default }]}
-              >
-                <View style={styles.rowText}>
-                  <ThemedText style={[styles.rowLabel, { color: textColor }]}>{option.label}</ThemedText>
-                  {option.nativeLabel && option.nativeLabel !== option.label ? (
-                    <ThemedText style={[styles.rowSub, { color: subduedColor }]}>
-                      {option.nativeLabel} · {option.tag}
-                    </ThemedText>
-                  ) : (
-                    <ThemedText style={[styles.rowSub, { color: subduedColor }]}>{option.tag}</ThemedText>
-                  )}
-                </View>
-                {isSelected ? (
-                  <IconSymbol
-                    name="checkmark.circle.fill"
-                    size={fontSize.xl}
-                    color={semanticColors.systemBlue}
-                  />
-                ) : null}
-              </Pressable>
-            );
-          })}
-        </ScrollView>
+        <FlatList
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.list}
+          data={filtered}
+          keyExtractor={optionKeyExtractor}
+          renderItem={renderOption}
+        />
       </ThemedView>
     </Modal>
   );

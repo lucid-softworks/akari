@@ -147,6 +147,7 @@ export function PostControlsSheet({
               <ThemedText style={[styles.sectionLabel, { color: iconColor }]}>
                 {t('post.controls.whoCanReply')}
               </ThemedText>
+              {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded fixed reply-options list (3 items), virtualization overhead > scan cost */}
               {replyOptions.map((opt, idx) => (
                 <View key={opt.key}>
                   {idx > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
