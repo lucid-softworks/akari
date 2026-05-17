@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 export type FeedInteractionEvent =
@@ -24,6 +25,7 @@ export type FeedInteractionEvent =
  * algorithmic, so the lexicon doesn't apply.
  */
 export function useSendFeedInteraction() {
+  const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   return useMutation({
@@ -55,6 +57,11 @@ export function useSendFeedInteraction() {
           ? { event, item: postUri, feedContext }
           : { event, item: postUri },
       ]);
+    },
+    onSuccess: (_data, variables) => {
+      // showMore / showLess shift the algo's future rankings for this
+      // feed; subsequent loads should reflect the new preference.
+      queryClient.invalidateQueries({ queryKey: queryKeys.feed.detail(variables.feedUri, currentAccount?.pdsUrl) });
     },
   });
 }

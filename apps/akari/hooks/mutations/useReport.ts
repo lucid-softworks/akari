@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 export type ReportReasonType =
   | 'reasonSpam'
@@ -16,6 +17,7 @@ export type ReportSubject =
   | { type: 'post'; uri: string; cid: string };
 
 export function useReport() {
+  const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
@@ -42,6 +44,16 @@ export function useReport() {
         : { uri: subject.uri, cid: subject.cid };
 
       return await api.createReport(token, subjectPayload, reasonType, reason, labelerDid);
+    },
+    onSuccess: (_data, variables) => {
+      // Labelers may attach a label asynchronously after a report — refresh
+      // the subject so any new labels propagate through the UI on next view.
+      if (variables.subject.type === 'account') {
+        queryClient.invalidateQueries({ queryKey: queryKeys.profile.forDid(variables.subject.did) });
+      } else {
+        queryClient.invalidateQueries({ queryKey: queryKeys.post.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.postThread.all });
+      }
     },
   });
 }

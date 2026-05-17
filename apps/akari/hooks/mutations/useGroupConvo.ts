@@ -5,11 +5,6 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
-const invalidateConvoQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
-  queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
-  queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
-};
-
 /**
  * Adds members to a group conversation.
  */
@@ -25,7 +20,10 @@ export function useAddConvoMembers() {
       const api = apiForAccount(currentAccount);
       return api.addConvoMembers(token, convoId, dids);
     },
-    onSuccess: () => invalidateConvoQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+    },
   });
 }
 
@@ -44,7 +42,10 @@ export function useRemoveConvoMembers() {
       const api = apiForAccount(currentAccount);
       return api.removeConvoMembers(token, convoId, dids);
     },
-    onSuccess: () => invalidateConvoQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+    },
   });
 }
 
@@ -63,7 +64,10 @@ export function useUpdateConvoName() {
       const api = apiForAccount(currentAccount);
       return api.updateConvoName(token, convoId, name);
     },
-    onSuccess: () => invalidateConvoQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+    },
   });
 }
 
@@ -84,7 +88,10 @@ export function useMuteConvo() {
         ? api.muteConvo(token, convoId)
         : api.unmuteConvo(token, convoId);
     },
-    onSuccess: () => invalidateConvoQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+    },
   });
 }
 
@@ -104,6 +111,9 @@ export function useLeaveConvo() {
       const api = apiForAccount(currentAccount);
       return api.leaveConvo(token, convoId);
     },
-    onSuccess: () => invalidateConvoQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+    },
   });
 }

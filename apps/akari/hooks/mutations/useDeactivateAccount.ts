@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 /**
@@ -10,6 +11,7 @@ import { apiForAccount } from '@/utils/blueskyApi';
  * in.
  */
 export function useDeactivateAccount() {
+  const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
@@ -19,6 +21,13 @@ export function useDeactivateAccount() {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       const api = apiForAccount(currentAccount);
       await api.deactivateAccount(token, deleteAfter);
+    },
+    onSuccess: () => {
+      // The account is now deactivated server-side; flush auth/session and
+      // profile caches so any post-deactivation UI re-reads the new state.
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.session.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.forDid(currentAccount?.did) });
     },
   });
 }

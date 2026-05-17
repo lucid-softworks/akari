@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
+import { queryKeys } from '@/hooks/queryKeys';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 export type CreateLeafletParams = {
@@ -27,6 +28,7 @@ export type CreateLeafletResult = {
  * `components/PostComposer.tsx`.
  */
 export function useCreateLeaflet() {
+  const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
 
@@ -69,6 +71,12 @@ export function useCreateLeaflet() {
       )}/${publication.rkey}/${created.rkey}`;
 
       return { uri: created.uri, url };
+    },
+    onSuccess: () => {
+      // New leaflet document lives in the author's repo and may surface
+      // in their author feed/posts views.
+      queryClient.invalidateQueries({ queryKey: queryKeys.author.repos(currentAccount?.did, 50, currentAccount?.pdsUrl) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.author.feed.forDid(currentAccount?.did ?? undefined) });
     },
   });
 }

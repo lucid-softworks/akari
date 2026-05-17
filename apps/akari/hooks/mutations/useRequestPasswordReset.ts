@@ -10,6 +10,7 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useRequestPasswordReset() {
   const { data: currentAccount } = useCurrentAccount();
 
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- fire-and-forget, no cache derived from this mutation
   return useMutation({
     mutationFn: async (email: string) => {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');

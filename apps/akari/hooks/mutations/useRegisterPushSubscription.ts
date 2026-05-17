@@ -1,4 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { queryKeys } from '@/hooks/queryKeys';
 
 type RegisterPushSubscriptionPayload = {
   did: string;
@@ -8,6 +10,7 @@ type RegisterPushSubscriptionPayload = {
 };
 
 export function useRegisterPushSubscription() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: RegisterPushSubscriptionPayload) => {
       const endpoint = process.env.EXPO_PUBLIC_PUSH_REGISTRY_URL?.trim();
@@ -34,6 +37,11 @@ export function useRegisterPushSubscription() {
         const body = await response.text();
         throw new Error(`Failed to create push subscription: ${response.status} ${response.statusText} - ${body}`);
       }
+    },
+    onSuccess: (_data, variables) => {
+      // The notification-preferences screen reflects push registration
+      // state, so refresh it once the registry confirms the subscription.
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.preferences(variables.did) });
     },
   });
 }

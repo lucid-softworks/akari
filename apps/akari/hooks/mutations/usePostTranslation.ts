@@ -12,6 +12,7 @@ type TranslateResult = {
 };
 
 export const usePostTranslation = () => {
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- fire-and-forget, no cache derived from this mutation
   return useMutation<TranslateResult, Error, TranslateVariables>({
     mutationKey: ['translate'],
     mutationFn: async ({ text, targetLanguage, sourceLanguage = 'auto' }) => {
