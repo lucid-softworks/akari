@@ -1,25 +1,19 @@
-import { Image } from '@/components/Image';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { BlueskyEmbed } from '@/bluesky-api';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { useJwtToken } from '@/hooks/queries/useJwtToken';
-import { ExternalEmbed } from '@/components/ExternalEmbed';
-import { GifEmbed } from '@/components/GifEmbed';
-import { RecordEmbed } from '@/components/RecordEmbed';
+import type { BlueskyEmbed } from '@/bluesky-api';
+import { EmojiPicker } from '@/components/EmojiPicker';
+import { MessageBubble } from '@/components/messages/conversation/MessageBubble';
+import { MessageComposer } from '@/components/messages/conversation/MessageComposer';
+import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { VideoEmbed } from '@/components/VideoEmbed';
-import { YouTubeEmbed } from '@/components/YouTubeEmbed';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { EmojiPicker } from '@/components/EmojiPicker';
-import { GifPicker } from '@/components/GifPicker';
-import { ChatMediaEmbed, extractChatMedia, stripChatMediaText } from '@/components/chat/ChatMediaEmbed';
-import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
+import { fontSize, fontWeight, opacity, spacing } from '@/constants/tokens';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
 import { useConvo } from '@/hooks/queries/useConvo';
@@ -30,21 +24,7 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { showAlert } from '@/utils/alert';
-import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { apiForAccount } from '@/utils/blueskyApi';
-
-
-
-type RecordEmbedData = Parameters<typeof RecordEmbed>[0]['embed'];
-type ExternalEmbedData = Parameters<typeof ExternalEmbed>[0]['embed'];
-type GifEmbedData = Parameters<typeof GifEmbed>[0]['embed'];
-type YouTubeEmbedData = Parameters<typeof YouTubeEmbed>[0]['embed'];
-type VideoEmbedData = Parameters<typeof VideoEmbed>[0]['embed'];
-
-type MessageImageData = {
-  url: string;
-  alt: string;
-};
 
 type Reaction = {
   value: string;
@@ -63,198 +43,17 @@ type Message = {
   reactions: Reaction[];
 };
 
-const QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
-
 type MessageError = {
   type: 'permission' | 'network' | 'unknown';
   message: string;
 };
 
-const isYouTubeUrl = (uri: string | undefined): boolean => {
-  if (!uri) {
-    return false;
-  }
-
-  const normalized = uri.toLowerCase();
-  return (
-    normalized.includes('youtube.com/watch') ||
-    normalized.includes('youtu.be/') ||
-    normalized.includes('music.youtube.com/watch') ||
-    normalized.includes('youtube.com/embed/')
-  );
-};
-
-const isGifUrl = (uri: string | undefined): boolean => {
-  if (!uri) {
-    return false;
-  }
-
-  const normalized = uri.toLowerCase();
-  return normalized.includes('tenor.com') || normalized.includes('media.tenor.com') || normalized.endsWith('.gif');
-};
-
-const isVideoUrl = (uri: string | undefined): boolean => {
-  if (!uri) {
-    return false;
-  }
-
-  const normalized = uri.toLowerCase();
-  const videoDomains = ['vimeo.com', 'dailymotion.com', 'twitch.tv', 'tiktok.com'];
-
-  for (const domain of videoDomains) {
-    if (normalized.includes(domain)) {
-      return true;
-    }
-  }
-
-  const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.m3u8'];
-
-  for (const extension of videoExtensions) {
-    if (normalized.includes(extension)) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-const getRecordEmbedData = (embed: BlueskyEmbed | undefined): RecordEmbedData | null => {
-  if (!embed) {
-    return null;
-  }
-
-  if (embed.$type === 'app.bsky.embed.record#view' && embed.record) {
-    return embed as RecordEmbedData;
-  }
-
-  if (embed.$type === 'app.bsky.embed.recordWithMedia#view' && embed.record) {
-    return embed as RecordEmbedData;
-  }
-
-  return null;
-};
-
-const getVideoEmbedData = (embed: BlueskyEmbed | undefined): VideoEmbedData | null => {
-  if (!embed) {
-    return null;
-  }
-
-  if (embed.$type === 'app.bsky.embed.video#view' && embed.playlist) {
-    return {
-      videoUrl: embed.playlist,
-      thumbnailUrl: embed.thumbnail,
-      altText: embed.alt,
-      aspectRatio: embed.aspectRatio,
-    } as VideoEmbedData;
-  }
-
-  if (embed.video?.ref?.$link) {
-    return {
-      videoUrl: embed.video.ref.$link,
-      thumbnailUrl: embed.video.ref.$link,
-      altText: embed.video.alt,
-      aspectRatio: embed.aspectRatio,
-    } as VideoEmbedData;
-  }
-
-  if (embed.media?.$type === 'app.bsky.embed.video#view' && embed.media.playlist) {
-    return {
-      videoUrl: embed.media.playlist,
-      thumbnailUrl: embed.media.thumbnail,
-      altText: embed.media.alt,
-      aspectRatio: embed.media.aspectRatio,
-    } as VideoEmbedData;
-  }
-
-  if (embed.media?.video?.ref?.$link) {
-    return {
-      videoUrl: embed.media.video.ref.$link,
-      thumbnailUrl: embed.media.video.ref.$link,
-      altText: embed.media.video.alt,
-      aspectRatio: embed.media.aspectRatio,
-    } as VideoEmbedData;
-  }
-
-  if (embed.$type?.includes('app.bsky.embed.external') && embed.external) {
-    const uri = embed.external.uri;
-    if (!isYouTubeUrl(uri) && !isGifUrl(uri) && isVideoUrl(uri)) {
-      return embed as VideoEmbedData;
-    }
-  }
-
-  return null;
-};
-
-const getYouTubeEmbedData = (embed: BlueskyEmbed | undefined): YouTubeEmbedData | null => {
-  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
-    return null;
-  }
-
-  return isYouTubeUrl(embed.external.uri) ? (embed as YouTubeEmbedData) : null;
-};
-
-const getGifEmbedData = (embed: BlueskyEmbed | undefined): GifEmbedData | null => {
-  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
-    return null;
-  }
-
-  return isGifUrl(embed.external.uri) ? (embed as GifEmbedData) : null;
-};
-
-const getExternalEmbedData = (embed: BlueskyEmbed | undefined): ExternalEmbedData | null => {
-  if (!embed?.external || !embed.$type?.includes('app.bsky.embed.external')) {
-    return null;
-  }
-
-  const uri = embed.external.uri;
-  if (isYouTubeUrl(uri) || isGifUrl(uri) || isVideoUrl(uri)) {
-    return null;
-  }
-
-  return embed as ExternalEmbedData;
-};
-
-const getImageEmbedData = (embed: BlueskyEmbed | undefined): MessageImageData[] => {
-  if (!embed) {
-    return [];
-  }
-
-  const images: MessageImageData[] = [];
-
-  const collectImages = (imageList: BlueskyEmbed['images'] | undefined) => {
-    if (!imageList) {
-      return;
-    }
-
-    for (const image of imageList) {
-      if (image.image?.mimeType && image.image.mimeType.startsWith('video/')) {
-        continue;
-      }
-
-      const url = image.fullsize || image.thumb;
-      if (url) {
-        images.push({
-          url,
-          alt: image.alt,
-        });
-      }
-    }
-  };
-
-  collectImages(embed.images);
-
-  if (embed.media?.images) {
-    collectImages(embed.media.images);
-  }
-
-  return images;
-};
-
 export default function ConversationScreen() {
-  // The path segment is the convoId. For backward compat with legacy links
-  // (push notifications dispatched before the rename, anything pasted from
-  // older history), accept either a convoId or a handle here. Handles
-  // always contain a dot; convoIds don't — that's enough to disambiguate.
+  // The path segment is the convoId. For backward compat with legacy
+  // links (push notifications dispatched before the rename, anything
+  // pasted from older history), accept either a convoId or a handle here.
+  // Handles always contain a dot; convoIds don't — that's enough to
+  // disambiguate.
   const params = useLocalSearchParams<{ convoId: string; handle?: string }>();
   const rawParam = decodeURIComponent(params.convoId ?? '');
   const looksLikeHandle = rawParam.includes('.');
@@ -277,27 +76,23 @@ export default function ConversationScreen() {
   const incomingMessageBackground = useThemeColor({ light: '#E9EAEC', dark: '#2c2c2e' }, 'background');
   const outgoingMessageBackground = useThemeColor({ light: '#7C8CF9', dark: '#5A67D8' }, 'tint');
 
-
   // Get the conversation ID from the conversations list. Prefer the
-  // `convoId` query param when set — handle alone isn't unique (e.g. every
-  // deleted account collapses to `missing.invalid`), so routing-by-handle
-  // would silently collide. The link from the conversations list now passes
-  // `convoId` so we can look up the exact convo even when handles repeat.
+  // `convoId` query param when set — handle alone isn't unique (e.g.
+  // every deleted account collapses to `missing.invalid`), so
+  // routing-by-handle would silently collide.
   const { data: conversationsData } = useConversations();
   const allConversations = conversationsData?.pages.flatMap((page) => page.conversations) ?? [];
   const conversationFromList =
     (convoIdParam && allConversations.find((conv) => conv.convoId === convoIdParam)) ||
     (handle ? allConversations.find((conv) => conv.handle === handle) : undefined);
-  // Fallback: a freshly-created convo (e.g. opened from a profile DM button)
-  // may not appear in `listConvos` until it has at least one message. Fetch
-  // the convo directly by id when the list lookup misses, so the route can
-  // render instead of getting stuck on the loading-conversations spinner.
+  // Fallback: a freshly-created convo may not appear in `listConvos`
+  // until it has at least one message. Fetch it directly when the list
+  // lookup misses.
   const { data: conversationDirect } = useConvo(
     !conversationFromList && convoIdParam ? convoIdParam : null,
   );
   const conversation = conversationFromList ?? conversationDirect;
 
-  // Fetch messages for this conversation
   const {
     data: messagesData,
     isLoading: messagesLoading,
@@ -307,15 +102,15 @@ export default function ConversationScreen() {
     isFetchingNextPage,
   } = useMessages(conversation?.convoId, 50);
 
-  // Send message mutation
   const sendMessageMutation = useSendMessage();
   const reactionMutation = useMessageReaction();
   const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
   const [reactionsDialogFor, setReactionsDialogFor] = useState<string | null>(null);
   const [emojiPickerFor, setEmojiPickerFor] = useState<string | null>(null);
-  const [composerEmojiPickerVisible, setComposerEmojiPickerVisible] = useState(false);
-  const composerSelectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
-  const [composerGifPickerVisible, setComposerGifPickerVisible] = useState(false);
+
+  // Flatten all pages of messages into a single array. API returns
+  // newest-first — keep order for an inverted FlatList.
+  const messages: Message[] = messagesData?.pages.flatMap((page) => page.messages) || [];
 
   const handleToggleReaction = (messageId: string, value: string) => {
     if (!conversation?.convoId || !currentAccount?.did) return;
@@ -356,63 +151,8 @@ export default function ConversationScreen() {
     }
   };
 
-  const renderMessageEmbed = (embed: BlueskyEmbed, messageId: string) => {
-    const recordEmbed = getRecordEmbedData(embed);
-    if (recordEmbed) {
-      return <RecordEmbed embed={recordEmbed} />;
-    }
-
-    const videoEmbed = getVideoEmbedData(embed);
-    if (videoEmbed) {
-      return <VideoEmbed embed={{ ...videoEmbed, altText: videoEmbed.altText || t('common.video') }} />;
-    }
-
-    const youTubeEmbed = getYouTubeEmbedData(embed);
-    if (youTubeEmbed) {
-      return <YouTubeEmbed embed={youTubeEmbed} />;
-    }
-
-    const gifEmbed = getGifEmbedData(embed);
-    if (gifEmbed) {
-      return <GifEmbed embed={gifEmbed} />;
-    }
-
-    const externalEmbed = getExternalEmbedData(embed);
-    if (externalEmbed) {
-      return <ExternalEmbed embed={externalEmbed} />;
-    }
-
-    const imageData = getImageEmbedData(embed);
-    if (imageData.length > 0) {
-      return (
-        <ThemedView style={styles.messageImagesContainer}>
-          {imageData.map((image) => {
-            const dimensions = imageDimensions[image.url];
-            const imageWidth = 260;
-            const imageHeight = dimensions ? (dimensions.height / dimensions.width) * imageWidth : 220;
-
-            return (
-              <Image
-                key={`${messageId}-${image.url}`}
-                source={{ uri: image.url }}
-                style={[styles.messageImage, { width: imageWidth, height: imageHeight }]}
-                contentFit="cover"
-                onLoad={(event) => handleMessageImageLoad(image.url, event.source.width, event.source.height)}
-                accessible
-                accessibilityLabel={image.alt || 'Image attachment'}
-              />
-            );
-          })}
-        </ThemedView>
-      );
-    }
-
-    return null;
-  };
-
   const handleSendMessage = async () => {
     if (!messageText.trim() || !conversation?.convoId) return;
-
     try {
       await sendMessageMutation.mutateAsync({
         convoId: conversation.convoId,
@@ -428,17 +168,13 @@ export default function ConversationScreen() {
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
-    const inlineMedia = extractChatMedia(item.text);
-    const displayText = inlineMedia ? stripChatMediaText(item.text, inlineMedia.matchedText) : item.text;
-    const hasText = displayText.trim().length > 0;
-    const embedContent = item.embed ? renderMessageEmbed(item.embed, item.id) : null;
     // In group chats, show the sender's display name above each incoming
-    // message so you know who said what. Suppressed for 1:1 chats and for
+    // message so you know who said what. Suppressed for 1:1 chats and
     // your own messages.
     const senderLabel =
       conversation?.isGroup && !item.isFromMe
         ? conversation.members.find((m) => m.did === item.senderDid)?.displayName ??
-          conversation.members.find((m) => m.did === item.senderDid)?.handle
+          conversation.members.find((m) => m.did === item.senderDid)?.handle ?? null
         : null;
 
     // Group reactions by emoji for compact display under the bubble.
@@ -456,135 +192,37 @@ export default function ConversationScreen() {
       },
       new Map(),
     );
-    const showPicker = reactionPickerFor === item.id;
 
     return (
-      <ThemedView style={[styles.messageContainer, item.isFromMe ? styles.myMessage : styles.theirMessage]}>
-        {senderLabel ? (
-          <ThemedText style={[styles.senderLabel, { color: iconColor }]} numberOfLines={1}>
-            {senderLabel}
-          </ThemedText>
-        ) : null}
-
-        {showPicker ? (
-          <View
-            style={[
-              styles.reactionPicker,
-              item.isFromMe ? styles.reactionPickerMine : styles.reactionPickerTheirs,
-              { backgroundColor: incomingMessageBackground },
-            ]}
-          >
-            {QUICK_REACTIONS.map((emoji) => (
-              <Pressable
-                key={emoji}
-                onPress={() => handleToggleReaction(item.id, emoji)}
-                hitSlop={6}
-                style={({ pressed }) => [styles.reactionPickerSlot, pressed && { opacity: 0.7 }]}
-              >
-                <ThemedText style={styles.reactionPickerEmoji}>{emoji}</ThemedText>
-              </Pressable>
-            ))}
-            <Pressable
-              onPress={() => {
-                setReactionPickerFor(null);
-                setEmojiPickerFor(item.id);
-              }}
-              hitSlop={6}
-              style={({ pressed }) => [styles.reactionPickerSlot, pressed && { opacity: 0.7 }]}
-              accessibilityLabel={t('messages.moreEmoji')}
-            >
-              <IconSymbol name="plus.circle" size={24} color={iconColor} />
-            </Pressable>
-          </View>
-        ) : null}
-
-        {(hasText || inlineMedia || !item.embed) && (
-          <Pressable
-            
-            onLongPress={() => handleLongPressMessage(item.id)}
-            delayLongPress={250} style={({ pressed }) => pressed && { opacity: 0.85 }}>
-            <ThemedView
-              style={[
-                styles.messageBubble,
-                item.isFromMe ? styles.myBubble : styles.theirBubble,
-                inlineMedia ? styles.messageBubbleMedia : null,
-                {
-                  backgroundColor: item.isFromMe ? outgoingMessageBackground : incomingMessageBackground,
-                },
-              ]}
-            >
-              {hasText && (
-                <ThemedText
-                  style={[
-                    styles.messageText,
-                    { color: item.isFromMe ? '#fff' : textColor },
-                    inlineMedia ? styles.messageTextWithMedia : null,
-                  ]}
-                >
-                  {displayText}
-                </ThemedText>
-              )}
-              {inlineMedia ? (
-                <ChatMediaEmbed
-                  media={inlineMedia}
-                  alignment={item.isFromMe ? 'right' : 'left'}
-                />
-              ) : null}
-            </ThemedView>
-          </Pressable>
-        )}
-
-        {item.embed && (
-          <ThemedView style={[styles.embedContainer, item.isFromMe ? styles.myEmbed : styles.theirEmbed]}>
-            {embedContent ?? (
-              <ThemedText style={[styles.unsupportedEmbedText, { color: iconColor }]}>{t('common.unknown')}</ThemedText>
-            )}
-          </ThemedView>
-        )}
-
-        {reactionGroups.size > 0 ? (
-          <View
-            style={[
-              styles.reactionsRow,
-              item.isFromMe ? styles.reactionsRowMine : styles.reactionsRowTheirs,
-            ]}
-          >
-            {Array.from(reactionGroups.entries()).map(([emoji, { count, mine }]) => (
-              <Pressable
-                key={emoji}
-                onPress={() => handleToggleReaction(item.id, emoji)}
-                onLongPress={() => setReactionsDialogFor(item.id)}
-                delayLongPress={250}
-                style={({ pressed }) => [styles.reactionChip,
-                  { borderColor },
-                  mine && { backgroundColor: incomingMessageBackground, borderColor: outgoingMessageBackground }, pressed && { opacity: 0.7 }]}
-                
-              >
-                <ThemedText style={styles.reactionChipEmoji}>{emoji}</ThemedText>
-                {count > 1 ? (
-                  <ThemedText style={[styles.reactionChipCount, { color: iconColor }]}>{count}</ThemedText>
-                ) : null}
-              </Pressable>
-            ))}
-          </View>
-        ) : null}
-
-        <ThemedText
-          style={[
-            styles.messageTimestamp,
-            item.isFromMe ? styles.timestampOutgoing : styles.timestampIncoming,
-            { color: iconColor },
-          ]}
-        >
-          {item.timestamp}
-        </ThemedText>
-      </ThemedView>
+      <MessageBubble
+        messageId={item.id}
+        text={item.text}
+        timestamp={item.timestamp}
+        isFromMe={item.isFromMe}
+        senderLabel={senderLabel}
+        embed={item.embed}
+        reactionGroups={reactionGroups}
+        showPicker={reactionPickerFor === item.id}
+        imageDimensions={imageDimensions}
+        textColor={textColor}
+        iconColor={iconColor}
+        incomingBackground={incomingMessageBackground}
+        outgoingBackground={outgoingMessageBackground}
+        borderColor={borderColor}
+        onImageLoad={handleMessageImageLoad}
+        onLongPress={() => handleLongPressMessage(item.id)}
+        onToggleReaction={(value) => handleToggleReaction(item.id, value)}
+        onOpenEmojiPicker={() => {
+          setReactionPickerFor(null);
+          setEmojiPickerFor(item.id);
+        }}
+        onShowReactionsDialog={() => setReactionsDialogFor(item.id)}
+      />
     );
   };
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
-
     return (
       <ThemedView style={styles.loadingFooter}>
         <ThemedText style={styles.loadingText}>
@@ -604,11 +242,11 @@ export default function ConversationScreen() {
   if (!conversation) {
     return (
       <ThemedView style={styles.container}>
-          <ThemedView style={styles.loadingState}>
-            <ThemedText style={styles.loadingText}>
-              {t('common.loading')} {t('common.conversations')}...
-            </ThemedText>
-          </ThemedView>
+        <ThemedView style={styles.loadingState}>
+          <ThemedText style={styles.loadingText}>
+            {t('common.loading')} {t('common.conversations')}...
+          </ThemedText>
+        </ThemedView>
       </ThemedView>
     );
   }
@@ -616,66 +254,17 @@ export default function ConversationScreen() {
   // Show error state
   if (messagesError) {
     const messageError = messagesError as MessageError;
-
     return (
       <ThemedView style={styles.container}>
-          <ThemedView style={styles.errorState}>
-            <ThemedText style={styles.errorText}>{messageError.message}</ThemedText>
-            {messageError.type === 'permission' && (
-              <ThemedText style={styles.errorSubtext}>{t('common.errorLoadingMessages')}</ThemedText>
-            )}
-          </ThemedView>
+        <ThemedView style={styles.errorState}>
+          <ThemedText style={styles.errorText}>{messageError.message}</ThemedText>
+          {messageError.type === 'permission' && (
+            <ThemedText style={styles.errorSubtext}>{t('common.errorLoadingMessages')}</ThemedText>
+          )}
+        </ThemedView>
       </ThemedView>
     );
   }
-
-  // Flatten all pages of messages into a single array
-  // API returns newest first -- keep order for inverted FlatList
-  const messages = messagesData?.pages.flatMap((page) => page.messages) || [];
-
-  const inputBar = (
-    <ThemedView style={[styles.inputContainer, { borderTopColor: borderColor }]}>
-      <Pressable
-        style={({ pressed }) => [styles.inputBarAction, pressed && { opacity: 0.7 }]}
-        onPress={() => setComposerEmojiPickerVisible(true)}
-        accessibilityLabel={t('post.addEmoji')}
-        hitSlop={8}
-      >
-        <IconSymbol name="face.smiling" size={26} color={iconColor} />
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [styles.inputBarAction, pressed && { opacity: 0.7 }]}
-        onPress={() => setComposerGifPickerVisible(true)}
-        accessibilityLabel={t('gif.addGif')}
-        hitSlop={8}
-      >
-        <IconSymbol name="photo.on.rectangle.angled" size={24} color={iconColor} />
-      </Pressable>
-      <TextInput
-        style={[styles.textInput, { backgroundColor, borderColor, color: textColor }]}
-        value={messageText}
-        onChangeText={setMessageText}
-        onSelectionChange={(e) => {
-          composerSelectionRef.current = e.nativeEvent.selection;
-        }}
-        placeholder={t('messages.typeMessage')}
-        placeholderTextColor={iconColor}
-        multiline
-        maxLength={500}
-      />
-      <Pressable
-        style={({ pressed }) => [styles.sendButton, !messageText.trim() || sendMessageMutation.isPending ? styles.sendButtonDisabled : null, pressed && { opacity: 0.7 }]}
-        onPress={handleSendMessage}
-        disabled={!messageText.trim() || sendMessageMutation.isPending}
-      >
-        <IconSymbol
-          name={sendMessageMutation.isPending ? 'clock' : 'arrow.up.circle.fill'}
-          size={32}
-          color={messageText.trim() && !sendMessageMutation.isPending ? '#007AFF' : '#C7C7CC'}
-        />
-      </Pressable>
-    </ThemedView>
-  );
 
   return (
     <KeyboardAvoidingView
@@ -683,8 +272,8 @@ export default function ConversationScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
-      {/* Header is rendered by the (tabs) layout's mobileDrawerHeader so the
-          chat thread looks consistent with the rest of the app. */}
+      {/* Header is rendered by the (tabs) layout's mobileDrawerHeader so
+          the chat thread looks consistent with the rest of the app. */}
       {messagesLoading ? (
         <View style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
@@ -704,7 +293,15 @@ export default function ConversationScreen() {
           keyboardDismissMode="interactive"
         />
       )}
-      {inputBar}
+
+      <MessageComposer
+        value={messageText}
+        onChange={setMessageText}
+        onSend={handleSendMessage}
+        sendDisabled={!messageText.trim()}
+        isSending={sendMessageMutation.isPending}
+        borderColor={borderColor}
+      />
 
       <ReactionsDialog
         visible={!!reactionsDialogFor}
@@ -733,32 +330,6 @@ export default function ConversationScreen() {
           setEmojiPickerFor(null);
         }}
       />
-
-      <EmojiPicker
-        visible={composerEmojiPickerVisible}
-        onClose={() => setComposerEmojiPickerVisible(false)}
-        onSelectEmoji={(emoji) => {
-          const { start, end } = composerSelectionRef.current;
-          const safeStart = Math.min(Math.max(start, 0), messageText.length);
-          const safeEnd = Math.min(Math.max(end, safeStart), messageText.length);
-          const next = messageText.slice(0, safeStart) + emoji + messageText.slice(safeEnd);
-          setMessageText(next);
-          const cursor = safeStart + emoji.length;
-          composerSelectionRef.current = { start: cursor, end: cursor };
-          setComposerEmojiPickerVisible(false);
-        }}
-      />
-
-      <GifPicker
-        visible={composerGifPickerVisible}
-        onClose={() => setComposerGifPickerVisible(false)}
-        onSelectGif={(gif) => {
-          // Append the GIF URL to the message; ChatMediaEmbed renders it
-          // inline below the bubble on receivers using this client.
-          setMessageText((prev) => (prev ? `${prev} ${gif.uri}` : gif.uri));
-          setComposerGifPickerVisible(false);
-        }}
-      />
     </KeyboardAvoidingView>
   );
 }
@@ -767,219 +338,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  threadHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  threadHeaderMain: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  threadHeaderBack: {
-    paddingRight: spacing.xs,
-  },
-  threadHeaderAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
-  threadHeaderGroupAvatar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 32,
-  },
-  threadHeaderGroupSlot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    borderWidth: 2,
-  },
-  threadHeaderGroupSlotOverlap: {
-    marginLeft: -8,
-  },
-  threadHeaderGroupSlotImage: {
-    width: '100%',
-    height: '100%',
-  },
-  threadHeaderGroupSlotFallback: {
-    fontSize: 10,
-    fontWeight: fontWeight.bold,
-    color: '#FFFFFF',
-  },
-  senderLabel: {
-    fontSize: fontSize.xs,
-    fontWeight: fontWeight.medium,
-    paddingHorizontal: spacing.md,
-    marginBottom: 2,
-  },
-  threadHeaderName: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-  },
-  threadHeaderHandle: {
-    fontSize: fontSize.sm,
-    opacity: opacity.secondary,
-  },
   messagesContent: {
     paddingVertical: spacing.lg,
-  },
-  messageContainer: {
-    marginHorizontal: spacing.lg,
-    marginVertical: spacing.xs,
-  },
-  myMessage: {
-    alignItems: 'flex-end',
-  },
-  theirMessage: {
-    alignItems: 'flex-start',
-  },
-  messageBubble: {
-    // Native (Yoga) resolves `'80%'` against the parent column's measured
-    // width. RN-Web's CSS pipeline can't always resolve a % maxWidth here —
-    // the bubble's Pressable wrapper has no definite width, so the
-    // percentage falls back near min-content and the bubble collapses to
-    // one or two characters per line. Pin the web cap to a comfortable
-    // chat-line dp; native keeps the original percentage behaviour.
-    maxWidth: Platform.OS === 'web' ? 520 : '80%',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderRadius: radius.xl,
-  },
-  messageBubbleMedia: {
-    // When inline media (gif/youtube) is rendered inside the bubble,
-    // tighten the surrounding padding so the media reads as content,
-    // not as a card-in-a-card.
-    padding: spacing.xs,
-  },
-  myBubble: {
-    // backgroundColor is set dynamically
-  },
-  theirBubble: {
-    // backgroundColor is set dynamically
-  },
-  messageText: {
-    fontSize: fontSize.lg,
-  },
-  messageTextWithMedia: {
-    paddingHorizontal: spacing.sm,
-    paddingTop: spacing.xs,
-  },
-  messageTimestamp: {
-    fontSize: fontSize.xs,
-    opacity: opacity.tertiary,
-    marginTop: spacing.xxs,
-  },
-  timestampOutgoing: {
-    alignSelf: 'flex-end',
-  },
-  timestampIncoming: {
-    alignSelf: 'flex-start',
-  },
-  reactionsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xxs,
-    marginTop: -spacing.xxs,
-  },
-  reactionsRowMine: {
-    alignSelf: 'flex-end',
-  },
-  reactionsRowTheirs: {
-    alignSelf: 'flex-start',
-  },
-  reactionChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 2,
-    borderRadius: 999,
-    borderWidth: layout.hairline,
-  },
-  reactionChipEmoji: {
-    fontSize: fontSize.sm,
-  },
-  reactionChipCount: {
-    fontSize: fontSize.xs,
-    fontWeight: fontWeight.medium,
-  },
-  reactionPicker: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 999,
-    marginBottom: spacing.xxs,
-  },
-  reactionPickerMine: {
-    alignSelf: 'flex-end',
-  },
-  reactionPickerTheirs: {
-    alignSelf: 'flex-start',
-  },
-  reactionPickerSlot: {
-    paddingHorizontal: 2,
-  },
-  reactionPickerEmoji: {
-    fontSize: 24,
-  },
-  embedContainer: {
-    maxWidth: '80%',
-    marginTop: spacing.sm,
-    gap: spacing.sm,
-  },
-  myEmbed: {
-    alignSelf: 'flex-end',
-  },
-  theirEmbed: {
-    alignSelf: 'flex-start',
-  },
-  messageImagesContainer: {
-    gap: spacing.sm,
-  },
-  messageImage: {
-    borderRadius: radius.md,
-    overflow: 'hidden',
-  },
-  unsupportedEmbedText: {
-    fontSize: fontSize.base,
-    opacity: 0.8,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderTopWidth: layout.hairline,
-    gap: spacing.xs,
-  },
-  inputBarAction: {
-    paddingBottom: spacing.xs,
-  },
-  textInput: {
-    flex: 1,
-    borderWidth: layout.border,
-    borderRadius: radius.xl,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    maxHeight: 100,
-    fontSize: fontSize.lg,
-  },
-  sendButton: {
-    padding: spacing.xs,
-  },
-  sendButtonDisabled: {
-    opacity: opacity.tertiary,
   },
   loadingState: {
     flex: 1,
@@ -1000,18 +360,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.xxxl,
   },
-  errorTitle: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.semibold,
-    marginBottom: spacing.sm,
-  },
-  errorSubtitle: {
-    fontSize: fontSize.lg,
-    opacity: opacity.tertiary,
-    textAlign: 'center',
-  },
   errorText: {
     fontSize: fontSize.lg,
+    fontWeight: fontWeight.medium,
     marginBottom: spacing.sm,
   },
   errorSubtext: {
