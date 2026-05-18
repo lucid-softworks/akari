@@ -189,6 +189,11 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.actors.getProfiles(accessJwt, actors);
   }
 
+  /** Personalised follow suggestions for the authenticated viewer. */
+  async getSuggestions(accessJwt: string, options?: { limit?: number; cursor?: string }) {
+    return this.actors.getSuggestions(accessJwt, options);
+  }
+
   /**
    * Updates profile metadata such as display name, description, avatar or banner in the actor record.
    * @param accessJwt - Valid session token authorised to modify the actor profile.

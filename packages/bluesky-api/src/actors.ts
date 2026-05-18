@@ -41,6 +41,24 @@ export class BlueskyActors extends BlueskyApiClient {
   }
 
   /**
+   * Personalised follow suggestions for the authenticated viewer. The
+   * AppView returns actors in roughly the same lightweight `profileView`
+   * shape as search results — display name, avatar, bio snippet, and
+   * (when present) the viewer's follow relationship.
+   */
+  async getSuggestions(
+    accessJwt: string,
+    options: { limit?: number; cursor?: string } = {},
+  ): Promise<{ actors: BlueskyProfileResponse[]; cursor?: string }> {
+    const { limit = 10, cursor } = options;
+    return this.makeAuthenticatedRequest<{ actors: BlueskyProfileResponse[]; cursor?: string }>(
+      '/app.bsky.actor.getSuggestions',
+      accessJwt,
+      { params: { limit, ...(cursor ? { cursor } : {}) } },
+    );
+  }
+
+  /**
    * Updates a user's profile information
    * @param accessJwt - Valid access JWT token
    * @param profileData - Profile data to update

@@ -174,30 +174,6 @@ export default function HomeScreen() {
     [allFeedsWithCreated],
   );
 
-  const listHeaderComponent = useCallback(
-    () => (
-      <FeedListHeader
-        isLargeScreen={isLargeScreen}
-        insetTop={insets.top}
-        feedTabs={feedTabs}
-        selectedFeed={selectedFeed ?? undefined}
-        anyFilterActive={anyFilterActive}
-        filterIconColor={filterIconColor}
-        onTabChange={handleFeedSelection}
-        onShowFilters={() => setShowFiltersSheet(true)}
-      />
-    ),
-    [
-      anyFilterActive,
-      feedTabs,
-      filterIconColor,
-      handleFeedSelection,
-      insets.top,
-      isLargeScreen,
-      selectedFeed,
-    ],
-  );
-
   const renderFeedItem = useCallback(
     ({ item }: { item: FeedListItem }) => {
       if (item.type === 'empty') {
@@ -234,6 +210,16 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <FeedListHeader
+        isLargeScreen={isLargeScreen}
+        insetTop={insets.top}
+        feedTabs={feedTabs}
+        selectedFeed={selectedFeed ?? undefined}
+        anyFilterActive={anyFilterActive}
+        filterIconColor={filterIconColor}
+        onTabChange={handleFeedSelection}
+        onShowFilters={() => setShowFiltersSheet(true)}
+      />
       <VirtualizedList
         ref={feedListRef}
         data={feedItems}
@@ -241,7 +227,6 @@ export default function HomeScreen() {
         keyExtractor={keyExtractor}
         estimatedItemSize={320}
         overscan={3}
-        ListHeaderComponent={listHeaderComponent}
         ListFooterComponent={listFooterComponent ?? undefined}
         contentContainerStyle={styles.listContent}
         onEndReached={loadMorePosts}

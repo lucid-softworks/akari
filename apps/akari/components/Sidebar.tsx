@@ -46,7 +46,6 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const activeBg = useThemeColor({ light: '#F3F4F6', dark: '#2A2D2E' }, 'background');
   const hoverBg = useThemeColor({}, 'hover');
   const accentColor = useThemeColor({ light: '#007AFF', dark: '#0A84FF' }, 'tint');
-  const borderColor = useThemeColor({}, 'border');
   const badgeBg = '#FF3B30';
   const activeAccount = currentAccount ?? accounts[0];
 
@@ -72,6 +71,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       },
       { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
       { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
+      { id: 'settings', label: t('navigation.settings'), icon: 'gearshape.fill', route: '/(tabs)/settings', webRoute: '/settings' },
     ],
     [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
   );
@@ -115,34 +115,6 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      {/* Account header */}
-      <PressableLink
-        href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
-        onPress={() => pushIfDifferent('/(tabs)/profile')}
-        accessibilityLabel="Account"
-        style={[styles.accountSection, { borderBottomColor: borderColor }]}
-      >
-        <View style={[styles.avatar, { backgroundColor: accentColor }]}>
-          {activeAccount?.avatar ? (
-            <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
-          ) : (
-            <Text style={styles.avatarInitial}>
-              {(activeAccount?.displayName || activeAccount?.handle || 'U').charAt(0).toUpperCase()}
-            </Text>
-          )}
-        </View>
-        <View style={styles.accountInfo}>
-          <Text style={[styles.displayName, { color: textPrimary }]} numberOfLines={1}>
-            {activeAccount?.displayName ?? activeAccount?.handle ?? 'Account'}
-          </Text>
-          {activeAccount?.handle ? (
-            <Text style={[styles.handle, { color: textSecondary }]} numberOfLines={1}>
-              @{activeAccount.handle}
-            </Text>
-          ) : null}
-        </View>
-      </PressableLink>
-
       {/* Navigation */}
       <View style={styles.nav}>
         {navigationItems.map((item) => {
@@ -188,36 +160,34 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
         })}
       </View>
 
-      {/* Settings at the bottom */}
-      <View style={[styles.footer, { borderTopColor: borderColor }]}>
+      {/* Footer: account chip at the very bottom */}
+      <View style={styles.footer}>
         <PressableLink
-          href={Platform.OS === 'web' ? '/settings' : '/(tabs)/settings'}
-          accessibilityLabel={t('navigation.settings')}
-          onPress={() => {
-            pushIfDifferent('/(tabs)/settings');
-            onNavigate?.();
-          }}
-          style={[
-            styles.navItem,
-            { backgroundColor: pathname.includes('/settings') ? activeBg : 'transparent' },
-          ]}
+          href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
+          onPress={() => pushIfDifferent('/(tabs)/profile')}
+          accessibilityLabel="Account"
+          style={styles.accountSection}
+          hoverStyle={{ backgroundColor: hoverBg }}
         >
-          <IconSymbol
-            name="gearshape.fill"
-            size={20}
-            color={pathname.includes('/settings') ? accentColor : textSecondary}
-          />
-          <Text
-            style={[
-              styles.navLabel,
-              {
-                color: pathname.includes('/settings') ? textPrimary : textSecondary,
-                fontWeight: pathname.includes('/settings') ? fontWeight.semibold : fontWeight.medium,
-              },
-            ]}
-          >
-            {t('navigation.settings')}
-          </Text>
+          <View style={[styles.avatar, { backgroundColor: accentColor }]}>
+            {activeAccount?.avatar ? (
+              <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
+            ) : (
+              <Text style={styles.avatarInitial}>
+                {(activeAccount?.displayName || activeAccount?.handle || 'U').charAt(0).toUpperCase()}
+              </Text>
+            )}
+          </View>
+          <View style={styles.accountInfo}>
+            <Text style={[styles.displayName, { color: textPrimary }]} numberOfLines={1}>
+              {activeAccount?.displayName ?? activeAccount?.handle ?? 'Account'}
+            </Text>
+            {activeAccount?.handle ? (
+              <Text style={[styles.handle, { color: textSecondary }]} numberOfLines={1}>
+                @{activeAccount.handle}
+              </Text>
+            ) : null}
+          </View>
         </PressableLink>
       </View>
     </View>
@@ -233,9 +203,10 @@ const styles = StyleSheet.create({
   accountSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.xs,
+    borderRadius: radius.sm,
     gap: spacing.md,
   },
   avatar: {
@@ -300,6 +271,5 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
-    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });

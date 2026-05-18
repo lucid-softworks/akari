@@ -6,6 +6,7 @@ import { SafeAreaInsetsContext, useSafeAreaInsets } from 'react-native-safe-area
 import { layout, spacing } from '@/constants/tokens';
 import { AccountSwitcherSheet } from '@/components/AccountSwitcherSheet';
 import { ReportSheet } from '@/components/ReportSheet';
+import { RightColumn } from '@/components/RightColumn';
 import { Sidebar } from '@/components/Sidebar';
 import { ThemedView } from '@/components/ThemedView';
 import { ChatActionsSheet } from '@/components/chat/ChatActionsSheet';
@@ -48,7 +49,8 @@ const headerTitles: Record<string, string> = {
 };
 
 export default function TabLayout() {
-  const { isLargeScreen } = useResponsive();
+  const { isLargeScreen, isDesktop } = useResponsive();
+  const showRightColumn = isDesktop && Platform.OS === 'web';
   const { visibleTabs } = useTabConfig();
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: currentAccount } = useCurrentAccount();
@@ -187,25 +189,35 @@ export default function TabLayout() {
           style={{
             flex: 1,
             alignItems: 'center',
-            paddingTop: spacing.lg,
-            paddingHorizontal: spacing.lg,
           }}
         >
           <View
             style={{
               flexDirection: 'row',
-              gap: spacing.xxl,
+              gap: spacing.lg,
               width: '100%',
-              maxWidth: layout.maxContentWidth,
+              maxWidth: showRightColumn ? 1280 : layout.maxContentWidth,
               minHeight: '100%',
             }}
           >
             <Sidebar />
             <View
-              style={{
-                flex: 1,
-                minHeight: '100%',
-              }}
+              style={
+                Platform.OS === 'web'
+                  ? {
+                      width: 600,
+                      maxWidth: 600,
+                      flexShrink: 0,
+                      minHeight: '100%',
+                      borderLeftWidth: 1,
+                      borderRightWidth: 1,
+                      borderColor: headerBorderColor,
+                    }
+                  : {
+                      flex: 1,
+                      minHeight: '100%',
+                    }
+              }
             >
               <Tabs
                 screenOptions={{
@@ -223,6 +235,7 @@ export default function TabLayout() {
                 <Tabs.Screen name="settings" />
               </Tabs>
             </View>
+            {showRightColumn ? <RightColumn /> : null}
           </View>
         </View>
       </ThemedView>

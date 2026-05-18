@@ -213,6 +213,8 @@ export const queryKeys = {
     ['typeaheadActors', debounced, appViewUrl] as const,
   trendingTopics: (limit: number, appViewUrl: string | undefined, appViewEnabled?: boolean) =>
     ['trendingTopics', limit, appViewUrl, appViewEnabled] as const,
+  suggestedFollows: (limit: number, viewerDid: string | undefined) =>
+    ['suggestedFollows', limit, viewerDid] as const,
 
   // ---- Bookmarks ----
   bookmarks: {
