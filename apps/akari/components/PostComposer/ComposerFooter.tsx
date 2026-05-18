@@ -1,14 +1,58 @@
-import { Pressable, View } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { fontSize } from '@/constants/tokens';
+import { fontSize, hexToRgba } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 import { describePostControls, type PostControls } from '@/utils/postControls';
 import type { ComposeMode } from '@/utils/postComposer/types';
 import { MAX_POST_CHARACTERS } from '@/utils/postComposer/types';
 
 import { styles } from './styles';
+
+type FooterIconButtonProps = {
+  icon: React.ComponentProps<typeof IconSymbol>['name'];
+  /** Color the icon paints at rest and the hover wash is derived from. */
+  activeColor: string;
+  /** Fallback colour used when the button is disabled. */
+  mutedColor: string;
+  disabled?: boolean;
+  onPress: () => void;
+  accessibilityLabel: string;
+  accessibilityHint?: string;
+};
+
+const FooterIconButton = React.memo(function FooterIconButton({
+  icon,
+  activeColor,
+  mutedColor,
+  disabled,
+  onPress,
+  accessibilityLabel,
+  accessibilityHint,
+}: FooterIconButtonProps) {
+  const [hovered, setHovered] = useState(false);
+  const showHover = Platform.OS === 'web' && hovered && !disabled;
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      onPointerEnter={Platform.OS === 'web' && !disabled ? () => setHovered(true) : undefined}
+      onPointerLeave={Platform.OS === 'web' ? () => setHovered(false) : undefined}
+      style={({ pressed }) => [
+        styles.actionButton,
+        disabled && styles.actionButtonDisabled,
+        showHover && { backgroundColor: hexToRgba(activeColor, 0.1) },
+        pressed && !disabled && { opacity: 0.7 },
+      ]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+    >
+      <IconSymbol name={icon} size={20} color={disabled ? mutedColor : activeColor} />
+    </Pressable>
+  );
+});
 
 type ComposerFooterProps = {
   composeMode: ComposeMode;
@@ -62,51 +106,39 @@ export function ComposerFooter({
   return (
     <View style={[styles.footer, { borderTopColor: borderColor }]}>
       <View style={styles.footerLeft}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.actionButton,
-            photoDisabled && styles.actionButtonDisabled,
-            pressed && { opacity: 0.7 },
-          ]}
-          onPress={onAddPhoto}
+        <FooterIconButton
+          icon="photo"
+          activeColor={tintColor}
+          mutedColor={iconColor}
           disabled={photoDisabled}
+          onPress={onAddPhoto}
           accessibilityLabel={t('post.addPhoto')}
           accessibilityHint={t('post.selectPhoto')}
-        >
-          <IconSymbol name="photo" size={20} color={photoDisabled ? iconColor : tintColor} />
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            styles.actionButton,
-            videoDisabled && styles.actionButtonDisabled,
-            pressed && { opacity: 0.7 },
-          ]}
-          onPress={onAddVideo}
+        />
+        <FooterIconButton
+          icon="video"
+          activeColor={tintColor}
+          mutedColor={iconColor}
           disabled={videoDisabled}
+          onPress={onAddVideo}
           accessibilityLabel={t('post.addVideo')}
-        >
-          <IconSymbol name="video" size={20} color={videoDisabled ? iconColor : tintColor} />
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [styles.actionButton, pressed && { opacity: 0.7 }]}
+        />
+        <FooterIconButton
+          icon="face.smiling"
+          activeColor={tintColor}
+          mutedColor={iconColor}
           onPress={onOpenEmoji}
           accessibilityLabel={t('post.addEmoji')}
-        >
-          <IconSymbol name="face.smiling" size={20} color={tintColor} />
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            styles.actionButton,
-            gifDisabled && styles.actionButtonDisabled,
-            pressed && { opacity: 0.7 },
-          ]}
-          onPress={onAddGif}
+        />
+        <FooterIconButton
+          icon="gif"
+          activeColor={tintColor}
+          mutedColor={iconColor}
           disabled={gifDisabled}
+          onPress={onAddGif}
           accessibilityLabel={t('gif.addGif')}
           accessibilityHint={t('gif.selectGif')}
-        >
-          <IconSymbol name="gif" size={20} color={gifDisabled ? iconColor : tintColor} />
-        </Pressable>
+        />
       </View>
 
       <View style={styles.footerCenter} pointerEvents="box-none">
