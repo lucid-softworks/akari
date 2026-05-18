@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  webBackdrop: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+  },
   webContainer: {
     maxWidth: 600,
     width: '100%',
@@ -16,6 +22,7 @@ export const styles = StyleSheet.create({
     maxHeight: '90%',
     marginVertical: spacing.xl,
     borderRadius: spacing.lg,
+    borderWidth: layout.hairline,
     ...shadows.lg,
   },
   header: {

@@ -1,7 +1,8 @@
-import { KeyboardAvoidingView, Modal, Platform, StatusBar } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/ThemedView';
+import { useBorderColor } from '@/hooks/useBorderColor';
 
 import { styles } from './styles';
 
@@ -30,6 +31,32 @@ export function ComposerShell({
   trailingChildren,
 }: ComposerShellProps) {
   const { bottom, top } = useSafeAreaInsets();
+  const borderColor = useBorderColor();
+
+  const composerSurface = (
+    <ThemedView
+      testID="post-composer-container"
+      style={[
+        styles.container,
+        { backgroundColor },
+        isWeb && [styles.webContainer, { borderColor }],
+        // `useSafeAreaInsets` returns 0 inside a Modal on Android, so use
+        // `StatusBar.currentHeight` for the top padding.
+        !isWeb && {
+          paddingTop:
+            Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : top,
+          paddingBottom: bottom,
+        },
+      ]}
+    >
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        {children}
+      </KeyboardAvoidingView>
+    </ThemedView>
+  );
 
   return (
     <Modal
@@ -39,34 +66,19 @@ export function ComposerShell({
       transparent={isWeb}
       onRequestClose={onRequestClose}
     >
-      {/*
-       * ThemedView wraps KeyboardAvoidingView so the dark background always
-       * paints the full modal frame. With KAV on the outside, Android
-       * `behavior='height'` would shrink the inner background and reveal the
-       * Modal's default white at the bottom.
-       */}
-      <ThemedView
-        testID="post-composer-container"
-        style={[
-          styles.container,
-          { backgroundColor },
-          isWeb && styles.webContainer,
-          // `useSafeAreaInsets` returns 0 inside a Modal on Android, so use
-          // `StatusBar.currentHeight` for the top padding.
-          !isWeb && {
-            paddingTop:
-              Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : top,
-            paddingBottom: bottom,
-          },
-        ]}
-      >
-        <KeyboardAvoidingView
-          style={styles.keyboardAvoidingView}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          {children}
-        </KeyboardAvoidingView>
-      </ThemedView>
+      {isWeb ? (
+        // Web modals are transparent, so we paint our own scrim and let
+        // backdrop clicks dismiss the composer. The inner Pressable absorbs
+        // clicks on the composer surface itself so they don't bubble up to
+        // the backdrop and close mid-edit.
+        <Pressable style={styles.webBackdrop} onPress={onRequestClose}>
+          <View onClick={(e: any) => e?.stopPropagation?.()}>
+            {composerSurface}
+          </View>
+        </Pressable>
+      ) : (
+        composerSurface
+      )}
       {trailingChildren}
     </Modal>
   );
