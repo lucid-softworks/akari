@@ -18,9 +18,14 @@ export default function AppearanceDarkScreen() {
 
   const fields = [
     { key: 'background' as const, label: t('settings.background'), presets: PRESETS.background.dark },
+    { key: 'panel' as const, label: t('settings.panel'), presets: PRESETS.panel.dark },
     { key: 'text' as const, label: t('settings.textColor'), presets: PRESETS.text.dark },
+    { key: 'textSecondary' as const, label: t('settings.textSecondary'), presets: PRESETS.textSecondary.dark },
+    { key: 'textTertiary' as const, label: t('settings.textTertiary'), presets: PRESETS.textTertiary.dark },
     { key: 'icon' as const, label: t('settings.icons'), presets: PRESETS.icon.dark },
     { key: 'border' as const, label: t('settings.borders'), presets: PRESETS.border.dark },
+    { key: 'lineSoft' as const, label: t('settings.softLine'), presets: PRESETS.lineSoft.dark },
+    { key: 'accentDim' as const, label: t('settings.accentWash'), presets: PRESETS.accentDim.dark },
   ];
 
   return (

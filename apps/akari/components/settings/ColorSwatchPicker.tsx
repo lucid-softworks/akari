@@ -36,7 +36,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
         style={({ pressed }) => [styles.swatchButton, isDefault && styles.swatchSelected, { borderColor: isDefault ? defaultColor : 'transparent' }, pressed && { opacity: 0.7 }]}
         onPress={() => { onSelect(null); setShowCustom(false); }}
       >
-        <View style={[styles.swatch, { backgroundColor: defaultColor }]}>
+        <View style={[styles.swatch, { backgroundColor: defaultColor, borderColor }]}>
           {isDefault ? <IconSymbol name="checkmark" size={14} color={isLightColor(defaultColor) ? '#000' : '#fff'} /> : null}
         </View>
         <ThemedText style={styles.swatchLabel}>{t('settings.default')}</ThemedText>
@@ -50,7 +50,7 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
             style={({ pressed }) => [styles.swatchButton, selected && styles.swatchSelected, { borderColor: selected ? preset.color : 'transparent' }, pressed && { opacity: 0.7 }]}
             onPress={() => { onSelect(preset.color); setShowCustom(false); }}
           >
-            <View style={[styles.swatch, { backgroundColor: preset.color }]}>
+            <View style={[styles.swatch, { backgroundColor: preset.color, borderColor }]}>
               {selected ? <IconSymbol name="checkmark" size={14} color={isLightColor(preset.color) ? '#000' : '#fff'} /> : null}
             </View>
             <ThemedText style={styles.swatchLabel}>{preset.label}</ThemedText>
@@ -132,7 +132,7 @@ export const PRESETS = {
       { label: 'Mint', color: '#F0FFF4' },
     ],
     dark: [
-      { label: 'Dark', color: '#151718' },
+      { label: 'Dark', color: '#0b0c0e' },
       { label: 'Black', color: '#000000' },
       { label: 'Navy', color: '#0F1729' },
       { label: 'Charcoal', color: '#1C1C1E' },
@@ -147,7 +147,7 @@ export const PRESETS = {
       { label: 'Warm', color: '#292524' },
     ],
     dark: [
-      { label: 'Light', color: '#ECEDEE' },
+      { label: 'Light', color: '#eceef1' },
       { label: 'White', color: '#FFFFFF' },
       { label: 'Soft', color: '#D1D5DB' },
       { label: 'Warm', color: '#FDE68A' },
@@ -161,7 +161,7 @@ export const PRESETS = {
       { label: 'Blue', color: '#3B82F6' },
     ],
     dark: [
-      { label: 'Gray', color: '#9BA1A6' },
+      { label: 'Gray', color: '#9a9ca3' },
       { label: 'Light', color: '#D1D5DB' },
       { label: 'Soft', color: '#6B7280' },
       { label: 'Blue', color: '#60A5FA' },
@@ -175,10 +175,80 @@ export const PRESETS = {
       { label: 'Warm', color: '#E5E0DB' },
     ],
     dark: [
-      { label: 'Dark', color: '#2A2D2E' },
+      { label: 'Dark', color: '#1b1c20' },
       { label: 'Subtle', color: '#1F2937' },
       { label: 'Medium', color: '#374151' },
       { label: 'Navy', color: '#1E293B' },
+    ],
+  },
+  panel: {
+    light: [
+      { label: 'Panel', color: '#F7F9FB' },
+      { label: 'White', color: '#FFFFFF' },
+      { label: 'Cool', color: '#F3F5F8' },
+      { label: 'Warm', color: '#FAFBFD' },
+    ],
+    dark: [
+      { label: 'Panel', color: '#0e0f12' },
+      { label: 'Raised', color: '#15161a' },
+      { label: 'Flat', color: '#0b0c0e' },
+      { label: 'Slate', color: '#161A22' },
+    ],
+  },
+  lineSoft: {
+    light: [
+      { label: 'Soft', color: '#EEF0F2' },
+      { label: 'Subtle', color: '#F3F5F7' },
+      { label: 'Faint', color: '#E5E7EB' },
+      { label: 'Warm', color: '#EDEAE5' },
+    ],
+    dark: [
+      { label: 'Soft', color: '#161719' },
+      { label: 'Subtle', color: '#15161a' },
+      { label: 'Mid', color: '#1b1c20' },
+      { label: 'Navy', color: '#1E293B' },
+    ],
+  },
+  textSecondary: {
+    light: [
+      { label: 'Slate', color: '#4B5563' },
+      { label: 'Gray', color: '#6B7280' },
+      { label: 'Dark', color: '#374151' },
+      { label: 'Soft', color: '#9CA3AF' },
+    ],
+    dark: [
+      { label: 'Gray', color: '#9a9ca3' },
+      { label: 'Light', color: '#AEB0B7' },
+      { label: 'Mid', color: '#8B8D94' },
+      { label: 'Cool', color: '#9BA1A6' },
+    ],
+  },
+  textTertiary: {
+    light: [
+      { label: 'Soft', color: '#9CA3AF' },
+      { label: 'Light', color: '#B0B4BB' },
+      { label: 'Gray', color: '#6B7280' },
+      { label: 'Warm', color: '#A8A29E' },
+    ],
+    dark: [
+      { label: 'Dim', color: '#6b6d74' },
+      { label: 'Mid', color: '#7A7C83' },
+      { label: 'Deep', color: '#5C5E65' },
+      { label: 'Cool', color: '#6B7280' },
+    ],
+  },
+  accentDim: {
+    light: [
+      { label: 'Wash', color: '#E5EBFF' },
+      { label: 'Indigo', color: '#EEF2FF' },
+      { label: 'Blue', color: '#DBEAFE' },
+      { label: 'Cool', color: '#EFF6FF' },
+    ],
+    dark: [
+      { label: 'Wash', color: '#1a2236' },
+      { label: 'Slate', color: '#1F2937' },
+      { label: 'Indigo', color: '#1E1B4B' },
+      { label: 'Deep', color: '#0F1729' },
     ],
   },
 };
@@ -205,6 +275,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
   },
