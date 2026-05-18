@@ -1,19 +1,36 @@
 import * as Haptics from 'expo-haptics';
-import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { SharePostSheet } from '@/components/SharePostSheet';
 import { ShareToChatSheet } from '@/components/ShareToChatSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { RepostSheet } from '@/components/post/RepostSheet';
-import { spacing, fontSize, opacity, activeOpacity, semanticColors, hitSlop } from '@/constants/tokens';
+import {
+  spacing,
+  fontSize,
+  opacity,
+  activeOpacity,
+  radius,
+  semanticColors,
+  hexToRgba,
+  hitSlop,
+} from '@/constants/tokens';
 import { formatCompactNumber } from '@/utils/formatNumber';
 import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useRepostPost } from '@/hooks/mutations/useRepostPost';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+export type ActionAnchorRect = {
+  top: number;
+  bottom: number;
+  left: number;
+  width: number;
+  height: number;
+};
 
 type PostActionsProps = {
   uri?: string;
@@ -30,9 +47,95 @@ type PostActionsProps = {
    * dims and a small lock icon appears next to it. */
   replyDisabled?: boolean;
   onReplyPress: () => void;
-  onMorePress: () => void;
+  /** Called when the more (...) button is pressed. On web the click event's
+   *  target rect is forwarded so the caller can anchor a portal-rendered
+   *  menu next to the trigger. */
+  onMorePress: (rect?: ActionAnchorRect) => void;
   onQuotePress?: () => void;
 };
+
+// 0.13s ease transition for icon color + wash background on web. Native
+// platforms have no hover, so the transition object is null there.
+const WEB_TRANSITION: ViewStyle | null = Platform.OS === 'web'
+  ? ({
+      transitionProperty: 'background-color, color',
+      transitionDuration: '0.13s',
+      transitionTimingFunction: 'ease',
+    } as ViewStyle)
+  : null;
+
+type ActionButtonProps = {
+  icon: string;
+  activeIcon?: string;
+  isActive?: boolean;
+  /** The color this button takes on when hovered (web) or active (toggled on). */
+  activeColor: string;
+  /** Numeric counter shown next to the icon. Omit for icon-only buttons. */
+  count?: number;
+  onPress?: () => void;
+  disabled?: boolean;
+  accessibilityLabel: string;
+  largerTextBadges?: boolean;
+  buttonRef?: React.Ref<View>;
+};
+
+const ActionButton = React.memo(function ActionButton({
+  icon,
+  activeIcon,
+  isActive,
+  activeColor,
+  count,
+  onPress,
+  disabled,
+  accessibilityLabel,
+  largerTextBadges,
+  buttonRef,
+}: ActionButtonProps) {
+  const [hovered, setHovered] = useState(false);
+  const restingColor = useThemeColor({}, 'textTertiary');
+
+  const tinted = !disabled && (isActive || hovered);
+  const color = tinted ? activeColor : restingColor;
+  // Wash only appears on hover, not when the toggle is active — matches the
+  // common Twitter/Bluesky pattern (liked state is communicated by the filled
+  // icon, not a permanent halo).
+  const background = !disabled && hovered ? hexToRgba(activeColor, 0.1) : 'transparent';
+  const iconName = isActive && activeIcon ? activeIcon : icon;
+
+  return (
+    <Pressable
+      ref={buttonRef}
+      onPress={onPress}
+      onPointerEnter={Platform.OS === 'web' && !disabled ? () => setHovered(true) : undefined}
+      onPointerLeave={Platform.OS === 'web' ? () => setHovered(false) : undefined}
+      disabled={disabled}
+      hitSlop={hitSlop}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ disabled: !!disabled }}
+      style={({ pressed }) => [
+        styles.actionButton,
+        { backgroundColor: background },
+        disabled && styles.actionDisabled,
+        pressed && !disabled && { opacity: activeOpacity.default },
+        WEB_TRANSITION,
+      ]}
+    >
+      <IconSymbol name={iconName} size={20} color={color} />
+      {typeof count === 'number' ? (
+        <ThemedText
+          style={[
+            styles.actionCount,
+            largerTextBadges && styles.actionCountLarge,
+            { color },
+          ]}
+        >
+          {formatCompactNumber(count)}
+        </ThemedText>
+      ) : null}
+    </Pressable>
+  );
+});
 
 export const PostActions = React.memo(function PostActions({
   uri,
@@ -60,10 +163,12 @@ export const PostActions = React.memo(function PostActions({
   const [shareSheetVisible, setShareSheetVisible] = useState(false);
   const [shareToChatVisible, setShareToChatVisible] = useState(false);
 
-  const iconColor = useThemeColor(
-    { light: '#687076', dark: '#9BA1A6' },
-    'text',
-  );
+  // Reply/share both use the theme tint — defaults to #5c8aff for dark, picks
+  // up the user's custom accent if they've set one.
+  const accentColor = useThemeColor({}, 'tint');
+  // Neutral hover color for the "more" button so it doesn't borrow an action
+  // color it shouldn't suggest.
+  const neutralAccent = useThemeColor({}, 'textSecondary');
 
   const handleLikePress = useCallback(() => {
     if (!uri || !cid) return;
@@ -141,128 +246,129 @@ export const PostActions = React.memo(function PostActions({
     setShareToChatVisible(true);
   }, []);
 
+  const moreButtonRef = useRef<View>(null);
+
+  const handleMorePress = useCallback(() => {
+    const node = moreButtonRef.current;
+    if (!node) {
+      onMorePress();
+      return;
+    }
+    // On web the ref resolves to the underlying DOM element, so we can
+    // pull the rect synchronously via getBoundingClientRect. Falling back
+    // to measureInWindow handles both native and the rare case where the
+    // ref doesn't expose a DOM API (eg. tests).
+    if (Platform.OS === 'web') {
+      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
+      if (typeof el.getBoundingClientRect === 'function') {
+        const r = el.getBoundingClientRect();
+        onMorePress({ top: r.top, bottom: r.bottom, left: r.left, width: r.width, height: r.height });
+        return;
+      }
+    }
+    node.measureInWindow((x, y, width, height) => {
+      onMorePress({ top: y, bottom: y + height, left: x, width, height });
+    });
+  }, [onMorePress]);
+
   return (
     <>
-    <View style={styles.interactions}>
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, replyDisabled && styles.interactionDisabled, pressed && { opacity: replyDisabled ? 1 : activeOpacity.default }]}
-        onPress={replyDisabled ? undefined : onReplyPress}
-        disabled={replyDisabled}
-        
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityState={{ disabled: !!replyDisabled }}
-        accessibilityLabel={
-          replyDisabled
-            ? `Replies restricted on post by ${authorName}`
-            : `Reply to post by ${authorName}`
-        }
-      >
-        <IconSymbol
-          name={replyDisabled ? 'lock' : 'bubble.left'}
-          size={20}
-          color={iconColor}
+      <View style={styles.interactions}>
+        <ActionButton
+          icon={replyDisabled ? 'lock' : 'bubble.left'}
+          activeColor={accentColor}
+          count={commentCount}
+          onPress={replyDisabled ? undefined : onReplyPress}
+          disabled={replyDisabled}
+          largerTextBadges={largerTextBadges}
+          accessibilityLabel={
+            replyDisabled
+              ? `Replies restricted on post by ${authorName}`
+              : `Reply to post by ${authorName}`
+          }
         />
-        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
-          {formatCompactNumber(commentCount)}
-        </ThemedText>
-      </Pressable>
 
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
-        onPress={handleRepostButtonPress}
-        
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityLabel={isReposted ? `Unrepost post by ${authorName}` : `Repost or quote post by ${authorName}`}
-      >
-        <IconSymbol name="arrow.2.squarepath" size={20} color={isReposted ? '#34C759' : iconColor} />
-        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
-          {formatCompactNumber(repostCount)}
-        </ThemedText>
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
-        onPress={handleLikePress}
-        
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityLabel={isLiked ? `Unlike post by ${authorName}` : `Like post by ${authorName}`}
-      >
-        <IconSymbol
-          name={isLiked ? 'heart.fill' : 'heart'}
-          size={20}
-          color={isLiked ? semanticColors.like : iconColor}
+        <ActionButton
+          icon="arrow.2.squarepath"
+          isActive={isReposted}
+          activeColor={semanticColors.repost}
+          count={repostCount}
+          onPress={handleRepostButtonPress}
+          largerTextBadges={largerTextBadges}
+          accessibilityLabel={
+            isReposted
+              ? `Unrepost post by ${authorName}`
+              : `Repost or quote post by ${authorName}`
+          }
         />
-        <ThemedText style={[styles.interactionCount, largerTextBadges && styles.interactionCountLarge]}>
-          {formatCompactNumber(likeCount)}
-        </ThemedText>
-      </Pressable>
 
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
-        onPress={handleBookmarkPress}
-
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityLabel={isBookmarked ? `Remove bookmark on post by ${authorName}` : `Bookmark post by ${authorName}`}
-      >
-        <IconSymbol
-          name={isBookmarked ? 'bookmark.fill' : 'bookmark'}
-          size={20}
-          color={isBookmarked ? semanticColors.bookmark : iconColor}
+        <ActionButton
+          icon="heart"
+          activeIcon="heart.fill"
+          isActive={isLiked}
+          activeColor={semanticColors.like}
+          count={likeCount}
+          onPress={handleLikePress}
+          largerTextBadges={largerTextBadges}
+          accessibilityLabel={
+            isLiked ? `Unlike post by ${authorName}` : `Like post by ${authorName}`
+          }
         />
-      </Pressable>
 
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.default }]}
-        onPress={handleSharePress}
-        
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityLabel="Share post"
-      >
-        <IconSymbol name="square.and.arrow.up" size={20} color={iconColor} />
-      </Pressable>
+        <ActionButton
+          icon="bookmark"
+          activeIcon="bookmark.fill"
+          isActive={isBookmarked}
+          activeColor={semanticColors.bookmark}
+          onPress={handleBookmarkPress}
+          accessibilityLabel={
+            isBookmarked
+              ? `Remove bookmark on post by ${authorName}`
+              : `Bookmark post by ${authorName}`
+          }
+        />
 
-      <Pressable
-        style={({ pressed }) => [styles.interactionItem, pressed && { opacity: activeOpacity.strong }]}
-        onPress={onMorePress}
-        
-        hitSlop={hitSlop}
-        accessibilityRole="button"
-        accessibilityLabel={`More actions for post by ${authorName}`}
-      >
-        <IconSymbol name="ellipsis" size={20} color={iconColor} />
-      </Pressable>
-    </View>
-    <RepostSheet
-      visible={repostSheetVisible}
-      isReposted={isReposted}
-      onDismiss={handleSheetDismiss}
-      onRepostPress={handleRepostConfirm}
-      onQuotePress={handleQuoteConfirm}
-    />
-    {uri && cid ? (
-      <SharePostSheet
-        visible={shareSheetVisible}
-        onDismiss={() => setShareSheetVisible(false)}
-        onSendToChat={handleSendToChat}
-        postUrl={postUrl}
-        postUri={uri}
-        postCid={cid}
+        <ActionButton
+          icon="square.and.arrow.up"
+          activeColor={accentColor}
+          onPress={handleSharePress}
+          accessibilityLabel="Share post"
+        />
+
+        <ActionButton
+          icon="ellipsis"
+          activeColor={neutralAccent}
+          onPress={handleMorePress}
+          buttonRef={moreButtonRef}
+          accessibilityLabel={`More actions for post by ${authorName}`}
+        />
+      </View>
+      <RepostSheet
+        visible={repostSheetVisible}
+        isReposted={isReposted}
+        onDismiss={handleSheetDismiss}
+        onRepostPress={handleRepostConfirm}
+        onQuotePress={handleQuoteConfirm}
       />
-    ) : null}
-    {uri && cid ? (
-      <ShareToChatSheet
-        visible={shareToChatVisible}
-        onDismiss={() => setShareToChatVisible(false)}
-        message={postUrl}
-        postUri={uri}
-        postCid={cid}
-      />
-    ) : null}
+      {uri && cid ? (
+        <SharePostSheet
+          visible={shareSheetVisible}
+          onDismiss={() => setShareSheetVisible(false)}
+          onSendToChat={handleSendToChat}
+          postUrl={postUrl}
+          postUri={uri}
+          postCid={cid}
+        />
+      ) : null}
+      {uri && cid ? (
+        <ShareToChatSheet
+          visible={shareToChatVisible}
+          onDismiss={() => setShareToChatVisible(false)}
+          message={postUrl}
+          postUri={uri}
+          postCid={cid}
+        />
+      ) : null}
     </>
   );
 });
@@ -274,19 +380,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: spacing.sm,
   },
-  interactionItem: {
+  actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.full,
   },
-  interactionDisabled: {
+  actionDisabled: {
     opacity: opacity.tertiary,
   },
-  interactionCount: {
+  actionCount: {
     fontSize: fontSize.base,
-    opacity: opacity.secondary,
   },
-  interactionCountLarge: {
+  actionCountLarge: {
     fontSize: fontSize.lg,
   },
 });

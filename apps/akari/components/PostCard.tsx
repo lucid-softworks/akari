@@ -11,7 +11,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { AdultContentGate } from '@/components/post/AdultContentGate';
 import { LiveStreamEmbed } from '@/components/post/LiveStreamEmbed';
-import { PostActions } from '@/components/post/PostActions';
+import { PostActions, type ActionAnchorRect } from '@/components/post/PostActions';
 import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
@@ -201,8 +201,11 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
 
   const isLive = Boolean(liveStreamInfo);
 
+  const [menuAnchorRect, setMenuAnchorRect] = useState<ActionAnchorRect | null>(null);
+
   // Handlers
-  const handleMenuToggle = useCallback(() => {
+  const handleMenuToggle = useCallback((rect?: ActionAnchorRect) => {
+    setMenuAnchorRect(rect ?? null);
     setShowActionsMenu((prev) => !prev);
   }, []);
 
@@ -337,6 +340,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         authorDid={post.author.did}
         feedUri={feedUri}
         feedContext={post.feedContext}
+        anchorRect={menuAnchorRect}
         onDismiss={handleMenuDismiss}
         onTranslatePress={handleTranslatePress}
       />

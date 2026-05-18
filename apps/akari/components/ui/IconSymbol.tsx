@@ -157,6 +157,15 @@ const MAPPING = {
   tag: 'sell',
   trash: 'delete-outline',
   video: 'videocam',
+  // Post actions menu icons
+  'character.book.closed': 'translate',
+  'doc.on.doc': 'content-copy',
+  'pin.slash': 'push-pin',
+  'hand.thumbsup': 'thumb-up-off-alt',
+  'hand.thumbsdown': 'thumb-down-off-alt',
+  'bell.slash': 'notifications-off',
+  'eye.slash': 'visibility-off',
+  'person.crop.circle.badge.xmark': 'person-off',
 } as unknown as IconMapping;
 
 /**

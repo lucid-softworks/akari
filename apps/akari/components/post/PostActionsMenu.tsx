@@ -1,14 +1,16 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Modal, Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { WebPortalDropdown } from '@/components/post/WebPortalDropdown';
 
 import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { PostControlsSheet } from '@/components/PostControlsSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hexToRgba } from '@/constants/tokens';
 import { ReportSheet } from '@/components/ReportSheet';
 import { useToast } from '@/contexts/ToastContext';
 import { useMuteThread } from '@/hooks/mutations/useMuteThread';
@@ -33,6 +35,8 @@ type PostMenuItem = {
   disabled?: boolean;
 };
 
+type AnchorRect = { top: number; bottom: number; left: number; width: number; height: number };
+
 type PostActionsMenuProps = {
   visible: boolean;
   canTranslate: boolean;
@@ -45,12 +49,69 @@ type PostActionsMenuProps = {
    *  back to that feed gen. */
   feedUri?: string;
   feedContext?: string;
+  /** Bounding rect of the More button that opened this menu. Used on web
+   *  to render the dropdown via a portal at the right viewport position,
+   *  flipping above the trigger if there isn't room below. */
+  anchorRect?: AnchorRect | null;
   onDismiss: () => void;
   onTranslatePress: () => void;
 };
 
+const WEB_MENU_ESTIMATED_HEIGHT = 380;
+
 // Global ref to dismiss any currently open menu when a new one opens
 let activeMenuDismiss: (() => void) | null = null;
+
+type MenuItemRowProps = {
+  item: PostMenuItem;
+  iconColor: string;
+  hoverBg: string;
+  onPress?: ((e: any) => void) | (() => void);
+};
+
+const DANGER_HOVER_BG = hexToRgba(semanticColors.danger, 0.12);
+
+const MenuItemRow = React.memo(function MenuItemRow({
+  item,
+  iconColor,
+  hoverBg,
+  onPress,
+}: MenuItemRowProps) {
+  const [hovered, setHovered] = useState(false);
+  const showHover = Platform.OS === 'web' && hovered && !item.disabled;
+  const hoverColor = item.destructive ? DANGER_HOVER_BG : hoverBg;
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.menuItem,
+        showHover && { backgroundColor: hoverColor },
+        pressed && { opacity: item.disabled ? 1 : activeOpacity.default },
+      ]}
+      onPress={item.disabled ? undefined : onPress}
+      onPointerEnter={Platform.OS === 'web' && !item.disabled ? () => setHovered(true) : undefined}
+      onPointerLeave={Platform.OS === 'web' ? () => setHovered(false) : undefined}
+      disabled={item.disabled}
+      accessibilityRole="menuitem"
+      accessibilityState={{ disabled: item.disabled }}
+    >
+      <IconSymbol
+        name={item.icon as any}
+        size={20}
+        color={item.destructive ? semanticColors.danger : iconColor}
+        style={item.disabled ? styles.menuItemDisabled : undefined}
+      />
+      <ThemedText
+        style={[
+          styles.menuItemText,
+          item.destructive && styles.menuItemTextDestructive,
+          item.disabled && styles.menuItemDisabled,
+        ]}
+      >
+        {item.label}
+      </ThemedText>
+    </Pressable>
+  );
+});
 
 export const PostActionsMenu = React.memo(function PostActionsMenu({
   visible,
@@ -61,6 +122,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   authorDid,
   feedUri,
   feedContext,
+  anchorRect,
   onDismiss,
   onTranslatePress,
 }: PostActionsMenuProps) {
@@ -98,10 +160,11 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     };
   }, [visible, onDismiss]);
 
-  const menuBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const handleBarColor = useThemeColor({ light: '#d1d1d6', dark: '#3a3a3c' }, 'border');
-  const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
+  const menuBackgroundColor = useThemeColor({}, 'panel');
+  const handleBarColor = useThemeColor({}, 'lineSoft');
+  const iconColor = useThemeColor({}, 'textSecondary');
   const borderColor = useThemeColor({}, 'border');
+  const hoverBg = useThemeColor({}, 'hover');
 
   const muteMutation = useMuteUser();
   const muteThreadMutation = useMuteThread();
@@ -283,44 +346,29 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     : (handler: (() => void) | undefined) => handler;
 
   const menuItems = menuActions.map((item) => (
-    <Pressable
+    <MenuItemRow
       key={item.key}
-      style={({ pressed }) => [styles.menuItem, pressed && { opacity: item.disabled ? 1 : activeOpacity.default }]}
+      item={item}
+      iconColor={iconColor}
+      hoverBg={hoverBg}
       onPress={item.disabled ? undefined : wrapPress(item.onPress)}
-      disabled={item.disabled}
-      accessibilityRole="menuitem"
-      accessibilityState={{ disabled: item.disabled }}
-      
-    >
-      <IconSymbol
-        name={item.icon as any}
-        size={20}
-        color={item.destructive ? semanticColors.danger : iconColor}
-        style={item.disabled ? styles.menuItemDisabled : undefined}
-      />
-      <ThemedText
-        style={[
-          styles.menuItemText,
-          item.destructive && styles.menuItemTextDestructive,
-          item.disabled && styles.menuItemDisabled,
-        ]}
-      >
-        {item.label}
-      </ThemedText>
-    </Pressable>
+    />
   ));
 
   return (
     <>
     {Platform.OS === 'web' ? (
-      visible ? (
-          <ThemedView
-            style={[styles.webDropdown, { backgroundColor: menuBackgroundColor, borderColor: handleBarColor }]}
-            {...{ onClick: (e: any) => e.stopPropagation() }}
-          >
-            {menuItems}
-          </ThemedView>
-      ) : null
+      <WebPortalDropdown
+        visible={visible}
+        anchorRect={anchorRect}
+        estimatedHeight={WEB_MENU_ESTIMATED_HEIGHT}
+      >
+        <ThemedView
+          style={[styles.webDropdown, { backgroundColor: menuBackgroundColor, borderColor: handleBarColor }]}
+        >
+          {menuItems}
+        </ThemedView>
+      </WebPortalDropdown>
     ) : (
       <Modal
         visible={visible}
@@ -436,6 +484,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: spacing.md,
+    paddingLeft: spacing.md,
+    paddingRight: spacing.xl,
+    borderRadius: radius.sm,
     gap: spacing.md,
   },
   menuItemText: {
@@ -449,15 +500,11 @@ const styles = StyleSheet.create({
     opacity: opacity.disabled,
   },
   webDropdown: {
-    position: 'absolute' as any,
-    right: 0,
-    bottom: 40,
-    zIndex: 9999,
     borderWidth: 1,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    minWidth: 200,
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-  },
+    paddingHorizontal: spacing.xs,
+    // boxShadow is a web-only style; RN-web passes it through to CSS.
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
+  } as ViewStyle,
 });
