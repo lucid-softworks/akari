@@ -181,9 +181,9 @@ export const semanticColors = {
   /** Destructive actions (delete, block, report) */
   danger: '#d13232',
   /** Like heart */
-  like: '#ff3b30',
+  like: '#ff5c8a',
   /** Repost / boost */
-  repost: '#34c759',
+  repost: '#3fb37f',
   /** Bookmark fill */
   bookmark: '#ff9500',
   /** Live streaming accent */
@@ -191,6 +191,20 @@ export const semanticColors = {
   /** iOS system blue (use sparingly -- prefer theme accent) */
   systemBlue: '#007AFF',
 } as const;
+
+/**
+ * Convert a 3/6-digit hex color to an rgba() string. Used for hover washes and
+ * other translucent overlays where the source color comes from a theme token
+ * (so we can't pre-compute the rgba ahead of time).
+ */
+export function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 // ---------------------------------------------------------------------------
 // Layout
