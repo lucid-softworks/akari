@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
@@ -252,7 +251,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({}, 'tint');
   const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
-  const insets = useSafeAreaInsets();
   const { height: windowHeight } = useWindowDimensions();
 
   // Get the post data
@@ -374,6 +372,23 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           />
         </View>
 
+        {/* Reply Bar — sits below the focused post so it's the next thing
+            users see when reading a thread, instead of floating at the bottom
+            of the page. */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.replyBar,
+            { borderTopColor: borderColor, borderBottomColor: borderColor },
+            pressed && { opacity: 0.7 },
+          ]}
+          onPress={() => setShowReplyComposer(true)}
+        >
+          <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
+          <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
+            {t('post.reply')}...
+          </ThemedText>
+        </Pressable>
+
         {/* Replies */}
         {threadLoading ? (
           <FeedSkeleton count={3} />
@@ -396,18 +411,6 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           </View>
         ) : null}
       </ScrollView>
-
-      {/* Reply Bar */}
-      <Pressable
-        style={({ pressed }) => [styles.replyBar, { borderTopColor: borderColor, paddingBottom: Math.max(insets.bottom - spacing.lg, spacing.xs) }, pressed && { opacity: 0.7 }]}
-        onPress={() => setShowReplyComposer(true)}
-        
-      >
-        <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
-        <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
-          {t('post.reply')}...
-        </ThemedText>
-      </Pressable>
 
       {/* Reply Composer */}
       <PostComposer
@@ -458,6 +461,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
+    paddingTop: spacing.md,
     paddingBottom: spacing.xl,
   },
   repliesContainer: {
@@ -474,8 +478,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
+    paddingVertical: spacing.md,
     borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   replyBarText: {
     fontSize: fontSize.lg,
