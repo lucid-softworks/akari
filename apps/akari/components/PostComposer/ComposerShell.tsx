@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Modal, Platform, Pressable, StatusBar, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -61,7 +61,11 @@ export function ComposerShell({
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      // Sliding up from the bottom reads as mobile-y on a desktop browser;
+      // fade matches the centred-modal pattern most web apps use. Native
+      // platforms keep the slide because it's the platform-native animation
+      // for pageSheet / fullScreen presentation styles.
+      animationType={isWeb ? 'fade' : 'slide'}
       presentationStyle={nativePresentationStyle}
       transparent={isWeb}
       onRequestClose={onRequestClose}
@@ -70,11 +74,17 @@ export function ComposerShell({
         // Web modals are transparent, so we paint our own scrim and let
         // backdrop clicks dismiss the composer. The inner Pressable absorbs
         // clicks on the composer surface itself so they don't bubble up to
-        // the backdrop and close mid-edit.
+        // the backdrop and close the composer mid-edit. Wrapper carries the
+        // sizing (maxWidth/maxHeight) so the inner ThemedView's `flex: 1`
+        // has a real frame to fill — otherwise the surface collapses to
+        // content size.
         <Pressable style={styles.webBackdrop} onPress={onRequestClose}>
-          <View onClick={(e: any) => e?.stopPropagation?.()}>
+          <Pressable
+            style={styles.webComposerWrapper}
+            onPress={() => undefined}
+          >
             {composerSurface}
-          </View>
+          </Pressable>
         </Pressable>
       ) : (
         composerSurface
