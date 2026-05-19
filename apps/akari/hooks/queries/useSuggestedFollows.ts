@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -13,6 +14,7 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useSuggestedFollows(limit: number = 5, enabled: boolean = true) {
   const { data: currentAccount } = useCurrentAccount();
   const { data: token } = useJwtToken();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.suggestedFollows(limit, currentAccount?.did),
@@ -22,8 +24,16 @@ export function useSuggestedFollows(limit: number = 5, enabled: boolean = true) 
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       const api = apiForAccount(currentAccount);
-      const res = await api.getSuggestions(token, { limit });
-      return res.actors;
+      const res = await api.getSuggestions(token, { limit, acceptLabelers });
+      // The AppView occasionally returns duplicate actors when the same
+      // account is recommended by multiple signals — drop the dupes so
+      // the keyed list in <WhoToFollowCard> doesn't warn about repeats.
+      const seen = new Set<string>();
+      return res.actors.filter((actor) => {
+        if (!actor.did || seen.has(actor.did)) return false;
+        seen.add(actor.did);
+        return true;
+      });
     },
   });
 }

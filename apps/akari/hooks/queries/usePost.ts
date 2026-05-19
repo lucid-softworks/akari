@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostView } from '@/hooks/queries/microcosm';
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -11,6 +12,7 @@ export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.post.detail({ actor, rKey, pdsUrl: currentAccount?.pdsUrl, appViewEnabled }),
@@ -26,7 +28,7 @@ export function usePost({ actor, rKey }: { actor?: string; rKey?: string }) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      return await api.getPost(token, constructedUri);
+      return await api.getPost(token, constructedUri, acceptLabelers);
     },
     enabled: !!actor && !!rKey && (appViewEnabled ? !!token && !!currentAccount?.pdsUrl : true),
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -40,6 +42,7 @@ export function useParentPost(parentUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.parentPost(parentUri, currentAccount?.pdsUrl, appViewEnabled),
@@ -53,7 +56,7 @@ export function useParentPost(parentUri: string | null) {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       const api = apiForAccount(currentAccount);
-      const result = await api.getPost(token, parentUri);
+      const result = await api.getPost(token, parentUri, acceptLabelers);
       return result;
     },
     enabled: !!parentUri,
@@ -67,6 +70,7 @@ export function useRootPost(rootUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.rootPost(rootUri, currentAccount?.pdsUrl, appViewEnabled),
@@ -80,7 +84,7 @@ export function useRootPost(rootUri: string | null) {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
       const api = apiForAccount(currentAccount);
-      const result = await api.getPost(token, rootUri);
+      const result = await api.getPost(token, rootUri, acceptLabelers);
       return result;
     },
     enabled: !!rootUri,

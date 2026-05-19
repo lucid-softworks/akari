@@ -5,6 +5,7 @@ import {
   getPostView,
   getReplyUris,
 } from '@/hooks/queries/microcosm';
+import { useAcceptLabelerDids } from "@/hooks/queries/useAcceptLabelerDids";
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { queryKeys } from '@/hooks/queryKeys';
@@ -58,6 +59,7 @@ export function usePostThread(postUri: string | null) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.postThread.detail(postUri, currentAccount?.pdsUrl, appViewEnabled),
@@ -72,7 +74,7 @@ export function usePostThread(postUri: string | null) {
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = apiForAccount(currentAccount);
-      return await api.getPostThread(token, postUri);
+      return await api.getPostThread(token, postUri, acceptLabelers);
     },
     enabled: !!postUri && (!!token || !appViewEnabled),
     staleTime: 5 * 60 * 1000, // 5 minutes

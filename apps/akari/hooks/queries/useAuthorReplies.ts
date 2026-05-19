@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { getAuthorFeedPage } from '@/hooks/queries/microcosm';
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
@@ -16,6 +17,7 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useInfiniteQuery({
     queryKey: queryKeys.author.replies(identifier, limit, currentAccount?.pdsUrl, appViewEnabled),
@@ -42,7 +44,14 @@ export function useAuthorReplies(identifier: string | undefined, limit: number =
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, 'posts_with_replies');
+      const feed = await api.getAuthorFeed(
+        token,
+        identifier,
+        limit,
+        pageParam,
+        'posts_with_replies',
+        acceptLabelers,
+      );
 
       // Map the feed items to posts (they should already be filtered for replies by the API)
       const replies = feed.feed.map((item) => item.post);

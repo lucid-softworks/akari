@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostView } from '@/hooks/queries/microcosm';
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -15,6 +16,7 @@ export function usePinnedPost(uri: string | undefined) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.pinnedPost.detail(currentAccount?.pdsUrl, uri, appViewEnabled),
@@ -31,7 +33,7 @@ export function usePinnedPost(uri: string | undefined) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      return api.getPost(token, uri);
+      return api.getPost(token, uri, acceptLabelers);
     },
   });
 }

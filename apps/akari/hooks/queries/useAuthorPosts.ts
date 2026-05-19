@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { getAuthorFeedPage } from '@/hooks/queries/microcosm';
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
@@ -16,6 +17,7 @@ export function useAuthorPosts(identifier: string | undefined, limit: number = 5
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useInfiniteQuery({
     queryKey: queryKeys.author.posts.list(identifier, limit, currentAccount?.pdsUrl, appViewEnabled),
@@ -31,7 +33,7 @@ export function useAuthorPosts(identifier: string | undefined, limit: number = 5
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
+      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, undefined, acceptLabelers);
 
       // Filter to only show original posts (not reposts or replies)
       const originalPosts = feed.feed.flatMap((item) => (!item.reason && !item.reply ? [item.post] : []));

@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
@@ -13,6 +14,7 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useFeed(feedUri: string | null, limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useInfiniteQuery({
     queryKey: queryKeys.feed.detail(feedUri, currentAccount?.pdsUrl),
@@ -22,7 +24,7 @@ export function useFeed(feedUri: string | null, limit: number = 20) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      return await api.getFeed(token, feedUri, limit, pageParam);
+      return await api.getFeed(token, feedUri, limit, pageParam, acceptLabelers);
     },
     enabled: !!feedUri && !!token,
     initialPageParam: undefined as string | undefined,

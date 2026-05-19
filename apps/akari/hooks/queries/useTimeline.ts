@@ -1,3 +1,4 @@
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -16,6 +17,7 @@ export function useTimeline(limit: number = 20, enabled: boolean = true) {
   const { data: currentAccount } = useCurrentAccount();
   const currentUserDid = currentAccount?.did;
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.timeline.list(limit, currentUserDid, appViewEnabled),
@@ -25,7 +27,7 @@ export function useTimeline(limit: number = 20, enabled: boolean = true) {
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      return await api.getTimeline(token, limit);
+      return await api.getTimeline(token, limit, acceptLabelers);
     },
     enabled: enabled && !!token && !!currentUserDid,
     staleTime: 2 * 60 * 1000, // 2 minutes

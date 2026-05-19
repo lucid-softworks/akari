@@ -1,4 +1,5 @@
 import { BlueskyApiClient } from './client';
+import { buildAcceptLabelersHeader } from './labelers';
 import type {
   BlueskyBookmarksResponse,
   BlueskyFeedResponse,
@@ -15,6 +16,8 @@ import type {
   BlueskyUploadBlobResponse,
 } from './types';
 
+export { buildAcceptLabelersHeader };
+
 /**
  * Bluesky API feed methods
  */
@@ -25,13 +28,14 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param limit - Number of posts to fetch (default: 20)
    * @returns Promise resolving to timeline data
    */
-  async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
+  async getTimeline(
+    accessJwt: string,
+    limit: number = 20,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyFeedResponse> {
     return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getTimeline', accessJwt, {
       params: { limit: limit.toString() },
-      headers: {
-        'atproto-accept-labelers':
-          'did:plc:ar7c4by46qjdydhdevvrndac;redact, did:plc:gvkp7euswjjrctjmqwhhfzif;redact, did:plc:newitj5jo3uel7o4mnf3vj2o, did:plc:pbmxe3tfpkts72wi74weijpo, did:plc:wkoofae5uytcm7bjncmev6n6, did:plc:blwl5jhgk7eygww2bhkt56hg, did:plc:mjyeurqmqjeexbgigk3yytvb, did:plc:i65enriuag7n5fgkopbqtkyk, did:plc:zal76px7lfptnpgn4j3v6i7d, did:plc:wp7hxfjl5l4zlptn7y6774lk, did:plc:xpxsa5aviwecd7cv6bzbmr5n, did:plc:gwqqyezoxusulkn5g2nzd6t2, did:plc:xss2sw5p4bfhjqjorl7gk6z4, did:plc:mtbmlt62wuf454ztne5wacev, did:plc:bfsapbnzx54ypg2mgrflkjlx, did:plc:gclep67kb2bifr3praijwoun, did:plc:aksxl7qy5azlzfm2jstcwqtz, did:plc:yb2gz6yxpebbzlundrrfkv4d, did:plc:vfibt4bgozsdx6rnnnpha3x7',
-      },
+      headers: buildAcceptLabelersHeader(acceptLabelers),
     });
   }
 
@@ -75,7 +79,13 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param cursor - Pagination cursor
    * @returns Promise resolving to feed posts data
    */
-  async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
+  async getFeed(
+    accessJwt: string,
+    feed: string,
+    limit: number = 50,
+    cursor?: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       feed,
       limit: limit.toString(),
@@ -85,7 +95,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getFeed', accessJwt, {
+      params,
+      headers: buildAcceptLabelersHeader(acceptLabelers),
+    });
   }
 
   /**
@@ -117,6 +130,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     accessJwt: string,
     limit: number = 50,
     cursor?: string,
+    acceptLabelers?: readonly string[],
   ): Promise<BlueskyBookmarksResponse> {
     const params: Record<string, string> = {
       limit: limit.toString(),
@@ -128,6 +142,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
 
     return this.makeAuthenticatedRequest<BlueskyBookmarksResponse>('/app.bsky.bookmark.getBookmarks', accessJwt, {
       params,
+      headers: buildAcceptLabelersHeader(acceptLabelers),
     });
   }
 
@@ -162,11 +177,16 @@ export class BlueskyFeeds extends BlueskyApiClient {
    * @param uri - The post's URI
    * @returns Promise resolving to post data
    */
-  async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {
+  async getPost(
+    accessJwt: string,
+    uri: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyPostView> {
     const data = await this.makeAuthenticatedRequest<{
       thread?: { post: BlueskyPostView };
     }>('/app.bsky.feed.getPostThread', accessJwt, {
       params: { uri },
+      headers: buildAcceptLabelersHeader(acceptLabelers),
     });
     if (!data.thread?.post) {
       throw new Error('Post not found');
@@ -175,14 +195,40 @@ export class BlueskyFeeds extends BlueskyApiClient {
   }
 
   /**
+   * Gets several posts in a single AppView round-trip. Used by the
+   * notifications screen to denormalise the targeted post (for
+   * like/repost/quote rows) without firing N getPostThread requests.
+   */
+  async getPosts(
+    accessJwt: string,
+    uris: readonly string[],
+    acceptLabelers?: readonly string[],
+  ): Promise<{ posts: BlueskyPostView[] }> {
+    if (uris.length === 0) return { posts: [] };
+    return this.makeAuthenticatedRequest<{ posts: BlueskyPostView[] }>(
+      '/app.bsky.feed.getPosts',
+      accessJwt,
+      {
+        params: { uris: uris.slice(0, 25) },
+        headers: buildAcceptLabelersHeader(acceptLabelers),
+      },
+    );
+  }
+
+  /**
    * Gets a post thread including replies
    * @param accessJwt - Valid access JWT token
    * @param uri - The post's URI
    * @returns Promise resolving to thread data
    */
-  async getPostThread(accessJwt: string, uri: string): Promise<BlueskyThreadResponse> {
+  async getPostThread(
+    accessJwt: string,
+    uri: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyThreadResponse> {
     return this.makeAuthenticatedRequest<BlueskyThreadResponse>('/app.bsky.feed.getPostThread', accessJwt, {
       params: { uri },
+      headers: buildAcceptLabelersHeader(acceptLabelers),
     });
   }
 
@@ -201,6 +247,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string,
     filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads',
+    acceptLabelers?: readonly string[],
   ): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       actor,
@@ -215,7 +262,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.filter = filter;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, {
+      params,
+      headers: buildAcceptLabelersHeader(acceptLabelers),
+    });
   }
 
   /**
@@ -231,6 +281,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     actor: string,
     limit: number = 20,
     cursor?: string,
+    acceptLabelers?: readonly string[],
   ): Promise<BlueskyFeedResponse> {
     const params: Record<string, string> = {
       actor,
@@ -242,7 +293,10 @@ export class BlueskyFeeds extends BlueskyApiClient {
       params.cursor = cursor;
     }
 
-    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, { params });
+    return this.makeAuthenticatedRequest<BlueskyFeedResponse>('/app.bsky.feed.getAuthorFeed', accessJwt, {
+      params,
+      headers: buildAcceptLabelersHeader(acceptLabelers),
+    });
   }
 
   /**

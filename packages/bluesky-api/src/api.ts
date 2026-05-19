@@ -180,17 +180,24 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param did - DID of the actor whose profile information should be retrieved.
    * @returns Profile record and viewer relationship metadata.
    */
-  async getProfile(accessJwt: string, did: string): Promise<BlueskyProfileResponse> {
-    return this.actors.getProfile(accessJwt, did);
+  async getProfile(
+    accessJwt: string,
+    did: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyProfileResponse> {
+    return this.actors.getProfile(accessJwt, did, acceptLabelers);
   }
 
   /** Batch profile lookup (up to 25 actors per call). */
-  async getProfiles(accessJwt: string, actors: string[]) {
-    return this.actors.getProfiles(accessJwt, actors);
+  async getProfiles(accessJwt: string, actors: string[], acceptLabelers?: readonly string[]) {
+    return this.actors.getProfiles(accessJwt, actors, acceptLabelers);
   }
 
   /** Personalised follow suggestions for the authenticated viewer. */
-  async getSuggestions(accessJwt: string, options?: { limit?: number; cursor?: string }) {
+  async getSuggestions(
+    accessJwt: string,
+    options?: { limit?: number; cursor?: string; acceptLabelers?: readonly string[] },
+  ) {
     return this.actors.getSuggestions(accessJwt, options);
   }
 
@@ -316,8 +323,12 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param limit - Maximum number of feed items to return, defaults to 20.
    * @returns Feed page that mirrors the app.bsky.feed.getTimeline endpoint.
    */
-  async getTimeline(accessJwt: string, limit: number = 20): Promise<BlueskyFeedResponse> {
-    return this.feeds.getTimeline(accessJwt, limit);
+  async getTimeline(
+    accessJwt: string,
+    limit: number = 20,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyFeedResponse> {
+    return this.feeds.getTimeline(accessJwt, limit, acceptLabelers);
   }
 
   /**
@@ -349,8 +360,14 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param cursor - Pagination cursor returned by the API, if available.
    * @returns Feed slice containing posts created by the generator.
    */
-  async getFeed(accessJwt: string, feed: string, limit: number = 50, cursor?: string): Promise<BlueskyFeedResponse> {
-    return this.feeds.getFeed(accessJwt, feed, limit, cursor);
+  async getFeed(
+    accessJwt: string,
+    feed: string,
+    limit: number = 50,
+    cursor?: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyFeedResponse> {
+    return this.feeds.getFeed(accessJwt, feed, limit, cursor, acceptLabelers);
   }
 
   /**
@@ -370,8 +387,13 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param cursor - Pagination cursor from the previous response, if any.
    * @returns Paginated bookmark feed from the app.bsky.bookmark namespace.
    */
-  async getBookmarks(accessJwt: string, limit: number = 50, cursor?: string): Promise<BlueskyBookmarksResponse> {
-    return this.feeds.getBookmarks(accessJwt, limit, cursor);
+  async getBookmarks(
+    accessJwt: string,
+    limit: number = 50,
+    cursor?: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyBookmarksResponse> {
+    return this.feeds.getBookmarks(accessJwt, limit, cursor, acceptLabelers);
   }
 
   /**
@@ -399,8 +421,23 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param uri - AT URI of the post to fetch.
    * @returns Post view containing record data, embeds and viewer state.
    */
-  async getPost(accessJwt: string, uri: string): Promise<BlueskyPostView> {
-    return this.feeds.getPost(accessJwt, uri);
+  async getPost(
+    accessJwt: string,
+    uri: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyPostView> {
+    return this.feeds.getPost(accessJwt, uri, acceptLabelers);
+  }
+
+  /**
+   * Batch post lookup; see `feeds.getPosts`.
+   */
+  async getPosts(
+    accessJwt: string,
+    uris: readonly string[],
+    acceptLabelers?: readonly string[],
+  ): Promise<{ posts: BlueskyPostView[] }> {
+    return this.feeds.getPosts(accessJwt, uris, acceptLabelers);
   }
 
   /**
@@ -409,8 +446,12 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param uri - AT URI of the root post to expand.
    * @returns Thread response mirroring the feed.getPostThread endpoint.
    */
-  async getPostThread(accessJwt: string, uri: string): Promise<BlueskyThreadResponse> {
-    return this.feeds.getPostThread(accessJwt, uri);
+  async getPostThread(
+    accessJwt: string,
+    uri: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyThreadResponse> {
+    return this.feeds.getPostThread(accessJwt, uri, acceptLabelers);
   }
 
   /**
@@ -428,8 +469,9 @@ export class BlueskyApi extends BlueskyApiClient {
     limit: number = 20,
     cursor?: string,
     filter?: 'posts_with_replies' | 'posts_no_replies' | 'posts_with_media' | 'posts_and_author_threads',
+    acceptLabelers?: readonly string[],
   ): Promise<BlueskyFeedResponse> {
-    return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor, filter);
+    return this.feeds.getAuthorFeed(accessJwt, actor, limit, cursor, filter, acceptLabelers);
   }
 
   /**
@@ -445,8 +487,9 @@ export class BlueskyApi extends BlueskyApiClient {
     actor: string,
     limit: number = 20,
     cursor?: string,
+    acceptLabelers?: readonly string[],
   ): Promise<BlueskyFeedResponse> {
-    return this.feeds.getAuthorVideos(accessJwt, actor, limit, cursor);
+    return this.feeds.getAuthorVideos(accessJwt, actor, limit, cursor, acceptLabelers);
   }
 
   /**

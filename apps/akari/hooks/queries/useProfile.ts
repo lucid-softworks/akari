@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getProfileView } from "@/hooks/queries/microcosm";
+import { useAcceptLabelerDids } from "@/hooks/queries/useAcceptLabelerDids";
 import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from "@/hooks/useAppViewEnabled";
@@ -15,6 +16,7 @@ export function useProfile(identifier: string | undefined) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const appViewEnabled = useAppViewEnabled();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useQuery({
     queryKey: queryKeys.profile.detail(identifier, currentAccount?.pdsUrl, appViewEnabled),
@@ -29,7 +31,7 @@ export function useProfile(identifier: string | undefined) {
       if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
       const api = apiForAccount(currentAccount);
-      const profile = await api.getProfile(token, identifier);
+      const profile = await api.getProfile(token, identifier, acceptLabelers);
 
       return profile;
     },

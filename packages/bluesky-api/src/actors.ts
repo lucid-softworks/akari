@@ -1,4 +1,5 @@
 import { BlueskyApiClient } from './client';
+import { buildAcceptLabelersHeader } from './labelers';
 import type {
   BlueskyLabelerServicesResponse,
   BlueskyPreference,
@@ -17,9 +18,14 @@ export class BlueskyActors extends BlueskyApiClient {
    * @param did - User's DID to fetch profile for
    * @returns Promise resolving to profile data
    */
-  async getProfile(accessJwt: string, did: string): Promise<BlueskyProfileResponse> {
+  async getProfile(
+    accessJwt: string,
+    did: string,
+    acceptLabelers?: readonly string[],
+  ): Promise<BlueskyProfileResponse> {
     return this.makeAuthenticatedRequest<BlueskyProfileResponse>('/app.bsky.actor.getProfile', accessJwt, {
       params: { actor: did },
+      headers: buildAcceptLabelersHeader(acceptLabelers),
     });
   }
 
@@ -32,11 +38,12 @@ export class BlueskyActors extends BlueskyApiClient {
   async getProfiles(
     accessJwt: string,
     actors: string[],
+    acceptLabelers?: readonly string[],
   ): Promise<{ profiles: BlueskyProfileResponse[] }> {
     return this.makeAuthenticatedRequest<{ profiles: BlueskyProfileResponse[] }>(
       '/app.bsky.actor.getProfiles',
       accessJwt,
-      { params: { actors } },
+      { params: { actors }, headers: buildAcceptLabelersHeader(acceptLabelers) },
     );
   }
 
@@ -48,13 +55,16 @@ export class BlueskyActors extends BlueskyApiClient {
    */
   async getSuggestions(
     accessJwt: string,
-    options: { limit?: number; cursor?: string } = {},
+    options: { limit?: number; cursor?: string; acceptLabelers?: readonly string[] } = {},
   ): Promise<{ actors: BlueskyProfileResponse[]; cursor?: string }> {
-    const { limit = 10, cursor } = options;
+    const { limit = 10, cursor, acceptLabelers } = options;
     return this.makeAuthenticatedRequest<{ actors: BlueskyProfileResponse[]; cursor?: string }>(
       '/app.bsky.actor.getSuggestions',
       accessJwt,
-      { params: { limit, ...(cursor ? { cursor } : {}) } },
+      {
+        params: { limit: String(limit), ...(cursor ? { cursor } : {}) },
+        headers: buildAcceptLabelersHeader(acceptLabelers),
+      },
     );
   }
 

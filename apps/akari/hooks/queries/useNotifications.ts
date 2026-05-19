@@ -89,6 +89,48 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
           };
         });
 
+        // For like / repost notifications the notification.record is
+        // the like/repost record itself — no text, no embed. Bluesky's
+        // web UI shows the targeted post inline, so we batch-fetch
+        // those (the user's own posts that were liked/reposted) via
+        // app.bsky.feed.getPosts and merge their text + embed into the
+        // notification rows. Capped at 25 per call (the endpoint's
+        // limit); one page of notifications is typically well under
+        // that.
+        const targetUris = Array.from(
+          new Set(
+            notifications
+              .filter((n) => n.reason === 'like' || n.reason === 'repost')
+              .map((n) => n.reasonSubject)
+              .filter((uri): uri is string => typeof uri === 'string'),
+          ),
+        );
+
+        if (targetUris.length > 0) {
+          try {
+            const { posts } = await api.getPosts(token, targetUris.slice(0, 25));
+            const byUri = new Map<string, { text?: string; embed?: BlueskyEmbed }>();
+            for (const post of posts) {
+              const record = post.record as { text?: string; embed?: BlueskyEmbed } | undefined;
+              byUri.set(post.uri, {
+                text: typeof record?.text === 'string' ? record.text : undefined,
+                embed: post.embed ?? record?.embed,
+              });
+            }
+            for (const n of notifications) {
+              if (n.reason !== 'like' && n.reason !== 'repost') continue;
+              if (!n.reasonSubject) continue;
+              const hit = byUri.get(n.reasonSubject);
+              if (!hit) continue;
+              if (hit.text) n.postContent = hit.text;
+              if (hit.embed) n.embed = hit.embed;
+            }
+          } catch {
+            // Non-fatal — notifications still render without the
+            // denormalised post body if the batch lookup fails.
+          }
+        }
+
         return {
           notifications,
           cursor: response.cursor,

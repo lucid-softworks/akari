@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
@@ -13,6 +14,7 @@ import { apiForAccount } from '@/utils/blueskyApi';
 export function useAuthorLikes(identifier: string | undefined, limit: number = 20) {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const acceptLabelers = useAcceptLabelerDids();
 
   return useInfiniteQuery({
     queryKey: queryKeys.author.likes.list(identifier, limit, currentAccount?.pdsUrl),
@@ -22,7 +24,7 @@ export function useAuthorLikes(identifier: string | undefined, limit: number = 2
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
       const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam);
+      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, undefined, acceptLabelers);
 
       // Filter to only show posts that the user has liked
       const likes = feed.feed.flatMap((item) => (item.post.viewer?.like ? [item.post] : []));
