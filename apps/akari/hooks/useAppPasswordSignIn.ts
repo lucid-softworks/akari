@@ -5,8 +5,8 @@ import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 
 const HANDLE_REGEX = /^@?[a-zA-Z0-9._-]+$/;
 
@@ -25,6 +25,7 @@ const validateHandle = (value: string): boolean => HANDLE_REGEX.test(value.repla
  */
 export function useAppPasswordSignIn() {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const { data: currentAccount } = useCurrentAccount();
   const signInMutation = useSignIn();
   const addAccountMutation = useAddAccount();
@@ -33,17 +34,19 @@ export function useAppPasswordSignIn() {
 
   const signIn = async (handle: string, appPassword: string) => {
     if (!handle || !appPassword) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('auth.fillAllFields'),
+        buttons: [{ text: t('common.ok') }],
       });
       return;
     }
 
     if (!validateHandle(handle)) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('auth.invalidBlueskyHandle'),
+        buttons: [{ text: t('common.ok') }],
       });
       return;
     }
@@ -52,9 +55,10 @@ export function useAppPasswordSignIn() {
       const detectedPdsUrl = await getPdsUrlFromHandle(handle);
 
       if (!detectedPdsUrl) {
-        showAlert({
+        confirm({
           title: t('common.error'),
           message: 'Could not detect PDS server for this handle',
+          buttons: [{ text: t('common.ok') }],
         });
         return;
       }
@@ -81,9 +85,10 @@ export function useAppPasswordSignIn() {
 
       setRedirectAfterAuth(currentAccount ? '/(tabs)/settings' : '/');
     } catch (error) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: error instanceof Error ? error.message : t('auth.signInFailed'),
+        buttons: [{ text: t('common.ok') }],
       });
     }
   };

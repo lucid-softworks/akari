@@ -22,8 +22,8 @@ import { useMessages } from '@/hooks/queries/useMessages';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 import { apiForAccount } from '@/utils/blueskyApi';
 
 type Reaction = {
@@ -65,6 +65,7 @@ export default function ConversationScreen() {
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
   const borderColor = useBorderColor();
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const queryClient = useQueryClient();
@@ -160,9 +161,10 @@ export default function ConversationScreen() {
       });
       setMessageText('');
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('messages.errorSendingMessage'),
+        buttons: [{ text: t('common.ok') }],
       });
     }
   };

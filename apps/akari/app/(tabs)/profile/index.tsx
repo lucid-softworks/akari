@@ -1,7 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { memo, useCallback, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -25,7 +25,8 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
+import { webScreenContainer } from '@/constants/webStyles';
+import { useConfirm } from '@/hooks/useConfirm';
 
 import type { ProfileTabType } from '@/types/profile';
 
@@ -123,6 +124,7 @@ export default function ProfileScreen() {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const { showToast } = useToast();
 
   const { data: profile, isLoading: isProfileLoading, refetch: refetchProfile } = useProfile(currentAccount?.handle);
@@ -188,7 +190,7 @@ export default function ProfileScreen() {
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
         <ProfileHeaderSkeleton />
       </ThemedView>
     );
@@ -198,7 +200,7 @@ export default function ProfileScreen() {
     const profileHandle = currentAccount?.handle || profile?.handle;
 
     if (!profileHandle) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
@@ -215,7 +217,7 @@ export default function ProfileScreen() {
         type: 'success',
       });
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
@@ -245,7 +247,7 @@ export default function ProfileScreen() {
     : null;
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
       {sharedTabProps == null ? (
         <ThemedView style={styles.emptyState}>
           <ThemedText style={styles.emptyStateText}>{t('common.loading')}</ThemedText>

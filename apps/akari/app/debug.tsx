@@ -2,8 +2,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -52,6 +52,7 @@ function CrashReporterTestSection(): React.JSX.Element {
 
 export default function DebugScreen() {
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const [expandedQueries, setExpandedQueries] = useState<Set<string>>(new Set());
@@ -71,7 +72,7 @@ export default function DebugScreen() {
   };
 
   const clearAllQueries = () => {
-    showAlert({
+    confirm({
       title: 'Clear All Queries',
       message: 'Are you sure you want to clear all cached queries?',
       buttons: [
@@ -89,7 +90,7 @@ export default function DebugScreen() {
   };
 
   const invalidateAllQueries = () => {
-    showAlert({
+    confirm({
       title: 'Invalidate All Queries',
       message: 'Are you sure you want to invalidate all queries? This will refetch all data.',
       buttons: [

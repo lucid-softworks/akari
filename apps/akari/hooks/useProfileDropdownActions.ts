@@ -6,8 +6,8 @@ import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import type { useProfile } from '@/hooks/queries/useProfile';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 
@@ -32,6 +32,7 @@ export function useProfileDropdownActions({
 }: UseProfileDropdownActionsArgs) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const confirm = useConfirm();
   const blockMutation = useBlockUser();
   const muteMutation = useMuteUser();
 
@@ -64,7 +65,7 @@ export function useProfileDropdownActions({
   const handleCopyLink = useCallback(async () => {
     const profileHandle = profile?.handle;
     if (!profileHandle) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
@@ -80,7 +81,7 @@ export function useProfileDropdownActions({
         type: 'success',
       });
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
@@ -88,7 +89,7 @@ export function useProfileDropdownActions({
     } finally {
       setShowDropdown(false);
     }
-  }, [profile?.handle, setShowDropdown, showToast, t]);
+  }, [profile?.handle, setShowDropdown, showToast, t, confirm]);
 
   const handleSearchPosts = useCallback(() => {
     searchProfilePosts({
@@ -106,7 +107,7 @@ export function useProfileDropdownActions({
     setShowDropdown(false);
     if (!profile) return;
     const isBlocking = !!profile.viewer?.blocking;
-    showAlert({
+    confirm({
       title: isBlocking ? t('common.unblock') : t('common.block'),
       message: isBlocking
         ? t('profile.unblockConfirmation', { handle: profile.handle })
@@ -122,13 +123,13 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [profile, runBlock, setShowDropdown, t]);
+  }, [profile, runBlock, setShowDropdown, t, confirm]);
 
   const handleMuteAccount = useCallback(() => {
     setShowDropdown(false);
     if (!profile?.did) return;
     const isMuted = !!profile.viewer?.muted;
-    showAlert({
+    confirm({
       title: isMuted ? t('common.unmute') : t('common.mute'),
       message: isMuted
         ? t('profile.unmuteConfirmation', { handle: profile.handle })
@@ -147,7 +148,7 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [muteMutation, profile, setShowDropdown, t]);
+  }, [muteMutation, profile, setShowDropdown, t, confirm]);
 
   const handleReportAccount = useCallback(() => {
     setShowDropdown(false);

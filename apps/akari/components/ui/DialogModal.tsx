@@ -9,16 +9,12 @@ type DialogModalProps = {
 };
 
 export function DialogModal({ children, isVisible = true, onRequestClose, testID }: DialogModalProps) {
-  const overlayProps = onRequestClose
-    ? {
-        accessibilityRole: 'button' as const,
-        accessibilityLabel: 'Close modal',
-        onPress: onRequestClose,
-      }
-    : {
-        pointerEvents: 'none' as const,
-      };
-
+  // The backdrop is the *parent* of the centered content so that clicks
+  // on dialog buttons reach their own Pressables first. An earlier
+  // version had the backdrop as an absoluteFill sibling of the content,
+  // which on web ended up on top in CSS stacking order — every click,
+  // including the buttons inside the dialog, hit the backdrop and fired
+  // onRequestClose without ever invoking the button's onPress.
   return (
     <Modal
       visible={isVisible}
@@ -27,14 +23,18 @@ export function DialogModal({ children, isVisible = true, onRequestClose, testID
       onRequestClose={onRequestClose}
       statusBarTranslucent
     >
-      <View style={styles.overlay} testID={testID}>
-        <Pressable style={StyleSheet.absoluteFill} {...overlayProps} />
-        <View style={styles.centerContainer} pointerEvents="box-none">
-          <Pressable style={styles.contentWrapper} onPress={() => {}}>
-            {children}
-          </Pressable>
-        </View>
-      </View>
+      <Pressable
+        style={styles.overlay}
+        testID={testID}
+        onPress={onRequestClose}
+        accessibilityLabel={onRequestClose ? 'Close modal' : undefined}
+      >
+        {/* Swallow the press so taps inside the dialog don't bubble to
+            the backdrop's onPress handler. */}
+        <Pressable style={styles.contentWrapper} onPress={() => undefined}>
+          {children}
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }
@@ -46,10 +46,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-  },
-  centerContainer: {
-    width: '100%',
-    alignItems: 'center',
   },
   contentWrapper: {
     width: '100%',

@@ -7,9 +7,9 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, fontSize, fontWeight, touchTarget } from '@/constants/tokens';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 
 type ImageViewerProps = {
   visible: boolean;
@@ -20,6 +20,7 @@ type ImageViewerProps = {
 
 export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewerProps) {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -117,9 +118,10 @@ export function ImageViewer({ visible, onClose, imageUrl, altText }: ImageViewer
         });
       }
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('common.failedToDownloadImage'),
+        buttons: [{ text: t('common.ok') }],
       });
     }
   };
