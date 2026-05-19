@@ -157,10 +157,11 @@ export class BlueskyLeaflet extends BlueskyApiClient {
 }
 
 function paragraphsToBlocks(body: string): { block: Record<string, unknown> }[] {
-  const paragraphs = body
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter((p) => p.length > 0);
+  const paragraphs: string[] = [];
+  for (const segment of body.split(/\n\s*\n/)) {
+    const trimmed = segment.trim();
+    if (trimmed.length > 0) paragraphs.push(trimmed);
+  }
 
   return paragraphs.map((para) => {
     const headingMatch = para.match(/^(#{1,6})\s+(.+)$/s);

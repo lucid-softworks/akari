@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import { Axiom } from '@axiomhq/js';
 
@@ -202,9 +202,12 @@ const DefaultFallbackComponent = ({ crashId, onReset }: FallbackComponentProps) 
       <Text style={styles.crashId}>{crashId}</Text>
       <Text style={styles.message}>Please share this code with support if you need assistance.</Text>
       {onReset && (
-        <TouchableOpacity style={styles.button} onPress={onReset}>
+        <Pressable
+          style={({ pressed }) => [styles.button, pressed && { opacity: 0.7 }]}
+          onPress={onReset}
+        >
           <Text style={styles.buttonText}>Try Again</Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   );

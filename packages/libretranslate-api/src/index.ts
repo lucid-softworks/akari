@@ -182,22 +182,20 @@ export class LibreTranslateClient {
         throw new Error('Invalid languages response');
       }
 
-      return data
-        .filter((entry): entry is LibreTranslateLanguage => {
-          if (!entry || typeof entry !== 'object') {
-            return false;
-          }
-
-          const language = entry as Partial<LibreTranslateLanguage>;
-          return typeof language.code === 'string' && typeof language.name === 'string';
-        })
-        .map((entry) => ({
-          code: entry.code,
-          name: entry.name,
-          targets: Array.isArray(entry.targets)
-            ? entry.targets.filter((target): target is string => typeof target === 'string')
+      const languages: LibreTranslateLanguage[] = [];
+      for (const entry of data) {
+        if (!entry || typeof entry !== 'object') continue;
+        const language = entry as Partial<LibreTranslateLanguage>;
+        if (typeof language.code !== 'string' || typeof language.name !== 'string') continue;
+        languages.push({
+          code: language.code,
+          name: language.name,
+          targets: Array.isArray(language.targets)
+            ? language.targets.filter((target): target is string => typeof target === 'string')
             : [],
-        }));
+        });
+      }
+      return languages;
     } catch (error) {
       if (error instanceof Error) {
         throw error;
