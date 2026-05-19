@@ -1,7 +1,9 @@
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+
+import { openExternalLink } from '@/utils/externalLink';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
@@ -20,6 +22,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { activeOpacity, fontSize, hitSlop, layout, semanticColors, spacing } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
@@ -28,7 +31,7 @@ import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
+import { useConfirm } from '@/hooks/useConfirm';
 
 type ProfileHeaderProps = {
   profile: {
@@ -123,6 +126,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const startConvoMutation = useStartConvo();
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
+  const confirm = useConfirm();
 
   const handleBskyMessage = async () => {
     if (!profile.did) return;
@@ -142,6 +146,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   const isFollowing = !!profile.viewer?.following;
+  // Mutual = we follow them and they follow us back. Used to swap the
+  // follow button's "Following" label to "Mutuals".
+  const isMutual = isFollowing && !!profile.viewer?.followedBy;
   const isBlocking = !!profile.viewer?.blocking;
   const isBlockedBy = profile.viewer?.blockedBy;
 
@@ -193,7 +200,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
 
   const handleFollowPress = () => {
     if (isFollowing) {
-      showAlert({
+      confirm({
         title: t('common.unfollow'),
         message: t('profile.unfollowConfirmation', { handle: profile.handle }),
         buttons: [
@@ -223,13 +230,13 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
     try {
       await updateProfileMutation.mutateAsync(profileData);
       setShowEditModal(false);
-      showAlert({
+      confirm({
         title: t('common.success'),
         message: t('profile.profileUpdated'),
         buttons: [{ text: t('common.ok') }],
       });
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('profile.profileUpdateError'),
         buttons: [{ text: t('common.ok') }],
@@ -238,7 +245,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   return (
-    <>
+    <View style={webColumnSideBorders(borderColor)}>
       <ProfileBanner banner={profile.banner} />
 
       <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
@@ -258,6 +265,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             state={{
               isOwnProfile,
               isFollowing,
+              isMutual,
               isBlocking,
               isBlockedBy,
               showBskyMessageButton,
@@ -296,7 +304,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           <View style={styles.metaRow}>
             <Pressable
               style={({ pressed }) => [styles.metaItem, pressed && { opacity: activeOpacity.default }]}
-              onPress={() => void Linking.openURL(profile.website!)}
+              onPress={() => void openExternalLink(profile.website!)}
               hitSlop={hitSlop}
             >
               <IconSymbol name="link" size={fontSize.base} color={mutedTextColor} />
@@ -369,7 +377,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           subject={{ type: 'account', did: profile.did }}
         />
       )}
-    </>
+    </View>
   );
 }
 

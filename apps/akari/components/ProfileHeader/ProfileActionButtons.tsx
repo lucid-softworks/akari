@@ -9,6 +9,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 type ProfileActionButtonsState = {
   isOwnProfile: boolean;
   isFollowing: boolean;
+  /** Viewer follows the subject AND the subject follows the viewer back.
+   *  Switches the button label to "Mutuals" instead of plain "Following". */
+  isMutual: boolean;
   isBlocking: boolean;
   isBlockedBy: boolean | undefined;
   showBskyMessageButton: boolean;
@@ -40,6 +43,7 @@ export function ProfileActionButtons({
   const {
     isOwnProfile,
     isFollowing,
+    isMutual,
     isBlocking,
     isBlockedBy,
     showBskyMessageButton,
@@ -89,7 +93,11 @@ export function ProfileActionButtons({
               disabled={followPending}
             >
               <ThemedText style={isFollowing ? styles.followingButtonText : styles.followButtonText}>
-                {isFollowing ? t('common.following') : t('common.follow')}
+                {isFollowing
+                  ? isMutual
+                    ? t('common.mutuals')
+                    : t('common.following')
+                  : t('common.follow')}
               </ThemedText>
             </Pressable>
           ) : null}
