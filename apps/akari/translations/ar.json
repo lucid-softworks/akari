@@ -1152,7 +1152,206 @@
       "containsSpoilers": "يحتوي على حرق للأحداث"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "ساعد في إضافة سياق للمنشورات",
+        "body1": "ملاحظات المجتمع هي ملاحظات قصيرة تُرفق بالمنشورات التي تحتاج إلى مزيد من السياق. يكتبها المساهمون ويقيّمون مسودات بعضهم البعض، ولا تُعرض على القرّاء سوى الملاحظات التي يصنّفها المجتمع بأنها مفيدة.",
+        "body2": "بالتسجيل، تنضم إلى بوابة المساهمين: المنشورات المعلّقة، وطابور التقييم، وملف الملاحظات التي كتبتها.",
+        "cta": "تسجيل"
+      },
+      "tabs": {
+        "pending": "قيد الانتظار",
+        "rate": "التقييم",
+        "you": "أنت"
+      },
+      "pendingTab": {
+        "empty": "لم يتم الإبلاغ عن أي منشورات بعد. عُد لاحقًا.",
+        "requestCountAndTime": "{count} طلبات · {time}",
+        "writeNote": "اكتب ملاحظة"
+      },
+      "rateTab": {
+        "empty": "لا يوجد شيء للتقييم الآن. ستظهر هنا المسودات التي يرسلها المساهمون الآخرون.",
+        "onPost": "على المنشور {postId}"
+      },
+      "profile": {
+        "notesWritten": "الملاحظات المكتوبة",
+        "helpfulRate": "نسبة الإفادة",
+        "ratingsGiven": "التقييمات المُعطاة",
+        "contributorSince": "مساهم منذ {date}",
+        "leave": "مغادرة البرنامج",
+        "recentNotes": "ملاحظاتك الأخيرة",
+        "noNotes": "لم تكتب أي ملاحظات بعد.",
+        "showPubliclyTitle": "إظهار ملاحظاتي تحت معرّفي",
+        "showPubliclyHint": "عند إيقاف هذا الخيار، تُنسب الملاحظات التي تكتبها إلى \"مساهم مجهول\"."
+      },
+      "note": {
+        "headlineHelpful": "أضاف القرّاء سياقًا",
+        "headlineUnderReview": "الملاحظة قيد المراجعة، تحتاج إلى مزيد من التقييمات",
+        "ratingSummary": "وجد {percent}% من {count} مقيّمًا أن هذه الملاحظة مفيدة",
+        "rateThisNote": "قيّم هذه الملاحظة",
+        "viewSources": "عرض المصادر",
+        "rateModalTitle": "هل هذه الملاحظة مفيدة؟",
+        "rateModalSubtitle": "يساعد تقييمك في تحديد ما إذا كانت الملاحظة ستُعرض على القرّاء الآخرين.",
+        "helpfulness": {
+          "helpful": "مفيدة",
+          "somewhat": "إلى حدٍّ ما",
+          "notHelpful": "غير مفيدة"
+        },
+        "whyNotHelpful": "لماذا ليست مفيدة؟",
+        "whatMakesItHelpful": "ما الذي يجعلها مفيدة؟",
+        "anythingElse": "أي شيء آخر؟",
+        "commentPlaceholder": "ملاحظات اختيارية لفريق التقييم",
+        "cancel": "إلغاء",
+        "submit": "إرسال",
+        "submitting": "جاري الإرسال...",
+        "sourcesTitle": "المصادر",
+        "sourcesSubtitle": "الاستشهادات التي أرفقها المساهم بهذه الملاحظة.",
+        "noSources": "لم تُرفق أي مصادر.",
+        "close": "إغلاق",
+        "helpfulReasons": {
+          "citesSources": "تستشهد بمصادر عالية الجودة",
+          "easyToUnderstand": "سهلة الفهم",
+          "addressesClaim": "تعالج الادعاء بشكل مباشر",
+          "providesContext": "تقدّم سياقًا مهمًا",
+          "fairBalanced": "مكتوبة بأسلوب محايد"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "المصادر لا تدعم الملاحظة",
+          "incorrectInfo": "تحتوي على معلومات غير صحيحة",
+          "opinion": "رأي وليس حقيقة",
+          "argumentative": "جدلية أو منحازة",
+          "irrelevant": "غير ذات صلة بالمنشور"
+        }
+      },
+      "contributor": {
+        "addTitle": "أضف ملاحظة مجتمع",
+        "addSubtitle": "تبقى ملاحظتك خاصة حتى يصنّفها عدد كافٍ من المقيّمين بأنها مفيدة. التزم بالحقائق القابلة للتحقق، واستشهد بالمصادر.",
+        "problemQuestion": "ما المشكلة في هذا المنشور؟",
+        "yourNote": "ملاحظتك",
+        "notePlaceholder": "اشرح ما هو ناقص أو مضلّل. استشهد بالمصادر أدناه.",
+        "sourcesLabel": "المصادر (رابط واحد لكل سطر)",
+        "cancel": "إلغاء",
+        "submitNote": "إرسال الملاحظة",
+        "submitting": "جاري الإرسال...",
+        "requestTitle": "اطلب ملاحظة مجتمع",
+        "requestSubtitle": "أبلغ عن هذا المنشور ليراجعه أحد المساهمين. سننبّه مجموعة المقيّمين، ولن ترى الملاحظة فورًا.",
+        "reason": "السبب",
+        "anythingElseOptional": "أي شيء آخر؟ (اختياري)",
+        "commentPlaceholder": "أضف سياقًا مفيدًا للمساهم",
+        "sendRequest": "إرسال الطلب",
+        "classification": {
+          "misleading": "مضلّل",
+          "missingContext": "ينقصه السياق",
+          "outdated": "قديم",
+          "satire": "سخرية تُعامَل كحقيقة",
+          "other": "أخرى"
+        },
+        "requestReason": {
+          "misinformation": "معلومات مضللة",
+          "missingContext": "يحتاج إلى مزيد من السياق",
+          "manipulation": "وسائط متلاعب بها",
+          "spam": "بريد مزعج أو احتيال",
+          "other": "مخاوف أخرى"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "الفريق",
+        "notModeratorPlaceholder": "لست مشرفًا على خدمة Ozone المُهيَّأة.",
+        "heading": "فريق الإشراف",
+        "addMember": "+ إضافة عضو",
+        "noMembers": "لا يوجد أعضاء في الفريق.",
+        "remove": "إزالة",
+        "modalTitle": "إضافة عضو إلى الفريق",
+        "modalSubtitle": "ابحث بالمعرّف، أو ألصق DID مباشرةً.",
+        "accountLabel": "الحساب",
+        "selected": "محدَّد",
+        "didHelper": "ستتم إضافة DID الخام دون التحقق منه، تأكّد من صحته.",
+        "searching": "جاري البحث...",
+        "onTeam": "ضمن الفريق",
+        "noMatches": "لا توجد نتائج مطابقة.",
+        "typeToSearch": "اكتب حرفين أو أكثر للبحث.",
+        "roleLabel": "الدور",
+        "cancel": "إلغاء",
+        "adding": "جاري الإضافة...",
+        "addMemberCta": "إضافة عضو",
+        "demote": "تخفيض الرتبة",
+        "promote": "ترقية",
+        "enable": "تفعيل",
+        "disable": "تعطيل"
+      },
+      "admin": {
+        "title": "المسؤول",
+        "notModeratorPlaceholder": "لست مشرفًا على خدمة Ozone المُهيَّأة.",
+        "noSafelinkRules": "لا توجد قواعد روابط آمنة.",
+        "remove": "إزالة",
+        "noSets": "لا توجد مجموعات بعد.",
+        "findRelated": "العثور على المرتبطة",
+        "signaturesIntro": "أدخل DID للعثور على الحسابات التي تتشارك التواقيع (البريد الإلكتروني، عنوان IP، إلخ).",
+        "noRelated": "لا توجد حسابات مرتبطة.",
+        "noVerifications": "لم تُمنح أي توثيقات.",
+        "addRule": "إضافة قاعدة",
+        "adding": "جاري الإضافة..."
+      },
+      "index": {
+        "title": "الإشراف",
+        "checkingAccess": "جاري التحقق من صلاحية الإشراف...",
+        "notModeratorPlaceholder": "لست مشرفًا على خدمة Ozone المُهيَّأة. اطلب من أحد المسؤولين إضافتك إلى الفريق، أو غيّر DID الخاص بـ Ozone في الإعدادات إذا كنت تقصد نسخة أخرى.",
+        "templates": "القوالب",
+        "scheduled": "مجدول",
+        "team": "الفريق",
+        "admin": "المسؤول",
+        "queueEmpty": "الطابور فارغ.",
+        "noEvents": "لا توجد أحداث بعد.",
+        "takeAction": "اتخاذ إجراء"
+      },
+      "scheduled": {
+        "title": "مجدول",
+        "notModeratorPlaceholder": "لست مشرفًا على خدمة Ozone المُهيَّأة.",
+        "nothingScheduled": "لا يوجد شيء مجدول.",
+        "cancel": "إلغاء",
+        "cancelling": "جاري الإلغاء..."
+      },
+      "templates": {
+        "title": "القوالب",
+        "notModeratorPlaceholder": "لست مشرفًا على خدمة Ozone المُهيَّأة.",
+        "heading": "قوالب التواصل",
+        "newTemplate": "+ قالب جديد",
+        "noTemplates": "لا توجد قوالب بعد. أنشئ قالبًا لاستخدامه في إجراء البريد الإلكتروني.",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "editTitle": "تعديل القالب",
+        "newTitle": "قالب جديد",
+        "nameLabel": "الاسم",
+        "subjectLabel": "موضوع البريد الإلكتروني",
+        "bodyLabel": "المحتوى (Markdown)",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ..."
+      },
+      "subject": {
+        "title": "الموضوع",
+        "takeAction": "اتخاذ إجراء",
+        "eventHistory": "سجل الأحداث",
+        "loading": "جاري التحميل...",
+        "noEvents": "لا توجد أحداث لهذا الموضوع بعد."
+      },
+      "actionSheet": {
+        "title": "اتخاذ إجراء",
+        "action": "الإجراء",
+        "comment": "تعليق",
+        "labelsToAdd": "التسميات المراد إضافتها",
+        "labelsToRemove": "التسميات المراد إزالتها",
+        "tagsToAdd": "الوسوم المراد إضافتها",
+        "tagsToRemove": "الوسوم المراد إزالتها",
+        "template": "القالب",
+        "emailSubject": "الموضوع",
+        "emailBody": "المحتوى",
+        "duration": "المدة (بالساعات، اتركها فارغة للدوام)",
+        "cancel": "إلغاء",
+        "noLabelOptions": "لا توجد خيارات مُهيَّأة لهذا المُسمِّي، استخدم الحقل أدناه."
+      }
     }
   }
 }

@@ -18,6 +18,7 @@ import { useOzoneCommTemplates } from '@/hooks/queries/useOzoneCommTemplates';
 import { useOzoneLabelOptions } from '@/hooks/queries/useOzoneLabelOptions';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type OzoneActionSheetProps = {
   subject: OzoneSubject | null;
@@ -104,6 +105,7 @@ export function OzoneActionSheet({
   const tint = useThemeColor({}, 'tint');
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'text');
+  const { t } = useTranslation();
 
   const [action, setAction] = useState<OzoneActionType>('comment');
   const [comment, setComment] = useState('');
@@ -226,7 +228,7 @@ export function OzoneActionSheet({
     >
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-              <ThemedText style={styles.title}>Take action</ThemedText>
+              <ThemedText style={styles.title}>{t('moderation.actionSheet.title')}</ThemedText>
               {subjectLabel ? (
                 <ThemedText style={[styles.subtitle, { color: secondary }]} numberOfLines={1}>
                   {subjectLabel}
@@ -253,7 +255,7 @@ export function OzoneActionSheet({
                 />
               </View>
               <ScrollView style={styles.bodyScroll} contentContainerStyle={styles.body}>
-              <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Action</ThemedText>
+              <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.action')}</ThemedText>
               <View style={styles.actionGrid}>
                 {ACTION_OPTIONS.map((opt) => {
                   const active = opt.id === action;
@@ -290,7 +292,7 @@ export function OzoneActionSheet({
                 {ACTION_OPTIONS.find((o) => o.id === action)?.description}
               </ThemedText>
 
-              <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Comment</ThemedText>
+              <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.comment')}</ThemedText>
               <TextInput
                 value={comment}
                 onChangeText={setComment}
@@ -302,7 +304,7 @@ export function OzoneActionSheet({
 
               {showLabels ? (
                 <>
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Labels to add</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.labelsToAdd')}</ThemedText>
                   <ChipMultiSelect
                     options={labelOptions?.labels ?? []}
                     selected={selectedLabelsAdd}
@@ -318,7 +320,7 @@ export function OzoneActionSheet({
                     placeholderTextColor={secondary}
                     style={[styles.input, { color: text, borderColor }]}
                   />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Labels to remove</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.labelsToRemove')}</ThemedText>
                   <ChipMultiSelect
                     options={labelOptions?.labels ?? []}
                     selected={selectedLabelsRemove}
@@ -339,7 +341,7 @@ export function OzoneActionSheet({
 
               {showTags ? (
                 <>
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Tags to add</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.tagsToAdd')}</ThemedText>
                   <ChipMultiSelect
                     options={labelOptions?.tags ?? []}
                     selected={selectedTagsAdd}
@@ -355,7 +357,7 @@ export function OzoneActionSheet({
                     placeholderTextColor={secondary}
                     style={[styles.input, { color: text, borderColor }]}
                   />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Tags to remove</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.tagsToRemove')}</ThemedText>
                   <ChipMultiSelect
                     options={labelOptions?.tags ?? []}
                     selected={selectedTagsRemove}
@@ -379,7 +381,7 @@ export function OzoneActionSheet({
                   {templates && templates.length > 0 ? (
                     <>
                       <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
-                        Template
+                        {t('moderation.actionSheet.template')}
                       </ThemedText>
                       <View style={styles.actionGrid}>
                         {templates.map((tpl) => (
@@ -397,7 +399,7 @@ export function OzoneActionSheet({
                       </View>
                     </>
                   ) : null}
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Subject</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.emailSubject')}</ThemedText>
                   <TextInput
                     value={emailSubject}
                     onChangeText={setEmailSubject}
@@ -405,7 +407,7 @@ export function OzoneActionSheet({
                     placeholderTextColor={secondary}
                     style={[styles.input, { color: text, borderColor }]}
                   />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Body</ThemedText>
+                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.emailBody')}</ThemedText>
                   <TextInput
                     value={emailBody}
                     onChangeText={setEmailBody}
@@ -420,7 +422,7 @@ export function OzoneActionSheet({
               {showDuration ? (
                 <>
                   <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
-                    Duration (hours, leave blank for permanent)
+                    {t('moderation.actionSheet.duration')}
                   </ThemedText>
                   <TextInput
                     value={durationHours}
@@ -447,7 +449,7 @@ export function OzoneActionSheet({
                 style={[styles.footerButton, { borderColor }]}
                 disabled={emit.isPending}
               >
-                <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+                <ThemedText style={styles.footerButtonLabel}>{t('moderation.actionSheet.cancel')}</ThemedText>
               </Pressable>
               <Pressable
                 onPress={onSubmit}
@@ -581,10 +583,11 @@ function ChipMultiSelect({
   secondary: string;
   tint: string;
 }) {
+  const { t } = useTranslation();
   if (options.length === 0) {
     return (
       <ThemedText style={[styles.helper, { color: secondary }]}>
-        No options configured for this labeler — use the field below.
+        {t('moderation.actionSheet.noLabelOptions')}
       </ThemedText>
     );
   }

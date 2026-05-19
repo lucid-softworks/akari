@@ -1152,7 +1152,206 @@
       "containsSpoilers": "Spoiler içerir"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Gönderilere bağlam eklemeye yardım edin",
+        "body1": "Community Notes, daha fazla bağlama ihtiyaç duyan gönderilere eklenen kısa notlardır. Katkıda bulunanlar bu notları yazar ve birbirlerinin taslaklarını değerlendirir; yalnızca topluluğun faydalı olarak işaretlediği notlar okuyuculara gösterilir.",
+        "body2": "Kayıt olmak sizi katkıda bulunan portalına dahil eder: bekleyen gönderiler, değerlendirme kuyruğu ve yazdığınız notların profili.",
+        "cta": "Kayıt ol"
+      },
+      "tabs": {
+        "pending": "Bekleyen",
+        "rate": "Değerlendir",
+        "you": "Siz"
+      },
+      "pendingTab": {
+        "empty": "Henüz hiçbir gönderi işaretlenmedi. Daha sonra tekrar bakın.",
+        "requestCountAndTime": "{count} istek · {time}",
+        "writeNote": "Not yaz"
+      },
+      "rateTab": {
+        "empty": "Şu anda değerlendirilecek bir şey yok. Diğer katkıda bulunanların gönderdiği taslaklar burada görünecek.",
+        "onPost": "{postId} gönderisinde"
+      },
+      "profile": {
+        "notesWritten": "Yazılan notlar",
+        "helpfulRate": "Faydalılık oranı",
+        "ratingsGiven": "Verilen değerlendirmeler",
+        "contributorSince": "Katkıda bulunma tarihi: {date}",
+        "leave": "Programdan ayrıl",
+        "recentNotes": "Son notlarınız",
+        "noNotes": "Henüz hiç not yazmadınız.",
+        "showPubliclyTitle": "Notlarımı kullanıcı adımla göster",
+        "showPubliclyHint": "Kapalıyken, yazdığınız notlar \"anonim katkıda bulunan\" olarak atfedilir."
+      },
+      "note": {
+        "headlineHelpful": "Okuyucular bağlam ekledi",
+        "headlineUnderReview": "Not inceleniyor, daha fazla değerlendirme gerekiyor",
+        "ratingSummary": "{count} değerlendiriciden %{percent}'i bunu faydalı buldu",
+        "rateThisNote": "Bu notu değerlendir",
+        "viewSources": "Kaynakları gör",
+        "rateModalTitle": "Bu not faydalı mı?",
+        "rateModalSubtitle": "Değerlendirmeniz, notun diğer okuyuculara gösterilip gösterilmeyeceğine karar verilmesine yardımcı olur.",
+        "helpfulness": {
+          "helpful": "Faydalı",
+          "somewhat": "Kısmen",
+          "notHelpful": "Faydalı değil"
+        },
+        "whyNotHelpful": "Neden faydalı değil?",
+        "whatMakesItHelpful": "Onu faydalı yapan nedir?",
+        "anythingElse": "Başka bir şey var mı?",
+        "commentPlaceholder": "Değerlendirme ekibi için isteğe bağlı notlar",
+        "cancel": "İptal",
+        "submit": "Gönder",
+        "submitting": "Gönderiliyor…",
+        "sourcesTitle": "Kaynaklar",
+        "sourcesSubtitle": "Katkıda bulunan tarafından bu nota eklenen alıntılar.",
+        "noSources": "Eklenmiş kaynak yok.",
+        "close": "Kapat",
+        "helpfulReasons": {
+          "citesSources": "Yüksek kaliteli kaynaklar gösteriyor",
+          "easyToUnderstand": "Anlaşılması kolay",
+          "addressesClaim": "İddiayı doğrudan ele alıyor",
+          "providesContext": "Önemli bağlam sağlıyor",
+          "fairBalanced": "Tarafsız bir tonda yazılmış"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Kaynaklar notu desteklemiyor",
+          "incorrectInfo": "Yanlış bilgi içeriyor",
+          "opinion": "Olgu değil, görüş",
+          "argumentative": "Tartışmacı veya taraflı",
+          "irrelevant": "Gönderiyle alakasız"
+        }
+      },
+      "contributor": {
+        "addTitle": "Community Note ekle",
+        "addSubtitle": "Notunuz, yeterli sayıda değerlendirici onu faydalı olarak işaretleyene kadar gizli kalır. Doğrulanabilir olgulara bağlı kalın ve kaynak gösterin.",
+        "problemQuestion": "Bu gönderideki sorun nedir?",
+        "yourNote": "Notunuz",
+        "notePlaceholder": "Eksik veya yanıltıcı olanı açıklayın. Aşağıda kaynak gösterin.",
+        "sourcesLabel": "Kaynaklar (her satıra bir URL)",
+        "cancel": "İptal",
+        "submitNote": "Notu gönder",
+        "submitting": "Gönderiliyor…",
+        "requestTitle": "Community Note iste",
+        "requestSubtitle": "Bu gönderiyi bir katkıda bulunanın incelemesi için işaretleyin. Değerlendirici havuzunu uyaracağız, notu hemen göremezsiniz.",
+        "reason": "Sebep",
+        "anythingElseOptional": "Başka bir şey? (isteğe bağlı)",
+        "commentPlaceholder": "Katkıda bulunan için faydalı bağlam ekleyin",
+        "sendRequest": "İstek gönder",
+        "classification": {
+          "misleading": "Yanıltıcı",
+          "missingContext": "Eksik bağlam",
+          "outdated": "Güncel değil",
+          "satire": "Olgu olarak ele alınan hiciv",
+          "other": "Diğer"
+        },
+        "requestReason": {
+          "misinformation": "Yanlış bilgi",
+          "missingContext": "Daha fazla bağlam gerekiyor",
+          "manipulation": "Manipüle edilmiş medya",
+          "spam": "Spam veya dolandırıcılık",
+          "other": "Diğer endişe"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Ekip",
+        "notModeratorPlaceholder": "Yapılandırılmış Ozone hizmetinde moderatör değilsiniz.",
+        "heading": "Moderasyon ekibi",
+        "addMember": "+ Üye ekle",
+        "noMembers": "Ekip üyesi yok.",
+        "remove": "Kaldır",
+        "modalTitle": "Ekip üyesi ekle",
+        "modalSubtitle": "Kullanıcı adıyla arayın veya doğrudan bir DID yapıştırın.",
+        "accountLabel": "Hesap",
+        "selected": "Seçildi",
+        "didHelper": "Ham DID'i çözümlemeden ekleyecek; doğru olduğundan emin olun.",
+        "searching": "Aranıyor…",
+        "onTeam": "Ekipte",
+        "noMatches": "Eşleşme yok.",
+        "typeToSearch": "Aramak için en az 2 karakter yazın.",
+        "roleLabel": "Rol",
+        "cancel": "İptal",
+        "adding": "Ekleniyor…",
+        "addMemberCta": "Üye ekle",
+        "demote": "Yetkiyi düşür",
+        "promote": "Yetkilendir",
+        "enable": "Etkinleştir",
+        "disable": "Devre dışı bırak"
+      },
+      "admin": {
+        "title": "Yönetici",
+        "notModeratorPlaceholder": "Yapılandırılmış Ozone hizmetinde moderatör değilsiniz.",
+        "noSafelinkRules": "Safelink kuralı yok.",
+        "remove": "Kaldır",
+        "noSets": "Henüz küme yok.",
+        "findRelated": "İlişkili olanları bul",
+        "signaturesIntro": "İmzaları (e-posta, IP vb.) paylaşan hesapları bulmak için bir DID girin.",
+        "noRelated": "İlişkili hesap yok.",
+        "noVerifications": "Verilmiş doğrulama yok.",
+        "addRule": "Kural ekle",
+        "adding": "Ekleniyor…"
+      },
+      "index": {
+        "title": "Moderasyon",
+        "checkingAccess": "Moderatör erişimi kontrol ediliyor…",
+        "notModeratorPlaceholder": "Yapılandırılmış Ozone hizmetinde moderatör değilsiniz. Sizi ekibe eklemesi için bir yöneticiden isteyin veya farklı bir örneği kastettiyseniz ayarlardan Ozone DID'ini değiştirin.",
+        "templates": "Şablonlar",
+        "scheduled": "Zamanlanmış",
+        "team": "Ekip",
+        "admin": "Yönetici",
+        "queueEmpty": "Kuyruk boş.",
+        "noEvents": "Henüz olay yok.",
+        "takeAction": "Eylem al"
+      },
+      "scheduled": {
+        "title": "Zamanlanmış",
+        "notModeratorPlaceholder": "Yapılandırılmış Ozone hizmetinde moderatör değilsiniz.",
+        "nothingScheduled": "Zamanlanmış bir şey yok.",
+        "cancel": "İptal",
+        "cancelling": "İptal ediliyor…"
+      },
+      "templates": {
+        "title": "Şablonlar",
+        "notModeratorPlaceholder": "Yapılandırılmış Ozone hizmetinde moderatör değilsiniz.",
+        "heading": "İletişim şablonları",
+        "newTemplate": "+ Yeni şablon",
+        "noTemplates": "Henüz şablon yok. E-posta eylemini kullanmak için bir tane oluşturun.",
+        "edit": "Düzenle",
+        "delete": "Sil",
+        "editTitle": "Şablonu düzenle",
+        "newTitle": "Yeni şablon",
+        "nameLabel": "Ad",
+        "subjectLabel": "E-posta konusu",
+        "bodyLabel": "Gövde (Markdown)",
+        "cancel": "İptal",
+        "save": "Kaydet",
+        "saving": "Kaydediliyor…"
+      },
+      "subject": {
+        "title": "Konu",
+        "takeAction": "Eylem al",
+        "eventHistory": "Olay geçmişi",
+        "loading": "Yükleniyor…",
+        "noEvents": "Bu konu için henüz olay yok."
+      },
+      "actionSheet": {
+        "title": "Eylem al",
+        "action": "Eylem",
+        "comment": "Yorum",
+        "labelsToAdd": "Eklenecek etiketler",
+        "labelsToRemove": "Kaldırılacak etiketler",
+        "tagsToAdd": "Eklenecek etiketler",
+        "tagsToRemove": "Kaldırılacak etiketler",
+        "template": "Şablon",
+        "emailSubject": "Konu",
+        "emailBody": "Gövde",
+        "duration": "Süre (saat, kalıcı için boş bırakın)",
+        "cancel": "İptal",
+        "noLabelOptions": "Bu etiketleyici için yapılandırılmış seçenek yok, aşağıdaki alanı kullanın."
+      }
     }
   }
 }

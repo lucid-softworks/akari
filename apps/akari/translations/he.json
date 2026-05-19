@@ -1152,7 +1152,206 @@
       "containsSpoilers": "מכיל ספוילרים"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "עזור להוסיף הקשר לפוסטים",
+        "body1": "Community Notes הם הערות קצרות המצורפות לפוסטים שזקוקים להקשר נוסף. תורמים כותבים אותן ומדרגים את הטיוטות זה של זה, ורק הערות שהקהילה מסמנת כמועילות מוצגות לקוראים.",
+        "body2": "ההצטרפות מאפשרת לך כניסה לפורטל התורמים: פוסטים ממתינים, תור הדירוג, ופרופיל ההערות שכתבת.",
+        "cta": "הצטרף"
+      },
+      "tabs": {
+        "pending": "ממתינים",
+        "rate": "דרג",
+        "you": "אתה"
+      },
+      "pendingTab": {
+        "empty": "עדיין לא סומנו פוסטים. חזור מאוחר יותר.",
+        "requestCountAndTime": "{count} בקשות · {time}",
+        "writeNote": "כתוב הערה"
+      },
+      "rateTab": {
+        "empty": "אין מה לדרג כרגע. טיוטות שתורמים אחרים מגישים יופיעו כאן.",
+        "onPost": "על פוסט {postId}"
+      },
+      "profile": {
+        "notesWritten": "הערות שנכתבו",
+        "helpfulRate": "אחוז המועילות",
+        "ratingsGiven": "דירוגים שניתנו",
+        "contributorSince": "תורם מאז {date}",
+        "leave": "עזוב את התוכנית",
+        "recentNotes": "ההערות האחרונות שלך",
+        "noNotes": "עדיין לא כתבת הערות.",
+        "showPubliclyTitle": "הצג את ההערות שלי תחת ה־handle שלי",
+        "showPubliclyHint": "כאשר כבוי, הערות שכתבת ישויכו ל\"תורם אנונימי\"."
+      },
+      "note": {
+        "headlineHelpful": "הקוראים הוסיפו הקשר",
+        "headlineUnderReview": "ההערה בבדיקה, נדרשים דירוגים נוספים",
+        "ratingSummary": "{percent}% מתוך {count} מדרגים מצאו את זה מועיל",
+        "rateThisNote": "דרג הערה זו",
+        "viewSources": "הצג מקורות",
+        "rateModalTitle": "האם ההערה הזו מועילה?",
+        "rateModalSubtitle": "הדירוג שלך מסייע לקבוע אם ההערה תוצג לקוראים אחרים.",
+        "helpfulness": {
+          "helpful": "מועיל",
+          "somewhat": "במידה מסוימת",
+          "notHelpful": "לא מועיל"
+        },
+        "whyNotHelpful": "למה לא מועיל?",
+        "whatMakesItHelpful": "מה הופך אותה למועילה?",
+        "anythingElse": "משהו נוסף?",
+        "commentPlaceholder": "הערות אופציונליות לצוות הדירוג",
+        "cancel": "ביטול",
+        "submit": "שלח",
+        "submitting": "שולח...",
+        "sourcesTitle": "מקורות",
+        "sourcesSubtitle": "ציטוטים שצורפו להערה זו על ידי התורם.",
+        "noSources": "לא צורפו מקורות.",
+        "close": "סגור",
+        "helpfulReasons": {
+          "citesSources": "מצטטת מקורות איכותיים",
+          "easyToUnderstand": "קלה להבנה",
+          "addressesClaim": "מתייחסת ישירות לטענה",
+          "providesContext": "מספקת הקשר חשוב",
+          "fairBalanced": "כתובה בטון ניטרלי"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "המקורות אינם תומכים בהערה",
+          "incorrectInfo": "מכילה מידע שגוי",
+          "opinion": "דעה, לא עובדה",
+          "argumentative": "ויכוחית או מוטה",
+          "irrelevant": "לא רלוונטית לפוסט"
+        }
+      },
+      "contributor": {
+        "addTitle": "הוסף Community Note",
+        "addSubtitle": "ההערה שלך פרטית עד שמספיק מדרגים יסמנו אותה כמועילה. הישאר בעובדות הניתנות לאימות וצטט מקורות.",
+        "problemQuestion": "מה הבעיה עם הפוסט הזה?",
+        "yourNote": "ההערה שלך",
+        "notePlaceholder": "הסבר מה חסר או מטעה. צטט מקורות למטה.",
+        "sourcesLabel": "מקורות (כתובת URL אחת בכל שורה)",
+        "cancel": "ביטול",
+        "submitNote": "שלח הערה",
+        "submitting": "שולח...",
+        "requestTitle": "בקש Community Note",
+        "requestSubtitle": "סמן את הפוסט הזה כדי שתורם יסקור אותו. נתריע למאגר המדרגים, ולא תראה את ההערה מיד.",
+        "reason": "סיבה",
+        "anythingElseOptional": "משהו נוסף? (אופציונלי)",
+        "commentPlaceholder": "הוסף הקשר מועיל לתורם",
+        "sendRequest": "שלח בקשה",
+        "classification": {
+          "misleading": "מטעה",
+          "missingContext": "חסר הקשר",
+          "outdated": "מיושן",
+          "satire": "סאטירה הנתפסת כעובדה",
+          "other": "אחר"
+        },
+        "requestReason": {
+          "misinformation": "מידע שגוי",
+          "missingContext": "זקוק להקשר נוסף",
+          "manipulation": "מדיה ערוכה",
+          "spam": "ספאם או הונאה",
+          "other": "חשש אחר"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "צוות",
+        "notModeratorPlaceholder": "אינך מודרטור בשירות Ozone המוגדר.",
+        "heading": "צוות המודרציה",
+        "addMember": "+ הוסף חבר",
+        "noMembers": "אין חברי צוות.",
+        "remove": "הסר",
+        "modalTitle": "הוסף חבר צוות",
+        "modalSubtitle": "חפש לפי handle, או הדבק DID ישירות.",
+        "accountLabel": "חשבון",
+        "selected": "נבחר",
+        "didHelper": "יוסיף את ה־DID הגולמי בלי לפענח אותו, ודא שהוא נכון.",
+        "searching": "מחפש...",
+        "onTeam": "בצוות",
+        "noMatches": "אין התאמות.",
+        "typeToSearch": "הקלד 2 תווים או יותר לחיפוש.",
+        "roleLabel": "תפקיד",
+        "cancel": "ביטול",
+        "adding": "מוסיף...",
+        "addMemberCta": "הוסף חבר",
+        "demote": "הורד דרגה",
+        "promote": "העלה דרגה",
+        "enable": "הפעל",
+        "disable": "השבת"
+      },
+      "admin": {
+        "title": "ניהול",
+        "notModeratorPlaceholder": "אינך מודרטור בשירות Ozone המוגדר.",
+        "noSafelinkRules": "אין כללי safelink.",
+        "remove": "הסר",
+        "noSets": "עדיין אין סטים.",
+        "findRelated": "מצא קשורים",
+        "signaturesIntro": "הזן DID כדי למצוא חשבונות שחולקים חתימות (דוא\"ל, IP וכדומה).",
+        "noRelated": "אין חשבונות קשורים.",
+        "noVerifications": "לא הוענקו אימותים.",
+        "addRule": "הוסף כלל",
+        "adding": "מוסיף..."
+      },
+      "index": {
+        "title": "מודרציה",
+        "checkingAccess": "בודק גישת מודרטור...",
+        "notModeratorPlaceholder": "אינך מודרטור בשירות Ozone המוגדר. בקש ממנהל להוסיף אותך לצוות, או שנה את ה־DID של Ozone בהגדרות אם התכוונת למופע אחר.",
+        "templates": "תבניות",
+        "scheduled": "מתוזמן",
+        "team": "צוות",
+        "admin": "ניהול",
+        "queueEmpty": "התור ריק.",
+        "noEvents": "עדיין אין אירועים.",
+        "takeAction": "בצע פעולה"
+      },
+      "scheduled": {
+        "title": "מתוזמן",
+        "notModeratorPlaceholder": "אינך מודרטור בשירות Ozone המוגדר.",
+        "nothingScheduled": "שום דבר לא מתוזמן.",
+        "cancel": "בטל",
+        "cancelling": "מבטל..."
+      },
+      "templates": {
+        "title": "תבניות",
+        "notModeratorPlaceholder": "אינך מודרטור בשירות Ozone המוגדר.",
+        "heading": "תבניות תקשורת",
+        "newTemplate": "+ תבנית חדשה",
+        "noTemplates": "עדיין אין תבניות. צור אחת כדי להשתמש בפעולת הדוא\"ל.",
+        "edit": "ערוך",
+        "delete": "מחק",
+        "editTitle": "ערוך תבנית",
+        "newTitle": "תבנית חדשה",
+        "nameLabel": "שם",
+        "subjectLabel": "נושא הדוא\"ל",
+        "bodyLabel": "גוף ההודעה (Markdown)",
+        "cancel": "ביטול",
+        "save": "שמור",
+        "saving": "שומר..."
+      },
+      "subject": {
+        "title": "נושא",
+        "takeAction": "בצע פעולה",
+        "eventHistory": "היסטוריית אירועים",
+        "loading": "טוען...",
+        "noEvents": "עדיין אין אירועים לנושא זה."
+      },
+      "actionSheet": {
+        "title": "בצע פעולה",
+        "action": "פעולה",
+        "comment": "הערה",
+        "labelsToAdd": "תוויות להוספה",
+        "labelsToRemove": "תוויות להסרה",
+        "tagsToAdd": "תגיות להוספה",
+        "tagsToRemove": "תגיות להסרה",
+        "template": "תבנית",
+        "emailSubject": "נושא",
+        "emailBody": "גוף ההודעה",
+        "duration": "משך (שעות, השאר ריק לקבוע)",
+        "cancel": "ביטול",
+        "noLabelOptions": "אין אפשרויות מוגדרות עבור התווית הזו, השתמש בשדה למטה."
+      }
     }
   }
 }

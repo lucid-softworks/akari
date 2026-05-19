@@ -1152,7 +1152,206 @@
       "containsSpoilers": "Cselekménybeli részleteket tartalmaz"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Segíts kontextust adni a bejegyzésekhez",
+        "body1": "A Community Notes rövid megjegyzések, amelyeket olyan bejegyzésekhez fűznek, amelyek további kontextust igényelnek. A közreműködők készítik őket, és értékelik egymás vázlatait; csak azokat a jegyzeteket látják az olvasók, amelyeket a közösség hasznosnak jelöl.",
+        "body2": "A beiratkozással hozzáférést kapsz a közreműködői portálhoz: a függő bejegyzésekhez, az értékelési sorhoz és a saját jegyzeteid profiljához.",
+        "cta": "Beiratkozás"
+      },
+      "tabs": {
+        "pending": "Függőben",
+        "rate": "Értékelés",
+        "you": "Te"
+      },
+      "pendingTab": {
+        "empty": "Még nincs megjelölt bejegyzés. Nézz vissza később.",
+        "requestCountAndTime": "{count} kérés · {time}",
+        "writeNote": "Jegyzet írása"
+      },
+      "rateTab": {
+        "empty": "Jelenleg nincs mit értékelni. Itt jelennek meg a más közreműködők által beküldött vázlatok.",
+        "onPost": "Ehhez a bejegyzéshez: {postId}"
+      },
+      "profile": {
+        "notesWritten": "Írt jegyzetek",
+        "helpfulRate": "Hasznosság aránya",
+        "ratingsGiven": "Adott értékelések",
+        "contributorSince": "Közreműködő ekkor óta: {date}",
+        "leave": "Kilépés a programból",
+        "recentNotes": "Legutóbbi jegyzeteid",
+        "noNotes": "Még nem írtál jegyzetet.",
+        "showPubliclyTitle": "Jegyzeteim megjelenítése a fogantyúm alatt",
+        "showPubliclyHint": "Ha kikapcsolod, az általad írt jegyzetek „névtelen közreműködő” néven jelennek meg."
+      },
+      "note": {
+        "headlineHelpful": "Az olvasók kontextust fűztek hozzá",
+        "headlineUnderReview": "Jegyzet felülvizsgálat alatt, több értékelésre van szükség",
+        "ratingSummary": "{count} értékelő {percent}%-a találta hasznosnak",
+        "rateThisNote": "Értékeld ezt a jegyzetet",
+        "viewSources": "Források megtekintése",
+        "rateModalTitle": "Hasznos ez a jegyzet?",
+        "rateModalSubtitle": "Az értékelésed segít eldönteni, hogy a jegyzet látható legyen-e a többi olvasó számára.",
+        "helpfulness": {
+          "helpful": "Hasznos",
+          "somewhat": "Részben",
+          "notHelpful": "Nem hasznos"
+        },
+        "whyNotHelpful": "Miért nem hasznos?",
+        "whatMakesItHelpful": "Mitől hasznos?",
+        "anythingElse": "Bármi más?",
+        "commentPlaceholder": "Opcionális megjegyzések az értékelő csapatnak",
+        "cancel": "Mégse",
+        "submit": "Beküldés",
+        "submitting": "Beküldés...",
+        "sourcesTitle": "Források",
+        "sourcesSubtitle": "A közreműködő által ehhez a jegyzethez csatolt hivatkozások.",
+        "noSources": "Nincs csatolt forrás.",
+        "close": "Bezárás",
+        "helpfulReasons": {
+          "citesSources": "Magas minőségű forrásokat idéz",
+          "easyToUnderstand": "Könnyen érthető",
+          "addressesClaim": "Közvetlenül foglalkozik az állítással",
+          "providesContext": "Fontos kontextust biztosít",
+          "fairBalanced": "Semleges hangnemben íródott"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "A források nem támasztják alá a jegyzetet",
+          "incorrectInfo": "Helytelen információt tartalmaz",
+          "opinion": "Vélemény, nem tény",
+          "argumentative": "Vitatkozó vagy elfogult",
+          "irrelevant": "Nem releváns a bejegyzéshez"
+        }
+      },
+      "contributor": {
+        "addTitle": "Community Note hozzáadása",
+        "addSubtitle": "A jegyzeted privát marad, amíg elég értékelő hasznosnak nem jelöli. Maradj ellenőrizhető tényeknél, és idézz forrásokat.",
+        "problemQuestion": "Mi a probléma ezzel a bejegyzéssel?",
+        "yourNote": "A te jegyzeted",
+        "notePlaceholder": "Magyarázd el, mi hiányzik vagy mi félrevezető. Idézz forrásokat alább.",
+        "sourcesLabel": "Források (soronként egy URL)",
+        "cancel": "Mégse",
+        "submitNote": "Jegyzet beküldése",
+        "submitting": "Beküldés...",
+        "requestTitle": "Community Note kérése",
+        "requestSubtitle": "Jelöld meg ezt a bejegyzést egy közreműködői felülvizsgálatra. Értesítjük az értékelői kört, a jegyzetet nem fogod azonnal látni.",
+        "reason": "Indok",
+        "anythingElseOptional": "Bármi más? (opcionális)",
+        "commentPlaceholder": "Adj hasznos kontextust a közreműködőnek",
+        "sendRequest": "Kérés elküldése",
+        "classification": {
+          "misleading": "Félrevezető",
+          "missingContext": "Hiányzó kontextus",
+          "outdated": "Elavult",
+          "satire": "Szatíra tényként kezelve",
+          "other": "Egyéb"
+        },
+        "requestReason": {
+          "misinformation": "Téves információ",
+          "missingContext": "Több kontextusra van szükség",
+          "manipulation": "Manipulált média",
+          "spam": "Spam vagy átverés",
+          "other": "Egyéb aggály"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Csapat",
+        "notModeratorPlaceholder": "Nem vagy moderátor a beállított Ozone szolgáltatáson.",
+        "heading": "Moderációs csapat",
+        "addMember": "+ Tag hozzáadása",
+        "noMembers": "Nincsenek csapattagok.",
+        "remove": "Eltávolítás",
+        "modalTitle": "Csapattag hozzáadása",
+        "modalSubtitle": "Keress fogantyú szerint, vagy illessz be egy DID-et közvetlenül.",
+        "accountLabel": "Fiók",
+        "selected": "Kiválasztva",
+        "didHelper": "A nyers DID-et feloldás nélkül adja hozzá; győződj meg róla, hogy helyes.",
+        "searching": "Keresés...",
+        "onTeam": "Csapatban",
+        "noMatches": "Nincs találat.",
+        "typeToSearch": "Írj be legalább 2 karaktert a kereséshez.",
+        "roleLabel": "Szerepkör",
+        "cancel": "Mégse",
+        "adding": "Hozzáadás...",
+        "addMemberCta": "Tag hozzáadása",
+        "demote": "Lefokozás",
+        "promote": "Előléptetés",
+        "enable": "Engedélyezés",
+        "disable": "Letiltás"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "Nem vagy moderátor a beállított Ozone szolgáltatáson.",
+        "noSafelinkRules": "Nincsenek safelink szabályok.",
+        "remove": "Eltávolítás",
+        "noSets": "Még nincsenek készletek.",
+        "findRelated": "Kapcsolódók keresése",
+        "signaturesIntro": "Adj meg egy DID-et az aláírásokat (email, IP stb.) megosztó fiókok megtalálásához.",
+        "noRelated": "Nincsenek kapcsolódó fiókok.",
+        "noVerifications": "Nincsenek megadott ellenőrzések.",
+        "addRule": "Szabály hozzáadása",
+        "adding": "Hozzáadás..."
+      },
+      "index": {
+        "title": "Moderáció",
+        "checkingAccess": "Moderátori hozzáférés ellenőrzése...",
+        "notModeratorPlaceholder": "Nem vagy moderátor a beállított Ozone szolgáltatáson. Kérj egy admint, hogy adjon hozzá a csapathoz, vagy módosítsd az Ozone DID-et a beállításokban, ha másik példányra gondoltál.",
+        "templates": "Sablonok",
+        "scheduled": "Ütemezve",
+        "team": "Csapat",
+        "admin": "Admin",
+        "queueEmpty": "A sor üres.",
+        "noEvents": "Még nincsenek események.",
+        "takeAction": "Művelet végrehajtása"
+      },
+      "scheduled": {
+        "title": "Ütemezve",
+        "notModeratorPlaceholder": "Nem vagy moderátor a beállított Ozone szolgáltatáson.",
+        "nothingScheduled": "Semmi sincs ütemezve.",
+        "cancel": "Mégse",
+        "cancelling": "Mégse..."
+      },
+      "templates": {
+        "title": "Sablonok",
+        "notModeratorPlaceholder": "Nem vagy moderátor a beállított Ozone szolgáltatáson.",
+        "heading": "Kommunikációs sablonok",
+        "newTemplate": "+ Új sablon",
+        "noTemplates": "Még nincsenek sablonok. Hozz létre egyet az email művelet használatához.",
+        "edit": "Szerkesztés",
+        "delete": "Törlés",
+        "editTitle": "Sablon szerkesztése",
+        "newTitle": "Új sablon",
+        "nameLabel": "Név",
+        "subjectLabel": "Email tárgy",
+        "bodyLabel": "Törzs (Markdown)",
+        "cancel": "Mégse",
+        "save": "Mentés",
+        "saving": "Mentés..."
+      },
+      "subject": {
+        "title": "Alany",
+        "takeAction": "Művelet végrehajtása",
+        "eventHistory": "Eseménytörténet",
+        "loading": "Betöltés...",
+        "noEvents": "Még nincsenek események ehhez az alanyhoz."
+      },
+      "actionSheet": {
+        "title": "Művelet végrehajtása",
+        "action": "Művelet",
+        "comment": "Megjegyzés",
+        "labelsToAdd": "Hozzáadandó címkék",
+        "labelsToRemove": "Eltávolítandó címkék",
+        "tagsToAdd": "Hozzáadandó tagek",
+        "tagsToRemove": "Eltávolítandó tagek",
+        "template": "Sablon",
+        "emailSubject": "Tárgy",
+        "emailBody": "Törzs",
+        "duration": "Időtartam (órák, hagyd üresen az állandóhoz)",
+        "cancel": "Mégse",
+        "noLabelOptions": "Nincsenek beállított opciók ehhez a címkézőhöz, használd az alábbi mezőt."
+      }
     }
   }
 }

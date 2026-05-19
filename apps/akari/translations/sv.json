@@ -1152,7 +1152,206 @@
       "postLanguageA11y": "Inläggsspråk: {{value}}"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Hjälp till att lägga sammanhang till inlägg",
+        "body1": "Community Notes är korta anteckningar som fästs vid inlägg som behöver mer sammanhang. Bidragsgivare skriver dem och betygsätter varandras utkast; endast anteckningar som gemenskapen markerar som hjälpsamma visas för läsarna.",
+        "body2": "Att gå med ger dig tillgång till bidragsgivarportalen: väntande inlägg, betygskön och din profil med skrivna anteckningar.",
+        "cta": "Gå med"
+      },
+      "tabs": {
+        "pending": "Väntande",
+        "rate": "Betygsätt",
+        "you": "Du"
+      },
+      "pendingTab": {
+        "empty": "Inga inlägg har flaggats än. Kom tillbaka senare.",
+        "requestCountAndTime": "{count} förfrågningar · {time}",
+        "writeNote": "Skriv en anteckning"
+      },
+      "rateTab": {
+        "empty": "Inget att betygsätta just nu. Utkast från andra bidragsgivare visas här.",
+        "onPost": "På inlägg {postId}"
+      },
+      "profile": {
+        "notesWritten": "Skrivna anteckningar",
+        "helpfulRate": "Hjälpsamhetsgrad",
+        "ratingsGiven": "Givna betyg",
+        "contributorSince": "Bidragsgivare sedan {date}",
+        "leave": "Lämna programmet",
+        "recentNotes": "Dina senaste anteckningar",
+        "noNotes": "Du har inte skrivit några anteckningar än.",
+        "showPubliclyTitle": "Visa mina anteckningar under mitt användarnamn",
+        "showPubliclyHint": "När detta är av tillskrivs anteckningar du skriver \"anonym bidragsgivare\"."
+      },
+      "note": {
+        "headlineHelpful": "Läsare har lagt till sammanhang",
+        "headlineUnderReview": "Anteckningen granskas, behöver fler betyg",
+        "ratingSummary": "{percent} % av {count} bedömare tyckte att detta var hjälpsamt",
+        "rateThisNote": "Betygsätt denna anteckning",
+        "viewSources": "Visa källor",
+        "rateModalTitle": "Är denna anteckning hjälpsam?",
+        "rateModalSubtitle": "Ditt betyg bidrar till att avgöra om anteckningen visas för andra läsare.",
+        "helpfulness": {
+          "helpful": "Hjälpsam",
+          "somewhat": "Delvis",
+          "notHelpful": "Inte hjälpsam"
+        },
+        "whyNotHelpful": "Varför inte hjälpsam?",
+        "whatMakesItHelpful": "Vad gör den hjälpsam?",
+        "anythingElse": "Något annat?",
+        "commentPlaceholder": "Valfria anteckningar till betygssättningsteamet",
+        "cancel": "Avbryt",
+        "submit": "Skicka",
+        "submitting": "Skickar…",
+        "sourcesTitle": "Källor",
+        "sourcesSubtitle": "Citeringar som bidragsgivaren har bifogat till denna anteckning.",
+        "noSources": "Inga källor bifogade.",
+        "close": "Stäng",
+        "helpfulReasons": {
+          "citesSources": "Citerar källor av hög kvalitet",
+          "easyToUnderstand": "Lätt att förstå",
+          "addressesClaim": "Bemöter påståendet direkt",
+          "providesContext": "Tillhandahåller viktigt sammanhang",
+          "fairBalanced": "Skriven i en neutral ton"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Källorna stöder inte anteckningen",
+          "incorrectInfo": "Innehåller felaktig information",
+          "opinion": "Åsikt, inte faktum",
+          "argumentative": "Argumenterande eller partisk",
+          "irrelevant": "Irrelevant för inlägget"
+        }
+      },
+      "contributor": {
+        "addTitle": "Lägg till en Community Note",
+        "addSubtitle": "Din anteckning är privat tills tillräckligt många bedömare markerar den som hjälpsam. Håll dig till verifierbara fakta och citera källor.",
+        "problemQuestion": "Vad är problemet med detta inlägg?",
+        "yourNote": "Din anteckning",
+        "notePlaceholder": "Förklara vad som saknas eller är vilseledande. Citera källor nedan.",
+        "sourcesLabel": "Källor (en URL per rad)",
+        "cancel": "Avbryt",
+        "submitNote": "Skicka anteckning",
+        "submitting": "Skickar…",
+        "requestTitle": "Begär en Community Note",
+        "requestSubtitle": "Flagga detta inlägg för granskning av en bidragsgivare. Vi meddelar bedömarpoolen, du ser inte anteckningen direkt.",
+        "reason": "Anledning",
+        "anythingElseOptional": "Något annat? (valfritt)",
+        "commentPlaceholder": "Lägg till användbart sammanhang för bidragsgivaren",
+        "sendRequest": "Skicka förfrågan",
+        "classification": {
+          "misleading": "Vilseledande",
+          "missingContext": "Saknar sammanhang",
+          "outdated": "Inaktuell",
+          "satire": "Satir som tas för fakta",
+          "other": "Annat"
+        },
+        "requestReason": {
+          "misinformation": "Felaktig information",
+          "missingContext": "Behöver mer sammanhang",
+          "manipulation": "Manipulerad media",
+          "spam": "Skräppost eller bedrägeri",
+          "other": "Annan oro"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Team",
+        "notModeratorPlaceholder": "Du är inte moderator på den konfigurerade Ozone-tjänsten.",
+        "heading": "Modereringsteam",
+        "addMember": "+ Lägg till medlem",
+        "noMembers": "Inga teammedlemmar.",
+        "remove": "Ta bort",
+        "modalTitle": "Lägg till teammedlem",
+        "modalSubtitle": "Sök efter användarnamn eller klistra in en DID direkt.",
+        "accountLabel": "Konto",
+        "selected": "Vald",
+        "didHelper": "Den råa DID:n läggs till utan att slås upp; se till att den är korrekt.",
+        "searching": "Söker…",
+        "onTeam": "I teamet",
+        "noMatches": "Inga träffar.",
+        "typeToSearch": "Skriv 2+ tecken för att söka.",
+        "roleLabel": "Roll",
+        "cancel": "Avbryt",
+        "adding": "Lägger till…",
+        "addMemberCta": "Lägg till medlem",
+        "demote": "Degradera",
+        "promote": "Befordra",
+        "enable": "Aktivera",
+        "disable": "Inaktivera"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "Du är inte moderator på den konfigurerade Ozone-tjänsten.",
+        "noSafelinkRules": "Inga safelink-regler.",
+        "remove": "Ta bort",
+        "noSets": "Inga uppsättningar än.",
+        "findRelated": "Hitta relaterade",
+        "signaturesIntro": "Ange en DID för att hitta konton som delar signaturer (e-post, IP, osv.).",
+        "noRelated": "Inga relaterade konton.",
+        "noVerifications": "Inga verifieringar beviljade.",
+        "addRule": "Lägg till regel",
+        "adding": "Lägger till…"
+      },
+      "index": {
+        "title": "Moderering",
+        "checkingAccess": "Kontrollerar moderatorbehörighet…",
+        "notModeratorPlaceholder": "Du är inte moderator på den konfigurerade Ozone-tjänsten. Be en admin att lägga till dig i teamet, eller ändra Ozone-DID:n i inställningarna om du menade en annan instans.",
+        "templates": "Mallar",
+        "scheduled": "Schemalagt",
+        "team": "Team",
+        "admin": "Admin",
+        "queueEmpty": "Kön är tom.",
+        "noEvents": "Inga händelser än.",
+        "takeAction": "Vidta åtgärd"
+      },
+      "scheduled": {
+        "title": "Schemalagt",
+        "notModeratorPlaceholder": "Du är inte moderator på den konfigurerade Ozone-tjänsten.",
+        "nothingScheduled": "Inget schemalagt.",
+        "cancel": "Avbryt",
+        "cancelling": "Avbryter…"
+      },
+      "templates": {
+        "title": "Mallar",
+        "notModeratorPlaceholder": "Du är inte moderator på den konfigurerade Ozone-tjänsten.",
+        "heading": "Kommunikationsmallar",
+        "newTemplate": "+ Ny mall",
+        "noTemplates": "Inga mallar än. Skapa en för att använda e-poståtgärden.",
+        "edit": "Redigera",
+        "delete": "Ta bort",
+        "editTitle": "Redigera mall",
+        "newTitle": "Ny mall",
+        "nameLabel": "Namn",
+        "subjectLabel": "E-postämne",
+        "bodyLabel": "Brödtext (Markdown)",
+        "cancel": "Avbryt",
+        "save": "Spara",
+        "saving": "Sparar…"
+      },
+      "subject": {
+        "title": "Subjekt",
+        "takeAction": "Vidta åtgärd",
+        "eventHistory": "Händelsehistorik",
+        "loading": "Läser in…",
+        "noEvents": "Inga händelser för detta subjekt än."
+      },
+      "actionSheet": {
+        "title": "Vidta åtgärd",
+        "action": "Åtgärd",
+        "comment": "Kommentar",
+        "labelsToAdd": "Etiketter att lägga till",
+        "labelsToRemove": "Etiketter att ta bort",
+        "tagsToAdd": "Taggar att lägga till",
+        "tagsToRemove": "Taggar att ta bort",
+        "template": "Mall",
+        "emailSubject": "Ämne",
+        "emailBody": "Brödtext",
+        "duration": "Varaktighet (timmar, lämna tomt för permanent)",
+        "cancel": "Avbryt",
+        "noLabelOptions": "Inga alternativ konfigurerade för denna etikettsättare, använd fältet nedan."
+      }
     }
   }
 }

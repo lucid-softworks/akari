@@ -1152,7 +1152,206 @@
       "postLanguageA11y": "Jazyk príspevku: {{value}}"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Pomôžte pridať kontext k príspevkom",
+        "body1": "Community Notes sú krátke poznámky pripojené k príspevkom, ktoré potrebujú viac kontextu. Prispievatelia ich píšu a navzájom hodnotia svoje návrhy. Čitateľom sa zobrazia iba poznámky, ktoré komunita označí ako užitočné.",
+        "body2": "Zapojením sa otvoríte portál pre prispievateľov: čakajúce príspevky, frontu na hodnotenie a profil vašich poznámok.",
+        "cta": "Zapojiť sa"
+      },
+      "tabs": {
+        "pending": "Čakajúce",
+        "rate": "Hodnotiť",
+        "you": "Vy"
+      },
+      "pendingTab": {
+        "empty": "Zatiaľ neboli označené žiadne príspevky. Skúste to neskôr.",
+        "requestCountAndTime": "{count} žiadostí · {time}",
+        "writeNote": "Napísať poznámku"
+      },
+      "rateTab": {
+        "empty": "Práve nie je čo hodnotiť. Návrhy od iných prispievateľov sa zobrazia tu.",
+        "onPost": "K príspevku {postId}"
+      },
+      "profile": {
+        "notesWritten": "Napísaných poznámok",
+        "helpfulRate": "Miera užitočnosti",
+        "ratingsGiven": "Udelených hodnotení",
+        "contributorSince": "Prispievateľ od {date}",
+        "leave": "Opustiť program",
+        "recentNotes": "Vaše nedávne poznámky",
+        "noNotes": "Zatiaľ ste nenapísali žiadne poznámky.",
+        "showPubliclyTitle": "Zobrazovať moje poznámky pod mojím handle",
+        "showPubliclyHint": "Keď je vypnuté, vami napísané poznámky sú pripísané ako „anonymný prispievateľ“."
+      },
+      "note": {
+        "headlineHelpful": "Čitatelia pridali kontext",
+        "headlineUnderReview": "Poznámka je v hodnotení, potrebuje viac hlasov",
+        "ratingSummary": "{percent} % z {count} hodnotiteľov označilo poznámku ako užitočnú",
+        "rateThisNote": "Ohodnotiť túto poznámku",
+        "viewSources": "Zobraziť zdroje",
+        "rateModalTitle": "Je táto poznámka užitočná?",
+        "rateModalSubtitle": "Vaše hodnotenie pomáha rozhodnúť, či sa poznámka zobrazí ostatným čitateľom.",
+        "helpfulness": {
+          "helpful": "Užitočné",
+          "somewhat": "Čiastočne",
+          "notHelpful": "Neužitočné"
+        },
+        "whyNotHelpful": "Prečo nie je užitočná?",
+        "whatMakesItHelpful": "Čím je užitočná?",
+        "anythingElse": "Ešte niečo?",
+        "commentPlaceholder": "Voliteľné poznámky pre hodnotiaci tím",
+        "cancel": "Zrušiť",
+        "submit": "Odoslať",
+        "submitting": "Odosiela sa…",
+        "sourcesTitle": "Zdroje",
+        "sourcesSubtitle": "Citácie pripojené k tejto poznámke prispievateľom.",
+        "noSources": "Žiadne pripojené zdroje.",
+        "close": "Zavrieť",
+        "helpfulReasons": {
+          "citesSources": "Cituje kvalitné zdroje",
+          "easyToUnderstand": "Ľahko zrozumiteľné",
+          "addressesClaim": "Priamo sa zaoberá tvrdením",
+          "providesContext": "Poskytuje dôležitý kontext",
+          "fairBalanced": "Napísané neutrálnym tónom"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Zdroje nepodporujú poznámku",
+          "incorrectInfo": "Obsahuje nesprávne informácie",
+          "opinion": "Názor, nie fakt",
+          "argumentative": "Polemické alebo zaujaté",
+          "irrelevant": "Nesúvisí s príspevkom"
+        }
+      },
+      "contributor": {
+        "addTitle": "Pridať Community Note",
+        "addSubtitle": "Vaša poznámka je súkromná, kým ju dostatok hodnotiteľov neoznačí ako užitočnú. Držte sa overiteľných faktov a citujte zdroje.",
+        "problemQuestion": "Čo je problém s týmto príspevkom?",
+        "yourNote": "Vaša poznámka",
+        "notePlaceholder": "Vysvetlite, čo chýba alebo je zavádzajúce. Zdroje uveďte nižšie.",
+        "sourcesLabel": "Zdroje (jedna URL na riadok)",
+        "cancel": "Zrušiť",
+        "submitNote": "Odoslať poznámku",
+        "submitting": "Odosiela sa…",
+        "requestTitle": "Požiadať o Community Note",
+        "requestSubtitle": "Označte tento príspevok, aby ho prispievateľ skontroloval. Upozorníme tím hodnotiteľov, poznámku neuvidíte hneď.",
+        "reason": "Dôvod",
+        "anythingElseOptional": "Ešte niečo? (voliteľné)",
+        "commentPlaceholder": "Pridajte užitočný kontext pre prispievateľa",
+        "sendRequest": "Odoslať žiadosť",
+        "classification": {
+          "misleading": "Zavádzajúce",
+          "missingContext": "Chýbajúci kontext",
+          "outdated": "Zastarané",
+          "satire": "Satira braná ako fakt",
+          "other": "Iné"
+        },
+        "requestReason": {
+          "misinformation": "Dezinformácia",
+          "missingContext": "Potrebuje viac kontextu",
+          "manipulation": "Manipulované médiá",
+          "spam": "Spam alebo podvod",
+          "other": "Iný problém"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Tím",
+        "notModeratorPlaceholder": "Nie ste moderátor na nakonfigurovanej službe Ozone.",
+        "heading": "Tím moderátorov",
+        "addMember": "+ Pridať člena",
+        "noMembers": "Žiadni členovia tímu.",
+        "remove": "Odstrániť",
+        "modalTitle": "Pridať člena tímu",
+        "modalSubtitle": "Vyhľadávajte podľa handle alebo vložte DID priamo.",
+        "accountLabel": "Účet",
+        "selected": "Vybraté",
+        "didHelper": "Pridá surové DID bez overenia, uistite sa, že je správne.",
+        "searching": "Vyhľadáva sa…",
+        "onTeam": "V tíme",
+        "noMatches": "Žiadne výsledky.",
+        "typeToSearch": "Pre vyhľadávanie zadajte 2 a viac znakov.",
+        "roleLabel": "Rola",
+        "cancel": "Zrušiť",
+        "adding": "Pridáva sa…",
+        "addMemberCta": "Pridať člena",
+        "demote": "Degradovať",
+        "promote": "Povýšiť",
+        "enable": "Povoliť",
+        "disable": "Zakázať"
+      },
+      "admin": {
+        "title": "Správca",
+        "notModeratorPlaceholder": "Nie ste moderátor na nakonfigurovanej službe Ozone.",
+        "noSafelinkRules": "Žiadne pravidlá bezpečných odkazov.",
+        "remove": "Odstrániť",
+        "noSets": "Zatiaľ žiadne sady.",
+        "findRelated": "Nájsť súvisiace",
+        "signaturesIntro": "Zadajte DID na vyhľadanie účtov, ktoré zdieľajú podpisy (e-mail, IP a podobne).",
+        "noRelated": "Žiadne súvisiace účty.",
+        "noVerifications": "Žiadne udelené overenia.",
+        "addRule": "Pridať pravidlo",
+        "adding": "Pridáva sa…"
+      },
+      "index": {
+        "title": "Moderovanie",
+        "checkingAccess": "Overuje sa prístup moderátora…",
+        "notModeratorPlaceholder": "Nie ste moderátor na nakonfigurovanej službe Ozone. Požiadajte správcu, aby vás pridal do tímu, alebo zmeňte Ozone DID v nastaveniach, ak ste mali na mysli inú inštanciu.",
+        "templates": "Šablóny",
+        "scheduled": "Naplánované",
+        "team": "Tím",
+        "admin": "Správca",
+        "queueEmpty": "Fronta je prázdna.",
+        "noEvents": "Zatiaľ žiadne udalosti.",
+        "takeAction": "Vykonať akciu"
+      },
+      "scheduled": {
+        "title": "Naplánované",
+        "notModeratorPlaceholder": "Nie ste moderátor na nakonfigurovanej službe Ozone.",
+        "nothingScheduled": "Nič nie je naplánované.",
+        "cancel": "Zrušiť",
+        "cancelling": "Ruší sa…"
+      },
+      "templates": {
+        "title": "Šablóny",
+        "notModeratorPlaceholder": "Nie ste moderátor na nakonfigurovanej službe Ozone.",
+        "heading": "Komunikačné šablóny",
+        "newTemplate": "+ Nová šablóna",
+        "noTemplates": "Zatiaľ žiadne šablóny. Vytvorte jednu na použitie e-mailovej akcie.",
+        "edit": "Upraviť",
+        "delete": "Odstrániť",
+        "editTitle": "Upraviť šablónu",
+        "newTitle": "Nová šablóna",
+        "nameLabel": "Názov",
+        "subjectLabel": "Predmet e-mailu",
+        "bodyLabel": "Telo (Markdown)",
+        "cancel": "Zrušiť",
+        "save": "Uložiť",
+        "saving": "Ukladá sa…"
+      },
+      "subject": {
+        "title": "Predmet",
+        "takeAction": "Vykonať akciu",
+        "eventHistory": "História udalostí",
+        "loading": "Načítava sa…",
+        "noEvents": "K tomuto predmetu zatiaľ žiadne udalosti."
+      },
+      "actionSheet": {
+        "title": "Vykonať akciu",
+        "action": "Akcia",
+        "comment": "Komentár",
+        "labelsToAdd": "Štítky na pridanie",
+        "labelsToRemove": "Štítky na odstránenie",
+        "tagsToAdd": "Značky na pridanie",
+        "tagsToRemove": "Značky na odstránenie",
+        "template": "Šablóna",
+        "emailSubject": "Predmet",
+        "emailBody": "Telo",
+        "duration": "Trvanie (hodiny, ponechajte prázdne pre trvalé)",
+        "cancel": "Zrušiť",
+        "noLabelOptions": "Pre tento labeler nie sú nakonfigurované možnosti, použite pole nižšie."
+      }
     }
   }
 }

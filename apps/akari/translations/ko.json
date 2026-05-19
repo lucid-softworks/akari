@@ -1152,7 +1152,206 @@
       "containsSpoilers": "스포일러가 포함되어 있습니다"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "게시물에 맥락을 더하는 데 도움을 주세요",
+        "body1": "Community Notes는 더 많은 맥락이 필요한 게시물에 첨부되는 짧은 메모입니다. 기여자가 작성하고 서로의 초안을 평가하며, 커뮤니티가 유용하다고 표시한 메모만 독자에게 표시됩니다.",
+        "body2": "참여하면 기여자 포털에 등록됩니다. 검토 대기 중인 게시물, 평가 대기열, 본인이 작성한 메모 프로필을 이용할 수 있습니다.",
+        "cta": "참여하기"
+      },
+      "tabs": {
+        "pending": "대기 중",
+        "rate": "평가",
+        "you": "내 정보"
+      },
+      "pendingTab": {
+        "empty": "아직 신고된 게시물이 없습니다. 나중에 다시 확인하세요.",
+        "requestCountAndTime": "{count}건의 요청 · {time}",
+        "writeNote": "메모 작성"
+      },
+      "rateTab": {
+        "empty": "지금 평가할 항목이 없습니다. 다른 기여자가 제출한 초안이 여기에 표시됩니다.",
+        "onPost": "게시물 {postId}에 대한 메모"
+      },
+      "profile": {
+        "notesWritten": "작성한 메모",
+        "helpfulRate": "유용함 비율",
+        "ratingsGiven": "평가한 횟수",
+        "contributorSince": "기여 시작: {date}",
+        "leave": "프로그램 탈퇴",
+        "recentNotes": "최근 작성한 메모",
+        "noNotes": "아직 작성한 메모가 없습니다.",
+        "showPubliclyTitle": "내 핸들로 메모를 공개하기",
+        "showPubliclyHint": "꺼두면 작성한 메모가 \"익명 기여자\"로 표시됩니다."
+      },
+      "note": {
+        "headlineHelpful": "독자가 맥락을 추가했습니다",
+        "headlineUnderReview": "메모 검토 중, 더 많은 평가가 필요합니다",
+        "ratingSummary": "{count}명의 평가자 중 {percent}%가 유용하다고 평가했습니다",
+        "rateThisNote": "이 메모 평가하기",
+        "viewSources": "출처 보기",
+        "rateModalTitle": "이 메모가 유용한가요?",
+        "rateModalSubtitle": "여러분의 평가는 메모를 다른 독자에게 표시할지 결정하는 데 도움이 됩니다.",
+        "helpfulness": {
+          "helpful": "유용함",
+          "somewhat": "다소 유용함",
+          "notHelpful": "유용하지 않음"
+        },
+        "whyNotHelpful": "왜 유용하지 않나요?",
+        "whatMakesItHelpful": "어떤 점이 유용한가요?",
+        "anythingElse": "추가로 남길 의견이 있나요?",
+        "commentPlaceholder": "평가 팀에 전할 선택 의견",
+        "cancel": "취소",
+        "submit": "제출",
+        "submitting": "제출 중...",
+        "sourcesTitle": "출처",
+        "sourcesSubtitle": "기여자가 이 메모에 첨부한 인용입니다.",
+        "noSources": "첨부된 출처가 없습니다.",
+        "close": "닫기",
+        "helpfulReasons": {
+          "citesSources": "신뢰할 수 있는 출처를 인용함",
+          "easyToUnderstand": "이해하기 쉬움",
+          "addressesClaim": "주장을 직접적으로 다룸",
+          "providesContext": "중요한 맥락을 제공함",
+          "fairBalanced": "중립적인 어조로 작성됨"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "출처가 메모 내용을 뒷받침하지 않음",
+          "incorrectInfo": "잘못된 정보가 포함됨",
+          "opinion": "사실이 아닌 의견",
+          "argumentative": "논쟁적이거나 편향됨",
+          "irrelevant": "게시물과 관련 없음"
+        }
+      },
+      "contributor": {
+        "addTitle": "Community Note 추가",
+        "addSubtitle": "충분한 평가자가 유용하다고 표시하기 전까지 메모는 비공개로 유지됩니다. 확인 가능한 사실에 집중하고 출처를 인용하세요.",
+        "problemQuestion": "이 게시물의 문제점은 무엇인가요?",
+        "yourNote": "내 메모",
+        "notePlaceholder": "누락되거나 오해를 일으키는 내용을 설명하세요. 아래에 출처를 인용하세요.",
+        "sourcesLabel": "출처 (한 줄에 하나의 URL)",
+        "cancel": "취소",
+        "submitNote": "메모 제출",
+        "submitting": "제출 중...",
+        "requestTitle": "Community Note 요청",
+        "requestSubtitle": "기여자가 검토하도록 이 게시물을 신고합니다. 평가자 풀에 알림이 가지만 메모는 즉시 표시되지 않습니다.",
+        "reason": "사유",
+        "anythingElseOptional": "추가로 남길 의견이 있나요? (선택)",
+        "commentPlaceholder": "기여자에게 도움이 될 맥락을 추가하세요",
+        "sendRequest": "요청 보내기",
+        "classification": {
+          "misleading": "오해의 소지가 있음",
+          "missingContext": "맥락 부족",
+          "outdated": "오래된 정보",
+          "satire": "풍자를 사실로 다룸",
+          "other": "기타"
+        },
+        "requestReason": {
+          "misinformation": "허위 정보",
+          "missingContext": "추가 맥락 필요",
+          "manipulation": "조작된 미디어",
+          "spam": "스팸 또는 사기",
+          "other": "기타 우려 사항"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "팀",
+        "notModeratorPlaceholder": "설정된 Ozone 서비스의 모더레이터가 아닙니다.",
+        "heading": "모더레이션 팀",
+        "addMember": "+ 멤버 추가",
+        "noMembers": "팀 멤버가 없습니다.",
+        "remove": "제거",
+        "modalTitle": "팀 멤버 추가",
+        "modalSubtitle": "핸들로 검색하거나 DID를 직접 붙여 넣으세요.",
+        "accountLabel": "계정",
+        "selected": "선택됨",
+        "didHelper": "DID를 확인 없이 그대로 추가합니다. 올바른지 확인하세요.",
+        "searching": "검색 중...",
+        "onTeam": "팀 소속",
+        "noMatches": "일치하는 항목이 없습니다.",
+        "typeToSearch": "검색하려면 2자 이상 입력하세요.",
+        "roleLabel": "역할",
+        "cancel": "취소",
+        "adding": "추가 중...",
+        "addMemberCta": "멤버 추가",
+        "demote": "강등",
+        "promote": "승격",
+        "enable": "활성화",
+        "disable": "비활성화"
+      },
+      "admin": {
+        "title": "관리자",
+        "notModeratorPlaceholder": "설정된 Ozone 서비스의 모더레이터가 아닙니다.",
+        "noSafelinkRules": "Safelink 규칙이 없습니다.",
+        "remove": "제거",
+        "noSets": "아직 세트가 없습니다.",
+        "findRelated": "관련 항목 찾기",
+        "signaturesIntro": "서명(이메일, IP 등)을 공유하는 계정을 찾으려면 DID를 입력하세요.",
+        "noRelated": "관련 계정이 없습니다.",
+        "noVerifications": "부여된 인증이 없습니다.",
+        "addRule": "규칙 추가",
+        "adding": "추가 중..."
+      },
+      "index": {
+        "title": "모더레이션",
+        "checkingAccess": "모더레이터 권한 확인 중...",
+        "notModeratorPlaceholder": "설정된 Ozone 서비스의 모더레이터가 아닙니다. 관리자에게 팀에 추가해 달라고 요청하거나, 다른 인스턴스를 의도했다면 설정에서 Ozone DID를 변경하세요.",
+        "templates": "템플릿",
+        "scheduled": "예약됨",
+        "team": "팀",
+        "admin": "관리자",
+        "queueEmpty": "대기열이 비어 있습니다.",
+        "noEvents": "아직 이벤트가 없습니다.",
+        "takeAction": "조치 취하기"
+      },
+      "scheduled": {
+        "title": "예약됨",
+        "notModeratorPlaceholder": "설정된 Ozone 서비스의 모더레이터가 아닙니다.",
+        "nothingScheduled": "예약된 항목이 없습니다.",
+        "cancel": "취소",
+        "cancelling": "취소 중..."
+      },
+      "templates": {
+        "title": "템플릿",
+        "notModeratorPlaceholder": "설정된 Ozone 서비스의 모더레이터가 아닙니다.",
+        "heading": "커뮤니케이션 템플릿",
+        "newTemplate": "+ 새 템플릿",
+        "noTemplates": "아직 템플릿이 없습니다. 이메일 작업에 사용할 템플릿을 만드세요.",
+        "edit": "편집",
+        "delete": "삭제",
+        "editTitle": "템플릿 편집",
+        "newTitle": "새 템플릿",
+        "nameLabel": "이름",
+        "subjectLabel": "이메일 제목",
+        "bodyLabel": "본문 (Markdown)",
+        "cancel": "취소",
+        "save": "저장",
+        "saving": "저장 중..."
+      },
+      "subject": {
+        "title": "대상",
+        "takeAction": "조치 취하기",
+        "eventHistory": "이벤트 기록",
+        "loading": "로딩 중...",
+        "noEvents": "이 대상에 대한 이벤트가 아직 없습니다."
+      },
+      "actionSheet": {
+        "title": "조치 취하기",
+        "action": "작업",
+        "comment": "의견",
+        "labelsToAdd": "추가할 라벨",
+        "labelsToRemove": "제거할 라벨",
+        "tagsToAdd": "추가할 태그",
+        "tagsToRemove": "제거할 태그",
+        "template": "템플릿",
+        "emailSubject": "제목",
+        "emailBody": "본문",
+        "duration": "기간 (시간 단위, 비워두면 영구)",
+        "cancel": "취소",
+        "noLabelOptions": "이 라벨러에 구성된 옵션이 없습니다. 아래 필드를 사용하세요."
+      }
     }
   }
 }

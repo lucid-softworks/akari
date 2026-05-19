@@ -1152,7 +1152,206 @@
       "containsSpoilers": "Indeholder spoilere"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Hjælp med at give kontekst til opslag",
+        "body1": "Community Notes er korte noter, der knyttes til opslag, som har brug for mere kontekst. Bidragsydere skriver dem og bedømmer hinandens udkast; kun noter, som fællesskabet markerer som hjælpsomme, vises for læserne.",
+        "body2": "Når du tilmelder dig, får du adgang til bidragyderportalen: afventende opslag, bedømmelseskøen og din profil med skrevne noter.",
+        "cta": "Tilmeld"
+      },
+      "tabs": {
+        "pending": "Afventer",
+        "rate": "Bedøm",
+        "you": "Dig"
+      },
+      "pendingTab": {
+        "empty": "Ingen opslag er blevet markeret endnu. Kig forbi senere.",
+        "requestCountAndTime": "{count} anmodninger · {time}",
+        "writeNote": "Skriv en note"
+      },
+      "rateTab": {
+        "empty": "Der er intet at bedømme lige nu. Udkast fra andre bidragsydere vises her.",
+        "onPost": "På opslag {postId}"
+      },
+      "profile": {
+        "notesWritten": "Skrevne noter",
+        "helpfulRate": "Andel hjælpsomme",
+        "ratingsGiven": "Afgivne bedømmelser",
+        "contributorSince": "Bidragyder siden {date}",
+        "leave": "Forlad programmet",
+        "recentNotes": "Dine seneste noter",
+        "noNotes": "Du har ikke skrevet nogen noter endnu.",
+        "showPubliclyTitle": "Vis mine noter under mit handle",
+        "showPubliclyHint": "Når dette er slået fra, tilskrives noter, du skriver, til \"anonym bidragyder\"."
+      },
+      "note": {
+        "headlineHelpful": "Læsere har tilføjet kontekst",
+        "headlineUnderReview": "Note under gennemgang, mangler flere bedømmelser",
+        "ratingSummary": "{percent}% af {count} bedømmere fandt denne hjælpsom",
+        "rateThisNote": "Bedøm denne note",
+        "viewSources": "Vis kilder",
+        "rateModalTitle": "Er denne note hjælpsom?",
+        "rateModalSubtitle": "Din bedømmelse er med til at afgøre, om noten vises for andre læsere.",
+        "helpfulness": {
+          "helpful": "Hjælpsom",
+          "somewhat": "Delvist",
+          "notHelpful": "Ikke hjælpsom"
+        },
+        "whyNotHelpful": "Hvorfor ikke hjælpsom?",
+        "whatMakesItHelpful": "Hvad gør den hjælpsom?",
+        "anythingElse": "Andet?",
+        "commentPlaceholder": "Valgfri noter til bedømmelsesteamet",
+        "cancel": "Annullér",
+        "submit": "Send",
+        "submitting": "Sender ...",
+        "sourcesTitle": "Kilder",
+        "sourcesSubtitle": "Kilder, som bidragyderen har vedhæftet denne note.",
+        "noSources": "Ingen kilder vedhæftet.",
+        "close": "Luk",
+        "helpfulReasons": {
+          "citesSources": "Henviser til kilder af høj kvalitet",
+          "easyToUnderstand": "Let at forstå",
+          "addressesClaim": "Adresserer påstanden direkte",
+          "providesContext": "Giver vigtig kontekst",
+          "fairBalanced": "Skrevet i en neutral tone"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Kilderne understøtter ikke noten",
+          "incorrectInfo": "Indeholder ukorrekte oplysninger",
+          "opinion": "Holdning, ikke kendsgerning",
+          "argumentative": "Polemisk eller forudindtaget",
+          "irrelevant": "Irrelevant for opslaget"
+        }
+      },
+      "contributor": {
+        "addTitle": "Tilføj en Community Note",
+        "addSubtitle": "Din note er privat, indtil nok bedømmere markerer den som hjælpsom. Hold dig til verificerbare fakta, og angiv kilder.",
+        "problemQuestion": "Hvad er problemet med dette opslag?",
+        "yourNote": "Din note",
+        "notePlaceholder": "Forklar, hvad der mangler eller er vildledende. Angiv kilder nedenfor.",
+        "sourcesLabel": "Kilder (én URL pr. linje)",
+        "cancel": "Annullér",
+        "submitNote": "Send note",
+        "submitting": "Sender ...",
+        "requestTitle": "Anmod om en Community Note",
+        "requestSubtitle": "Markér dette opslag, så en bidragyder kan gennemgå det. Vi underretter bedømmerpuljen, du ser ikke noten med det samme.",
+        "reason": "Årsag",
+        "anythingElseOptional": "Andet? (valgfrit)",
+        "commentPlaceholder": "Tilføj nyttig kontekst til bidragyderen",
+        "sendRequest": "Send anmodning",
+        "classification": {
+          "misleading": "Vildledende",
+          "missingContext": "Manglende kontekst",
+          "outdated": "Forældet",
+          "satire": "Satire opfattet som fakta",
+          "other": "Andet"
+        },
+        "requestReason": {
+          "misinformation": "Misinformation",
+          "missingContext": "Mangler kontekst",
+          "manipulation": "Manipulerede medier",
+          "spam": "Spam eller fupnummer",
+          "other": "Anden bekymring"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Team",
+        "notModeratorPlaceholder": "Du er ikke moderator på den konfigurerede Ozone-tjeneste.",
+        "heading": "Moderationsteam",
+        "addMember": "+ Tilføj medlem",
+        "noMembers": "Ingen teammedlemmer.",
+        "remove": "Fjern",
+        "modalTitle": "Tilføj teammedlem",
+        "modalSubtitle": "Søg efter handle, eller indsæt et DID direkte.",
+        "accountLabel": "Konto",
+        "selected": "Valgt",
+        "didHelper": "Tilføjer det rå DID uden at slå det op; sørg for, at det er korrekt.",
+        "searching": "Søger ...",
+        "onTeam": "På teamet",
+        "noMatches": "Ingen resultater.",
+        "typeToSearch": "Skriv 2 eller flere tegn for at søge.",
+        "roleLabel": "Rolle",
+        "cancel": "Annullér",
+        "adding": "Tilføjer ...",
+        "addMemberCta": "Tilføj medlem",
+        "demote": "Degradér",
+        "promote": "Forfrem",
+        "enable": "Aktivér",
+        "disable": "Deaktivér"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "Du er ikke moderator på den konfigurerede Ozone-tjeneste.",
+        "noSafelinkRules": "Ingen safelink-regler.",
+        "remove": "Fjern",
+        "noSets": "Ingen sæt endnu.",
+        "findRelated": "Find relaterede",
+        "signaturesIntro": "Indtast et DID for at finde konti, der deler signaturer (e-mail, IP osv.).",
+        "noRelated": "Ingen relaterede konti.",
+        "noVerifications": "Ingen verifikationer tildelt.",
+        "addRule": "Tilføj regel",
+        "adding": "Tilføjer ..."
+      },
+      "index": {
+        "title": "Moderation",
+        "checkingAccess": "Kontrollerer moderatoradgang ...",
+        "notModeratorPlaceholder": "Du er ikke moderator på den konfigurerede Ozone-tjeneste. Bed en admin om at tilføje dig til teamet, eller skift Ozone-DID'et i indstillingerne, hvis du mente en anden instans.",
+        "templates": "Skabeloner",
+        "scheduled": "Planlagte",
+        "team": "Team",
+        "admin": "Admin",
+        "queueEmpty": "Køen er tom.",
+        "noEvents": "Ingen hændelser endnu.",
+        "takeAction": "Træf handling"
+      },
+      "scheduled": {
+        "title": "Planlagte",
+        "notModeratorPlaceholder": "Du er ikke moderator på den konfigurerede Ozone-tjeneste.",
+        "nothingScheduled": "Intet planlagt.",
+        "cancel": "Annullér",
+        "cancelling": "Annullerer ..."
+      },
+      "templates": {
+        "title": "Skabeloner",
+        "notModeratorPlaceholder": "Du er ikke moderator på den konfigurerede Ozone-tjeneste.",
+        "heading": "Kommunikationsskabeloner",
+        "newTemplate": "+ Ny skabelon",
+        "noTemplates": "Ingen skabeloner endnu. Opret en for at bruge e-mailhandlingen.",
+        "edit": "Redigér",
+        "delete": "Slet",
+        "editTitle": "Redigér skabelon",
+        "newTitle": "Ny skabelon",
+        "nameLabel": "Navn",
+        "subjectLabel": "E-mailemne",
+        "bodyLabel": "Brødtekst (Markdown)",
+        "cancel": "Annullér",
+        "save": "Gem",
+        "saving": "Gemmer ..."
+      },
+      "subject": {
+        "title": "Emne",
+        "takeAction": "Træf handling",
+        "eventHistory": "Hændelseshistorik",
+        "loading": "Indlæser ...",
+        "noEvents": "Ingen hændelser for dette emne endnu."
+      },
+      "actionSheet": {
+        "title": "Træf handling",
+        "action": "Handling",
+        "comment": "Kommentar",
+        "labelsToAdd": "Etiketter, der skal tilføjes",
+        "labelsToRemove": "Etiketter, der skal fjernes",
+        "tagsToAdd": "Tags, der skal tilføjes",
+        "tagsToRemove": "Tags, der skal fjernes",
+        "template": "Skabelon",
+        "emailSubject": "Emne",
+        "emailBody": "Brødtekst",
+        "duration": "Varighed (timer, lad være tomt for permanent)",
+        "cancel": "Annullér",
+        "noLabelOptions": "Ingen muligheder konfigureret for denne labeler, brug feltet nedenfor."
+      }
     }
   }
 }

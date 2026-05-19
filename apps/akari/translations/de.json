@@ -1152,7 +1152,206 @@
       "containsSpoilers": "Enthält Spoiler"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Hilf, Beiträgen Kontext hinzuzufügen",
+        "body1": "Community Notes sind kurze Hinweise, die an Beiträge angehängt werden, die mehr Kontext benötigen. Mitwirkende verfassen sie und bewerten gegenseitig ihre Entwürfe; nur Notizen, die die Community als hilfreich markiert, werden Lesern angezeigt.",
+        "body2": "Mit der Anmeldung erhältst du Zugang zum Mitwirkenden-Portal: ausstehende Beiträge, die Bewertungswarteschlange und dein Profil mit verfassten Notizen.",
+        "cta": "Anmelden"
+      },
+      "tabs": {
+        "pending": "Ausstehend",
+        "rate": "Bewerten",
+        "you": "Du"
+      },
+      "pendingTab": {
+        "empty": "Bisher wurden keine Beiträge gemeldet. Schau später wieder vorbei.",
+        "requestCountAndTime": "{count} Anfragen · {time}",
+        "writeNote": "Notiz schreiben"
+      },
+      "rateTab": {
+        "empty": "Im Moment gibt es nichts zu bewerten. Entwürfe anderer Mitwirkender erscheinen hier.",
+        "onPost": "Zum Beitrag {postId}"
+      },
+      "profile": {
+        "notesWritten": "Verfasste Notizen",
+        "helpfulRate": "Hilfreich-Quote",
+        "ratingsGiven": "Abgegebene Bewertungen",
+        "contributorSince": "Mitwirkend seit {date}",
+        "leave": "Programm verlassen",
+        "recentNotes": "Deine letzten Notizen",
+        "noNotes": "Du hast noch keine Notizen verfasst.",
+        "showPubliclyTitle": "Meine Notizen unter meinem Handle anzeigen",
+        "showPubliclyHint": "Wenn deaktiviert, werden von dir verfasste Notizen als \"anonymer Mitwirkender\" gekennzeichnet."
+      },
+      "note": {
+        "headlineHelpful": "Leser haben Kontext hinzugefügt",
+        "headlineUnderReview": "Notiz wird geprüft, benötigt mehr Bewertungen",
+        "ratingSummary": "{percent}% von {count} Bewertenden fanden dies hilfreich",
+        "rateThisNote": "Diese Notiz bewerten",
+        "viewSources": "Quellen anzeigen",
+        "rateModalTitle": "Ist diese Notiz hilfreich?",
+        "rateModalSubtitle": "Deine Bewertung hilft zu entscheiden, ob die Notiz anderen Lesern angezeigt wird.",
+        "helpfulness": {
+          "helpful": "Hilfreich",
+          "somewhat": "Einigermaßen",
+          "notHelpful": "Nicht hilfreich"
+        },
+        "whyNotHelpful": "Warum nicht hilfreich?",
+        "whatMakesItHelpful": "Was macht sie hilfreich?",
+        "anythingElse": "Sonst noch etwas?",
+        "commentPlaceholder": "Optionale Hinweise für das Bewertungsteam",
+        "cancel": "Abbrechen",
+        "submit": "Absenden",
+        "submitting": "Wird gesendet...",
+        "sourcesTitle": "Quellen",
+        "sourcesSubtitle": "Belege, die der Mitwirkende dieser Notiz angehängt hat.",
+        "noSources": "Keine Quellen angehängt.",
+        "close": "Schließen",
+        "helpfulReasons": {
+          "citesSources": "Zitiert hochwertige Quellen",
+          "easyToUnderstand": "Leicht verständlich",
+          "addressesClaim": "Geht direkt auf die Behauptung ein",
+          "providesContext": "Liefert wichtigen Kontext",
+          "fairBalanced": "In neutralem Ton geschrieben"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Quellen stützen die Notiz nicht",
+          "incorrectInfo": "Enthält falsche Informationen",
+          "opinion": "Meinung, keine Tatsache",
+          "argumentative": "Argumentativ oder voreingenommen",
+          "irrelevant": "Nicht relevant für den Beitrag"
+        }
+      },
+      "contributor": {
+        "addTitle": "Community Note hinzufügen",
+        "addSubtitle": "Deine Notiz bleibt privat, bis genügend Bewertende sie als hilfreich markieren. Halte dich an überprüfbare Fakten und zitiere Quellen.",
+        "problemQuestion": "Was ist das Problem mit diesem Beitrag?",
+        "yourNote": "Deine Notiz",
+        "notePlaceholder": "Erkläre, was fehlt oder irreführend ist. Zitiere unten Quellen.",
+        "sourcesLabel": "Quellen (eine URL pro Zeile)",
+        "cancel": "Abbrechen",
+        "submitNote": "Notiz absenden",
+        "submitting": "Wird gesendet...",
+        "requestTitle": "Community Note anfordern",
+        "requestSubtitle": "Melde diesen Beitrag zur Prüfung durch einen Mitwirkenden. Wir benachrichtigen den Bewertungspool, du siehst die Notiz nicht sofort.",
+        "reason": "Grund",
+        "anythingElseOptional": "Sonst noch etwas? (optional)",
+        "commentPlaceholder": "Nützlichen Kontext für den Mitwirkenden hinzufügen",
+        "sendRequest": "Anfrage senden",
+        "classification": {
+          "misleading": "Irreführend",
+          "missingContext": "Fehlender Kontext",
+          "outdated": "Veraltet",
+          "satire": "Satire als Tatsache behandelt",
+          "other": "Sonstiges"
+        },
+        "requestReason": {
+          "misinformation": "Falschinformation",
+          "missingContext": "Benötigt mehr Kontext",
+          "manipulation": "Manipulierte Medien",
+          "spam": "Spam oder Betrug",
+          "other": "Anderes Anliegen"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Team",
+        "notModeratorPlaceholder": "Du bist kein Moderator im konfigurierten Ozone-Dienst.",
+        "heading": "Moderationsteam",
+        "addMember": "+ Mitglied hinzufügen",
+        "noMembers": "Keine Teammitglieder.",
+        "remove": "Entfernen",
+        "modalTitle": "Teammitglied hinzufügen",
+        "modalSubtitle": "Nach Handle suchen oder eine DID direkt einfügen.",
+        "accountLabel": "Konto",
+        "selected": "Ausgewählt",
+        "didHelper": "Fügt die rohe DID ohne Auflösung hinzu; stelle sicher, dass sie korrekt ist.",
+        "searching": "Suche...",
+        "onTeam": "Im Team",
+        "noMatches": "Keine Treffer.",
+        "typeToSearch": "Gib 2+ Zeichen ein, um zu suchen.",
+        "roleLabel": "Rolle",
+        "cancel": "Abbrechen",
+        "adding": "Wird hinzugefügt...",
+        "addMemberCta": "Mitglied hinzufügen",
+        "demote": "Herabstufen",
+        "promote": "Befördern",
+        "enable": "Aktivieren",
+        "disable": "Deaktivieren"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "Du bist kein Moderator im konfigurierten Ozone-Dienst.",
+        "noSafelinkRules": "Keine Safelink-Regeln.",
+        "remove": "Entfernen",
+        "noSets": "Noch keine Sets.",
+        "findRelated": "Verwandte finden",
+        "signaturesIntro": "Gib eine DID ein, um Konten zu finden, die Signaturen teilen (E-Mail, IP usw.).",
+        "noRelated": "Keine verwandten Konten.",
+        "noVerifications": "Keine Verifizierungen erteilt.",
+        "addRule": "Regel hinzufügen",
+        "adding": "Wird hinzugefügt..."
+      },
+      "index": {
+        "title": "Moderation",
+        "checkingAccess": "Moderatorzugriff wird geprüft...",
+        "notModeratorPlaceholder": "Du bist kein Moderator im konfigurierten Ozone-Dienst. Bitte einen Admin, dich zum Team hinzuzufügen, oder ändere die Ozone-DID in den Einstellungen, falls du eine andere Instanz meintest.",
+        "templates": "Vorlagen",
+        "scheduled": "Geplant",
+        "team": "Team",
+        "admin": "Admin",
+        "queueEmpty": "Warteschlange ist leer.",
+        "noEvents": "Noch keine Ereignisse.",
+        "takeAction": "Maßnahme ergreifen"
+      },
+      "scheduled": {
+        "title": "Geplant",
+        "notModeratorPlaceholder": "Du bist kein Moderator im konfigurierten Ozone-Dienst.",
+        "nothingScheduled": "Nichts geplant.",
+        "cancel": "Abbrechen",
+        "cancelling": "Wird abgebrochen..."
+      },
+      "templates": {
+        "title": "Vorlagen",
+        "notModeratorPlaceholder": "Du bist kein Moderator im konfigurierten Ozone-Dienst.",
+        "heading": "Kommunikationsvorlagen",
+        "newTemplate": "+ Neue Vorlage",
+        "noTemplates": "Noch keine Vorlagen. Erstelle eine, um die E-Mail-Aktion zu verwenden.",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "editTitle": "Vorlage bearbeiten",
+        "newTitle": "Neue Vorlage",
+        "nameLabel": "Name",
+        "subjectLabel": "E-Mail-Betreff",
+        "bodyLabel": "Inhalt (Markdown)",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "saving": "Speichern..."
+      },
+      "subject": {
+        "title": "Subjekt",
+        "takeAction": "Maßnahme ergreifen",
+        "eventHistory": "Ereignisverlauf",
+        "loading": "Lädt...",
+        "noEvents": "Noch keine Ereignisse für dieses Subjekt."
+      },
+      "actionSheet": {
+        "title": "Maßnahme ergreifen",
+        "action": "Aktion",
+        "comment": "Kommentar",
+        "labelsToAdd": "Hinzuzufügende Labels",
+        "labelsToRemove": "Zu entfernende Labels",
+        "tagsToAdd": "Hinzuzufügende Tags",
+        "tagsToRemove": "Zu entfernende Tags",
+        "template": "Vorlage",
+        "emailSubject": "Betreff",
+        "emailBody": "Inhalt",
+        "duration": "Dauer (Stunden, leer lassen für dauerhaft)",
+        "cancel": "Abbrechen",
+        "noLabelOptions": "Keine Optionen für diesen Labeler konfiguriert, verwende das Feld unten."
+      }
     }
   }
 }

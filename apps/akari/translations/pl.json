@@ -1152,7 +1152,206 @@
       "postLanguageA11y": "Język posta: {{value}}"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Pomóż dodawać kontekst do postów",
+        "body1": "Community Notes to krótkie notatki dołączane do postów, które wymagają większego kontekstu. Współtwórcy je piszą i oceniają nawzajem swoje wersje robocze; czytelnikom pokazywane są tylko notatki oznaczone przez społeczność jako pomocne.",
+        "body2": "Zapisanie się otwiera portal współtwórcy: oczekujące posty, kolejka ocen i profil twoich utworzonych notatek.",
+        "cta": "Zapisz się"
+      },
+      "tabs": {
+        "pending": "Oczekujące",
+        "rate": "Oceń",
+        "you": "Ty"
+      },
+      "pendingTab": {
+        "empty": "Żadne posty nie zostały jeszcze zgłoszone. Sprawdź ponownie później.",
+        "requestCountAndTime": "{count} zgłoszeń · {time}",
+        "writeNote": "Napisz notatkę"
+      },
+      "rateTab": {
+        "empty": "Obecnie nie ma nic do oceny. Wersje robocze od innych współtwórców pojawią się tutaj.",
+        "onPost": "Do postu {postId}"
+      },
+      "profile": {
+        "notesWritten": "Napisane notatki",
+        "helpfulRate": "Wskaźnik pomocności",
+        "ratingsGiven": "Wystawione oceny",
+        "contributorSince": "Współtwórca od {date}",
+        "leave": "Opuść program",
+        "recentNotes": "Twoje ostatnie notatki",
+        "noNotes": "Nie napisałeś jeszcze żadnych notatek.",
+        "showPubliclyTitle": "Pokazuj moje notatki pod moim handle",
+        "showPubliclyHint": "Gdy wyłączone, notatki twojego autorstwa są przypisywane do „anonimowego współtwórcy”."
+      },
+      "note": {
+        "headlineHelpful": "Czytelnicy dodali kontekst",
+        "headlineUnderReview": "Notatka w trakcie oceny, wymaga więcej ocen",
+        "ratingSummary": "{percent}% z {count} oceniających uznało ją za pomocną",
+        "rateThisNote": "Oceń tę notatkę",
+        "viewSources": "Pokaż źródła",
+        "rateModalTitle": "Czy ta notatka jest pomocna?",
+        "rateModalSubtitle": "Twoja ocena pomaga zdecydować, czy notatka będzie pokazywana innym czytelnikom.",
+        "helpfulness": {
+          "helpful": "Pomocna",
+          "somewhat": "Częściowo",
+          "notHelpful": "Niepomocna"
+        },
+        "whyNotHelpful": "Dlaczego niepomocna?",
+        "whatMakesItHelpful": "Co czyni ją pomocną?",
+        "anythingElse": "Coś jeszcze?",
+        "commentPlaceholder": "Opcjonalne uwagi dla zespołu oceniającego",
+        "cancel": "Anuluj",
+        "submit": "Wyślij",
+        "submitting": "Wysyłanie…",
+        "sourcesTitle": "Źródła",
+        "sourcesSubtitle": "Cytowania dołączone do tej notatki przez współtwórcę.",
+        "noSources": "Brak dołączonych źródeł.",
+        "close": "Zamknij",
+        "helpfulReasons": {
+          "citesSources": "Cytuje wiarygodne źródła",
+          "easyToUnderstand": "Łatwa do zrozumienia",
+          "addressesClaim": "Bezpośrednio odnosi się do twierdzenia",
+          "providesContext": "Dostarcza ważnego kontekstu",
+          "fairBalanced": "Napisana neutralnym tonem"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Źródła nie potwierdzają notatki",
+          "incorrectInfo": "Zawiera nieprawdziwe informacje",
+          "opinion": "Opinia, a nie fakt",
+          "argumentative": "Polemiczna lub stronnicza",
+          "irrelevant": "Nieistotna dla postu"
+        }
+      },
+      "contributor": {
+        "addTitle": "Dodaj Community Note",
+        "addSubtitle": "Twoja notatka pozostaje prywatna, dopóki wystarczająca liczba oceniających nie uzna jej za pomocną. Trzymaj się weryfikowalnych faktów i cytuj źródła.",
+        "problemQuestion": "Na czym polega problem z tym postem?",
+        "yourNote": "Twoja notatka",
+        "notePlaceholder": "Wyjaśnij, czego brakuje lub co wprowadza w błąd. Źródła podaj poniżej.",
+        "sourcesLabel": "Źródła (jeden adres URL w linii)",
+        "cancel": "Anuluj",
+        "submitNote": "Wyślij notatkę",
+        "submitting": "Wysyłanie…",
+        "requestTitle": "Poproś o Community Note",
+        "requestSubtitle": "Oznacz ten post do oceny przez współtwórcę. Powiadomimy grupę oceniających, notatki nie zobaczysz od razu.",
+        "reason": "Powód",
+        "anythingElseOptional": "Coś jeszcze? (opcjonalne)",
+        "commentPlaceholder": "Dodaj przydatny kontekst dla współtwórcy",
+        "sendRequest": "Wyślij zgłoszenie",
+        "classification": {
+          "misleading": "Wprowadza w błąd",
+          "missingContext": "Brakuje kontekstu",
+          "outdated": "Nieaktualne",
+          "satire": "Satyra brana za fakt",
+          "other": "Inne"
+        },
+        "requestReason": {
+          "misinformation": "Dezinformacja",
+          "missingContext": "Wymaga większego kontekstu",
+          "manipulation": "Zmanipulowane media",
+          "spam": "Spam lub oszustwo",
+          "other": "Inny problem"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Zespół",
+        "notModeratorPlaceholder": "Nie jesteś moderatorem w skonfigurowanej usłudze Ozone.",
+        "heading": "Zespół moderacyjny",
+        "addMember": "+ Dodaj członka",
+        "noMembers": "Brak członków zespołu.",
+        "remove": "Usuń",
+        "modalTitle": "Dodaj członka zespołu",
+        "modalSubtitle": "Wyszukaj po handle lub wklej DID bezpośrednio.",
+        "accountLabel": "Konto",
+        "selected": "Wybrane",
+        "didHelper": "Doda surowe DID bez weryfikacji; upewnij się, że jest poprawne.",
+        "searching": "Wyszukiwanie…",
+        "onTeam": "W zespole",
+        "noMatches": "Brak dopasowań.",
+        "typeToSearch": "Wpisz co najmniej 2 znaki, aby wyszukać.",
+        "roleLabel": "Rola",
+        "cancel": "Anuluj",
+        "adding": "Dodawanie…",
+        "addMemberCta": "Dodaj członka",
+        "demote": "Zdegraduj",
+        "promote": "Awansuj",
+        "enable": "Włącz",
+        "disable": "Wyłącz"
+      },
+      "admin": {
+        "title": "Administracja",
+        "notModeratorPlaceholder": "Nie jesteś moderatorem w skonfigurowanej usłudze Ozone.",
+        "noSafelinkRules": "Brak reguł safelink.",
+        "remove": "Usuń",
+        "noSets": "Brak zestawów.",
+        "findRelated": "Znajdź powiązane",
+        "signaturesIntro": "Wprowadź DID, aby znaleźć konta dzielące sygnatury (e-mail, IP itp.).",
+        "noRelated": "Brak powiązanych kont.",
+        "noVerifications": "Nie udzielono żadnych weryfikacji.",
+        "addRule": "Dodaj regułę",
+        "adding": "Dodawanie…"
+      },
+      "index": {
+        "title": "Moderacja",
+        "checkingAccess": "Sprawdzanie dostępu moderatora…",
+        "notModeratorPlaceholder": "Nie jesteś moderatorem w skonfigurowanej usłudze Ozone. Poproś administratora o dodanie do zespołu lub zmień Ozone DID w ustawieniach, jeśli chodziło o inną instancję.",
+        "templates": "Szablony",
+        "scheduled": "Zaplanowane",
+        "team": "Zespół",
+        "admin": "Administracja",
+        "queueEmpty": "Kolejka jest pusta.",
+        "noEvents": "Brak zdarzeń.",
+        "takeAction": "Podejmij działanie"
+      },
+      "scheduled": {
+        "title": "Zaplanowane",
+        "notModeratorPlaceholder": "Nie jesteś moderatorem w skonfigurowanej usłudze Ozone.",
+        "nothingScheduled": "Nic nie zostało zaplanowane.",
+        "cancel": "Anuluj",
+        "cancelling": "Anulowanie…"
+      },
+      "templates": {
+        "title": "Szablony",
+        "notModeratorPlaceholder": "Nie jesteś moderatorem w skonfigurowanej usłudze Ozone.",
+        "heading": "Szablony wiadomości",
+        "newTemplate": "+ Nowy szablon",
+        "noTemplates": "Brak szablonów. Utwórz jeden, aby użyć akcji e-mail.",
+        "edit": "Edytuj",
+        "delete": "Usuń",
+        "editTitle": "Edytuj szablon",
+        "newTitle": "Nowy szablon",
+        "nameLabel": "Nazwa",
+        "subjectLabel": "Temat wiadomości",
+        "bodyLabel": "Treść (Markdown)",
+        "cancel": "Anuluj",
+        "save": "Zapisz",
+        "saving": "Zapisywanie…"
+      },
+      "subject": {
+        "title": "Podmiot",
+        "takeAction": "Podejmij działanie",
+        "eventHistory": "Historia zdarzeń",
+        "loading": "Ładowanie…",
+        "noEvents": "Brak zdarzeń dla tego podmiotu."
+      },
+      "actionSheet": {
+        "title": "Podejmij działanie",
+        "action": "Akcja",
+        "comment": "Komentarz",
+        "labelsToAdd": "Etykiety do dodania",
+        "labelsToRemove": "Etykiety do usunięcia",
+        "tagsToAdd": "Tagi do dodania",
+        "tagsToRemove": "Tagi do usunięcia",
+        "template": "Szablon",
+        "emailSubject": "Temat",
+        "emailBody": "Treść",
+        "duration": "Czas trwania (godziny, pozostaw puste dla trwałego)",
+        "cancel": "Anuluj",
+        "noLabelOptions": "Brak skonfigurowanych opcji dla tego labelera, użyj pola poniżej."
+      }
     }
   }
 }

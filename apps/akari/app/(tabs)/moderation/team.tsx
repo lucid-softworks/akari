@@ -19,6 +19,7 @@ import {
 import { useTypeaheadActors, type TypeaheadActor } from '@/hooks/queries/useTypeaheadActors';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const ROLE_OPTIONS = [
   { label: 'Admin', value: 'tools.ozone.team.defs#roleAdmin' },
@@ -37,6 +38,7 @@ const ROLE_LABELS: Record<string, string> = Object.fromEntries(
  * require it.
  */
 export default function TeamScreen() {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -77,9 +79,9 @@ export default function TeamScreen() {
   if (!membership?.isMod) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Team' }} />
+        <Stack.Screen options={{ title: t('moderation.team.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You are not a moderator on the configured Ozone service.
+          {t('moderation.team.notModeratorPlaceholder')}
         </ThemedText>
       </ThemedView>
     );
@@ -87,7 +89,7 @@ export default function TeamScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Team' }} />
+      <Stack.Screen options={{ title: t('moderation.team.title') }} />
 
       <View
         style={[
@@ -96,7 +98,7 @@ export default function TeamScreen() {
           webColumnSideBorders(borderColor),
         ]}
       >
-        <ThemedText style={styles.title}>Moderation team</ThemedText>
+        <ThemedText style={styles.title}>{t('moderation.team.heading')}</ThemedText>
         {isAdmin ? (
           <Pressable
             onPress={openAdd}
@@ -107,7 +109,7 @@ export default function TeamScreen() {
             ]}
           >
             <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>
-              + Add member
+              {t('moderation.team.addMember')}
             </ThemedText>
           </Pressable>
         ) : null}
@@ -115,7 +117,7 @@ export default function TeamScreen() {
 
       <ScrollView contentContainerStyle={styles.list}>
         {!members || members.length === 0 ? (
-          <ThemedText style={[styles.placeholder, { color: secondary }]}>No team members.</ThemedText>
+          <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.team.noMembers')}</ThemedText>
         ) : (
           members.map((m) => {
             const profile = m.profile as
@@ -162,7 +164,9 @@ export default function TeamScreen() {
                     style={[styles.smallButton, { borderColor }]}
                   >
                     <ThemedText style={styles.smallButtonLabel}>
-                      {m.role === 'tools.ozone.team.defs#roleAdmin' ? 'Demote' : 'Promote'}
+                      {m.role === 'tools.ozone.team.defs#roleAdmin'
+                        ? t('moderation.team.demote')
+                        : t('moderation.team.promote')}
                     </ThemedText>
                   </Pressable>
                   <Pressable
@@ -170,14 +174,14 @@ export default function TeamScreen() {
                     style={[styles.smallButton, { borderColor }]}
                   >
                     <ThemedText style={styles.smallButtonLabel}>
-                      {m.disabled ? 'Enable' : 'Disable'}
+                      {m.disabled ? t('moderation.team.enable') : t('moderation.team.disable')}
                     </ThemedText>
                   </Pressable>
                   <Pressable
                     onPress={() => del.mutate(m.did)}
                     style={[styles.smallButton, { borderColor: dangerColor }]}
                   >
-                    <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>Remove</ThemedText>
+                    <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>{t('moderation.team.remove')}</ThemedText>
                   </Pressable>
                 </View>
               ) : null}
@@ -201,6 +205,7 @@ function AddTeamMemberModal({
   isPending: boolean;
   existingDids: Set<string>;
 }) {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -230,14 +235,14 @@ function AddTeamMemberModal({
     <CenteredModal onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.modalTitle}>Add team member</ThemedText>
+          <ThemedText style={styles.modalTitle}>{t('moderation.team.modalTitle')}</ThemedText>
           <ThemedText style={[styles.modalSubtitle, { color: secondary }]}>
-            Search by handle, or paste a DID directly.
+            {t('moderation.team.modalSubtitle')}
           </ThemedText>
         </View>
 
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Account</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.team.accountLabel')}</ThemedText>
           <TextInput
             value={query}
             onChangeText={(text) => {
@@ -272,15 +277,15 @@ function AddTeamMemberModal({
                   @{selected.handle}
                 </ThemedText>
               </View>
-              <ThemedText style={[styles.suggestionMeta, { color: accent }]}>Selected</ThemedText>
+              <ThemedText style={[styles.suggestionMeta, { color: accent }]}>{t('moderation.team.selected')}</ThemedText>
             </View>
           ) : isDid ? (
             <ThemedText style={[styles.helper, { color: secondary }]}>
-              Will add the raw DID without resolving — make sure it's correct.
+              {t('moderation.team.didHelper')}
             </ThemedText>
           ) : query.trim().length >= 2 ? (
             isLoading && (!matches || matches.length === 0) ? (
-              <ThemedText style={[styles.helper, { color: secondary }]}>Searching…</ThemedText>
+              <ThemedText style={[styles.helper, { color: secondary }]}>{t('moderation.team.searching')}</ThemedText>
             ) : matches && matches.length > 0 ? (
               <View style={styles.suggestionList}>
                 {matches.map((actor) => {
@@ -314,7 +319,7 @@ function AddTeamMemberModal({
                       </View>
                       {isExisting ? (
                         <ThemedText style={[styles.suggestionMeta, { color: secondary }]}>
-                          On team
+                          {t('moderation.team.onTeam')}
                         </ThemedText>
                       ) : null}
                     </Pressable>
@@ -323,16 +328,16 @@ function AddTeamMemberModal({
               </View>
             ) : (
               <ThemedText style={[styles.helper, { color: secondary }]}>
-                No matches.
+                {t('moderation.team.noMatches')}
               </ThemedText>
             )
           ) : (
             <ThemedText style={[styles.helper, { color: secondary }]}>
-              Type 2+ characters to search.
+              {t('moderation.team.typeToSearch')}
             </ThemedText>
           )}
 
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Role</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.team.roleLabel')}</ThemedText>
           <View style={styles.roleChips}>
             {ROLE_OPTIONS.map((r) => {
               const active = role === r.value;
@@ -368,7 +373,7 @@ function AddTeamMemberModal({
             disabled={isPending}
             style={[styles.footerButton, { borderColor }]}
           >
-            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+            <ThemedText style={styles.footerButtonLabel}>{t('moderation.team.cancel')}</ThemedText>
           </Pressable>
           <Pressable
             onPress={handleSubmit}
@@ -381,7 +386,7 @@ function AddTeamMemberModal({
             ]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              {isPending ? 'Adding…' : 'Add member'}
+              {isPending ? t('moderation.team.adding') : t('moderation.team.addMemberCta')}
             </ThemedText>
           </Pressable>
         </View>

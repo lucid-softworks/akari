@@ -1152,7 +1152,206 @@
       "containsSpoilers": "Chứa tiết lộ nội dung"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Giúp thêm ngữ cảnh cho bài đăng",
+        "body1": "Community Notes là những ghi chú ngắn được đính kèm vào các bài đăng cần thêm ngữ cảnh. Người đóng góp viết chúng và đánh giá bản nháp của nhau; chỉ những ghi chú được cộng đồng đánh dấu là hữu ích mới được hiển thị cho người đọc.",
+        "body2": "Đăng ký để tham gia cổng người đóng góp: các bài đăng đang chờ, hàng đợi đánh giá và hồ sơ ghi chú do bạn viết.",
+        "cta": "Đăng ký"
+      },
+      "tabs": {
+        "pending": "Đang chờ",
+        "rate": "Đánh giá",
+        "you": "Bạn"
+      },
+      "pendingTab": {
+        "empty": "Chưa có bài đăng nào bị gắn cờ. Hãy quay lại sau.",
+        "requestCountAndTime": "{count} yêu cầu · {time}",
+        "writeNote": "Viết ghi chú"
+      },
+      "rateTab": {
+        "empty": "Hiện không có gì để đánh giá. Bản nháp do người đóng góp khác gửi sẽ xuất hiện ở đây.",
+        "onPost": "Trên bài đăng {postId}"
+      },
+      "profile": {
+        "notesWritten": "Ghi chú đã viết",
+        "helpfulRate": "Tỷ lệ hữu ích",
+        "ratingsGiven": "Đánh giá đã đưa ra",
+        "contributorSince": "Người đóng góp từ {date}",
+        "leave": "Rời chương trình",
+        "recentNotes": "Ghi chú gần đây của bạn",
+        "noNotes": "Bạn chưa viết ghi chú nào.",
+        "showPubliclyTitle": "Hiển thị ghi chú của tôi dưới handle của tôi",
+        "showPubliclyHint": "Khi tắt, các ghi chú do bạn viết sẽ được ghi nhận là \"người đóng góp ẩn danh\"."
+      },
+      "note": {
+        "headlineHelpful": "Người đọc đã thêm ngữ cảnh",
+        "headlineUnderReview": "Ghi chú đang được xem xét, cần thêm đánh giá",
+        "ratingSummary": "{percent}% trong số {count} người đánh giá thấy ghi chú này hữu ích",
+        "rateThisNote": "Đánh giá ghi chú này",
+        "viewSources": "Xem nguồn",
+        "rateModalTitle": "Ghi chú này có hữu ích không?",
+        "rateModalSubtitle": "Đánh giá của bạn giúp quyết định liệu ghi chú có được hiển thị cho người đọc khác hay không.",
+        "helpfulness": {
+          "helpful": "Hữu ích",
+          "somewhat": "Tương đối",
+          "notHelpful": "Không hữu ích"
+        },
+        "whyNotHelpful": "Vì sao không hữu ích?",
+        "whatMakesItHelpful": "Điều gì khiến nó hữu ích?",
+        "anythingElse": "Còn gì khác không?",
+        "commentPlaceholder": "Ghi chú tùy chọn cho đội ngũ đánh giá",
+        "cancel": "Hủy",
+        "submit": "Gửi",
+        "submitting": "Đang gửi...",
+        "sourcesTitle": "Nguồn",
+        "sourcesSubtitle": "Các trích dẫn được người đóng góp đính kèm với ghi chú này.",
+        "noSources": "Không có nguồn đính kèm.",
+        "close": "Đóng",
+        "helpfulReasons": {
+          "citesSources": "Trích dẫn nguồn chất lượng cao",
+          "easyToUnderstand": "Dễ hiểu",
+          "addressesClaim": "Đề cập trực tiếp đến nội dung",
+          "providesContext": "Cung cấp ngữ cảnh quan trọng",
+          "fairBalanced": "Được viết với giọng văn trung lập"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Các nguồn không hỗ trợ ghi chú",
+          "incorrectInfo": "Chứa thông tin không chính xác",
+          "opinion": "Ý kiến, không phải sự thật",
+          "argumentative": "Mang tính tranh luận hoặc thiên vị",
+          "irrelevant": "Không liên quan đến bài đăng"
+        }
+      },
+      "contributor": {
+        "addTitle": "Thêm một Community Note",
+        "addSubtitle": "Ghi chú của bạn được giữ riêng tư cho đến khi đủ người đánh giá xác nhận là hữu ích. Hãy bám sát các sự kiện có thể xác minh và trích dẫn nguồn.",
+        "problemQuestion": "Bài đăng này có vấn đề gì?",
+        "yourNote": "Ghi chú của bạn",
+        "notePlaceholder": "Giải thích những gì còn thiếu hoặc gây hiểu nhầm. Trích dẫn nguồn bên dưới.",
+        "sourcesLabel": "Nguồn (mỗi URL một dòng)",
+        "cancel": "Hủy",
+        "submitNote": "Gửi ghi chú",
+        "submitting": "Đang gửi...",
+        "requestTitle": "Yêu cầu một Community Note",
+        "requestSubtitle": "Gắn cờ bài đăng này để một người đóng góp xem xét. Chúng tôi sẽ thông báo cho nhóm người đánh giá, bạn sẽ không thấy ghi chú ngay lập tức.",
+        "reason": "Lý do",
+        "anythingElseOptional": "Còn gì khác không? (tùy chọn)",
+        "commentPlaceholder": "Thêm ngữ cảnh hữu ích cho người đóng góp",
+        "sendRequest": "Gửi yêu cầu",
+        "classification": {
+          "misleading": "Gây hiểu nhầm",
+          "missingContext": "Thiếu ngữ cảnh",
+          "outdated": "Lỗi thời",
+          "satire": "Châm biếm bị hiểu là sự thật",
+          "other": "Khác"
+        },
+        "requestReason": {
+          "misinformation": "Thông tin sai lệch",
+          "missingContext": "Cần thêm ngữ cảnh",
+          "manipulation": "Phương tiện bị chỉnh sửa",
+          "spam": "Thư rác hoặc lừa đảo",
+          "other": "Vấn đề khác"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Đội ngũ",
+        "notModeratorPlaceholder": "Bạn không phải là kiểm duyệt viên trên dịch vụ Ozone đã cấu hình.",
+        "heading": "Đội ngũ kiểm duyệt",
+        "addMember": "+ Thêm thành viên",
+        "noMembers": "Không có thành viên trong đội.",
+        "remove": "Xóa",
+        "modalTitle": "Thêm thành viên đội",
+        "modalSubtitle": "Tìm theo handle, hoặc dán trực tiếp một DID.",
+        "accountLabel": "Tài khoản",
+        "selected": "Đã chọn",
+        "didHelper": "Sẽ thêm DID gốc mà không phân giải; hãy đảm bảo nó chính xác.",
+        "searching": "Đang tìm...",
+        "onTeam": "Trong đội",
+        "noMatches": "Không có kết quả khớp.",
+        "typeToSearch": "Nhập từ 2 ký tự trở lên để tìm.",
+        "roleLabel": "Vai trò",
+        "cancel": "Hủy",
+        "adding": "Đang thêm...",
+        "addMemberCta": "Thêm thành viên",
+        "demote": "Giáng cấp",
+        "promote": "Thăng cấp",
+        "enable": "Bật",
+        "disable": "Tắt"
+      },
+      "admin": {
+        "title": "Quản trị",
+        "notModeratorPlaceholder": "Bạn không phải là kiểm duyệt viên trên dịch vụ Ozone đã cấu hình.",
+        "noSafelinkRules": "Không có quy tắc safelink nào.",
+        "remove": "Xóa",
+        "noSets": "Chưa có tập hợp nào.",
+        "findRelated": "Tìm liên quan",
+        "signaturesIntro": "Nhập một DID để tìm các tài khoản dùng chung chữ ký (email, IP, v.v.).",
+        "noRelated": "Không có tài khoản liên quan.",
+        "noVerifications": "Chưa cấp xác minh nào.",
+        "addRule": "Thêm quy tắc",
+        "adding": "Đang thêm..."
+      },
+      "index": {
+        "title": "Kiểm duyệt",
+        "checkingAccess": "Đang kiểm tra quyền kiểm duyệt viên...",
+        "notModeratorPlaceholder": "Bạn không phải là kiểm duyệt viên trên dịch vụ Ozone đã cấu hình. Hãy nhờ quản trị viên thêm bạn vào đội, hoặc thay đổi DID Ozone trong cài đặt nếu bạn muốn dùng một phiên bản khác.",
+        "templates": "Mẫu",
+        "scheduled": "Đã lên lịch",
+        "team": "Đội ngũ",
+        "admin": "Quản trị",
+        "queueEmpty": "Hàng đợi trống.",
+        "noEvents": "Chưa có sự kiện nào.",
+        "takeAction": "Thực hiện hành động"
+      },
+      "scheduled": {
+        "title": "Đã lên lịch",
+        "notModeratorPlaceholder": "Bạn không phải là kiểm duyệt viên trên dịch vụ Ozone đã cấu hình.",
+        "nothingScheduled": "Không có gì được lên lịch.",
+        "cancel": "Hủy",
+        "cancelling": "Đang hủy..."
+      },
+      "templates": {
+        "title": "Mẫu",
+        "notModeratorPlaceholder": "Bạn không phải là kiểm duyệt viên trên dịch vụ Ozone đã cấu hình.",
+        "heading": "Mẫu giao tiếp",
+        "newTemplate": "+ Mẫu mới",
+        "noTemplates": "Chưa có mẫu nào. Tạo một mẫu để dùng cho hành động email.",
+        "edit": "Sửa",
+        "delete": "Xóa",
+        "editTitle": "Sửa mẫu",
+        "newTitle": "Mẫu mới",
+        "nameLabel": "Tên",
+        "subjectLabel": "Tiêu đề email",
+        "bodyLabel": "Nội dung (Markdown)",
+        "cancel": "Hủy",
+        "save": "Lưu",
+        "saving": "Đang lưu..."
+      },
+      "subject": {
+        "title": "Đối tượng",
+        "takeAction": "Thực hiện hành động",
+        "eventHistory": "Lịch sử sự kiện",
+        "loading": "Đang tải...",
+        "noEvents": "Chưa có sự kiện nào cho đối tượng này."
+      },
+      "actionSheet": {
+        "title": "Thực hiện hành động",
+        "action": "Hành động",
+        "comment": "Bình luận",
+        "labelsToAdd": "Nhãn cần thêm",
+        "labelsToRemove": "Nhãn cần gỡ",
+        "tagsToAdd": "Thẻ cần thêm",
+        "tagsToRemove": "Thẻ cần gỡ",
+        "template": "Mẫu",
+        "emailSubject": "Tiêu đề",
+        "emailBody": "Nội dung",
+        "duration": "Thời lượng (giờ, để trống nếu vĩnh viễn)",
+        "cancel": "Hủy",
+        "noLabelOptions": "Không có tùy chọn nào được cấu hình cho labeler này, hãy dùng trường bên dưới."
+      }
     }
   }
 }

@@ -1152,7 +1152,206 @@
       "postLanguageA11y": "Jezik objave: {{value}}"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Pomagaj dodati kontekst objavam",
+        "body1": "Community Notes so kratke opombe, pripete objavam, ki potrebujejo več konteksta. Sodelujoči jih pišejo in ocenjujejo osnutke drug drugemu, bralcem pa so prikazane le opombe, ki jih skupnost označi kot koristne.",
+        "body2": "Z včlanitvijo se pridružiš portalu za sodelujoče: čakajočim objavam, čakalni vrsti za ocenjevanje in profilu z napisanimi opombami.",
+        "cta": "Včlani se"
+      },
+      "tabs": {
+        "pending": "V obravnavi",
+        "rate": "Oceni",
+        "you": "Ti"
+      },
+      "pendingTab": {
+        "empty": "Še ni nobene označene objave. Preveri pozneje.",
+        "requestCountAndTime": "{count} zahtev · {time}",
+        "writeNote": "Napiši opombo"
+      },
+      "rateTab": {
+        "empty": "Trenutno ni ničesar za oceniti. Osnutki drugih sodelujočih se bodo pojavili tukaj.",
+        "onPost": "Pri objavi {postId}"
+      },
+      "profile": {
+        "notesWritten": "Napisanih opomb",
+        "helpfulRate": "Stopnja koristnosti",
+        "ratingsGiven": "Oddanih ocen",
+        "contributorSince": "Sodelujoči od {date}",
+        "leave": "Zapusti program",
+        "recentNotes": "Tvoje nedavne opombe",
+        "noNotes": "Še nisi napisal nobene opombe.",
+        "showPubliclyTitle": "Prikaži moje opombe pod mojim ročajem",
+        "showPubliclyHint": "Ko je izklopljeno, so opombe, ki jih napišeš, pripisane \"anonimnemu sodelujočemu\"."
+      },
+      "note": {
+        "headlineHelpful": "Bralci so dodali kontekst",
+        "headlineUnderReview": "Opomba je v pregledu, potrebuje več ocen",
+        "ratingSummary": "{percent} % od {count} ocenjevalcev je to označilo kot koristno",
+        "rateThisNote": "Oceni to opombo",
+        "viewSources": "Poglej vire",
+        "rateModalTitle": "Je ta opomba koristna?",
+        "rateModalSubtitle": "Tvoja ocena pomaga odločiti, ali se opomba prikaže drugim bralcem.",
+        "helpfulness": {
+          "helpful": "Koristna",
+          "somewhat": "Delno",
+          "notHelpful": "Ni koristna"
+        },
+        "whyNotHelpful": "Zakaj ni koristna?",
+        "whatMakesItHelpful": "Zaradi česa je koristna?",
+        "anythingElse": "Še kaj?",
+        "commentPlaceholder": "Neobvezne opombe za ekipo ocenjevalcev",
+        "cancel": "Prekliči",
+        "submit": "Oddaj",
+        "submitting": "Oddajanje ...",
+        "sourcesTitle": "Viri",
+        "sourcesSubtitle": "Navedbe, ki jih je opombi priložil sodelujoči.",
+        "noSources": "Ni priloženih virov.",
+        "close": "Zapri",
+        "helpfulReasons": {
+          "citesSources": "Navaja kakovostne vire",
+          "easyToUnderstand": "Lahko razumljiva",
+          "addressesClaim": "Neposredno naslavlja trditev",
+          "providesContext": "Ponuja pomemben kontekst",
+          "fairBalanced": "Napisana v nevtralnem tonu"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Viri ne podpirajo opombe",
+          "incorrectInfo": "Vsebuje napačne informacije",
+          "opinion": "Mnenje, ne dejstvo",
+          "argumentative": "Polemična ali pristranska",
+          "irrelevant": "Nepomembna za objavo"
+        }
+      },
+      "contributor": {
+        "addTitle": "Dodaj Community Note",
+        "addSubtitle": "Tvoja opomba je zasebna, dokler je dovolj ocenjevalcev ne označi kot koristne. Drži se preverljivih dejstev in navajaj vire.",
+        "problemQuestion": "Kaj je narobe s to objavo?",
+        "yourNote": "Tvoja opomba",
+        "notePlaceholder": "Pojasni, kaj manjka ali kaj zavaja. Navedi vire spodaj.",
+        "sourcesLabel": "Viri (en URL na vrstico)",
+        "cancel": "Prekliči",
+        "submitNote": "Oddaj opombo",
+        "submitting": "Oddajanje ...",
+        "requestTitle": "Zahtevaj Community Note",
+        "requestSubtitle": "Označi to objavo za pregled sodelujočega. Obvestili bomo ocenjevalce, opombe pa ne boš videl takoj.",
+        "reason": "Razlog",
+        "anythingElseOptional": "Še kaj? (neobvezno)",
+        "commentPlaceholder": "Dodaj koristen kontekst za sodelujočega",
+        "sendRequest": "Pošlji zahtevo",
+        "classification": {
+          "misleading": "Zavajajoče",
+          "missingContext": "Manjkajoči kontekst",
+          "outdated": "Zastarelo",
+          "satire": "Satira, predstavljena kot dejstvo",
+          "other": "Drugo"
+        },
+        "requestReason": {
+          "misinformation": "Dezinformacija",
+          "missingContext": "Potrebuje več konteksta",
+          "manipulation": "Prirejena vsebina",
+          "spam": "Neželena pošta ali prevara",
+          "other": "Drug pomislek"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Ekipa",
+        "notModeratorPlaceholder": "Nisi moderator na nastavljeni storitvi Ozone.",
+        "heading": "Moderatorska ekipa",
+        "addMember": "+ Dodaj člana",
+        "noMembers": "Ni članov ekipe.",
+        "remove": "Odstrani",
+        "modalTitle": "Dodaj člana ekipe",
+        "modalSubtitle": "Išči po ročaju ali prilepi DID neposredno.",
+        "accountLabel": "Račun",
+        "selected": "Izbrano",
+        "didHelper": "Dodal bo surovi DID brez razreševanja, prepričaj se, da je pravilen.",
+        "searching": "Iskanje ...",
+        "onTeam": "V ekipi",
+        "noMatches": "Ni zadetkov.",
+        "typeToSearch": "Vnesi vsaj 2 znaka za iskanje.",
+        "roleLabel": "Vloga",
+        "cancel": "Prekliči",
+        "adding": "Dodajanje ...",
+        "addMemberCta": "Dodaj člana",
+        "demote": "Degradiraj",
+        "promote": "Povišaj",
+        "enable": "Omogoči",
+        "disable": "Onemogoči"
+      },
+      "admin": {
+        "title": "Skrbnik",
+        "notModeratorPlaceholder": "Nisi moderator na nastavljeni storitvi Ozone.",
+        "noSafelinkRules": "Ni pravil za varne povezave.",
+        "remove": "Odstrani",
+        "noSets": "Še ni nizov.",
+        "findRelated": "Najdi povezane",
+        "signaturesIntro": "Vnesi DID, da najdeš račune s skupnimi podpisi (e-pošta, IP itd.).",
+        "noRelated": "Ni povezanih računov.",
+        "noVerifications": "Ni podeljenih preverjanj.",
+        "addRule": "Dodaj pravilo",
+        "adding": "Dodajanje ..."
+      },
+      "index": {
+        "title": "Moderiranje",
+        "checkingAccess": "Preverjanje moderatorskega dostopa ...",
+        "notModeratorPlaceholder": "Nisi moderator na nastavljeni storitvi Ozone. Prosi skrbnika, da te doda v ekipo, ali spremeni Ozone DID v nastavitvah, če si mislil drugo storitev.",
+        "templates": "Predloge",
+        "scheduled": "Načrtovano",
+        "team": "Ekipa",
+        "admin": "Skrbnik",
+        "queueEmpty": "Čakalna vrsta je prazna.",
+        "noEvents": "Še ni dogodkov.",
+        "takeAction": "Ukrepaj"
+      },
+      "scheduled": {
+        "title": "Načrtovano",
+        "notModeratorPlaceholder": "Nisi moderator na nastavljeni storitvi Ozone.",
+        "nothingScheduled": "Nič ni načrtovanega.",
+        "cancel": "Prekliči",
+        "cancelling": "Preklicevanje ..."
+      },
+      "templates": {
+        "title": "Predloge",
+        "notModeratorPlaceholder": "Nisi moderator na nastavljeni storitvi Ozone.",
+        "heading": "Predloge za komunikacijo",
+        "newTemplate": "+ Nova predloga",
+        "noTemplates": "Še ni predlog. Ustvari eno, da boš lahko uporabljal e-poštno dejanje.",
+        "edit": "Uredi",
+        "delete": "Izbriši",
+        "editTitle": "Uredi predlogo",
+        "newTitle": "Nova predloga",
+        "nameLabel": "Ime",
+        "subjectLabel": "Zadeva e-pošte",
+        "bodyLabel": "Vsebina (Markdown)",
+        "cancel": "Prekliči",
+        "save": "Shrani",
+        "saving": "Shranjevanje ..."
+      },
+      "subject": {
+        "title": "Predmet",
+        "takeAction": "Ukrepaj",
+        "eventHistory": "Zgodovina dogodkov",
+        "loading": "Nalaganje ...",
+        "noEvents": "Za ta predmet še ni dogodkov."
+      },
+      "actionSheet": {
+        "title": "Ukrepaj",
+        "action": "Dejanje",
+        "comment": "Komentar",
+        "labelsToAdd": "Oznake za dodajanje",
+        "labelsToRemove": "Oznake za odstranitev",
+        "tagsToAdd": "Značke za dodajanje",
+        "tagsToRemove": "Značke za odstranitev",
+        "template": "Predloga",
+        "emailSubject": "Zadeva",
+        "emailBody": "Vsebina",
+        "duration": "Trajanje (ure, pusti prazno za trajno)",
+        "cancel": "Prekliči",
+        "noLabelOptions": "Za tega označevalca ni nastavljenih možnosti, uporabi spodnje polje."
+      }
     }
   }
 }

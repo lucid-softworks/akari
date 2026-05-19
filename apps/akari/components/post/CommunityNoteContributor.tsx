@@ -12,21 +12,28 @@ import {
 } from '@/hooks/mutations/useSubmitCommunityNote';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
-const CLASSIFICATION_OPTIONS: { id: SubmitCommunityNoteInput['classification']; label: string }[] = [
-  { id: 'misleading', label: 'Misleading' },
-  { id: 'missingContext', label: 'Missing context' },
-  { id: 'outdated', label: 'Outdated' },
-  { id: 'satire', label: 'Satire treated as fact' },
-  { id: 'other', label: 'Other' },
+type TFn = ReturnType<typeof useTranslation>['t'];
+
+const getClassificationOptions = (
+  t: TFn,
+): { id: SubmitCommunityNoteInput['classification']; label: string }[] => [
+  { id: 'misleading', label: t('communityNotes.contributor.classification.misleading') },
+  { id: 'missingContext', label: t('communityNotes.contributor.classification.missingContext') },
+  { id: 'outdated', label: t('communityNotes.contributor.classification.outdated') },
+  { id: 'satire', label: t('communityNotes.contributor.classification.satire') },
+  { id: 'other', label: t('communityNotes.contributor.classification.other') },
 ];
 
-const REQUEST_REASONS: { id: RequestCommunityNoteInput['reason']; label: string }[] = [
-  { id: 'misinformation', label: 'Misinformation' },
-  { id: 'missingContext', label: 'Needs more context' },
-  { id: 'manipulation', label: 'Manipulated media' },
-  { id: 'spam', label: 'Spam or scam' },
-  { id: 'other', label: 'Other concern' },
+const getRequestReasons = (
+  t: TFn,
+): { id: RequestCommunityNoteInput['reason']; label: string }[] => [
+  { id: 'misinformation', label: t('communityNotes.contributor.requestReason.misinformation') },
+  { id: 'missingContext', label: t('communityNotes.contributor.requestReason.missingContext') },
+  { id: 'manipulation', label: t('communityNotes.contributor.requestReason.manipulation') },
+  { id: 'spam', label: t('communityNotes.contributor.requestReason.spam') },
+  { id: 'other', label: t('communityNotes.contributor.requestReason.other') },
 ];
 
 /**
@@ -51,6 +58,7 @@ export function AddCommunityNoteModal({
   const tint = useThemeColor({}, 'tint');
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
   const textColor = useThemeColor({}, 'text');
+  const { t } = useTranslation();
 
   const [classification, setClassification] =
     useState<SubmitCommunityNoteInput['classification']>('missingContext');
@@ -58,6 +66,7 @@ export function AddCommunityNoteModal({
   const [sourcesRaw, setSourcesRaw] = useState('');
 
   const submit = useSubmitCommunityNote();
+  const classificationOptions = getClassificationOptions(t);
 
   const handleSubmit = async () => {
     if (!body.trim()) return;
@@ -78,19 +87,18 @@ export function AddCommunityNoteModal({
     <CenteredModal onClose={onClose} maxWidth={620} height="85%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>Add a Community Note</ThemedText>
+          <ThemedText style={styles.title}>{t('communityNotes.contributor.addTitle')}</ThemedText>
           <ThemedText style={[styles.subtitle, { color: secondary }]}>
-            Your note is private until enough raters mark it helpful. Stick to
-            verifiable facts and cite sources.
+            {t('communityNotes.contributor.addSubtitle')}
           </ThemedText>
         </View>
 
         <ScrollView style={styles.bodyScroll} contentContainerStyle={styles.body}>
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
-            What's the problem with this post?
+            {t('communityNotes.contributor.problemQuestion')}
           </ThemedText>
           <View style={styles.chipRow}>
-            {CLASSIFICATION_OPTIONS.map((opt) => {
+            {classificationOptions.map((opt) => {
               const active = classification === opt.id;
               return (
                 <Pressable
@@ -117,11 +125,11 @@ export function AddCommunityNoteModal({
             })}
           </View>
 
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Your note</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('communityNotes.contributor.yourNote')}</ThemedText>
           <TextInput
             value={body}
             onChangeText={setBody}
-            placeholder="Explain what's missing or misleading. Cite sources below."
+            placeholder={t('communityNotes.contributor.notePlaceholder')}
             placeholderTextColor={secondary}
             multiline
             style={[
@@ -132,7 +140,7 @@ export function AddCommunityNoteModal({
           />
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
-            Sources (one URL per line)
+            {t('communityNotes.contributor.sourcesLabel')}
           </ThemedText>
           <TextInput
             value={sourcesRaw}
@@ -156,7 +164,7 @@ export function AddCommunityNoteModal({
             disabled={submit.isPending}
             style={[styles.footerButton, { borderColor }]}
           >
-            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+            <ThemedText style={styles.footerButtonLabel}>{t('communityNotes.contributor.cancel')}</ThemedText>
           </Pressable>
           <Pressable
             onPress={handleSubmit}
@@ -169,7 +177,7 @@ export function AddCommunityNoteModal({
             ]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              {submit.isPending ? 'Submitting…' : 'Submit note'}
+              {submit.isPending ? t('communityNotes.contributor.submitting') : t('communityNotes.contributor.submitNote')}
             </ThemedText>
           </Pressable>
         </View>
@@ -196,11 +204,13 @@ export function RequestCommunityNoteModal({
   const tint = useThemeColor({}, 'tint');
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
   const textColor = useThemeColor({}, 'text');
+  const { t } = useTranslation();
 
   const [reason, setReason] = useState<RequestCommunityNoteInput['reason']>('misinformation');
   const [comment, setComment] = useState('');
 
   const request = useRequestCommunityNote();
+  const requestReasons = getRequestReasons(t);
 
   const handleSubmit = async () => {
     await request.mutateAsync({
@@ -215,17 +225,16 @@ export function RequestCommunityNoteModal({
     <CenteredModal onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.title}>Request a Community Note</ThemedText>
+          <ThemedText style={styles.title}>{t('communityNotes.contributor.requestTitle')}</ThemedText>
           <ThemedText style={[styles.subtitle, { color: secondary }]}>
-            Flag this post for a contributor to review. We'll alert the rater
-            pool — you won't see the note immediately.
+            {t('communityNotes.contributor.requestSubtitle')}
           </ThemedText>
         </View>
 
         <ScrollView style={styles.bodyScroll} contentContainerStyle={styles.body}>
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Reason</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('communityNotes.contributor.reason')}</ThemedText>
           <View style={styles.chipRow}>
-            {REQUEST_REASONS.map((opt) => {
+            {requestReasons.map((opt) => {
               const active = reason === opt.id;
               return (
                 <Pressable
@@ -253,12 +262,12 @@ export function RequestCommunityNoteModal({
           </View>
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
-            Anything else? (optional)
+            {t('communityNotes.contributor.anythingElseOptional')}
           </ThemedText>
           <TextInput
             value={comment}
             onChangeText={setComment}
-            placeholder="Add useful context for the contributor"
+            placeholder={t('communityNotes.contributor.commentPlaceholder')}
             placeholderTextColor={secondary}
             multiline
             style={[
@@ -275,7 +284,7 @@ export function RequestCommunityNoteModal({
             disabled={request.isPending}
             style={[styles.footerButton, { borderColor }]}
           >
-            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+            <ThemedText style={styles.footerButtonLabel}>{t('communityNotes.contributor.cancel')}</ThemedText>
           </Pressable>
           <Pressable
             onPress={handleSubmit}
@@ -288,7 +297,7 @@ export function RequestCommunityNoteModal({
             ]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              {request.isPending ? 'Submitting…' : 'Send request'}
+              {request.isPending ? t('communityNotes.contributor.submitting') : t('communityNotes.contributor.sendRequest')}
             </ThemedText>
           </Pressable>
         </View>

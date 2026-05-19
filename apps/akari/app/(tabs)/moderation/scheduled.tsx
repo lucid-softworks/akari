@@ -15,6 +15,7 @@ import {
 } from '@/hooks/queries/useOzoneScheduledActions';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 const STATUS_TABS: { label: string; value: OzoneScheduledStatus }[] = [
@@ -30,6 +31,7 @@ const STATUS_TABS: { label: string; value: OzoneScheduledStatus }[] = [
  * the per-subject detail pane (follow-up; the lexicon supports it).
  */
 export default function ScheduledScreen() {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'tint');
@@ -43,9 +45,9 @@ export default function ScheduledScreen() {
   if (!membership?.isMod) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Scheduled' }} />
+        <Stack.Screen options={{ title: t('moderation.scheduled.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You are not a moderator on the configured Ozone service.
+          {t('moderation.scheduled.notModeratorPlaceholder')}
         </ThemedText>
       </ThemedView>
     );
@@ -53,7 +55,7 @@ export default function ScheduledScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Scheduled' }} />
+      <Stack.Screen options={{ title: t('moderation.scheduled.title') }} />
       <View
         style={[
           styles.tabBar,
@@ -91,7 +93,7 @@ export default function ScheduledScreen() {
       <ScrollView contentContainerStyle={styles.list}>
         {actions && actions.length === 0 ? (
           <ThemedText style={[styles.placeholder, { color: secondary }]}>
-            Nothing scheduled.
+            {t('moderation.scheduled.nothingScheduled')}
           </ThemedText>
         ) : (
           (actions ?? []).map((action, index) => {
@@ -140,7 +142,7 @@ export default function ScheduledScreen() {
                     ]}
                   >
                     <ThemedText style={[styles.cancelLabel, { color: dangerColor }]}>
-                      {cancel.isPending ? 'Cancelling…' : 'Cancel'}
+                      {cancel.isPending ? t('moderation.scheduled.cancelling') : t('moderation.scheduled.cancel')}
                     </ThemedText>
                   </Pressable>
                 ) : null}

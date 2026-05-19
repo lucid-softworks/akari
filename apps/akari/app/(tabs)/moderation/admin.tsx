@@ -18,6 +18,7 @@ import {
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type AdminTab = 'safelink' | 'sets' | 'signatures' | 'verifications';
@@ -34,6 +35,7 @@ const TABS: { label: string; value: AdminTab }[] = [
  * heavier UI work needed for full lifecycle management.
  */
 export default function AdminScreen() {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -44,9 +46,9 @@ export default function AdminScreen() {
   if (!membership?.isMod) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Admin' }} />
+        <Stack.Screen options={{ title: t('moderation.admin.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You are not a moderator on the configured Ozone service.
+          {t('moderation.admin.notModeratorPlaceholder')}
         </ThemedText>
       </ThemedView>
     );
@@ -54,7 +56,7 @@ export default function AdminScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Admin' }} />
+      <Stack.Screen options={{ title: t('moderation.admin.title') }} />
 
       <View
         style={[
@@ -105,6 +107,7 @@ export default function AdminScreen() {
 }
 
 function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
+  const { t } = useTranslation();
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const textColor = useThemeColor({}, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -176,13 +179,13 @@ function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondar
           ]}
         >
           <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>
-            {add.isPending ? 'Adding…' : 'Add rule'}
+            {add.isPending ? t('moderation.admin.adding') : t('moderation.admin.addRule')}
           </ThemedText>
         </Pressable>
       </View>
 
       {!rules || rules.length === 0 ? (
-        <ThemedText style={[styles.placeholder, { color: secondary }]}>No safelink rules.</ThemedText>
+        <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.admin.noSafelinkRules')}</ThemedText>
       ) : (
         rules.map((rule) => {
           const r = rule as { url?: string; pattern?: string; action?: string; reason?: string; createdAt?: string };
@@ -216,7 +219,7 @@ function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondar
                 }
                 style={[styles.smallButton, { borderColor: dangerColor }]}
               >
-                <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>Remove</ThemedText>
+                <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>{t('moderation.admin.remove')}</ThemedText>
               </Pressable>
             </View>
           );
@@ -227,9 +230,10 @@ function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondar
 }
 
 function SetsTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
+  const { t } = useTranslation();
   const { data: sets } = useOzoneSets();
   if (!sets || sets.length === 0) {
-    return <ThemedText style={[styles.placeholder, { color: secondary }]}>No sets yet.</ThemedText>;
+    return <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.admin.noSets')}</ThemedText>;
   }
   return (
     <View>
@@ -259,6 +263,7 @@ function SetsTab({ borderColor, secondary }: { borderColor: string; secondary: s
 }
 
 function SignaturesTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
+  const { t } = useTranslation();
   const accent = useThemeColor({}, 'tint');
   const textColor = useThemeColor({}, 'text');
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
@@ -289,15 +294,15 @@ function SignaturesTab({ borderColor, secondary }: { borderColor: string; second
             !did.trim() && { opacity: 0.5 },
           ]}
         >
-          <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>Find related</ThemedText>
+          <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>{t('moderation.admin.findRelated')}</ThemedText>
         </Pressable>
       </View>
       {!active ? (
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          Enter a DID to find accounts that share signatures (email, IP, etc.).
+          {t('moderation.admin.signaturesIntro')}
         </ThemedText>
       ) : !related || related.length === 0 ? (
-        <ThemedText style={[styles.placeholder, { color: secondary }]}>No related accounts.</ThemedText>
+        <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.admin.noRelated')}</ThemedText>
       ) : (
         related.map((row) => {
           const r = row as { account?: { did?: string; handle?: string }; similarities?: string[] };
@@ -321,9 +326,10 @@ function SignaturesTab({ borderColor, secondary }: { borderColor: string; second
 }
 
 function VerificationsTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
+  const { t } = useTranslation();
   const { data: verifications } = useOzoneVerifications();
   if (!verifications || verifications.length === 0) {
-    return <ThemedText style={[styles.placeholder, { color: secondary }]}>No verifications granted.</ThemedText>;
+    return <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.admin.noVerifications')}</ThemedText>;
   }
   return (
     <View>

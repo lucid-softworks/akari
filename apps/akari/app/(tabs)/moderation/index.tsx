@@ -17,6 +17,7 @@ import { useOzoneQueue, type OzoneQueueFilters } from '@/hooks/queries/useOzoneQ
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 /**
@@ -30,6 +31,7 @@ import { formatRelativeTime } from '@/utils/timeUtils';
  * skip the detail step and open the action sheet directly.
  */
 export default function ModerationScreen() {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
   const borderColor = useBorderColor();
@@ -90,9 +92,9 @@ export default function ModerationScreen() {
   if (membershipLoading) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Moderation' }} />
+        <Stack.Screen options={{ title: t('moderation.index.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          Checking moderator access…
+          {t('moderation.index.checkingAccess')}
         </ThemedText>
       </ThemedView>
     );
@@ -101,11 +103,9 @@ export default function ModerationScreen() {
   if (!membership?.isMod) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Moderation' }} />
+        <Stack.Screen options={{ title: t('moderation.index.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You are not a moderator on the configured Ozone service. Ask an
-          admin to add you to the team, or change the Ozone DID in
-          settings if you meant a different instance.
+          {t('moderation.index.notModeratorPlaceholder')}
         </ThemedText>
       </ThemedView>
     );
@@ -118,7 +118,7 @@ export default function ModerationScreen() {
         { paddingTop: isLargeScreen ? insets.top : 0 },
       ]}
     >
-      <Stack.Screen options={{ title: 'Moderation' }} />
+      <Stack.Screen options={{ title: t('moderation.index.title') }} />
 
       <View
         style={[
@@ -135,28 +135,28 @@ export default function ModerationScreen() {
           onPress={() => router.push('/(tabs)/moderation/templates' as Href)}
           style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.6 }]}
         >
-          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>Templates</ThemedText>
+          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>{t('moderation.index.templates')}</ThemedText>
         </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/(tabs)/moderation/scheduled' as Href)}
           style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.6 }]}
         >
-          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>Scheduled</ThemedText>
+          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>{t('moderation.index.scheduled')}</ThemedText>
         </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/(tabs)/moderation/team' as Href)}
           style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.6 }]}
         >
-          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>Team</ThemedText>
+          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>{t('moderation.index.team')}</ThemedText>
         </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/(tabs)/moderation/admin' as Href)}
           style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.6 }]}
         >
-          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>Admin</ThemedText>
+          <ThemedText style={[styles.toolButtonLabel, { color: secondary }]}>{t('moderation.index.admin')}</ThemedText>
         </Pressable>
       </View>
 
@@ -182,7 +182,7 @@ export default function ModerationScreen() {
         {tab === 'queue' ? (
           flatStatuses.length === 0 && !queue.isFetching ? (
             <ThemedText style={[styles.placeholder, { color: secondary }]}>
-              Queue is empty.
+              {t('moderation.index.queueEmpty')}
             </ThemedText>
           ) : (
             flatStatuses.map((s) => (
@@ -196,7 +196,7 @@ export default function ModerationScreen() {
             ))
           )
         ) : flatEvents.length === 0 && !events.isFetching ? (
-          <ThemedText style={[styles.placeholder, { color: secondary }]}>No events yet.</ThemedText>
+          <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.index.noEvents')}</ThemedText>
         ) : (
           flatEvents.map((ev) => (
             <EventRow key={`e-${ev.id}`} event={ev} borderColor={borderColor} secondary={secondary} />
@@ -317,6 +317,7 @@ function QueueRow({
     extras: { avatar?: string; handle?: string; snippet?: string },
   ) => void;
 }) {
+  const { t } = useTranslation();
   const subjectLabel = describeSubject(status.subject, status.subjectRepoHandle);
   const reviewState = humanReviewState(status.reviewState);
   const actionSubject = toEmitSubject(status.subject);
@@ -380,7 +381,7 @@ function QueueRow({
                 accessibilityRole="button"
               >
                 <ThemedText style={[styles.inlineActionLabel, { color: secondary }]}>
-                  Take action
+                  {t('moderation.index.takeAction')}
                 </ThemedText>
               </Pressable>
             </View>

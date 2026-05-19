@@ -1160,7 +1160,206 @@
       "descriptionPlaceholder": "Description (optional)"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Help add context to posts",
+        "body1": "Community Notes are short notes attached to posts that need more context. Contributors author them and rate each other's drafts; only notes the community marks helpful are shown to readers.",
+        "body2": "Enrolling opts you into the contributor portal: pending posts, the rating queue, and your authored-notes profile.",
+        "cta": "Enroll"
+      },
+      "tabs": {
+        "pending": "Pending",
+        "rate": "Rate",
+        "you": "You"
+      },
+      "pendingTab": {
+        "empty": "No posts have been flagged yet. Check back later.",
+        "requestCountAndTime": "{count} requests · {time}",
+        "writeNote": "Write a note"
+      },
+      "rateTab": {
+        "empty": "Nothing to rate right now. Drafts other contributors submit will appear here.",
+        "onPost": "On post {postId}"
+      },
+      "profile": {
+        "notesWritten": "Notes written",
+        "helpfulRate": "Helpful rate",
+        "ratingsGiven": "Ratings given",
+        "contributorSince": "Contributor since {date}",
+        "leave": "Leave program",
+        "recentNotes": "Your recent notes",
+        "noNotes": "You haven't written any notes yet.",
+        "showPubliclyTitle": "Show my notes under my handle",
+        "showPubliclyHint": "When off, notes you author are attributed to \"anonymous contributor\"."
+      },
+      "note": {
+        "headlineHelpful": "Readers added context",
+        "headlineUnderReview": "Note under review, needs more ratings",
+        "ratingSummary": "{percent}% of {count} raters found this helpful",
+        "rateThisNote": "Rate this note",
+        "viewSources": "View sources",
+        "rateModalTitle": "Is this note helpful?",
+        "rateModalSubtitle": "Your rating helps decide whether the note is shown to other readers.",
+        "helpfulness": {
+          "helpful": "Helpful",
+          "somewhat": "Somewhat",
+          "notHelpful": "Not helpful"
+        },
+        "whyNotHelpful": "Why not helpful?",
+        "whatMakesItHelpful": "What makes it helpful?",
+        "anythingElse": "Anything else?",
+        "commentPlaceholder": "Optional notes for the rating team",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "submitting": "Submitting…",
+        "sourcesTitle": "Sources",
+        "sourcesSubtitle": "Citations attached to this note by the contributor.",
+        "noSources": "No sources attached.",
+        "close": "Close",
+        "helpfulReasons": {
+          "citesSources": "Cites high-quality sources",
+          "easyToUnderstand": "Easy to understand",
+          "addressesClaim": "Directly addresses the claim",
+          "providesContext": "Provides important context",
+          "fairBalanced": "Written in a neutral tone"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Sources do not support the note",
+          "incorrectInfo": "Contains incorrect information",
+          "opinion": "Opinion, not fact",
+          "argumentative": "Argumentative or biased",
+          "irrelevant": "Irrelevant to the post"
+        }
+      },
+      "contributor": {
+        "addTitle": "Add a Community Note",
+        "addSubtitle": "Your note is private until enough raters mark it helpful. Stick to verifiable facts and cite sources.",
+        "problemQuestion": "What's the problem with this post?",
+        "yourNote": "Your note",
+        "notePlaceholder": "Explain what's missing or misleading. Cite sources below.",
+        "sourcesLabel": "Sources (one URL per line)",
+        "cancel": "Cancel",
+        "submitNote": "Submit note",
+        "submitting": "Submitting…",
+        "requestTitle": "Request a Community Note",
+        "requestSubtitle": "Flag this post for a contributor to review. We'll alert the rater pool, you won't see the note immediately.",
+        "reason": "Reason",
+        "anythingElseOptional": "Anything else? (optional)",
+        "commentPlaceholder": "Add useful context for the contributor",
+        "sendRequest": "Send request",
+        "classification": {
+          "misleading": "Misleading",
+          "missingContext": "Missing context",
+          "outdated": "Outdated",
+          "satire": "Satire treated as fact",
+          "other": "Other"
+        },
+        "requestReason": {
+          "misinformation": "Misinformation",
+          "missingContext": "Needs more context",
+          "manipulation": "Manipulated media",
+          "spam": "Spam or scam",
+          "other": "Other concern"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Team",
+        "notModeratorPlaceholder": "You are not a moderator on the configured Ozone service.",
+        "heading": "Moderation team",
+        "addMember": "+ Add member",
+        "noMembers": "No team members.",
+        "remove": "Remove",
+        "modalTitle": "Add team member",
+        "modalSubtitle": "Search by handle, or paste a DID directly.",
+        "accountLabel": "Account",
+        "selected": "Selected",
+        "didHelper": "Will add the raw DID without resolving; make sure it's correct.",
+        "searching": "Searching…",
+        "onTeam": "On team",
+        "noMatches": "No matches.",
+        "typeToSearch": "Type 2+ characters to search.",
+        "roleLabel": "Role",
+        "cancel": "Cancel",
+        "adding": "Adding…",
+        "addMemberCta": "Add member",
+        "demote": "Demote",
+        "promote": "Promote",
+        "enable": "Enable",
+        "disable": "Disable"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "You are not a moderator on the configured Ozone service.",
+        "noSafelinkRules": "No safelink rules.",
+        "remove": "Remove",
+        "noSets": "No sets yet.",
+        "findRelated": "Find related",
+        "signaturesIntro": "Enter a DID to find accounts that share signatures (email, IP, etc.).",
+        "noRelated": "No related accounts.",
+        "noVerifications": "No verifications granted.",
+        "addRule": "Add rule",
+        "adding": "Adding…"
+      },
+      "index": {
+        "title": "Moderation",
+        "checkingAccess": "Checking moderator access…",
+        "notModeratorPlaceholder": "You are not a moderator on the configured Ozone service. Ask an admin to add you to the team, or change the Ozone DID in settings if you meant a different instance.",
+        "templates": "Templates",
+        "scheduled": "Scheduled",
+        "team": "Team",
+        "admin": "Admin",
+        "queueEmpty": "Queue is empty.",
+        "noEvents": "No events yet.",
+        "takeAction": "Take action"
+      },
+      "scheduled": {
+        "title": "Scheduled",
+        "notModeratorPlaceholder": "You are not a moderator on the configured Ozone service.",
+        "nothingScheduled": "Nothing scheduled.",
+        "cancel": "Cancel",
+        "cancelling": "Cancelling…"
+      },
+      "templates": {
+        "title": "Templates",
+        "notModeratorPlaceholder": "You are not a moderator on the configured Ozone service.",
+        "heading": "Communication templates",
+        "newTemplate": "+ New template",
+        "noTemplates": "No templates yet. Create one to use the email action.",
+        "edit": "Edit",
+        "delete": "Delete",
+        "editTitle": "Edit template",
+        "newTitle": "New template",
+        "nameLabel": "Name",
+        "subjectLabel": "Email subject",
+        "bodyLabel": "Body (Markdown)",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…"
+      },
+      "subject": {
+        "title": "Subject",
+        "takeAction": "Take action",
+        "eventHistory": "Event history",
+        "loading": "Loading…",
+        "noEvents": "No events for this subject yet."
+      },
+      "actionSheet": {
+        "title": "Take action",
+        "action": "Action",
+        "comment": "Comment",
+        "labelsToAdd": "Labels to add",
+        "labelsToRemove": "Labels to remove",
+        "tagsToAdd": "Tags to add",
+        "tagsToRemove": "Tags to remove",
+        "template": "Template",
+        "emailSubject": "Subject",
+        "emailBody": "Body",
+        "duration": "Duration (hours, leave blank for permanent)",
+        "cancel": "Cancel",
+        "noLabelOptions": "No options configured for this labeler, use the field below."
+      }
     }
   }
 }

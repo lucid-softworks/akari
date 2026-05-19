@@ -17,6 +17,7 @@ import {
 } from '@/hooks/queries/useCommunityNotesContributor';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 type Tab = 'pending' | 'rate' | 'profile';
@@ -34,6 +35,7 @@ export default function CommunityNotesScreen() {
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
+  const { t } = useTranslation();
 
   const { isContributor, setIsContributor } = useCommunityNotesSettings();
   const [tab, setTab] = useState<Tab>('pending');
@@ -41,7 +43,7 @@ export default function CommunityNotesScreen() {
   if (!isContributor) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Community Notes' }} />
+        <Stack.Screen options={{ title: t('communityNotes.title') }} />
         <View
           style={[
             styles.enrollCard,
@@ -49,15 +51,12 @@ export default function CommunityNotesScreen() {
             webColumnSideBorders(borderColor),
           ]}
         >
-          <ThemedText style={styles.enrollTitle}>Help add context to posts</ThemedText>
+          <ThemedText style={styles.enrollTitle}>{t('communityNotes.enroll.title')}</ThemedText>
           <ThemedText style={[styles.enrollBody, { color: secondary }]}>
-            Community Notes are short notes attached to posts that need more
-            context. Contributors author them and rate each other's drafts;
-            only notes the community marks helpful are shown to readers.
+            {t('communityNotes.enroll.body1')}
           </ThemedText>
           <ThemedText style={[styles.enrollBody, { color: secondary }]}>
-            Enrolling opts you into the contributor portal — pending posts,
-            the rating queue, and your authored-notes profile.
+            {t('communityNotes.enroll.body2')}
           </ThemedText>
           <Pressable
             onPress={() => setIsContributor(true)}
@@ -67,7 +66,7 @@ export default function CommunityNotesScreen() {
               pressed && { opacity: 0.7 },
             ]}
           >
-            <ThemedText style={styles.enrollButtonLabel}>Enroll</ThemedText>
+            <ThemedText style={styles.enrollButtonLabel}>{t('communityNotes.enroll.cta')}</ThemedText>
           </Pressable>
         </View>
       </ThemedView>
@@ -76,7 +75,7 @@ export default function CommunityNotesScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Community Notes' }} />
+      <Stack.Screen options={{ title: t('communityNotes.title') }} />
 
       <View
         style={[
@@ -85,9 +84,9 @@ export default function CommunityNotesScreen() {
           webColumnSideBorders(borderColor),
         ]}
       >
-        <TabButton label="Pending" active={tab === 'pending'} onPress={() => setTab('pending')} accent={accent} secondary={secondary} />
-        <TabButton label="Rate" active={tab === 'rate'} onPress={() => setTab('rate')} accent={accent} secondary={secondary} />
-        <TabButton label="You" active={tab === 'profile'} onPress={() => setTab('profile')} accent={accent} secondary={secondary} />
+        <TabButton label={t('communityNotes.tabs.pending')} active={tab === 'pending'} onPress={() => setTab('pending')} accent={accent} secondary={secondary} />
+        <TabButton label={t('communityNotes.tabs.rate')} active={tab === 'rate'} onPress={() => setTab('rate')} accent={accent} secondary={secondary} />
+        <TabButton label={t('communityNotes.tabs.you')} active={tab === 'profile'} onPress={() => setTab('profile')} accent={accent} secondary={secondary} />
       </View>
 
       <ScrollView contentContainerStyle={styles.listContent}>
@@ -150,6 +149,7 @@ function PendingTab({
 }) {
   const { data: pending } = usePendingPostsNeedingNotes();
   const dialogManager = useDialogManager();
+  const { t } = useTranslation();
   const openComposer = useCallback(
     (postUri: string) => {
       const id = 'add-community-note';
@@ -166,7 +166,7 @@ function PendingTab({
   if (!pending || pending.length === 0) {
     return (
       <ThemedText style={[styles.placeholder, { color: secondary }]}>
-        No posts have been flagged yet. Check back later.
+        {t('communityNotes.pendingTab.empty')}
       </ThemedText>
     );
   }
@@ -189,7 +189,10 @@ function PendingTab({
           </ThemedText>
           <View style={styles.rowMetaRow}>
             <ThemedText style={[styles.rowMeta, { color: secondary }]}>
-              {`${post.requestCount} requests · ${formatRelativeTime(post.lastRequestedAt)}`}
+              {t('communityNotes.pendingTab.requestCountAndTime', {
+                count: post.requestCount,
+                time: formatRelativeTime(post.lastRequestedAt),
+              })}
             </ThemedText>
             <Pressable
               onPress={() => openComposer(post.uri)}
@@ -199,7 +202,7 @@ function PendingTab({
                 pressed && { opacity: 0.7 },
               ]}
             >
-              <ThemedText style={[styles.actionLabel, { color: accent }]}>Write a note</ThemedText>
+              <ThemedText style={[styles.actionLabel, { color: accent }]}>{t('communityNotes.pendingTab.writeNote')}</ThemedText>
             </Pressable>
           </View>
         </View>
@@ -210,10 +213,11 @@ function PendingTab({
 
 function RateTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
   const { data: notes } = useNotesPendingRating();
+  const { t } = useTranslation();
   if (!notes || notes.length === 0) {
     return (
       <ThemedText style={[styles.placeholder, { color: secondary }]}>
-        Nothing to rate right now. Drafts other contributors submit will appear here.
+        {t('communityNotes.rateTab.empty')}
       </ThemedText>
     );
   }
@@ -225,7 +229,7 @@ function RateTab({ borderColor, secondary }: { borderColor: string; secondary: s
           style={[styles.rateCell, webColumnSideBorders(borderColor)]}
         >
           <ThemedText style={[styles.rateContext, { color: secondary }]} numberOfLines={1}>
-            On post {note.postUri.split('/').pop()}
+            {t('communityNotes.rateTab.onPost', { postId: note.postUri.split('/').pop() ?? '' })}
           </ThemedText>
           <CommunityNote note={note} />
         </View>
@@ -246,6 +250,7 @@ function ProfileTab({
   onLeave: () => void;
 }) {
   const { data: profile } = useMyContributorProfile();
+  const { t } = useTranslation();
   if (!profile) return null;
   return (
     <View>
@@ -257,12 +262,12 @@ function ProfileTab({
         ]}
       >
         <View style={styles.statsRow}>
-          <Stat value={profile.notesWritten} label="Notes written" secondary={secondary} />
-          <Stat value={`${profile.helpfulRate}%`} label="Helpful rate" secondary={secondary} />
-          <Stat value={profile.ratingsGiven} label="Ratings given" secondary={secondary} />
+          <Stat value={profile.notesWritten} label={t('communityNotes.profile.notesWritten')} secondary={secondary} />
+          <Stat value={`${profile.helpfulRate}%`} label={t('communityNotes.profile.helpfulRate')} secondary={secondary} />
+          <Stat value={profile.ratingsGiven} label={t('communityNotes.profile.ratingsGiven')} secondary={secondary} />
         </View>
         <ThemedText style={[styles.joined, { color: secondary }]}>
-          Contributor since {new Date(profile.joinedAt).toLocaleDateString()}
+          {t('communityNotes.profile.contributorSince', { date: new Date(profile.joinedAt).toLocaleDateString() })}
         </ThemedText>
         <View style={styles.profileButtonRow}>
           <Pressable
@@ -274,7 +279,7 @@ function ProfileTab({
             ]}
           >
             <ThemedText style={[styles.actionLabel, { color: secondary }]}>
-              Leave program
+              {t('communityNotes.profile.leave')}
             </ThemedText>
           </Pressable>
         </View>
@@ -282,16 +287,16 @@ function ProfileTab({
 
       <ContributorPreferences accent={accent} borderColor={borderColor} secondary={secondary} />
 
-      <ThemedText style={[styles.sectionLabel, { color: secondary }]}>Your recent notes</ThemedText>
+      <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('communityNotes.profile.recentNotes')}</ThemedText>
       {profile.recentNotes.length === 0 ? (
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You haven't written any notes yet.
+          {t('communityNotes.profile.noNotes')}
         </ThemedText>
       ) : (
         profile.recentNotes.map((note) => (
           <View key={note.id} style={[styles.rateCell, webColumnSideBorders(borderColor)]}>
             <ThemedText style={[styles.rateContext, { color: secondary }]} numberOfLines={1}>
-              On post {note.postUri.split('/').pop()}
+              {t('communityNotes.rateTab.onPost', { postId: note.postUri.split('/').pop() ?? '' })}
             </ThemedText>
             <CommunityNote note={note} />
           </View>
@@ -322,6 +327,7 @@ function ContributorPreferences({
   // Local state placeholder for "show my notes publicly" — once a real
   // contributor lexicon ships this maps to a setting record write.
   const [showPublicly, setShowPublicly] = useState(true);
+  const { t } = useTranslation();
   return (
     <View
       style={[
@@ -332,9 +338,9 @@ function ContributorPreferences({
     >
       <View style={styles.prefRow}>
         <View style={styles.prefBody}>
-          <ThemedText style={styles.prefTitle}>Show my notes under my handle</ThemedText>
+          <ThemedText style={styles.prefTitle}>{t('communityNotes.profile.showPubliclyTitle')}</ThemedText>
           <ThemedText style={[styles.prefHint, { color: secondary }]}>
-            When off, notes you author are attributed to "anonymous contributor".
+            {t('communityNotes.profile.showPubliclyHint')}
           </ThemedText>
         </View>
         <Switch value={showPublicly} onValueChange={setShowPublicly} trackColor={{ true: accent }} />

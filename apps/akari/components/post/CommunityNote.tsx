@@ -21,21 +21,24 @@ import {
 import { type CommunityNote as CommunityNoteData } from '@/hooks/queries/useCommunityNote';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
-const HELPFUL_REASONS = [
-  { id: 'cites-sources', label: 'Cites high-quality sources' },
-  { id: 'easy-to-understand', label: 'Easy to understand' },
-  { id: 'addresses-claim', label: 'Directly addresses the claim' },
-  { id: 'provides-context', label: 'Provides important context' },
-  { id: 'fair-balanced', label: 'Written in a neutral tone' },
+type TFn = ReturnType<typeof useTranslation>['t'];
+
+const getHelpfulReasons = (t: TFn) => [
+  { id: 'cites-sources', label: t('communityNotes.note.helpfulReasons.citesSources') },
+  { id: 'easy-to-understand', label: t('communityNotes.note.helpfulReasons.easyToUnderstand') },
+  { id: 'addresses-claim', label: t('communityNotes.note.helpfulReasons.addressesClaim') },
+  { id: 'provides-context', label: t('communityNotes.note.helpfulReasons.providesContext') },
+  { id: 'fair-balanced', label: t('communityNotes.note.helpfulReasons.fairBalanced') },
 ];
 
-const NOT_HELPFUL_REASONS = [
-  { id: 'sources-do-not-support', label: 'Sources do not support the note' },
-  { id: 'incorrect-info', label: 'Contains incorrect information' },
-  { id: 'opinion', label: 'Opinion, not fact' },
-  { id: 'argumentative', label: 'Argumentative or biased' },
-  { id: 'irrelevant', label: 'Irrelevant to the post' },
+const getNotHelpfulReasons = (t: TFn) => [
+  { id: 'sources-do-not-support', label: t('communityNotes.note.notHelpfulReasons.sourcesDoNotSupport') },
+  { id: 'incorrect-info', label: t('communityNotes.note.notHelpfulReasons.incorrectInfo') },
+  { id: 'opinion', label: t('communityNotes.note.notHelpfulReasons.opinion') },
+  { id: 'argumentative', label: t('communityNotes.note.notHelpfulReasons.argumentative') },
+  { id: 'irrelevant', label: t('communityNotes.note.notHelpfulReasons.irrelevant') },
 ];
 
 /**
@@ -55,6 +58,7 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tint = useThemeColor({}, 'tint');
+  const { t } = useTranslation();
   const panelBg = useThemeColor(
     { light: '#FFF9F1', dark: '#1F1A11' },
     'background',
@@ -96,8 +100,8 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
   const isHelpful = note.status === 'currentlyRatedHelpful';
   const containerBg = isHelpful ? panelBg : reviewPanelBg;
   const headline = isHelpful
-    ? 'Readers added context'
-    : 'Note under review — needs more ratings';
+    ? t('communityNotes.note.headlineHelpful')
+    : t('communityNotes.note.headlineUnderReview');
 
   return (
     <View
@@ -121,7 +125,10 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
       <ThemedText style={styles.body}>{note.body}</ThemedText>
 
       <ThemedText style={[styles.rating, { color: secondary }]}>
-        {`${note.helpfulPercent}% of ${note.ratingCount} raters found this helpful`}
+        {t('communityNotes.note.ratingSummary', {
+          percent: note.helpfulPercent,
+          count: note.ratingCount,
+        })}
       </ThemedText>
 
       <View style={styles.actionsRow}>
@@ -137,7 +144,7 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
           ]}
         >
           <ThemedText style={[styles.actionLabel, { color: tint }]}>
-            Rate this note
+            {t('communityNotes.note.rateThisNote')}
           </ThemedText>
         </Pressable>
         {note.sources && note.sources.length > 0 ? (
@@ -153,7 +160,7 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
             ]}
           >
             <ThemedText style={[styles.actionLabel, { color: secondary }]}>
-              View sources
+              {t('communityNotes.note.viewSources')}
             </ThemedText>
           </Pressable>
         ) : null}
@@ -174,6 +181,7 @@ function RateNoteModal({
   const tint = useThemeColor({}, 'tint');
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
   const textColor = useThemeColor({}, 'text');
+  const { t } = useTranslation();
 
   const [helpfulness, setHelpfulness] = useState<CommunityNoteHelpfulness | null>(null);
   const [reasons, setReasons] = useState<Set<string>>(new Set());
@@ -184,7 +192,7 @@ function RateNoteModal({
   // with a fresh state slate; no manual reset effect needed.
 
   const reasonOptions =
-    helpfulness === 'notHelpful' ? NOT_HELPFUL_REASONS : HELPFUL_REASONS;
+    helpfulness === 'notHelpful' ? getNotHelpfulReasons(t) : getHelpfulReasons(t);
 
   const submit = async () => {
     if (!helpfulness) return;
@@ -201,18 +209,18 @@ function RateNoteModal({
     <CenteredModal onClose={onClose} maxWidth={560} height="85%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.modalTitle}>Is this note helpful?</ThemedText>
+          <ThemedText style={styles.modalTitle}>{t('communityNotes.note.rateModalTitle')}</ThemedText>
           <ThemedText style={[styles.modalSubtitle, { color: secondary }]}>
-            Your rating helps decide whether the note is shown to other readers.
+            {t('communityNotes.note.rateModalSubtitle')}
           </ThemedText>
         </View>
 
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
           <View style={styles.helpfulRow}>
             {([
-              { id: 'helpful', label: 'Helpful' },
-              { id: 'somewhatHelpful', label: 'Somewhat' },
-              { id: 'notHelpful', label: 'Not helpful' },
+              { id: 'helpful', label: t('communityNotes.note.helpfulness.helpful') },
+              { id: 'somewhatHelpful', label: t('communityNotes.note.helpfulness.somewhat') },
+              { id: 'notHelpful', label: t('communityNotes.note.helpfulness.notHelpful') },
             ] as { id: CommunityNoteHelpfulness; label: string }[]).map((opt) => {
               const active = helpfulness === opt.id;
               return (
@@ -248,7 +256,9 @@ function RateNoteModal({
           {helpfulness ? (
             <>
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
-                {helpfulness === 'notHelpful' ? 'Why not helpful?' : 'What makes it helpful?'}
+                {helpfulness === 'notHelpful'
+                  ? t('communityNotes.note.whyNotHelpful')
+                  : t('communityNotes.note.whatMakesItHelpful')}
               </ThemedText>
               <View style={styles.reasonGrid}>
                 {reasonOptions.map((opt) => {
@@ -283,12 +293,12 @@ function RateNoteModal({
                 })}
               </View>
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
-                Anything else?
+                {t('communityNotes.note.anythingElse')}
               </ThemedText>
               <TextInput
                 value={comment}
                 onChangeText={setComment}
-                placeholder="Optional notes for the rating team"
+                placeholder={t('communityNotes.note.commentPlaceholder')}
                 placeholderTextColor={secondary}
                 multiline
                 style={[
@@ -306,7 +316,7 @@ function RateNoteModal({
             disabled={rate.isPending}
             style={[styles.footerButton, { borderColor }]}
           >
-            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+            <ThemedText style={styles.footerButtonLabel}>{t('communityNotes.note.cancel')}</ThemedText>
           </Pressable>
           <Pressable
             onPress={submit}
@@ -319,7 +329,7 @@ function RateNoteModal({
             ]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              {rate.isPending ? 'Submitting…' : 'Submit'}
+              {rate.isPending ? t('communityNotes.note.submitting') : t('communityNotes.note.submit')}
             </ThemedText>
           </Pressable>
         </View>
@@ -338,20 +348,21 @@ function SourcesModal({
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tint = useThemeColor({}, 'tint');
+  const { t } = useTranslation();
 
   return (
     <CenteredModal onClose={onClose} maxWidth={520}>
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
-          <ThemedText style={styles.modalTitle}>Sources</ThemedText>
+          <ThemedText style={styles.modalTitle}>{t('communityNotes.note.sourcesTitle')}</ThemedText>
           <ThemedText style={[styles.modalSubtitle, { color: secondary }]}>
-            Citations attached to this note by the contributor.
+            {t('communityNotes.note.sourcesSubtitle')}
           </ThemedText>
         </View>
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
           {sources.length === 0 ? (
             <ThemedText style={[styles.modalSubtitle, { color: secondary }]}>
-              No sources attached.
+              {t('communityNotes.note.noSources')}
             </ThemedText>
           ) : (
             sources.map((url) => (
@@ -378,7 +389,7 @@ function SourcesModal({
             style={[styles.footerButton, styles.footerButtonPrimary, { backgroundColor: tint }]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              Close
+              {t('communityNotes.note.close')}
             </ThemedText>
           </Pressable>
         </View>

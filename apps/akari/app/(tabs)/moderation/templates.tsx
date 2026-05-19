@@ -20,6 +20,7 @@ import {
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const TEMPLATE_EDITOR_DIALOG_ID = 'mod-template-editor';
 
@@ -36,6 +37,7 @@ type TemplateEditorValues = {
  * the moderation workflow immediately on invalidation.
  */
 export default function TemplatesScreen() {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -94,9 +96,9 @@ export default function TemplatesScreen() {
   if (!membership?.isMod) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <Stack.Screen options={{ title: 'Templates' }} />
+        <Stack.Screen options={{ title: t('moderation.templates.title') }} />
         <ThemedText style={[styles.placeholder, { color: secondary }]}>
-          You are not a moderator on the configured Ozone service.
+          {t('moderation.templates.notModeratorPlaceholder')}
         </ThemedText>
       </ThemedView>
     );
@@ -104,7 +106,7 @@ export default function TemplatesScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Templates' }} />
+      <Stack.Screen options={{ title: t('moderation.templates.title') }} />
 
       <View
         style={[
@@ -113,7 +115,7 @@ export default function TemplatesScreen() {
           webColumnSideBorders(borderColor),
         ]}
       >
-        <ThemedText style={styles.title}>Communication templates</ThemedText>
+        <ThemedText style={styles.title}>{t('moderation.templates.heading')}</ThemedText>
         <Pressable
           onPress={startNew}
           style={({ pressed }) => [
@@ -122,14 +124,14 @@ export default function TemplatesScreen() {
             pressed && { opacity: 0.6 },
           ]}
         >
-          <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>+ New template</ThemedText>
+          <ThemedText style={[styles.primaryButtonLabel, { color: accent }]}>{t('moderation.templates.newTemplate')}</ThemedText>
         </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.list}>
         {templates && templates.length === 0 ? (
           <ThemedText style={[styles.placeholder, { color: secondary }]}>
-            No templates yet — create one to use the email action.
+            {t('moderation.templates.noTemplates')}
           </ThemedText>
         ) : (
           (templates ?? []).map((tpl) => (
@@ -159,7 +161,7 @@ export default function TemplatesScreen() {
                     pressed && { opacity: 0.6 },
                   ]}
                 >
-                  <ThemedText style={styles.smallButtonLabel}>Edit</ThemedText>
+                  <ThemedText style={styles.smallButtonLabel}>{t('moderation.templates.edit')}</ThemedText>
                 </Pressable>
                 <Pressable
                   onPress={() => deleteMutation.mutate(tpl.id)}
@@ -169,7 +171,7 @@ export default function TemplatesScreen() {
                     pressed && { opacity: 0.6 },
                   ]}
                 >
-                  <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>Delete</ThemedText>
+                  <ThemedText style={[styles.smallButtonLabel, { color: dangerColor }]}>{t('moderation.templates.delete')}</ThemedText>
                 </Pressable>
               </View>
             </View>
@@ -199,6 +201,7 @@ function TemplateEditorModal({
   onClose: () => void;
   onSave: (values: TemplateEditorValues) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
@@ -231,7 +234,7 @@ function TemplateEditorModal({
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>
-            {template?.id ? 'Edit template' : 'New template'}
+            {template?.id ? t('moderation.templates.editTitle') : t('moderation.templates.newTitle')}
           </ThemedText>
           {template?.id ? (
             <ThemedText style={[styles.modalSubtitle, { color: secondary }]} numberOfLines={1}>
@@ -241,7 +244,7 @@ function TemplateEditorModal({
         </View>
 
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Name</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.nameLabel')}</ThemedText>
           <TextInput
             value={draftName}
             onChangeText={setDraftName}
@@ -249,7 +252,7 @@ function TemplateEditorModal({
             placeholderTextColor={secondary}
             style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
           />
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Email subject</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.subjectLabel')}</ThemedText>
           <TextInput
             value={draftSubject}
             onChangeText={setDraftSubject}
@@ -257,7 +260,7 @@ function TemplateEditorModal({
             placeholderTextColor={secondary}
             style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
           />
-          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Body (Markdown)</ThemedText>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.bodyLabel')}</ThemedText>
           <TextInput
             value={draftBody}
             onChangeText={setDraftBody}
@@ -278,7 +281,7 @@ function TemplateEditorModal({
             disabled={saving}
             style={[styles.footerButton, { borderColor }]}
           >
-            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+            <ThemedText style={styles.footerButtonLabel}>{t('moderation.templates.cancel')}</ThemedText>
           </Pressable>
           <Pressable
             onPress={handleSave}
@@ -291,7 +294,7 @@ function TemplateEditorModal({
             ]}
           >
             <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-              {saving ? 'Saving…' : 'Save'}
+              {saving ? t('moderation.templates.saving') : t('moderation.templates.save')}
             </ThemedText>
           </Pressable>
         </View>

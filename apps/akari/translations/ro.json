@@ -1152,7 +1152,206 @@
       "postLanguageA11y": "Limba postării: {{value}}"
     },
     "communityNotes": {
-      "title": "Community Notes"
+      "title": "Community Notes",
+      "enroll": {
+        "title": "Ajută la adăugarea de context la postări",
+        "body1": "Community Notes sunt note scurte atașate postărilor care au nevoie de mai mult context. Contribuitorii le redactează și evaluează schițele celorlalți; doar notele pe care comunitatea le marchează ca utile sunt afișate cititorilor.",
+        "body2": "Înscrierea te include în portalul contribuitorilor: postări în așteptare, coada de evaluare și profilul cu notele tale.",
+        "cta": "Înscrie-te"
+      },
+      "tabs": {
+        "pending": "În așteptare",
+        "rate": "Evaluează",
+        "you": "Tu"
+      },
+      "pendingTab": {
+        "empty": "Nicio postare nu a fost semnalată încă. Revino mai târziu.",
+        "requestCountAndTime": "{count} solicitări · {time}",
+        "writeNote": "Scrie o notă"
+      },
+      "rateTab": {
+        "empty": "Nimic de evaluat momentan. Schițele trimise de alți contribuitori vor apărea aici.",
+        "onPost": "La postarea {postId}"
+      },
+      "profile": {
+        "notesWritten": "Note scrise",
+        "helpfulRate": "Rată de utilitate",
+        "ratingsGiven": "Evaluări date",
+        "contributorSince": "Contribuitor din {date}",
+        "leave": "Părăsește programul",
+        "recentNotes": "Notele tale recente",
+        "noNotes": "Nu ai scris încă nicio notă.",
+        "showPubliclyTitle": "Afișează notele mele sub handle-ul meu",
+        "showPubliclyHint": "Când e dezactivat, notele scrise de tine sunt atribuite unui „contribuitor anonim”."
+      },
+      "note": {
+        "headlineHelpful": "Cititorii au adăugat context",
+        "headlineUnderReview": "Notă în curs de revizuire, are nevoie de mai multe evaluări",
+        "ratingSummary": "{percent}% din {count} evaluatori au considerat asta util",
+        "rateThisNote": "Evaluează această notă",
+        "viewSources": "Vezi sursele",
+        "rateModalTitle": "Este utilă această notă?",
+        "rateModalSubtitle": "Evaluarea ta ajută la a decide dacă nota este afișată altor cititori.",
+        "helpfulness": {
+          "helpful": "Utilă",
+          "somewhat": "Oarecum",
+          "notHelpful": "Neutilă"
+        },
+        "whyNotHelpful": "De ce nu este utilă?",
+        "whatMakesItHelpful": "Ce o face utilă?",
+        "anythingElse": "Altceva?",
+        "commentPlaceholder": "Note opționale pentru echipa de evaluare",
+        "cancel": "Anulează",
+        "submit": "Trimite",
+        "submitting": "Se trimite…",
+        "sourcesTitle": "Surse",
+        "sourcesSubtitle": "Citările atașate acestei note de către contribuitor.",
+        "noSources": "Nicio sursă atașată.",
+        "close": "Închide",
+        "helpfulReasons": {
+          "citesSources": "Citează surse de calitate",
+          "easyToUnderstand": "Ușor de înțeles",
+          "addressesClaim": "Abordează direct afirmația",
+          "providesContext": "Oferă context important",
+          "fairBalanced": "Scrisă pe un ton neutru"
+        },
+        "notHelpfulReasons": {
+          "sourcesDoNotSupport": "Sursele nu susțin nota",
+          "incorrectInfo": "Conține informații incorecte",
+          "opinion": "Opinie, nu fapt",
+          "argumentative": "Combativă sau părtinitoare",
+          "irrelevant": "Irelevantă pentru postare"
+        }
+      },
+      "contributor": {
+        "addTitle": "Adaugă o Community Note",
+        "addSubtitle": "Nota ta este privată până când suficienți evaluatori o marchează ca utilă. Limitează-te la fapte verificabile și citează surse.",
+        "problemQuestion": "Care este problema cu această postare?",
+        "yourNote": "Nota ta",
+        "notePlaceholder": "Explică ce lipsește sau ce este înșelător. Citează sursele mai jos.",
+        "sourcesLabel": "Surse (un URL pe linie)",
+        "cancel": "Anulează",
+        "submitNote": "Trimite nota",
+        "submitting": "Se trimite…",
+        "requestTitle": "Solicită o Community Note",
+        "requestSubtitle": "Semnalează această postare unui contribuitor pentru revizuire. Vom anunța grupul de evaluatori, nu vei vedea nota imediat.",
+        "reason": "Motiv",
+        "anythingElseOptional": "Altceva? (opțional)",
+        "commentPlaceholder": "Adaugă context util pentru contribuitor",
+        "sendRequest": "Trimite solicitarea",
+        "classification": {
+          "misleading": "Înșelătoare",
+          "missingContext": "Lipsă de context",
+          "outdated": "Învechită",
+          "satire": "Satiră tratată ca fapt",
+          "other": "Altele"
+        },
+        "requestReason": {
+          "misinformation": "Dezinformare",
+          "missingContext": "Are nevoie de mai mult context",
+          "manipulation": "Conținut media manipulat",
+          "spam": "Spam sau înșelătorie",
+          "other": "Altă îngrijorare"
+        }
+      }
+    },
+    "moderation": {
+      "team": {
+        "title": "Echipă",
+        "notModeratorPlaceholder": "Nu ești moderator pe serviciul Ozone configurat.",
+        "heading": "Echipa de moderare",
+        "addMember": "+ Adaugă membru",
+        "noMembers": "Niciun membru în echipă.",
+        "remove": "Elimină",
+        "modalTitle": "Adaugă membru în echipă",
+        "modalSubtitle": "Caută după handle sau lipește direct un DID.",
+        "accountLabel": "Cont",
+        "selected": "Selectat",
+        "didHelper": "Va adăuga DID-ul brut fără rezolvare; asigură-te că este corect.",
+        "searching": "Se caută…",
+        "onTeam": "În echipă",
+        "noMatches": "Nicio potrivire.",
+        "typeToSearch": "Tastează cel puțin 2 caractere pentru a căuta.",
+        "roleLabel": "Rol",
+        "cancel": "Anulează",
+        "adding": "Se adaugă…",
+        "addMemberCta": "Adaugă membru",
+        "demote": "Retrogradează",
+        "promote": "Promovează",
+        "enable": "Activează",
+        "disable": "Dezactivează"
+      },
+      "admin": {
+        "title": "Admin",
+        "notModeratorPlaceholder": "Nu ești moderator pe serviciul Ozone configurat.",
+        "noSafelinkRules": "Nicio regulă safelink.",
+        "remove": "Elimină",
+        "noSets": "Niciun set încă.",
+        "findRelated": "Găsește conexiuni",
+        "signaturesIntro": "Introdu un DID pentru a găsi conturi care împart semnături (e-mail, IP etc.).",
+        "noRelated": "Niciun cont conex.",
+        "noVerifications": "Nicio verificare acordată.",
+        "addRule": "Adaugă regulă",
+        "adding": "Se adaugă…"
+      },
+      "index": {
+        "title": "Moderare",
+        "checkingAccess": "Se verifică accesul de moderator…",
+        "notModeratorPlaceholder": "Nu ești moderator pe serviciul Ozone configurat. Cere unui admin să te adauge în echipă sau schimbă DID-ul Ozone în setări dacă te refereai la o altă instanță.",
+        "templates": "Șabloane",
+        "scheduled": "Programate",
+        "team": "Echipă",
+        "admin": "Admin",
+        "queueEmpty": "Coada este goală.",
+        "noEvents": "Niciun eveniment încă.",
+        "takeAction": "Acționează"
+      },
+      "scheduled": {
+        "title": "Programate",
+        "notModeratorPlaceholder": "Nu ești moderator pe serviciul Ozone configurat.",
+        "nothingScheduled": "Nimic programat.",
+        "cancel": "Anulează",
+        "cancelling": "Se anulează…"
+      },
+      "templates": {
+        "title": "Șabloane",
+        "notModeratorPlaceholder": "Nu ești moderator pe serviciul Ozone configurat.",
+        "heading": "Șabloane de comunicare",
+        "newTemplate": "+ Șablon nou",
+        "noTemplates": "Niciun șablon încă. Creează unul pentru a folosi acțiunea prin e-mail.",
+        "edit": "Editează",
+        "delete": "Șterge",
+        "editTitle": "Editează șablonul",
+        "newTitle": "Șablon nou",
+        "nameLabel": "Nume",
+        "subjectLabel": "Subiect e-mail",
+        "bodyLabel": "Conținut (Markdown)",
+        "cancel": "Anulează",
+        "save": "Salvează",
+        "saving": "Se salvează…"
+      },
+      "subject": {
+        "title": "Subiect",
+        "takeAction": "Acționează",
+        "eventHistory": "Istoric evenimente",
+        "loading": "Se încarcă…",
+        "noEvents": "Niciun eveniment pentru acest subiect încă."
+      },
+      "actionSheet": {
+        "title": "Acționează",
+        "action": "Acțiune",
+        "comment": "Comentariu",
+        "labelsToAdd": "Etichete de adăugat",
+        "labelsToRemove": "Etichete de eliminat",
+        "tagsToAdd": "Taguri de adăugat",
+        "tagsToRemove": "Taguri de eliminat",
+        "template": "Șablon",
+        "emailSubject": "Subiect",
+        "emailBody": "Conținut",
+        "duration": "Durată (ore, lasă gol pentru permanent)",
+        "cancel": "Anulează",
+        "noLabelOptions": "Nicio opțiune configurată pentru acest labeler, folosește câmpul de mai jos."
+      }
     }
   }
 }

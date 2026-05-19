@@ -26,6 +26,7 @@ import {
 } from '@/hooks/queries/useOzoneSubject';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from '@/hooks/useTranslation';
 import { formatRelativeTime } from '@/utils/timeUtils';
 
 /**
@@ -42,6 +43,7 @@ import { formatRelativeTime } from '@/utils/timeUtils';
  *   └─────────────────────────────────────────────┘
  */
 export default function SubjectDetailScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{ ref?: string | string[] }>();
   const ref = decodeRef(params.ref);
   const borderColor = useBorderColor();
@@ -80,7 +82,7 @@ export default function SubjectDetailScreen() {
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title: 'Subject' }} />
+      <Stack.Screen options={{ title: t('moderation.subject.title') }} />
 
       <View
         style={[
@@ -126,7 +128,7 @@ export default function SubjectDetailScreen() {
               pressed && { opacity: 0.6 },
             ]}
           >
-            <ThemedText style={[styles.actionLabel, { color: accent }]}>Take action</ThemedText>
+            <ThemedText style={[styles.actionLabel, { color: accent }]}>{t('moderation.subject.takeAction')}</ThemedText>
           </Pressable>
         ) : null}
       </View>
@@ -139,13 +141,13 @@ export default function SubjectDetailScreen() {
             webColumnSideBorders(borderColor),
           ]}
         >
-          <ThemedText style={styles.sectionTitle}>Event history</ThemedText>
+          <ThemedText style={styles.sectionTitle}>{t('moderation.subject.eventHistory')}</ThemedText>
         </View>
         {statusLoading || historyLoading ? (
-          <ThemedText style={[styles.placeholder, { color: secondary }]}>Loading…</ThemedText>
+          <ThemedText style={[styles.placeholder, { color: secondary }]}>{t('moderation.subject.loading')}</ThemedText>
         ) : !history || history.length === 0 ? (
           <ThemedText style={[styles.placeholder, { color: secondary }]}>
-            No events for this subject yet.
+            {t('moderation.subject.noEvents')}
           </ThemedText>
         ) : (
           history.map((e) => (
