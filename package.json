@@ -122,6 +122,11 @@
     "webpack": "5.106.2"
   },
   "optionalDependencies": {
-    "@rolldown/binding-linux-x64-gnu": "^1.0.1"
+    "@esbuild/linux-x64": "0.28.0",
+    "@oxlint/binding-linux-x64-gnu": "1.66.0",
+    "@rolldown/binding-linux-x64-gnu": "^1.0.1",
+    "@sentry/cli-linux-x64": "3.4.1",
+    "@swc/core-linux-x64-gnu": "1.15.33",
+    "lightningcss-linux-x64-gnu": "1.32.0"
   }
 }
