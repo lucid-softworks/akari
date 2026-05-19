@@ -8,4 +8,5 @@ export type ProfileTabType =
   | 'repos'
   | 'starterpacks'
   | 'links'
-  | 'recipes';
+  | 'recipes'
+  | 'photos';

@@ -148,6 +148,12 @@ export const queryKeys = {
       ['authorStarterpacks', identifier, limit, pdsUrl, appViewEnabled] as const,
     recipes: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorRecipes', identifier, limit, pdsUrl] as const,
+    grainGalleries: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
+      ['authorGrainGalleries', identifier, limit, pdsUrl] as const,
+    grainPhotos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
+      ['authorGrainPhotos', identifier, limit, pdsUrl] as const,
+    grainGalleryItems: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>
+      ['authorGrainGalleryItems', identifier, pdsUrl] as const,
     feeds: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorFeeds', identifier, limit, pdsUrl] as const,
     likes: {

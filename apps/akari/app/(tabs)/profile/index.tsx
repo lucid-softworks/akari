@@ -12,6 +12,7 @@ import { FeedsTab } from '@/components/profile/FeedsTab';
 import { LikesTab } from '@/components/profile/LikesTab';
 import { LinksTab } from '@/components/profile/LinksTab';
 import { MediaTab } from '@/components/profile/MediaTab';
+import { PhotosTab } from '@/components/profile/PhotosTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RecipesTab } from '@/components/profile/RecipesTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
@@ -77,6 +78,7 @@ const TAB_ORDER: ProfileTabType[] = [
   'likes',
   'media',
   'videos',
+  'photos',
   'feeds',
   'repos',
   'starterpacks',
@@ -112,6 +114,7 @@ function OwnProfileTabPane({ tab, isActive, sharedProps }: OwnProfileTabPaneProp
     case 'repos': return <ReposTab {...props} />;
     case 'starterpacks': return <StarterpacksTab {...props} />;
     case 'recipes': return <RecipesTab {...props} />;
+    case 'photos': return <PhotosTab {...props} />;
     case 'links': return <LinksTab {...props} />;
     default: return null;
   }

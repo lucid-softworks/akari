@@ -32,6 +32,7 @@ const TAB_ORDER: ProfileTabType[] = [
   'likes',
   'media',
   'videos',
+  'photos',
   'feeds',
   'repos',
   'starterpacks',

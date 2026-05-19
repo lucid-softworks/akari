@@ -6,6 +6,12 @@ import { BlueskyDrafts } from './draft';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyGraph } from './graph';
 import {
+  BlueskyGrain,
+  type GrainGalleryRecordsResponse,
+  type GrainPhotoRecordsResponse,
+  type GrainGalleryItemRecordsResponse,
+} from './grain';
+import {
   BlueskyLeaflet,
   type CreateLeafletDocumentInput,
   type CreateLeafletDocumentResponse,
@@ -59,6 +65,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private drafts: BlueskyDrafts;
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
+  private grain: BlueskyGrain;
   private leaflet: BlueskyLeaflet;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
@@ -79,6 +86,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.drafts = new BlueskyDrafts(pdsUrl, appViewProxyDid);
     this.feeds = new BlueskyFeeds(pdsUrl, appViewProxyDid);
     this.graph = new BlueskyGraph(pdsUrl, appViewProxyDid);
+    this.grain = new BlueskyGrain(pdsUrl, appViewProxyDid);
     this.leaflet = new BlueskyLeaflet(pdsUrl, appViewProxyDid);
     this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
@@ -298,6 +306,43 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<BlueskyRecipeRecordsResponse> {
     return this.repos.getActorRecipes(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `social.grain.gallery` records on the actor's repo.
+   */
+  async getActorGalleries(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<GrainGalleryRecordsResponse> {
+    return this.grain.getActorGalleries(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `social.grain.photo` records on the actor's repo.
+   */
+  async getActorGrainPhotos(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<GrainPhotoRecordsResponse> {
+    return this.grain.getActorPhotos(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `social.grain.gallery.item` membership records on the actor's
+   * repo. These tie photos to galleries.
+   */
+  async getActorGrainGalleryItems(
+    accessJwt: string,
+    actor: string,
+    limit: number = 100,
+    cursor?: string,
+  ): Promise<GrainGalleryItemRecordsResponse> {
+    return this.grain.getActorGalleryItems(accessJwt, actor, limit, cursor);
   }
 
   /**
