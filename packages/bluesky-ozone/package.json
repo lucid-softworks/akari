@@ -1,0 +1,24 @@
+{
+  "name": "bluesky-ozone",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Client for tools.ozone.* moderation endpoints. Sits alongside bluesky-api and reuses its XRPC client (DPoP, rate limiting, proxy headers, etc.).",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "oxlint src"
+  },
+  "keywords": [
+    "bluesky",
+    "ozone",
+    "moderation",
+    "atproto"
+  ],
+  "dependencies": {
+    "bluesky-api": "1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
