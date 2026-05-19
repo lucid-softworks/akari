@@ -16,7 +16,7 @@ import {
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, layout } from '@/constants/tokens';
+import { spacing, fontSize, fontWeight, opacity, activeOpacity } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
