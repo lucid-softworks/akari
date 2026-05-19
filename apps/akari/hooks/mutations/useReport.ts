@@ -10,7 +10,11 @@ export type ReportReasonType =
   | 'reasonMisleading'
   | 'reasonSexual'
   | 'reasonRude'
-  | 'reasonOther';
+  | 'reasonOther'
+  /** Used when the labelled subject wants to contest a label. The PDS
+   *  forwards this directly to the labeler that emitted the original
+   *  label (passed via `labelerDid`) rather than the generic mod queue. */
+  | 'reasonAppeal';
 
 export type ReportSubject =
   | { type: 'account'; did: string }
