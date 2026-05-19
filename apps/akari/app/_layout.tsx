@@ -22,6 +22,7 @@ import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-c
 import { CrashProvider } from '@/axiom-crash-reporter';
 import { BuildWatermark } from '@/components/BuildWatermark';
 import { DevServerBanner } from '@/components/DevServerBanner';
+import { ExternalLinkConfirmHost } from '@/components/ExternalLinkConfirmHost';
 import { OAuthAccountBinder } from '@/components/OAuthAccountBinder';
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { DialogProvider } from '@/contexts/DialogContext';
@@ -189,6 +190,7 @@ function AppProviders({ colorScheme }: ProvidersProps) {
               <DevServerBanner />
               <OfflineBanner />
               <PlausibleAutoPageview />
+              <ExternalLinkConfirmHost />
               <Stack>
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

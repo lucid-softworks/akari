@@ -1,8 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { AddAccountForm } from '@/components/AddAccountForm';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { spacing } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -11,13 +12,13 @@ export default function AddAccountScreen() {
 
   return (
     <SettingsSubpageLayout title={t('common.addAccount')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
         <AddAccountForm />
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

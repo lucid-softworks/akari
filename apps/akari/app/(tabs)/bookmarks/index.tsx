@@ -1,15 +1,18 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyBookmark } from '@/bluesky-api';
 import { EmptyState } from '@/components/EmptyState';
 import { PostCard } from '@/components/PostCard';
+import { UnavailableRecord } from '@/components/RecordEmbed/UnavailableRecord';
 import { FeedSkeleton } from '@/components/skeletons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { spacing } from '@/constants/tokens';
+import { webScreenContainer } from '@/constants/webStyles';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
@@ -19,6 +22,26 @@ import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { useNavigateToPost } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
+
+// app.bsky.bookmark.getBookmarks can return items in three shapes — a full
+// post view, a notFoundPost stub (the original post was deleted), or a
+// blockedPost stub (the viewer can't see it). Only the first variant has
+// `author` and the rest of the post fields, so we have to branch before
+// rendering. The lexicon tags each variant with `$type`, but we fall back
+// to a structural author check so unexpected shapes don't crash either.
+type BookmarkItemView = BlueskyBookmark['item'] & {
+  $type?: string;
+  notFound?: boolean;
+  blocked?: boolean;
+};
+
+function bookmarkUnavailableKind(item: BookmarkItemView): 'notFound' | 'blocked' | null {
+  const type = item.$type;
+  if (type === 'app.bsky.feed.defs#notFoundPost' || item.notFound) return 'notFound';
+  if (type === 'app.bsky.feed.defs#blockedPost' || item.blocked) return 'blocked';
+  if (!item.author) return 'notFound';
+  return null;
+}
 
 const ESTIMATED_POST_CARD_HEIGHT = 320;
 
@@ -37,12 +60,20 @@ export default function BookmarksScreen() {
   }, []);
 
   const appViewEnabled = useAppViewEnabled();
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(20);
+  // 50 = AppView's default page size; matches bsky.app and avoids two
+  // small initial round-trips when the user has more than ~20 bookmarks.
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useBookmarks(50);
   const { data: mutedWords } = useMutedWords();
 
   const rawBookmarks = data?.pages.flatMap((page) => page.bookmarks) ?? [];
+  // Muted-word filtering reads post.author.did, so skip unavailable items
+  // (deleted / blocked) before they hit the filter. They still render below
+  // as an UnavailableRecord placeholder so the user can see and remove them.
   const bookmarks = mutedWords.length
-    ? rawBookmarks.filter((b) => !isPostMuted(b.item, mutedWords))
+    ? rawBookmarks.filter((b) => {
+        if (bookmarkUnavailableKind(b.item as BookmarkItemView)) return true;
+        return !isPostMuted(b.item, mutedWords);
+      })
     : rawBookmarks;
 
   const handleLoadMore = () => {
@@ -56,7 +87,19 @@ export default function BookmarksScreen() {
   };
 
   const renderBookmark = ({ item }: { item: BlueskyBookmark }) => {
-    const post = item.item;
+    const post = item.item as BookmarkItemView;
+
+    // Deleted or blocked bookmarks come back without the post fields a
+    // PostCard expects. Render a placeholder instead of crashing on a
+    // missing author reference.
+    const unavailable = bookmarkUnavailableKind(post);
+    if (unavailable) {
+      return (
+        <View style={styles.unavailableWrapper}>
+          <UnavailableRecord kind={unavailable} handleLabel={null} blockingMessage={null} />
+        </View>
+      );
+    }
 
     const replyTo = post.reply?.parent
       ? {
@@ -79,6 +122,7 @@ export default function BookmarksScreen() {
             displayName: post.author.displayName,
             avatar: post.author.avatar,
             verification: post.author.verification,
+            labels: post.author.labels,
           },
           createdAt: formatRelativeTime(post.indexedAt),
           likeCount: post.likeCount || 0,
@@ -106,14 +150,14 @@ export default function BookmarksScreen() {
 
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <ThemedView style={[Platform.OS === 'web' ? webScreenContainer : styles.container, { paddingTop: insets.top }]}>
         <UnavailableWithoutAppView feature={t('common.bookmarks')} />
       </ThemedView>
     );
   }
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+    <ThemedView style={[Platform.OS === 'web' ? webScreenContainer : styles.container, { paddingTop: insets.top }]}>
       <VirtualizedList
         ref={flatListRef}
         data={bookmarks}
@@ -167,5 +211,9 @@ const styles = StyleSheet.create({
   loadingMoreText: {
     fontSize: 14,
     opacity: 0.6,
+  },
+  unavailableWrapper: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
   },
 });

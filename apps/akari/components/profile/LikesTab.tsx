@@ -58,6 +58,7 @@ export function LikesTab({
               displayName: item.author.displayName,
               avatar: item.author.avatar,
               verification: item.author.verification,
+              labels: item.author.labels,
             },
             createdAt: formatRelativeTime(item.indexedAt),
             likeCount: item.likeCount || 0,

@@ -3,7 +3,7 @@ import { cdnImageUrl } from '@/utils/cdn';
 import { Image } from '@/components/Image';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, View, type ImageStyle } from 'react-native';
+import { Platform, StyleSheet, Text, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
@@ -29,6 +29,7 @@ import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, semanticColors } from '@/constants/tokens';
+import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { isAppViewRequiredError } from '@/utils/appView';
 import { apiForAccount } from '@/utils/blueskyApi';
 
@@ -207,6 +208,57 @@ type NotificationEmbedImagesProps = {
   authorDid: string | undefined;
 };
 
+/**
+ * Compact preview of a record-embed (quoted post) shown in notifications.
+ * Bluesky's web UI renders the quoted post inline as a small card under
+ * the notification; this mirrors that without pulling in the full
+ * `<RecordEmbed/>` component (which is sized for in-feed quotes).
+ */
+function NotificationQuotedRecord({ embed }: { embed: BlueskyEmbed | undefined }) {
+  const borderColor = useBorderColor();
+  // The AppView view-shapes for record embeds are nested:
+  //   app.bsky.embed.record#view             → { record: <viewRecord> }
+  //   app.bsky.embed.recordWithMedia#view    → { record: { record: <viewRecord> }, media: ... }
+  // The actual post lives on the inner `record.record` (or
+  // `record.media.record` for the media variant). Walk one layer down
+  // when the outer wrapper doesn't have author/value of its own.
+  const outer = embed?.record ?? embed?.media?.record;
+  const record = outer?.author || outer?.value ? outer : outer?.record;
+  if (!record) return null;
+  const author = record.author;
+  const value =
+    (record as { value?: { text?: string } } | undefined)?.value;
+  const text = typeof value?.text === 'string' ? value.text : undefined;
+  const handle = author?.handle ? `@${author.handle}` : '';
+  const name = author?.displayName || author?.handle || '';
+  return (
+    <View style={[styles.quotedRecord, { borderColor }]}>
+      <View style={styles.quotedRecordHeader}>
+        {author?.avatar ? (
+          <Image
+            source={{ uri: author.avatar }}
+            style={styles.quotedRecordAvatar}
+            contentFit="cover"
+          />
+        ) : null}
+        <ThemedText style={styles.quotedRecordName} numberOfLines={1}>
+          {name}
+        </ThemedText>
+        {handle ? (
+          <ThemedText style={styles.quotedRecordHandle} numberOfLines={1}>
+            {handle}
+          </ThemedText>
+        ) : null}
+      </View>
+      {text ? (
+        <ThemedText style={styles.quotedRecordText} numberOfLines={4}>
+          {text}
+        </ThemedText>
+      ) : null}
+    </View>
+  );
+}
+
 function NotificationEmbedImages({ embed, authorDid }: NotificationEmbedImagesProps) {
   if (!embed || !authorDid) return null;
 
@@ -307,7 +359,11 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
     <PressableLink
       href={href}
       onPress={onPress}
-      style={[styles.notificationItem, { borderBottomColor: borderColor }]}
+      style={[
+        styles.notificationItem,
+        { borderBottomColor: borderColor },
+        webColumnSideBorders(borderColor),
+      ]}
     >
       <View style={styles.mainContent}>
         <View style={styles.iconContainer}>
@@ -328,14 +384,17 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
         </View>
         {!notification.isRead ? <View style={styles.unreadIndicator} /> : null}
       </View>
-      {notification.postContent && (
+      {notification.postContent || notification.embed ? (
         <View style={styles.postContentContainer}>
-          <ThemedText style={styles.postContent} numberOfLines={2}>
-            {notification.postContent}
-          </ThemedText>
+          {notification.postContent ? (
+            <ThemedText style={styles.postContent} numberOfLines={4}>
+              {notification.postContent}
+            </ThemedText>
+          ) : null}
           <NotificationEmbedImages embed={notification.embed} authorDid={authorDid} />
+          <NotificationQuotedRecord embed={notification.embed} />
         </View>
-      )}
+      ) : null}
     </PressableLink>
   );
 }
@@ -677,6 +736,7 @@ export default function NotificationsScreen() {
       <ThemedView
         style={[
           styles.headerContainer,
+          webColumnSideBorders(borderColor),
           {
             paddingTop: isLargeScreen ? insets.top : 0,
             paddingBottom: isLargeScreen ? spacing.md : 0,
@@ -696,7 +756,7 @@ export default function NotificationsScreen() {
 
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
+      <ThemedView style={[Platform.OS === 'web' ? webScreenContainer : styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
         <UnavailableWithoutAppView feature={t('navigation.notifications')} />
       </ThemedView>
     );
@@ -704,14 +764,14 @@ export default function NotificationsScreen() {
 
   if (isError) {
     return (
-      <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
+      <ThemedView style={[Platform.OS === 'web' ? webScreenContainer : styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
         <NotificationsErrorState message={error?.message ?? null} />
       </ThemedView>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
       <VirtualizedList
         ref={listRef}
         data={filteredNotifications}
@@ -847,6 +907,37 @@ const styles = StyleSheet.create({
     ...EMBED_IMAGE_STYLE,
     width: '100%',
     backgroundColor: '#000',
+  },
+  quotedRecord: {
+    marginTop: spacing.sm,
+    borderWidth: 1,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  quotedRecordHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.xxs,
+  },
+  quotedRecordAvatar: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+  },
+  quotedRecordName: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+  },
+  quotedRecordHandle: {
+    fontSize: fontSize.sm,
+    opacity: opacity.tertiary,
+  },
+  quotedRecordText: {
+    fontSize: fontSize.sm,
+    opacity: opacity.secondary,
+    lineHeight: 18,
   },
   timeText: {
     fontSize: fontSize.sm,

@@ -14,6 +14,7 @@ import {
   SettingsSection,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -140,7 +141,7 @@ export default function NetworkSettingsScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flex}
       >
-        <ScrollView
+        <SettingsScroll
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
@@ -320,7 +321,7 @@ export default function NetworkSettingsScreen() {
               </ThemedView>
             </SettingsSection>
           ) : null}
-        </ScrollView>
+        </SettingsScroll>
       </KeyboardAvoidingView>
     </SettingsSubpageLayout>
   );

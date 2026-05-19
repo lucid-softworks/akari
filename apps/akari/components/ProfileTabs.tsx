@@ -1,4 +1,8 @@
+import { View } from 'react-native';
+
 import { TabBar } from '@/components/TabBar';
+import { webColumnSideBorders } from '@/constants/webStyles';
+import { useBorderColor } from '@/hooks/useBorderColor';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
@@ -12,6 +16,7 @@ type ProfileTabsProps = {
 export function ProfileTabs({ activeTab, onTabChange, profileHandle }: ProfileTabsProps) {
   const { t } = useTranslation();
   const { data: currentUser } = useCurrentAccount();
+  const borderColor = useBorderColor();
 
   const isOwnProfile = currentUser?.handle === profileHandle;
 
@@ -28,5 +33,9 @@ export function ProfileTabs({ activeTab, onTabChange, profileHandle }: ProfileTa
     { key: 'links' as const, label: t('profile.links') },
   ];
 
-  return <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />;
+  return (
+    <View style={webColumnSideBorders(borderColor)}>
+      <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
+    </View>
+  );
 }

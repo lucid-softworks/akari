@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as WebBrowser from 'expo-web-browser';
 import React, { useCallback, useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import {
   SettingsRow,
@@ -9,11 +9,12 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 
 const LINKS = {
   terms: 'https://blueskyweb.xyz/support/tos',
@@ -26,6 +27,7 @@ export default function AboutSettingsScreen() {
   const borderColor = useBorderColor();
   const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
+  const confirm = useConfirm();
 
   const version = Constants.expoConfig?.version ?? t('common.unknown');
   const iosBuildNumber = Constants.expoConfig?.ios?.buildNumber;
@@ -57,14 +59,14 @@ export default function AboutSettingsScreen() {
       try {
         await WebBrowser.openBrowserAsync(url);
       } catch {
-        showAlert({
+        confirm({
           title: t('common.error'),
           message: t('common.failedToOpenLink'),
           buttons: [{ text: t('common.ok') }],
         });
       }
     },
-    [t],
+    [confirm, t],
   );
 
   const aboutRows = useMemo<SettingsRowDescriptor[]>(
@@ -122,7 +124,7 @@ export default function AboutSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.about')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -143,7 +145,7 @@ export default function AboutSettingsScreen() {
             ))}
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

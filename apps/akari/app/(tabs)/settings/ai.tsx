@@ -1,11 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Switch, View } from 'react-native';
 
 import {
   SettingsSection,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -148,7 +149,7 @@ export default function AiSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.ai.title')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -191,7 +192,7 @@ export default function AiSettingsScreen() {
             <ActivityIndicator />
           </View>
         ) : null}
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

@@ -1,7 +1,7 @@
 import { fontSize, layout, opacity, spacing } from '@/constants/tokens';
 import { useResponsive } from '@/hooks/useResponsive';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
@@ -27,6 +27,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { shouldHideFeedItem } from '@/utils/feedFilters';
 import { isPostMuted } from '@/utils/mutedWordsFilter';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
+import { TabChromeContext } from '@/app/(tabs)/_layout';
+import { webScreenContainer } from '@/constants/webStyles';
 
 type FeedListItem = { type: 'empty'; state: 'select' | 'loading' | 'empty' } | { type: 'post'; item: BlueskyFeedItem };
 
@@ -37,9 +39,15 @@ export default function HomeScreen() {
   const [showReviewComposer, setShowReviewComposer] = useState(false);
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const filterIconColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  // Opaque background for the sticky tabs strip on web — without this
+  // the header is transparent, so PostCards scrolling underneath show
+  // through and read as if they were "going over" the header.
+  const surfaceBackground = useThemeColor({}, 'background');
   const feedListRef = useRef<VirtualizedListHandle<FeedListItem>>(null);
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
+  const isWeb = Platform.OS === 'web';
+  const { topInset: chromeTopInset } = useContext(TabChromeContext);
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
@@ -200,7 +208,7 @@ export default function HomeScreen() {
 
   if (savedFeedsLoading || feedsLoading) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
         <ThemedView style={styles.header}>
           <ThemedText style={styles.subtitle}>{t('feed.loadingFeeds')}</ThemedText>
         </ThemedView>
@@ -208,18 +216,43 @@ export default function HomeScreen() {
     );
   }
 
+  const feedListHeader = (
+    <FeedListHeader
+      isLargeScreen={isLargeScreen}
+      insetTop={insets.top}
+      feedTabs={feedTabs}
+      selectedFeed={selectedFeed ?? undefined}
+      anyFilterActive={anyFilterActive}
+      filterIconColor={filterIconColor}
+      onTabChange={handleFeedSelection}
+      onShowFilters={() => setShowFiltersSheet(true)}
+    />
+  );
+
   return (
-    <ThemedView style={styles.container}>
-      <FeedListHeader
-        isLargeScreen={isLargeScreen}
-        insetTop={insets.top}
-        feedTabs={feedTabs}
-        selectedFeed={selectedFeed ?? undefined}
-        anyFilterActive={anyFilterActive}
-        filterIconColor={filterIconColor}
-        onTabChange={handleFeedSelection}
-        onShowFilters={() => setShowFiltersSheet(true)}
-      />
+    <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
+      {isWeb ? (
+        <View
+          style={
+            ({
+              // Sticky (not fixed) so the header sits in the same flow
+              // context as the PostCards below it — both centered inside
+              // the same body-width column, both rendered at the same
+              // sub-pixel x. zIndex forces the header above the list
+              // when both are positioned (sticky + relative — RN-Web's
+              // default), otherwise later siblings (the feed) paint on
+              // top. backgroundColor keeps the strip opaque so cards
+              // don't bleed through during scroll.
+              position: 'sticky',
+              top: chromeTopInset,
+              zIndex: 10,
+              backgroundColor: surfaceBackground,
+            } as object)
+          }
+        >
+          {feedListHeader}
+        </View>
+      ) : null}
       <VirtualizedList
         ref={feedListRef}
         data={feedItems}
@@ -227,6 +260,13 @@ export default function HomeScreen() {
         keyExtractor={keyExtractor}
         estimatedItemSize={320}
         overscan={3}
+        // On web large screens the header is rendered above as a
+        // position:fixed bar that sits over the scrolling content —
+        // dropping it from the list keeps it pinned independently of
+        // the virtualiser's scroll math. On native (and on mobile
+        // web), keep it inside the list so FlashList's sticky-header
+        // pinning still works.
+        ListHeaderComponent={isWeb ? undefined : feedListHeader}
         ListFooterComponent={listFooterComponent ?? undefined}
         contentContainerStyle={styles.listContent}
         onEndReached={loadMorePosts}
@@ -255,6 +295,7 @@ export default function HomeScreen() {
     </ThemedView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

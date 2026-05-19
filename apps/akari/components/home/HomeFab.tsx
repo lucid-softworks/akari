@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -10,6 +10,14 @@ type HomeFabProps = {
   onPostPress: () => void;
   onReviewPress: () => void;
 };
+
+// `position: fixed` pins the FAB to the viewport on web, where the
+// document body now scrolls (home feed + profiles + settings). With
+// `position: absolute` the FAB was tied to its parent container, which
+// is page-tall now, so it scrolled away with the rest of the content.
+// Native RN doesn't support `fixed`, so we keep `absolute` there — the
+// FAB lives over a scroll container that doesn't move.
+const FAB_POSITION = (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute';
 
 export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
   const { t } = useTranslation();
@@ -59,7 +67,7 @@ export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
 
 const styles = StyleSheet.create({
   fab: {
-    position: 'absolute',
+    position: FAB_POSITION,
     right: spacing.xl,
     width: 56,
     height: 56,
@@ -70,14 +78,14 @@ const styles = StyleSheet.create({
     ...shadows.lg,
   },
   fabOverlay: {
-    position: 'absolute',
+    position: FAB_POSITION,
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   fabMenu: {
-    position: 'absolute',
+    position: FAB_POSITION,
     right: spacing.xl,
     gap: spacing.sm,
   },

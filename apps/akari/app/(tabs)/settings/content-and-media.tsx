@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, Switch } from 'react-native';
+import { StyleSheet, Switch } from 'react-native';
 
 import {
   SettingsRow,
@@ -8,6 +8,7 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -75,7 +76,7 @@ export default function ContentAndMediaScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.contentAndMedia')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -124,7 +125,7 @@ export default function ContentAndMediaScreen() {
             </ThemedView>
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

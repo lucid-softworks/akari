@@ -1,8 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -27,7 +28,7 @@ export default function AccessibilitySettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.accessibility')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -92,7 +93,7 @@ export default function AccessibilitySettingsScreen() {
             </ThemedView>
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

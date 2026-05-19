@@ -6,6 +6,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { TrendingBar } from '@/components/TrendingBar';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { activeOpacity, fontSize, semanticColors, spacing } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
+import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type FeedTab = { key: string; label: string };
@@ -32,6 +34,8 @@ export function FeedListHeader({
   onShowFilters,
 }: FeedListHeaderProps) {
   const { t } = useTranslation();
+  const borderColor = useBorderColor();
+  const webSideBorders = webColumnSideBorders(borderColor);
 
   return (
     <ThemedView
@@ -39,8 +43,8 @@ export function FeedListHeader({
         styles.listHeaderContainer,
         {
           paddingTop: isLargeScreen ? insetTop : 0,
-          paddingBottom: isLargeScreen ? spacing.md : 0,
         },
+        webSideBorders,
       ]}
     >
       <ThemedView style={styles.listHeaderContent}>

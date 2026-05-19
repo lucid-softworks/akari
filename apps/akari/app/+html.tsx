@@ -20,9 +20,9 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-title" content="akari" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        {/* iOS Safari's bottom URL bar is partly translucent and samples the
-            page color under it — without an html background the bar looks
-            white even when theme-color is set. */}
+        {/* iOS Safari's bottom URL bar is partly translucent and samples
+            the page color under it — without an html background the bar
+            looks white even when theme-color is set. */}
         {/* oxlint-disable-next-line react-doctor/rn-no-raw-text -- +html.tsx is the Expo Router web entry; CSS inside a <style> tag is never rendered on RN */}
         <style>{`
           html { color-scheme: dark light; background-color: #0b0c0e; }
@@ -31,6 +31,16 @@ export default function Root({ children }: PropsWithChildren) {
           }
         `}</style>
         <ScrollViewStyleReset />
+        {/* The reset above sets `body { overflow: hidden; height: 100% }`
+            for the typical fixed-viewport mobile-shell. We need the
+            window to scroll (TanStack Virtual `useWindowVirtualizer`),
+            so undo that part of the reset. */}
+        {/* oxlint-disable-next-line react-doctor/rn-no-raw-text -- +html.tsx is the Expo Router web entry; CSS inside a <style> tag is never rendered on RN */}
+        <style>{`
+          html, body { height: auto !important; overflow: visible !important; }
+          body { min-height: 100vh; overscroll-behavior-y: auto; }
+          #root { min-height: 100vh; height: auto !important; }
+        `}</style>
       </head>
       <body>{children}</body>
     </html>

@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Keyboard, StyleSheet } from 'react-native';
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Keyboard, Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,6 +13,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppView';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { fontSize, layout, opacity, spacing } from '@/constants/tokens';
+import { webScreenContainer } from '@/constants/webStyles';
+import { TabChromeContext } from '@/app/(tabs)/_layout';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useCollapsibleHeader } from '@/hooks/useCollapsibleHeader';
@@ -82,6 +84,8 @@ export default function SearchScreen() {
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
   const { isLargeScreen } = useResponsive();
+  const { topInset: chromeTopInset } = useContext(TabChromeContext);
+  const isWeb = Platform.OS === 'web';
 
   const {
     headerHeight,
@@ -220,14 +224,14 @@ export default function SearchScreen() {
 
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
         <UnavailableWithoutAppView feature={t('navigation.search')} />
       </ThemedView>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
       <VirtualizedList
         ref={flatListRef}
         data={filteredResults}
@@ -258,7 +262,32 @@ export default function SearchScreen() {
       <Animated.View
         pointerEvents="box-none"
         onLayout={handleHeaderLayout}
-        style={[styles.headerOverlay, { backgroundColor }, headerAnimatedStyle]}
+        style={[
+          // On web pin the header to the viewport so the page itself
+          // scrolls underneath it. Large screen: no `left` so it
+          // keeps its natural horizontal position (the centered
+          // middle column's left edge), width:600 to span the column.
+          // Mobile web: full-width strip, offset by the mobile
+          // header's height so it sits just under the chrome.
+          //
+          // On web we also skip `headerAnimatedStyle` — that hook
+          // applies `transform: translateY(-h)` as the user scrolls
+          // down to collapse the header off-screen. On native that's
+          // the desired UX; on web we want the bar genuinely fixed.
+          isWeb
+            ? isLargeScreen
+              ? ({ position: 'fixed', top: 0, width: 600, zIndex: 10 } as object)
+              : ({
+                  position: 'fixed',
+                  top: chromeTopInset,
+                  left: 0,
+                  right: 0,
+                  zIndex: 10,
+                } as object)
+            : styles.headerOverlay,
+          { backgroundColor },
+          isWeb ? null : headerAnimatedStyle,
+        ]}
       >
         <MemoizedSearchListHeader
           query={query}

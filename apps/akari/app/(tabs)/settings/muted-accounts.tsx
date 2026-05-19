@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Image } from '@/components/Image';
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -47,7 +48,7 @@ export default function MutedAccountsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.mutedAccounts')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -127,7 +128,7 @@ export default function MutedAccountsScreen() {
             )}
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

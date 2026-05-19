@@ -201,6 +201,7 @@ function postCardFromFeedItem(item: BlueskyFeedItem) {
       displayName: post.author.displayName,
       avatar: post.author.avatar,
       verification: post.author.verification,
+      labels: post.author.labels,
     },
     createdAt: post.indexedAt,
     likeCount: post.likeCount || 0,

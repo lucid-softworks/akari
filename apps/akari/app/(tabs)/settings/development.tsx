@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo } from 'react';
-import { ScrollView, StyleSheet, Switch } from 'react-native';
+import { StyleSheet, Switch } from 'react-native';
 
 import {
   SettingsRow,
@@ -9,14 +9,15 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useDevSettings } from '@/hooks/useDevSettings';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 import { getTranslationReport } from '@/utils/translationLogger';
 
 export default function DevelopmentSettingsScreen() {
@@ -24,6 +25,7 @@ export default function DevelopmentSettingsScreen() {
   const iconColor = useThemeColor({}, 'text');
   const { fpsOverlayEnabled, setFpsOverlayEnabled } = useDevSettings();
   const { t } = useTranslation();
+  const confirm = useConfirm();
 
   const version = Constants.expoConfig?.version ?? t('common.unknown');
   const iosBuildNumber = Constants.expoConfig?.ios?.buildNumber;
@@ -44,12 +46,12 @@ export default function DevelopmentSettingsScreen() {
   const handleCheckMissingTranslations = useCallback(() => {
     const report = getTranslationReport();
 
-    showAlert({
+    confirm({
       title: t('settings.checkMissingTranslations'),
       message: report,
       buttons: [{ text: t('common.ok') }],
     });
-  }, [t]);
+  }, [confirm, t]);
 
   const handleOpenDebugTools = useCallback(() => {
     router.push('/debug');
@@ -97,7 +99,7 @@ export default function DevelopmentSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.development')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -123,7 +125,7 @@ export default function DevelopmentSettingsScreen() {
             ))}
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

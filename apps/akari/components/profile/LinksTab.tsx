@@ -8,7 +8,8 @@ import { useLinks } from '@/hooks/queries/useLinks';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { openExternalLink } from '@/utils/externalLink';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { ProfileTabContentProps } from '@/components/profile/types';
 
@@ -52,7 +53,7 @@ function LinkItem({ card }: LinkItemProps) {
 
   const handleLinkPress = async () => {
     try {
-      await Linking.openURL(card.url);
+      await openExternalLink(card.url);
     } catch (error) {
       console.error('Failed to open link:', error);
     }

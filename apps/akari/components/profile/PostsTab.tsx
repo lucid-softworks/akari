@@ -7,6 +7,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
+import { useBorderColor } from '@/hooks/useBorderColor';
 import { useAuthorPosts } from '@/hooks/queries/useAuthorPosts';
 import { usePinnedPost } from '@/hooks/queries/usePinnedPost';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -46,6 +48,7 @@ export function PostsTab({
   const navigateToPost = useNavigateToPost();
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
+  const borderColor = useBorderColor();
 
   const mutedPosts = useMutedFilter(posts);
   const filteredPosts = useMemo(() => {
@@ -80,6 +83,7 @@ export function PostsTab({
               displayName: item.author.displayName,
               avatar: item.author.avatar,
               verification: item.author.verification,
+              labels: item.author.labels,
             },
             createdAt: formatRelativeTime(item.indexedAt),
             likeCount: item.likeCount || 0,
@@ -107,7 +111,7 @@ export function PostsTab({
       if (item._isPinned) {
         return (
           <View>
-            <View style={styles.pinnedBadge}>
+            <View style={[styles.pinnedBadge, webColumnSideBorders(borderColor)]}>
               <IconSymbol name="pin.fill" size={12} color={iconColor} />
               <ThemedText style={[styles.pinnedBadgeText, { color: iconColor }]}>
                 {t('post.pinned')}
@@ -120,7 +124,7 @@ export function PostsTab({
 
       return card;
     },
-    [navigateToPost, iconColor, t],
+    [navigateToPost, iconColor, t, borderColor],
   );
 
   return (

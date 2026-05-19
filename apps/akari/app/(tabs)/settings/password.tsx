@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import {
@@ -43,7 +44,7 @@ export default function PasswordScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.password')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -71,7 +72,7 @@ export default function PasswordScreen() {
             </ThemedText>
           </Pressable>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

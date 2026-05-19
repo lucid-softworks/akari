@@ -1,8 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedView } from '@/components/ThemedView';
 import { SwatchPicker, PRESETS } from '@/components/settings/ColorSwatchPicker';
 import { Colors } from '@/constants/Colors';
@@ -30,7 +31,7 @@ export default function AppearanceDarkScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.darkModeColors')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -49,7 +50,7 @@ export default function AppearanceDarkScreen() {
             </ThemedView>
           </SettingsSection>
         ))}
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

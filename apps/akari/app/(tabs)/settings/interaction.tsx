@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -110,7 +111,7 @@ export default function InteractionSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.interactionSettings')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -214,7 +215,7 @@ export default function InteractionSettingsScreen() {
         >
           <ThemedText style={styles.saveButtonText}>{t('common.save')}</ThemedText>
         </Pressable>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ResultsList } from '@/components/settings/following-cleanup/ResultsList';
 import { ScanCard } from '@/components/settings/following-cleanup/ScanCard';
@@ -7,6 +7,7 @@ import { SkippedSection } from '@/components/settings/following-cleanup/SkippedS
 import { SortPicker, type SortMode } from '@/components/settings/following-cleanup/SortPicker';
 import { ThresholdPicker, type Threshold } from '@/components/settings/following-cleanup/ThresholdPicker';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, layout, spacing } from '@/constants/tokens';
@@ -86,7 +87,7 @@ export default function FollowingCleanupScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.followingCleanup.title')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -158,7 +159,7 @@ export default function FollowingCleanupScreen() {
             tintColor={tintColor}
           />
         ) : null}
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

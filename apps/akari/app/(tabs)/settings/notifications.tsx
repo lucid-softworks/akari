@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { NotificationSettings } from '@/components/NotificationSettings';
 import {
@@ -9,6 +9,7 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedView } from '@/components/ThemedView';
 import { useNotificationPreferences } from '@/hooks/queries/useNotificationPreferences';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -92,7 +93,7 @@ export default function NotificationSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.notifications')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -118,7 +119,7 @@ export default function NotificationSettingsScreen() {
             <NotificationSettings />
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

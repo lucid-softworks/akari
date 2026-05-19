@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -64,7 +65,7 @@ export default function CustomizeTabsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.customizeTabs')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -141,7 +142,7 @@ export default function CustomizeTabsScreen() {
         <Pressable style={({ pressed }) => [styles.resetButton, pressed && { opacity: activeOpacity.default }]} onPress={handleReset} >
           <ThemedText style={[styles.resetText, { color: accentColor }]}>{t('settings.resetToDefault')}</ThemedText>
         </Pressable>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

@@ -38,6 +38,7 @@ export function SearchPostResult({ post }: SearchPostResultProps) {
           displayName: post.author.displayName,
           avatar: post.author.avatar,
           verification: post.author.verification,
+          labels: post.author.labels,
         },
         createdAt: formatRelativeTime(post.indexedAt),
         likeCount: post.likeCount || 0,

@@ -1,9 +1,10 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useReducer } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import {
@@ -143,7 +144,7 @@ export default function NotificationCategoryScreen() {
 
   return (
     <SettingsSubpageLayout title={title}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -220,7 +221,7 @@ export default function NotificationCategoryScreen() {
         >
           <ThemedText style={styles.saveButtonText}>{t('common.save')}</ThemedText>
         </Pressable>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

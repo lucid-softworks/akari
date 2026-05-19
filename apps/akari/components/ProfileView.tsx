@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
+
+import { webScreenContainer } from '@/constants/webStyles';
 
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ProfileActionSheets } from '@/components/ProfileView/ProfileActionSheets';
@@ -8,8 +10,10 @@ import { ProfileTabPane } from '@/components/ProfileView/ProfileTabPane';
 import { ProfileViewHeader } from '@/components/ProfileView/ProfileViewHeader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
-import { fontSize, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, semanticColors, spacing } from '@/constants/tokens';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { germButtonVisibleFor, useGermDeclaration } from '@/hooks/queries/useGermDeclaration';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -144,6 +148,15 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   }
 
   if (error || !profile) {
+    // Suspended accounts come back with a 4xx + `error: 'AccountTakedown'`
+    // body. The XRPC client surfaces those as Error objects with a
+    // `.errorCode` property — fall through to the suspended UI rather
+    // than the generic "not found" screen so the user understands the
+    // account hasn't been deleted, it's been actioned by moderation.
+    const errorCode = (error as { errorCode?: string } | null | undefined)?.errorCode;
+    if (errorCode === 'AccountTakedown') {
+      return <SuspendedAccountState handle={handle} />;
+    }
     return (
       <ThemedView style={styles.container}>
         <ThemedText style={styles.errorText}>{t('common.noProfile')}</ThemedText>
@@ -191,22 +204,32 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     );
   }
 
+  const isWeb = Platform.OS === 'web';
+
+  // On web the page itself scrolls — only the active tab is mounted in
+  // flow, so the document body grows to fit its content and the chrome
+  // header + sticky tabs strip can pin to the viewport.
+  // On native, all visited tabs stay mounted in absolute-fill panes so
+  // switching is instant (and each tab's FlatList preserves its own
+  // scroll position).
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={isWeb ? webScreenContainer : styles.container}>
       {handle
-        ? TAB_ORDER.map((tab) => {
-            if (!visitedTabs.has(tab)) return null;
-            const isActive = tab === activeTab;
-            return (
-              <View
-                key={tab}
-                style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
-                pointerEvents={isActive ? 'auto' : 'none'}
-              >
-                <ProfileTabPane tab={tab} isActive={isActive} sharedProps={sharedTabProps} />
-              </View>
-            );
-          })
+        ? isWeb
+          ? <ProfileTabPane tab={activeTab} isActive sharedProps={sharedTabProps} />
+          : TAB_ORDER.map((tab) => {
+              if (!visitedTabs.has(tab)) return null;
+              const isActive = tab === activeTab;
+              return (
+                <View
+                  key={tab}
+                  style={[styles.tabPane, !isActive && styles.tabPaneHidden]}
+                  pointerEvents={isActive ? 'auto' : 'none'}
+                >
+                  <ProfileTabPane tab={tab} isActive={isActive} sharedProps={sharedTabProps} />
+                </View>
+              );
+            })
         : null}
 
       <ProfileActionSheets
@@ -232,6 +255,29 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   );
 }
 
+function SuspendedAccountState({ handle }: { handle: string }) {
+  const { t } = useTranslation();
+  const panelColor = useThemeColor({}, 'panel');
+  const lineSoft = useThemeColor({}, 'lineSoft');
+  const textPrimary = useThemeColor({}, 'text');
+  const textSecondary = useThemeColor({}, 'textSecondary');
+  return (
+    <ThemedView style={styles.container}>
+      <View style={styles.suspendedWrap}>
+        <View style={[styles.suspendedIcon, { backgroundColor: panelColor, borderColor: lineSoft }]}>
+          <IconSymbol name="exclamationmark.triangle" size={32} color={semanticColors.danger} />
+        </View>
+        <ThemedText style={[styles.suspendedTitle, { color: textPrimary }]}>
+          {t('profile.suspendedTitle')}
+        </ThemedText>
+        <ThemedText style={[styles.suspendedBody, { color: textSecondary }]}>
+          {t('profile.suspendedBody', { handle })}
+        </ThemedText>
+      </View>
+    </ThemedView>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -251,5 +297,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.xxxxl,
     color: 'red',
+  },
+  suspendedWrap: {
+    alignItems: 'center',
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xxxxl,
+    gap: spacing.md,
+  },
+  suspendedIcon: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  suspendedTitle: {
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
+    textAlign: 'center',
+  },
+  suspendedBody: {
+    fontSize: fontSize.base,
+    textAlign: 'center',
+    lineHeight: 20,
+    maxWidth: 320,
   },
 });
