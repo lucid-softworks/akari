@@ -1,9 +1,9 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { cdnImageUrl } from '@/utils/cdn';
 import { Image } from '@/components/Image';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View, type ImageStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View, type ImageStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
@@ -25,7 +25,7 @@ import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useNavigateToPost, useNavigateToProfile } from '@/utils/navigation';
+import { useNavigateToPost, useNavigateToProfile, useProfileHref } from '@/utils/navigation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { formatRelativeTime } from '@/utils/timeUtils';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, semanticColors } from '@/constants/tokens';
@@ -157,12 +157,27 @@ function NotificationAvatars({ authors }: NotificationAvatarsProps) {
   const maxAvatars = 4;
   const avatarsToShow = authors.slice(0, maxAvatars);
   const remainingCount = authors.length - maxAvatars;
+  const navigateToProfile = useNavigateToProfile();
+  const profileHref = useProfileHref();
 
   return (
     <View style={styles.avatarsContainer}>
       {avatarsToShow.map((author, index) => (
-        <View
+        // Wrap each avatar in its own PressableLink so tapping the
+        // avatar opens the actor's profile instead of triggering the
+        // notification row's default navigation (which, for a like or
+        // repost notification, would land on the liked/reposted post).
+        // The outer row is now a plain Pressable (was a PressableLink
+        // / <a> — see header comment), so this PressableLink can
+        // render as a real `<a>` on web and middle-click-opens-in-
+        // new-tab works on the avatar itself. PressableLink's web
+        // click handler calls stopPropagation, so the row's onPress
+        // doesn't also fire.
+        <PressableLink
           key={author.did}
+          href={profileHref(author.handle) as never}
+          onPress={() => navigateToProfile({ actor: author.handle })}
+          accessibilityLabel={`View @${author.handle}'s profile`}
           style={[
             styles.avatarWrapper,
             {
@@ -182,9 +197,12 @@ function NotificationAvatars({ authors }: NotificationAvatarsProps) {
               <Text style={styles.avatarFallbackText}>{(author.displayName || author.handle)[0].toUpperCase()}</Text>
             </View>
           )}
-        </View>
+        </PressableLink>
       ))}
       {remainingCount > 0 && (
+        // The "+N" overflow chip stays non-interactive — tapping it
+        // doesn't make sense without a list view, and we want the
+        // outer notification onPress to handle the gesture there.
         <View
           style={[
             styles.avatarWrapper,
@@ -356,9 +374,18 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
   const authorDid = notification.authors[0]?.did;
 
   return (
-    <PressableLink
-      href={href}
-      onPress={onPress}
+    // Plain Pressable instead of PressableLink so the row can host
+    // nested PressableLinks (avatars) on web without rendering a
+    // forbidden nested `<a>`. Inner interactive children
+    // (avatar -> profile) handle their own taps + stopPropagation; the
+    // empty row area falls through to the default notification action
+    // (post detail for likes/reposts/quotes, profile for follows, etc.).
+    <Pressable
+      accessibilityRole="link"
+      onPress={() => {
+        if (onPress) onPress();
+        else if (href) router.push(href as never);
+      }}
       style={[
         styles.notificationItem,
         { borderBottomColor: borderColor },
@@ -395,7 +422,7 @@ function NotificationItem({ notification, onPress, href, borderColor }: Notifica
           <NotificationQuotedRecord embed={notification.embed} />
         </View>
       ) : null}
-    </PressableLink>
+    </Pressable>
   );
 }
 
