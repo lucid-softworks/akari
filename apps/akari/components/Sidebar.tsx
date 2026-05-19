@@ -9,6 +9,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PressableLink } from '@/components/ui/PressableLink';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -49,31 +50,56 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const badgeBg = '#FF3B30';
   const activeAccount = currentAccount ?? accounts[0];
 
+  const { data: ozoneMembership } = useOzoneMembership();
+  const showModeration = !!ozoneMembership?.isMod;
+
   const navigationItems = useMemo<NavigationItem[]>(
-    () => [
-      { id: 'timeline', label: t('common.home'), icon: 'house', route: '/(tabs)', webRoute: '/' },
-      { id: 'search', label: t('common.search'), icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
-      {
-        id: 'notifications',
-        label: t('navigation.notifications'),
-        icon: 'bell',
-        route: '/(tabs)/notifications',
-        webRoute: '/notifications',
-        badge: unreadNotificationsCount,
-      },
-      {
-        id: 'messages',
-        label: t('common.messages'),
-        icon: 'message.fill',
-        route: '/(tabs)/messages',
-        webRoute: '/messages',
-        badge: unreadMessagesCount,
-      },
-      { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
-      { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
-      { id: 'settings', label: t('navigation.settings'), icon: 'gearshape.fill', route: '/(tabs)/settings', webRoute: '/settings' },
-    ],
-    [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle],
+    () => {
+      const items: NavigationItem[] = [
+        { id: 'timeline', label: t('common.home'), icon: 'house', route: '/(tabs)', webRoute: '/' },
+        { id: 'search', label: t('common.search'), icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
+        {
+          id: 'notifications',
+          label: t('navigation.notifications'),
+          icon: 'bell',
+          route: '/(tabs)/notifications',
+          webRoute: '/notifications',
+          badge: unreadNotificationsCount,
+        },
+        {
+          id: 'messages',
+          label: t('common.messages'),
+          icon: 'message.fill',
+          route: '/(tabs)/messages',
+          webRoute: '/messages',
+          badge: unreadMessagesCount,
+        },
+        { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
+        { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
+        {
+          id: 'community-notes',
+          label: t('communityNotes.title'),
+          icon: 'info.circle.fill',
+          route: '/(tabs)/community-notes',
+          webRoute: '/community-notes',
+        },
+      ];
+      // Moderation lives between profile and settings, gated on Ozone
+      // team membership. The hook is best-effort — if Ozone is
+      // unreachable or the user isn't on the team, this stays hidden.
+      if (showModeration) {
+        items.push({
+          id: 'moderation',
+          label: 'Moderation',
+          icon: 'shield.fill',
+          route: '/(tabs)/moderation',
+          webRoute: '/moderation',
+        });
+      }
+      items.push({ id: 'settings', label: t('navigation.settings'), icon: 'gearshape.fill', route: '/(tabs)/settings', webRoute: '/settings' });
+      return items;
+    },
+    [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle, showModeration],
   );
 
   const isActiveRoute = (item: NavigationItem) => {
