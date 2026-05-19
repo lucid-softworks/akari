@@ -184,11 +184,11 @@ function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondar
       {!rules || rules.length === 0 ? (
         <ThemedText style={[styles.placeholder, { color: secondary }]}>No safelink rules.</ThemedText>
       ) : (
-        rules.map((rule, i) => {
+        rules.map((rule) => {
           const r = rule as { url?: string; pattern?: string; action?: string; reason?: string; createdAt?: string };
           return (
             <View
-              key={`rule-${i}`}
+              key={`${r.url ?? ''}|${r.pattern ?? ''}|${r.action ?? ''}|${r.createdAt ?? ''}`}
               style={[styles.row, { borderBottomColor: borderColor }, webColumnSideBorders(borderColor)]}
             >
               <View style={styles.rowBody}>
@@ -233,11 +233,11 @@ function SetsTab({ borderColor, secondary }: { borderColor: string; secondary: s
   }
   return (
     <View>
-      {sets.map((s, i) => {
+      {sets.map((s) => {
         const set = s as { name?: string; description?: string; size?: number };
         return (
           <View
-            key={`set-${i}`}
+            key={set.name ?? ''}
             style={[styles.row, { borderBottomColor: borderColor }, webColumnSideBorders(borderColor)]}
           >
             <View style={styles.rowBody}>
@@ -299,11 +299,11 @@ function SignaturesTab({ borderColor, secondary }: { borderColor: string; second
       ) : !related || related.length === 0 ? (
         <ThemedText style={[styles.placeholder, { color: secondary }]}>No related accounts.</ThemedText>
       ) : (
-        related.map((row, i) => {
+        related.map((row) => {
           const r = row as { account?: { did?: string; handle?: string }; similarities?: string[] };
           return (
             <View
-              key={`rel-${i}`}
+              key={r.account?.did ?? r.account?.handle ?? ''}
               style={[styles.row, { borderBottomColor: borderColor }, webColumnSideBorders(borderColor)]}
             >
               <View style={styles.rowBody}>
@@ -327,11 +327,11 @@ function VerificationsTab({ borderColor, secondary }: { borderColor: string; sec
   }
   return (
     <View>
-      {verifications.map((v, i) => {
+      {verifications.map((v) => {
         const it = v as { subject?: string; handle?: string; displayName?: string; createdAt?: string };
         return (
           <View
-            key={`ver-${i}`}
+            key={`${it.subject ?? ''}|${it.createdAt ?? ''}`}
             style={[styles.row, { borderBottomColor: borderColor }, webColumnSideBorders(borderColor)]}
           >
             <View style={styles.rowBody}>
