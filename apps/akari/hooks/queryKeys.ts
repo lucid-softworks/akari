@@ -243,4 +243,33 @@ export const queryKeys = {
   keytrace: (handle: Maybe<string>) => ['keytrace', handle] as const,
   germDeclaration: (did: Maybe<string>) => ['germDeclaration', did] as const,
   standardDocument: (did: Maybe<string>, rkey: Maybe<string>) => ['standardDocument', did, rkey] as const,
+
+  // ---- Ozone (moderation tools) ----
+  ozone: {
+    all: ['ozone'] as const,
+    membership: (ozoneDid: Maybe<string>, viewerDid: Maybe<string>) =>
+      ['ozone', 'membership', ozoneDid, viewerDid] as const,
+    teamMembers: (ozoneDid: Maybe<string>) => ['ozone', 'teamMembers', ozoneDid] as const,
+    queue: (ozoneDid: Maybe<string>, filters: unknown) =>
+      ['ozone', 'queue', ozoneDid, filters] as const,
+    events: (ozoneDid: Maybe<string>, filters: unknown) =>
+      ['ozone', 'events', ozoneDid, filters] as const,
+    subjectStatus: (ozoneDid: Maybe<string>, subject: Maybe<string>) =>
+      ['ozone', 'subjectStatus', ozoneDid, subject] as const,
+    subjectEvents: (ozoneDid: Maybe<string>, subject: Maybe<string>) =>
+      ['ozone', 'subjectEvents', ozoneDid, subject] as const,
+    repo: (ozoneDid: Maybe<string>, did: Maybe<string>) => ['ozone', 'repo', ozoneDid, did] as const,
+    record: (ozoneDid: Maybe<string>, uri: Maybe<string>) =>
+      ['ozone', 'record', ozoneDid, uri] as const,
+    accountTimeline: (ozoneDid: Maybe<string>, did: Maybe<string>) =>
+      ['ozone', 'accountTimeline', ozoneDid, did] as const,
+    reporterStats: (ozoneDid: Maybe<string>, didsCsv: string) =>
+      ['ozone', 'reporterStats', ozoneDid, didsCsv] as const,
+    templates: (ozoneDid: Maybe<string>) => ['ozone', 'templates', ozoneDid] as const,
+    scheduled: (ozoneDid: Maybe<string>, filters: unknown) =>
+      ['ozone', 'scheduled', ozoneDid, filters] as const,
+    searchRepos: (ozoneDid: Maybe<string>, q: Maybe<string>) =>
+      ['ozone', 'searchRepos', ozoneDid, q] as const,
+    labelOptions: (ozoneDid: Maybe<string>) => ['ozone', 'labelOptions', ozoneDid] as const,
+  },
 } as const;

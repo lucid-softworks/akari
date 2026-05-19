@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, Switch, View } from 'react-native';
 
 import {
   SettingsRow,
@@ -8,6 +8,7 @@ import {
   type SettingsRowDescriptor,
 } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -67,7 +68,7 @@ export default function ModerationSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.moderation')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -118,11 +119,19 @@ export default function ModerationSettingsScreen() {
               label={t('settings.moderationServices')}
               description={t('settings.moderationServicesIntro')}
               onPress={() => router.push('/(tabs)/settings/moderation-services')}
+              showDivider
+            />
+            <SettingsRow
+              borderColor={borderColor}
+              icon="rectangle.connected.to.line.below"
+              label={t('settings.ozoneLabeler.title')}
+              description={t('settings.ozoneLabeler.entryDescription')}
+              onPress={() => router.push('/(tabs)/settings/moderation-ozone')}
               showDivider={false}
             />
           </ThemedView>
         </SettingsSection>
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }
