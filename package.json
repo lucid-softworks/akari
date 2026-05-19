@@ -120,5 +120,8 @@
     "uuid": "14.0.0",
     "vite": "^8.0.10",
     "webpack": "5.106.2"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "^1.0.1"
   }
 }
