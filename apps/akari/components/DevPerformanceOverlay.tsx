@@ -136,9 +136,9 @@ export function DevPerformanceOverlay() {
 
 const styles = StyleSheet.create({
   toggleButton: {
-    position: 'absolute',
-    top: 60,
-    left: spacing.sm,
+    position: Platform.OS === 'web' ? ('fixed' as 'absolute') : 'absolute',
+    top: Platform.OS === 'web' ? 10 : 60,
+    left: Platform.OS === 'web' ? 10 : spacing.sm,
     backgroundColor: 'rgba(0,0,0,0.7)',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
   },
   overlay: {
-    position: 'absolute',
-    top: 60,
-    left: spacing.sm,
+    position: Platform.OS === 'web' ? ('fixed' as 'absolute') : 'absolute',
+    top: Platform.OS === 'web' ? 10 : 60,
+    left: Platform.OS === 'web' ? 10 : spacing.sm,
     zIndex: 9999,
   },
   panel: {

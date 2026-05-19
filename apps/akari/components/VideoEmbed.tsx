@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -9,6 +9,7 @@ import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity }
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { matchYouTubeId, resolveExternalThumb, vimeoThumbnailFor, youtubeThumbnailUrl } from '@/utils/embedThumb';
+import { openExternalLink } from '@/utils/externalLink';
 
 type VideoEmbedProps = {
   /** Video embed data from Bluesky or native video data */
@@ -104,7 +105,7 @@ export function VideoEmbed({ embed }: VideoEmbedProps) {
   const handlePress = () => {
     // If it's an external video, open the link
     if (embed.external?.uri) {
-      Linking.openURL(embed.external.uri);
+      void openExternalLink(embed.external.uri);
     }
   };
 
@@ -211,7 +212,13 @@ export function VideoEmbed({ embed }: VideoEmbedProps) {
     const thumbnailAspectRatio = embed.aspectRatio ? embed.aspectRatio.width / embed.aspectRatio.height : 16 / 9;
 
     return (
-      <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
+      <Pressable
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          handlePress();
+        }}
+        style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}
+      >
         <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
           <ThemedView style={[styles.thumbnailContainer, { aspectRatio: thumbnailAspectRatio }]}>
             {thumbnailUrl ? (

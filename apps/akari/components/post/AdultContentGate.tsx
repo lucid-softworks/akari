@@ -48,12 +48,25 @@ export function AdultContentGate({ matchedLabels, children }: AdultContentGatePr
       .join(', ');
   }, [matchedLabels, t]);
 
+  // The gate is reused for any content-label warn — pick a generic title
+  // unless every matched label is in the adult set, in which case the
+  // existing "Adult content" copy is more specific and reads better.
+  const isAdultOnly =
+    matchedLabels.length > 0 &&
+    matchedLabels.every((value) => ADULT_LABEL_KEYS.has(value));
+  const gateTitle = isAdultOnly
+    ? t('settings.adultContentWarnTitle')
+    : t('post.labelGateTitle');
+
   if (revealed) {
     return (
       <View>
         {children}
         <Pressable
-          onPress={() => setRevealed(false)}
+          onPress={(event: { stopPropagation?: () => void }) => {
+            event?.stopPropagation?.();
+            setRevealed(false);
+          }}
           accessibilityRole="button"
           accessibilityLabel={t('settings.adultContentHide')}
           style={({ pressed }) => [
@@ -80,13 +93,16 @@ export function AdultContentGate({ matchedLabels, children }: AdultContentGatePr
     >
       <View style={styles.gateHeader}>
         <IconSymbol name="exclamationmark.triangle.fill" size={20} color={accentColor} />
-        <ThemedText style={styles.gateTitle}>{t('settings.adultContentWarnTitle')}</ThemedText>
+        <ThemedText style={styles.gateTitle}>{gateTitle}</ThemedText>
       </View>
       <ThemedText style={[styles.gateSubtitle, { color: subduedColor }]}>
         {t('settings.adultContentWarnSubtitle', { labels: labelText })}
       </ThemedText>
       <Pressable
-        onPress={() => setRevealed(true)}
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          setRevealed(true);
+        }}
         accessibilityRole="button"
         accessibilityLabel={t('settings.adultContentShow')}
         style={({ pressed }) => [

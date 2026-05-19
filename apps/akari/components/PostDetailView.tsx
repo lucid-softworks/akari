@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
 
 import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
@@ -70,6 +71,7 @@ function CommentRow({ item, navigateToPost }: CommentRowProps) {
             displayName: post.author.displayName,
             avatar: post.author.avatar,
             verification: post.author.verification,
+            labels: post.author.labels,
           },
           createdAt: formatRelativeTime(post.indexedAt),
           likeCount: post.likeCount || 0,
@@ -131,6 +133,7 @@ function CommentRow({ item, navigateToPost }: CommentRowProps) {
           displayName: postItem.author.displayName,
           avatar: postItem.author.avatar,
           verification: postItem.author.verification,
+          labels: postItem.author.labels,
         },
         createdAt: formatRelativeTime(postItem.indexedAt),
         likeCount: postItem.likeCount || 0,
@@ -185,6 +188,7 @@ function ThreadContextPost({ post: ctxPost, focusedUri, navigateToPost }: Thread
           displayName: ctxPost.author.displayName,
           avatar: ctxPost.author.avatar,
           verification: ctxPost.author.verification,
+          labels: ctxPost.author.labels,
         },
         createdAt: formatRelativeTime(ctxPost.indexedAt),
         likeCount: ctxPost.likeCount || 0,
@@ -355,6 +359,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
                 displayName: post.author.displayName,
                 avatar: post.author.avatar,
                 verification: post.author.verification,
+                labels: post.author.labels,
               },
               createdAt: formatRelativeTime(post.indexedAt),
               likeCount: post.likeCount || 0,
@@ -379,6 +384,7 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
           style={({ pressed }) => [
             styles.replyBar,
             { borderTopColor: borderColor, borderBottomColor: borderColor },
+            webColumnSideBorders(borderColor),
             pressed && { opacity: 0.7 },
           ]}
           onPress={() => setShowReplyComposer(true)}
@@ -391,9 +397,11 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
 
         {/* Replies */}
         {threadLoading ? (
-          <FeedSkeleton count={3} />
+          <View style={webColumnSideBorders(borderColor)}>
+            <FeedSkeleton count={3} />
+          </View>
         ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
-          <View style={styles.repliesContainer}>
+          <View style={[styles.repliesContainer, webColumnSideBorders(borderColor)]}>
             <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
             {threadData.thread.replies.map((reply, index) => {
               const isLast = index === threadData.thread!.replies!.length - 1;
@@ -465,7 +473,10 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   repliesContainer: {
-    marginTop: spacing.lg,
+    // Padding (not margin) so the column side borders extend across the
+    // gap above the "Replies" label instead of leaving a gap where the
+    // borders would otherwise stop.
+    paddingTop: spacing.lg,
   },
   repliesLabel: {
     fontSize: fontSize.lg,

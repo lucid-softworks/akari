@@ -7,6 +7,11 @@ import { WebPortalDropdown } from '@/components/post/WebPortalDropdown';
 
 import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { PostControlsSheet } from '@/components/PostControlsSheet';
+import {
+  AddCommunityNoteModal,
+  RequestCommunityNoteModal,
+} from '@/components/post/CommunityNoteContributor';
+import { PostDebugInspector } from '@/components/post/PostDebugInspector';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -21,6 +26,7 @@ import { useSendFeedInteraction } from '@/hooks/mutations/useSendFeedInteraction
 import { useExistingPostControls } from '@/hooks/queries/usePostControls';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useProfile } from '@/hooks/queries/useProfile';
+import { useIsCommunityNotesContributor } from '@/hooks/useCommunityNotesSettings';
 import { useHiddenContent } from '@/hooks/useHiddenContent';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -53,6 +59,11 @@ type PostActionsMenuProps = {
    *  to render the dropdown via a portal at the right viewport position,
    *  flipping above the trigger if there isn't room below. */
   anchorRect?: AnchorRect | null;
+  /** Arbitrary post data to surface in the dev-only JSON inspector. The
+   *  caller usually passes the same `post` object it handed to PostCard;
+   *  __DEV__ guards both the prop's consumption and the menu item itself
+   *  so prod builds drop the whole branch. */
+  debugData?: unknown;
   onDismiss: () => void;
   onTranslatePress: () => void;
 };
@@ -123,6 +134,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   feedUri,
   feedContext,
   anchorRect,
+  debugData,
   onDismiss,
   onTranslatePress,
 }: PostActionsMenuProps) {
@@ -132,6 +144,9 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showListPicker, setShowListPicker] = useState(false);
   const [showControlsSheet, setShowControlsSheet] = useState(false);
+  const [showDebugInspector, setShowDebugInspector] = useState(false);
+  const [showAddNote, setShowAddNote] = useState(false);
+  const [showRequestNote, setShowRequestNote] = useState(false);
   const postControlsMutation = usePostControls();
   // Fetch existing threadgate/postgate state when the user is the author —
   // only enabled while the sheet is open to skip the network round-trip on
@@ -171,6 +186,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const pinPostMutation = usePinPost();
   const feedInteractionMutation = useSendFeedInteraction();
   const { hidePost, hideAccount } = useHiddenContent();
+  const isNotesContributor = useIsCommunityNotesContributor();
 
   // Algorithmic feed gens advertise their context via at:// URIs that
   // include `app.bsky.feed.generator`. The Following timeline (URI
@@ -333,12 +349,57 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         { key: 'muteAccount', icon: 'speaker.slash', label: t('profile.muteAccount'), onPress: handleMuteAccount, disabled: !authorDid },
         { key: 'hidePost', icon: 'eye.slash', label: t('post.actions.hidePost'), onPress: handleHidePost, disabled: !postUri },
         { key: 'hideAccount', icon: 'person.crop.circle.badge.xmark', label: t('post.actions.hideAccount'), onPress: handleHideAccount, disabled: !authorDid },
+        // Reader-side "request a note" — always available to anyone
+        // (matches X's affordance: any user can flag, only enrolled
+        // contributors can author).
+        {
+          key: 'requestCommunityNote',
+          icon: 'questionmark.circle',
+          label: t('post.actions.requestCommunityNote'),
+          onPress: () => {
+            onDismiss();
+            setShowRequestNote(true);
+          },
+          disabled: !postUri,
+        },
+        // Contributor-side "add a note" — gated on the local opt-in
+        // flag from the Community Notes portal. Non-enrolled accounts
+        // don't see this entry at all; enrolling happens in the
+        // sidebar's Community Notes page.
+        ...(isNotesContributor
+          ? [
+              {
+                key: 'addCommunityNote',
+                icon: 'info.circle',
+                label: t('post.actions.addCommunityNote'),
+                onPress: () => {
+                  onDismiss();
+                  setShowAddNote(true);
+                },
+                disabled: !postUri,
+              } as PostMenuItem,
+            ]
+          : []),
         { key: 'reportPost', icon: 'exclamationmark.triangle', label: t('profile.reportPost'), onPress: () => { onDismiss(); setShowReportSheet(true); }, destructive: true },
       );
 
+      // Dev-only inspector. __DEV__ is a Metro/Babel compile-time constant,
+      // so this whole branch tree-shakes out of production bundles.
+      if (__DEV__) {
+        items.push({
+          key: 'inspectJson',
+          icon: 'chevron.left.forwardslash.chevron.right',
+          label: 'Inspect post JSON (dev)',
+          onPress: () => {
+            onDismiss();
+            setShowDebugInspector(true);
+          },
+        });
+      }
+
       return items;
     },
-    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, isAlgorithmicFeed, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handleShowMore, handleShowLess, handlePinPost, onTranslatePress, onDismiss, t],
+    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, isAlgorithmicFeed, isNotesContributor, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handleShowMore, handleShowLess, handlePinPost, onTranslatePress, onDismiss, t],
   );
 
   const wrapPress = Platform.OS === 'web'
@@ -445,6 +506,29 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
           );
           setShowControlsSheet(false);
         }}
+      />
+    ) : null}
+    {__DEV__ ? (
+      <PostDebugInspector
+        visible={showDebugInspector}
+        postUri={postUri}
+        postCid={postCid}
+        data={debugData}
+        onDismiss={() => setShowDebugInspector(false)}
+      />
+    ) : null}
+    {postUri ? (
+      <AddCommunityNoteModal
+        visible={showAddNote}
+        onClose={() => setShowAddNote(false)}
+        postUri={postUri}
+      />
+    ) : null}
+    {postUri ? (
+      <RequestCommunityNoteModal
+        visible={showRequestNote}
+        onClose={() => setShowRequestNote(false)}
+        postUri={postUri}
       />
     ) : null}
     </>

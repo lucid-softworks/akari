@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+
+import { openExternalLink } from '@/utils/externalLink';
 import { WebView } from 'react-native-webview';
 
 import { Image } from '@/components/Image';
@@ -76,7 +77,7 @@ export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
     isStreamPlaceWebRTCAvailable();
 
   const handleOpenExternal = useCallback(() => {
-    void Linking.openURL(info.uri).catch((error) => {
+    void openExternalLink(info.uri).catch((error) => {
       if (__DEV__) console.warn('Failed to open live stream', error);
     });
   }, [info.uri]);
@@ -125,7 +126,10 @@ export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
   } else {
     playerSurface = (
       <Pressable
-        onPress={handlePlay}
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          handlePlay();
+        }}
         accessibilityRole="button"
         accessibilityLabel={t('common.watchNow')}
         style={({ pressed }) => [
@@ -164,7 +168,10 @@ export function LiveStreamEmbed({ info, streamerDid }: LiveStreamEmbedProps) {
       </View>
 
       <Pressable
-        onPress={handleOpenExternal}
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          handleOpenExternal();
+        }}
         accessibilityRole="link"
         accessibilityLabel={t('common.openProfile')}
         style={({ pressed }) => [styles.watchBar, pressed && { opacity: activeOpacity.default }]}

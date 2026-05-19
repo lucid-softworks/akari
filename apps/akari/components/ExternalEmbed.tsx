@@ -76,7 +76,13 @@ export function ExternalEmbed({ embed, translatedTitle, translatedDescription }:
   );
 
   return (
-    <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
+    <Pressable
+      onPress={(event: { stopPropagation?: () => void }) => {
+        event?.stopPropagation?.();
+        handlePress();
+      }}
+      style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}
+    >
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.content}>
           {thumbUrl && (

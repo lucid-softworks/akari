@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Linking, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, semanticColors, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { openExternalLink } from '@/utils/externalLink';
 import { parseMarkdown, truncateMarkdown, type MarkdownBlock, type MarkdownInline } from '@/utils/markdown';
 
 const HEADING_FONT_SIZES: Record<1 | 2 | 3 | 4 | 5 | 6, number> = {
@@ -123,7 +124,7 @@ function InlineNode({
       return (
         <ThemedText
           style={{ color: semanticColors.systemBlue }}
-          onPress={() => void Linking.openURL(node.url)}
+          onPress={() => void openExternalLink(node.url)}
         >
           {node.text}
         </ThemedText>

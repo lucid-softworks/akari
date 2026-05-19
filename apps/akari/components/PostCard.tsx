@@ -1,14 +1,18 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
+
+import { openExternalLink } from '@/utils/externalLink';
 
 import type { BlueskyEmbed, BlueskyLabel, BlueskyVerification } from '@/bluesky-api';
+import { CommunityNote } from '@/components/post/CommunityNote';
+import { useCommunityNote } from '@/hooks/queries/useCommunityNote';
 import { Labels } from '@/components/Labels';
 import { PostComposer } from '@/components/PostComposer';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { UnthreadEmbed } from '@/components/UnthreadEmbed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { PressableLink } from '@/components/ui/PressableLink';
+import { router } from 'expo-router';
 import { AdultContentGate } from '@/components/post/AdultContentGate';
 import { LiveStreamEmbed } from '@/components/post/LiveStreamEmbed';
 import { PostActions, type ActionAnchorRect } from '@/components/post/PostActions';
@@ -17,11 +21,16 @@ import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
 import { resolveExternalThumb } from '@/utils/embedThumb';
+import { parseSkyblurUrl } from '@/utils/skyblur';
 import { findUnthreadFacet, parseUnthreadUrl, stripUnthreadFromPost } from '@/utils/unthread';
+import { useSkyblurPost } from '@/hooks/queries/useSkyblurPost';
+import { SkyblurBody } from '@/components/post/SkyblurBody';
 import { spacing, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
 import { useLiveNow } from '@/hooks/queries/useLiveNow';
-import { useAdultContentDecision } from '@/hooks/useAdultContentDecision';
+import { useLabelVisibility } from '@/hooks/useLabelVisibility';
 import { useHiddenContent } from '@/hooks/useHiddenContent';
+import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -35,6 +44,10 @@ export type PostCardProps = {
       displayName?: string;
       avatar?: string;
       verification?: BlueskyVerification;
+      /** Moderation labels applied to the author account (e.g. spam,
+       *  impersonation). Rendered alongside the post's own labels and
+       *  fed into the same hide/cover gating as post labels. */
+      labels?: BlueskyLabel[];
     };
     createdAt: string;
     likeCount?: number;
@@ -94,7 +107,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
 
-  const borderColor = useThemeColor({ light: '#e8eaed', dark: '#2d3133' }, 'background');
+  const borderColor = useBorderColor();
   const hoverBg = useThemeColor({}, 'hover');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
 
@@ -117,7 +130,19 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
     if (!embed?.$type?.includes('app.bsky.embed.external')) return false;
     return parseUnthreadUrl(embed.external?.uri) !== null;
   }, [post.embed]);
-  const renderEmbed = !externalEmbedIsUnthread;
+  // Skyblur posts publish a regular bsky post with the redacted text
+  // (asterisks where the bracketed words go) plus an external embed
+  // pointing at skyblur.uk. When we recognise that URL we fetch the
+  // source record's `text` field — which has the original `[bracketed]`
+  // words — and render it with per-word tap-to-reveal tokens, hiding
+  // the auto-generated link card.
+  const skyblurExternalUrl = useMemo(() => {
+    const embed = post.embed as { $type?: string; external?: { uri?: string } } | undefined;
+    if (!embed?.$type?.includes('app.bsky.embed.external')) return undefined;
+    return parseSkyblurUrl(embed.external?.uri) ? embed.external?.uri : undefined;
+  }, [post.embed]);
+  const { data: skyblur } = useSkyblurPost(skyblurExternalUrl);
+  const renderEmbed = !externalEmbedIsUnthread && !skyblurExternalUrl;
   const hasText = Boolean(displayText && displayText.trim());
   const hasEmbed = renderEmbed && Boolean(post.embed || (post.embeds && post.embeds.length > 0));
   const canTranslate = hasText;
@@ -129,12 +154,24 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   const { isHidden } = useHiddenContent();
   const hideThisCard = isHidden(post.uri, post.author.did);
 
-  // Adult-content gate. Reads `adultContentPref` and the post's labels
-  // to decide between showing normally, blurring with a reveal button,
-  // or suppressing the post entirely. Suppression matches Bluesky's
-  // behaviour when adult content is off — the post just disappears
-  // from the feed.
-  const adultDecision = useAdultContentDecision(post.labels);
+  // Content-label gate. Folds the user's `contentLabelPref` entries
+  // (plus the master adult-content switch) against the post's labels
+  // AND the author's labels together — so an account labelled `spam`
+  // hides the post even when the post itself carries no label.
+  // Suppression matches Bluesky's behaviour when a label is set to
+  // hide: the post disappears from the feed entirely; warn renders a
+  // blurred placeholder with a reveal button.
+  const combinedLabels = useMemo(() => {
+    const postLabels = post.labels ?? [];
+    const authorLabels = post.author.labels ?? [];
+    if (postLabels.length === 0 && authorLabels.length === 0) return undefined;
+    return [...postLabels, ...authorLabels];
+  }, [post.labels, post.author.labels]);
+  const labelDecision = useLabelVisibility(combinedLabels);
+  // Stubbed Community Note for this post — fires through useCommunityNote
+  // which currently returns deterministic fakes for ~1 in 7 posts so the
+  // UI is exercisable in a scrolled feed without a backend.
+  const { data: communityNote } = useCommunityNote(post.uri);
 
   // Live stream detection
   const { data: liveNowEntries = [] } = useLiveNow();
@@ -237,7 +274,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
 
   const handleWatchLive = useCallback(() => {
     if (!liveStreamInfo?.uri) return;
-    void Linking.openURL(liveStreamInfo.uri).catch((error) => {
+    void openExternalLink(liveStreamInfo.uri).catch((error) => {
       if (__DEV__) console.warn('Failed to open live stream', error);
     });
   }, [liveStreamInfo?.uri]);
@@ -250,6 +287,29 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
     <View style={hasText || hasEmbed || unthreadRef ? styles.content : undefined}>
       {unthreadRef ? (
         <UnthreadEmbed unthread={unthreadRef} fallbackText={displayText} />
+      ) : skyblur?.text ? (
+        <>
+          <SkyblurBody
+            text={skyblur.text}
+            textStyle={[styles.text, !hasEmbed && styles.textOnly]}
+            // Encrypted (password-visibility) posts only have empty
+            // `[]` placeholders in `text`; the real body sits in an
+            // AES-256-encrypted blob we can't decrypt locally. Hand
+            // the tap off to skyblur.uk instead.
+            forwardUrl={
+              skyblur.visibility === 'password' ? skyblurExternalUrl : undefined
+            }
+          />
+          {skyblur.additional ? (
+            <SkyblurBody
+              text={skyblur.additional}
+              textStyle={[styles.text, !hasEmbed && styles.textOnly]}
+              forwardUrl={
+                skyblur.visibility === 'password' ? skyblurExternalUrl : undefined
+              }
+            />
+          ) : null}
+        </>
       ) : hasText ? (
         <PostTranslation
           text={displayText!}
@@ -303,13 +363,13 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      {adultDecision.action === 'warn' ? (
-        <AdultContentGate matchedLabels={adultDecision.matchedLabels}>{postBody}</AdultContentGate>
+      <Labels labels={combinedLabels} maxLabels={4} />
+
+      {labelDecision.action === 'warn' ? (
+        <AdultContentGate matchedLabels={labelDecision.matchedLabels}>{postBody}</AdultContentGate>
       ) : (
         postBody
       )}
-
-      <Labels labels={post.labels} maxLabels={3} />
     </>
   );
 
@@ -341,6 +401,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         feedUri={feedUri}
         feedContext={post.feedContext}
         anchorRect={menuAnchorRect}
+        debugData={__DEV__ ? post : undefined}
         onDismiss={handleMenuDismiss}
         onTranslatePress={handleTranslatePress}
       />
@@ -348,27 +409,53 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   );
 
   if (hideThisCard) return null;
-  if (adultDecision.action === 'hide') return null;
+  if (labelDecision.action === 'hide') return null;
+
+  const webSideBorders = webColumnSideBorders(borderColor);
 
   return (
     <>
       {onPress || href ? (
         <View
-          style={[styles.container, { borderBottomColor: borderColor }, isCardHovered && { backgroundColor: hoverBg }]}
+          style={[
+            styles.container,
+            { borderBottomColor: borderColor },
+            webSideBorders,
+            isCardHovered && { backgroundColor: hoverBg },
+          ]}
           onPointerEnter={() => setIsCardHovered(true)}
           onPointerLeave={() => setIsCardHovered(false)}
         >
-          <PressableLink
-            href={href ?? '#'}
-            onPress={onPress}
+          {/* Plain Pressable instead of PressableLink/<a>: inner
+              interactive elements (avatar, links, embeds, labels, etc.)
+              already handle their own taps and stopPropagation, so the
+              outer card only fires when the user actually clicks empty
+              post space. Trade-off: middle-click-opens-in-new-tab and
+              browser link previews are forfeited at the post-card
+              level — the avatar/handle still uses PressableLink, so the
+              "open profile in new tab" affordance is preserved there. */}
+          <Pressable
+            accessibilityRole="link"
+            onPress={() => {
+              if (onPress) onPress();
+              else if (href) router.push(href as never);
+            }}
           >
             {postContent}
-          </PressableLink>
+          </Pressable>
+          {/* Community Note — sits between the card body and the
+              action bar so it doesn't push the embeds around (X-style
+              placement). Rendered outside the inner Pressable so its
+              own buttons handle taps without bubbling navigation. */}
+          {communityNote ? <CommunityNote note={communityNote} /> : null}
           {actionsBar}
         </View>
       ) : (
-        <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
+        <ThemedView
+          style={[styles.container, { borderBottomColor: borderColor }, webSideBorders]}
+        >
           {postContent}
+          {communityNote ? <CommunityNote note={communityNote} /> : null}
           {actionsBar}
         </ThemedView>
       )}

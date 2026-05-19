@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -8,6 +8,7 @@ import { spacing, radius, fontSize, fontWeight, layout, activeOpacity } from '@/
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { resolveExternalThumb, youtubeThumbnailUrl } from '@/utils/embedThumb';
+import { openExternalLink } from '@/utils/externalLink';
 
 type YouTubeEmbedProps = {
   /** YouTube embed data from Bluesky */
@@ -52,7 +53,7 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
   );
 
   const handlePress = () => {
-    Linking.openURL(embed.external.uri);
+    void openExternalLink(embed.external.uri);
   };
 
   // Extract YouTube video ID from URI
@@ -84,7 +85,13 @@ export function YouTubeEmbed({ embed }: YouTubeEmbedProps) {
   );
 
   return (
-    <Pressable onPress={handlePress} style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}>
+    <Pressable
+      onPress={(event: { stopPropagation?: () => void }) => {
+        event?.stopPropagation?.();
+        handlePress();
+      }}
+      style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}
+    >
       <View style={[styles.container, { borderColor, backgroundColor: 'transparent' }]}>
         <ThemedView style={styles.thumbnailContainer}>
           {thumbnailUrl && (

@@ -211,7 +211,13 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
             return (
               <Pressable
                 key={`${postId}-${imageUrl}`}
-                onPress={() => handleImagePress(index)}
+                onPress={(event: { stopPropagation?: () => void }) => {
+                  // Stop the click from bubbling to the outer PostCard
+                  // PressableLink — opening the image viewer should not
+                  // also navigate to the post detail page.
+                  event?.stopPropagation?.();
+                  handleImagePress(index);
+                }}
 
                 style={({ pressed }) => [isGrid ? styles.gridCell : undefined, pressed && { opacity: activeOpacity.subtle }]}
               >
@@ -303,7 +309,12 @@ function extractVideo(embed: BlueskyEmbed, t: (key: any) => string) {
       videoUrl: embed.video.ref.$link,
       thumbnailUrl: embed.video.ref.$link,
       altText: embed.video.alt || t('common.video'),
-      aspectRatio: embed.aspectRatio,
+      // For the raw record shape (`app.bsky.embed.video`), the aspect
+      // ratio lives on the nested `video` field, not the outer embed —
+      // the outer `embed.aspectRatio` is undefined here, which is why
+      // square / portrait videos were being letterboxed into the 16:9
+      // fallback.
+      aspectRatio: embed.video.aspectRatio ?? embed.aspectRatio,
     };
   }
 

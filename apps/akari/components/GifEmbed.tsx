@@ -67,7 +67,10 @@ export function GifEmbed({ embed }: GifEmbedProps) {
 
   return (
     <Pressable
-      onPress={handleTogglePlay}
+      onPress={(event: { stopPropagation?: () => void }) => {
+        event?.stopPropagation?.();
+        handleTogglePlay();
+      }}
       accessibilityRole="button"
       accessibilityLabel={playing ? t('ui.pause') : t('ui.play')}
       style={({ pressed }) => pressed && { opacity: activeOpacity.subtle }}

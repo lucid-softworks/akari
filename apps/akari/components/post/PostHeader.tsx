@@ -3,6 +3,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { AvatarOrInitial } from '@/components/AvatarOrInitial';
+import { ProfileHoverTrigger } from '@/components/ProfileHoverCard';
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
 import { PressableLink } from '@/components/ui/PressableLink';
@@ -52,47 +53,51 @@ export const PostHeader = React.memo(function PostHeader({
   return (
     <View style={styles.header}>
       <View style={styles.authorSection}>
-        <PressableLink
-          href={profileHref(author.handle) as any}
-          onPress={handleProfilePress}
-          accessibilityLabel={`View ${authorName}'s profile via avatar`}
-          style={styles.avatarPressable}
-        >
-          <View
-            style={[styles.avatarWrapper, isLive && styles.liveAvatarWrapper]}
-            onPointerEnter={handleAvatarPointerEnter}
-            onPointerLeave={handleAvatarPointerLeave}
-          >
-            <AvatarOrInitial
-              uri={author.avatar}
-              seed={author.displayName || author.handle}
-              size={layout.avatarMedium}
-            />
-            {isLive && (
-              <View style={styles.liveBadge}>
-                <ThemedText style={styles.liveBadgeText}>LIVE</ThemedText>
-              </View>
-            )}
-          </View>
-        </PressableLink>
-        <View style={styles.authorInfo}>
-          <View style={styles.displayNameRow}>
-            <ThemedText style={styles.displayName} numberOfLines={1}>{authorName}</ThemedText>
-            <VerificationBadge
-              subjectDid={author.did}
-              verification={author.verification}
-              subjectHandle={author.handle}
-              subjectDisplayName={author.displayName}
-              size={fontSize.base}
-            />
-          </View>
+        <ProfileHoverTrigger handle={author.handle}>
           <PressableLink
             href={profileHref(author.handle) as any}
             onPress={handleProfilePress}
-            accessibilityLabel={`View profile of ${authorName}`}
+            accessibilityLabel={`View ${authorName}'s profile via avatar`}
+            style={styles.avatarPressable}
           >
-            <ThemedText style={styles.handle}>@{author.handle}</ThemedText>
+            <View
+              style={[styles.avatarWrapper, isLive && styles.liveAvatarWrapper]}
+              onPointerEnter={handleAvatarPointerEnter}
+              onPointerLeave={handleAvatarPointerLeave}
+            >
+              <AvatarOrInitial
+                uri={author.avatar}
+                seed={author.displayName || author.handle}
+                size={layout.avatarMedium}
+              />
+              {isLive && (
+                <View style={styles.liveBadge}>
+                  <ThemedText style={styles.liveBadgeText}>LIVE</ThemedText>
+                </View>
+              )}
+            </View>
           </PressableLink>
+        </ProfileHoverTrigger>
+        <View style={styles.authorInfo}>
+          <ProfileHoverTrigger handle={author.handle}>
+            <View style={styles.displayNameRow}>
+              <ThemedText style={styles.displayName} numberOfLines={1}>{authorName}</ThemedText>
+              <VerificationBadge
+                subjectDid={author.did}
+                verification={author.verification}
+                subjectHandle={author.handle}
+                subjectDisplayName={author.displayName}
+                size={fontSize.base}
+              />
+            </View>
+            <PressableLink
+              href={profileHref(author.handle) as any}
+              onPress={handleProfilePress}
+              accessibilityLabel={`View profile of ${authorName}`}
+            >
+              <ThemedText style={styles.handle}>@{author.handle}</ThemedText>
+            </PressableLink>
+          </ProfileHoverTrigger>
         </View>
       </View>
       <View style={styles.headerMeta}>

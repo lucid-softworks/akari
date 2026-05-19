@@ -5,6 +5,7 @@ import { Platform, ViewStyle } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { NestedAnchorContext } from '@/components/ui/PressableLink';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { isExternalUrl, openExternalLink } from '@/utils/externalLink';
 import { useProfileHref } from '@/utils/navigation';
 
 type InlineFacetLinkProps = {
@@ -17,13 +18,35 @@ type InlineFacetLinkProps = {
 
 /**
  * Inline link wrapper used by `RichTextWithFacets` for mentions, links, and
- * hashtags. On native — and on web when the rich text isn't inside another
- * anchor — defer to expo-router's `<Link>` so middle-click and right-click
- * still open in a new tab. When nested inside a parent `<a>` on web (which
- * HTML forbids and browsers respond to by double-firing pushState), render
- * the segment as a `Text` with `onPress` and call `router.push` directly.
+ * hashtags. Internal hrefs (mentions, hashtags, anything not http/https)
+ * keep the expo-router `<Link>` so middle-click and right-click still open
+ * in a new tab. External hrefs (http/https URLs pasted into a post) route
+ * through `openExternalLink` so the leave-akari confirmation modal can
+ * intercept before the browser/OS opens the URL.
+ *
+ * The `insideAnchor` branch is a workaround for the HTML rule against
+ * nested `<a>` tags — when a rich-text segment is rendered inside a parent
+ * PressableLink's `<a>`, we render as plain `Text` with `onPress` and call
+ * the router directly instead.
  */
 function InlineFacetLink({ href, push, insideAnchor, textStyle, children }: InlineFacetLinkProps) {
+  const external = isExternalUrl(href);
+
+  if (external) {
+    return (
+      <ThemedText
+        accessibilityRole="link"
+        style={textStyle}
+        onPress={(event: { stopPropagation?: () => void }) => {
+          event?.stopPropagation?.();
+          void openExternalLink(href);
+        }}
+      >
+        {children}
+      </ThemedText>
+    );
+  }
+
   if (Platform.OS === 'web' && insideAnchor) {
     return (
       <ThemedText

@@ -166,6 +166,19 @@ const MAPPING = {
   'bell.slash': 'notifications-off',
   'eye.slash': 'visibility-off',
   'person.crop.circle.badge.xmark': 'person-off',
+  // Account-settings extras: automation label icon (SF "cpu" → Material "memory")
+  // and the Ozone labeler entry on the moderation settings page.
+  cpu: 'memory',
+  'rectangle.connected.to.line.below': 'hub',
+  // Notification-settings category icons. MaterialIcons doesn't ship
+  // separate filled/circled variants for most of these, so the `.fill`
+  // / `.circle.fill` SF symbols collapse onto the same Material name as
+  // their plain counterpart.
+  'person.badge.plus': 'person-add',
+  'quote.bubble.fill': 'format-quote',
+  'heart.circle.fill': 'favorite',
+  'arrow.triangle.2.circlepath': 'sync',
+  'ellipsis.circle.fill': 'more-horiz',
 } as unknown as IconMapping;
 
 /**
