@@ -67,7 +67,8 @@
       "done": "완료",
       "following": "팔로잉",
       "reset": "재설정",
-      "or": "또는"
+      "or": "또는",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "모든 필드를 입력해주세요",
@@ -104,7 +105,8 @@
       "continue": "계속",
       "invalidHandle": "올바른 handle을 입력해 주세요.",
       "oauthSuccessTitle": "로그인됨",
-      "oauthSuccessMessage": "@{{handle}} ({{did}})이(가) atproto OAuth로 인증되었습니다. 다음 단계는 이 세션을 API 클라이언트에 연결하는 것입니다."
+      "oauthSuccessMessage": "@{{handle}} ({{did}})이(가) atproto OAuth로 인증되었습니다. 다음 단계는 이 세션을 API 클라이언트에 연결하는 것입니다.",
+      "refreshingSession": "세션을 새로 고침는 중…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "검색",
       "notifications": "알림",
       "post": "게시물",
-      "settings": "설정"
+      "settings": "설정",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Bluesky에서 프로필과 게시물 검색",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "이 사용자는 아직 핸들을 변경하지 않았습니다.",
       "reportPost": "게시물 신고",
       "joinedDate": "{{date}}에 가입",
-      "sendMessage": "메시지 보내기"
+      "sendMessage": "메시지 보내기",
+      "suspendedTitle": "계정 정지됨",
+      "suspendedBody": "@{{handle}} 계정이 운영진에 의해 정지되었습니다."
     },
     "feed": {
       "loadingMorePosts": "더 많은 게시물 로딩 중...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "최대 {{metric}}",
       "feed": "피드"
     },
+    "confirmExternal": {
+      "title": "akari를 나가시겠어요?",
+      "body": "{{host}}의 링크를 열려고 합니다. 이 사이트는 akari와 제휴되어 있지 않습니다.",
+      "copy": "링크 복사",
+      "continue": "계속"
+    },
+    "labelDetail": {
+      "unknown": "이 라벨에 대한 추가 정보가 없습니다.",
+      "source": "출처",
+      "created": "생성됨",
+      "expires": "만료",
+      "negated": "취소됨",
+      "yes": "예",
+      "appeal": "라벨 이의 제기",
+      "appealSent": "이의 제기 전송됨"
+    },
     "post": {
       "postNotFound": "게시물을 찾을 수 없습니다",
       "newPost": "새 게시물",
+      "labelGateTitle": "콘텐츠 경고",
       "reply": "답장",
       "post": "게시",
       "posting": "게시 중...",
@@ -370,7 +393,9 @@
         "showMore": "이런 게시물 더 보기",
         "showLess": "이런 게시물 덜 보기",
         "showMoreSent": "\"더 보기\" 전송됨",
-        "showLessSent": "\"덜 보기\" 전송됨"
+        "showLessSent": "\"덜 보기\" 전송됨",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "번역",
@@ -958,6 +983,17 @@
             "description": "URL로 호환되는 CDN을 지정합니다."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "리뷰",
       "thisIsRevisit": "다시 보기입니다",
       "containsSpoilers": "스포일러가 포함되어 있습니다"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

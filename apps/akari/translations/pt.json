@@ -67,7 +67,8 @@
       "done": "Concluído",
       "following": "A seguir",
       "reset": "Redefinir",
-      "or": "ou"
+      "or": "ou",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Preencha todos os campos",
@@ -104,7 +105,8 @@
       "continue": "Continuar",
       "invalidHandle": "Digite um handle válido.",
       "oauthSuccessTitle": "Sessão iniciada",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) autenticado via atproto OAuth. Conectar esta sessão ao cliente da API é o próximo passo."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) autenticado via atproto OAuth. Conectar esta sessão ao cliente da API é o próximo passo.",
+      "refreshingSession": "Atualizando sessão…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Pesquisar",
       "notifications": "Notificações",
       "post": "Publicação",
-      "settings": "Configurações"
+      "settings": "Configurações",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Pesquisar perfis e publicações no Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Este usuário ainda não alterou o identificador.",
       "reportPost": "Denunciar publicação",
       "joinedDate": "Entrou em {{date}}",
-      "sendMessage": "Enviar mensagem"
+      "sendMessage": "Enviar mensagem",
+      "suspendedTitle": "Conta suspensa",
+      "suspendedBody": "@{{handle}} foi suspenso pela moderação."
     },
     "feed": {
       "loadingMorePosts": "Carregando mais publicações...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Máximo de {{metric}}",
       "feed": "Feed"
     },
+    "confirmExternal": {
+      "title": "Sair do akari?",
+      "body": "Você está prestes a abrir um link em {{host}}. Este site não é afiliado ao akari.",
+      "copy": "Copiar link",
+      "continue": "Continuar"
+    },
+    "labelDetail": {
+      "unknown": "Sem informações adicionais sobre este rótulo.",
+      "source": "Fonte",
+      "created": "Criado",
+      "expires": "Expira",
+      "negated": "Anulado",
+      "yes": "Sim",
+      "appeal": "Contestar rótulo",
+      "appealSent": "Contestação enviada"
+    },
     "post": {
       "postNotFound": "Post não encontrado",
       "newPost": "Nova Publicação",
+      "labelGateTitle": "Aviso de conteúdo",
       "reply": "Responder",
       "post": "Publicar",
       "posting": "Publicando...",
@@ -370,7 +393,9 @@
         "showMore": "Mostrar mais como este",
         "showLess": "Mostrar menos como este",
         "showMoreSent": "\"Mais como este\" enviado",
-        "showLessSent": "\"Menos como este\" enviado"
+        "showLessSent": "\"Menos como este\" enviado",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Tradução",
@@ -958,6 +983,17 @@
             "description": "Aponte para qualquer CDN compatível via URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Escolha até {{max}} idiomas para a sua publicação.",
       "postLanguageSearch": "Procurar idiomas",
       "postLanguageA11y": "Idioma da publicação: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

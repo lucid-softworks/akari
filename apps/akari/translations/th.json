@@ -67,7 +67,8 @@
       "done": "เสร็จ",
       "following": "กำลังติดตาม",
       "reset": "รีเซ็ต",
-      "or": "หรือ"
+      "or": "หรือ",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "กรุณากรอกทุกช่อง",
@@ -104,7 +105,8 @@
       "continue": "ดำเนินการต่อ",
       "invalidHandle": "กรุณากรอก handle ที่ถูกต้อง",
       "oauthSuccessTitle": "เข้าสู่ระบบแล้ว",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) ได้รับการยืนยันผ่าน atproto OAuth แล้ว ขั้นตอนต่อไปคือการเชื่อมเซสชันนี้เข้ากับไคลเอนต์ API"
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) ได้รับการยืนยันผ่าน atproto OAuth แล้ว ขั้นตอนต่อไปคือการเชื่อมเซสชันนี้เข้ากับไคลเอนต์ API",
+      "refreshingSession": "กำลังรีเฟรชเซสชัน…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "ค้นหา",
       "notifications": "การแจ้งเตือน",
       "post": "โพสต์",
-      "settings": "การตั้งค่า"
+      "settings": "การตั้งค่า",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "ค้นหาโปรไฟล์และโพสต์บน Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "ผู้ใช้นี้ยังไม่เคยเปลี่ยนแฮนเดิล",
       "reportPost": "รายงานโพสต์",
       "joinedDate": "เข้าร่วมเมื่อ {{date}}",
-      "sendMessage": "ส่งข้อความ"
+      "sendMessage": "ส่งข้อความ",
+      "suspendedTitle": "บัญชีถูกระงับ",
+      "suspendedBody": "@{{handle}} ถูกระงับโดยทีมตรวจสอบเนื้อหา"
     },
     "feed": {
       "loadingMorePosts": "กำลังโหลดโพสต์เพิ่มเติม...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "สูงสุด {{metric}}",
       "feed": "ฟีด"
     },
+    "confirmExternal": {
+      "title": "ออกจาก akari?",
+      "body": "คุณกำลังจะเปิดลิงก์บน {{host}} เว็บไซต์นี้ไม่มีส่วนเกี่ยวข้องกับ akari",
+      "copy": "คัดลอกลิงก์",
+      "continue": "ดำเนินการต่อ"
+    },
+    "labelDetail": {
+      "unknown": "ไม่มีข้อมูลเพิ่มเติมเกี่ยวกับป้ายกำกับนี้",
+      "source": "แหล่งที่มา",
+      "created": "สร้างเมื่อ",
+      "expires": "หมดอายุ",
+      "negated": "ยกเลิก",
+      "yes": "ใช่",
+      "appeal": "อุทธรณ์ป้ายกำกับ",
+      "appealSent": "ส่งคำอุทธรณ์แล้ว"
+    },
     "post": {
       "postNotFound": "ไม่พบโพสต์",
       "newPost": "โพสต์ใหม่",
+      "labelGateTitle": "คำเตือนเนื้อหา",
       "reply": "ตอบกลับ",
       "post": "โพสต์",
       "posting": "กำลังโพสต์...",
@@ -370,7 +393,9 @@
         "showMore": "แสดงเพิ่มแบบนี้",
         "showLess": "แสดงน้อยลงแบบนี้",
         "showMoreSent": "ส่งคำขอ \"เพิ่มแบบนี้\" แล้ว",
-        "showLessSent": "ส่งคำขอ \"น้อยลงแบบนี้\" แล้ว"
+        "showLessSent": "ส่งคำขอ \"น้อยลงแบบนี้\" แล้ว",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "การแปล",
@@ -958,6 +983,17 @@
             "description": "ชี้ไปยัง CDN ที่เข้ากันได้ใด ๆ ด้วย URL"
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "รีวิว",
       "thisIsRevisit": "นี่คือการดูซ้ำ",
       "containsSpoilers": "มีการสปอยล์"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

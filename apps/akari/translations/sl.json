@@ -67,7 +67,8 @@
       "done": "Končano",
       "following": "Sledite",
       "reset": "Ponastavi",
-      "or": "ali"
+      "or": "ali",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Prosimo, izpolnite vsa polja",
@@ -104,7 +105,8 @@
       "continue": "Naprej",
       "invalidHandle": "Vnesi veljaven handle.",
       "oauthSuccessTitle": "Prijavljeno",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) je bil overjen prek atproto OAuth. Naslednji korak je povezava te seje s klientom API."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) je bil overjen prek atproto OAuth. Naslednji korak je povezava te seje s klientom API.",
+      "refreshingSession": "Osveževanje seje…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Iskanje",
       "notifications": "Obvestila",
       "post": "Objavo",
-      "settings": "Nastavitve"
+      "settings": "Nastavitve",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Poiščite profile in objave na Bluesskyju",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Ta uporabnik še ni spremenil ročaja.",
       "reportPost": "Prijavi objavo",
       "joinedDate": "Pridružil(a) se {{date}}",
-      "sendMessage": "Pošlji sporočilo"
+      "sendMessage": "Pošlji sporočilo",
+      "suspendedTitle": "Račun začasno onemogočen",
+      "suspendedBody": "@{{handle}} je bil začasno onemogočen s strani moderiranja."
     },
     "feed": {
       "loadingMorePosts": "Nalaganje več objav ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Največ {{metric}}",
       "feed": "Vir"
     },
+    "confirmExternal": {
+      "title": "Zapustiti akari?",
+      "body": "Odpreti boste povezavo na {{host}}. To spletno mesto ni povezano z akari.",
+      "copy": "Kopiraj povezavo",
+      "continue": "Nadaljuj"
+    },
+    "labelDetail": {
+      "unknown": "Ni dodatnih informacij o tej oznaki.",
+      "source": "Vir",
+      "created": "Ustvarjeno",
+      "expires": "Poteče",
+      "negated": "Razveljavljeno",
+      "yes": "Da",
+      "appeal": "Pritoži se na oznako",
+      "appealSent": "Pritožba poslana"
+    },
     "post": {
       "postNotFound": "Post ni mogoče najti",
       "newPost": "Nova objava",
+      "labelGateTitle": "Opozorilo o vsebini",
       "reply": "Odgovor",
       "post": "Objavo",
       "posting": "Objavljanje ...",
@@ -370,7 +393,9 @@
         "showMore": "Prikaži več takih",
         "showLess": "Prikaži manj takih",
         "showMoreSent": "Poslano: več takih",
-        "showLessSent": "Poslano: manj takih"
+        "showLessSent": "Poslano: manj takih",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Prevod",
@@ -967,6 +992,17 @@
             "description": "Pokaži na poljuben združljiv CDN prek URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Izberite do {{max}} jezikov za svojo objavo.",
       "postLanguageSearch": "Iskanje jezikov",
       "postLanguageA11y": "Jezik objave: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

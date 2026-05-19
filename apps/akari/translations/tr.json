@@ -67,7 +67,8 @@
       "done": "Tamam",
       "following": "Takip ediliyor",
       "reset": "Sıfırla",
-      "or": "veya"
+      "or": "veya",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
@@ -104,7 +105,8 @@
       "continue": "Devam et",
       "invalidHandle": "Lütfen geçerli bir handle gir.",
       "oauthSuccessTitle": "Giriş yapıldı",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ile kimliği doğrulandı. Sonraki adım bu oturumu API istemcisine bağlamak."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ile kimliği doğrulandı. Sonraki adım bu oturumu API istemcisine bağlamak.",
+      "refreshingSession": "Oturum yenileniyor…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Arama",
       "notifications": "Bildirimler",
       "post": "Gönderi",
-      "settings": "Ayarlar"
+      "settings": "Ayarlar",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Bluesky'de profiller ve gönderiler ara",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Bu kullanıcı henüz kullanıcı adını değiştirmedi.",
       "reportPost": "Gönderiyi bildir",
       "joinedDate": "{{date}} tarihinde katıldı",
-      "sendMessage": "Mesaj gönder"
+      "sendMessage": "Mesaj gönder",
+      "suspendedTitle": "Hesap askıya alındı",
+      "suspendedBody": "@{{handle}} moderasyon tarafından askıya alındı."
     },
     "feed": {
       "loadingMorePosts": "Daha fazla gönderi yükleniyor...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maksimum {{metric}}",
       "feed": "Akış"
     },
+    "confirmExternal": {
+      "title": "akari'den çıkılsın mı?",
+      "body": "{{host}} adresinde bir bağlantı açmak üzeresiniz. Bu site akari ile bağlantılı değildir.",
+      "copy": "Bağlantıyı kopyala",
+      "continue": "Devam et"
+    },
+    "labelDetail": {
+      "unknown": "Bu etiket hakkında ek bilgi yok.",
+      "source": "Kaynak",
+      "created": "Oluşturuldu",
+      "expires": "Sona erer",
+      "negated": "İptal edildi",
+      "yes": "Evet",
+      "appeal": "Etikete itiraz et",
+      "appealSent": "İtiraz gönderildi"
+    },
     "post": {
       "postNotFound": "Gönderi bulunamadı",
       "newPost": "Yeni Gönderi",
+      "labelGateTitle": "İçerik uyarısı",
       "reply": "Yanıtla",
       "post": "Gönder",
       "posting": "Gönderiliyor...",
@@ -370,7 +393,9 @@
         "showMore": "Bunun gibi daha fazlasını göster",
         "showLess": "Bunun gibi daha azını göster",
         "showMoreSent": "\"Daha fazla\" gönderildi",
-        "showLessSent": "\"Daha az\" gönderildi"
+        "showLessSent": "\"Daha az\" gönderildi",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Çeviri",
@@ -958,6 +983,17 @@
             "description": "URL üzerinden uyumlu herhangi bir CDN'e yönlendirin."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "İnceleme",
       "thisIsRevisit": "Bu bir tekrar izleme",
       "containsSpoilers": "Spoiler içerir"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

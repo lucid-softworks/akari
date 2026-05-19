@@ -67,7 +67,8 @@
       "done": "Iawn",
       "following": "Dilyn",
       "reset": "Ailosod",
-      "or": "neu"
+      "or": "neu",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Llenwch bob maes",
@@ -104,7 +105,8 @@
       "continue": "Parhau",
       "invalidHandle": "Rhowch handle dilys.",
       "oauthSuccessTitle": "Wedi mewngofnodi",
-      "oauthSuccessMessage": "Mae @{{handle}} ({{did}}) wedi'i ddilysu trwy atproto OAuth. Y cam nesaf yw cysylltu'r sesiwn hon â chleient yr API."
+      "oauthSuccessMessage": "Mae @{{handle}} ({{did}}) wedi'i ddilysu trwy atproto OAuth. Y cam nesaf yw cysylltu'r sesiwn hon â chleient yr API.",
+      "refreshingSession": "Yn adnewyddu’r sesiwn…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Chwilio",
       "notifications": "Hysbysiadau",
       "post": "Post",
-      "settings": "Gosodiadau"
+      "settings": "Gosodiadau",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Chwilio am broffiliau a swyddi ar Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Nid yw'r defnyddiwr hwn wedi newid ei handlen eto.",
       "reportPost": "Adrodd am bostiad",
       "joinedDate": "Ymunodd {{date}}",
-      "sendMessage": "Anfon neges"
+      "sendMessage": "Anfon neges",
+      "suspendedTitle": "Mae'r cyfrif wedi'i atal",
+      "suspendedBody": "Mae @{{handle}} wedi'i atal gan gymedroli."
     },
     "feed": {
       "loadingMorePosts": "Wrth lwytho mwy o bostiadau...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Mwyaf {{metric}}",
       "feed": "Ffrwd"
     },
+    "confirmExternal": {
+      "title": "Gadael akari?",
+      "body": "Rydych ar fin agor dolen ar {{host}}. Nid yw'r wefan hon yn gysylltiedig ag akari.",
+      "copy": "Copïo'r ddolen",
+      "continue": "Parhau"
+    },
+    "labelDetail": {
+      "unknown": "Dim gwybodaeth ychwanegol am y label hwn.",
+      "source": "Ffynhonnell",
+      "created": "Crëwyd",
+      "expires": "Yn dod i ben",
+      "negated": "Diddymwyd",
+      "yes": "Ie",
+      "appeal": "Apelio yn erbyn y label",
+      "appealSent": "Anfonwyd yr apêl"
+    },
     "post": {
       "postNotFound": "Heb ddod o hyd i'r post",
       "newPost": "Post Newydd",
+      "labelGateTitle": "Rhybudd cynnwys",
       "reply": "Ateb",
       "post": "Postio",
       "posting": "Postio...",
@@ -370,7 +393,9 @@
         "showMore": "Dangos mwy fel hyn",
         "showLess": "Dangos llai fel hyn",
         "showMoreSent": "Anfonwyd \"mwy fel hyn\"",
-        "showLessSent": "Anfonwyd \"llai fel hyn\""
+        "showLessSent": "Anfonwyd \"llai fel hyn\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Cyfieithiad",
@@ -958,6 +983,17 @@
             "description": "Pwyntiwch at unrhyw CDN cydnaws gan ddefnyddio URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "Adolygiad",
       "thisIsRevisit": "Mae hwn yn ail ymweliad",
       "containsSpoilers": "Yn cynnwys datgeliadau"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

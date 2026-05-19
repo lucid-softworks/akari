@@ -67,7 +67,8 @@
       "done": "Готово",
       "following": "Следва се",
       "reset": "Нулиране",
-      "or": "или"
+      "or": "или",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Моля, попълнете всички полета",
@@ -104,7 +105,8 @@
       "continue": "Продължи",
       "invalidHandle": "Моля, въведете валиден handle.",
       "oauthSuccessTitle": "Влязохте",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) е удостоверен чрез atproto OAuth. Свързването на тази сесия с API клиента е следващата стъпка."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) е удостоверен чрез atproto OAuth. Свързването на тази сесия с API клиента е следващата стъпка.",
+      "refreshingSession": "Опресняване на сесията…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Търсене",
       "notifications": "Известия",
       "post": "Публикуване",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Потърсете профили и публикации на Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Този потребител все още не е променил дръжката си.",
       "reportPost": "Докладвай публикация",
       "joinedDate": "Присъединил се през {{date}}",
-      "sendMessage": "Изпрати съобщение"
+      "sendMessage": "Изпрати съобщение",
+      "suspendedTitle": "Акаунтът е спрян",
+      "suspendedBody": "@{{handle}} е спрян от модерацията."
     },
     "feed": {
       "loadingMorePosts": "Зареждане на още публикации ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Максимум {{metric}}",
       "feed": "Емисия"
     },
+    "confirmExternal": {
+      "title": "Излизане от akari?",
+      "body": "На път сте да отворите връзка към {{host}}. Този сайт не е свързан с akari.",
+      "copy": "Копиране на връзка",
+      "continue": "Продължи"
+    },
+    "labelDetail": {
+      "unknown": "Няма допълнителна информация за този етикет.",
+      "source": "Източник",
+      "created": "Създадено",
+      "expires": "Изтича",
+      "negated": "Отменено",
+      "yes": "Да",
+      "appeal": "Обжалване на етикета",
+      "appealSent": "Обжалването е изпратено"
+    },
     "post": {
       "postNotFound": "Публикация не е намерена",
       "newPost": "Нова публикация",
+      "labelGateTitle": "Предупреждение за съдържанието",
       "reply": "Отговор",
       "post": "Публикуване",
       "posting": "Публикуване ...",
@@ -370,7 +393,9 @@
         "showMore": "Повече такива",
         "showLess": "По-малко такива",
         "showMoreSent": "Изпратено: повече такива",
-        "showLessSent": "Изпратено: по-малко такива"
+        "showLessSent": "Изпратено: по-малко такива",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Превод",
@@ -967,6 +992,17 @@
             "description": "Насочете към съвместим CDN чрез URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Рецензия",
       "thisIsRevisit": "Това е повторно гледане",
       "containsSpoilers": "Съдържа спойлери"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

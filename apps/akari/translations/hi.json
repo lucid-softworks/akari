@@ -67,7 +67,8 @@
       "done": "हो गया",
       "following": "फ़ॉलो किया हुआ",
       "reset": "रीसेट",
-      "or": "या"
+      "or": "या",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "कृपया सभी फ़ील्ड भरें",
@@ -104,7 +105,8 @@
       "continue": "जारी रखें",
       "invalidHandle": "कृपया एक मान्य handle दर्ज करें.",
       "oauthSuccessTitle": "साइन इन हो गया",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) को atproto OAuth के माध्यम से प्रमाणित किया गया. इस सत्र को API क्लाइंट से जोड़ना अगला कदम है."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) को atproto OAuth के माध्यम से प्रमाणित किया गया. इस सत्र को API क्लाइंट से जोड़ना अगला कदम है.",
+      "refreshingSession": "सत्र रीफ़्रेश हो रहा है…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "खोज",
       "notifications": "सूचनाएं",
       "post": "पोस्ट",
-      "settings": "सेटिंग्स"
+      "settings": "सेटिंग्स",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Bluesky पर प्रोफ़ाइल और पोस्ट खोजें",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "इस उपयोगकर्ता ने अभी तक अपना हैंडल नहीं बदला है।",
       "reportPost": "पोस्ट की रिपोर्ट करें",
       "joinedDate": "{{date}} में शामिल हुए",
-      "sendMessage": "संदेश भेजें"
+      "sendMessage": "संदेश भेजें",
+      "suspendedTitle": "खाता निलंबित",
+      "suspendedBody": "@{{handle}} को मॉडरेशन द्वारा निलंबित किया गया है।"
     },
     "feed": {
       "loadingMorePosts": "और पोस्ट लोड हो रही हैं...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "अधिकतम {{metric}}",
       "feed": "फ़ीड"
     },
+    "confirmExternal": {
+      "title": "akari छोड़ें?",
+      "body": "आप {{host}} पर एक लिंक खोलने वाले हैं। यह साइट akari से संबद्ध नहीं है।",
+      "copy": "लिंक कॉपी करें",
+      "continue": "जारी रखें"
+    },
+    "labelDetail": {
+      "unknown": "इस लेबल पर कोई अतिरिक्त जानकारी नहीं।",
+      "source": "स्रोत",
+      "created": "बनाया गया",
+      "expires": "समाप्त होता है",
+      "negated": "रद्द किया गया",
+      "yes": "हाँ",
+      "appeal": "लेबल पर अपील करें",
+      "appealSent": "अपील भेजी गई"
+    },
     "post": {
       "postNotFound": "पोस्ट नहीं मिली",
       "newPost": "नई पोस्ट",
+      "labelGateTitle": "सामग्री चेतावनी",
       "reply": "जवाब दें",
       "post": "पोस्ट करें",
       "posting": "पोस्ट हो रही है...",
@@ -370,7 +393,9 @@
         "showMore": "इस जैसा और दिखाएँ",
         "showLess": "इस जैसा कम दिखाएँ",
         "showMoreSent": "\"और दिखाएँ\" भेजा गया",
-        "showLessSent": "\"कम दिखाएँ\" भेजा गया"
+        "showLessSent": "\"कम दिखाएँ\" भेजा गया",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "अनुवाद",
@@ -958,6 +983,17 @@
             "description": "URL के माध्यम से किसी भी संगत CDN की ओर इंगित करें।"
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "समीक्षा",
       "thisIsRevisit": "यह दोबारा देखना है",
       "containsSpoilers": "स्पॉइलर शामिल हैं"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

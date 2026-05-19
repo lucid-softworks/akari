@@ -67,7 +67,8 @@
       "done": "Færdig",
       "following": "Følger",
       "reset": "Nulstil",
-      "or": "eller"
+      "or": "eller",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Udfyld venligst alle felter",
@@ -104,7 +105,8 @@
       "continue": "Fortsæt",
       "invalidHandle": "Indtast venligst et gyldigt handle.",
       "oauthSuccessTitle": "Logget ind",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) er godkendt via atproto OAuth. At forbinde denne session til API-klienten er næste skridt."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) er godkendt via atproto OAuth. At forbinde denne session til API-klienten er næste skridt.",
+      "refreshingSession": "Opdaterer sessionen…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Søg",
       "notifications": "Notifikationer",
       "post": "Post",
-      "settings": "Indstillinger"
+      "settings": "Indstillinger",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Søg efter profiler og posts på Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Denne bruger har ikke ændret sit handle endnu.",
       "reportPost": "Anmeld opslag",
       "joinedDate": "Tilmeldt {{date}}",
-      "sendMessage": "Send besked"
+      "sendMessage": "Send besked",
+      "suspendedTitle": "Konto suspenderet",
+      "suspendedBody": "@{{handle}} er blevet suspenderet af moderation."
     },
     "feed": {
       "loadingMorePosts": "Indlæser flere Posts ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maksimum {{metric}}",
       "feed": "Feed"
     },
+    "confirmExternal": {
+      "title": "Forlade akari?",
+      "body": "Du er ved at åbne et link på {{host}}. Dette websted er ikke tilknyttet akari.",
+      "copy": "Kopiér link",
+      "continue": "Fortsæt"
+    },
+    "labelDetail": {
+      "unknown": "Ingen yderligere oplysninger om denne etiket.",
+      "source": "Kilde",
+      "created": "Oprettet",
+      "expires": "Udløber",
+      "negated": "Annulleret",
+      "yes": "Ja",
+      "appeal": "Anke etiket",
+      "appealSent": "Anke sendt"
+    },
     "post": {
       "postNotFound": "Post ikke fundet",
       "newPost": "Ny post",
+      "labelGateTitle": "Indholdsadvarsel",
       "reply": "Svar",
       "post": "Post",
       "posting": "Poster ...",
@@ -370,7 +393,9 @@
         "showMore": "Vis flere som denne",
         "showLess": "Vis færre som denne",
         "showMoreSent": "Sendt: vis flere",
-        "showLessSent": "Sendt: vis færre"
+        "showLessSent": "Sendt: vis færre",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Oversættelse",
@@ -967,6 +992,17 @@
             "description": "Peg på et hvilket som helst kompatibelt CDN via URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Anmeldelse",
       "thisIsRevisit": "Dette er et gensyn",
       "containsSpoilers": "Indeholder spoilere"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

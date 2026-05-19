@@ -67,7 +67,8 @@
       "done": "Valmis",
       "following": "Seurataan",
       "reset": "Nollaa",
-      "or": "tai"
+      "or": "tai",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Täytä kaikki kentät",
@@ -104,7 +105,8 @@
       "continue": "Jatka",
       "invalidHandle": "Anna kelvollinen handle.",
       "oauthSuccessTitle": "Kirjautuminen onnistui",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) tunnistettiin atproto OAuth -valtuutuksen kautta. Tämän istunnon liittäminen API-asiakkaaseen on seuraava vaihe."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) tunnistettiin atproto OAuth -valtuutuksen kautta. Tämän istunnon liittäminen API-asiakkaaseen on seuraava vaihe.",
+      "refreshingSession": "Päivitetään istuntoa…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Haku",
       "notifications": "Ilmoitukset",
       "post": "Lähettää",
-      "settings": "Asetukset"
+      "settings": "Asetukset",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Etsi profiileja ja viestejä Blueskylle",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Tämä käyttäjä ei ole vielä muuttanut kahtaansa.",
       "reportPost": "Ilmoita julkaisusta",
       "joinedDate": "Liittynyt {{date}}",
-      "sendMessage": "Lähetä viesti"
+      "sendMessage": "Lähetä viesti",
+      "suspendedTitle": "Tili keskeytetty",
+      "suspendedBody": "@{{handle}} on keskeytetty moderoinnin toimesta."
     },
     "feed": {
       "loadingMorePosts": "Lataa lisää viestejä ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Enintään {{metric}}",
       "feed": "Syöte"
     },
+    "confirmExternal": {
+      "title": "Poistutko akarista?",
+      "body": "Olet avaamassa linkin sivustolle {{host}}. Tämä sivusto ei liity akariin.",
+      "copy": "Kopioi linkki",
+      "continue": "Jatka"
+    },
+    "labelDetail": {
+      "unknown": "Ei lisätietoja tästä tunnisteesta.",
+      "source": "Lähde",
+      "created": "Luotu",
+      "expires": "Vanhenee",
+      "negated": "Kumottu",
+      "yes": "Kyllä",
+      "appeal": "Valita tunnisteesta",
+      "appealSent": "Valitus lähetetty"
+    },
     "post": {
       "postNotFound": "Viesti ei löydy",
       "newPost": "Uusi viesti",
+      "labelGateTitle": "Sisältövaroitus",
       "reply": "Vastata",
       "post": "Lähettää",
       "posting": "Lähettäminen ...",
@@ -370,7 +393,9 @@
         "showMore": "Näytä enemmän tällaisia",
         "showLess": "Näytä vähemmän tällaisia",
         "showMoreSent": "Pyydettiin enemmän",
-        "showLessSent": "Pyydettiin vähemmän"
+        "showLessSent": "Pyydettiin vähemmän",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Käännös",
@@ -967,6 +992,17 @@
             "description": "Osoita mihin tahansa yhteensopivaan CDN:ään URL:n kautta."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Arvostelu",
       "thisIsRevisit": "Tämä on uusintakatselu",
       "containsSpoilers": "Sisältää juonipaljastuksia"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

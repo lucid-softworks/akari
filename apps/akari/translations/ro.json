@@ -67,7 +67,8 @@
       "done": "Gata",
       "following": "Urmăriți",
       "reset": "Resetare",
-      "or": "sau"
+      "or": "sau",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Vă rugăm să completați toate câmpurile",
@@ -104,7 +105,8 @@
       "continue": "Continuă",
       "invalidHandle": "Introdu un handle valid.",
       "oauthSuccessTitle": "Autentificat",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) a fost autentificat prin atproto OAuth. Conectarea acestei sesiuni la clientul API este pasul următor."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) a fost autentificat prin atproto OAuth. Conectarea acestei sesiuni la clientul API este pasul următor.",
+      "refreshingSession": "Se actualizează sesiunea…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Căutare",
       "notifications": "Notificări",
       "post": "Post",
-      "settings": "Setări"
+      "settings": "Setări",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Căutați profiluri și postări pe Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Acest utilizator nu și -a schimbat încă mânerul.",
       "reportPost": "Raportează postarea",
       "joinedDate": "S-a alăturat în {{date}}",
-      "sendMessage": "Trimite mesaj"
+      "sendMessage": "Trimite mesaj",
+      "suspendedTitle": "Cont suspendat",
+      "suspendedBody": "@{{handle}} a fost suspendat de moderare."
     },
     "feed": {
       "loadingMorePosts": "Încărcarea mai multor postări ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maxim {{metric}}",
       "feed": "Flux"
     },
+    "confirmExternal": {
+      "title": "Părăsești akari?",
+      "body": "Ești pe cale să deschizi un link pe {{host}}. Acest site nu este afiliat cu akari.",
+      "copy": "Copiază linkul",
+      "continue": "Continuă"
+    },
+    "labelDetail": {
+      "unknown": "Nicio informație suplimentară despre această etichetă.",
+      "source": "Sursă",
+      "created": "Creat",
+      "expires": "Expiră",
+      "negated": "Anulat",
+      "yes": "Da",
+      "appeal": "Contestă eticheta",
+      "appealSent": "Contestație trimisă"
+    },
     "post": {
       "postNotFound": "Post nu a fost găsit",
       "newPost": "Post nou",
+      "labelGateTitle": "Avertisment privind conținutul",
       "reply": "Răspuns",
       "post": "Post",
       "posting": "Postarea ...",
@@ -370,7 +393,9 @@
         "showMore": "Arată mai multe ca acesta",
         "showLess": "Arată mai puține ca acesta",
         "showMoreSent": "Trimis: mai multe",
-        "showLessSent": "Trimis: mai puține"
+        "showLessSent": "Trimis: mai puține",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Traducere",
@@ -967,6 +992,17 @@
             "description": "Indică orice CDN compatibil prin URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Alege până la {{max}} limbi pentru postarea ta.",
       "postLanguageSearch": "Caută limbi",
       "postLanguageA11y": "Limba postării: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

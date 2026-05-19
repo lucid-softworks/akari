@@ -67,7 +67,8 @@
       "done": "完了",
       "following": "フォロー中",
       "reset": "リセット",
-      "or": "または"
+      "or": "または",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "すべてのフィールドを入力してください",
@@ -104,7 +105,8 @@
       "continue": "続行",
       "invalidHandle": "有効な handle を入力してください。",
       "oauthSuccessTitle": "サインインしました",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) を atproto OAuth で認証しました。次のステップはこのセッションを API クライアントに接続することです。"
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) を atproto OAuth で認証しました。次のステップはこのセッションを API クライアントに接続することです。",
+      "refreshingSession": "セッションを更新中…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "検索",
       "notifications": "通知",
       "post": "投稿",
-      "settings": "設定"
+      "settings": "設定",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Blueskyでプロフィールと投稿を検索",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "このユーザーはまだハンドルを変更していません。",
       "reportPost": "ポストを報告",
       "joinedDate": "{{date}}に参加",
-      "sendMessage": "メッセージを送る"
+      "sendMessage": "メッセージを送る",
+      "suspendedTitle": "アカウントが停止されました",
+      "suspendedBody": "@{{handle}} はモデレーションにより停止されています。"
     },
     "feed": {
       "loadingMorePosts": "さらに投稿を読み込み中...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "最大 {{metric}}",
       "feed": "フィード"
     },
+    "confirmExternal": {
+      "title": "akariを離れますか？",
+      "body": "{{host}} のリンクを開こうとしています。このサイトは akari と提携していません。",
+      "copy": "リンクをコピー",
+      "continue": "続ける"
+    },
+    "labelDetail": {
+      "unknown": "このラベルに関する追加情報はありません。",
+      "source": "ソース",
+      "created": "作成日",
+      "expires": "有効期限",
+      "negated": "取り消し済み",
+      "yes": "はい",
+      "appeal": "ラベルに異議を申し立てる",
+      "appealSent": "異議申し立てを送信しました"
+    },
     "post": {
       "postNotFound": "投稿が見つかりません",
       "newPost": "新しい投稿",
+      "labelGateTitle": "コンテンツ警告",
       "reply": "返信",
       "post": "投稿",
       "posting": "投稿中...",
@@ -370,7 +393,9 @@
         "showMore": "これと同じものをもっと表示",
         "showLess": "これと同じものを少なく表示",
         "showMoreSent": "「もっと表示」を送信しました",
-        "showLessSent": "「少なく表示」を送信しました"
+        "showLessSent": "「少なく表示」を送信しました",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "翻訳",
@@ -958,6 +983,17 @@
             "description": "URL で任意の互換 CDN を指定できます。"
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "レビュー",
       "thisIsRevisit": "再視聴です",
       "containsSpoilers": "ネタバレを含みます"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

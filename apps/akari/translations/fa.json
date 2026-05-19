@@ -67,7 +67,8 @@
       "done": "انجام شد",
       "following": "دنبال می‌شود",
       "reset": "بازنشانی",
-      "or": "یا"
+      "or": "یا",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "لطفا همه زمینه ها را پر کنید",
@@ -104,7 +105,8 @@
       "continue": "ادامه",
       "invalidHandle": "لطفاً یک handle معتبر وارد کنید.",
       "oauthSuccessTitle": "وارد شدید",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) از طریق atproto OAuth احراز هویت شد. اتصال این نشست به کلاینت API گام بعدی است."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) از طریق atproto OAuth احراز هویت شد. اتصال این نشست به کلاینت API گام بعدی است.",
+      "refreshingSession": "در حال تازه‌سازی نشست…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "جستجو",
       "notifications": "اعلان ها",
       "post": "پست",
-      "settings": "تنظیمات"
+      "settings": "تنظیمات",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "در Bluesky پروفایل و پست ها را جستجو کنید",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "این کاربر هنوز دسته خود را تغییر نداده است.",
       "reportPost": "گزارش پست",
       "joinedDate": "عضو از {{date}}",
-      "sendMessage": "ارسال پیام"
+      "sendMessage": "ارسال پیام",
+      "suspendedTitle": "حساب تعلیق شده",
+      "suspendedBody": "@{{handle}} توسط مدیریت تعلیق شده است."
     },
     "feed": {
       "loadingMorePosts": "در حال بارگیری بیشتر پست ها ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "حداکثر {{metric}}",
       "feed": "خوراک"
     },
+    "confirmExternal": {
+      "title": "خروج از akari؟",
+      "body": "در حال باز کردن پیوندی در {{host}} هستید. این سایت با akari مرتبط نیست.",
+      "copy": "کپی پیوند",
+      "continue": "ادامه"
+    },
+    "labelDetail": {
+      "unknown": "اطلاعات بیشتری در مورد این برچسب وجود ندارد.",
+      "source": "منبع",
+      "created": "ساخته شد",
+      "expires": "منقضی می‌شود",
+      "negated": "لغو شده",
+      "yes": "بله",
+      "appeal": "اعتراض به برچسب",
+      "appealSent": "اعتراض ارسال شد"
+    },
     "post": {
       "postNotFound": "پست یافت نشد",
       "newPost": "پست جدید",
+      "labelGateTitle": "هشدار محتوا",
       "reply": "پاسخ",
       "post": "پست",
       "posting": "ارسال ...",
@@ -370,7 +393,9 @@
         "showMore": "بیشتر مانند این نشان بده",
         "showLess": "کمتر مانند این نشان بده",
         "showMoreSent": "درخواست بیشتر ارسال شد",
-        "showLessSent": "درخواست کمتر ارسال شد"
+        "showLessSent": "درخواست کمتر ارسال شد",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "ترجمه",
@@ -967,6 +992,17 @@
             "description": "با URL به هر CDN سازگار اشاره کنید."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "نقد",
       "thisIsRevisit": "این بازبینی مجدد است",
       "containsSpoilers": "حاوی اسپویل است"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

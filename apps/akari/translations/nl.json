@@ -67,7 +67,8 @@
       "done": "Klaar",
       "following": "Volgend",
       "reset": "Resetten",
-      "or": "of"
+      "or": "of",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Vul alle velden in",
@@ -104,7 +105,8 @@
       "continue": "Doorgaan",
       "invalidHandle": "Voer een geldige handle in.",
       "oauthSuccessTitle": "Ingelogd",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) is geverifieerd via atproto OAuth. Deze sessie aan de API-client koppelen is de volgende stap."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) is geverifieerd via atproto OAuth. Deze sessie aan de API-client koppelen is de volgende stap.",
+      "refreshingSession": "Sessie vernieuwen…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Zoeken",
       "notifications": "Meldingen",
       "post": "Bericht",
-      "settings": "Instellingen"
+      "settings": "Instellingen",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Zoek naar profielen en berichten op Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Deze gebruiker heeft zijn handle nog niet gewijzigd.",
       "reportPost": "Bericht melden",
       "joinedDate": "Lid sinds {{date}}",
-      "sendMessage": "Bericht versturen"
+      "sendMessage": "Bericht versturen",
+      "suspendedTitle": "Account geschorst",
+      "suspendedBody": "@{{handle}} is geschorst door moderatie."
     },
     "feed": {
       "loadingMorePosts": "Meer berichten laden...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maximum {{metric}}",
       "feed": "Feed"
     },
+    "confirmExternal": {
+      "title": "akari verlaten?",
+      "body": "Je staat op het punt een link op {{host}} te openen. Deze site is niet gelieerd aan akari.",
+      "copy": "Link kopiëren",
+      "continue": "Doorgaan"
+    },
+    "labelDetail": {
+      "unknown": "Geen aanvullende info over dit label.",
+      "source": "Bron",
+      "created": "Aangemaakt",
+      "expires": "Verloopt",
+      "negated": "Ingetrokken",
+      "yes": "Ja",
+      "appeal": "Label aanvechten",
+      "appealSent": "Bezwaar verzonden"
+    },
     "post": {
       "postNotFound": "Bericht niet gevonden",
       "newPost": "Nieuw Bericht",
+      "labelGateTitle": "Inhoudswaarschuwing",
       "reply": "Beantwoorden",
       "post": "Bericht",
       "posting": "Bericht plaatsen...",
@@ -370,7 +393,9 @@
         "showMore": "Meer zoals deze tonen",
         "showLess": "Minder zoals deze tonen",
         "showMoreSent": "\"Meer zoals deze\" verzonden",
-        "showLessSent": "\"Minder zoals deze\" verzonden"
+        "showLessSent": "\"Minder zoals deze\" verzonden",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Vertaling",
@@ -958,6 +983,17 @@
             "description": "Verwijs via URL naar een willekeurig compatibel CDN."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "Recensie",
       "thisIsRevisit": "Dit is een herbezoek",
       "containsSpoilers": "Bevat spoilers"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

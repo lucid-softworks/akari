@@ -67,7 +67,8 @@
       "done": "完成",
       "following": "追蹤中",
       "reset": "重設",
-      "or": "或"
+      "or": "或",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "請填寫所有欄位",
@@ -104,7 +105,8 @@
       "continue": "繼續",
       "invalidHandle": "請輸入有效的 handle。",
       "oauthSuccessTitle": "已登入",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) 已透過 atproto OAuth 認證。下一步是將這個工作階段接到 API 用戶端。"
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) 已透過 atproto OAuth 認證。下一步是將這個工作階段接到 API 用戶端。",
+      "refreshingSession": "正在重新整理會話…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "搜尋",
       "notifications": "通知",
       "post": "貼文",
-      "settings": "設定"
+      "settings": "設定",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "在 Bluesky 上搜尋個人資料和貼文",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "此使用者尚未變更過代號。",
       "reportPost": "檢舉貼文",
       "joinedDate": "{{date}}加入",
-      "sendMessage": "傳送訊息"
+      "sendMessage": "傳送訊息",
+      "suspendedTitle": "帳號已被暫停",
+      "suspendedBody": "@{{handle}} 已被審核團隊暫停。"
     },
     "feed": {
       "loadingMorePosts": "載入更多貼文...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "最大 {{metric}}",
       "feed": "資訊流"
     },
+    "confirmExternal": {
+      "title": "離開 akari？",
+      "body": "您即將開啟 {{host}} 上的連結。此網站與 akari 無關。",
+      "copy": "複製連結",
+      "continue": "繼續"
+    },
+    "labelDetail": {
+      "unknown": "沒有關於此標籤的額外資訊。",
+      "source": "來源",
+      "created": "建立於",
+      "expires": "到期",
+      "negated": "已撤銷",
+      "yes": "是",
+      "appeal": "申訴標籤",
+      "appealSent": "申訴已送出"
+    },
     "post": {
       "postNotFound": "找不到貼文",
       "newPost": "新貼文",
+      "labelGateTitle": "內容警告",
       "reply": "回覆",
       "post": "發布",
       "posting": "發布中...",
@@ -370,7 +393,9 @@
         "showMore": "多看這類",
         "showLess": "少看這類",
         "showMoreSent": "已傳送 \"多看這類\"",
-        "showLessSent": "已傳送 \"少看這類\""
+        "showLessSent": "已傳送 \"少看這類\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "翻譯",
@@ -958,6 +983,17 @@
             "description": "透過 URL 指向任何相容的 CDN。"
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "影評",
       "thisIsRevisit": "這是重溫",
       "containsSpoilers": "含有劇透"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

@@ -67,7 +67,8 @@
       "done": "Έγινε",
       "following": "Ακολουθείτε",
       "reset": "Επαναφορά",
-      "or": "ή"
+      "or": "ή",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Συμπληρώστε όλα τα πεδία",
@@ -104,7 +105,8 @@
       "continue": "Συνέχεια",
       "invalidHandle": "Δώσε ένα έγκυρο handle.",
       "oauthSuccessTitle": "Συνδεθήκατε",
-      "oauthSuccessMessage": "Το @{{handle}} ({{did}}) πιστοποιήθηκε μέσω atproto OAuth. Επόμενο βήμα είναι η σύνδεση αυτής της συνεδρίας με τον πελάτη του API."
+      "oauthSuccessMessage": "Το @{{handle}} ({{did}}) πιστοποιήθηκε μέσω atproto OAuth. Επόμενο βήμα είναι η σύνδεση αυτής της συνεδρίας με τον πελάτη του API.",
+      "refreshingSession": "Ανανέωση συνεδρίας…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Ερευνα",
       "notifications": "Ειδοποιήσεις",
       "post": "Θέση",
-      "settings": "Ρυθμίσεις"
+      "settings": "Ρυθμίσεις",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Αναζητήστε προφίλ και δημοσιεύσεις στο Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Αυτός ο χρήστης δεν έχει αλλάξει ακόμα τη λαβή του.",
       "reportPost": "Αναφορά ανάρτησης",
       "joinedDate": "Εγγραφή {{date}}",
-      "sendMessage": "Αποστολή μηνύματος"
+      "sendMessage": "Αποστολή μηνύματος",
+      "suspendedTitle": "Ο λογαριασμός έχει ανασταλεί",
+      "suspendedBody": "Ο λογαριασμός @{{handle}} έχει ανασταλεί από την εποπτεία."
     },
     "feed": {
       "loadingMorePosts": "Φόρτωση περισσότερων αναρτήσεων ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Μέγιστο {{metric}}",
       "feed": "Ροή"
     },
+    "confirmExternal": {
+      "title": "Έξοδος από το akari;",
+      "body": "Πρόκειται να ανοίξετε έναν σύνδεσμο στο {{host}}. Αυτή η ιστοσελίδα δεν σχετίζεται με το akari.",
+      "copy": "Αντιγραφή συνδέσμου",
+      "continue": "Συνέχεια"
+    },
+    "labelDetail": {
+      "unknown": "Καμία επιπλέον πληροφορία για αυτήν την ετικέτα.",
+      "source": "Πηγή",
+      "created": "Δημιουργήθηκε",
+      "expires": "Λήγει",
+      "negated": "Ακυρώθηκε",
+      "yes": "Ναι",
+      "appeal": "Έφεση ετικέτας",
+      "appealSent": "Η έφεση εστάλη"
+    },
     "post": {
       "postNotFound": "Η ανάρτηση δεν βρέθηκε",
       "newPost": "Νέα ανάρτηση",
+      "labelGateTitle": "Προειδοποίηση περιεχομένου",
       "reply": "Απάντηση",
       "post": "Θέση",
       "posting": "Δημοσίευση ...",
@@ -370,7 +393,9 @@
         "showMore": "Δείξε περισσότερα σαν αυτό",
         "showLess": "Δείξε λιγότερα σαν αυτό",
         "showMoreSent": "Στάλθηκε \"περισσότερα\"",
-        "showLessSent": "Στάλθηκε \"λιγότερα\""
+        "showLessSent": "Στάλθηκε \"λιγότερα\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Μετάφραση",
@@ -967,6 +992,17 @@
             "description": "Δείξτε σε οποιοδήποτε συμβατό CDN μέσω URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Κριτική",
       "thisIsRevisit": "Αυτό είναι επανεξέταση",
       "containsSpoilers": "Περιέχει spoilers"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

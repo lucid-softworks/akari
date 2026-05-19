@@ -67,7 +67,8 @@
       "done": "Xong",
       "following": "Đang theo dõi",
       "reset": "Đặt lại",
-      "or": "hoặc"
+      "or": "hoặc",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Vui lòng điền tất cả các trường",
@@ -104,7 +105,8 @@
       "continue": "Tiếp tục",
       "invalidHandle": "Vui lòng nhập một handle hợp lệ.",
       "oauthSuccessTitle": "Đã đăng nhập",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) đã được xác thực qua atproto OAuth. Bước tiếp theo là kết nối phiên này vào client API."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) đã được xác thực qua atproto OAuth. Bước tiếp theo là kết nối phiên này vào client API.",
+      "refreshingSession": "Đang làm mới phiên…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Tìm kiếm",
       "notifications": "Thông báo",
       "post": "Bài đăng",
-      "settings": "Cài đặt"
+      "settings": "Cài đặt",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Tìm kiếm hồ sơ và bài đăng trên Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Người dùng này chưa từng đổi tên định danh.",
       "reportPost": "Báo cáo bài đăng",
       "joinedDate": "Tham gia vào {{date}}",
-      "sendMessage": "Gửi tin nhắn"
+      "sendMessage": "Gửi tin nhắn",
+      "suspendedTitle": "Tài khoản bị đình chỉ",
+      "suspendedBody": "@{{handle}} đã bị đình chỉ bởi kiểm duyệt."
     },
     "feed": {
       "loadingMorePosts": "Đang tải thêm bài đăng...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Tối đa {{metric}}",
       "feed": "Bảng tin"
     },
+    "confirmExternal": {
+      "title": "Rời khỏi akari?",
+      "body": "Bạn sắp mở một liên kết trên {{host}}. Trang web này không liên kết với akari.",
+      "copy": "Sao chép liên kết",
+      "continue": "Tiếp tục"
+    },
+    "labelDetail": {
+      "unknown": "Không có thông tin bổ sung về nhãn này.",
+      "source": "Nguồn",
+      "created": "Đã tạo",
+      "expires": "Hết hạn",
+      "negated": "Đã hủy",
+      "yes": "Có",
+      "appeal": "Khiếu nại nhãn",
+      "appealSent": "Đã gửi khiếu nại"
+    },
     "post": {
       "postNotFound": "Không tìm thấy bài viết",
       "newPost": "Bài Đăng Mới",
+      "labelGateTitle": "Cảnh báo nội dung",
       "reply": "Trả Lời",
       "post": "Đăng",
       "posting": "Đang đăng...",
@@ -370,7 +393,9 @@
         "showMore": "Hiện thêm bài như vậy",
         "showLess": "Hiện ít bài như vậy",
         "showMoreSent": "Đã gửi yêu cầu \"thêm\"",
-        "showLessSent": "Đã gửi yêu cầu \"ít\""
+        "showLessSent": "Đã gửi yêu cầu \"ít\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Bản dịch",
@@ -958,6 +983,17 @@
             "description": "Trỏ tới bất kỳ CDN tương thích nào qua URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "Đánh giá",
       "thisIsRevisit": "Đây là lần xem lại",
       "containsSpoilers": "Chứa tiết lộ nội dung"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

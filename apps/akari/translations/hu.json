@@ -67,7 +67,8 @@
       "done": "Kész",
       "following": "Követed",
       "reset": "Visszaállítás",
-      "or": "vagy"
+      "or": "vagy",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Kérjük, töltse ki az összes mezőt",
@@ -104,7 +105,8 @@
       "continue": "Tovább",
       "invalidHandle": "Adj meg egy érvényes handle-t.",
       "oauthSuccessTitle": "Bejelentkezve",
-      "oauthSuccessMessage": "A(z) @{{handle}} ({{did}}) atproto OAuth-on keresztül hitelesítve. A következő lépés ennek a munkamenetnek az API klienshez kapcsolása."
+      "oauthSuccessMessage": "A(z) @{{handle}} ({{did}}) atproto OAuth-on keresztül hitelesítve. A következő lépés ennek a munkamenetnek az API klienshez kapcsolása.",
+      "refreshingSession": "Munkamenet frissítése…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Keresés",
       "notifications": "Értesítések",
       "post": "Oszlop",
-      "settings": "Beállítások"
+      "settings": "Beállítások",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Keressen profilokat és hozzászólásokat a Bluesky -n",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Ez a felhasználó még nem változtatta meg a fogantyúját.",
       "reportPost": "Bejegyzés jelentése",
       "joinedDate": "Csatlakozott: {{date}}",
-      "sendMessage": "Üzenet küldése"
+      "sendMessage": "Üzenet küldése",
+      "suspendedTitle": "Fiók felfüggesztve",
+      "suspendedBody": "@{{handle}} fiókját a moderátorok felfüggesztették."
     },
     "feed": {
       "loadingMorePosts": "További hozzászólások betöltése ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maximum {{metric}}",
       "feed": "Hírfolyam"
     },
+    "confirmExternal": {
+      "title": "Elhagyod az akarit?",
+      "body": "Egy hivatkozást készülsz megnyitni a {{host}} oldalon. Ez az oldal nem áll kapcsolatban az akarival.",
+      "copy": "Hivatkozás másolása",
+      "continue": "Folytatás"
+    },
+    "labelDetail": {
+      "unknown": "Nincs további információ erről a címkéről.",
+      "source": "Forrás",
+      "created": "Létrehozva",
+      "expires": "Lejár",
+      "negated": "Visszavonva",
+      "yes": "Igen",
+      "appeal": "Címke megfellebbezése",
+      "appealSent": "Fellebbezés elküldve"
+    },
     "post": {
       "postNotFound": "A hozzászólás nem található",
       "newPost": "Új poszt",
+      "labelGateTitle": "Tartalom-figyelmeztetés",
       "reply": "Válasz",
       "post": "Oszlop",
       "posting": "Feladás ...",
@@ -370,7 +393,9 @@
         "showMore": "Több ilyet mutass",
         "showLess": "Kevesebb ilyet mutass",
         "showMoreSent": "\"Több ilyet\" elküldve",
-        "showLessSent": "\"Kevesebb ilyet\" elküldve"
+        "showLessSent": "\"Kevesebb ilyet\" elküldve",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Fordítás",
@@ -967,6 +992,17 @@
             "description": "Mutass bármely kompatibilis CDN-re URL alapján."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Vélemény",
       "thisIsRevisit": "Ez egy újranézés",
       "containsSpoilers": "Cselekménybeli részleteket tartalmaz"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

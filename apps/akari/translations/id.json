@@ -67,7 +67,8 @@
       "done": "Selesai",
       "following": "Mengikuti",
       "reset": "Atur ulang",
-      "or": "atau"
+      "or": "atau",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Silakan isi semua kolom",
@@ -104,7 +105,8 @@
       "continue": "Lanjutkan",
       "invalidHandle": "Masukkan handle yang valid.",
       "oauthSuccessTitle": "Masuk berhasil",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) berhasil diautentikasi lewat atproto OAuth. Menyambungkan sesi ini ke klien API adalah langkah berikutnya."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) berhasil diautentikasi lewat atproto OAuth. Menyambungkan sesi ini ke klien API adalah langkah berikutnya.",
+      "refreshingSession": "Memperbarui sesi…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Cari",
       "notifications": "Notifikasi",
       "post": "Posting",
-      "settings": "Pengaturan"
+      "settings": "Pengaturan",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Cari profil dan post di Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Pengguna ini belum pernah mengganti handle-nya.",
       "reportPost": "Laporkan kiriman",
       "joinedDate": "Bergabung {{date}}",
-      "sendMessage": "Kirim pesan"
+      "sendMessage": "Kirim pesan",
+      "suspendedTitle": "Akun ditangguhkan",
+      "suspendedBody": "@{{handle}} telah ditangguhkan oleh moderasi."
     },
     "feed": {
       "loadingMorePosts": "Memuat lebih banyak postingan...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maksimum {{metric}}",
       "feed": "Feed"
     },
+    "confirmExternal": {
+      "title": "Tinggalkan akari?",
+      "body": "Anda akan membuka tautan di {{host}}. Situs ini tidak berafiliasi dengan akari.",
+      "copy": "Salin tautan",
+      "continue": "Lanjutkan"
+    },
+    "labelDetail": {
+      "unknown": "Tidak ada info tambahan tentang label ini.",
+      "source": "Sumber",
+      "created": "Dibuat",
+      "expires": "Kedaluwarsa",
+      "negated": "Dibatalkan",
+      "yes": "Ya",
+      "appeal": "Banding label",
+      "appealSent": "Banding terkirim"
+    },
     "post": {
       "postNotFound": "Postingan tidak ditemukan",
       "newPost": "Post Baru",
+      "labelGateTitle": "Peringatan konten",
       "reply": "Balas",
       "post": "Kirim",
       "posting": "Mengirim...",
@@ -370,7 +393,9 @@
         "showMore": "Tampilkan lebih banyak seperti ini",
         "showLess": "Tampilkan lebih sedikit seperti ini",
         "showMoreSent": "Diminta: lebih banyak",
-        "showLessSent": "Diminta: lebih sedikit"
+        "showLessSent": "Diminta: lebih sedikit",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Terjemahan",
@@ -958,6 +983,17 @@
             "description": "Arahkan ke CDN kompatibel mana pun via URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "Ulasan",
       "thisIsRevisit": "Ini adalah tontonan ulang",
       "containsSpoilers": "Mengandung spoiler"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

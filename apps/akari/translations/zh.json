@@ -67,7 +67,8 @@
       "done": "完成",
       "following": "已关注",
       "reset": "重置",
-      "or": "或"
+      "or": "或",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "请填写所有字段",
@@ -104,7 +105,8 @@
       "continue": "继续",
       "invalidHandle": "请输入有效的 handle。",
       "oauthSuccessTitle": "已登录",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) 已通过 atproto OAuth 认证。下一步是把这个会话接入 API 客户端。"
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) 已通过 atproto OAuth 认证。下一步是把这个会话接入 API 客户端。",
+      "refreshingSession": "正在刷新会话…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "搜索",
       "notifications": "通知",
       "post": "邮政",
-      "settings": "设置"
+      "settings": "设置",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "搜索布鲁斯基上的个人资料和帖子",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "该用户尚未更改其手柄。",
       "reportPost": "举报帖子",
       "joinedDate": "{{date}}加入",
-      "sendMessage": "发送消息"
+      "sendMessage": "发送消息",
+      "suspendedTitle": "账户已被暂停",
+      "suspendedBody": "@{{handle}} 已被审核团队暂停。"
     },
     "feed": {
       "loadingMorePosts": "加载更多帖子...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "最大 {{metric}}",
       "feed": "信息流"
     },
+    "confirmExternal": {
+      "title": "离开 akari？",
+      "body": "您即将打开 {{host}} 上的链接。此网站与 akari 无关。",
+      "copy": "复制链接",
+      "continue": "继续"
+    },
+    "labelDetail": {
+      "unknown": "没有关于此标签的附加信息。",
+      "source": "来源",
+      "created": "创建于",
+      "expires": "到期",
+      "negated": "已撤销",
+      "yes": "是",
+      "appeal": "申诉标签",
+      "appealSent": "申诉已发送"
+    },
     "post": {
       "postNotFound": "帖子找不到",
       "newPost": "新帖子",
+      "labelGateTitle": "内容警告",
       "reply": "回复",
       "post": "邮政",
       "posting": "发布...",
@@ -370,7 +393,9 @@
         "showMore": "多看这类",
         "showLess": "少看这类",
         "showMoreSent": "已发送 \"多看这类\"",
-        "showLessSent": "已发送 \"少看这类\""
+        "showLessSent": "已发送 \"少看这类\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "翻译",
@@ -967,6 +992,17 @@
             "description": "通过 URL 指向任意兼容的 CDN。"
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "影评",
       "thisIsRevisit": "这是重温",
       "containsSpoilers": "包含剧透"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

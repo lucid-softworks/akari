@@ -67,7 +67,8 @@
       "done": "Готово",
       "following": "Подписаны",
       "reset": "Сбросить",
-      "or": "или"
+      "or": "или",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Заполните все поля",
@@ -104,7 +105,8 @@
       "continue": "Продолжить",
       "invalidHandle": "Пожалуйста, введите корректный handle.",
       "oauthSuccessTitle": "Вход выполнен",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) аутентифицирован через atproto OAuth. Следующий шаг — подключение этой сессии к клиенту API."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) аутентифицирован через atproto OAuth. Следующий шаг — подключение этой сессии к клиенту API.",
+      "refreshingSession": "Обновление сеанса…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Поиск",
       "notifications": "Уведомления",
       "post": "Пост",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Поиск профилей и постов в Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Этот пользователь ещё не менял свой хэндл.",
       "reportPost": "Пожаловаться на запись",
       "joinedDate": "Присоединился в {{date}}",
-      "sendMessage": "Отправить сообщение"
+      "sendMessage": "Отправить сообщение",
+      "suspendedTitle": "Аккаунт заблокирован",
+      "suspendedBody": "Аккаунт @{{handle}} заблокирован модерацией."
     },
     "feed": {
       "loadingMorePosts": "Загрузка дополнительных постов...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Максимум {{metric}}",
       "feed": "Лента"
     },
+    "confirmExternal": {
+      "title": "Покинуть akari?",
+      "body": "Вы собираетесь открыть ссылку на {{host}}. Этот сайт не связан с akari.",
+      "copy": "Копировать ссылку",
+      "continue": "Продолжить"
+    },
+    "labelDetail": {
+      "unknown": "Нет дополнительной информации об этом ярлыке.",
+      "source": "Источник",
+      "created": "Создано",
+      "expires": "Истекает",
+      "negated": "Отменено",
+      "yes": "Да",
+      "appeal": "Оспорить ярлык",
+      "appealSent": "Жалоба отправлена"
+    },
     "post": {
       "postNotFound": "Пост не найден",
       "newPost": "Новая Запись",
+      "labelGateTitle": "Предупреждение о содержимом",
       "reply": "Ответить",
       "post": "Опубликовать",
       "posting": "Публикация...",
@@ -370,7 +393,9 @@
         "showMore": "Показывать больше таких",
         "showLess": "Показывать меньше таких",
         "showMoreSent": "Отправлено: больше таких",
-        "showLessSent": "Отправлено: меньше таких"
+        "showLessSent": "Отправлено: меньше таких",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Перевод",
@@ -958,6 +983,17 @@
             "description": "Укажите любой совместимый CDN по URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Выберите до {{max}} языков для вашей публикации.",
       "postLanguageSearch": "Поиск языков",
       "postLanguageA11y": "Язык публикации: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

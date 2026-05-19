@@ -67,7 +67,8 @@
       "done": "Готово",
       "following": "Підписані",
       "reset": "Скинути",
-      "or": "або"
+      "or": "або",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Будь ласка, заповніть усі поля",
@@ -104,7 +105,8 @@
       "continue": "Продовжити",
       "invalidHandle": "Будь ласка, введіть коректний handle.",
       "oauthSuccessTitle": "Виконано вхід",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) автентифікований через atproto OAuth. Наступний крок — підключення цієї сесії до клієнта API."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) автентифікований через atproto OAuth. Наступний крок — підключення цієї сесії до клієнта API.",
+      "refreshingSession": "Оновлення сесії…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Пошук",
       "notifications": "Сповіщення",
       "post": "Допис",
-      "settings": "Налаштування"
+      "settings": "Налаштування",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Шукайте профілі та публікації на Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Цей користувач ще не змінив свою ручку.",
       "reportPost": "Поскаржитися на допис",
       "joinedDate": "Приєднався {{date}}",
-      "sendMessage": "Надіслати повідомлення"
+      "sendMessage": "Надіслати повідомлення",
+      "suspendedTitle": "Обліковий запис заблоковано",
+      "suspendedBody": "Обліковий запис @{{handle}} заблоковано модерацією."
     },
     "feed": {
       "loadingMorePosts": "Завантаження більше публікацій ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Максимум {{metric}}",
       "feed": "Стрічка"
     },
+    "confirmExternal": {
+      "title": "Покинути akari?",
+      "body": "Ви відкриваєте посилання на {{host}}. Цей сайт не пов'язаний з akari.",
+      "copy": "Копіювати посилання",
+      "continue": "Продовжити"
+    },
+    "labelDetail": {
+      "unknown": "Немає додаткової інформації про цю позначку.",
+      "source": "Джерело",
+      "created": "Створено",
+      "expires": "Закінчується",
+      "negated": "Скасовано",
+      "yes": "Так",
+      "appeal": "Оскаржити позначку",
+      "appealSent": "Скаргу надіслано"
+    },
     "post": {
       "postNotFound": "Повідомлення не знайдено",
       "newPost": "Новий пост",
+      "labelGateTitle": "Попередження про вміст",
       "reply": "Відповідати",
       "post": "Допис",
       "posting": "Публікація ...",
@@ -370,7 +393,9 @@
         "showMore": "Більше такого",
         "showLess": "Менше такого",
         "showMoreSent": "Надіслано: більше такого",
-        "showLessSent": "Надіслано: менше такого"
+        "showLessSent": "Надіслано: менше такого",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Переклад",
@@ -967,6 +992,17 @@
             "description": "Вкажіть будь-який сумісний CDN через URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "Огляд",
       "thisIsRevisit": "Це повторний перегляд",
       "containsSpoilers": "Містить спойлери"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

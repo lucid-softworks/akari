@@ -67,7 +67,8 @@
       "done": "Hotovo",
       "following": "Sledujete",
       "reset": "Obnoviť",
-      "or": "alebo"
+      "or": "alebo",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Vyplňte prosím všetky polia",
@@ -104,7 +105,8 @@
       "continue": "Pokračovať",
       "invalidHandle": "Zadaj platný handle.",
       "oauthSuccessTitle": "Prihlásené",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) bol overený cez atproto OAuth. Ďalším krokom je prepojenie tejto relácie s klientom API."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) bol overený cez atproto OAuth. Ďalším krokom je prepojenie tejto relácie s klientom API.",
+      "refreshingSession": "Obnovuje sa relácia…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Prehliadka",
       "notifications": "Oznámenia",
       "post": "Post",
-      "settings": "Nastavenia"
+      "settings": "Nastavenia",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Vyhľadajte profily a príspevky na Bluessky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Tento používateľ ešte nezmenil ich rukoväť.",
       "reportPost": "Nahlásiť príspevok",
       "joinedDate": "Pripojil(a) sa {{date}}",
-      "sendMessage": "Odoslať správu"
+      "sendMessage": "Odoslať správu",
+      "suspendedTitle": "Účet pozastavený",
+      "suspendedBody": "@{{handle}} bol pozastavený moderátormi."
     },
     "feed": {
       "loadingMorePosts": "Načítava viac príspevkov ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Maximum {{metric}}",
       "feed": "Kanál"
     },
+    "confirmExternal": {
+      "title": "Opustiť akari?",
+      "body": "Chystáte sa otvoriť odkaz na {{host}}. Táto stránka nie je prepojená s akari.",
+      "copy": "Kopírovať odkaz",
+      "continue": "Pokračovať"
+    },
+    "labelDetail": {
+      "unknown": "K tomuto štítku nie sú ďalšie informácie.",
+      "source": "Zdroj",
+      "created": "Vytvorené",
+      "expires": "Vyprší",
+      "negated": "Zrušené",
+      "yes": "Áno",
+      "appeal": "Odvolať sa proti štítku",
+      "appealSent": "Odvolanie odoslané"
+    },
     "post": {
       "postNotFound": "Príspevok sa nenašiel",
       "newPost": "Nový príspevok",
+      "labelGateTitle": "Upozornenie na obsah",
       "reply": "Odpovedať",
       "post": "Post",
       "posting": "Uverejnenie ...",
@@ -370,7 +393,9 @@
         "showMore": "Zobraziť viac podobných",
         "showLess": "Zobraziť menej podobných",
         "showMoreSent": "Odoslané: viac podobných",
-        "showLessSent": "Odoslané: menej podobných"
+        "showLessSent": "Odoslané: menej podobných",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Preklad",
@@ -967,6 +992,17 @@
             "description": "Ukáž na ľubovoľný kompatibilný CDN cez URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Vyberte až {{max}} jazykov pre váš príspevok.",
       "postLanguageSearch": "Hľadať jazyky",
       "postLanguageA11y": "Jazyk príspevku: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

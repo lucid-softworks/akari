@@ -67,7 +67,8 @@
       "done": "Klar",
       "following": "Följer",
       "reset": "Återställ",
-      "or": "eller"
+      "or": "eller",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "Fyll i alla fält",
@@ -104,7 +105,8 @@
       "continue": "Fortsätt",
       "invalidHandle": "Ange ett giltigt handle.",
       "oauthSuccessTitle": "Inloggad",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) har autentiserats via atproto OAuth. Nästa steg är att koppla den här sessionen till API-klienten."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) har autentiserats via atproto OAuth. Nästa steg är att koppla den här sessionen till API-klienten.",
+      "refreshingSession": "Uppdaterar sessionen…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "Söka",
       "notifications": "Meddelanden",
       "post": "Posta",
-      "settings": "Inställningar"
+      "settings": "Inställningar",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "Sök efter profiler och inlägg på bluessky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "Den här användaren har inte bytt handtag ännu.",
       "reportPost": "Anmäl inlägg",
       "joinedDate": "Gick med {{date}}",
-      "sendMessage": "Skicka meddelande"
+      "sendMessage": "Skicka meddelande",
+      "suspendedTitle": "Konto avstängt",
+      "suspendedBody": "@{{handle}} har stängts av av moderering."
     },
     "feed": {
       "loadingMorePosts": "Laddar fler inlägg ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "Högst {{metric}}",
       "feed": "Flöde"
     },
+    "confirmExternal": {
+      "title": "Lämna akari?",
+      "body": "Du är på väg att öppna en länk på {{host}}. Denna webbplats är inte ansluten till akari.",
+      "copy": "Kopiera länk",
+      "continue": "Fortsätt"
+    },
+    "labelDetail": {
+      "unknown": "Ingen ytterligare information om denna etikett.",
+      "source": "Källa",
+      "created": "Skapad",
+      "expires": "Upphör",
+      "negated": "Upphävd",
+      "yes": "Ja",
+      "appeal": "Överklaga etikett",
+      "appealSent": "Överklagan skickad"
+    },
     "post": {
       "postNotFound": "Post hittades inte",
       "newPost": "Ny inlägg",
+      "labelGateTitle": "Innehållsvarning",
       "reply": "Svar",
       "post": "Posta",
       "posting": "Post ...",
@@ -370,7 +393,9 @@
         "showMore": "Visa fler som denna",
         "showLess": "Visa färre som denna",
         "showMoreSent": "Skickat: fler som denna",
-        "showLessSent": "Skickat: färre som denna"
+        "showLessSent": "Skickat: färre som denna",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "Översättning",
@@ -967,6 +992,17 @@
             "description": "Peka på valfri kompatibel CDN via URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "postLanguageHint": "Välj upp till {{max}} språk för ditt inlägg.",
       "postLanguageSearch": "Sök språk",
       "postLanguageA11y": "Inläggsspråk: {{value}}"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

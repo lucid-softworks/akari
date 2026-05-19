@@ -67,7 +67,8 @@
       "done": "סיום",
       "following": "עוקב",
       "reset": "איפוס",
-      "or": "או"
+      "or": "או",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "אנא מלא את כל השדות",
@@ -104,7 +105,8 @@
       "continue": "המשך",
       "invalidHandle": "אנא הזינו handle תקין.",
       "oauthSuccessTitle": "התחברת",
-      "oauthSuccessMessage": "@{{handle}} ({{did}}) אומת דרך atproto OAuth. חיבור הסשן הזה ללקוח ה־API הוא השלב הבא."
+      "oauthSuccessMessage": "@{{handle}} ({{did}}) אומת דרך atproto OAuth. חיבור הסשן הזה ללקוח ה־API הוא השלב הבא.",
+      "refreshingSession": "מרענן הפעלה…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "לְחַפֵּשׂ",
       "notifications": "התראות",
       "post": "שֶׁלְאַחַר",
-      "settings": "הגדרות"
+      "settings": "הגדרות",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "חפש פרופילים ופוסטים בבלוזקי",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "משתמש זה עדיין לא שינה את הידית שלו.",
       "reportPost": "דווח על פוסט",
       "joinedDate": "הצטרף ב-{{date}}",
-      "sendMessage": "שלח הודעה"
+      "sendMessage": "שלח הודעה",
+      "suspendedTitle": "החשבון מושעה",
+      "suspendedBody": "@{{handle}} הושעה על ידי הניהול."
     },
     "feed": {
       "loadingMorePosts": "טוען פוסטים נוספים ...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "מקסימום {{metric}}",
       "feed": "פיד"
     },
+    "confirmExternal": {
+      "title": "לעזוב את akari?",
+      "body": "אתה עומד לפתוח קישור באתר {{host}}. אתר זה אינו קשור ל-akari.",
+      "copy": "העתק קישור",
+      "continue": "המשך"
+    },
+    "labelDetail": {
+      "unknown": "אין מידע נוסף על תווית זו.",
+      "source": "מקור",
+      "created": "נוצר",
+      "expires": "פג תוקף",
+      "negated": "בוטל",
+      "yes": "כן",
+      "appeal": "ערעור על תווית",
+      "appealSent": "הערעור נשלח"
+    },
     "post": {
       "postNotFound": "פוסט לא נמצא",
       "newPost": "פוסט חדש",
+      "labelGateTitle": "אזהרת תוכן",
       "reply": "תְגוּבָה",
       "post": "שֶׁלְאַחַר",
       "posting": "הַצָבָה...",
@@ -370,7 +393,9 @@
         "showMore": "הצג עוד כמו זה",
         "showLess": "הצג פחות כמו זה",
         "showMoreSent": "נשלח: עוד כמו זה",
-        "showLessSent": "נשלח: פחות כמו זה"
+        "showLessSent": "נשלח: פחות כמו זה",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "תִרגוּם",
@@ -967,6 +992,17 @@
             "description": "הצביעו על כל CDN תואם לפי URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "bookmarks": {
@@ -1114,6 +1150,9 @@
       "review": "ביקורת",
       "thisIsRevisit": "זוהי צפייה חוזרת",
       "containsSpoilers": "מכיל ספוילרים"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }

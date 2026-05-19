@@ -67,7 +67,8 @@
       "done": "تم",
       "following": "متابع",
       "reset": "إعادة تعيين",
-      "or": "أو"
+      "or": "أو",
+      "mutuals": "Mutuals"
     },
     "auth": {
       "fillAllFields": "يرجى ملء جميع الحقول",
@@ -104,7 +105,8 @@
       "continue": "متابعة",
       "invalidHandle": "يرجى إدخال اسم مستخدم صالح.",
       "oauthSuccessTitle": "تم تسجيل الدخول",
-      "oauthSuccessMessage": "تم التحقق من @{{handle}} ({{did}}) عبر atproto OAuth. ربط هذه الجلسة بعميل الـ API هو الخطوة التالية."
+      "oauthSuccessMessage": "تم التحقق من @{{handle}} ({{did}}) عبر atproto OAuth. ربط هذه الجلسة بعميل الـ API هو الخطوة التالية.",
+      "refreshingSession": "جارٍ تحديث الجلسة…"
     },
     "oauth": {
       "scopes": {
@@ -195,7 +197,9 @@
       "search": "البحث",
       "notifications": "الإشعارات",
       "post": "المنشور",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "followers": "Followers",
+      "following": "Following"
     },
     "search": {
       "searchPlaceholder": "البحث عن الملفات الشخصية والمنشورات على Bluesky",
@@ -316,7 +320,9 @@
       "noHandleHistoryDescription": "لم يغيّر هذا المستخدم معرفه بعد.",
       "reportPost": "الإبلاغ عن المنشور",
       "joinedDate": "انضم في {{date}}",
-      "sendMessage": "إرسال رسالة"
+      "sendMessage": "إرسال رسالة",
+      "suspendedTitle": "الحساب موقوف",
+      "suspendedBody": "تم تعليق @{{handle}} من قبل الإشراف."
     },
     "feed": {
       "loadingMorePosts": "جاري تحميل المزيد من المنشورات...",
@@ -346,9 +352,26 @@
       "filterMaxLabel": "الحد الأقصى لـ {{metric}}",
       "feed": "خلاصة"
     },
+    "confirmExternal": {
+      "title": "مغادرة akari؟",
+      "body": "أنت على وشك فتح رابط على {{host}}. هذا الموقع غير تابع لـ akari.",
+      "copy": "نسخ الرابط",
+      "continue": "متابعة"
+    },
+    "labelDetail": {
+      "unknown": "لا توجد معلومات إضافية حول هذه التسمية.",
+      "source": "المصدر",
+      "created": "أُنشئ",
+      "expires": "تنتهي صلاحيته",
+      "negated": "ملغى",
+      "yes": "نعم",
+      "appeal": "الطعن في التسمية",
+      "appealSent": "تم إرسال الطعن"
+    },
     "post": {
       "postNotFound": "لم يتم العثور على المنشور",
       "newPost": "منشور جديد",
+      "labelGateTitle": "تحذير المحتوى",
       "reply": "رد",
       "post": "نشر",
       "posting": "جاري النشر...",
@@ -370,7 +393,9 @@
         "showMore": "إظهار المزيد مثل هذا",
         "showLess": "إظهار أقل مثل هذا",
         "showMoreSent": "تم إرسال \"المزيد مثل هذا\"",
-        "showLessSent": "تم إرسال \"أقل مثل هذا\""
+        "showLessSent": "تم إرسال \"أقل مثل هذا\"",
+        "addCommunityNote": "Add Community Note",
+        "requestCommunityNote": "Request Community Note"
       },
       "translation": {
         "title": "الترجمة",
@@ -958,6 +983,17 @@
             "description": "وجّه إلى أي CDN متوافق عبر URL."
           }
         }
+      },
+      "ozoneLabeler": {
+        "title": "Ozone labeler",
+        "didLabel": "Labeler DID",
+        "didHint": "Which Ozone labeler the moderation tools talk to. Defaults to the official Bluesky moderation service; change this only if you run your own Ozone instance.",
+        "save": "Save",
+        "reset": "Reset to default",
+        "currentLabel": "Currently using",
+        "usingDefault": "Using the default Bluesky moderation labeler.",
+        "usingCustom": "Using a custom Ozone labeler. Settings only apply on this device.",
+        "entryDescription": "Configure which Ozone instance the moderation tools talk to."
       }
     },
     "gif": {
@@ -1114,6 +1150,9 @@
       "review": "المراجعة",
       "thisIsRevisit": "هذه مشاهدة متكررة",
       "containsSpoilers": "يحتوي على حرق للأحداث"
+    },
+    "communityNotes": {
+      "title": "Community Notes"
     }
   }
 }
