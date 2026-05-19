@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Redirect, router } from 'expo-router';
 
 import { spacing } from '@/constants/tokens';
@@ -8,6 +8,7 @@ import { AccountsListSection } from '@/components/settings/account/AccountsListS
 import { SettingsRowsSection } from '@/components/settings/account/SettingsRowsSection';
 import { type SettingsRowDescriptor } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
+import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { useRemoveAccount } from '@/hooks/mutations/useRemoveAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
@@ -23,7 +24,6 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Account } from '@/types/account';
-import { showAlert } from '@/utils/alert';
 
 export default function AccountSettingsScreen() {
   const borderColor = useBorderColor();
@@ -73,7 +73,7 @@ export default function AccountSettingsScreen() {
 
   const handleRemoveAccount = useCallback(
     (account: Account) => {
-      showAlert({
+      confirm({
         title: t('common.removeAccount'),
         message: t('profile.removeAccountConfirmation', { handle: account.handle }),
         buttons: [
@@ -95,7 +95,7 @@ export default function AccountSettingsScreen() {
         ],
       });
     },
-    [currentAccount?.did, removeAccountMutation, t],
+    [confirm, currentAccount?.did, removeAccountMutation, t],
   );
 
   const handleAddAccount = useCallback(() => {
@@ -107,12 +107,13 @@ export default function AccountSettingsScreen() {
       await wipeAllDataMutation.mutateAsync();
       setSignedOut(true);
     } catch {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('common.failedToLogout'),
+        buttons: [{ text: t('common.ok') }],
       });
     }
-  }, [t, wipeAllDataMutation]);
+  }, [confirm, t, wipeAllDataMutation]);
 
   const accountManagementRows = useMemo<SettingsRowDescriptor[]>(
     () => [
@@ -215,7 +216,7 @@ export default function AccountSettingsScreen() {
 
   return (
     <SettingsSubpageLayout title={t('settings.account')}>
-      <ScrollView
+      <SettingsScroll
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -250,7 +251,7 @@ export default function AccountSettingsScreen() {
           rows={dangerRows}
           borderColor={borderColor}
         />
-      </ScrollView>
+      </SettingsScroll>
     </SettingsSubpageLayout>
   );
 }

@@ -16,16 +16,26 @@ import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 
 const HANDLE_REGEX = /^@?[a-zA-Z0-9._-]+$/;
 
-export function AddAccountForm() {
+type AddAccountFormProps = {
+  /**
+   * Called after the new account is added and switched-to. When set, the
+   * form skips its default `router.replace('/(tabs)/settings')` so a
+   * parent surface (e.g. a modal) can take over closure / navigation.
+   */
+  onSuccess?: () => void;
+};
+
+export function AddAccountForm({ onSuccess }: AddAccountFormProps = {}) {
   const { t } = useTranslation();
   const { replace } = useRouter();
   const { data: currentAccount } = useCurrentAccount();
+  const confirm = useConfirm();
 
   const [handle, setHandle] = useState('');
   const [appPassword, setAppPassword] = useState('');
@@ -56,17 +66,19 @@ export function AddAccountForm() {
     const trimmedHandle = handle.trim();
 
     if (!trimmedHandle || !appPassword) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('auth.fillAllFields'),
+        buttons: [{ text: t('common.ok') }],
       });
       return;
     }
 
     if (!validateHandle(trimmedHandle)) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: t('auth.invalidBlueskyHandle'),
+        buttons: [{ text: t('common.ok') }],
       });
       return;
     }
@@ -75,9 +87,10 @@ export function AddAccountForm() {
       const detectedPdsUrl = await getPdsUrlFromHandle(trimmedHandle);
 
       if (!detectedPdsUrl) {
-        showAlert({
+        confirm({
           title: t('common.error'),
           message: 'Could not detect PDS server for this handle',
+          buttons: [{ text: t('common.ok') }],
         });
         return;
       }
@@ -104,9 +117,14 @@ export function AddAccountForm() {
 
       setHandle('');
       setAppPassword('');
-      replace((currentAccount ? '/(tabs)/settings' : '/') as never);
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        replace((currentAccount ? '/(tabs)/settings' : '/') as never);
+      }
     } catch (error) {
-      showAlert({
+      confirm({
+        buttons: [{ text: t('common.ok') }],
         title: t('common.error'),
         message: error instanceof Error ? error.message : t('auth.signInFailed'),
       });

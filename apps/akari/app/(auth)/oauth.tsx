@@ -16,9 +16,9 @@ import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors,
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
 import { apiForPdsUrl } from '@/utils/blueskyApi';
 import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
 import { oauthSignIn } from '@/utils/oauth/signIn';
@@ -27,6 +27,7 @@ const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
 
 export default function OauthSignInScreen() {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const params = useLocalSearchParams<{ handle?: string }>();
   const initialHandle = typeof params.handle === 'string' ? params.handle : '';
 
@@ -152,14 +153,15 @@ export default function OauthSignInScreen() {
       await switchAccountMutation.mutateAsync(newAccount);
       setRedirectAfterAuth('/');
     } catch (error) {
-      showAlert({
+      confirm({
         title: t('common.error'),
         message: error instanceof Error ? error.message : t('auth.signInFailed'),
+        buttons: [{ text: t('common.ok') }],
       });
     } finally {
       setSignInInFlight(false);
     }
-  }, [addAccountMutation, canSubmit, signInInFlight, switchAccountMutation, t, trimmed]);
+  }, [addAccountMutation, canSubmit, confirm, signInInFlight, switchAccountMutation, t, trimmed]);
 
   if (redirectAfterAuth) {
     return <Redirect href={redirectAfterAuth as never} />;

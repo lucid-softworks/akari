@@ -2,10 +2,11 @@ import Constants from 'expo-constants';
 import { Image } from '@/components/Image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AddAccountModal } from '@/components/AddAccountModal';
 import {
   SettingsRow,
   SettingsSection,
@@ -15,14 +16,15 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, layout } from '@/constants/tokens';
+import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useResponsive } from '@/hooks/useResponsive';
-import { showAlert } from '@/utils/alert';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const EXTERNAL_LINKS = {
@@ -47,6 +49,8 @@ export default function SettingsScreen() {
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const cardBackground = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const iconColor = useThemeColor({}, 'text');
+  const confirm = useConfirm();
 
   const handleScrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -61,7 +65,7 @@ export default function SettingsScreen() {
       try {
         await WebBrowser.openBrowserAsync(url);
       } catch {
-        showAlert({
+        confirm({
           title: t('common.error'),
           message: t('common.failedToOpenLink'),
           buttons: [{ text: t('common.ok') }],
@@ -71,8 +75,12 @@ export default function SettingsScreen() {
     [t],
   );
 
+  const [addAccountOpen, setAddAccountOpen] = useState(false);
   const handleAddAccount = useCallback(() => {
-    router.push('/(tabs)/settings/add-account');
+    setAddAccountOpen(true);
+  }, []);
+  const closeAddAccount = useCallback(() => {
+    setAddAccountOpen(false);
   }, []);
 
   // Version info
@@ -198,54 +206,97 @@ export default function SettingsScreen() {
   const displayName = currentProfile?.displayName ?? currentAccount?.displayName ?? null;
   const fallbackLetter = (displayName || currentAccount?.handle || 'U').charAt(0).toUpperCase();
 
+  // Mini avatars for the hero's "Switch account" row. We surface up to
+  // five of the *other* accounts on the device so the user can tell at a
+  // glance how many sessions are signed in — the row itself is tappable
+  // and routes to the accounts manager for actually switching.
+  const otherAccounts = (accounts ?? []).filter((a) => a.did !== currentAccount?.did);
+  const miniAccounts = otherAccounts.slice(0, 5);
+
   return (
-    <ThemedView style={[styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
+    <ThemedView style={[Platform.OS === 'web' ? webScreenContainer : styles.container, { paddingTop: isLargeScreen ? insets.top : 0 }]}>
       <ScrollView
         ref={scrollViewRef}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(insets.bottom, spacing.xxl) + spacing.xxl }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, spacing.xxl) + spacing.xxl },
+        ]}
         showsVerticalScrollIndicator={false}
+        style={[styles.scrollView, webColumnSideBorders(borderColor)]}
       >
-        {/* Profile Card */}
+        {/* Profile hero */}
         <Pressable
-          style={({ pressed }) => [styles.profileCard, { backgroundColor: cardBackground, borderColor }, pressed && { opacity: activeOpacity.subtle }]}
+          style={({ pressed }) => [styles.hero, pressed && { opacity: activeOpacity.subtle }]}
           onPress={() => router.push('/(tabs)/settings/account')}
-          
         >
-          <View style={styles.profileRow}>
-            {avatar ? (
-              <Image contentFit="cover" source={{ uri: avatar }} style={styles.avatar} />
-            ) : (
-              <View style={[styles.avatarFallback, { backgroundColor: accentColor }]}>
-                <ThemedText style={styles.avatarFallbackText}>{fallbackLetter}</ThemedText>
-              </View>
-            )}
-            <View style={styles.profileInfo}>
-              {displayName ? <ThemedText style={styles.displayName}>{displayName}</ThemedText> : null}
-              {currentAccount ? (
-                <ThemedText style={[styles.handle, { color: secondaryText }]}>@{currentAccount.handle}</ThemedText>
-              ) : null}
+          {avatar ? (
+            <Image contentFit="cover" source={{ uri: avatar }} style={styles.heroAvatar} />
+          ) : (
+            <View style={[styles.heroAvatar, styles.heroAvatarFallback, { backgroundColor: accentColor }]}>
+              <ThemedText style={styles.heroAvatarFallbackText}>{fallbackLetter}</ThemedText>
             </View>
-            <IconSymbol name="chevron.right" size={16} color={secondaryText} />
-          </View>
-
-          {accounts && accounts.length > 1 ? (
-            <View style={styles.accountBadge}>
-              <ThemedText style={[styles.accountBadgeText, { color: secondaryText }]}>
-                {accounts.length} {t('common.accounts').toLowerCase()}
-              </ThemedText>
-            </View>
+          )}
+          {displayName ? <ThemedText style={styles.heroDisplayName}>{displayName}</ThemedText> : null}
+          {currentAccount ? (
+            <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
+              @{currentAccount.handle}
+            </ThemedText>
           ) : null}
         </Pressable>
 
-        {/* Add Account */}
-        <Pressable
-          style={({ pressed }) => [styles.addAccountButton, { borderColor }, pressed && { opacity: activeOpacity.default }]}
-          onPress={handleAddAccount}
-          
-        >
-          <IconSymbol name="plus.circle.fill" size={20} color={accentColor} />
-          <ThemedText style={[styles.addAccountText, { color: accentColor }]}>{t('common.addAccount')}</ThemedText>
-        </Pressable>
+        {/* Switch-account row */}
+        <View style={styles.switchRow}>
+          <Pressable
+            style={({ pressed }) => [styles.switchButton, pressed && { opacity: activeOpacity.default }]}
+            onPress={handleAddAccount}
+          >
+            <IconSymbol name="person.2.fill" size={20} color={iconColor} />
+            <ThemedText style={styles.switchLabel}>
+              {otherAccounts.length > 0 ? t('common.switchAccount') : t('common.addAccount')}
+            </ThemedText>
+          </Pressable>
+          {miniAccounts.length > 0 ? (
+            <View style={styles.miniAccounts}>
+              {miniAccounts.map((acct, index) => {
+                const mini = accountProfiles?.[acct.did];
+                const miniAvatar = mini?.avatar ?? acct.avatar;
+                const miniLetter = (mini?.displayName ?? acct.handle ?? '?')
+                  .charAt(0)
+                  .toUpperCase();
+                return (
+                  <View
+                    key={acct.did}
+                    style={[
+                      styles.miniAvatarWrap,
+                      // Stack with a slight overlap, leftmost on top so the
+                      // most recent (rightmost) sit underneath — matches the
+                      // visual order of the design.
+                      { zIndex: miniAccounts.length - index, marginLeft: index === 0 ? 0 : -8 },
+                    ]}
+                  >
+                    {miniAvatar ? (
+                      <Image
+                        contentFit="cover"
+                        source={{ uri: miniAvatar }}
+                        style={[styles.miniAvatar, { borderColor: cardBackground }]}
+                      />
+                    ) : (
+                      <View
+                        style={[
+                          styles.miniAvatar,
+                          styles.miniAvatarFallback,
+                          { backgroundColor: accentColor, borderColor: cardBackground },
+                        ]}
+                      >
+                        <ThemedText style={styles.miniAvatarFallbackText}>{miniLetter}</ThemedText>
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
+        </View>
 
         {/* Settings */}
         <SettingsSection isFirst title={t('navigation.settings')}>
@@ -305,6 +356,7 @@ export default function SettingsScreen() {
           </ThemedText>
         </View>
       </ScrollView>
+      <AddAccountModal visible={addAccountOpen} onClose={closeAddAccount} />
     </ThemedView>
   );
 }
@@ -313,72 +365,80 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
   scrollContent: {},
-  profileCard: {
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.xxl,
-    padding: spacing.lg,
-    borderWidth: layout.hairline,
-    borderRadius: radius.md,
-  },
-  profileRow: {
-    flexDirection: 'row',
+  hero: {
     alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xxl,
+    paddingBottom: spacing.lg,
+    gap: spacing.sm,
   },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginRight: spacing.md,
+  heroAvatar: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    marginBottom: spacing.md,
   },
-  avatarFallback: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  heroAvatarFallback: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: spacing.md,
   },
-  avatarFallbackText: {
-    fontSize: fontSize.xl,
+  heroAvatarFallbackText: {
+    fontSize: fontSize.xxl,
     fontWeight: fontWeight.bold,
     color: '#FFFFFF',
   },
-  profileInfo: {
-    flex: 1,
+  heroDisplayName: {
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
+    textAlign: 'center',
   },
-  displayName: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-  },
-  handle: {
+  heroHandle: {
     fontSize: fontSize.base,
-    marginTop: spacing.xxs,
+    textAlign: 'center',
   },
-  accountBadge: {
-    marginTop: spacing.sm,
-    paddingTop: spacing.sm,
-    borderTopWidth: layout.hairline,
-    borderTopColor: 'rgba(0,0,0,0.06)',
-  },
-  accountBadgeText: {
-    fontSize: fontSize.sm,
-  },
-  addAccountButton: {
+  switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.sm,
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    borderWidth: layout.hairline,
-    borderRadius: radius.md,
-    borderStyle: 'dashed',
+    gap: spacing.md,
   },
-  addAccountText: {
+  switchButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  switchLabel: {
     fontSize: fontSize.base,
-    fontWeight: fontWeight.medium,
+    fontWeight: fontWeight.semibold,
+  },
+  miniAccounts: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  miniAvatarWrap: {
+    width: 28,
+    height: 28,
+  },
+  miniAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+  },
+  miniAvatarFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  miniAvatarFallbackText: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.bold,
+    color: '#FFFFFF',
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
