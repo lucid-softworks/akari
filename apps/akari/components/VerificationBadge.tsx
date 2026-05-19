@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { VerifiersSheet } from '@/components/VerifiersSheet';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { hitSlop } from '@/constants/tokens';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useVerifiersForDid } from '@/hooks/queries/useVerifiersForDid';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useVerificationSettings } from '@/hooks/useVerificationSettings';
@@ -77,7 +78,7 @@ export function VerificationBadge({
   interactive = true,
 }: VerificationBadgeProps) {
   const { t } = useTranslation();
-  const [sheetVisible, setSheetVisible] = useState(false);
+  const dialogManager = useDialogManager();
   const { badgesEnabled, trustedVerifierDids } = useVerificationSettings();
   const { data: constellationDids } = useVerifiersForDid(badgesEnabled ? subjectDid : undefined);
 
@@ -111,28 +112,34 @@ export function VerificationBadge({
     );
   }
 
+  const handleOpenSheet = () => {
+    const id = `verifiers-sheet:${subjectDid ?? subjectHandle ?? 'unknown'}`;
+    dialogManager.open({
+      id,
+      component: (
+        <VerifiersSheet
+          onClose={() => dialogManager.close(id)}
+          subjectDid={subjectDid}
+          verification={verification}
+          subjectHandle={subjectHandle}
+          subjectDisplayName={subjectDisplayName}
+          tier={tier}
+        />
+      ),
+    });
+  };
+
   return (
-    <>
-      <Pressable
-        onPress={() => setSheetVisible(true)}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={t('ui.verifiedBadgeHint')}
-        hitSlop={hitSlop}
-        style={({ pressed }) => [styles.wrapper, pressed && { opacity: 0.7 }]}
-      >
-        {icon}
-      </Pressable>
-      <VerifiersSheet
-        visible={sheetVisible}
-        onClose={() => setSheetVisible(false)}
-        subjectDid={subjectDid}
-        verification={verification}
-        subjectHandle={subjectHandle}
-        subjectDisplayName={subjectDisplayName}
-        tier={tier}
-      />
-    </>
+    <Pressable
+      onPress={handleOpenSheet}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={t('ui.verifiedBadgeHint')}
+      hitSlop={hitSlop}
+      style={({ pressed }) => [styles.wrapper, pressed && { opacity: 0.7 }]}
+    >
+      {icon}
+    </Pressable>
   );
 }
 

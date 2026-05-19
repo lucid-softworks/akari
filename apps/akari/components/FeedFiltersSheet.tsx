@@ -23,7 +23,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 const ACCENT = '#0085ff';
 
 type FeedFiltersSheetProps = {
-  visible: boolean;
   onClose: () => void;
   /** Feed key to scope filter persistence (e.g. `'following'` or a feed URI). */
   feedKey: string | null | undefined;
@@ -49,7 +48,7 @@ function parseBound(input: string): number | undefined {
   return parsed;
 }
 
-export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheetProps) {
+export function FeedFiltersSheet({ onClose, feedKey }: FeedFiltersSheetProps) {
   const { t } = useTranslation();
   const borderColor = useBorderColor();
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#151718' }, 'background');
@@ -65,7 +64,7 @@ export function FeedFiltersSheet({ visible, onClose, feedKey }: FeedFiltersSheet
 
   return (
     <Modal
-      visible={visible}
+      visible
       animationType="slide"
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}

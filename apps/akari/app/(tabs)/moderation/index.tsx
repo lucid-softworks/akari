@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, opacity, radius, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useOzoneEvents } from '@/hooks/queries/useOzoneEvents';
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useOzoneQueue, type OzoneQueueFilters } from '@/hooks/queries/useOzoneQueue';
@@ -41,13 +42,30 @@ export default function ModerationScreen() {
     sortField: 'lastReportedAt',
     sortDirection: 'desc',
   });
-  const [activeSubject, setActiveSubject] = useState<{
-    subject: OzoneSubject;
-    label: string;
-    avatar?: string;
-    handle?: string;
-    snippet?: string;
-  } | null>(null);
+  const dialogManager = useDialogManager();
+  const handleOpenAction = useCallback(
+    (
+      subject: OzoneSubject,
+      label: string,
+      extras: { avatar?: string; handle?: string; snippet?: string },
+    ) => {
+      const id = 'ozone-action';
+      dialogManager.open({
+        id,
+        component: (
+          <OzoneActionSheet
+            subject={subject}
+            subjectLabel={label}
+            subjectAvatar={extras.avatar}
+            subjectHandle={extras.handle}
+            subjectSnippet={extras.snippet}
+            onClose={() => dialogManager.close(id)}
+          />
+        ),
+      });
+    },
+    [dialogManager],
+  );
 
   const queue = useOzoneQueue(queueFilters);
   const events = useOzoneEvents();
@@ -173,9 +191,7 @@ export default function ModerationScreen() {
                 status={s}
                 borderColor={borderColor}
                 secondary={secondary}
-                onAction={(subject, label, extras) =>
-                  setActiveSubject({ subject, label, ...extras })
-                }
+                onAction={handleOpenAction}
               />
             ))
           )
@@ -187,16 +203,6 @@ export default function ModerationScreen() {
           ))
         )}
       </ScrollView>
-
-      <OzoneActionSheet
-        visible={!!activeSubject}
-        subject={activeSubject?.subject ?? null}
-        subjectLabel={activeSubject?.label}
-        subjectAvatar={activeSubject?.avatar}
-        subjectHandle={activeSubject?.handle}
-        subjectSnippet={activeSubject?.snippet}
-        onClose={() => setActiveSubject(null)}
-      />
     </ThemedView>
   );
 }

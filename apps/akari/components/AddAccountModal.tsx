@@ -29,7 +29,6 @@ type Step = 'pick' | 'oauth' | 'password';
 const HANDLE_PATTERN = /^@?[a-zA-Z0-9._-]+$/;
 
 type AddAccountModalProps = {
-  visible: boolean;
   onClose: () => void;
 };
 
@@ -47,7 +46,7 @@ type AddAccountModalProps = {
  *     handles its own signIn → addAccount → switchAccount chain and
  *     calls `onClose` once done.
  */
-export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
+export function AddAccountModal({ onClose }: AddAccountModalProps) {
   const { t } = useTranslation();
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
@@ -58,16 +57,10 @@ export function AddAccountModal({ visible, onClose }: AddAccountModalProps) {
 
   const [step, setStep] = useState<Step>('pick');
 
-  // Reset to the picker each time the modal opens; otherwise a user who
-  // backed out mid-password-flow would re-open into the password screen.
-  useEffect(() => {
-    if (visible) setStep('pick');
-  }, [visible]);
-
   const goToOauth = () => setStep('oauth');
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={560} height="80%">
+    <CenteredModal onClose={onClose} maxWidth={560} height="80%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           {step !== 'pick' ? (

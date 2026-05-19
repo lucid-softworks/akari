@@ -15,6 +15,7 @@ import { FeedListHeader } from '@/components/home/FeedListHeader';
 import { FeedPostCard } from '@/components/home/FeedPostCard';
 import { HomeFab } from '@/components/home/HomeFab';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useFeed } from '@/hooks/queries/useFeed';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
@@ -37,7 +38,7 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
   const [showReviewComposer, setShowReviewComposer] = useState(false);
-  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  const dialogManager = useDialogManager();
   const filterIconColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   // Opaque background for the sticky tabs strip on web — without this
   // the header is transparent, so PostCards scrolling underneath show
@@ -75,6 +76,19 @@ export default function HomeScreen() {
     },
     [scrollToTop, setSelectedFeedMutation],
   );
+
+  const handleShowFilters = useCallback(() => {
+    const id = 'feed-filters';
+    dialogManager.open({
+      id,
+      component: (
+        <FeedFiltersSheet
+          onClose={() => dialogManager.close(id)}
+          feedKey={selectedFeed ?? null}
+        />
+      ),
+    });
+  }, [dialogManager, selectedFeed]);
 
   // Get posts from selected feed
   const {
@@ -225,7 +239,7 @@ export default function HomeScreen() {
       anyFilterActive={anyFilterActive}
       filterIconColor={filterIconColor}
       onTabChange={handleFeedSelection}
-      onShowFilters={() => setShowFiltersSheet(true)}
+      onShowFilters={handleShowFilters}
     />
   );
 
@@ -287,11 +301,6 @@ export default function HomeScreen() {
 
       <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />
       <ReviewComposer visible={showReviewComposer} onClose={() => setShowReviewComposer(false)} />
-      <FeedFiltersSheet
-        visible={showFiltersSheet}
-        onClose={() => setShowFiltersSheet(false)}
-        feedKey={selectedFeed ?? null}
-      />
     </ThemedView>
   );
 }

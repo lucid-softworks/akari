@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -40,11 +40,9 @@ const REQUEST_REASONS: { id: RequestCommunityNoteInput['reason']; label: string 
  * a stub that logs + 350ms latency.
  */
 export function AddCommunityNoteModal({
-  visible,
   onClose,
   postUri,
 }: {
-  visible: boolean;
   onClose: () => void;
   postUri: string;
 }) {
@@ -60,14 +58,6 @@ export function AddCommunityNoteModal({
   const [sourcesRaw, setSourcesRaw] = useState('');
 
   const submit = useSubmitCommunityNote();
-
-  useEffect(() => {
-    if (!visible) {
-      setClassification('missingContext');
-      setBody('');
-      setSourcesRaw('');
-    }
-  }, [visible]);
 
   const handleSubmit = async () => {
     if (!body.trim()) return;
@@ -85,7 +75,7 @@ export function AddCommunityNoteModal({
   };
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={620} height="85%">
+    <CenteredModal onClose={onClose} maxWidth={620} height="85%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>Add a Community Note</ThemedText>
@@ -195,11 +185,9 @@ export function AddCommunityNoteModal({
  * looks misleading but doesn't have contributor access themselves.
  */
 export function RequestCommunityNoteModal({
-  visible,
   onClose,
   postUri,
 }: {
-  visible: boolean;
   onClose: () => void;
   postUri: string;
 }) {
@@ -214,13 +202,6 @@ export function RequestCommunityNoteModal({
 
   const request = useRequestCommunityNote();
 
-  useEffect(() => {
-    if (!visible) {
-      setReason('misinformation');
-      setComment('');
-    }
-  }, [visible]);
-
   const handleSubmit = async () => {
     await request.mutateAsync({
       postUri,
@@ -231,7 +212,7 @@ export function RequestCommunityNoteModal({
   };
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={560} height="70%">
+    <CenteredModal onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>Request a Community Note</ThemedText>

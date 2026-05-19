@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { CenteredModal } from '@/components/ui/CenteredModal';
@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
+import { useDialogManager } from '@/contexts/DialogContext';
 import {
   useCreateOzoneTemplate,
   useDeleteOzoneTemplate,
@@ -20,6 +21,14 @@ import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+const TEMPLATE_EDITOR_DIALOG_ID = 'mod-template-editor';
+
+type TemplateEditorValues = {
+  name: string;
+  subject?: string;
+  contentMarkdown: string;
+};
+
 /**
  * Comm-templates manager. Lists every template the labeler has on file
  * and lets admins create / edit / delete them. The action sheet's email
@@ -31,8 +40,6 @@ export default function TemplatesScreen() {
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const textColor = useThemeColor({}, 'text');
 
   const { data: membership } = useOzoneMembership();
   const { data: templates } = useOzoneCommTemplates();
@@ -40,44 +47,49 @@ export default function TemplatesScreen() {
   const updateMutation = useUpdateOzoneTemplate();
   const deleteMutation = useDeleteOzoneTemplate();
 
-  const [editing, setEditing] = useState<OzoneCommTemplate | null>(null);
-  const [draftName, setDraftName] = useState('');
-  const [draftSubject, setDraftSubject] = useState('');
-  const [draftBody, setDraftBody] = useState('');
+  const dialogManager = useDialogManager();
 
-  const startNew = () => {
-    setEditing({ id: '', name: '' });
-    setDraftName('');
-    setDraftSubject('');
-    setDraftBody('');
-  };
-  const startEdit = (tpl: OzoneCommTemplate) => {
-    setEditing(tpl);
-    setDraftName(tpl.name ?? '');
-    setDraftSubject(tpl.subject ?? '');
-    setDraftBody(tpl.contentMarkdown ?? '');
-  };
-  const cancelEdit = () => setEditing(null);
+  // The editor used to be inlined with a `editing: OzoneCommTemplate | null`
+  // state acting as both visibility flag and template data. We've migrated
+  // open/close to DialogManager (so CenteredModal can drop its `visible`
+  // prop); the template-being-edited is now passed straight into the
+  // subcomponent as an argument to open().
+  const openEditor = useCallback(
+    (template: OzoneCommTemplate | null) => {
+      const close = () => dialogManager.close(TEMPLATE_EDITOR_DIALOG_ID);
+      const handleSave = async (values: TemplateEditorValues) => {
+        if (template?.id) {
+          await updateMutation.mutateAsync({
+            id: template.id,
+            name: values.name,
+            subject: values.subject,
+            contentMarkdown: values.contentMarkdown,
+          });
+        } else {
+          await createMutation.mutateAsync({
+            name: values.name,
+            subject: values.subject,
+            contentMarkdown: values.contentMarkdown,
+          });
+        }
+        close();
+      };
+      dialogManager.open({
+        id: TEMPLATE_EDITOR_DIALOG_ID,
+        component: (
+          <TemplateEditorModal
+            template={template}
+            onClose={close}
+            onSave={handleSave}
+          />
+        ),
+      });
+    },
+    [createMutation, dialogManager, updateMutation],
+  );
 
-  const save = async () => {
-    if (!editing) return;
-    if (!draftName.trim() || !draftBody.trim()) return;
-    if (editing.id) {
-      await updateMutation.mutateAsync({
-        id: editing.id,
-        name: draftName.trim(),
-        subject: draftSubject.trim() || undefined,
-        contentMarkdown: draftBody,
-      });
-    } else {
-      await createMutation.mutateAsync({
-        name: draftName.trim(),
-        subject: draftSubject.trim() || undefined,
-        contentMarkdown: draftBody,
-      });
-    }
-    setEditing(null);
-  };
+  const startNew = () => openEditor(null);
+  const startEdit = (tpl: OzoneCommTemplate) => openEditor(tpl);
 
   if (!membership?.isMod) {
     return (
@@ -165,90 +177,126 @@ export default function TemplatesScreen() {
         )}
       </ScrollView>
 
-      <CenteredModal
-        visible={!!editing}
-        onClose={cancelEdit}
-        maxWidth={640}
-        height="80%"
-      >
-        <View style={styles.modalContents}>
-          <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
-            <ThemedText style={styles.modalTitle}>
-              {editing?.id ? 'Edit template' : 'New template'}
-            </ThemedText>
-            {editing?.id ? (
-              <ThemedText style={[styles.modalSubtitle, { color: secondary }]} numberOfLines={1}>
-                {editing.name}
-              </ThemedText>
-            ) : null}
-          </View>
-
-          <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
-            <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Name</ThemedText>
-            <TextInput
-              value={draftName}
-              onChangeText={setDraftName}
-              placeholder="Internal label"
-              placeholderTextColor={secondary}
-              style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
-            />
-            <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Email subject</ThemedText>
-            <TextInput
-              value={draftSubject}
-              onChangeText={setDraftSubject}
-              placeholder="(optional)"
-              placeholderTextColor={secondary}
-              style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
-            />
-            <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Body (Markdown)</ThemedText>
-            <TextInput
-              value={draftBody}
-              onChangeText={setDraftBody}
-              placeholder="Hi {{handle}},&#10;&#10;..."
-              placeholderTextColor={secondary}
-              multiline
-              style={[
-                styles.input,
-                styles.inputMultiline,
-                { borderColor, color: textColor, backgroundColor: inputBg },
-              ]}
-            />
-          </ScrollView>
-
-          <View style={[styles.modalFooter, { borderTopColor: borderColor }]}>
-            <Pressable
-              onPress={cancelEdit}
-              disabled={createMutation.isPending || updateMutation.isPending}
-              style={[styles.footerButton, { borderColor }]}
-            >
-              <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
-            </Pressable>
-            <Pressable
-              onPress={save}
-              disabled={
-                !draftName.trim() ||
-                !draftBody.trim() ||
-                createMutation.isPending ||
-                updateMutation.isPending
-              }
-              style={[
-                styles.footerButton,
-                styles.footerButtonPrimary,
-                { backgroundColor: accent },
-                (!draftName.trim() ||
-                  !draftBody.trim() ||
-                  createMutation.isPending ||
-                  updateMutation.isPending) && { opacity: 0.6 },
-              ]}
-            >
-              <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-                {createMutation.isPending || updateMutation.isPending ? 'Saving…' : 'Save'}
-              </ThemedText>
-            </Pressable>
-          </View>
-        </View>
-      </CenteredModal>
     </ThemedView>
+  );
+}
+
+/**
+ * Editor dialog for a single comm-template. Mounted via DialogManager
+ * (see `openEditor` above), so its presence in the tree implies it
+ * should render — CenteredModal no longer takes a `visible` prop.
+ *
+ * Owns its own draft state, seeded from the optional `template` prop
+ * (null = "+ New template"). Calls `onSave` with the trimmed values and
+ * leaves the actual create/update mutation + close to the caller.
+ */
+function TemplateEditorModal({
+  template,
+  onClose,
+  onSave,
+}: {
+  template: OzoneCommTemplate | null;
+  onClose: () => void;
+  onSave: (values: TemplateEditorValues) => Promise<void>;
+}) {
+  const borderColor = useBorderColor();
+  const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
+  const accent = useThemeColor({}, 'tint');
+  const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
+  const textColor = useThemeColor({}, 'text');
+
+  const [draftName, setDraftName] = useState(template?.name ?? '');
+  const [draftSubject, setDraftSubject] = useState(template?.subject ?? '');
+  const [draftBody, setDraftBody] = useState(template?.contentMarkdown ?? '');
+  const [saving, setSaving] = useState(false);
+
+  const canSave = !!draftName.trim() && !!draftBody.trim() && !saving;
+
+  const handleSave = useCallback(async () => {
+    if (!canSave) return;
+    setSaving(true);
+    try {
+      await onSave({
+        name: draftName.trim(),
+        subject: draftSubject.trim() || undefined,
+        contentMarkdown: draftBody,
+      });
+    } finally {
+      setSaving(false);
+    }
+  }, [canSave, draftBody, draftName, draftSubject, onSave]);
+
+  return (
+    <CenteredModal onClose={onClose} maxWidth={640} height="80%">
+      <View style={styles.modalContents}>
+        <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
+          <ThemedText style={styles.modalTitle}>
+            {template?.id ? 'Edit template' : 'New template'}
+          </ThemedText>
+          {template?.id ? (
+            <ThemedText style={[styles.modalSubtitle, { color: secondary }]} numberOfLines={1}>
+              {template.name}
+            </ThemedText>
+          ) : null}
+        </View>
+
+        <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Name</ThemedText>
+          <TextInput
+            value={draftName}
+            onChangeText={setDraftName}
+            placeholder="Internal label"
+            placeholderTextColor={secondary}
+            style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
+          />
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Email subject</ThemedText>
+          <TextInput
+            value={draftSubject}
+            onChangeText={setDraftSubject}
+            placeholder="(optional)"
+            placeholderTextColor={secondary}
+            style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
+          />
+          <ThemedText style={[styles.fieldLabel, { color: secondary }]}>Body (Markdown)</ThemedText>
+          <TextInput
+            value={draftBody}
+            onChangeText={setDraftBody}
+            placeholder="Hi {{handle}},&#10;&#10;..."
+            placeholderTextColor={secondary}
+            multiline
+            style={[
+              styles.input,
+              styles.inputMultiline,
+              { borderColor, color: textColor, backgroundColor: inputBg },
+            ]}
+          />
+        </ScrollView>
+
+        <View style={[styles.modalFooter, { borderTopColor: borderColor }]}>
+          <Pressable
+            onPress={onClose}
+            disabled={saving}
+            style={[styles.footerButton, { borderColor }]}
+          >
+            <ThemedText style={styles.footerButtonLabel}>Cancel</ThemedText>
+          </Pressable>
+          <Pressable
+            onPress={handleSave}
+            disabled={!canSave}
+            style={[
+              styles.footerButton,
+              styles.footerButtonPrimary,
+              { backgroundColor: accent },
+              !canSave && { opacity: 0.6 },
+            ]}
+          >
+            <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
+              {saving ? 'Saving…' : 'Save'}
+            </ThemedText>
+          </Pressable>
+        </View>
+      </View>
+    </CenteredModal>
   );
 }
 

@@ -17,7 +17,6 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type CenteredModalProps = {
-  visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
   /** Caps the dialog's width on wide viewports (defaults to 640). */
@@ -50,6 +49,12 @@ type CenteredModalProps = {
  * avoiding view, the centered sizing, and the rounded-card framing.
  * Consumers just pass children for the dialog contents.
  *
+ * Visibility is intentionally not a prop: the parent (DialogManager in
+ * `contexts/DialogContext.tsx`) controls mount/unmount via
+ * `dialogManager.open` / `dialogManager.close`, so whenever this
+ * component is in the tree it should render. CenteredModal just paints
+ * its UI.
+ *
  * Why this exists: every modal sheet in the app used to duplicate the
  * backdrop / KeyboardAvoidingView / "stop press from propagating to
  * the dismiss handler" wiring. Centralising it here keeps individual
@@ -57,7 +62,6 @@ type CenteredModalProps = {
  * consistently across surfaces.
  */
 export function CenteredModal({
-  visible,
   onClose,
   children,
   maxWidth = 640,
@@ -70,7 +74,7 @@ export function CenteredModal({
   const bg = useThemeColor({}, 'background');
   return (
     <Modal
-      visible={visible}
+      visible
       animationType={animation}
       transparent
       onRequestClose={onClose}

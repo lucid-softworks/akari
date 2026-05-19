@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import type { OzoneSubject } from 'bluesky-ozone';
 
@@ -19,6 +19,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
+import { useDialogManager } from '@/contexts/DialogContext';
 import {
   useOzoneSubjectEvents,
   useOzoneSubjectStatus,
@@ -59,7 +60,23 @@ export default function SubjectDetailScreen() {
   const actionSubject = status ? toEmitSubject(status.subject) : null;
   const isAccount = Boolean(ref?.startsWith('did:'));
 
-  const [actionOpen, setActionOpen] = useState(false);
+  const dialogManager = useDialogManager();
+  const openAction = () => {
+    if (!actionSubject) return;
+    const id = 'ozone-action';
+    dialogManager.open({
+      id,
+      component: (
+        <OzoneActionSheet
+          subject={actionSubject as OzoneSubject | null}
+          subjectLabel={subjectLabel}
+          subjectAvatar={avatar}
+          subjectHandle={handle}
+          onClose={() => dialogManager.close(id)}
+        />
+      ),
+    });
+  };
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
@@ -102,7 +119,7 @@ export default function SubjectDetailScreen() {
         {actionSubject ? (
           <Pressable
             accessibilityRole="button"
-            onPress={() => setActionOpen(true)}
+            onPress={openAction}
             style={({ pressed }) => [
               styles.actionButton,
               { borderColor: accent },
@@ -162,15 +179,6 @@ export default function SubjectDetailScreen() {
           ))
         )}
       </ScrollView>
-
-      <OzoneActionSheet
-        visible={actionOpen}
-        subject={actionSubject as OzoneSubject | null}
-        subjectLabel={subjectLabel}
-        subjectAvatar={avatar}
-        subjectHandle={handle}
-        onClose={() => setActionOpen(false)}
-      />
     </ThemedView>
   );
 }

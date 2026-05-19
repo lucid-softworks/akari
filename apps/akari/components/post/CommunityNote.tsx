@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -13,6 +13,7 @@ import {
   radius,
   spacing,
 } from '@/constants/tokens';
+import { useDialogManager } from '@/contexts/DialogContext';
 import {
   useRateCommunityNote,
   type CommunityNoteHelpfulness,
@@ -64,8 +65,33 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
   );
   const accentBorder = useThemeColor({ light: '#F0B458', dark: '#5A4621' }, 'border');
 
-  const [rateOpen, setRateOpen] = useState(false);
-  const [sourcesOpen, setSourcesOpen] = useState(false);
+  const dialogManager = useDialogManager();
+
+  const handleOpenRate = () => {
+    const id = `community-note-rate-${note.id}`;
+    dialogManager.open({
+      id,
+      component: (
+        <RateNoteModal
+          onClose={() => dialogManager.close(id)}
+          noteId={note.id}
+        />
+      ),
+    });
+  };
+
+  const handleOpenSources = () => {
+    const id = `community-note-sources-${note.id}`;
+    dialogManager.open({
+      id,
+      component: (
+        <SourcesModal
+          onClose={() => dialogManager.close(id)}
+          sources={note.sources ?? []}
+        />
+      ),
+    });
+  };
 
   const isHelpful = note.status === 'currentlyRatedHelpful';
   const containerBg = isHelpful ? panelBg : reviewPanelBg;
@@ -102,7 +128,7 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
         <Pressable
           onPress={(event: { stopPropagation?: () => void }) => {
             event?.stopPropagation?.();
-            setRateOpen(true);
+            handleOpenRate();
           }}
           style={({ pressed }) => [
             styles.actionButton,
@@ -118,7 +144,7 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
           <Pressable
             onPress={(event: { stopPropagation?: () => void }) => {
               event?.stopPropagation?.();
-              setSourcesOpen(true);
+              handleOpenSources();
             }}
             style={({ pressed }) => [
               styles.actionButton,
@@ -132,27 +158,14 @@ export function CommunityNote({ note }: { note: CommunityNoteData }) {
           </Pressable>
         ) : null}
       </View>
-
-      <RateNoteModal
-        visible={rateOpen}
-        onClose={() => setRateOpen(false)}
-        noteId={note.id}
-      />
-      <SourcesModal
-        visible={sourcesOpen}
-        onClose={() => setSourcesOpen(false)}
-        sources={note.sources ?? []}
-      />
     </View>
   );
 }
 
 function RateNoteModal({
-  visible,
   onClose,
   noteId,
 }: {
-  visible: boolean;
   onClose: () => void;
   noteId: string;
 }) {
@@ -167,15 +180,8 @@ function RateNoteModal({
   const [comment, setComment] = useState('');
   const rate = useRateCommunityNote();
 
-  // Reset every time the sheet reopens so an aborted rating doesn't
-  // leak state into the next one.
-  React.useEffect(() => {
-    if (!visible) {
-      setHelpfulness(null);
-      setReasons(new Set());
-      setComment('');
-    }
-  }, [visible]);
+  // DialogManager unmounts this component on close, so each open starts
+  // with a fresh state slate; no manual reset effect needed.
 
   const reasonOptions =
     helpfulness === 'notHelpful' ? NOT_HELPFUL_REASONS : HELPFUL_REASONS;
@@ -192,7 +198,7 @@ function RateNoteModal({
   };
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={560} height="85%">
+    <CenteredModal onClose={onClose} maxWidth={560} height="85%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>Is this note helpful?</ThemedText>
@@ -323,11 +329,9 @@ function RateNoteModal({
 }
 
 function SourcesModal({
-  visible,
   onClose,
   sources,
 }: {
-  visible: boolean;
   onClose: () => void;
   sources: string[];
 }) {
@@ -336,7 +340,7 @@ function SourcesModal({
   const tint = useThemeColor({}, 'tint');
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={520}>
+    <CenteredModal onClose={onClose} maxWidth={520}>
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>Sources</ThemedText>

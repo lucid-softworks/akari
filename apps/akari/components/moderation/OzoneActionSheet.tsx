@@ -20,7 +20,6 @@ import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type OzoneActionSheetProps = {
-  visible: boolean;
   subject: OzoneSubject | null;
   /** Human-friendly label (e.g. handle, AT URI tail) for the modal header. */
   subjectLabel?: string;
@@ -92,7 +91,6 @@ const ACTION_OPTIONS: ActionOption[] = [
  * exercised.
  */
 export function OzoneActionSheet({
-  visible,
   subject,
   subjectLabel,
   subjectAvatar,
@@ -221,7 +219,6 @@ export function OzoneActionSheet({
 
   return (
     <CenteredModal
-      visible={visible}
       onClose={onClose}
       height="85%"
       // Wider modal on web because the subject + form sit side-by-side.

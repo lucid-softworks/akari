@@ -2,11 +2,12 @@ import Constants from 'expo-constants';
 import { Image } from '@/components/Image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountModal } from '@/components/AddAccountModal';
+import { useDialogManager } from '@/contexts/DialogContext';
 import {
   SettingsRow,
   SettingsSection,
@@ -75,13 +76,14 @@ export default function SettingsScreen() {
     [t],
   );
 
-  const [addAccountOpen, setAddAccountOpen] = useState(false);
+  const dialogManager = useDialogManager();
   const handleAddAccount = useCallback(() => {
-    setAddAccountOpen(true);
-  }, []);
-  const closeAddAccount = useCallback(() => {
-    setAddAccountOpen(false);
-  }, []);
+    const id = 'add-account';
+    dialogManager.open({
+      id,
+      component: <AddAccountModal onClose={() => dialogManager.close(id)} />,
+    });
+  }, [dialogManager]);
 
   // Version info
   const version = Constants.expoConfig?.version ?? t('common.unknown');
@@ -356,7 +358,6 @@ export default function SettingsScreen() {
           </ThemedText>
         </View>
       </ScrollView>
-      <AddAccountModal visible={addAccountOpen} onClose={closeAddAccount} />
     </ThemedView>
   );
 }

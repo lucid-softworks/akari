@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
 import { VerificationBadge, computeVerificationTier } from '@/components/VerificationBadge';
+import { DialogProvider } from '@/contexts/DialogContext';
 
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -21,8 +22,8 @@ jest.mock('@/components/VerifiersSheet', () => {
   const ReactLib = require('react');
   const { Text: RNText } = require('react-native');
   return {
-    VerifiersSheet: jest.fn(({ visible }: { visible: boolean }) =>
-      visible ? ReactLib.createElement(RNText, { testID: 'verifiers-sheet-open' }, 'open') : null,
+    VerifiersSheet: jest.fn(() =>
+      ReactLib.createElement(RNText, { testID: 'verifiers-sheet-open' }, 'open'),
     ),
   };
 });
@@ -93,9 +94,12 @@ describe('computeVerificationTier', () => {
   });
 });
 
+const renderWithDialogs = (ui: React.ReactElement) =>
+  render(ui, { wrapper: DialogProvider });
+
 describe('VerificationBadge', () => {
   it('renders nothing when nobody has verified the subject', () => {
-    const { queryByTestId } = render(<VerificationBadge subjectDid="did:plc:alice" />);
+    const { queryByTestId } = renderWithDialogs(<VerificationBadge subjectDid="did:plc:alice" />);
     expect(queryByTestId('icon-checkmark.seal.fill')).toBeNull();
   });
 
@@ -105,13 +109,13 @@ describe('VerificationBadge', () => {
       trustedVerifierDids: [],
     });
     mockUseVerifiersForDid.mockReturnValue({ data: ['did:plc:rando'] });
-    const { queryByTestId } = render(<VerificationBadge subjectDid="did:plc:alice" />);
+    const { queryByTestId } = renderWithDialogs(<VerificationBadge subjectDid="did:plc:alice" />);
     expect(queryByTestId('icon-checkmark.seal.fill')).toBeNull();
   });
 
   it('renders a blue badge when verified by someone outside the trusted list', () => {
     mockUseVerifiersForDid.mockReturnValue({ data: ['did:plc:rando'] });
-    const { getByTestId } = render(<VerificationBadge subjectDid="did:plc:alice" />);
+    const { getByTestId } = renderWithDialogs(<VerificationBadge subjectDid="did:plc:alice" />);
     expect(getByTestId('icon-checkmark.seal.fill').props.children).toMatch(/#0085ff$/i);
   });
 
@@ -123,7 +127,7 @@ describe('VerificationBadge', () => {
       badgesEnabled: true,
       trustedVerifierDids: ['did:plc:trusted-a', 'did:plc:trusted-b'],
     });
-    const { getByTestId } = render(<VerificationBadge subjectDid="did:plc:alice" />);
+    const { getByTestId } = renderWithDialogs(<VerificationBadge subjectDid="did:plc:alice" />);
     expect(getByTestId('icon-checkmark.seal.fill').props.children).toMatch(/#C0C0C0$/i);
   });
 
@@ -135,13 +139,13 @@ describe('VerificationBadge', () => {
       badgesEnabled: true,
       trustedVerifierDids: ['did:plc:trusted-a', 'did:plc:trusted-b'],
     });
-    const { getByTestId } = render(<VerificationBadge subjectDid="did:plc:alice" />);
+    const { getByTestId } = renderWithDialogs(<VerificationBadge subjectDid="did:plc:alice" />);
     expect(getByTestId('icon-checkmark.seal.fill').props.children).toMatch(/#FFC629$/i);
   });
 
   it('falls back to appview verification.verifications when Constellation has no data yet', () => {
     mockUseVerifiersForDid.mockReturnValue({ data: undefined });
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithDialogs(
       <VerificationBadge subjectDid="did:plc:alice" verification={validVerification} />,
     );
     expect(getByTestId('icon-checkmark.seal.fill')).toBeTruthy();
@@ -149,16 +153,17 @@ describe('VerificationBadge', () => {
 
   it('opens the verifiers sheet when tapped', () => {
     mockUseVerifiersForDid.mockReturnValue({ data: ['did:plc:rando'] });
-    const { getByRole, getByTestId } = render(
+    const { getByRole, getByTestId, queryByTestId } = renderWithDialogs(
       <VerificationBadge subjectDid="did:plc:alice" subjectHandle="alice.test" />,
     );
+    expect(queryByTestId('verifiers-sheet-open')).toBeNull();
     fireEvent.press(getByRole('button'));
     expect(getByTestId('verifiers-sheet-open')).toBeTruthy();
   });
 
   it('renders non-interactive when interactive=false', () => {
     mockUseVerifiersForDid.mockReturnValue({ data: ['did:plc:rando'] });
-    const { queryByRole, getByTestId } = render(
+    const { queryByRole, getByTestId } = renderWithDialogs(
       <VerificationBadge subjectDid="did:plc:alice" interactive={false} />,
     );
     expect(queryByRole('button')).toBeNull();

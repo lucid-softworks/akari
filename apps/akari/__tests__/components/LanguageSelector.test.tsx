@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Modal } from 'react-native';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { DialogProvider } from '@/contexts/DialogContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getAvailableLocales, getTranslationData } from '@/utils/i18n';
 
@@ -26,7 +27,12 @@ const spanishMetadata = {
 
 let changeLanguage: jest.Mock;
 
-const renderLanguageSelector = () => render(<LanguageSelector />);
+const renderLanguageSelector = () =>
+  render(
+    <DialogProvider>
+      <LanguageSelector />
+    </DialogProvider>,
+  );
 
 describe('LanguageSelector', () => {
   beforeEach(() => {

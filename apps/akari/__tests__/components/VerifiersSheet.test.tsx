@@ -92,7 +92,6 @@ describe('VerifiersSheet', () => {
   it('renders rows from the appview verifications', () => {
     const { queryByText } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -108,7 +107,6 @@ describe('VerifiersSheet', () => {
     });
     const { queryByText } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -126,7 +124,6 @@ describe('VerifiersSheet', () => {
     });
     const { getByText } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -142,7 +139,6 @@ describe('VerifiersSheet', () => {
     const onClose = jest.fn();
     const { getAllByRole } = render(
       <VerifiersSheet
-        visible
         onClose={onClose}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -159,7 +155,6 @@ describe('VerifiersSheet', () => {
   it('promotes a verifier into the trusted list when the trust toggle is tapped', () => {
     const { getAllByRole } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -177,7 +172,6 @@ describe('VerifiersSheet', () => {
     mockTrustedDids = ['did:plc:appview'];
     const { getAllByRole } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={verification}
@@ -198,7 +192,6 @@ describe('VerifiersSheet', () => {
     };
     const { getByText } = render(
       <VerifiersSheet
-        visible
         onClose={() => undefined}
         subjectDid="did:plc:alice"
         verification={noneVerification}

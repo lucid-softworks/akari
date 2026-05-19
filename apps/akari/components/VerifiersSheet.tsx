@@ -25,7 +25,6 @@ const VERIFIED_GOLD = '#FFC629';
 const AVATAR_SIZE = 40;
 
 type VerifiersSheetProps = {
-  visible: boolean;
   onClose: () => void;
   subjectDid?: string;
   verification?: BlueskyVerification;
@@ -48,7 +47,6 @@ type SheetSection =
   | { type: 'row'; key: string; row: VerifierRowData };
 
 export function VerifiersSheet({
-  visible,
   onClose,
   subjectDid,
   verification,
@@ -62,7 +60,7 @@ export function VerifiersSheet({
   const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { trustedVerifierDids, isTrustedVerifier } = useVerificationSettings();
-  const { data: constellationDids } = useVerifiersForDid(visible ? subjectDid : undefined);
+  const { data: constellationDids } = useVerifiersForDid(subjectDid);
   // iOS pageSheet auto-respects the safe area; Android fullScreen draws under
   // the status bar, so we have to push the header down ourselves or the Done
   // button lands behind the notch / clock. `useSafeAreaInsets` returns 0
@@ -120,7 +118,7 @@ export function VerifiersSheet({
 
   return (
     <Modal
-      visible={visible}
+      visible
       animationType="slide"
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}

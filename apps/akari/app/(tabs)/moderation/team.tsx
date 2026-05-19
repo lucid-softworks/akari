@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import {
   useAddOzoneTeamMember,
@@ -40,8 +41,6 @@ export default function TeamScreen() {
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'tint');
-  const textColor = useThemeColor({}, 'text');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
 
   const { data: membership } = useOzoneMembership();
   const { data: members } = useOzoneTeam();
@@ -49,9 +48,29 @@ export default function TeamScreen() {
   const update = useUpdateOzoneTeamMember();
   const del = useDeleteOzoneTeamMember();
 
-  const [addOpen, setAddOpen] = useState(false);
-  const openAdd = useCallback(() => setAddOpen(true), []);
-  const closeAdd = useCallback(() => setAddOpen(false), []);
+  const dialogManager = useDialogManager();
+  const existingDids = React.useMemo(
+    () => new Set((members ?? []).map((m) => m.did)),
+    [members],
+  );
+  const openAdd = useCallback(() => {
+    const id = 'team-add-member';
+    const close = () => dialogManager.close(id);
+    dialogManager.open({
+      id,
+      component: (
+        <AddTeamMemberModal
+          onClose={close}
+          onSubmit={async ({ did, role }) => {
+            await add.mutateAsync({ did, role });
+            close();
+          }}
+          isPending={add.isPending}
+          existingDids={existingDids}
+        />
+      ),
+    });
+  }, [add, dialogManager, existingDids]);
 
   const isAdmin = membership?.role === 'tools.ozone.team.defs#roleAdmin';
 
@@ -167,29 +186,16 @@ export default function TeamScreen() {
           })
         )}
       </ScrollView>
-
-      <AddTeamMemberModal
-        visible={addOpen}
-        onClose={closeAdd}
-        onSubmit={async ({ did, role }) => {
-          await add.mutateAsync({ did, role });
-          closeAdd();
-        }}
-        isPending={add.isPending}
-        existingDids={new Set((members ?? []).map((m) => m.did))}
-      />
     </ThemedView>
   );
 }
 
 function AddTeamMemberModal({
-  visible,
   onClose,
   onSubmit,
   isPending,
   existingDids,
 }: {
-  visible: boolean;
   onClose: () => void;
   onSubmit: (input: { did: string; role: string }) => void | Promise<void>;
   isPending: boolean;
@@ -205,15 +211,8 @@ function AddTeamMemberModal({
   const [selected, setSelected] = useState<TypeaheadActor | null>(null);
   const [role, setRole] = useState(ROLE_OPTIONS[1].value);
 
-  // Reset the form when reopened so an aborted add doesn't leak state
-  // into the next session.
-  React.useEffect(() => {
-    if (!visible) {
-      setQuery('');
-      setSelected(null);
-      setRole(ROLE_OPTIONS[1].value);
-    }
-  }, [visible]);
+  // DialogManager remounts this component on each open, so no reset
+  // effect is needed — initial state above is the reset.
 
   const { data: matches, isLoading } = useTypeaheadActors(query);
 
@@ -228,7 +227,7 @@ function AddTeamMemberModal({
   }, [existingDids, isDid, onSubmit, query, role, selected]);
 
   return (
-    <CenteredModal visible={visible} onClose={onClose} maxWidth={560} height="70%">
+    <CenteredModal onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>Add team member</ThemedText>

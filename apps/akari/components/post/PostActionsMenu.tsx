@@ -17,6 +17,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, semanticColors, layout, hexToRgba } from '@/constants/tokens';
 import { ReportSheet } from '@/components/ReportSheet';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useMuteThread } from '@/hooks/mutations/useMuteThread';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
@@ -145,8 +146,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
   const [showListPicker, setShowListPicker] = useState(false);
   const [showControlsSheet, setShowControlsSheet] = useState(false);
   const [showDebugInspector, setShowDebugInspector] = useState(false);
-  const [showAddNote, setShowAddNote] = useState(false);
-  const [showRequestNote, setShowRequestNote] = useState(false);
+  const dialogManager = useDialogManager();
   const postControlsMutation = usePostControls();
   // Fetch existing threadgate/postgate state when the user is the author —
   // only enabled while the sheet is open to skip the network round-trip on
@@ -306,6 +306,34 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     onDismiss();
   }, [feedUri, postUri, feedContext, feedInteractionMutation, onDismiss, showToast, t]);
 
+  const handleOpenAddNote = useCallback(() => {
+    if (!postUri) return;
+    const id = 'add-community-note';
+    dialogManager.open({
+      id,
+      component: (
+        <AddCommunityNoteModal
+          onClose={() => dialogManager.close(id)}
+          postUri={postUri}
+        />
+      ),
+    });
+  }, [dialogManager, postUri]);
+
+  const handleOpenRequestNote = useCallback(() => {
+    if (!postUri) return;
+    const id = 'request-community-note';
+    dialogManager.open({
+      id,
+      component: (
+        <RequestCommunityNoteModal
+          onClose={() => dialogManager.close(id)}
+          postUri={postUri}
+        />
+      ),
+    });
+  }, [dialogManager, postUri]);
+
   const menuActions = useMemo<PostMenuItem[]>(
     () => {
       const items: PostMenuItem[] = [
@@ -358,7 +386,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
           label: t('post.actions.requestCommunityNote'),
           onPress: () => {
             onDismiss();
-            setShowRequestNote(true);
+            handleOpenRequestNote();
           },
           disabled: !postUri,
         },
@@ -374,7 +402,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
                 label: t('post.actions.addCommunityNote'),
                 onPress: () => {
                   onDismiss();
-                  setShowAddNote(true);
+                  handleOpenAddNote();
                 },
                 disabled: !postUri,
               } as PostMenuItem,
@@ -399,7 +427,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 
       return items;
     },
-    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, isAlgorithmicFeed, isNotesContributor, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handleShowMore, handleShowLess, handlePinPost, onTranslatePress, onDismiss, t],
+    [canTranslate, postText, authorDid, postUri, postCid, isOwnPost, isCurrentlyPinned, isAlgorithmicFeed, isNotesContributor, handleCopyText, handleMuteAccount, handleMuteThread, handleHidePost, handleHideAccount, handleShowMore, handleShowLess, handlePinPost, handleOpenAddNote, handleOpenRequestNote, onTranslatePress, onDismiss, t],
   );
 
   const wrapPress = Platform.OS === 'web'
@@ -515,20 +543,6 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         postCid={postCid}
         data={debugData}
         onDismiss={() => setShowDebugInspector(false)}
-      />
-    ) : null}
-    {postUri ? (
-      <AddCommunityNoteModal
-        visible={showAddNote}
-        onClose={() => setShowAddNote(false)}
-        postUri={postUri}
-      />
-    ) : null}
-    {postUri ? (
-      <RequestCommunityNoteModal
-        visible={showRequestNote}
-        onClose={() => setShowRequestNote(false)}
-        postUri={postUri}
       />
     ) : null}
     </>

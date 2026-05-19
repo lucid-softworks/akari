@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, type ListRenderItem, Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getAvailableLocales, getTranslationData } from '@/utils/i18n';
 
@@ -51,24 +52,27 @@ const getLanguages = (): LanguageOption[] => {
   return languages.toSorted((a, b) => a.name.localeCompare(b.name));
 };
 
-export const LanguageSelector = () => {
-  const { t, currentLocale, changeLanguage } = useTranslation();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+type LanguageSelectorModalProps = {
+  languages: LanguageOption[];
+  currentLocale: string;
+  title: string;
+  backLabel: string;
+  onSelect: (languageCode: string) => void;
+  onClose: () => void;
+};
+
+const LanguageSelectorModal = ({
+  languages,
+  currentLocale,
+  title,
+  backLabel,
+  onSelect,
+  onClose,
+}: LanguageSelectorModalProps) => {
   // Android Modal `presentationStyle='fullScreen'` draws under the status
   // bar; iOS pageSheet auto-respects the safe area. Use `StatusBar.currentHeight`
   // — `useSafeAreaInsets` returns 0 inside a Modal (separate native window).
   const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
-
-  const languages = getLanguages();
-  const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0];
-
-  const handleLanguageChange = useCallback(
-    (languageCode: string) => {
-      changeLanguage(languageCode);
-      setIsModalVisible(false);
-    },
-    [changeLanguage],
-  );
 
   const renderLanguage = useCallback<ListRenderItem<LanguageOption>>(
     ({ item: language }) => {
@@ -78,7 +82,7 @@ export const LanguageSelector = () => {
           accessibilityRole="menuitem"
           accessibilityState={{ selected }}
           style={({ pressed }) => [styles.languageOption, selected && styles.selectedLanguage, pressed && { opacity: 0.7 }]}
-          onPress={() => handleLanguageChange(language.code)}
+          onPress={() => onSelect(language.code)}
         >
           <View style={styles.languageInfo}>
             <ThemedText style={styles.flag}>{language.flag}</ThemedText>
@@ -95,8 +99,75 @@ export const LanguageSelector = () => {
         </Pressable>
       );
     },
-    [currentLocale, handleLanguageChange],
+    [currentLocale, onSelect],
   );
+
+  return (
+    <Modal
+      visible
+      animationType="slide"
+      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
+      onRequestClose={onClose}
+    >
+      <ThemedView
+        accessible
+        accessibilityRole="menu"
+        accessibilityLabel={title}
+        style={[styles.nativeSheet, { paddingTop: containerTopPadding }]}
+      >
+        <View style={styles.modalHeader}>
+          <Pressable
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel={backLabel}
+            style={({ pressed }) => [styles.modalBackButton, pressed && { opacity: 0.7 }]}
+            hitSlop={8}
+          >
+            <IconSymbol name="chevron.left" size={20} color="#007AFF" />
+          </Pressable>
+          <ThemedText style={styles.modalTitle}>{title}</ThemedText>
+          <View style={styles.modalBackButton} />
+        </View>
+        <FlatList
+          style={styles.languageList}
+          contentContainerStyle={styles.languageListContent}
+          data={languages}
+          keyExtractor={languageKeyExtractor}
+          renderItem={renderLanguage}
+          keyboardShouldPersistTaps="handled"
+        />
+      </ThemedView>
+    </Modal>
+  );
+};
+
+export const LanguageSelector = () => {
+  const { t, currentLocale, changeLanguage } = useTranslation();
+  const dialogManager = useDialogManager();
+
+  const languages = getLanguages();
+  const currentLanguage = languages.find((lang) => lang.code === currentLocale) || languages[0];
+
+  const handleOpen = useCallback(() => {
+    const id = 'language-selector';
+    const handleSelect = (languageCode: string) => {
+      changeLanguage(languageCode);
+      dialogManager.close(id);
+    };
+    dialogManager.open({
+      id,
+      component: (
+        <LanguageSelectorModal
+          languages={languages}
+          currentLocale={currentLocale}
+          title={t('settings.language')}
+          backLabel={t('common.back')}
+          onSelect={handleSelect}
+          onClose={() => dialogManager.close(id)}
+        />
+      ),
+    });
+  }, [changeLanguage, currentLocale, dialogManager, languages, t]);
 
   return (
     <ThemedView style={styles.container}>
@@ -106,7 +177,7 @@ export const LanguageSelector = () => {
         accessibilityLabel={t('settings.language')}
         accessibilityRole="button"
         style={({ pressed }) => [styles.selector, pressed && { opacity: 0.7 }]}
-        onPress={() => setIsModalVisible(true)}
+        onPress={handleOpen}
       >
         <View style={styles.selectorContent}>
           <ThemedText style={styles.flag}>{currentLanguage.flag}</ThemedText>
@@ -117,42 +188,6 @@ export const LanguageSelector = () => {
         </View>
         <IconSymbol name="chevron.down" size={12} color="rgba(0, 0, 0, 0.6)" />
       </Pressable>
-
-      <Modal
-        visible={isModalVisible}
-        animationType="slide"
-        presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-          <ThemedView
-            accessible
-            accessibilityRole="menu"
-            accessibilityLabel={t('settings.language')}
-            style={[styles.nativeSheet, { paddingTop: containerTopPadding }]}
-          >
-            <View style={styles.modalHeader}>
-              <Pressable
-                onPress={() => setIsModalVisible(false)}
-                accessibilityRole="button"
-                accessibilityLabel={t('common.back')}
-                style={({ pressed }) => [styles.modalBackButton, pressed && { opacity: 0.7 }]}
-                hitSlop={8}
-              >
-                <IconSymbol name="chevron.left" size={20} color="#007AFF" />
-              </Pressable>
-              <ThemedText style={styles.modalTitle}>{t('settings.language')}</ThemedText>
-              <View style={styles.modalBackButton} />
-            </View>
-            <FlatList
-              style={styles.languageList}
-              contentContainerStyle={styles.languageListContent}
-              data={languages}
-              keyExtractor={languageKeyExtractor}
-              renderItem={renderLanguage}
-              keyboardShouldPersistTaps="handled"
-            />
-          </ThemedView>
-      </Modal>
     </ThemedView>
   );
 };

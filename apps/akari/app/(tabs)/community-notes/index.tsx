@@ -1,8 +1,9 @@
 import { Stack } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { AddCommunityNoteModal } from '@/components/post/CommunityNoteContributor';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { CommunityNote } from '@/components/post/CommunityNote';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -148,7 +149,19 @@ function PendingTab({
   accent: string;
 }) {
   const { data: pending } = usePendingPostsNeedingNotes();
-  const [composeForUri, setComposeForUri] = useState<string | null>(null);
+  const dialogManager = useDialogManager();
+  const openComposer = useCallback(
+    (postUri: string) => {
+      const id = 'add-community-note';
+      dialogManager.open({
+        id,
+        component: (
+          <AddCommunityNoteModal onClose={() => dialogManager.close(id)} postUri={postUri} />
+        ),
+      });
+    },
+    [dialogManager],
+  );
 
   if (!pending || pending.length === 0) {
     return (
@@ -179,7 +192,7 @@ function PendingTab({
               {`${post.requestCount} requests · ${formatRelativeTime(post.lastRequestedAt)}`}
             </ThemedText>
             <Pressable
-              onPress={() => setComposeForUri(post.uri)}
+              onPress={() => openComposer(post.uri)}
               style={({ pressed }) => [
                 styles.actionButton,
                 { borderColor: accent },
@@ -191,13 +204,6 @@ function PendingTab({
           </View>
         </View>
       ))}
-      {composeForUri ? (
-        <AddCommunityNoteModal
-          visible
-          onClose={() => setComposeForUri(null)}
-          postUri={composeForUri}
-        />
-      ) : null}
     </View>
   );
 }

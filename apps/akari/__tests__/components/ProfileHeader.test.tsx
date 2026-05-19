@@ -1,7 +1,11 @@
 import React from 'react';
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render as rtlRender } from '@testing-library/react-native';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
+import { DialogProvider } from '@/contexts/DialogContext';
+
+const render: typeof rtlRender = (ui, options) =>
+  rtlRender(ui, { wrapper: DialogProvider, ...options });
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useBorderColor } from '@/hooks/useBorderColor';
@@ -75,7 +79,7 @@ describe('ProfileHeader', () => {
   it('shows edit profile modal for own profile', () => {
     const { getByText } = render(<ProfileHeader profile={baseProfile} isOwnProfile />);
     fireEvent.press(getByText(/profile.editProfile/));
-    expect(mockProfileEditModal.mock.calls[1][0].visible).toBe(true);
+    expect(mockProfileEditModal.mock.calls[0][0].visible).toBe(true);
   });
 
   it('searches posts when search button pressed', () => {
@@ -126,7 +130,8 @@ describe('ProfileHeader', () => {
   it('saves profile and handles errors', async () => {
     const updateMutate = jest.fn().mockResolvedValue(undefined);
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: updateMutate, isPending: false });
-    render(<ProfileHeader profile={baseProfile} />);
+    const { getByText } = render(<ProfileHeader profile={baseProfile} isOwnProfile />);
+    fireEvent.press(getByText(/profile.editProfile/));
     const save = mockProfileEditModal.mock.calls[0][0].onSave;
     await act(async () => {
       await save({ displayName: 'Alice', description: 'bio' });
@@ -146,8 +151,9 @@ describe('ProfileHeader', () => {
   });
 
   it('calls modal close handlers', () => {
-    render(<ProfileHeader profile={baseProfile} />);
+    const { getByText } = render(<ProfileHeader profile={baseProfile} isOwnProfile />);
     mockHandleHistoryModal.mock.calls[0][0].onClose();
+    fireEvent.press(getByText(/profile.editProfile/));
     mockProfileEditModal.mock.calls[0][0].onClose();
   });
 });

@@ -8,7 +8,6 @@ import { openExternalLink } from '@/utils/externalLink';
 import type { BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
-import { ReportSheet } from '@/components/ReportSheet';
 import { Labels } from '@/components/Labels';
 import { ProfileActionButtons } from '@/components/ProfileHeader/ProfileActionButtons';
 import { ProfileAvatar } from '@/components/ProfileHeader/ProfileAvatar';
@@ -23,6 +22,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { activeOpacity, fontSize, hitSlop, layout, semanticColors, spacing } from '@/constants/tokens';
 import { webColumnSideBorders } from '@/constants/webStyles';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
@@ -117,10 +117,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const showDropdownRef = useRef(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
-  const [showReportSheet, setShowReportSheet] = useState(false);
   const borderColor = useBorderColor();
+  const dialogManager = useDialogManager();
   const mutedTextColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
   const followMutation = useFollowUser();
   const startConvoMutation = useStartConvo();
@@ -217,10 +216,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
     }
   };
 
-  const handleEditProfile = () => {
-    setShowEditModal(true);
-  };
-
   const handleSaveProfile = async (profileData: {
     displayName: string;
     description: string;
@@ -229,7 +224,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   }) => {
     try {
       await updateProfileMutation.mutateAsync(profileData);
-      setShowEditModal(false);
+      dialogManager.close('profile-edit');
       confirm({
         title: t('common.success'),
         message: t('profile.profileUpdated'),
@@ -243,6 +238,28 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
       });
     }
   };
+
+  const handleEditProfile = () => {
+    const id = 'profile-edit';
+    dialogManager.open({
+      id,
+      component: (
+        <ProfileEditModal
+          visible
+          onClose={() => dialogManager.close(id)}
+          onSave={handleSaveProfile}
+          profile={{
+            displayName: profile.displayName,
+            description: profile.description,
+            avatar: profile.avatar,
+            banner: profile.banner,
+          }}
+          isLoading={updateProfileMutation.isPending}
+        />
+      ),
+    });
+  };
+
 
   return (
     <View style={webColumnSideBorders(borderColor)}>
@@ -345,20 +362,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
         <ProfileBlockedNotice isBlockedBy={isBlockedBy} isBlocking={isBlocking} borderColor={borderColor} />
       </ThemedView>
 
-      {/* Profile Edit Modal */}
-      <ProfileEditModal
-        visible={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        onSave={handleSaveProfile}
-        profile={{
-          displayName: profile.displayName,
-          description: profile.description,
-          avatar: profile.avatar,
-          banner: profile.banner,
-        }}
-        isLoading={updateProfileMutation.isPending}
-      />
-
       {/* Handle History Modal */}
       {profile.did && (
         <HandleHistoryModal
@@ -366,15 +369,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           onClose={() => setShowHandleHistory(false)}
           did={profile.did}
           currentHandle={profile.handle}
-        />
-      )}
-
-      {/* Report Sheet */}
-      {profile.did && (
-        <ReportSheet
-          visible={showReportSheet}
-          onDismiss={() => setShowReportSheet(false)}
-          subject={{ type: 'account', did: profile.did }}
         />
       )}
     </View>
