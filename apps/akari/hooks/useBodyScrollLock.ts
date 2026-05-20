@@ -13,12 +13,35 @@ import { Platform } from 'react-native';
  * that value after the last modal closes.
  */
 let lockCount = 0;
-let originalOverflow: string | null = null;
+let saved: {
+  htmlOverflow: string;
+  bodyOverflow: string;
+  bodyPosition: string;
+  bodyTop: string;
+  bodyWidth: string;
+  scrollY: number;
+} | null = null;
 
 function applyLock() {
   if (lockCount === 0) {
-    originalOverflow = document.body.style.overflow;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    saved = {
+      htmlOverflow: document.documentElement.style.overflow,
+      bodyOverflow: document.body.style.overflow,
+      bodyPosition: document.body.style.position,
+      bodyTop: document.body.style.top,
+      bodyWidth: document.body.style.width,
+      scrollY,
+    };
+    // `overflow: hidden` on documentElement and body covers desktop
+    // browsers that scroll either element. `position: fixed` covers
+    // iOS Safari, which ignores overflow:hidden — we pin the body to
+    // its current scroll offset so the visual position doesn't jump.
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
   }
   lockCount += 1;
 }
@@ -26,9 +49,18 @@ function applyLock() {
 function releaseLock() {
   if (lockCount === 0) return;
   lockCount -= 1;
-  if (lockCount === 0) {
-    document.body.style.overflow = originalOverflow ?? '';
-    originalOverflow = null;
+  if (lockCount === 0 && saved) {
+    const { htmlOverflow, bodyOverflow, bodyPosition, bodyTop, bodyWidth, scrollY } = saved;
+    document.documentElement.style.overflow = htmlOverflow;
+    document.body.style.overflow = bodyOverflow;
+    document.body.style.position = bodyPosition;
+    document.body.style.top = bodyTop;
+    document.body.style.width = bodyWidth;
+    // Restore the scroll position the lock froze us at. Without this
+    // the page would jump to top when the body's `position: fixed`
+    // comes off.
+    window.scrollTo(0, scrollY);
+    saved = null;
   }
 }
 
