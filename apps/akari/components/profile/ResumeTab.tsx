@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import type { SifaEducationRecord, SifaPositionRecord, SifaSelfRecord } from '@/bluesky-api';
+import type { SifaEducationRecord, SifaPositionRecord } from '@/bluesky-api';
 import { humanizeSifaToken } from '@/bluesky-api';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
@@ -12,7 +12,6 @@ import {
   sortSifaPositions,
   useSifaEducation,
   useSifaPositions,
-  useSifaSelf,
 } from '@/hooks/queries/useSifaProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -24,7 +23,6 @@ type ResumeTabProps = ProfileTabContentProps & {
 };
 
 type Row =
-  | { kind: 'self'; key: string; self: SifaSelfRecord }
   | { kind: 'positionsHeader'; key: string }
   | { kind: 'position'; key: string; position: SifaPositionRecord }
   | { kind: 'educationHeader'; key: string }
@@ -40,60 +38,6 @@ function formatDateRange(
   const end = endedAt ?? presentLabel;
   if (!start) return end;
   return `${start} – ${end}`;
-}
-
-type SelfCardProps = {
-  self: SifaSelfRecord;
-  badgeBg: string;
-  badgeText: string;
-  secondary: string;
-  borderColor: string;
-  openToLabel: string;
-  workplaceLabel: string;
-};
-
-function SelfCard({ self, badgeBg, badgeText, secondary, borderColor, openToLabel, workplaceLabel }: SelfCardProps) {
-  const headline = self.value.headline;
-  const about = self.value.about;
-  const openTo = self.value.openTo ?? [];
-  const workplace = self.value.preferredWorkplace ?? [];
-
-  return (
-    <View style={[styles.selfCard, { borderColor }]}>
-      {headline ? <ThemedText style={styles.headline}>{headline}</ThemedText> : null}
-      {about ? (
-        <ThemedText style={[styles.aboutText, { color: secondary }]}>{about}</ThemedText>
-      ) : null}
-      {openTo.length > 0 ? (
-        <View style={styles.tagGroup}>
-          <ThemedText style={[styles.tagGroupLabel, { color: secondary }]}>{openToLabel}</ThemedText>
-          <View style={styles.tagRow}>
-            {openTo.map((token) => (
-              <View key={token} style={[styles.tag, { backgroundColor: badgeBg }]}>
-                <ThemedText style={[styles.tagText, { color: badgeText }]}>
-                  {humanizeSifaToken(token)}
-                </ThemedText>
-              </View>
-            ))}
-          </View>
-        </View>
-      ) : null}
-      {workplace.length > 0 ? (
-        <View style={styles.tagGroup}>
-          <ThemedText style={[styles.tagGroupLabel, { color: secondary }]}>{workplaceLabel}</ThemedText>
-          <View style={styles.tagRow}>
-            {workplace.map((token) => (
-              <View key={token} style={[styles.tag, { backgroundColor: badgeBg }]}>
-                <ThemedText style={[styles.tagText, { color: badgeText }]}>
-                  {humanizeSifaToken(token)}
-                </ThemedText>
-              </View>
-            ))}
-          </View>
-        </View>
-      ) : null}
-    </View>
-  );
 }
 
 type PositionCardProps = {
@@ -178,7 +122,6 @@ export function ResumeTab({
   const badgeBg = useThemeColor({ light: '#EEF2FF', dark: '#1F2937' }, 'background');
   const badgeText = useThemeColor({ light: '#4338CA', dark: '#A5B4FC' }, 'text');
 
-  const { data: self, isLoading: isSelfLoading, refetch: refetchSelf, isRefetching: isSelfRefetching } = useSifaSelf(handle);
   const {
     data: positions,
     isLoading: isPositionsLoading,
@@ -199,15 +142,15 @@ export function ResumeTab({
   } = useSifaEducation(handle);
 
   const refetchAll = useCallback(async () => {
-    await Promise.all([refetchSelf(), refetchPositions(), refetchEducation()]);
-  }, [refetchSelf, refetchPositions, refetchEducation]);
+    await Promise.all([refetchPositions(), refetchEducation()]);
+  }, [refetchPositions, refetchEducation]);
   const handleRefresh = useProfileTabRefresh(refetchAll, onProfileRefresh);
 
   const sortedPositions = useMemo(() => sortSifaPositions(positions), [positions]);
   const sortedEducation = useMemo(() => sortSifaEducation(education), [education]);
 
-  const isLoading = isSelfLoading || isPositionsLoading || isEducationLoading;
-  const isRefetching = isSelfRefetching || isPositionsRefetching || isEducationRefetching;
+  const isLoading = isPositionsLoading || isEducationLoading;
+  const isRefetching = isPositionsRefetching || isEducationRefetching;
   const hasNextPage = hasMorePositions || hasMoreEducation;
   const isFetchingNextPage = isFetchingMorePositions || isFetchingMoreEducation;
 
@@ -218,7 +161,6 @@ export function ResumeTab({
 
   const rows = useMemo<Row[]>(() => {
     const out: Row[] = [];
-    if (self) out.push({ kind: 'self', key: 'sifa:self', self });
     if (sortedPositions.length > 0) {
       out.push({ kind: 'positionsHeader', key: 'sifa:positions:header' });
       for (const position of sortedPositions) {
@@ -232,29 +174,15 @@ export function ResumeTab({
       }
     }
     return out;
-  }, [self, sortedPositions, sortedEducation]);
+  }, [sortedPositions, sortedEducation]);
 
   const presentLabel = t('profile.resumePresent');
   const positionsHeaderLabel = t('profile.resumePositions');
   const educationHeaderLabel = t('profile.resumeEducation');
-  const openToLabel = t('profile.resumeOpenTo');
-  const workplaceLabel = t('profile.resumeWorkplace');
 
   const renderItem = useCallback(
     (row: Row) => {
       switch (row.kind) {
-        case 'self':
-          return (
-            <SelfCard
-              self={row.self}
-              badgeBg={badgeBg}
-              badgeText={badgeText}
-              secondary={secondary}
-              borderColor={borderColor}
-              openToLabel={openToLabel}
-              workplaceLabel={workplaceLabel}
-            />
-          );
         case 'positionsHeader':
           return (
             <View style={[styles.sectionHeader, { borderColor }]}>
@@ -300,12 +228,10 @@ export function ResumeTab({
       badgeText,
       borderColor,
       educationHeaderLabel,
-      openToLabel,
       positionsHeaderLabel,
       presentLabel,
       secondary,
       sectionHeaderColor,
-      workplaceLabel,
     ],
   );
 
@@ -332,36 +258,6 @@ export function ResumeTab({
 }
 
 const styles = StyleSheet.create({
-  selfCard: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    borderLeftWidth: layout.hairline,
-    borderRightWidth: layout.hairline,
-    borderBottomWidth: layout.hairline,
-    gap: spacing.sm,
-  },
-  headline: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-  },
-  aboutText: {
-    fontSize: fontSize.base,
-    lineHeight: 22,
-  },
-  tagGroup: {
-    gap: spacing.xs,
-  },
-  tagGroupLabel: {
-    fontSize: fontSize.xs,
-    fontWeight: fontWeight.medium,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  tagRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
   tag: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
