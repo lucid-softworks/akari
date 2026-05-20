@@ -9,5 +9,5 @@ export default function UserProfileScreen() {
     return null;
   }
 
-  return <ProfileView handle={handle} />;
+  return <ProfileView key={handle} handle={handle} />;
 }
