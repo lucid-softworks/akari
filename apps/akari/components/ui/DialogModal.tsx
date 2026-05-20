@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Pressable, StyleSheet } from 'react-native';
 
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+
 type DialogModalProps = {
   children: React.ReactNode;
   isVisible?: boolean;
@@ -9,6 +11,9 @@ type DialogModalProps = {
 };
 
 export function DialogModal({ children, isVisible = true, onRequestClose, testID }: DialogModalProps) {
+  // Lock body scroll on web only while this modal is actually visible
+  // — DialogModal supports an `isVisible={false}` mount in some flows.
+  useBodyScrollLock(isVisible);
   // The backdrop is the *parent* of the centered content so that clicks
   // on dialog buttons reach their own Pressables first. An earlier
   // version had the backdrop as an absoluteFill sibling of the content,

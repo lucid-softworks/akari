@@ -13,6 +13,7 @@ import {
 
 import { ThemedView } from '@/components/ThemedView';
 import { radius, spacing } from '@/constants/tokens';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -72,6 +73,7 @@ export function CenteredModal({
 }: CenteredModalProps) {
   const borderColor = useBorderColor();
   const bg = useThemeColor({}, 'background');
+  useBodyScrollLock();
   return (
     <Modal
       visible
