@@ -1,3 +1,4 @@
+import { AppLogo } from '@/components/AppLogo';
 import { Image } from '@/components/Image';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -179,11 +180,7 @@ export default function OauthSignInScreen() {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-            <Image
-              source={require('@/assets/images/icon.png')}
-              style={styles.logo}
-              contentFit="contain"
-            />
+            <AppLogo style={styles.logo} />
             <ThemedText type="title" style={styles.title}>
               {t('auth.oauthScreenTitle')}
             </ThemedText>

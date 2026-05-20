@@ -3,6 +3,7 @@ import '@/utils/polyfills/getRandomValues'; // Polyfills globalThis.crypto.getRa
 import '@/utils/intl-polyfills'; // Initialize Intl polyfills
 import '@/utils/polyfills/silenceWebWarnings'; // Drop cosmetic-only RN warnings that flood the web console
 
+import { useFaviconSync } from '@/components/AppLogo';
 import { DevPerformanceOverlay } from '@/components/DevPerformanceOverlay';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useIsRestoring } from '@tanstack/react-query';
@@ -172,6 +173,7 @@ let hasLoggedMissingCrashReporterConfig = false;
 
 function AppProviders({ colorScheme }: ProvidersProps) {
   const isRestoring = useIsRestoring();
+  useFaviconSync();
 
   if (isRestoring) {
     return null;

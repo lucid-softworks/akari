@@ -1,4 +1,4 @@
-import { Image } from '@/components/Image';
+import { AppLogo } from '@/components/AppLogo';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, layout, opacity, radius, semanticColors, spacing } from '@/constants/tokens';
@@ -26,11 +26,7 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: '404', headerShown: false }} />
       <ThemedView style={styles.container}>
         <View style={styles.content}>
-          <Image
-            source={require('@/assets/images/icon.png')}
-            style={styles.logo}
-            contentFit="contain"
-          />
+          <AppLogo style={styles.logo} />
           <ThemedText type="title" style={[styles.code, { color: helperColor }]}>
             404
           </ThemedText>

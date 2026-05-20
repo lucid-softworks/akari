@@ -1,4 +1,4 @@
-import { Image } from '@/components/Image';
+import { AppLogo } from '@/components/AppLogo';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -43,11 +43,7 @@ export default function SignInScreen() {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-            <Image
-              source={require('@/assets/images/icon.png')}
-              style={styles.logo}
-              contentFit="contain"
-            />
+            <AppLogo style={styles.logo} />
             <ThemedText type="title" style={styles.title}>
               {t('auth.welcomeTitle')}
             </ThemedText>

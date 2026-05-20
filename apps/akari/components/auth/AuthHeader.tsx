@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Image } from '@/components/Image';
+import { AppLogo } from '@/components/AppLogo';
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -15,11 +15,7 @@ export function AuthHeader({ helperColor }: AuthHeaderProps) {
 
   return (
     <View style={styles.passwordHeader}>
-      <Image
-        source={require('@/assets/images/icon.png')}
-        style={styles.passwordLogo}
-        contentFit="contain"
-      />
+      <AppLogo style={styles.passwordLogo} />
       <ThemedText type="title" style={styles.passwordTitle}>
         {t('auth.passwordScreenTitle')}
       </ThemedText>

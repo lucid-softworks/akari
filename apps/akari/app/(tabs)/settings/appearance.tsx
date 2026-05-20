@@ -12,10 +12,16 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { AppLogo } from '@/components/AppLogo';
 import { SwatchPicker, PRESETS } from '@/components/settings/ColorSwatchPicker';
 import { Colors } from '@/constants/Colors';
 import { spacing, radius, fontSize as fontSizeTokens, fontWeight, semanticColors } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import {
+  useLogoVariant,
+  useSetLogoVariant,
+  type LogoVariant,
+} from '@/hooks/useLogoSetting';
 import {
   useThemeConfig,
   type ColorMode,
@@ -36,6 +42,9 @@ export default function AppearanceSettingsScreen() {
   const { t } = useTranslation();
   const { config, setAccentColor, setColorMode, setDarkVariant, setFont, setFontSize, resetToDefaults } =
     useThemeConfig();
+
+  const logoVariant = useLogoVariant();
+  const setLogoVariant = useSetLogoVariant();
 
   const colorMode: ColorMode = config.colorMode ?? 'auto';
   const darkVariant: DarkVariant = config.darkVariant ?? 'dark';
@@ -187,6 +196,35 @@ export default function AppearanceSettingsScreen() {
           </ThemedView>
         </SettingsSection>
 
+        {/* App Logo */}
+        <SettingsSection title={t('settings.appLogo')}>
+          <ThemedView style={[styles.logoOptions, { borderColor }]}>
+            {(['default', 'classic'] as LogoVariant[]).map((variant, index) => {
+              const active = logoVariant === variant;
+              const label = variant === 'default' ? t('settings.appLogoDefault') : t('settings.appLogoClassic');
+              return (
+                <Pressable
+                  key={variant}
+                  style={({ pressed }) => [
+                    styles.logoOption,
+                    index > 0 && { borderLeftColor: borderColor, borderLeftWidth: 1 },
+                    active && { backgroundColor: `${accentColor}22` },
+                    pressed && { opacity: 0.7 },
+                  ]}
+                  onPress={() => setLogoVariant(variant)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                >
+                  <AppLogo variant={variant} style={styles.logoPreview} />
+                  <ThemedText style={[styles.logoLabel, active && { color: accentColor, fontWeight: fontWeight.semibold }]}>
+                    {label}
+                  </ThemedText>
+                </Pressable>
+              );
+            })}
+          </ThemedView>
+        </SettingsSection>
+
         {/* Accent Color */}
         <SettingsSection title={t('settings.accentColor')}>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
@@ -268,6 +306,30 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
     fontSize: fontSizeTokens.sm,
     opacity: 0.7,
+  },
+  logoOptions: {
+    flexDirection: 'row',
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.sm,
+    overflow: 'hidden',
+  },
+  logoOption: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.lg,
+  },
+  logoPreview: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.md,
+  },
+  logoLabel: {
+    fontSize: fontSizeTokens.sm,
+    fontWeight: fontWeight.medium,
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
