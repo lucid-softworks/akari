@@ -363,7 +363,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <Labels labels={combinedLabels} maxLabels={4} />
+      <Labels labels={combinedLabels} />
 
       {labelDecision.action === 'warn' ? (
         <AdultContentGate matchedLabels={labelDecision.matchedLabels}>{postBody}</AdultContentGate>

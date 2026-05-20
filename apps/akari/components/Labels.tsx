@@ -71,7 +71,7 @@ function classify(text: string): { isWarning: boolean; isPositive: boolean } {
  * `LabelDetailModal` with the full record (value, labeler DID, timestamp,
  * negation flag) so the user can dig into what triggered it.
  */
-export function Labels({ labels, maxLabels = 5 }: LabelsProps) {
+export function Labels({ labels, maxLabels }: LabelsProps) {
   const [openLabel, setOpenLabel] = useState<LabelData | null>(null);
   // Resolve each label's `src` (DID) to the labeler's avatar so the chip
   // can show who applied it — matching the official Bluesky client's
@@ -93,12 +93,15 @@ export function Labels({ labels, maxLabels = 5 }: LabelsProps) {
     return null;
   }
 
-  // Filter out empty / negated labels, then cap. Negated labels are
-  // tombstones — they undo a previous label, not something to display.
-  const display = labels.filter((label) => {
+  // Filter out empty / negated labels. Negated labels are tombstones —
+  // they undo a previous label, not something to display. Optionally
+  // cap if the caller asked for one (post tiles / search rows do; the
+  // profile header shows all).
+  const filtered = labels.filter((label) => {
     const text = readLabelText(label);
     return text.trim() !== '' && !label.neg;
-  }).slice(0, maxLabels);
+  });
+  const display = typeof maxLabels === 'number' ? filtered.slice(0, maxLabels) : filtered;
 
   if (display.length === 0) return null;
 
@@ -145,6 +148,11 @@ const styles = StyleSheet.create({
     // labels row and the post body underneath.
     marginTop: spacing.xs,
     marginBottom: spacing.sm,
-    gap: spacing.xs,
+    // Explicit row/column gaps: when the label set wraps onto multiple
+    // rows (e.g. the profile header with many labels), a tighter
+    // column gap keeps chips close together while a larger row gap
+    // gives the rows breathing room.
+    columnGap: spacing.xs,
+    rowGap: spacing.sm,
   },
 });
