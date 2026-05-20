@@ -329,11 +329,10 @@ export function ResumeTab({
 
 const styles = StyleSheet.create({
   selfCard: {
-    marginHorizontal: spacing.md,
-    marginTop: spacing.md,
-    padding: spacing.lg,
-    borderRadius: radius.md,
-    borderWidth: layout.hairline,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    borderLeftWidth: layout.hairline,
+    borderRightWidth: layout.hairline,
     gap: spacing.sm,
   },
   headline: {
@@ -368,20 +367,19 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
   sectionHeader: {
-    marginHorizontal: spacing.md,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.sm,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   entryCard: {
-    marginHorizontal: spacing.md,
-    marginBottom: spacing.sm,
-    padding: spacing.md,
-    borderRadius: radius.md,
-    borderWidth: layout.hairline,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderLeftWidth: layout.hairline,
+    borderRightWidth: layout.hairline,
     gap: spacing.xs,
   },
   entryHeader: {
