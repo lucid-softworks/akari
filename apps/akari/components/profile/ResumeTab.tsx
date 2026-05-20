@@ -257,7 +257,7 @@ export function ResumeTab({
           );
         case 'positionsHeader':
           return (
-            <ThemedText style={[styles.sectionHeader, { color: sectionHeaderColor }]}>
+            <ThemedText style={[styles.sectionHeader, { color: sectionHeaderColor, borderColor }]}>
               {positionsHeaderLabel}
             </ThemedText>
           );
@@ -274,7 +274,7 @@ export function ResumeTab({
           );
         case 'educationHeader':
           return (
-            <ThemedText style={[styles.sectionHeader, { color: sectionHeaderColor }]}>
+            <ThemedText style={[styles.sectionHeader, { color: sectionHeaderColor, borderColor }]}>
               {educationHeaderLabel}
             </ThemedText>
           );
@@ -371,6 +371,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingTop: spacing.lg,
     paddingBottom: spacing.sm,
+    borderLeftWidth: layout.hairline,
+    borderRightWidth: layout.hairline,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.semibold,
     textTransform: 'uppercase',
