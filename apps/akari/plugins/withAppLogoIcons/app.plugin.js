@@ -1,13 +1,13 @@
-import {
-  ConfigPlugin,
+/* eslint-disable @typescript-eslint/no-var-requires */
+const {
   withAndroidManifest,
   withDangerousMod,
   withInfoPlist,
   withMainApplication,
   withXcodeProject,
-} from '@expo/config-plugins';
-import fs from 'fs';
-import path from 'path';
+} = require('@expo/config-plugins');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Expo config plugin for switchable home-screen app icons. Bakes a
@@ -36,6 +36,12 @@ import path from 'path';
  *       MainApplication.kt edits.
  *
  * Runtime usage: see utils/appLogoIcon.ts.
+ *
+ * This file is CommonJS by convention — Expo CLI loads the plugin via
+ * `require()`, and using TS here forces ts-node setup that the
+ * project doesn't have. The matching `index.ts` is kept solely as
+ * documentation / typechecking — Expo uses THIS file because
+ * `app.plugin.js` takes precedence inside a plugin folder.
  */
 const PLUGIN_ROOT = __dirname;
 const NATIVE_DIR = path.join(PLUGIN_ROOT, 'native');
@@ -43,7 +49,7 @@ const APP_ROOT = path.join(PLUGIN_ROOT, '..', '..');
 const IOS_ICON_SRC_DIR = path.join(APP_ROOT, 'assets', 'ios-alt-icons');
 const ANDROID_ICON_SRC_DIR = path.join(APP_ROOT, 'assets', 'android-alt-icons');
 
-const IOS_PNG_RENAMES: Array<[string, string]> = [
+const IOS_PNG_RENAMES = [
   ['icon-classic-120.png', 'icon-classic@2x.png'],
   ['icon-classic-180.png', 'icon-classic@3x.png'],
   ['icon-classic-76.png', 'icon-classic~ipad.png'],
@@ -57,37 +63,33 @@ const ANDROID_MODULE_SOURCE = 'AppLogoIconModule.kt';
 const ANDROID_PACKAGE_SOURCE = 'AppLogoIconPackage.kt';
 const ANDROID_KT_PACKAGE = 'works.lucidsoft.akari.applogoicon';
 
-function ensureCopy(src: string, dst: string) {
+function ensureCopy(src, dst) {
   fs.mkdirSync(path.dirname(dst), { recursive: true });
   fs.copyFileSync(src, dst);
 }
 
-const withIosAlternateIcons: ConfigPlugin = (config) => {
+function withIosAlternateIcons(config) {
   config = withInfoPlist(config, (cfg) => {
-    const plist = cfg.modResults as Record<string, unknown>;
-    const primaryIcons = (plist.CFBundleIcons as Record<string, unknown> | undefined) ?? {};
-    plist.CFBundleIcons = {
-      ...primaryIcons,
-      CFBundleAlternateIcons: {
-        ...(primaryIcons.CFBundleAlternateIcons as Record<string, unknown> | undefined),
+    const plist = cfg.modResults;
+    const primaryIcons = plist.CFBundleIcons || {};
+    plist.CFBundleIcons = Object.assign({}, primaryIcons, {
+      CFBundleAlternateIcons: Object.assign({}, primaryIcons.CFBundleAlternateIcons, {
         classic: {
           CFBundleIconFiles: ['icon-classic'],
           UIPrerenderedIcon: false,
         },
-      },
-    };
+      }),
+    });
 
-    const ipadIcons = (plist['CFBundleIcons~ipad'] as Record<string, unknown> | undefined) ?? {};
-    plist['CFBundleIcons~ipad'] = {
-      ...ipadIcons,
-      CFBundleAlternateIcons: {
-        ...(ipadIcons.CFBundleAlternateIcons as Record<string, unknown> | undefined),
+    const ipadIcons = plist['CFBundleIcons~ipad'] || {};
+    plist['CFBundleIcons~ipad'] = Object.assign({}, ipadIcons, {
+      CFBundleAlternateIcons: Object.assign({}, ipadIcons.CFBundleAlternateIcons, {
         classic: {
           CFBundleIconFiles: ['icon-classic'],
           UIPrerenderedIcon: false,
         },
-      },
-    };
+      }),
+    });
     return cfg;
   });
 
@@ -101,7 +103,10 @@ const withIosAlternateIcons: ConfigPlugin = (config) => {
       for (const [src, dst] of IOS_PNG_RENAMES) {
         ensureCopy(path.join(IOS_ICON_SRC_DIR, src), path.join(targetDir, dst));
       }
-      ensureCopy(path.join(NATIVE_DIR, 'ios-template', IOS_BRIDGE_SOURCE), path.join(targetDir, IOS_BRIDGE_SOURCE));
+      ensureCopy(
+        path.join(NATIVE_DIR, 'ios-template', IOS_BRIDGE_SOURCE),
+        path.join(targetDir, IOS_BRIDGE_SOURCE),
+      );
       return cfg;
     },
   ]);
@@ -110,31 +115,29 @@ const withIosAlternateIcons: ConfigPlugin = (config) => {
     const project = cfg.modResults;
     const projectName = cfg.modRequest.projectName;
     if (!projectName) throw new Error('withAppLogoIcons: no iOS projectName for pbxproj');
-    const groupKey = project.findPBXGroupKey({ name: projectName }) ?? project.findPBXGroupKey({ path: projectName });
-    if (!groupKey) {
-      // Best effort: skip silently. Without the group we can't add the
-      // .m file; the user will see a missing-symbol link error and can
-      // re-run prebuild with --clean to fix.
-      return cfg;
-    }
+    const groupKey =
+      project.findPBXGroupKey({ name: projectName }) ||
+      project.findPBXGroupKey({ path: projectName });
+    if (!groupKey) return cfg;
     const bridgePath = `${projectName}/${IOS_BRIDGE_SOURCE}`;
-    const alreadyAdded = (project.getSourceFile?.(bridgePath) as unknown) ?? null;
-    if (alreadyAdded) return cfg;
+    // Idempotency: bail if the file is already in the project.
+    const existing = project.hasFile ? project.hasFile(bridgePath) : null;
+    if (existing) return cfg;
     project.addSourceFile(bridgePath, { target: project.getFirstTarget().uuid }, groupKey);
     return cfg;
   });
 
   return config;
-};
+}
 
-const withAndroidAlternateIcons: ConfigPlugin = (config) => {
+function withAndroidAlternateIcons(config) {
   config = withAndroidManifest(config, (cfg) => {
     const manifest = cfg.modResults.manifest;
-    const application = manifest.application?.[0];
+    const application = manifest.application && manifest.application[0];
     if (!application) return cfg;
-    application['activity-alias'] = application['activity-alias'] ?? [];
+    application['activity-alias'] = application['activity-alias'] || [];
     const aliases = application['activity-alias'];
-    const alreadyDeclared = aliases.some((a) => (a.$ as Record<string, string>)['android:name'] === '.MainActivityClassic');
+    const alreadyDeclared = aliases.some((a) => a.$ && a.$['android:name'] === '.MainActivityClassic');
     if (!alreadyDeclared) {
       aliases.push({
         $: {
@@ -145,14 +148,14 @@ const withAndroidAlternateIcons: ConfigPlugin = (config) => {
           'android:roundIcon': '@mipmap/ic_launcher_classic',
           'android:label': '@string/app_name',
           'android:targetActivity': '.MainActivity',
-        } as never,
+        },
         'intent-filter': [
           {
-            action: [{ $: { 'android:name': 'android.intent.action.MAIN' } as never }],
-            category: [{ $: { 'android:name': 'android.intent.category.LAUNCHER' } as never }],
+            action: [{ $: { 'android:name': 'android.intent.action.MAIN' } }],
+            category: [{ $: { 'android:name': 'android.intent.category.LAUNCHER' } }],
           },
         ],
-      } as never);
+      });
     }
     return cfg;
   });
@@ -167,16 +170,29 @@ const withAndroidAlternateIcons: ConfigPlugin = (config) => {
         const dst = path.join(resRoot, `mipmap-${dpi}`, 'ic_launcher_classic.png');
         ensureCopy(src, dst);
       }
-      const ktTargetDir = path.join(androidRoot, 'app', 'src', 'main', 'java', ...ANDROID_KT_PACKAGE.split('.'));
-      ensureCopy(path.join(NATIVE_DIR, 'android-template', ANDROID_MODULE_SOURCE), path.join(ktTargetDir, ANDROID_MODULE_SOURCE));
-      ensureCopy(path.join(NATIVE_DIR, 'android-template', ANDROID_PACKAGE_SOURCE), path.join(ktTargetDir, ANDROID_PACKAGE_SOURCE));
+      const ktTargetDir = path.join(
+        androidRoot,
+        'app',
+        'src',
+        'main',
+        'java',
+        ...ANDROID_KT_PACKAGE.split('.'),
+      );
+      ensureCopy(
+        path.join(NATIVE_DIR, 'android-template', ANDROID_MODULE_SOURCE),
+        path.join(ktTargetDir, ANDROID_MODULE_SOURCE),
+      );
+      ensureCopy(
+        path.join(NATIVE_DIR, 'android-template', ANDROID_PACKAGE_SOURCE),
+        path.join(ktTargetDir, ANDROID_PACKAGE_SOURCE),
+      );
       return cfg;
     },
   ]);
 
   config = withMainApplication(config, (cfg) => {
     const importLine = `import ${ANDROID_KT_PACKAGE}.AppLogoIconPackage`;
-    const registerLine = 'packages.add(AppLogoIconPackage())';
+    const registerLine = 'add(AppLogoIconPackage())';
 
     let src = cfg.modResults.contents;
 
@@ -194,12 +210,11 @@ const withAndroidAlternateIcons: ConfigPlugin = (config) => {
       //         // (autolinking gaps go here)
       //       }
       //
-      // Inject our `add(AppLogoIconPackage())` call inside that
-      // `.apply { ... }` block. The regex matches `.apply {` plus the
-      // following newline so we keep the existing indentation.
+      // Inject `add(AppLogoIconPackage())` inside that `.apply { ... }`
+      // block, preserving the existing indentation.
       const applyOpen = /(PackageList\(this\)\.packages\.apply\s*\{)\n/;
       if (applyOpen.test(src)) {
-        src = src.replace(applyOpen, `$1\n              add(AppLogoIconPackage())\n`);
+        src = src.replace(applyOpen, `$1\n              ${registerLine}\n`);
       } else if (src.includes('PackageList(this).packages')) {
         // Fallback for the bare expression form without `.apply { }`.
         src = src.replace(
@@ -214,12 +229,10 @@ const withAndroidAlternateIcons: ConfigPlugin = (config) => {
   });
 
   return config;
-};
+}
 
-const withAppLogoIcons: ConfigPlugin = (config) => {
+module.exports = function withAppLogoIcons(config) {
   config = withIosAlternateIcons(config);
   config = withAndroidAlternateIcons(config);
   return config;
 };
-
-export default withAppLogoIcons;

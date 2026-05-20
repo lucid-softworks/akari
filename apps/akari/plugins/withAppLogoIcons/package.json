@@ -1,0 +1,6 @@
+{
+  "name": "akari-with-app-logo-icons",
+  "version": "0.0.0",
+  "private": true,
+  "main": "app.plugin.js"
+}

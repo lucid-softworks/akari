@@ -56,7 +56,7 @@
     },
     "plugins": [
       "expo-router",
-      "./plugins/withAppLogoIcons/index.ts",
+      "./plugins/withAppLogoIcons",
       [
         "expo-splash-screen",
         {
