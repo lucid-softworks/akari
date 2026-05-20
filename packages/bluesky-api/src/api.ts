@@ -19,6 +19,7 @@ import {
 } from './leaflet';
 import { BlueskyNotifications } from './notifications';
 import { BlueskyRepos } from './repos';
+import { BlueskyRpg, type RpgItemRecordsResponse } from './rpg';
 import { BlueskySearch } from './search';
 import type {
   BlueskyBookmarksResponse,
@@ -70,6 +71,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
   private repos: BlueskyRepos;
+  private rpg: BlueskyRpg;
 
   /**
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
@@ -91,6 +93,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
     this.repos = new BlueskyRepos(pdsUrl, appViewProxyDid);
+    this.rpg = new BlueskyRpg(pdsUrl, appViewProxyDid);
   }
 
   /**
@@ -343,6 +346,19 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<GrainGalleryItemRecordsResponse> {
     return this.grain.getActorGalleryItems(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `equipment.rpg.item` records on the actor's repo
+   * (rpg.actor inventory).
+   */
+  async getActorRpgInventory(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<RpgItemRecordsResponse> {
+    return this.rpg.getActorInventory(accessJwt, actor, limit, cursor);
   }
 
   /**

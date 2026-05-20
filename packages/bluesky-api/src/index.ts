@@ -11,6 +11,7 @@ export * from './grain';
 export * from './leaflet';
 export * from './notifications';
 export * from './pds';
+export * from './rpg';
 export * from './search';
 export * from './types';
 export * from './video';

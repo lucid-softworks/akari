@@ -154,6 +154,8 @@ export const queryKeys = {
       ['authorGrainPhotos', identifier, limit, pdsUrl] as const,
     grainGalleryItems: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>
       ['authorGrainGalleryItems', identifier, pdsUrl] as const,
+    rpgInventory: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
+      ['authorRpgInventory', identifier, limit, pdsUrl] as const,
     feeds: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorFeeds', identifier, limit, pdsUrl] as const,
     likes: {

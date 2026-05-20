@@ -9,4 +9,5 @@ export type ProfileTabType =
   | 'starterpacks'
   | 'links'
   | 'recipes'
-  | 'photos';
+  | 'photos'
+  | 'rpgItems';

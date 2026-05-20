@@ -33,6 +33,7 @@ const TAB_ORDER: ProfileTabType[] = [
   'media',
   'videos',
   'photos',
+  'rpgItems',
   'feeds',
   'repos',
   'starterpacks',

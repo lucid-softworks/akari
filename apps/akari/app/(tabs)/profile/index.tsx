@@ -15,6 +15,7 @@ import { MediaTab } from '@/components/profile/MediaTab';
 import { PhotosTab } from '@/components/profile/PhotosTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RecipesTab } from '@/components/profile/RecipesTab';
+import { RpgItemsTab } from '@/components/profile/RpgItemsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { ReposTab } from '@/components/profile/ReposTab';
 import { StarterpacksTab } from '@/components/profile/StarterpacksTab';
@@ -79,6 +80,7 @@ const TAB_ORDER: ProfileTabType[] = [
   'media',
   'videos',
   'photos',
+  'rpgItems',
   'feeds',
   'repos',
   'starterpacks',
@@ -115,6 +117,7 @@ function OwnProfileTabPane({ tab, isActive, sharedProps }: OwnProfileTabPaneProp
     case 'starterpacks': return <StarterpacksTab {...props} />;
     case 'recipes': return <RecipesTab {...props} />;
     case 'photos': return <PhotosTab {...props} />;
+    case 'rpgItems': return <RpgItemsTab {...props} />;
     case 'links': return <LinksTab {...props} />;
     default: return null;
   }
