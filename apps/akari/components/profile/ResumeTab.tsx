@@ -333,6 +333,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
     borderLeftWidth: layout.hairline,
     borderRightWidth: layout.hairline,
+    borderBottomWidth: layout.hairline,
     gap: spacing.sm,
   },
   headline: {
@@ -380,6 +381,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderLeftWidth: layout.hairline,
     borderRightWidth: layout.hairline,
+    borderBottomWidth: layout.hairline,
     gap: spacing.xs,
   },
   entryHeader: {
