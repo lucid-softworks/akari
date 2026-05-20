@@ -23,6 +23,7 @@ export function ProfileTabs({ activeTab, onTabChange, profileHandle }: ProfileTa
   const tabs = [
     { key: 'posts' as const, label: t('common.posts') },
     { key: 'replies' as const, label: t('common.replies') },
+    { key: 'resume' as const, label: t('profile.resume') },
     { key: 'media' as const, label: t('profile.media') },
     ...(isOwnProfile ? [{ key: 'likes' as const, label: t('common.likes') }] : []),
     { key: 'videos' as const, label: t('profile.videos') },

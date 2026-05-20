@@ -156,6 +156,12 @@ export const queryKeys = {
       ['authorGrainGalleryItems', identifier, pdsUrl] as const,
     rpgInventory: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorRpgInventory', identifier, limit, pdsUrl] as const,
+    sifaSelf: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>
+      ['authorSifaSelf', identifier, pdsUrl] as const,
+    sifaPositions: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
+      ['authorSifaPositions', identifier, limit, pdsUrl] as const,
+    sifaEducation: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
+      ['authorSifaEducation', identifier, limit, pdsUrl] as const,
     feeds: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorFeeds', identifier, limit, pdsUrl] as const,
     likes: {

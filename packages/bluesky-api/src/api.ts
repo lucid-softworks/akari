@@ -20,6 +20,12 @@ import {
 import { BlueskyNotifications } from './notifications';
 import { BlueskyRepos } from './repos';
 import { BlueskyRpg, type RpgItemRecordsResponse } from './rpg';
+import {
+  BlueskySifa,
+  type SifaEducationRecordsResponse,
+  type SifaPositionRecordsResponse,
+  type SifaSelfRecord,
+} from './sifa';
 import { BlueskySearch } from './search';
 import type {
   BlueskyBookmarksResponse,
@@ -72,6 +78,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private search: BlueskySearch;
   private repos: BlueskyRepos;
   private rpg: BlueskyRpg;
+  private sifa: BlueskySifa;
 
   /**
    * Creates a convenience wrapper around the various Bluesky domain clients while sharing the base PDS URL.
@@ -94,6 +101,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
     this.repos = new BlueskyRepos(pdsUrl, appViewProxyDid);
     this.rpg = new BlueskyRpg(pdsUrl, appViewProxyDid);
+    this.sifa = new BlueskySifa(pdsUrl, appViewProxyDid);
   }
 
   /**
@@ -359,6 +367,40 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<RpgItemRecordsResponse> {
     return this.rpg.getActorInventory(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Reads the actor's `id.sifa.profile.self` record.
+   */
+  async getSifaProfileSelf(
+    accessJwt: string,
+    actor: string,
+  ): Promise<SifaSelfRecord | null> {
+    return this.sifa.getProfileSelf(accessJwt, actor);
+  }
+
+  /**
+   * Lists `id.sifa.profile.position` records on the actor's repo.
+   */
+  async getActorSifaPositions(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<SifaPositionRecordsResponse> {
+    return this.sifa.getActorPositions(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `id.sifa.profile.education` records on the actor's repo.
+   */
+  async getActorSifaEducation(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<SifaEducationRecordsResponse> {
+    return this.sifa.getActorEducation(accessJwt, actor, limit, cursor);
   }
 
   /**

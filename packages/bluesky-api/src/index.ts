@@ -13,6 +13,7 @@ export * from './notifications';
 export * from './pds';
 export * from './rpg';
 export * from './search';
+export * from './sifa';
 export * from './types';
 export * from './video';
 export * from './videoService';

@@ -10,4 +10,5 @@ export type ProfileTabType =
   | 'links'
   | 'recipes'
   | 'photos'
-  | 'rpgItems';
+  | 'rpgItems'
+  | 'resume';

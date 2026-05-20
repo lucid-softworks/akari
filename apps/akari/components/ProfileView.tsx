@@ -29,6 +29,7 @@ type ProfileViewProps = {
 const TAB_ORDER: ProfileTabType[] = [
   'posts',
   'replies',
+  'resume',
   'likes',
   'media',
   'videos',

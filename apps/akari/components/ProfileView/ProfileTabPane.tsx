@@ -7,6 +7,7 @@ import { MediaTab } from '@/components/profile/MediaTab';
 import { PhotosTab } from '@/components/profile/PhotosTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RecipesTab } from '@/components/profile/RecipesTab';
+import { ResumeTab } from '@/components/profile/ResumeTab';
 import { RpgItemsTab } from '@/components/profile/RpgItemsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
 import { ReposTab } from '@/components/profile/ReposTab';
@@ -60,6 +61,8 @@ export function ProfileTabPane({ tab, isActive, sharedProps }: ProfileTabPanePro
       return <PhotosTab {...props} />;
     case 'rpgItems':
       return <RpgItemsTab {...props} />;
+    case 'resume':
+      return <ResumeTab {...props} />;
     case 'links':
       return <LinksTab {...props} />;
     default:
