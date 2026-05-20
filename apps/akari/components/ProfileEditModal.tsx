@@ -1,10 +1,11 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Modal, Platform, Pressable, StatusBar, StyleSheet, TextInput, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, TextInput, View } from 'react-native';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { CenteredModal } from '@/components/ui/CenteredModal';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -64,6 +65,115 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
     avatar !== profile.avatar ||
     banner !== profile.banner;
 
+  const headerRow = (
+    <View style={[styles.header, { borderBottomColor: borderColor }]}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={handleCancel}
+        style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+      >
+        <ThemedText style={[styles.headerButtonText, { color: '#007AFF' }]}>{t('common.cancel')}</ThemedText>
+      </Pressable>
+
+      <ThemedText style={[styles.headerTitle, { color: textColor }]}>{t('profile.editProfile')}</ThemedText>
+
+      <Pressable
+        accessibilityRole="button"
+        onPress={handleSave}
+        style={({ pressed }) => [styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null, pressed && { opacity: 0.7 }]}
+        disabled={!isFormChanged || isLoading}
+      >
+        <ThemedText style={[styles.headerButtonText, { color: isFormChanged && !isLoading ? '#007AFF' : '#8E8E93' }]}>
+          {isLoading ? t('common.saving') : t('common.save')}
+        </ThemedText>
+      </Pressable>
+    </View>
+  );
+
+  const formBody = (
+    <>
+      <View style={styles.bannerSection}>
+        <View style={styles.bannerContainer}>
+          {banner ? (
+            <Image source={{ uri: banner }} style={styles.bannerImage} contentFit="cover" />
+          ) : (
+            <View style={[styles.bannerPlaceholder, { backgroundColor: inputBackgroundColor }]}>
+              <ThemedText style={[styles.bannerPlaceholderText, { color: textColor }]}>
+                {t('profile.noBanner')}
+              </ThemedText>
+            </View>
+          )}
+          <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
+            <IconSymbol name="camera" size={16} color="#ffffff" />
+          </Pressable>
+        </View>
+      </View>
+
+      <View style={styles.avatarSection}>
+        <View style={styles.avatarContainer}>
+          {avatar ? (
+            <Image source={{ uri: avatar }} style={styles.avatarImage} contentFit="cover" />
+          ) : (
+            <View style={[styles.avatarFallback, { backgroundColor: '#007AFF' }]}>
+              <ThemedText style={styles.avatarFallbackText}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
+            </View>
+          )}
+          <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
+            <IconSymbol name="camera" size={16} color="#ffffff" />
+          </Pressable>
+        </View>
+      </View>
+
+      <View style={styles.formSection}>
+        <View style={styles.fieldContainer}>
+          <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.displayName')}</ThemedText>
+          <TextInput
+            style={[
+              styles.textInput,
+              { backgroundColor: inputBackgroundColor, color: textColor, borderColor },
+            ]}
+            value={displayName}
+            onChangeText={setDisplayName}
+            placeholder={t('profile.displayNamePlaceholder')}
+            placeholderTextColor="#8E8E93"
+            maxLength={64}
+          />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.description')}</ThemedText>
+          <TextInput
+            style={[
+              styles.textArea,
+              { backgroundColor: inputBackgroundColor, color: textColor, borderColor },
+            ]}
+            value={description}
+            onChangeText={setDescription}
+            placeholder={t('profile.descriptionPlaceholder')}
+            placeholderTextColor="#8E8E93"
+            multiline
+            numberOfLines={4}
+            maxLength={256}
+            textAlignVertical="top"
+          />
+        </View>
+      </View>
+    </>
+  );
+
+  // Web routes through the codebase's CenteredModal so the editor
+  // reads as a backdrop-dimmed card (matching AddAccountModal etc.)
+  // instead of the full-viewport overlay RN-web gives a plain
+  // `<Modal>`. Native keeps the slide-up page-sheet presentation.
+  if (Platform.OS === 'web') {
+    return (
+      <CenteredModal onClose={handleCancel} maxWidth={640} height="85%" sheetStyle={{ backgroundColor }}>
+        {headerRow}
+        <ScrollView contentContainerStyle={styles.webBody}>{formBody}</ScrollView>
+      </CenteredModal>
+    );
+  }
+
   return (
     <Modal
       visible={visible}
@@ -72,109 +182,8 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
       onRequestClose={handleCancel}
     >
         <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
-          {/* Header */}
-          <View style={[styles.header, { borderBottomColor: borderColor }]}>
-            <Pressable
-              accessibilityRole="button"
-              onPress={handleCancel}
-              style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
-            >
-              <ThemedText style={[styles.headerButtonText, { color: '#007AFF' }]}>{t('common.cancel')}</ThemedText>
-            </Pressable>
-
-            <ThemedText style={[styles.headerTitle, { color: textColor }]}>{t('profile.editProfile')}</ThemedText>
-
-            <Pressable
-              accessibilityRole="button"
-              onPress={handleSave}
-              style={({ pressed }) => [styles.headerButton, !isFormChanged || isLoading ? styles.headerButtonDisabled : null, pressed && { opacity: 0.7 }]}
-              disabled={!isFormChanged || isLoading}
-            >
-              <ThemedText style={[styles.headerButtonText, { color: isFormChanged && !isLoading ? '#007AFF' : '#8E8E93' }]}>
-                {isLoading ? t('common.saving') : t('common.save')}
-              </ThemedText>
-            </Pressable>
-          </View>
-
-          {/* Banner Section */}
-          <View style={styles.bannerSection}>
-            <View style={styles.bannerContainer}>
-              {banner ? (
-                <Image source={{ uri: banner }} style={styles.bannerImage} contentFit="cover" />
-              ) : (
-                <View style={[styles.bannerPlaceholder, { backgroundColor: inputBackgroundColor }]}>
-                  <ThemedText style={[styles.bannerPlaceholderText, { color: textColor }]}>
-                    {t('profile.noBanner')}
-                  </ThemedText>
-                </View>
-              )}
-              <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
-                <IconSymbol name="camera" size={16} color="#ffffff" />
-              </Pressable>
-            </View>
-          </View>
-
-          {/* Avatar Section */}
-          <View style={styles.avatarSection}>
-            <View style={styles.avatarContainer}>
-              {avatar ? (
-                <Image source={{ uri: avatar }} style={styles.avatarImage} contentFit="cover" />
-              ) : (
-                <View style={[styles.avatarFallback, { backgroundColor: '#007AFF' }]}>
-                  <ThemedText style={styles.avatarFallbackText}>{(displayName || 'U')[0].toUpperCase()}</ThemedText>
-                </View>
-              )}
-              <Pressable accessibilityRole="button" style={({ pressed }) => [styles.cameraButton, pressed && { opacity: 0.7 }]} onPress={() => {}}>
-                <IconSymbol name="camera" size={16} color="#ffffff" />
-              </Pressable>
-            </View>
-          </View>
-
-          {/* Form Fields */}
-          <View style={styles.formSection}>
-            {/* Display Name */}
-            <View style={styles.fieldContainer}>
-              <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.displayName')}</ThemedText>
-              <TextInput
-                style={[
-                  styles.textInput,
-                  {
-                    backgroundColor: inputBackgroundColor,
-                    color: textColor,
-                    borderColor: borderColor,
-                  },
-                ]}
-                value={displayName}
-                onChangeText={setDisplayName}
-                placeholder={t('profile.displayNamePlaceholder')}
-                placeholderTextColor="#8E8E93"
-                maxLength={64}
-              />
-            </View>
-
-            {/* Description */}
-            <View style={styles.fieldContainer}>
-              <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.description')}</ThemedText>
-              <TextInput
-                style={[
-                  styles.textArea,
-                  {
-                    backgroundColor: inputBackgroundColor,
-                    color: textColor,
-                    borderColor: borderColor,
-                  },
-                ]}
-                value={description}
-                onChangeText={setDescription}
-                placeholder={t('profile.descriptionPlaceholder')}
-                placeholderTextColor="#8E8E93"
-                multiline
-                numberOfLines={4}
-                maxLength={256}
-                textAlignVertical="top"
-              />
-            </View>
-          </View>
+          {headerRow}
+          {formBody}
         </ThemedView>
     </Modal>
   );
@@ -183,6 +192,9 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  webBody: {
+    paddingBottom: spacing.lg,
   },
   header: {
     flexDirection: 'row',
