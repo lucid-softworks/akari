@@ -14,6 +14,7 @@
       "posts": "Posts",
       "likes": "Likes",
       "replies": "Replies",
+      "reposts": "Reposts",
       "accounts": "Accounts",
       "current": "Current",
       "switch": "Switch",
@@ -272,6 +273,7 @@
     "profile": {
       "media": "Media",
       "noPosts": "No posts yet",
+      "noReposts": "No reposts yet",
       "noLikes": "No likes yet",
       "noMedia": "No media yet",
       "noReplies": "No replies yet",

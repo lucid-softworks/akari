@@ -140,6 +140,8 @@ export const queryKeys = {
       ['authorReplies', identifier, limit, pdsUrl, appViewEnabled] as const,
     media: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
       ['authorMedia', identifier, limit, pdsUrl, appViewEnabled] as const,
+    reposts: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
+      ['authorReposts', identifier, limit, pdsUrl, appViewEnabled] as const,
     videos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>, appViewEnabled?: boolean) =>
       ['authorVideos', identifier, limit, pdsUrl, appViewEnabled] as const,
     repos: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>

@@ -1,6 +1,7 @@
 export type ProfileTabType =
   | 'posts'
   | 'replies'
+  | 'reposts'
   | 'likes'
   | 'media'
   | 'videos'

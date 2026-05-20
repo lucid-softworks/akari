@@ -15,6 +15,7 @@ import { MediaTab } from '@/components/profile/MediaTab';
 import { PhotosTab } from '@/components/profile/PhotosTab';
 import { PostsTab } from '@/components/profile/PostsTab';
 import { RecipesTab } from '@/components/profile/RecipesTab';
+import { RepostsTab } from '@/components/profile/RepostsTab';
 import { ResumeTab } from '@/components/profile/ResumeTab';
 import { RpgItemsTab } from '@/components/profile/RpgItemsTab';
 import { RepliesTab } from '@/components/profile/RepliesTab';
@@ -77,6 +78,7 @@ const OwnProfileHeader = memo(function OwnProfileHeader({
 const TAB_ORDER: ProfileTabType[] = [
   'posts',
   'replies',
+  'reposts',
   'resume',
   'likes',
   'media',
@@ -111,6 +113,7 @@ function OwnProfileTabPane({ tab, isActive, sharedProps }: OwnProfileTabPaneProp
   switch (tab) {
     case 'posts': return <PostsTab {...props} />;
     case 'replies': return <RepliesTab {...props} />;
+    case 'reposts': return <RepostsTab {...props} />;
     case 'likes': return <LikesTab {...props} />;
     case 'media': return <MediaTab {...props} />;
     case 'videos': return <VideosTab {...props} />;
