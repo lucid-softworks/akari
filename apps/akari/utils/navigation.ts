@@ -157,5 +157,42 @@ export function useNavigateToFeed() {
   };
 }
 
+type GalleryNavigationArgs = {
+  /** Handle or DID of the gallery's owner. */
+  actor: string;
+  /** Record-key of the `social.grain.gallery` record. */
+  rKey: string;
+};
+
+/**
+ * Navigate to a grain.social gallery detail screen — same tab-aware
+ * shape as post / feed navigation. Web uses
+ * `/profile/<actor>/gallery/<rKey>`; native picks the per-tab variant
+ * so the back-swipe lands inside the tab the user came from.
+ */
+export function useNavigateToGallery() {
+  const pathname = usePathname() as string;
+
+  return ({ actor, rKey }: GalleryNavigationArgs) => {
+    let target: string;
+    if (Platform.OS === 'web') {
+      target = `/profile/${encodeURIComponent(actor)}/gallery/${encodeURIComponent(rKey)}`;
+    } else {
+      const targetTabRoute = getTabRouteFromPathname(pathname);
+      if (targetTabRoute === 'profile') {
+        target = `/profile/${encodeURIComponent(actor)}/gallery/${encodeURIComponent(rKey)}`;
+      } else if (targetTabRoute === 'index') {
+        target = `/user-profile/${encodeURIComponent(actor)}/gallery/${encodeURIComponent(rKey)}`;
+      } else {
+        target = `/${targetTabRoute}/user-profile/${encodeURIComponent(actor)}/gallery/${encodeURIComponent(rKey)}`;
+      }
+    }
+
+    if (isSamePath(target, pathname)) return;
+    // @ts-expect-error collapsed-index-segment URL not in generated types
+    router.push(target);
+  };
+}
+
 // Export the TabRoute type for use in other files
 export type { TabRoute };

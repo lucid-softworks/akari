@@ -1,5 +1,4 @@
 import { Image } from '@/components/Image';
-import { router } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -18,6 +17,7 @@ import {
 import { usePdsUrl } from '@/hooks/queries/usePdsUrl';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNavigateToGallery } from '@/utils/navigation';
 import type { ProfileTabContentProps } from '@/components/profile/types';
 
 type PhotosTabProps = ProfileTabContentProps & {
@@ -102,6 +102,7 @@ export function PhotosTab({
   const { data: items } = useGrainGalleryItems(handle);
   const { data: photos } = useGrainPhotos(handle);
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
+  const navigateToGallery = useNavigateToGallery();
 
   const photoIndex = useMemo(() => indexGrainPhotosByUri(photos), [photos]);
   const itemsByGallery = useMemo(() => groupGalleryItems(items), [items]);
@@ -137,9 +138,9 @@ export function PhotosTab({
     (tile: GalleryTileData) => {
       const parts = tile.gallery.uri.split('/');
       const rkey = parts[parts.length - 1];
-      router.push(`/(tabs)/profile/${handle}/gallery/${rkey}`);
+      navigateToGallery({ actor: handle, rKey: rkey });
     },
-    [handle],
+    [handle, navigateToGallery],
   );
 
   const renderItem = useCallback(
