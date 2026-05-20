@@ -33,6 +33,16 @@ export default function UserProfileLayout() {
         }}
         dangerouslySingular
       />
+      <Stack.Screen
+        name="gallery/[rkey]"
+        options={{
+          title: 'Gallery',
+          headerShown: isLargeNative,
+          headerBackVisible: true,
+          headerBackButtonDisplayMode: 'minimal',
+        }}
+        dangerouslySingular
+      />
     </Stack>
   );
 }

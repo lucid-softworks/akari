@@ -43,6 +43,11 @@ export default function ProfileLayout() {
         options={{ title: 'Feed' }}
         dangerouslySingular
       />
+      <Stack.Screen
+        name="[handle]/gallery/[rkey]"
+        options={{ title: 'Gallery' }}
+        dangerouslySingular
+      />
     </Stack>
   );
 }

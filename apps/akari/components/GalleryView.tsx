@@ -59,12 +59,12 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
       .filter((p): p is NonNullable<typeof p> => Boolean(p));
   }, [gallery, itemsByGallery, photoIndex]);
 
-  const title = gallery?.value.title ?? '';
+  const title = gallery?.value.title;
   const description = gallery?.value.description;
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      <Stack.Screen options={{ title }} />
+      {title ? <Stack.Screen options={{ title }} /> : null}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View
           style={[
@@ -73,7 +73,7 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
             webColumnSideBorders(borderColor),
           ]}
         >
-          <ThemedText style={styles.title}>{title}</ThemedText>
+          <ThemedText style={styles.title}>{title ?? ''}</ThemedText>
           {description ? (
             <ThemedText style={[styles.description, { color: secondary }]}>{description}</ThemedText>
           ) : null}
