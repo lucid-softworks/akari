@@ -101,7 +101,7 @@ const withIosAlternateIcons: ConfigPlugin = (config) => {
       for (const [src, dst] of IOS_PNG_RENAMES) {
         ensureCopy(path.join(IOS_ICON_SRC_DIR, src), path.join(targetDir, dst));
       }
-      ensureCopy(path.join(NATIVE_DIR, 'ios', IOS_BRIDGE_SOURCE), path.join(targetDir, IOS_BRIDGE_SOURCE));
+      ensureCopy(path.join(NATIVE_DIR, 'ios-template', IOS_BRIDGE_SOURCE), path.join(targetDir, IOS_BRIDGE_SOURCE));
       return cfg;
     },
   ]);
@@ -168,8 +168,8 @@ const withAndroidAlternateIcons: ConfigPlugin = (config) => {
         ensureCopy(src, dst);
       }
       const ktTargetDir = path.join(androidRoot, 'app', 'src', 'main', 'java', ...ANDROID_KT_PACKAGE.split('.'));
-      ensureCopy(path.join(NATIVE_DIR, 'android', ANDROID_MODULE_SOURCE), path.join(ktTargetDir, ANDROID_MODULE_SOURCE));
-      ensureCopy(path.join(NATIVE_DIR, 'android', ANDROID_PACKAGE_SOURCE), path.join(ktTargetDir, ANDROID_PACKAGE_SOURCE));
+      ensureCopy(path.join(NATIVE_DIR, 'android-template', ANDROID_MODULE_SOURCE), path.join(ktTargetDir, ANDROID_MODULE_SOURCE));
+      ensureCopy(path.join(NATIVE_DIR, 'android-template', ANDROID_PACKAGE_SOURCE), path.join(ktTargetDir, ANDROID_PACKAGE_SOURCE));
       return cfg;
     },
   ]);
