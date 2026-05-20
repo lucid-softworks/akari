@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const {
+  IOSConfig,
   withAndroidManifest,
   withDangerousMod,
   withInfoPlist,
@@ -115,15 +116,45 @@ function withIosAlternateIcons(config) {
     const project = cfg.modResults;
     const projectName = cfg.modRequest.projectName;
     if (!projectName) throw new Error('withAppLogoIcons: no iOS projectName for pbxproj');
+    const targetUuid = project.getFirstTarget().uuid;
     const groupKey =
       project.findPBXGroupKey({ name: projectName }) ||
       project.findPBXGroupKey({ path: projectName });
     if (!groupKey) return cfg;
+
+    // Register the ObjC bridge in the "Sources" build phase. Without
+    // this, the .m file lives on disk but the linker has no symbols
+    // and RN can't find the native module at runtime.
     const bridgePath = `${projectName}/${IOS_BRIDGE_SOURCE}`;
-    // Idempotency: bail if the file is already in the project.
-    const existing = project.hasFile ? project.hasFile(bridgePath) : null;
-    if (existing) return cfg;
-    project.addSourceFile(bridgePath, { target: project.getFirstTarget().uuid }, groupKey);
+    if (!(project.hasFile && project.hasFile(bridgePath))) {
+      project.addSourceFile(bridgePath, { target: targetUuid }, groupKey);
+    }
+
+    // Register each PNG as a bundle Resource. Alternate icons MUST be
+    // copied into the .app at build time — Info.plist's
+    // CFBundleAlternateIcons entry points to filenames Apple expects
+    // to find at the bundle root. Without this step the PNGs sit
+    // beside the .xcodeproj but never make it into the installed
+    // app, so iOS just shows blank.
+    //
+    // We use Expo's IOSConfig.XcodeUtils.addResourceFileToGroup
+    // helper rather than xcode-lib's raw addResourceFile, because
+    // the latter calls correctForResourcesPath which assumes a
+    // PBXGroup literally named "Resources" exists. Expo's iOS
+    // projects don't have that group (the modern template inlines
+    // resources into the app's main group), so the raw API crashes
+    // with "Cannot read properties of null (reading 'path')". The
+    // wrapper helper goes through addToPbxResourcesBuildPhase
+    // directly and doesn't need the named group.
+    for (const [, dst] of IOS_PNG_RENAMES) {
+      IOSConfig.XcodeUtils.addResourceFileToGroup({
+        filepath: path.join(projectName, dst),
+        groupName: projectName,
+        isBuildFile: true,
+        project,
+        targetUuid,
+      });
+    }
     return cfg;
   });
 

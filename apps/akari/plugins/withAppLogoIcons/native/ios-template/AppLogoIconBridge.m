@@ -50,10 +50,22 @@ RCT_EXPORT_METHOD(setAlternateIconName:(NSString *)name
         // The system treats nil as "reset to primary icon"; "default"
         // is the JS-side keyword for that.
         NSString *target = ([name isEqualToString:@"default"] || name.length == 0) ? nil : name;
-        [[UIApplication sharedApplication] setAlternateIconName:target completionHandler:^(NSError * _Nullable error) {
+        UIApplication *app = [UIApplication sharedApplication];
+        if (![app supportsAlternateIcons]) {
+            reject(@"unsupported", @"This iOS build does not support alternate icons", nil);
+            return;
+        }
+        NSString *current = app.alternateIconName;
+        NSLog(@"[AppLogoIconBridge] requested='%@' current='%@' supports=%d",
+              target ?: @"<primary>", current ?: @"<primary>", [app supportsAlternateIcons]);
+        [app setAlternateIconName:target completionHandler:^(NSError * _Nullable error) {
             if (error != nil) {
-                reject(@"set_failed", error.localizedDescription, error);
+                NSString *detail = [NSString stringWithFormat:@"%@ (domain=%@ code=%ld userInfo=%@)",
+                                    error.localizedDescription, error.domain, (long)error.code, error.userInfo];
+                NSLog(@"[AppLogoIconBridge] FAILED %@", detail);
+                reject(@"set_failed", detail, error);
             } else {
+                NSLog(@"[AppLogoIconBridge] OK target='%@'", target ?: @"<primary>");
                 resolve(@YES);
             }
         }];

@@ -17,10 +17,14 @@ function getBridge(): NativeBridge | null {
   if (Platform.OS === 'web') return null;
   const native = (NativeModules as Record<string, unknown>).AppLogoIconBridge;
   if (!native) {
-    // Either we're running in Expo Go (no custom native) or the
-    // user hasn't rebuilt the dev client since the plugin landed. The
-    // caller should fall back to a no-op rather than crash; the
-    // in-app logo + favicon swap still works.
+    // Either we're running in Expo Go (no custom native), the user
+    // hasn't rebuilt the dev client since the plugin landed, OR the
+    // module is compiled in but not surfaced through NativeModules
+    // (a known new-arch bridgeless gotcha for `RCT_EXPORT_MODULE`
+    // classes that haven't been wired into the interop module list).
+    console.warn(
+      '[applyHomescreenIcon] NativeModules.AppLogoIconBridge is undefined — homescreen icon swap will no-op',
+    );
     return null;
   }
   return native as NativeBridge;
@@ -40,7 +44,10 @@ export async function applyHomescreenIcon(variant: LogoVariant): Promise<void> {
   const bridge = getBridge();
   if (!bridge) return;
   try {
-    await bridge.setAlternateIconName(variant === 'default' ? null : variant);
+    console.log('[applyHomescreenIcon] calling native bridge', { variant });
+    const target = variant === 'default' ? null : variant;
+    const result = await bridge.setAlternateIconName(target);
+    console.log('[applyHomescreenIcon] native bridge resolved', { variant, result });
   } catch (error) {
     // The most common failure mode is the user backgrounding the app
     // mid-switch on iOS — non-fatal; the JS-side setting still
