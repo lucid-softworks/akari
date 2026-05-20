@@ -1,6 +1,8 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { MMKV } from 'react-native-mmkv';
 
+import { applyHomescreenIcon } from '@/utils/appLogoIcon';
+
 /**
  * User preference for which logo variant the app should display in-app
  * and as the web favicon. Stored locally via MMKV so the choice is
@@ -59,6 +61,9 @@ export function useSetLogoVariant() {
       // best-effort; if persistence fails, in-memory cache + UI still updates
     }
     emit();
+    // Mirror the choice to the homescreen icon on native (no-op on
+    // web and on builds without the AppLogoIconBridge native module).
+    void applyHomescreenIcon(variant);
   }, []);
 }
 
