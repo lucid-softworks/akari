@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { Platform } from 'react-native';
 
+import { zIndex } from '@/constants/tokens';
+
 // React-DOM only exists in web bundles. require() keeps native bundlers
 // from trying to resolve it; the require call only runs when we're on
 // web and there's a document we can portal into.
@@ -87,7 +89,7 @@ export function WebPortalDropdown({
         right: position.right,
         width: 'max-content',
         maxWidth: 'calc(100vw - 16px)',
-        zIndex: 9999,
+        zIndex: zIndex.dropdown,
       }}
       // Stop clicks inside the menu from bubbling to the document-level
       // dismiss handler that PostActionsMenu installs. The matching key

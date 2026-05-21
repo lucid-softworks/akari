@@ -4,7 +4,7 @@ import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { Image } from '@/components/Image';
 import { ThemedText } from '@/components/ThemedText';
-import { fontSize, fontWeight, radius, shadows, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, radius, shadows, spacing, zIndex } from '@/constants/tokens';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -116,7 +116,7 @@ function HoverCardPortal({ position, children }: HoverCardPortalProps) {
         top: position.top,
         left: position.left,
         width: CARD_WIDTH,
-        zIndex: 9999,
+        zIndex: zIndex.dropdown,
       }}
     >
       {children}

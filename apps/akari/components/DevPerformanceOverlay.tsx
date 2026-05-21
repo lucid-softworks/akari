@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { radius, spacing } from '@/constants/tokens';
+import { radius, spacing, zIndex } from '@/constants/tokens';
 import { useDevSettings } from '@/hooks/useDevSettings';
 
 // Only render in dev mode
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: radius.xs,
-    zIndex: 9999,
+    zIndex: zIndex.devOverlay,
   },
   toggleText: {
     color: '#4ade80',
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     position: Platform.OS === 'web' ? ('fixed' as 'absolute') : 'absolute',
     top: Platform.OS === 'web' ? 10 : 60,
     left: Platform.OS === 'web' ? 10 : spacing.sm,
-    zIndex: 9999,
+    zIndex: zIndex.devOverlay,
   },
   panel: {
     flexDirection: 'row',

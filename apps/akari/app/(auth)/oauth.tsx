@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors, shadows } from '@/constants/tokens';
+import { spacing, radius, fontSize, fontWeight, layout, opacity, semanticColors, shadows, zIndex } from '@/constants/tokens';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useTypeaheadActors } from '@/hooks/queries/useTypeaheadActors';
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     // no-op `translateY: 0` forces the browser to create a fresh stacking
     // context here. Native just respects the child zIndex.
     position: 'relative',
-    zIndex: 9999,
+    zIndex: zIndex.dropdown,
     transform: [{ translateY: 0 }],
   },
   suggestions: {
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // Cap so big result sets don't grow off-screen; the rest scroll inside.
     maxHeight: 220,
-    zIndex: 9999,
+    zIndex: zIndex.dropdown,
     // Without an elevation/shadow the panel ends up white-on-white in light
     // mode (page bg and suggestionBackground are both `#fff`) and almost
     // matches in dark mode too — looks like the dropdown has no background

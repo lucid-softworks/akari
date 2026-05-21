@@ -10,6 +10,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { zIndex } from '@/constants/tokens';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 type ToastType = 'success' | 'error' | 'info';
@@ -249,9 +250,9 @@ export function useToast(): ToastContextValue {
 const styles = StyleSheet.create({
   // oxlint-disable-next-line react-doctor/rn-no-legacy-shadow-styles -- elevation drives Android stacking order for the toast overlay, not shadow
   viewportOverlay: {
-    zIndex: 1000,
+    zIndex: zIndex.toast,
     // oxlint-disable-next-line react-doctor/rn-style-prefer-boxshadow -- elevation drives Android stacking order for the toast overlay, not shadow
-    elevation: 1000,
+    elevation: zIndex.toast,
   },
   viewport: {
     flex: 1,

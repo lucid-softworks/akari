@@ -207,6 +207,29 @@ export function hexToRgba(hex: string, alpha: number): string {
 }
 
 // ---------------------------------------------------------------------------
+// Z-index scale
+//
+// A small, deliberate ladder. If you're tempted to reach for a value above
+// `devOverlay`, the fix is almost always a new stacking context via
+// `isolation: 'isolate'` on the parent — not a bigger number. Escalating
+// zIndex past this scale signals a stacking-context bug, not a fix.
+// ---------------------------------------------------------------------------
+export const zIndex = {
+  /** Minor lifts within a card or list (avatar overlap, header sub-pixel fixes). */
+  raised: 1,
+  /** Sticky headers and bars inside a scroll column. */
+  sticky: 10,
+  /** Dropdowns, autocompletes, hover cards, portaled menus. */
+  dropdown: 20,
+  /** Modal dialogs, sheets, fullscreen overlays. */
+  modal: 30,
+  /** Toast notifications — above modals so confirmations land. */
+  toast: 40,
+  /** Dev-only banners and perf overlays — above everything during dev. */
+  devOverlay: 50,
+} as const;
+
+// ---------------------------------------------------------------------------
 // Layout
 // ---------------------------------------------------------------------------
 export const layout = {

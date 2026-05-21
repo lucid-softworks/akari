@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { activeOpacity, fontSize, fontWeight, hitSlop, layout, radius, semanticColors, spacing } from '@/constants/tokens';
+import { activeOpacity, fontSize, fontWeight, hitSlop, layout, radius, semanticColors, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type ProfileActionButtonsState = {
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   },
   moreButtonContainer: {
     position: 'relative',
-    zIndex: 999999,
+    zIndex: zIndex.dropdown,
   },
   moreButton: {
     width: layout.avatarSmall,

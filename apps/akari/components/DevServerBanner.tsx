@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
-import { fontSize, fontWeight, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const POLL_INTERVAL_MS = 5000;
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 1000,
+    zIndex: zIndex.devOverlay,
     backgroundColor: '#7c2d12',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.sm,

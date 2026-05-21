@@ -4,7 +4,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
-import { fontSize, fontWeight, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 // On web, NetInfo's default `reachabilityUrl` is `/` with `HEAD` — which
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 999,
+    zIndex: zIndex.toast,
     backgroundColor: '#1f1f1f',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.sm,

@@ -6,7 +6,7 @@ import { Image } from '@/components/Image';
 import { ProfileHoverTrigger } from '@/components/ProfileHoverCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { fontSize, fontWeight, radius, shadows, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, radius, shadows, spacing, zIndex } from '@/constants/tokens';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useSuggestedFollows } from '@/hooks/queries/useSuggestedFollows';
 import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     position: 'relative',
-    zIndex: 100,
+    zIndex: zIndex.dropdown,
   } as object,
   searchWrapper: {
     flexDirection: 'row',
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     paddingVertical: spacing.xs,
     overflow: 'hidden',
-    zIndex: 100,
+    zIndex: zIndex.dropdown,
   } as object,
   typeaheadRow: {
     flexDirection: 'row',

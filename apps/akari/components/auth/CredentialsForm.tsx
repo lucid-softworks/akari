@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { fontSize, fontWeight, hitSlop, layout, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, hitSlop, layout, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type CredentialsFormColors = {
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     // descendant always paints above sibling form sections (App Password
     // input etc). Native just respects the child zIndex.
     position: 'relative',
-    zIndex: 9999,
+    zIndex: zIndex.dropdown,
     transform: [{ translateY: 0 }],
   },
 });
