@@ -16,6 +16,11 @@ jest.mock('@/components/Label', () => {
   };
 });
 
+jest.mock('@/components/LabelDetailModal', () => ({ LabelDetailModal: () => null }));
+jest.mock('@/hooks/queries/useLabelers', () => ({
+  useLabelers: () => ({ data: [] }),
+}));
+
 jest.mock('@/hooks/useThemeColor');
 const mockUseThemeColor = useThemeColor as jest.Mock;
 
@@ -46,23 +51,47 @@ describe('Labels', () => {
     expect(queryByText('Three')).toBeNull();
   });
 
+  it('hides the !no-unauthenticated system label', () => {
+    const labels = [
+      { val: '!no-unauthenticated' },
+      { val: 'verified' },
+    ];
+    render(<Labels labels={labels} />);
+    expect(mockLabel).toHaveBeenCalledTimes(1);
+    expect(mockLabel).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'verified' }),
+    );
+  });
+
   it('applies correct label classifications', () => {
     const labels = [
-      { val: 'Spammy', neg: true },
-      { val: 'Verified account' },
+      { val: 'spam' },
+      { val: 'verified' },
       { val: 'Regular user' },
     ];
     render(<Labels labels={labels} />);
 
     expect(mockLabel).toHaveBeenCalledTimes(3);
     expect(mockLabel).toHaveBeenCalledWith(
-      expect.objectContaining({ text: 'Spammy', isWarning: true }),
+      expect.objectContaining({ text: 'spam', isWarning: true }),
     );
     expect(mockLabel).toHaveBeenCalledWith(
-      expect.objectContaining({ text: 'Verified account', isPositive: true }),
+      expect.objectContaining({ text: 'verified', isPositive: true }),
     );
     expect(mockLabel).toHaveBeenCalledWith(
       expect.objectContaining({ text: 'Regular user' }),
+    );
+  });
+
+  it('filters out negated labels', () => {
+    const labels = [
+      { val: 'spam', neg: true },
+      { val: 'verified' },
+    ];
+    render(<Labels labels={labels} />);
+    expect(mockLabel).toHaveBeenCalledTimes(1);
+    expect(mockLabel).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'verified' }),
     );
   });
 });

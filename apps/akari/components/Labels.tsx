@@ -54,6 +54,13 @@ const WARNING_LABELS = new Set([
 const POSITIVE_LABELS = new Set([
   'verified', 'official', 'trusted',
 ]);
+// System self-labels that are filtering directives rather than user-facing
+// signals. `!no-unauthenticated` only gates whether content is served to
+// logged-out viewers — rendering it as a warning chip on every post and
+// profile is noise, and the official Bluesky client doesn't show it either.
+const HIDDEN_LABEL_VALUES = new Set([
+  '!no-unauthenticated',
+]);
 
 function classify(text: string): { isWarning: boolean; isPositive: boolean } {
   const lower = text.toLowerCase();
@@ -98,8 +105,10 @@ export function Labels({ labels, maxLabels }: LabelsProps) {
   // cap if the caller asked for one (post tiles / search rows do; the
   // profile header shows all).
   const filtered = labels.filter((label) => {
-    const text = readLabelText(label);
-    return text.trim() !== '' && !label.neg;
+    const text = readLabelText(label).trim();
+    if (text === '' || label.neg) return false;
+    if (HIDDEN_LABEL_VALUES.has(text.toLowerCase())) return false;
+    return true;
   });
   const display = typeof maxLabels === 'number' ? filtered.slice(0, maxLabels) : filtered;
 
