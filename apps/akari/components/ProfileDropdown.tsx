@@ -1,14 +1,21 @@
 import React, { useMemo } from 'react';
 import * as Haptics from 'expo-haptics';
-import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { WebPortalDropdown, type WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { spacing, radius, fontSize, fontWeight, activeOpacity, semanticColors, layout } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+
+// Rough height of the menu used by `WebPortalDropdown` to decide
+// whether to flip the menu above the anchor when there isn't room
+// below. Doesn't need to be exact — six rows × ~52px + borders.
+const WEB_PROFILE_MENU_ESTIMATED_HEIGHT = 320;
 
 type MenuItem = {
   key: string;
@@ -34,6 +41,10 @@ type ProfileDropdownProps = {
   isBlocking: boolean;
   isMuted: boolean;
   isOwnProfile: boolean;
+  /** Position of the `…` trigger as measured at open time. When set
+   *  on web we render a portaled dropdown anchored to it instead of
+   *  the bottom-sheet shape used on native. */
+  anchorRect?: WebPortalAnchorRect | null;
 };
 
 export const ProfileDropdown = React.memo(function ProfileDropdown({
@@ -49,6 +60,7 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
   isBlocking,
   isMuted,
   isOwnProfile,
+  anchorRect,
 }: ProfileDropdownProps) {
   const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
@@ -87,6 +99,62 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
     return items;
   }, [isOwnProfile, isMuted, isBlocking, t, onCopyLink, onSearchPosts, onAddToLists, onMuteAccount, onBlockPress, onReportAccount, onMessageOnGerm]);
 
+  const menuBody = (
+    <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
+      {menuItems.map((item, index) => (
+        <React.Fragment key={item.key}>
+          {index > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
+          <Pressable
+            style={({ pressed }) => [styles.item, pressed && { opacity: activeOpacity.default }]}
+            onPress={() => {
+              void Haptics.impactAsync(
+                item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
+              );
+              item.onPress();
+            }}
+            accessibilityRole="menuitem"
+          >
+            <IconSymbol
+              name={item.icon as any}
+              size={22}
+              color={item.destructive ? semanticColors.danger : iconColor}
+            />
+            <ThemedText
+              style={[
+                styles.itemText,
+                { color: item.destructive ? semanticColors.danger : textColor },
+              ]}
+            >
+              {item.label}
+            </ThemedText>
+          </Pressable>
+        </React.Fragment>
+      ))}
+    </ThemedView>
+  );
+
+  // Web with an anchor → portaled dropdown anchored to the `…`
+  // trigger, matching the post `…` menu and repost-sheet pattern.
+  // The portal renders into `document.body` so the menu escapes any
+  // ancestor `overflow: hidden` (the profile header + tab container
+  // both clip on web). Without an anchor (older callers, no
+  // measurement available) we fall through to the native bottom
+  // sheet so the menu still works.
+  if (Platform.OS === 'web' && anchorRect) {
+    return (
+      <WebPortalDropdown
+        visible={isVisible}
+        anchorRect={anchorRect}
+        estimatedHeight={WEB_PROFILE_MENU_ESTIMATED_HEIGHT}
+        onDismiss={onDismiss}
+      >
+        <ThemedView style={[styles.webDropdown, { backgroundColor: sheetBg, borderColor }]}>
+          {menuBody}
+        </ThemedView>
+      </WebPortalDropdown>
+    );
+  }
+
   return (
     <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onDismiss}>
       <Pressable style={styles.backdrop} onPress={onDismiss}>
@@ -94,37 +162,7 @@ export const ProfileDropdown = React.memo(function ProfileDropdown({
           style={[styles.sheetWrapper, { paddingBottom: bottom + spacing.md }]}
           onPress={(event) => event.stopPropagation()}
         >
-          <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
-            {menuItems.map((item, index) => (
-              <React.Fragment key={item.key}>
-                {index > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-                <Pressable
-                  style={({ pressed }) => [styles.item, pressed && { opacity: activeOpacity.default }]}
-                  onPress={() => {
-                    void Haptics.impactAsync(
-                      item.destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
-                    );
-                    item.onPress();
-                  }}
-                  accessibilityRole="menuitem"
-                >
-                  <IconSymbol
-                    name={item.icon as any}
-                    size={22}
-                    color={item.destructive ? semanticColors.danger : iconColor}
-                  />
-                  <ThemedText
-                    style={[
-                      styles.itemText,
-                      { color: item.destructive ? semanticColors.danger : textColor },
-                    ]}
-                  >
-                    {item.label}
-                  </ThemedText>
-                </Pressable>
-              </React.Fragment>
-            ))}
-          </ThemedView>
+          {menuBody}
         </Pressable>
       </Pressable>
     </Modal>
@@ -148,6 +186,16 @@ const styles = StyleSheet.create({
       web: { maxWidth: 420, alignSelf: 'center', width: '100%' },
       default: {},
     }),
+  },
+  // The portaled web dropdown sizes to its content (WebPortalDropdown
+  // anchors via `right:` so we don't need a width); the inner sheet
+  // keeps the same compact card chrome as the post `…` menu.
+  webDropdown: {
+    minWidth: 220,
+    maxWidth: 320,
+    borderRadius: radius.md,
+    borderWidth: layout.hairline,
+    overflow: 'hidden',
   },
   item: {
     flexDirection: 'row',

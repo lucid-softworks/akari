@@ -4,6 +4,7 @@ import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { webScreenContainer } from '@/constants/webStyles';
 
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ProfileActionSheets } from '@/components/ProfileView/ProfileActionSheets';
 import { ProfileTabPane } from '@/components/ProfileView/ProfileTabPane';
@@ -47,9 +48,20 @@ export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownAnchorRect, setDropdownAnchorRect] = useState<WebPortalAnchorRect | null>(null);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showListPicker, setShowListPicker] = useState(false);
   const dropdownRef = useRef<View | null>(null);
+
+  // The header passes `(isOpen, rect?)`; capture both so the
+  // portaled web menu can anchor next to the `…` trigger.
+  const handleDropdownToggle = useCallback(
+    (isOpen: boolean, rect?: WebPortalAnchorRect) => {
+      setShowDropdown(isOpen);
+      setDropdownAnchorRect(isOpen ? rect ?? null : null);
+    },
+    [],
+  );
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
   // sticky-tabs-pinned) instead of jumping to the top or hiding the banner.
@@ -108,7 +120,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     <ProfileViewHeader
       profile={profile}
       isOwnProfile={isOwnProfile}
-      onDropdownToggle={setShowDropdown}
+      onDropdownToggle={handleDropdownToggle}
       dropdownRef={dropdownRef}
     />
   ) : null;
@@ -194,6 +206,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
           profile={profile}
           isOwnProfile={isOwnProfile}
           visibility={{ dropdown: showDropdown, reportSheet: showReportSheet }}
+          dropdownAnchorRect={dropdownAnchorRect}
           onDismissDropdown={() => setShowDropdown(false)}
           onDismissReportSheet={() => setShowReportSheet(false)}
           onCopyLink={dropdownActions.handleCopyLink}
@@ -244,6 +257,7 @@ export default function ProfileView({ handle }: ProfileViewProps) {
           reportSheet: showReportSheet,
           listPicker: showListPicker,
         }}
+        dropdownAnchorRect={dropdownAnchorRect}
         onDismissDropdown={() => setShowDropdown(false)}
         onDismissReportSheet={() => setShowReportSheet(false)}
         onDismissListPicker={() => setShowListPicker(false)}

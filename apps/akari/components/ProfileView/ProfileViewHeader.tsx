@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import type { View } from 'react-native';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import type { useProfile } from '@/hooks/queries/useProfile';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
@@ -9,7 +10,7 @@ type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 type ProfileViewHeaderProps = {
   profile: ProfileShape;
   isOwnProfile: boolean;
-  onDropdownToggle: (isOpen: boolean) => void;
+  onDropdownToggle: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
   dropdownRef: React.RefObject<View | null>;
 };
 

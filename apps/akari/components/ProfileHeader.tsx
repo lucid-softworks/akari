@@ -10,6 +10,7 @@ import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { Labels } from '@/components/Labels';
 import { ProfileActionButtons } from '@/components/ProfileHeader/ProfileActionButtons';
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { ProfileAvatar } from '@/components/ProfileHeader/ProfileAvatar';
 import { ProfileBanner } from '@/components/ProfileHeader/ProfileBanner';
 import { ProfileBlockedNotice } from '@/components/ProfileHeader/ProfileBlockedNotice';
@@ -72,7 +73,11 @@ type ProfileHeaderProps = {
   };
   isOwnProfile?: boolean;
   onSettingsPress?: () => void;
-  onDropdownToggle?: (isOpen: boolean) => void;
+  /** Toggle the `…` overflow menu. The optional `rect` is the bounding
+   *  box of the trigger (measured at tap time); the consumer forwards
+   *  it to `ProfileDropdown` so a portaled web dropdown can anchor
+   *  next to the button. */
+  onDropdownToggle?: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
   dropdownRef?: React.RefObject<View | null>;
 };
 
@@ -199,10 +204,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
     searchProfilePosts({ handle: profile.handle });
   };
 
-  const handleDropdownToggle = () => {
+  const handleDropdownToggle = (rect?: WebPortalAnchorRect) => {
     const newState = !showDropdownRef.current;
     showDropdownRef.current = newState;
-    onDropdownToggle?.(newState);
+    onDropdownToggle?.(newState, newState ? rect : undefined);
   };
 
   const handleFollowPress = () => {

@@ -26,6 +26,7 @@ import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { GuestSignInRequired } from '@/components/GuestSignInRequired';
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -41,7 +42,7 @@ type OwnProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 type OwnProfileHeaderProps = {
   profile: OwnProfileShape;
   accountHandle: string;
-  onDropdownToggle: (isOpen: boolean) => void;
+  onDropdownToggle: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
   dropdownRef: React.RefObject<View | null>;
 };
 
@@ -137,6 +138,11 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
+  // The trigger's bounding rect captured at open time. Used by
+  // `ProfileDropdown` to anchor the portaled web menu next to the
+  // `…` button instead of falling back to the bottom sheet.
+  const [dropdownAnchorRect, setDropdownAnchorRect] =
+    useState<WebPortalAnchorRect | null>(null);
   const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const confirm = useConfirm();
@@ -153,9 +159,13 @@ export default function ProfileScreen() {
     }
   }, [refetchProfile, queryClient, profile?.did]);
 
-  const handleDropdownToggle = useCallback((isOpen: boolean) => {
-    setShowDropdown(isOpen);
-  }, []);
+  const handleDropdownToggle = useCallback(
+    (isOpen: boolean, rect?: WebPortalAnchorRect) => {
+      setShowDropdown(isOpen);
+      setDropdownAnchorRect(isOpen ? rect ?? null : null);
+    },
+    [],
+  );
 
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
@@ -291,6 +301,7 @@ export default function ProfileScreen() {
 
       <ProfileDropdown
         isVisible={showDropdown}
+        anchorRect={dropdownAnchorRect}
         onDismiss={() => setShowDropdown(false)}
         onCopyLink={handleCopyLink}
         onSearchPosts={handleSearchPosts}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Platform } from 'react-native';
 
 import { zIndex } from '@/constants/tokens';
@@ -35,6 +35,14 @@ export type WebPortalDropdownProps = {
   /** Estimated height used to decide whether to flip the menu above the
    *  anchor when there isn't room below. Doesn't need to be exact. */
   estimatedHeight: number;
+  /** Called when an outside interaction (page scroll, viewport resize)
+   *  invalidates the menu's anchored position. The menu uses
+   *  `position: fixed` so the anchor scrolls away while the menu
+   *  stays pinned — re-anchoring on scroll is jittery, so the
+   *  standard UX is to dismiss instead (matches Twitter/GitHub/etc.).
+   *  Optional: omit if the consumer wants the menu to stay open
+   *  regardless. */
+  onDismiss?: () => void;
   children: React.ReactNode;
 };
 
@@ -52,8 +60,27 @@ export function WebPortalDropdown({
   visible,
   anchorRect,
   estimatedHeight,
+  onDismiss,
   children,
 }: WebPortalDropdownProps) {
+  // Page-scroll / viewport-resize dismisses the menu so it doesn't
+  // float disconnected from its trigger. Listen on `window` in the
+  // capture phase so scrolling on a nested scroll container also
+  // fires this (capture-phase scroll events bubble up from any
+  // descendant). No-op without an `onDismiss` callback so consumers
+  // can opt out by omitting the prop.
+  useEffect(() => {
+    if (!visible || !onDismiss) return;
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+    const handle = () => onDismiss();
+    window.addEventListener('scroll', handle, true);
+    window.addEventListener('resize', handle);
+    return () => {
+      window.removeEventListener('scroll', handle, true);
+      window.removeEventListener('resize', handle);
+    };
+  }, [visible, onDismiss]);
+
   const position = useMemo(() => {
     if (Platform.OS !== 'web' || typeof window === 'undefined') return null;
     if (!anchorRect) {

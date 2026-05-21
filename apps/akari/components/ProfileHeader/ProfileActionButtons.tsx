@@ -1,8 +1,9 @@
-import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { activeOpacity, fontSize, fontWeight, hitSlop, layout, radius, semanticColors, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -24,7 +25,12 @@ type ProfileActionButtonsProps = {
   dropdownRef?: React.RefObject<View | null>;
   onEditProfile: () => void;
   onSettingsPress?: () => void;
-  onDropdownToggle: () => void;
+  /** Called when the `…` button is tapped. The optional rect carries
+   *  the trigger's bounding box (measured against the viewport on
+   *  web, against the window on native) so the consumer can anchor a
+   *  portaled menu next to it. Falls back to `undefined` when we
+   *  can't measure (no ref, missing DOM API). */
+  onDropdownToggle: (rect?: WebPortalAnchorRect) => void;
   onFollowPress: () => void;
   onSearchPosts: () => void;
   onBskyMessage: () => void;
@@ -52,6 +58,35 @@ export function ProfileActionButtons({
   } = state;
   const { t } = useTranslation();
 
+  // Measure the `…` button at tap time so the portaled web menu can
+  // anchor itself next to it. Mirrors the pattern used by
+  // `PostActions.handleMorePress`. Native passes the same rect shape
+  // back via `measureInWindow` so consumers don't have to branch.
+  const handleMoreToggle = useCallback(() => {
+    const node = dropdownRef?.current;
+    if (!node) {
+      onDropdownToggle();
+      return;
+    }
+    if (Platform.OS === 'web') {
+      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
+      if (typeof el.getBoundingClientRect === 'function') {
+        const r = el.getBoundingClientRect();
+        onDropdownToggle({
+          top: r.top,
+          bottom: r.bottom,
+          left: r.left,
+          width: r.width,
+          height: r.height,
+        });
+        return;
+      }
+    }
+    node.measureInWindow((x, y, width, height) => {
+      onDropdownToggle({ top: y, bottom: y + height, left: x, width, height });
+    });
+  }, [dropdownRef, onDropdownToggle]);
+
   return (
     <View style={styles.actionButtons}>
       {isOwnProfile ? (
@@ -74,7 +109,7 @@ export function ProfileActionButtons({
           <View style={styles.moreButtonContainer} ref={dropdownRef}>
             <Pressable
               style={({ pressed }) => [styles.moreButton, pressed && { opacity: activeOpacity.default }]}
-              onPress={onDropdownToggle}
+              onPress={handleMoreToggle}
               hitSlop={hitSlop}
             >
               <IconSymbol name="ellipsis" size={fontSize.xxl} color="#ffffff" />
@@ -123,7 +158,7 @@ export function ProfileActionButtons({
           <View style={styles.moreButtonContainer} ref={dropdownRef}>
             <Pressable
               style={({ pressed }) => [styles.iconButton, pressed && { opacity: activeOpacity.default }]}
-              onPress={onDropdownToggle}
+              onPress={handleMoreToggle}
               hitSlop={hitSlop}
             >
               <IconSymbol name="ellipsis" size={fontSize.xxl} color={semanticColors.systemBlue} />

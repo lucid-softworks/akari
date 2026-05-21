@@ -1,6 +1,7 @@
 import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ReportSheet } from '@/components/ReportSheet';
+import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import type { useProfile } from '@/hooks/queries/useProfile';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
@@ -15,6 +16,9 @@ type ProfileActionSheetsProps = {
   profile: ProfileShape | undefined;
   isOwnProfile: boolean;
   visibility: ProfileActionVisibility;
+  /** Bounding rect of the `…` trigger captured at open time, used to
+   *  anchor the portaled web dropdown next to the button. */
+  dropdownAnchorRect?: WebPortalAnchorRect | null;
   onDismissDropdown: () => void;
   onDismissReportSheet: () => void;
   onDismissListPicker?: () => void;
@@ -39,6 +43,7 @@ export function ProfileActionSheets({
   profile,
   isOwnProfile,
   visibility,
+  dropdownAnchorRect,
   onDismissDropdown,
   onDismissReportSheet,
   onDismissListPicker,
@@ -55,6 +60,7 @@ export function ProfileActionSheets({
     <>
       <ProfileDropdown
         isVisible={dropdown}
+        anchorRect={dropdownAnchorRect}
         onDismiss={onDismissDropdown}
         onCopyLink={onCopyLink}
         onSearchPosts={onSearchPosts}
