@@ -702,8 +702,14 @@ export type BlueskyConvosResponse = {
 export type BlueskyFeedItem = {
   /** The post data */
   post: BlueskyPostView;
-  /** Reply context if this is a reply */
+  /** Reply context if this is a reply. Per `app.bsky.feed.defs#replyRef`
+   * the AppView populates `root` and `parent` with full post views (or
+   * a notFoundPost / blockedPost stub when the upstream post has been
+   * deleted / blocked the viewer); the feed UI uses these to render
+   * the inline parent above the reply. */
   reply?: {
+    root?: BlueskyPostView;
+    parent?: BlueskyPostView;
     grandparentAuthor?: BlueskyAuthor;
   };
   /** Repost/reason context if this is a repost */

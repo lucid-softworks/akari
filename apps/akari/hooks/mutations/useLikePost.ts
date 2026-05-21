@@ -112,10 +112,29 @@ export function useLikePost() {
         },
       });
 
-      const updateFeedItemPost = (item: BlueskyFeedItem): BlueskyFeedItem => ({
-        ...item,
-        post: item.post.uri === postUri ? updatePostLikeStatus(item.post) : item.post,
-      });
+      // Walk the feed item's main post AND its inline reply context
+      // (`item.reply.parent` / `item.reply.root` — populated by the
+      // AppView when the entry is a reply). The FeedPostCard renders
+      // the parent above the child, so a like on the parent updates
+      // the same `BlueskyPostView` we have to mutate here; without
+      // patching the reply context the optimistic heart never lit up
+      // even though the network call succeeded.
+      const updateFeedItemPost = (item: BlueskyFeedItem): BlueskyFeedItem => {
+        const next: BlueskyFeedItem = { ...item };
+        if (item.post.uri === postUri) {
+          next.post = updatePostLikeStatus(item.post);
+        }
+        if (item.reply?.parent || item.reply?.root) {
+          next.reply = { ...item.reply };
+          if (item.reply.parent && item.reply.parent.uri === postUri) {
+            next.reply.parent = updatePostLikeStatus(item.reply.parent);
+          }
+          if (item.reply.root && item.reply.root.uri === postUri) {
+            next.reply.root = updatePostLikeStatus(item.reply.root);
+          }
+        }
+        return next;
+      };
 
       // Apply optimistic updates by walking the snapshots we just took. Going
       // through `setQueryData` per-key keeps every cache in lockstep with
@@ -124,9 +143,7 @@ export function useLikePost() {
         if (!data) continue;
         queryClient.setQueryData(queryKey, {
           ...data,
-          feed: data.feed?.map((item) =>
-            item.post.uri === postUri ? updateFeedItemPost(item) : item,
-          ),
+          feed: data.feed?.map((item) => updateFeedItemPost(item)),
         });
       }
 
@@ -248,10 +265,26 @@ export function useLikePost() {
           },
         });
 
-        const updateFeedItemPost = (item: BlueskyFeedItem): BlueskyFeedItem => ({
-          ...item,
-          post: updateLikeUri(item.post),
-        });
+        // Same approach as the optimistic path: patch the main post
+        // *and* the inline `reply.parent` / `reply.root` views so the
+        // newly-issued like URI replaces the temp one we put on the
+        // parent card.
+        const updateFeedItemPost = (item: BlueskyFeedItem): BlueskyFeedItem => {
+          const next: BlueskyFeedItem = { ...item };
+          if (item.post.uri === variables.postUri) {
+            next.post = updateLikeUri(item.post);
+          }
+          if (item.reply?.parent || item.reply?.root) {
+            next.reply = { ...item.reply };
+            if (item.reply.parent && item.reply.parent.uri === variables.postUri) {
+              next.reply.parent = updateLikeUri(item.reply.parent);
+            }
+            if (item.reply.root && item.reply.root.uri === variables.postUri) {
+              next.reply.root = updateLikeUri(item.reply.root);
+            }
+          }
+          return next;
+        };
 
         // Update timeline (prefix-matched).
         const timelineQueries = queryClient.getQueriesData<BlueskyFeedResponse>({ queryKey: queryKeys.timeline.all });
@@ -259,9 +292,7 @@ export function useLikePost() {
           if (!timelineData) continue;
           queryClient.setQueryData(queryKey, {
             ...timelineData,
-            feed: timelineData.feed?.map((item) =>
-              item.post.uri === variables.postUri ? updateFeedItemPost(item) : item,
-            ),
+            feed: timelineData.feed?.map((item) => updateFeedItemPost(item)),
           });
         }
 
@@ -273,7 +304,7 @@ export function useLikePost() {
               ...feedData,
               pages: feedData.pages.map((page) => ({
                 ...page,
-                feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
+                feed: page.feed.map((item) => updateFeedItemPost(item)),
               })),
             });
           }
@@ -287,7 +318,7 @@ export function useLikePost() {
               ...authorFeedData,
               pages: authorFeedData.pages.map((page) => ({
                 ...page,
-                feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItemPost(item) : item)),
+                feed: page.feed.map((item) => updateFeedItemPost(item)),
               })),
             });
           }

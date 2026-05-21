@@ -94,9 +94,37 @@ export type PostCardProps = {
    *  feedback rows that route to that feed gen. Pass the at:// URI of
    *  the feed the post was rendered from. */
   feedUri?: string;
+  /**
+   * Render a vertical thread line in the avatar column connecting this
+   * card to the previous post above it. Used when a feed entry's
+   * parent reply is rendered immediately above the child — the child
+   * gets `connectsTop` and the parent gets `connectsBottom`, and
+   * together the two lines visually braid through the avatar column.
+   */
+  connectsTop?: boolean;
+  /** Companion to `connectsTop`: line continues from the avatar down
+   *  to the bottom edge of the card. */
+  connectsBottom?: boolean;
+  /** Suppress the card's bottom border so the next card visually
+   *  merges with this one (e.g. a parent that flows into its reply). */
+  hideBottomBorder?: boolean;
+  /** Hide the inline "Replying to @handle" snippet shown above the
+   *  author row. The feed renderer suppresses this when the full
+   *  parent post is already drawn above, so we don't repeat the
+   *  context twice. */
+  hideReplyContext?: boolean;
 };
 
-export const PostCard = React.memo(function PostCard({ post, onPress, href, feedUri }: PostCardProps) {
+export const PostCard = React.memo(function PostCard({
+  post,
+  onPress,
+  href,
+  feedUri,
+  connectsTop,
+  connectsBottom,
+  hideBottomBorder,
+  hideReplyContext,
+}: PostCardProps) {
   const { t } = useTranslation();
 
   const [showActionsMenu, setShowActionsMenu] = useState(false);
@@ -335,7 +363,7 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
   const postContent = (
     <>
       {/* Reply Context */}
-      {post.replyTo && (
+      {post.replyTo && !hideReplyContext && (
         <View style={styles.replyContext}>
           <IconSymbol name="arrowshape.turn.up.left" size={12} color={iconColor} style={styles.replyIcon} />
           <ThemedText style={styles.replyText}>{t('ui.replyingTo', { handle: post.replyTo.author.handle })}</ThemedText>
@@ -363,18 +391,24 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
         onAvatarHoverChange={handleAvatarHoverChange}
       />
 
-      <Labels labels={combinedLabels} />
+      {/* Indent labels + body to align with the right edge of the
+          avatar column. The thread-line (when drawn) runs through
+          the gap between the card's left edge and this column, so
+          the lines look like a continuous spine through the avatar. */}
+      <View style={styles.contentColumn}>
+        <Labels labels={combinedLabels} />
 
-      {labelDecision.action === 'warn' ? (
-        <AdultContentGate matchedLabels={labelDecision.matchedLabels}>{postBody}</AdultContentGate>
-      ) : (
-        postBody
-      )}
+        {labelDecision.action === 'warn' ? (
+          <AdultContentGate matchedLabels={labelDecision.matchedLabels}>{postBody}</AdultContentGate>
+        ) : (
+          postBody
+        )}
+      </View>
     </>
   );
 
   const actionsBar = (
-    <View style={styles.actionsContainer}>
+    <View style={[styles.actionsContainer, styles.contentColumn]}>
       <PostActions
         uri={post.uri}
         cid={post.cid}
@@ -413,19 +447,48 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
 
   const webSideBorders = webColumnSideBorders(borderColor);
 
+  // Vertical thread line that runs through the avatar column. Two
+  // segments so a card can connect upward only (top half), downward
+  // only (bottom half), or both. Positioned absolutely against the
+  // card container; the `pointerEvents="none"` prevents it from
+  // swallowing taps on the avatar or content below.
+  const threadLine =
+    connectsTop || connectsBottom ? (
+      <>
+        {connectsTop ? (
+          <View
+            pointerEvents="none"
+            style={[styles.threadLineTop, { backgroundColor: borderColor }]}
+          />
+        ) : null}
+        {connectsBottom ? (
+          <View
+            pointerEvents="none"
+            style={[styles.threadLineBottom, { backgroundColor: borderColor }]}
+          />
+        ) : null}
+      </>
+    ) : null;
+
+  const containerStyle = [
+    styles.container,
+    { borderBottomColor: borderColor },
+    hideBottomBorder && styles.containerNoBorder,
+    webSideBorders,
+  ];
+
   return (
     <>
       {onPress || href ? (
         <View
           style={[
-            styles.container,
-            { borderBottomColor: borderColor },
-            webSideBorders,
+            ...containerStyle,
             isCardHovered && { backgroundColor: hoverBg },
           ]}
           onPointerEnter={() => setIsCardHovered(true)}
           onPointerLeave={() => setIsCardHovered(false)}
         >
+          {threadLine}
           {/* Plain Pressable instead of PressableLink/<a>: inner
               interactive elements (avatar, links, embeds, labels, etc.)
               already handle their own taps and stopPropagation, so the
@@ -451,9 +514,8 @@ export const PostCard = React.memo(function PostCard({ post, onPress, href, feed
           {actionsBar}
         </View>
       ) : (
-        <ThemedView
-          style={[styles.container, { borderBottomColor: borderColor }, webSideBorders]}
-        >
+        <ThemedView style={containerStyle}>
+          {threadLine}
           {postContent}
           {communityNote ? <CommunityNote note={communityNote} /> : null}
           {actionsBar}
@@ -558,11 +620,51 @@ const LivePreview = React.memo(function LivePreview({
   );
 });
 
+// Avatar column geometry. The PostHeader renders the avatar in its
+// own row at `paddingHorizontal: spacing.lg` (the container inset);
+// the body / labels / actions sit in a sibling column that's offset
+// by the avatar width + an 8px gap so everything below the avatar
+// aligns under the author's name, leaving a clean vertical alley for
+// the thread line to run through.
+const AVATAR_COLUMN_OFFSET = layout.avatarMedium + spacing.sm;
+const THREAD_LINE_WIDTH = 2;
+// Centre the line on the avatar's vertical axis: container padding +
+// half the avatar width, minus half the line width.
+const THREAD_LINE_LEFT = spacing.lg + layout.avatarMedium / 2 - THREAD_LINE_WIDTH / 2;
+// Vertical span of the avatar inside the card. The avatar sits at the
+// top of the postContent area, which is offset from the card edge by
+// the container's `paddingVertical`. The thread line stops at the
+// top of the avatar (so the circle reads as the line's "node"), then
+// resumes below it.
+const THREAD_LINE_TOP_HEIGHT = spacing.md;
+const THREAD_LINE_BOTTOM_TOP = spacing.md + layout.avatarMedium;
+
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     borderBottomWidth: layout.hairline,
+  },
+  containerNoBorder: {
+    borderBottomWidth: 0,
+  },
+  contentColumn: {
+    paddingLeft: AVATAR_COLUMN_OFFSET,
+  },
+  threadLineTop: {
+    position: 'absolute',
+    top: 0,
+    height: THREAD_LINE_TOP_HEIGHT,
+    left: THREAD_LINE_LEFT,
+    width: THREAD_LINE_WIDTH,
+  },
+  threadLineBottom: {
+    position: 'absolute',
+    top: THREAD_LINE_BOTTOM_TOP,
+    bottom: 0,
+    left: THREAD_LINE_LEFT,
+    width: THREAD_LINE_WIDTH,
   },
   actionsContainer: {
     position: 'relative',

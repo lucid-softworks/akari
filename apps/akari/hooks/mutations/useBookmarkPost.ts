@@ -85,10 +85,26 @@ export function useBookmarkPost() {
         viewer: { ...post.viewer, bookmarked: action === 'bookmark' },
       });
 
-      const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => ({
-        ...item,
-        post: item.post.uri === postUri ? updatePost(item.post) : item.post,
-      });
+      // Patch the main post AND the inline `reply.parent` /
+      // `reply.root` views so bookmarking the parent rendered above a
+      // reply still flips its icon optimistically. Same pattern used
+      // by `useLikePost` / `useRepostPost`.
+      const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => {
+        const next: BlueskyFeedItem = { ...item };
+        if (item.post.uri === postUri) {
+          next.post = updatePost(item.post);
+        }
+        if (item.reply?.parent || item.reply?.root) {
+          next.reply = { ...item.reply };
+          if (item.reply.parent && item.reply.parent.uri === postUri) {
+            next.reply.parent = updatePost(item.reply.parent);
+          }
+          if (item.reply.root && item.reply.root.uri === postUri) {
+            next.reply.root = updatePost(item.reply.root);
+          }
+        }
+        return next;
+      };
 
       for (const [queryKey, data] of timelineSnapshots) {
         if (!data) continue;

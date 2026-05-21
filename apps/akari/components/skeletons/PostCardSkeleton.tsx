@@ -28,41 +28,55 @@ export function PostCardSkeleton() {
         <Skeleton width={60} height={14} />
       </View>
 
-      {/* Content */}
-      <View style={styles.content}>
-        <Skeleton width="100%" height={16} style={styles.textLine} />
-        <Skeleton width="85%" height={16} style={styles.textLine} />
-        <Skeleton width="70%" height={16} style={styles.textLine} />
-      </View>
-
-      {/* Media placeholder */}
-      <View style={styles.mediaContainer}>
-        <Skeleton width="100%" height={200} borderRadius={radius.sm} />
-      </View>
-
-      {/* Actions */}
-      <View style={styles.actions}>
-        <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={radius.full} />
-          <Skeleton width={30} height={14} style={styles.actionText} />
+      {/* Content + actions sit in a column that's offset by the
+          avatar width + gap so the loading state previews the same
+          layout the rendered card uses — otherwise the skeleton
+          collapses to full-width and the page jumps when posts
+          finally arrive. */}
+      <View style={styles.contentColumn}>
+        <View style={styles.content}>
+          <Skeleton width="100%" height={16} style={styles.textLine} />
+          <Skeleton width="85%" height={16} style={styles.textLine} />
+          <Skeleton width="70%" height={16} style={styles.textLine} />
         </View>
-        <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={radius.full} />
-          <Skeleton width={30} height={14} style={styles.actionText} />
+
+        {/* Media placeholder */}
+        <View style={styles.mediaContainer}>
+          <Skeleton width="100%" height={200} borderRadius={radius.sm} />
         </View>
-        <View style={styles.actionItem}>
-          <Skeleton width={20} height={20} borderRadius={radius.full} />
-          <Skeleton width={30} height={14} style={styles.actionText} />
+
+        {/* Actions */}
+        <View style={styles.actions}>
+          <View style={styles.actionItem}>
+            <Skeleton width={20} height={20} borderRadius={radius.full} />
+            <Skeleton width={30} height={14} style={styles.actionText} />
+          </View>
+          <View style={styles.actionItem}>
+            <Skeleton width={20} height={20} borderRadius={radius.full} />
+            <Skeleton width={30} height={14} style={styles.actionText} />
+          </View>
+          <View style={styles.actionItem}>
+            <Skeleton width={20} height={20} borderRadius={radius.full} />
+            <Skeleton width={30} height={14} style={styles.actionText} />
+          </View>
         </View>
       </View>
     </ThemedView>
   );
 }
 
+// Same avatar-column geometry the real PostCard uses; defining it
+// locally rather than importing from PostCard avoids a circular
+// dependency between the skeleton and the card.
+const AVATAR_COLUMN_OFFSET = layout.avatarMedium + spacing.sm;
+
 const styles = StyleSheet.create({
   container: {
     padding: spacing.lg,
     borderBottomWidth: layout.border,
+  },
+  contentColumn: {
+    paddingLeft: AVATAR_COLUMN_OFFSET,
   },
   header: {
     flexDirection: 'row',

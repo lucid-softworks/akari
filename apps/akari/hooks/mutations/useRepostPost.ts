@@ -62,17 +62,33 @@ export function useRepostPost() {
         },
       });
 
-      const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => ({
-        ...item,
-        post: updatePostRepostStatus(item.post),
-      });
+      // Patch the main post AND the inline `reply.parent` /
+      // `reply.root` views so a repost on the parent we render above
+      // a reply still flips its button optimistically. See the
+      // matching comment in `useLikePost`.
+      const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => {
+        const next: BlueskyFeedItem = { ...item };
+        if (item.post.uri === postUri) {
+          next.post = updatePostRepostStatus(item.post);
+        }
+        if (item.reply?.parent || item.reply?.root) {
+          next.reply = { ...item.reply };
+          if (item.reply.parent && item.reply.parent.uri === postUri) {
+            next.reply.parent = updatePostRepostStatus(item.reply.parent);
+          }
+          if (item.reply.root && item.reply.root.uri === postUri) {
+            next.reply.root = updatePostRepostStatus(item.reply.root);
+          }
+        }
+        return next;
+      };
 
       // Update timeline
       queryClient.setQueryData<BlueskyFeedResponse>(queryKeys.timeline.all, (old) => {
         if (!old) return old;
         return {
           ...old,
-          feed: old.feed?.map((item) => (item.post.uri === postUri ? updateFeedItem(item) : item)),
+          feed: old.feed?.map((item) => updateFeedItem(item)),
         };
       });
 
@@ -84,7 +100,7 @@ export function useRepostPost() {
             ...data,
             pages: data.pages.map((page) => ({
               ...page,
-              feed: page.feed.map((item) => (item.post.uri === postUri ? updateFeedItem(item) : item)),
+              feed: page.feed.map((item) => updateFeedItem(item)),
             })),
           });
         }
@@ -98,7 +114,7 @@ export function useRepostPost() {
             ...data,
             pages: data.pages.map((page) => ({
               ...page,
-              feed: page.feed.map((item) => (item.post.uri === postUri ? updateFeedItem(item) : item)),
+              feed: page.feed.map((item) => updateFeedItem(item)),
             })),
           });
         }
@@ -141,16 +157,28 @@ export function useRepostPost() {
           viewer: { ...post.viewer, repost: data.uri },
         });
 
-        const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => ({
-          ...item,
-          post: updateRepostUri(item.post),
-        });
+        const updateFeedItem = (item: BlueskyFeedItem): BlueskyFeedItem => {
+          const next: BlueskyFeedItem = { ...item };
+          if (item.post.uri === variables.postUri) {
+            next.post = updateRepostUri(item.post);
+          }
+          if (item.reply?.parent || item.reply?.root) {
+            next.reply = { ...item.reply };
+            if (item.reply.parent && item.reply.parent.uri === variables.postUri) {
+              next.reply.parent = updateRepostUri(item.reply.parent);
+            }
+            if (item.reply.root && item.reply.root.uri === variables.postUri) {
+              next.reply.root = updateRepostUri(item.reply.root);
+            }
+          }
+          return next;
+        };
 
         queryClient.setQueryData<BlueskyFeedResponse>(queryKeys.timeline.all, (old) => {
           if (!old) return old;
           return {
             ...old,
-            feed: old.feed?.map((item) => (item.post.uri === variables.postUri ? updateFeedItem(item) : item)),
+            feed: old.feed?.map((item) => updateFeedItem(item)),
           };
         });
 
@@ -161,7 +189,7 @@ export function useRepostPost() {
               ...feedData,
               pages: feedData.pages.map((page) => ({
                 ...page,
-                feed: page.feed.map((item) => (item.post.uri === variables.postUri ? updateFeedItem(item) : item)),
+                feed: page.feed.map((item) => updateFeedItem(item)),
               })),
             });
           }
