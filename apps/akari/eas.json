@@ -47,6 +47,7 @@
         "bundleIdentifier": "works.lucidsoft.akari"
       },
       "android": {
+        "applicationId": "works.lucidsoft.akari",
         "track": "beta",
         "releaseStatus": "draft"
       }

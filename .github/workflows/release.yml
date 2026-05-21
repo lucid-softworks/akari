@@ -1,8 +1,6 @@
 name: release
 
 on:
-  release:
-    types: [published]
   push:
     tags:
       - 'v*'
@@ -24,10 +22,9 @@ jobs:
     permissions:
       contents: read
     env:
-      RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || inputs.release_tag || '' }}
+      RELEASE_TAG: ${{ (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || inputs.release_tag || '' }}
     outputs:
       release_tag: ${{ steps.resolve_tag.outputs.release_tag }}
-      upload_url: ${{ steps.release_metadata.outputs.upload_url }}
       sha: ${{ steps.deploy_commit.outputs.sha }}
     steps:
       - name: Check for EXPO_TOKEN
@@ -40,58 +37,18 @@ jobs:
 
       - name: Expose release tag
         id: resolve_tag
-        run: echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+        run: |
+          if [ -z "$RELEASE_TAG" ]; then
+            echo "RELEASE_TAG is not set for event ${{ github.event_name }}" >&2
+            exit 1
+          fi
+          echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ env.RELEASE_TAG != '' && format('refs/tags/{0}', env.RELEASE_TAG) || github.sha }}
-
-      - name: Resolve release metadata
-        id: release_metadata
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-
-          if [ -z "$RELEASE_TAG" ]; then
-            echo "RELEASE_TAG is not set for event $EVENT_NAME" >&2
-            exit 1
-          fi
-
-          if [ "$EVENT_NAME" = "release" ]; then
-            upload_url='${{ github.event.release.upload_url }}'
-          else
-            attempts=0
-            while [ $attempts -lt 10 ]; do
-              response=$(curl -fsSL \
-                -H "Accept: application/vnd.github+json" \
-                -H "Authorization: Bearer $GITHUB_TOKEN" \
-                "https://api.github.com/repos/$REPOSITORY/releases/tags/$RELEASE_TAG" \
-                || true)
-
-              if [ -n "$response" ]; then
-                upload_url=$(echo "$response" | jq -r '.upload_url // empty')
-                if [ -n "$upload_url" ]; then
-                  break
-                fi
-              fi
-
-              attempts=$((attempts + 1))
-              echo "Release metadata not available yet, retrying in 5 seconds... ($attempts/10)" >&2
-              sleep 5
-            done
-
-            if [ -z "${upload_url:-}" ]; then
-              echo "Failed to resolve release metadata for tag $RELEASE_TAG" >&2
-              exit 1
-            fi
-          fi
-
-          echo "upload_url=$upload_url" >> "$GITHUB_OUTPUT"
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - name: Determine deploy commit
         id: deploy_commit
@@ -117,11 +74,14 @@ jobs:
           - platform: ios
             label: iOS
             ext: ipa
-            content_type: application/octet-stream
+            submit_continue_on_error: false
           - platform: android
             label: Android
             ext: aab
-            content_type: application/vnd.android.package-archive
+            # Android Play submit needs a Google service account JSON registered
+            # on EAS (`eas credentials -p android` to upload). Until that's set
+            # up, let the step fail without blocking the rest of the release.
+            submit_continue_on_error: true
     env:
       RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
       EXPO_PUBLIC_COMMIT_SHA: ${{ needs.prepare.outputs.sha }}
@@ -172,19 +132,18 @@ jobs:
 
       - name: Submit to store
         working-directory: apps/akari
+        continue-on-error: ${{ matrix.submit_continue_on_error }}
         run: |
           eas submit --latest --platform ${{ matrix.platform }} --profile production --non-interactive --wait
 
       - name: Upload native artifact to GitHub Release
-        if: needs.prepare.outputs.upload_url != ''
-        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.prepare.outputs.upload_url }}
-          asset_path: apps/akari/release-artifacts/akari-${{ needs.prepare.outputs.release_tag }}-${{ matrix.platform }}.${{ matrix.ext }}
-          asset_name: akari-${{ needs.prepare.outputs.release_tag }}-${{ matrix.platform }}.${{ matrix.ext }}
-          asset_content_type: ${{ matrix.content_type }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release upload "$RELEASE_TAG" \
+            "apps/akari/release-artifacts/akari-${RELEASE_TAG}-${{ matrix.platform }}.${{ matrix.ext }}" \
+            --clobber
 
       - name: Upload build manifest
         uses: actions/upload-artifact@v4
@@ -262,12 +221,25 @@ jobs:
           tar -czf "release-artifacts/akari-${RELEASE_TAG}-web.tar.gz" -C dist .
 
       - name: Upload web bundle to GitHub Release
-        if: needs.prepare.outputs.upload_url != ''
-        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.prepare.outputs.upload_url }}
-          asset_path: apps/akari/release-artifacts/akari-${{ needs.prepare.outputs.release_tag }}-web.tar.gz
-          asset_name: akari-${{ needs.prepare.outputs.release_tag }}-web.tar.gz
-          asset_content_type: application/gzip
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release upload "$RELEASE_TAG" \
+            "apps/akari/release-artifacts/akari-${RELEASE_TAG}-web.tar.gz" \
+            --clobber
+
+  finalize-release:
+    name: Publish GitHub Release
+    needs: [prepare, native-build, publish-update-and-web]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Publish draft release
+        run: |
+          set -euo pipefail
+          gh release edit "$RELEASE_TAG" --repo "${{ github.repository }}" --draft=false --latest
