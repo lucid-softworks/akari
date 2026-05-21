@@ -38,7 +38,9 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
 
   const [displayName, setDisplayName] = useState(profile.displayName || '');
   const [description, setDescription] = useState(profile.description || '');
+  // oxlint-disable-next-line react-doctor/no-derived-useState -- draft form; user edits diverge from the prop until save/cancel
   const [avatar, setAvatar] = useState(profile.avatar);
+  // oxlint-disable-next-line react-doctor/no-derived-useState -- draft form; user edits diverge from the prop until save/cancel
   const [banner, setBanner] = useState(profile.banner);
 
   const handleSave = () => {

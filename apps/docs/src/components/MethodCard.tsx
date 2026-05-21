@@ -39,7 +39,7 @@ const renderTypeBadges = (typeText: string | undefined, typeIndex: TypeReference
         );
 
         return (
-          <li key={`${variant}-${index}`}>
+          <li key={variant}>
             {content}
           </li>
         );
@@ -171,12 +171,12 @@ const renderSignatureParameters = (
   parameters.forEach((parameter, index) => {
     if (index > 0) {
       items.push(
-        <span key={`comma-${parameter.name}-${index}`} className="signature-token signature-token--punctuation">, </span>,
+        <span key={`comma-${parameter.name}`} className="signature-token signature-token--punctuation">, </span>,
       );
     }
 
     items.push(
-      <span key={`parameter-${parameter.name}-${index}`} className="signature-parameter">
+      <span key={`parameter-${parameter.name}`} className="signature-parameter">
         {renderParameterSignature(parameter, typeIndex, methodName)}
       </span>,
     );

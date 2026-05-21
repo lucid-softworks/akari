@@ -419,6 +419,7 @@ const FollowButton = React.memo(function FollowButton({
   accentColor,
 }: FollowButtonProps) {
   const { t } = useTranslation();
+  // oxlint-disable-next-line react-doctor/no-derived-useState -- optimistic follow state diverges from the prop during the mutation, rolling back on error
   const [optimisticUri, setOptimisticUri] = useState<string | undefined>(followingUri);
   const followMutation = useFollowUser();
   const isFollowing = Boolean(optimisticUri);

@@ -34,6 +34,7 @@ export function PostControlsSheet({
   const textColor = useThemeColor({}, 'text');
   const tintColor = useThemeColor({}, 'tint');
 
+  // oxlint-disable-next-line react-doctor/no-derived-useState -- sheet draft; user edits diverge from the prop until save/cancel, reset below on (re)open
   const [draft, setDraft] = useState<PostControls>(initialControls);
 
   // Reset draft state every time the sheet opens so a previous-session
