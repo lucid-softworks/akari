@@ -8,6 +8,14 @@ import { storage } from '@/utils/secureStorage';
 const DEFAULT_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
 
+// `useSelectedFeed` now branches on guest mode (guests are pinned to
+// the discover feed regardless of what's in MMKV). The unit tests
+// below exercise the authed path — flipping the mocked hook to
+// `false` matches the "user has a session" condition.
+jest.mock('@/hooks/queries/useIsGuest', () => ({
+  useIsGuest: jest.fn(() => false),
+}));
+
 describe('useSelectedFeed query hook', () => {
   const createWrapper = () => {
     const queryClient = new QueryClient({
