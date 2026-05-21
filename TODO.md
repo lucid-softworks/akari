@@ -37,89 +37,58 @@ implemented*; everything that's already shipped lives in `git log`.
 - **Hashtag feed screen.** `/tag/[tag]` route with Top / Latest tabs.
   Hashtag taps currently route to `/search?query=#tag`.
 
-## P1 — settings screens (~41 stubbed rows)
+## P1 — settings screens (remaining stubs)
 
-Each row below currently routes through `useNotImplementedToast`.
-Items marked **(=> TODO)** also unblock a separate P1 item — knock
-those out together.
+Each row below currently routes through `useNotImplementedToast`. The
+list has shrunk a lot — most rows now route to real sub-pages.
 
-**Local-prefs only** — same shape as `useFeedSettings`; just MMKV +
-a Switch.
-- `content-and-media.tsx`: `threadPreferences` (sort order picker,
-  prioritise-followed-replies toggle), `externalMedia` (per-provider
-  on/off list — YouTube, Twitter/X, Tenor, Spotify, etc.),
-  `followingFeedPreferences` (relation/recency weights),
-  `yourInterests` (interest tag picker)
-- `languages.tsx`: `primaryLanguage` (translation target picker — UI
-  exists as a stub dropdown), `contentLanguages` (multi-select; UI
-  exists as a stub empty state, also writes to
-  `app.bsky.actor.preferences#contentLanguagesPref`)
-- `appearance.tsx`: `darkVariant` (Dim/Dark) — stored, but a Dim
-  palette doesn't exist yet; need to fork `Colors.dark` into a
-  dimmed variant. `font` (System/Theme) and `fontSize`
-  (Smaller/Default/Larger) — stored, but no app-wide
-  font-family / text-scaling pass is wired up yet.
-- `accessibility.tsx`: `largerAltTextBadges` — stored, but the
-  ALT-indicator on the image overlay component still uses the same
-  badge size regardless.
+**Stubs still firing the toast** — ordered easiest → hardest.
 
-**Behaviour gating for prefs that already persist** — the toggles are
-saved but don't yet drive a label-filtering pass.
-- `enableAdultContent` (moderation.tsx) — fully wired. Preference
-  round-trips via `app.bsky.actor.defs#adultContentPref` and PostCard
-  applies a feed-level decision: posts carrying any of `porn`,
-  `sexual`, `nudity`, `graphic-media` are hidden when the toggle is
-  off, or rendered behind a "Show post" warn overlay when on. Future
-  work: per-label `contentLabelPref` (show / warn / hide) overrides
-  on top of the global toggle.
+1. `about.tsx` → `systemLog` — render the in-app log buffer in a
+   ScrollView. No atproto round-trip, no preference, no consumer
+   branching. Self-contained screen, maybe a "copy to clipboard"
+   button.
+2. `languages.tsx` → `primaryLanguage` — single-select picker writing
+   to `app.bsky.actor.preferences#languagesPref`. Same lexicon shape
+   as the content-languages page that already ships, so the
+   read/write hooks already exist; just need a sheet of locales and a
+   chevron on the existing stub dropdown.
+3. `privacy-and-security.tsx` → `notifyOthers` — replace the
+   hard-coded "Anyone who follows me" subtitle with a real audience
+   picker (anyone / followers / mutuals / no-one). Round-trips
+   through the user's profile preferences. Small UI, well-known
+   lexicon.
+4. `content-and-media.tsx` → `externalMedia` — local-only MMKV: a row
+   per provider (YouTube, Twitter/X, Tenor, Spotify, …) with a
+   Switch. Each embed renderer in `components/post/PostEmbeds` (and
+   the chat embed siblings) reads the flag and falls back to the link
+   card. Storage is trivial; the work is finding every embed
+   component and gating it.
+5. `content-and-media.tsx` → `followingFeedPreferences` — persist
+   relation/recency weights and pipe them into `useTimeline` (either
+   at the AppView call or as a client-side reweighting pass). Needs a
+   call on whether weights compose with the existing feed filters.
+6. `content-and-media.tsx` → `manageSavedFeeds` — list + reorder +
+   pin/unpin via `app.bsky.actor.putPreferences#savedFeedsPrefV2`.
+   Read side (`useSavedFeedsList`, home-tab strip) already exists;
+   you're adding a drag-and-drop list (on web), an add-from-search
+   flow, and the put-preferences round-trip. Cross-references the
+   "Custom feed pins" item under "P1 — original task list".
+7. `privacy-and-security.tsx` → `twoFactor` — no user-app-level
+   atproto lexicon for managing 2FA exists yet. **Blocked.**
 
-**List views over existing data** — all the major list pages now
-read from atproto. Add-flows (search for a labeler / list to subscribe
-to) still need building, but the read + remove path is wired.
-
-**Cross-feature with TODO**
-- `content-and-media.tsx`: `manageSavedFeeds` => TODO "Custom feed
-  pins"
-- `content-and-media.tsx`: `enableTrendingTopics` and
-  `enableTrendingVideos` are persisted toggles, but neither drives
-  feed rendering yet — `trendingBarEnabled` already gates the home
-  trending bar; `trendingVideosEnabled` would gate a Discover-feed
-  video filter that doesn't exist.
-
-**Account / security flows** — Bluesky API integration. Most flows
-are now wired:
-- `email` row reads from `com.atproto.server.getSession` and shows
-  the address with an "Email not confirmed" subtitle when applicable.
-- `handle` opens a real edit page that calls
-  `com.atproto.identity.updateHandle` and invalidates session/profile
-  caches on success.
-- `automationLabel` toggles the `automated` self-label on the user's
-  profile via the shared `setProfileSelfLabel` helper.
-- `exportData` calls `com.atproto.sync.getRepo` and downloads the
-  resulting CAR blob (web only — native shows a placeholder toast
-  until expo-file-system / expo-sharing land).
-- `deactivateAccount` and `deleteAccount` have full confirm flows:
-  deactivate is one call after a confirm dialog; delete uses
-  `requestAccountDelete` + `deleteAccount` with a token-and-password
-  modal.
-
-Still pending:
-- `updateEmail`, `password` (request reset email), `birthday`
-- `privacy-and-security.tsx`: `twoFactor`, `notifyOthers` (subtitle
-  currently shows "Anyone who follows me" hard-coded).
-  `loggedOutVisibility` is now wired to the `!no-unauthenticated`
-  self-label on the user's profile record via `getRecord` /
-  `putRecord` against `app.bsky.actor.profile/self`.
-  `appPasswords` is fully wired: list + create + revoke via
-  `com.atproto.server.{listAppPasswords,createAppPassword,revokeAppPassword}`,
-  with the count rendered as a badge on the row.
-
-**Skippable / niche**
-- `about.tsx`: `systemLog`
+**Behaviour-only gaps** — persisted prefs that don't drive a runtime
+behaviour yet.
+- `content-and-media.tsx`: `trendingVideosEnabled` would gate a
+  Discover-feed video filter that doesn't exist;
+  `enableTrendingTopics` is fully wired via `trendingBarEnabled`.
+- `moderation.tsx`: per-label `contentLabelPref` (show / warn / hide)
+  overrides on top of the global `enableAdultContent` toggle.
 - `moderation.tsx`: `interactionSettings` — stub page at
   `settings/interaction` with who-can-reply / quote-posts UI; Save is
-  not wired. Eventually overlaps with PostComposer's reply-controls;
-  needs to round-trip to `app.bsky.actor.preferences#postInteractionSettingsPref`.
+  not wired. Overlaps with PostComposer's reply-controls; needs to
+  round-trip to
+  `app.bsky.actor.preferences#postInteractionSettingsPref`.
 
 ## P1 — original task list (still pending)
 
@@ -141,6 +110,15 @@ Still pending:
 - **Trending topics on Search tab.** A topic grid on the empty Search
   tab that uses the same `getTrendingTopics` hook the home trending
   bar already does.
+- **PostComposer @ mention typeahead.** Typing `@` in the composer
+  doesn't surface a typeahead dropdown of matching actors. The
+  `useTypeaheadActors` hook already exists (the right-column
+  quickfind and `AddAccountModal` both use it); the work is parsing
+  the active `@token` segment out of the input, wiring up the
+  results dropdown anchored to the caret, inserting the chosen
+  handle, and writing a `app.bsky.richtext.facet#mention` facet
+  pointing at the resolved DID so the link survives a handle
+  change.
 
 ## P2 — polish
 
