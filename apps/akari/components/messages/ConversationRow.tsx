@@ -93,6 +93,13 @@ export function ConversationRow({ conversation, borderColor }: ConversationRowPr
               </ThemedText>
               {!conversation.isGroup ? (
                 <VerificationBadge
+                  // `subjectDid` is what unlocks the Constellation
+                  // backlink lookup inside `VerificationBadge` — the
+                  // chat lexicon's member view doesn't always populate
+                  // `verification`, so without the DID the badge had
+                  // no data path and silently rendered nothing for
+                  // verified counterparts.
+                  subjectDid={conversation.members[0]?.did}
                   verification={conversation.verification}
                   subjectHandle={conversation.handle}
                   subjectDisplayName={conversation.displayName}
