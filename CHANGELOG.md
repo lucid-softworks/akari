@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.12.0](https://github.com/lucid-softworks/akari/compare/v1.11.0...v1.12.0) (2026-05-21)
+
+
+### Features
+
+* **akari:** member badge + thanks modal on member profiles ([c77c9ce](https://github.com/lucid-softworks/akari/commit/c77c9ced0669acc1a1089659db34ebbe795b6f1f))
+* **feed:** render reply parents inline with avatar-column thread line ([0ef8a35](https://github.com/lucid-softworks/akari/commit/0ef8a35458d03b1421bc895be3a538a90d3587b8))
+* **guest:** browse the app without signing in ([0d9e305](https://github.com/lucid-softworks/akari/commit/0d9e305cf4daaca916d21b7699b62fc87228aca0))
+* **messages-settings:** "hide deleted accounts" toggle with new Messages sub-page ([523e0c7](https://github.com/lucid-softworks/akari/commit/523e0c7f6887c7eb7d85310a7460f9480e48d45a))
+* **messages:** sticky chat header on web with actions menu ([211962e](https://github.com/lucid-softworks/akari/commit/211962e664a0a88358d653a866915a9f10291d7d))
+* **post:** use portaled menu for the repost button on web ([7b6578f](https://github.com/lucid-softworks/akari/commit/7b6578fe131aa93cb4f7631def595b0566c14370))
+* **profile:** portaled web `…` menu, dismisses on page scroll ([2645189](https://github.com/lucid-softworks/akari/commit/2645189db6536a1b5937a0457759dd0cd7abfa61))
+* **tabs:** customise community-notes + moderation, sidebar follows config ([48614fa](https://github.com/lucid-softworks/akari/commit/48614fae9f89eec2fba8219640134344990758ae))
+* **verifiers:** render the verifiers sheet as a centered modal on web ([a9e025a](https://github.com/lucid-softworks/akari/commit/a9e025afcb99ff69765fea26ff421af695477034))
+* **web-scroll:** page-level scroll, sticky header, column borders on inboxes and threads ([bb6b52e](https://github.com/lucid-softworks/akari/commit/bb6b52ec69e06aa5a8bfe9f1a5d2ab8f29efe1d2))
+
+
+### Bug Fixes
+
+* **home:** restore feed-tab switching dropped by guest-mode keying ([50b2262](https://github.com/lucid-softworks/akari/commit/50b22629807eac0eaa14b6a016405849f062b1bb))
+* **messages:** pass subjectDid to ConversationRow's VerificationBadge ([a25b7fb](https://github.com/lucid-softworks/akari/commit/a25b7fb27dfb7b713a4d6ca08e7270147a8f7976))
+* **ozone:** skip the membership lookup when the moderation tab is hidden ([12c3b7b](https://github.com/lucid-softworks/akari/commit/12c3b7b3e7a8bbf5919c3c4219e802665500942e))
+* **query-cache:** trim infinite pages before write, recover from QuotaExceededError ([921dc2a](https://github.com/lucid-softworks/akari/commit/921dc2a3cf99a42e08042926721c614222da875f))
+* **selected-feed:** actually read the persisted choice from MMKV on mount ([1232f25](https://github.com/lucid-softworks/akari/commit/1232f25da26c5ae5777ff8a94f9a98a95581080f))
+
 ## [1.11.0](https://github.com/lucid-softworks/akari/compare/v1.10.0...v1.11.0) (2026-05-21)
 
 
