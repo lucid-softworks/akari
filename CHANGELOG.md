@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/lucid-softworks/akari/compare/v1.10.0...v1.11.0) (2026-05-21)
+
+
+### Features
+
+* **labels:** hide !no-unauthenticated chip on posts and profiles ([b34aec7](https://github.com/lucid-softworks/akari/commit/b34aec74d6b2e6f24b20b5b7457fec5ed34169e5))
+
 ## [1.10.0](https://github.com/lucid-softworks/akari/compare/v1.9.0...v1.10.0) (2026-05-21)
 
 
