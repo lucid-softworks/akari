@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   Modal,
   Platform,
@@ -11,9 +11,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { WebPortalDropdown, type WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { spacing, radius, fontSize, fontWeight, layout, semanticColors } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+
+const WEB_REPOST_MENU_ESTIMATED_HEIGHT = 120;
 
 type RepostSheetProps = {
   visible: boolean;
@@ -21,6 +24,12 @@ type RepostSheetProps = {
   onDismiss: () => void;
   onRepostPress: () => void;
   onQuotePress: () => void;
+  /**
+   * Bounding rect of the repost button. Required on web to anchor the
+   * portaled menu next to the button (matching the "..." menu). Native
+   * ignores it and renders a bottom sheet instead.
+   */
+  anchorRect?: WebPortalAnchorRect | null;
 };
 
 export function RepostSheet({
@@ -29,6 +38,7 @@ export function RepostSheet({
   onDismiss,
   onRepostPress,
   onQuotePress,
+  anchorRect,
 }: RepostSheetProps) {
   const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
@@ -48,6 +58,66 @@ export function RepostSheet({
     onDismiss();
   }, [onQuotePress, onDismiss]);
 
+  // On web, dismiss on any outside click. Mirrors PostActionsMenu's
+  // pattern so the repost menu behaves like the "..." menu.
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !visible) return;
+    const handler = () => onDismiss();
+    const id = requestAnimationFrame(() =>
+      window.addEventListener('click', handler, { once: true }),
+    );
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('click', handler);
+    };
+  }, [visible, onDismiss]);
+
+  const menuContent = (
+    <>
+      <Pressable
+        style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
+        onPress={handleRepost}
+        accessibilityRole="button"
+        accessibilityLabel={isReposted ? t('post.undoRepost') : t('post.repostAction')}
+      >
+        <IconSymbol
+          name="arrow.2.squarepath"
+          size={22}
+          color={isReposted ? semanticColors.repost : iconColor}
+        />
+        <ThemedText style={[styles.optionText, { color: textColor }]}>
+          {isReposted ? t('post.undoRepost') : t('post.repostAction')}
+        </ThemedText>
+      </Pressable>
+      <View style={[styles.divider, { backgroundColor: borderColor }]} />
+      <Pressable
+        style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
+        onPress={handleQuote}
+        accessibilityRole="button"
+        accessibilityLabel={t('post.quoteAction')}
+      >
+        <IconSymbol name="quote.bubble" size={22} color={iconColor} />
+        <ThemedText style={[styles.optionText, { color: textColor }]}>
+          {t('post.quoteAction')}
+        </ThemedText>
+      </Pressable>
+    </>
+  );
+
+  if (Platform.OS === 'web') {
+    return (
+      <WebPortalDropdown
+        visible={visible}
+        anchorRect={anchorRect}
+        estimatedHeight={WEB_REPOST_MENU_ESTIMATED_HEIGHT}
+      >
+        <ThemedView style={[styles.webDropdown, { backgroundColor: sheetBg, borderColor }]}>
+          {menuContent}
+        </ThemedView>
+      </WebPortalDropdown>
+    );
+  }
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onDismiss}>
       <Pressable style={styles.backdrop} onPress={onDismiss}>
@@ -59,33 +129,7 @@ export function RepostSheet({
           onPress={(event) => event.stopPropagation()}
         >
           <ThemedView style={[styles.sheet, { backgroundColor: sheetBg, borderColor }]}>
-            <Pressable
-              style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
-              onPress={handleRepost}
-              accessibilityRole="button"
-              accessibilityLabel={isReposted ? t('post.undoRepost') : t('post.repostAction')}
-            >
-              <IconSymbol
-                name="arrow.2.squarepath"
-                size={22}
-                color={isReposted ? semanticColors.repost : iconColor}
-              />
-              <ThemedText style={[styles.optionText, { color: textColor }]}>
-                {isReposted ? t('post.undoRepost') : t('post.repostAction')}
-              </ThemedText>
-            </Pressable>
-            <View style={[styles.divider, { backgroundColor: borderColor }]} />
-            <Pressable
-              style={({ pressed }) => [styles.option, pressed && { opacity: 0.7 }]}
-              onPress={handleQuote}
-              accessibilityRole="button"
-              accessibilityLabel={t('post.quoteAction')}
-            >
-              <IconSymbol name="quote.bubble" size={22} color={iconColor} />
-              <ThemedText style={[styles.optionText, { color: textColor }]}>
-                {t('post.quoteAction')}
-              </ThemedText>
-            </Pressable>
+            {menuContent}
           </ThemedView>
         </Pressable>
       </Pressable>
@@ -106,14 +150,12 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     borderWidth: layout.hairline,
     overflow: 'hidden',
-    ...Platform.select({
-      web: {
-        maxWidth: 420,
-        alignSelf: 'center',
-        width: '100%',
-      },
-      default: {},
-    }),
+  },
+  webDropdown: {
+    minWidth: 220,
+    borderRadius: radius.md,
+    borderWidth: layout.hairline,
+    overflow: 'hidden',
   },
   option: {
     flexDirection: 'row',

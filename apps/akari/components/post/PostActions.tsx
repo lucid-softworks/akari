@@ -160,6 +160,8 @@ export const PostActions = React.memo(function PostActions({
   const isLiked = Boolean(likeUri);
   const isReposted = Boolean(repostUri);
   const [repostSheetVisible, setRepostSheetVisible] = useState(false);
+  const [repostAnchorRect, setRepostAnchorRect] = useState<ActionAnchorRect | null>(null);
+  const repostButtonRef = useRef<View>(null);
   const [shareSheetVisible, setShareSheetVisible] = useState(false);
   const [shareToChatVisible, setShareToChatVisible] = useState(false);
 
@@ -193,6 +195,17 @@ export const PostActions = React.memo(function PostActions({
   const handleRepostButtonPress = useCallback(() => {
     if (!uri || !cid) return;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Measure the button on web so the portaled menu anchors next to it
+    // (matching the "..." menu pattern). Native ignores the rect and
+    // renders the bottom sheet.
+    const node = repostButtonRef.current;
+    if (Platform.OS === 'web' && node) {
+      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
+      if (typeof el.getBoundingClientRect === 'function') {
+        const r = el.getBoundingClientRect();
+        setRepostAnchorRect({ top: r.top, bottom: r.bottom, left: r.left, width: r.width, height: r.height });
+      }
+    }
     setRepostSheetVisible(true);
   }, [uri, cid]);
 
@@ -294,6 +307,7 @@ export const PostActions = React.memo(function PostActions({
           activeColor={semanticColors.repost}
           count={repostCount}
           onPress={handleRepostButtonPress}
+          buttonRef={repostButtonRef}
           largerTextBadges={largerTextBadges}
           accessibilityLabel={
             isReposted
@@ -349,6 +363,7 @@ export const PostActions = React.memo(function PostActions({
         onDismiss={handleSheetDismiss}
         onRepostPress={handleRepostConfirm}
         onQuotePress={handleQuoteConfirm}
+        anchorRect={repostAnchorRect}
       />
       {uri && cid ? (
         <SharePostSheet
