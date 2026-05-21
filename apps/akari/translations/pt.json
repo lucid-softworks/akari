@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privacidade e segurança",
       "moderation": "Moderação",
+      "messagesSettings": {
+        "title": "Mensagens",
+        "filtersSection": "Filtros",
+        "hideDeletedAccounts": "Ocultar contas excluídas",
+        "hideDeletedAccountsHint": "Não mostrar conversas cujo outro participante excluiu a conta."
+      },
       "contentAndMedia": "Conteúdo e mídia",
       "appearance": "Aparência",
       "appLogo": "Logotipo do app",

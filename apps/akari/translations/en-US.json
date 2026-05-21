@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privacy and Security",
       "moderation": "Moderation",
+      "messagesSettings": {
+        "title": "Messages",
+        "filtersSection": "Filters",
+        "hideDeletedAccounts": "Hide deleted accounts",
+        "hideDeletedAccountsHint": "Don't show chats whose other participant has deleted their account."
+      },
       "contentAndMedia": "Content & Media",
       "appearance": "Appearance",
       "appLogo": "App logo",

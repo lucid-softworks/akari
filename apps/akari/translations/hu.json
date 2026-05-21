@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Magánélet és biztonság",
       "moderation": "Mérsékeltség",
+      "messagesSettings": {
+        "title": "Üzenetek",
+        "filtersSection": "Szűrők",
+        "hideDeletedAccounts": "Törölt fiókok elrejtése",
+        "hideDeletedAccountsHint": "Ne jelenítse meg azokat a beszélgetéseket, amelyek másik résztvevője törölte a fiókját."
+      },
       "contentAndMedia": "Tartalom és média",
       "appearance": "Megjelenés",
       "appLogo": "Alkalmazás logója",

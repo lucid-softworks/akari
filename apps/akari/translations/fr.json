@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Confidentialité et sécurité",
       "moderation": "Modération",
+      "messagesSettings": {
+        "title": "Messages",
+        "filtersSection": "Filtres",
+        "hideDeletedAccounts": "Masquer les comptes supprimés",
+        "hideDeletedAccountsHint": "Ne pas afficher les conversations dont l’autre participant a supprimé son compte."
+      },
       "contentAndMedia": "Contenu et médias",
       "appearance": "Apparence",
       "appLogo": "Logo de l'app",

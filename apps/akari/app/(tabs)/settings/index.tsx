@@ -119,6 +119,12 @@ export default function SettingsScreen() {
         onPress: () => router.push('/(tabs)/settings/notifications'),
       },
       {
+        key: 'messages',
+        icon: 'message.fill',
+        label: t('settings.messagesSettings.title'),
+        onPress: () => router.push('/(tabs)/settings/messages'),
+      },
+      {
         key: 'customize-tabs',
         icon: 'square.grid.2x2',
         label: t('settings.customizeTabs'),

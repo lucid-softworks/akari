@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Конфиденциальность и безопасность",
       "moderation": "Умеренность",
+      "messagesSettings": {
+        "title": "Сообщения",
+        "filtersSection": "Фильтры",
+        "hideDeletedAccounts": "Скрывать удалённые аккаунты",
+        "hideDeletedAccountsHint": "Не показывать чаты, в которых другой участник удалил свой аккаунт."
+      },
       "contentAndMedia": "Контент и СМИ",
       "appearance": "Появление",
       "appLogo": "Логотип приложения",

@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privasi dan Keamanan",
       "moderation": "Moderasi",
+      "messagesSettings": {
+        "title": "Pesan",
+        "filtersSection": "Filter",
+        "hideDeletedAccounts": "Sembunyikan akun yang dihapus",
+        "hideDeletedAccountsHint": "Jangan tampilkan obrolan yang peserta lainnya telah menghapus akunnya."
+      },
       "contentAndMedia": "Konten & Media",
       "appearance": "Penampilan",
       "appLogo": "Logo aplikasi",

@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Ιδιωτικότητα και ασφάλεια",
       "moderation": "Μετριοπάθεια",
+      "messagesSettings": {
+        "title": "Μηνύματα",
+        "filtersSection": "Φίλτρα",
+        "hideDeletedAccounts": "Απόκρυψη διαγραμμένων λογαριασμών",
+        "hideDeletedAccountsHint": "Να μην εμφανίζονται συνομιλίες όπου ο άλλος συμμετέχων έχει διαγράψει τον λογαριασμό του."
+      },
       "contentAndMedia": "Περιεχόμενο & μέσα ενημέρωσης",
       "appearance": "Εμφάνιση",
       "appLogo": "Λογότυπο εφαρμογής",

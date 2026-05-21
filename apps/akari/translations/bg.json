@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Поверителност и сигурност",
       "moderation": "Умереност",
+      "messagesSettings": {
+        "title": "Съобщения",
+        "filtersSection": "Филтри",
+        "hideDeletedAccounts": "Скриване на изтрити акаунти",
+        "hideDeletedAccountsHint": "Не показвай разговори, в които другият участник е изтрил профила си."
+      },
       "contentAndMedia": "Съдържание и медии",
       "appearance": "Външен вид",
       "appLogo": "Лого на приложението",

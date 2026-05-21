@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "गोपनीयता और सुरक्षा",
       "moderation": "संयम",
+      "messagesSettings": {
+        "title": "संदेश",
+        "filtersSection": "फ़िल्टर",
+        "hideDeletedAccounts": "हटाए गए खाते छुपाएं",
+        "hideDeletedAccountsHint": "ऐसी चैट न दिखाएं जिनके दूसरे प्रतिभागी ने अपना खाता हटा दिया है।"
+      },
       "contentAndMedia": "सामग्री और मीडिया",
       "appearance": "उपस्थिति",
       "appLogo": "ऐप लोगो",

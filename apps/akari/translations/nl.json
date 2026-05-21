@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privacy en beveiliging",
       "moderation": "Matiging",
+      "messagesSettings": {
+        "title": "Berichten",
+        "filtersSection": "Filters",
+        "hideDeletedAccounts": "Verwijderde accounts verbergen",
+        "hideDeletedAccountsHint": "Toon geen chats waarvan de andere deelnemer zijn account heeft verwijderd."
+      },
       "contentAndMedia": "Inhoud en media",
       "appearance": "Verschijning",
       "appLogo": "App-logo",

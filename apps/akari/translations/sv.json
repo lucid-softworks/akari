@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Integritet och säkerhet",
       "moderation": "Måtta",
+      "messagesSettings": {
+        "title": "Meddelanden",
+        "filtersSection": "Filter",
+        "hideDeletedAccounts": "Dölj raderade konton",
+        "hideDeletedAccountsHint": "Visa inte chattar där den andra deltagaren har raderat sitt konto."
+      },
       "contentAndMedia": "Innehåll och media",
       "appearance": "Utseende",
       "appLogo": "Applogotyp",

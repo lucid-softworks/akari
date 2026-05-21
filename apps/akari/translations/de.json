@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privatsphäre und Sicherheit",
       "moderation": "Moderation",
+      "messagesSettings": {
+        "title": "Nachrichten",
+        "filtersSection": "Filter",
+        "hideDeletedAccounts": "Gelöschte Konten ausblenden",
+        "hideDeletedAccountsHint": "Chats nicht anzeigen, bei denen der andere Teilnehmer sein Konto gelöscht hat."
+      },
       "contentAndMedia": "Inhalte & Medien",
       "appearance": "Aussehen",
       "appLogo": "App-Logo",

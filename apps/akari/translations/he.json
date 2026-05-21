@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "פרטיות וביטחון",
       "moderation": "מְתִינוּת",
+      "messagesSettings": {
+        "title": "הודעות",
+        "filtersSection": "מסננים",
+        "hideDeletedAccounts": "הסתר חשבונות שנמחקו",
+        "hideDeletedAccountsHint": "אל תציג שיחות שהמשתתף השני בהן מחק את חשבונו."
+      },
       "contentAndMedia": "תוכן ומדיה",
       "appearance": "הוֹפָעָה",
       "appLogo": "לוגו האפליקציה",

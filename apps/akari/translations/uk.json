@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Конфіденційність та безпека",
       "moderation": "Помірність",
+      "messagesSettings": {
+        "title": "Повідомлення",
+        "filtersSection": "Фільтри",
+        "hideDeletedAccounts": "Приховати видалені облікові записи",
+        "hideDeletedAccountsHint": "Не показувати чати, у яких інший учасник видалив свій обліковий запис."
+      },
       "contentAndMedia": "Вміст та медіа",
       "appearance": "Зовнішність",
       "appLogo": "Логотип застосунку",

@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Preifatrwydd a Diogelwch",
       "moderation": "Cymedroldeb",
+      "messagesSettings": {
+        "title": "Negeseuon",
+        "filtersSection": "Hidlyddion",
+        "hideDeletedAccounts": "Cuddio cyfrifon wedi’u dileu",
+        "hideDeletedAccountsHint": "Peidio â dangos sgyrsiau lle mae’r cyfranogwr arall wedi dileu ei gyfrif."
+      },
       "contentAndMedia": "Cynnwys a Chyfryngau",
       "appearance": "Ymddangosiad",
       "appLogo": "Logo'r ap",

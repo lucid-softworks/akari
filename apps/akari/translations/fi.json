@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Yksityisyys ja turvallisuus",
       "moderation": "Maltillisuus",
+      "messagesSettings": {
+        "title": "Viestit",
+        "filtersSection": "Suodattimet",
+        "hideDeletedAccounts": "Piilota poistetut tilit",
+        "hideDeletedAccountsHint": "Älä näytä keskusteluja, joissa toinen osallistuja on poistanut tilinsä."
+      },
       "contentAndMedia": "Sisältö ja media",
       "appearance": "Esiintyminen",
       "appLogo": "Sovelluksen logo",

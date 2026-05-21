@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Quyền riêng tư và bảo mật",
       "moderation": "Kiểm duyệt",
+      "messagesSettings": {
+        "title": "Tin nhắn",
+        "filtersSection": "Bộ lọc",
+        "hideDeletedAccounts": "Ẩn tài khoản đã xóa",
+        "hideDeletedAccountsHint": "Không hiển thị các cuộc trò chuyện mà người kia đã xóa tài khoản."
+      },
       "contentAndMedia": "Nội dung & phương tiện truyền thông",
       "appearance": "Vẻ bề ngoài",
       "appLogo": "Logo ứng dụng",

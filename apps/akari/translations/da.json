@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privatliv og sikkerhed",
       "moderation": "Moderation",
+      "messagesSettings": {
+        "title": "Beskeder",
+        "filtersSection": "Filtre",
+        "hideDeletedAccounts": "Skjul slettede konti",
+        "hideDeletedAccountsHint": "Vis ikke chats, hvor den anden deltager har slettet sin konto."
+      },
       "contentAndMedia": "Indhold og medier",
       "appearance": "Udseende",
       "appLogo": "Applogo",

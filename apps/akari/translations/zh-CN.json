@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "隐私和安全",
       "moderation": "适度",
+      "messagesSettings": {
+        "title": "消息",
+        "filtersSection": "筛选",
+        "hideDeletedAccounts": "隐藏已删除的账户",
+        "hideDeletedAccountsHint": "不显示对方已删除账户的聊天。"
+      },
       "contentAndMedia": "内容和媒体",
       "appearance": "外貌",
       "appLogo": "应用图标",

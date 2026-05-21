@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Confidențialitate și securitate",
       "moderation": "Moderare",
+      "messagesSettings": {
+        "title": "Mesaje",
+        "filtersSection": "Filtre",
+        "hideDeletedAccounts": "Ascunde conturile șterse",
+        "hideDeletedAccountsHint": "Nu afișa conversațiile al căror celălalt participant și-a șters contul."
+      },
       "contentAndMedia": "Conținut și media",
       "appearance": "Aspect",
       "appLogo": "Logo aplicație",

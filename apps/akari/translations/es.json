@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Privacidad y seguridad",
       "moderation": "Moderación",
+      "messagesSettings": {
+        "title": "Mensajes",
+        "filtersSection": "Filtros",
+        "hideDeletedAccounts": "Ocultar cuentas eliminadas",
+        "hideDeletedAccountsHint": "No mostrar chats cuyo otro participante haya eliminado su cuenta."
+      },
       "contentAndMedia": "Contenido y medios",
       "appearance": "Apariencia",
       "appLogo": "Logotipo de la app",

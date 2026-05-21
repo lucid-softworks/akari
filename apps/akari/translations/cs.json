@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Ochrana osobních údajů a zabezpečení",
       "moderation": "Umírněnost",
+      "messagesSettings": {
+        "title": "Zprávy",
+        "filtersSection": "Filtry",
+        "hideDeletedAccounts": "Skrýt smazané účty",
+        "hideDeletedAccountsHint": "Nezobrazovat konverzace, ve kterých druhý účastník smazal svůj účet."
+      },
       "contentAndMedia": "Obsah a média",
       "appearance": "Vzhled",
       "appLogo": "Logo aplikace",

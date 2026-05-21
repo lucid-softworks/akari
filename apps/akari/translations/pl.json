@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Prywatność i bezpieczeństwo",
       "moderation": "Umiar",
+      "messagesSettings": {
+        "title": "Wiadomości",
+        "filtersSection": "Filtry",
+        "hideDeletedAccounts": "Ukryj usunięte konta",
+        "hideDeletedAccountsHint": "Nie pokazuj czatów, w których drugi uczestnik usunął swoje konto."
+      },
       "contentAndMedia": "Treść i media",
       "appearance": "Wygląd",
       "appLogo": "Logo aplikacji",

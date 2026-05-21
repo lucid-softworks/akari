@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Gizlilik ve Güvenlik",
       "moderation": "Ilımlılık",
+      "messagesSettings": {
+        "title": "Mesajlar",
+        "filtersSection": "Filtreler",
+        "hideDeletedAccounts": "Silinmiş hesapları gizle",
+        "hideDeletedAccountsHint": "Diğer katılımcısı hesabını silmiş sohbetleri gösterme."
+      },
       "contentAndMedia": "İçerik ve Medya",
       "appearance": "Dış görünüş",
       "appLogo": "Uygulama logosu",

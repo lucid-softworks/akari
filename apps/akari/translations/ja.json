@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "プライバシーとセキュリティ",
       "moderation": "節度",
+      "messagesSettings": {
+        "title": "メッセージ",
+        "filtersSection": "フィルター",
+        "hideDeletedAccounts": "削除されたアカウントを非表示",
+        "hideDeletedAccountsHint": "相手がアカウントを削除したチャットを表示しません。"
+      },
       "contentAndMedia": "コンテンツとメディア",
       "appearance": "外観",
       "appLogo": "アプリのロゴ",

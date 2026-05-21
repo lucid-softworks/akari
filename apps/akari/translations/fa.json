@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "حریم خصوصی و امنیت",
       "moderation": "اعتدال",
+      "messagesSettings": {
+        "title": "پیام‌ها",
+        "filtersSection": "فیلترها",
+        "hideDeletedAccounts": "پنهان کردن حساب‌های حذف‌شده",
+        "hideDeletedAccountsHint": "گفت‌وگوهایی که طرف مقابل حساب خود را حذف کرده است نشان داده نشوند."
+      },
       "contentAndMedia": "محتوا و رسانه",
       "appearance": "ظاهر",
       "appLogo": "لوگوی برنامه",

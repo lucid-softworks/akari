@@ -618,6 +618,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "Zasebnost in varnost",
       "moderation": "Zmernost",
+      "messagesSettings": {
+        "title": "Sporočila",
+        "filtersSection": "Filtri",
+        "hideDeletedAccounts": "Skrij izbrisane račune",
+        "hideDeletedAccountsHint": "Ne prikazuj pogovorov, v katerih je drugi udeleženec izbrisal svoj račun."
+      },
       "contentAndMedia": "Vsebina in mediji",
       "appearance": "Videz",
       "appLogo": "Logotip aplikacije",

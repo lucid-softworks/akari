@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "الخصوصية والأمن",
       "moderation": "الاعتدال",
+      "messagesSettings": {
+        "title": "الرسائل",
+        "filtersSection": "عوامل التصفية",
+        "hideDeletedAccounts": "إخفاء الحسابات المحذوفة",
+        "hideDeletedAccountsHint": "عدم عرض المحادثات التي حذف الطرف الآخر فيها حسابه."
+      },
       "contentAndMedia": "المحتوى والوسائط",
       "appearance": "مظهر",
       "appLogo": "شعار التطبيق",

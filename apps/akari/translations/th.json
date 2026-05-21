@@ -609,6 +609,12 @@
       "colors": "Colors",
       "privacyAndSecurity": "ความเป็นส่วนตัวและความปลอดภัย",
       "moderation": "การกลั่นกรอง",
+      "messagesSettings": {
+        "title": "ข้อความ",
+        "filtersSection": "ตัวกรอง",
+        "hideDeletedAccounts": "ซ่อนบัญชีที่ถูกลบ",
+        "hideDeletedAccountsHint": "ไม่แสดงการแชทที่อีกฝ่ายลบบัญชีไปแล้ว"
+      },
       "contentAndMedia": "เนื้อหาและสื่อ",
       "appearance": "รูปร่าง",
       "appLogo": "โลโก้แอป",
