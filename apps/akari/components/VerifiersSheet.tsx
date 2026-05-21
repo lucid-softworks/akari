@@ -9,7 +9,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import type { VerificationTier } from '@/components/VerificationBadge';
-import { activeOpacity, fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
+import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useVerifiersForDid } from '@/hooks/queries/useVerifiersForDid';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -116,6 +116,72 @@ export function VerifiersSheet({
     return t('ui.verifiersSheetIntroBody');
   }, [trustedVerifierDids.length, t]);
 
+  const isWeb = Platform.OS === 'web';
+
+  const content = (
+    <ThemedView
+      style={[
+        isWeb ? styles.webCard : styles.container,
+        { backgroundColor, paddingTop: isWeb ? 0 : containerTopPadding },
+        isWeb && { borderColor },
+      ]}
+    >
+      <View style={[styles.header, { borderBottomColor: borderColor }]}>
+        <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
+          <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
+            {t('common.done')}
+          </ThemedText>
+        </Pressable>
+        <ThemedText style={[styles.headerTitle, { color: textColor }]}>
+          {t('ui.verifiersSheetTitle')}
+        </ThemedText>
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <View style={styles.intro}>
+        <IconSymbol
+          name="checkmark.seal.fill"
+          size={32}
+          color={tier === 'gold' ? VERIFIED_GOLD : tier === 'silver' ? VERIFIED_SILVER : VERIFIED_BLUE}
+        />
+        <ThemedText style={[styles.introTitle, { color: textColor }]}>{introTitle}</ThemedText>
+        <ThemedText style={[styles.introBody, { color: subduedColor }]}>{introBody}</ThemedText>
+      </View>
+
+      {sections.length === 0 ? (
+        <View style={styles.emptyState}>
+          <ThemedText style={[styles.emptyText, { color: subduedColor }]}>
+            {t('ui.noVerifiers')}
+          </ThemedText>
+        </View>
+      ) : (
+        <VerifiersList
+          sections={sections}
+          onClose={onClose}
+          borderColor={borderColor}
+          subduedColor={subduedColor}
+        />
+      )}
+    </ThemedView>
+  );
+
+  if (isWeb) {
+    return (
+      <Modal visible transparent animationType="fade" onRequestClose={onClose}>
+        <Pressable style={styles.webBackdrop} onPress={onClose}>
+          <Pressable
+            style={styles.webCardWrapper}
+            // Swallow card-region presses so they don't bubble to the
+            // backdrop and dismiss the modal.
+            onPress={(event) => event.stopPropagation()}
+          >
+            {content}
+          </Pressable>
+        </Pressable>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       visible
@@ -123,44 +189,7 @@ export function VerifiersSheet({
       presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
     >
-      <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
-        <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
-            <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
-              {t('common.done')}
-            </ThemedText>
-          </Pressable>
-          <ThemedText style={[styles.headerTitle, { color: textColor }]}>
-            {t('ui.verifiersSheetTitle')}
-          </ThemedText>
-          <View style={styles.headerSpacer} />
-        </View>
-
-        <View style={styles.intro}>
-          <IconSymbol
-            name="checkmark.seal.fill"
-            size={32}
-            color={tier === 'gold' ? VERIFIED_GOLD : tier === 'silver' ? VERIFIED_SILVER : VERIFIED_BLUE}
-          />
-          <ThemedText style={[styles.introTitle, { color: textColor }]}>{introTitle}</ThemedText>
-          <ThemedText style={[styles.introBody, { color: subduedColor }]}>{introBody}</ThemedText>
-        </View>
-
-        {sections.length === 0 ? (
-          <View style={styles.emptyState}>
-            <ThemedText style={[styles.emptyText, { color: subduedColor }]}>
-              {t('ui.noVerifiers')}
-            </ThemedText>
-          </View>
-        ) : (
-          <VerifiersList
-            sections={sections}
-            onClose={onClose}
-            borderColor={borderColor}
-            subduedColor={subduedColor}
-          />
-        )}
-      </ThemedView>
+      {content}
     </Modal>
   );
 }
@@ -289,6 +318,24 @@ function VerifierRow({ row, onClose, borderColor, subduedColor }: VerifierRowPro
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  webBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.lg,
+  },
+  webCardWrapper: {
+    width: '100%',
+    maxWidth: 480,
+    maxHeight: '90%',
+  },
+  webCard: {
+    width: '100%',
+    borderRadius: radius.md,
+    borderWidth: layout.hairline,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
