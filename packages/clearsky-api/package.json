@@ -3,14 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "description": "ClearSky API client for React Native and web applications",
-  "main": "dist/api.js",
-  "types": "dist/api.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/api.d.ts",
-      "import": "./dist/api.js"
-    }
-  },
+  "main": "src/api.ts",
+  "types": "src/api.ts",
   "scripts": {
     "build": "tsc",
     "test": "npm run test:run",

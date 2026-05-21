@@ -18,13 +18,17 @@ on:
         required: true
 
 jobs:
-  production-build:
-    name: EAS Production Build
+  prepare:
+    name: Resolve release metadata
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     env:
       RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || inputs.release_tag || '' }}
+    outputs:
+      release_tag: ${{ steps.resolve_tag.outputs.release_tag }}
+      upload_url: ${{ steps.release_metadata.outputs.upload_url }}
+      sha: ${{ steps.deploy_commit.outputs.sha }}
     steps:
       - name: Check for EXPO_TOKEN
         run: |
@@ -33,6 +37,10 @@ jobs:
             echo "Learn more: https://docs.expo.dev/eas-update/github-actions"
             exit 1
           fi
+
+      - name: Expose release tag
+        id: resolve_tag
+        run: echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,7 +52,6 @@ jobs:
         id: release_metadata
         env:
           EVENT_NAME: ${{ github.event_name }}
-          RELEASE_TAG: ${{ env.RELEASE_TAG }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
         run: |
@@ -88,24 +95,42 @@ jobs:
 
       - name: Determine deploy commit
         id: deploy_commit
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: |
-          if [ -n "$RELEASE_TAG" ]; then
-            tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
-            head_commit=$(git rev-parse HEAD)
-            if [ "$tag_commit" != "$head_commit" ]; then
-              echo "Checked out commit $head_commit does not match release tag $RELEASE_TAG ($tag_commit)" >&2
-              exit 1
-            fi
-            echo "sha=$tag_commit" >> "$GITHUB_OUTPUT"
-          else
-            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
+          head_commit=$(git rev-parse HEAD)
+          if [ "$tag_commit" != "$head_commit" ]; then
+            echo "Checked out commit $head_commit does not match release tag $RELEASE_TAG ($tag_commit)" >&2
+            exit 1
           fi
+          echo "sha=$tag_commit" >> "$GITHUB_OUTPUT"
 
-      - name: Record commit metadata
-        run: echo "EXPO_PUBLIC_COMMIT_SHA=${{ steps.deploy_commit.outputs.sha }}" >> "$GITHUB_ENV"
+  native-build:
+    name: EAS Production Build (${{ matrix.label }})
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ios
+            label: iOS
+            ext: ipa
+            content_type: application/octet-stream
+          - platform: android
+            label: Android
+            ext: aab
+            content_type: application/vnd.android.package-archive
+    env:
+      RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
+      EXPO_PUBLIC_COMMIT_SHA: ${{ needs.prepare.outputs.sha }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/tags/${{ needs.prepare.outputs.release_tag }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -122,24 +147,91 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build ClearSky API package
-        run: npm --workspace clearsky-api run build
-
       - name: Run production build
         working-directory: apps/akari
         run: |
           set -o pipefail
-          eas build --profile production --platform all --non-interactive --wait --json | tee production-build-result.json
+          eas build --profile production --platform ${{ matrix.platform }} --non-interactive --wait --json | tee "production-build-result-${{ matrix.platform }}.json"
 
-      - name: Download native build artifacts
+      - name: Download native build artifact
         working-directory: apps/akari
         run: |
           set -euo pipefail
           mkdir -p release-artifacts
-          ios_path="release-artifacts/akari-${RELEASE_TAG}-ios.ipa"
-          android_path="release-artifacts/akari-${RELEASE_TAG}-android.aab"
-          eas build:download --latest --platform ios --profile production --non-interactive --path "$ios_path"
-          eas build:download --latest --platform android --profile production --non-interactive --path "$android_path"
+          artifact_path="release-artifacts/akari-${RELEASE_TAG}-${{ matrix.platform }}.${{ matrix.ext }}"
+          build_url=$(jq -r '
+            (if type == "array" then .[0] else . end)
+            | .artifacts.applicationArchiveUrl // .artifacts.buildUrl // empty
+          ' "production-build-result-${{ matrix.platform }}.json")
+          if [ -z "$build_url" ] || [ "$build_url" = "null" ]; then
+            echo "No build artifact URL in production-build-result-${{ matrix.platform }}.json" >&2
+            cat "production-build-result-${{ matrix.platform }}.json" >&2
+            exit 1
+          fi
+          curl -fSL --retry 3 --retry-delay 5 -o "$artifact_path" "$build_url"
+
+      - name: Submit to store
+        working-directory: apps/akari
+        run: |
+          eas submit --latest --platform ${{ matrix.platform }} --profile production --non-interactive --wait
+
+      - name: Upload native artifact to GitHub Release
+        if: needs.prepare.outputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.prepare.outputs.upload_url }}
+          asset_path: apps/akari/release-artifacts/akari-${{ needs.prepare.outputs.release_tag }}-${{ matrix.platform }}.${{ matrix.ext }}
+          asset_name: akari-${{ needs.prepare.outputs.release_tag }}-${{ matrix.platform }}.${{ matrix.ext }}
+          asset_content_type: ${{ matrix.content_type }}
+
+      - name: Upload build manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: eas-production-build-${{ matrix.platform }}
+          path: apps/akari/production-build-result-${{ matrix.platform }}.json
+
+      - name: Summarize build results
+        run: |
+          {
+            echo "### EAS Production Build (${{ matrix.label }})"
+            echo
+            echo '```json'
+            cat "apps/akari/production-build-result-${{ matrix.platform }}.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publish-update-and-web:
+    name: EAS Update + Web Deploy
+    needs: [prepare, native-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
+      EXPO_PUBLIC_COMMIT_SHA: ${{ needs.prepare.outputs.sha }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/tags/${{ needs.prepare.outputs.release_tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.9.0
+          cache: npm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Publish EAS update for native apps
         working-directory: apps/akari
@@ -166,63 +258,16 @@ jobs:
         working-directory: apps/akari
         run: |
           set -euo pipefail
+          mkdir -p release-artifacts
           tar -czf "release-artifacts/akari-${RELEASE_TAG}-web.tar.gz" -C dist .
 
-      - name: Publish Android build to Play Store
-        working-directory: apps/akari
-        run: |
-          eas submit --latest --platform android --profile production --non-interactive --wait
-
-      - name: Publish iOS build to App Store
-        working-directory: apps/akari
-        run: |
-          eas submit --latest --platform ios --profile production --non-interactive --wait
-
-      - name: Upload Android bundle to GitHub Release
-        if: steps.release_metadata.outputs.upload_url != ''
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-android.aab
-          asset_name: akari-${{ env.RELEASE_TAG }}-android.aab
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload iOS binary to GitHub Release
-        if: steps.release_metadata.outputs.upload_url != ''
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-ios.ipa
-          asset_name: akari-${{ env.RELEASE_TAG }}-ios.ipa
-          asset_content_type: application/octet-stream
-
       - name: Upload web bundle to GitHub Release
-        if: steps.release_metadata.outputs.upload_url != ''
+        if: needs.prepare.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release_metadata.outputs.upload_url }}
-          asset_path: apps/akari/release-artifacts/akari-${{ env.RELEASE_TAG }}-web.tar.gz
-          asset_name: akari-${{ env.RELEASE_TAG }}-web.tar.gz
+          upload_url: ${{ needs.prepare.outputs.upload_url }}
+          asset_path: apps/akari/release-artifacts/akari-${{ needs.prepare.outputs.release_tag }}-web.tar.gz
+          asset_name: akari-${{ needs.prepare.outputs.release_tag }}-web.tar.gz
           asset_content_type: application/gzip
-
-      - name: Upload build manifest
-        uses: actions/upload-artifact@v4
-        with:
-          name: eas-production-build
-          path: apps/akari/production-build-result.json
-
-      - name: Summarize build results
-        run: |
-          {
-            echo "### EAS Production Build"
-            echo
-            echo '```json'
-            cat apps/akari/production-build-result.json
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
