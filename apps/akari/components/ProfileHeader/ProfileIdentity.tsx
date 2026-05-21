@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { AkariMemberBadge } from '@/components/AkariMemberBadge';
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -35,6 +36,7 @@ export function ProfileIdentity({
           subjectDisplayName={displayName}
           size={20}
         />
+        <AkariMemberBadge subjectDid={did} size={20} />
       </View>
       <View style={styles.handleRow}>
         <Pressable
