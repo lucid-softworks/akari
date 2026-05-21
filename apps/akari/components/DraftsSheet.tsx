@@ -1,6 +1,7 @@
 import { Image } from '@/components/Image';
 import React, { useCallback } from 'react';
-import { FlatList, type ListRenderItem, Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, type ListRenderItem, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';

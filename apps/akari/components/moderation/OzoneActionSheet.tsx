@@ -10,7 +10,7 @@ import {
 import { OZONE_EVENT_TYPES, type OzoneSubject } from 'bluesky-ozone';
 
 import { Image } from '@/components/Image';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, opacity, radius, spacing } from '@/constants/tokens';
 import { useEmitOzoneEvent } from '@/hooks/mutations/useEmitOzoneEvent';
@@ -220,7 +220,7 @@ export function OzoneActionSheet({
   const subjectIsRecord = subject.$type === 'com.atproto.repo.strongRef';
 
   return (
-    <CenteredModal
+    <Dialog keyboardAvoiding
       onClose={onClose}
       height="85%"
       // Wider modal on web because the subject + form sit side-by-side.
@@ -467,7 +467,7 @@ export function OzoneActionSheet({
               </Pressable>
             </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

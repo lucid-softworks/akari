@@ -1,6 +1,7 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Modal, Platform, Pressable, Share, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, Share, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 

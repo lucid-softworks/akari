@@ -1,6 +1,7 @@
 import { Image } from '@/components/Image';
 import React, { useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';

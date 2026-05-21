@@ -4,7 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { buildRpgItemBlobUrl, pickRpgItemImageCid, type RpgItemRecord } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -39,7 +39,7 @@ export function RpgItemDetailModal({ item, pdsUrl, onClose }: RpgItemDetailModal
     : acceptedAt.toLocaleDateString();
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={520}>
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={520}>
       <ScrollView contentContainerStyle={styles.body}>
         <View style={[styles.heroBox, { borderColor }]}>
           {imageUrl ? (
@@ -95,7 +95,7 @@ export function RpgItemDetailModal({ item, pdsUrl, onClose }: RpgItemDetailModal
           <ThemedText style={styles.closeButtonLabel}>{t('common.ok')}</ThemedText>
         </Pressable>
       </ScrollView>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

@@ -1,20 +1,20 @@
 import { Image } from '@/components/Image';
 import React, { useCallback, useMemo } from 'react';
 import {
-  Modal,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountForm } from '@/components/AddAccountForm';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { DialogModal } from '@/components/ui/DialogModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { ADD_ACCOUNT_PANEL_ID } from '@/constants/dialogs';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -84,18 +84,17 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
     dialogManager.open({
       id: ADD_ACCOUNT_PANEL_ID,
       component: (
-        <DialogModal onRequestClose={closePanel}>
-          {/* Wrap the form in a themed card — DialogModal only paints
-              the dim backdrop, and AddAccountForm has no surface of its
-              own, so without a wrapper the inputs float on the backdrop
-              with no panel behind them. */}
-          <ThemedView style={[styles.addAccountCard, { backgroundColor: sheetBackground, borderColor }]}>
-            <AddAccountForm />
-          </ThemedView>
-        </DialogModal>
+        <Dialog
+          onClose={closePanel}
+          maxWidth={420}
+          backgroundColor={sheetBackground}
+          sheetStyle={styles.addAccountFormPadding}
+        >
+          <AddAccountForm />
+        </Dialog>
       ),
     });
-  }, [borderColor, dialogManager, onClose, sheetBackground]);
+  }, [dialogManager, sheetBackground]);
 
   if (!visible) {
     return null;
@@ -302,10 +301,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  addAccountCard: {
-    width: '100%',
-    borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
+  // Padding only — Dialog already paints the surface (background +
+  // border + rounded corners), so the consumer just supplies inner
+  // spacing.
+  addAccountFormPadding: {
     paddingHorizontal: 20,
     paddingVertical: 24,
   },

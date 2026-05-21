@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 
-import { SheetModal } from '@/components/ui/SheetModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useIsGuest } from '@/hooks/queries/useIsGuest';
@@ -61,7 +61,7 @@ export function FeedFiltersSheet({ onClose, feedKey }: FeedFiltersSheetProps) {
   const isGuest = useIsGuest();
 
   return (
-    <SheetModal onRequestClose={onClose}>
+    <Dialog onClose={onClose} nativePresentation="sheet">
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
         <Pressable onPress={reset} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
           <ThemedText style={[styles.headerButtonText, { color: subduedColor }]}>
@@ -114,7 +114,7 @@ export function FeedFiltersSheet({ onClose, feedKey }: FeedFiltersSheetProps) {
           />
         ))}
       </ScrollView>
-    </SheetModal>
+    </Dialog>
   );
 }
 

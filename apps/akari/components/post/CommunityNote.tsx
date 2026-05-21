@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import {
   activeOpacity,
@@ -206,7 +206,7 @@ function RateNoteModal({
   };
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={560} height="85%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={560} height="85%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>{t('communityNotes.note.rateModalTitle')}</ThemedText>
@@ -334,7 +334,7 @@ function RateNoteModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 
@@ -351,7 +351,7 @@ function SourcesModal({
   const { t } = useTranslation();
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={520}>
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={520}>
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>{t('communityNotes.note.sourcesTitle')}</ThemedText>
@@ -394,7 +394,7 @@ function SourcesModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

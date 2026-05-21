@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';

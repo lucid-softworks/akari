@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
@@ -230,7 +230,7 @@ function TemplateEditorModal({
   }, [canSave, draftBody, draftName, draftSubject, onSave]);
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={640} height="80%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={640} height="80%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>
@@ -299,7 +299,7 @@ function TemplateEditorModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

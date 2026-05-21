@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import {
   useRequestCommunityNote,
@@ -84,7 +84,7 @@ export function AddCommunityNoteModal({
   };
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={620} height="85%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={620} height="85%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('communityNotes.contributor.addTitle')}</ThemedText>
@@ -182,7 +182,7 @@ export function AddCommunityNoteModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 
@@ -222,7 +222,7 @@ export function RequestCommunityNoteModal({
   };
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={560} height="70%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.title}>{t('communityNotes.contributor.requestTitle')}</ThemedText>
@@ -302,7 +302,7 @@ export function RequestCommunityNoteModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

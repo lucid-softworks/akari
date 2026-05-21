@@ -1,6 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WebPortalDropdown } from '@/components/post/WebPortalDropdown';
@@ -451,6 +452,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         visible={visible}
         anchorRect={anchorRect}
         estimatedHeight={WEB_MENU_ESTIMATED_HEIGHT}
+        onDismiss={onDismiss}
       >
         <ThemedView
           style={[styles.webDropdown, { backgroundColor: menuBackgroundColor, borderColor: handleBarColor }]}

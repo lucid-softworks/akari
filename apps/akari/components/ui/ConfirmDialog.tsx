@@ -2,9 +2,8 @@ import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { DialogModal } from '@/components/ui/DialogModal';
-import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
+import { Dialog } from '@/components/ui/Dialog';
+import { fontSize, fontWeight, layout, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ConfirmButton = {
@@ -43,45 +42,42 @@ export function ConfirmDialog({ title, message, buttons, onClose }: ConfirmDialo
   );
 
   return (
-    <DialogModal onRequestClose={onClose}>
-      <ThemedView style={[styles.card, { backgroundColor: surfaceColor, borderColor }]}>
-        <ThemedText style={styles.title}>{title}</ThemedText>
-        {message ? (
-          <ThemedText style={[styles.message, { color: subduedColor }]}>{message}</ThemedText>
-        ) : null}
-        <View style={[styles.buttonRow, { borderTopColor: borderColor }]}>
-          {buttons.map((button, index) => {
-            const isLast = index === buttons.length - 1;
-            const isCancel = button.style === 'cancel';
-            const isDestructive = button.style === 'destructive';
-            const color = isDestructive ? destructiveColor : isCancel ? subduedColor : accentColor;
-            return (
-              <Pressable
-                key={button.text}
-                accessibilityRole="button"
-                
-                onPress={() => handlePress(button)}
-                style={({ pressed }) => [styles.button,
-                  !isLast && { borderRightColor: borderColor, borderRightWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
-              >
-                <ThemedText style={[styles.buttonText, { color }, isCancel ? styles.cancelText : null]}>
-                  {button.text}
-                </ThemedText>
-              </Pressable>
-            );
-          })}
-        </View>
-      </ThemedView>
-    </DialogModal>
+    <Dialog
+      onClose={onClose}
+      maxWidth={420}
+      backgroundColor={surfaceColor}
+    >
+      <ThemedText style={styles.title}>{title}</ThemedText>
+      {message ? (
+        <ThemedText style={[styles.message, { color: subduedColor }]}>{message}</ThemedText>
+      ) : null}
+      <View style={[styles.buttonRow, { borderTopColor: borderColor }]}>
+        {buttons.map((button, index) => {
+          const isLast = index === buttons.length - 1;
+          const isCancel = button.style === 'cancel';
+          const isDestructive = button.style === 'destructive';
+          const color = isDestructive ? destructiveColor : isCancel ? subduedColor : accentColor;
+          return (
+            <Pressable
+              key={button.text}
+              accessibilityRole="button"
+
+              onPress={() => handlePress(button)}
+              style={({ pressed }) => [styles.button,
+                !isLast && { borderRightColor: borderColor, borderRightWidth: layout.hairline }, pressed && { opacity: 0.7 }]}
+            >
+              <ThemedText style={[styles.buttonText, { color }, isCancel ? styles.cancelText : null]}>
+                {button.text}
+              </ThemedText>
+            </Pressable>
+          );
+        })}
+      </View>
+    </Dialog>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: radius.md,
-    borderWidth: layout.hairline,
-    overflow: 'hidden',
-  },
   title: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,

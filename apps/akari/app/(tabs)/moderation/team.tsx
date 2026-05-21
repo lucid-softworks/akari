@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { Avatar, Badge, shortDid } from '@/app/(tabs)/moderation/index';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, spacing } from '@/constants/tokens';
@@ -232,7 +232,7 @@ function AddTeamMemberModal({
   }, [existingDids, isDid, onSubmit, query, role, selected]);
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={560} height="70%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={560} height="70%">
       <View style={styles.modalContents}>
         <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
           <ThemedText style={styles.modalTitle}>{t('moderation.team.modalTitle')}</ThemedText>
@@ -391,7 +391,7 @@ function AddTeamMemberModal({
           </Pressable>
         </View>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

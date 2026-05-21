@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { FlatList, type ListRenderItem, Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { FlatList, type ListRenderItem, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';

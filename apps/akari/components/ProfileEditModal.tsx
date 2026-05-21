@@ -1,11 +1,12 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, TextInput, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 
 import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -169,10 +170,10 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
   // `<Modal>`. Native keeps the slide-up page-sheet presentation.
   if (Platform.OS === 'web') {
     return (
-      <CenteredModal onClose={handleCancel} maxWidth={640} height="85%" sheetStyle={{ backgroundColor }}>
+      <Dialog keyboardAvoiding onClose={handleCancel} maxWidth={640} height="85%" sheetStyle={{ backgroundColor }}>
         {headerRow}
         <ScrollView contentContainerStyle={styles.webBody}>{formBody}</ScrollView>
-      </CenteredModal>
+      </Dialog>
     );
   }
 

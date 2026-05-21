@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
-import { SheetModal } from '@/components/ui/SheetModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
@@ -109,7 +109,7 @@ export function VerifiersSheet({
   }, [trustedVerifierDids.length, t]);
 
   return (
-    <SheetModal onRequestClose={onClose}>
+    <Dialog onClose={onClose} nativePresentation="sheet">
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
         <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
           <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
@@ -146,7 +146,7 @@ export function VerifiersSheet({
           subduedColor={subduedColor}
         />
       )}
-    </SheetModal>
+    </Dialog>
   );
 }
 

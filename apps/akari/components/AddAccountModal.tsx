@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { AddAccountForm } from '@/components/AddAccountForm';
-import { CenteredModal } from '@/components/ui/CenteredModal';
+import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import {
@@ -60,7 +60,7 @@ export function AddAccountModal({ onClose }: AddAccountModalProps) {
   const goToOauth = () => setStep('oauth');
 
   return (
-    <CenteredModal onClose={onClose} maxWidth={560} height="80%">
+    <Dialog keyboardAvoiding onClose={onClose} maxWidth={560} height="80%">
       <View style={styles.contents}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           {step !== 'pick' ? (
@@ -148,7 +148,7 @@ export function AddAccountModal({ onClose }: AddAccountModalProps) {
           )}
         </ScrollView>
       </View>
-    </CenteredModal>
+    </Dialog>
   );
 }
 

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import {
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -110,6 +110,7 @@ export function RepostSheet({
         visible={visible}
         anchorRect={anchorRect}
         estimatedHeight={WEB_REPOST_MENU_ESTIMATED_HEIGHT}
+        onDismiss={onDismiss}
       >
         <ThemedView style={[styles.webDropdown, { backgroundColor: sheetBg, borderColor }]}>
           {menuContent}

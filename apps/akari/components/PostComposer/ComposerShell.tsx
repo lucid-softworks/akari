@@ -1,4 +1,5 @@
-import { KeyboardAvoidingView, Modal, Platform, Pressable, StatusBar } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, StatusBar } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/ThemedView';

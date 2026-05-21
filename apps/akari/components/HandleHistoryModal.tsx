@@ -1,4 +1,5 @@
-import { Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';

@@ -4,13 +4,13 @@ import {
   ActivityIndicator,
   FlatList,
   type ListRenderItem,
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyListView } from '@/bluesky-api';

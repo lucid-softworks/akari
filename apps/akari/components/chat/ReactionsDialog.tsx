@@ -3,12 +3,12 @@ import React, { useCallback, useMemo } from 'react';
 import {
   FlatList,
   type ListRenderItem,
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import { Modal } from '@/components/ui/Modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
