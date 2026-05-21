@@ -41,7 +41,6 @@ export function MessagesListHeader({
         styles.headerContainer,
         {
           paddingTop: isLargeScreen ? insetTop : 0,
-          paddingBottom: isLargeScreen ? spacing.md : 0,
         },
       ]}
     >

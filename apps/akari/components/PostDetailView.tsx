@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
 
 import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
-import { webColumnSideBorders } from '@/constants/webStyles';
+import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
 import { PostCard } from '@/components/PostCard';
 import { PostComposer } from '@/components/PostComposer';
@@ -212,6 +212,121 @@ function ThreadContextPost({ post: ctxPost, focusedUri, navigateToPost }: Thread
   );
 }
 
+type ThreadBodyProps = {
+  post: BlueskyPostView;
+  rootPost?: BlueskyPostView | null;
+  parentPost?: BlueskyPostView | null;
+  threadLoading: boolean;
+  threadData: ReturnType<typeof usePostThread>['data'];
+  borderColor: string;
+  accentColor: string;
+  secondaryText: string;
+  onFocusedPostLayout: (event: LayoutChangeEvent) => void;
+  onLastReplyLayout: (event: LayoutChangeEvent) => void;
+  onReplyPress: () => void;
+  navigateToPost: (args: { actor: string; rKey: string }) => void;
+};
+
+/**
+ * Body of the post-detail thread: root/parent context cards, the focused
+ * post, the inline reply bar, and the replies list. Extracted so the
+ * outer screen can wrap it in either a `<ScrollView>` (native, internal
+ * scroll) or a plain `<View>` (web, page-level scroll) without
+ * duplicating the JSX.
+ */
+function ThreadBody({
+  post,
+  rootPost,
+  parentPost,
+  threadLoading,
+  threadData,
+  borderColor,
+  accentColor,
+  secondaryText,
+  onFocusedPostLayout,
+  onLastReplyLayout,
+  onReplyPress,
+  navigateToPost,
+}: ThreadBodyProps) {
+  const { t } = useTranslation();
+  return (
+    <View>
+      {rootPost ? (
+        <ThreadContextPost post={rootPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
+      ) : null}
+      {parentPost ? (
+        <ThreadContextPost post={parentPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
+      ) : null}
+      <View onLayout={onFocusedPostLayout}>
+        <PostCard
+          post={{
+            id: post.uri,
+            text:
+              typeof post.record === 'object' && post.record && 'text' in post.record
+                ? (post.record as { text: string }).text
+                : undefined,
+            author: {
+              did: post.author.did,
+              handle: post.author.handle,
+              displayName: post.author.displayName,
+              avatar: post.author.avatar,
+              verification: post.author.verification,
+              labels: post.author.labels,
+            },
+            createdAt: formatRelativeTime(post.indexedAt),
+            likeCount: post.likeCount || 0,
+            commentCount: post.replyCount || 0,
+            repostCount: post.repostCount || 0,
+            embed: post.embed,
+            embeds: post.embeds,
+            labels: post.labels,
+            viewer: post.viewer,
+            facets: (post.record as any)?.facets,
+            uri: post.uri,
+            cid: post.cid,
+            threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
+          }}
+        />
+      </View>
+      <Pressable
+        style={({ pressed }) => [
+          styles.replyBar,
+          { borderTopColor: borderColor, borderBottomColor: borderColor },
+          webColumnSideBorders(borderColor),
+          pressed && { opacity: 0.7 },
+        ]}
+        onPress={onReplyPress}
+      >
+        <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
+        <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
+          {t('post.reply')}...
+        </ThemedText>
+      </Pressable>
+      {threadLoading ? (
+        <View style={webColumnSideBorders(borderColor)}>
+          <FeedSkeleton count={3} />
+        </View>
+      ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
+        <View style={[styles.repliesContainer, webColumnSideBorders(borderColor)]}>
+          <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
+          {threadData.thread.replies.map((reply, index) => {
+            const isLast = index === threadData.thread!.replies!.length - 1;
+            return (
+              <View
+                key={'post' in reply ? reply.post.uri : `reply-${index}`}
+                // last reply's height feeds the scroll-bottom padding
+                onLayout={isLast ? onLastReplyLayout : undefined}
+              >
+                <CommentRow item={reply} navigateToPost={navigateToPost} />
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
 type PostDetailViewProps = {
   actor: string;
   rKey: string;
@@ -236,13 +351,22 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const [focusedPostHeight, setFocusedPostHeight] = useState(0);
   const [lastReplyHeight, setLastReplyHeight] = useState(0);
 
+  const isWeb = Platform.OS === 'web';
+
   const handleFocusedPostLayout = useCallback((event: LayoutChangeEvent) => {
     const { y, height } = event.nativeEvent.layout;
     focusedPostYRef.current = y;
     setFocusedPostHeight(height);
     if (hasUserScrolledRef.current) return;
-    scrollViewRef.current?.scrollTo({ y, animated: false });
-  }, []);
+    if (isWeb) {
+      // Page-level scroll on web — match home/profile/messages. The
+      // inner ScrollView isn't mounted on web; the document is what
+      // scrolls.
+      window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior });
+    } else {
+      scrollViewRef.current?.scrollTo({ y, animated: false });
+    }
+  }, [isWeb]);
 
   const handleLastReplyLayout = useCallback((event: LayoutChangeEvent) => {
     setLastReplyHeight(event.nativeEvent.layout.height);
@@ -251,6 +375,17 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
   const handleScrollBeginDrag = useCallback(() => {
     hasUserScrolledRef.current = true;
   }, []);
+
+  // On web, the document scrolls; mark the user-scrolled gate when the
+  // window scrolls so subsequent layout fires don't fight the user.
+  useEffect(() => {
+    if (!isWeb) return;
+    const onScroll = () => {
+      hasUserScrolledRef.current = true;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true, once: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isWeb]);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const borderColor = useBorderColor();
   const accentColor = useThemeColor({}, 'tint');
@@ -311,114 +446,51 @@ export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
     );
   }
 
+  const threadBody = (
+    <ThreadBody
+      post={post}
+      rootPost={rootPost}
+      parentPost={parentPost}
+      threadLoading={threadLoading}
+      threadData={threadData}
+      borderColor={borderColor}
+      accentColor={accentColor}
+      secondaryText={secondaryText}
+      onFocusedPostLayout={handleFocusedPostLayout}
+      onLastReplyLayout={handleLastReplyLayout}
+      onReplyPress={() => setShowReplyComposer(true)}
+      navigateToPost={navigateToPost}
+    />
+  );
+
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        // Pad just enough to let the *last* post (focused if no replies,
-        // otherwise the last reply) scroll up to sit at the top of the
-        // viewport — `windowHeight - lastPostHeight`. Without it,
-        // scrollTo gets clamped by `contentHeight - viewportHeight` and
-        // we can't get the focused post to the top on short threads.
-        contentContainerStyle={[
-          styles.scrollViewContent,
-          {
-            paddingBottom: Math.max(
-              0,
-              windowHeight - (lastReplyHeight || focusedPostHeight),
-            ),
-          },
-        ]}
-        showsVerticalScrollIndicator={false}
-        onScrollBeginDrag={handleScrollBeginDrag}
-      >
-        {/* Thread Context - Root Post (if this is a reply to a reply) */}
-        {rootPost ? (
-          <ThreadContextPost post={rootPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
-        ) : null}
-
-        {/* Thread Context - Parent Post */}
-        {parentPost ? (
-          <ThreadContextPost post={parentPost} focusedUri={post.uri} navigateToPost={navigateToPost} />
-        ) : null}
-
-        {/* Main Post — wrapped so we can capture its y-offset and snap the
-            scroll position to it on initial open / async parent loads. */}
-        <View onLayout={handleFocusedPostLayout}>
-          <PostCard
-            post={{
-              id: post.uri,
-              text:
-                typeof post.record === 'object' && post.record && 'text' in post.record
-                  ? (post.record as { text: string }).text
-                  : undefined,
-              author: {
-                did: post.author.did,
-                handle: post.author.handle,
-                displayName: post.author.displayName,
-                avatar: post.author.avatar,
-                verification: post.author.verification,
-                labels: post.author.labels,
-              },
-              createdAt: formatRelativeTime(post.indexedAt),
-              likeCount: post.likeCount || 0,
-              commentCount: post.replyCount || 0,
-              repostCount: post.repostCount || 0,
-              embed: post.embed,
-              embeds: post.embeds,
-              labels: post.labels,
-              viewer: post.viewer,
-              facets: (post.record as any)?.facets,
-              uri: post.uri,
-              cid: post.cid,
-              threadRootUri: (post.record as { reply?: { root?: { uri?: string } } }).reply?.root?.uri,
-            }}
-          />
-        </View>
-
-        {/* Reply Bar — sits below the focused post so it's the next thing
-            users see when reading a thread, instead of floating at the bottom
-            of the page. */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.replyBar,
-            { borderTopColor: borderColor, borderBottomColor: borderColor },
-            webColumnSideBorders(borderColor),
-            pressed && { opacity: 0.7 },
+    <ThemedView style={isWeb ? webScreenContainer : styles.container}>
+      {isWeb ? (
+        <View style={[styles.scrollViewContent, styles.scrollViewContentWeb]}>{threadBody}</View>
+      ) : (
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          // Pad just enough to let the *last* post (focused if no replies,
+          // otherwise the last reply) scroll up to sit at the top of the
+          // viewport — `windowHeight - lastPostHeight`. Without it,
+          // scrollTo gets clamped by `contentHeight - viewportHeight` and
+          // we can't get the focused post to the top on short threads.
+          contentContainerStyle={[
+            styles.scrollViewContent,
+            {
+              paddingBottom: Math.max(
+                0,
+                windowHeight - (lastReplyHeight || focusedPostHeight),
+              ),
+            },
           ]}
-          onPress={() => setShowReplyComposer(true)}
+          showsVerticalScrollIndicator={false}
+          onScrollBeginDrag={handleScrollBeginDrag}
         >
-          <IconSymbol name="arrowshape.turn.up.left" size={18} color={accentColor} />
-          <ThemedText style={[styles.replyBarText, { color: secondaryText }]}>
-            {t('post.reply')}...
-          </ThemedText>
-        </Pressable>
-
-        {/* Replies */}
-        {threadLoading ? (
-          <View style={webColumnSideBorders(borderColor)}>
-            <FeedSkeleton count={3} />
-          </View>
-        ) : threadData?.thread?.replies && threadData.thread.replies.length > 0 ? (
-          <View style={[styles.repliesContainer, webColumnSideBorders(borderColor)]}>
-            <ThemedText style={styles.repliesLabel}>{t('common.replies')}</ThemedText>
-            {threadData.thread.replies.map((reply, index) => {
-              const isLast = index === threadData.thread!.replies!.length - 1;
-              return (
-                <View
-                  key={'post' in reply ? reply.post.uri : `reply-${index}`}
-                  // The last reply's height drives the scroll-to-top
-                  // bottom-padding calculation up at the ScrollView level.
-                  onLayout={isLast ? handleLastReplyLayout : undefined}
-                >
-                  <CommentRow item={reply} navigateToPost={navigateToPost} />
-                </View>
-              );
-            })}
-          </View>
-        ) : null}
-      </ScrollView>
+          {threadBody}
+        </ScrollView>
+      )}
 
       {/* Reply Composer */}
       <PostComposer
@@ -471,6 +543,11 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingTop: spacing.md,
     paddingBottom: spacing.xl,
+  },
+  scrollViewContentWeb: {
+    // Web uses page-level scroll; no need for headroom at the bottom of
+    // the thread, the document grows to fit naturally.
+    paddingBottom: 0,
   },
   repliesContainer: {
     // Padding (not margin) so the column side borders extend across the

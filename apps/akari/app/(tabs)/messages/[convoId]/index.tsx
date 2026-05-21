@@ -12,6 +12,7 @@ import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, opacity, spacing } from '@/constants/tokens';
+import { webColumnSideBorders } from '@/constants/webStyles';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
@@ -240,10 +241,12 @@ export default function ConversationScreen() {
     }
   };
 
+  const webBorders = Platform.OS === 'web' ? webColumnSideBorders(borderColor) : null;
+
   // Show loading state while finding conversation
   if (!conversation) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={[styles.container, webBorders]}>
         <ThemedView style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>
             {t('common.loading')} {t('common.conversations')}...
@@ -257,7 +260,7 @@ export default function ConversationScreen() {
   if (messagesError) {
     const messageError = messagesError as MessageError;
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={[styles.container, webBorders]}>
         <ThemedView style={styles.errorState}>
           <ThemedText style={styles.errorText}>{messageError.message}</ThemedText>
           {messageError.type === 'permission' && (
@@ -270,7 +273,7 @@ export default function ConversationScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor }]}
+      style={[styles.container, { backgroundColor }, webBorders]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
