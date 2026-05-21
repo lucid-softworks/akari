@@ -3,6 +3,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
+import { storage } from '@/utils/secureStorage';
+
+const DEFAULT_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
 
 describe('useSelectedFeed query hook', () => {
   const createWrapper = () => {
@@ -15,7 +19,11 @@ describe('useSelectedFeed query hook', () => {
     return { queryClient, wrapper };
   };
 
-  it('returns the default feed and persists the query', async () => {
+  afterEach(() => {
+    storage.removeItem('selectedFeed');
+  });
+
+  it('returns the default feed when nothing is stored', async () => {
     const { queryClient, wrapper } = createWrapper();
     const { result } = renderHook(() => useSelectedFeed(), { wrapper });
 
@@ -23,17 +31,28 @@ describe('useSelectedFeed query hook', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const defaultUri =
-      'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
-    expect(result.current.data).toBe(defaultUri);
-
-    const fetchResult = await result.current.refetch();
-    expect(fetchResult.data).toBe(defaultUri);
+    expect(result.current.data).toBe(DEFAULT_URI);
 
     const query = queryClient.getQueryCache().find({ queryKey: ['selectedFeed'] });
-    expect(query?.meta?.persist).toBe(true);
+    // The query opts out of the persisted cache — MMKV is the source of
+    // truth, persisting twice lets stale persisted blobs clobber it.
+    expect(query?.meta?.persist).toBe(false);
     expect((query?.options as any)?.staleTime).toBe(Infinity);
     expect(query?.options.gcTime).toBe(Infinity);
+  });
+
+  it('reads the persisted choice from MMKV on mount', async () => {
+    const customUri = 'at://did:plc:fakebskypartner/app.bsky.feed.generator/sports';
+    storage.setItem('selectedFeed', customUri);
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useSelectedFeed(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toBe(customUri);
   });
 });
 
