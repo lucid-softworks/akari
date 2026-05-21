@@ -12,6 +12,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
+import { type TabKey, useTabConfig } from '@/hooks/useTabConfig';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -52,55 +53,39 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
 
   const { data: ozoneMembership } = useOzoneMembership();
   const showModeration = !!ozoneMembership?.isMod;
+  const { visibleTabs } = useTabConfig();
 
-  const navigationItems = useMemo<NavigationItem[]>(
-    () => {
-      const items: NavigationItem[] = [
-        { id: 'timeline', label: t('common.home'), icon: 'house', route: '/(tabs)', webRoute: '/' },
-        { id: 'search', label: t('common.search'), icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
-        {
-          id: 'notifications',
-          label: t('navigation.notifications'),
-          icon: 'bell',
-          route: '/(tabs)/notifications',
-          webRoute: '/notifications',
-          badge: unreadNotificationsCount,
-        },
-        {
-          id: 'messages',
-          label: t('common.messages'),
-          icon: 'message.fill',
-          route: '/(tabs)/messages',
-          webRoute: '/messages',
-          badge: unreadMessagesCount,
-        },
-        { id: 'bookmarks', label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
-        { id: 'profile', label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile' },
-        {
-          id: 'community-notes',
-          label: t('communityNotes.title'),
-          icon: 'info.circle.fill',
-          route: '/(tabs)/community-notes',
-          webRoute: '/community-notes',
-        },
-      ];
-      // Moderation lives between profile and settings, gated on Ozone
-      // team membership. The hook is best-effort — if Ozone is
-      // unreachable or the user isn't on the team, this stays hidden.
-      if (showModeration) {
-        items.push({
-          id: 'moderation',
-          label: 'Moderation',
-          icon: 'shield.fill',
-          route: '/(tabs)/moderation',
-          webRoute: '/moderation',
-        });
-      }
-      items.push({ id: 'settings', label: t('navigation.settings'), icon: 'gearshape.fill', route: '/(tabs)/settings', webRoute: '/settings' });
-      return items;
-    },
-    [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle, showModeration],
-  );
+  // The sidebar mirrors the user's "Customize Tabs" selection so a tab
+  // hidden from the bottom bar also stays hidden here. The map below is
+  // the per-TabKey sidebar metadata (outline-style icons, translated
+  // labels). Moderation is still gated on Ozone team membership — the
+  // tab can be enabled by anyone, but the link only appears when the
+  // server confirms moderator access.
+  const navigationItems = useMemo<NavigationItem[]>(() => {
+    const profileWebRoute = activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile';
+    const tabMeta: Record<TabKey, Omit<NavigationItem, 'id' | 'badge'>> = {
+      index: { label: t('common.home'), icon: 'house', route: '/(tabs)', webRoute: '/' },
+      search: { label: t('common.search'), icon: 'magnifyingglass', route: '/(tabs)/search', webRoute: '/search' },
+      messages: { label: t('common.messages'), icon: 'message.fill', route: '/(tabs)/messages', webRoute: '/messages' },
+      notifications: { label: t('navigation.notifications'), icon: 'bell', route: '/(tabs)/notifications', webRoute: '/notifications' },
+      bookmarks: { label: t('common.bookmarks'), icon: 'bookmark.fill', route: '/(tabs)/bookmarks', webRoute: '/bookmarks' },
+      profile: { label: t('common.profile'), icon: 'person.fill', route: '/(tabs)/profile', webRoute: profileWebRoute },
+      'community-notes': { label: t('communityNotes.title'), icon: 'info.circle.fill', route: '/(tabs)/community-notes', webRoute: '/community-notes' },
+      moderation: { label: 'Moderation', icon: 'shield.fill', route: '/(tabs)/moderation', webRoute: '/moderation' },
+      settings: { label: t('navigation.settings'), icon: 'gearshape.fill', route: '/(tabs)/settings', webRoute: '/settings' },
+    };
+    const badgeFor: Partial<Record<TabKey, number>> = {
+      notifications: unreadNotificationsCount,
+      messages: unreadMessagesCount,
+    };
+    return visibleTabs
+      .filter((key) => key !== 'moderation' || showModeration)
+      .map((key) => ({
+        id: key,
+        ...tabMeta[key],
+        badge: badgeFor[key],
+      }));
+  }, [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle, showModeration, visibleTabs]);
 
   const isActiveRoute = (item: NavigationItem) => {
     if (item.route === '/(tabs)') {

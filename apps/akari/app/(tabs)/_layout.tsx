@@ -65,6 +65,8 @@ function NativeLargeScreenLayout({
               <Tabs.Screen name="notifications" />
               <Tabs.Screen name="bookmarks" options={{ href: null }} />
               <Tabs.Screen name="profile" />
+              <Tabs.Screen name="community-notes" />
+              <Tabs.Screen name="moderation" />
               <Tabs.Screen name="settings" />
             </Tabs>
           </View>
@@ -104,6 +106,8 @@ const WEB_TAB_ORDER: TabKey[] = [
   'notifications',
   'bookmarks',
   'profile',
+  'community-notes',
+  'moderation',
   'settings',
 ];
 
@@ -140,7 +144,7 @@ function WebTabLayout({
   safeAreaInsetsTop,
   accountSwitcher,
 }: WebTabLayoutProps) {
-  const router = useRouter();
+  const { push } = useRouter();
   const pathname = usePathname();
 
   // Page-level scroll on web means the document body keeps its scroll
@@ -184,12 +188,12 @@ function WebTabLayout({
       } as unknown as BottomTabBarProps['state'],
       navigation: {
         navigate: (name: string) => {
-          router.push((name === 'index' ? '/' : `/${name}`) as unknown as Href);
+          push((name === 'index' ? '/' : `/${name}`) as unknown as Href);
         },
         emit: () => ({ defaultPrevented: false }),
       } as unknown as BottomTabBarProps['navigation'],
     };
-  }, [pathname, router]);
+  }, [pathname, push]);
 
   const chromeValue = useMemo(
     () => ({
@@ -608,6 +612,8 @@ export default function TabLayout() {
                 },
               })}
             />
+            <Tabs.Screen name="community-notes" />
+            <Tabs.Screen name="moderation" />
             <Tabs.Screen name="settings" />
           </Tabs>
         </View>

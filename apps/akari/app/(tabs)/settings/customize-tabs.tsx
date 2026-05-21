@@ -60,7 +60,7 @@ export default function CustomizeTabsScreen() {
 
   const handleReset = useCallback(() => {
     resetToDefault();
-    setLocalTabs(['index', 'search', 'notifications', 'bookmarks', 'profile', 'settings']);
+    setLocalTabs(['index', 'search', 'notifications', 'messages', 'bookmarks', 'profile', 'community-notes', 'settings']);
   }, [resetToDefault]);
 
   return (
@@ -86,24 +86,28 @@ export default function CustomizeTabsScreen() {
                   <ThemedText style={styles.rowLabel}>{meta.label}</ThemedText>
                 </View>
                 <View style={styles.rowRight}>
-                  {!meta.alwaysVisible ? (
-                    <Pressable onPress={() => handleMoveUp(key)}  style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]} disabled={index === 0}>
-                      <IconSymbol name="chevron.up" size={16} color={index === 0 ? borderColor : iconColor} />
-                    </Pressable>
-                  ) : null}
-                  {!meta.alwaysVisible ? (
-                    <Pressable onPress={() => handleMoveDown(key)}  style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]} disabled={index === localTabs.length - 1}>
-                      <IconSymbol name="chevron.down" size={16} color={index === localTabs.length - 1 ? borderColor : iconColor} />
-                    </Pressable>
-                  ) : null}
-                  {!meta.alwaysVisible ? (
+                  <Pressable
+                    onPress={() => handleMoveUp(key)}
+                    style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]}
+                    disabled={index === 0}
+                  >
+                    <IconSymbol name="chevron.up" size={16} color={index === 0 ? borderColor : iconColor} />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => handleMoveDown(key)}
+                    style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]}
+                    disabled={index === localTabs.length - 1}
+                  >
+                    <IconSymbol name="chevron.down" size={16} color={index === localTabs.length - 1 ? borderColor : iconColor} />
+                  </Pressable>
+                  {meta.alwaysVisible ? (
+                    <ThemedText style={[styles.alwaysOnLabel, { color: secondaryText }]}>{t('settings.alwaysOn')}</ThemedText>
+                  ) : (
                     <Switch
                       value={true}
                       onValueChange={(v) => handleToggle(key, v)}
                       trackColor={{ false: borderColor, true: accentColor }}
                     />
-                  ) : (
-                    <ThemedText style={[styles.alwaysOnLabel, { color: secondaryText }]}>{t('settings.alwaysOn')}</ThemedText>
                   )}
                 </View>
               </View>

@@ -17,6 +17,8 @@ const TAB_ICONS: Record<TabKey, string> = {
   notifications: 'bell',
   bookmarks: 'bookmark.fill',
   profile: 'person.fill',
+  'community-notes': 'info.circle.fill',
+  moderation: 'shield.fill',
   settings: 'gearshape.fill',
 };
 

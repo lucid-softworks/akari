@@ -4,7 +4,16 @@ import { MMKV } from 'react-native-mmkv';
 const storage = new MMKV();
 const STORAGE_KEY = 'tab_config';
 
-export type TabKey = 'index' | 'search' | 'messages' | 'notifications' | 'bookmarks' | 'profile' | 'settings';
+export type TabKey =
+  | 'index'
+  | 'search'
+  | 'messages'
+  | 'notifications'
+  | 'bookmarks'
+  | 'profile'
+  | 'community-notes'
+  | 'moderation'
+  | 'settings';
 
 export type TabConfig = {
   /** Ordered list of visible tab keys */
@@ -19,10 +28,21 @@ export const ALL_TABS: { key: TabKey; label: string; icon: string; alwaysVisible
   { key: 'notifications', label: 'Notifications', icon: 'bell.fill' },
   { key: 'bookmarks', label: 'Bookmarks', icon: 'bookmark.fill' },
   { key: 'profile', label: 'Profile', icon: 'person.fill' },
+  { key: 'community-notes', label: 'Community Notes', icon: 'info.circle.fill' },
+  { key: 'moderation', label: 'Moderation', icon: 'shield.fill' },
   { key: 'settings', label: 'Settings', icon: 'gearshape.fill', alwaysVisible: true },
 ];
 
-const DEFAULT_VISIBLE: TabKey[] = ['index', 'search', 'notifications', 'messages', 'bookmarks', 'profile', 'settings'];
+const DEFAULT_VISIBLE: TabKey[] = [
+  'index',
+  'search',
+  'notifications',
+  'messages',
+  'bookmarks',
+  'profile',
+  'community-notes',
+  'settings',
+];
 const DEFAULT_CONFIG: TabConfig = { visibleTabs: DEFAULT_VISIBLE };
 
 // Cached snapshot -- useSyncExternalStore compares by reference,
