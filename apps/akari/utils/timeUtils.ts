@@ -3,6 +3,7 @@ const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
 function getRelativeTimeFormatter(locale: string): Intl.RelativeTimeFormat {
   let rtf = relativeTimeFormatters.get(locale);
   if (!rtf) {
+    // oxlint-disable-next-line react-doctor/js-hoist-intl -- cached per-locale; locale is dynamic, can't hoist to module scope
     rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
     relativeTimeFormatters.set(locale, rtf);
   }

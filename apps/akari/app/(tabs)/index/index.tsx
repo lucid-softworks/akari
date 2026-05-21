@@ -1,6 +1,6 @@
 import { fontSize, layout, opacity, spacing } from '@/constants/tokens';
 import { useResponsive } from '@/hooks/useResponsive';
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { use, useCallback, useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -48,7 +48,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { isLargeScreen } = useResponsive();
   const isWeb = Platform.OS === 'web';
-  const { topInset: chromeTopInset } = useContext(TabChromeContext);
+  const { topInset: chromeTopInset } = use(TabChromeContext);
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {

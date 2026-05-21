@@ -81,6 +81,7 @@ const joinedDateFormatters = new Map<string, Intl.DateTimeFormat>();
 const formatNumber = (num: number, locale: string): string => {
   let formatter = numberFormatters.get(locale);
   if (!formatter) {
+    // oxlint-disable-next-line react-doctor/js-hoist-intl -- cached per-locale; locale is dynamic, can't hoist to module scope
     formatter = new Intl.NumberFormat(locale, {
       notation: 'compact',
       compactDisplay: 'short',
@@ -95,6 +96,7 @@ const formatJoinedDate = (iso: string, locale: string): string | null => {
   if (Number.isNaN(date.getTime())) return null;
   let formatter = joinedDateFormatters.get(locale);
   if (!formatter) {
+    // oxlint-disable-next-line react-doctor/js-hoist-intl -- cached per-locale; locale is dynamic, can't hoist to module scope
     formatter = new Intl.DateTimeFormat(locale, {
       month: 'long',
       year: 'numeric',

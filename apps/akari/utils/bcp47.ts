@@ -67,6 +67,7 @@ function getDisplayNames(uiLocale: string): Intl.DisplayNames | null {
   if (!displayNamesCache) displayNamesCache = new Map();
   if (displayNamesCache.has(uiLocale)) return displayNamesCache.get(uiLocale) ?? null;
   try {
+    // oxlint-disable-next-line react-doctor/js-hoist-intl -- cached per-locale; locale is dynamic, can't hoist to module scope
     const dn = new Intl.DisplayNames([uiLocale], { type: 'language' });
     displayNamesCache.set(uiLocale, dn);
     return dn;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { use, useEffect, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { TabChromeContext } from '@/app/(tabs)/_layout';
@@ -57,7 +57,7 @@ export function ProfileTabFlatList<T>({
   // Match the home feed's sticky-strip background so cards don't bleed
   // through during scroll.
   const surfaceBackground = useThemeColor({}, 'background');
-  const { topInset } = useContext(TabChromeContext);
+  const { topInset } = use(TabChromeContext);
 
   // Forward window scroll position + header height to the parent so it
   // can preserve the user's vertical position when switching tabs.

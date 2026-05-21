@@ -16,13 +16,18 @@ import { Platform, ScrollView, type ScrollViewProps, View } from 'react-native';
  * scrolling the document, not a nested container. `contentContainerStyle`
  * is merged onto the View's style on web so layout/padding survives.
  */
-export const SettingsScroll = React.forwardRef<
-  ScrollView,
-  ScrollViewProps & { children?: React.ReactNode }
->(function SettingsScroll(
-  { children, contentContainerStyle, style, ...scrollProps },
+type SettingsScrollProps = ScrollViewProps & {
+  children?: React.ReactNode;
+  ref?: React.Ref<ScrollView>;
+};
+
+export function SettingsScroll({
+  children,
+  contentContainerStyle,
+  style,
   ref,
-) {
+  ...scrollProps
+}: SettingsScrollProps) {
   if (Platform.OS === 'web') {
     return <View style={[style, contentContainerStyle]}>{children}</View>;
   }
@@ -36,4 +41,4 @@ export const SettingsScroll = React.forwardRef<
       {children}
     </ScrollView>
   );
-});
+}

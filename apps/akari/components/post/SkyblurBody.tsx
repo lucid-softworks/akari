@@ -124,12 +124,12 @@ export function SkyblurBody({ text, textStyle, forwardUrl }: SkyblurBodyProps) {
     <ThemedText style={textStyle}>
       {segments.map((segment, i) => {
         if (segment.kind === 'text') {
-          // oxlint-disable-next-line react/no-array-index-key -- segments are positional and the array has no stable identity beyond index
+          // oxlint-disable-next-line react-doctor/no-array-index-as-key -- segments are positional and the array has no stable identity beyond index
           return <React.Fragment key={`t-${i}`}>{segment.value}</React.Fragment>;
         }
         return (
           <BlurToken
-            // oxlint-disable-next-line react/no-array-index-key -- same as above
+            // oxlint-disable-next-line react-doctor/no-array-index-as-key -- same as above
             key={`b-${i}`}
             word={segment.value}
             textStyle={textStyle}

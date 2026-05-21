@@ -102,9 +102,9 @@ export function buildSelectedScopeString(selection: ScopeSelection): string {
   }
   for (const repo of OAUTH_REPO_SCOPES) {
     const actionState = selection.repo[repo.collection] ?? {};
-    const requiredActions = repo.requiredActions ?? [];
+    const requiredActions = new Set(repo.requiredActions ?? []);
     for (const action of repo.actions) {
-      if (requiredActions.includes(action) || actionState[action]) {
+      if (requiredActions.has(action) || actionState[action]) {
         tokens.push(`repo:${repo.collection}?action=${action}`);
       }
     }
@@ -117,8 +117,9 @@ export function defaultScopeSelection(): ScopeSelection {
   for (const f of OAUTH_FLAT_SCOPES) flat[f.id] = f.defaultEnabled;
   const repo: Record<string, Partial<Record<RepoAction, boolean>>> = {};
   for (const r of OAUTH_REPO_SCOPES) {
+    const defaults = new Set(r.defaultActions);
     repo[r.collection] = Object.fromEntries(
-      r.actions.map((a) => [a, r.defaultActions.includes(a)]),
+      r.actions.map((a) => [a, defaults.has(a)]),
     ) as Partial<Record<RepoAction, boolean>>;
   }
   return { flat, repo };

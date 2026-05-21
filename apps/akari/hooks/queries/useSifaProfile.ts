@@ -88,7 +88,7 @@ export function useSifaEducation(identifier: string | undefined, limit: number =
  */
 export function sortSifaPositions(positions: SifaPositionRecord[] | undefined): SifaPositionRecord[] {
   if (!positions) return [];
-  return [...positions].sort((a, b) => {
+  return positions.toSorted((a, b) => {
     if (a.value.isPrimary && !b.value.isPrimary) return -1;
     if (!a.value.isPrimary && b.value.isPrimary) return 1;
     return (b.value.startedAt ?? '').localeCompare(a.value.startedAt ?? '');
@@ -101,7 +101,7 @@ export function sortSifaPositions(positions: SifaPositionRecord[] | undefined): 
  */
 export function sortSifaEducation(items: SifaEducationRecord[] | undefined): SifaEducationRecord[] {
   if (!items) return [];
-  return [...items].sort((a, b) => {
+  return items.toSorted((a, b) => {
     const aKey = a.value.endedAt ?? a.value.startedAt ?? '';
     const bKey = b.value.endedAt ?? b.value.startedAt ?? '';
     return bKey.localeCompare(aKey);

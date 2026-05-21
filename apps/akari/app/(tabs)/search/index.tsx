@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -84,7 +84,7 @@ export default function SearchScreen() {
   const { t } = useTranslation();
   const navigateToProfile = useNavigateToProfile();
   const { isLargeScreen } = useResponsive();
-  const { topInset: chromeTopInset } = useContext(TabChromeContext);
+  const { topInset: chromeTopInset } = use(TabChromeContext);
   const isWeb = Platform.OS === 'web';
 
   const {

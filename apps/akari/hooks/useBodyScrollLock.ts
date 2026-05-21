@@ -15,10 +15,7 @@ import { Platform } from 'react-native';
 let lockCount = 0;
 let saved: {
   htmlOverflow: string;
-  bodyOverflow: string;
-  bodyPosition: string;
-  bodyTop: string;
-  bodyWidth: string;
+  bodyCssText: string;
   scrollY: number;
 } | null = null;
 
@@ -27,21 +24,19 @@ function applyLock() {
     const scrollY = window.scrollY || window.pageYOffset || 0;
     saved = {
       htmlOverflow: document.documentElement.style.overflow,
-      bodyOverflow: document.body.style.overflow,
-      bodyPosition: document.body.style.position,
-      bodyTop: document.body.style.top,
-      bodyWidth: document.body.style.width,
+      bodyCssText: document.body.style.cssText,
       scrollY,
     };
     // `overflow: hidden` on documentElement and body covers desktop
     // browsers that scroll either element. `position: fixed` covers
     // iOS Safari, which ignores overflow:hidden — we pin the body to
     // its current scroll offset so the visual position doesn't jump.
+    // Body mutations are batched into a single `cssText` write; the
+    // html write below targets a different element so it can't merge.
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements, can't merge into one cssText
     document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
+    document.body.style.cssText +=
+      `;overflow:hidden;position:fixed;top:-${scrollY}px;width:100%`;
   }
   lockCount += 1;
 }
@@ -50,12 +45,10 @@ function releaseLock() {
   if (lockCount === 0) return;
   lockCount -= 1;
   if (lockCount === 0 && saved) {
-    const { htmlOverflow, bodyOverflow, bodyPosition, bodyTop, bodyWidth, scrollY } = saved;
+    const { htmlOverflow, bodyCssText, scrollY } = saved;
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements, can't merge into one cssText
     document.documentElement.style.overflow = htmlOverflow;
-    document.body.style.overflow = bodyOverflow;
-    document.body.style.position = bodyPosition;
-    document.body.style.top = bodyTop;
-    document.body.style.width = bodyWidth;
+    document.body.style.cssText = bodyCssText;
     // Restore the scroll position the lock froze us at. Without this
     // the page would jump to top when the body's `position: fixed`
     // comes off.

@@ -172,7 +172,7 @@ export default function SubjectDetailScreen() {
                   </ThemedText>
                 </View>
                 {readEventComment(e.event) ? (
-                  <ThemedText style={[styles.eventComment]} numberOfLines={4}>
+                  <ThemedText style={styles.eventComment} numberOfLines={4}>
                     {readEventComment(e.event)}
                   </ThemedText>
                 ) : null}

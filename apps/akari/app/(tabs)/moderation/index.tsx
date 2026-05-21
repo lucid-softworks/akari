@@ -472,7 +472,7 @@ function EventRow({
             </ThemedText>
           </View>
           {comment ? (
-            <ThemedText style={[styles.rowBody]} numberOfLines={4}>
+            <ThemedText style={styles.rowBody} numberOfLines={4}>
               {comment}
             </ThemedText>
           ) : null}

@@ -37,18 +37,13 @@ export const isGifUrl = (uri: string | undefined): boolean => {
   );
 };
 
+const VIDEO_DOMAIN_RE = /(?:vimeo\.com|dailymotion\.com|twitch\.tv|tiktok\.com)/;
+const VIDEO_EXTENSION_RE = /\.(?:mp4|mov|avi|webm|m3u8)(?:[?#]|$)/;
+
 export const isVideoUrl = (uri: string | undefined): boolean => {
   if (!uri) return false;
   const normalized = uri.toLowerCase();
-  const videoDomains = ['vimeo.com', 'dailymotion.com', 'twitch.tv', 'tiktok.com'];
-  for (const domain of videoDomains) {
-    if (normalized.includes(domain)) return true;
-  }
-  const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.m3u8'];
-  for (const extension of videoExtensions) {
-    if (normalized.includes(extension)) return true;
-  }
-  return false;
+  return VIDEO_DOMAIN_RE.test(normalized) || VIDEO_EXTENSION_RE.test(normalized);
 };
 
 export const getRecordEmbedData = (embed: BlueskyEmbed | undefined): RecordEmbedData | null => {
