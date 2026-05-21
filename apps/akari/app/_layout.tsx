@@ -104,10 +104,22 @@ function trimPersistedInfinitePages<T>(client: T): T {
 
 const queryCachePersister: Persister = {
   persistClient: async (client) => {
+    // Trim before write, not just before restore. Without this we
+    // serialize every infinite-query page (a feed can accumulate 30+
+    // pages in a session) which blows the web's localStorage quota.
+    const trimmed = trimPersistedInfinitePages(client);
     try {
-      storage.setItem(REACT_QUERY_CACHE_STORAGE_KEY, client);
+      storage.setItem(REACT_QUERY_CACHE_STORAGE_KEY, trimmed);
     } catch (error) {
       if (__DEV__) console.error('Failed to persist React Query cache', error);
+      // QuotaExceededError on web: clear what we have so the next
+      // persist starts from an empty slot rather than failing again
+      // on the same oversized entry.
+      try {
+        storage.removeItem(REACT_QUERY_CACHE_STORAGE_KEY);
+      } catch {
+        // best-effort; nothing else to do
+      }
     }
   },
   restoreClient: async () => {
