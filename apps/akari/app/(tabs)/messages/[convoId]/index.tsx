@@ -1,17 +1,22 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useQueryClient } from '@tanstack/react-query';
 import type { BlueskyEmbed } from '@/bluesky-api';
+import { AvatarOrInitial } from '@/components/AvatarOrInitial';
 import { EmojiPicker } from '@/components/EmojiPicker';
 import { MessageBubble } from '@/components/messages/conversation/MessageBubble';
 import { MessageComposer } from '@/components/messages/conversation/MessageComposer';
+import { ChatActionsSheet } from '@/components/chat/ChatActionsSheet';
 import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
+import { ReportSheet } from '@/components/ReportSheet';
+import { VerificationBadge } from '@/components/VerificationBadge';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { fontSize, fontWeight, opacity, spacing } from '@/constants/tokens';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { activeOpacity, fontSize, fontWeight, layout, opacity, radius, spacing } from '@/constants/tokens';
 import { webColumnSideBorders } from '@/constants/webStyles';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
@@ -22,6 +27,7 @@ import { useConversations } from '@/hooks/queries/useConversations';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -70,6 +76,7 @@ export default function ConversationScreen() {
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
   const queryClient = useQueryClient();
+  const { isLargeScreen } = useResponsive();
 
   // Theme colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -109,6 +116,14 @@ export default function ConversationScreen() {
   const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
   const [reactionsDialogFor, setReactionsDialogFor] = useState<string | null>(null);
   const [emojiPickerFor, setEmojiPickerFor] = useState<string | null>(null);
+  // The (tabs) layout already hosts a ChatActionsSheet wired to the
+  // mobile header's options button. On web large-screen there's no
+  // mobile chrome, so the sticky chat header rendered below owns its
+  // own copy of the sheet (and the nested ReportSheet) — both are
+  // gated to `showWebThreadHeader` to avoid double-mounting on
+  // viewports where the mobile chrome is already in play.
+  const [chatActionsSheetVisible, setChatActionsSheetVisible] = useState(false);
+  const [chatReportSheetVisible, setChatReportSheetVisible] = useState(false);
 
   // Flatten all pages of messages into a single array. API returns
   // newest-first — keep order for an inverted FlatList.
@@ -243,6 +258,22 @@ export default function ConversationScreen() {
 
   const webBorders = Platform.OS === 'web' ? webColumnSideBorders(borderColor) : null;
 
+  // Web large-screen has no chrome above the chat thread — the
+  // `(tabs)` layout's mobile header only renders at narrow widths, so
+  // a desktop visitor lands inside a wall of messages with no
+  // indication of *who* the chat is with. Native and mobile-web are
+  // already covered by `MobileTabHeader`; this sticky header fills the
+  // large-screen gap. `position: sticky; top: 0` keeps it pinned as
+  // the chat scrolls.
+  const showWebThreadHeader = Platform.OS === 'web' && isLargeScreen;
+  const threadHeaderTitle = conversation?.isGroup
+    ? (conversation?.members ?? [])
+        .map((m) => m.displayName || m.handle)
+        .join(', ')
+    : conversation?.displayName || conversation?.handle || '';
+  const threadHeaderHandle = conversation && !conversation.isGroup ? conversation.handle : null;
+  const threadHeaderAvatar = conversation?.avatar;
+
   // Show loading state while finding conversation
   if (!conversation) {
     return (
@@ -277,8 +308,67 @@ export default function ConversationScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 56 + 60}
     >
-      {/* Header is rendered by the (tabs) layout's mobileDrawerHeader so
-          the chat thread looks consistent with the rest of the app. */}
+      {/* Mobile / native header is rendered by the (tabs) layout's
+          MobileTabHeader (with avatar + name pulled from
+          messageThreadConvo). The header below covers the web
+          large-screen case the mobile chrome doesn't reach. */}
+      {showWebThreadHeader ? (
+        <View
+          style={[
+            styles.webThreadHeader,
+            {
+              backgroundColor,
+              borderBottomColor: borderColor,
+            },
+          ]}
+        >
+          <AvatarOrInitial
+            uri={threadHeaderAvatar}
+            seed={threadHeaderTitle || threadHeaderHandle || '?'}
+            size={32}
+          />
+          <View style={styles.webThreadHeaderText}>
+            <View style={styles.webThreadHeaderTitleRow}>
+              <ThemedText
+                style={[styles.webThreadHeaderTitle, { color: textColor }]}
+                numberOfLines={1}
+              >
+                {threadHeaderTitle}
+              </ThemedText>
+              {!conversation?.isGroup && conversation?.members[0]?.did ? (
+                <VerificationBadge
+                  subjectDid={conversation.members[0].did}
+                  verification={conversation.verification}
+                  subjectHandle={conversation.handle}
+                  subjectDisplayName={conversation.displayName}
+                  size={fontSize.base}
+                />
+              ) : null}
+            </View>
+            {threadHeaderHandle ? (
+              <ThemedText
+                style={[styles.webThreadHeaderHandle, { color: textColor }]}
+                numberOfLines={1}
+              >
+                @{threadHeaderHandle}
+              </ThemedText>
+            ) : null}
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('navigation.settings')}
+            onPress={() => setChatActionsSheetVisible(true)}
+            disabled={!conversation}
+            style={({ pressed }) => [
+              styles.webThreadHeaderButton,
+              pressed && { opacity: activeOpacity.default },
+            ]}
+          >
+            <IconSymbol name="ellipsis" color={iconColor} size={20} />
+          </Pressable>
+        </View>
+      ) : null}
+
       {messagesLoading ? (
         <View style={styles.loadingState}>
           <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
@@ -335,6 +425,28 @@ export default function ConversationScreen() {
           setEmojiPickerFor(null);
         }}
       />
+
+      {showWebThreadHeader && conversation ? (
+        <>
+          <ChatActionsSheet
+            visible={chatActionsSheetVisible}
+            onDismiss={() => setChatActionsSheetVisible(false)}
+            convoId={conversation.convoId}
+            isMuted={conversation.muted}
+            isGroup={conversation.isGroup}
+            peerDid={conversation.isGroup ? undefined : conversation.members[0]?.did}
+            onReportPress={() => setChatReportSheetVisible(true)}
+            onLeft={() => router.back()}
+          />
+          {!conversation.isGroup && conversation.members[0]?.did ? (
+            <ReportSheet
+              visible={chatReportSheetVisible}
+              onDismiss={() => setChatReportSheetVisible(false)}
+              subject={{ type: 'account', did: conversation.members[0].did }}
+            />
+          ) : null}
+        </>
+      ) : null}
     </KeyboardAvoidingView>
   );
 }
@@ -342,6 +454,49 @@ export default function ConversationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  // `position: sticky` is web-only; RN's StyleSheet types it as
+  // `absolute | relative | fixed`, so we have to cast through `object`
+  // the same way the home tab's sticky tabs strip does. `top: 0` is
+  // relative to the nearest scroll context — for the chat thread on
+  // web, that's the document body (the WebTabLayout content View is
+  // `overflow: visible`), which is exactly what we want.
+  webThreadHeader: ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
+  } as object),
+  webThreadHeaderText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webThreadHeaderTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
+    flexShrink: 1,
+  },
+  webThreadHeaderTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    flexShrink: 1,
+  },
+  webThreadHeaderHandle: {
+    fontSize: fontSize.sm,
+    opacity: opacity.secondary,
+  },
+  webThreadHeaderButton: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   messagesContent: {
     paddingVertical: spacing.lg,
