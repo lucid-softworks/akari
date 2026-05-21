@@ -51,9 +51,13 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const badgeBg = '#FF3B30';
   const activeAccount = currentAccount ?? accounts[0];
 
-  const { data: ozoneMembership } = useOzoneMembership();
-  const showModeration = !!ozoneMembership?.isMod;
   const { visibleTabs } = useTabConfig();
+  // Only resolve Ozone membership when the moderation tab is on. Otherwise
+  // we'd hit `tools.ozone.team.listMembers` for every signed-in user, even
+  // those who aren't moderators and have hidden the tab.
+  const moderationOptedIn = visibleTabs.includes('moderation');
+  const { data: ozoneMembership } = useOzoneMembership({ enabled: moderationOptedIn });
+  const showModeration = moderationOptedIn && !!ozoneMembership?.isMod;
 
   // The sidebar mirrors the user's "Customize Tabs" selection so a tab
   // hidden from the bottom bar also stays hidden here. The map below is

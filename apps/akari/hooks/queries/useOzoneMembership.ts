@@ -15,6 +15,17 @@ export type OzoneMembership = {
   self: OzoneTeamMember | undefined;
 };
 
+type UseOzoneMembershipOptions = {
+  ozoneDidOverride?: string;
+  /**
+   * When false, the underlying `listMembers` request is suppressed. The
+   * sidebar opts out unless the user has the moderation tab enabled so
+   * we don't fire an Ozone request just to ask "should I render the
+   * moderation link?". Moderation pages always leave this on.
+   */
+  enabled?: boolean;
+};
+
 /**
  * Resolves whether the signed-in account is a member of the configured
  * Ozone team. Used to gate the moderation tab + sidebar entry.
@@ -23,7 +34,8 @@ export type OzoneMembership = {
  * the `q` parameter so we don't pull the whole team just to answer
  * "am I in this list?".
  */
-export function useOzoneMembership(ozoneDidOverride?: string) {
+export function useOzoneMembership(options: UseOzoneMembershipOptions = {}) {
+  const { ozoneDidOverride, enabled = true } = options;
   const { data: currentAccount } = useCurrentAccount();
   const { data: token } = useJwtToken();
   const settingDid = useOzoneDid();
@@ -31,7 +43,7 @@ export function useOzoneMembership(ozoneDidOverride?: string) {
 
   return useQuery<OzoneMembership>({
     queryKey: queryKeys.ozone.membership(ozoneDid, currentAccount?.did),
-    enabled: !!token && !!currentAccount?.did && !!currentAccount.pdsUrl && !!ozoneDid,
+    enabled: enabled && !!token && !!currentAccount?.did && !!currentAccount.pdsUrl && !!ozoneDid,
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
       if (!token || !currentAccount?.did || !currentAccount.pdsUrl) {
