@@ -107,7 +107,11 @@
       "invalidHandle": "Vui lòng nhập một handle hợp lệ.",
       "oauthSuccessTitle": "Đã đăng nhập",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) đã được xác thực qua atproto OAuth. Bước tiếp theo là kết nối phiên này vào client API.",
-      "refreshingSession": "Đang làm mới phiên…"
+      "refreshingSession": "Đang làm mới phiên…",
+      "continueAsGuest": "Tiếp tục mà không đăng nhập",
+      "signInCta": "Đăng nhập",
+      "guestHeroTitle": "Đang duyệt với tư cách khách",
+      "guestRequiredSubtitle": "Đăng nhập để sử dụng tính năng này trên Akari."
     },
     "oauth": {
       "scopes": {

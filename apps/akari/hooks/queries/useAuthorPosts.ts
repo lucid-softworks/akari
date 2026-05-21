@@ -7,7 +7,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching a user's original posts (not replies or reposts)
  * @param identifier - The user's handle or DID
@@ -29,11 +29,17 @@ export function useAuthorPosts(identifier: string | undefined, limit: number = 5
         return { posts: page.feed.map((item) => item.post), cursor: page.cursor };
       }
 
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-
-      const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, undefined, acceptLabelers);
+      // Guest path: public AppView serves `getAuthorFeed` unauth.
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
+      const feed = await api.getAuthorFeed(
+        useGuestPath ? '' : token,
+        identifier,
+        limit,
+        pageParam,
+        undefined,
+        acceptLabelers,
+      );
 
       // Filter to only show original posts (not reposts or replies)
       const originalPosts = feed.feed.flatMap((item) => (!item.reason && !item.reply ? [item.post] : []));
@@ -49,7 +55,7 @@ export function useAuthorPosts(identifier: string | undefined, limit: number = 5
       };
     },
     select: (data) => data.pages.flatMap((page) => page.posts),
-    enabled: !!identifier && (appViewEnabled ? !!token : true),
+    enabled: !!identifier,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000, // 5 minutes

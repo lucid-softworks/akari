@@ -13,7 +13,8 @@ describe('SearchResultSkeleton', () => {
   });
 
   it('renders all skeleton elements for a search result', () => {
+    // avatar (1) + display name (1) + handle (1) + two description lines (2) = 5
     const { UNSAFE_getAllByType } = render(<SearchResultSkeleton />);
-    expect(UNSAFE_getAllByType(Skeleton)).toHaveLength(4);
+    expect(UNSAFE_getAllByType(Skeleton)).toHaveLength(5);
   });
 });

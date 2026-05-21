@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-  Modal,
-  Platform,
   Pressable,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Switch,
   TextInput,
   View,
 } from 'react-native';
 
+import { SheetModal } from '@/components/ui/SheetModal';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useFeedFilters, type FeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -51,70 +49,72 @@ function parseBound(input: string): number | undefined {
 export function FeedFiltersSheet({ onClose, feedKey }: FeedFiltersSheetProps) {
   const { t } = useTranslation();
   const borderColor = useBorderColor();
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#151718' }, 'background');
-  const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
+  // Surface is the `panel` token (set by SheetModal), so the count
+  // inputs need a lower tone than that or they'd disappear into the
+  // card. `hover` is the next step down — bright enough to read as an
+  // input field without looking like a button.
+  const textColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
-  const inputBackground = useThemeColor({ light: '#f3f4f6', dark: '#1f2326' }, 'background');
+  const inputBackground = useThemeColor({}, 'hover');
 
   const { filters, update, reset } = useFeedFilters(feedKey);
-
-  // Android fullScreen Modal needs explicit top safe area; iOS pageSheet
-  // already insets correctly. Same trick used in VerifiersSheet.
-  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
+  const isGuest = useIsGuest();
 
   return (
-    <Modal
-      visible
-      animationType="slide"
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
-      onRequestClose={onClose}
-    >
-      <ThemedView style={[styles.container, { backgroundColor, paddingTop: containerTopPadding }]}>
-        <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <Pressable onPress={reset} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
-            <ThemedText style={[styles.headerButtonText, { color: subduedColor }]}>
-              {t('common.reset')}
-            </ThemedText>
-          </Pressable>
-          <ThemedText style={[styles.headerTitle, { color: textColor }]}>
-            {t('feed.filterSheetTitle')}
+    <SheetModal onRequestClose={onClose}>
+      <View style={[styles.header, { borderBottomColor: borderColor }]}>
+        <Pressable onPress={reset} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
+          <ThemedText style={[styles.headerButtonText, { color: subduedColor }]}>
+            {t('common.reset')}
           </ThemedText>
-          <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
-            <ThemedText style={[styles.headerButtonText, { color: ACCENT, fontWeight: fontWeight.semibold }]}>
-              {t('common.done')}
-            </ThemedText>
-          </Pressable>
-        </View>
+        </Pressable>
+        <ThemedText style={[styles.headerTitle, { color: textColor }]}>
+          {t('feed.filterSheetTitle')}
+        </ThemedText>
+        <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
+          <ThemedText style={[styles.headerButtonText, { color: ACCENT, fontWeight: fontWeight.semibold }]}>
+            {t('common.done')}
+          </ThemedText>
+        </Pressable>
+      </View>
 
-        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-          <SectionHeader label={t('feed.filterSectionHide')} subduedColor={subduedColor} />
-          <ToggleRow filterKey="hideReplies" label={t('feed.hideReplies')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
-          <ToggleRow filterKey="hideReposts" label={t('feed.hideReposts')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
-          <ToggleRow filterKey="hideQuotes" label={t('feed.hideQuotes')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
-          <ToggleRow filterKey="hideEngaged" label={t('feed.hideEngaged')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <SectionHeader label={t('feed.filterSectionHide')} subduedColor={subduedColor} />
+        <ToggleRow filterKey="hideReplies" label={t('feed.hideReplies')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+        <ToggleRow filterKey="hideReposts" label={t('feed.hideReposts')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+        <ToggleRow filterKey="hideQuotes" label={t('feed.hideQuotes')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+        <ToggleRow filterKey="hideEngaged" label={t('feed.hideEngaged')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
 
-          <SectionHeader label={t('feed.filterSectionAuthor')} subduedColor={subduedColor} />
-          <ToggleRow filterKey="onlyFollowing" label={t('feed.onlyFollowing')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
-          <ToggleRow filterKey="onlyMutuals" label={t('feed.onlyMutuals')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+        {/* Author-based filters need the viewer's social graph
+            (`viewer.following` / `viewer.followedBy`), which the
+            public AppView doesn't populate for unauthenticated reads.
+            Hide the section entirely for guests rather than render
+            toggles that would silently filter nothing. */}
+        {isGuest ? null : (
+          <>
+            <SectionHeader label={t('feed.filterSectionAuthor')} subduedColor={subduedColor} />
+            <ToggleRow filterKey="onlyFollowing" label={t('feed.onlyFollowing')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+            <ToggleRow filterKey="onlyMutuals" label={t('feed.onlyMutuals')} filters={filters} update={update} borderColor={borderColor} textColor={textColor} />
+          </>
+        )}
 
-          <SectionHeader label={t('feed.filterSectionCounts')} subduedColor={subduedColor} />
-          {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded 4-element list (COUNT_KEYS), virtualization overhead > scan cost */}
-          {COUNT_KEYS.map((key) => (
-            <CountRow
-              key={key}
-              countKey={key}
-              label={t(`feed.count${key}`)}
-              filters={filters}
-              update={update}
-              borderColor={borderColor}
-              textColor={textColor}
-              subduedColor={subduedColor}
-              inputBackground={inputBackground}
-            />
-          ))}
-        </ScrollView>
-      </ThemedView>
-    </Modal>
+        <SectionHeader label={t('feed.filterSectionCounts')} subduedColor={subduedColor} />
+        {/* oxlint-disable-next-line react-doctor/rn-no-scrollview-mapped-list -- Bounded 4-element list (COUNT_KEYS), virtualization overhead > scan cost */}
+        {COUNT_KEYS.map((key) => (
+          <CountRow
+            key={key}
+            countKey={key}
+            label={t(`feed.count${key}`)}
+            filters={filters}
+            update={update}
+            borderColor={borderColor}
+            textColor={textColor}
+            subduedColor={subduedColor}
+            inputBackground={inputBackground}
+          />
+        ))}
+      </ScrollView>
+    </SheetModal>
   );
 }
 
@@ -214,9 +214,6 @@ function CountRow({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

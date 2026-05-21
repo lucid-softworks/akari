@@ -5,7 +5,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useQuery } from '@tanstack/react-query';
-import { apiForPdsUrl } from '@/utils/blueskyApi';
+import { apiForPdsUrl, apiForPublicAppView } from '@/utils/blueskyApi';
 
 const FEED_GENERATORS_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
@@ -23,8 +23,13 @@ export const feedGeneratorsQueryOptions = (
       return getFeedGeneratorViews(feedUris);
     }
 
-    if (!token) throw new Error('No access token');
-    if (!pdsUrl) throw new Error('No PDS URL available');
+    // Guest path: fall through to the public AppView when there's no
+    // session to proxy through. `getFeedGenerators` is a pure read
+    // and works unauthenticated.
+    if (!token || !pdsUrl) {
+      const api = apiForPublicAppView();
+      return await api.getFeedGenerators('', feedUris);
+    }
 
     const api = apiForPdsUrl(pdsUrl);
     return await api.getFeedGenerators(token, feedUris);
@@ -43,6 +48,6 @@ export function useFeedGenerators(feedUris: string[]) {
 
   return useQuery({
     ...feedGeneratorsQueryOptions(feedUris, token ?? '', currentAccount?.pdsUrl ?? '', appViewEnabled),
-    enabled: feedUris.length > 0 && (appViewEnabled ? !!token && !!currentAccount?.pdsUrl : true),
+    enabled: feedUris.length > 0,
   });
 }

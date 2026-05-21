@@ -6,7 +6,7 @@ import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from "@/hooks/useAppViewEnabled";
 import { useCurrentAccount } from "./useCurrentAccount";
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 
 /**
  * Query hook for fetching a user's profile information
@@ -27,15 +27,18 @@ export function useProfile(identifier: string | undefined) {
         return getProfileView(identifier);
       }
 
-      if (!token) throw new Error("No access token");
-      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
+      // Guest path: public AppView serves `getProfile` unauthenticated.
+      if (!token || !currentAccount?.pdsUrl) {
+        const api = apiForPublicAppView();
+        return await api.getProfile('', identifier, acceptLabelers);
+      }
 
       const api = apiForAccount(currentAccount);
       const profile = await api.getProfile(token, identifier, acceptLabelers);
 
       return profile;
     },
-    enabled: !!identifier && (appViewEnabled ? !!token : true),
+    enabled: !!identifier,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

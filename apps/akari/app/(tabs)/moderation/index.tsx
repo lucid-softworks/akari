@@ -4,6 +4,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { OzoneSubject } from 'bluesky-ozone';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { Image } from '@/components/Image';
 import { OzoneActionSheet } from '@/components/moderation/OzoneActionSheet';
 import { ThemedText } from '@/components/ThemedText';
@@ -11,6 +12,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, opacity, radius, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { useDialogManager } from '@/contexts/DialogContext';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useOzoneEvents } from '@/hooks/queries/useOzoneEvents';
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useOzoneQueue, type OzoneQueueFilters } from '@/hooks/queries/useOzoneQueue';
@@ -37,6 +39,7 @@ export default function ModerationScreen() {
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
 
+  const isGuest = useIsGuest();
   const { data: membership, isLoading: membershipLoading } = useOzoneMembership();
   const [tab, setTab] = useState<'queue' | 'events'>('queue');
   const [queueFilters, setQueueFilters] = useState<OzoneQueueFilters>({
@@ -88,6 +91,10 @@ export default function ModerationScreen() {
       void events.fetchNextPage();
     }
   }, [tab, queue, events]);
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('moderation.index.title')} />;
+  }
 
   if (membershipLoading) {
     return (

@@ -1,15 +1,15 @@
 import { Image } from '@/components/Image';
 import type { ListRenderItem } from '@shopify/flash-list';
 import React, { useCallback, useMemo } from 'react';
-import { Modal, Platform, Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyVerification } from '@/bluesky-api';
+import { SheetModal } from '@/components/ui/SheetModal';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import type { VerificationTier } from '@/components/VerificationBadge';
-import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
+import { activeOpacity, fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useVerifiersForDid } from '@/hooks/queries/useVerifiersForDid';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -56,18 +56,10 @@ export function VerifiersSheet({
 }: VerifiersSheetProps) {
   const { t } = useTranslation();
   const borderColor = useBorderColor();
-  const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#151718' }, 'background');
-  const textColor = useThemeColor({ light: '#000000', dark: '#ffffff' }, 'text');
+  const textColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { trustedVerifierDids, isTrustedVerifier } = useVerificationSettings();
   const { data: constellationDids } = useVerifiersForDid(subjectDid);
-  // iOS pageSheet auto-respects the safe area; Android fullScreen draws under
-  // the status bar, so we have to push the header down ourselves or the Done
-  // button lands behind the notch / clock. `useSafeAreaInsets` returns 0
-  // inside a Modal (the Modal is its own native window, the SafeAreaProvider
-  // context doesn't reach), so we use `StatusBar.currentHeight` instead —
-  // a static Android-only value exposed without any provider.
-  const containerTopPadding = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
   const { trustedRows, otherRows } = useMemo(() => {
     const byIssuer = new Map<string, VerifierRowData>();
@@ -116,16 +108,8 @@ export function VerifiersSheet({
     return t('ui.verifiersSheetIntroBody');
   }, [trustedVerifierDids.length, t]);
 
-  const isWeb = Platform.OS === 'web';
-
-  const content = (
-    <ThemedView
-      style={[
-        isWeb ? styles.webCard : styles.container,
-        { backgroundColor, paddingTop: isWeb ? 0 : containerTopPadding },
-        isWeb && { borderColor },
-      ]}
-    >
+  return (
+    <SheetModal onRequestClose={onClose}>
       <View style={[styles.header, { borderBottomColor: borderColor }]}>
         <Pressable onPress={onClose} style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]} accessibilityRole="button">
           <ThemedText style={[styles.headerButtonText, { color: VERIFIED_BLUE }]}>
@@ -162,35 +146,7 @@ export function VerifiersSheet({
           subduedColor={subduedColor}
         />
       )}
-    </ThemedView>
-  );
-
-  if (isWeb) {
-    return (
-      <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-        <Pressable style={styles.webBackdrop} onPress={onClose}>
-          <Pressable
-            style={styles.webCardWrapper}
-            // Swallow card-region presses so they don't bubble to the
-            // backdrop and dismiss the modal.
-            onPress={(event) => event.stopPropagation()}
-          >
-            {content}
-          </Pressable>
-        </Pressable>
-      </Modal>
-    );
-  }
-
-  return (
-    <Modal
-      visible
-      animationType="slide"
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
-      onRequestClose={onClose}
-    >
-      {content}
-    </Modal>
+    </SheetModal>
   );
 }
 
@@ -316,27 +272,6 @@ function VerifierRow({ row, onClose, borderColor, subduedColor }: VerifierRowPro
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  webBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.lg,
-  },
-  webCardWrapper: {
-    width: '100%',
-    maxWidth: 480,
-    maxHeight: '90%',
-  },
-  webCard: {
-    width: '100%',
-    borderRadius: radius.md,
-    borderWidth: layout.hairline,
-    overflow: 'hidden',
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

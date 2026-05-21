@@ -107,7 +107,11 @@
       "invalidHandle": "Δώσε ένα έγκυρο handle.",
       "oauthSuccessTitle": "Συνδεθήκατε",
       "oauthSuccessMessage": "Το @{{handle}} ({{did}}) πιστοποιήθηκε μέσω atproto OAuth. Επόμενο βήμα είναι η σύνδεση αυτής της συνεδρίας με τον πελάτη του API.",
-      "refreshingSession": "Ανανέωση συνεδρίας…"
+      "refreshingSession": "Ανανέωση συνεδρίας…",
+      "continueAsGuest": "Συνέχεια χωρίς σύνδεση",
+      "signInCta": "Σύνδεση",
+      "guestHeroTitle": "Περιήγηση ως επισκέπτης",
+      "guestRequiredSubtitle": "Συνδεθείτε για να χρησιμοποιήσετε αυτή τη λειτουργία στο Akari."
     },
     "oauth": {
       "scopes": {

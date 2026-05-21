@@ -5,6 +5,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, Switch, View } from 'react
 import { AddCommunityNoteModal } from '@/components/post/CommunityNoteContributor';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { CommunityNote } from '@/components/post/CommunityNote';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, opacity, radius, spacing } from '@/constants/tokens';
@@ -15,6 +16,7 @@ import {
   useNotesPendingRating,
   usePendingPostsNeedingNotes,
 } from '@/hooks/queries/useCommunityNotesContributor';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -38,7 +40,12 @@ export default function CommunityNotesScreen() {
   const { t } = useTranslation();
 
   const { isContributor, setIsContributor } = useCommunityNotesSettings();
+  const isGuest = useIsGuest();
   const [tab, setTab] = useState<Tab>('pending');
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('communityNotes.title')} />;
+  }
 
   if (!isContributor) {
     return (

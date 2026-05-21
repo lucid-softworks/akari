@@ -107,7 +107,11 @@
       "invalidHandle": "Wpisz prawidłowy handle.",
       "oauthSuccessTitle": "Zalogowano",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) został uwierzytelniony przez atproto OAuth. Połączenie tej sesji z klientem API to kolejny krok.",
-      "refreshingSession": "Odświeżanie sesji…"
+      "refreshingSession": "Odświeżanie sesji…",
+      "continueAsGuest": "Kontynuuj bez logowania",
+      "signInCta": "Zaloguj się",
+      "guestHeroTitle": "Przeglądasz jako gość",
+      "guestRequiredSubtitle": "Zaloguj się, aby korzystać z tej funkcji w Akari."
     },
     "oauth": {
       "scopes": {

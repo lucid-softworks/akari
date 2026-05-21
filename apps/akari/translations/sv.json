@@ -107,7 +107,11 @@
       "invalidHandle": "Ange ett giltigt handle.",
       "oauthSuccessTitle": "Inloggad",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) har autentiserats via atproto OAuth. Nästa steg är att koppla den här sessionen till API-klienten.",
-      "refreshingSession": "Uppdaterar sessionen…"
+      "refreshingSession": "Uppdaterar sessionen…",
+      "continueAsGuest": "Fortsätt utan att logga in",
+      "signInCta": "Logga in",
+      "guestHeroTitle": "Surfar som gäst",
+      "guestRequiredSubtitle": "Logga in för att använda den här funktionen i Akari."
     },
     "oauth": {
       "scopes": {

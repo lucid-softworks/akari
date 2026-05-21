@@ -149,15 +149,42 @@ describe('useSearch', () => {
     expect(mockSearchPosts).not.toHaveBeenCalled();
   });
 
-  it('does not run query without token', async () => {
+  it('falls through to the public AppView for guest user search', async () => {
+    // Guest path: `searchActors` resolves unauthenticated against
+    // `public.api.bsky.app`. `searchPosts` does NOT work without auth
+    // (the public AppView returns 403), so the "all" tab degrades to
+    // actor-only and post search is skipped entirely until the user
+    // signs in. This is the working slice that keeps the search page
+    // useful for unauthenticated browsing.
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: undefined });
+    mockSearchProfiles.mockResolvedValueOnce({ actors: [{ did: 'p1' }], cursor: undefined });
+
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useSearch('q'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.data).toBeUndefined();
+      expect(result.current.data?.pages[0].results).toEqual([
+        { type: 'profile', data: { did: 'p1' } },
+      ]);
     });
-    expect(mockSearchProfiles).not.toHaveBeenCalled();
+    expect(mockSearchProfiles).toHaveBeenCalledWith('', 'q', 20, undefined);
+    expect(mockSearchPosts).not.toHaveBeenCalled();
+  });
+
+  it('returns empty results for guest post search', async () => {
+    // Posts tab for guests short-circuits to empty rather than hitting
+    // the 403 endpoint. The screen will show the empty state.
+    (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: undefined });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useSearch('q', 'posts'), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.data?.pages[0].results).toEqual([]);
+      expect(result.current.data?.pages[0].cursor).toBeUndefined();
+    });
     expect(mockSearchPosts).not.toHaveBeenCalled();
   });
 
@@ -173,17 +200,21 @@ describe('useSearch', () => {
   });
 
 
-  it('returns error when PDS URL is missing', async () => {
+  it('falls through to public AppView when account lacks PDS URL', async () => {
+    // An account object with no pdsUrl is treated as a guest read —
+    // the hook resolves against the public AppView with an empty
+    // access token rather than throwing.
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockSearchProfiles.mockResolvedValueOnce({ actors: [{ did: 'g1' }], cursor: undefined });
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useSearch('q', 'users'), { wrapper });
 
     await waitFor(() => {
-      expect((result.current.error as SearchError).message).toBe(
-        'No PDS URL available',
-      );
+      expect(result.current.data?.pages[0].results).toEqual([
+        { type: 'profile', data: { did: 'g1' } },
+      ]);
     });
-    expect(mockSearchProfiles).not.toHaveBeenCalled();
+    expect(mockSearchProfiles).toHaveBeenCalledWith('', 'q', 20, undefined);
   });
 
   it.each([

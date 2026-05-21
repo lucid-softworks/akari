@@ -7,7 +7,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching a user's posts with media
  * @param identifier - The user's handle or DID
@@ -34,12 +34,10 @@ export function useAuthorMedia(identifier: string | undefined, limit: number = 2
         return { media: page.feed.map((item) => item.post), cursor: page.cursor };
       }
 
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-
-      const api = apiForAccount(currentAccount);
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
       const feed = await api.getAuthorFeed(
-        token,
+        useGuestPath ? '' : token,
         identifier,
         limit,
         pageParam,
@@ -59,7 +57,7 @@ export function useAuthorMedia(identifier: string | undefined, limit: number = 2
       };
     },
     select: (data) => data.pages.flatMap((page) => page.media),
-    enabled: !!identifier && (appViewEnabled ? !!token : true),
+    enabled: !!identifier,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000, // 5 minutes

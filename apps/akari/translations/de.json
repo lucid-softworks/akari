@@ -107,7 +107,11 @@
       "invalidHandle": "Bitte gib einen gültigen Handle ein.",
       "oauthSuccessTitle": "Angemeldet",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) wurde über atproto OAuth authentifiziert. Diese Sitzung mit dem API-Client zu verbinden ist der nächste Schritt.",
-      "refreshingSession": "Sitzung wird aktualisiert…"
+      "refreshingSession": "Sitzung wird aktualisiert…",
+      "continueAsGuest": "Ohne Anmeldung fortfahren",
+      "signInCta": "Anmelden",
+      "guestHeroTitle": "Als Gast unterwegs",
+      "guestRequiredSubtitle": "Melde dich an, um diese Funktion in Akari zu nutzen."
     },
     "oauth": {
       "scopes": {

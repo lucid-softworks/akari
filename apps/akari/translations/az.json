@@ -107,7 +107,11 @@
       "invalidHandle": "Zəhmət olmasa düzgün istifadəçi adı daxil et.",
       "oauthSuccessTitle": "Daxil olundu",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ilə təsdiqləndi. Bu sessiyanı API müştərisinə bağlamaq növbəti addımdır.",
-      "refreshingSession": "Sessiya yenilənir…"
+      "refreshingSession": "Sessiya yenilənir…",
+      "continueAsGuest": "Daxil olmadan davam et",
+      "signInCta": "Daxil ol",
+      "guestHeroTitle": "Qonaq kimi baxırsınız",
+      "guestRequiredSubtitle": "Bu funksiyadan istifadə etmək üçün Akari-yə daxil olun."
     },
     "oauth": {
       "scopes": {

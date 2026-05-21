@@ -1,4 +1,4 @@
-import { Redirect, Slot, Tabs, usePathname, useRouter, type Href } from 'expo-router';
+import { Slot, Tabs, usePathname, useRouter, type Href } from 'expo-router';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { TabKey } from '@/hooks/useTabConfig';
 import type { LayoutChangeEvent } from 'react-native';
@@ -494,10 +494,11 @@ export default function TabLayout() {
     );
   }
 
-  // Don't render tabs if not authenticated or still loading
-  if (!authStatus?.isAuthenticated) {
-    return <Redirect href="/(auth)/signin" />;
-  }
+  // Unauthenticated users see the same tab shell as authenticated ones —
+  // individual screens decide whether to render public reads or a "sign
+  // in" empty state, and write actions are gated by `useIsGuest`. We no
+  // longer redirect; the signin screen is reachable explicitly via the
+  // sign-in CTAs surfaced inside the gated affordances.
 
   // Mobile chrome (used by web tab layout's mobile branch AND by the
   // native mobile path below).

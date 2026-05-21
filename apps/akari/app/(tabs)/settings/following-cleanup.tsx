@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { ResultsList } from '@/components/settings/following-cleanup/ResultsList';
 import { ScanCard } from '@/components/settings/following-cleanup/ScanCard';
 import { SkippedSection } from '@/components/settings/following-cleanup/SkippedSection';
@@ -11,6 +12,7 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, layout, spacing } from '@/constants/tokens';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useFollowingCleanupController } from '@/hooks/useFollowingCleanupController';
 import { useFollowingCleanupFilters } from '@/hooks/useFollowingCleanupFilters';
@@ -27,6 +29,7 @@ export default function FollowingCleanupScreen() {
   const textColor = useThemeColor({}, 'text');
   const dangerColor = useThemeColor({ light: '#DC2626', dark: '#F87171' }, 'text');
   const { t } = useTranslation();
+  const isGuest = useIsGuest();
   const profileHref = useProfileHref();
 
   const {
@@ -84,6 +87,10 @@ export default function FollowingCleanupScreen() {
       : isCompleted
       ? t('settings.followingCleanup.scanComplete', { count: state.totalScanned })
       : t('settings.followingCleanup.scanHint');
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.followingCleanup.title')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.followingCleanup.title')}>

@@ -107,7 +107,11 @@
       "invalidHandle": "올바른 handle을 입력해 주세요.",
       "oauthSuccessTitle": "로그인됨",
       "oauthSuccessMessage": "@{{handle}} ({{did}})이(가) atproto OAuth로 인증되었습니다. 다음 단계는 이 세션을 API 클라이언트에 연결하는 것입니다.",
-      "refreshingSession": "세션을 새로 고침는 중…"
+      "refreshingSession": "세션을 새로 고침는 중…",
+      "continueAsGuest": "로그인하지 않고 계속하기",
+      "signInCta": "로그인",
+      "guestHeroTitle": "게스트로 둘러보는 중",
+      "guestRequiredSubtitle": "이 기능을 사용하려면 Akari에 로그인하세요."
     },
     "oauth": {
       "scopes": {

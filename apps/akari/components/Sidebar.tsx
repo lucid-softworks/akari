@@ -175,35 +175,58 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
         })}
       </View>
 
-      {/* Footer: account chip at the very bottom */}
+      {/* Footer: account chip at the very bottom. For guests the chip
+          becomes a sign-in CTA instead of a profile link. */}
       <View style={styles.footer}>
-        <PressableLink
-          href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
-          onPress={() => pushIfDifferent('/(tabs)/profile')}
-          accessibilityLabel="Account"
-          style={styles.accountSection}
-          hoverStyle={{ backgroundColor: hoverBg }}
-        >
-          <View style={[styles.avatar, { backgroundColor: accentColor }]}>
-            {activeAccount?.avatar ? (
-              <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
-            ) : (
-              <Text style={styles.avatarInitial}>
-                {(activeAccount?.displayName || activeAccount?.handle || 'U').charAt(0).toUpperCase()}
+        {activeAccount ? (
+          <PressableLink
+            href={Platform.OS === 'web' ? (activeAccount?.handle ? `/profile/${activeAccount.handle}` : '/profile') : '/(tabs)/profile'}
+            onPress={() => pushIfDifferent('/(tabs)/profile')}
+            accessibilityLabel="Account"
+            style={styles.accountSection}
+            hoverStyle={{ backgroundColor: hoverBg }}
+          >
+            <View style={[styles.avatar, { backgroundColor: accentColor }]}>
+              {activeAccount?.avatar ? (
+                <Image source={{ uri: activeAccount.avatar }} style={styles.avatarImage} contentFit="cover" />
+              ) : (
+                <Text style={styles.avatarInitial}>
+                  {(activeAccount?.displayName || activeAccount?.handle || 'U').charAt(0).toUpperCase()}
+                </Text>
+              )}
+            </View>
+            <View style={styles.accountInfo}>
+              <Text style={[styles.displayName, { color: textPrimary }]} numberOfLines={1}>
+                {activeAccount?.displayName ?? activeAccount?.handle ?? 'Account'}
               </Text>
-            )}
-          </View>
-          <View style={styles.accountInfo}>
-            <Text style={[styles.displayName, { color: textPrimary }]} numberOfLines={1}>
-              {activeAccount?.displayName ?? activeAccount?.handle ?? 'Account'}
-            </Text>
-            {activeAccount?.handle ? (
+              {activeAccount?.handle ? (
+                <Text style={[styles.handle, { color: textSecondary }]} numberOfLines={1}>
+                  @{activeAccount.handle}
+                </Text>
+              ) : null}
+            </View>
+          </PressableLink>
+        ) : (
+          <PressableLink
+            href="/(auth)/signin"
+            onPress={() => push('/(auth)/signin' as any)}
+            accessibilityLabel={t('auth.signInCta')}
+            style={styles.accountSection}
+            hoverStyle={{ backgroundColor: hoverBg }}
+          >
+            <View style={[styles.avatar, { backgroundColor: accentColor }]}>
+              <Text style={styles.avatarInitial}>?</Text>
+            </View>
+            <View style={styles.accountInfo}>
+              <Text style={[styles.displayName, { color: textPrimary }]} numberOfLines={1}>
+                {t('auth.guestHeroTitle')}
+              </Text>
               <Text style={[styles.handle, { color: textSecondary }]} numberOfLines={1}>
-                @{activeAccount.handle}
+                {t('auth.signInCta')}
               </Text>
-            ) : null}
-          </View>
-        </PressableLink>
+            </View>
+          </PressableLink>
+        )}
       </View>
     </View>
   );

@@ -107,7 +107,11 @@
       "invalidHandle": "Zadaj platný handle.",
       "oauthSuccessTitle": "Prihlásené",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) bol overený cez atproto OAuth. Ďalším krokom je prepojenie tejto relácie s klientom API.",
-      "refreshingSession": "Obnovuje sa relácia…"
+      "refreshingSession": "Obnovuje sa relácia…",
+      "continueAsGuest": "Pokračovať bez prihlásenia",
+      "signInCta": "Prihlásiť sa",
+      "guestHeroTitle": "Prehliadate ako hosť",
+      "guestRequiredSubtitle": "Pre použitie tejto funkcie v Akari sa prihláste."
     },
     "oauth": {
       "scopes": {

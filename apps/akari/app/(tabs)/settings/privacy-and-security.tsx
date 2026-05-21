@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import {
   SettingsRow,
   SettingsSection,
@@ -15,6 +16,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useToast } from '@/contexts/ToastContext';
 import { useUpdateLoggedOutVisibility } from '@/hooks/mutations/useUpdateLoggedOutVisibility';
 import { useAppPasswords } from '@/hooks/queries/useAppPasswords';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import {
   isLoggedOutVisibilityDiscouraged,
   useProfileRecord,
@@ -32,6 +34,7 @@ export default function PrivacyAndSecurityScreen() {
   const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const isGuest = useIsGuest();
 
   const profileRecordQuery = useProfileRecord();
   const updateLoggedOutVisibility = useUpdateLoggedOutVisibility();
@@ -74,6 +77,10 @@ export default function PrivacyAndSecurityScreen() {
     ],
     [appPasswordsCount, showNotImplemented, t],
   );
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.privacyAndSecurity')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.privacyAndSecurity')}>

@@ -6,7 +6,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 
 /**
  * Infinite query for posts the user has reposted. Walks the author
@@ -27,12 +27,18 @@ export function useAuthorReposts(identifier: string | undefined, limit: number =
   return useInfiniteQuery({
     queryKey: queryKeys.author.reposts(identifier, limit, currentAccount?.pdsUrl, appViewEnabled),
     queryFn: async ({ pageParam }: CursorPageParam) => {
-      if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorFeed(token, identifier, limit, pageParam, undefined, acceptLabelers);
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
+      const feed = await api.getAuthorFeed(
+        useGuestPath ? '' : token,
+        identifier,
+        limit,
+        pageParam,
+        undefined,
+        acceptLabelers,
+      );
 
       const reposts = feed.feed.flatMap((item) => {
         const reason = item.reason as { $type?: string } | undefined;
@@ -52,7 +58,7 @@ export function useAuthorReposts(identifier: string | undefined, limit: number =
       };
     },
     select: (data) => data.pages.flatMap((page) => page.reposts),
-    enabled: !!identifier && !!token,
+    enabled: !!identifier,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000,

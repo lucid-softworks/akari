@@ -6,6 +6,7 @@ import { Image } from '@/components/Image';
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, radius, shadows, spacing, zIndex } from '@/constants/tokens';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -140,6 +141,7 @@ function ProfileHoverCard({ handle }: ProfileHoverCardProps) {
   const placeholderBg = useThemeColor({}, 'hover');
 
   const followMutation = useFollowUser();
+  const { isGuest, promptSignIn } = useRequireAuth();
   const [optimisticUri, setOptimisticUri] = useState<string | undefined>(undefined);
 
   const followingUri = optimisticUri ?? profile?.viewer?.following;
@@ -148,6 +150,10 @@ function ProfileHoverCard({ handle }: ProfileHoverCardProps) {
   const handleFollow = useCallback(
     (e: { stopPropagation?: () => void }) => {
       e.stopPropagation?.();
+      if (isGuest) {
+        promptSignIn();
+        return;
+      }
       if (!profile) return;
       if (isFollowing && followingUri) {
         const prev = followingUri;
@@ -164,7 +170,7 @@ function ProfileHoverCard({ handle }: ProfileHoverCardProps) {
         );
       }
     },
-    [profile, isFollowing, followingUri, followMutation],
+    [profile, isFollowing, followingUri, followMutation, isGuest, promptSignIn],
   );
 
   const handleOpenProfile = useCallback(() => {

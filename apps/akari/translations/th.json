@@ -107,7 +107,11 @@
       "invalidHandle": "กรุณากรอก handle ที่ถูกต้อง",
       "oauthSuccessTitle": "เข้าสู่ระบบแล้ว",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) ได้รับการยืนยันผ่าน atproto OAuth แล้ว ขั้นตอนต่อไปคือการเชื่อมเซสชันนี้เข้ากับไคลเอนต์ API",
-      "refreshingSession": "กำลังรีเฟรชเซสชัน…"
+      "refreshingSession": "กำลังรีเฟรชเซสชัน…",
+      "continueAsGuest": "ดำเนินการต่อโดยไม่เข้าสู่ระบบ",
+      "signInCta": "เข้าสู่ระบบ",
+      "guestHeroTitle": "กำลังเรียกดูในฐานะแขก",
+      "guestRequiredSubtitle": "เข้าสู่ระบบเพื่อใช้คุณสมบัตินี้บน Akari"
     },
     "oauth": {
       "scopes": {

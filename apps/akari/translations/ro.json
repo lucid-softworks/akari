@@ -107,7 +107,11 @@
       "invalidHandle": "Introdu un handle valid.",
       "oauthSuccessTitle": "Autentificat",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) a fost autentificat prin atproto OAuth. Conectarea acestei sesiuni la clientul API este pasul următor.",
-      "refreshingSession": "Se actualizează sesiunea…"
+      "refreshingSession": "Se actualizează sesiunea…",
+      "continueAsGuest": "Continuă fără autentificare",
+      "signInCta": "Autentificare",
+      "guestHeroTitle": "Navighezi ca invitat",
+      "guestRequiredSubtitle": "Autentifică-te pentru a folosi această funcție pe Akari."
     },
     "oauth": {
       "scopes": {

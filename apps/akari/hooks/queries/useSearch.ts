@@ -7,7 +7,7 @@ import { readAppViewEnabled } from '@/hooks/useAppViewSettings';
 import { type BlueskyPostView, type BlueskyProfile } from "@/bluesky-api";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { AppViewRequiredError, isAppViewRequiredError } from '@/utils/appView';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 
 type SearchTabType = "all" | "users" | "posts";
 type SearchSort = "top" | "latest";
@@ -43,19 +43,31 @@ export function useSearch(
     queryKey: queryKeys.search({ query, activeTab, limit, sort, pdsUrl: currentAccount?.pdsUrl, appViewEnabled }),
     queryFn: async ({ pageParam }: CursorPageParam) => {
       if (!readAppViewEnabled()) throw new AppViewRequiredError("search");
-      if (!token) throw new Error("No access token");
       if (!query) throw new Error("No query provided");
-      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
 
-      const api = apiForAccount(currentAccount);
+      // Guest path: the bsky public AppView serves `searchActors`
+      // unauthenticated (200) but `searchPosts` is auth-gated (403).
+      // For guests we use the public AppView with an empty access
+      // token and drop the post-side branch entirely — the actor
+      // search still resolves, the "all" tab degrades to users-only,
+      // and post / "from:handle" searches return empty until the user
+      // signs in. Without this, the failing `searchPosts` rejection
+      // bubbles up via `Promise.all` and kills the whole query.
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
+      const authToken = useGuestPath ? '' : token;
+      const skipPostSearch = useGuestPath;
 
       try {
         // Check if this is a "from:handle" search
         const fromMatch = query.match(/^from:(\S+)/);
         if (fromMatch) {
+          if (skipPostSearch) {
+            return { results: [], cursor: undefined };
+          }
           // For "from:handle" searches, only search posts
           const postResults = await api.searchPosts(
-            token,
+            authToken,
             query,
             limit,
             pageParam,
@@ -78,7 +90,7 @@ export function useSearch(
         // Regular search based on active tab
         if (activeTab === "users") {
           const profileResults = await api.searchProfiles(
-            token,
+            authToken,
             query,
             limit,
             pageParam
@@ -96,8 +108,11 @@ export function useSearch(
             cursor: profileResults.cursor,
           };
         } else if (activeTab === "posts") {
+          if (skipPostSearch) {
+            return { results: [], cursor: undefined };
+          }
           const postResults = await api.searchPosts(
-            token,
+            authToken,
             query,
             limit,
             pageParam,
@@ -116,10 +131,13 @@ export function useSearch(
             cursor: postResults.cursor,
           };
         } else if (activeTab === "all") {
-          // For "all" tab, combine both searches
+          // For "all" tab, combine both searches. For guests, skip the
+          // auth-gated `searchPosts` so the actor results still render.
           const [profileResults, postResults] = await Promise.all([
-            api.searchProfiles(token, query, limit, pageParam),
-            api.searchPosts(token, query, limit, pageParam, sort),
+            api.searchProfiles(authToken, query, limit, pageParam),
+            skipPostSearch
+              ? Promise.resolve({ posts: [] as BlueskyPostView[], cursor: undefined as string | undefined })
+              : api.searchPosts(authToken, query, limit, pageParam, sort),
           ]);
 
           const results: SearchResult[] = [
@@ -186,7 +204,7 @@ export function useSearch(
         throw searchError;
       }
     },
-    enabled: !!query && !!query.trim() && !!token,
+    enabled: !!query && !!query.trim(),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     placeholderData: keepPreviousData,

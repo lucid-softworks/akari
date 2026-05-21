@@ -107,7 +107,11 @@
       "invalidHandle": "Rhowch handle dilys.",
       "oauthSuccessTitle": "Wedi mewngofnodi",
       "oauthSuccessMessage": "Mae @{{handle}} ({{did}}) wedi'i ddilysu trwy atproto OAuth. Y cam nesaf yw cysylltu'r sesiwn hon â chleient yr API.",
-      "refreshingSession": "Yn adnewyddu’r sesiwn…"
+      "refreshingSession": "Yn adnewyddu’r sesiwn…",
+      "continueAsGuest": "Parhau heb fewngofnodi",
+      "signInCta": "Mewngofnodi",
+      "guestHeroTitle": "Pori fel gwestai",
+      "guestRequiredSubtitle": "Mewngofnodwch i ddefnyddio'r nodwedd hon ar Akari."
     },
     "oauth": {
       "scopes": {

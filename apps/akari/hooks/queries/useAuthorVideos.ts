@@ -7,7 +7,7 @@ import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching a user's posts with videos
  * @param identifier - The user's handle or DID
@@ -34,11 +34,15 @@ export function useAuthorVideos(identifier: string | undefined, limit: number = 
         return { videos: page.feed.map((item) => item.post), cursor: page.cursor };
       }
 
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
-
-      const api = apiForAccount(currentAccount);
-      const feed = await api.getAuthorVideos(token, identifier, limit, pageParam, acceptLabelers);
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
+      const feed = await api.getAuthorVideos(
+        useGuestPath ? '' : token,
+        identifier,
+        limit,
+        pageParam,
+        acceptLabelers,
+      );
 
       // Map the feed items to posts (they should already be filtered for videos by the API)
       const videoPosts = feed.feed.map((item) => item.post);
@@ -52,7 +56,7 @@ export function useAuthorVideos(identifier: string | undefined, limit: number = 
       };
     },
     select: (data) => data.pages.flatMap((page) => page.videos),
-    enabled: !!identifier && (appViewEnabled ? !!token : true),
+    enabled: !!identifier,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000, // 5 minutes

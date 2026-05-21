@@ -13,7 +13,9 @@ import { UnavailableWithoutAppView } from '@/components/UnavailableWithoutAppVie
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { spacing } from '@/constants/tokens';
 import { webScreenContainer } from '@/constants/webStyles';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { useBookmarks } from '@/hooks/queries/useBookmarks';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -49,6 +51,7 @@ export default function BookmarksScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
+  const isGuest = useIsGuest();
   const flatListRef = useRef<VirtualizedListHandle<BlueskyBookmark>>(null);
 
   const scrollToTop = () => {
@@ -147,6 +150,10 @@ export default function BookmarksScreen() {
       />
     );
   };
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('common.bookmarks')} />;
+  }
 
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (

@@ -18,6 +18,8 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { useDialogManager } from '@/contexts/DialogContext';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
 import { useFeed } from '@/hooks/queries/useFeed';
+import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
@@ -32,6 +34,12 @@ import { TabChromeContext } from '@/app/(tabs)/_layout';
 import { webScreenContainer } from '@/constants/webStyles';
 
 type FeedListItem = { type: 'empty'; state: 'select' | 'loading' | 'empty' } | { type: 'post'; item: BlueskyFeedItem };
+
+// Mirrors the default in `useSelectedFeed` — the bsky discover feed.
+// Guests get this as their only feed entry (saved-feeds prefs require
+// auth) so they always have something on the home tab.
+const DISCOVER_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -61,6 +69,13 @@ export default function HomeScreen() {
   }, [scrollToTop]);
 
   const { allFeedsWithCreated, savedFeedsLoading, feedsLoading, refetchFeeds } = useSavedFeedsList();
+  const isGuest = useIsGuest();
+  // Resolve the discover feed's metadata via the public AppView so the
+  // tab label shows the feed creator's real display name ("Discover")
+  // instead of a hardcoded string we'd have to translate. The query is
+  // a no-op once a real saved-feeds list is loaded, so authed users
+  // pay nothing extra here.
+  const discoverFeedQuery = useFeedGenerators(isGuest ? [DISCOVER_FEED_URI] : []);
 
   // Use the custom hook for selected feed management
   const { data: selectedFeed } = useSelectedFeed();
@@ -187,14 +202,26 @@ export default function HomeScreen() {
     return allPosts.map((item) => ({ type: 'post', item }));
   }, [allPosts, feedData, feedLoading, selectedFeed, timelineData, timelineLoading]);
 
-  const feedTabs = useMemo(
-    () =>
-      allFeedsWithCreated.map((feed) => ({
-        key: feed.uri,
-        label: feed.displayName,
-      })),
-    [allFeedsWithCreated],
-  );
+  const feedTabs = useMemo(() => {
+    if (isGuest) {
+      // The saved-feeds preference is auth-only — without an account
+      // `allFeedsWithCreated` is empty, so the home tab strip would
+      // render no tabs at all. Inject the discover feed (the same one
+      // `useSelectedFeed` forces guests onto) so there's a visible,
+      // selectable tab on the home screen.
+      const discoverGenerator = discoverFeedQuery.data?.feeds?.[0];
+      return [
+        {
+          key: DISCOVER_FEED_URI,
+          label: discoverGenerator?.displayName ?? '',
+        },
+      ];
+    }
+    return allFeedsWithCreated.map((feed) => ({
+      key: feed.uri,
+      label: feed.displayName,
+    }));
+  }, [allFeedsWithCreated, discoverFeedQuery.data, isGuest]);
 
   const renderFeedItem = useCallback(
     ({ item }: { item: FeedListItem }) => {

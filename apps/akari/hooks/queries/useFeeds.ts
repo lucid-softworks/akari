@@ -9,7 +9,7 @@ import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { type BlueskyFeedsResponse } from '@/bluesky-api';
 import { useQuery } from '@tanstack/react-query';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 
 /**
  * Query hook for fetching feed generators created by an actor
@@ -35,13 +35,16 @@ export function useFeeds(actor: string | undefined, limit: number = 50, cursor?:
         return getActorFeedsPage({ did, pdsUrl, limit, cursor });
       }
 
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+      // Guest path: read via the public AppView when no session.
+      if (!token || !currentAccount?.pdsUrl) {
+        const api = apiForPublicAppView();
+        return await api.getFeeds('', actor, limit, cursor);
+      }
 
       const api = apiForAccount(currentAccount);
       return await api.getFeeds(token, actor, limit, cursor);
     },
-    enabled: !!actor && (appViewEnabled ? !!token : true),
+    enabled: !!actor,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }

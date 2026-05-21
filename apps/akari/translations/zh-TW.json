@@ -107,7 +107,11 @@
       "invalidHandle": "請輸入有效的 handle。",
       "oauthSuccessTitle": "已登入",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) 已透過 atproto OAuth 認證。下一步是將這個工作階段接到 API 用戶端。",
-      "refreshingSession": "正在重新整理會話…"
+      "refreshingSession": "正在重新整理會話…",
+      "continueAsGuest": "不登入繼續",
+      "signInCta": "登入",
+      "guestHeroTitle": "以訪客身分瀏覽",
+      "guestRequiredSubtitle": "登入後即可在 Akari 使用此功能。"
     },
     "oauth": {
       "scopes": {

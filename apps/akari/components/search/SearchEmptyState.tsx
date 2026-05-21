@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { EmptyState } from '@/components/EmptyState';
@@ -14,6 +15,10 @@ export type SearchEmptyStateProps = {
   isError: boolean;
   errorMessage: string | undefined;
   activeTab: SearchTabType;
+  /** True when no session is signed in. Post search is auth-gated on
+   *  the public AppView (403), so we surface a sign-in CTA instead of
+   *  the generic "no posts found" copy that would imply an empty index. */
+  isGuest?: boolean;
   onRetry: () => void;
 };
 
@@ -28,6 +33,7 @@ export function SearchEmptyState({
   isError,
   errorMessage,
   activeTab,
+  isGuest,
   onRetry,
 }: SearchEmptyStateProps) {
   const { t } = useTranslation();
@@ -40,6 +46,19 @@ export function SearchEmptyState({
           <SearchResultSkeleton key={`search-skeleton-${index}`} />
         ))}
       </ThemedView>
+    );
+  }
+
+  // Guest + posts tab + has query → the hook short-circuited before
+  // ever calling searchPosts because the public AppView 403s it. Tell
+  // the user why the column's empty and route them to sign-in.
+  if (isGuest && searchQuery && !isError && activeTab === 'posts') {
+    return (
+      <EmptyState
+        title={t('auth.guestHeroTitle')}
+        subtitle={t('auth.guestRequiredSubtitle')}
+        action={{ label: t('auth.signInCta'), onPress: () => router.push('/(auth)/signin') }}
+      />
     );
   }
 

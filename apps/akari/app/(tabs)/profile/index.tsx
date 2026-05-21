@@ -25,7 +25,9 @@ import { VideosTab } from '@/components/profile/VideosTab';
 import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { queryKeys } from '@/hooks/queryKeys';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -131,6 +133,7 @@ function OwnProfileTabPane({ tab, isActive, sharedProps }: OwnProfileTabPaneProp
 
 export default function ProfileScreen() {
   const { data: currentAccount, isLoading: isCurrentAccountLoading } = useCurrentAccount();
+  const isGuest = useIsGuest();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const [showDropdown, setShowDropdown] = useState(false);
@@ -198,6 +201,12 @@ export default function ProfileScreen() {
   const tabsComponent = (
     <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={currentAccount?.handle || ''} />
   );
+
+  // Guests don't have a "your profile" — surface the sign-in CTA
+  // instead of an empty profile shell.
+  if (isGuest) {
+    return <GuestSignInRequired title={t('common.profile')} />;
+  }
 
   // Show skeleton while loading current account or profile data
   if (isCurrentAccountLoading || isProfileLoading) {

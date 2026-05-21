@@ -11,7 +11,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import type { AiPreferenceCategory, AiPreferencesRecord } from '@/bluesky-api';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useAiPreferences } from '@/hooks/queries/useAiPreferences';
 import {
   buildAiPreferencesRecord,
@@ -61,6 +63,7 @@ export default function AiSettingsScreen() {
   const borderColor = useBorderColor();
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
+  const isGuest = useIsGuest();
   const { data: currentAccount } = useCurrentAccount();
   const { data: aiPrefs, isLoading, isFetched } = useAiPreferences();
   const updateAi = useUpdateAiPreferences();
@@ -146,6 +149,10 @@ export default function AiSettingsScreen() {
     },
     [aiPrefsQueryKey, flushPending, queryClient],
   );
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.ai.title')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.ai.title')}>

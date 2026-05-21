@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Redirect, router } from 'expo-router';
 
 import { spacing } from '@/constants/tokens';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { AccountDetailsSection } from '@/components/settings/account/AccountDetailsSection';
 import { AccountsListSection } from '@/components/settings/account/AccountsListSection';
 import { SettingsRowsSection } from '@/components/settings/account/SettingsRowsSection';
@@ -15,6 +16,7 @@ import { useWipeAllData } from '@/hooks/mutations/useWipeAllData';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useSession } from '@/hooks/queries/useSession';
 import {
   isAccountAutomated,
@@ -28,6 +30,7 @@ import { Account } from '@/types/account';
 export default function AccountSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
+  const isGuest = useIsGuest();
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const { data: accountProfiles } = useAccountProfiles();
@@ -212,6 +215,10 @@ export default function AccountSettingsScreen() {
 
   if (signedOut) {
     return <Redirect href="/(auth)/signin" />;
+  }
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.account')} />;
   }
 
   return (

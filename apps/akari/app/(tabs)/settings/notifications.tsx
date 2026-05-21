@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import {
   SettingsRow,
@@ -11,6 +12,7 @@ import {
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedView } from '@/components/ThemedView';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useNotificationPreferences } from '@/hooks/queries/useNotificationPreferences';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -49,6 +51,7 @@ const ICON_FOR_CATEGORY: Record<CategoryKey, React.ComponentProps<typeof Setting
 export default function NotificationSettingsScreen() {
   const borderColor = useBorderColor();
   const { t } = useTranslation();
+  const isGuest = useIsGuest();
   const prefsQuery = useNotificationPreferences();
 
   const categoryRows = useMemo<SettingsRowDescriptor[]>(() => {
@@ -90,6 +93,10 @@ export default function NotificationSettingsScreen() {
       };
     });
   }, [prefsQuery.data, t]);
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.notifications')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.notifications')}>

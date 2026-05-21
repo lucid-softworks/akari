@@ -107,7 +107,11 @@
       "invalidHandle": "Masukkan handle yang valid.",
       "oauthSuccessTitle": "Masuk berhasil",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) berhasil diautentikasi lewat atproto OAuth. Menyambungkan sesi ini ke klien API adalah langkah berikutnya.",
-      "refreshingSession": "Memperbarui sesi…"
+      "refreshingSession": "Memperbarui sesi…",
+      "continueAsGuest": "Lanjutkan tanpa masuk",
+      "signInCta": "Masuk",
+      "guestHeroTitle": "Menjelajah sebagai tamu",
+      "guestRequiredSubtitle": "Masuk untuk menggunakan fitur ini di Akari."
     },
     "oauth": {
       "scopes": {

@@ -107,7 +107,11 @@
       "invalidHandle": "Anna kelvollinen handle.",
       "oauthSuccessTitle": "Kirjautuminen onnistui",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) tunnistettiin atproto OAuth -valtuutuksen kautta. Tämän istunnon liittäminen API-asiakkaaseen on seuraava vaihe.",
-      "refreshingSession": "Päivitetään istuntoa…"
+      "refreshingSession": "Päivitetään istuntoa…",
+      "continueAsGuest": "Jatka kirjautumatta",
+      "signInCta": "Kirjaudu",
+      "guestHeroTitle": "Selaat vieraana",
+      "guestRequiredSubtitle": "Kirjaudu sisään käyttääksesi tätä Akarin ominaisuutta."
     },
     "oauth": {
       "scopes": {

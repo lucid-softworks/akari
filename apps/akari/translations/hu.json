@@ -107,7 +107,11 @@
       "invalidHandle": "Adj meg egy érvényes handle-t.",
       "oauthSuccessTitle": "Bejelentkezve",
       "oauthSuccessMessage": "A(z) @{{handle}} ({{did}}) atproto OAuth-on keresztül hitelesítve. A következő lépés ennek a munkamenetnek az API klienshez kapcsolása.",
-      "refreshingSession": "Munkamenet frissítése…"
+      "refreshingSession": "Munkamenet frissítése…",
+      "continueAsGuest": "Folytatás bejelentkezés nélkül",
+      "signInCta": "Bejelentkezés",
+      "guestHeroTitle": "Vendégként böngészel",
+      "guestRequiredSubtitle": "Jelentkezz be, hogy használhasd ezt a funkciót az Akarin."
     },
     "oauth": {
       "scopes": {

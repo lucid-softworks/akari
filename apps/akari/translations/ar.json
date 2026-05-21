@@ -107,7 +107,11 @@
       "invalidHandle": "يرجى إدخال اسم مستخدم صالح.",
       "oauthSuccessTitle": "تم تسجيل الدخول",
       "oauthSuccessMessage": "تم التحقق من @{{handle}} ({{did}}) عبر atproto OAuth. ربط هذه الجلسة بعميل الـ API هو الخطوة التالية.",
-      "refreshingSession": "جارٍ تحديث الجلسة…"
+      "refreshingSession": "جارٍ تحديث الجلسة…",
+      "continueAsGuest": "المتابعة دون تسجيل الدخول",
+      "signInCta": "تسجيل الدخول",
+      "guestHeroTitle": "تصفح كضيف",
+      "guestRequiredSubtitle": "سجّل الدخول لاستخدام هذه الميزة على أكاري."
     },
     "oauth": {
       "scopes": {

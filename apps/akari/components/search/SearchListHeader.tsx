@@ -24,6 +24,8 @@ type SearchListHeaderProps = {
   isLoading: boolean;
   activeTab: SearchTabType;
   onTabChange: (tab: SearchTabType) => void;
+  /** Forwarded to `SearchTabs` so the "All" tab can be hidden in guest mode. */
+  isGuest?: boolean;
   sort: SearchSort;
   onSortChange: (sort: SearchSort) => void;
   show: SearchHeaderVisibility;
@@ -49,6 +51,7 @@ const SearchListHeaderInner = ({
   isLoading,
   activeTab,
   onTabChange,
+  isGuest,
   sort,
   onSortChange,
   show,
@@ -121,7 +124,7 @@ const SearchListHeaderInner = ({
         </Pressable>
       </ThemedView>
 
-      {show.tabs ? <SearchTabs activeTab={activeTab} onTabChange={onTabChange} /> : null}
+      {show.tabs ? <SearchTabs activeTab={activeTab} onTabChange={onTabChange} isGuest={isGuest} /> : null}
 
       {show.sort ? (
         <ThemedView style={styles.sortContainer}>

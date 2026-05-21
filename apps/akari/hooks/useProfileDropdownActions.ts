@@ -7,6 +7,7 @@ import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
 import type { useProfile } from '@/hooks/queries/useProfile';
 import { useConfirm } from '@/hooks/useConfirm';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
@@ -33,6 +34,7 @@ export function useProfileDropdownActions({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const confirm = useConfirm();
+  const { isGuest, promptSignIn } = useRequireAuth();
   const blockMutation = useBlockUser();
   const muteMutation = useMuteUser();
 
@@ -105,6 +107,10 @@ export function useProfileDropdownActions({
 
   const handleBlockPress = useCallback(() => {
     setShowDropdown(false);
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     if (!profile) return;
     const isBlocking = !!profile.viewer?.blocking;
     confirm({
@@ -123,10 +129,14 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [profile, runBlock, setShowDropdown, t, confirm]);
+  }, [profile, runBlock, setShowDropdown, t, confirm, isGuest, promptSignIn]);
 
   const handleMuteAccount = useCallback(() => {
     setShowDropdown(false);
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     if (!profile?.did) return;
     const isMuted = !!profile.viewer?.muted;
     confirm({
@@ -148,12 +158,16 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [muteMutation, profile, setShowDropdown, t, confirm]);
+  }, [muteMutation, profile, setShowDropdown, t, confirm, isGuest, promptSignIn]);
 
   const handleReportAccount = useCallback(() => {
     setShowDropdown(false);
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     setShowReportSheet(true);
-  }, [setShowDropdown, setShowReportSheet]);
+  }, [setShowDropdown, setShowReportSheet, isGuest, promptSignIn]);
 
   return {
     handleCopyLink,

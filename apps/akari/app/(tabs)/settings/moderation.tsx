@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import {
   SettingsRow,
   SettingsSection,
@@ -12,6 +13,7 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useModerationSettings } from '@/hooks/useModerationSettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -22,6 +24,7 @@ export default function ModerationSettingsScreen() {
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { t } = useTranslation();
+  const isGuest = useIsGuest();
   const { adultContentEnabled, setAdultContentEnabled } = useModerationSettings();
 
   const moderationRows = useMemo<SettingsRowDescriptor[]>(
@@ -65,6 +68,10 @@ export default function ModerationSettingsScreen() {
     ],
     [t],
   );
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.moderation')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.moderation')}>

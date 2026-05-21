@@ -7,6 +7,7 @@ import { Platform, Pressable, StyleSheet, Text, View, type ImageStyle } from 're
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { TabBar } from '@/components/TabBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -18,6 +19,7 @@ import { PressableLink } from '@/components/ui/PressableLink';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useNotifications } from '@/hooks/queries/useNotifications';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -597,6 +599,7 @@ export default function NotificationsScreen() {
   const navigateToProfile = useNavigateToProfile();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
+  const isGuest = useIsGuest();
 
   const queryClient = useQueryClient();
 
@@ -780,6 +783,10 @@ export default function NotificationsScreen() {
     ),
     [activeTab, borderColor, handleTabChange, insets.top, isLargeScreen, t, tabs],
   );
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('navigation.notifications')} />;
+  }
 
   if (!appViewEnabled || isAppViewRequiredError(error)) {
     return (

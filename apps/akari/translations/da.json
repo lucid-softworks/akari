@@ -107,7 +107,11 @@
       "invalidHandle": "Indtast venligst et gyldigt handle.",
       "oauthSuccessTitle": "Logget ind",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) er godkendt via atproto OAuth. At forbinde denne session til API-klienten er næste skridt.",
-      "refreshingSession": "Opdaterer sessionen…"
+      "refreshingSession": "Opdaterer sessionen…",
+      "continueAsGuest": "Fortsæt uden at logge ind",
+      "signInCta": "Log ind",
+      "guestHeroTitle": "Browser som gæst",
+      "guestRequiredSubtitle": "Log ind for at bruge denne funktion på Akari."
     },
     "oauth": {
       "scopes": {

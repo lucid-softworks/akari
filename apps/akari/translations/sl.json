@@ -107,7 +107,11 @@
       "invalidHandle": "Vnesi veljaven handle.",
       "oauthSuccessTitle": "Prijavljeno",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) je bil overjen prek atproto OAuth. Naslednji korak je povezava te seje s klientom API.",
-      "refreshingSession": "Osveževanje seje…"
+      "refreshingSession": "Osveževanje seje…",
+      "continueAsGuest": "Nadaljuj brez prijave",
+      "signInCta": "Prijava",
+      "guestHeroTitle": "Brskanje kot gost",
+      "guestRequiredSubtitle": "Prijavite se za uporabo te funkcije v Akariju."
     },
     "oauth": {
       "scopes": {

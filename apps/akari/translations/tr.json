@@ -107,7 +107,11 @@
       "invalidHandle": "Lütfen geçerli bir handle gir.",
       "oauthSuccessTitle": "Giriş yapıldı",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) atproto OAuth ile kimliği doğrulandı. Sonraki adım bu oturumu API istemcisine bağlamak.",
-      "refreshingSession": "Oturum yenileniyor…"
+      "refreshingSession": "Oturum yenileniyor…",
+      "continueAsGuest": "Giriş yapmadan devam et",
+      "signInCta": "Giriş yap",
+      "guestHeroTitle": "Misafir olarak göz atıyorsunuz",
+      "guestRequiredSubtitle": "Bu özelliği Akari'de kullanmak için giriş yapın."
     },
     "oauth": {
       "scopes": {

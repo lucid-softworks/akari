@@ -10,7 +10,7 @@ import { useJwtToken } from "@/hooks/queries/useJwtToken";
 import { useCurrentAccount } from "@/hooks/queries/useCurrentAccount";
 import { queryKeys } from '@/hooks/queryKeys';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 
 const MAX_MICROCOSM_REPLIES = 50;
 
@@ -70,13 +70,18 @@ export function usePostThread(postUri: string | null) {
         return microcosmPostThread(postUri);
       }
 
-      if (!token) throw new Error('No access token');
-      if (!currentAccount?.pdsUrl) throw new Error("No PDS URL available");
+      // Guest path: public AppView serves `getPostThread`
+      // unauthenticated. Viewer state (`viewer.like` / `viewer.repost`)
+      // is missing but the thread structure renders the same.
+      if (!token || !currentAccount?.pdsUrl) {
+        const api = apiForPublicAppView();
+        return await api.getPostThread('', postUri, acceptLabelers);
+      }
 
       const api = apiForAccount(currentAccount);
       return await api.getPostThread(token, postUri, acceptLabelers);
     },
-    enabled: !!postUri && (!!token || !appViewEnabled),
+    enabled: !!postUri,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

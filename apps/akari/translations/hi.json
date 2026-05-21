@@ -107,7 +107,11 @@
       "invalidHandle": "कृपया एक मान्य handle दर्ज करें.",
       "oauthSuccessTitle": "साइन इन हो गया",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) को atproto OAuth के माध्यम से प्रमाणित किया गया. इस सत्र को API क्लाइंट से जोड़ना अगला कदम है.",
-      "refreshingSession": "सत्र रीफ़्रेश हो रहा है…"
+      "refreshingSession": "सत्र रीफ़्रेश हो रहा है…",
+      "continueAsGuest": "बिना साइन इन जारी रखें",
+      "signInCta": "साइन इन करें",
+      "guestHeroTitle": "अतिथि के रूप में ब्राउज़ कर रहे हैं",
+      "guestRequiredSubtitle": "Akari पर इस सुविधा का उपयोग करने के लिए साइन इन करें।"
     },
     "oauth": {
       "scopes": {

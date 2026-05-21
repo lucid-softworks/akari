@@ -107,7 +107,11 @@
       "invalidHandle": "Zadej prosím platný handle.",
       "oauthSuccessTitle": "Přihlášeno",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) byl ověřen přes atproto OAuth. Dalším krokem je propojení této relace s klientem API.",
-      "refreshingSession": "Obnovuje se relace…"
+      "refreshingSession": "Obnovuje se relace…",
+      "continueAsGuest": "Pokračovat bez přihlášení",
+      "signInCta": "Přihlásit se",
+      "guestHeroTitle": "Prohlížíte jako host",
+      "guestRequiredSubtitle": "Pro použití této funkce v Akari se přihlaste."
     },
     "oauth": {
       "scopes": {

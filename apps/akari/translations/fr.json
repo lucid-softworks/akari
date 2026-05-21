@@ -107,7 +107,11 @@
       "invalidHandle": "Saisis un handle valide.",
       "oauthSuccessTitle": "Connecté",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) authentifié via atproto OAuth. La prochaine étape est de relier cette session au client de l’API.",
-      "refreshingSession": "Actualisation de la session…"
+      "refreshingSession": "Actualisation de la session…",
+      "continueAsGuest": "Continuer sans se connecter",
+      "signInCta": "Se connecter",
+      "guestHeroTitle": "Navigation en tant qu'invité",
+      "guestRequiredSubtitle": "Connectez-vous pour utiliser cette fonctionnalité sur Akari."
     },
     "oauth": {
       "scopes": {

@@ -22,6 +22,7 @@ import { useBookmarkPost } from '@/hooks/mutations/useBookmarkPost';
 import { useLikePost } from '@/hooks/mutations/useLikePost';
 import { useRepostPost } from '@/hooks/mutations/useRepostPost';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ActionAnchorRect = {
@@ -154,6 +155,7 @@ export const PostActions = React.memo(function PostActions({
   onQuotePress,
 }: PostActionsProps) {
   const { largerTextBadges } = useAccessibilitySettings();
+  const { isGuest, promptSignIn } = useRequireAuth();
   const likeMutation = useLikePost();
   const repostMutation = useRepostPost();
   const bookmarkMutation = useBookmarkPost();
@@ -174,6 +176,10 @@ export const PostActions = React.memo(function PostActions({
 
   const handleLikePress = useCallback(() => {
     if (!uri || !cid) return;
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
 
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
@@ -190,10 +196,14 @@ export const PostActions = React.memo(function PostActions({
         action: 'like',
       });
     }
-  }, [uri, cid, likeUri, likeMutation]);
+  }, [uri, cid, likeUri, likeMutation, isGuest, promptSignIn]);
 
   const handleRepostButtonPress = useCallback(() => {
     if (!uri || !cid) return;
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     // Measure the button on web so the portaled menu anchors next to it
     // (matching the "..." menu pattern). Native ignores the rect and
@@ -207,7 +217,7 @@ export const PostActions = React.memo(function PostActions({
       }
     }
     setRepostSheetVisible(true);
-  }, [uri, cid]);
+  }, [uri, cid, isGuest, promptSignIn]);
 
   const handleRepostConfirm = useCallback(() => {
     if (!uri || !cid) return;
@@ -237,13 +247,17 @@ export const PostActions = React.memo(function PostActions({
 
   const handleBookmarkPress = useCallback(() => {
     if (!uri || !cid) return;
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     bookmarkMutation.mutate({
       postUri: uri,
       postCid: cid,
       action: isBookmarked ? 'unbookmark' : 'bookmark',
     });
-  }, [uri, cid, isBookmarked, bookmarkMutation]);
+  }, [uri, cid, isBookmarked, bookmarkMutation, isGuest, promptSignIn]);
 
   const postUrl = uri
     ? `https://bsky.app/profile/${authorHandle}/post/${uri.split('/').pop()}`
@@ -291,7 +305,13 @@ export const PostActions = React.memo(function PostActions({
           icon={replyDisabled ? 'lock' : 'bubble.left'}
           activeColor={accentColor}
           count={commentCount}
-          onPress={replyDisabled ? undefined : onReplyPress}
+          onPress={
+            replyDisabled
+              ? undefined
+              : isGuest
+                ? promptSignIn
+                : onReplyPress
+          }
           disabled={replyDisabled}
           largerTextBadges={largerTextBadges}
           accessibilityLabel={

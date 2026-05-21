@@ -2,8 +2,17 @@ import { StyleSheet, View } from 'react-native';
 
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ThemedView } from '@/components/ThemedView';
+import { layout, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+/**
+ * Placeholder card matching `SearchProfileResult`'s layout — same row
+ * padding (lg horizontal / md vertical), same 48px avatar, same stacked
+ * info column (display name + handle + two-line description). The
+ * previous version painted a 16/16 box with a fake "follow" button that
+ * doesn't exist on the real card, so the list visibly resized when
+ * results arrived. Mirroring the real card keeps the layout stable.
+ */
 export function SearchResultSkeleton() {
   const borderColor = useThemeColor(
     {
@@ -15,14 +24,15 @@ export function SearchResultSkeleton() {
 
   return (
     <ThemedView style={[styles.container, { borderBottomColor: borderColor }]}>
-      <View style={styles.userInfo}>
-        <Skeleton width={48} height={48} borderRadius={24} />
-        <View style={styles.userDetails}>
-          <Skeleton width={120} height={16} style={styles.displayName} />
-          <Skeleton width={100} height={14} style={styles.handle} />
+      <Skeleton width={48} height={48} borderRadius={24} />
+      <View style={styles.info}>
+        <Skeleton width={140} height={18} />
+        <Skeleton width={110} height={14} />
+        <View style={styles.descriptionLines}>
+          <Skeleton width="100%" height={14} />
+          <Skeleton width="70%" height={14} />
         </View>
       </View>
-      <Skeleton width={80} height={32} borderRadius={16} />
     </ThemedView>
   );
 }
@@ -30,24 +40,18 @@ export function SearchResultSkeleton() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
+    alignItems: 'flex-start',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: layout.hairline,
   },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  info: {
     flex: 1,
+    gap: spacing.xs,
   },
-  userDetails: {
-    marginLeft: 12,
-    flex: 1,
+  descriptionLines: {
+    marginTop: spacing.xs,
+    gap: spacing.xs,
   },
-  displayName: {
-    marginBottom: 4,
-  },
-  handle: {
-    opacity: 0.7,
-  },
-}); 
+});

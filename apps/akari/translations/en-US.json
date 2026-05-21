@@ -107,7 +107,11 @@
       "invalidHandle": "Please enter a valid handle.",
       "oauthSuccessTitle": "Signed in",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) authenticated via atproto OAuth. Wiring this session into the API client is the next step.",
-      "refreshingSession": "Refreshing session…"
+      "refreshingSession": "Refreshing session…",
+      "continueAsGuest": "Continue without signing in",
+      "signInCta": "Sign in",
+      "guestHeroTitle": "Browsing as guest",
+      "guestRequiredSubtitle": "Sign in to use this feature on Akari."
     },
     "oauth": {
       "scopes": {

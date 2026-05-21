@@ -4,7 +4,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching feeds created by a user
  * @param identifier - The user's handle or DID
@@ -17,12 +17,16 @@ export function useAuthorFeeds(identifier: string | undefined, limit: number = 5
   return useInfiniteQuery({
     queryKey: queryKeys.author.feeds(identifier, limit, currentAccount?.pdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
-      if (!token) throw new Error('No access token');
       if (!identifier) throw new Error('No identifier provided');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
 
-      const api = apiForAccount(currentAccount);
-      const feeds = await api.getAuthorFeeds(token, identifier, limit, pageParam);
+      const useGuestPath = !token || !currentAccount?.pdsUrl;
+      const api = useGuestPath ? apiForPublicAppView() : apiForAccount(currentAccount);
+      const feeds = await api.getAuthorFeeds(
+        useGuestPath ? '' : token,
+        identifier,
+        limit,
+        pageParam,
+      );
 
       return {
         feeds: feeds.feeds,
@@ -30,7 +34,7 @@ export function useAuthorFeeds(identifier: string | undefined, limit: number = 5
       };
     },
     select: (data) => data.pages.flatMap((page) => page.feeds),
-    enabled: !!identifier && !!token,
+    enabled: !!identifier,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 5 * 60 * 1000, // 5 minutes

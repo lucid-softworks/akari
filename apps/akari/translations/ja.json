@@ -107,7 +107,11 @@
       "invalidHandle": "有効な handle を入力してください。",
       "oauthSuccessTitle": "サインインしました",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) を atproto OAuth で認証しました。次のステップはこのセッションを API クライアントに接続することです。",
-      "refreshingSession": "セッションを更新中…"
+      "refreshingSession": "セッションを更新中…",
+      "continueAsGuest": "サインインせずに続ける",
+      "signInCta": "サインイン",
+      "guestHeroTitle": "ゲストとして閲覧中",
+      "guestRequiredSubtitle": "この機能を使うには Akari にサインインしてください。"
     },
     "oauth": {
       "scopes": {

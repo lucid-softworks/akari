@@ -409,6 +409,17 @@ export class BlueskyApiClient {
       headers?: Record<string, string>;
     },
   ): Promise<T> {
+    // Guest reads: an empty accessJwt means the caller is hitting a
+    // public AppView endpoint (e.g. unauthenticated `app.bsky.feed.*`
+    // GETs) and there is no session to bind. Skip the Authorization
+    // header entirely; per-user endpoints (timeline, notifications,
+    // bookmarks, chat, prefs) will still 401 server-side, but the
+    // guest-mode hooks gate those at the React Query layer before they
+    // ever call here.
+    if (accessJwt === '') {
+      return this.makeRequest<T>(endpoint, options);
+    }
+
     const signer = dpopSignersByAccessToken.get(accessJwt);
     if (!signer) {
       return this.makeRequest<T>(endpoint, {

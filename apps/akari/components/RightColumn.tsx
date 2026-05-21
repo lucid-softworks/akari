@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { fontSize, fontWeight, radius, shadows, spacing, zIndex } from '@/constants/tokens';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useSuggestedFollows } from '@/hooks/queries/useSuggestedFollows';
 import { useTrendingTopics } from '@/hooks/queries/useTrendingTopics';
 import { useTypeaheadActors, type TypeaheadActor } from '@/hooks/queries/useTypeaheadActors';
@@ -422,11 +423,16 @@ const FollowButton = React.memo(function FollowButton({
   // oxlint-disable-next-line react-doctor/no-derived-useState -- optimistic follow state diverges from the prop during the mutation, rolling back on error
   const [optimisticUri, setOptimisticUri] = useState<string | undefined>(followingUri);
   const followMutation = useFollowUser();
+  const { isGuest, promptSignIn } = useRequireAuth();
   const isFollowing = Boolean(optimisticUri);
 
   const handlePress = useCallback(
     (e: { stopPropagation?: () => void }) => {
       e.stopPropagation?.();
+      if (isGuest) {
+        promptSignIn();
+        return;
+      }
       if (isFollowing && optimisticUri) {
         const prev = optimisticUri;
         setOptimisticUri(undefined);
@@ -449,7 +455,7 @@ const FollowButton = React.memo(function FollowButton({
         );
       }
     },
-    [did, isFollowing, optimisticUri, followMutation],
+    [did, isFollowing, optimisticUri, followMutation, isGuest, promptSignIn],
   );
 
   return (

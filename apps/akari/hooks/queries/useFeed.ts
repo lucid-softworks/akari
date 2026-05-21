@@ -5,7 +5,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { queryKeys } from '@/hooks/queryKeys';
-import { apiForAccount } from '@/utils/blueskyApi';
+import { apiForAccount, apiForPublicAppView } from '@/utils/blueskyApi';
 /**
  * Infinite query hook for fetching feed posts
  * @param feedUri - The feed URI to fetch posts from
@@ -19,14 +19,20 @@ export function useFeed(feedUri: string | null, limit: number = 20) {
   return useInfiniteQuery({
     queryKey: queryKeys.feed.detail(feedUri, currentAccount?.pdsUrl),
     queryFn: async ({ pageParam }: CursorPageParam) => {
-      if (!token) throw new Error('No access token');
       if (!feedUri) throw new Error('No feed URI provided');
-      if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
+
+      // Guest path: hit the public AppView directly with no token. The
+      // shared API client treats `accessJwt === ''` as "public read"
+      // and skips the Authorization header.
+      if (!token || !currentAccount?.pdsUrl) {
+        const api = apiForPublicAppView();
+        return await api.getFeed('', feedUri, limit, pageParam, acceptLabelers);
+      }
 
       const api = apiForAccount(currentAccount);
       return await api.getFeed(token, feedUri, limit, pageParam, acceptLabelers);
     },
-    enabled: !!feedUri && !!token,
+    enabled: !!feedUri,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.cursor,
     staleTime: 2 * 60 * 1000, // 2 minutes

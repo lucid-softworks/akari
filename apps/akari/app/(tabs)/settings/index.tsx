@@ -21,6 +21,7 @@ import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles'
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useConfirm } from '@/hooks/useConfirm';
@@ -37,6 +38,24 @@ const EXTERNAL_LINKS = {
   changeLog: 'https://blueskyweb.xyz/blog',
 } as const;
 
+// Settings rows surfaced to guest users — local-prefs / read-only
+// pages that don't require a signed-in session. Everything else
+// (account / privacy / notifications / messages / moderation /
+// following-cleanup / ai) is hidden until the user signs in;
+// deep-linking to any of those routes shows the same
+// `GuestSignInRequired` empty state the rest of the gated tabs use.
+// `ai` lives behind auth because translation/recommendation prefs
+// attach to the current account.
+const GUEST_VISIBLE_SETTINGS_KEYS = new Set([
+  'customize-tabs',
+  'content-and-media',
+  'appearance',
+  'languages',
+  'network',
+  'accessibility',
+  'about',
+]);
+
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const borderColor = useBorderColor();
@@ -44,6 +63,7 @@ export default function SettingsScreen() {
   const { data: accounts = [] } = useAccounts();
   const { data: currentAccount } = useCurrentAccount();
   const { data: accountProfiles } = useAccountProfiles();
+  const isGuest = useIsGuest();
   const scrollViewRef = useRef<ScrollView>(null);
   const { isLargeScreen } = useResponsive();
 
@@ -97,8 +117,12 @@ export default function SettingsScreen() {
     ? (Constants.expoConfig.extra?.variant as string) : undefined;
   const showDev = __DEV__ || (variant ? variant !== 'production' : false);
 
-  // Settings rows
-  const settingsRows = useMemo<SettingsRowDescriptor[]>(
+  // Settings rows. The full list lives below; guests get a filtered
+  // subset (see `guestVisibleKeys`) so the index hides rows that lead
+  // exclusively to auth-only screens. Local-prefs / informational rows
+  // (appearance, languages, network, ai, accessibility, about,
+  // customize-tabs) stay visible for everyone.
+  const allSettingsRows = useMemo<SettingsRowDescriptor[]>(
     () => [
       {
         key: 'account',
@@ -188,6 +212,14 @@ export default function SettingsScreen() {
     [t],
   );
 
+  const settingsRows = useMemo<SettingsRowDescriptor[]>(
+    () =>
+      isGuest
+        ? allSettingsRows.filter((row) => row.key !== undefined && GUEST_VISIBLE_SETTINGS_KEYS.has(row.key))
+        : allSettingsRows,
+    [allSettingsRows, isGuest],
+  );
+
   const linksRows = useMemo<SettingsRowDescriptor[]>(
     () => [
       { key: 'help', icon: 'questionmark.circle', label: t('settings.help'), onPress: () => openExternalLink(EXTERNAL_LINKS.helpCenter) },
@@ -232,24 +264,44 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
         style={[styles.scrollView, webColumnSideBorders(borderColor)]}
       >
-        {/* Profile hero */}
+        {/* Profile hero — for guests, the hero swaps to a sign-in CTA
+            since there's no account to surface or route into. */}
         <Pressable
           style={({ pressed }) => [styles.hero, pressed && { opacity: activeOpacity.subtle }]}
-          onPress={() => router.push('/(tabs)/settings/account')}
+          onPress={() =>
+            isGuest
+              ? router.push('/(auth)/signin')
+              : router.push('/(tabs)/settings/account')
+          }
         >
-          {avatar ? (
+          {isGuest ? (
+            <View style={[styles.heroAvatar, styles.heroAvatarFallback, { backgroundColor: accentColor }]}>
+              <IconSymbol name="person.fill" size={36} color="#ffffff" />
+            </View>
+          ) : avatar ? (
             <Image contentFit="cover" source={{ uri: avatar }} style={styles.heroAvatar} />
           ) : (
             <View style={[styles.heroAvatar, styles.heroAvatarFallback, { backgroundColor: accentColor }]}>
               <ThemedText style={styles.heroAvatarFallbackText}>{fallbackLetter}</ThemedText>
             </View>
           )}
-          {displayName ? <ThemedText style={styles.heroDisplayName}>{displayName}</ThemedText> : null}
-          {currentAccount ? (
-            <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
-              @{currentAccount.handle}
-            </ThemedText>
-          ) : null}
+          {isGuest ? (
+            <>
+              <ThemedText style={styles.heroDisplayName}>{t('auth.guestHeroTitle')}</ThemedText>
+              <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
+                {t('auth.signInCta')}
+              </ThemedText>
+            </>
+          ) : (
+            <>
+              {displayName ? <ThemedText style={styles.heroDisplayName}>{displayName}</ThemedText> : null}
+              {currentAccount ? (
+                <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
+                  @{currentAccount.handle}
+                </ThemedText>
+              ) : null}
+            </>
+          )}
         </Pressable>
 
         {/* Switch-account row */}

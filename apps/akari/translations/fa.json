@@ -107,7 +107,11 @@
       "invalidHandle": "لطفاً یک handle معتبر وارد کنید.",
       "oauthSuccessTitle": "وارد شدید",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) از طریق atproto OAuth احراز هویت شد. اتصال این نشست به کلاینت API گام بعدی است.",
-      "refreshingSession": "در حال تازه‌سازی نشست…"
+      "refreshingSession": "در حال تازه‌سازی نشست…",
+      "continueAsGuest": "ادامه بدون ورود",
+      "signInCta": "ورود",
+      "guestHeroTitle": "مشاهده به‌عنوان مهمان",
+      "guestRequiredSubtitle": "برای استفاده از این قابلیت در آکاری وارد شوید."
     },
     "oauth": {
       "scopes": {

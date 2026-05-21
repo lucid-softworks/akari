@@ -107,7 +107,11 @@
       "invalidHandle": "Будь ласка, введіть коректний handle.",
       "oauthSuccessTitle": "Виконано вхід",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) автентифікований через atproto OAuth. Наступний крок — підключення цієї сесії до клієнта API.",
-      "refreshingSession": "Оновлення сесії…"
+      "refreshingSession": "Оновлення сесії…",
+      "continueAsGuest": "Продовжити без входу",
+      "signInCta": "Увійти",
+      "guestHeroTitle": "Перегляд як гість",
+      "guestRequiredSubtitle": "Увійдіть, щоб скористатися цією функцією в Akari."
     },
     "oauth": {
       "scopes": {

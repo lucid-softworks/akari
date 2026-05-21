@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Image } from '@/components/Image';
+import { AvatarOrInitial } from '@/components/AvatarOrInitial';
 import { Labels } from '@/components/Labels';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -37,13 +37,11 @@ export function SearchProfileResult({
       onPress={onPress}
     >
       <ThemedView style={styles.profileContainer}>
-        {profile.avatar ? (
-          <Image
-            source={{ uri: profile.avatar }}
-            style={styles.profileAvatar}
-            contentFit="cover"
-          />
-        ) : null}
+        <AvatarOrInitial
+          uri={profile.avatar}
+          seed={profile.displayName || profile.handle}
+          size={48}
+        />
         <ThemedView style={styles.profileInfo}>
           <ThemedView style={styles.displayNameRow}>
             <ThemedText style={[styles.displayName, { color: textColor }]} numberOfLines={1}>
@@ -79,11 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: spacing.md,
-  },
-  profileAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
   },
   profileInfo: {
     flex: 1,

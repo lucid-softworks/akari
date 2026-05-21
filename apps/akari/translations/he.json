@@ -107,7 +107,11 @@
       "invalidHandle": "אנא הזינו handle תקין.",
       "oauthSuccessTitle": "התחברת",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) אומת דרך atproto OAuth. חיבור הסשן הזה ללקוח ה־API הוא השלב הבא.",
-      "refreshingSession": "מרענן הפעלה…"
+      "refreshingSession": "מרענן הפעלה…",
+      "continueAsGuest": "המשך בלי להתחבר",
+      "signInCta": "התחברות",
+      "guestHeroTitle": "גלישה כאורח",
+      "guestRequiredSubtitle": "התחברו כדי להשתמש בתכונה זו ב‑Akari."
     },
     "oauth": {
       "scopes": {

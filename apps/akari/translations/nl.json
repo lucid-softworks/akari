@@ -107,7 +107,11 @@
       "invalidHandle": "Voer een geldige handle in.",
       "oauthSuccessTitle": "Ingelogd",
       "oauthSuccessMessage": "@{{handle}} ({{did}}) is geverifieerd via atproto OAuth. Deze sessie aan de API-client koppelen is de volgende stap.",
-      "refreshingSession": "Sessie vernieuwen…"
+      "refreshingSession": "Sessie vernieuwen…",
+      "continueAsGuest": "Doorgaan zonder in te loggen",
+      "signInCta": "Inloggen",
+      "guestHeroTitle": "Bladeren als gast",
+      "guestRequiredSubtitle": "Log in om deze functie in Akari te gebruiken."
     },
     "oauth": {
       "scopes": {

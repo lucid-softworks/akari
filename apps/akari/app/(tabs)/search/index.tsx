@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -15,6 +15,7 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { fontSize, layout, opacity, spacing } from '@/constants/tokens';
 import { webScreenContainer } from '@/constants/webStyles';
 import { TabChromeContext } from '@/app/(tabs)/_layout';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useCollapsibleHeader } from '@/hooks/useCollapsibleHeader';
@@ -45,6 +46,7 @@ const MemoizedSearchListHeader = memo(SearchListHeader);
 
 export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
+  const isGuest = useIsGuest();
 
   // The deep-linked `?query=` param seeds four pieces of form state on
   // first mount and whenever the URL param flips to a new value. Holding
@@ -56,17 +58,22 @@ export default function SearchScreen() {
     activeTab: SearchTabType;
     sort: SearchSort;
   };
-  const buildInitialForm = (raw: string | undefined): SearchForm => {
+  const buildInitialForm = (raw: string | undefined, guest: boolean): SearchForm => {
     const initial = raw ?? '';
     const isHashtag = initial && isHashtagQuery(initial);
+    // Guests don't see the "All" tab (it'd collapse to Users since
+    // post search is auth-gated), so default them to "users". Hashtag
+    // searches still go to "posts" — the empty state on that tab
+    // shows the sign-in CTA.
+    const defaultTab: SearchTabType = isHashtag ? 'posts' : guest ? 'users' : 'all';
     return {
       query: initial,
       searchQuery: initial,
-      activeTab: isHashtag ? 'posts' : 'all',
+      activeTab: defaultTab,
       sort: 'top',
     };
   };
-  const [form, setForm] = useState<SearchForm>(() => buildInitialForm(initialQuery));
+  const [form, setForm] = useState<SearchForm>(() => buildInitialForm(initialQuery, isGuest));
   const { query, searchQuery, activeTab, sort } = form;
   const setQuery = useCallback((next: string) => setForm((p) => ({ ...p, query: next })), []);
   const setSearchQuery = useCallback(
@@ -159,6 +166,29 @@ export default function SearchScreen() {
     });
   }, [initialQuery, searchQuery]);
 
+  // Mirror the committed search term into the route's `?query=` param so
+  // that navigating to a result and coming back via the browser/back
+  // button restores the search instead of dropping into an empty
+  // state. `router.setParams` updates the URL in place — no new
+  // history entry — and the effect above already short-circuits when
+  // `initialQuery === searchQuery`, so this won't loop.
+  useEffect(() => {
+    const next = searchQuery.trim();
+    const current = (initialQuery ?? '').trim();
+    if (next === current) return;
+    router.setParams({ query: next.length > 0 ? next : undefined });
+  }, [searchQuery, initialQuery]);
+
+  // If the user signs out mid-session while parked on the "All" tab,
+  // SearchTabs drops that entry — leaving the bar with no visibly
+  // selected tab. Slide them down to "Users", which is the closest
+  // equivalent (post search is auth-gated for guests anyway).
+  useEffect(() => {
+    if (isGuest && activeTab === 'all') {
+      setActiveTab('users');
+    }
+  }, [isGuest, activeTab, setActiveTab]);
+
   const handleSearch = useCallback(() => {
     if (query.trim()) {
       setSearchQuery(query.trim());
@@ -172,6 +202,13 @@ export default function SearchScreen() {
   }, [setQuery, setSearchQuery]);
 
   const handleLoadMore = () => {
+    // The empty state fills the viewport, so the list's `onEndReached`
+    // fires immediately when results are empty. Without this guard,
+    // `fetchNextPage` runs against a tab that has nothing to paginate
+    // (e.g. the Posts tab in guest mode, where the query short-circuits
+    // to `[]`) and the "Loading more results…" footer briefly renders
+    // underneath the sign-in CTA.
+    if (filteredResults.length === 0) return;
     if (hasNextPage && !isFetchingNextPage) {
       void fetchNextPage();
     }
@@ -204,6 +241,10 @@ export default function SearchScreen() {
   // here rather than inside a footer component that always returns JSX.
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
+    // No items → nothing to "load more" of. Guards against the footer
+    // briefly painting beneath the empty-state CTA when a stale
+    // pagination request settles after a tab switch.
+    if (filteredResults.length === 0) return null;
     return (
       <ThemedView style={styles.loadingFooter}>
         <ThemedText style={[styles.loadingText, { color: textColor }]}>
@@ -253,6 +294,7 @@ export default function SearchScreen() {
             isError={isError}
             errorMessage={error?.message}
             activeTab={activeTab}
+            isGuest={isGuest}
             onRetry={() => void refetch()}
           />
         }
@@ -297,6 +339,7 @@ export default function SearchScreen() {
           isLoading={isLoading}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          isGuest={isGuest}
           sort={sort}
           onSortChange={setSort}
           show={show}

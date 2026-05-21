@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
+import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useMessagesSettings } from '@/hooks/useMessagesSettings';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -17,7 +19,12 @@ export default function MessagesSettingsScreen() {
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const { t } = useTranslation();
+  const isGuest = useIsGuest();
   const { hideDeletedAccounts, setHideDeletedAccounts } = useMessagesSettings();
+
+  if (isGuest) {
+    return <GuestSignInRequired title={t('settings.messagesSettings.title')} />;
+  }
 
   return (
     <SettingsSubpageLayout title={t('settings.messagesSettings.title')}>

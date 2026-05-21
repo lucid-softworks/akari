@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
@@ -10,7 +10,17 @@ import { spacing, radius, fontSize, fontWeight, opacity, activeOpacity, layout }
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { ALL_TABS, type TabKey, useTabConfig } from '@/hooks/useTabConfig';
+
+// Tabs that have no meaningful UX for unauthenticated users — even if
+// the row appeared in the customize list, the destination would render
+// the `GuestSignInRequired` empty state. Hide them outright until the
+// user signs in.
+const GUEST_HIDDEN_TABS: ReadonlySet<TabKey> = new Set<TabKey>([
+  'community-notes',
+  'moderation',
+]);
 
 export default function CustomizeTabsScreen() {
   const { t } = useTranslation();
@@ -20,8 +30,20 @@ export default function CustomizeTabsScreen() {
   const secondaryText = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const cardBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
 
+  const isGuest = useIsGuest();
   const { visibleTabs, setVisibleTabs, resetToDefault } = useTabConfig();
   const [localTabs, setLocalTabs] = useState<TabKey[]>(visibleTabs);
+
+  // For guests, hide tabs that lead to auth-gated screens from both
+  // the "visible" and "hidden" sections so they can't be added at all.
+  const availableTabs = useMemo(
+    () => (isGuest ? ALL_TABS.filter((tab) => !GUEST_HIDDEN_TABS.has(tab.key)) : ALL_TABS),
+    [isGuest],
+  );
+  const visibleLocalTabs = useMemo(
+    () => (isGuest ? localTabs.filter((key) => !GUEST_HIDDEN_TABS.has(key)) : localTabs),
+    [isGuest, localTabs],
+  );
 
   const handleToggle = useCallback((key: TabKey, enabled: boolean) => {
     setLocalTabs((prev) => {
@@ -76,11 +98,11 @@ export default function CustomizeTabsScreen() {
         {/* Visible tabs (ordered) */}
         <ThemedText style={styles.sectionTitle}>{t('settings.visibleTabs')}</ThemedText>
         <ThemedView style={[styles.card, { borderColor, backgroundColor: cardBg }]}>
-          {localTabs.map((key, index) => {
-            const meta = ALL_TABS.find((tab) => tab.key === key);
+          {visibleLocalTabs.map((key, index) => {
+            const meta = availableTabs.find((tab) => tab.key === key);
             if (!meta) return null;
             return (
-              <View key={key} style={[styles.row, index < localTabs.length - 1 && { borderBottomWidth: layout.hairline, borderBottomColor: borderColor }]}>
+              <View key={key} style={[styles.row, index < visibleLocalTabs.length - 1 && { borderBottomWidth: layout.hairline, borderBottomColor: borderColor }]}>
                 <View style={styles.rowLeft}>
                   <IconSymbol name={meta.icon as any} size={20} color={accentColor} />
                   <ThemedText style={styles.rowLabel}>{meta.label}</ThemedText>
@@ -96,9 +118,9 @@ export default function CustomizeTabsScreen() {
                   <Pressable
                     onPress={() => handleMoveDown(key)}
                     style={({ pressed }) => [styles.arrowButton, pressed && { opacity: activeOpacity.default }]}
-                    disabled={index === localTabs.length - 1}
+                    disabled={index === visibleLocalTabs.length - 1}
                   >
-                    <IconSymbol name="chevron.down" size={16} color={index === localTabs.length - 1 ? borderColor : iconColor} />
+                    <IconSymbol name="chevron.down" size={16} color={index === visibleLocalTabs.length - 1 ? borderColor : iconColor} />
                   </Pressable>
                   {meta.alwaysVisible ? (
                     <ThemedText style={[styles.alwaysOnLabel, { color: secondaryText }]}>{t('settings.alwaysOn')}</ThemedText>
@@ -117,8 +139,8 @@ export default function CustomizeTabsScreen() {
 
         {/* Hidden tabs */}
         {(() => {
-          const localTabSet = new Set(localTabs);
-          const hiddenTabs = ALL_TABS.filter((tab) => !localTabSet.has(tab.key));
+          const localTabSet = new Set(visibleLocalTabs);
+          const hiddenTabs = availableTabs.filter((tab) => !localTabSet.has(tab.key));
           if (hiddenTabs.length === 0) return null;
           return (
           <>

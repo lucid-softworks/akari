@@ -34,6 +34,10 @@ export default function SignInScreen() {
 
   const goToOauth = () => router.push('/(auth)/oauth');
   const goToPassword = () => router.push('/(auth)/password');
+  // Continue without authenticating. Lands on the home tab in guest
+  // mode (discover feed, write affordances gated). Reachable via the
+  // tertiary link below the OAuth + app-password choices.
+  const continueAsGuest = () => router.replace('/' as never);
 
   return (
     <ThemedView style={styles.container}>
@@ -97,7 +101,19 @@ export default function SignInScreen() {
                 </ThemedText>
               </Pressable>
             </View>
-          ) : null}
+          ) : (
+            <View style={styles.footerToggle}>
+              <Pressable
+                onPress={continueAsGuest}
+                accessibilityRole="button"
+                style={({ pressed }) => pressed && { opacity: 0.7 }}
+              >
+                <ThemedText style={styles.footerLinkText}>
+                  {t('auth.continueAsGuest')}
+                </ThemedText>
+              </Pressable>
+            </View>
+          )}
         </View>
       </ScrollView>
     </ThemedView>

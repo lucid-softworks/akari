@@ -4,6 +4,7 @@ import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { activeOpacity, fontSize, fontWeight, radius, semanticColors, shadows, spacing } from '@/constants/tokens';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type HomeFabProps = {
@@ -21,7 +22,18 @@ const FAB_POSITION = (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute
 
 export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
   const { t } = useTranslation();
+  const { isGuest, promptSignIn } = useRequireAuth();
   const [showFabMenu, setShowFabMenu] = useState(false);
+
+  // Guest tap on the FAB skips the menu and goes straight to the sign-
+  // in screen — there's nothing under the menu they'd be allowed to do.
+  const handleFabPress = () => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
+    setShowFabMenu((prev) => !prev);
+  };
 
   return (
     <>
@@ -57,7 +69,7 @@ export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
 
       <Pressable
         style={({ pressed }) => [styles.fab, { bottom: 20 }, pressed && { opacity: activeOpacity.subtle }]}
-        onPress={() => setShowFabMenu((prev) => !prev)}
+        onPress={handleFabPress}
       >
         <IconSymbol name="plus" size={24} color="white" />
       </Pressable>

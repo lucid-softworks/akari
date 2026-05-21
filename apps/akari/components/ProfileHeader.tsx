@@ -29,6 +29,7 @@ import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useStartConvo } from '@/hooks/mutations/useStartConvo';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConfirm } from '@/hooks/useConfirm';
@@ -128,8 +129,13 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const updateProfileMutation = useUpdateProfile();
   const { showToast } = useToast();
   const confirm = useConfirm();
+  const { isGuest, promptSignIn } = useRequireAuth();
 
   const handleBskyMessage = async () => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     if (!profile.did) return;
     try {
       const convo = await startConvoMutation.mutateAsync({ memberDids: [profile.did] });
@@ -200,6 +206,10 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   };
 
   const handleFollowPress = () => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
     if (isFollowing) {
       confirm({
         title: t('common.unfollow'),
