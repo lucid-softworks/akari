@@ -48,10 +48,10 @@ type PostActionsProps = {
    * dims and a small lock icon appears next to it. */
   replyDisabled?: boolean;
   onReplyPress: () => void;
-  /** Called when the more (...) button is pressed. On web the click event's
-   *  target rect is forwarded so the caller can anchor a portal-rendered
-   *  menu next to the trigger. */
-  onMorePress: (rect?: ActionAnchorRect) => void;
+  /** Rendered in the "more (...)" slot at the end of the action row.
+   *  Pass `<PostActionsMenu />` (it owns its own trigger button styled
+   *  to match the other action buttons). */
+  moreSlot?: React.ReactNode;
   onQuotePress?: () => void;
 };
 
@@ -151,7 +151,7 @@ export const PostActions = React.memo(function PostActions({
   likeCount,
   replyDisabled,
   onReplyPress,
-  onMorePress,
+  moreSlot,
   onQuotePress,
 }: PostActionsProps) {
   const { largerTextBadges } = useAccessibilitySettings();
@@ -170,9 +170,6 @@ export const PostActions = React.memo(function PostActions({
   // Reply/share both use the theme tint — defaults to #5c8aff for dark, picks
   // up the user's custom accent if they've set one.
   const accentColor = useThemeColor({}, 'tint');
-  // Neutral hover color for the "more" button so it doesn't borrow an action
-  // color it shouldn't suggest.
-  const neutralAccent = useThemeColor({}, 'textSecondary');
 
   const handleLikePress = useCallback(() => {
     if (!uri || !cid) return;
@@ -273,31 +270,6 @@ export const PostActions = React.memo(function PostActions({
     setShareToChatVisible(true);
   }, []);
 
-  const moreButtonRef = useRef<View>(null);
-
-  const handleMorePress = useCallback(() => {
-    const node = moreButtonRef.current;
-    if (!node) {
-      onMorePress();
-      return;
-    }
-    // On web the ref resolves to the underlying DOM element, so we can
-    // pull the rect synchronously via getBoundingClientRect. Falling back
-    // to measureInWindow handles both native and the rare case where the
-    // ref doesn't expose a DOM API (eg. tests).
-    if (Platform.OS === 'web') {
-      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
-      if (typeof el.getBoundingClientRect === 'function') {
-        const r = el.getBoundingClientRect();
-        onMorePress({ top: r.top, bottom: r.bottom, left: r.left, width: r.width, height: r.height });
-        return;
-      }
-    }
-    node.measureInWindow((x, y, width, height) => {
-      onMorePress({ top: y, bottom: y + height, left: x, width, height });
-    });
-  }, [onMorePress]);
-
   return (
     <>
       <View style={styles.interactions}>
@@ -369,13 +341,7 @@ export const PostActions = React.memo(function PostActions({
           accessibilityLabel="Share post"
         />
 
-        <ActionButton
-          icon="ellipsis"
-          activeColor={neutralAccent}
-          onPress={handleMorePress}
-          buttonRef={moreButtonRef}
-          accessibilityLabel={`More actions for post by ${authorName}`}
-        />
+        {moreSlot}
       </View>
       <RepostSheet
         visible={repostSheetVisible}

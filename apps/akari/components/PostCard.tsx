@@ -15,7 +15,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { router } from 'expo-router';
 import { AdultContentGate } from '@/components/post/AdultContentGate';
 import { LiveStreamEmbed } from '@/components/post/LiveStreamEmbed';
-import { PostActions, type ActionAnchorRect } from '@/components/post/PostActions';
+import { PostActions } from '@/components/post/PostActions';
 import { PostActionsMenu } from '@/components/post/PostActionsMenu';
 import { PostEmbeds } from '@/components/post/PostEmbeds';
 import { PostHeader } from '@/components/post/PostHeader';
@@ -127,7 +127,6 @@ export const PostCard = React.memo(function PostCard({
 }: PostCardProps) {
   const { t } = useTranslation();
 
-  const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [showQuoteComposer, setShowQuoteComposer] = useState(false);
   const [isTranslationVisible, setIsTranslationVisible] = useState(false);
@@ -266,18 +265,7 @@ export const PostCard = React.memo(function PostCard({
 
   const isLive = Boolean(liveStreamInfo);
 
-  const [menuAnchorRect, setMenuAnchorRect] = useState<ActionAnchorRect | null>(null);
-
   // Handlers
-  const handleMenuToggle = useCallback((rect?: ActionAnchorRect) => {
-    setMenuAnchorRect(rect ?? null);
-    setShowActionsMenu((prev) => !prev);
-  }, []);
-
-  const handleMenuDismiss = useCallback(() => {
-    setShowActionsMenu(false);
-  }, []);
-
   const handleReplyPress = useCallback(() => {
     setShowReplyComposer(true);
   }, []);
@@ -288,7 +276,6 @@ export const PostCard = React.memo(function PostCard({
   }, [post.uri, post.cid]);
 
   const handleTranslatePress = useCallback(() => {
-    setShowActionsMenu(false);
     setIsTranslationVisible(true);
   }, []);
 
@@ -422,22 +409,21 @@ export const PostCard = React.memo(function PostCard({
         repostCount={post.repostCount || 0}
         likeCount={post.likeCount || 0}
         onReplyPress={handleReplyPress}
-        onMorePress={handleMenuToggle}
         onQuotePress={handleQuotePress}
-      />
-      <PostActionsMenu
-        visible={showActionsMenu}
-        canTranslate={canTranslate}
-        postText={post.text}
-        postUri={post.uri}
-        postCid={post.cid}
-        authorDid={post.author.did}
-        feedUri={feedUri}
-        feedContext={post.feedContext}
-        anchorRect={menuAnchorRect}
-        debugData={__DEV__ ? post : undefined}
-        onDismiss={handleMenuDismiss}
-        onTranslatePress={handleTranslatePress}
+        moreSlot={
+          <PostActionsMenu
+            canTranslate={canTranslate}
+            postText={post.text}
+            postUri={post.uri}
+            postCid={post.cid}
+            authorDid={post.author.did}
+            feedUri={feedUri}
+            feedContext={post.feedContext}
+            debugData={__DEV__ ? post : undefined}
+            onTranslatePress={handleTranslatePress}
+            triggerAccessibilityLabel={`More actions for post by ${authorName}`}
+          />
+        }
       />
     </View>
   );
