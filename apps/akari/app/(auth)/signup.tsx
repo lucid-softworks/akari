@@ -14,7 +14,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { AuthHeader } from '@/components/auth/AuthHeader';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Input } from '@/components/ui/Input';
-import { Menu, type MenuOption } from '@/components/ui/Menu';
+import { Menu, MenuTrigger, type MenuItem } from '@/components/ui/Menu';
 import {
   activeOpacity,
   fontSize,
@@ -78,18 +78,27 @@ export default function SignupScreen() {
   const suffixes = isCustom ? [] : SIGNUP_PROVIDERS[provider].handleSuffixes;
   const hasSuffixChoice = suffixes.length > 1;
 
-  const providerOptions: readonly MenuOption<SignupProviderId>[] = useMemo(
+  const providerItems: readonly MenuItem[] = useMemo(
     () =>
       SIGNUP_PROVIDER_ORDER.map((id) => ({
-        value: id,
+        key: id,
         label: id === 'custom' ? t('auth.signupProviderCustom') : SIGNUP_PROVIDERS[id].label,
+        selected: id === provider,
+        onPress: () => handleProviderChange(id),
       })),
-    [t],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t, provider],
   );
 
-  const suffixOptions: readonly MenuOption<string>[] = useMemo(
-    () => suffixes.map((suffix) => ({ value: suffix, label: suffix })),
-    [suffixes],
+  const suffixItems: readonly MenuItem[] = useMemo(
+    () =>
+      suffixes.map((suffix) => ({
+        key: suffix,
+        label: suffix,
+        selected: suffix === handleSuffix,
+        onPress: () => setHandleSuffix(suffix),
+      })),
+    [suffixes, handleSuffix],
   );
 
   const submit = () => {
@@ -128,28 +137,19 @@ export default function SignupScreen() {
   }
 
   const handleSuffixSlot = hasSuffixChoice ? (
-    <Menu
-      value={handleSuffix}
-      options={suffixOptions}
-      onChange={setHandleSuffix}
-      renderTrigger={({ onPress, ref, isOpen }) => (
-        <Pressable
-          ref={ref}
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityState={{ expanded: isOpen }}
-          style={({ pressed }) => [
-            styles.suffixTrigger,
-            pressed && { opacity: activeOpacity.default },
-          ]}
-        >
-          <ThemedText style={[styles.suffixLabel, { color: helperColor }]}>
-            {handleSuffix}
-          </ThemedText>
-          <IconSymbol name="chevron.down" size={12} color={helperColor} />
-        </Pressable>
-      )}
-    />
+    <Menu items={suffixItems}>
+      <MenuTrigger
+        style={({ pressed }) => [
+          styles.suffixTrigger,
+          pressed && { opacity: activeOpacity.default },
+        ]}
+      >
+        <ThemedText style={[styles.suffixLabel, { color: helperColor }]}>
+          {handleSuffix}
+        </ThemedText>
+        <IconSymbol name="chevron.down" size={12} color={helperColor} />
+      </MenuTrigger>
+    </Menu>
   ) : (
     <ThemedText style={[styles.suffixLabel, { color: helperColor }]}>
       {handleSuffix}
@@ -177,29 +177,20 @@ export default function SignupScreen() {
               <ThemedText style={[styles.label, { color: labelColor }]}>
                 {t('auth.signupServer')}
               </ThemedText>
-              <Menu
-                value={provider}
-                options={providerOptions}
-                onChange={handleProviderChange}
-                renderTrigger={({ onPress, ref, isOpen }) => (
-                  <Pressable
-                    ref={ref}
-                    onPress={onPress}
-                    accessibilityRole="button"
-                    accessibilityState={{ expanded: isOpen }}
-                    style={({ pressed }) => [
-                      styles.dropdownTrigger,
-                      { borderColor, backgroundColor: inputBackground },
-                      pressed && { opacity: activeOpacity.default },
-                    ]}
-                  >
-                    <ThemedText style={[styles.dropdownTriggerLabel, { color: labelColor }]}>
-                      {providerDisplayLabel}
-                    </ThemedText>
-                    <IconSymbol name="chevron.down" size={14} color={helperColor} />
-                  </Pressable>
-                )}
-              />
+              <Menu items={providerItems}>
+                <MenuTrigger
+                  style={({ pressed }) => [
+                    styles.dropdownTrigger,
+                    { borderColor, backgroundColor: inputBackground },
+                    pressed && { opacity: activeOpacity.default },
+                  ]}
+                >
+                  <ThemedText style={[styles.dropdownTriggerLabel, { color: labelColor }]}>
+                    {providerDisplayLabel}
+                  </ThemedText>
+                  <IconSymbol name="chevron.down" size={14} color={helperColor} />
+                </MenuTrigger>
+              </Menu>
             </View>
 
             {isCustom ? (

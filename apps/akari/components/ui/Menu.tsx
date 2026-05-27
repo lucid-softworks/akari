@@ -1,5 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  type PressableProps,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -11,32 +26,48 @@ import {
   fontSize,
   fontWeight,
   layout,
+  opacity,
   radius,
   semanticColors,
   spacing,
 } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-export type MenuOption<T extends string> = {
-  value: T;
+export type MenuItem = {
+  key: string;
   label: string;
+  /** Optional `IconSymbol` name rendered to the left of the label. */
+  icon?: string;
+  /** When true, the row paints in the danger colour (matches block/report). */
+  destructive?: boolean;
+  /** Disables the row (greyed out, no press feedback). */
+  disabled?: boolean;
+  /** Renders a trailing checkmark; use for picker-style menus. */
+  selected?: boolean;
+  onPress: () => void;
 };
 
-type MenuProps<T extends string> = {
-  value: T;
-  options: readonly MenuOption<T>[];
-  onChange: (next: T) => void;
-  /**
-   * Builds the closed-state trigger. `ref` must be attached to a `View`-
-   * compatible element we can `measureInWindow` against to anchor the
-   * portaled dropdown on web. `onPress` toggles the menu open.
-   */
-  renderTrigger: (args: {
-    onPress: () => void;
-    ref: React.RefObject<View | null>;
-    isOpen: boolean;
-  }) => React.ReactNode;
-  /** Rough menu height (px) used by the portal for above/below flip logic. */
+type MenuContextValue = {
+  triggerRef: React.RefObject<View | null>;
+  toggle: () => void;
+  isOpen: boolean;
+};
+
+const MenuContext = createContext<MenuContextValue | null>(null);
+
+function useMenuContext(componentName: string): MenuContextValue {
+  const ctx = useContext(MenuContext);
+  if (!ctx) {
+    throw new Error(`<${componentName}> must be rendered inside a <Menu>.`);
+  }
+  return ctx;
+}
+
+type MenuProps = {
+  items: readonly MenuItem[];
+  /** The trigger (wrap in `<MenuTrigger>`) and anything else to render alongside it. */
+  children: React.ReactNode;
+  /** Rough menu height (px) used by the web portal for above/below flip logic. */
   estimatedHeight?: number;
 };
 
@@ -45,28 +76,36 @@ type MenuProps<T extends string> = {
  * ancestor `overflow: hidden` and stacking contexts; on native it falls
  * back to a bottom-sheet Modal. Items show a hover highlight on web (via
  * Pressable's `onHoverIn`/`onHoverOut`) and a press-state highlight on
- * native.
+ * native. Re-tapping the trigger closes the menu; clicking anywhere
+ * outside the trigger or the menu on web also closes it.
+ *
+ * Pair with `<MenuTrigger>` for the tap target:
+ *
+ * ```tsx
+ * <Menu items={items}>
+ *   <MenuTrigger style={styles.button}>
+ *     <IconSymbol name="ellipsis" />
+ *   </MenuTrigger>
+ * </Menu>
+ * ```
+ *
+ * Items carry their own `onPress` so the same primitive serves both
+ * picker (mark `selected: true` on the active row) and action (set
+ * `icon` / `destructive`) menus.
  */
-export function Menu<T extends string>({
-  value,
-  options,
-  onChange,
-  renderTrigger,
-  estimatedHeight = 240,
-}: MenuProps<T>) {
+export function Menu({ items, children, estimatedHeight = 240 }: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState<WebPortalAnchorRect | null>(null);
   const triggerRef = useRef<View | null>(null);
   const menuContentRef = useRef<View | null>(null);
   const { bottom } = useSafeAreaInsets();
 
-  // Outside-click dismissal on web: while the menu is open, listen on
-  // `window` in the capture phase so this handler fires before any
-  // descendant onPress. If the click target lives inside either the
-  // trigger or the portaled menu, leave it to the inner handler; if it
-  // falls outside both, close. Capture phase is required so a re-click
-  // on the trigger doesn't first close (via outside-click) and then
-  // reopen (via the trigger's `onPress -> toggle`).
+  // Outside-click dismissal on web: capture-phase mousedown so this
+  // handler fires before any descendant onPress. If the click target
+  // lives inside either the trigger or the portaled menu, leave it to
+  // the inner handler; if it falls outside both, close. Capture phase
+  // is required so a re-click on the trigger doesn't first close (via
+  // outside-click) and then reopen (via the trigger's toggle).
   useEffect(() => {
     if (!isOpen || Platform.OS !== 'web' || typeof window === 'undefined') return;
     const handler = (event: MouseEvent) => {
@@ -82,9 +121,6 @@ export function Menu<T extends string>({
   }, [isOpen]);
 
   const toggle = useCallback(() => {
-    // Re-tapping the trigger while open closes the menu. Without this the
-    // user has to click outside the menu to dismiss, which is awkward when
-    // the trigger is exactly where their finger / cursor already is.
     if (isOpen) {
       setIsOpen(false);
       return;
@@ -100,31 +136,28 @@ export function Menu<T extends string>({
     });
   }, [isOpen]);
 
-  const handleSelect = useCallback(
-    (next: T) => {
-      onChange(next);
-      setIsOpen(false);
-    },
-    [onChange],
-  );
-
-  useEffect(() => {
-    return () => setIsOpen(false);
+  const handleSelect = useCallback((item: MenuItem) => {
+    if (item.disabled) return;
+    item.onPress();
+    setIsOpen(false);
   }, []);
 
-  const trigger = renderTrigger({ onPress: toggle, ref: triggerRef, isOpen });
+  useEffect(() => () => setIsOpen(false), []);
 
-  // Wrapping the menu in a ref-bearing View gives the outside-click
-  // handler a DOM node to `contains`-check against on web.
+  const contextValue = useMemo<MenuContextValue>(
+    () => ({ triggerRef, toggle, isOpen }),
+    [toggle, isOpen],
+  );
+
   const menu = (
     <View ref={menuContentRef} collapsable={false}>
-      <MenuBody value={value} options={options} onSelect={handleSelect} />
+      <MenuBody items={items} onSelect={handleSelect} />
     </View>
   );
 
   return (
-    <>
-      {trigger}
+    <MenuContext.Provider value={contextValue}>
+      {children}
       {Platform.OS === 'web' ? (
         <WebPortalDropdown
           visible={isOpen}
@@ -146,33 +179,59 @@ export function Menu<T extends string>({
           </Pressable>
         </Modal>
       )}
-    </>
+    </MenuContext.Provider>
   );
 }
 
-type MenuBodyProps<T extends string> = {
-  value: T;
-  options: readonly MenuOption<T>[];
-  onSelect: (next: T) => void;
+type MenuTriggerProps = Omit<PressableProps, 'onPress'> & {
+  children: React.ReactNode;
 };
 
-function MenuBody<T extends string>({ value, options, onSelect }: MenuBodyProps<T>) {
+/**
+ * Tappable trigger paired with `<Menu>`. Hands its ref to the parent
+ * Menu so the portaled web dropdown can anchor against it, and wires
+ * the tap to the Menu's toggle. Accepts the same props as `Pressable`
+ * (style, accessibilityLabel, hitSlop, …) except `onPress`, which Menu
+ * owns.
+ */
+export function MenuTrigger({ children, ...pressableProps }: MenuTriggerProps) {
+  const { triggerRef, toggle, isOpen } = useMenuContext('MenuTrigger');
+  return (
+    <Pressable
+      {...pressableProps}
+      ref={triggerRef}
+      onPress={toggle}
+      accessibilityRole="button"
+      accessibilityState={{ expanded: isOpen }}
+    >
+      {children}
+    </Pressable>
+  );
+}
+
+type MenuBodyProps = {
+  items: readonly MenuItem[];
+  onSelect: (item: MenuItem) => void;
+};
+
+function MenuBody({ items, onSelect }: MenuBodyProps) {
   const sheetBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const borderColor = useThemeColor({}, 'border');
   const textColor = useThemeColor({}, 'text');
+  const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
   const hoverBg = useThemeColor({ light: '#F3F4F6', dark: '#2A2D33' }, 'background');
 
   return (
     <ThemedView style={[styles.menu, { backgroundColor: sheetBg, borderColor }]}>
-      {options.map((option, index) => (
-        <React.Fragment key={option.value}>
+      {items.map((item, index) => (
+        <React.Fragment key={item.key}>
           {index > 0 ? <View style={[styles.divider, { backgroundColor: borderColor }]} /> : null}
-          <MenuItem
-            option={option}
-            isActive={option.value === value}
+          <MenuItemRow
+            item={item}
             textColor={textColor}
+            iconColor={iconColor}
             hoverBg={hoverBg}
-            onPress={() => onSelect(option.value)}
+            onPress={() => onSelect(item)}
           />
         </React.Fragment>
       ))}
@@ -180,31 +239,43 @@ function MenuBody<T extends string>({ value, options, onSelect }: MenuBodyProps<
   );
 }
 
-type MenuItemProps<T extends string> = {
-  option: MenuOption<T>;
-  isActive: boolean;
+type MenuItemRowProps = {
+  item: MenuItem;
   textColor: string;
+  iconColor: string;
   hoverBg: string;
   onPress: () => void;
 };
 
-function MenuItem<T extends string>({ option, isActive, textColor, hoverBg, onPress }: MenuItemProps<T>) {
+function MenuItemRow({ item, textColor, iconColor, hoverBg, onPress }: MenuItemRowProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const labelColor = item.destructive ? semanticColors.danger : textColor;
+  const itemIconColor = item.destructive ? semanticColors.danger : iconColor;
+
   return (
     <Pressable
       accessibilityRole="menuitem"
-      accessibilityState={{ selected: isActive }}
+      accessibilityState={{ disabled: item.disabled, selected: item.selected }}
+      disabled={item.disabled}
       onPress={onPress}
-      onHoverIn={() => setIsHovered(true)}
+      onHoverIn={() => !item.disabled && setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
       style={({ pressed }) => [
         styles.item,
-        (pressed || isHovered) && { backgroundColor: hoverBg },
-        pressed && { opacity: activeOpacity.default },
+        item.disabled && { opacity: opacity.disabled },
+        !item.disabled && (pressed || isHovered) && { backgroundColor: hoverBg },
+        !item.disabled && pressed && { opacity: activeOpacity.default },
       ]}
     >
-      <ThemedText style={[styles.itemLabel, { color: textColor }]}>{option.label}</ThemedText>
-      {isActive ? (
+      {item.icon ? (
+        <IconSymbol
+          name={item.icon as Parameters<typeof IconSymbol>[0]['name']}
+          size={20}
+          color={itemIconColor}
+        />
+      ) : null}
+      <ThemedText style={[styles.itemLabel, { color: labelColor }]}>{item.label}</ThemedText>
+      {item.selected ? (
         <IconSymbol name="checkmark" size={16} color={semanticColors.systemBlue} />
       ) : null}
     </Pressable>
@@ -221,12 +292,12 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: spacing.md,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
   },
   itemLabel: {
+    flex: 1,
     fontSize: fontSize.base,
     fontWeight: fontWeight.medium,
   },

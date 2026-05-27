@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Image } from '@/components/Image';
 import { ProfileHoverTrigger } from '@/components/ProfileHoverCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { fontSize, fontWeight, radius, shadows, spacing, zIndex } from '@/constants/tokens';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -108,22 +109,20 @@ const SearchBox = React.memo(function SearchBox({
 
   return (
     <View style={styles.searchContainer}>
-      <View style={[styles.searchWrapper, { backgroundColor: panelColor }]}>
-        <IconSymbol name="magnifyingglass" size={16} color={textTertiary} />
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSubmit}
-          onFocus={() => setFocused(true)}
-          // Delay so a typeahead row press registers before we hide the
-          // dropdown — RN's onBlur fires before onPress on the touched row.
-          onBlur={() => setTimeout(() => setFocused(false), 150)}
-          placeholder={t('common.search')}
-          placeholderTextColor={textTertiary}
-          returnKeyType="search"
-          style={[styles.searchInput, { color: textPrimary }]}
-        />
-      </View>
+      <Input
+        variant="filled"
+        value={query}
+        onChangeText={setQuery}
+        onSubmitEditing={handleSubmit}
+        onFocus={() => setFocused(true)}
+        // Delay so a typeahead row press registers before we hide the
+        // dropdown — RN's onBlur fires before onPress on the touched row.
+        onBlur={() => setTimeout(() => setFocused(false), 150)}
+        placeholder={t('common.search')}
+        placeholderTextColor={textTertiary}
+        returnKeyType="search"
+        prefix={<IconSymbol name="magnifyingglass" size={16} color={textTertiary} />}
+      />
       {showDropdown ? (
         <View
           style={[
@@ -496,18 +495,6 @@ const styles = StyleSheet.create({
   searchContainer: {
     position: 'relative',
     zIndex: zIndex.dropdown,
-  } as object,
-  searchWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    borderRadius: radius.full,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: fontSize.base,
   } as object,
   typeaheadDropdown: {
     position: 'absolute',
