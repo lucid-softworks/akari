@@ -1,9 +1,9 @@
 import * as Clipboard from 'expo-clipboard';
+import * as Haptics from 'expo-haptics';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ThemedText } from '@/components/ThemedText';
@@ -26,7 +26,7 @@ import { searchProfilePosts } from '@/components/profile/profileActions';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { useToast } from '@/contexts/ToastContext';
 import { GuestSignInRequired } from '@/components/GuestSignInRequired';
-import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
+import type { MenuItem } from '@/components/ui/Menu';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useProfile } from '@/hooks/queries/useProfile';
@@ -42,15 +42,13 @@ type OwnProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 type OwnProfileHeaderProps = {
   profile: OwnProfileShape;
   accountHandle: string;
-  onDropdownToggle: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
-  dropdownRef: React.RefObject<View | null>;
+  menuItems: readonly MenuItem[];
 };
 
 const OwnProfileHeader = memo(function OwnProfileHeader({
   profile,
   accountHandle,
-  onDropdownToggle,
-  dropdownRef,
+  menuItems,
 }: OwnProfileHeaderProps) {
   return (
     <ProfileHeader
@@ -72,8 +70,7 @@ const OwnProfileHeader = memo(function OwnProfileHeader({
         verification: profile.verification,
       }}
       isOwnProfile={true}
-      onDropdownToggle={onDropdownToggle}
-      dropdownRef={dropdownRef}
+      menuItems={menuItems}
     />
   );
 });
@@ -137,13 +134,6 @@ export default function ProfileScreen() {
   const isGuest = useIsGuest();
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
-  const [showDropdown, setShowDropdown] = useState(false);
-  // The trigger's bounding rect captured at open time. Used by
-  // `ProfileDropdown` to anchor the portaled web menu next to the
-  // `…` button instead of falling back to the bottom sheet.
-  const [dropdownAnchorRect, setDropdownAnchorRect] =
-    useState<WebPortalAnchorRect | null>(null);
-  const dropdownRef = useRef<View | null>(null);
   const { t } = useTranslation();
   const confirm = useConfirm();
   const { showToast } = useToast();
@@ -158,14 +148,6 @@ export default function ProfileScreen() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.verifiersForDid(did) });
     }
   }, [refetchProfile, queryClient, profile?.did]);
-
-  const handleDropdownToggle = useCallback(
-    (isOpen: boolean, rect?: WebPortalAnchorRect) => {
-      setShowDropdown(isOpen);
-      setDropdownAnchorRect(isOpen ? rect ?? null : null);
-    },
-    [],
-  );
 
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
@@ -199,12 +181,62 @@ export default function ProfileScreen() {
     });
   }, []);
 
+  const accountHandleForMenu = currentAccount?.handle || profile?.handle;
+
+  const handleCopyLink = useCallback(async () => {
+    if (!accountHandleForMenu) {
+      confirm({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+      return;
+    }
+    try {
+      await Clipboard.setStringAsync(`https://bsky.app/profile/${accountHandleForMenu}`);
+      showToast({ message: t('profile.linkCopied'), type: 'success' });
+    } catch {
+      confirm({
+        title: t('common.error'),
+        message: t('profile.linkCopyError'),
+        buttons: [{ text: t('common.ok') }],
+      });
+    }
+  }, [accountHandleForMenu, confirm, showToast, t]);
+
+  const handleSearchPosts = useCallback(() => {
+    searchProfilePosts({ handle: accountHandleForMenu });
+  }, [accountHandleForMenu]);
+
+  const ownMenuItems = useMemo<MenuItem[]>(
+    () => [
+      {
+        key: 'search',
+        icon: 'magnifyingglass',
+        label: t('common.search'),
+        onPress: () => {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          handleSearchPosts();
+        },
+      },
+      {
+        key: 'copyLink',
+        icon: 'link',
+        label: t('profile.copyLink'),
+        onPress: () => {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          void handleCopyLink();
+        },
+      },
+    ],
+    [t, handleSearchPosts, handleCopyLink],
+  );
+
   const headerComponent = profile ? (
     <OwnProfileHeader
       profile={profile}
       accountHandle={currentAccount?.handle || ''}
-      onDropdownToggle={handleDropdownToggle}
-      dropdownRef={dropdownRef}
+      menuItems={ownMenuItems}
     />
   ) : null;
 
@@ -226,44 +258,6 @@ export default function ProfileScreen() {
       </ThemedView>
     );
   }
-
-  const handleCopyLink = async () => {
-    const profileHandle = currentAccount?.handle || profile?.handle;
-
-    if (!profileHandle) {
-      confirm({
-        title: t('common.error'),
-        message: t('profile.linkCopyError'),
-        buttons: [{ text: t('common.ok') }],
-      });
-      setShowDropdown(false);
-      return;
-    }
-
-    try {
-      const profileUrl = `https://bsky.app/profile/${profileHandle}`;
-      await Clipboard.setStringAsync(profileUrl);
-      showToast({
-        message: t('profile.linkCopied'),
-        type: 'success',
-      });
-    } catch {
-      confirm({
-        title: t('common.error'),
-        message: t('profile.linkCopyError'),
-        buttons: [{ text: t('common.ok') }],
-      });
-    } finally {
-      setShowDropdown(false);
-    }
-  };
-
-  const handleSearchPosts = () => {
-    searchProfilePosts({
-      handle: currentAccount?.handle || profile?.handle,
-      onComplete: () => setShowDropdown(false),
-    });
-  };
 
   const sharedTabProps: SharedTabProps | null = currentAccount?.handle
     ? {
@@ -298,30 +292,6 @@ export default function ProfileScreen() {
           );
         })
       )}
-
-      <ProfileDropdown
-        isVisible={showDropdown}
-        anchorRect={dropdownAnchorRect}
-        onDismiss={() => setShowDropdown(false)}
-        onCopyLink={handleCopyLink}
-        onSearchPosts={handleSearchPosts}
-        onAddToLists={() => {
-          setShowDropdown(false);
-        }}
-        onMuteAccount={() => {
-          setShowDropdown(false);
-        }}
-        onBlockPress={() => {
-          setShowDropdown(false);
-        }}
-        onReportAccount={() => {
-          setShowDropdown(false);
-        }}
-        isFollowing={false}
-        isBlocking={false}
-        isMuted={false}
-        isOwnProfile={true}
-      />
     </ThemedView>
   );
 }

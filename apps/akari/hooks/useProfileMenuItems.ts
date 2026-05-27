@@ -1,7 +1,9 @@
 import * as Clipboard from 'expo-clipboard';
-import { useCallback } from 'react';
+import * as Haptics from 'expo-haptics';
+import { useCallback, useMemo } from 'react';
 
 import { searchProfilePosts } from '@/components/profile/profileActions';
+import type { MenuItem } from '@/components/ui/Menu';
 import { useToast } from '@/contexts/ToastContext';
 import { useBlockUser } from '@/hooks/mutations/useBlockUser';
 import { useMuteUser } from '@/hooks/mutations/useMuteUser';
@@ -12,25 +14,31 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 
-type UseProfileDropdownActionsArgs = {
+type UseProfileMenuItemsArgs = {
   profile: ProfileShape | undefined;
-  setShowDropdown: (open: boolean) => void;
+  isOwnProfile: boolean;
   setShowReportSheet: (open: boolean) => void;
   setShowListPicker: (open: boolean) => void;
+  /** Optional: when present, a Germ "message on Germ" row is appended for non-self profiles. */
+  onMessageOnGerm?: () => void;
 };
 
 /**
- * Centralizes the click handlers attached to the profile dropdown
- * (copy link, search, lists, mute, block, report). Each handler is
- * self-contained so the parent screen only has to wire them onto the
- * dropdown component.
+ * Builds the `MenuItem[]` rendered by the profile `…` menu. Each row's
+ * `onPress` runs the action and any required follow-up dialog; the
+ * shared Menu primitive closes itself after the press, so callers no
+ * longer need to track the menu's open state.
+ *
+ * Destructive rows (block / report) fire a heavier haptic on press;
+ * non-destructive rows fire a light tick.
  */
-export function useProfileDropdownActions({
+export function useProfileMenuItems({
   profile,
-  setShowDropdown,
+  isOwnProfile,
   setShowReportSheet,
   setShowListPicker,
-}: UseProfileDropdownActionsArgs) {
+  onMessageOnGerm,
+}: UseProfileMenuItemsArgs): MenuItem[] {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const confirm = useConfirm();
@@ -72,41 +80,30 @@ export function useProfileDropdownActions({
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
       });
-      setShowDropdown(false);
       return;
     }
     try {
       const profileUrl = `https://bsky.app/profile/${profileHandle}`;
       await Clipboard.setStringAsync(profileUrl);
-      showToast({
-        message: t('profile.linkCopied'),
-        type: 'success',
-      });
+      showToast({ message: t('profile.linkCopied'), type: 'success' });
     } catch {
       confirm({
         title: t('common.error'),
         message: t('profile.linkCopyError'),
         buttons: [{ text: t('common.ok') }],
       });
-    } finally {
-      setShowDropdown(false);
     }
-  }, [profile?.handle, setShowDropdown, showToast, t, confirm]);
+  }, [profile?.handle, showToast, t, confirm]);
 
   const handleSearchPosts = useCallback(() => {
-    searchProfilePosts({
-      handle: profile?.handle,
-      onComplete: () => setShowDropdown(false),
-    });
-  }, [profile?.handle, setShowDropdown]);
+    searchProfilePosts({ handle: profile?.handle });
+  }, [profile?.handle]);
 
   const handleAddToLists = useCallback(() => {
-    setShowDropdown(false);
     setShowListPicker(true);
-  }, [setShowDropdown, setShowListPicker]);
+  }, [setShowListPicker]);
 
   const handleBlockPress = useCallback(() => {
-    setShowDropdown(false);
     if (isGuest) {
       promptSignIn();
       return;
@@ -129,10 +126,9 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [profile, runBlock, setShowDropdown, t, confirm, isGuest, promptSignIn]);
+  }, [profile, runBlock, t, confirm, isGuest, promptSignIn]);
 
   const handleMuteAccount = useCallback(() => {
-    setShowDropdown(false);
     if (isGuest) {
       promptSignIn();
       return;
@@ -158,23 +154,84 @@ export function useProfileDropdownActions({
         },
       ],
     });
-  }, [muteMutation, profile, setShowDropdown, t, confirm, isGuest, promptSignIn]);
+  }, [muteMutation, profile, t, confirm, isGuest, promptSignIn]);
 
   const handleReportAccount = useCallback(() => {
-    setShowDropdown(false);
     if (isGuest) {
       promptSignIn();
       return;
     }
     setShowReportSheet(true);
-  }, [setShowDropdown, setShowReportSheet, isGuest, promptSignIn]);
+  }, [setShowReportSheet, isGuest, promptSignIn]);
 
-  return {
+  return useMemo<MenuItem[]>(() => {
+    const wrap = (destructive: boolean, fn: () => void) => () => {
+      void Haptics.impactAsync(
+        destructive ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
+      );
+      fn();
+    };
+
+    if (isOwnProfile) {
+      return [
+        { key: 'search', icon: 'magnifyingglass', label: t('common.search'), onPress: wrap(false, handleSearchPosts) },
+        { key: 'copyLink', icon: 'link', label: t('profile.copyLink'), onPress: wrap(false, handleCopyLink) },
+      ];
+    }
+
+    const isBlocking = !!profile?.viewer?.blocking;
+    const isMuted = !!profile?.viewer?.muted;
+
+    const items: MenuItem[] = [
+      { key: 'copyLink', icon: 'link', label: t('profile.copyLink'), onPress: wrap(false, handleCopyLink) },
+      { key: 'search', icon: 'magnifyingglass', label: t('common.search'), onPress: wrap(false, handleSearchPosts) },
+      { key: 'addToLists', icon: 'list.bullet', label: t('profile.addToLists'), onPress: wrap(false, handleAddToLists) },
+    ];
+
+    if (onMessageOnGerm) {
+      items.push({
+        key: 'messageOnGerm',
+        icon: 'arrow.up.right.square',
+        label: t('germ.messageOnGerm'),
+        onPress: wrap(false, onMessageOnGerm),
+      });
+    }
+
+    items.push(
+      {
+        key: 'mute',
+        icon: 'speaker.slash',
+        label: isMuted ? t('common.unmute') : t('profile.muteAccount'),
+        onPress: wrap(false, handleMuteAccount),
+      },
+      {
+        key: 'block',
+        icon: 'hand.raised.fill',
+        label: isBlocking ? t('common.unblock') : t('common.block'),
+        destructive: true,
+        onPress: wrap(true, handleBlockPress),
+      },
+      {
+        key: 'report',
+        icon: 'exclamationmark.triangle',
+        label: t('profile.reportAccount'),
+        destructive: true,
+        onPress: wrap(true, handleReportAccount),
+      },
+    );
+
+    return items;
+  }, [
+    isOwnProfile,
+    profile?.viewer?.blocking,
+    profile?.viewer?.muted,
+    t,
     handleCopyLink,
     handleSearchPosts,
     handleAddToLists,
-    handleBlockPress,
     handleMuteAccount,
+    handleBlockPress,
     handleReportAccount,
-  };
+    onMessageOnGerm,
+  ]);
 }

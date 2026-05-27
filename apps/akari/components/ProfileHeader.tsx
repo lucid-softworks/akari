@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { openExternalLink } from '@/utils/externalLink';
@@ -10,7 +10,6 @@ import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { Labels } from '@/components/Labels';
 import { ProfileActionButtons } from '@/components/ProfileHeader/ProfileActionButtons';
-import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { ProfileAvatar } from '@/components/ProfileHeader/ProfileAvatar';
 import { ProfileBanner } from '@/components/ProfileHeader/ProfileBanner';
 import { ProfileBlockedNotice } from '@/components/ProfileHeader/ProfileBlockedNotice';
@@ -21,6 +20,7 @@ import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import type { MenuItem } from '@/components/ui/Menu';
 import { activeOpacity, fontSize, hitSlop, layout, semanticColors, spacing } from '@/constants/tokens';
 import { webColumnSideBorders } from '@/constants/webStyles';
 import { useDialogManager } from '@/contexts/DialogContext';
@@ -73,12 +73,8 @@ type ProfileHeaderProps = {
   };
   isOwnProfile?: boolean;
   onSettingsPress?: () => void;
-  /** Toggle the `…` overflow menu. The optional `rect` is the bounding
-   *  box of the trigger (measured at tap time); the consumer forwards
-   *  it to `ProfileDropdown` so a portaled web dropdown can anchor
-   *  next to the button. */
-  onDropdownToggle?: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
-  dropdownRef?: React.RefObject<View | null>;
+  /** Rows for the `…` overflow menu. Built by `useProfileMenuItems`. */
+  menuItems?: readonly MenuItem[];
 };
 
 const numberFormatters = new Map<string, Intl.NumberFormat>();
@@ -121,10 +117,9 @@ const formatWebsiteLabel = (url: string): string => {
   }
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, onDropdownToggle, dropdownRef }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, menuItems = [] }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
-  const showDropdownRef = useRef(false);
   const [showHandleHistory, setShowHandleHistory] = useState(false);
   const borderColor = useBorderColor();
   const dialogManager = useDialogManager();
@@ -189,7 +184,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           action: 'follow',
         });
       }
-      showDropdownRef.current = false;
     } catch (error) {
       console.error('Follow error:', error);
       showToast({
@@ -202,12 +196,6 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
 
   const handleSearchPosts = () => {
     searchProfilePosts({ handle: profile.handle });
-  };
-
-  const handleDropdownToggle = (rect?: WebPortalAnchorRect) => {
-    const newState = !showDropdownRef.current;
-    showDropdownRef.current = newState;
-    onDropdownToggle?.(newState, newState ? rect : undefined);
   };
 
   const handleFollowPress = () => {
@@ -306,10 +294,9 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
               followPending: followMutation.isPending,
               startConvoPending: startConvoMutation.isPending,
             }}
-            dropdownRef={dropdownRef}
+            menuItems={menuItems}
             onEditProfile={handleEditProfile}
             onSettingsPress={onSettingsPress}
-            onDropdownToggle={handleDropdownToggle}
             onFollowPress={handleFollowPress}
             onSearchPosts={handleSearchPosts}
             onBskyMessage={handleBskyMessage}

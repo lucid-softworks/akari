@@ -4,7 +4,6 @@ import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { webScreenContainer } from '@/constants/webStyles';
 
-import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ProfileActionSheets } from '@/components/ProfileView/ProfileActionSheets';
 import { ProfileTabPane } from '@/components/ProfileView/ProfileTabPane';
@@ -19,7 +18,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { germButtonVisibleFor, useGermDeclaration } from '@/hooks/queries/useGermDeclaration';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { queryKeys } from '@/hooks/queryKeys';
-import { useProfileDropdownActions } from '@/hooks/useProfileDropdownActions';
+import { useProfileMenuItems } from '@/hooks/useProfileMenuItems';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProfileTabType } from '@/types/profile';
 
@@ -47,21 +46,9 @@ const TAB_ORDER: ProfileTabType[] = [
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [dropdownAnchorRect, setDropdownAnchorRect] = useState<WebPortalAnchorRect | null>(null);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showListPicker, setShowListPicker] = useState(false);
-  const dropdownRef = useRef<View | null>(null);
 
-  // The header passes `(isOpen, rect?)`; capture both so the
-  // portaled web menu can anchor next to the `…` trigger.
-  const handleDropdownToggle = useCallback(
-    (isOpen: boolean, rect?: WebPortalAnchorRect) => {
-      setShowDropdown(isOpen);
-      setDropdownAnchorRect(isOpen ? rect ?? null : null);
-    },
-    [],
-  );
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
   // sticky-tabs-pinned) instead of jumping to the top or hiding the banner.
@@ -109,31 +96,11 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     }
   }, [refetchProfile, queryClient, profile?.did]);
 
-  const dropdownActions = useProfileDropdownActions({
-    profile,
-    setShowDropdown,
-    setShowReportSheet,
-    setShowListPicker,
-  });
-
-  const headerComponent = profile ? (
-    <ProfileViewHeader
-      profile={profile}
-      isOwnProfile={isOwnProfile}
-      onDropdownToggle={handleDropdownToggle}
-      dropdownRef={dropdownRef}
-    />
-  ) : null;
-
-  const tabsComponent = profile ? (
-    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />
-  ) : null;
-
-  // Germ Network message-me — both viewer and target must have published a
+  // Germ message-me — both viewer and target must have published a
   // `com.germnetwork.declaration/self` record, and the target's
-  // `messageMe.showButtonTo` audience must permit the current viewer. These
-  // hooks MUST sit above any early return so React sees the same hook order
-  // every render.
+  // `messageMe.showButtonTo` audience must permit the current viewer. We
+  // hoist this above the menu-items hook so it can include the row when
+  // both sides allow it.
   const viewerDid = currentUser?.did;
   const { data: targetGerm } = useGermDeclaration(!isOwnProfile ? profile?.did : undefined);
   const { data: viewerGerm } = useGermDeclaration(!isOwnProfile ? viewerDid : undefined);
@@ -150,10 +117,29 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     const baseUrl =
       targetGerm.messageMe?.messageMeUrl?.replace(/\/$/, '') ?? 'https://landing.ger.mx/newUser';
     return () => {
-      setShowDropdown(false);
       void Linking.openURL(`${baseUrl}/web/#${profile.did}+${viewerDid}`);
     };
   }, [isOwnProfile, profile?.did, profile?.viewer, targetGerm, viewerDid, viewerGerm]);
+
+  const menuItems = useProfileMenuItems({
+    profile,
+    isOwnProfile,
+    setShowReportSheet,
+    setShowListPicker,
+    onMessageOnGerm: handleMessageOnGerm,
+  });
+
+  const headerComponent = profile ? (
+    <ProfileViewHeader
+      profile={profile}
+      isOwnProfile={isOwnProfile}
+      menuItems={menuItems}
+    />
+  ) : null;
+
+  const tabsComponent = profile ? (
+    <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} profileHandle={profile.handle} />
+  ) : null;
 
   if (isLoading) {
     return (
@@ -204,18 +190,8 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
         <ProfileActionSheets
           profile={profile}
-          isOwnProfile={isOwnProfile}
-          visibility={{ dropdown: showDropdown, reportSheet: showReportSheet }}
-          dropdownAnchorRect={dropdownAnchorRect}
-          onDismissDropdown={() => setShowDropdown(false)}
+          visibility={{ reportSheet: showReportSheet }}
           onDismissReportSheet={() => setShowReportSheet(false)}
-          onCopyLink={dropdownActions.handleCopyLink}
-          onSearchPosts={dropdownActions.handleSearchPosts}
-          onAddToLists={dropdownActions.handleAddToLists}
-          onMuteAccount={dropdownActions.handleMuteAccount}
-          onBlockPress={dropdownActions.handleBlockPress}
-          onReportAccount={dropdownActions.handleReportAccount}
-          onMessageOnGerm={handleMessageOnGerm}
         />
       </ThemedView>
     );
@@ -251,23 +227,9 @@ export default function ProfileView({ handle }: ProfileViewProps) {
 
       <ProfileActionSheets
         profile={profile}
-        isOwnProfile={isOwnProfile}
-        visibility={{
-          dropdown: showDropdown,
-          reportSheet: showReportSheet,
-          listPicker: showListPicker,
-        }}
-        dropdownAnchorRect={dropdownAnchorRect}
-        onDismissDropdown={() => setShowDropdown(false)}
+        visibility={{ reportSheet: showReportSheet, listPicker: showListPicker }}
         onDismissReportSheet={() => setShowReportSheet(false)}
         onDismissListPicker={() => setShowListPicker(false)}
-        onCopyLink={dropdownActions.handleCopyLink}
-        onSearchPosts={dropdownActions.handleSearchPosts}
-        onAddToLists={dropdownActions.handleAddToLists}
-        onMuteAccount={dropdownActions.handleMuteAccount}
-        onBlockPress={dropdownActions.handleBlockPress}
-        onReportAccount={dropdownActions.handleReportAccount}
-        onMessageOnGerm={handleMessageOnGerm}
       />
     </ThemedView>
   );

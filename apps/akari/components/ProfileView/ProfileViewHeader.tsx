@@ -1,8 +1,7 @@
 import React, { memo } from 'react';
-import type { View } from 'react-native';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
-import type { WebPortalAnchorRect } from '@/components/post/WebPortalDropdown';
+import type { MenuItem } from '@/components/ui/Menu';
 import type { useProfile } from '@/hooks/queries/useProfile';
 
 type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
@@ -10,8 +9,7 @@ type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 type ProfileViewHeaderProps = {
   profile: ProfileShape;
   isOwnProfile: boolean;
-  onDropdownToggle: (isOpen: boolean, rect?: WebPortalAnchorRect) => void;
-  dropdownRef: React.RefObject<View | null>;
+  menuItems: readonly MenuItem[];
 };
 
 /**
@@ -22,8 +20,7 @@ type ProfileViewHeaderProps = {
 export const ProfileViewHeader = memo(function ProfileViewHeader({
   profile,
   isOwnProfile,
-  onDropdownToggle,
-  dropdownRef,
+  menuItems,
 }: ProfileViewHeaderProps) {
   return (
     <ProfileHeader
@@ -45,8 +42,7 @@ export const ProfileViewHeader = memo(function ProfileViewHeader({
         verification: profile.verification,
       }}
       isOwnProfile={isOwnProfile}
-      onDropdownToggle={onDropdownToggle}
-      dropdownRef={dropdownRef}
+      menuItems={menuItems}
     />
   );
 });

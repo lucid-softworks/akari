@@ -115,18 +115,6 @@ describe('ProfileHeader', () => {
     );
   });
 
-  it('toggles dropdown when more button pressed', () => {
-    const onToggle = jest.fn();
-    const { getByText } = render(
-      <ProfileHeader profile={baseProfile} onDropdownToggle={onToggle} />,
-    );
-    fireEvent.press(getByText(/ellipsis/));
-    expect(onToggle).toHaveBeenCalledWith(true);
-    fireEvent.press(getByText(/ellipsis/));
-    expect(onToggle).toHaveBeenLastCalledWith(false);
-  });
-
-
   it('saves profile and handles errors', async () => {
     const updateMutate = jest.fn().mockResolvedValue(undefined);
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: updateMutate, isPending: false });
