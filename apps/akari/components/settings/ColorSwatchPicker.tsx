@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { spacing, radius, fontSize, fontWeight } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -77,8 +78,9 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
 
       {showCustom ? (
         <View style={styles.customInputRow}>
-          <TextInput
-            style={[styles.customInput, { borderColor }]}
+          <Input
+            containerStyle={styles.customInputContainer}
+            inputStyle={styles.customInputFont}
             value={customHex}
             onChangeText={setCustomHex}
             onSubmitEditing={() => {
@@ -93,7 +95,6 @@ export function SwatchPicker({ presets, defaultColor, currentColor, onSelect, bo
             autoCorrect={false}
             maxLength={7}
             placeholder="#RRGGBB"
-            placeholderTextColor="#999"
           />
           <Pressable
             style={({ pressed }) => [styles.customApply, { backgroundColor: HEX_REGEX.test(customHex) ? (customHex || '#999') : '#ccc' }, pressed && { opacity: 0.7 }]}
@@ -293,14 +294,12 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.sm,
   },
-  customInput: {
+  customInputContainer: {
     flex: 1,
-    fontSize: fontSize.base,
-    fontFamily: 'Menlo',
-    borderWidth: 1,
     borderRadius: radius.xs,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+  },
+  customInputFont: {
+    fontFamily: 'Menlo',
   },
   customApply: {
     paddingHorizontal: spacing.lg,

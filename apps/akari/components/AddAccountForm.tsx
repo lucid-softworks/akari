@@ -5,13 +5,13 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
-import { spacing, radius, fontSize, fontWeight, opacity, semanticColors, layout } from '@/constants/tokens';
+import { Input } from '@/components/ui/Input';
+import { spacing, radius, fontSize, fontWeight, opacity, semanticColors } from '@/constants/tokens';
 import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
@@ -44,10 +44,8 @@ export function AddAccountForm({ onSuccess }: AddAccountFormProps = {}) {
   const addAccountMutation = useAddAccount();
   const switchAccountMutation = useSwitchAccount();
 
-  const borderColor = useThemeColor({}, 'border');
   const labelColor = useThemeColor({}, 'text');
   const helperColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
-  const inputBackground = useThemeColor({ light: '#f9fafb', dark: '#2a2a2e' }, 'background');
 
   const isSubmitting =
     signInMutation.isPending || addAccountMutation.isPending || switchAccountMutation.isPending;
@@ -139,12 +137,11 @@ export function AddAccountForm({ onSuccess }: AddAccountFormProps = {}) {
       <View style={styles.content}>
         <View style={styles.fieldGroup}>
           <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
-          <TextInput
-            style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+          <Input
+            size="lg"
             value={handle}
             onChangeText={setHandle}
             placeholder={t('auth.blueskyHandlePlaceholder')}
-            placeholderTextColor="#9CA3AF"
             autoCapitalize="none"
             autoCorrect={false}
             autoComplete="off"
@@ -156,12 +153,11 @@ export function AddAccountForm({ onSuccess }: AddAccountFormProps = {}) {
 
         <View style={styles.fieldGroup}>
           <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.appPassword')}</ThemedText>
-          <TextInput
-            style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+          <Input
+            size="lg"
             value={appPassword}
             onChangeText={setAppPassword}
             placeholder={t('auth.appPasswordPlaceholder')}
-            placeholderTextColor="#9CA3AF"
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
@@ -201,13 +197,6 @@ const styles = StyleSheet.create({
   },
   helperText: {
     fontSize: fontSize.sm,
-  },
-  input: {
-    borderWidth: layout.border,
-    borderRadius: 10,
-    paddingVertical: spacing.md,
-    paddingHorizontal: 14,
-    fontSize: fontSize.lg,
   },
   footerActions: {
     flexDirection: 'row',

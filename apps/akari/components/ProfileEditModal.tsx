@@ -1,13 +1,14 @@
 import { Image } from '@/components/Image';
 import { useState } from 'react';
-import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { Modal } from '@/components/ui/Modal';
 
-import { spacing, radius, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
+import { spacing, fontSize, fontWeight, opacity, layout } from '@/constants/tokens';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Dialog } from '@/components/ui/Dialog';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -130,34 +131,27 @@ export function ProfileEditModal({ visible, onClose, onSave, profile, isLoading 
       <View style={styles.formSection}>
         <View style={styles.fieldContainer}>
           <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.displayName')}</ThemedText>
-          <TextInput
-            style={[
-              styles.textInput,
-              { backgroundColor: inputBackgroundColor, color: textColor, borderColor },
-            ]}
+          <Input
+            size="lg"
             value={displayName}
             onChangeText={setDisplayName}
             placeholder={t('profile.displayNamePlaceholder')}
-            placeholderTextColor="#8E8E93"
             maxLength={64}
           />
         </View>
 
         <View style={styles.fieldContainer}>
           <ThemedText style={[styles.fieldLabel, { color: textColor }]}>{t('profile.description')}</ThemedText>
-          <TextInput
-            style={[
-              styles.textArea,
-              { backgroundColor: inputBackgroundColor, color: textColor, borderColor },
-            ]}
+          <Input
+            size="lg"
             value={description}
             onChangeText={setDescription}
             placeholder={t('profile.descriptionPlaceholder')}
-            placeholderTextColor="#8E8E93"
             multiline
             numberOfLines={4}
             maxLength={256}
             textAlignVertical="top"
+            inputStyle={styles.textAreaInput}
           />
         </View>
       </View>
@@ -295,21 +289,7 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
     marginBottom: spacing.sm,
   },
-  textInput: {
-    height: 44,
-    borderWidth: layout.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    fontSize: fontSize.lg,
-    width: '100%',
-  },
-  textArea: {
+  textAreaInput: {
     minHeight: 100,
-    borderWidth: layout.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    fontSize: fontSize.lg,
-    width: '100%',
   },
 });

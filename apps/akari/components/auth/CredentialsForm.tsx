@@ -3,7 +3,8 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { fontSize, fontWeight, hitSlop, layout, spacing, zIndex } from '@/constants/tokens';
+import { Input } from '@/components/ui/Input';
+import { fontSize, fontWeight, hitSlop, spacing, zIndex } from '@/constants/tokens';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type CredentialsFormColors = {
@@ -43,20 +44,19 @@ export function CredentialsForm({
   onHelpPress,
 }: CredentialsFormProps) {
   const { t } = useTranslation();
-  const { borderColor, labelColor, helperColor, inputBackground } = colors;
+  const { labelColor, helperColor } = colors;
 
   return (
     <View style={styles.form}>
       <View style={styles.inputContainer}>
         <ThemedText style={[styles.label, { color: labelColor }]}>{t('auth.blueskyHandle')}</ThemedText>
         <View ref={inputAnchorRef} style={styles.inputAnchor} onLayout={onAnchorLayout}>
-          <TextInput
+          <Input
             ref={handleInputRef}
-            style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+            size="lg"
             value={handle}
             onChangeText={onHandleChange}
             placeholder={t('auth.blueskyHandlePlaceholder')}
-            placeholderTextColor="#9CA3AF"
             autoCapitalize="none"
             autoCorrect={false}
             autoComplete="off"
@@ -82,14 +82,13 @@ export function CredentialsForm({
             <IconSymbol name="questionmark.circle" size={18} color={helperColor} />
           </Pressable>
         </View>
-        <TextInput
+        <Input
           ref={passwordInputRef}
-          style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
+          size="lg"
           value={appPassword}
           onChangeText={onAppPasswordChange}
           onFocus={onPasswordFocus}
           placeholder={t('auth.appPasswordPlaceholder')}
-          placeholderTextColor="#9CA3AF"
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -120,13 +119,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  input: {
-    borderWidth: layout.border,
-    borderRadius: 10,
-    paddingVertical: 14,
-    paddingHorizontal: spacing.lg,
-    fontSize: fontSize.lg,
   },
   helperText: {
     fontSize: fontSize.sm,
