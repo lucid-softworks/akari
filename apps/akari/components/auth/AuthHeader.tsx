@@ -8,19 +8,22 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 type AuthHeaderProps = {
   helperColor: string;
+  /** Defaults to the app-password screen's title/subtitle for backwards compat. */
+  title?: string;
+  subtitle?: string;
 };
 
-export function AuthHeader({ helperColor }: AuthHeaderProps) {
+export function AuthHeader({ helperColor, title, subtitle }: AuthHeaderProps) {
   const { t } = useTranslation();
 
   return (
     <View style={styles.passwordHeader}>
       <AppLogo style={styles.passwordLogo} />
       <ThemedText type="title" style={styles.passwordTitle}>
-        {t('auth.passwordScreenTitle')}
+        {title ?? t('auth.passwordScreenTitle')}
       </ThemedText>
       <ThemedText style={[styles.passwordSubtitle, { color: helperColor }]}>
-        {t('auth.passwordScreenSubtitle')}
+        {subtitle ?? t('auth.passwordScreenSubtitle')}
       </ThemedText>
     </View>
   );

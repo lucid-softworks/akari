@@ -25,6 +25,13 @@ export default function AuthLayout() {
           headerShown: Platform.OS !== 'web',
         }}
       />
+      <Stack.Screen
+        name="signup"
+        options={{
+          title: "Create account",
+          headerShown: Platform.OS !== 'web',
+        }}
+      />
     </Stack>
   );
 }

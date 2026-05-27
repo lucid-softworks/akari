@@ -34,6 +34,7 @@ export default function SignInScreen() {
 
   const goToOauth = () => router.push('/(auth)/oauth');
   const goToPassword = () => router.push('/(auth)/password');
+  const goToSignup = () => router.push('/(auth)/signup');
   // Continue without authenticating. Lands on the home tab in guest
   // mode (discover feed, write affordances gated). Reachable via the
   // tertiary link below the OAuth + app-password choices.
@@ -75,7 +76,7 @@ export default function SignInScreen() {
             <Pressable
               style={({ pressed }) => [styles.choiceSecondary, { borderColor }, pressed && { opacity: activeOpacity.default }]}
               onPress={goToPassword}
-              
+
               accessibilityRole="button"
             >
               <View style={styles.choiceText}>
@@ -84,6 +85,22 @@ export default function SignInScreen() {
                 </ThemedText>
                 <ThemedText style={[styles.choiceSecondarySubtitle, { color: helperColor }]}>
                   {t('auth.passwordChoiceSubtitle')}
+                </ThemedText>
+              </View>
+              <IconSymbol name="chevron.right" size={20} color={helperColor} />
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [styles.choiceSecondary, { borderColor }, pressed && { opacity: activeOpacity.default }]}
+              onPress={goToSignup}
+              accessibilityRole="button"
+            >
+              <View style={styles.choiceText}>
+                <ThemedText style={styles.choiceSecondaryTitle}>
+                  {t('auth.signupChoiceTitle')}
+                </ThemedText>
+                <ThemedText style={[styles.choiceSecondarySubtitle, { color: helperColor }]}>
+                  {t('auth.signupChoiceSubtitle')}
                 </ThemedText>
               </View>
               <IconSymbol name="chevron.right" size={20} color={helperColor} />

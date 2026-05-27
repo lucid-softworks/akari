@@ -28,6 +28,34 @@ export class BlueskyAuth extends BlueskyApiClient {
   }
 
   /**
+   * Creates a brand-new account on the PDS this client is pointed at.
+   * Returns a session in the same shape as `createSession`, so the caller
+   * can flow straight into the existing token-storage pipeline. `inviteCode`
+   * is only required when the PDS is in invite-only mode (bsky.social isn't
+   * anymore, but smaller PDSes may be).
+   */
+  async createAccount(args: {
+    email: string;
+    handle: string;
+    password: string;
+    inviteCode?: string;
+  }): Promise<BlueskySession> {
+    const { email, handle, password, inviteCode } = args;
+    return this.makeRequest<BlueskySession>(
+      "/com.atproto.server.createAccount",
+      {
+        method: "POST",
+        body: {
+          email,
+          handle,
+          password,
+          ...(inviteCode ? { inviteCode } : {}),
+        },
+      },
+    );
+  }
+
+  /**
    * Refreshes an existing session using the refresh token
    * @param refreshJwt - The refresh JWT token
    * @returns Promise resolving to new session data

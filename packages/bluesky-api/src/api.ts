@@ -115,6 +115,20 @@ export class BlueskyApi extends BlueskyApiClient {
   }
 
   /**
+   * Creates a brand-new atproto account on the PDS this client is pointed at.
+   * Returns a session in the same shape as `createSession`, ready to flow into
+   * the host app's token-storage pipeline.
+   */
+  async createAccount(args: {
+    email: string;
+    handle: string;
+    password: string;
+    inviteCode?: string;
+  }): Promise<BlueskySession> {
+    return this.auth.createAccount(args);
+  }
+
+  /**
    * Exchanges a refresh token for a new authenticated session.
    * @param refreshJwt - Refresh JWT provided by Bluesky during the original session creation.
    * @returns Fresh access and refresh token pair from the PDS.
