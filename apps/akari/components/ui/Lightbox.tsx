@@ -252,6 +252,30 @@ export function Lightbox({
             bounces={false}
           />
 
+          {/* Web-only: prev / next chevrons. Touch platforms can swipe
+              the pager directly; web users expect click targets. */}
+          {Platform.OS === 'web' && isMulti ? (
+            <Animated.View
+              style={[styles.navOverlay, chromeStyle]}
+              pointerEvents="box-none"
+            >
+              <NavChevron
+                direction="prev"
+                disabled={currentIndex === 0}
+                onPress={() =>
+                  listRef.current?.scrollToIndex({ index: currentIndex - 1, animated: true })
+                }
+              />
+              <NavChevron
+                direction="next"
+                disabled={currentIndex === items.length - 1}
+                onPress={() =>
+                  listRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true })
+                }
+              />
+            </Animated.View>
+          ) : null}
+
           <Animated.View
             style={[
               styles.footer,
@@ -305,6 +329,39 @@ function ChromeButton({ icon, onPress, accessibilityLabel, testID }: ChromeButto
       style={({ pressed }) => [styles.chromeButton, pressed && { opacity: 0.7 }]}
     >
       <IconSymbol name={icon} size={20} color={CHROME_FG} style={styles.chromeIcon} />
+    </Pressable>
+  );
+}
+
+function NavChevron({
+  direction,
+  disabled,
+  onPress,
+}: {
+  direction: 'prev' | 'next';
+  disabled: boolean;
+  onPress: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={t(direction === 'prev' ? 'common.previous' : 'common.next')}
+      accessibilityState={{ disabled }}
+      style={({ pressed }) => [
+        styles.navChevron,
+        direction === 'prev' ? styles.navChevronLeft : styles.navChevronRight,
+        disabled && styles.navChevronDisabled,
+        pressed && !disabled && { opacity: 0.7 },
+      ]}
+    >
+      <IconSymbol
+        name={direction === 'prev' ? 'chevron.left' : 'chevron.right'}
+        size={20}
+        color={CHROME_FG}
+      />
     </Pressable>
   );
 }
@@ -510,6 +567,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   chromeIcon: {},
+  navOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    zIndex: 2,
+  },
+  navChevron: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  navChevronLeft: {},
+  navChevronRight: {},
+  navChevronDisabled: { opacity: 0.25 },
   page: {
     justifyContent: 'center',
     alignItems: 'center',
