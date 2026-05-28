@@ -5,6 +5,9 @@ const storage = new MMKV({ id: 'accessibility-settings' });
 const REQUIRE_ALT_TEXT_KEY = 'require_alt_text';
 const LARGER_TEXT_BADGES_KEY = 'larger_text_badges';
 const LARGER_ALT_TEXT_BADGES_KEY = 'larger_alt_text_badges';
+const SHOW_LIKE_COUNT_KEY = 'show_like_count';
+const SHOW_REPOST_COUNT_KEY = 'show_repost_count';
+const SHOW_REPLY_COUNT_KEY = 'show_reply_count';
 
 type AccessibilitySnapshot = {
   /** Block sending an image post without alt text. */
@@ -13,6 +16,12 @@ type AccessibilitySnapshot = {
   largerTextBadges: boolean;
   /** Make the "ALT" indicator on images with descriptions more prominent. */
   largerAltTextBadges: boolean;
+  /** Show the numeric count next to the heart icon. Defaults to true. */
+  showLikeCount: boolean;
+  /** Show the numeric count next to the repost icon. Defaults to true. */
+  showRepostCount: boolean;
+  /** Show the numeric count next to the reply icon. Defaults to true. */
+  showReplyCount: boolean;
 };
 
 let cached: AccessibilitySnapshot | null = null;
@@ -31,6 +40,9 @@ function readAll(): AccessibilitySnapshot {
     requireAltText: readBool(REQUIRE_ALT_TEXT_KEY, false),
     largerTextBadges: readBool(LARGER_TEXT_BADGES_KEY, false),
     largerAltTextBadges: readBool(LARGER_ALT_TEXT_BADGES_KEY, false),
+    showLikeCount: readBool(SHOW_LIKE_COUNT_KEY, true),
+    showRepostCount: readBool(SHOW_REPOST_COUNT_KEY, true),
+    showReplyCount: readBool(SHOW_REPLY_COUNT_KEY, true),
   };
 }
 
@@ -69,6 +81,21 @@ export function useAccessibilitySettings() {
     notify();
   }, []);
 
+  const setShowLikeCount = useCallback((enabled: boolean) => {
+    storage.set(SHOW_LIKE_COUNT_KEY, enabled);
+    notify();
+  }, []);
+
+  const setShowRepostCount = useCallback((enabled: boolean) => {
+    storage.set(SHOW_REPOST_COUNT_KEY, enabled);
+    notify();
+  }, []);
+
+  const setShowReplyCount = useCallback((enabled: boolean) => {
+    storage.set(SHOW_REPLY_COUNT_KEY, enabled);
+    notify();
+  }, []);
+
   return {
     requireAltText: value.requireAltText,
     setRequireAltText,
@@ -76,5 +103,11 @@ export function useAccessibilitySettings() {
     setLargerTextBadges,
     largerAltTextBadges: value.largerAltTextBadges,
     setLargerAltTextBadges,
+    showLikeCount: value.showLikeCount,
+    setShowLikeCount,
+    showRepostCount: value.showRepostCount,
+    setShowRepostCount,
+    showReplyCount: value.showReplyCount,
+    setShowReplyCount,
   };
 }

@@ -154,7 +154,7 @@ export const PostActions = React.memo(function PostActions({
   moreSlot,
   onQuotePress,
 }: PostActionsProps) {
-  const { largerTextBadges } = useAccessibilitySettings();
+  const { largerTextBadges, showLikeCount, showRepostCount, showReplyCount } = useAccessibilitySettings();
   const { isGuest, promptSignIn } = useRequireAuth();
   const likeMutation = useLikePost();
   const repostMutation = useRepostPost();
@@ -276,7 +276,7 @@ export const PostActions = React.memo(function PostActions({
         <ActionButton
           icon={replyDisabled ? 'lock' : 'bubble.left'}
           activeColor={accentColor}
-          count={commentCount}
+          count={showReplyCount ? commentCount : undefined}
           onPress={
             replyDisabled
               ? undefined
@@ -297,7 +297,7 @@ export const PostActions = React.memo(function PostActions({
           icon="arrow.2.squarepath"
           isActive={isReposted}
           activeColor={semanticColors.repost}
-          count={repostCount}
+          count={showRepostCount ? repostCount : undefined}
           onPress={handleRepostButtonPress}
           buttonRef={repostButtonRef}
           largerTextBadges={largerTextBadges}
@@ -313,7 +313,7 @@ export const PostActions = React.memo(function PostActions({
           activeIcon="heart.fill"
           isActive={isLiked}
           activeColor={semanticColors.like}
-          count={likeCount}
+          count={showLikeCount ? likeCount : undefined}
           onPress={handleLikePress}
           largerTextBadges={largerTextBadges}
           accessibilityLabel={

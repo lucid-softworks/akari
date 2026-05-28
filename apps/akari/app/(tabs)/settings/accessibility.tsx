@@ -24,6 +24,12 @@ export default function AccessibilitySettingsScreen() {
     setLargerTextBadges,
     largerAltTextBadges,
     setLargerAltTextBadges,
+    showLikeCount,
+    setShowLikeCount,
+    showRepostCount,
+    setShowRepostCount,
+    showReplyCount,
+    setShowReplyCount,
   } = useAccessibilitySettings();
 
   return (
@@ -93,6 +99,41 @@ export default function AccessibilitySettingsScreen() {
             </ThemedView>
           </ThemedView>
         </SettingsSection>
+
+        <SettingsSection title={t('settings.postCounts')}>
+          <ThemedText style={[styles.sectionIntro, { color: subduedColor }]}>
+            {t('settings.postCountsHint')}
+          </ThemedText>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
+              <IconSymbol color={iconColor} name="heart" size={20} style={styles.toggleIcon} />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.showLikeCount')}
+                </ThemedText>
+              </View>
+              <Switch value={showLikeCount} onValueChange={setShowLikeCount} />
+            </ThemedView>
+            <ThemedView style={[styles.toggleRow, { borderBottomColor: borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
+              <IconSymbol color={iconColor} name="arrow.2.squarepath" size={20} style={styles.toggleIcon} />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.showRepostCount')}
+                </ThemedText>
+              </View>
+              <Switch value={showRepostCount} onValueChange={setShowRepostCount} />
+            </ThemedView>
+            <ThemedView style={styles.toggleRow}>
+              <IconSymbol color={iconColor} name="bubble.left" size={20} style={styles.toggleIcon} />
+              <View style={styles.toggleLabelWrap}>
+                <ThemedText style={styles.toggleLabel}>
+                  {t('settings.showReplyCount')}
+                </ThemedText>
+              </View>
+              <Switch value={showReplyCount} onValueChange={setShowReplyCount} />
+            </ThemedView>
+          </ThemedView>
+        </SettingsSection>
       </SettingsScroll>
     </SettingsSubpageLayout>
   );
@@ -131,5 +172,12 @@ const styles = StyleSheet.create({
   toggleHint: {
     fontSize: 12,
     marginTop: 2,
+  },
+  sectionIntro: {
+    marginHorizontal: 16,
+    marginTop: 4,
+    marginBottom: 4,
+    fontSize: 12,
+    lineHeight: 18,
   },
 });
