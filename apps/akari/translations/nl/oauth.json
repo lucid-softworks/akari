@@ -13,9 +13,17 @@
       "label": "Identiteit",
       "description": "Bevestig wie je bent op atproto. Altijd vereist."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky-toegang",
+      "description": "Bundel rechten voor feeds, profielen, meldingen, zoeken, volgen, blokkeren, lijsten en posts op de Bluesky AppView."
+    },
+    "bskyChat": {
       "label": "Directe berichten",
       "description": "Chatberichten lezen en versturen namens jou."
+    },
+    "blobs": {
+      "label": "Afbeeldingen en video's uploaden",
+      "description": "Upload afbeeldings- en videoblobs naar je account zodat je media aan posts kunt toevoegen."
     },
     "profile": {
       "label": "Profiel",

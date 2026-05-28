@@ -13,9 +13,17 @@
       "label": "Identitet",
       "description": "Bekräfta vem du är på atproto. Alltid obligatorisk."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky-åtkomst",
+      "description": "Samling behörigheter som täcker flöden, profiler, aviseringar, sökning, följningar, blockeringar, listor och inlägg på Blueskys AppView."
+    },
+    "bskyChat": {
       "label": "Direktmeddelanden",
       "description": "Läs och skicka chattmeddelanden i ditt namn."
+    },
+    "blobs": {
+      "label": "Uppladdning av bilder och videor",
+      "description": "Ladda upp bild- och videoblobbar till ditt konto så att du kan bifoga media till inlägg."
     },
     "profile": {
       "label": "Profil",

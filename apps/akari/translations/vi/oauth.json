@@ -13,9 +13,17 @@
       "label": "Danh tính",
       "description": "Xác nhận bạn là ai trên atproto. Luôn bắt buộc."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Truy cập Bluesky",
+      "description": "Gói quyền bao gồm bảng tin, hồ sơ, thông báo, tìm kiếm, theo dõi, chặn, danh sách và bài đăng trên Bluesky AppView."
+    },
+    "bskyChat": {
       "label": "Tin nhắn trực tiếp",
       "description": "Đọc và gửi tin nhắn trò chuyện thay cho bạn."
+    },
+    "blobs": {
+      "label": "Tải lên hình ảnh và video",
+      "description": "Tải các blob hình ảnh và video lên tài khoản của bạn để có thể đính kèm phương tiện vào bài đăng."
     },
     "profile": {
       "label": "Hồ sơ",

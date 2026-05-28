@@ -13,10 +13,6 @@
       "label": "Identidad",
       "description": "Confirma quién eres en atproto. Siempre obligatorio."
     },
-    "chat": {
-      "label": "Mensajes directos",
-      "description": "Leer y enviar mensajes de chat en tu nombre."
-    },
     "profile": {
       "label": "Perfil",
       "description": "Edita tu nombre visible, biografía, avatar y banner."
@@ -80,6 +76,18 @@
     "linkatBoard": {
       "label": "Tablero Linkat",
       "description": "Gestiona tu tablero link-in-bio de Linkat."
+    },
+    "bskyChat": {
+      "label": "Mensajes directos",
+      "description": "Leer y enviar mensajes de chat en tu nombre."
+    },
+    "bskyAppview": {
+      "label": "Acceso a Bluesky",
+      "description": "Conjunto de permisos que abarca feeds, perfiles, notificaciones, búsqueda, seguidos, bloqueos, listas y publicaciones en el AppView de Bluesky."
+    },
+    "blobs": {
+      "label": "Subidas de imágenes y videos",
+      "description": "Sube blobs de imagen y video a tu cuenta para poder adjuntar contenido multimedia a las publicaciones."
     }
   }
 }

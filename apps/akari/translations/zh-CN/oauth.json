@@ -13,9 +13,17 @@
       "label": "身份",
       "description": "确认你在 atproto 上的身份。始终必需。"
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky 访问权限",
+      "description": "涵盖 Bluesky AppView 上的信息流、个人资料、通知、搜索、关注、屏蔽、列表和帖子的权限集合。"
+    },
+    "bskyChat": {
       "label": "私信",
       "description": "代表你读取和发送聊天消息。"
+    },
+    "blobs": {
+      "label": "图片和视频上传",
+      "description": "将图片和视频 blob 上传到你的账户，以便在帖子中附加媒体。"
     },
     "profile": {
       "label": "个人资料",
