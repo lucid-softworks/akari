@@ -32,6 +32,7 @@ module.exports = {
     '^@/clearsky-api$': '<rootDir>/../../packages/clearsky-api/src/api',
     '^@/constellation-api$': '<rootDir>/../../packages/constellation-api/src',
     '^@/libretranslate-api$': '<rootDir>/../../packages/libretranslate-api/src',
+    '^@/slingshot-api$': '<rootDir>/../../packages/slingshot-api/src',
     '^@/tenor-api$': '<rootDir>/../../packages/tenor-api/src',
     '^@/tmdb-api$': '<rootDir>/../../packages/tmdb-api/src',
     // react-native-webrtc is a native-only module that tests can't
