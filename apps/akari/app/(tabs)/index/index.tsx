@@ -59,6 +59,15 @@ export default function HomeScreen() {
 
   // Create scroll to top function
   const scrollToTop = useCallback(() => {
+    // On web the feed scrolls the window and the tab strip sits above the
+    // list (sticky, outside it), so the list's offset 0 is *below* the
+    // strip — scrolling there lands the page under the tabs. Go to the
+    // document top instead. Native keeps the header inside the list, so
+    // offset 0 is already the true top.
+    if (Platform.OS === 'web') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     feedListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
