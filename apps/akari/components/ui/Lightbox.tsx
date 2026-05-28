@@ -1,3 +1,4 @@
+import { BlurView } from 'expo-blur';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -40,14 +41,13 @@ type LightboxProps = {
   visible: boolean;
   onClose: () => void;
   /**
-   * Multi-image gallery. When provided alongside `startIndex`, the
-   * lightbox renders a horizontal pager and shows an "n / m" counter
-   * in the top bar. Mutually exclusive with the legacy single-image
-   * props below.
+   * Multi-image gallery. The lightbox renders a horizontal pager and a
+   * pagination dot row at the bottom. Mutually exclusive with the
+   * single-image props below.
    */
   images?: LightboxImage[];
   startIndex?: number;
-  /** Legacy single-image API. Kept for callers that haven't migrated. */
+  /** Single-image API for callers that don't have a gallery. */
   imageUrl?: string;
   altText?: string;
 };
@@ -56,13 +56,14 @@ const SWIPE_DOWN_CLOSE_THRESHOLD = 120;
 const SWIPE_DOWN_VELOCITY_THRESHOLD = 800;
 const DOUBLE_TAP_ZOOM = 2.5;
 const CHROME_FG = '#ffffff';
-const CHROME_BG = hexToRgba('#000000', 0.45);
+const CHROME_TINT_BG = hexToRgba('#000000', 0.35);
 
 /**
  * Full-screen photo lightbox. Pager-style multi-image swipe, real
  * double-tap-to-zoom, pinch-and-pan when zoomed, swipe-down-to-dismiss
- * with progressive backdrop fade, and an auto-hiding chrome layer so
- * the photo can breathe once the user starts interacting.
+ * with progressive backdrop fade, plus a glassmorphic chrome layer
+ * (blurred close / share buttons, pagination dots, alt-text card) that
+ * auto-hides as soon as the user starts interacting with the photo.
  */
 export function Lightbox({
   visible,
@@ -88,26 +89,39 @@ export function Lightbox({
     if (visible) setCurrentIndex(startIndex);
   }, [visible, startIndex]);
 
-  // Drives the backdrop alpha (dimmer as the user drags to dismiss) and
-  // the vertical offset on the entire scene. Stays at 1/0 unless the
-  // user is actively swiping down.
-  const backdropOpacity = useSharedValue(1);
+  // Backdrop opacity dims as the user swipes down to dismiss; scene
+  // scale gives the open / close animation a touch of motion (snaps from
+  // 0.96 → 1.0 on open, drops with the dismiss). Chrome opacity fades
+  // the header + footer card as soon as the user pinches or pans the
+  // photo so nothing covers the image they're focused on.
+  const backdropOpacity = useSharedValue(0);
+  const sceneScale = useSharedValue(0.96);
   const dismissTranslateY = useSharedValue(0);
-  // Tapping anywhere on the chrome-less area toggles the chrome (header
-  // + alt-text footer). Always visible on first open; fades out when
-  // the user starts panning / zooming.
-  const chromeOpacity = useSharedValue(1);
+  const chromeOpacity = useSharedValue(0);
 
-  const setChromeVisible = useCallback((visibleFlag: boolean) => {
-    chromeOpacity.value = withTiming(visibleFlag ? 1 : 0, { duration: 160 });
-  }, [chromeOpacity]);
+  useEffect(() => {
+    if (visible) {
+      backdropOpacity.value = withTiming(1, { duration: 200 });
+      sceneScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+      chromeOpacity.value = withTiming(1, { duration: 220 });
+    } else {
+      backdropOpacity.value = 0;
+      sceneScale.value = 0.96;
+      chromeOpacity.value = 0;
+      dismissTranslateY.value = 0;
+    }
+  }, [visible, backdropOpacity, chromeOpacity, dismissTranslateY, sceneScale]);
+
+  const setChromeVisible = useCallback(
+    (next: boolean) => {
+      chromeOpacity.value = withTiming(next ? 1 : 0, { duration: 160 });
+    },
+    [chromeOpacity],
+  );
 
   const closeAndReset = useCallback(() => {
-    dismissTranslateY.value = 0;
-    backdropOpacity.value = 1;
-    chromeOpacity.value = 1;
     onClose();
-  }, [backdropOpacity, chromeOpacity, dismissTranslateY, onClose]);
+  }, [onClose]);
 
   // Web keyboard support: Escape closes, arrow keys page.
   const listRef = useRef<FlatList<LightboxImage>>(null);
@@ -160,13 +174,10 @@ export function Lightbox({
   }, [confirm, currentIndex, items, t]);
 
   const sceneStyle = useAnimatedStyle(() => ({
-    backgroundColor: `rgba(0, 0, 0, ${backdropOpacity.value})`,
-    transform: [{ translateY: dismissTranslateY.value }],
+    transform: [{ translateY: dismissTranslateY.value }, { scale: sceneScale.value }],
   }));
-
-  const chromeStyle = useAnimatedStyle(() => ({
-    opacity: chromeOpacity.value,
-  }));
+  const backdropStyle = useAnimatedStyle(() => ({ opacity: backdropOpacity.value }));
+  const chromeStyle = useAnimatedStyle(() => ({ opacity: chromeOpacity.value }));
 
   const renderItem = useCallback<ListRenderItem<LightboxImage>>(
     ({ item }) => (
@@ -176,11 +187,22 @@ export function Lightbox({
         screenH={screenH}
         dismissTranslateY={dismissTranslateY}
         backdropOpacity={backdropOpacity}
+        sceneScale={sceneScale}
+        chromeOpacity={chromeOpacity}
         onDismiss={closeAndReset}
         onChromeShouldHide={() => setChromeVisible(false)}
       />
     ),
-    [backdropOpacity, closeAndReset, dismissTranslateY, screenH, screenW, setChromeVisible],
+    [
+      backdropOpacity,
+      chromeOpacity,
+      closeAndReset,
+      dismissTranslateY,
+      sceneScale,
+      screenH,
+      screenW,
+      setChromeVisible,
+    ],
   );
 
   const keyExtractor = useCallback((item: LightboxImage, i: number) => `${i}-${item.url}`, []);
@@ -191,79 +213,109 @@ export function Lightbox({
 
   if (items.length === 0) return null;
   const altForCurrent = items[currentIndex]?.alt;
+  const isMulti = items.length > 1;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={closeAndReset}>
-      <Animated.View style={[styles.container, sceneStyle]}>
-        <Animated.View
-          style={[styles.header, { paddingTop: insets.top + spacing.sm }, chromeStyle]}
-          pointerEvents="box-none"
-        >
-          <Pressable
-            onPress={closeAndReset}
-            style={({ pressed }) => [styles.chromeButton, pressed && { opacity: 0.75 }]}
-            testID="close-button"
-            accessibilityRole="button"
-            accessibilityLabel={t('common.close')}
-            hitSlop={8}
+    <Modal visible={visible} transparent animationType="none" onRequestClose={closeAndReset}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.backdrop, backdropStyle]} pointerEvents="none" />
+
+        <Animated.View style={[styles.scene, sceneStyle]}>
+          {/* Header chrome — close + share as blurred circles. The counter
+              moved out of the header for a cleaner top bar; pagination
+              dots sit at the bottom for multi-image. */}
+          <Animated.View
+            style={[styles.header, { paddingTop: insets.top + spacing.sm }, chromeStyle]}
+            pointerEvents="box-none"
           >
-            <IconSymbol name="xmark" size={18} color={CHROME_FG} />
-          </Pressable>
+            <ChromeButton
+              icon="xmark"
+              testID="close-button"
+              accessibilityLabel={t('common.close')}
+              onPress={closeAndReset}
+            />
+            <ChromeButton
+              icon="square.and.arrow.up"
+              testID="download-button"
+              accessibilityLabel={t('common.share')}
+              onPress={handleDownload}
+            />
+          </Animated.View>
 
-          {items.length > 1 ? (
-            <View style={styles.counterPill}>
-              <ThemedText style={styles.counterText}>
-                {`${currentIndex + 1} / ${items.length}`}
-              </ThemedText>
-            </View>
-          ) : (
-            <View />
-          )}
+          <FlatList
+            ref={listRef}
+            data={items}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            initialScrollIndex={startIndex}
+            getItemLayout={getItemLayout}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            decelerationRate="fast"
+            bounces={false}
+          />
 
-          <Pressable
-            onPress={handleDownload}
-            style={({ pressed }) => [styles.chromeButton, pressed && { opacity: 0.75 }]}
-            testID="download-button"
-            accessibilityRole="button"
-            accessibilityLabel={t('common.share')}
-            hitSlop={8}
-          >
-            <IconSymbol name="square.and.arrow.up" size={18} color={CHROME_FG} />
-          </Pressable>
-        </Animated.View>
-
-        <FlatList
-          ref={listRef}
-          data={items}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          initialScrollIndex={startIndex}
-          getItemLayout={getItemLayout}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          decelerationRate="fast"
-          bounces={false}
-        />
-
-        {altForCurrent ? (
           <Animated.View
             style={[
-              styles.altTextContainer,
-              { paddingBottom: insets.bottom + spacing.lg },
+              styles.footer,
+              { paddingBottom: insets.bottom + spacing.md },
               chromeStyle,
             ]}
-            pointerEvents="none"
+            pointerEvents="box-none"
           >
-            <ThemedText style={styles.altText} numberOfLines={4}>
-              {altForCurrent}
-            </ThemedText>
+            {altForCurrent ? (
+              <BlurView intensity={40} tint="dark" style={styles.altTextCard}>
+                <ThemedText style={styles.altText} numberOfLines={4}>
+                  {altForCurrent}
+                </ThemedText>
+              </BlurView>
+            ) : null}
+            {isMulti ? (
+              <View style={styles.dotsRow}>
+                {items.map((_, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.dot,
+                      i === currentIndex && styles.dotActive,
+                    ]}
+                  />
+                ))}
+              </View>
+            ) : null}
           </Animated.View>
-        ) : null}
-      </Animated.View>
+        </Animated.View>
+      </View>
     </Modal>
+  );
+}
+
+type ChromeButtonProps = {
+  icon: Parameters<typeof IconSymbol>[0]['name'];
+  onPress: () => void;
+  accessibilityLabel: string;
+  testID?: string;
+};
+
+function ChromeButton({ icon, onPress, accessibilityLabel, testID }: ChromeButtonProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      hitSlop={8}
+      style={({ pressed }) => [styles.chromeButtonWrapper, pressed && { opacity: 0.75 }]}
+    >
+      <BlurView intensity={50} tint="dark" style={styles.chromeButtonBlur}>
+        <View style={styles.chromeButtonInner}>
+          <IconSymbol name={icon} size={18} color={CHROME_FG} />
+        </View>
+      </BlurView>
+    </Pressable>
   );
 }
 
@@ -273,6 +325,8 @@ type ZoomableImageProps = {
   screenH: number;
   dismissTranslateY: SharedValue<number>;
   backdropOpacity: SharedValue<number>;
+  sceneScale: SharedValue<number>;
+  chromeOpacity: SharedValue<number>;
   onDismiss: () => void;
   onChromeShouldHide: () => void;
 };
@@ -283,6 +337,8 @@ function ZoomableImage({
   screenH,
   dismissTranslateY,
   backdropOpacity,
+  sceneScale,
+  chromeOpacity,
   onDismiss,
   onChromeShouldHide,
 }: ZoomableImageProps) {
@@ -322,21 +378,33 @@ function ZoomableImage({
     })
     .onUpdate((event) => {
       if (scale.value > 1) {
-        // Pan inside the zoomed image.
         translateX.value = savedTranslateX.value + event.translationX;
         translateY.value = savedTranslateY.value + event.translationY;
       } else if (Math.abs(event.translationY) > Math.abs(event.translationX)) {
-        // Swipe-down-to-dismiss. Only catch vertical so the FlatList
-        // still owns horizontal pages.
         const dy = Math.max(0, event.translationY);
         dismissTranslateY.value = dy;
+        // Backdrop fades and the scene contracts a touch as it falls
+        // away — gives a sense of "lifting" the photo off the screen.
         backdropOpacity.value = interpolate(
           dy,
           [0, SWIPE_DOWN_CLOSE_THRESHOLD * 2],
           [1, 0],
           Extrapolation.CLAMP,
         );
-        if (dy > 8) runOnJS(onChromeShouldHide)();
+        sceneScale.value = interpolate(
+          dy,
+          [0, SWIPE_DOWN_CLOSE_THRESHOLD * 2],
+          [1, 0.85],
+          Extrapolation.CLAMP,
+        );
+        if (dy > 8) {
+          chromeOpacity.value = interpolate(
+            dy,
+            [8, 80],
+            [1, 0],
+            Extrapolation.CLAMP,
+          );
+        }
       }
     })
     .onEnd((event) => {
@@ -349,13 +417,14 @@ function ZoomableImage({
         dismissTranslateY.value > SWIPE_DOWN_CLOSE_THRESHOLD ||
         event.velocityY > SWIPE_DOWN_VELOCITY_THRESHOLD;
       if (shouldDismiss) {
-        dismissTranslateY.value = withTiming(screenH, { duration: 180 });
+        dismissTranslateY.value = withTiming(screenH * 0.5, { duration: 180 });
         backdropOpacity.value = withTiming(0, { duration: 180 }, () => {
           runOnJS(onDismiss)();
         });
       } else {
         dismissTranslateY.value = withSpring(0);
         backdropOpacity.value = withSpring(1);
+        sceneScale.value = withSpring(1);
       }
     });
 
@@ -427,6 +496,13 @@ function ZoomableImage({
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#000000',
+  },
+  scene: {
+    flex: 1,
+  },
   header: {
     position: 'absolute',
     top: 0,
@@ -440,24 +516,23 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     zIndex: 2,
   },
-  chromeButton: {
+  chromeButtonWrapper: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: CHROME_BG,
+    overflow: 'hidden',
+  },
+  chromeButtonBlur: {
+    flex: 1,
+  },
+  chromeButtonInner: {
+    flex: 1,
+    backgroundColor: CHROME_TINT_BG,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  counterPill: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: 6,
-    borderRadius: radius.full,
-    backgroundColor: CHROME_BG,
-  },
-  counterText: {
-    color: CHROME_FG,
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   page: {
     justifyContent: 'center',
@@ -482,19 +557,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: CHROME_FG,
   },
-  altTextContainer: {
+  footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xl,
-    backgroundColor: hexToRgba('#000000', 0.55),
+    paddingHorizontal: spacing.lg,
+    gap: spacing.md,
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  altTextCard: {
+    width: '100%',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   altText: {
-    fontSize: fontSize.base,
-    lineHeight: 22,
+    fontSize: fontSize.sm,
+    lineHeight: 20,
     textAlign: 'center',
     color: CHROME_FG,
+  },
+  dotsRow: {
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: spacing.xs,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+  },
+  dotActive: {
+    width: 18,
+    backgroundColor: '#ffffff',
   },
 });
