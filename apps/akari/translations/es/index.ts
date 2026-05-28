@@ -19,6 +19,7 @@ import moderation from './moderation.json';
 import navigation from './navigation.json';
 import notifications from './notifications.json';
 import oauth from './oauth.json';
+import poll from './poll.json';
 import post from './post.json';
 import profile from './profile.json';
 import recipe from './recipe.json';
@@ -51,6 +52,7 @@ export const translations = {
   navigation,
   notifications,
   oauth,
+  poll,
   post,
   profile,
   recipe,

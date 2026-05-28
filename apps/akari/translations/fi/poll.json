@@ -1,0 +1,20 @@
+{
+  "newPoll": "Uusi kysely",
+  "create": "Luo",
+  "questionPlaceholder": "Esitä kysymys",
+  "optionPlaceholder": "Vaihtoehto {{number}}",
+  "addOption": "Lisää vaihtoehto",
+  "removeOption": "Poista vaihtoehto",
+  "duration": "Kyselyn kesto",
+  "duration6Hours": "6 tuntia",
+  "duration1Day": "1 päivä",
+  "duration3Days": "3 päivää",
+  "duration7Days": "7 päivää",
+  "created": "Kysely julkaistu",
+  "createFailed": "Kyselyn luominen ei onnistunut",
+  "vote": "{{count}} ääni",
+  "votes": "{{count}} ääntä",
+  "endsIn": "Päättyy {{time}} kuluttua",
+  "ended": "Kysely päättyi",
+  "voteFailed": "Ääntäsi ei voitu tallentaa"
+}

@@ -203,6 +203,14 @@ export type BlueskyCreatePostInput = {
   /** Optional record to quote (post URI/CID). If `images` are also provided,
    * the post is encoded as `app.bsky.embed.recordWithMedia`. */
   quote?: { uri: string; cid: string };
+  /** Optional `app.bsky.embed.external` link card. Used to attach a poll
+   * (`uri` points at the `tech.tokimeki.poll.poll` record). Mutually
+   * exclusive with images/video/quote — only set on a plain link/poll post. */
+  externalEmbed?: {
+    uri: string;
+    title: string;
+    description: string;
+  };
   /** BCP-47 language tags the post is written in (e.g. ['en'], ['es', 'pt']).
    *  Drives the AppView's per-language feeds and moderation. Defaults to
    *  ['en'] on the server side when omitted. */

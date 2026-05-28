@@ -1,0 +1,20 @@
+{
+  "newPoll": "Sondaj nou",
+  "create": "Creează",
+  "questionPlaceholder": "Pune o întrebare",
+  "optionPlaceholder": "Opțiunea {{number}}",
+  "addOption": "Adaugă opțiune",
+  "removeOption": "Elimină opțiunea",
+  "duration": "Durata sondajului",
+  "duration6Hours": "6 ore",
+  "duration1Day": "1 zi",
+  "duration3Days": "3 zile",
+  "duration7Days": "7 zile",
+  "created": "Sondaj publicat",
+  "createFailed": "Nu s-a putut crea sondajul",
+  "vote": "{{count}} vot",
+  "votes": "{{count}} voturi",
+  "endsIn": "Se termină în {{time}}",
+  "ended": "Sondaj încheiat",
+  "voteFailed": "Nu s-a putut înregistra votul tău"
+}

@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nuovo sondaggio",
+  "create": "Crea",
+  "questionPlaceholder": "Fai una domanda",
+  "optionPlaceholder": "Opzione {{number}}",
+  "addOption": "Aggiungi opzione",
+  "removeOption": "Rimuovi opzione",
+  "duration": "Durata del sondaggio",
+  "duration6Hours": "6 ore",
+  "duration1Day": "1 giorno",
+  "duration3Days": "3 giorni",
+  "duration7Days": "7 giorni",
+  "created": "Sondaggio pubblicato",
+  "createFailed": "Impossibile creare il sondaggio",
+  "vote": "{{count}} voto",
+  "votes": "{{count}} voti",
+  "endsIn": "Termina tra {{time}}",
+  "ended": "Sondaggio terminato",
+  "voteFailed": "Impossibile registrare il tuo voto"
+}

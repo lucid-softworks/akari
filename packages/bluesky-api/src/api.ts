@@ -6,6 +6,7 @@ import { BlueskyDrafts } from './draft';
 import { BlueskyFeeds } from './feeds';
 import { BlueskyFlashes, type FlashesStoryRecordsResponse } from './flashes';
 import { BlueskyGraph } from './graph';
+import { BlueskyPoll, type PollCreateRecordResponse, type PollStrongRef } from './poll';
 import { BlueskySpark, type SprkStoryRecordsResponse } from './sprk';
 import {
   BlueskyGrain,
@@ -78,6 +79,7 @@ export class BlueskyApi extends BlueskyApiClient {
   private grain: BlueskyGrain;
   private flashes: BlueskyFlashes;
   private spark: BlueskySpark;
+  private poll: BlueskyPoll;
   private leaflet: BlueskyLeaflet;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
@@ -103,6 +105,7 @@ export class BlueskyApi extends BlueskyApiClient {
     this.grain = new BlueskyGrain(pdsUrl, appViewProxyDid);
     this.flashes = new BlueskyFlashes(pdsUrl, appViewProxyDid);
     this.spark = new BlueskySpark(pdsUrl, appViewProxyDid);
+    this.poll = new BlueskyPoll(pdsUrl, appViewProxyDid);
     this.leaflet = new BlueskyLeaflet(pdsUrl, appViewProxyDid);
     this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
@@ -428,6 +431,30 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<SprkStoryRecordsResponse> {
     return this.spark.getActorStories(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Creates a `tech.tokimeki.poll.poll` record (poll options + endsAt).
+   * Returns `{ uri, cid }` to attach to a post via an external embed.
+   */
+  async createPoll(
+    accessJwt: string,
+    repo: string,
+    input: { options: string[]; endsAt: string },
+  ): Promise<PollCreateRecordResponse> {
+    return this.poll.createPoll(accessJwt, repo, input);
+  }
+
+  /**
+   * Creates a `tech.tokimeki.poll.vote` record voting for `optionIndex` on
+   * the given poll.
+   */
+  async createPollVote(
+    accessJwt: string,
+    repo: string,
+    input: { poll: PollStrongRef; optionIndex: number },
+  ): Promise<PollCreateRecordResponse> {
+    return this.poll.createVote(accessJwt, repo, input);
   }
 
   /**

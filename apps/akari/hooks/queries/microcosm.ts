@@ -20,6 +20,9 @@ import type {
   BlueskyPostView,
   BlueskyProfile,
   BlueskyStarterPack,
+  PollRecord,
+  PollRecordValue,
+  PollVoteRecordValue,
 } from '@/bluesky-api';
 
 const PLC_DIRECTORY_BASE = 'https://plc.directory';
@@ -508,6 +511,55 @@ export async function resolveIdentifierToDid(identifier: string): Promise<string
   if (identifier.startsWith('did:')) return identifier;
   const res = await slingshot().resolveHandle(identifier);
   return res.did;
+}
+
+/**
+ * Fetch a `tech.tokimeki.poll.poll` record by its at:// URI (via slingshot's
+ * edge cache). Returns null if the URI is malformed or the record is gone.
+ */
+export async function getPollRecord(pollUri: string): Promise<PollRecord | null> {
+  const parsed = parseAtUri(pollUri);
+  if (!parsed) return null;
+  try {
+    const res = await slingshot().getRecord<PollRecordValue>(parsed);
+    return { uri: res.uri, cid: res.cid, value: res.value };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Tally a poll's votes across the network. Constellation gives the
+ * back-referencing `tech.tokimeki.poll.vote` records (did + rkey) but not
+ * their contents, so we fetch each one to read `optionIndex`. Capped at
+ * `limit` records — accurate for typical polls; a sample for very large
+ * ones (the headline `total` stays exact via the link count).
+ */
+export async function getPollVotes(
+  pollUri: string,
+  limit: number = 100,
+): Promise<{ voters: { did: string; optionIndex: number }[]; total: number }> {
+  const links = await constellation().getLinks({
+    target: pollUri,
+    collection: 'tech.tokimeki.poll.vote',
+    path: '.poll.uri',
+  });
+  const sample = links.linking_records.slice(0, limit);
+  const voters = await Promise.all(
+    sample.map(async ({ did, collection, rkey }) => {
+      try {
+        const res = await slingshot().getRecord<PollVoteRecordValue>({ repo: did, collection, rkey });
+        const idx = res.value?.optionIndex;
+        return typeof idx === 'number' ? { did, optionIndex: idx } : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return {
+    voters: voters.filter((v): v is { did: string; optionIndex: number } => v !== null),
+    total: links.total,
+  };
 }
 
 /**

@@ -12,6 +12,7 @@ export * from './grain';
 export * from './leaflet';
 export * from './notifications';
 export * from './pds';
+export * from './poll';
 export * from './rpg';
 export * from './search';
 export * from './sifa';

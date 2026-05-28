@@ -5,10 +5,12 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
+import { PollEmbed } from '@/components/post/PollEmbed';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useLightbox } from '@/hooks/useLightbox';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { suppressCardPress } from '@/utils/postCardPressGuard';
+import { isTokimekiPollUrl, pollUriFromEmbedUrl } from '@/utils/tokimekiPoll';
 import type { LightboxImage } from '@/components/ui/Lightbox';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
@@ -177,6 +179,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         uri.includes('.avi') ||
         uri.includes('.webm');
       if (isVideoLink) return 'externalVideo';
+      if (isTokimekiPollUrl(uri)) return 'poll';
       return 'external';
     }
 
@@ -185,6 +188,13 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
 
     return null;
   }, [embedData]);
+
+  // Resolve the Tokimeki poll viewer URL to the poll record's at:// URI.
+  const pollUri = useMemo(() => {
+    if (embedClassification !== 'poll') return null;
+    const uri = embedData?.external?.uri;
+    return uri ? pollUriFromEmbedUrl(uri) : null;
+  }, [embedClassification, embedData]);
 
   if (!embedData && !videoData && imageData.urls.length === 0) return null;
 
@@ -203,6 +213,8 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
       {embedClassification === 'gif' && embedData && (
         <GifEmbed embed={embedData as ExternalEmbedData} />
       )}
+
+      {embedClassification === 'poll' && pollUri && <PollEmbed pollUri={pollUri} />}
 
       {embedClassification === 'external' && embedData && (
         <ExternalEmbed embed={embedData as ExternalEmbedData} translatedTitle={translatedEmbed?.title} translatedDescription={translatedEmbed?.description} />

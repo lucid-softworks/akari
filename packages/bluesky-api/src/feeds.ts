@@ -506,7 +506,7 @@ export class BlueskyFeeds extends BlueskyApiClient {
     userDid: string,
     post: BlueskyCreatePostInput,
   ): Promise<BlueskyCreatePostResponse> {
-    const { text, replyTo, images, video, quote, langs, facets } = post;
+    const { text, replyTo, images, video, quote, langs, facets, externalEmbed } = post;
 
     let record: Record<string, unknown> = {
       text,
@@ -621,6 +621,15 @@ export class BlueskyFeeds extends BlueskyApiClient {
         : recordEmbed;
     } else if (mediaEmbed) {
       record.embed = mediaEmbed;
+    } else if (externalEmbed) {
+      record.embed = {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: externalEmbed.uri,
+          title: externalEmbed.title,
+          description: externalEmbed.description,
+        },
+      };
     }
 
     return this.makeAuthenticatedRequest<BlueskyCreatePostResponse>('/com.atproto.repo.createRecord', accessJwt, {

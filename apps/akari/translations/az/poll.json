@@ -1,0 +1,20 @@
+{
+  "newPoll": "Yeni sorğu",
+  "create": "Yarat",
+  "questionPlaceholder": "Sual ver",
+  "optionPlaceholder": "Variant {{number}}",
+  "addOption": "Variant əlavə et",
+  "removeOption": "Variantı sil",
+  "duration": "Sorğu müddəti",
+  "duration6Hours": "6 saat",
+  "duration1Day": "1 gün",
+  "duration3Days": "3 gün",
+  "duration7Days": "7 gün",
+  "created": "Sorğu yerləşdirildi",
+  "createFailed": "Sorğu yaradıla bilmədi",
+  "vote": "{{count}} səs",
+  "votes": "{{count}} səs",
+  "endsIn": "{{time}} sonra bitir",
+  "ended": "Sorğu bitdi",
+  "voteFailed": "Səsiniz qeydə alına bilmədi"
+}

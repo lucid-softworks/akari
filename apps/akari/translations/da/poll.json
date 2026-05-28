@@ -1,0 +1,20 @@
+{
+  "newPoll": "Ny afstemning",
+  "create": "Opret",
+  "questionPlaceholder": "Stil et spørgsmål",
+  "optionPlaceholder": "Mulighed {{number}}",
+  "addOption": "Tilføj mulighed",
+  "removeOption": "Fjern mulighed",
+  "duration": "Afstemningens varighed",
+  "duration6Hours": "6 timer",
+  "duration1Day": "1 dag",
+  "duration3Days": "3 dage",
+  "duration7Days": "7 dage",
+  "created": "Afstemning offentliggjort",
+  "createFailed": "Kunne ikke oprette afstemning",
+  "vote": "{{count}} stemme",
+  "votes": "{{count}} stemmer",
+  "endsIn": "Slutter om {{time}}",
+  "ended": "Afstemning afsluttet",
+  "voteFailed": "Kunne ikke registrere din stemme"
+}

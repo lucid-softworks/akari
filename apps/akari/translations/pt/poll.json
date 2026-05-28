@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nova enquete",
+  "create": "Criar",
+  "questionPlaceholder": "Faça uma pergunta",
+  "optionPlaceholder": "Opção {{number}}",
+  "addOption": "Adicionar opção",
+  "removeOption": "Remover opção",
+  "duration": "Duração da enquete",
+  "duration6Hours": "6 horas",
+  "duration1Day": "1 dia",
+  "duration3Days": "3 dias",
+  "duration7Days": "7 dias",
+  "created": "Enquete publicada",
+  "createFailed": "Não foi possível criar a enquete",
+  "vote": "{{count}} voto",
+  "votes": "{{count}} votos",
+  "endsIn": "Termina em {{time}}",
+  "ended": "Enquete encerrada",
+  "voteFailed": "Não foi possível registrar seu voto"
+}

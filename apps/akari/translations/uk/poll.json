@@ -1,0 +1,20 @@
+{
+  "newPoll": "Нове опитування",
+  "create": "Створити",
+  "questionPlaceholder": "Поставте запитання",
+  "optionPlaceholder": "Варіант {{number}}",
+  "addOption": "Додати варіант",
+  "removeOption": "Видалити варіант",
+  "duration": "Тривалість опитування",
+  "duration6Hours": "6 годин",
+  "duration1Day": "1 день",
+  "duration3Days": "3 дні",
+  "duration7Days": "7 днів",
+  "created": "Опитування опубліковано",
+  "createFailed": "Не вдалося створити опитування",
+  "vote": "{{count}} голос",
+  "votes": "{{count}} голосів",
+  "endsIn": "Завершується через {{time}}",
+  "ended": "Опитування завершено",
+  "voteFailed": "Не вдалося зарахувати ваш голос"
+}

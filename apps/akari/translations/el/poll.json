@@ -1,0 +1,20 @@
+{
+  "newPoll": "Νέα ψηφοφορία",
+  "create": "Δημιουργία",
+  "questionPlaceholder": "Κάντε μια ερώτηση",
+  "optionPlaceholder": "Επιλογή {{number}}",
+  "addOption": "Προσθήκη επιλογής",
+  "removeOption": "Αφαίρεση επιλογής",
+  "duration": "Διάρκεια ψηφοφορίας",
+  "duration6Hours": "6 ώρες",
+  "duration1Day": "1 ημέρα",
+  "duration3Days": "3 ημέρες",
+  "duration7Days": "7 ημέρες",
+  "created": "Η ψηφοφορία αναρτήθηκε",
+  "createFailed": "Δεν ήταν δυνατή η δημιουργία της ψηφοφορίας",
+  "vote": "{{count}} ψήφος",
+  "votes": "{{count}} ψήφοι",
+  "endsIn": "Λήγει σε {{time}}",
+  "ended": "Η ψηφοφορία έληξε",
+  "voteFailed": "Δεν ήταν δυνατή η καταγραφή της ψήφου σας"
+}

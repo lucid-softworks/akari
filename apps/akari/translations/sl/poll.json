@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nova anketa",
+  "create": "Ustvari",
+  "questionPlaceholder": "Zastavite vprašanje",
+  "optionPlaceholder": "Možnost {{number}}",
+  "addOption": "Dodaj možnost",
+  "removeOption": "Odstrani možnost",
+  "duration": "Trajanje ankete",
+  "duration6Hours": "6 ur",
+  "duration1Day": "1 dan",
+  "duration3Days": "3 dni",
+  "duration7Days": "7 dni",
+  "created": "Anketa objavljena",
+  "createFailed": "Ankete ni bilo mogoče ustvariti",
+  "vote": "{{count}} glas",
+  "votes": "{{count}} glasov",
+  "endsIn": "Konča se čez {{time}}",
+  "ended": "Anketa končana",
+  "voteFailed": "Vašega glasu ni bilo mogoče zabeležiti"
+}

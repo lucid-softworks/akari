@@ -1,0 +1,20 @@
+{
+  "newPoll": "새 투표",
+  "create": "만들기",
+  "questionPlaceholder": "질문을 입력하세요",
+  "optionPlaceholder": "선택지 {{number}}",
+  "addOption": "선택지 추가",
+  "removeOption": "선택지 삭제",
+  "duration": "투표 기간",
+  "duration6Hours": "6시간",
+  "duration1Day": "1일",
+  "duration3Days": "3일",
+  "duration7Days": "7일",
+  "created": "투표가 게시되었습니다",
+  "createFailed": "투표를 만들 수 없습니다",
+  "vote": "투표 {{count}}표",
+  "votes": "투표 {{count}}표",
+  "endsIn": "{{time}} 후 종료",
+  "ended": "투표 종료됨",
+  "voteFailed": "투표를 기록할 수 없습니다"
+}

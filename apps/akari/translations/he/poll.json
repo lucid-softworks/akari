@@ -1,0 +1,20 @@
+{
+  "newPoll": "סקר חדש",
+  "create": "צור",
+  "questionPlaceholder": "שאל שאלה",
+  "optionPlaceholder": "אפשרות {{number}}",
+  "addOption": "הוסף אפשרות",
+  "removeOption": "הסר אפשרות",
+  "duration": "משך הסקר",
+  "duration6Hours": "6 שעות",
+  "duration1Day": "יום אחד",
+  "duration3Days": "3 ימים",
+  "duration7Days": "7 ימים",
+  "created": "הסקר פורסם",
+  "createFailed": "לא ניתן ליצור את הסקר",
+  "vote": "{{count}} קול",
+  "votes": "{{count}} קולות",
+  "endsIn": "מסתיים בעוד {{time}}",
+  "ended": "הסקר הסתיים",
+  "voteFailed": "לא ניתן לרשום את הצבעתך"
+}

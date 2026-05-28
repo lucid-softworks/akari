@@ -1,0 +1,20 @@
+{
+  "newPoll": "Новый опрос",
+  "create": "Создать",
+  "questionPlaceholder": "Задайте вопрос",
+  "optionPlaceholder": "Вариант {{number}}",
+  "addOption": "Добавить вариант",
+  "removeOption": "Удалить вариант",
+  "duration": "Длительность опроса",
+  "duration6Hours": "6 часов",
+  "duration1Day": "1 день",
+  "duration3Days": "3 дня",
+  "duration7Days": "7 дней",
+  "created": "Опрос опубликован",
+  "createFailed": "Не удалось создать опрос",
+  "vote": "{{count}} голос",
+  "votes": "{{count}} голосов",
+  "endsIn": "Завершится через {{time}}",
+  "ended": "Опрос завершён",
+  "voteFailed": "Не удалось записать ваш голос"
+}

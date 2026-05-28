@@ -1,0 +1,20 @@
+{
+  "newPoll": "新しいアンケート",
+  "create": "作成",
+  "questionPlaceholder": "質問を入力",
+  "optionPlaceholder": "選択肢 {{number}}",
+  "addOption": "選択肢を追加",
+  "removeOption": "選択肢を削除",
+  "duration": "アンケートの期間",
+  "duration6Hours": "6時間",
+  "duration1Day": "1日",
+  "duration3Days": "3日",
+  "duration7Days": "7日",
+  "created": "アンケートを投稿しました",
+  "createFailed": "アンケートを作成できませんでした",
+  "vote": "{{count}}票",
+  "votes": "{{count}}票",
+  "endsIn": "終了まで{{time}}",
+  "ended": "アンケート終了",
+  "voteFailed": "投票を記録できませんでした"
+}

@@ -1,0 +1,20 @@
+{
+  "newPoll": "New poll",
+  "create": "Create",
+  "questionPlaceholder": "Ask a question",
+  "optionPlaceholder": "Option {{number}}",
+  "addOption": "Add option",
+  "removeOption": "Remove option",
+  "duration": "Poll length",
+  "duration6Hours": "6 hours",
+  "duration1Day": "1 day",
+  "duration3Days": "3 days",
+  "duration7Days": "7 days",
+  "created": "Poll posted",
+  "createFailed": "Couldn't create poll",
+  "vote": "{{count}} vote",
+  "votes": "{{count}} votes",
+  "endsIn": "Ends in {{time}}",
+  "ended": "Poll ended",
+  "voteFailed": "Couldn't record your vote"
+}

@@ -1,0 +1,20 @@
+{
+  "newPoll": "Új szavazás",
+  "create": "Létrehozás",
+  "questionPlaceholder": "Tegyél fel egy kérdést",
+  "optionPlaceholder": "{{number}}. lehetőség",
+  "addOption": "Lehetőség hozzáadása",
+  "removeOption": "Lehetőség eltávolítása",
+  "duration": "Szavazás hossza",
+  "duration6Hours": "6 óra",
+  "duration1Day": "1 nap",
+  "duration3Days": "3 nap",
+  "duration7Days": "7 nap",
+  "created": "Szavazás közzétéve",
+  "createFailed": "Nem sikerült létrehozni a szavazást",
+  "vote": "{{count}} szavazat",
+  "votes": "{{count}} szavazat",
+  "endsIn": "Vége: {{time}} múlva",
+  "ended": "Szavazás véget ért",
+  "voteFailed": "Nem sikerült rögzíteni a szavazatodat"
+}

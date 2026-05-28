@@ -117,6 +117,7 @@ const MAPPING = {
   'eye.fill': 'visibility',
   star: 'star-border',
   'star.fill': 'star',
+  'chart.bar.fill': 'poll',
   'rectangle.stack.fill': 'collections',
   'play.circle.fill': 'play-circle-filled',
   'envelope.fill': 'email',

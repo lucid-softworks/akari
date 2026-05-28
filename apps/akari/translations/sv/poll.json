@@ -1,0 +1,20 @@
+{
+  "newPoll": "Ny omröstning",
+  "create": "Skapa",
+  "questionPlaceholder": "Ställ en fråga",
+  "optionPlaceholder": "Alternativ {{number}}",
+  "addOption": "Lägg till alternativ",
+  "removeOption": "Ta bort alternativ",
+  "duration": "Omröstningens längd",
+  "duration6Hours": "6 timmar",
+  "duration1Day": "1 dag",
+  "duration3Days": "3 dagar",
+  "duration7Days": "7 dagar",
+  "created": "Omröstning publicerad",
+  "createFailed": "Det gick inte att skapa omröstningen",
+  "vote": "{{count}} röst",
+  "votes": "{{count}} röster",
+  "endsIn": "Slutar om {{time}}",
+  "ended": "Omröstning avslutad",
+  "voteFailed": "Det gick inte att registrera din röst"
+}

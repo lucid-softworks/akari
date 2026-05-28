@@ -1,0 +1,20 @@
+{
+  "newPoll": "新投票",
+  "create": "创建",
+  "questionPlaceholder": "提出一个问题",
+  "optionPlaceholder": "选项 {{number}}",
+  "addOption": "添加选项",
+  "removeOption": "移除选项",
+  "duration": "投票时长",
+  "duration6Hours": "6 小时",
+  "duration1Day": "1 天",
+  "duration3Days": "3 天",
+  "duration7Days": "7 天",
+  "created": "投票已发布",
+  "createFailed": "无法创建投票",
+  "vote": "{{count}} 票",
+  "votes": "{{count}} 票",
+  "endsIn": "{{time}}后结束",
+  "ended": "投票已结束",
+  "voteFailed": "无法记录您的投票"
+}

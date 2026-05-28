@@ -1,0 +1,20 @@
+{
+  "newPoll": "Pleidlais newydd",
+  "create": "Creu",
+  "questionPlaceholder": "Gofyn cwestiwn",
+  "optionPlaceholder": "Opsiwn {{number}}",
+  "addOption": "Ychwanegu opsiwn",
+  "removeOption": "Tynnu opsiwn",
+  "duration": "Hyd y bleidlais",
+  "duration6Hours": "6 awr",
+  "duration1Day": "1 diwrnod",
+  "duration3Days": "3 diwrnod",
+  "duration7Days": "7 diwrnod",
+  "created": "Pleidlais wedi'i phostio",
+  "createFailed": "Methu creu'r bleidlais",
+  "vote": "{{count}} bleidlais",
+  "votes": "{{count}} pleidlais",
+  "endsIn": "Yn gorffen mewn {{time}}",
+  "ended": "Daeth y bleidlais i ben",
+  "voteFailed": "Methu cofnodi eich pleidlais"
+}

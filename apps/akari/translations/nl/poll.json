@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nieuwe poll",
+  "create": "Aanmaken",
+  "questionPlaceholder": "Stel een vraag",
+  "optionPlaceholder": "Optie {{number}}",
+  "addOption": "Optie toevoegen",
+  "removeOption": "Optie verwijderen",
+  "duration": "Duur van de poll",
+  "duration6Hours": "6 uur",
+  "duration1Day": "1 dag",
+  "duration3Days": "3 dagen",
+  "duration7Days": "7 dagen",
+  "created": "Poll geplaatst",
+  "createFailed": "Kon poll niet aanmaken",
+  "vote": "{{count}} stem",
+  "votes": "{{count}} stemmen",
+  "endsIn": "Eindigt over {{time}}",
+  "ended": "Poll beëindigd",
+  "voteFailed": "Kon je stem niet registreren"
+}

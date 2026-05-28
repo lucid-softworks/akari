@@ -1,0 +1,20 @@
+{
+  "newPoll": "Cuộc thăm dò mới",
+  "create": "Tạo",
+  "questionPlaceholder": "Đặt một câu hỏi",
+  "optionPlaceholder": "Lựa chọn {{number}}",
+  "addOption": "Thêm lựa chọn",
+  "removeOption": "Xóa lựa chọn",
+  "duration": "Thời lượng thăm dò",
+  "duration6Hours": "6 giờ",
+  "duration1Day": "1 ngày",
+  "duration3Days": "3 ngày",
+  "duration7Days": "7 ngày",
+  "created": "Đã đăng cuộc thăm dò",
+  "createFailed": "Không thể tạo cuộc thăm dò",
+  "vote": "{{count}} phiếu",
+  "votes": "{{count}} phiếu",
+  "endsIn": "Kết thúc sau {{time}}",
+  "ended": "Cuộc thăm dò đã kết thúc",
+  "voteFailed": "Không thể ghi nhận phiếu bầu của bạn"
+}

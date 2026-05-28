@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
 import { FeedFiltersSheet } from '@/components/FeedFiltersSheet';
+import { PollComposer } from '@/components/PollComposer';
 import { PostComposer } from '@/components/PostComposer';
 import { ReviewComposer } from '@/components/ReviewComposer';
 import { ThemedText } from '@/components/ThemedText';
@@ -99,6 +100,14 @@ export default function HomeScreen() {
     },
     [scrollToTop, setSelectedFeedMutation],
   );
+
+  const handleShowPoll = useCallback(() => {
+    const id = 'poll-composer';
+    dialogManager.open({
+      id,
+      component: <PollComposer onClose={() => dialogManager.close(id)} />,
+    });
+  }, [dialogManager]);
 
   const handleShowFilters = useCallback(() => {
     const id = 'feed-filters';
@@ -328,6 +337,7 @@ export default function HomeScreen() {
       <HomeFab
         onPostPress={() => setShowPostComposer(true)}
         onReviewPress={() => setShowReviewComposer(true)}
+        onPollPress={handleShowPoll}
       />
 
       <PostComposer visible={showPostComposer} onClose={() => setShowPostComposer(false)} />

@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nowa ankieta",
+  "create": "Utwórz",
+  "questionPlaceholder": "Zadaj pytanie",
+  "optionPlaceholder": "Opcja {{number}}",
+  "addOption": "Dodaj opcję",
+  "removeOption": "Usuń opcję",
+  "duration": "Czas trwania ankiety",
+  "duration6Hours": "6 godzin",
+  "duration1Day": "1 dzień",
+  "duration3Days": "3 dni",
+  "duration7Days": "7 dni",
+  "created": "Ankieta opublikowana",
+  "createFailed": "Nie udało się utworzyć ankiety",
+  "vote": "{{count}} głos",
+  "votes": "{{count}} głosów",
+  "endsIn": "Kończy się za {{time}}",
+  "ended": "Ankieta zakończona",
+  "voteFailed": "Nie udało się zapisać Twojego głosu"
+}

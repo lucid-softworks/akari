@@ -1,0 +1,20 @@
+{
+  "newPoll": "Jajak pendapat baru",
+  "create": "Buat",
+  "questionPlaceholder": "Ajukan pertanyaan",
+  "optionPlaceholder": "Opsi {{number}}",
+  "addOption": "Tambah opsi",
+  "removeOption": "Hapus opsi",
+  "duration": "Durasi jajak pendapat",
+  "duration6Hours": "6 jam",
+  "duration1Day": "1 hari",
+  "duration3Days": "3 hari",
+  "duration7Days": "7 hari",
+  "created": "Jajak pendapat diposting",
+  "createFailed": "Tidak dapat membuat jajak pendapat",
+  "vote": "{{count}} suara",
+  "votes": "{{count}} suara",
+  "endsIn": "Berakhir dalam {{time}}",
+  "ended": "Jajak pendapat berakhir",
+  "voteFailed": "Tidak dapat mencatat suara Anda"
+}

@@ -1,0 +1,20 @@
+{
+  "newPoll": "نظرسنجی جدید",
+  "create": "ایجاد",
+  "questionPlaceholder": "یک سؤال بپرسید",
+  "optionPlaceholder": "گزینه {{number}}",
+  "addOption": "افزودن گزینه",
+  "removeOption": "حذف گزینه",
+  "duration": "مدت نظرسنجی",
+  "duration6Hours": "۶ ساعت",
+  "duration1Day": "۱ روز",
+  "duration3Days": "۳ روز",
+  "duration7Days": "۷ روز",
+  "created": "نظرسنجی منتشر شد",
+  "createFailed": "ایجاد نظرسنجی ممکن نشد",
+  "vote": "{{count}} رأی",
+  "votes": "{{count}} رأی",
+  "endsIn": "پایان تا {{time}}",
+  "ended": "نظرسنجی پایان یافت",
+  "voteFailed": "ثبت رأی شما ممکن نشد"
+}

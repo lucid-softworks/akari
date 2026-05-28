@@ -1,0 +1,20 @@
+{
+  "newPoll": "Нова анкета",
+  "create": "Създай",
+  "questionPlaceholder": "Задай въпрос",
+  "optionPlaceholder": "Опция {{number}}",
+  "addOption": "Добави опция",
+  "removeOption": "Премахни опцията",
+  "duration": "Продължителност на анкетата",
+  "duration6Hours": "6 часа",
+  "duration1Day": "1 ден",
+  "duration3Days": "3 дни",
+  "duration7Days": "7 дни",
+  "created": "Анкетата е публикувана",
+  "createFailed": "Анкетата не можа да бъде създадена",
+  "vote": "{{count}} глас",
+  "votes": "{{count}} гласа",
+  "endsIn": "Приключва след {{time}}",
+  "ended": "Анкетата приключи",
+  "voteFailed": "Гласът ви не можа да бъде записан"
+}

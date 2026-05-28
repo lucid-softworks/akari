@@ -1,0 +1,20 @@
+{
+  "newPoll": "नया पोल",
+  "create": "बनाएं",
+  "questionPlaceholder": "एक प्रश्न पूछें",
+  "optionPlaceholder": "विकल्प {{number}}",
+  "addOption": "विकल्प जोड़ें",
+  "removeOption": "विकल्प हटाएं",
+  "duration": "पोल की अवधि",
+  "duration6Hours": "6 घंटे",
+  "duration1Day": "1 दिन",
+  "duration3Days": "3 दिन",
+  "duration7Days": "7 दिन",
+  "created": "पोल पोस्ट किया गया",
+  "createFailed": "पोल नहीं बनाया जा सका",
+  "vote": "{{count}} वोट",
+  "votes": "{{count}} वोट",
+  "endsIn": "{{time}} में समाप्त होगा",
+  "ended": "पोल समाप्त हुआ",
+  "voteFailed": "आपका वोट दर्ज नहीं किया जा सका"
+}

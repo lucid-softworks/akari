@@ -1,0 +1,20 @@
+{
+  "newPoll": "โพลใหม่",
+  "create": "สร้าง",
+  "questionPlaceholder": "ตั้งคำถาม",
+  "optionPlaceholder": "ตัวเลือก {{number}}",
+  "addOption": "เพิ่มตัวเลือก",
+  "removeOption": "ลบตัวเลือก",
+  "duration": "ระยะเวลาโพล",
+  "duration6Hours": "6 ชั่วโมง",
+  "duration1Day": "1 วัน",
+  "duration3Days": "3 วัน",
+  "duration7Days": "7 วัน",
+  "created": "โพสต์โพลแล้ว",
+  "createFailed": "ไม่สามารถสร้างโพลได้",
+  "vote": "{{count}} โหวต",
+  "votes": "{{count}} โหวต",
+  "endsIn": "สิ้นสุดใน {{time}}",
+  "ended": "โพลสิ้นสุดแล้ว",
+  "voteFailed": "ไม่สามารถบันทึกการโหวตของคุณได้"
+}

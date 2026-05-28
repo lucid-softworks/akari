@@ -110,6 +110,12 @@ export const queryKeys = {
     list: (limit: number, did: string | undefined, appViewEnabled?: boolean) =>
       ['timeline', limit, did, appViewEnabled] as const,
   },
+  poll: {
+    all: ['poll'] as const,
+    detail: (pollUri: Maybe<string>) => ['poll', pollUri] as const,
+    votes: (pollUri: Maybe<string>, viewerDid: Maybe<string>) =>
+      ['pollVotes', pollUri, viewerDid] as const,
+  },
   feed: {
     all: ['feed'] as const,
     detail: (feedUri: Maybe<string>, pdsUrl: Maybe<string>) => ['feed', feedUri, pdsUrl] as const,

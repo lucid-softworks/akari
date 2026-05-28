@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 type HomeFabProps = {
   onPostPress: () => void;
   onReviewPress: () => void;
+  onPollPress: () => void;
 };
 
 // `position: fixed` pins the FAB to the viewport on web, where the
@@ -20,7 +21,7 @@ type HomeFabProps = {
 // FAB lives over a scroll container that doesn't move.
 const FAB_POSITION = (Platform.OS === 'web' ? 'fixed' : 'absolute') as 'absolute';
 
-export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
+export function HomeFab({ onPostPress, onReviewPress, onPollPress }: HomeFabProps) {
   const { t } = useTranslation();
   const { isGuest, promptSignIn } = useRequireAuth();
   const [showFabMenu, setShowFabMenu] = useState(false);
@@ -62,6 +63,16 @@ export function HomeFab({ onPostPress, onReviewPress }: HomeFabProps) {
             >
               <IconSymbol name="star.fill" size={18} color="white" />
               <ThemedText style={styles.fabMenuText}>{t('home.fabReview')}</ThemedText>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [styles.fabMenuItem, pressed && { opacity: activeOpacity.default }]}
+              onPress={() => {
+                setShowFabMenu(false);
+                onPollPress();
+              }}
+            >
+              <IconSymbol name="chart.bar.fill" size={18} color="white" />
+              <ThemedText style={styles.fabMenuText}>{t('home.fabPoll')}</ThemedText>
             </Pressable>
           </View>
         </Pressable>

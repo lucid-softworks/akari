@@ -1,0 +1,20 @@
+{
+  "newPoll": "استطلاع جديد",
+  "create": "إنشاء",
+  "questionPlaceholder": "اطرح سؤالاً",
+  "optionPlaceholder": "خيار {{number}}",
+  "addOption": "إضافة خيار",
+  "removeOption": "إزالة الخيار",
+  "duration": "مدة الاستطلاع",
+  "duration6Hours": "6 ساعات",
+  "duration1Day": "يوم واحد",
+  "duration3Days": "3 أيام",
+  "duration7Days": "7 أيام",
+  "created": "تم نشر الاستطلاع",
+  "createFailed": "تعذر إنشاء الاستطلاع",
+  "vote": "{{count}} صوت",
+  "votes": "{{count}} صوت",
+  "endsIn": "ينتهي خلال {{time}}",
+  "ended": "انتهى الاستطلاع",
+  "voteFailed": "تعذر تسجيل صوتك"
+}

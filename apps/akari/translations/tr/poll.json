@@ -1,0 +1,20 @@
+{
+  "newPoll": "Yeni anket",
+  "create": "Oluştur",
+  "questionPlaceholder": "Bir soru sor",
+  "optionPlaceholder": "Seçenek {{number}}",
+  "addOption": "Seçenek ekle",
+  "removeOption": "Seçeneği kaldır",
+  "duration": "Anket süresi",
+  "duration6Hours": "6 saat",
+  "duration1Day": "1 gün",
+  "duration3Days": "3 gün",
+  "duration7Days": "7 gün",
+  "created": "Anket paylaşıldı",
+  "createFailed": "Anket oluşturulamadı",
+  "vote": "{{count}} oy",
+  "votes": "{{count}} oy",
+  "endsIn": "{{time}} içinde bitiyor",
+  "ended": "Anket sona erdi",
+  "voteFailed": "Oyunuz kaydedilemedi"
+}

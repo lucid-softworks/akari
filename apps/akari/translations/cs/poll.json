@@ -1,0 +1,20 @@
+{
+  "newPoll": "Nová anketa",
+  "create": "Vytvořit",
+  "questionPlaceholder": "Položte otázku",
+  "optionPlaceholder": "Možnost {{number}}",
+  "addOption": "Přidat možnost",
+  "removeOption": "Odebrat možnost",
+  "duration": "Délka ankety",
+  "duration6Hours": "6 hodin",
+  "duration1Day": "1 den",
+  "duration3Days": "3 dny",
+  "duration7Days": "7 dní",
+  "created": "Anketa zveřejněna",
+  "createFailed": "Anketu se nepodařilo vytvořit",
+  "vote": "{{count}} hlas",
+  "votes": "{{count}} hlasů",
+  "endsIn": "Končí za {{time}}",
+  "ended": "Anketa skončila",
+  "voteFailed": "Váš hlas se nepodařilo zaznamenat"
+}

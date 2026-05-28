@@ -1,0 +1,20 @@
+{
+  "newPoll": "Neue Umfrage",
+  "create": "Erstellen",
+  "questionPlaceholder": "Stelle eine Frage",
+  "optionPlaceholder": "Option {{number}}",
+  "addOption": "Option hinzufügen",
+  "removeOption": "Option entfernen",
+  "duration": "Umfragedauer",
+  "duration6Hours": "6 Stunden",
+  "duration1Day": "1 Tag",
+  "duration3Days": "3 Tage",
+  "duration7Days": "7 Tage",
+  "created": "Umfrage veröffentlicht",
+  "createFailed": "Umfrage konnte nicht erstellt werden",
+  "vote": "{{count}} Stimme",
+  "votes": "{{count}} Stimmen",
+  "endsIn": "Endet in {{time}}",
+  "ended": "Umfrage beendet",
+  "voteFailed": "Deine Stimme konnte nicht erfasst werden"
+}
