@@ -27,8 +27,7 @@ import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useSavedFeedsList } from '@/hooks/useSavedFeedsList';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { shouldHideFeedItem } from '@/utils/feedFilters';
-import { isPostMuted } from '@/utils/mutedWordsFilter';
+import { filterFeedItems } from '@/utils/feedFilters';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { TabChromeContext } from '@/app/(tabs)/_layout';
 import { webScreenContainer } from '@/constants/webStyles';
@@ -105,9 +104,11 @@ export default function HomeScreen() {
     });
   }, [dialogManager, selectedFeed]);
 
-  // Get posts from selected feed
+  // `useFeed` fetches (topping short pages up to a full batch) and applies
+  // the muted-word + per-feed filters, so `feedPosts` is render-ready.
   const {
     data: feedData,
+    posts: feedPosts,
     isLoading: feedLoading,
     fetchNextPage,
     hasNextPage,
@@ -173,20 +174,14 @@ export default function HomeScreen() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // Get posts based on selected feed type, filtering out anything that
-  // matches a muted-word rule or a global feed-filter toggle.
+  // Feed-generator posts come pre-filtered from `useFeed`. The "following"
+  // timeline is a separate source (`useTimeline`), so run the same shared
+  // filter pass over it here.
   const { data: mutedWords } = useMutedWords();
   const allPosts = useMemo(() => {
-    const raw =
-      selectedFeed === 'following'
-        ? (timelineData?.feed ?? [])
-        : (feedData?.pages.flatMap((page) => page.feed) ?? []);
-    return raw.filter((entry) => {
-      if (mutedWords.length && isPostMuted(entry.post, mutedWords)) return false;
-      if (shouldHideFeedItem(entry, filters)) return false;
-      return true;
-    });
-  }, [feedData, filters, mutedWords, selectedFeed, timelineData]);
+    if (selectedFeed !== 'following') return feedPosts;
+    return filterFeedItems(timelineData?.feed ?? [], filters, mutedWords);
+  }, [feedPosts, filters, mutedWords, selectedFeed, timelineData]);
 
   const feedItems = useMemo<FeedListItem[]>(() => {
     if (!selectedFeed) {
@@ -195,12 +190,12 @@ export default function HomeScreen() {
 
     if (allPosts.length === 0) {
       const hasFetched = selectedFeed === 'following' ? timelineData !== undefined : feedData !== undefined;
-      const isLoading = feedLoading || timelineLoading || !hasFetched;
+      const isLoading = feedLoading || timelineLoading || isFetchingNextPage || !hasFetched;
       return [{ type: 'empty', state: isLoading ? 'loading' : 'empty' }];
     }
 
     return allPosts.map((item) => ({ type: 'post', item }));
-  }, [allPosts, feedData, feedLoading, selectedFeed, timelineData, timelineLoading]);
+  }, [allPosts, feedData, feedLoading, isFetchingNextPage, selectedFeed, timelineData, timelineLoading]);
 
   const feedTabs = useMemo(() => {
     if (isGuest) {

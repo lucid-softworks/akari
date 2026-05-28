@@ -1,5 +1,6 @@
-import type { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
+import type { BlueskyFeedItem, BlueskyMutedWord, BlueskyPostView } from '@/bluesky-api';
 import type { FeedFilters } from '@/hooks/useFeedFilters';
+import { isPostMuted } from '@/utils/mutedWordsFilter';
 
 /**
  * The reply / quote checks for a single post — shared by `shouldHideFeedItem`
@@ -83,5 +84,22 @@ export function shouldHideFeedItem(
   if (postFailsCounts(item.post, filters)) return true;
 
   return false;
+}
+
+/**
+ * Apply the viewer's muted-word rules and a feed's filter toggles to a list
+ * of feed items. The shared display pass for every feed surface (home feed,
+ * following timeline, standalone feed viewer) so the rules don't drift.
+ */
+export function filterFeedItems(
+  items: BlueskyFeedItem[],
+  filters: FeedFilters,
+  mutedWords: readonly BlueskyMutedWord[],
+): BlueskyFeedItem[] {
+  return items.filter((entry) => {
+    if (mutedWords.length && isPostMuted(entry.post, mutedWords)) return false;
+    if (shouldHideFeedItem(entry, filters)) return false;
+    return true;
+  });
 }
 

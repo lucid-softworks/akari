@@ -13,14 +13,10 @@ import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/Vir
 import { fontSize, fontWeight, layout, spacing } from '@/constants/tokens';
 import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
-import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { queryKeys } from '@/hooks/queryKeys';
-import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { resolveHandleToDid } from '@/utils/oauth/discovery';
-import { shouldHideFeedItem } from '@/utils/feedFilters';
-import { isPostMuted } from '@/utils/mutedWordsFilter';
 
 type FeedViewProps = {
   /** Handle or DID of the feed-generator's owner. */
@@ -61,33 +57,30 @@ export default function FeedView({ actor, rKey }: FeedViewProps) {
   const actorDid = actor.startsWith('did:') ? actor : resolvedDid;
   const feedUri = actorDid ? `at://${actorDid}/app.bsky.feed.generator/${rKey}` : null;
 
-  const { data: feedData, isLoading: feedLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
-    useFeed(feedUri ?? null, 20);
+  // `useFeed` fetches (topping short pages up to a full batch) and applies
+  // the muted-word + per-feed filters, so `allPosts` is render-ready.
+  const {
+    data: feedData,
+    posts: allPosts,
+    isLoading: feedLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useFeed(feedUri ?? null, 20);
 
   // Fetch the feed-generator's metadata for the header (name, creator,
   // avatar). Cheap and shows up immediately while the post list loads.
   const { data: generatorsData } = useFeedGenerators(feedUri ? [feedUri] : []);
   const feedMeta = generatorsData?.feeds?.[0];
 
-  const { filters } = useFeedFilters(feedUri ?? null);
-  const { data: mutedWords } = useMutedWords();
-
-  const allPosts = useMemo(() => {
-    const raw = feedData?.pages.flatMap((page) => page.feed) ?? [];
-    return raw.filter((entry) => {
-      if (mutedWords.length && isPostMuted(entry.post, mutedWords)) return false;
-      if (shouldHideFeedItem(entry, filters)) return false;
-      return true;
-    });
-  }, [feedData, filters, mutedWords]);
-
   const feedItems = useMemo<FeedListItem[]>(() => {
     if (allPosts.length === 0) {
-      const isLoading = feedLoading || feedData === undefined;
+      const isLoading = feedLoading || isFetchingNextPage || feedData === undefined;
       return [{ type: 'empty', state: isLoading ? 'loading' : 'empty' }];
     }
     return allPosts.map((item) => ({ type: 'post', item }));
-  }, [allPosts, feedData, feedLoading]);
+  }, [allPosts, feedData, feedLoading, isFetchingNextPage]);
 
   // Match the home tab's pagination guards so FlashList web's mid-layout
   // `onEndReached` re-fires don't cascade into dozens of getFeed calls.
