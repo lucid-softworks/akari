@@ -63,9 +63,6 @@ const CHROME_BG = hexToRgba('#000000', 0.45);
  * double-tap-to-zoom, pinch-and-pan when zoomed, swipe-down-to-dismiss
  * with progressive backdrop fade, and an auto-hiding chrome layer so
  * the photo can breathe once the user starts interacting.
- *
- * The legacy `ImageViewer` import path still re-exports `Lightbox` for
- * back-compat — see `components/ImageViewer.tsx`.
  */
 export function Lightbox({
   visible,

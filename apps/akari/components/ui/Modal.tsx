@@ -16,7 +16,7 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
  *
  * Most app code should reach for the higher-level `Dialog` primitive;
  * this stays as the raw escape hatch for takeover surfaces
- * (ImageViewer, EmojiPicker, etc.) that don't want Dialog's chrome.
+ * (Lightbox, EmojiPicker, etc.) that don't want Dialog's chrome.
  */
 export function Modal(props: RNModalProps) {
   useBodyScrollLock(props.visible !== false);

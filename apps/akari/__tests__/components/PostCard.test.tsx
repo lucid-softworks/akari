@@ -44,7 +44,7 @@ jest.mock('react-native/Libraries/Modal/Modal', () => {
 // Mock heavy child components that are not under test
 jest.mock('@/components/ExternalEmbed', () => ({ ExternalEmbed: jest.fn(() => null) }));
 jest.mock('@/components/GifEmbed', () => ({ GifEmbed: jest.fn(() => null) }));
-jest.mock('@/components/ImageViewer', () => ({ ImageViewer: jest.fn(() => null) }));
+jest.mock('@/components/ui/Lightbox', () => ({ Lightbox: jest.fn(() => null) }));
 jest.mock('@/components/Labels', () => ({ Labels: jest.fn(() => null) }));
 jest.mock('@/components/PostComposer', () => ({ PostComposer: jest.fn(() => null) }));
 jest.mock('@/components/RecordEmbed', () => ({ RecordEmbed: jest.fn(() => null) }));
@@ -59,7 +59,7 @@ jest.mock('react-native-safe-area-context', () => ({
 const ImageMock = require('expo-image').Image as jest.Mock;
 const ExternalEmbedMock = require('@/components/ExternalEmbed').ExternalEmbed as jest.Mock;
 const GifEmbedMock = require('@/components/GifEmbed').GifEmbed as jest.Mock;
-const ImageViewerMock = require('@/components/ImageViewer').ImageViewer as jest.Mock;
+const ImageViewerMock = require('@/components/ui/Lightbox').Lightbox as jest.Mock;
 const PostComposerMock = require('@/components/PostComposer').PostComposer as jest.Mock;
 const RecordEmbedMock = require('@/components/RecordEmbed').RecordEmbed as jest.Mock;
 const RichTextWithFacetsMock = require('@/components/RichTextWithFacets').RichTextWithFacets as jest.Mock;
