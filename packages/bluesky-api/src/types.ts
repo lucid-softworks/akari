@@ -901,6 +901,43 @@ export type BlueskySession =
     };
 
 /**
+ * Live status view returned on a profile (`app.bsky.actor.defs#statusView`).
+ *
+ * Present when an account has published an `app.bsky.actor.status` record.
+ * `status` is currently always `app.bsky.actor.status#live`. `isActive` is
+ * the AppView's "not expired" flag; `isDisabled` is set when a moderator has
+ * revoked the account's go-live access. The embed (when present) is the
+ * `app.bsky.embed.external#view` shape pointing at the live link.
+ */
+export type BlueskyActorStatusView = {
+  /** Status token, e.g. `app.bsky.actor.status#live`. */
+  status: string;
+  /** The underlying `app.bsky.actor.status` record. */
+  record: unknown;
+  /** AT-URI of the status record. */
+  uri?: string;
+  /** CID of the status record. */
+  cid?: string;
+  /** External-link embed for the live content. */
+  embed?: {
+    $type?: string;
+    external?: {
+      uri: string;
+      title?: string;
+      description?: string;
+      /** View shape resolves this to a URL string; record shape is a blob ref. */
+      thumb?: unknown;
+    };
+  };
+  /** ISO 8601 timestamp at which the status expires. */
+  expiresAt?: string;
+  /** True while the status is still within its duration window. */
+  isActive?: boolean;
+  /** True when a moderator has disabled the account's go-live access. */
+  isDisabled?: boolean;
+};
+
+/**
  * Bluesky profile information
  */
 export type BlueskyProfile = {
@@ -944,6 +981,8 @@ export type BlueskyProfile = {
   pinnedPost?: { uri: string; cid: string };
   /** Verification state (verified accounts and trusted verifiers). */
   verification?: BlueskyVerification;
+  /** Live status, present when the account is broadcasting via `app.bsky.actor.status`. */
+  status?: BlueskyActorStatusView;
 };
 
 /**

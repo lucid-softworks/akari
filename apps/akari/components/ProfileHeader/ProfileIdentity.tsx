@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AkariMemberBadge } from '@/components/AkariMemberBadge';
+import { LiveBadge } from '@/components/LiveBadge';
 import { ThemedText } from '@/components/ThemedText';
 import { VerificationBadge } from '@/components/VerificationBadge';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -14,6 +15,10 @@ type ProfileIdentityProps = {
   did?: string;
   verification?: BlueskyVerification;
   pronouns?: string;
+  /** Whether to render the LIVE badge next to the display name. */
+  isLive?: boolean;
+  /** Tapping the LIVE badge (own profile only) opens the go-live editor. */
+  onLivePress?: () => void;
   onHandlePress: () => void;
 };
 
@@ -23,6 +28,8 @@ export function ProfileIdentity({
   did,
   verification,
   pronouns,
+  isLive,
+  onLivePress,
   onHandlePress,
 }: ProfileIdentityProps) {
   return (
@@ -37,6 +44,7 @@ export function ProfileIdentity({
           size={20}
         />
         <AkariMemberBadge subjectDid={did} size={20} />
+        {isLive ? <LiveBadge onPress={onLivePress} /> : null}
       </View>
       <View style={styles.handleRow}>
         <Pressable

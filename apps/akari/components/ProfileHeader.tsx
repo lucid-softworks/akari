@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { openExternalLink } from '@/utils/externalLink';
 
-import type { BlueskyVerification } from '@/bluesky-api';
+import type { BlueskyActorStatusView, BlueskyVerification } from '@/bluesky-api';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { KeytraceClaims } from '@/components/KeytraceClaims';
 import { Labels } from '@/components/Labels';
@@ -28,6 +28,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useUserStories } from '@/hooks/queries/useUserStories';
 import { useLightbox } from '@/hooks/useLightbox';
+import { useProfileLive } from '@/hooks/useProfileLive';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useStartConvo } from '@/hooks/mutations/useStartConvo';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
@@ -72,12 +73,16 @@ type ProfileHeaderProps = {
       exp?: string;
     }[];
     verification?: BlueskyVerification;
+    status?: BlueskyActorStatusView;
   };
   isOwnProfile?: boolean;
   onSettingsPress?: () => void;
   /** Rows for the `…` overflow menu. Built by `useProfileMenuItems`. */
   menuItems?: readonly MenuItem[];
 };
+
+/** Stable empty default so the prop doesn't create a new array each render. */
+const EMPTY_MENU_ITEMS: readonly MenuItem[] = [];
 
 const numberFormatters = new Map<string, Intl.NumberFormat>();
 const joinedDateFormatters = new Map<string, Intl.DateTimeFormat>();
@@ -119,7 +124,7 @@ const formatWebsiteLabel = (url: string): string => {
   }
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, menuItems = [] }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, menuItems = EMPTY_MENU_ITEMS }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showHandleHistory, setShowHandleHistory] = useState(false);
@@ -134,6 +139,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const { showToast } = useToast();
   const confirm = useConfirm();
   const { isGuest, promptSignIn } = useRequireAuth();
+  const { isLive, onGoLive, menuItems: resolvedMenuItems } = useProfileLive({
+    profile,
+    isOwnProfile,
+    menuItems,
+  });
 
   const handleBskyMessage = async () => {
     if (isGuest) {
@@ -290,6 +300,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
             did={profile.did}
             verification={profile.verification}
             pronouns={profile.pronouns}
+            isLive={isLive}
+            onLivePress={onGoLive}
             onHandlePress={() => setShowHandleHistory(true)}
           />
 
@@ -304,7 +316,7 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
               followPending: followMutation.isPending,
               startConvoPending: startConvoMutation.isPending,
             }}
-            menuItems={menuItems}
+            menuItems={resolvedMenuItems}
             onEditProfile={handleEditProfile}
             onSettingsPress={onSettingsPress}
             onFollowPress={handleFollowPress}

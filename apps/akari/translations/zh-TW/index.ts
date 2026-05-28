@@ -14,6 +14,7 @@ import home from './home.json';
 import labelDetail from './labelDetail.json';
 import lightbox from './lightbox.json';
 import lists from './lists.json';
+import live from './live.json';
 import messages from './messages.json';
 import moderation from './moderation.json';
 import navigation from './navigation.json';
@@ -47,6 +48,7 @@ export const translations = {
   labelDetail,
   lightbox,
   lists,
+  live,
   messages,
   moderation,
   navigation,

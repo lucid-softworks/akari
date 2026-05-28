@@ -40,6 +40,7 @@ export const ProfileViewHeader = memo(function ProfileViewHeader({
         viewer: profile.viewer,
         labels: profile.labels,
         verification: profile.verification,
+        status: profile.status,
       }}
       isOwnProfile={isOwnProfile}
       menuItems={menuItems}
