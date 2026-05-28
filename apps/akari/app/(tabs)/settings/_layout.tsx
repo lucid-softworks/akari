@@ -97,6 +97,10 @@ export default function SettingsLayout() {
         options={{ title: t('settings.contentAndMedia') }}
       />
       <Stack.Screen
+        name="external-media"
+        options={{ title: t('settings.externalMedia') }}
+      />
+      <Stack.Screen
         name="appearance"
         options={{ title: t('settings.appearance') }}
       />

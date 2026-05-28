@@ -56,7 +56,7 @@ export default function ContentAndMediaScreen() {
         key: 'external-media',
         icon: 'rectangle.stack.fill',
         label: t('settings.externalMedia'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/external-media'),
       },
       {
         key: 'your-interests',
