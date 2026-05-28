@@ -1,12 +1,13 @@
 import { Image } from '@/components/Image';
 import { Stack } from 'expo-router';
-import { useMemo } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { buildGrainPhotoBlobUrl } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
+import { Lightbox, type LightboxImage } from '@/components/ui/Lightbox';
+import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import {
   groupGalleryItems,
@@ -59,6 +60,27 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
       .filter((p): p is NonNullable<typeof p> => Boolean(p));
   }, [gallery, itemsByGallery, photoIndex]);
 
+  // Resolve all photo blob URLs once so the lightbox can hand the full
+  // set to the pager and the grid tiles share the same resolution
+  // logic. Skips photos whose blob ref doesn't resolve to a PDS URL.
+  const lightboxImages = useMemo<LightboxImage[]>(() => {
+    if (!pdsUrl) return [];
+    const out: LightboxImage[] = [];
+    for (const photo of galleryPhotos) {
+      const photoDid = photo.uri.split('/')[2];
+      if (!photoDid) continue;
+      out.push({
+        url: buildGrainPhotoBlobUrl(pdsUrl, photoDid, photo.value.photo.ref.$link),
+        alt: photo.value.alt,
+      });
+    }
+    return out;
+  }, [galleryPhotos, pdsUrl]);
+
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const openAt = useCallback((index: number) => setLightboxIndex(index), []);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+
   const title = gallery?.value.title;
   const description = gallery?.value.description;
 
@@ -85,7 +107,7 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
           </ThemedText>
         ) : (
           <View style={[styles.grid, webColumnSideBorders(borderColor)]}>
-            {galleryPhotos.map((photo) => {
+            {galleryPhotos.map((photo, idx) => {
               const photoDid = photo.uri.split('/')[2];
               const url = pdsUrl && photoDid
                 ? buildGrainPhotoBlobUrl(pdsUrl, photoDid, photo.value.photo.ref.$link)
@@ -93,7 +115,17 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
               const ar = photo.value.aspectRatio;
               const aspect = ar.width > 0 && ar.height > 0 ? ar.width / ar.height : 1;
               return (
-                <View key={photo.uri} style={[styles.tile, { aspectRatio: aspect }]}>
+                <Pressable
+                  key={photo.uri}
+                  onPress={url ? () => openAt(idx) : undefined}
+                  accessibilityRole={url ? 'button' : undefined}
+                  accessibilityLabel={photo.value.alt}
+                  style={({ pressed }) => [
+                    styles.tile,
+                    { aspectRatio: aspect },
+                    pressed && url ? { opacity: activeOpacity.default } : null,
+                  ]}
+                >
                   {url ? (
                     <Image
                       source={{ uri: url }}
@@ -102,12 +134,21 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
                       accessibilityLabel={photo.value.alt}
                     />
                   ) : null}
-                </View>
+                </Pressable>
               );
             })}
           </View>
         )}
       </ScrollView>
+
+      {lightboxIndex !== null && lightboxImages.length > 0 ? (
+        <Lightbox
+          visible
+          onClose={closeLightbox}
+          images={lightboxImages}
+          startIndex={lightboxIndex}
+        />
+      ) : null}
     </ThemedView>
   );
 }
