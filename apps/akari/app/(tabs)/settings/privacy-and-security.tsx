@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { StyleSheet, Switch, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import {
@@ -13,6 +13,7 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Menu, MenuTrigger, type MenuItem } from '@/components/ui/Menu';
 import { useToast } from '@/contexts/ToastContext';
 import { useUpdateLoggedOutVisibility } from '@/hooks/mutations/useUpdateLoggedOutVisibility';
 import { useAppPasswords } from '@/hooks/queries/useAppPasswords';
@@ -22,6 +23,7 @@ import {
   useProfileRecord,
 } from '@/hooks/queries/useProfileRecord';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useNotifyAudience, type NotifyAudience } from '@/hooks/useNotifyAudience';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -42,6 +44,34 @@ export default function PrivacyAndSecurityScreen() {
   const appPasswordsQuery = useAppPasswords();
   const appPasswordsCount = appPasswordsQuery.data?.length;
   const { optedOut: analyticsOptedOut, setOptedOut: setAnalyticsOptedOut } = useAnalyticsOptOut();
+  const { audience: notifyAudience, setAudience: setNotifyAudience } = useNotifyAudience();
+
+  const notifyAudienceLabel = useMemo(
+    () =>
+      ({
+        anyone: t('settings.notifyOthersAnyone'),
+        followers: t('settings.notifyOthersFollowers'),
+        mutuals: t('settings.notifyOthersMutuals'),
+        'no-one': t('settings.notifyOthersNoOne'),
+      })[notifyAudience],
+    [notifyAudience, t],
+  );
+
+  const notifyAudienceItems = useMemo<MenuItem[]>(
+    () =>
+      (['anyone', 'followers', 'mutuals', 'no-one'] as const).map((value) => ({
+        key: value,
+        label: {
+          anyone: t('settings.notifyOthersAnyone'),
+          followers: t('settings.notifyOthersFollowers'),
+          mutuals: t('settings.notifyOthersMutuals'),
+          'no-one': t('settings.notifyOthersNoOne'),
+        }[value],
+        selected: notifyAudience === value,
+        onPress: () => setNotifyAudience(value as NotifyAudience),
+      })),
+    [notifyAudience, setNotifyAudience, t],
+  );
 
   const handleToggleDiscourage = (next: boolean) => {
     updateLoggedOutVisibility.mutate(next, {
@@ -66,13 +96,6 @@ export default function PrivacyAndSecurityScreen() {
         label: t('settings.appPasswords'),
         value: typeof appPasswordsCount === 'number' ? String(appPasswordsCount) : undefined,
         onPress: () => router.push('/(tabs)/settings/app-passwords'),
-      },
-      {
-        key: 'notify-others',
-        icon: 'bell.badge.fill',
-        label: t('settings.notifyOthers'),
-        description: t('settings.notifyOthersFollowers'),
-        onPress: showNotImplemented,
       },
     ],
     [appPasswordsCount, showNotImplemented, t],
@@ -103,6 +126,26 @@ export default function PrivacyAndSecurityScreen() {
                 value={item.value}
               />
             ))}
+          </ThemedView>
+        </SettingsSection>
+
+        <SettingsSection title={t('settings.notifyOthers')}>
+          <ThemedText style={[styles.toggleHint, { color: subduedColor, marginHorizontal: 16 }]}>
+            {t('settings.notifyOthersIntro')}
+          </ThemedText>
+          <ThemedView style={[styles.sectionCard, { borderColor }]}>
+            <Menu items={notifyAudienceItems}>
+              <MenuTrigger
+                style={({ pressed }) => [
+                  styles.audienceRow,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <IconSymbol color={iconColor} name="bell.badge.fill" size={20} style={styles.toggleIcon} />
+                <ThemedText style={styles.toggleLabel}>{notifyAudienceLabel}</ThemedText>
+                <IconSymbol name="chevron.down" size={14} color={subduedColor} />
+              </MenuTrigger>
+            </Menu>
           </ThemedView>
         </SettingsSection>
 
@@ -202,6 +245,13 @@ const styles = StyleSheet.create({
   toggleHint: {
     fontSize: 12,
     marginTop: 2,
+  },
+  audienceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 12,
   },
   noticeCard: {
     marginHorizontal: 16,
