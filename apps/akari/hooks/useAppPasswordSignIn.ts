@@ -31,8 +31,49 @@ export function useAppPasswordSignIn() {
   const addAccountMutation = useAddAccount();
   const switchAccountMutation = useSwitchAccount();
   const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
+  // Flips to `true` after the PDS responds with `AuthFactorTokenRequired`.
+  // Callers should reveal a token input and pass the entered value into
+  // the next `signIn(handle, appPassword, authFactorToken)` call.
+  const [requiresAuthFactor, setRequiresAuthFactor] = useState(false);
 
-  const signIn = async (handle: string, appPassword: string) => {
+  const finishSignIn = async (
+    handle: string,
+    appPassword: string,
+    pdsUrl: string,
+    authFactorToken: string | undefined,
+  ) => {
+    const session = await signInMutation.mutateAsync({
+      identifier: handle,
+      password: appPassword,
+      pdsUrl,
+      authFactorToken,
+    });
+
+    const profile = session.profile;
+
+    const newAccount = await addAccountMutation.mutateAsync({
+      did: session.did,
+      handle: session.handle,
+      displayName: profile?.displayName ?? session.handle,
+      avatar: profile?.avatar ?? undefined,
+      jwtToken: session.accessJwt,
+      refreshToken: session.refreshJwt,
+      pdsUrl,
+    });
+
+    await switchAccountMutation.mutateAsync(newAccount);
+    setRedirectAfterAuth(currentAccount ? '/(tabs)/settings' : '/');
+  };
+
+  const isAuthFactorRequiredError = (err: unknown): boolean => {
+    if (!(err instanceof Error)) return false;
+    const code = (err as { errorCode?: string; error?: string });
+    if (code.errorCode === 'AuthFactorTokenRequired') return true;
+    if (code.error === 'AuthFactorTokenRequired') return true;
+    return /AuthFactorTokenRequired/.test(err.message);
+  };
+
+  const signIn = async (handle: string, appPassword: string, authFactorToken?: string) => {
     if (!handle || !appPassword) {
       confirm({
         title: t('common.error'),
@@ -63,28 +104,21 @@ export function useAppPasswordSignIn() {
         return;
       }
 
-      const session = await signInMutation.mutateAsync({
-        identifier: handle,
-        password: appPassword,
-        pdsUrl: detectedPdsUrl,
-      });
-
-      const profile = session.profile;
-
-      const newAccount = await addAccountMutation.mutateAsync({
-        did: session.did,
-        handle: session.handle,
-        displayName: profile?.displayName ?? session.handle,
-        avatar: profile?.avatar ?? undefined,
-        jwtToken: session.accessJwt,
-        refreshToken: session.refreshJwt,
-        pdsUrl: detectedPdsUrl,
-      });
-
-      await switchAccountMutation.mutateAsync(newAccount);
-
-      setRedirectAfterAuth(currentAccount ? '/(tabs)/settings' : '/');
+      await finishSignIn(handle, appPassword, detectedPdsUrl, authFactorToken);
+      setRequiresAuthFactor(false);
     } catch (error) {
+      if (isAuthFactorRequiredError(error)) {
+        setRequiresAuthFactor(true);
+        if (authFactorToken) {
+          // We already tried a token and it was wrong / expired.
+          confirm({
+            title: t('settings.twoFactorRequiredTitle'),
+            message: t('settings.twoFactorInvalidToken'),
+            buttons: [{ text: t('common.ok') }],
+          });
+        }
+        return;
+      }
       confirm({
         title: t('common.error'),
         message: error instanceof Error ? error.message : t('auth.signInFailed'),
@@ -98,5 +132,6 @@ export function useAppPasswordSignIn() {
     redirectAfterAuth,
     isLoading: signInMutation.isPending,
     hasCurrentAccount: !!currentAccount,
+    requiresAuthFactor,
   };
 }

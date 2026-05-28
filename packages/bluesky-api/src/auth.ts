@@ -6,14 +6,18 @@ import type { BlueskySession } from "./types";
  */
 export class BlueskyAuth extends BlueskyApiClient {
   /**
-   * Creates a new session with the Bluesky API
+   * Creates a new session with the Bluesky API.
    * @param identifier - User's handle or email
    * @param password - App password
-   * @returns Promise resolving to session data
+   * @param authFactorToken - Email-issued 2FA token when the account has
+   *   `emailAuthFactor` enabled. If you don't pass it and the account
+   *   requires 2FA, the PDS returns an `AuthFactorTokenRequired` error
+   *   and emails the user a fresh token to retry with.
    */
   async createSession(
     identifier: string,
-    password: string
+    password: string,
+    authFactorToken?: string
   ): Promise<BlueskySession> {
     return this.makeRequest<BlueskySession>(
       "/com.atproto.server.createSession",
@@ -22,7 +26,43 @@ export class BlueskyAuth extends BlueskyApiClient {
         body: {
           identifier,
           password,
+          ...(authFactorToken ? { authFactorToken } : {}),
         },
+      }
+    );
+  }
+
+  /**
+   * Asks the PDS to email the user a verification token they can paste
+   * back into `confirmEmail` to verify their address. Also used as the
+   * first step in the 2FA enrolment flow: confirming an already-verified
+   * address with `confirmEmail` toggles `emailAuthFactor: true`.
+   */
+  async requestEmailConfirmation(accessJwt: string): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      "/com.atproto.server.requestEmailConfirmation",
+      accessJwt,
+      { method: "POST" }
+    );
+  }
+
+  /**
+   * Confirms the user's email with the token from
+   * `requestEmailConfirmation`. The PDS flips `emailConfirmed: true` and,
+   * if the email was already confirmed, also flips `emailAuthFactor:
+   * true` — i.e. this is the same call you use to enable email-based 2FA.
+   */
+  async confirmEmail(
+    accessJwt: string,
+    email: string,
+    token: string
+  ): Promise<void> {
+    await this.makeAuthenticatedRequest<unknown>(
+      "/com.atproto.server.confirmEmail",
+      accessJwt,
+      {
+        method: "POST",
+        body: { email, token },
       }
     );
   }

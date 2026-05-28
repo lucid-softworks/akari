@@ -88,7 +88,7 @@ export default function PrivacyAndSecurityScreen() {
         icon: 'lock.shield.fill',
         label: t('settings.twoFactor'),
         value: t('settings.twoFactorEnable'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/two-factor'),
       },
       {
         key: 'app-passwords',

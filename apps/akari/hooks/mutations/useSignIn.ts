@@ -16,6 +16,8 @@ type SignInVariables = {
   password: string;
   /** PDS URL to use for authentication */
   pdsUrl: string;
+  /** Optional 2FA token when the account has `emailAuthFactor` enabled. */
+  authFactorToken?: string;
 };
 
 type SignInResult = BlueskySession & {
@@ -28,9 +30,9 @@ export function useSignIn() {
   const setAuthMutation = useSetAuthentication();
 
   return useMutation({
-    mutationFn: async ({ identifier, password, pdsUrl }: SignInVariables): Promise<SignInResult> => {
+    mutationFn: async ({ identifier, password, pdsUrl, authFactorToken }: SignInVariables): Promise<SignInResult> => {
       const api = apiForPdsUrl(pdsUrl);
-      const session = await api.createSession(identifier, password);
+      const session = await api.createSession(identifier, password, authFactorToken);
 
       let profile: BlueskyProfileResponse | null = null;
 

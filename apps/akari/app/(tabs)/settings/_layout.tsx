@@ -109,6 +109,10 @@ export default function SettingsLayout() {
         options={{ title: t('settings.manageSavedFeeds') }}
       />
       <Stack.Screen
+        name="two-factor"
+        options={{ title: t('settings.twoFactor') }}
+      />
+      <Stack.Screen
         name="system-log"
         options={{ title: t('settings.systemLog') }}
       />

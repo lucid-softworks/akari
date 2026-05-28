@@ -110,8 +110,22 @@ export class BlueskyApi extends BlueskyApiClient {
    * @param password - Account password used to obtain the session tokens.
    * @returns Newly created session tokens for the account.
    */
-  async createSession(identifier: string, password: string): Promise<BlueskySession> {
-    return this.auth.createSession(identifier, password);
+  async createSession(
+    identifier: string,
+    password: string,
+    authFactorToken?: string,
+  ): Promise<BlueskySession> {
+    return this.auth.createSession(identifier, password, authFactorToken);
+  }
+
+  /** Triggers the PDS to email the user a verification token. */
+  async requestEmailConfirmation(accessJwt: string): Promise<void> {
+    return this.auth.requestEmailConfirmation(accessJwt);
+  }
+
+  /** Confirms the email with the token issued by `requestEmailConfirmation`. */
+  async confirmEmail(accessJwt: string, email: string, token: string): Promise<void> {
+    return this.auth.confirmEmail(accessJwt, email, token);
   }
 
   /**
