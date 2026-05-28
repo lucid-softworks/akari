@@ -7,7 +7,7 @@ import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
-import { ImageViewer } from '@/components/ImageViewer';
+import { Lightbox } from '@/components/ui/Lightbox';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
 import { VideoEmbed } from '@/components/VideoEmbed';
@@ -282,12 +282,12 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         <RecordEmbed embed={embedData as any} />
       )}
 
-      {selectedImageIndex !== null && imageData.urls[selectedImageIndex] && (
-        <ImageViewer
+      {selectedImageIndex !== null && imageData.urls.length > 0 && (
+        <Lightbox
           visible={selectedImageIndex !== null}
           onClose={handleCloseImageViewer}
-          imageUrl={imageData.urls[selectedImageIndex]}
-          altText={imageData.altTexts[selectedImageIndex]}
+          images={imageData.urls.map((url, i) => ({ url, alt: imageData.altTexts[i] }))}
+          startIndex={selectedImageIndex}
         />
       )}
     </>
