@@ -105,6 +105,10 @@ export default function SettingsLayout() {
         options={{ title: t('settings.followingFeedPreferences') }}
       />
       <Stack.Screen
+        name="manage-saved-feeds"
+        options={{ title: t('settings.manageSavedFeeds') }}
+      />
+      <Stack.Screen
         name="system-log"
         options={{ title: t('settings.systemLog') }}
       />

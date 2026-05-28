@@ -38,7 +38,7 @@ export default function ContentAndMediaScreen() {
         key: 'saved-feeds',
         icon: 'bookmark.fill',
         label: t('settings.manageSavedFeeds'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/manage-saved-feeds'),
       },
       {
         key: 'thread-preferences',

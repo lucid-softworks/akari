@@ -228,6 +228,9 @@
   },
   "moderationServices": "Moderation services",
   "manageSavedFeeds": "Manage saved feeds",
+  "manageSavedFeedsIntro": "Reorder, pin, or remove the feeds saved to your account.",
+  "manageSavedFeedsEmpty": "No saved feeds yet.",
+  "manageSavedFeedsPinned": "Pinned",
   "followingCleanup": {
     "title": "Following cleanup",
     "intro": "Find accounts you follow that have gone quiet so you can decide who to keep. Scans the latest post (including replies and reposts) for every follow; likes aren't counted.",
