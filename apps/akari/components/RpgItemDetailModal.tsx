@@ -12,7 +12,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 type RpgItemDetailModalProps = {
   item: RpgItemRecord;
-  pdsUrl: string | undefined;
+  pdsUrl: string | null | undefined;
   onClose: () => void;
 };
 

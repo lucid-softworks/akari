@@ -28,7 +28,11 @@ type ReportSheetProps = {
   subject: ReportSubject | null;
 };
 
-const REASON_ICONS: Record<ReportReasonType, string> = {
+// `reasonAppeal` is a separate labeler-direct flow (see ReportReasonType),
+// not one of the reasons this sheet offers — exclude it from the picker maps.
+type SheetReasonType = Exclude<ReportReasonType, 'reasonAppeal'>;
+
+const REASON_ICONS: Record<SheetReasonType, string> = {
   reasonSpam: 'xmark.bin',
   reasonMisleading: 'exclamationmark.triangle',
   reasonSexual: 'eye.slash',
@@ -44,7 +48,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
   const { showToast } = useToast();
   const { data: labelers = [] } = useLabelers();
 
-  const [selectedReason, setSelectedReason] = useState<ReportReasonType | null>(null);
+  const [selectedReason, setSelectedReason] = useState<SheetReasonType | null>(null);
   const [details, setDetails] = useState('');
   const [selectedLabelerDids, setSelectedLabelerDids] = useState<Set<string>>(
     () => new Set([BSKY_DEFAULT_LABELER_DID]),
@@ -83,7 +87,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
     });
   }, []);
 
-  const allReasonKeys: ReportReasonType[] = useMemo(
+  const allReasonKeys: SheetReasonType[] = useMemo(
     () => ['reasonSpam', 'reasonMisleading', 'reasonSexual', 'reasonRude', 'reasonViolation', 'reasonOther'],
     [],
   );
@@ -92,15 +96,15 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
   // selected labeler's `reasonTypes`. Labelers without `reasonTypes` are
   // treated as accepting all. The lexicon namespace prefix is optional in
   // the response, so match on either.
-  const availableReasons = useMemo<ReportReasonType[]>(() => {
+  const availableReasons = useMemo<SheetReasonType[]>(() => {
     const selected = sortedLabelers.filter((l) => selectedLabelerDids.has(l.creator.did));
     if (selected.length === 0) return allReasonKeys;
 
-    const allowed = new Set<ReportReasonType>(allReasonKeys);
+    const allowed = new Set<SheetReasonType>(allReasonKeys);
     for (const labeler of selected) {
       if (!labeler.reasonTypes || labeler.reasonTypes.length === 0) continue;
       const labelerSet = new Set(
-        labeler.reasonTypes.map((r) => r.replace('com.atproto.moderation.defs#', '')) as ReportReasonType[],
+        labeler.reasonTypes.map((r) => r.replace('com.atproto.moderation.defs#', '')) as SheetReasonType[],
       );
       for (const key of allReasonKeys) {
         if (!labelerSet.has(key)) allowed.delete(key);
@@ -117,7 +121,7 @@ export function ReportSheet({ visible, onDismiss, subject }: ReportSheetProps) {
     }
   }, [availableReasons, selectedReason]);
 
-  const reasonLabels: Record<ReportReasonType, string> = {
+  const reasonLabels: Record<SheetReasonType, string> = {
     reasonSpam: t('report.reasonSpam'),
     reasonMisleading: t('report.reasonMisleading'),
     reasonSexual: t('report.reasonSexual'),

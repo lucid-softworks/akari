@@ -1,4 +1,4 @@
-import Hls, { Events, isSupported } from 'hls.js';
+import Hls, { Events } from 'hls.js';
 import { useEffect, useReducer, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -93,7 +93,7 @@ export function VideoPlayer({
 
         if (isHLS) {
           // Use hls.js for HLS streams
-          if (isSupported()) {
+          if (Hls.isSupported()) {
             hlsRef.current = new Hls({
               enableWorker: true,
               lowLatencyMode: true,

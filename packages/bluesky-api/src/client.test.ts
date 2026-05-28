@@ -121,13 +121,15 @@ describe('BlueskyApiClient', () => {
 
   it('omits content type header for FormData bodies', async () => {
     let capturedHeaders: Record<string, string> | null = null;
-    let capturedFile: FormDataEntryValue | null = null;
+    // `unknown` because the in-scope FormData global (react-native's, which
+    // leaks into this package) types entries loosely; we only assert it's a Blob.
+    let capturedFile: unknown = null;
 
     server.use(
       http.post('https://pds.example/xrpc/upload', async ({ request }) => {
         capturedHeaders = Object.fromEntries(request.headers.entries());
         const formData = await request.formData();
-        capturedFile = formData.get('file');
+        capturedFile = formData.getAll('file')[0] ?? null;
         return HttpResponse.json({ done: true });
       }),
     );

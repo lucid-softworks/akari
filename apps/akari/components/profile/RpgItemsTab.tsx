@@ -28,7 +28,7 @@ type ItemRow = {
 
 type ItemTileProps = {
   item: RpgItemRecord | undefined;
-  pdsUrl: string | undefined;
+  pdsUrl: string | null | undefined;
   tileBg: string;
   badgeBg: string;
   badgeText: string;
