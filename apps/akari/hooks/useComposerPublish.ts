@@ -184,6 +184,14 @@ export function useComposerPublish({
       if (currentDraftId) deleteDraft(currentDraftId);
       onResetAfterPublish();
       onClose();
+      showToast({
+        type: 'success',
+        message: replyTo
+          ? t('post.replyPostedToast')
+          : trimmed.length > 1
+          ? t('post.threadPostedToast')
+          : t('post.postedToast'),
+      });
     } catch (error) {
       console.error('Failed to create thread:', error);
       showToast({
