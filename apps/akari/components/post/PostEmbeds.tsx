@@ -6,9 +6,10 @@ import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
+import { useLightbox } from '@/hooks/useLightbox';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
 import { suppressCardPress } from '@/utils/postCardPressGuard';
-import { Lightbox } from '@/components/ui/Lightbox';
+import type { LightboxImage } from '@/components/ui/Lightbox';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
 import { VideoEmbed } from '@/components/VideoEmbed';
@@ -41,16 +42,8 @@ type ExternalEmbedData = {
 export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds, translatedEmbed }: PostEmbedsProps) {
   const { t } = useTranslation();
   const { largerAltTextBadges } = useAccessibilitySettings();
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({});
-
-  const handleImagePress = useCallback((index: number) => {
-    setSelectedImageIndex(index);
-  }, []);
-
-  const handleCloseImageViewer = useCallback(() => {
-    setSelectedImageIndex(null);
-  }, []);
+  const openLightbox = useLightbox();
 
   const handleImageLoad = useCallback((imageUrl: string, width: number, height: number) => {
     setImageDimensions((prev) => ({
@@ -122,6 +115,19 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
     return empty;
   }, [embedData, additionalEmbeds]);
 
+  const handleImagePress = useCallback(
+    (index: number) => {
+      const images: LightboxImage[] = imageData.urls.map((url, i) => ({
+        url,
+        alt: imageData.altTexts[i],
+        width: imageData.dims[i]?.width,
+        height: imageData.dims[i]?.height,
+      }));
+      openLightbox(images, index);
+    },
+    [imageData, openLightbox],
+  );
+
   const videoData = useMemo(() => {
     const tFn = t as (key: any) => string;
     const findVideo = (e: BlueskyEmbed | undefined | null): ReturnType<typeof extractVideo> => {
@@ -184,7 +190,7 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
 
   return (
     <>
-      {videoData && <VideoEmbed embed={videoData} onClose={handleCloseImageViewer} />}
+      {videoData && <VideoEmbed embed={videoData} />}
 
       {!videoData && embedClassification === 'externalVideo' && embedData && (
         <VideoEmbed embed={embedData as any} />
@@ -295,19 +301,6 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         <RecordEmbed embed={embedData as any} />
       )}
 
-      {selectedImageIndex !== null && imageData.urls.length > 0 && (
-        <Lightbox
-          visible={selectedImageIndex !== null}
-          onClose={handleCloseImageViewer}
-          images={imageData.urls.map((url, i) => ({
-            url,
-            alt: imageData.altTexts[i],
-            width: imageData.dims[i]?.width,
-            height: imageData.dims[i]?.height,
-          }))}
-          startIndex={selectedImageIndex}
-        />
-      )}
     </>
   );
 });

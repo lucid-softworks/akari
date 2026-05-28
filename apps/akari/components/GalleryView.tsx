@@ -1,12 +1,12 @@
 import { Image } from '@/components/Image';
 import { Stack } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { buildGrainPhotoBlobUrl } from '@/bluesky-api';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Lightbox, type LightboxImage } from '@/components/ui/Lightbox';
+import { type LightboxImage } from '@/components/ui/Lightbox';
 import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import {
@@ -22,6 +22,7 @@ import type { GrainPhotoExifRecord } from '@/bluesky-api';
 import type { LightboxExif } from '@/components/ui/LightboxInfoPanel';
 import { usePdsUrl } from '@/hooks/queries/usePdsUrl';
 import { useBorderColor } from '@/hooks/useBorderColor';
+import { useLightbox } from '@/hooks/useLightbox';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -109,9 +110,8 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
     return out;
   }, [galleryPhotos, pdsUrl, exifIndex]);
 
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const openAt = useCallback((index: number) => setLightboxIndex(index), []);
-  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const openLightbox = useLightbox();
+  const openAt = useCallback((index: number) => openLightbox(lightboxImages, index), [openLightbox, lightboxImages]);
 
   const title = gallery?.value.title;
   const description = gallery?.value.description;
@@ -172,15 +172,6 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
           </View>
         )}
       </ScrollView>
-
-      {lightboxIndex !== null && lightboxImages.length > 0 ? (
-        <Lightbox
-          visible
-          onClose={closeLightbox}
-          images={lightboxImages}
-          startIndex={lightboxIndex}
-        />
-      ) : null}
     </ThemedView>
   );
 }
