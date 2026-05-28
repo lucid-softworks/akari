@@ -167,6 +167,18 @@ export function VideoPlayer({
     };
   }, [playbackUrl, shouldShowVideo]);
 
+  // The video only mounts after the user taps the thumbnail (an explicit
+  // gesture), so start playback as soon as it's ready rather than making
+  // them press the native play button too. The tap is the activating
+  // gesture, so this is allowed; if the browser's autoplay policy still
+  // rejects it, the visible controls let the user start it manually.
+  useEffect(() => {
+    if (playerStatus !== 'readyToPlay') return;
+    const video = videoRef.current;
+    if (!video) return;
+    void video.play().catch(() => {});
+  }, [playerStatus]);
+
   // Resetting on videoUrl change is handled by the parent passing `key={videoUrl}`
   // to remount this component, which gives us a clean state slate.
 
