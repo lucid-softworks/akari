@@ -1,5 +1,11 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
+import { DraftsSheet } from '@/components/DraftsSheet';
+import { EmojiPicker } from '@/components/EmojiPicker';
+import { GifPicker } from '@/components/GifPicker';
+import { PostControlsSheet } from '@/components/PostControlsSheet';
+import { PostLanguagesSheet } from '@/components/PostLanguagesSheet';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useComposerColors } from '@/hooks/useComposerColors';
@@ -13,7 +19,6 @@ import { useComposerPoll } from '@/hooks/useComposerPoll';
 import { useComposerPublish } from '@/hooks/useComposerPublish';
 import { useComposerResetOnOpen } from '@/hooks/useComposerResetOnOpen';
 import { useComposerSendability } from '@/hooks/useComposerSendability';
-import { useComposerSheets } from '@/hooks/useComposerSheets';
 import { useComposerSwitchMode } from '@/hooks/useComposerSwitchMode';
 import { useComposerVideoUpload } from '@/hooks/useComposerVideoUpload';
 import { usePostLanguages } from '@/hooks/usePostLanguages';
@@ -36,6 +41,19 @@ type UsePostComposerStateParams = {
 };
 
 /**
+ * Dialog ids for the composer's secondary sheets/pickers. They are opened
+ * through the shared DialogManager (rendered at the app root) rather than
+ * local visibility state, so they live outside the composer's own tree.
+ */
+const COMPOSER_DIALOGS = {
+  languages: 'composer-languages',
+  gif: 'composer-gif',
+  emoji: 'composer-emoji',
+  controls: 'composer-controls',
+  drafts: 'composer-drafts',
+} as const;
+
+/**
  * Orchestrates all of the composer's state, derived values, and handlers.
  * Extracted from PostComposer so the component itself stays a thin render of
  * the composer chrome. The returned values map one-for-one onto the props the
@@ -51,8 +69,26 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
   const [longTitle, setLongTitle] = useState('');
   const longTextSelectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
   const [postControls, setPostControls] = useState<PostControls>(DEFAULT_POST_CONTROLS);
-  const sheets = useComposerSheets();
+  const dialogManager = useDialogManager();
   const isLongMode = composeMode !== 'standard';
+
+  // Close handlers for each composer sheet (dialog ids live in COMPOSER_DIALOGS).
+  const closeLanguagesSheet = useCallback(
+    () => dialogManager.close(COMPOSER_DIALOGS.languages),
+    [dialogManager],
+  );
+  const closeGifPicker = useCallback(() => dialogManager.close(COMPOSER_DIALOGS.gif), [dialogManager]);
+  const closeEmojiPicker = useCallback(() => dialogManager.close(COMPOSER_DIALOGS.emoji), [dialogManager]);
+  const closeControlsSheet = useCallback(
+    () => dialogManager.close(COMPOSER_DIALOGS.controls),
+    [dialogManager],
+  );
+  const closeDraftsSheet = useCallback(() => dialogManager.close(COMPOSER_DIALOGS.drafts), [dialogManager]);
+  // Close every composer sheet at once — used when the composer itself resets
+  // or closes, since these dialogs are mounted outside the composer's tree.
+  const closeComposerSheets = useCallback(() => {
+    for (const id of Object.values(COMPOSER_DIALOGS)) dialogManager.close(id);
+  }, [dialogManager]);
 
   // Poll gating: a poll uses the post's external-embed slot, so it's
   // mutually exclusive with media / quote and only allowed in standard mode.
@@ -112,7 +148,7 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
     setPostControls,
     setCurrentDraftId,
     draftIdRef,
-    setGifPickerVisible: sheets.setGifPickerVisible,
+    closeSheets: closeComposerSheets,
     onClose,
   });
 
@@ -145,7 +181,7 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
     setPosts,
     setActiveIndex,
     setPostControls,
-    setDraftsSheetVisible: sheets.setDraftsSheetVisible,
+    closeDraftsSheet,
     deleteDraft,
     runSave,
     resetAndClose,
@@ -181,7 +217,7 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
     setLongText,
     textSelectionRef,
     longTextSelectionRef,
-    onClose: sheets.closeEmojiPicker,
+    onClose: closeEmojiPicker,
   });
 
   const handleSelectGif = useCallback(
@@ -194,15 +230,78 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
   const handleSaveControls = useCallback(
     (next: PostControls) => {
       setPostControls(next);
-      sheets.closeControlsSheet();
+      closeControlsSheet();
     },
-    [sheets],
+    [closeControlsSheet],
   );
 
+  // Open handlers render each sheet through the DialogManager. They capture a
+  // snapshot of the relevant state at open time; the sheets seed their own
+  // internal state from it and write changes back through the callbacks.
+  const openLanguagesSheet = useCallback(() => {
+    dialogManager.open({
+      id: COMPOSER_DIALOGS.languages,
+      component: (
+        <PostLanguagesSheet
+          visible
+          onClose={closeLanguagesSheet}
+          selected={postLangs}
+          onChange={setPostLangs}
+        />
+      ),
+    });
+  }, [dialogManager, closeLanguagesSheet, postLangs, setPostLangs]);
+
+  const openGifPicker = useCallback(() => {
+    dialogManager.open({
+      id: COMPOSER_DIALOGS.gif,
+      component: <GifPicker visible onClose={closeGifPicker} onSelectGif={handleSelectGif} />,
+    });
+  }, [dialogManager, closeGifPicker, handleSelectGif]);
+
+  const openEmojiPicker = useCallback(() => {
+    dialogManager.open({
+      id: COMPOSER_DIALOGS.emoji,
+      component: <EmojiPicker visible onClose={closeEmojiPicker} onSelectEmoji={handleInsertEmoji} />,
+    });
+  }, [dialogManager, closeEmojiPicker, handleInsertEmoji]);
+
+  const openControlsSheet = useCallback(() => {
+    dialogManager.open({
+      id: COMPOSER_DIALOGS.controls,
+      component: (
+        <PostControlsSheet
+          visible
+          initialControls={postControls}
+          onDismiss={closeControlsSheet}
+          onSave={handleSaveControls}
+        />
+      ),
+    });
+  }, [dialogManager, closeControlsSheet, postControls, handleSaveControls]);
+
+  const openDraftsSheet = useCallback(() => {
+    dialogManager.open({
+      id: COMPOSER_DIALOGS.drafts,
+      component: (
+        <DraftsSheet
+          visible
+          drafts={drafts}
+          onDismiss={closeDraftsSheet}
+          onSelect={handleSelectDraft}
+          onDelete={handleDeleteDraft}
+        />
+      ),
+    });
+  }, [dialogManager, closeDraftsSheet, drafts, handleSelectDraft, handleDeleteDraft]);
+
   const handleOpenDrafts = useCallback(() => {
+    // Refetch so the next open reflects fresh drafts; the sheet snapshots the
+    // current list at open time (drafts are already loaded once the composer
+    // is open, so this is effectively up to date).
     draftsQuery.refetch();
-    sheets.openDraftsSheet();
-  }, [draftsQuery, sheets]);
+    openDraftsSheet();
+  }, [draftsQuery, openDraftsSheet]);
 
   const { isPostDisabled } = useComposerSendability({
     composeMode,
@@ -248,7 +347,10 @@ export function usePostComposerState({ visible, onClose, replyTo, quote }: UsePo
     setLongText,
     setLongTitle,
     postControls,
-    sheets,
+    openEmojiPicker,
+    openGifPicker,
+    openControlsSheet,
+    openLanguagesSheet,
     poll,
     setPoll,
     togglePoll,

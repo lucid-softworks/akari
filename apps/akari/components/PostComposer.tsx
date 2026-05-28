@@ -1,7 +1,6 @@
 import { ComposerContent } from '@/components/PostComposer/ComposerContent';
 import { ComposerFooter } from '@/components/PostComposer/ComposerFooter';
 import { ComposerHeader } from '@/components/PostComposer/ComposerHeader';
-import { ComposerModalsSection } from '@/components/PostComposer/ComposerModalsSection';
 import { ComposerShell } from '@/components/PostComposer/ComposerShell';
 import { PollEditor } from '@/components/PostComposer/PollEditor';
 import { ReplyContextBanner } from '@/components/PostComposer/ReplyContextBanner';
@@ -39,13 +38,15 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     setLongText,
     setLongTitle,
     postControls,
-    sheets,
+    openEmojiPicker,
+    openGifPicker,
+    openControlsSheet,
+    openLanguagesSheet,
     poll,
     setPoll,
     togglePoll,
     pollDisabled,
     postLangs,
-    setPostLangs,
     postLangsLabel,
     drafts,
     backgroundColor,
@@ -57,15 +58,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     handlePublish,
     isPosting,
     isPublishingLongform,
-    handleSelectDraft,
-    handleDeleteDraft,
     handleClose,
     handleAddImage,
     handleAddVideo,
     switchMode,
-    handleInsertEmoji,
-    handleSelectGif,
-    handleSaveControls,
     handleOpenDrafts,
     photoDisabled,
     videoDisabled,
@@ -86,20 +82,6 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
       visible={visible}
       onRequestClose={handleClose}
       backgroundColor={backgroundColor}
-      trailingChildren={
-        <ComposerModalsSection
-          sheets={sheets}
-          postLangs={postLangs}
-          onChangePostLangs={setPostLangs}
-          onSelectGif={handleSelectGif}
-          onSelectEmoji={handleInsertEmoji}
-          postControls={postControls}
-          onSaveControls={handleSaveControls}
-          drafts={drafts}
-          onSelectDraft={handleSelectDraft}
-          onDeleteDraft={handleDeleteDraft}
-        />
-      }
     >
       <ComposerHeader
         state={{
@@ -189,10 +171,10 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         onAddPhoto={handleAddImage}
         onAddVideo={handleAddVideo}
         onTogglePoll={togglePoll}
-        onOpenEmoji={sheets.openEmojiPicker}
-        onAddGif={sheets.openGifPicker}
-        onOpenControls={sheets.openControlsSheet}
-        onOpenLanguages={sheets.openLanguagesSheet}
+        onOpenEmoji={openEmojiPicker}
+        onAddGif={openGifPicker}
+        onOpenControls={openControlsSheet}
+        onOpenLanguages={openLanguagesSheet}
       />
     </ComposerShell>
   );

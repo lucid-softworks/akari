@@ -11,7 +11,8 @@ type UseComposerLifecycleOptions = {
   setPostControls: (next: PostControls) => void;
   setCurrentDraftId: (id: string | null) => void;
   draftIdRef: React.MutableRefObject<string | null>;
-  setGifPickerVisible: (visible: boolean) => void;
+  /** Closes any open composer sheets (gif/emoji/controls/drafts/languages). */
+  closeSheets: () => void;
   onClose: () => void;
 };
 
@@ -32,7 +33,7 @@ export function useComposerLifecycle({
   setPostControls,
   setCurrentDraftId,
   draftIdRef,
-  setGifPickerVisible,
+  closeSheets,
   onClose,
 }: UseComposerLifecycleOptions): UseComposerLifecycleResult {
   const resetAfterPublish = useCallback(() => {
@@ -55,9 +56,9 @@ export function useComposerLifecycle({
 
   const resetAndClose = useCallback(() => {
     resetAfterPublish();
-    setGifPickerVisible(false);
+    closeSheets();
     onClose();
-  }, [resetAfterPublish, setGifPickerVisible, onClose]);
+  }, [resetAfterPublish, closeSheets, onClose]);
 
   return { resetAfterPublish, resetAndClose };
 }
