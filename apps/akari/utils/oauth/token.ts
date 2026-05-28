@@ -84,7 +84,17 @@ export async function refreshTokens(input: RefreshTokenInput): Promise<{ tokens:
 
   if (!response.ok || !body?.access_token) {
     const reason = body?.error_description ?? body?.error ?? `HTTP ${response.status}`;
-    throw new Error(`token refresh failed: ${reason}`);
+    // Carry the status + OAuth error code so the refresh interceptor can tell
+    // a dead refresh token (`invalid_grant`) apart from a transient failure
+    // (5xx, network, an unresolved DPoP-nonce handshake) and only sign the
+    // user out for the former.
+    const err = new Error(`token refresh failed: ${reason}`) as Error & {
+      status?: number;
+      oauthError?: string;
+    };
+    err.status = response.status;
+    err.oauthError = body?.error;
+    throw err;
   }
 
   return { tokens: body, nonce };

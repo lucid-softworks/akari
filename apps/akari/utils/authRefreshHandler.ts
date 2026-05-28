@@ -61,7 +61,15 @@ export function installAuthRefreshHandler(qc: QueryClient): void {
         if (__DEV__) {
           console.warn('Auth refresh interceptor failed:', err);
         }
-        clearAuth(qc);
+        // Only drop the session when the refresh token is *definitively*
+        // dead. A transient failure (server 5xx, network blip, an
+        // unresolved DPoP-nonce handshake) must not log the user out —
+        // we return null so this one request fails and the next request
+        // retries the refresh. Wrongly clearing here was logging people
+        // out on momentary hiccups.
+        if (isSessionPermanentlyInvalid(err)) {
+          clearAuth(qc);
+        }
         return null;
       } finally {
         inFlight.delete(oldAccessJwt);
@@ -71,6 +79,26 @@ export function installAuthRefreshHandler(qc: QueryClient): void {
     inFlight.set(oldAccessJwt, promise);
     return promise;
   });
+}
+
+/**
+ * Did the refresh fail because the session is genuinely dead (vs. a
+ * transient error)? Definitive signals:
+ *   - OAuth: the auth server returned `invalid_grant` (refresh token
+ *     revoked or already rotated away).
+ *   - Bearer: `com.atproto.server.refreshSession` returned 400/401 (the
+ *     refresh JWT is expired/invalid). Bearer errors carry no `oauthError`.
+ *
+ * Everything else (network errors with no status, 5xx, 429, an unresolved
+ * `use_dpop_nonce`) is transient and must keep the session intact.
+ */
+function isSessionPermanentlyInvalid(err: unknown): boolean {
+  const e = err as { status?: number; oauthError?: string } | null | undefined;
+  if (!e) return false;
+  if (e.oauthError === 'use_dpop_nonce') return false;
+  if (e.oauthError === 'invalid_grant') return true;
+  if (e.oauthError === undefined && (e.status === 400 || e.status === 401)) return true;
+  return false;
 }
 
 function findAccountByAccessToken(qc: QueryClient, token: string): Account | null {
