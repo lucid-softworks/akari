@@ -33,6 +33,9 @@ type CreatePostParams = {
   };
   /** Optional quoted post (URI/CID) */
   quote?: { uri: string; cid: string };
+  /** Optional `app.bsky.embed.external` link card (e.g. an attached poll).
+   *  Mutually exclusive with images/video/quote. */
+  externalEmbed?: { uri: string; title: string; description: string };
   /** BCP-47 language tags the post is written in. Defaults to ['en'] when
    *  the array is empty / omitted. */
   langs?: string[];
@@ -45,7 +48,7 @@ export function useCreatePost() {
 
   return useMutation({
     mutationKey: ['createPost'],
-    mutationFn: async ({ text, replyTo, images, video, quote, langs }: CreatePostParams) => {
+    mutationFn: async ({ text, replyTo, images, video, quote, externalEmbed, langs }: CreatePostParams) => {
       if (!token) throw new Error('No access token');
       if (!currentAccount?.did) throw new Error('No user DID available');
       if (!currentAccount?.pdsUrl) throw new Error('No PDS URL available');
@@ -62,6 +65,7 @@ export function useCreatePost() {
         images,
         video,
         quote,
+        externalEmbed,
         langs,
         facets: facets.length > 0 ? facets : undefined,
       });

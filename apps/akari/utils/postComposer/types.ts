@@ -61,6 +61,21 @@ export type AttachedVideo = {
     | { phase: 'error'; message: string };
 };
 
+/** A poll being attached to the post (root post only). The post text is
+ *  the question; these are the answer options + how long voting stays open. */
+export type PollDraft = {
+  options: string[];
+  durationHours: number;
+};
+
+export const MIN_POLL_OPTIONS = 2;
+export const MAX_POLL_OPTIONS = 4;
+
+export const EMPTY_POLL_DRAFT: PollDraft = {
+  options: ['', ''],
+  durationHours: 24,
+};
+
 /** One leaf in a thread compose. The composer holds an array of these
  *  and posts them sequentially with reply chaining when published. */
 export type ThreadPost = {

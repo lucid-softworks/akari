@@ -67,11 +67,14 @@ type ComposerFooterProps = {
   photoDisabled: boolean;
   videoDisabled: boolean;
   gifDisabled: boolean;
+  pollActive: boolean;
+  pollDisabled: boolean;
   borderColor: string;
   iconColor: string;
   tintColor: string;
   onAddPhoto: () => void;
   onAddVideo: () => void;
+  onTogglePoll: () => void;
   onOpenEmoji: () => void;
   onAddGif: () => void;
   onOpenControls: () => void;
@@ -91,11 +94,14 @@ export function ComposerFooter({
   photoDisabled,
   videoDisabled,
   gifDisabled,
+  pollActive,
+  pollDisabled,
   borderColor,
   iconColor,
   tintColor,
   onAddPhoto,
   onAddVideo,
+  onTogglePoll,
   onOpenEmoji,
   onAddGif,
   onOpenControls,
@@ -122,6 +128,14 @@ export function ComposerFooter({
           disabled={videoDisabled}
           onPress={onAddVideo}
           accessibilityLabel={t('post.addVideo')}
+        />
+        <FooterIconButton
+          icon="chart.bar.fill"
+          activeColor={pollActive ? tintColor : iconColor}
+          mutedColor={iconColor}
+          disabled={pollDisabled}
+          onPress={onTogglePoll}
+          accessibilityLabel={t('poll.newPoll')}
         />
         <FooterIconButton
           icon="face.smiling"

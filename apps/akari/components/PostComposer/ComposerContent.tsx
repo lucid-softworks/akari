@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -51,6 +52,8 @@ type ComposerContentProps = {
   borderColor: string;
   backgroundColor: string;
   tintColor: string;
+  /** Inline poll editor, rendered under the root post when a poll is attached. */
+  pollEditor?: ReactNode;
 };
 
 export function ComposerContent({
@@ -84,6 +87,7 @@ export function ComposerContent({
   borderColor,
   backgroundColor,
   tintColor,
+  pollEditor,
 }: ComposerContentProps) {
   const { t } = useTranslation();
   const isLongMode = composeMode !== 'standard';
@@ -211,6 +215,8 @@ export function ComposerContent({
             />
           );
         })}
+
+      {!isLongMode ? pollEditor : null}
     </ScrollView>
   );
 }

@@ -1,5 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { PollFields } from '@/components/PollFields';
+import { ThemedText } from '@/components/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ComposerContent } from '@/components/PostComposer/ComposerContent';
 import { ComposerFooter } from '@/components/PostComposer/ComposerFooter';
 import { ComposerHeader } from '@/components/PostComposer/ComposerHeader';
@@ -26,12 +30,17 @@ import { getLanguageLabel } from '@/utils/bcp47';
 import { DEFAULT_POST_CONTROLS, type PostControls } from '@/utils/postControls';
 import { splitForThread } from '@/utils/threadSplitter';
 import {
+  EMPTY_POLL_DRAFT,
   MAX_POST_CHARACTERS,
+  MIN_POLL_OPTIONS,
   type AttachedImage,
   type ComposeMode,
+  type PollDraft,
   type PostPreview,
   type QuotedPost,
 } from '@/utils/postComposer/types';
+import { fontSize, fontWeight, hitSlop, spacing } from '@/constants/tokens';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type PostComposerProps = {
   visible: boolean;
@@ -64,6 +73,14 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
   const [postControls, setPostControls] = useState<PostControls>(DEFAULT_POST_CONTROLS);
   const [draftsSheetVisible, setDraftsSheetVisible] = useState(false);
   const [languagesSheetVisible, setLanguagesSheetVisible] = useState(false);
+  const [poll, setPoll] = useState<PollDraft | null>(null);
+
+  const { t } = useTranslation();
+  // Clear any attached poll when the composer closes so the next open starts
+  // fresh (mirrors the other reset-on-open state).
+  useEffect(() => {
+    if (!visible) setPoll(null);
+  }, [visible]);
 
   const { data: currentAccount } = useCurrentAccount();
   const did = currentAccount?.did;
@@ -130,6 +147,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     postControls,
     replyTo,
     quote,
+    poll,
     currentDraftId,
     deleteDraft,
     onResetAfterPublish: resetAfterPublish,
@@ -214,6 +232,42 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     activePostVideo: activePost.attachedVideo,
   });
 
+  // Poll gating: a poll uses the post's external-embed slot, so it's
+  // mutually exclusive with media / quote and only allowed in standard mode.
+  const pollDisabled =
+    !!quote || activePost.attachedImages.length > 0 || !!activePost.attachedVideo || isLongMode;
+  const filledPollOptions = poll ? poll.options.filter((o) => o.trim().length > 0).length : 0;
+  const hasValidPoll = !!poll && filledPollOptions >= MIN_POLL_OPTIONS;
+  const pollIncomplete = !!poll && !hasValidPoll;
+  const togglePoll = useCallback(() => {
+    setPoll((prev) => (prev ? null : EMPTY_POLL_DRAFT));
+  }, []);
+
+  // A valid poll makes the post sendable even with empty text; an
+  // incomplete poll blocks it.
+  const postDisabled = pollIncomplete
+    ? true
+    : hasValidPoll
+      ? isPosting || isPublishingLongform
+      : isPostDisabled;
+
+  const pollEditor = poll ? (
+    <View style={styles.pollSection}>
+      <View style={styles.pollHeader}>
+        <ThemedText style={[styles.pollTitle, { color: textColor }]}>{t('poll.newPoll')}</ThemedText>
+        <Pressable onPress={() => setPoll(null)} hitSlop={hitSlop} accessibilityRole="button" accessibilityLabel={t('common.cancel')}>
+          <IconSymbol name="xmark" size={16} color={iconColor} />
+        </Pressable>
+      </View>
+      <PollFields
+        options={poll.options}
+        onChangeOptions={(options) => setPoll((prev) => (prev ? { ...prev, options } : prev))}
+        durationHours={poll.durationHours}
+        onChangeDuration={(durationHours) => setPoll((prev) => (prev ? { ...prev, durationHours } : prev))}
+      />
+    </View>
+  ) : null;
+
   const previewPost: PostPreview | undefined = quote ?? replyTo?.preview;
   const characterCount = isLongMode ? longText.length : text.length;
   const isNearLimit = !isLongMode && text.length > MAX_POST_CHARACTERS * 0.8;
@@ -256,7 +310,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
           mode: composeMode,
           kind: replyTo ? 'reply' : quote ? 'quote' : 'new',
           pending: isPublishingLongform ? 'publishingLongform' : isPosting ? 'posting' : 'idle',
-          postDisabled: isPostDisabled,
+          postDisabled,
         }}
         borderColor={borderColor}
         textColor={textColor}
@@ -318,6 +372,7 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         borderColor={borderColor}
         backgroundColor={backgroundColor}
         tintColor={tintColor}
+        pollEditor={pollEditor}
       />
 
       <ComposerFooter
@@ -330,14 +385,17 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
         postControls={postControls}
         postLangs={postLangs}
         postLangsLabel={postLangsLabel}
-        photoDisabled={photoDisabled}
-        videoDisabled={videoDisabled}
-        gifDisabled={gifDisabled}
+        photoDisabled={photoDisabled || !!poll}
+        videoDisabled={videoDisabled || !!poll}
+        gifDisabled={gifDisabled || !!poll}
+        pollActive={!!poll}
+        pollDisabled={pollDisabled}
         borderColor={borderColor}
         iconColor={iconColor}
         tintColor={tintColor}
         onAddPhoto={handleAddImage}
         onAddVideo={handleAddVideo}
+        onTogglePoll={togglePoll}
         onOpenEmoji={() => setEmojiPickerVisible(true)}
         onAddGif={() => setGifPickerVisible(true)}
         onOpenControls={() => setControlsSheetVisible(true)}
@@ -346,3 +404,20 @@ export function PostComposer({ visible, onClose, replyTo, quote }: PostComposerP
     </ComposerShell>
   );
 }
+
+const styles = StyleSheet.create({
+  pollSection: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    gap: spacing.sm,
+  },
+  pollHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  pollTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+  },
+});

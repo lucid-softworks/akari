@@ -4,16 +4,22 @@ import { useToast } from '@/contexts/ToastContext';
 import { useCreateLeaflet } from '@/hooks/mutations/useCreateLeaflet';
 import { useCreatePost } from '@/hooks/mutations/useCreatePost';
 import { usePostControls } from '@/hooks/mutations/usePostControls';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useTranslation } from '@/hooks/useTranslation';
+import { apiForAccount } from '@/utils/blueskyApi';
 import type { PostControls } from '@/utils/postControls';
 import {
   EMPTY_THREAD_POST,
   MAX_POST_CHARACTERS,
+  MIN_POLL_OPTIONS,
   type ComposeMode,
+  type PollDraft,
   type QuotedPost,
   type ThreadPost,
 } from '@/utils/postComposer/types';
 import { splitForThread } from '@/utils/threadSplitter';
+import { pollEmbedUrlFromRecord } from '@/utils/tokimekiPoll';
 
 type ReplyContext = {
   root: string;
@@ -30,6 +36,8 @@ type UseComposerPublishOptions = {
   postControls: PostControls;
   replyTo?: ReplyContext;
   quote?: QuotedPost;
+  /** Poll to attach to the root post (mutually exclusive with media/quote). */
+  poll?: PollDraft | null;
   currentDraftId: string | null;
   deleteDraft: (id: string) => void;
   onResetAfterPublish: () => void;
@@ -51,6 +59,7 @@ export function useComposerPublish({
   postControls,
   replyTo,
   quote,
+  poll,
   currentDraftId,
   deleteDraft,
   onResetAfterPublish,
@@ -58,6 +67,8 @@ export function useComposerPublish({
 }: UseComposerPublishOptions): UseComposerPublishResult {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { data: token } = useJwtToken();
+  const { data: currentAccount } = useCurrentAccount();
   const createPostMutation = useCreatePost();
   const createLeafletMutation = useCreateLeaflet();
   const postControlsMutation = usePostControls();
@@ -125,14 +136,36 @@ export function useComposerPublish({
     })();
     if (trimmed.length === 0) return;
     const rootPost = trimmed[0];
+    const pollOptions = poll ? poll.options.map((o) => o.trim()).filter(Boolean) : [];
+    const hasPoll = !!poll && pollOptions.length >= MIN_POLL_OPTIONS;
     const rootPostHasContent =
       rootPost.text.trim().length > 0 ||
       rootPost.attachedImages.length > 0 ||
       !!rootPost.attachedVideo ||
-      !!quote;
+      !!quote ||
+      hasPoll;
     if (!rootPostHasContent) return;
 
     try {
+      // Create the poll record first, then attach it to the root post via
+      // the Tokimeki viewer URL (mutually exclusive with media/quote — the
+      // composer disables those when a poll is attached).
+      let rootExternalEmbed: { uri: string; title: string; description: string } | undefined;
+      if (hasPoll && token && currentAccount?.did) {
+        const api = apiForAccount(currentAccount);
+        const endsAt = new Date(Date.now() + poll!.durationHours * 60 * 60 * 1000).toISOString();
+        const pollRecord = await api.createPoll(token, currentAccount.did, {
+          options: pollOptions,
+          endsAt,
+        });
+        const url = pollEmbedUrlFromRecord(pollRecord.uri, pollOptions.length) ?? pollRecord.uri;
+        rootExternalEmbed = {
+          uri: url,
+          title: rootPost.text.trim() || pollOptions.slice(0, 2).join(' / '),
+          description: pollOptions.join(' / '),
+        };
+      }
+
       const conversationRoot = replyTo?.root;
       let our0Uri: string | undefined;
       let prevUri: string | undefined;
@@ -165,6 +198,7 @@ export function useComposerPublish({
               }
             : undefined,
           quote: isRoot && quote ? { uri: quote.uri, cid: quote.cid } : undefined,
+          externalEmbed: isRoot ? rootExternalEmbed : undefined,
           langs: postLangs,
         });
 
