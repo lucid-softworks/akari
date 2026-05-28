@@ -19,9 +19,14 @@
     {
       "name": "react-doctor",
       "specifier": "oxlint-plugin-react-doctor"
+    },
+    {
+      "name": "akari",
+      "specifier": "./oxlint-plugins/translation-key-parity.mjs"
     }
   ],
   "rules": {
+    "akari/translation-key-parity": "error",
     "i18next/no-literal-string": [
       "error",
       {

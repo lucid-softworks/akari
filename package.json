@@ -39,7 +39,6 @@
     "web:test": "node ./scripts/start-expo-web.cjs",
     "reset-project": "node ./scripts/reset-project.js",
     "update-translations": "node ./scripts/update-translations.js",
-    "validate-translations": "node ./scripts/validate-translations.js",
     "find-unused-translations": "node ./scripts/find-unused-translations.js",
     "react-doctor": "npx react-doctor@latest"
   },
