@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React, { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
@@ -99,8 +100,7 @@ export default function AboutSettingsScreen() {
         key: 'system-log',
         icon: 'square.and.pencil',
         label: t('settings.systemLog'),
-        description: t('settings.notImplemented'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/system-log'),
       },
       {
         key: 'version',
