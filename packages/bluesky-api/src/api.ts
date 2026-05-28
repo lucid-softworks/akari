@@ -4,7 +4,9 @@ import { BlueskyApiClient } from './client';
 import { BlueskyConversations } from './conversations';
 import { BlueskyDrafts } from './draft';
 import { BlueskyFeeds } from './feeds';
+import { BlueskyFlashes, type FlashesStoryRecordsResponse } from './flashes';
 import { BlueskyGraph } from './graph';
+import { BlueskySpark, type SprkStoryRecordsResponse } from './sprk';
 import {
   BlueskyGrain,
   type GrainGalleryRecordsResponse,
@@ -74,6 +76,8 @@ export class BlueskyApi extends BlueskyApiClient {
   private feeds: BlueskyFeeds;
   private graph: BlueskyGraph;
   private grain: BlueskyGrain;
+  private flashes: BlueskyFlashes;
+  private spark: BlueskySpark;
   private leaflet: BlueskyLeaflet;
   private notifications: BlueskyNotifications;
   private search: BlueskySearch;
@@ -97,6 +101,8 @@ export class BlueskyApi extends BlueskyApiClient {
     this.feeds = new BlueskyFeeds(pdsUrl, appViewProxyDid);
     this.graph = new BlueskyGraph(pdsUrl, appViewProxyDid);
     this.grain = new BlueskyGrain(pdsUrl, appViewProxyDid);
+    this.flashes = new BlueskyFlashes(pdsUrl, appViewProxyDid);
+    this.spark = new BlueskySpark(pdsUrl, appViewProxyDid);
     this.leaflet = new BlueskyLeaflet(pdsUrl, appViewProxyDid);
     this.notifications = new BlueskyNotifications(pdsUrl, appViewProxyDid);
     this.search = new BlueskySearch(pdsUrl, appViewProxyDid);
@@ -396,6 +402,32 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<GrainPhotoExifRecordsResponse> {
     return this.grain.getActorPhotoExif(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `blue.flashes.story.post` records on the actor's repo — Flashes
+   * "stories" (ephemeral images). Returns empty for non-Flashes actors.
+   */
+  async getActorFlashesStories(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<FlashesStoryRecordsResponse> {
+    return this.flashes.getActorStories(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `so.sprk.story.post` records on the actor's repo — Spark
+   * "stories" (ephemeral image/video). Returns empty for non-Spark actors.
+   */
+  async getActorSparkStories(
+    accessJwt: string,
+    actor: string,
+    limit: number = 50,
+    cursor?: string,
+  ): Promise<SprkStoryRecordsResponse> {
+    return this.spark.getActorStories(accessJwt, actor, limit, cursor);
   }
 
   /**

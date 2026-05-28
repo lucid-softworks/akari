@@ -158,6 +158,10 @@ export const queryKeys = {
       ['authorGrainGalleryItems', identifier, pdsUrl] as const,
     grainPhotoExif: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorGrainPhotoExif', identifier, limit, pdsUrl] as const,
+    flashesStories: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>
+      ['authorFlashesStories', identifier, pdsUrl] as const,
+    sparkStories: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>
+      ['authorSparkStories', identifier, pdsUrl] as const,
     rpgInventory: (identifier: Maybe<string>, limit: number, pdsUrl: Maybe<string>) =>
       ['authorRpgInventory', identifier, limit, pdsUrl] as const,
     sifaSelf: (identifier: Maybe<string>, pdsUrl: Maybe<string>) =>

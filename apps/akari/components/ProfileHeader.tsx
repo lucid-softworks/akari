@@ -20,12 +20,14 @@ import { RichText } from '@/components/RichText';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Lightbox } from '@/components/ui/Lightbox';
 import type { MenuItem } from '@/components/ui/Menu';
 import { activeOpacity, fontSize, hitSlop, layout, semanticColors, spacing } from '@/constants/tokens';
 import { webColumnSideBorders } from '@/constants/webStyles';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/contexts/ToastContext';
+import { useUserStories } from '@/hooks/queries/useUserStories';
 import { useFollowUser } from '@/hooks/mutations/useFollowUser';
 import { useStartConvo } from '@/hooks/mutations/useStartConvo';
 import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
@@ -121,6 +123,8 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showHandleHistory, setShowHandleHistory] = useState(false);
+  const [showStory, setShowStory] = useState(false);
+  const { images: storyImages, hasActiveStory } = useUserStories(profile.did ?? profile.handle);
   const borderColor = useBorderColor();
   const dialogManager = useDialogManager();
   const mutedTextColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
@@ -271,7 +275,13 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
       <ProfileBanner banner={profile.banner} />
 
       <ThemedView style={[styles.profileHeader, { borderBottomColor: borderColor }]}>
-        <ProfileAvatar avatar={profile.avatar} displayName={profile.displayName} handle={profile.handle} />
+        <ProfileAvatar
+          avatar={profile.avatar}
+          displayName={profile.displayName}
+          handle={profile.handle}
+          hasStory={hasActiveStory}
+          onPress={() => setShowStory(true)}
+        />
 
         <View style={styles.profileInfoSection}>
           <ProfileIdentity
@@ -374,6 +384,11 @@ export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, 
           did={profile.did}
           currentHandle={profile.handle}
         />
+      )}
+
+      {/* Flashes / Spark story viewer */}
+      {showStory && storyImages.length > 0 && (
+        <Lightbox visible onClose={() => setShowStory(false)} images={storyImages} />
       )}
     </View>
   );
