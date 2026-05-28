@@ -5,13 +5,11 @@ implemented*; everything that's already shipped lives in `git log`.
 
 ## P1 — official-app parity gaps
 
-- **Feed filters — propagate beyond the home tab.** Per-feed filter
-  sheet shipped on the home tab (toggles for hiding replies / reposts
-  / quote posts, only-following / only-mutuals, and min/max ranges
-  for likes / reposts / replies / bookmarks; persisted per feed URI
-  in MMKV via `useFeedFilters`). Still TODO: wire the same filter
-  pass into the profile post tabs and any other feed-list surfaces
-  so the toggles apply globally as users expect.
+- **Feed filters — propagate to the profile post tabs.** The per-feed
+  filter sheet + filter pass ship on the home tab and the standalone
+  feed viewer (shared via `useFeed` + `filterFeedItems`, persisted per
+  feed URI in MMKV). Still TODO: apply the same pass to the profile post
+  tabs so the toggles are truly global.
 - **Activity Subscriptions.** Per-user "ring the bell" toggle that
   pushes a notification on every new post from that account. Lexicon
   is `app.bsky.notification.declaration` + the per-user subscription
@@ -29,66 +27,26 @@ implemented*; everything that's already shipped lives in `git log`.
 - **Hashtag feed screen.** `/tag/[tag]` route with Top / Latest tabs.
   Hashtag taps currently route to `/search?query=#tag`.
 
-## P1 — settings screens (remaining stubs)
+## P1 — settings behaviour gaps
 
-Each row below currently routes through `useNotImplementedToast`. The
-list has shrunk a lot — most rows now route to real sub-pages.
-
-**Stubs still firing the toast** — ordered easiest → hardest.
-
-1. `about.tsx` → `systemLog` — render the in-app log buffer in a
-   ScrollView. No atproto round-trip, no preference, no consumer
-   branching. Self-contained screen, maybe a "copy to clipboard"
-   button.
-2. `languages.tsx` → `primaryLanguage` — single-select picker writing
-   to `app.bsky.actor.preferences#languagesPref`. Same lexicon shape
-   as the content-languages page that already ships, so the
-   read/write hooks already exist; just need a sheet of locales and a
-   chevron on the existing stub dropdown.
-3. `privacy-and-security.tsx` → `notifyOthers` — replace the
-   hard-coded "Anyone who follows me" subtitle with a real audience
-   picker (anyone / followers / mutuals / no-one). Round-trips
-   through the user's profile preferences. Small UI, well-known
-   lexicon.
-4. `content-and-media.tsx` → `externalMedia` — local-only MMKV: a row
-   per provider (YouTube, Twitter/X, Tenor, Spotify, …) with a
-   Switch. Each embed renderer in `components/post/PostEmbeds` (and
-   the chat embed siblings) reads the flag and falls back to the link
-   card. Storage is trivial; the work is finding every embed
-   component and gating it.
-5. `content-and-media.tsx` → `followingFeedPreferences` — persist
-   relation/recency weights and pipe them into `useTimeline` (either
-   at the AppView call or as a client-side reweighting pass). Needs a
-   call on whether weights compose with the existing feed filters.
-6. `content-and-media.tsx` → `manageSavedFeeds` — list + reorder +
-   pin/unpin via `app.bsky.actor.putPreferences#savedFeedsPrefV2`.
-   Read side (`useSavedFeedsList`, home-tab strip) already exists;
-   you're adding a drag-and-drop list (on web), an add-from-search
-   flow, and the put-preferences round-trip. Cross-references the
-   "Custom feed pins" item under "P1 — original task list".
-7. `privacy-and-security.tsx` → `twoFactor` — no user-app-level
-   atproto lexicon for managing 2FA exists yet. **Blocked.**
-
-**Behaviour-only gaps** — persisted prefs that don't drive a runtime
+Persisted prefs / screens that exist but don't fully drive a runtime
 behaviour yet.
+
 - `content-and-media.tsx`: `trendingVideosEnabled` would gate a
-  Discover-feed video filter that doesn't exist;
-  `enableTrendingTopics` is fully wired via `trendingBarEnabled`.
+  Discover-feed video filter that doesn't exist yet.
 - `moderation.tsx`: per-label `contentLabelPref` (show / warn / hide)
-  overrides on top of the global `enableAdultContent` toggle.
-- `moderation.tsx`: `interactionSettings` — stub page at
-  `settings/interaction` with who-can-reply / quote-posts UI; Save is
-  not wired. Overlaps with PostComposer's reply-controls; needs to
-  round-trip to
-  `app.bsky.actor.preferences#postInteractionSettingsPref`.
+  override UI on top of the global `enableAdultContent` toggle. The
+  visibility hook (`useLabelVisibility`) already reads these prefs; the
+  per-label settings UI to set them is missing.
 
 ## P1 — original task list (still pending)
 
 - **Profile tabs — scrollable header + sticky tabs parity.** Banner
   scrolls under the tabs; tabs pin to top once they reach it.
-- **Custom feed pins.** Reorder / pin / unpin saved feeds via
-  `app.bsky.actor.putPreferences#savedFeedsPref` (or the newer
-  `savedFeedsPrefV2`). Drag-and-drop on web is a stretch goal.
+- **Custom feed pins — add-a-feed flow.** Reorder / pin / unpin + the
+  put-preferences round-trip ship in `manage-saved-feeds`. Still TODO:
+  an add-from-search flow, and (stretch) drag-and-drop reordering on web
+  in place of the up/down chevrons.
 - **Notification settings categories.** Per-event-type push / in-app
   toggles (likes, reposts, follows, replies, mentions, quotes), backed
   by `app.bsky.notification.putPreferences`.
@@ -196,13 +154,13 @@ apply to akari (kawaii branding, "no age assurance/location blocks",
 
 ### Metrics visibility
 
-Per-counter "hide this metric" toggles in settings so a privacy- or
-focus-minded user can blank out:
+Per-counter "hide this metric" toggles. The post like / repost / reply
+counts already honor the accessibility settings; still TODO:
 
-- like / repost / quote / save / reply counts on posts
+- quote and save/bookmark counts on posts
 - follower / following / followed-by counts on profiles
 
-Each is independent; UI should collapse the row entirely when
+Each is independent; the UI should collapse the row entirely when
 hidden, not show a `0` or a placeholder.
 
 ## Codebase-wide refactors
