@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
 import type { BlueskyFeedViewPref } from '@/bluesky-api';
+import { FollowingFeedToggle } from '@/components/settings/FollowingFeedToggle';
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { SettingsScroll } from '@/components/settings/SettingsScroll';
@@ -42,21 +43,6 @@ export default function FollowingFeedPreferencesScreen() {
     );
   };
 
-  const Toggle = ({
-    label,
-    value,
-    onChange,
-  }: {
-    label: string;
-    value: boolean;
-    onChange: (next: boolean) => void;
-  }) => (
-    <View style={[styles.toggleRow, { borderBottomColor: borderColor, borderBottomWidth: layout.hairline }]}>
-      <ThemedText style={[styles.toggleLabel, { color: textColor }]}>{label}</ThemedText>
-      <Switch value={value} onValueChange={onChange} />
-    </View>
-  );
-
   return (
     <SettingsSubpageLayout title={t('settings.followingFeedPreferences')}>
       <SettingsScroll
@@ -70,15 +56,19 @@ export default function FollowingFeedPreferencesScreen() {
 
         <SettingsSection>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
-            <Toggle
+            <FollowingFeedToggle
               label={t('settings.followingFeedHideReplies')}
               value={!!home?.hideReplies}
               onChange={(next) => apply({ hideReplies: next })}
+              borderColor={borderColor}
+              textColor={textColor}
             />
-            <Toggle
+            <FollowingFeedToggle
               label={t('settings.followingFeedHideReposts')}
               value={!!home?.hideReposts}
               onChange={(next) => apply({ hideReposts: next })}
+              borderColor={borderColor}
+              textColor={textColor}
             />
             <View style={styles.toggleRow}>
               <ThemedText style={[styles.toggleLabel, { color: textColor }]}>

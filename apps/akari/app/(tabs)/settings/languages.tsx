@@ -61,17 +61,18 @@ export default function LanguagesSettingsScreen() {
   const primaryLanguageItems = useMemo<MenuItem[]>(
     () =>
       getAvailableLocales()
-        .map((code) => {
+        .flatMap((code) => {
           const meta = getTranslationData(code);
-          if (!meta?.nativeName) return null;
-          return {
-            key: code,
-            label: `${meta.flag ?? ''} ${meta.nativeName}`.trim(),
-            selected: code === primaryLanguageCode,
-            onPress: () => handlePrimarySelect(code),
-          } as MenuItem;
+          if (!meta?.nativeName) return [];
+          return [
+            {
+              key: code,
+              label: `${meta.flag ?? ''} ${meta.nativeName}`.trim(),
+              selected: code === primaryLanguageCode,
+              onPress: () => handlePrimarySelect(code),
+            } as MenuItem,
+          ];
         })
-        .filter((x): x is MenuItem => x !== null)
         .sort((a, b) => a.label.localeCompare(b.label)),
     [handlePrimarySelect, primaryLanguageCode],
   );

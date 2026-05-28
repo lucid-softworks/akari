@@ -82,6 +82,8 @@ type ProfileHeaderProps = {
 const numberFormatters = new Map<string, Intl.NumberFormat>();
 const joinedDateFormatters = new Map<string, Intl.DateTimeFormat>();
 
+const EMPTY_MENU_ITEMS: readonly MenuItem[] = [];
+
 const formatNumber = (num: number, locale: string): string => {
   let formatter = numberFormatters.get(locale);
   if (!formatter) {
@@ -119,7 +121,7 @@ const formatWebsiteLabel = (url: string): string => {
   }
 };
 
-export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, menuItems = [] }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isOwnProfile = false, onSettingsPress, menuItems = EMPTY_MENU_ITEMS }: ProfileHeaderProps) {
   const { t } = useTranslation();
   const { currentLocale } = useLanguage();
   const [showHandleHistory, setShowHandleHistory] = useState(false);

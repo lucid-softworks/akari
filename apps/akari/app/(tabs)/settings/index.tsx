@@ -1,13 +1,14 @@
 import Constants from 'expo-constants';
-import { Image } from '@/components/Image';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddAccountModal } from '@/components/AddAccountModal';
 import { useDialogManager } from '@/contexts/DialogContext';
+import { SettingsProfileHero } from '@/components/settings/SettingsProfileHero';
+import { SettingsSwitchAccountRow } from '@/components/settings/SettingsSwitchAccountRow';
 import {
   SettingsRow,
   SettingsSection,
@@ -15,8 +16,7 @@ import {
 } from '@/components/settings/SettingsList';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { spacing, fontSize, fontWeight, opacity, activeOpacity } from '@/constants/tokens';
+import { spacing, fontSize, opacity } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { useAccountProfiles } from '@/hooks/queries/useAccountProfiles';
 import { useAccounts } from '@/hooks/queries/useAccounts';
@@ -93,7 +93,7 @@ export default function SettingsScreen() {
         });
       }
     },
-    [t],
+    [confirm, t],
   );
 
   const dialogManager = useDialogManager();
@@ -266,97 +266,31 @@ export default function SettingsScreen() {
       >
         {/* Profile hero — for guests, the hero swaps to a sign-in CTA
             since there's no account to surface or route into. */}
-        <Pressable
-          style={({ pressed }) => [styles.hero, pressed && { opacity: activeOpacity.subtle }]}
+        <SettingsProfileHero
+          isGuest={isGuest}
+          accentColor={accentColor}
+          secondaryText={secondaryText}
+          avatar={avatar}
+          fallbackLetter={fallbackLetter}
+          displayName={displayName}
+          handle={currentAccount?.handle}
           onPress={() =>
             isGuest
               ? router.push('/(auth)/signin')
               : router.push('/(tabs)/settings/account')
           }
-        >
-          {isGuest ? (
-            <View style={[styles.heroAvatar, styles.heroAvatarFallback, { backgroundColor: accentColor }]}>
-              <IconSymbol name="person.fill" size={36} color="#ffffff" />
-            </View>
-          ) : avatar ? (
-            <Image contentFit="cover" source={{ uri: avatar }} style={styles.heroAvatar} />
-          ) : (
-            <View style={[styles.heroAvatar, styles.heroAvatarFallback, { backgroundColor: accentColor }]}>
-              <ThemedText style={styles.heroAvatarFallbackText}>{fallbackLetter}</ThemedText>
-            </View>
-          )}
-          {isGuest ? (
-            <>
-              <ThemedText style={styles.heroDisplayName}>{t('auth.guestHeroTitle')}</ThemedText>
-              <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
-                {t('auth.signInCta')}
-              </ThemedText>
-            </>
-          ) : (
-            <>
-              {displayName ? <ThemedText style={styles.heroDisplayName}>{displayName}</ThemedText> : null}
-              {currentAccount ? (
-                <ThemedText style={[styles.heroHandle, { color: secondaryText }]}>
-                  @{currentAccount.handle}
-                </ThemedText>
-              ) : null}
-            </>
-          )}
-        </Pressable>
+        />
 
         {/* Switch-account row */}
-        <View style={styles.switchRow}>
-          <Pressable
-            style={({ pressed }) => [styles.switchButton, pressed && { opacity: activeOpacity.default }]}
-            onPress={handleAddAccount}
-          >
-            <IconSymbol name="person.2.fill" size={20} color={iconColor} />
-            <ThemedText style={styles.switchLabel}>
-              {otherAccounts.length > 0 ? t('common.switchAccount') : t('common.addAccount')}
-            </ThemedText>
-          </Pressable>
-          {miniAccounts.length > 0 ? (
-            <View style={styles.miniAccounts}>
-              {miniAccounts.map((acct, index) => {
-                const mini = accountProfiles?.[acct.did];
-                const miniAvatar = mini?.avatar ?? acct.avatar;
-                const miniLetter = (mini?.displayName ?? acct.handle ?? '?')
-                  .charAt(0)
-                  .toUpperCase();
-                return (
-                  <View
-                    key={acct.did}
-                    style={[
-                      styles.miniAvatarWrap,
-                      // Stack with a slight overlap, leftmost on top so the
-                      // most recent (rightmost) sit underneath — matches the
-                      // visual order of the design.
-                      { zIndex: miniAccounts.length - index, marginLeft: index === 0 ? 0 : -8 },
-                    ]}
-                  >
-                    {miniAvatar ? (
-                      <Image
-                        contentFit="cover"
-                        source={{ uri: miniAvatar }}
-                        style={[styles.miniAvatar, { borderColor: cardBackground }]}
-                      />
-                    ) : (
-                      <View
-                        style={[
-                          styles.miniAvatar,
-                          styles.miniAvatarFallback,
-                          { backgroundColor: accentColor, borderColor: cardBackground },
-                        ]}
-                      >
-                        <ThemedText style={styles.miniAvatarFallbackText}>{miniLetter}</ThemedText>
-                      </View>
-                    )}
-                  </View>
-                );
-              })}
-            </View>
-          ) : null}
-        </View>
+        <SettingsSwitchAccountRow
+          iconColor={iconColor}
+          accentColor={accentColor}
+          cardBackground={cardBackground}
+          otherAccountsCount={otherAccounts.length}
+          miniAccounts={miniAccounts}
+          accountProfiles={accountProfiles}
+          onAddAccount={handleAddAccount}
+        />
 
         {/* Settings */}
         <SettingsSection isFirst title={t('navigation.settings')}>
@@ -428,77 +362,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {},
-  hero: {
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xxl,
-    paddingBottom: spacing.lg,
-    gap: spacing.sm,
-  },
-  heroAvatar: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    marginBottom: spacing.md,
-  },
-  heroAvatarFallback: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heroAvatarFallbackText: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-    color: '#FFFFFF',
-  },
-  heroDisplayName: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-    textAlign: 'center',
-  },
-  heroHandle: {
-    fontSize: fontSize.base,
-    textAlign: 'center',
-  },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    gap: spacing.md,
-  },
-  switchButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  switchLabel: {
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  miniAccounts: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  miniAvatarWrap: {
-    width: 28,
-    height: 28,
-  },
-  miniAvatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 2,
-  },
-  miniAvatarFallback: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  miniAvatarFallbackText: {
-    fontSize: fontSize.xs,
-    fontWeight: fontWeight.bold,
-    color: '#FFFFFF',
-  },
   sectionCard: {
     marginHorizontal: spacing.lg,
     borderWidth: StyleSheet.hairlineWidth,

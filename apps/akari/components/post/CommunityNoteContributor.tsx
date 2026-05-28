@@ -70,10 +70,10 @@ export function AddCommunityNoteModal({
 
   const handleSubmit = async () => {
     if (!body.trim()) return;
-    const sources = sourcesRaw
-      .split(/\r?\n/)
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+    const sources = sourcesRaw.split(/\r?\n/).flatMap((s) => {
+      const trimmed = s.trim();
+      return trimmed.length > 0 ? [trimmed] : [];
+    });
     await submit.mutateAsync({
       postUri,
       classification,

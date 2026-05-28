@@ -33,8 +33,9 @@ function applyLock() {
     // its current scroll offset so the visual position doesn't jump.
     // Body mutations are batched into a single `cssText` write; the
     // html write below targets a different element so it can't merge.
-    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements, can't merge into one cssText
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements (html vs body), can't merge into one cssText
     document.documentElement.style.overflow = 'hidden';
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- already a single cssText write; the only other mutation is on a different element (html)
     document.body.style.cssText +=
       `;overflow:hidden;position:fixed;top:-${scrollY}px;width:100%`;
   }
@@ -46,8 +47,9 @@ function releaseLock() {
   lockCount -= 1;
   if (lockCount === 0 && saved) {
     const { htmlOverflow, bodyCssText, scrollY } = saved;
-    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements, can't merge into one cssText
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- separate elements (html vs body), can't merge into one cssText
     document.documentElement.style.overflow = htmlOverflow;
+    // oxlint-disable-next-line react-doctor/js-batch-dom-css -- already a single cssText write; the only other mutation is on a different element (html)
     document.body.style.cssText = bodyCssText;
     // Restore the scroll position the lock froze us at. Without this
     // the page would jump to top when the body's `position: fixed`

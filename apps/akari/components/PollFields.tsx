@@ -48,6 +48,7 @@ export function PollFields({ options, onChangeOptions, durationHours, onChangeDu
       <View style={styles.optionsList}>
         {options.map((opt, index) => (
           <Input
+            // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- poll options have no stable id and are edited positionally (setOption / removeOption are keyed by index); keying by value would remount inputs on duplicate/empty options and drop focus mid-type
             key={index}
             value={opt}
             onChangeText={(v) => setOption(index, v)}

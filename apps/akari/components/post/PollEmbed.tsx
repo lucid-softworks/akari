@@ -80,12 +80,14 @@ export function PollEmbed({ pollUri }: PollEmbedProps) {
           const pct = total > 0 ? Math.round((count / total) * 100) : 0;
           const mine = myOptionIndex === index;
           return (
+            // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- poll options are a fixed positional list; vote counts (votes.counts[index]) are addressed by the same index, so position IS the option's identity
             <View key={index} style={[styles.resultRow, { borderColor }]}>
               <View
                 style={[styles.resultFill, { width: `${pct}%`, backgroundColor: hexToRgba(tint, mine ? 0.3 : 0.12) }]}
               />
               <View style={styles.resultContent}>
                 <View style={styles.resultLabelWrap}>
+                  {/* oxlint-disable-next-line i18next/no-literal-string -- decorative checkmark glyph, not user-facing copy */}
                   {mine ? <ThemedText style={[styles.check, { color: tint }]}>✓ </ThemedText> : null}
                   <ThemedText style={[styles.optionLabel, mine && styles.optionLabelMine]} numberOfLines={2}>
                     {label}
@@ -98,6 +100,7 @@ export function PollEmbed({ pollUri }: PollEmbedProps) {
         }
         return (
           <Pressable
+            // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- poll options are a fixed positional list; handleVote(index) addresses the same index, so position IS the option's identity
             key={index}
             onPress={() => handleVote(index)}
             style={({ pressed }) => [styles.optionButton, { borderColor: tint }, pressed && { opacity: activeOpacity.default }]}

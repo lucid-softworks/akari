@@ -94,7 +94,7 @@ export function AccountSwitcherSheet({ visible, onClose }: AccountSwitcherSheetP
         </Dialog>
       ),
     });
-  }, [dialogManager, sheetBackground]);
+  }, [dialogManager, onClose, sheetBackground]);
 
   if (!visible) {
     return null;

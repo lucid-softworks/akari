@@ -28,7 +28,10 @@ export function PollComposer({ onClose }: PollComposerProps) {
   const [options, setOptions] = useState<string[]>(['', '']);
   const [durationHours, setDurationHours] = useState(24);
 
-  const filledOptions = options.map((o) => o.trim()).filter(Boolean);
+  const filledOptions = options.flatMap((o) => {
+    const trimmed = o.trim();
+    return trimmed ? [trimmed] : [];
+  });
   const canSubmit =
     question.trim().length > 0 && filledOptions.length >= MIN_POLL_OPTIONS && !createPoll.isPending;
 
@@ -89,9 +92,7 @@ export function PollComposer({ onClose }: PollComposerProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    ...(Platform.OS === 'web' ? { maxHeight: 560 } : { flex: 1 }),
-  },
+  container: Platform.OS === 'web' ? { maxHeight: 560 } : { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

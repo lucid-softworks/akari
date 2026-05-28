@@ -64,9 +64,10 @@ export function useAkariMembers() {
       for (let pages = 0; pages < 20; pages++) {
         const response = await api.getList('', AKARI_LIST_URI, PAGE_SIZE, cursor);
         for (const item of response.items ?? []) {
-          if (!item.subject?.did) continue;
-          if (dids.has(item.subject.did)) continue;
-          dids.add(item.subject.did);
+          const did = item.subject?.did;
+          if (!did) continue;
+          if (dids.has(did)) continue;
+          dids.add(did);
           members.push(item.subject);
         }
         cursor = response.cursor;

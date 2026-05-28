@@ -17,12 +17,14 @@
 type Compare<T> = (a: T, b: T) => number;
 
 if (typeof Array.prototype.toSorted !== 'function') {
+  // oxlint-disable-next-line no-extend-native -- deliberate ES2023 polyfill
   Object.defineProperty(Array.prototype, 'toSorted', {
     value(this: any[], compareFn?: Compare<any>): any[] {
       // Native semantics: returns a *copy* sorted with the same compare
       // function semantics as `Array.prototype.sort`. The default
       // comparator coerces values to strings — Array#sort already does
       // that when no fn is passed, so we just delegate.
+      // oxlint-disable-next-line no-array-sort -- sorting a fresh copy is the polyfill's whole point
       return this.slice().sort(compareFn);
     },
     writable: true,
@@ -31,9 +33,11 @@ if (typeof Array.prototype.toSorted !== 'function') {
 }
 
 if (typeof Array.prototype.toReversed !== 'function') {
+  // oxlint-disable-next-line no-extend-native -- deliberate ES2023 polyfill
   Object.defineProperty(Array.prototype, 'toReversed', {
     value(this: any[]): any[] {
       // `Array#reverse` mutates in place, so copy first.
+      // oxlint-disable-next-line no-array-reverse -- reversing a fresh copy is the polyfill's whole point
       return this.slice().reverse();
     },
     writable: true,
@@ -42,6 +46,7 @@ if (typeof Array.prototype.toReversed !== 'function') {
 }
 
 if (typeof Array.prototype.toSpliced !== 'function') {
+  // oxlint-disable-next-line no-extend-native -- deliberate ES2023 polyfill
   Object.defineProperty(Array.prototype, 'toSpliced', {
     value(this: any[], start: number, deleteCount?: number, ...items: any[]): any[] {
       const copy = this.slice();
@@ -63,6 +68,7 @@ if (typeof Array.prototype.toSpliced !== 'function') {
 }
 
 if (typeof Array.prototype.with !== 'function') {
+  // oxlint-disable-next-line no-extend-native -- deliberate ES2023 polyfill
   Object.defineProperty(Array.prototype, 'with', {
     value(this: any[], index: number, value: any): any[] {
       const len = this.length;

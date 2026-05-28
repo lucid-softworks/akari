@@ -18,6 +18,7 @@ import type {
 } from 'react-native';
 
 import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary';
+import { VirtualizedListBody } from '@/components/ui/VirtualizedListBody.web';
 import { WebPullToRefresh } from '@/components/ui/WebPullToRefresh';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 240;
@@ -26,8 +27,6 @@ const DEFAULT_END_REACHED_THRESHOLD = 0.5;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
 export type VirtualizedListHandle<_T> = any;
-
-type RenderItemInfo<T> = Parameters<NonNullable<ListRenderItem<T>>>[0];
 
 export type VirtualizedListProps<T> = {
   data: readonly T[] | null | undefined;
@@ -323,70 +322,19 @@ export function VirtualizedList<T>({
 
           {isEmpty ? (
             <Slot component={ListEmptyComponent} />
-          ) : (() => {
-            // Block-positioned virtualisation. We used to render every
-            // visible item as `position: absolute` inside a container
-            // with `height: totalSize`. That kept the container box
-            // tall, but absolute items contribute nothing to the
-            // ancestor chain's intrinsic height — so column borders on
-            // the page layout never extended past viewport even though
-            // the document scrolled correctly.
-            //
-            // Now we render visible items in normal flow between two
-            // spacer divs that absorb the heights of the
-            // not-currently-rendered items above and below. Total
-            // height of the three regions still equals `totalSize`,
-            // and the rendered items now push every flex/block
-            // ancestor up to the document body.
-            if (!isMeasured) {
-              return (
-                <div style={{ width: '100%', height: reservedHeight }} />
-              );
-            }
-            if (virtualItems.length === 0) {
-              return (
-                <div style={{ width: '100%', height: totalSize }} />
-              );
-            }
-            const margin = virtualizer.options.scrollMargin;
-            const firstStart = virtualItems[0].start - margin;
-            const lastEnd =
-              virtualItems[virtualItems.length - 1].end - margin;
-            const spacerBefore = Math.max(0, firstStart);
-            const spacerAfter = Math.max(0, totalSize - lastEnd);
-            return (
-              <div style={{ width: '100%' }}>
-                <div style={{ width: '100%', height: spacerBefore }} />
-                {virtualItems.map((virtualRow) => {
-                  const item = items[virtualRow.index];
-                  const info: RenderItemInfo<T> = {
-                    item,
-                    index: virtualRow.index,
-                    separators: {
-                      highlight: () => undefined,
-                      unhighlight: () => undefined,
-                      updateProps: () => undefined,
-                    },
-                    target: 'Cell',
-                  } as RenderItemInfo<T>;
-                  const key = keyExtractor
-                    ? keyExtractor(item, virtualRow.index)
-                    : String(virtualRow.key);
-                  return (
-                    <div
-                      key={key}
-                      data-index={virtualRow.index}
-                      ref={handleItemRef}
-                      style={{ width: '100%' }}
-                    >
-                      {renderItem ? renderItem(info) : null}
-                    </div>
-                  );
-                })}
-                <div style={{ width: '100%', height: spacerAfter }} />
-              </div>
-            );
-          })()}
+          ) : (
+            <VirtualizedListBody
+              items={items}
+              isMeasured={isMeasured}
+              reservedHeight={reservedHeight}
+              totalSize={totalSize}
+              scrollMargin={virtualizer.options.scrollMargin}
+              virtualItems={virtualItems}
+              renderItem={renderItem}
+              keyExtractor={keyExtractor}
+              onItemRef={handleItemRef}
+            />
+          )}
 
           {ListFooterComponent ? <Slot component={ListFooterComponent} /> : null}
         </div>

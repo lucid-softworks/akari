@@ -49,6 +49,7 @@ export function AkariMembersSheet({ members, onClose }: AkariMembersSheetProps) 
             accessibilityLabel="akari"
           />
           <ThemedText style={[styles.headerTitle, { color: textColor }]}>
+            {/* oxlint-disable-next-line i18next/no-literal-string -- brand sheet title, intentionally untranslated */}
             Thanks
           </ThemedText>
         </View>
@@ -58,6 +59,7 @@ export function AkariMembersSheet({ members, onClose }: AkariMembersSheetProps) 
           style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
         >
           <ThemedText style={[styles.headerButtonText, { color: semanticColors.systemBlue }]}>
+            {/* oxlint-disable-next-line i18next/no-literal-string -- brand sheet action, intentionally untranslated */}
             Done
           </ThemedText>
         </Pressable>
@@ -65,6 +67,7 @@ export function AkariMembersSheet({ members, onClose }: AkariMembersSheetProps) 
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <ThemedText style={[styles.intro, { color: subduedColor }]}>
+          {/* oxlint-disable-next-line i18next/no-literal-string -- brand sheet copy, intentionally untranslated */}
           A standing thank you to the people on this list — early testers,
           contributors, translators, and friends who've helped shape akari.
           Tap a name to open their profile.

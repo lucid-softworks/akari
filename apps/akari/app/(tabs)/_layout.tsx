@@ -500,6 +500,22 @@ export default function TabLayout() {
   // longer redirect; the signin screen is reachable explicitly via the
   // sign-in CTAs surfaced inside the gated affordances.
 
+  // Memoized at component scope (not inlined in the `tabBar` prop) so the
+  // navigator gets a stable render function and we don't define a
+  // component during render.
+  const renderTabBar = useCallback(
+    (props: BottomTabBarProps) => (
+      <HardcodedTabBar
+        {...props}
+        unreadMessagesCount={unreadMessagesCount}
+        unreadNotificationsCount={unreadNotificationsCount}
+        avatarUri={currentAccount?.avatar}
+        visibleTabs={visibleTabs}
+      />
+    ),
+    [unreadMessagesCount, unreadNotificationsCount, currentAccount?.avatar, visibleTabs],
+  );
+
   // Mobile chrome (used by web tab layout's mobile branch AND by the
   // native mobile path below).
   const mobileChrome = (
@@ -590,15 +606,7 @@ export default function TabLayout() {
             screenOptions={{
               headerShown: false,
             }}
-            tabBar={(props) => (
-              <HardcodedTabBar
-                {...props}
-                unreadMessagesCount={unreadMessagesCount}
-                unreadNotificationsCount={unreadNotificationsCount}
-                avatarUri={currentAccount?.avatar}
-                visibleTabs={visibleTabs}
-              />
-            )}
+            tabBar={renderTabBar}
           >
             <Tabs.Screen name="index" />
             <Tabs.Screen name="search" />

@@ -93,6 +93,7 @@ export function VideoPlayer({
 
         if (isHLS) {
           // Use hls.js for HLS streams
+          // oxlint-disable-next-line import/no-named-as-default-member -- hls.js exposes isSupported only as a static method on the default-exported class
           if (Hls.isSupported()) {
             hlsRef.current = new Hls({
               enableWorker: true,

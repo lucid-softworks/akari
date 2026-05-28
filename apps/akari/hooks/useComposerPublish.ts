@@ -136,7 +136,12 @@ export function useComposerPublish({
     })();
     if (trimmed.length === 0) return;
     const rootPost = trimmed[0];
-    const pollOptions = poll ? poll.options.map((o) => o.trim()).filter(Boolean) : [];
+    const pollOptions = poll
+      ? poll.options.flatMap((o) => {
+          const option = o.trim();
+          return option ? [option] : [];
+        })
+      : [];
     const hasPoll = !!poll && pollOptions.length >= MIN_POLL_OPTIONS;
     const rootPostHasContent =
       rootPost.text.trim().length > 0 ||

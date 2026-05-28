@@ -115,7 +115,7 @@ export default function SubjectDetailScreen() {
             {typeof status.priorityScore === 'number' ? (
               <Badge label={`p${status.priorityScore}`} tone="accent" />
             ) : null}
-            {status.tags?.map((t) => <Badge key={t} label={t} />)}
+            {status.tags?.map((tag) => <Badge key={tag} label={tag} />)}
           </View>
         ) : null}
         {actionSubject ? (

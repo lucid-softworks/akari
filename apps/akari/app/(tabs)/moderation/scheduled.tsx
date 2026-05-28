@@ -63,10 +63,10 @@ export default function ScheduledScreen() {
           webColumnSideBorders(borderColor),
         ]}
       >
-        {STATUS_TABS.map((t) => (
+        {STATUS_TABS.map((tab) => (
           <Pressable
-            key={t.value}
-            onPress={() => setStatus(t.value)}
+            key={tab.value}
+            onPress={() => setStatus(tab.value)}
             style={({ pressed }) => [
               styles.tabButton,
               pressed && { opacity: 0.6 },
@@ -75,15 +75,15 @@ export default function ScheduledScreen() {
             <ThemedText
               style={[
                 styles.tabLabel,
-                status === t.value ? { color: accent, fontWeight: fontWeight.semibold } : { color: secondary },
+                status === tab.value ? { color: accent, fontWeight: fontWeight.semibold } : { color: secondary },
               ]}
             >
-              {t.label}
+              {tab.label}
             </ThemedText>
             <View
               style={[
                 styles.tabIndicator,
-                status === t.value ? { backgroundColor: accent } : null,
+                status === tab.value ? { backgroundColor: accent } : null,
               ]}
             />
           </Pressable>

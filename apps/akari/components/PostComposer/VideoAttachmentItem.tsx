@@ -30,7 +30,7 @@ export function VideoAttachmentItem({
   textColor,
   iconColor,
   borderColor,
-  backgroundColor,
+  backgroundColor: _backgroundColor,
   tintColor,
 }: VideoAttachmentItemProps) {
   const { t } = useTranslation();
