@@ -1,6 +1,8 @@
 import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Dialog } from '@/components/ui/Dialog';
@@ -179,8 +181,6 @@ function RateNoteModal({
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tint = useThemeColor({}, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
-  const textColor = useThemeColor({}, 'text');
   const { t } = useTranslation();
 
   const [helpfulness, setHelpfulness] = useState<CommunityNoteHelpfulness | null>(null);
@@ -295,16 +295,14 @@ function RateNoteModal({
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
                 {t('communityNotes.note.anythingElse')}
               </ThemedText>
-              <TextInput
+              <Input
+                containerStyle={styles.commentBox}
+                inputStyle={styles.commentInputInner}
                 value={comment}
                 onChangeText={setComment}
                 placeholder={t('communityNotes.note.commentPlaceholder')}
                 placeholderTextColor={secondary}
                 multiline
-                style={[
-                  styles.commentInput,
-                  { color: textColor, borderColor, backgroundColor: inputBg },
-                ]}
               />
             </>
           ) : null}
@@ -520,12 +518,10 @@ const styles = StyleSheet.create({
   reasonChipLabel: {
     fontSize: fontSize.sm,
   },
-  commentInput: {
-    borderWidth: 1,
+  commentBox: {
     borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
-    fontSize: fontSize.base,
+  },
+  commentInputInner: {
     minHeight: 96,
     textAlignVertical: 'top',
   },

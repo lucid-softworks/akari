@@ -1,6 +1,8 @@
 import { Stack } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
@@ -245,33 +247,30 @@ function TemplateEditorModal({
 
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.nameLabel')}</ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.inputBox}
             value={draftName}
             onChangeText={setDraftName}
             placeholder="Internal label"
             placeholderTextColor={secondary}
-            style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
           />
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.subjectLabel')}</ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.inputBox}
             value={draftSubject}
             onChangeText={setDraftSubject}
             placeholder="(optional)"
             placeholderTextColor={secondary}
-            style={[styles.input, { borderColor, color: textColor, backgroundColor: inputBg }]}
           />
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.bodyLabel')}</ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.inputBox}
+            inputStyle={styles.inputMultilineInner}
             value={draftBody}
             onChangeText={setDraftBody}
             placeholder="Hi {{handle}},&#10;&#10;..."
             placeholderTextColor={secondary}
             multiline
-            style={[
-              styles.input,
-              styles.inputMultiline,
-              { borderColor, color: textColor, backgroundColor: inputBg },
-            ]}
           />
         </ScrollView>
 
@@ -421,14 +420,10 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  input: {
-    borderWidth: 1,
+  inputBox: {
     borderRadius: 6,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
-    fontSize: fontSize.base,
   },
-  inputMultiline: {
+  inputMultilineInner: {
     minHeight: 120,
     textAlignVertical: 'top',
   },

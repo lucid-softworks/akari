@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
 import { SettingsScroll } from '@/components/settings/SettingsScroll';
@@ -22,8 +24,6 @@ export default function OzoneSettingsScreen() {
   const borderColor = useBorderColor();
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const text = useThemeColor({}, 'text');
   const { t } = useTranslation();
   const { ozoneDid, setOzoneDid, resetOzoneDid } = useOzoneSettings();
 
@@ -47,7 +47,8 @@ export default function OzoneSettingsScreen() {
           <ThemedText style={[styles.hint, { color: subduedColor }]}>
             {t('settings.ozoneLabeler.didHint')}
           </ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.inputBox}
             value={draft}
             onChangeText={setDraft}
             placeholder={DEFAULT_OZONE_DID}
@@ -55,7 +56,6 @@ export default function OzoneSettingsScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             spellCheck={false}
-            style={[styles.input, { borderColor, backgroundColor: inputBg, color: text }]}
           />
           <View style={styles.buttonRow}>
             <Pressable
@@ -131,13 +131,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Menlo, Consolas, monospace',
   },
-  input: {
+  inputBox: {
     marginTop: 8,
-    borderWidth: 1,
     borderRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
   },
   buttonRow: {
     flexDirection: 'row',

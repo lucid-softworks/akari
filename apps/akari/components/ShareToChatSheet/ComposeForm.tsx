@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { PostInlineCard } from '@/components/PostInlineCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -50,8 +51,9 @@ export function ComposeForm({
     <View style={styles.composeContainer}>
       <RecipientsRow selected={selected} onRemove={onRemoveRecipient} />
 
-      <TextInput
-        style={[styles.textInput, { color: textColor }]}
+      <Input
+        variant="filled"
+        inputStyle={styles.textareaInput}
         value={draft}
         onChangeText={onDraftChange}
         placeholder={t('post.share.addMessagePlaceholder')}
@@ -104,9 +106,8 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md,
     gap: spacing.md,
   },
-  textInput: {
+  textareaInput: {
     minHeight: 80,
-    fontSize: fontSize.base,
     lineHeight: 22,
   },
   urlPreview: {

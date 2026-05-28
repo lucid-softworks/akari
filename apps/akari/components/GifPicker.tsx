@@ -1,11 +1,12 @@
 import { Image } from '@/components/Image';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Modal } from '@/components/ui/Modal';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
@@ -234,20 +235,18 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
 
       {/* Search Input */}
       <View style={[styles.searchContainer, { borderBottomColor: borderColor }]}>
-        <View style={[styles.searchInputContainer, { backgroundColor: inputBackgroundColor, borderColor }]}>
-          <IconSymbol name="magnifyingglass" size={16} color={iconColor} style={styles.searchIcon} />
-          <TextInput
-            style={[styles.searchInput, { color: textColor }]}
-            value={searchQuery}
-            onChangeText={handleSearch}
-            placeholder={t('gif.searchPlaceholder')}
-            placeholderTextColor={iconColor}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          {searchLoading && <ActivityIndicator size="small" color={tintColor} style={styles.searchLoading} />}
-        </View>
+        <Input
+          variant="filled"
+          value={searchQuery}
+          onChangeText={handleSearch}
+          placeholder={t('gif.searchPlaceholder')}
+          placeholderTextColor={iconColor}
+          returnKeyType="search"
+          autoCapitalize="none"
+          autoCorrect={false}
+          prefix={<IconSymbol name="magnifyingglass" size={16} color={iconColor} />}
+          suffix={searchLoading ? <ActivityIndicator size="small" color={tintColor} /> : null}
+        />
       </View>
 
       {/* GIF Grid */}
@@ -325,25 +324,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.lg,
     borderBottomWidth: layout.hairline,
-  },
-  searchInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: radius.md,
-    borderWidth: layout.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  searchIcon: {
-    marginRight: spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: fontSize.lg,
-    paddingVertical: spacing.xs,
-  },
-  searchLoading: {
-    marginLeft: spacing.sm,
   },
   gifList: {
     padding: 10,

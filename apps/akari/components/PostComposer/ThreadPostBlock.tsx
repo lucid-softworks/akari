@@ -1,4 +1,6 @@
-import { Platform, Pressable, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -10,8 +12,6 @@ import { ImageAttachmentItem } from './ImageAttachmentItem';
 import { PostPreviewCard } from './PostPreviewCard';
 import { VideoAttachmentItem } from './VideoAttachmentItem';
 import { styles } from './styles';
-
-const isWeb = Platform.OS === 'web';
 
 type ThreadPostPosition = {
   /** 0-based index in the thread. */
@@ -74,13 +74,9 @@ export function ThreadPostBlock({
         <View style={[styles.threadDivider, { backgroundColor: borderColor }]} />
       ) : null}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={[
-            styles.textInput,
-            { color: textColor },
-            !isActive && styles.textInputInactive,
-            isWeb && { outline: 'none' },
-          ]}
+        <Input
+          containerStyle={styles.composerCanvasContainer}
+          inputStyle={[styles.textInput, { color: textColor }, !isActive && styles.textInputInactive]}
           value={post.text}
           onChangeText={onChangeText}
           onFocus={onFocus}

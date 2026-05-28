@@ -1,6 +1,8 @@
 import { Stack } from 'expo-router';
 import React, { useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { Badge } from '@/app/(tabs)/moderation/index';
 import { ThemedText } from '@/components/ThemedText';
@@ -127,19 +129,21 @@ function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondar
       <View
         style={[styles.addBar, { borderBottomColor: borderColor, backgroundColor: inputBg }, webColumnSideBorders(borderColor)]}
       >
-        <TextInput
+        <Input
+          containerStyle={styles.inputBox}
+          inputStyle={styles.inputSm}
           value={url}
           onChangeText={setUrl}
           placeholder="hostname.example or full URL"
           placeholderTextColor={secondary}
-          style={[styles.input, { color: textColor, borderColor }]}
         />
-        <TextInput
+        <Input
+          containerStyle={styles.inputBox}
+          inputStyle={styles.inputSm}
           value={reason}
           onChangeText={setReason}
           placeholder="Reason"
           placeholderTextColor={secondary}
-          style={[styles.input, { color: textColor, borderColor }]}
         />
         <View style={styles.chipRow}>
           {(['domain', 'url'] as const).map((p) => (
@@ -276,14 +280,15 @@ function SignaturesTab({ borderColor, secondary }: { borderColor: string; second
       <View
         style={[styles.addBar, { borderBottomColor: borderColor, backgroundColor: inputBg }, webColumnSideBorders(borderColor)]}
       >
-        <TextInput
+        <Input
+          containerStyle={styles.inputBox}
+          inputStyle={styles.inputSm}
           value={did}
           onChangeText={setDid}
           placeholder="did:plc:…"
           placeholderTextColor={secondary}
           autoCapitalize="none"
           autoCorrect={false}
-          style={[styles.input, { color: textColor, borderColor }]}
         />
         <Pressable
           disabled={!did.trim()}
@@ -387,11 +392,10 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     borderBottomWidth: 1,
   },
-  input: {
-    borderWidth: 1,
+  inputBox: {
     borderRadius: 6,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+  },
+  inputSm: {
     fontSize: fontSize.sm,
   },
   chipRow: {

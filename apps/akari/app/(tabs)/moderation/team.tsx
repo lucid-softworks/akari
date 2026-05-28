@@ -1,6 +1,8 @@
 import { Stack } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { Avatar, Badge, shortDid } from '@/app/(tabs)/moderation/index';
 import { Dialog } from '@/components/ui/Dialog';
@@ -243,7 +245,9 @@ function AddTeamMemberModal({
 
         <ScrollView style={styles.modalBodyScroll} contentContainerStyle={styles.modalBody}>
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.team.accountLabel')}</ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.inputBox}
+            inputStyle={styles.inputSm}
             value={query}
             onChangeText={(text) => {
               setQuery(text);
@@ -257,7 +261,6 @@ function AddTeamMemberModal({
             placeholderTextColor={secondary}
             autoCapitalize="none"
             autoCorrect={false}
-            style={[styles.input, { color: textColor, borderColor, backgroundColor: inputBg }]}
           />
 
           {selected ? (
@@ -409,11 +412,10 @@ const styles = StyleSheet.create({
     fontSize: fontSize.lg,
     fontWeight: fontWeight.semibold,
   },
-  input: {
-    borderWidth: 1,
+  inputBox: {
     borderRadius: 6,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+  },
+  inputSm: {
     fontSize: fontSize.sm,
   },
   roleChips: {

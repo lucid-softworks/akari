@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import type { BlueskyMutedWord } from '@/bluesky-api';
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -64,7 +66,6 @@ export default function MutedWordsScreen() {
   const borderColor = useBorderColor();
   const textColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
-  const inputBackground = useThemeColor({ light: '#F3F4F6', dark: '#1C1C1E' }, 'background');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const checkboxBorder = useThemeColor({ light: '#D1D5DB', dark: '#3A3A3C' }, 'text');
   const { t } = useTranslation();
@@ -138,12 +139,14 @@ export default function MutedWordsScreen() {
         <SettingsSection isFirst>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <View style={styles.formRow}>
-              <TextInput
+              <Input
+                variant="filled"
+                size="lg"
+                containerStyle={styles.inputBox}
                 value={draftValue}
                 onChangeText={setDraftValue}
                 placeholder={t('settings.mutedWordPlaceholder')}
                 placeholderTextColor={subduedColor}
-                style={[styles.input, { backgroundColor: inputBackground, color: textColor }]}
                 returnKeyType="done"
                 onSubmitEditing={handleAdd}
                 autoCapitalize="none"
@@ -335,10 +338,7 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 8,
   },
-  input: {
-    fontSize: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+  inputBox: {
     borderRadius: 8,
   },
   fieldLabel: {

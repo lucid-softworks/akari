@@ -1,6 +1,8 @@
 import { Redirect } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
 import { SettingsSubpageLayout } from '@/components/settings/SettingsSubpageLayout';
@@ -31,7 +33,6 @@ export default function DeleteAccountScreen() {
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const dangerColor = useThemeColor({ light: '#DC2626', dark: '#F87171' }, 'text');
   const textColor = useThemeColor({}, 'text');
-  const inputBackground = useThemeColor({ light: '#F3F4F6', dark: '#1F2937' }, 'background');
   const { t } = useTranslation();
   const { showToast } = useToast();
 
@@ -128,22 +129,24 @@ export default function DeleteAccountScreen() {
         <SettingsSection>
           <ThemedView style={[styles.sectionCard, { borderColor }]}>
             <View style={styles.formRow}>
-              <TextInput
+              <Input
+                variant="filled"
+                containerStyle={styles.inputBox}
                 value={emailToken}
                 onChangeText={setEmailToken}
                 placeholder={t('settings.deleteAccountTokenPlaceholder')}
                 placeholderTextColor={subduedColor}
-                style={[styles.input, { backgroundColor: inputBackground, color: textColor }]}
                 autoCapitalize="none"
                 autoCorrect={false}
               />
-              <TextInput
+              <Input
+                variant="filled"
+                containerStyle={styles.inputBox}
                 value={password}
                 onChangeText={setPassword}
                 placeholder={t('settings.deleteAccountPasswordPlaceholder')}
                 placeholderTextColor={subduedColor}
                 secureTextEntry
-                style={[styles.input, { backgroundColor: inputBackground, color: textColor }]}
                 autoCapitalize="none"
                 autoCorrect={false}
               />
@@ -222,10 +225,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     gap: spacing.sm,
   },
-  input: {
-    fontSize: fontSize.base,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+  inputBox: {
     borderRadius: radius.xs,
   },
   confirmButton: {

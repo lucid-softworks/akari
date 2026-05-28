@@ -1,7 +1,8 @@
-import { Pressable, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Image } from '@/components/Image';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { AttachedImage } from '@/utils/postComposer/types';
 
@@ -42,8 +43,8 @@ export function ImageAttachmentItem({
           <IconSymbol name="xmark" size={16} color="#ffffff" />
         </Pressable>
       </View>
-      <TextInput
-        style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
+      <Input
+        containerStyle={styles.altTextInput}
         value={image.alt}
         onChangeText={onUpdateAlt}
         placeholder={t('post.imageAltTextPlaceholder')}

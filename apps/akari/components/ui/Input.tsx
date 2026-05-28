@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
-import { Platform, StyleSheet, TextInput, View, type TextInputProps, type ViewStyle } from 'react-native';
+import React, { forwardRef, useState } from 'react';
+import { Platform, StyleSheet, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from 'react-native';
 
-import { fontSize, radius, spacing } from '@/constants/tokens';
+import { fontSize, hexToRgba, radius, semanticColors, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type InputSize = 'md' | 'lg';
@@ -24,7 +24,7 @@ type InputProps = Omit<TextInputProps, 'style'> & {
    */
   variant?: InputVariant;
   /** Override for the outer row container. */
-  containerStyle?: ViewStyle;
+  containerStyle?: StyleProp<ViewStyle>;
   /** Override for the inner `TextInput` element. */
   inputStyle?: TextInputProps['style'];
 };
@@ -38,7 +38,7 @@ type InputProps = Omit<TextInputProps, 'style'> & {
  * paints its own border.
  */
 export const Input = forwardRef<TextInput, InputProps>(function Input(
-  { prefix, suffix, size = 'md', variant = 'outlined', containerStyle, inputStyle, ...textInputProps },
+  { prefix, suffix, size = 'md', variant = 'outlined', containerStyle, inputStyle, onFocus, onBlur, ...textInputProps },
   ref,
 ) {
   const outlinedBorder = useThemeColor({ light: '#E5E7EB', dark: '#1F212D' }, 'border');
@@ -47,10 +47,37 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
   const textColor = useThemeColor({ light: '#374151', dark: '#E2E8F0' }, 'text');
   const placeholderColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
 
+  // Track focus on the inner TextInput so we can paint a focus ring on
+  // the *outer* row — that way the highlight wraps both the prefix and
+  // suffix slots, not just the typing area. RN-Web's default `<input>`
+  // outline is suppressed (see `suppressWebFocusRing`).
+  const [isFocused, setIsFocused] = useState(false);
+  const handleFocus: NonNullable<TextInputProps['onFocus']> = (event) => {
+    setIsFocused(true);
+    onFocus?.(event);
+  };
+  const handleBlur: NonNullable<TextInputProps['onBlur']> = (event) => {
+    setIsFocused(false);
+    onBlur?.(event);
+  };
+
   const isFilled = variant === 'filled';
+  const focusBorderColor = semanticColors.systemBlue;
+  const focusRingStyle = isFocused ? webFocusRing : null;
+
+  // Both variants keep a 1px border always — only the colour flips on
+  // focus. Toggling `borderWidth` would nudge the row 1px in each
+  // direction and shift sibling layout, even though `box-shadow` (the
+  // halo below) is paint-only and doesn't affect layout.
   const containerVariantStyle = isFilled
-    ? { borderColor: 'transparent', backgroundColor: filledBg, borderWidth: 0 }
-    : { borderColor: outlinedBorder, backgroundColor: outlinedBg };
+    ? {
+        borderColor: isFocused ? focusBorderColor : 'transparent',
+        backgroundColor: filledBg,
+      }
+    : {
+        borderColor: isFocused ? focusBorderColor : outlinedBorder,
+        backgroundColor: outlinedBg,
+      };
 
   // Outlined puts vertical padding on the inner TextInput so the slots
   // stretch to the row height; filled puts it on the outer container so
@@ -72,6 +99,8 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
       ref={ref}
       placeholderTextColor={textInputProps.placeholderTextColor ?? placeholderColor}
       {...textInputProps}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       style={[styles.input, inputSizeStyle, { color: textColor }, suppressWebFocusRing, inputStyle]}
     />
   );
@@ -79,7 +108,13 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
   if (!prefix && !suffix) {
     return (
       <View
-        style={[styles.standalone, containerSizeStyle, containerVariantStyle, containerStyle]}
+        style={[
+          styles.standalone,
+          containerSizeStyle,
+          containerVariantStyle,
+          focusRingStyle,
+          containerStyle,
+        ]}
       >
         {textInput}
       </View>
@@ -88,7 +123,13 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
 
   return (
     <View
-      style={[styles.composite, containerSizeStyle, containerVariantStyle, containerStyle]}
+      style={[
+        styles.composite,
+        containerSizeStyle,
+        containerVariantStyle,
+        focusRingStyle,
+        containerStyle,
+      ]}
     >
       {prefix ? <View style={styles.slot}>{prefix}</View> : null}
       <View style={styles.inputWrapper}>{textInput}</View>
@@ -96,6 +137,15 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
     </View>
   );
 });
+
+// Subtle outer halo around the whole composite when focused, matching
+// the Tailwind `focus:ring-2` pattern. RN-Web maps this to a CSS
+// box-shadow; native renders it as the elevation prop (a soft shadow
+// rather than the precise halo, but visually consistent).
+const webFocusRing =
+  Platform.OS === 'web'
+    ? ({ boxShadow: `0 0 0 3px ${hexToRgba(semanticColors.systemBlue, 0.18)}` } as unknown as ViewStyle)
+    : null;
 
 // RN-Web maps TextInput to a real `<input>`. Suppress the browser's
 // default focus outline so it doesn't paint inside our themed row;
@@ -105,6 +155,8 @@ const suppressWebFocusRing: TextInputProps['style'] =
 
 const styles = StyleSheet.create({
   standalone: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
   },
   composite: {
@@ -112,13 +164,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
   },
+  // Vertical padding lives on the outer container for every variant so
+  // the row height is uniform and `alignItems: center` actually
+  // vertically centres the TextInput text with the prefix / suffix
+  // icons. (Previously the inner TextInput owned its own paddingVertical
+  // and the text drifted off-baseline relative to the slots.)
   containerMd: {
     borderRadius: radius.sm,
     paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    gap: spacing.sm,
   },
   containerLg: {
     borderRadius: 10,
     paddingHorizontal: spacing.lg,
+    paddingVertical: 14,
+    gap: spacing.sm,
   },
   containerFilled: {
     flexDirection: 'row',
@@ -130,20 +191,15 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     flex: 1,
+    justifyContent: 'center',
   },
   slot: {
     flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {},
-  inputMd: {
-    paddingVertical: spacing.sm,
-    fontSize: fontSize.base,
-  },
-  inputLg: {
-    paddingVertical: 14,
-    fontSize: fontSize.lg,
-  },
-  inputFilled: {
-    fontSize: fontSize.base,
-  },
+  inputMd: { fontSize: fontSize.base },
+  inputLg: { fontSize: fontSize.lg },
+  inputFilled: { fontSize: fontSize.base },
 });

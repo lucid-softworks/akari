@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { Input } from '@/components/ui/Input';
+
 import { AddAccountForm } from '@/components/AddAccountForm';
 import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
@@ -274,8 +276,10 @@ function OauthHandleForm({
       <ThemedText style={[styles.fieldLabel, { color: labelColor }]}>
         {t('auth.blueskyHandle')}
       </ThemedText>
-      <TextInput
+      <Input
         ref={inputRef}
+        size="lg"
+        containerStyle={styles.inputBox}
         value={handle}
         onChangeText={handleChange}
         placeholder={t('auth.blueskyHandlePlaceholder')}
@@ -285,10 +289,6 @@ function OauthHandleForm({
         autoComplete="off"
         onSubmitEditing={handleContinue}
         returnKeyType="go"
-        style={[
-          styles.input,
-          { borderColor, backgroundColor: inputBackground, color: labelColor },
-        ]}
       />
       {showSuggestions ? (
         <View style={[styles.suggestionList, { borderColor, backgroundColor: suggestionBg }]}>
@@ -417,12 +417,8 @@ const styles = StyleSheet.create({
     fontSize: fontSize.base,
     fontWeight: fontWeight.semibold,
   },
-  input: {
-    borderWidth: 1,
+  inputBox: {
     borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: 14,
-    fontSize: fontSize.lg,
   },
   suggestionList: {
     borderWidth: 1,

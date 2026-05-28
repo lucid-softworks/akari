@@ -1,13 +1,12 @@
-import { Platform, TextInput, View } from 'react-native';
+import { View } from 'react-native';
 
+import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { AttachedImage, ComposeMode } from '@/utils/postComposer/types';
 
 import { AutoThreadPreview } from './AutoThreadPreview';
 import { ImageAttachmentItem } from './ImageAttachmentItem';
 import { styles } from './styles';
-
-const isWeb = Platform.OS === 'web';
 
 type LongModeInputBlockProps = {
   mode: Exclude<ComposeMode, 'standard'>;
@@ -51,12 +50,9 @@ export function LongModeInputBlock({
     <View style={styles.threadPostBlock}>
       {isLongform ? (
         <View style={[styles.inputContainer, styles.titleInputContainer]}>
-          <TextInput
-            style={[
-              styles.titleInput,
-              { color: textColor, borderBottomColor: borderColor },
-              isWeb && { outline: 'none' },
-            ]}
+          <Input
+            containerStyle={[styles.composerCanvasContainer, { borderBottomColor: borderColor }, styles.titleCanvasContainer]}
+            inputStyle={[styles.titleInput, { color: textColor }]}
             value={longTitle}
             onChangeText={setLongTitle}
             placeholder={t('post.longform.titlePlaceholder')}
@@ -72,13 +68,9 @@ export function LongModeInputBlock({
         </View>
       ) : null}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={[
-            styles.textInput,
-            styles.longTextInput,
-            { color: textColor },
-            isWeb && { outline: 'none' },
-          ]}
+        <Input
+          containerStyle={styles.composerCanvasContainer}
+          inputStyle={[styles.textInput, styles.longTextInput, { color: textColor }]}
           value={longText}
           onChangeText={setLongText}
           onSelectionChange={(e) => onLongTextSelectionChange(e.nativeEvent.selection)}

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { SearchTabs } from '@/components/SearchTabs';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Input } from '@/components/ui/Input';
 import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 
 export type SearchTabType = 'all' | 'users' | 'posts';
@@ -85,30 +86,30 @@ const SearchListHeaderInner = ({
       ) : null}
 
       <ThemedView style={styles.searchContainer}>
-        <ThemedView style={[styles.inputWrapper, { backgroundColor, borderColor }]}>
-          <TextInput
-            style={[styles.searchInput, { color: textColor }]}
-            placeholder={inputPlaceholder}
-            placeholderTextColor={placeholderColor}
-            value={query}
-            onChangeText={onQueryChange}
-            onSubmitEditing={onSearch}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          {query.length > 0 ? (
-            <Pressable
-              onPress={onClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={clearLabel}
-              hitSlop={8}
-              style={({ pressed }) => [styles.clearButton, pressed && { opacity: 0.7 }]}
-            >
-              <IconSymbol name="xmark.circle.fill" size={18} color={placeholderColor} />
-            </Pressable>
-          ) : null}
-        </ThemedView>
+        <Input
+          containerStyle={styles.inputContainer}
+          placeholder={inputPlaceholder}
+          placeholderTextColor={placeholderColor}
+          value={query}
+          onChangeText={onQueryChange}
+          onSubmitEditing={onSearch}
+          returnKeyType="search"
+          autoCapitalize="none"
+          autoCorrect={false}
+          suffix={
+            query.length > 0 ? (
+              <Pressable
+                onPress={onClearQuery}
+                accessibilityRole="button"
+                accessibilityLabel={clearLabel}
+                hitSlop={8}
+                style={({ pressed }) => [styles.clearButton, pressed && { opacity: 0.7 }]}
+              >
+                <IconSymbol name="xmark.circle.fill" size={18} color={placeholderColor} />
+              </Pressable>
+            ) : null
+          }
+        />
         <Pressable
           style={({ pressed }) => [
             styles.searchButton,
@@ -181,20 +182,9 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xs,
     gap: spacing.sm,
   },
-  inputWrapper: {
+  inputContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
     height: 44,
-    borderWidth: layout.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    gap: spacing.xs,
-  },
-  searchInput: {
-    flex: 1,
-    height: '100%',
-    fontSize: fontSize.lg,
   },
   clearButton: {
     width: 24,

@@ -162,11 +162,26 @@ export const styles = StyleSheet.create({
   titleInputContainer: {
     paddingBottom: spacing.md,
   },
+  // Composer canvases (title + body) hand-roll their own chrome: no
+  // border, no rounding, no internal padding. The Input primitive's
+  // outer container strips back to zero so the inner TextInput can paint
+  // full-bleed against the composer surface.
+  composerCanvasContainer: {
+    borderWidth: 0,
+    borderRadius: 0,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
+  // The longform title is a single-line bold display row with a hairline
+  // bottom divider — overrides the full-bleed container with a bottom
+  // border only.
+  titleCanvasContainer: {
+    borderBottomWidth: layout.hairline,
+  },
   titleInput: {
     fontSize: 24,
     fontWeight: fontWeight.semibold,
     paddingVertical: spacing.sm,
-    borderBottomWidth: layout.hairline,
   },
   autoThreadPreview: {
     paddingHorizontal: spacing.lg,
@@ -352,8 +367,12 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   altTextInput: {
-    padding: spacing.md,
-    fontSize: fontSize.base,
+    // Image/video alt-text input — render as a top-divider-only input
+    // (no left/right/bottom border). Overrides the Input primitive's
+    // default 4-sided border in favour of a single top hairline so the
+    // input visually attaches to the image card above it.
+    borderWidth: 0,
+    borderRadius: 0,
     borderTopWidth: layout.border,
   },
   footer: {

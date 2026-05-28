@@ -1,4 +1,6 @@
-import { Pressable, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { ThemedText } from '@/components/ThemedText';
 import { VideoThumbnail } from '@/components/VideoThumbnail';
@@ -105,8 +107,8 @@ export function VideoAttachmentItem({
             <IconSymbol name="xmark" size={16} color="#ffffff" />
           </Pressable>
         </View>
-        <TextInput
-          style={[styles.altTextInput, { color: textColor, borderColor, backgroundColor }]}
+        <Input
+          containerStyle={styles.altTextInput}
           value={video.alt}
           onChangeText={onUpdateAlt}
           placeholder={t('post.imageAltTextPlaceholder')}

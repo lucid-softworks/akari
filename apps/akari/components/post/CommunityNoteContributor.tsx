@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+
+import { Input } from '@/components/ui/Input';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Dialog } from '@/components/ui/Dialog';
@@ -56,8 +58,6 @@ export function AddCommunityNoteModal({
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tint = useThemeColor({}, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
-  const textColor = useThemeColor({}, 'text');
   const { t } = useTranslation();
 
   const [classification, setClassification] =
@@ -126,23 +126,22 @@ export function AddCommunityNoteModal({
           </View>
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('communityNotes.contributor.yourNote')}</ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.textareaBox}
+            inputStyle={styles.textareaInput}
             value={body}
             onChangeText={setBody}
             placeholder={t('communityNotes.contributor.notePlaceholder')}
             placeholderTextColor={secondary}
             multiline
-            style={[
-              styles.input,
-              styles.inputMultiline,
-              { borderColor, color: textColor, backgroundColor: inputBg },
-            ]}
           />
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
             {t('communityNotes.contributor.sourcesLabel')}
           </ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.textareaBox}
+            inputStyle={styles.textareaInput}
             value={sourcesRaw}
             onChangeText={setSourcesRaw}
             placeholder={'https://example.org/study\nhttps://example.org/dataset'}
@@ -150,11 +149,6 @@ export function AddCommunityNoteModal({
             multiline
             autoCapitalize="none"
             autoCorrect={false}
-            style={[
-              styles.input,
-              styles.inputMultiline,
-              { borderColor, color: textColor, backgroundColor: inputBg },
-            ]}
           />
         </ScrollView>
 
@@ -202,8 +196,6 @@ export function RequestCommunityNoteModal({
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const tint = useThemeColor({}, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#15181c' }, 'background');
-  const textColor = useThemeColor({}, 'text');
   const { t } = useTranslation();
 
   const [reason, setReason] = useState<RequestCommunityNoteInput['reason']>('misinformation');
@@ -264,17 +256,14 @@ export function RequestCommunityNoteModal({
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
             {t('communityNotes.contributor.anythingElseOptional')}
           </ThemedText>
-          <TextInput
+          <Input
+            containerStyle={styles.textareaBox}
+            inputStyle={styles.textareaInput}
             value={comment}
             onChangeText={setComment}
             placeholder={t('communityNotes.contributor.commentPlaceholder')}
             placeholderTextColor={secondary}
             multiline
-            style={[
-              styles.input,
-              styles.inputMultiline,
-              { borderColor, color: textColor, backgroundColor: inputBg },
-            ]}
           />
         </ScrollView>
 
@@ -373,14 +362,10 @@ const styles = StyleSheet.create({
   chipLabel: {
     fontSize: fontSize.sm,
   },
-  input: {
-    borderWidth: 1,
+  textareaBox: {
     borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
-    fontSize: fontSize.base,
   },
-  inputMultiline: {
+  textareaInput: {
     minHeight: 96,
     textAlignVertical: 'top',
   },
