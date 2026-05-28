@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { BlueskyFeedItem } from '@/bluesky-api';
 import { useAcceptLabelerDids } from '@/hooks/queries/useAcceptLabelerDids';
@@ -87,10 +87,51 @@ export function useFeed(feedUri: string | null, limit: number = 20) {
   const { filters } = useFeedFilters(feedUri);
   const { data: mutedWords } = useMutedWords();
 
+  // Sticky membership: once a post is shown it stays shown until the feed
+  // actually reloads, so engaging with it (an optimistic like/repost that
+  // trips the hide-engaged filter) doesn't yank it out from under you before
+  // you can also repost, reply, etc. Membership is recomputed on a feed
+  // switch, a filter/muted-word change, or a settled refetch (pull-to-refresh
+  // / background refresh) — never on an optimistic cache write. Post content
+  // still updates live; only the *set* of visible posts is frozen.
+  const shownUris = useRef<Set<string>>(new Set());
+  const lastFeedUri = useRef(feedUri);
+  const lastFilters = useRef(filters);
+  const lastMuted = useRef(mutedWords);
+  const lastEpoch = useRef(0);
+
+  // Bump an epoch when a refetch settles (not on fetchNextPage or optimistic
+  // writes) so the membership reset above fires on refresh.
+  const [refetchEpoch, setRefetchEpoch] = useState(0);
+  const wasRefetching = useRef(query.isRefetching);
+  useEffect(() => {
+    if (wasRefetching.current && !query.isRefetching) setRefetchEpoch((e) => e + 1);
+    wasRefetching.current = query.isRefetching;
+  }, [query.isRefetching]);
+
   const posts = useMemo<BlueskyFeedItem[]>(() => {
+    if (
+      feedUri !== lastFeedUri.current ||
+      filters !== lastFilters.current ||
+      mutedWords !== lastMuted.current ||
+      refetchEpoch !== lastEpoch.current
+    ) {
+      lastFeedUri.current = feedUri;
+      lastFilters.current = filters;
+      lastMuted.current = mutedWords;
+      lastEpoch.current = refetchEpoch;
+      shownUris.current = new Set();
+    }
+
     const raw = query.data?.pages.flatMap((page) => page.feed) ?? [];
-    return filterFeedItems(raw, filters, mutedWords);
-  }, [query.data, filters, mutedWords]);
+    const passingUris = new Set(
+      filterFeedItems(raw, filters, mutedWords).map((item) => item.post.uri),
+    );
+    for (const uri of passingUris) shownUris.current.add(uri);
+    return raw.filter(
+      (item) => passingUris.has(item.post.uri) || shownUris.current.has(item.post.uri),
+    );
+  }, [query.data, filters, mutedWords, feedUri, refetchEpoch]);
 
   return { ...query, posts };
 }
