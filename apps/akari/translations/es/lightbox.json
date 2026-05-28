@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "VIENDO",
+  "frame": "FOTO {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "CÁMARA",
+  "exposure": "EXPOSICIÓN",
+  "file": "ARCHIVO",
+  "model": "modelo",
+  "make": "marca",
+  "lens": "objetivo",
+  "aperture": "apertura",
+  "shutter": "obturador",
+  "iso": "iso",
+  "focalLength": "distancia focal",
+  "flash": "flash",
+  "dimensions": "dimensiones",
+  "format": "formato",
+  "size": "tamaño",
+  "hintsWeb": "← → NAV   I INFO   ESC CERRAR",
+  "hintsTouch": "Desliza hacia abajo para cerrar"
+}

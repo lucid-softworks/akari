@@ -1,0 +1,22 @@
+{
+  "info": "Информация",
+  "viewing": "ПРОСМОТР",
+  "frame": "КАДР {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "КАМЕРА",
+  "exposure": "ЭКСПОЗИЦИЯ",
+  "file": "ФАЙЛ",
+  "model": "модель",
+  "make": "произв.",
+  "lens": "объектив",
+  "aperture": "диафрагма",
+  "shutter": "выдержка",
+  "iso": "iso",
+  "focalLength": "фокусное расст.",
+  "flash": "вспышка",
+  "dimensions": "размеры",
+  "format": "формат",
+  "size": "размер",
+  "hintsWeb": "← → НАВ   I ИНФО   ESC ЗАКРЫТЬ",
+  "hintsTouch": "Смахните вниз, чтобы закрыть"
+}

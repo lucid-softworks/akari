@@ -1,0 +1,22 @@
+{
+  "info": "מידע",
+  "viewing": "צפייה",
+  "frame": "פריים {{current}} / {{total}}",
+  "alt": "טקסט חלופי",
+  "camera": "מצלמה",
+  "exposure": "חשיפה",
+  "file": "קובץ",
+  "model": "דגם",
+  "make": "יצרן",
+  "lens": "עדשה",
+  "aperture": "צמצם",
+  "shutter": "תריס",
+  "iso": "iso",
+  "focalLength": "אורך מוקד",
+  "flash": "מבזק",
+  "dimensions": "מידות",
+  "format": "פורמט",
+  "size": "גודל",
+  "hintsWeb": "← → ניווט   I מידע   ESC סגירה",
+  "hintsTouch": "החלק מטה לסגירה"
+}

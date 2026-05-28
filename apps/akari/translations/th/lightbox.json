@@ -1,0 +1,22 @@
+{
+  "info": "ข้อมูล",
+  "viewing": "กำลังดู",
+  "frame": "เฟรม {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "กล้อง",
+  "exposure": "การรับแสง",
+  "file": "ไฟล์",
+  "model": "รุ่น",
+  "make": "ยี่ห้อ",
+  "lens": "เลนส์",
+  "aperture": "รูรับแสง",
+  "shutter": "ชัตเตอร์",
+  "iso": "iso",
+  "focalLength": "ทางยาวโฟกัส",
+  "flash": "แฟลช",
+  "dimensions": "ขนาดภาพ",
+  "format": "รูปแบบ",
+  "size": "ขนาด",
+  "hintsWeb": "← → เลื่อน   I ข้อมูล   ESC ปิด",
+  "hintsTouch": "ปัดลงเพื่อปิด"
+}

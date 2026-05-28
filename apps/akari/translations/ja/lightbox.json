@@ -1,0 +1,22 @@
+{
+  "info": "情報",
+  "viewing": "表示中",
+  "frame": "フレーム {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "カメラ",
+  "exposure": "露出",
+  "file": "ファイル",
+  "model": "機種",
+  "make": "メーカー",
+  "lens": "レンズ",
+  "aperture": "絞り",
+  "shutter": "シャッター",
+  "iso": "iso",
+  "focalLength": "焦点距離",
+  "flash": "フラッシュ",
+  "dimensions": "サイズ",
+  "format": "形式",
+  "size": "容量",
+  "hintsWeb": "← → 移動   I 情報   ESC 閉じる",
+  "hintsTouch": "下にスワイプで閉じる"
+}

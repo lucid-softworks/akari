@@ -22,6 +22,7 @@ import { PostHeader } from '@/components/post/PostHeader';
 import { PostTranslation } from '@/components/post/PostTranslation';
 import { resolveExternalThumb } from '@/utils/embedThumb';
 import { parseSkyblurUrl } from '@/utils/skyblur';
+import { isCardPressSuppressed } from '@/utils/postCardPressGuard';
 import { findUnthreadFacet, parseUnthreadUrl, stripUnthreadFromPost } from '@/utils/unthread';
 import { useSkyblurPost } from '@/hooks/queries/useSkyblurPost';
 import { SkyblurBody } from '@/components/post/SkyblurBody';
@@ -486,6 +487,9 @@ export const PostCard = React.memo(function PostCard({
           <Pressable
             accessibilityRole="link"
             onPress={() => {
+              // An inner element (e.g. a tapped image opening the lightbox)
+              // just claimed this press — don't also navigate to the post.
+              if (isCardPressSuppressed()) return;
               if (onPress) onPress();
               else if (href) router.push(href as never);
             }}

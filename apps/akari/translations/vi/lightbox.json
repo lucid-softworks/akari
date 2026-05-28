@@ -1,0 +1,22 @@
+{
+  "info": "Thông tin",
+  "viewing": "ĐANG XEM",
+  "frame": "KHUNG {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "MÁY ẢNH",
+  "exposure": "PHƠI SÁNG",
+  "file": "TỆP",
+  "model": "mẫu máy",
+  "make": "hãng",
+  "lens": "ống kính",
+  "aperture": "khẩu độ",
+  "shutter": "màn trập",
+  "iso": "iso",
+  "focalLength": "tiêu cự",
+  "flash": "đèn flash",
+  "dimensions": "kích thước",
+  "format": "định dạng",
+  "size": "dung lượng",
+  "hintsWeb": "← → ĐIỀU HƯỚNG   I THÔNG TIN   ESC ĐÓNG",
+  "hintsTouch": "Vuốt xuống để đóng"
+}

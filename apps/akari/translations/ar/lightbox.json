@@ -1,0 +1,22 @@
+{
+  "info": "معلومات",
+  "viewing": "عرض",
+  "frame": "لقطة {{current}} / {{total}}",
+  "alt": "النص البديل",
+  "camera": "الكاميرا",
+  "exposure": "التعريض",
+  "file": "الملف",
+  "model": "الطراز",
+  "make": "الصانع",
+  "lens": "العدسة",
+  "aperture": "فتحة العدسة",
+  "shutter": "الغالق",
+  "iso": "ISO",
+  "focalLength": "البعد البؤري",
+  "flash": "الفلاش",
+  "dimensions": "الأبعاد",
+  "format": "الصيغة",
+  "size": "الحجم",
+  "hintsWeb": "← → تنقل   I معلومات   ESC إغلاق",
+  "hintsTouch": "اسحب للأسفل للإغلاق"
+}

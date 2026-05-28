@@ -1,0 +1,22 @@
+{
+  "info": "信息",
+  "viewing": "查看中",
+  "frame": "画面 {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "相机",
+  "exposure": "曝光",
+  "file": "文件",
+  "model": "型号",
+  "make": "厂商",
+  "lens": "镜头",
+  "aperture": "光圈",
+  "shutter": "快门",
+  "iso": "iso",
+  "focalLength": "焦距",
+  "flash": "闪光灯",
+  "dimensions": "尺寸",
+  "format": "格式",
+  "size": "大小",
+  "hintsWeb": "← → 导航   I 信息   ESC 关闭",
+  "hintsTouch": "向下滑动关闭"
+}

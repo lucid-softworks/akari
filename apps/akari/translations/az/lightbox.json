@@ -1,0 +1,22 @@
+{
+  "info": "Məlumat",
+  "viewing": "BAXIŞ",
+  "frame": "KADR {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "EKSPOZİSİYA",
+  "file": "FAYL",
+  "model": "model",
+  "make": "istehsalçı",
+  "lens": "lens",
+  "aperture": "diafraqma",
+  "shutter": "sürət",
+  "iso": "iso",
+  "focalLength": "fokus məsafəsi",
+  "flash": "fləş",
+  "dimensions": "ölçülər",
+  "format": "format",
+  "size": "həcm",
+  "hintsWeb": "← → KEÇİD   I MƏLUMAT   ESC BAĞLA",
+  "hintsTouch": "Bağlamaq üçün aşağı sürüşdür"
+}

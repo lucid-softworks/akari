@@ -1,6 +1,11 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import type { GrainGalleryItemRecord, GrainGalleryRecord, GrainPhotoRecord } from '@/bluesky-api';
+import type {
+  GrainGalleryItemRecord,
+  GrainGalleryRecord,
+  GrainPhotoExifRecord,
+  GrainPhotoRecord,
+} from '@/bluesky-api';
 import { CursorPageParam } from '@/hooks/queries/types';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { usePdsUrl } from '@/hooks/queries/usePdsUrl';
@@ -107,6 +112,39 @@ export function useGrainPhotos(identifier: string | undefined, limit: number = 1
 }
 
 /**
+ * One-shot query for all of an actor's `social.grain.photo.exif`
+ * sidecar records — camera / lens / exposure metadata grain extracts
+ * on upload. Returns empty for non-grain actors, so the lightbox info
+ * panel just hides the EXIF sections.
+ */
+export function useGrainPhotoExif(identifier: string | undefined, limit: number = 100) {
+  const { data: token } = useJwtToken();
+  const { data: targetPdsUrl, isLoading: isPdsLoading } = usePdsUrl(identifier);
+
+  return useQuery({
+    queryKey: queryKeys.author.grainPhotoExif(identifier, limit, targetPdsUrl),
+    queryFn: async () => {
+      if (!token) throw new Error('No access token');
+      if (!identifier) throw new Error('No identifier provided');
+      if (!targetPdsUrl) throw new Error('No PDS URL available for target user');
+
+      const api = apiForPdsUrl(targetPdsUrl);
+      const records: GrainPhotoExifRecord[] = [];
+      let cursor: string | undefined;
+      for (let i = 0; i < 10; i++) {
+        const page = await api.getActorGrainPhotoExif(token, identifier, limit, cursor);
+        records.push(...page.records);
+        if (!page.cursor) break;
+        cursor = page.cursor;
+      }
+      return records;
+    },
+    enabled: !!identifier && !!token && !!targetPdsUrl && !isPdsLoading,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
  * Convenience: build a `Map<photoUri, GrainPhotoRecord>` from a list,
  * so gallery detail can resolve membership references in O(1).
  */
@@ -114,6 +152,20 @@ export function indexGrainPhotosByUri(photos: GrainPhotoRecord[] | undefined): M
   const map = new Map<string, GrainPhotoRecord>();
   if (!photos) return map;
   for (const photo of photos) map.set(photo.uri, photo);
+  return map;
+}
+
+/**
+ * Convenience: index EXIF sidecars by the photo URI they describe.
+ */
+export function indexGrainExifByPhotoUri(
+  exif: GrainPhotoExifRecord[] | undefined,
+): Map<string, GrainPhotoExifRecord> {
+  const map = new Map<string, GrainPhotoExifRecord>();
+  if (!exif) return map;
+  for (const record of exif) {
+    if (record.value.photo) map.set(record.value.photo, record);
+  }
   return map;
 }
 

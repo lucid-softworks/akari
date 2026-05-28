@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "VISAR",
+  "frame": "BILD {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "EXPONERING",
+  "file": "FIL",
+  "model": "modell",
+  "make": "märke",
+  "lens": "objektiv",
+  "aperture": "bländare",
+  "shutter": "slutare",
+  "iso": "iso",
+  "focalLength": "brännvidd",
+  "flash": "blixt",
+  "dimensions": "dimensioner",
+  "format": "format",
+  "size": "storlek",
+  "hintsWeb": "← → NAV   I INFO   ESC STÄNG",
+  "hintsTouch": "Svep nedåt för att stänga"
+}

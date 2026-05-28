@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "VIZUALIZARE",
+  "frame": "CADRU {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "CAMERĂ",
+  "exposure": "EXPUNERE",
+  "file": "FIȘIER",
+  "model": "model",
+  "make": "producător",
+  "lens": "obiectiv",
+  "aperture": "diafragmă",
+  "shutter": "obturator",
+  "iso": "iso",
+  "focalLength": "distanță focală",
+  "flash": "bliț",
+  "dimensions": "dimensiuni",
+  "format": "format",
+  "size": "mărime",
+  "hintsWeb": "← → NAV   I INFO   ESC ÎNCHIDE",
+  "hintsTouch": "Glisează în jos pentru a închide"
+}

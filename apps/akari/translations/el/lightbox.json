@@ -1,0 +1,22 @@
+{
+  "info": "Πληροφορίες",
+  "viewing": "ΠΡΟΒΟΛΗ",
+  "frame": "ΚΑΡΕ {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "ΚΑΜΕΡΑ",
+  "exposure": "ΕΚΘΕΣΗ",
+  "file": "ΑΡΧΕΙΟ",
+  "model": "μοντέλο",
+  "make": "κατασκευαστής",
+  "lens": "φακός",
+  "aperture": "διάφραγμα",
+  "shutter": "κλείστρο",
+  "iso": "iso",
+  "focalLength": "εστιακή απόστ.",
+  "flash": "φλας",
+  "dimensions": "διαστάσεις",
+  "format": "μορφή",
+  "size": "μέγεθος",
+  "hintsWeb": "← → ΠΛΟΗΓ   I ΠΛΗΡ   ESC ΚΛΕΙΣΙΜΟ",
+  "hintsTouch": "Σύρετε προς τα κάτω για κλείσιμο"
+}

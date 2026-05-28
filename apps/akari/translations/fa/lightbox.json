@@ -1,0 +1,22 @@
+{
+  "info": "اطلاعات",
+  "viewing": "نمایش",
+  "frame": "فریم {{current}} / {{total}}",
+  "alt": "متن جایگزین",
+  "camera": "دوربین",
+  "exposure": "نوردهی",
+  "file": "فایل",
+  "model": "مدل",
+  "make": "سازنده",
+  "lens": "لنز",
+  "aperture": "دیافراگم",
+  "shutter": "شاتر",
+  "iso": "iso",
+  "focalLength": "فاصله کانونی",
+  "flash": "فلاش",
+  "dimensions": "ابعاد",
+  "format": "قالب",
+  "size": "حجم",
+  "hintsWeb": "← → پیمایش   I اطلاعات   ESC بستن",
+  "hintsTouch": "برای بستن به پایین بکشید"
+}

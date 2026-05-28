@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "WEERGAVE",
+  "frame": "BEELD {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "CAMERA",
+  "exposure": "BELICHTING",
+  "file": "BESTAND",
+  "model": "model",
+  "make": "merk",
+  "lens": "lens",
+  "aperture": "diafragma",
+  "shutter": "sluiter",
+  "iso": "iso",
+  "focalLength": "brandpuntsafst.",
+  "flash": "flits",
+  "dimensions": "afmetingen",
+  "format": "formaat",
+  "size": "grootte",
+  "hintsWeb": "← → NAV   I INFO   ESC SLUITEN",
+  "hintsTouch": "Veeg omlaag om te sluiten"
+}

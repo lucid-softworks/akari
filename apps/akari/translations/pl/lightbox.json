@@ -1,0 +1,22 @@
+{
+  "info": "Informacje",
+  "viewing": "PODGLĄD",
+  "frame": "KLATKA {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "APARAT",
+  "exposure": "EKSPOZYCJA",
+  "file": "PLIK",
+  "model": "model",
+  "make": "marka",
+  "lens": "obiektyw",
+  "aperture": "przysłona",
+  "shutter": "migawka",
+  "iso": "iso",
+  "focalLength": "ogniskowa",
+  "flash": "lampa",
+  "dimensions": "wymiary",
+  "format": "format",
+  "size": "rozmiar",
+  "hintsWeb": "← → NAW   I INFO   ESC ZAMKNIJ",
+  "hintsTouch": "Przesuń w dół, aby zamknąć"
+}

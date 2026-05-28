@@ -29,12 +29,25 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from '@/components/Image';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { LightboxInfoPanel, type LightboxExif } from '@/components/ui/LightboxInfoPanel';
 import { Modal } from '@/components/ui/Modal';
 import { fontSize, fontWeight, hexToRgba, radius, spacing } from '@/constants/tokens';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
 
-export type LightboxImage = { url: string; alt?: string };
+export type { LightboxExif } from '@/components/ui/LightboxInfoPanel';
+
+export type LightboxImage = {
+  url: string;
+  alt?: string;
+  /** Pixel dimensions, surfaced in the info panel's FILE section. */
+  width?: number;
+  height?: number;
+  sizeBytes?: number;
+  mimeType?: string;
+  /** Decoded EXIF sidecar — only present for grain.social photos. */
+  exif?: LightboxExif;
+};
 
 type LightboxProps = {
   visible: boolean;
@@ -84,8 +97,12 @@ export function Lightbox({
   }, [images, imageUrl, altText]);
 
   const [currentIndex, setCurrentIndex] = useState(startIndex);
+  const [infoOpen, setInfoOpen] = useState(false);
   useEffect(() => {
-    if (visible) setCurrentIndex(startIndex);
+    if (visible) {
+      setCurrentIndex(startIndex);
+      setInfoOpen(false);
+    }
   }, [visible, startIndex]);
 
   // Backdrop opacity dims as the user swipes down to dismiss. Chrome
@@ -125,7 +142,10 @@ export function Lightbox({
     if (!visible || Platform.OS !== 'web' || typeof window === 'undefined') return;
     const handle = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeAndReset();
+        if (infoOpen) setInfoOpen(false);
+        else closeAndReset();
+      } else if (event.key === 'i' || event.key === 'I') {
+        setInfoOpen((v) => !v);
       } else if (event.key === 'ArrowRight' && currentIndex < items.length - 1) {
         listRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
       } else if (event.key === 'ArrowLeft' && currentIndex > 0) {
@@ -134,7 +154,7 @@ export function Lightbox({
     };
     window.addEventListener('keydown', handle);
     return () => window.removeEventListener('keydown', handle);
-  }, [visible, closeAndReset, currentIndex, items.length]);
+  }, [visible, closeAndReset, currentIndex, items.length, infoOpen]);
 
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -208,6 +228,9 @@ export function Lightbox({
   if (items.length === 0) return null;
   const altForCurrent = items[currentIndex]?.alt;
   const isMulti = items.length > 1;
+  // Dock the info panel to the right on wide viewports (web / tablet)
+  // so the photo stays visible; full-screen on phones.
+  const isWideScreen = screenW >= 700;
 
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={closeAndReset}>
@@ -228,12 +251,20 @@ export function Lightbox({
               accessibilityLabel={t('common.close')}
               onPress={closeAndReset}
             />
-            <ChromeButton
-              icon="square.and.arrow.up"
-              testID="download-button"
-              accessibilityLabel={t('common.share')}
-              onPress={handleDownload}
-            />
+            <View style={styles.headerRight}>
+              <ChromeButton
+                icon="info.circle"
+                testID="info-button"
+                accessibilityLabel={t('lightbox.info')}
+                onPress={() => setInfoOpen(true)}
+              />
+              <ChromeButton
+                icon="square.and.arrow.up"
+                testID="download-button"
+                accessibilityLabel={t('common.share')}
+                onPress={handleDownload}
+              />
+            </View>
           </Animated.View>
 
           <FlatList
@@ -306,6 +337,34 @@ export function Lightbox({
             ) : null}
           </Animated.View>
         </Animated.View>
+
+        {/* Darkroom-style metadata panel, toggled by the info button or
+            the `I` key on web. On wide screens it docks to the right so
+            the photo stays visible alongside it; on phones it takes the
+            full screen. */}
+        {infoOpen ? (
+          <View
+            style={[
+              isWideScreen ? styles.infoPanelRight : styles.infoOverlay,
+              { paddingTop: insets.top, paddingBottom: insets.bottom },
+              isWideScreen && { borderLeftColor: '#1c1c20' },
+            ]}
+          >
+            <LightboxInfoPanel
+              meta={{
+                alt: items[currentIndex]?.alt,
+                width: items[currentIndex]?.width,
+                height: items[currentIndex]?.height,
+                sizeBytes: items[currentIndex]?.sizeBytes,
+                mimeType: items[currentIndex]?.mimeType,
+                exif: items[currentIndex]?.exif,
+              }}
+              index={currentIndex}
+              total={items.length}
+              onClose={() => setInfoOpen(false)}
+            />
+          </View>
+        ) : null}
       </View>
     </Modal>
   );
@@ -556,6 +615,11 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     zIndex: 2,
   },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
   chromeButton: {
     width: 36,
     height: 36,
@@ -567,6 +631,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   chromeIcon: {},
+  infoOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#0b0b0d',
+    zIndex: 3,
+  },
+  infoPanelRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 360,
+    backgroundColor: '#0b0b0d',
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    zIndex: 3,
+  },
   navOverlay: {
     ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',

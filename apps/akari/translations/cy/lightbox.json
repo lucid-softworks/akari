@@ -1,0 +1,22 @@
+{
+  "info": "Gwybodaeth",
+  "viewing": "GWYLIO",
+  "frame": "FFRÂM {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "CAMERA",
+  "exposure": "AMLYGIAD",
+  "file": "FFEIL",
+  "model": "model",
+  "make": "gwneuthurwr",
+  "lens": "lens",
+  "aperture": "agorfa",
+  "shutter": "caead",
+  "iso": "iso",
+  "focalLength": "hyd ffocal",
+  "flash": "fflach",
+  "dimensions": "dimensiynau",
+  "format": "fformat",
+  "size": "maint",
+  "hintsWeb": "← → LLYW   I GWYB   ESC CAU",
+  "hintsTouch": "Llusgwch i lawr i gau"
+}

@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "VIEWING",
+  "frame": "FRAME {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "CAMERA",
+  "exposure": "EXPOSURE",
+  "file": "FILE",
+  "model": "model",
+  "make": "make",
+  "lens": "lens",
+  "aperture": "aperture",
+  "shutter": "shutter",
+  "iso": "iso",
+  "focalLength": "focal length",
+  "flash": "flash",
+  "dimensions": "dimensions",
+  "format": "format",
+  "size": "size",
+  "hintsWeb": "← → NAV   I INFO   ESC CLOSE",
+  "hintsTouch": "Swipe down to close"
+}

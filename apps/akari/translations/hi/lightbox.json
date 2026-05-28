@@ -1,0 +1,22 @@
+{
+  "info": "जानकारी",
+  "viewing": "देखना",
+  "frame": "फ़्रेम {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "कैमरा",
+  "exposure": "एक्सपोज़र",
+  "file": "फ़ाइल",
+  "model": "मॉडल",
+  "make": "निर्माता",
+  "lens": "लेंस",
+  "aperture": "अपर्चर",
+  "shutter": "शटर",
+  "iso": "iso",
+  "focalLength": "फ़ोकल लंबाई",
+  "flash": "फ़्लैश",
+  "dimensions": "आयाम",
+  "format": "प्रारूप",
+  "size": "आकार",
+  "hintsWeb": "← → नेव   I जानकारी   ESC बंद",
+  "hintsTouch": "बंद करने के लिए नीचे स्वाइप करें"
+}

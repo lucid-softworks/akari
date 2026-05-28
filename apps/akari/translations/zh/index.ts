@@ -12,6 +12,7 @@ import germ from './germ.json';
 import gif from './gif.json';
 import home from './home.json';
 import labelDetail from './labelDetail.json';
+import lightbox from './lightbox.json';
 import lists from './lists.json';
 import messages from './messages.json';
 import moderation from './moderation.json';
@@ -43,6 +44,7 @@ export const translations = {
   gif,
   home,
   labelDetail,
+  lightbox,
   lists,
   messages,
   moderation,

@@ -1,0 +1,22 @@
+{
+  "info": "Informace",
+  "viewing": "PROHLÍŽENÍ",
+  "frame": "SNÍMEK {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "FOTOAPARÁT",
+  "exposure": "EXPOZICE",
+  "file": "SOUBOR",
+  "model": "model",
+  "make": "značka",
+  "lens": "objektiv",
+  "aperture": "clona",
+  "shutter": "závěrka",
+  "iso": "iso",
+  "focalLength": "ohnisko",
+  "flash": "blesk",
+  "dimensions": "rozměry",
+  "format": "formát",
+  "size": "velikost",
+  "hintsWeb": "← → NAV   I INFO   ESC ZAVŘÍT",
+  "hintsTouch": "Zavřete přejetím dolů"
+}

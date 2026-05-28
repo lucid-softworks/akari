@@ -1,0 +1,22 @@
+{
+  "info": "Информация",
+  "viewing": "ПРЕГЛЕД",
+  "frame": "КАДЪР {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "КАМЕРА",
+  "exposure": "ЕКСПОЗИЦИЯ",
+  "file": "ФАЙЛ",
+  "model": "модел",
+  "make": "марка",
+  "lens": "обектив",
+  "aperture": "бленда",
+  "shutter": "затвор",
+  "iso": "iso",
+  "focalLength": "фокусно разст.",
+  "flash": "светкавица",
+  "dimensions": "размери",
+  "format": "формат",
+  "size": "размер",
+  "hintsWeb": "← → НАВ   I ИНФО   ESC ЗАТВ",
+  "hintsTouch": "Плъзни надолу за затваряне"
+}

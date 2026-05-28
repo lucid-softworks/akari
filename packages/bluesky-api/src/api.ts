@@ -10,6 +10,7 @@ import {
   type GrainGalleryRecordsResponse,
   type GrainPhotoRecordsResponse,
   type GrainGalleryItemRecordsResponse,
+  type GrainPhotoExifRecordsResponse,
 } from './grain';
 import {
   BlueskyLeaflet,
@@ -382,6 +383,19 @@ export class BlueskyApi extends BlueskyApiClient {
     cursor?: string,
   ): Promise<GrainGalleryItemRecordsResponse> {
     return this.grain.getActorGalleryItems(accessJwt, actor, limit, cursor);
+  }
+
+  /**
+   * Lists `social.grain.photo.exif` sidecar records on the actor's repo
+   * — per-photo camera / lens / exposure metadata.
+   */
+  async getActorGrainPhotoExif(
+    accessJwt: string,
+    actor: string,
+    limit: number = 100,
+    cursor?: string,
+  ): Promise<GrainPhotoExifRecordsResponse> {
+    return this.grain.getActorPhotoExif(accessJwt, actor, limit, cursor);
   }
 
   /**

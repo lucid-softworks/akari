@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "VISER",
+  "frame": "BILLEDE {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "EKSPONERING",
+  "file": "FIL",
+  "model": "model",
+  "make": "mærke",
+  "lens": "objektiv",
+  "aperture": "blænde",
+  "shutter": "lukker",
+  "iso": "iso",
+  "focalLength": "brændvidde",
+  "flash": "flash",
+  "dimensions": "dimensioner",
+  "format": "format",
+  "size": "størrelse",
+  "hintsWeb": "← → NAV   I INFO   ESC LUK",
+  "hintsTouch": "Stryg ned for at lukke"
+}

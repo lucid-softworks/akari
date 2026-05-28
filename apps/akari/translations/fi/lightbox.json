@@ -1,0 +1,22 @@
+{
+  "info": "Tiedot",
+  "viewing": "KATSELU",
+  "frame": "KUVA {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "VALOTUS",
+  "file": "TIEDOSTO",
+  "model": "malli",
+  "make": "valmistaja",
+  "lens": "objektiivi",
+  "aperture": "aukko",
+  "shutter": "suljin",
+  "iso": "iso",
+  "focalLength": "polttoväli",
+  "flash": "salama",
+  "dimensions": "mitat",
+  "format": "muoto",
+  "size": "koko",
+  "hintsWeb": "← → NAV   I TIEDOT   ESC SULJE",
+  "hintsTouch": "Sulje pyyhkäisemällä alas"
+}

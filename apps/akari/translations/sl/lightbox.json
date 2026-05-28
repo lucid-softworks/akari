@@ -1,0 +1,22 @@
+{
+  "info": "Informacije",
+  "viewing": "OGLED",
+  "frame": "SLIKA {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "FOTOAPARAT",
+  "exposure": "OSVETLITEV",
+  "file": "DATOTEKA",
+  "model": "model",
+  "make": "znamka",
+  "lens": "objektiv",
+  "aperture": "zaslonka",
+  "shutter": "zaklop",
+  "iso": "iso",
+  "focalLength": "goriščna razd.",
+  "flash": "bliskavica",
+  "dimensions": "dimenzije",
+  "format": "oblika",
+  "size": "velikost",
+  "hintsWeb": "← → NAV   I INFO   ESC ZAPRI",
+  "hintsTouch": "Povlecite navzdol za zaprtje"
+}

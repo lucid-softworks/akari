@@ -1,0 +1,22 @@
+{
+  "info": "정보",
+  "viewing": "보기",
+  "frame": "프레임 {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "카메라",
+  "exposure": "노출",
+  "file": "파일",
+  "model": "모델",
+  "make": "제조사",
+  "lens": "렌즈",
+  "aperture": "조리개",
+  "shutter": "셔터",
+  "iso": "iso",
+  "focalLength": "초점 거리",
+  "flash": "플래시",
+  "dimensions": "크기",
+  "format": "형식",
+  "size": "용량",
+  "hintsWeb": "← → 이동   I 정보   ESC 닫기",
+  "hintsTouch": "아래로 스와이프하여 닫기"
+}

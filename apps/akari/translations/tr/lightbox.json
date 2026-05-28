@@ -1,0 +1,22 @@
+{
+  "info": "Bilgi",
+  "viewing": "GÖRÜNTÜLEME",
+  "frame": "KARE {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "POZLAMA",
+  "file": "DOSYA",
+  "model": "model",
+  "make": "marka",
+  "lens": "lens",
+  "aperture": "diyafram",
+  "shutter": "enstantane",
+  "iso": "iso",
+  "focalLength": "odak uzaklığı",
+  "flash": "flaş",
+  "dimensions": "boyutlar",
+  "format": "biçim",
+  "size": "boyut",
+  "hintsWeb": "← → GEZ   I BİLGİ   ESC KAPAT",
+  "hintsTouch": "Kapatmak için aşağı kaydır"
+}

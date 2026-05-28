@@ -1,0 +1,22 @@
+{
+  "info": "資訊",
+  "viewing": "檢視中",
+  "frame": "畫面 {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "相機",
+  "exposure": "曝光",
+  "file": "檔案",
+  "model": "型號",
+  "make": "廠商",
+  "lens": "鏡頭",
+  "aperture": "光圈",
+  "shutter": "快門",
+  "iso": "iso",
+  "focalLength": "焦距",
+  "flash": "閃光燈",
+  "dimensions": "尺寸",
+  "format": "格式",
+  "size": "大小",
+  "hintsWeb": "← → 導覽   I 資訊   ESC 關閉",
+  "hintsTouch": "向下滑動關閉"
+}

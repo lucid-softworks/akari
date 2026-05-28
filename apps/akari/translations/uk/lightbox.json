@@ -1,0 +1,22 @@
+{
+  "info": "Інформація",
+  "viewing": "ПЕРЕГЛЯД",
+  "frame": "КАДР {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "КАМЕРА",
+  "exposure": "ЕКСПОЗИЦІЯ",
+  "file": "ФАЙЛ",
+  "model": "модель",
+  "make": "виробник",
+  "lens": "об’єктив",
+  "aperture": "діафрагма",
+  "shutter": "витримка",
+  "iso": "iso",
+  "focalLength": "фокусна відст.",
+  "flash": "спалах",
+  "dimensions": "розміри",
+  "format": "формат",
+  "size": "розмір",
+  "hintsWeb": "← → НАВ   I ІНФО   ESC ЗАКРИТИ",
+  "hintsTouch": "Проведіть вниз, щоб закрити"
+}

@@ -1,0 +1,22 @@
+{
+  "info": "Informácie",
+  "viewing": "ZOBRAZENIE",
+  "frame": "SNÍMKA {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "FOTOAPARÁT",
+  "exposure": "EXPOZÍCIA",
+  "file": "SÚBOR",
+  "model": "model",
+  "make": "značka",
+  "lens": "objektív",
+  "aperture": "clona",
+  "shutter": "uzávierka",
+  "iso": "iso",
+  "focalLength": "ohnisko",
+  "flash": "blesk",
+  "dimensions": "rozmery",
+  "format": "formát",
+  "size": "veľkosť",
+  "hintsWeb": "← → NAV   I INFO   ESC ZAVRIEŤ",
+  "hintsTouch": "Zatvorte potiahnutím nadol"
+}

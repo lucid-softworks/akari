@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "MELIHAT",
+  "frame": "BINGKAI {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "PENCAHAYAAN",
+  "file": "BERKAS",
+  "model": "model",
+  "make": "merek",
+  "lens": "lensa",
+  "aperture": "bukaan",
+  "shutter": "rana",
+  "iso": "iso",
+  "focalLength": "panjang fokus",
+  "flash": "lampu kilat",
+  "dimensions": "dimensi",
+  "format": "format",
+  "size": "ukuran",
+  "hintsWeb": "← → NAV   I INFO   ESC TUTUP",
+  "hintsTouch": "Geser ke bawah untuk menutup"
+}

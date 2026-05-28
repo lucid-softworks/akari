@@ -1,0 +1,22 @@
+{
+  "info": "Infó",
+  "viewing": "NÉZET",
+  "frame": "KÉP {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "FÉNYKÉPEZŐ",
+  "exposure": "EXPOZÍCIÓ",
+  "file": "FÁJL",
+  "model": "modell",
+  "make": "gyártó",
+  "lens": "objektív",
+  "aperture": "rekesz",
+  "shutter": "zár",
+  "iso": "iso",
+  "focalLength": "fókusztáv",
+  "flash": "vaku",
+  "dimensions": "méretek",
+  "format": "formátum",
+  "size": "méret",
+  "hintsWeb": "← → NAV   I INFÓ   ESC BEZÁR",
+  "hintsTouch": "Húzd le a bezáráshoz"
+}

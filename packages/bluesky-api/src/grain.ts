@@ -64,6 +64,32 @@ export type GrainGalleryItemRecord = {
   };
 };
 
+/**
+ * EXIF sidecar for a `social.grain.photo`. Numeric fields are scaled by
+ * 1,000,000 on the wire (grain stores integers to keep room for decimal
+ * precision); divide by 1e6 before display. `photo` is the at:// URI of
+ * the photo record this metadata belongs to.
+ */
+export type GrainPhotoExifRecord = {
+  uri: string;
+  cid: string;
+  value: {
+    $type: 'social.grain.photo.exif';
+    photo: string;
+    createdAt: string;
+    dateTimeOriginal?: string;
+    exposureTime?: number;
+    fNumber?: number;
+    flash?: string;
+    focalLengthIn35mmFormat?: number;
+    iSO?: number;
+    lensMake?: string;
+    lensModel?: string;
+    make?: string;
+    model?: string;
+  };
+};
+
 export type GrainGalleryRecordsResponse = {
   records: GrainGalleryRecord[];
   cursor?: string;
@@ -76,6 +102,11 @@ export type GrainPhotoRecordsResponse = {
 
 export type GrainGalleryItemRecordsResponse = {
   records: GrainGalleryItemRecord[];
+  cursor?: string;
+};
+
+export type GrainPhotoExifRecordsResponse = {
+  records: GrainPhotoExifRecord[];
   cursor?: string;
 };
 
@@ -157,6 +188,36 @@ export class BlueskyGrain extends BlueskyApiClient {
 
     try {
       return await this.makeAuthenticatedRequest<GrainGalleryItemRecordsResponse>(
+        '/com.atproto.repo.listRecords',
+        accessJwt,
+        { params },
+      );
+    } catch {
+      return { records: [], cursor: undefined };
+    }
+  }
+
+  /**
+   * Lists `social.grain.photo.exif` sidecar records — camera / lens /
+   * exposure metadata that grain extracts on upload (Bluesky strips EXIF,
+   * grain keeps it in this separate record). Each links to its photo via
+   * `value.photo`. Returns empty for actors that don't use grain.
+   */
+  async getActorPhotoExif(
+    accessJwt: string,
+    repo: string,
+    limit: number = 100,
+    cursor?: string,
+  ): Promise<GrainPhotoExifRecordsResponse> {
+    const params: Record<string, string> = {
+      repo,
+      collection: 'social.grain.photo.exif',
+      limit: limit.toString(),
+    };
+    if (cursor) params.cursor = cursor;
+
+    try {
+      return await this.makeAuthenticatedRequest<GrainPhotoExifRecordsResponse>(
         '/com.atproto.repo.listRecords',
         accessJwt,
         { params },

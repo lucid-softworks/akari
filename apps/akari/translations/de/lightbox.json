@@ -1,0 +1,22 @@
+{
+  "info": "Info",
+  "viewing": "ANSICHT",
+  "frame": "BILD {{current}} / {{total}}",
+  "alt": "ALT",
+  "camera": "KAMERA",
+  "exposure": "BELICHTUNG",
+  "file": "DATEI",
+  "model": "Modell",
+  "make": "Hersteller",
+  "lens": "Objektiv",
+  "aperture": "Blende",
+  "shutter": "Verschluss",
+  "iso": "iso",
+  "focalLength": "Brennweite",
+  "flash": "Blitz",
+  "dimensions": "Abmessungen",
+  "format": "Format",
+  "size": "Größe",
+  "hintsWeb": "← → NAV   I INFO   ESC SCHLIESSEN",
+  "hintsTouch": "Zum Schließen nach unten wischen"
+}

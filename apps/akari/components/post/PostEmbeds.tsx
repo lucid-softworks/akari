@@ -7,6 +7,7 @@ import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
+import { suppressCardPress } from '@/utils/postCardPressGuard';
 import { Lightbox } from '@/components/ui/Lightbox';
 import { RecordEmbed } from '@/components/RecordEmbed';
 import { ThemedText } from '@/components/ThemedText';
@@ -69,7 +70,12 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
   );
 
   const imageData = useMemo(() => {
-    const empty = { urls: [] as string[], altTexts: [] as string[], ratios: [] as (number | undefined)[] };
+    const empty = {
+      urls: [] as string[],
+      altTexts: [] as string[],
+      ratios: [] as (number | undefined)[],
+      dims: [] as ({ width: number; height: number } | undefined)[],
+    };
     if (!embedData) return empty;
 
     const fromImages = (images: BlueskyImage[]) => {
@@ -82,6 +88,11 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         ratios: filtered.map((img) =>
           img.aspectRatio && img.aspectRatio.width > 0 && img.aspectRatio.height > 0
             ? img.aspectRatio.width / img.aspectRatio.height
+            : undefined,
+        ),
+        dims: filtered.map((img) =>
+          img.aspectRatio && img.aspectRatio.width > 0 && img.aspectRatio.height > 0
+            ? { width: img.aspectRatio.width, height: img.aspectRatio.height }
             : undefined,
         ),
       };
@@ -211,10 +222,12 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
             return (
               <Pressable
                 key={`${postId}-${imageUrl}`}
+                // Claim the press before the card's release fires — on web,
+                // stopPropagation alone doesn't reliably stop the outer
+                // card Pressable, so opening the lightbox and navigating to
+                // the post would otherwise race.
+                onPressIn={() => suppressCardPress()}
                 onPress={(event: { stopPropagation?: () => void }) => {
-                  // Stop the click from bubbling to the outer PostCard
-                  // PressableLink — opening the image viewer should not
-                  // also navigate to the post detail page.
                   event?.stopPropagation?.();
                   handleImagePress(index);
                 }}
@@ -286,7 +299,12 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         <Lightbox
           visible={selectedImageIndex !== null}
           onClose={handleCloseImageViewer}
-          images={imageData.urls.map((url, i) => ({ url, alt: imageData.altTexts[i] }))}
+          images={imageData.urls.map((url, i) => ({
+            url,
+            alt: imageData.altTexts[i],
+            width: imageData.dims[i]?.width,
+            height: imageData.dims[i]?.height,
+          }))}
           startIndex={selectedImageIndex}
         />
       )}
