@@ -127,5 +127,8 @@
   "likeFailed": "Tidak dapat menyukai postingan. Coba lagi.",
   "unlikeFailed": "Tidak dapat membatalkan suka. Coba lagi.",
   "bookmarkFailed": "Tidak dapat menandai postingan. Coba lagi.",
-  "unbookmarkFailed": "Tidak dapat menghapus penanda. Coba lagi."
+  "unbookmarkFailed": "Tidak dapat menghapus penanda. Coba lagi.",
+  "postedToast": "Diposting",
+  "replyPostedToast": "Balasan diposting",
+  "threadPostedToast": "Utas diposting"
 }

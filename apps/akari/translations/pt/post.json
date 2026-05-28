@@ -127,5 +127,8 @@
   "likeFailed": "Não foi possível curtir a publicação. Tente novamente.",
   "unlikeFailed": "Não foi possível remover a curtida. Tente novamente.",
   "bookmarkFailed": "Não foi possível salvar a publicação. Tente novamente.",
-  "unbookmarkFailed": "Não foi possível remover o favorito. Tente novamente."
+  "unbookmarkFailed": "Não foi possível remover o favorito. Tente novamente.",
+  "postedToast": "Publicado",
+  "replyPostedToast": "Resposta publicada",
+  "threadPostedToast": "Tópico publicado"
 }

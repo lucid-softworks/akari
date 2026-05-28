@@ -127,5 +127,8 @@
   "likeFailed": "投稿にいいねできませんでした。もう一度お試しください。",
   "unlikeFailed": "いいねを取り消せませんでした。もう一度お試しください。",
   "bookmarkFailed": "投稿をブックマークできませんでした。もう一度お試しください。",
-  "unbookmarkFailed": "ブックマークを解除できませんでした。もう一度お試しください。"
+  "unbookmarkFailed": "ブックマークを解除できませんでした。もう一度お試しください。",
+  "postedToast": "投稿しました",
+  "replyPostedToast": "返信を投稿しました",
+  "threadPostedToast": "スレッドを投稿しました"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "Gönderi beğenilemedi. Tekrar dene.",
   "unlikeFailed": "Gönderinin beğenisi kaldırılamadı. Tekrar dene.",
   "bookmarkFailed": "Gönderi kaydedilemedi. Tekrar dene.",
-  "unbookmarkFailed": "Yer imi kaldırılamadı. Tekrar dene."
+  "unbookmarkFailed": "Yer imi kaldırılamadı. Tekrar dene.",
+  "postedToast": "Paylaşıldı",
+  "replyPostedToast": "Yanıt paylaşıldı",
+  "threadPostedToast": "Zincir paylaşıldı"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "Impossibile mettere mi piace al post. Riprova.",
   "unlikeFailed": "Impossibile rimuovere il mi piace. Riprova.",
   "bookmarkFailed": "Impossibile salvare il post. Riprova.",
-  "unbookmarkFailed": "Impossibile rimuovere il segnalibro. Riprova."
+  "unbookmarkFailed": "Impossibile rimuovere il segnalibro. Riprova.",
+  "postedToast": "Pubblicato",
+  "replyPostedToast": "Risposta pubblicata",
+  "threadPostedToast": "Thread pubblicato"
 }

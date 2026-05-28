@@ -127,5 +127,8 @@
   "likeFailed": "Impossible d'aimer le post. Réessayez.",
   "unlikeFailed": "Impossible de retirer le j'aime. Réessayez.",
   "bookmarkFailed": "Impossible d'enregistrer le post. Réessayez.",
-  "unbookmarkFailed": "Impossible de retirer le favori. Réessayez."
+  "unbookmarkFailed": "Impossible de retirer le favori. Réessayez.",
+  "postedToast": "Publié",
+  "replyPostedToast": "Réponse publiée",
+  "threadPostedToast": "Fil publié"
 }

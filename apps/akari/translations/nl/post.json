@@ -127,5 +127,8 @@
   "likeFailed": "Kon bericht niet liken. Probeer het opnieuw.",
   "unlikeFailed": "Kon like niet verwijderen. Probeer het opnieuw.",
   "bookmarkFailed": "Kon bericht niet opslaan. Probeer het opnieuw.",
-  "unbookmarkFailed": "Kon bladwijzer niet verwijderen. Probeer het opnieuw."
+  "unbookmarkFailed": "Kon bladwijzer niet verwijderen. Probeer het opnieuw.",
+  "postedToast": "Geplaatst",
+  "replyPostedToast": "Reactie geplaatst",
+  "threadPostedToast": "Thread geplaatst"
 }

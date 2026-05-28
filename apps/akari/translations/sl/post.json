@@ -127,5 +127,8 @@
   "likeFailed": "Objave ni bilo mogoče označiti z všečkom. Poskusite znova.",
   "unlikeFailed": "Všečka ni bilo mogoče odstraniti. Poskusite znova.",
   "bookmarkFailed": "Objave ni bilo mogoče dodati med zaznamke. Poskusite znova.",
-  "unbookmarkFailed": "Zaznamka ni bilo mogoče odstraniti. Poskusite znova."
+  "unbookmarkFailed": "Zaznamka ni bilo mogoče odstraniti. Poskusite znova.",
+  "postedToast": "Objavljeno",
+  "replyPostedToast": "Odgovor objavljen",
+  "threadPostedToast": "Nit objavljena"
 }

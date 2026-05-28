@@ -127,5 +127,8 @@
   "likeFailed": "Julkaisusta ei voitu tykätä. Yritä uudelleen.",
   "unlikeFailed": "Tykkäystä ei voitu poistaa. Yritä uudelleen.",
   "bookmarkFailed": "Julkaisua ei voitu tallentaa. Yritä uudelleen.",
-  "unbookmarkFailed": "Kirjanmerkkiä ei voitu poistaa. Yritä uudelleen."
+  "unbookmarkFailed": "Kirjanmerkkiä ei voitu poistaa. Yritä uudelleen.",
+  "postedToast": "Julkaistu",
+  "replyPostedToast": "Vastaus julkaistu",
+  "threadPostedToast": "Ketju julkaistu"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "Nepodařilo se dát „to se mi líbí“. Zkuste to znovu.",
   "unlikeFailed": "Nepodařilo se odebrat „to se mi líbí“. Zkuste to znovu.",
   "bookmarkFailed": "Nepodařilo se uložit záložku. Zkuste to znovu.",
-  "unbookmarkFailed": "Nepodařilo se odebrat záložku. Zkuste to znovu."
+  "unbookmarkFailed": "Nepodařilo se odebrat záložku. Zkuste to znovu.",
+  "postedToast": "Publikováno",
+  "replyPostedToast": "Odpověď publikována",
+  "threadPostedToast": "Vlákno publikováno"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "Kunne ikke like opslag. Prøv igen.",
   "unlikeFailed": "Kunne ikke fjerne like. Prøv igen.",
   "bookmarkFailed": "Kunne ikke gemme bogmærke. Prøv igen.",
-  "unbookmarkFailed": "Kunne ikke fjerne bogmærke. Prøv igen."
+  "unbookmarkFailed": "Kunne ikke fjerne bogmærke. Prøv igen.",
+  "postedToast": "Indlæg sendt",
+  "replyPostedToast": "Svar sendt",
+  "threadPostedToast": "Tråd sendt"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "No se pudo dar me gusta a la publicación. Inténtalo de nuevo.",
   "unlikeFailed": "No se pudo quitar el me gusta. Inténtalo de nuevo.",
   "bookmarkFailed": "No se pudo guardar la publicación. Inténtalo de nuevo.",
-  "unbookmarkFailed": "No se pudo quitar el marcador. Inténtalo de nuevo."
+  "unbookmarkFailed": "No se pudo quitar el marcador. Inténtalo de nuevo.",
+  "postedToast": "Publicado",
+  "replyPostedToast": "Respuesta publicada",
+  "threadPostedToast": "Hilo publicado"
 }

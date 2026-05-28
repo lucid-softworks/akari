@@ -127,5 +127,8 @@
   "likeFailed": "Không thể thích bài viết. Vui lòng thử lại.",
   "unlikeFailed": "Không thể bỏ thích bài viết. Vui lòng thử lại.",
   "bookmarkFailed": "Không thể đánh dấu bài viết. Vui lòng thử lại.",
-  "unbookmarkFailed": "Không thể bỏ đánh dấu bài viết. Vui lòng thử lại."
+  "unbookmarkFailed": "Không thể bỏ đánh dấu bài viết. Vui lòng thử lại.",
+  "postedToast": "Đã đăng",
+  "replyPostedToast": "Đã đăng phản hồi",
+  "threadPostedToast": "Đã đăng chuỗi bài"
 }

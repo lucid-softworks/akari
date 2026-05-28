@@ -127,5 +127,8 @@
   "likeFailed": "Nu s-a putut aprecia postarea. Încearcă din nou.",
   "unlikeFailed": "Nu s-a putut retrage aprecierea. Încearcă din nou.",
   "bookmarkFailed": "Nu s-a putut salva postarea. Încearcă din nou.",
-  "unbookmarkFailed": "Nu s-a putut elimina marcajul. Încearcă din nou."
+  "unbookmarkFailed": "Nu s-a putut elimina marcajul. Încearcă din nou.",
+  "postedToast": "Publicat",
+  "replyPostedToast": "Răspuns publicat",
+  "threadPostedToast": "Fir publicat"
 }

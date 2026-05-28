@@ -127,5 +127,8 @@
   "likeFailed": "Det gick inte att gilla inlägget. Försök igen.",
   "unlikeFailed": "Det gick inte att ta bort gillamarkeringen. Försök igen.",
   "bookmarkFailed": "Det gick inte att spara inlägget. Försök igen.",
-  "unbookmarkFailed": "Det gick inte att ta bort bokmärket. Försök igen."
+  "unbookmarkFailed": "Det gick inte att ta bort bokmärket. Försök igen.",
+  "postedToast": "Publicerat",
+  "replyPostedToast": "Svar publicerat",
+  "threadPostedToast": "Tråd publicerad"
 }

@@ -127,5 +127,8 @@
   "likeFailed": "Couldn’t like post. Try again.",
   "unlikeFailed": "Couldn’t unlike post. Try again.",
   "bookmarkFailed": "Couldn’t bookmark post. Try again.",
-  "unbookmarkFailed": "Couldn’t remove bookmark. Try again."
+  "unbookmarkFailed": "Couldn’t remove bookmark. Try again.",
+  "postedToast": "Posted",
+  "replyPostedToast": "Reply posted",
+  "threadPostedToast": "Thread posted"
 }

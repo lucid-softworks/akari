@@ -127,5 +127,8 @@
   "likeFailed": "Methwyd hoffi'r post. Ceisiwch eto.",
   "unlikeFailed": "Methwyd dad-hoffi'r post. Ceisiwch eto.",
   "bookmarkFailed": "Methwyd creu nod tudalen. Ceisiwch eto.",
-  "unbookmarkFailed": "Methwyd dileu'r nod tudalen. Ceisiwch eto."
+  "unbookmarkFailed": "Methwyd dileu'r nod tudalen. Ceisiwch eto.",
+  "postedToast": "Wedi cyhoeddi",
+  "replyPostedToast": "Ymateb wedi cyhoeddi",
+  "threadPostedToast": "Edefyn wedi cyhoeddi"
 }

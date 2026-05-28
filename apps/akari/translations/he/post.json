@@ -127,5 +127,8 @@
   "likeFailed": "לא ניתן היה לסמן את הפוסט בלייק. נסה שוב.",
   "unlikeFailed": "לא ניתן היה לבטל את הלייק. נסה שוב.",
   "bookmarkFailed": "לא ניתן היה לשמור את הפוסט. נסה שוב.",
-  "unbookmarkFailed": "לא ניתן היה להסיר את הסימנייה. נסה שוב."
+  "unbookmarkFailed": "לא ניתן היה להסיר את הסימנייה. נסה שוב.",
+  "postedToast": "פורסם",
+  "replyPostedToast": "התגובה פורסמה",
+  "threadPostedToast": "השרשור פורסם"
 }
