@@ -14,6 +14,8 @@ export type DerivedPostInteractionSettings = {
   following: boolean;
   mentioned: boolean;
   allowQuotes: boolean;
+  /** At-URIs of moderation lists whose members are always allowed to reply. */
+  allowedLists: string[];
 };
 
 const DEFAULTS: DerivedPostInteractionSettings = {
@@ -22,6 +24,7 @@ const DEFAULTS: DerivedPostInteractionSettings = {
   following: false,
   mentioned: false,
   allowQuotes: true,
+  allowedLists: [],
 };
 
 /**
@@ -52,6 +55,7 @@ export function usePostInteractionSettings(): {
     let followers = false;
     let following = false;
     let mentioned = false;
+    const allowedLists: string[] = [];
 
     if (Array.isArray(allowRules)) {
       // Empty array == "nobody" in atproto threadgate semantics.
@@ -60,11 +64,15 @@ export function usePostInteractionSettings(): {
       } else {
         mode = 'anyone';
         for (const rule of allowRules) {
-          const t = rule?.$type;
+          const t = (rule as { $type?: string } | null | undefined)?.$type;
           if (typeof t !== 'string') continue;
           if (t.endsWith('#followerRule')) followers = true;
           else if (t.endsWith('#followingRule')) following = true;
           else if (t.endsWith('#mentionRule')) mentioned = true;
+          else if (t.endsWith('#listRule')) {
+            const list = (rule as { list?: string }).list;
+            if (typeof list === 'string') allowedLists.push(list);
+          }
         }
       }
     }
@@ -79,6 +87,7 @@ export function usePostInteractionSettings(): {
       following,
       mentioned,
       allowQuotes: !disableQuotes,
+      allowedLists,
     };
   }, [data]);
 

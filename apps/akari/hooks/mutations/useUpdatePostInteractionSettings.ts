@@ -33,12 +33,15 @@ export function useUpdatePostInteractionSettings() {
       const api = apiForAccount(currentAccount);
       const current = await api.getPreferences(token);
 
-      const allowRules: { $type: string }[] | undefined = (() => {
+      const allowRules: { $type: string; list?: string }[] | undefined = (() => {
         if (input.mode === 'nobody') return [];
-        const rules: { $type: string }[] = [];
+        const rules: { $type: string; list?: string }[] = [];
         if (input.followers) rules.push({ $type: 'app.bsky.feed.threadgate#followerRule' });
         if (input.following) rules.push({ $type: 'app.bsky.feed.threadgate#followingRule' });
         if (input.mentioned) rules.push({ $type: 'app.bsky.feed.threadgate#mentionRule' });
+        for (const list of input.allowedLists) {
+          rules.push({ $type: 'app.bsky.feed.threadgate#listRule', list });
+        }
         return rules.length ? rules : undefined;
       })();
 

@@ -69,6 +69,12 @@ type MenuProps = {
   children: React.ReactNode;
   /** Rough menu height (px) used by the web portal for above/below flip logic. */
   estimatedHeight?: number;
+  /**
+   * Whether tapping an item dismisses the menu. Defaults to `true` for
+   * picker-style menus; set to `false` for multi-select menus where the
+   * user should toggle several items before closing.
+   */
+  closeOnSelect?: boolean;
 };
 
 /**
@@ -93,7 +99,7 @@ type MenuProps = {
  * picker (mark `selected: true` on the active row) and action (set
  * `icon` / `destructive`) menus.
  */
-export function Menu({ items, children, estimatedHeight = 240 }: MenuProps) {
+export function Menu({ items, children, estimatedHeight = 240, closeOnSelect = true }: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState<WebPortalAnchorRect | null>(null);
   const triggerRef = useRef<View | null>(null);
@@ -136,11 +142,14 @@ export function Menu({ items, children, estimatedHeight = 240 }: MenuProps) {
     });
   }, [isOpen]);
 
-  const handleSelect = useCallback((item: MenuItem) => {
-    if (item.disabled) return;
-    item.onPress();
-    setIsOpen(false);
-  }, []);
+  const handleSelect = useCallback(
+    (item: MenuItem) => {
+      if (item.disabled) return;
+      item.onPress();
+      if (closeOnSelect) setIsOpen(false);
+    },
+    [closeOnSelect],
+  );
 
   useEffect(() => () => setIsOpen(false), []);
 

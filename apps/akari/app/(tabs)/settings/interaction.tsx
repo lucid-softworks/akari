@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { SettingsSection } from '@/components/settings/SettingsList';
@@ -8,10 +8,13 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Menu, MenuTrigger, type MenuItem } from '@/components/ui/Menu';
 import { activeOpacity, fontSize, fontWeight, radius, spacing } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
 import { useUpdatePostInteractionSettings } from '@/hooks/mutations/useUpdatePostInteractionSettings';
 import { usePostInteractionSettings } from '@/hooks/queries/usePostInteractionSettings';
+import { useLists } from '@/hooks/queries/useLists';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -35,6 +38,7 @@ export default function InteractionSettingsScreen() {
     allowFollowing: boolean;
     allowMentioned: boolean;
     allowQuotes: boolean;
+    allowedLists: string[];
   };
 
   // Pre-fill once preferences land. This effect only seeds the form
@@ -47,8 +51,9 @@ export default function InteractionSettingsScreen() {
     allowFollowing: settings.data.following,
     allowMentioned: settings.data.mentioned,
     allowQuotes: settings.data.allowQuotes,
+    allowedLists: settings.data.allowedLists,
   }));
-  const { mode, allowFollowers, allowFollowing, allowMentioned, allowQuotes } = form;
+  const { mode, allowFollowers, allowFollowing, allowMentioned, allowQuotes, allowedLists } = form;
   const setMode = useCallback((nextMode: ReplyMode) => setForm((p) => ({ ...p, mode: nextMode })), []);
   const setAllowFollowers = useCallback(
     (next: boolean | ((prev: boolean) => boolean)) =>
@@ -78,6 +83,43 @@ export default function InteractionSettingsScreen() {
     (next: boolean) => setForm((p) => ({ ...p, allowQuotes: next })),
     [],
   );
+  const toggleAllowedList = useCallback(
+    (listUri: string) =>
+      setForm((p) => ({
+        ...p,
+        allowedLists: p.allowedLists.includes(listUri)
+          ? p.allowedLists.filter((uri) => uri !== listUri)
+          : [...p.allowedLists, listUri],
+      })),
+    [],
+  );
+
+  const { data: currentAccount } = useCurrentAccount();
+  const listsQuery = useLists(currentAccount?.did);
+  const userLists = useMemo(
+    () => listsQuery.data?.pages.flatMap((page) => page.lists) ?? [],
+    [listsQuery.data],
+  );
+  const listMenuItems = useMemo<MenuItem[]>(
+    () =>
+      userLists
+        .filter((list) => list.purpose !== 'app.bsky.graph.defs#modlist')
+        .map((list) => ({
+          key: list.uri,
+          label: list.name,
+          selected: allowedLists.includes(list.uri),
+          onPress: () => toggleAllowedList(list.uri),
+        })),
+    [userLists, allowedLists, toggleAllowedList],
+  );
+  const listsSummary = useMemo(() => {
+    if (allowedLists.length === 0) return t('settings.whoCanReplyListsNone');
+    const names = userLists
+      .filter((list) => allowedLists.includes(list.uri))
+      .map((list) => list.name);
+    if (names.length === 0) return t('settings.whoCanReplyListsSelected', { count: allowedLists.length });
+    return names.join(', ');
+  }, [allowedLists, userLists, t]);
 
   useEffect(() => {
     setForm({
@@ -86,6 +128,7 @@ export default function InteractionSettingsScreen() {
       allowFollowing: settings.data.following,
       allowMentioned: settings.data.mentioned,
       allowQuotes: settings.data.allowQuotes,
+      allowedLists: settings.data.allowedLists,
     });
   }, [settings.data]);
 
@@ -97,6 +140,7 @@ export default function InteractionSettingsScreen() {
         following: allowFollowing,
         mentioned: allowMentioned,
         allowQuotes,
+        allowedLists,
       },
       {
         onSuccess: () => router.back(),
@@ -105,7 +149,7 @@ export default function InteractionSettingsScreen() {
         },
       },
     );
-  }, [allowFollowers, allowFollowing, allowMentioned, allowQuotes, mode, showToast, t, update]);
+  }, [allowFollowers, allowFollowing, allowMentioned, allowQuotes, allowedLists, mode, showToast, t, update]);
 
   const restrictionsDisabled = mode === 'nobody';
 
@@ -175,20 +219,28 @@ export default function InteractionSettingsScreen() {
               showDivider
               value={!restrictionsDisabled && allowMentioned}
             />
-            <Pressable
-              disabled={restrictionsDisabled}
-              onPress={() => showToast({ type: 'info', message: t('settings.notImplemented') })}
-              style={({ pressed }) => [
-                styles.listsRow,
-                restrictionsDisabled && styles.disabled,
-                pressed && !restrictionsDisabled && { opacity: activeOpacity.default },
-              ]}
-            >
-              <ThemedText style={styles.listsLabel}>
-                {t('settings.whoCanReplyLists')}
-              </ThemedText>
-              <IconSymbol name="chevron.down" size={16} color={subduedColor} />
-            </Pressable>
+            <Menu items={listMenuItems} closeOnSelect={false} estimatedHeight={320}>
+              <MenuTrigger
+                disabled={restrictionsDisabled || listMenuItems.length === 0}
+                style={({ pressed }) => [
+                  styles.listsRow,
+                  (restrictionsDisabled || listMenuItems.length === 0) && styles.disabled,
+                  pressed && !restrictionsDisabled && { opacity: activeOpacity.default },
+                ]}
+              >
+                <View style={styles.listsBody}>
+                  <ThemedText style={styles.listsLabel}>
+                    {t('settings.whoCanReplyLists')}
+                  </ThemedText>
+                  <ThemedText style={[styles.listsSummary, { color: subduedColor }]} numberOfLines={1}>
+                    {listMenuItems.length === 0
+                      ? t('settings.whoCanReplyListsEmpty')
+                      : listsSummary}
+                  </ThemedText>
+                </View>
+                <IconSymbol name="chevron.down" size={16} color={subduedColor} />
+              </MenuTrigger>
+            </Menu>
           </ThemedView>
         </SettingsSection>
 
@@ -368,9 +420,16 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   listsLabel: {
-    flex: 1,
     fontSize: fontSize.base,
     fontWeight: fontWeight.medium,
+  },
+  listsBody: {
+    flex: 1,
+    minWidth: 0,
+    gap: 2,
+  },
+  listsSummary: {
+    fontSize: fontSize.xs,
   },
   toggleRow: {
     flexDirection: 'row',
