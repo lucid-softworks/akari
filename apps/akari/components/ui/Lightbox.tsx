@@ -1,4 +1,3 @@
-import { BlurView } from 'expo-blur';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -89,28 +88,25 @@ export function Lightbox({
     if (visible) setCurrentIndex(startIndex);
   }, [visible, startIndex]);
 
-  // Backdrop opacity dims as the user swipes down to dismiss; scene
-  // scale gives the open / close animation a touch of motion (snaps from
-  // 0.96 → 1.0 on open, drops with the dismiss). Chrome opacity fades
-  // the header + footer card as soon as the user pinches or pans the
-  // photo so nothing covers the image they're focused on.
+  // Backdrop opacity dims as the user swipes down to dismiss. Chrome
+  // opacity fades the header + footer as soon as the user pinches or
+  // pans so nothing covers the photo they're focused on. No scale
+  // animation on the scene — it felt bouncy and out of place; a clean
+  // fade matches the rest of the app's modal transitions.
   const backdropOpacity = useSharedValue(0);
-  const sceneScale = useSharedValue(0.96);
   const dismissTranslateY = useSharedValue(0);
   const chromeOpacity = useSharedValue(0);
 
   useEffect(() => {
     if (visible) {
-      backdropOpacity.value = withTiming(1, { duration: 200 });
-      sceneScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+      backdropOpacity.value = withTiming(1, { duration: 180 });
       chromeOpacity.value = withTiming(1, { duration: 220 });
     } else {
       backdropOpacity.value = 0;
-      sceneScale.value = 0.96;
       chromeOpacity.value = 0;
       dismissTranslateY.value = 0;
     }
-  }, [visible, backdropOpacity, chromeOpacity, dismissTranslateY, sceneScale]);
+  }, [visible, backdropOpacity, chromeOpacity, dismissTranslateY]);
 
   const setChromeVisible = useCallback(
     (next: boolean) => {
@@ -174,7 +170,7 @@ export function Lightbox({
   }, [confirm, currentIndex, items, t]);
 
   const sceneStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: dismissTranslateY.value }, { scale: sceneScale.value }],
+    transform: [{ translateY: dismissTranslateY.value }],
   }));
   const backdropStyle = useAnimatedStyle(() => ({ opacity: backdropOpacity.value }));
   const chromeStyle = useAnimatedStyle(() => ({ opacity: chromeOpacity.value }));
@@ -187,7 +183,6 @@ export function Lightbox({
         screenH={screenH}
         dismissTranslateY={dismissTranslateY}
         backdropOpacity={backdropOpacity}
-        sceneScale={sceneScale}
         chromeOpacity={chromeOpacity}
         onDismiss={closeAndReset}
         onChromeShouldHide={() => setChromeVisible(false)}
@@ -198,7 +193,6 @@ export function Lightbox({
       chromeOpacity,
       closeAndReset,
       dismissTranslateY,
-      sceneScale,
       screenH,
       screenW,
       setChromeVisible,
@@ -267,11 +261,11 @@ export function Lightbox({
             pointerEvents="box-none"
           >
             {altForCurrent ? (
-              <BlurView intensity={40} tint="dark" style={styles.altTextCard}>
+              <View style={styles.altTextCard}>
                 <ThemedText style={styles.altText} numberOfLines={4}>
                   {altForCurrent}
                 </ThemedText>
-              </BlurView>
+              </View>
             ) : null}
             {isMulti ? (
               <View style={styles.dotsRow}>
@@ -307,14 +301,10 @@ function ChromeButton({ icon, onPress, accessibilityLabel, testID }: ChromeButto
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      hitSlop={8}
-      style={({ pressed }) => [styles.chromeButtonWrapper, pressed && { opacity: 0.75 }]}
+      hitSlop={12}
+      style={({ pressed }) => [styles.chromeButton, pressed && { opacity: 0.7 }]}
     >
-      <BlurView intensity={50} tint="dark" style={styles.chromeButtonBlur}>
-        <View style={styles.chromeButtonInner}>
-          <IconSymbol name={icon} size={18} color={CHROME_FG} />
-        </View>
-      </BlurView>
+      <IconSymbol name={icon} size={20} color={CHROME_FG} style={styles.chromeIcon} />
     </Pressable>
   );
 }
@@ -325,7 +315,6 @@ type ZoomableImageProps = {
   screenH: number;
   dismissTranslateY: SharedValue<number>;
   backdropOpacity: SharedValue<number>;
-  sceneScale: SharedValue<number>;
   chromeOpacity: SharedValue<number>;
   onDismiss: () => void;
   onChromeShouldHide: () => void;
@@ -337,7 +326,6 @@ function ZoomableImage({
   screenH,
   dismissTranslateY,
   backdropOpacity,
-  sceneScale,
   chromeOpacity,
   onDismiss,
   onChromeShouldHide,
@@ -381,20 +369,15 @@ function ZoomableImage({
         translateX.value = savedTranslateX.value + event.translationX;
         translateY.value = savedTranslateY.value + event.translationY;
       } else if (Math.abs(event.translationY) > Math.abs(event.translationX)) {
+        // Plain drag-down dismiss: translateY follows the finger, the
+        // backdrop fades 1:1 with distance, chrome fades out as soon
+        // as the gesture commits.
         const dy = Math.max(0, event.translationY);
         dismissTranslateY.value = dy;
-        // Backdrop fades and the scene contracts a touch as it falls
-        // away — gives a sense of "lifting" the photo off the screen.
         backdropOpacity.value = interpolate(
           dy,
           [0, SWIPE_DOWN_CLOSE_THRESHOLD * 2],
           [1, 0],
-          Extrapolation.CLAMP,
-        );
-        sceneScale.value = interpolate(
-          dy,
-          [0, SWIPE_DOWN_CLOSE_THRESHOLD * 2],
-          [1, 0.85],
           Extrapolation.CLAMP,
         );
         if (dy > 8) {
@@ -417,14 +400,14 @@ function ZoomableImage({
         dismissTranslateY.value > SWIPE_DOWN_CLOSE_THRESHOLD ||
         event.velocityY > SWIPE_DOWN_VELOCITY_THRESHOLD;
       if (shouldDismiss) {
-        dismissTranslateY.value = withTiming(screenH * 0.5, { duration: 180 });
-        backdropOpacity.value = withTiming(0, { duration: 180 }, () => {
+        dismissTranslateY.value = withTiming(screenH, { duration: 160 });
+        backdropOpacity.value = withTiming(0, { duration: 160 }, () => {
           runOnJS(onDismiss)();
         });
       } else {
-        dismissTranslateY.value = withSpring(0);
-        backdropOpacity.value = withSpring(1);
-        sceneScale.value = withSpring(1);
+        dismissTranslateY.value = withTiming(0, { duration: 180 });
+        backdropOpacity.value = withTiming(1, { duration: 180 });
+        chromeOpacity.value = withTiming(1, { duration: 180 });
       }
     });
 
@@ -516,24 +499,17 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     zIndex: 2,
   },
-  chromeButtonWrapper: {
+  chromeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    overflow: 'hidden',
-  },
-  chromeButtonBlur: {
-    flex: 1,
-  },
-  chromeButtonInner: {
-    flex: 1,
-    backgroundColor: CHROME_TINT_BG,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 18,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    // Soft dark fill — enough contrast to keep the white icon legible
+    // against any photo without looking like a glassmorphic graft.
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
+  chromeIcon: {},
   page: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -571,10 +547,8 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: radius.md,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   altText: {
     fontSize: fontSize.sm,
