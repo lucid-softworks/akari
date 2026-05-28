@@ -1389,6 +1389,21 @@ export type BlueskyMutedWordsPref = {
 };
 
 /**
+ * Per-feed view preferences (hide replies / reposts / quote posts on a
+ * particular feed). `feed` is the at:// URI of the feed gen, or the
+ * literal string `'home'` for the user's Following timeline.
+ */
+export type BlueskyFeedViewPref = {
+  $type: 'app.bsky.actor.defs#feedViewPref';
+  feed: string;
+  hideReplies?: boolean;
+  hideRepliesByUnfollowed?: boolean;
+  hideRepliesByLikeCount?: number;
+  hideReposts?: boolean;
+  hideQuotePosts?: boolean;
+};
+
+/**
  * Union type for all preference types
  */
 export type BlueskyPreference =
@@ -1402,7 +1417,8 @@ export type BlueskyPreference =
   | BlueskyThreadViewPref
   | BlueskyAppStatePref
   | BlueskyLabelersPref
-  | BlueskyMutedWordsPref;
+  | BlueskyMutedWordsPref
+  | BlueskyFeedViewPref;
 
 /**
  * Labeler service view

@@ -50,7 +50,7 @@ export default function ContentAndMediaScreen() {
         key: 'following-feed-preferences',
         icon: 'house.fill',
         label: t('settings.followingFeedPreferences'),
-        onPress: showNotImplemented,
+        onPress: () => router.push('/(tabs)/settings/following-feed-preferences'),
       },
       {
         key: 'external-media',

@@ -101,6 +101,10 @@ export default function SettingsLayout() {
         options={{ title: t('settings.externalMedia') }}
       />
       <Stack.Screen
+        name="following-feed-preferences"
+        options={{ title: t('settings.followingFeedPreferences') }}
+      />
+      <Stack.Screen
         name="system-log"
         options={{ title: t('settings.systemLog') }}
       />
