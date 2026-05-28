@@ -318,6 +318,7 @@
   "appLanguageHint": "Select which language to use for the app's user interface.",
   "primaryLanguage": "Primary language",
   "primaryLanguageHint": "Select your preferred language for translations in your feed.",
+  "primaryLanguageNone": "Not set",
   "contentLanguagesHint": "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown.",
   "addMoreLanguages": "Add more languages…",
   "contentLanguages": "Content languages",
