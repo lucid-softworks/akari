@@ -23,11 +23,31 @@ function getAllKeys(obj, prefix = "") {
   return keys;
 }
 
-// Function to validate translation file structure
-function validateTranslationFile(filePath, referenceKeys) {
+// Translations live as one directory per locale, each holding a set of
+// per-namespace JSON files (common.json, profile.json, …) that the locale's
+// index.ts barrel merges into a single `{ namespace: { …keys } }` object.
+// Load a locale by merging those files the same way, keyed by file basename
+// (which is exactly the namespace key the barrel exports).
+function loadLocale(localeDir) {
+  const merged = {};
+  const files = fs
+    .readdirSync(localeDir)
+    .filter((file) => file.endsWith(".json"))
+    .toSorted();
+
+  for (const file of files) {
+    const namespace = path.basename(file, ".json");
+    const content = fs.readFileSync(path.join(localeDir, file), "utf8");
+    merged[namespace] = JSON.parse(content);
+  }
+
+  return merged;
+}
+
+// Validate a single locale directory against the reference key set.
+function validateLocale(locale, localeDir, referenceKeys) {
   try {
-    const content = fs.readFileSync(filePath, "utf8");
-    const translation = JSON.parse(content);
+    const translation = loadLocale(localeDir);
 
     const fileKeys = getAllKeys(translation);
     const fileKeySet = new Set(fileKeys);
@@ -35,14 +55,12 @@ function validateTranslationFile(filePath, referenceKeys) {
     const missingKeys = [];
     const extraKeys = [];
 
-    // Check for missing keys
     for (const refKey of referenceKeys) {
       if (!fileKeySet.has(refKey)) {
         missingKeys.push(refKey);
       }
     }
 
-    // Check for extra keys
     for (const fileKey of fileKeys) {
       if (!referenceKeySet.has(fileKey)) {
         extraKeys.push(fileKey);
@@ -50,14 +68,14 @@ function validateTranslationFile(filePath, referenceKeys) {
     }
 
     return {
-      filePath,
+      locale,
       isValid: missingKeys.length === 0 && extraKeys.length === 0,
       missingKeys,
       extraKeys,
     };
   } catch (error) {
     return {
-      filePath,
+      locale,
       isValid: false,
       error: error.message,
       missingKeys: [],
@@ -69,50 +87,49 @@ function validateTranslationFile(filePath, referenceKeys) {
 // Main function
 function main() {
   const translationsDir = path.join(process.cwd(), "translations");
-  const referenceFile = path.join(translationsDir, "en.json");
+  const referenceLocale = "en";
+  const referenceDir = path.join(translationsDir, referenceLocale);
 
-  // Check if reference file exists
-  if (!fs.existsSync(referenceFile)) {
-    console.error("❌ Reference file en.json not found!");
+  // Check if reference locale exists
+  if (!fs.existsSync(referenceDir) || !fs.statSync(referenceDir).isDirectory()) {
+    console.error("❌ Reference locale directory en/ not found!");
     process.exit(1);
   }
 
-  // Load reference file
+  // Load reference locale
   let referenceTranslation;
   try {
-    const referenceContent = fs.readFileSync(referenceFile, "utf8");
-    referenceTranslation = JSON.parse(referenceContent);
+    referenceTranslation = loadLocale(referenceDir);
   } catch (error) {
-    console.error("❌ Error parsing reference file en.json:", error.message);
+    console.error("❌ Error loading reference locale en:", error.message);
     process.exit(1);
   }
 
-  // Get all keys from reference file
+  // Get all keys from reference locale
   const referenceKeys = getAllKeys(referenceTranslation);
-  console.log(`📋 Reference file has ${referenceKeys.length} keys`);
+  console.log(`📋 Reference locale "${referenceLocale}" has ${referenceKeys.length} keys`);
 
-  // Get all JSON files in translations directory
-  const files = fs
-    .readdirSync(translationsDir)
-    .flatMap((file) =>
-      file.endsWith(".json") && file !== "en.json"
-        ? [path.join(translationsDir, file)]
-        : [],
-    );
+  // Every other locale is a sibling directory of the reference locale.
+  const locales = fs
+    .readdirSync(translationsDir, { withFileTypes: true })
+    .flatMap((entry) =>
+      entry.isDirectory() && entry.name !== referenceLocale ? [entry.name] : [],
+    )
+    .toSorted();
 
-  if (files.length === 0) {
-    console.log("ℹ️  No translation files found to validate");
+  if (locales.length === 0) {
+    console.log("ℹ️  No locales found to validate");
     return;
   }
 
-  console.log(`🔍 Validating ${files.length} translation files...\n`);
+  console.log(`🔍 Validating ${locales.length} locales...\n`);
 
   let allValid = true;
   const results = [];
 
-  // Validate each file
-  for (const file of files) {
-    const result = validateTranslationFile(file, referenceKeys);
+  // Validate each locale
+  for (const locale of locales) {
+    const result = validateLocale(locale, path.join(translationsDir, locale), referenceKeys);
     results.push(result);
 
     if (!result.isValid) {
@@ -122,14 +139,12 @@ function main() {
 
   // Display results
   for (const result of results) {
-    const fileName = path.basename(result.filePath);
-
     if (result.error) {
-      console.log(`❌ ${fileName}: Parse error - ${result.error}`);
+      console.log(`❌ ${result.locale}: Parse error - ${result.error}`);
     } else if (result.isValid) {
-      console.log(`✅ ${fileName}: Valid`);
+      console.log(`✅ ${result.locale}: Valid`);
     } else {
-      console.log(`❌ ${fileName}: Invalid`);
+      console.log(`❌ ${result.locale}: Invalid`);
 
       if (result.missingKeys.length > 0) {
         console.log(`   Missing keys (${result.missingKeys.length}):`);
@@ -149,15 +164,15 @@ function main() {
   const invalidCount = results.length - validCount;
 
   console.log("📊 Summary:");
-  console.log(`   Total files: ${results.length}`);
+  console.log(`   Total locales: ${results.length}`);
   console.log(`   Valid: ${validCount}`);
   console.log(`   Invalid: ${invalidCount}`);
 
   if (allValid) {
-    console.log("\n🎉 All translation files are valid!");
+    console.log("\n🎉 All locales are valid!");
     process.exit(0);
   } else {
-    console.log("\n⚠️  Some translation files have issues. Please fix them.");
+    console.log("\n⚠️  Some locales have issues. Please fix them.");
     process.exit(1);
   }
 }
