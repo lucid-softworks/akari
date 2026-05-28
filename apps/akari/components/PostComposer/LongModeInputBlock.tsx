@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { AttachedImage, ComposeMode } from '@/utils/postComposer/types';
 
@@ -68,9 +69,10 @@ export function LongModeInputBlock({
         </View>
       ) : null}
       <View style={styles.inputContainer}>
-        <Input
-          containerStyle={styles.composerCanvasContainer}
-          inputStyle={[styles.textInput, styles.longTextInput, { color: textColor }]}
+        <Textarea
+          containerStyle={styles.composerTextareaContainer}
+          inputStyle={[styles.textInput, { color: textColor }]}
+          minHeight={220}
           value={longText}
           onChangeText={setLongText}
           onSelectionChange={(e) => onLongTextSelectionChange(e.nativeEvent.selection)}
@@ -78,11 +80,9 @@ export function LongModeInputBlock({
             isLongform ? t('post.longform.placeholder') : t('post.autothread.placeholder')
           }
           placeholderTextColor={iconColor}
-          multiline
           // oxlint-disable-next-line jsx-a11y/no-autofocus -- composer modal opens to immediately capture post body text
           autoFocus={!isLongform}
           autoCapitalize="none"
-          textAlignVertical="top"
           selectionColor={tintColor}
           cursorColor={tintColor}
           testID={isLongform ? 'longform-input' : 'autothread-input'}

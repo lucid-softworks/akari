@@ -156,9 +156,6 @@ export const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     lineHeight: 18,
   },
-  longTextInput: {
-    minHeight: 220,
-  },
   titleInputContainer: {
     paddingBottom: spacing.md,
   },
@@ -171,6 +168,16 @@ export const styles = StyleSheet.create({
     borderRadius: 0,
     paddingHorizontal: 0,
     paddingVertical: 0,
+  },
+  // Same full-bleed canvas as the Input variant above, but the Textarea
+  // primitive applies padding via `padding` (not separate horizontal/
+  // vertical) — and we keep a small breathing margin around the caret
+  // rather than fully zero so the cursor isn't flush against the
+  // composer's outer edge.
+  composerTextareaContainer: {
+    borderWidth: 0,
+    borderRadius: 0,
+    padding: spacing.sm,
   },
   // The longform title is a single-line bold display row with a hairline
   // bottom divider — overrides the full-bleed container with a bottom
@@ -224,10 +231,10 @@ export const styles = StyleSheet.create({
     fontWeight: fontWeight.medium,
   },
   textInput: {
+    // Textarea owns `minHeight` (via prop) and `textAlignVertical: top`;
+    // this style just contributes the composer's bigger type scale.
     fontSize: 18,
     lineHeight: 26,
-    minHeight: 120,
-    textAlignVertical: 'top',
   },
   imagesContainer: {
     paddingHorizontal: spacing.lg,

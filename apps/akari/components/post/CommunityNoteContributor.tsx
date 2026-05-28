@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Dialog } from '@/components/ui/Dialog';
@@ -126,27 +126,23 @@ export function AddCommunityNoteModal({
           </View>
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('communityNotes.contributor.yourNote')}</ThemedText>
-          <Input
+          <Textarea
             containerStyle={styles.textareaBox}
-            inputStyle={styles.textareaInput}
             value={body}
             onChangeText={setBody}
             placeholder={t('communityNotes.contributor.notePlaceholder')}
             placeholderTextColor={secondary}
-            multiline
           />
 
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
             {t('communityNotes.contributor.sourcesLabel')}
           </ThemedText>
-          <Input
+          <Textarea
             containerStyle={styles.textareaBox}
-            inputStyle={styles.textareaInput}
             value={sourcesRaw}
             onChangeText={setSourcesRaw}
             placeholder={'https://example.org/study\nhttps://example.org/dataset'}
             placeholderTextColor={secondary}
-            multiline
             autoCapitalize="none"
             autoCorrect={false}
           />
@@ -256,14 +252,12 @@ export function RequestCommunityNoteModal({
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>
             {t('communityNotes.contributor.anythingElseOptional')}
           </ThemedText>
-          <Input
+          <Textarea
             containerStyle={styles.textareaBox}
-            inputStyle={styles.textareaInput}
             value={comment}
             onChangeText={setComment}
             placeholder={t('communityNotes.contributor.commentPlaceholder')}
             placeholderTextColor={secondary}
-            multiline
           />
         </ScrollView>
 
@@ -364,9 +358,5 @@ const styles = StyleSheet.create({
   },
   textareaBox: {
     borderRadius: radius.md,
-  },
-  textareaInput: {
-    minHeight: 96,
-    textAlignVertical: 'top',
   },
 });

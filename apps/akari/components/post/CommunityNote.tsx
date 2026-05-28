@@ -2,7 +2,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Dialog } from '@/components/ui/Dialog';
@@ -295,14 +295,12 @@ function RateNoteModal({
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
                 {t('communityNotes.note.anythingElse')}
               </ThemedText>
-              <Input
+              <Textarea
                 containerStyle={styles.commentBox}
-                inputStyle={styles.commentInputInner}
                 value={comment}
                 onChangeText={setComment}
                 placeholder={t('communityNotes.note.commentPlaceholder')}
                 placeholderTextColor={secondary}
-                multiline
               />
             </>
           ) : null}
@@ -520,10 +518,6 @@ const styles = StyleSheet.create({
   },
   commentBox: {
     borderRadius: radius.md,
-  },
-  commentInputInner: {
-    minHeight: 96,
-    textAlignVertical: 'top',
   },
   sourceRow: {
     flexDirection: 'row',

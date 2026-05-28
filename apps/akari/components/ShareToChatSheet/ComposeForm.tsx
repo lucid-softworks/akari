@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { PostInlineCard } from '@/components/PostInlineCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import { activeOpacity, fontSize, fontWeight, layout, radius, spacing } from '@/constants/tokens';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -51,18 +51,16 @@ export function ComposeForm({
     <View style={styles.composeContainer}>
       <RecipientsRow selected={selected} onRemove={onRemoveRecipient} />
 
-      <Input
-        variant="filled"
+      <Textarea
         inputStyle={styles.textareaInput}
+        minHeight={80}
         value={draft}
         onChangeText={onDraftChange}
         placeholder={t('post.share.addMessagePlaceholder')}
         placeholderTextColor={iconColor}
-        multiline
         // oxlint-disable-next-line jsx-a11y/no-autofocus -- share sheet opens to let the user immediately type a message alongside the shared post
         autoFocus
         maxLength={1000}
-        textAlignVertical="top"
         selectionColor={tintColor}
         cursorColor={tintColor}
       />
@@ -107,7 +105,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   textareaInput: {
-    minHeight: 80,
     lineHeight: 22,
   },
   urlPreview: {

@@ -105,26 +105,15 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
     />
   );
 
-  if (!prefix && !suffix) {
-    return (
-      <View
-        style={[
-          styles.standalone,
-          containerSizeStyle,
-          containerVariantStyle,
-          focusRingStyle,
-          containerStyle,
-        ]}
-      >
-        {textInput}
-      </View>
-    );
-  }
-
+  // Single render path: the TextInput always lives inside a `flex: 1`
+  // wrapper so it fills the row width even when there are no slots.
+  // (Without the wrapper, the slot-less branch landed the TextInput
+  // directly inside a `flexDirection: row` View, which on web shrank it
+  // to its intrinsic ~200px width.)
   return (
     <View
       style={[
-        styles.composite,
+        styles.row,
         containerSizeStyle,
         containerVariantStyle,
         focusRingStyle,
@@ -154,12 +143,7 @@ const suppressWebFocusRing: TextInputProps['style'] =
   Platform.OS === 'web' ? ({ outlineStyle: 'none' } as unknown as TextInputProps['style']) : undefined;
 
 const styles = StyleSheet.create({
-  standalone: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  composite: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,

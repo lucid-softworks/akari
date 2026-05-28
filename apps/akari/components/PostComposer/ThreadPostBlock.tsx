@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 
-import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -74,9 +74,10 @@ export function ThreadPostBlock({
         <View style={[styles.threadDivider, { backgroundColor: borderColor }]} />
       ) : null}
       <View style={styles.inputContainer}>
-        <Input
-          containerStyle={styles.composerCanvasContainer}
+        <Textarea
+          containerStyle={styles.composerTextareaContainer}
           inputStyle={[styles.textInput, { color: textColor }, !isActive && styles.textInputInactive]}
+          minHeight={120}
           value={post.text}
           onChangeText={onChangeText}
           onFocus={onFocus}
@@ -91,12 +92,10 @@ export function ThreadPostBlock({
               : t('post.continueThreadPlaceholder')
           }
           placeholderTextColor={iconColor}
-          multiline
           // oxlint-disable-next-line jsx-a11y/no-autofocus -- composer modal opens with the first post focused so the user can type immediately
           autoFocus={isFirst}
           autoCapitalize="none"
           maxLength={MAX_POST_CHARACTERS}
-          textAlignVertical="top"
           selectionColor={tintColor}
           cursorColor={tintColor}
         />

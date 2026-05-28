@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
@@ -263,14 +264,13 @@ function TemplateEditorModal({
             placeholderTextColor={secondary}
           />
           <ThemedText style={[styles.fieldLabel, { color: secondary }]}>{t('moderation.templates.bodyLabel')}</ThemedText>
-          <Input
+          <Textarea
             containerStyle={styles.inputBox}
-            inputStyle={styles.inputMultilineInner}
+            minHeight={120}
             value={draftBody}
             onChangeText={setDraftBody}
             placeholder="Hi {{handle}},&#10;&#10;..."
             placeholderTextColor={secondary}
-            multiline
           />
         </ScrollView>
 
@@ -422,10 +422,6 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     borderRadius: 6,
-  },
-  inputMultilineInner: {
-    minHeight: 120,
-    textAlignVertical: 'top',
   },
   placeholder: {
     fontSize: fontSize.base,
